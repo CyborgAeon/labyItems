@@ -35,7 +35,10 @@
             <Editor x:Name="DescriptionEditor" Placeholder="Describe the item..." AutoSize="TextChanges" />
 
             <Label Text="ISP" FontAttributes="Bold" />
-            <Entry x:Name="IspEntry" Keyboard="Numeric" Placeholder="0" />
+<HorizontalStackLayout Spacing="10">
+    <Entry x:Name="IspEntry" Keyboard="Numeric" Placeholder="0" WidthRequest="120" />
+    <Button Text="Calculate" Clicked="OnCalculateIsp" />
+</HorizontalStackLayout>
 
             <Label Text="Created Date" FontAttributes="Bold" />
             <DatePicker x:Name="CreatedDatePicker" Date="{x:Static sys:DateTime.Now}" />

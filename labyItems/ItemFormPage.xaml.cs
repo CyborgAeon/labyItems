@@ -41,6 +41,24 @@ public partial class ItemFormPage : ContentPage
         DnbuodSwitch.IsToggled = item.DoesNotBlowUpOnDeath;
     }
 
+private async void OnCalculateIsp(object sender, EventArgs e)
+{
+    // Open calculator, await result (total + summary text)
+    var page = new IspCalculator();
+    var result = await page.GetResultAsync(Navigation);
+    if (result != null)
+    {
+        // Set ISP and append to description
+        IspEntry.Text = result.TotalIsp.ToString();
+        if (!string.IsNullOrWhiteSpace(result.Summary))
+        {
+            DescriptionEditor.Text = string.IsNullOrWhiteSpace(DescriptionEditor.Text)
+                ? result.Summary
+                : $"{DescriptionEditor.Text}\n{result.Summary}";
+        }
+    }
+}
+
 	private async void OnSubmitClicked(object sender, EventArgs e)
     {
         try
