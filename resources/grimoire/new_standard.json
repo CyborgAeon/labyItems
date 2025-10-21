@@ -1,0 +1,517 @@
+[
+    {
+        "name": "Tell Strength",
+        "Level": "0",
+        "Colour": "Bronze",
+        "Range": "20'",
+        "Duration": "Instant",
+        "Verbal": " By the Drake reveal thine strength''",
+        "Description": " This reveals to the wizard the resistance level of the target with respect to bronze magic.  The response that the wizard receives is the number of stackable runes that would need to be cast on the target in order for a stackable spell to work.  See Silver 'Tell Strength' for further details."
+    },
+    {
+        "name": "Limb Thrall",
+        "Level": "2",
+        "Colour": "Bronze",
+        "Range": "20'",
+        "Duration": "24 hours",
+        "Verbal": " Fool, feel the might of true power.....Limb Thrall",
+        "Description": " This is a level-based stackable spell, with resistances applying as listed under the Tell Strength spell listed above.  All other effects of the spell are as the spell Thrall below but it applies to only one limb at a time.  The casting wizard may have more than one Limb Thrall active at a time.",
+        "Note": " This is a stackable Glyph (see Stackable Glyphs on page 8)"
+    },
+    {
+        "name": "Shudder",
+        "Level": "4",
+        "Colour": "Bronze",
+        "Range": "20'",
+        "Duration": "5 Minutes",
+        "Verbal": " Fool, feel your mortal form twist and shudder under my power''",
+        "Description": " The target of the spell suffers a drop in Dexterity armour class of 3 points, caused by uncontrollable shakes.  This can negate Physical armour class, but will not drop the total armour class below 0.  If this is cast on a monster then it decreases the monsters hits by 6.  The minimum number of hits that a monster can be left with is 1, as clearly this spell cannot kill, but merely increase the amount of damage that the victim receives during combat. This spell does not stack with itself. Immunity to Dexterity Drain or Domination effects applies."
+    },
+    {
+        "name": "Thrall",
+        "Level": "6",
+        "Colour": "Bronze",
+        "Range": "20ft",
+        "Duration": "24 hours",
+        "Verbal": " By the might of the Bronze Drake I am now your master and ye shall follow my commands.....Thrall 4 levels'",
+        "Description": " This is a stackable spell, similar to Sleep, but the target comes under the control of the casting wizard, becoming an unwilling automaton. The thrall will do nothing unless ordered to do so by the wizard, which includes defending themselves.  The target retains life/hit points and resistances as usual, but loses all weapon masteries, Dexterity armour class and any skill that requires knowledge, which includes spell casting, or using mystical innates.  Only psionics and other powers that may be triggered without any exterior motion or verbals can be used at the will of the victim.  The victim can be ordered to commit suicide, but it must beat itself to death using its own strength.  A Thrall victim automatically develops the Unarmed Combat ability and may use any Strength abilities that it may have.  Also, they are not penalised for actions committed whilst under the influence of the spell - i.e. a Priest drawing blood has no side effects. Should the casting Wizard of the Thrall die; the spell is broken - as it is should the caster lose consciousness.",
+        "Note": " This is a stackable Glyph (see Stackable Glyphs on page 8)",
+        "Expertise": " May cast Thrall for 5mana per rune, with the 1st rune affecting 5 levels."
+    }, {
+        "name": "Words of Pain",
+        "Level": "14",
+        "Colour": "Bronze",
+        "Range": "20'",
+        "Duration": "5 Minutes",
+        "Verbal": " Hear now my Words Of Pain.....''",
+        "Description": " The target stands or falls writhing in agony, unable to make any other action unless struck by another blow or spell.  During this period the target takes 6 TBLP damage and 1 point to each location (2 hits to a monster) per 15 seconds, as long as the casting wizard stands talking to the target, up to a maximum of 5 minutes.  The damage ignores any form of armour class.  Should the wizard elect to move around, stop talking or if the wizard takes damage or if the target takes any other damage then the spell is cancelled.  This spell does not effect creatures which do not feel pain, such as elementals, undead and the like.  This is not a listed stopping effect, and only complete immunity to pain effects can prevent the writhing detailed above.",
+        "Expertise": " May now cast this spell for 12 mana."
+    }, {
+        "name": "Words of Death",
+        "Level": "16",
+        "Colour": "Bronze",
+        "Range": "20'",
+        "Duration": "2 Minutes",
+        "Verbal": " Hear now my Words of Death.....''",
+        "Description": " As long as the wizard does not move from where they stand and they keep talking to the target then the target will suffer the effects of a magical disorder, which progresses at the following rate:\u0009Up to 1 minute:\u0009they become too weak to move or cast, and collapse After 1 minute:\u0009they are unconscious After 2 minutes:\u0009they die This spell is broken if the wizard takes damage, casts another spell or moves from where he is standing, and then the mana is wasted.  The spell is not broken should the target be struck, however.  As this produces effects like a disease any creatures who are immune to disease are not affected by this spell.",
+        "Expertise": " Expertise: May now cast this spell for 14 mana."
+    }, {
+        "name": "Pain",
+        "Level": "2",
+        "Colour": "Ebony",
+        "Range": "20'",
+        "Duration": "Instant",
+        "Verbal": " By the Ebony Drake I smite thee with Pain",
+        "Description": " The target of the spell is struck with a nerve wracking pain which causes a character 12 TBLP damage (4 hits to a monster) - magical armour class does protect against this damage (at 1 for 1), and the damage is magical. Only creatures vulnerable to pain are affected of course - undead and elementals, for example, are unharmed."
+    }, {
+        "name": "Confusion",
+        "Level": "4",
+        "Colour": "Ebony",
+        "Range": "20'",
+        "Duration": "5 Minutes",
+        "Verbal": " Be thou filled with doubt and confusion'",
+        "Description": " This stackable spell causes a target affected to become unsure of what they are doing, they regard all around them as potential enemies, but will only initiate violence against those who attack them.  They will otherwise take no other action other than to defend themselves. This is a domination effect, not a stopping effect.",
+        "Note": " This is a stackable Glyph (see Stackable Glyphs on page 8)",
+        "Expertise": " May now cast this spell for 3 mana per rune, and starting at 5 levels of effect."
+    }, {
+        "name": "Spell Shield",
+        "Level": "5",
+        "Colour": "Ebony",
+        "Range": "Self",
+        "Duration": "5 Minutes",
+        "Verbal": " Shield my body from magic, great Ebony Drake",
+        "Description": " This spell prevents any information spell working on the Ebony wizard for the duration of the Spell Shield spell. This includes Detect Magic, but Recognise Mana will still give the normal responses."
+    }, {
+        "name": "Induce Spasm",
+        "Level": "6",
+        "Colour": "Ebony",
+        "Range": "20'",
+        "Duration": "5 Minutes",
+        "Verbal": " By Ebony power, let thy body wrack and spasm",
+        "Description": " This is a stackable spell, much like Confusion, but the target will fall to the ground and writhe uncontrollably for the duration of the spell.  It is not a Domination effect, but a listed stopping effect.",
+        "Note": " This is a stackable Glyph (see Stackable Glyphs on page 8)",
+        "Expertise": " May now cast this spell for 5 mana per rune, and starting at 5 levels of effect."
+    }, {
+        "name": "Pass Unknown",
+        "Level": "8",
+        "Colour": "Ebony",
+        "Range": "Self",
+        "Duration": "5 Minutes",
+        "Verbal": " May Ebony power make my step unknown",
+        "Description": " The caster makes no noise (unless deliberate), nor can be smelled, granting invisibility to those two senses only- immunity to Acute Hearing and locational Sniff.  It also prevents detection by mana sight and elemental sight, and other visual detections by creatures made by magic without minds e.g. statues, not elves. This spell is broken if the caster engages in Melee Combat (Use of any weapon, including MP and HP ones)."
+    }, {
+        "name": "Mist",
+        "Level": "10",
+        "Colour": "Ebony",
+        "Range": "Self / 10' Radius",
+        "Duration": "5 Minutes",
+        "Verbal": " With Ebony power let mist rise and hide me from my foes",
+        "Description": " The spell causes a thick mist to develop around the wizard, which moves as they do, maintaining a 10' radius around them.  Whilst the casting wizard can see perfectly within the mist, no others can.  Unintelligent creatures will not venture into the mist and those within the mist will try and leave it as swiftly as possible."
+    }, {
+        "name": "Escape",
+        "Level": "12",
+        "Colour": "Ebony",
+        "Range": "Self",
+        "Duration": "Instant",
+        "Verbal": " Ebony Drake take me hence",
+        "Description": " This spell takes the wizard to any point that they had already been to during the course of the adventure, including the start point of the adventure.  This spell will not, however, cross planes, dimensions or any other mystical distances, and in all ways is treated as the Blink spell. Memorised locations may be learnt for 5pts each post 8th level, [cf. Teleport]."
+    }, {
+        "name": "Mark Ally",
+        "Level": "0",
+        "Colour": "Gold",
+        "Range": "Touch",
+        "Duration": "Adventure",
+        "Verbal": " Let our trust reside together''",
+        "Description": " This cantrip can only be cast upon a willing target and cannot be dispelled - the casting wizard must be told by the target if they refuse to accept the mark, thus making them an unwilling target.  This spell has several purposes.  Firstly, certain spells can only be cast on a target who has been marked as an ally by the wizard; these spells are the beneficial other spells of the golden magic, and certain other golden spells contained in this supplement.  Secondly, should a marked ally attack the wizard then they will suffer the reverse effect of any spell cast upon them by the golden wizard - this includes any spells cast prior or subsequent to the treachery. This spell may be cast on self if desired."
+    }, {
+        "name": "Shield (self)",
+        "Level": "2",
+        "Colour": "Gold",
+        "Range": "Self",
+        "Duration": "5 Minutes",
+        "Verbal": " May the Golden Drake shield my body''",
+        "Description": " The caster receives an increase in their armour class of +2 Magical armour class and +2 Physical armour class.  This armour can stack with any other magical or physical defence, but not Plate (self), Plate (other) or other spells which preclude the stacking of armour.  It cannot stack with itself."
+    }, {
+        "name": "Shield (other)",
+        "Level": "3",
+        "Colour": "Gold",
+        "Range": "Touch",
+        "Duration": "5 Minutes",
+        "Verbal": " May the Golden Drake shield your body''",
+        "Description": " As Shield (self), but this can only be cast on an ally, as described under the Mark Ally spell described above.",
+        "Expertise": " May be cast for only 2 mana on allies."
+    }, {
+        "name": "Lesser Forcewall",
+        "Level": "4",
+        "Colour": "Gold",
+        "Range": "20'",
+        "Duration": "5 Minutes",
+        "Verbal": " May the gold drake erect a shining wall of force.",
+        "Description": " Creates a shimmering wall of gold force that is impenetrable to either magical or physical objects or beings.  This wall can be dissipated by use of the casting wizard's command word, as described under Forcewall below.  The wall can be up to 20' high and 20' across, and must be a straight line."
+    }, {
+        "name": "Strengthen (self)",
+        "Level": "5",
+        "Colour": "Gold",
+        "Range": "Self",
+        "Duration": "5 Minutes",
+        "Verbal": " Feel the power through my limbs, the Drake has strengthened my body to resist my foes''.",
+        "Description": " This increases the resistance level for the purposes of magical and physical effects for the wizard to 10 levels.  If the spell is cast after a level-based spell has already affected the wizard then the increase is only to 9 levels of resistance.  Note, this does not stack with already raised increases in resistance - the increase is limited to 9 and 10."
+    }, {
+        "name": "Hearten (self)",
+        "Level": "6",
+        "Colour": "Gold",
+        "Range": "Self",
+        "Duration": "5 Minutes",
+        "Verbal": " Golden Drake, strengthen my heart with your power''.",
+        "Description": " This spell temporarily grants immunity to all forms of non-spiritual domination, non-spiritual fear and non-spiritual paralysis.  If the caster is still mobile he may cast this spell after another spell has affected him - e.g. if he is not paralysed."
+    }, {
+        "name": "Strengthen (other)",
+        "Level": "6",
+        "Colour": "Gold",
+        "Range": "Touch",
+        "Duration": "5 Minutes",
+        "Verbal": " Feel the power through your limbs, the Drake has strengthened your body to resist your foes''",
+        "Description": " As Strengthen (self), except that it works on those targets detailed under the Mark Ally spell.",
+        "Expertise": " May be cast for only 5 mana on allies."
+    }, {
+        "name": "Hearten (Other)",
+        "Level": "7",
+        "Colour": "Gold",
+        "Range": "Touch",
+        "Duration": "5 Minutes",
+        "Verbal": " Let the Golden Drake strengthen your heart with its power''",
+        "Description": " As the Hearten (self) spell, except that it only works on those targets detailed under the Mark Ally spell.",
+        "Expertise": " May be cast for only 6 mana on allies."
+    }, {
+        "name": "Warding",
+        "Level": "10",
+        "Colour": "Gold",
+        "Range": "20'",
+        "Duration": "5 Minutes",
+        "Verbal": " The Golden Drake wards your presence from me, foe''",
+        "Description": " This spell prevents one opponent with less than 9 levels of resistance, or 60 hits, from attacking the wizard, or from approaching within 10', forcing them to back away if need be.  The spell is broken if the wizard casts another spell, moves faster than a walk, attacks or the target is cornered and cannot get out of the 10' radius."
+    }, {
+        "name": "Forcewall",
+        "Level": "12",
+        "Colour": "Gold",
+        "Range": "20'",
+        "Duration": "12 hours",
+        "Verbal": " Golden Drake, I beseech thee, erect a wall of force to protect my companions''",
+        "Description": " This creates a wall of force, which is purely magical, and will prevent any creature, which is not purely spiritual or completely immune to magic, from passing the wall.  It can be up to 30' long and 30' high, but must be in a straight line.  The wizard can elect to cancel it at any time, otherwise it can be released by use of a command word.  The same command word must always be used by the wizard and must be written on his character card.  The command word can be acquired by casting a Talk to Inanimate spell onto the force wall.  Any who know the password may also lower the force wall. The Ivory Drake seeks to grant her followers might in magic, on the condition that they accept her own rules and conditions.  She is a lawful entity, and her code is to be adhered to by all her followers.  To break the code results in the loss of all Ivory spells until the character has been atoned. This atonement either happens at the end of the adventure or at a time previous to that at the referees' discretion. - This applies to Ivory Draves equally. Additionally any active Ivory spells on the character immediately go down."
+
+    }, {
+        "name": "Mark Ally",
+        "Level": "0",
+        "Colour": "Ivory",
+        "Range": "Touch",
+        "Duration": "Adventure",
+        "Verbal": " Let our trust reside together",
+        "Description": " This cantrip can only be cast upon a willing target and cannot be dispelled - the casting wizard must be told by the target if they refuse to accept the mark, thus making them an unwilling target.  This spell has several purposes.  Firstly, certain spells can only be cast on a target who has been marked as an ally by the wizard; these spells are the beneficial other spells of the ivory magic, and certain other Ivory spells contained in this supplement.  Secondly, should a marked ally attack the wizard then they will suffer the reverse effect of any spell cast upon them by the ivory wizard - this includes any spells cast prior or subsequent to the treachery. ",
+        "Note": " Should the spell caster have access to Gold and Ivory magics it would be necessary for the target to receive two separate mark allies - in order to benefit from both colours. I.e. they are different and separate spells. Mark Ally may be cast on self if desired."
+    }, {
+        "name": "Might (self)",
+        "Level": "4",
+        "Colour": "Ivory",
+        "Range": "Self",
+        "Duration": "1 hour",
+        "Verbal": " May the Drake give me strength",
+        "Description": " The caster gains +6/2 temporary life for the duration, which cannot be cured by spiritual means.  This spell will not stack with itself or any other temporary life-gains, except those from other Ivory spells"
+    }, {
+        "name": "Might (Other)",
+        "Level": "5",
+        "Colour": "Ivory",
+        "Range": "Touch",
+        "Duration": "1 hour",
+        "Verbal": " May the Drake grant my ally strength to fight beside me",
+        "Description": " May only be cast on a Marked Ally. Recipient gains +6/2 temporary life in all ways as Might above, only while within 20' of the caster.  Should the beneficiary leave this radius the benefits are lost until the radius is entered again."
+    }, {
+        "name": "Traitors Shield",
+        "Level": "6",
+        "Colour": "Ivory",
+        "Range": "Self",
+        "Duration": "Adventure",
+        "Verbal": " May the Ivory Drake shield me from the acts of a traitor''",
+        "Description": " This spell only works if the wizard is attacked by a creature/character who previously on the adventure was marked as being an ally by the Mark Ally spell.  Should that ally subsequently attack the wizard the wizard benefits as follows:1: Armour class rises to the maximum armour class of the wizard against attacks from the traitor - this means Magical, Physical and Dexterity armour class. 2: The wizard gains 18 TBLP and 3 life per location with respect to damage from the Traitor, and the Traitor only.  These extra life points cannot be cured by spiritual means."
+
+    }, {
+        "name": "Freedom of the Drake",
+        "Level": "6",
+        "Colour": "Ivory",
+        "Range": "Self",
+        "Duration": "5 Minutes",
+        "Verbal": " I have the strength of my Drake",
+        "Description": " In most ways as the published ability War-Cry - if used within 2 seconds of a listed stopping effect allows the caster to shrug it off and continue to act normally, and furthermore the caster becomes immune to that stopping effect for a further 5 minutes.  However, this spell may not be used against spiritual or 'mantic stopping effects, except by elves or draves."
+    }, {
+        "name": "Mobility",
+        "Level": "8",
+        "Colour": "Ivory",
+        "Range": "Self",
+        "Duration": "5 Minutes",
+        "Verbal": " May the Ivory Drake grant me great purpose in my actions''",
+        "Description": " The wizard cannot, for the duration of the spell, suffer from the effects of the following spells: Bind, Entangle, Magnetise, Freeze (white glyph only), Trip, Slip, Catalepsy, Sleep, Slow, spells which repel the wizard, magical petrification or similar magical stopping/slowing effects.  Neither are they affected by physical effects that would mimic the above, such as Knockbacks or Knockdowns."
+    }, {
+        "name": "Ivory Warrior",
+        "Level": "8",
+        "Colour": "Ivory",
+        "Range": "Self",
+        "Duration": "30 minutes",
+        "Verbal": " May the Ivory Drake grant me the might of her champion, let the power enter my form and strengthen my purpose to that of X men''",
+        "Description": " Each glyph that the wizard activates on himself at the time of casting strengthens them, turning them into a mighty war machine.  For each additional glyph the verbal changes to granting the power of 3, 4 or more men.  Once the spell has been cast it cannot be added to until the previous spell expires.  As with all stackable spells each glyph must be dispelled, and until all glyphs have been dispelled the spell remains at full potency. Each additional glyph adds +6/+2 life points, +1 maximum armour class (up to a maximum armour class of 12) and 1 point of Dexterity armour class. None of the additional life points may be spiritually cured.  The life from this spell is non-stacking with other temporary life-increases except those granted by other Ivory spells.",
+        "Note": " This is a stackable Glyph (see Stackable Glyphs on page 8), not more than 6 runes may be benefited from at any one time. ",
+        "Expertise": " May now cast this spell for 7 mana for the 1st rune, and 6 mana for each additional rune."
+    }, {
+        "name": "Enhance Weapon",
+        "Level": "10",
+        "Colour": "Ivory",
+        "Range": "Self",
+        "Duration": "5 Minutes",
+        "Verbal": " Ivory Drake, twist and transform this wizard’s weapon such that my opponents will fear it's blow''",
+        "Description": " This spell will magically augment a traditional wizard’s weapon i.e. staff, spear or dagger.  The weapon can only be used by the wizard who cast the spell, and they cannot be physically disarmed, although a Vanish will remove the weapon for 5 minutes.  The weapon is modified as follows:1: The weapon does 3 more magical damage grades, (i.e.+3 magical damage) stopping at the wizards maximum damage, normally, the maximum is quad. 2: The damage done ignores Physical armour - only Magical and Dexterity armour can be used in defence against it. 3: The weapon will shatter any normal weapon, shield or armour used in defence against it.  It does not shatter anything else. If cast by a Warlock (only) this spell will enhance any weapon instead of the above weapon types, if so desired."
+
+    }, {
+        "name": "Sanctuary",
+        "Level": "15",
+        "Colour": "Ivory",
+        "Range": "30' radius",
+        "Duration": "12 hours",
+        "Verbal": " The Ivory Drake offers shelter to all her allies who seek rest and shelter within the boundaries of her sanctuary''",
+        "Description": " Within the range of the spell all Marked Allies of the wizard receive the following bonuses:1: +2 Dexterity armour class.  This acts as the Chosen Of The Dragon ability in the Post 8th Development System supplement.  This means that the +2 DAC does not stack with blesses, curses or similar watchings.  2: 25% reduction of non-purely spiritual damage after armour calculations. This is as the Cold Rage ability (again, this can found in the Post 8th Level Development System), and does not stack with any other percentile reductions of damage. 3: 9th level of resistance to magical attacks - this does not stack with any other resistance level increases.",
+        "Note": " The spell cannot be moved in any way, and no bonuses are gained unless the casting wizard is within the radius.",
+        "Expertise": " A Silver Wizard may repeat any published informational Silver glyph they have cast, within the last minute at normal cost, again for 4 mana less. Minimum 1 mana.  This can be used at most 1 per 15 minutes. This reduction is not cumulative with any other mana cost reduction. The spell must be used there and then it cannot be stored, or held over in anyway. All of these spells are obviously Magical informational spells. "
+
+    }, {
+        "name": "Tell Strength",
+        "Level": "0",
+        "Colour": "Silver",
+        "Range": "20'",
+        "Duration": "Instant",
+        "Verbal": " By the Dragon reveal thine strength",
+        "Description": " This reveals to the wizard the resistance level of the target with respect to silver magic.  The response that the wizard receives is the number of stackable runes that would need to be cast on the target in order for a stackable spell to work. 1 stackable rune\u00094th level\u00092 stackable runes\u00095th level\u0009 3 stackable runes\u00096th level\u00094 stackable runes\u00097th level\u0009 5 stackable runes\u00098th level\u0009each additional rune\u0009+1 level\u0009 For example, Tell Strength on a 5th level player character would result in the response being `2 stackable runes'."
+
+    }, {
+        "name": "Tell Power",
+        "Level": "1",
+        "Colour": "Silver",
+        "Range": "20’",
+        "Duration": "Instant",
+        "Verbal": " The Silver Dragon desires knowledge of your power''",
+        "Description": " This tells the caster what mana points and colours of mana are currently active on the target, but not what the actual spells are."
+
+    }, {
+        "name": "Tell Colour",
+        "Level": "1",
+        "Colour": "Silver",
+        "Range": "20'",
+        "Duration": "Instant",
+        "Verbal": " The Silver Dragon desires knowledge of your colour''",
+        "Description": " This tells the caster the colour of either a spell that they can see the on-going effects of, or the colour of another Wizard, Warlock, Power Master or any other type of magician who uses either innate power points or innate spells.  If the target possesses more than one colour, knowledge is granted of all colours."
+    }, {
+        "name": "Tell Wounds",
+        "Level": "2",
+        "Colour": "Silver",
+        "Range": "20'",
+        "Duration": "Instant",
+        "Verbal": " The Silver Dragon desires knowledge of your wounds''",
+        "Description": " This acts in all manners as the priestly Discern Nature of Wounds ability.  However, this spell will only work on either Elves or similar magical creatures or on the wizard who cast it."
+    }, {
+        "name": "Tell Form",
+        "Level": "2",
+        "Colour": "Silver",
+        "Range": "20'",
+        "Duration": "Instant",
+        "Verbal": " Tell me your form''",
+        "Description": " This tells the wizard the species of the target (e.g. Human, Troll, 1/2-Orc, Undead, Wood Elf or Statue).  Note that this spell will not differentiate between different types of the same species."
+    }, {
+        "name": "Tell Tracks",
+        "Level": "2",
+        "Colour": "Silver",
+        "Range": "Self",
+        "Duration": "30 seconds",
+        "Verbal": " Silver Dragon, what has passed here?''",
+        "Description": " This spell grants the caster the skills Tracking and Shadowing for the duration, except that the caster has no need to keep a Track list as would a ranger, as the Silver drake has prior knowledge of all forms."
+    }, {
+        "name": "Inquiry",
+        "Level": "3",
+        "Colour": "Silver",
+        "Range": "20'",
+        "Duration": "Instant",
+        "Verbal": " Elements, answer me this…",
+        "Description": " This allows the wizard to ask one question of all of the surrounding elements of Air, Earth, Fire, Water, Light and Darkness.  The elements collectively answer with a phrase of up to 3 words.  The subject of the question must be within 20' and the elements are only aware of events that have occurred in their presence."
+    }, {
+        "name": "True Sight",
+        "Level": "6",
+        "Colour": "Silver",
+        "Range": "Self",
+        "Duration": "5 Minutes",
+        "Verbal": " Silver Dragon, remove all deceptions from my sight''",
+        "Description": " The caster is no longer affected by illusions and can see them for what they are.  The wizard can see magically or physically chameleoned, invisible or otherwise hidden objects - they are immune to all visual magic or physical deceptions, seeing through disguises instantly and so on. This spell is however an Infomational spell - and immunity to informational spells stops it working on that individual."
+    }, {
+        "name": "Know Foe",
+        "Level": "12",
+        "Colour": "Silver",
+        "Range": "20'",
+        "Duration": "24 hours",
+        "Verbal": " The Silver Dragon demands knowledge of thee, foe''",
+        "Description": " The caster sets up a link between themselves and a target creature.  The wizard receives a bonus of 4 points of Dexterity armour class with respect to damage from the target, and gains a non-cumulative weapon mastery in any physical weapon, or weapon created by mana, used by the wizard.  The target is unable to use any attack mode against the wizard bar a weapon, and may not use any special attack modes bar from the innate nature of the weapon.  For instance, a target Warlock could continue to use their magic sword, but they could not cast a Lightning Bolt, nor could they use the Shock spell that their sword could otherwise use once per day.   Note, the benefits are the game effects of the casting wizard deducing all magical information about the target - no other information is to be given to the wizard. In order to cast a Jade spell a person must be of goodly alignment, as such only Goodly people may learn them as Specialists."
+
+    }, {
+        "name": "Reveal Living",
+        "Level": "0",
+        "Colour": "Jade",
+        "Range": "20ft",
+        "Duration": "Instant",
+        "Verbal": " I call upon the powers of the body and the flesh to reveal to me if life may be found... Reveal Living ",
+        "Description": " Reveals if a target is living for the purposes of Jade/Onyx magic"
+    }, {
+        "name": "Strength within",
+        "Level": "3",
+        "Colour": "Jade",
+        "Range": "Touch",
+        "Duration": "1 minute",
+        "Verbal": " may the life within grow strong and verdant power endure ",
+        "Description": " Grants the recipient 12 points of casting stamina for the duration, does not stack with itself."
+    }, {
+        "name": "Strengthen the body",
+        "Level": "4",
+        "Colour": "Jade",
+        "Range": "Touch",
+        "Duration": "5 Minutes",
+        "Verbal": " Let Verdant force strengthen your body ",
+        "Description": " Grants the recipient immunity to bruising using PAC, DAC, and/or MAC."
+    }, {
+        "name": "Revive the Body",
+        "Level": "6",
+        "Colour": "Jade",
+        "Range": "Touch",
+        "Duration": "1 Minute",
+        "Verbal": " Let the power of the verdant dragon flow into your body. Where it has given way to harm let it rise again, where it has faded due to weakness let it grow strong. Let jade power revive your body.",
+        "Description": " Returns an individual to consciousness for the duration if they are unconscious due to damage. Also ensures all limbs work for the duration if they are not working due to damage."
+    }, {
+        "name": "Empower Form",
+        "Level": "6",
+        "Colour": "Jade",
+        "Range": "Touch",
+        "Duration": "5 Minutes",
+        "Verbal": " May verdant power flow through your body and empower your form ",
+        "Description": " Grants the recipient +18/6 life temp life. Does not stack with other supernatural temp life, including itself."
+    }, {
+        "name": "Eternal Life",
+        "Level": "6",
+        "Colour": "Jade",
+        "Range": "Touch",
+        "Duration": "5 minutes",
+        "Verbal": " Let Verdant power renew your form ",
+        "Description": " Grants the target immunity to aging."
+    }, {
+        "name": "Renew the Body",
+        "Level": "6",
+        "Colour": "Jade",
+        "Range": "Touch",
+        "Duration": "Instant/5 minutes with expertise",
+        "Verbal": " May verdant power touch your form, let the weakness that afflicts you fade and pass.",
+        "Description": " Removes all on-going strength and dex drains from the recipient. This does not remove spiritual effects.",
+        "Expertise": " If cast on a target that is not suffering from a strength or dex drain then the spell can instead grant them immunity to those effects for 5 minutes."
+    }, {
+        "name": "Fortitude",
+        "Level": "8",
+        "Colour": "Jade",
+        "Range": "Touch",
+        "Duration": "5 Minutes",
+        "Verbal": " May your blood cease to flow, your heart cease to beat, your lungs cease to draw breath, and your body be as magic as verdant magic sustains they life.",
+        "Description": " Grants the target immunity to flesh and blood effects (including pain)for the duration. For 15 minutes after the spell ends (Even if dispelled or otherwise ended prematurely) they have ½ effect beneficial flesh and blood (including potions).",
+        "Expertise": " The Spell no longer has the detrimental effects after it ends."
+    }, {
+        "name": "Harden the Body",
+        "Level": "10",
+        "Colour": "Jade",
+        "Range": "Touch",
+        "Duration": "5 minutes",
+        "Verbal": " Let verdant power touch your body, where it was weak let it become strong.",
+        "Description": " Grants the recipient 25% off all bar purely spirit damage."
+    }, {
+        "name": "Purge the Dracon Corpus",
+        "Level": "10",
+        "Colour": "Jade",
+        "Range": "20ft",
+        "Duration": "Instant",
+        "Verbal": " Feel the touch of the Jade Dragon as it purifies your body ",
+        "Description": " Removes all on going Onyx spells from the target. In order to cast an Onyx spell a person must be of evil alignment, as such only Evil people may learn them as Specialists."
+
+    }, {
+        "name": "Reveal Living",
+        "Level": "0",
+        "Colour": "Onyx",
+        "Range": "20ft",
+        "Duration": "Instant",
+        "Verbal": " I call upon the powers of the body and the flesh to reveal to me if life may be found... Reveal Living ",
+        "Description": " Reveals if a target is living for the purposes of Jade/Onyx magic"
+    }, {
+        "name": "Nature of the Child",
+        "Level": "2",
+        "Colour": "Onyx",
+        "Range": "20'",
+        "Duration": "5 minutes",
+        "Verbal": " Let your reflex’s slow and wits fade as the onyx dragon twists your form",
+        "Description": " Causes the target to lose X points of DAC for the duration. This cannot reduce the target below 0 DAC. ",
+        "Expertise": " The spell costs 2 mana less to cast, to a minimum of 3 mana.",
+        "special": "This spell costs 2 mana plus X (the amount of DAC). i.e draining 6 DAC would cost 8 mana, or 6 with Expertise"
+    }, {
+        "name": "Decay the Form",
+        "Level": "5",
+        "Colour": "Onyx",
+        "Range": "20'",
+        "Duration": "5 minutes",
+        "Verbal": " Let your body fade away to nothing as the onyx dragon decays your form ",
+        "Description": " Reduces the targets maximum life by 6/2 (2 hits) per casting. This will stack with itself. Immunity to diminish spirit applies.",
+        "Expertise": " The first Decay the form on a target causes them to lose 12/4 life (4 hits)."
+    }, {
+        "name": "Frailty of Age",
+        "Level": "8",
+        "Colour": "Onyx",
+        "Range": "20'",
+        "Duration": "5 Minutes",
+        "Verbal": " The onyx dragon twists your body, let your muscles weaken and strength fade ",
+        "Description": " Causes the target to lose a grade of strength for the duration, to a minimum of zero."
+    }, {
+        "name": "Rend the body",
+        "Level": "8",
+        "Colour": "Onyx",
+        "Range": "20ft",
+        "Duration": "Instant",
+        "Verbal": " The onyx dragon rips through your flesh, severing muscles to rend the body ",
+        "Description": " Causes the target to suffer 24/4 damage to which MAC does not apply. Immunity to involuntary shape-shifting applies."
+    }, {
+        "name": "The Body Crumbles",
+        "Level": "8",
+        "Colour": "Onyx",
+        "Range": "20ft",
+        "Duration": "15 minutes",
+        "Verbal": " Your flesh is ruined, bones brittle and feels the might of the onyx drake as your body crumbles.",
+        "Description": " Causes all published active onyx spells on the target to become 15 minute in duration."
+    }, {
+        "name": "Wither",
+        "Level": "10",
+        "Colour": "Onyx",
+        "Range": "20ft",
+        "Duration": "5 minutes",
+        "Verbal": " The onyx drake grips your .... let bones crumble and flesh wither ",
+        "Description": " Causes the target limb too become withered and unusable for the duration. The limb is still present and as such can suffer damage."
+    }, {
+        "name": "Heart Attack",
+        "Level": "10",
+        "Colour": "Onyx",
+        "Range": "20'",
+        "Duration": "Instant/10 seconds",
+        "Verbal": " The onyx dragon holds your heart in his claws, shudder and die now as they close... Heart Attack",
+        "Description": " Causes the targets heart to cease to beat for a few seconds causing them to suffer 18 TBLP, 18 to the chest (6 hits to a monsters) to which MAC does not apply. Additionally the target suffers a magical halt at the casters skill level. This is a flesh and blood effect, and immunity to flesh and blood effects applies."
+    }, {
+        "name": "Weaken the Body",
+        "Level": "10",
+        "Colour": "Onyx",
+        "Range": "20ft",
+        "Duration": "5 Minutes",
+        "Verbal": " The might of the onyx dragon grips your flesh and weakens your body ",
+        "Description": " Causes the target to suffer 25% more damage from any magical attack. This applies vs pure weapon blows, but not those with a physical component. Immunity to involuntary shape-shifting applies."
+
+    }
+]
