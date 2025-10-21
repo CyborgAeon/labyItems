@@ -1,0 +1,162 @@
+# ========================================
+# .NET / MAUI / Android project .gitignore
+# ========================================
+
+## Build outputs
+bin/
+obj/
+[Bb]uild/
+[Ll]ogs/
+
+## User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.vscode/
+.vs/
+.idea/
+*.userprefs
+
+## Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.DS_Store
+ehthumbs.db
+Thumbs.db
+
+## .NET specific
+project.lock.json
+artifacts/
+*.pidb
+*.svclog
+*.scc
+*.pdb
+
+## MAUI specific
+# Local platform-specific build folders
+Platforms/Android/bin/
+Platforms/Android/obj/
+Platforms/iOS/bin/
+Platforms/iOS/obj/
+Platforms/MacCatalyst/bin/
+Platforms/MacCatalyst/obj/
+Platforms/Tizen/bin/
+Platforms/Tizen/obj/
+# Generated Maui assets
+Resources/Raw/*.zip
+
+## Android / Java
+*.apk
+*.aab
+*.dex
+*.class
+*.keystore
+*.jks
+*.iml
+.gradle/
+.gradle-cache/
+.gradle/
+local.properties
+.gradle/gradle.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+## Android Studio / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+.gradle/
+build/
+captures/
+.navigation/
+*.hprof
+
+## Xcode / iOS
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+DerivedData/
+*.xcuserstate
+
+## macOS system
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+## Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.tlog
+
+## Docker
+docker-compose.override.yml
+**/docker-compose.override.yml
+**/docker-compose*.log
+**/docker-data/
+**/data/
+**/tmp/
+**/.docker/
+
+## Mongo / Local databases
+*.realm
+*.db
+*.db-shm
+*.db-wal
+data/
+local.mongo/
+local.db/
+
+## IDE settings
+.vscode/
+.vscode-test/
+*.code-workspace
+*.sln.iml
+
+## Misc
+*.orig
+*.rej
+*.patch
+*.tgz
+*.zip
+*.7z
+*.tar
+*.gz
+
+## Rider / JetBrains
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+## Security / Credentials
+secrets.json
+appsettings.Development.json
+*.pfx
+*.snk
+*.key
+*.pem
+*.cer
+
+## OS-specific
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ================================
+# End of .gitignore
+# ================================
