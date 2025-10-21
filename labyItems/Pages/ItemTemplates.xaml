@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="labyItems.Pages.ItemTemplates"
+             Title="Saved Items">
+  <CollectionView x:Name="ItemsView" SelectionMode="Single" SelectionChanged="OnSelected">
+    <CollectionView.ItemTemplate>
+      <DataTemplate>
+        <Frame Margin="12" Padding="14" CornerRadius="14" HasShadow="True">
+          <VerticalStackLayout Spacing="4">
+            <Label Text="{Binding ItemType}" FontAttributes="Bold" />
+            <Label Text="{Binding Description}" LineBreakMode="TailTruncation" MaxLines="2" />
+            <HorizontalStackLayout Spacing="12">
+              <Label Text="{Binding MakerPlayerName}" Opacity="0.7" />
+              <Label Text="{Binding MakerCharacterName}" Opacity="0.7" />
+            </HorizontalStackLayout>
+            <Label Text="{Binding CreatedDate, StringFormat='{}{0:d}'}" Opacity="0.6" />
+          </VerticalStackLayout>
+        </Frame>
+      </DataTemplate>
+    </CollectionView.ItemTemplate>
+  </CollectionView>
+</ContentPage>

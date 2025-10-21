@@ -15,9 +15,7 @@
 1. run `dotnet --info` to check above worked
 1. run `dotnet workload install maui` to install maui workload
 1. run `dotnet workload install maui-android` to install android workload
-
-
-
-
-# Add it to PATH (add this line to your shell profile too: ~/.zshrc)
-export PATH="$HOME/.dotnet:$PATH"
+## setup android studio
+to work on this, including generic commands for testing you'll need some basic setup. Download this via the gui, it's more straightforward than CLI
+1. go to https://developer.android.com/studio#cmdline-tools
+1. download, then install as appropriate.
