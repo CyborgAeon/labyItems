@@ -7,7 +7,7 @@ public static class SpellService
     private class SpellRaw
     {
         public string name { get; set; }
-        public int level { get; set; }
+        public string level { get; set; }
         public string colour { get; set; }
         public string range { get; set; }
         public string duration { get; set; }
@@ -33,8 +33,8 @@ public static class SpellService
             .Select(kvp =>
             {
                 var name = kvp.Key;
-                var power = kvp.Value.level;
                 var colour = kvp.Value.colour;
+                int.TryParse(kvp.Value.level, out int power);
                 return new SpellEntry(name, power, colour);
             })
             .OrderBy(e => e.Name)
