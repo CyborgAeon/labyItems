@@ -1,8 +1,10 @@
 using System.Text;
 using labyItems.Models;
+using labyItems.Pages.Configs;
 
 namespace labyItems.Pages;
 
+public sealed record CalcContribution(string Source, string Label, int Isp);
 public partial class IspCalculator : ContentPage
 {
     // ---- Result DTO returned to the form
@@ -18,10 +20,10 @@ public partial class IspCalculator : ContentPage
     private List<CalcRow> _magic = new();
     private List<CalcRow> _spirit = new();
     private List<CalcRow> _other = new();
-    private readonly List<Evocation.Result> _chosenEarthPowers = new();
-
+    private readonly List<EvocationConfig> _chosenEarthPowers = new();
+    private readonly List<CalcContribution> _contributions = new();
     public IspCalculator()
-    {            
+    {
         InitializeComponent();
 
         // Start with Weapon section
@@ -41,21 +43,32 @@ public partial class IspCalculator : ContentPage
 
     private async void OnEarthPower(object sender, EventArgs e)
     {
-        var picker = new Evocation();
+        var picker = new Evocation(); // your search page
         var picked = await picker.PickAsync(Navigation);
         if (picked == null) return;
 
-        _chosenEarthPowers.Add(picked);
+        // new: configure this evocation
+        var configPage = new EvocationConfigPage(picked);
+        var config = await configPage.Completion;
+        if (config == null) return;
 
-        // Show a small summary under the button
+        _contributions.Add(new CalcContribution(
+    Source: "Charm/Evocation",
+    Label: $"{config.BaseEvocation.Name}: Basic x{config.BasicPerDay}, " +
+           $"Advanced x{config.AdvancedPerDay}" +
+           $"{(config.AddBasic ? ", +Basic" : "")}" +
+           $"{(config.AddAdvanced ? ", +Advanced" : "")}" +
+           $"{(config.AddPrep ? ", +30s prep" : "")} → {config.Total} ISP",
+    Isp: config.Total));
+
+        // Optional: show a quick summary in-page
         EarthPowerCharmPickedLabel.IsVisible = true;
-        EarthPowerCharmPickedLabel.Text =
-            string.Join("\n", _chosenEarthPowers.Select(p =>
-                $"{p.Name} (Power {p.Power}) — {string.Join(", ", p.Fields)}"));
+        EarthPowerCharmPickedLabel.Text = string.Join("\n", _contributions
+            .Where(c => c.Source == "Charm/Evocation")
+            .Select(c => c.Label));
 
-        // If you want these to affect ISP, add their power here and refresh total:
-        // _earthPowerIsp = _chosenEarthPowers.Sum(p => p.Power);
-        // UpdateTotal();
+        // Recompute the calculator total (now includes this evocation)
+        UpdateTotal();
     }
 
     // Expose a task so the opener can await a result
@@ -126,27 +139,32 @@ public partial class IspCalculator : ContentPage
                     UpdateTotal();
             };
     }
-    
+
     private void RefreshCollections()
     {
         // force UI to refresh counts
-        MagicRows.ItemsSource = null; 
+        MagicRows.ItemsSource = null;
         MagicRows.ItemsSource = _magic;
-        SpiritRows.ItemsSource = null; 
+        SpiritRows.ItemsSource = null;
         SpiritRows.ItemsSource = _spirit;
-        OtherRows.ItemsSource = null; 
+        OtherRows.ItemsSource = null;
         OtherRows.ItemsSource = _other;
     }
-
     private int ComputeTotal()
     {
-        // Sum selected rows × cost, then round to multiples of 5 (spec says: cost values are multiples of 5; we’ll enforce)
-        int sum = _magic.Sum(r => r.Count * r.Cost)
-                + _spirit.Sum(r => r.Count * r.Cost)
-                + _other.Sum(r => r.Count * r.Cost);
+        // base rows in this page (weapon/spirit/other)
+        int baseRows =
+        (_magic?.Sum(r => r.Count * r.Cost) ?? 0) +
+        (_spirit?.Sum(r => r.Count * r.Cost) ?? 0) +
+        (_other?.Sum(r => r.Count * r.Cost) ?? 0);
 
-        // Safety: round to nearest 5 above zero
+        // ALL extras from subflows (Evocations etc.)
+        int extras = _contributions.Sum(c => c.Isp);
+
+        int sum = baseRows + extras;
         if (sum <= 0) return 0;
+
+        // keep your “multiples of 5” rule if you want it
         return (int)(Math.Round(sum / 5.0, MidpointRounding.AwayFromZero) * 5);
     }
 
@@ -157,31 +175,34 @@ public partial class IspCalculator : ContentPage
 
     private string BuildSummary()
     {
-        var sb = new StringBuilder();
-        void add(IEnumerable<CalcRow> rows, string header)
+        var lines = new List<string>();
+
+        // Example: summarize the rows that were selected in this page
+        void addRows(string header, IEnumerable<CalcRow> rows)
         {
-            var selected = rows.Where(r => r.Count > 0).ToList();
-            if (!selected.Any()) return;
-            sb.AppendLine(header + ":");
-            foreach (var r in selected)
-            {
-                var countPart = r.AllowMultiple ? $" x{r.Count}" : "";
-                sb.AppendLine($"• {r.Name}{countPart} ({r.Cost * r.Count} ISP)");
-            }
+            var picked = rows.Where(r => r.Count > 0).ToList();
+            if (picked.Count == 0) return;
+            lines.Add(header + ":");
+            lines.AddRange(picked.Select(r =>
+                $"• {r.Name}{(r.AllowMultiple ? $" x{r.Count}" : "")} ({r.Cost * r.Count} ISP)"));
         }
 
-        add(_magic, "Magic");
-        add(_spirit, "Spirit");
-        add(_other, "Other");
+        addRows("Magic", _magic);
+        addRows("Spirit", _spirit);
+        addRows("Other", _other);
+
+        // Add every contribution (Evocation configs, Miracles, Spells, etc.)
+        if (_contributions.Count > 0)
+        {
+            lines.Add("Charm:");
+            lines.AddRange(_contributions.Select(c => $"• {c.Label}"));
+        }
 
         var total = ComputeTotal();
-        if (total > 0)
-        {
-            sb.AppendLine($"Total ISP: {total}");
-        }
-        return sb.ToString().Trim();
-    }
+        if (total > 0) lines.Add($"Total ISP: {total}");
 
+        return string.Join("\n", lines);
+    }
     private async void OnReturn(object sender, EventArgs e)
     {
         var result = new CalcResult
