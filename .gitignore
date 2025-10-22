@@ -163,3 +163,8 @@ $RECYCLE.BIN/
 # ================================
 */project.nuget.cache
 */.DS_Store
+
+labyItems/Resources/Raw/*
+.DS_Store
+labyItems/.DS_Store
+labyItems/Resources/.DS_Store

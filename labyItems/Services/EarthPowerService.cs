@@ -18,10 +18,9 @@ public static class EarthPowerService
     {
         if (_cache != null) return _cache;
 
-        using var s = await FileSystem.OpenAppPackageFileAsync("evocs.json");
+        using var s = await FileSystem.OpenAppPackageFileAsync("druids_way/evocs.json");
         using var r = new StreamReader(s);
         var json = await r.ReadToEndAsync();
-
         var dict = JsonSerializer.Deserialize<Dictionary<string, EvocRaw>>(json)
                    ?? new Dictionary<string, EvocRaw>();
 
