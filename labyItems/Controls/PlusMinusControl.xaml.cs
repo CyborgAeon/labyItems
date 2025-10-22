@@ -5,7 +5,6 @@ public partial class PlusMinusControl : ContentView
     public PlusMinusControl()
     {
         InitializeComponent();
-        BindingContext = this;
     }
 
     public static readonly BindableProperty AllowMultipleProperty =

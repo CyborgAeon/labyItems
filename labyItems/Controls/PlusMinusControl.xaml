@@ -2,10 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="labyItems.Controls.PlusMinusControl"
-             x:Name="Root">
+             x:Name="Self">
   <HorizontalStackLayout Spacing="6" HorizontalOptions="End" VerticalOptions="Center">
     <Button Text="-" Clicked="OnMinus"/>
-    <Label Text="{Binding Source={x:Reference Root}, Path=Count}"
+    <!-- Bind to *this control’s* Count via x:Reference, not BindingContext -->
+    <Label Text="{Binding Source={x:Reference Self}, Path=Count}"
            WidthRequest="24" HorizontalTextAlignment="Center" />
     <Button Text="+" Clicked="OnPlus"/>
   </HorizontalStackLayout>

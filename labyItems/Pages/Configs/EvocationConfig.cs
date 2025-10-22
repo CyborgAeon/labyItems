@@ -1,71 +1,82 @@
-
+// Pages/Configs/EvocationConfig.cs
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using labyItems.Services;
+
 namespace labyItems.Pages.Configs;
 
 public class EvocationConfig : INotifyPropertyChanged
 {
-    public EarthPowerService.EvocEntry BaseEvocation { get; }
-    public EvocationConfig(EarthPowerService.EvocEntry baseEvoc)
-    {
-        BaseEvocation = baseEvoc;
-    }
-
+    private string _evocationName = "";
+    private int _power;
     private int _basicPerDay;
     private int _advancedPerDay;
     private bool _addBasic;
     private bool _addAdvanced;
     private bool _addPrep;
 
+    public string EvocationName
+    {
+        get => _evocationName;
+        set { if (_evocationName == value) return; _evocationName = value; OnPropertyChanged(); OnPropertyChanged(nameof(Title)); OnPropertyChanged(nameof(Total)); }
+    }
+
+    public int Power
+    {
+        get => _power;
+        set { if (_power == value) return; _power = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
+    }
+
+    // your existing fields
     public int BasicPerDay
     {
         get => _basicPerDay;
-        set { _basicPerDay = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
+        set { if (_basicPerDay == value) return; _basicPerDay = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
     }
     public int AdvancedPerDay
     {
         get => _advancedPerDay;
-        set { _advancedPerDay = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
+        set { if (_advancedPerDay == value) return; _advancedPerDay = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
     }
-
     public bool AddBasic
     {
         get => _addBasic;
-        set { _addBasic = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
+        set { if (_addBasic == value) return; _addBasic = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
     }
     public bool AddAdvanced
     {
         get => _addAdvanced;
-        set { _addAdvanced = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
+        set { if (_addAdvanced == value) return; _addAdvanced = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
     }
     public bool AddPrep
     {
         get => _addPrep;
-        set { _addPrep = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
+        set { if (_addPrep == value) return; _addPrep = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
     }
 
+    public string Title => string.IsNullOrWhiteSpace(EvocationName) ? "Evocation (none selected)" : EvocationName;
+
+    // ISP formula uses "Power"
     public int Total
     {
         get
         {
-            var p = BaseEvocation.Power;
-            double total = 0;
-
-            total += 2 * p * BasicPerDay;
-            total += 3 * p * AdvancedPerDay;
-
-            if (AddBasic) total += 15;
-            if (AddAdvanced) total += 18;
-
-            if (AddPrep)
-                total *= 1.5;
-
-            return (int)Math.Round(total);
+            double t = 0;
+            t += 2 * Power * BasicPerDay;
+            t += 3 * Power * AdvancedPerDay;
+            if (AddBasic) t += 15;
+            if (AddAdvanced) t += 18;
+            if (AddPrep) t *= 1.5;
+            return (int)Math.Round(t);
         }
     }
 
+    public void ApplyEvocation(Evocation.Result picked)
+    {
+        EvocationName = picked.Name;
+        Power = picked.Power;
+    }
+
     public event PropertyChangedEventHandler? PropertyChanged;
-    void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? name = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    void OnPropertyChanged([CallerMemberName] string? n = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
 }

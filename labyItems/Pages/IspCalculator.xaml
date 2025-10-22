@@ -31,10 +31,10 @@
       </HorizontalStackLayout>
       <!--  Charm options  -->
       <VerticalStackLayout
-        x:Name="CharmSection"
+        x:Name="CharmCategoryPage"
         IsVisible="False"
         Spacing="10">
-        <Button Clicked="OnEarthPower" Text="EarthPower" />
+        <Button Clicked="OnCharmEarthPower" Text="EarthPower" />
         <Label x:Name="EarthPowerCharmPickedLabel" IsVisible="False" />
       </VerticalStackLayout>
       <!--  Weapon options  -->
