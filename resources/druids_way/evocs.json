@@ -1,1 +1,906 @@
-{"Toughened Hide":{"power":"6","fields":["Summer","Deserts","Horned Man"]},"Greater Water of Spite":{"fields":["Rivers","Horned Man"],"power":"3"},"Plant Seed":{"fields":["Spring","Forests","Father of the World"],"power":"3"},"Eyes of the Eagle":{"fields":["Skies","Keeper of the Winds","Horned Man"],"power":"2"},"Deluges uplifting Gusts":{"power":"8","fields":["Skies","Keeper of the Winds"]},"Resist Cold":{"fields":["Summer","Deserts","Father of the World"],"power":"4"},"Shower of Flame":{"fields":["Summer","Deserts"],"power":"3"},"Quake":{"power":"4","fields":["Summer","Mountains","Father of the World"]},"Wall of Brambles":{"power":"6","fields":["Spring","Forests","Father of the World"]},"Gust of Wind":{"fields":["Autumn","Skies","Keeper of the Winds"],"power":"6"},"Aerie's Foul Feast":{"power":"5","fields":["Deserts","Shadow of the Dawn"]},"Stone Skin (Other)":{"fields":["Mountains","Father of the World"],"power":"3"},"Control Plant":{"power":"1","fields":["Forests","Father of the World"]},"Cobra Strike":{"fields":["Horned Man"],"power":"6"},"Slow Healing":{"fields":["Spring","Rivers","Mother Nature"],"power":"8"},"Wall of Wind":{"fields":["Spring","Skies","Keeper of the Winds"],"power":"5"},"Bear's Rage":{"fields":["Forests","Horned Man"],"power":"6"},"Winter's Touch":{"fields":["Winter","Shadow of the Dawn"],"power":"7"},"Slow Death":{"power":"8","fields":["Winter","Deserts","Shadow of the Dawn"]},"Swarm of Flies":{"fields":["Summer","Deserts","Horned Man"],"power":"10"},"Animate Medium Tree":{"fields":["Spring","Forests","Father of the World","Horned Man"],"power":"6"},"Creeping Swarm":{"power":"8","fields":["Autumn","Deserts","Shadow of the Dawn"]},"Oaken Spear":{"fields":["Summer","Forests","Horned Man"],"power":"6"},"Owl's Vision":{"power":"4","fields":["Skies","Father of the World","Horned Man"]},"Druidic Heal":{"fields":["Spring","Rivers","Mother Nature"],"power":"3"},"Neutrality to Plants":{"power":"4","fields":["Winter","Forests","Father of the World"]},"Life Bloom":{"fields":["Spring","Mother Nature"],"power":"6"},"Weathered Bark":{"power":"3","fields":["Autumn","Forests","Horned Man"]},"Neutralise Poison":{"fields":["Rivers","Mother Nature"],"power":"6"},"Natural Brew":{"fields":["Rivers","Mother Nature"],"power":"2"},"Control Animal":{"fields":["Forests","Father of the World"],"power":"1"},"Hand Fire":{"fields":["Summer","Deserts"],"power":"1"},"Warping":{"power":"2","fields":["Autumn","Forests","Shadow of the Dawn"]},"Meld With Earth":{"power":"7","fields":["Autumn","Mountains","Father of the World"]},"Petrification":{"power":"6","fields":["Autumn","Mountains","Horned Man"]},"Soothe Wounds":{"fields":["Spring","Rivers","Mother Nature"],"power":"5"},"Cause Disease":{"fields":["Autumn","Deserts","Shadow of the Dawn"],"power":"4"},"Invisibility to Animals":{"power":"3","fields":["Spring","Autumn","Forests","Horned Man"]},"Speak With Plants":{"fields":["Forests","Father of the World"],"power":"3"},"Predict Weather":{"power":"1","fields":["Spring","Summer","Autumn","Winter"]},"Call Lightning":{"fields":["Spring","Skies","Keeper of the Winds"],"power":"8"},"Lesser Water of Spite":{"power":"1","fields":["Rivers","Horned Man"]},"Druidic Harm":{"fields":["Winter","Deserts","Shadow of the Dawn"],"power":"3"},"Iron Skin":{"power":"8","fields":["Mountains","Horned Man"]},"Cat's Grace":{"power":"3","fields":["Mountains","Horned Man"]},"Cudgel":{"fields":["Summer","Forests","Horned Man"],"power":"4"},"Greater Ensnare":{"power":"6","fields":["Autumn","Forests","Horned Man"]},"Ties That Bind":{"fields":["Forests","Father of the World"],"power":"1"},"Spark":{"fields":["Spring","Skies","Keeper of the Winds"],"power":"2"},"Slumber of the Trees":{"power":"3","fields":["Winter","Forests","Shadow of the Dawn"]},"Cure Disease":{"fields":["Spring","Rivers","Mother Nature"],"power":"5"},"Slow Poison":{"fields":["Rivers","Mother Nature"],"power":"2"},"Camouflage":{"fields":["Autumn","Forests","Horned Man"],"power":"3"},"Oak Nature":{"power":"6","fields":["Summer","Forests","Horned Man"]},"Verdant Flesh":{"fields":["Mother Nature"],"power":"10"},"Stumbling Tread":{"fields":["Autumn","Forests","Father of the World"],"power":"7"},"Travelling the World Tree":{"power":"12","fields":["Forests","Father of the World"]},"Wither":{"fields":["Autumn","Deserts","Shadow of the Dawn"],"power":"8"},"Stone Skin (Self)":{"fields":["Mountains","Father of the World"],"power":"2"},"Hasten Venom":{"fields":["Rivers","Horned Man"],"power":"1"},"Forest Shift":{"fields":["Summer","Forests","Horned Man"],"power":"7"},"Bandage Infusion":{"fields":["Autumn","Mother Nature"],"power":"1"},"Regrowth":{"fields":["Spring","Rivers","Mother Nature"],"power":"7"},"Quickening":{"power":"4","fields":["Spring","Forests","Father of the World"]},"Conjure Cloud":{"fields":["Spring","Skies","Keeper of the Winds"],"power":"5"},"Corroding Touch":{"fields":["Winter","Rivers","Shadow of the Dawn"],"power":"1"},"Ears of the Wolf":{"fields":["Forests","Horned Man"],"power":"4"},"Animate Small Tree":{"power":"5","fields":["Spring","Forests","Father of the World","Horned Man"]},"Envenom":{"power":"7","fields":["Rivers","Horned Man"]},"Greater Water of Life":{"power":"3","fields":["Spring","Rivers","Mother Nature"]},"Spider's Silk":{"fields":["Mountains","Father of the World"],"power":"4"},"Bramble's Touch":{"power":"2","fields":["Autumn","Forests","Horned Man"]},"Breeze":{"power":"3","fields":["Spring","Skies","Keeper of the Winds"]},"Resist Fire":{"fields":["Winter","Rivers","Keeper of the Winds"],"power":"4"},"Wind Walk (Other)":{"power":"4","fields":["Spring","Skies","Keeper of the Winds"]},"Corrosion":{"fields":["Winter","Rivers","Shadow of the Dawn"],"power":"2"},"Speak to Animals":{"fields":["Forests","Father of the World"],"power":"3"},"Searing Flame":{"fields":["Summer","Deserts"],"power":"3"},"Endurance of the Mountains ":{"power":"7","fields":["Mountains","Father of the World"]},"Trip":{"power":"2","fields":["Autumn","Forests","Father of the World"]},"Hail Storm":{"fields":["Winter","Skies","Keeper of the Winds"],"power":"5"},"Cleansing Fire":{"fields":["Summer","Deserts","Mother Nature"],"power":"6"},"Druidic Total Heal":{"power":"10","fields":["Spring","Rivers","Mother Nature"]},"Greater Cudgel":{"power":"7","fields":["Summer","Forests","Horned Man"]},"Springs soothing rain":{"fields":["Spring","Mother Nature"],"power":"20"},"Grand Howl":{"fields":["Forests","Horned Man"],"power":"7"},"Life's Memories":{"fields":["Spring","Forests","Father of the World"],"power":"2"},"Create Water":{"fields":["Spring","Rivers","Mother Nature"],"power":"1"},"Puma's Speed":{"power":"5","fields":["Deserts","Horned Man"]},"Bosleys Creeping Vines":{"power":"6","fields":["Forests"]},"Salmon Leap":{"power":"3","fields":["Rivers"]},"Greater Druidic Harm":{"power":"6","fields":["Winter","Deserts","Shadow of the Dawn"]},"Wolf Howl":{"fields":["Forests","Horned Man"],"power":"4"},"Wall of Thorns":{"fields":["Spring","Forests","Father of the World"],"power":"4"},"Fire's Touch":{"fields":["Summer","Deserts","Father of the World"],"power":"4"},"Remus' Tremors":{"power":"10","fields":["Mountains"]},"Stout Branches":{"power":"5","fields":["Summer","Forests","Father of the World"]},"Animal Large Tree":{"power":"8","fields":["Spring","Forests","Father of the World","Horned Man"]},"Natural Death":{"fields":["Winter","Deserts","Shadow of the Dawn"],"power":"10"},"Rising Sap":{"fields":["Spring","Forests","Mother Nature"],"power":"6"},"Wind Walk (Self)":{"fields":["Spring","Skies","Keeper of the Winds"],"power":"3"},"Tiger's Prowl":{"fields":["Forests","Horned Man"],"power":"8"},"Barkskin":{"power":"2","fields":["Summer","Forests","Horned Man"]},"Water from the Fountain of Youth":{"power":"4","fields":["Rivers","Mother Nature"]},"Calm Animals":{"fields":["Winter","Forests","Father of the World"],"power":"4"},"Dawn's Light":{"power":"6","fields":["Summer","Deserts","Father of the World"]},"Lesser Druidic Harm":{"power":"1","fields":["Winter","Deserts","Shadow of the Dawn"]},"Ensnare":{"fields":["Autumn","Forests","Horned Man"],"power":"2"},"Lesser Water of Life":{"fields":["Spring","Rivers","Mother Nature"],"power":"1"},"Walk Through Earth":{"fields":["Mountains","Father of the World"],"power":"10"},"Sloth's Speed":{"fields":["Shadow of the Dawn"],"power":"6"},"Font of Knowledge":{"fields":["Rivers","Father of the World"],"power":"4"},"Weasel's Agility":{"power":"2","fields":["Horned Man"]},"Greater Druidic Heal":{"power":"7","fields":["Spring","Rivers","Mother Nature"]},"De":{"fields":["Skies","Keeper of the Winds"],"power":"1"},"Warping Touch":{"fields":["Autumn","Forests","Shadow of the Dawn"],"power":"1"},"Breathe of Life":{"power":"10","fields":["Spring","Rivers","Mother Nature"]},"Well of Knowledge":{"power":"10","fields":["Rivers","Father of the World"]},"Neutrality to Animals":{"fields":["Winter","Forests","Father of the World"],"power":"4"}}
+{
+    "Toughened Hide": {
+        "power": "6",
+        "fields": [
+            "Summer",
+            "Deserts",
+            "Horned Man"
+        ]
+    },
+    "Greater Water of Spite": {
+        "fields": [
+            "Rivers",
+            "Horned Man"
+        ],
+        "power": "3"
+    },
+    "Plant Seed": {
+        "fields": [
+            "Spring",
+            "Forests",
+            "Father of the World"
+        ],
+        "power": "3"
+    },
+    "Eyes of the Eagle": {
+        "fields": [
+            "Skies",
+            "Keeper of the Winds",
+            "Horned Man"
+        ],
+        "power": "2"
+    },
+    "Deluges uplifting Gusts": {
+        "power": "8",
+        "fields": [
+            "Skies",
+            "Keeper of the Winds"
+        ]
+    },
+    "Resist Cold": {
+        "fields": [
+            "Summer",
+            "Deserts",
+            "Father of the World"
+        ],
+        "power": "4"
+    },
+    "Shower of Flame": {
+        "fields": [
+            "Summer",
+            "Deserts"
+        ],
+        "power": "3"
+    },
+    "Quake": {
+        "power": "4",
+        "fields": [
+            "Summer",
+            "Mountains",
+            "Father of the World"
+        ]
+    },
+    "Wall of Brambles": {
+        "power": "6",
+        "fields": [
+            "Spring",
+            "Forests",
+            "Father of the World"
+        ]
+    },
+    "Gust of Wind": {
+        "fields": [
+            "Autumn",
+            "Skies",
+            "Keeper of the Winds"
+        ],
+        "power": "6"
+    },
+    "Aerie's Foul Feast": {
+        "power": "5",
+        "fields": [
+            "Deserts",
+            "Shadow of the Dawn"
+        ]
+    },
+    "Stone Skin (Other)": {
+        "fields": [
+            "Mountains",
+            "Father of the World"
+        ],
+        "power": "3"
+    },
+    "Control Plant": {
+        "power": "1",
+        "fields": [
+            "Forests",
+            "Father of the World"
+        ]
+    },
+    "Cobra Strike": {
+        "fields": [
+            "Horned Man"
+        ],
+        "power": "6"
+    },
+    "Slow Healing": {
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ],
+        "power": "8"
+    },
+    "Wall of Wind": {
+        "fields": [
+            "Spring",
+            "Skies",
+            "Keeper of the Winds"
+        ],
+        "power": "5"
+    },
+    "Bear's Rage": {
+        "fields": [
+            "Forests",
+            "Horned Man"
+        ],
+        "power": "6"
+    },
+    "Winter's Touch": {
+        "fields": [
+            "Winter",
+            "Shadow of the Dawn"
+        ],
+        "power": "7"
+    },
+    "Slow Death": {
+        "power": "8",
+        "fields": [
+            "Winter",
+            "Deserts",
+            "Shadow of the Dawn"
+        ]
+    },
+    "Swarm of Flies": {
+        "fields": [
+            "Summer",
+            "Deserts",
+            "Horned Man"
+        ],
+        "power": "10"
+    },
+    "Animate Medium Tree": {
+        "fields": [
+            "Spring",
+            "Forests",
+            "Father of the World",
+            "Horned Man"
+        ],
+        "power": "6"
+    },
+    "Creeping Swarm": {
+        "power": "8",
+        "fields": [
+            "Autumn",
+            "Deserts",
+            "Shadow of the Dawn"
+        ]
+    },
+    "Oaken Spear": {
+        "fields": [
+            "Summer",
+            "Forests",
+            "Horned Man"
+        ],
+        "power": "6"
+    },
+    "Owl's Vision": {
+        "power": "4",
+        "fields": [
+            "Skies",
+            "Father of the World",
+            "Horned Man"
+        ]
+    },
+    "Druidic Heal": {
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ],
+        "power": "3"
+    },
+    "Neutrality to Plants": {
+        "power": "4",
+        "fields": [
+            "Winter",
+            "Forests",
+            "Father of the World"
+        ]
+    },
+    "Life Bloom": {
+        "fields": [
+            "Spring",
+            "Mother Nature"
+        ],
+        "power": "6"
+    },
+    "Weathered Bark": {
+        "power": "3",
+        "fields": [
+            "Autumn",
+            "Forests",
+            "Horned Man"
+        ]
+    },
+    "Neutralise Poison": {
+        "fields": [
+            "Rivers",
+            "Mother Nature"
+        ],
+        "power": "6"
+    },
+    "Natural Brew": {
+        "fields": [
+            "Rivers",
+            "Mother Nature"
+        ],
+        "power": "2"
+    },
+    "Control Animal": {
+        "fields": [
+            "Forests",
+            "Father of the World"
+        ],
+        "power": "1"
+    },
+    "Hand Fire": {
+        "fields": [
+            "Summer",
+            "Deserts"
+        ],
+        "power": "1"
+    },
+    "Warping": {
+        "power": "2",
+        "fields": [
+            "Autumn",
+            "Forests",
+            "Shadow of the Dawn"
+        ]
+    },
+    "Meld With Earth": {
+        "power": "7",
+        "fields": [
+            "Autumn",
+            "Mountains",
+            "Father of the World"
+        ]
+    },
+    "Petrification": {
+        "power": "6",
+        "fields": [
+            "Autumn",
+            "Mountains",
+            "Horned Man"
+        ]
+    },
+    "Soothe Wounds": {
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ],
+        "power": "5"
+    },
+    "Cause Disease": {
+        "fields": [
+            "Autumn",
+            "Deserts",
+            "Shadow of the Dawn"
+        ],
+        "power": "4"
+    },
+    "Invisibility to Animals": {
+        "power": "3",
+        "fields": [
+            "Spring",
+            "Autumn",
+            "Forests",
+            "Horned Man"
+        ]
+    },
+    "Speak With Plants": {
+        "fields": [
+            "Forests",
+            "Father of the World"
+        ],
+        "power": "3"
+    },
+    "Predict Weather": {
+        "power": "1",
+        "fields": [
+            "Spring",
+            "Summer",
+            "Autumn",
+            "Winter"
+        ]
+    },
+    "Call Lightning": {
+        "fields": [
+            "Spring",
+            "Skies",
+            "Keeper of the Winds"
+        ],
+        "power": "8"
+    },
+    "Lesser Water of Spite": {
+        "power": "1",
+        "fields": [
+            "Rivers",
+            "Horned Man"
+        ]
+    },
+    "Druidic Harm": {
+        "fields": [
+            "Winter",
+            "Deserts",
+            "Shadow of the Dawn"
+        ],
+        "power": "3"
+    },
+    "Iron Skin": {
+        "power": "8",
+        "fields": [
+            "Mountains",
+            "Horned Man"
+        ]
+    },
+    "Cat's Grace": {
+        "power": "3",
+        "fields": [
+            "Mountains",
+            "Horned Man"
+        ]
+    },
+    "Cudgel": {
+        "fields": [
+            "Summer",
+            "Forests",
+            "Horned Man"
+        ],
+        "power": "4"
+    },
+    "Greater Ensnare": {
+        "power": "6",
+        "fields": [
+            "Autumn",
+            "Forests",
+            "Horned Man"
+        ]
+    },
+    "Ties That Bind": {
+        "fields": [
+            "Forests",
+            "Father of the World"
+        ],
+        "power": "1"
+    },
+    "Spark": {
+        "fields": [
+            "Spring",
+            "Skies",
+            "Keeper of the Winds"
+        ],
+        "power": "2"
+    },
+    "Slumber of the Trees": {
+        "power": "3",
+        "fields": [
+            "Winter",
+            "Forests",
+            "Shadow of the Dawn"
+        ]
+    },
+    "Cure Disease": {
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ],
+        "power": "5"
+    },
+    "Slow Poison": {
+        "fields": [
+            "Rivers",
+            "Mother Nature"
+        ],
+        "power": "2"
+    },
+    "Camouflage": {
+        "fields": [
+            "Autumn",
+            "Forests",
+            "Horned Man"
+        ],
+        "power": "3"
+    },
+    "Oak Nature": {
+        "power": "6",
+        "fields": [
+            "Summer",
+            "Forests",
+            "Horned Man"
+        ]
+    },
+    "Verdant Flesh": {
+        "fields": [
+            "Mother Nature"
+        ],
+        "power": "10"
+    },
+    "Stumbling Tread": {
+        "fields": [
+            "Autumn",
+            "Forests",
+            "Father of the World"
+        ],
+        "power": "7"
+    },
+    "Travelling the World Tree": {
+        "power": "12",
+        "fields": [
+            "Forests",
+            "Father of the World"
+        ]
+    },
+    "Wither": {
+        "fields": [
+            "Autumn",
+            "Deserts",
+            "Shadow of the Dawn"
+        ],
+        "power": "8"
+    },
+    "Stone Skin (Self)": {
+        "fields": [
+            "Mountains",
+            "Father of the World"
+        ],
+        "power": "2"
+    },
+    "Hasten Venom": {
+        "fields": [
+            "Rivers",
+            "Horned Man"
+        ],
+        "power": "1"
+    },
+    "Forest Shift": {
+        "fields": [
+            "Summer",
+            "Forests",
+            "Horned Man"
+        ],
+        "power": "7"
+    },
+    "Bandage Infusion": {
+        "fields": [
+            "Autumn",
+            "Mother Nature"
+        ],
+        "power": "1"
+    },
+    "Regrowth": {
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ],
+        "power": "7"
+    },
+    "Quickening": {
+        "power": "4",
+        "fields": [
+            "Spring",
+            "Forests",
+            "Father of the World"
+        ]
+    },
+    "Conjure Cloud": {
+        "fields": [
+            "Spring",
+            "Skies",
+            "Keeper of the Winds"
+        ],
+        "power": "5"
+    },
+    "Corroding Touch": {
+        "fields": [
+            "Winter",
+            "Rivers",
+            "Shadow of the Dawn"
+        ],
+        "power": "1"
+    },
+    "Ears of the Wolf": {
+        "fields": [
+            "Forests",
+            "Horned Man"
+        ],
+        "power": "4"
+    },
+    "Animate Small Tree": {
+        "power": "5",
+        "fields": [
+            "Spring",
+            "Forests",
+            "Father of the World",
+            "Horned Man"
+        ]
+    },
+    "Envenom": {
+        "power": "7",
+        "fields": [
+            "Rivers",
+            "Horned Man"
+        ]
+    },
+    "Greater Water of Life": {
+        "power": "3",
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ]
+    },
+    "Spider's Silk": {
+        "fields": [
+            "Mountains",
+            "Father of the World"
+        ],
+        "power": "4"
+    },
+    "Bramble's Touch": {
+        "power": "2",
+        "fields": [
+            "Autumn",
+            "Forests",
+            "Horned Man"
+        ]
+    },
+    "Breeze": {
+        "power": "3",
+        "fields": [
+            "Spring",
+            "Skies",
+            "Keeper of the Winds"
+        ]
+    },
+    "Resist Fire": {
+        "fields": [
+            "Winter",
+            "Rivers",
+            "Keeper of the Winds"
+        ],
+        "power": "4"
+    },
+    "Wind Walk (Other)": {
+        "power": "4",
+        "fields": [
+            "Spring",
+            "Skies",
+            "Keeper of the Winds"
+        ]
+    },
+    "Corrosion": {
+        "fields": [
+            "Winter",
+            "Rivers",
+            "Shadow of the Dawn"
+        ],
+        "power": "2"
+    },
+    "Speak to Animals": {
+        "fields": [
+            "Forests",
+            "Father of the World"
+        ],
+        "power": "3"
+    },
+    "Searing Flame": {
+        "fields": [
+            "Summer",
+            "Deserts"
+        ],
+        "power": "3"
+    },
+    "Endurance of the Mountains ": {
+        "power": "7",
+        "fields": [
+            "Mountains",
+            "Father of the World"
+        ]
+    },
+    "Trip": {
+        "power": "2",
+        "fields": [
+            "Autumn",
+            "Forests",
+            "Father of the World"
+        ]
+    },
+    "Hail Storm": {
+        "fields": [
+            "Winter",
+            "Skies",
+            "Keeper of the Winds"
+        ],
+        "power": "5"
+    },
+    "Cleansing Fire": {
+        "fields": [
+            "Summer",
+            "Deserts",
+            "Mother Nature"
+        ],
+        "power": "6"
+    },
+    "Druidic Total Heal": {
+        "power": "10",
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ]
+    },
+    "Greater Cudgel": {
+        "power": "7",
+        "fields": [
+            "Summer",
+            "Forests",
+            "Horned Man"
+        ]
+    },
+    "Springs soothing rain": {
+        "fields": [
+            "Spring",
+            "Mother Nature"
+        ],
+        "power": "20"
+    },
+    "Grand Howl": {
+        "fields": [
+            "Forests",
+            "Horned Man"
+        ],
+        "power": "7"
+    },
+    "Life's Memories": {
+        "fields": [
+            "Spring",
+            "Forests",
+            "Father of the World"
+        ],
+        "power": "2"
+    },
+    "Create Water": {
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ],
+        "power": "1"
+    },
+    "Puma's Speed": {
+        "power": "5",
+        "fields": [
+            "Deserts",
+            "Horned Man"
+        ]
+    },
+    "Bosleys Creeping Vines": {
+        "power": "6",
+        "fields": [
+            "Forests"
+        ]
+    },
+    "Salmon Leap": {
+        "power": "3",
+        "fields": [
+            "Rivers"
+        ]
+    },
+    "Greater Druidic Harm": {
+        "power": "6",
+        "fields": [
+            "Winter",
+            "Deserts",
+            "Shadow of the Dawn"
+        ]
+    },
+    "Wolf Howl": {
+        "fields": [
+            "Forests",
+            "Horned Man"
+        ],
+        "power": "4"
+    },
+    "Wall of Thorns": {
+        "fields": [
+            "Spring",
+            "Forests",
+            "Father of the World"
+        ],
+        "power": "4"
+    },
+    "Fire's Touch": {
+        "fields": [
+            "Summer",
+            "Deserts",
+            "Father of the World"
+        ],
+        "power": "4"
+    },
+    "Remus' Tremors": {
+        "power": "10",
+        "fields": [
+            "Mountains"
+        ]
+    },
+    "Stout Branches": {
+        "power": "5",
+        "fields": [
+            "Summer",
+            "Forests",
+            "Father of the World"
+        ]
+    },
+    "Animal Large Tree": {
+        "power": "8",
+        "fields": [
+            "Spring",
+            "Forests",
+            "Father of the World",
+            "Horned Man"
+        ]
+    },
+    "Natural Death": {
+        "fields": [
+            "Winter",
+            "Deserts",
+            "Shadow of the Dawn"
+        ],
+        "power": "10"
+    },
+    "Rising Sap": {
+        "fields": [
+            "Spring",
+            "Forests",
+            "Mother Nature"
+        ],
+        "power": "6"
+    },
+    "Wind Walk (Self)": {
+        "fields": [
+            "Spring",
+            "Skies",
+            "Keeper of the Winds"
+        ],
+        "power": "3"
+    },
+    "Tiger's Prowl": {
+        "fields": [
+            "Forests",
+            "Horned Man"
+        ],
+        "power": "8"
+    },
+    "Barkskin": {
+        "power": "2",
+        "fields": [
+            "Summer",
+            "Forests",
+            "Horned Man"
+        ]
+    },
+    "Water from the Fountain of Youth": {
+        "power": "4",
+        "fields": [
+            "Rivers",
+            "Mother Nature"
+        ]
+    },
+    "Calm Animals": {
+        "fields": [
+            "Winter",
+            "Forests",
+            "Father of the World"
+        ],
+        "power": "4"
+    },
+    "Dawn's Light": {
+        "power": "6",
+        "fields": [
+            "Summer",
+            "Deserts",
+            "Father of the World"
+        ]
+    },
+    "Lesser Druidic Harm": {
+        "power": "1",
+        "fields": [
+            "Winter",
+            "Deserts",
+            "Shadow of the Dawn"
+        ]
+    },
+    "Ensnare": {
+        "fields": [
+            "Autumn",
+            "Forests",
+            "Horned Man"
+        ],
+        "power": "2"
+    },
+    "Lesser Water of Life": {
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ],
+        "power": "1"
+    },
+    "Walk Through Earth": {
+        "fields": [
+            "Mountains",
+            "Father of the World"
+        ],
+        "power": "10"
+    },
+    "Sloth's Speed": {
+        "fields": [
+            "Shadow of the Dawn"
+        ],
+        "power": "6"
+    },
+    "Font of Knowledge": {
+        "fields": [
+            "Rivers",
+            "Father of the World"
+        ],
+        "power": "4"
+    },
+    "Weasel's Agility": {
+        "power": "2",
+        "fields": [
+            "Horned Man"
+        ]
+    },
+    "Greater Druidic Heal": {
+        "power": "7",
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ]
+    },
+    "De": {
+        "fields": [
+            "Skies",
+            "Keeper of the Winds"
+        ],
+        "power": "1"
+    },
+    "Warping Touch": {
+        "fields": [
+            "Autumn",
+            "Forests",
+            "Shadow of the Dawn"
+        ],
+        "power": "1"
+    },
+    "Breathe of Life": {
+        "power": "10",
+        "fields": [
+            "Spring",
+            "Rivers",
+            "Mother Nature"
+        ]
+    },
+    "Well of Knowledge": {
+        "power": "10",
+        "fields": [
+            "Rivers",
+            "Father of the World"
+        ]
+    },
+    "Neutrality to Animals": {
+        "fields": [
+            "Winter",
+            "Forests",
+            "Father of the World"
+        ],
+        "power": "4"
+    }
+}

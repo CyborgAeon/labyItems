@@ -1,4 +1,5 @@
 using System.Text;
+using labyItems.Models;
 
 namespace labyItems.Pages;
 
@@ -11,31 +12,20 @@ public partial class IspCalculator : ContentPage
         public string Summary { get; set; } = string.Empty;
     }
 
-    // ---- Row VM used in the UI
-    public class CalcRow
-    {
-        public string Name { get; init; } = "";
-        public int Cost { get; init; }    // cost per unit (always multiple of 5)
-        public bool AllowMultiple { get; init; }
-        public int Count { get; set; }    // 0/1 for toggles, or any >=0 if multiples
-
-        public string CostLabel => Cost.ToString();
-    }
-
     private TaskCompletionSource<CalcResult?>? _tcs;
 
     // Data sources for Weapon
     private List<CalcRow> _magic = new();
     private List<CalcRow> _spirit = new();
     private List<CalcRow> _other = new();
+    private readonly List<Evocation.Result> _chosenEarthPowers = new();
 
     public IspCalculator()
-    {
+    {            
         InitializeComponent();
 
         // Start with Weapon section
         BuildWeaponRows();
-
         MagicRows.ItemsSource = _magic;
         SpiritRows.ItemsSource = _spirit;
         OtherRows.ItemsSource = _other;
@@ -43,10 +33,29 @@ public partial class IspCalculator : ContentPage
         // Category toggles: only Weapon implemented now
         RbWeapon.CheckedChanged += (_, e) => WeaponSection.IsVisible = RbWeapon.IsChecked;
         RbArmour.CheckedChanged += (_, e) => WeaponSection.IsVisible = RbWeapon.IsChecked;
-        RbCharm.CheckedChanged  += (_, e) => WeaponSection.IsVisible = RbWeapon.IsChecked;
+        RbCharm.CheckedChanged += (_, e) => { WeaponSection.IsVisible = false; CharmSection.IsVisible = RbCharm.IsChecked; };
         RbConsumable.CheckedChanged += (_, e) => WeaponSection.IsVisible = RbWeapon.IsChecked;
 
         UpdateTotal();
+    }
+
+    private async void OnEarthPower(object sender, EventArgs e)
+    {
+        var picker = new Evocation();
+        var picked = await picker.PickAsync(Navigation);
+        if (picked == null) return;
+
+        _chosenEarthPowers.Add(picked);
+
+        // Show a small summary under the button
+        EarthPowerCharmPickedLabel.IsVisible = true;
+        EarthPowerCharmPickedLabel.Text =
+            string.Join("\n", _chosenEarthPowers.Select(p =>
+                $"{p.Name} (Power {p.Power}) — {string.Join(", ", p.Fields)}"));
+
+        // If you want these to affect ISP, add their power here and refresh total:
+        // _earthPowerIsp = _chosenEarthPowers.Sum(p => p.Power);
+        // UpdateTotal();
     }
 
     // Expose a task so the opener can await a result
@@ -56,7 +65,6 @@ public partial class IspCalculator : ContentPage
         await nav.PushAsync(this);
         return await _tcs.Task;
     }
-
     private void BuildWeaponRows()
     {
         // MAGIC / VS GROUP
@@ -103,36 +111,31 @@ public partial class IspCalculator : ContentPage
 
             new() { Name = "Cut through Opponent’s Aura of Defence 1/day (5 mins)", Cost = 25, AllowMultiple = false },
         };
+        // Call after (re)building data
+        HookRows(_magic);
+        HookRows(_spirit);
+        HookRows(_other);
     }
 
-    // plus/minus handlers
-    private void OnPlusClicked(object sender, EventArgs e)
+    void HookRows(IEnumerable<CalcRow> rows)
     {
-        if ((sender as Button)?.CommandParameter is CalcRow row)
-        {
-            if (!row.AllowMultiple && row.Count >= 1) return; // toggle-like
-            row.Count++;
-            UpdateTotal();
-            RefreshCollections();
-        }
+        foreach (var r in rows)
+            r.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(CalcRow.Count))
+                    UpdateTotal();
+            };
     }
-
-    private void OnMinusClicked(object sender, EventArgs e)
-    {
-        if ((sender as Button)?.CommandParameter is CalcRow row)
-        {
-            if (row.Count > 0) row.Count--;
-            UpdateTotal();
-            RefreshCollections();
-        }
-    }
-
+    
     private void RefreshCollections()
     {
         // force UI to refresh counts
-        MagicRows.ItemsSource = null;  MagicRows.ItemsSource = _magic;
-        SpiritRows.ItemsSource = null; SpiritRows.ItemsSource = _spirit;
-        OtherRows.ItemsSource = null;  OtherRows.ItemsSource = _other;
+        MagicRows.ItemsSource = null; 
+        MagicRows.ItemsSource = _magic;
+        SpiritRows.ItemsSource = null; 
+        SpiritRows.ItemsSource = _spirit;
+        OtherRows.ItemsSource = null; 
+        OtherRows.ItemsSource = _other;
     }
 
     private int ComputeTotal()
@@ -167,9 +170,9 @@ public partial class IspCalculator : ContentPage
             }
         }
 
-        add(_magic,  "Magic");
+        add(_magic, "Magic");
         add(_spirit, "Spirit");
-        add(_other,  "Other");
+        add(_other, "Other");
 
         var total = ComputeTotal();
         if (total > 0)

@@ -1,68 +1,97 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="labyItems.Pages.IspCalculator"
-             Title="ISP Calculator">
+<ContentPage
+  x:Class="labyItems.Pages.IspCalculator"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:controls="clr-namespace:labyItems.Controls"
+  Title="ISP Calculator">
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="18">
 
-      <!-- Category selector -->
-      <Label Text="Select Category" FontAttributes="Bold" />
+      <!--  Category selector  -->
+      <Label FontAttributes="Bold" Text="Select Category" />
       <HorizontalStackLayout x:Name="CategoryRow" Spacing="12">
-        <RadioButton x:Name="RbArmour" Content="Armour/Shield" GroupName="cat" />
-        <RadioButton x:Name="RbWeapon" Content="Weapon" GroupName="cat" IsChecked="True" />
-        <RadioButton x:Name="RbCharm" Content="Charm" GroupName="cat" />
-        <RadioButton x:Name="RbConsumable" Content="Consumable" GroupName="cat" />
+        <RadioButton
+          x:Name="RbArmour"
+          Content="Armour/Shield"
+          GroupName="cat" />
+        <RadioButton
+          x:Name="RbWeapon"
+          Content="Weapon"
+          GroupName="cat"
+          IsChecked="True" />
+        <RadioButton
+          x:Name="RbCharm"
+          Content="Charm"
+          GroupName="cat" />
+        <RadioButton
+          x:Name="RbConsumable"
+          Content="Consumable"
+          GroupName="cat" />
       </HorizontalStackLayout>
-
-      <!-- Weapon options (first implemented) -->
+      <!--  Charm options  -->
+      <VerticalStackLayout
+        x:Name="CharmSection"
+        IsVisible="False"
+        Spacing="10">
+        <Button Clicked="OnEarthPower" Text="EarthPower" />
+        <Label x:Name="EarthPowerCharmPickedLabel" IsVisible="False" />
+      </VerticalStackLayout>
+      <!--  Weapon options  -->
       <VerticalStackLayout x:Name="WeaponSection" Spacing="10">
 
-        <Label Text="Magic / Vs Group" FontAttributes="Bold" />
+        <Label FontAttributes="Bold" Text="Magic / Vs Group" />
         <CollectionView x:Name="MagicRows">
           <CollectionView.ItemTemplate>
             <DataTemplate>
-              <Grid ColumnDefinitions="*,Auto,120" Padding="6">
+              <Grid Padding="6" ColumnDefinitions="*,Auto,120">
                 <Label Text="{Binding Name}" />
-                <Label Text="{Binding CostLabel}" Grid.Column="1" HorizontalTextAlignment="End" />
-                <HorizontalStackLayout Grid.Column="2" Spacing="6" HorizontalOptions="End">
-                  <Button Text="-" Clicked="OnMinusClicked" CommandParameter="{Binding}" />
-                  <Label Text="{Binding Count}" WidthRequest="24" HorizontalTextAlignment="Center" />
-                  <Button Text="+" Clicked="OnPlusClicked" CommandParameter="{Binding}" />
-                </HorizontalStackLayout>
+                <Label
+                  Grid.Column="1"
+                  HorizontalTextAlignment="End"
+                  Text="{Binding CostLabel}" />
               </Grid>
             </DataTemplate>
           </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Label Text="Spirit" FontAttributes="Bold" />
+        <Label FontAttributes="Bold" Text="Spirit" />
         <CollectionView x:Name="SpiritRows">
           <CollectionView.ItemTemplate>
             <DataTemplate>
-              <Grid ColumnDefinitions="*,Auto,120" Padding="6">
+              <Grid Padding="6" ColumnDefinitions="*,Auto,120">
                 <Label Text="{Binding Name}" />
-                <Label Text="{Binding CostLabel}" Grid.Column="1" HorizontalTextAlignment="End" />
-                <HorizontalStackLayout Grid.Column="2" Spacing="6" HorizontalOptions="End">
-                  <Button Text="-" Clicked="OnMinusClicked" CommandParameter="{Binding}" />
-                  <Label Text="{Binding Count}" WidthRequest="24" HorizontalTextAlignment="Center" />
-                  <Button Text="+" Clicked="OnPlusClicked" CommandParameter="{Binding}" />
-                </HorizontalStackLayout>
+                <Label
+                  Grid.Column="1"
+                  HorizontalTextAlignment="End"
+                  Text="{Binding CostLabel}" />
+                <controls:PlusMinusControl
+                  Grid.Column="2"
+                  AllowMultiple="{Binding AllowMultiple}"
+                  Count="{Binding Count, Mode=TwoWay}" />
               </Grid>
             </DataTemplate>
           </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Label Text="Mantic / Physical / Specials" FontAttributes="Bold" />
+        <Label FontAttributes="Bold" Text="Mantic / Physical / Specials" />
         <CollectionView x:Name="OtherRows">
           <CollectionView.ItemTemplate>
             <DataTemplate>
-              <Grid ColumnDefinitions="*,Auto,120" Padding="6">
+              <Grid Padding="6" ColumnDefinitions="*,Auto,120">
                 <Label Text="{Binding Name}" />
-                <Label Text="{Binding CostLabel}" Grid.Column="1" HorizontalTextAlignment="End" />
-                <HorizontalStackLayout Grid.Column="2" Spacing="6" HorizontalOptions="End">
-                  <Button Text="-" Clicked="OnMinusClicked" CommandParameter="{Binding}" />
-                  <Label Text="{Binding Count}" WidthRequest="24" HorizontalTextAlignment="Center" />
-                  <Button Text="+" Clicked="OnPlusClicked" CommandParameter="{Binding}" />
+                <Label
+                  Grid.Column="1"
+                  HorizontalTextAlignment="End"
+                  Text="{Binding CostLabel}" />
+                <HorizontalStackLayout
+                  Grid.Column="2"
+                  HorizontalOptions="End"
+                  Spacing="6">
+                  <controls:PlusMinusControl
+                    Grid.Column="2"
+                    AllowMultiple="{Binding AllowMultiple}"
+                    Count="{Binding Count, Mode=TwoWay}" />
                 </HorizontalStackLayout>
               </Grid>
             </DataTemplate>
@@ -71,12 +100,18 @@
 
       </VerticalStackLayout>
 
-      <!-- Totals + Return -->
-      <VerticalStackLayout Spacing="6" Padding="8,16,8,8">
-        <Label x:Name="TotalLabel" Text="Total: 0 ISP" FontAttributes="Bold" />
-        <Button Text="Return to Form" Clicked="OnReturn" HeightRequest="50" CornerRadius="12" />
+      <!--  Totals + Return  -->
+      <VerticalStackLayout Padding="8,16,8,8" Spacing="6">
+        <Label
+          x:Name="TotalLabel"
+          FontAttributes="Bold"
+          Text="Total: 0 ISP" />
+        <Button
+          Clicked="OnReturn"
+          CornerRadius="12"
+          HeightRequest="50"
+          Text="Return to Form" />
       </VerticalStackLayout>
-
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>

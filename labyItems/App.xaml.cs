@@ -9,6 +9,15 @@ public partial class App : Application
     {
         InitializeComponent();
         MainPage = new NavigationPage(new CharactersPage()); // first screen
+        AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+        {
+            System.Diagnostics.Debug.WriteLine($"[UNHANDLED] {e.ExceptionObject}");
+        };
+        TaskScheduler.UnobservedTaskException += (s, e) =>
+        {
+            System.Diagnostics.Debug.WriteLine($"[UNOBSERVED] {e.Exception}");
+        };
     }
+
 }
 
