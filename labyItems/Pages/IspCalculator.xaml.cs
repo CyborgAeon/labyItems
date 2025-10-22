@@ -11,16 +11,18 @@ public partial class IspCalculator : ContentPage
     private readonly ConsumableCategory _consumable = new();
 
     private ICalculatorCategory _active;
+    private bool _categoryLocked = false;
 
     public IspCalculator(ItemTypeEnum category)
     {
         InitializeComponent();
         RbWeapon.CheckedChanged += (_, e) => WeaponSection.IsVisible = RbWeapon.IsChecked;
         RbArmour.CheckedChanged += (_, e) => WeaponSection.IsVisible = RbWeapon.IsChecked;
-        RbCharm.CheckedChanged += (_, e) => {
+        RbCharm.CheckedChanged += (_, e) =>
+        {
             WeaponSection.IsVisible = false;
-            CharmCategoryPage.IsVisible = RbCharm.IsChecked; 
-         };
+            CharmCategoryPage.IsVisible = RbCharm.IsChecked;
+        };
         RbConsumable.CheckedChanged += (_, e) => WeaponSection.IsVisible = RbWeapon.IsChecked;
     }
 
@@ -31,28 +33,21 @@ public partial class IspCalculator : ContentPage
 
     private void SetActive(ICalculatorCategory cat)
     {
+        if (_categoryLocked) return;
         _active = cat;
+        // update visible sections etc...
         UpdateTotal();
-    }
-
-    private void UpdateTotal()
-    {
-        var (total, lines) = _active.AddToSummary();
-        TotalLabel.Text = $"Total: {total} ISP";
-
-        // Optionally show the lines live in the page:
-        // SummaryLabel.Text = string.Join("\n", lines);
     }
 
     // Return result to parent page
     private async void OnReturn(object sender, EventArgs e)
     {
-        var (total, lines) = _active.AddToSummary();
         var result = new CalcResult
         {
-            TotalIsp = total,
-            Summary = string.Join("\n", lines.Append($"Total ISP: {total}"))
+            TotalIsp = ComputeTotal(),
+            Summary = BuildSummary()
         };
+        _categoryLocked = false;
         _tcs?.TrySetResult(result);
         await Navigation.PopAsync();
     }
@@ -61,20 +56,16 @@ public partial class IspCalculator : ContentPage
 
     private async void OnCharmEarthPower(object sender, EventArgs e)
     {
+        _categoryLocked = true;
         var cfgPage = new EvocationConfigPage();
         await Navigation.PushAsync(cfgPage);
         var cfg = await cfgPage.Completion;
-        if (cfg == null) return;
+        if (cfg == null) { _categoryLocked = false; return; }
 
         _contributions.Add(new CalcContribution(
             Source: "Charm/EarthPower",
-            Label:
-                $"{cfg.EvocationName}: Basic x{cfg.BasicPerDay}, Advanced x{cfg.AdvancedPerDay}"
-                + (cfg.AddBasic ? ", +Basic" : "")
-                + (cfg.AddAdvanced ? ", +Advanced" : "")
-                + (cfg.AddPrep ? ", +30s prep" : "")
-                + $" → {cfg.Total} ISP",
-            Isp: cfg.Total));
+            Label: cfg.Summary,
+            Isp: cfg.TotalIsp));
 
         EarthPowerCharmPickedLabel.IsVisible = true;
         EarthPowerCharmPickedLabel.Text = string.Join("\n", _contributions
@@ -87,7 +78,8 @@ public partial class IspCalculator : ContentPage
     private async void OnCharmSpirit(object sender, EventArgs e)
     {
         // 1) Open SpiritConfig (stub for now)
-        // // var cfgPage = new SpiritConfigPage();               // new stub page below
+        // _categoryLocked = true;
+        // var cfgPage = new SpiritConfigPage();               // new stub page below
         // await Navigation.PushAsync(cfgPage);
         // var cfg = await cfgPage.Completion;                 // waits for Return
         // if (cfg is null) return;
@@ -126,8 +118,34 @@ public partial class IspCalculator : ContentPage
         await nav.PushAsync(this);
         return await _tcs.Task;
     }
-    private TaskCompletionSource<CalcResult?>? _tcs;
 
+    private TaskCompletionSource<CalcResult?>? _tcs;
+    private void UpdateTotal()
+    {
+        TotalLabel.Text = $"Total: {ComputeTotal()} ISP";
+    }
+
+    private int ComputeTotal()
+    {
+        var sum = _contributions.Sum(c => c.Isp);
+        if (sum <= 0) return 0;
+        return (int)(Math.Round(sum / 5.0, MidpointRounding.AwayFromZero) * 5);
+    }
+    private string BuildSummary()
+    {
+        var lines = new List<string>();
+
+        // If you also want row-based items (weapon/spirit/other), append them here...
+        // lines.AddRange(...)
+
+        // Add contributions
+        foreach (var c in _contributions)
+            lines.Add(c.Label);
+
+        var total = ComputeTotal();
+        if (total > 0) lines.Add($"Total ISP: {total}");
+        return string.Join("\n", lines);
+    }
 }
 
 

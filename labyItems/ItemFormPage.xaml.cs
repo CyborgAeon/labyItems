@@ -5,18 +5,18 @@ namespace labyItems;
 
 public partial class ItemFormPage : ContentPage
 {
-	private readonly Character _character;
+    private readonly Character _character;
 
-	public ItemFormPage(Character character)
-	{
-   		InitializeComponent();
+    public ItemFormPage(Character character)
+    {
+        InitializeComponent();
         _character = character;
         CharacterHeader.Text = $"Character: {_character.Name} ({_character.Class})";
         CreatedDatePicker.Date = DateTime.Now;
-		ItemTypePicker.ItemsSource = Enum.GetValues(typeof(labyItems.Models.ItemTypeEnum)).Cast<labyItems.Models.ItemTypeEnum>().ToList();
+        ItemTypePicker.ItemsSource = Enum.GetValues(typeof(labyItems.Models.ItemTypeEnum)).Cast<labyItems.Models.ItemTypeEnum>().ToList();
         MakerPlayerNameEntry.Text = _character.PlayerName;
         MakerCharacterNameEntry.Text = _character.Name;
-	}
+    }
 
     private async void OnViewSavedClicked(object sender, EventArgs e)
     {
@@ -41,14 +41,11 @@ public partial class ItemFormPage : ContentPage
         DnbuodSwitch.IsToggled = item.DoesNotBlowUpOnDeath;
     }
 
-private async void OnCalculateIsp(object sender, EventArgs e)
-{
-    // Open calculator, await result (total + summary text)
-    var page = new IspCalculator(ItemTypePicker.SelectedItem as ItemTypeEnum? ?? ItemTypeEnum.None);
-    var result = await page.GetResultAsync(Navigation);
-    if (result != null)
+    private async void OnCalculateIsp(object sender, EventArgs e)
     {
-        // Set ISP and append to description
+        var page = new IspCalculator(ItemTypePicker.SelectedItem as ItemTypeEnum? ?? ItemTypeEnum.None);
+        var result = await page.GetResultAsync(Navigation);
+        if (result == null) return;
         IspEntry.Text = result.TotalIsp.ToString();
         if (!string.IsNullOrWhiteSpace(result.Summary))
         {
@@ -57,9 +54,8 @@ private async void OnCalculateIsp(object sender, EventArgs e)
                 : $"{DescriptionEditor.Text}\n{result.Summary}";
         }
     }
-}
 
-	private async void OnSubmitClicked(object sender, EventArgs e)
+    private async void OnSubmitClicked(object sender, EventArgs e)
     {
         try
         {
@@ -85,41 +81,41 @@ private async void OnCalculateIsp(object sender, EventArgs e)
 
             await DisplayAlert("Item Created",
                 $"\nType: {item.ItemType}" +
-				$"\nMaker player name: {item.MakerPlayerName}" +
-				$"\nMaker character name: {item.MakerCharacterName}" + 
-				$"\nWitness name: {item.WitnessName}" +
-				$"\nRecipient player name: {item.RecipientPlayerName}" +
-				$"\nRecipient character name: {item.RecipientCharacterName}" +
-				$"\nRecipient character class: {item.RecipientCharacterClass}" +
+                $"\nMaker player name: {item.MakerPlayerName}" +
+                $"\nMaker character name: {item.MakerCharacterName}" +
+                $"\nWitness name: {item.WitnessName}" +
+                $"\nRecipient player name: {item.RecipientPlayerName}" +
+                $"\nRecipient character name: {item.RecipientCharacterName}" +
+                $"\nRecipient character class: {item.RecipientCharacterClass}" +
                 $"\nISP: {item.Isp}\n" +
-				$"\nDNBUOD: {item.DoesNotBlowUpOnDeath}\n" +
-				$"\nCreated: {item.CreatedDate:d}", "OK");
+                $"\nDNBUOD: {item.DoesNotBlowUpOnDeath}\n" +
+                $"\nCreated: {item.CreatedDate:d}", "OK");
 
-			string subject = $"{item.MakerCharacterName} item for {item.RecipientCharacterName}";
-    		string body = $"Type: {item.ItemType}\n" +
-						$"Maker: {item.MakerPlayerName}\n" +
-						$"Witness name: {item.WitnessName}\n" +
-						$"Recipient player: {item.RecipientPlayerName}\n" +
-						$"Recipient character: {item.RecipientCharacterName}\n" +
-						$"Recipient character: {item.RecipientCharacterClass}\n" +
-						$"Description: {item.Description}\n" +
-						$"ISP: {item.Isp}\n" +
-						$"Dnbuod: {item.DoesNotBlowUpOnDeath}\n" +
-						$"Created: {item.CreatedDate:d}";
+            string subject = $"{item.MakerCharacterName} item for {item.RecipientCharacterName}";
+            string body = $"Type: {item.ItemType}\n" +
+                        $"Maker: {item.MakerPlayerName}\n" +
+                        $"Witness name: {item.WitnessName}\n" +
+                        $"Recipient player: {item.RecipientPlayerName}\n" +
+                        $"Recipient character: {item.RecipientCharacterName}\n" +
+                        $"Recipient character: {item.RecipientCharacterClass}\n" +
+                        $"Description: {item.Description}\n" +
+                        $"ISP: {item.Isp}\n" +
+                        $"Dnbuod: {item.DoesNotBlowUpOnDeath}\n" +
+                        $"Created: {item.CreatedDate:d}";
 
-    string mailto = $"mailto:bradleyjamesbarfoot@gmail.com" +
-                    $"?subject={Uri.EscapeDataString(subject)}" +
-                    $"&body={Uri.EscapeDataString(body)}";
+            string mailto = $"mailto:bradleyjamesbarfoot@gmail.com" +
+                            $"?subject={Uri.EscapeDataString(subject)}" +
+                            $"&body={Uri.EscapeDataString(body)}";
 
-    try
-    {
-        await Launcher.OpenAsync(mailto);
-        LiteDbService.InsertItem(item);
-    }
-    catch (Exception ex)
-    {
-        await DisplayAlert("Error", $"Could not open mail client: {ex.Message}", "OK");
-    }
+            try
+            {
+                await Launcher.OpenAsync(mailto);
+                LiteDbService.InsertItem(item);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Could not open mail client: {ex.Message}", "OK");
+            }
         }
         catch (Exception ex)
         {
