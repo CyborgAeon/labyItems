@@ -1,5 +1,4 @@
 using labyItems.Services;
-using static labyItems.Services.EarthPowerService;
 
 namespace labyItems.Pages;
 
