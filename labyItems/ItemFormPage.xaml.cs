@@ -44,7 +44,7 @@ public partial class ItemFormPage : ContentPage
 private async void OnCalculateIsp(object sender, EventArgs e)
 {
     // Open calculator, await result (total + summary text)
-    var page = new IspCalculator();
+    var page = new IspCalculator(ItemTypePicker.SelectedItem as ItemTypeEnum? ?? ItemTypeEnum.None);
     var result = await page.GetResultAsync(Navigation);
     if (result != null)
     {
