@@ -6,7 +6,7 @@
   <CollectionView x:Name="ItemsView" SelectionMode="Single" SelectionChanged="OnSelected">
     <CollectionView.ItemTemplate>
       <DataTemplate>
-        <Frame Margin="12" Padding="14" CornerRadius="14" HasShadow="True">
+        <Border Margin="12" Padding="16" BackgroundColor="#21FFFFFF"  StrokeShape="RoundRectangle 14">
           <VerticalStackLayout Spacing="4">
             <Label Text="{Binding ItemType}" FontAttributes="Bold" />
             <Label Text="{Binding Description}" LineBreakMode="TailTruncation" MaxLines="2" />
@@ -16,7 +16,7 @@
             </HorizontalStackLayout>
             <Label Text="{Binding CreatedDate, StringFormat='{}{0:d}'}" Opacity="0.6" />
           </VerticalStackLayout>
-        </Frame>
+        </Border>
       </DataTemplate>
     </CollectionView.ItemTemplate>
   </CollectionView>

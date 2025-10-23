@@ -13,13 +13,13 @@
     <CollectionView x:Name="Results" SelectionMode="Single" SelectionChanged="OnPick">
       <CollectionView.ItemTemplate>
         <DataTemplate>
-          <Frame Padding="12" Margin="4" CornerRadius="12" HasShadow="True">
+          <Border Margin="12" Padding="16" BackgroundColor="#21FFFFFF" StrokeShape="RoundRectangle 14">
             <VerticalStackLayout Spacing="4">
               <Label Text="{Binding Name}" FontAttributes="Bold"/>
               <Label Text="{Binding FieldsText}" FontSize="12" Opacity="0.7"/>
               <Label Text="{Binding PowerText}" FontSize="12" Opacity="0.7"/>
             </VerticalStackLayout>
-          </Frame>
+          </Border>
         </DataTemplate>
       </CollectionView.ItemTemplate>
     </CollectionView>

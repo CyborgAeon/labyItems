@@ -11,12 +11,13 @@
   <CollectionView x:Name="CharsView"
                   SelectionMode="Single"
                   SelectionChanged="OnSelected"
-                  Margin="0,8">
+                  Margin="0,8"
+                  BackgroundColor="Transparent">
     <CollectionView.ItemTemplate>
       <DataTemplate>
-        <Frame Margin="12" Padding="16" CornerRadius="14" HasShadow="True">
-          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-            <VerticalStackLayout>
+        <Border Margin="12" Padding="16" BackgroundColor="#21FFFFFF"  StrokeShape="RoundRectangle 14">
+          <Grid BackgroundColor="Transparent" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <VerticalStackLayout InputTransparent="True">
               <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="18" />
               <Label Text="{Binding Class}" FontSize="12" Opacity="1" />
             </VerticalStackLayout>
@@ -31,7 +32,7 @@
               </ImageButton.Source>
             </ImageButton>
           </Grid>
-        </Frame>
+        </Border>
       </DataTemplate>
     </CollectionView.ItemTemplate>
   </CollectionView>
