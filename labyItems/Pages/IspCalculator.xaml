@@ -34,6 +34,9 @@
         x:Name="CharmCategoryPage"
         IsVisible="False"
         Spacing="10">
+        <Button Clicked="OnCharmMagic" Text="Magic" />
+        <Label x:Name="MagicCharmPickedLabel" IsVisible="False" />
+        
         <Button Clicked="OnCharmEarthPower" Text="EarthPower" />
         <Label x:Name="EarthPowerCharmPickedLabel" IsVisible="False" />
       </VerticalStackLayout>

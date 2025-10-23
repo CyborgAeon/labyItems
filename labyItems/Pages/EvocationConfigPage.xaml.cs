@@ -35,11 +35,11 @@ public partial class EvocationConfigPage : ContentPage
 
     private async void OnSearchEvocation(object sender, EventArgs e)
     {
-        var picked = await new Evocation().PickAsync(Navigation); // your search/autocomplete page
+        var picked = await new Evocation().PickAsync(Navigation);
         if (picked == null) return;
 
         var cfg = (EvocationConfig)BindingContext;
-        cfg.ApplyEvocation(picked); // updates EvocationName and Power
+        cfg.ApplyEvocation(picked);
 
     }
 

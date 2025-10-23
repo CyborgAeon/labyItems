@@ -14,7 +14,7 @@ public class EvocationConfig : INotifyPropertyChanged
     private bool _addBasic;
     private bool _addAdvanced;
     private bool _addPrep;
-
+    private int _drawOnEpPerDay;
     public string EvocationName
     {
         get => _evocationName;
@@ -27,7 +27,6 @@ public class EvocationConfig : INotifyPropertyChanged
         set { if (_power == value) return; _power = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
     }
 
-    // your existing fields
     public int BasicPerDay
     {
         get => _basicPerDay;
@@ -56,7 +55,6 @@ public class EvocationConfig : INotifyPropertyChanged
 
     public string Title => string.IsNullOrWhiteSpace(EvocationName) ? "Evocation (none selected)" : EvocationName;
 
-    // ISP formula uses "Power"
     public int Total
     {
         get
@@ -64,6 +62,7 @@ public class EvocationConfig : INotifyPropertyChanged
             double t = 0;
             t += 2 * Power * BasicPerDay;
             t += 3 * Power * AdvancedPerDay;
+            t += 16 * _drawOnEpPerDay;
             if (AddBasic) t += 15;
             if (AddAdvanced) t += 18;
             if (AddPrep) t *= 1.5;
