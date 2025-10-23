@@ -18,7 +18,7 @@ public partial class ItemFormPage : ContentPage
         _character = character;
         ShowPlayerNameField = string.IsNullOrWhiteSpace(_character.PlayerName);
         ShowPlayerCharNameField = string.IsNullOrWhiteSpace(_character.Name);
-        CharacterHeader.Text = $"Character: {_character.Name} ({_character.Class}): {_character.Points.ToKNotation()}";
+        CharacterHeader.Text = $"{_character.Name} ({_character.Class}): {_character.Points.ToKNotation()}";
         CreatedDatePicker.Date = DateTime.Now;
         ItemTypePicker.ItemsSource = Enum.GetValues(typeof(ItemTypeEnum)).Cast<ItemTypeEnum>().ToList();
         ItemTypePicker.SelectedItem = ItemTypeEnum.None;

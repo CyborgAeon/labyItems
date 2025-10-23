@@ -22,12 +22,6 @@
         CornerRadius="12"
         HeightRequest="50"
         Text="Save" />
-      <Label
-        Margin="0,16,0,4"
-        FontAttributes="Bold"
-        Text="Your Characters" />
-
-
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>

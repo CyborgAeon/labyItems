@@ -7,7 +7,7 @@ public static class NotationHelper
         if (number < 1000)
             return number.ToString();
 
-        long rounded = (number + 500) / 1000; // rounds to nearest 1000
+        long rounded = number / 1000; // rounds to nearest 1000
         return $"{rounded}k";
     }
 }
