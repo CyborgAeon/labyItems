@@ -63,12 +63,12 @@
           <CollectionView.ItemTemplate>
             <DataTemplate>
               <Grid Padding="6" ColumnDefinitions="*,Auto,120">
-                <Label Text="{Binding Name}" />
                 <Label
                   Grid.Column="1"
                   HorizontalTextAlignment="End"
                   Text="{Binding CostLabel}" />
                 <controls:PlusMinusControl
+                  LabelText="{Binding Name}" 
                   Grid.Column="2"
                   AllowMultiple="{Binding AllowMultiple}"
                   Count="{Binding Count, Mode=TwoWay}" />
@@ -82,7 +82,7 @@
           <CollectionView.ItemTemplate>
             <DataTemplate>
               <Grid Padding="6" ColumnDefinitions="*,Auto,120">
-                <Label Text="{Binding Name}" />
+                
                 <Label
                   Grid.Column="1"
                   HorizontalTextAlignment="End"
@@ -92,6 +92,7 @@
                   HorizontalOptions="End"
                   Spacing="6">
                   <controls:PlusMinusControl
+                    LabelText="{Binding Name}"
                     Grid.Column="2"
                     AllowMultiple="{Binding AllowMultiple}"
                     Count="{Binding Count, Mode=TwoWay}" />

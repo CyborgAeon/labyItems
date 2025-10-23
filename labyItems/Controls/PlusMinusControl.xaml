@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="labyItems.Controls.PlusMinusControl"
-             x:Name="Self">
-  <HorizontalStackLayout Spacing="6" HorizontalOptions="End" VerticalOptions="Center">
-    <Button Text="-" Clicked="OnMinus"/>
-    <!-- Bind to *this control’s* Count via x:Reference, not BindingContext -->
-    <Label Text="{Binding Source={x:Reference Self}, Path=Count}"
-           WidthRequest="24" HorizontalTextAlignment="Center" />
-    <Button Text="+" Clicked="OnPlus"/>
+<ContentView
+  x:Class="labyItems.Controls.PlusMinusControl"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  x:Name="Root">
+
+  <HorizontalStackLayout Spacing="6">
+    <Label
+      x:Name="Label"
+      FontAttributes="Bold"
+      FontSize="16"
+      HorizontalOptions="Start"
+      Text="{Binding LabelText, Source={x:Reference Name=Root}}"
+      VerticalOptions="Center"
+      VerticalTextAlignment="Center" />
+    <Button HorizontalOptions="End" Clicked="OnMinus" Text="-" />
+    <Label
+      HorizontalTextAlignment="Center"
+      Text="{Binding Source={x:Reference Name=Root}, Path=Count}"
+      WidthRequest="24" />
+    <!--  Bind to *this control’s* Count via x:Reference, not BindingContext  -->
+    <Button HorizontalOptions="End" Clicked="OnPlus" Text="+" />
   </HorizontalStackLayout>
 </ContentView>

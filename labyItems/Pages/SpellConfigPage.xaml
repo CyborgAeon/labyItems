@@ -6,36 +6,35 @@
   xmlns:controls="clr-namespace:labyItems.Controls"
   Title="Configure Spell">
 
-    <ScrollView>
-  <VerticalStackLayout Padding="20" Spacing="14">
+  <ScrollView>
+    <VerticalStackLayout Padding="20" Spacing="14">
       <!--  Title / selected Spell  -->
       <Label
         FontAttributes="Bold"
         FontSize="20"
         Text="{Binding Title}" />
 
-      <!--  Mana cost + Search (Power as +/- now)  -->
       <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-        <Label
-          Grid.Column="0"
-          Text="Mana cost"
-          VerticalTextAlignment="Center" />
         <controls:PlusMinusControl
           Grid.Column="1"
           AllowMultiple="True"
-          Count="{Binding Power, Mode=TwoWay}" />
+          Count="{Binding Power, Mode=TwoWay}"
+          LabelText="Mana cost" />
         <Button
           Grid.Column="2"
           Clicked="OnSearchSpell"
           Text="Search" />
       </Grid>
 
-      <!--  Casting frequency  -->
-      <Label Text="Cast basic times per day" />
-      <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BasicPerDay, Mode=TwoWay}" />
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding BasicPerDay, Mode=TwoWay}"
+        LabelText="Cast basic times per day" />
 
-      <Label Text="Cast advanced times per day" />
-      <controls:PlusMinusControl AllowMultiple="True" Count="{Binding AdvancedPerDay, Mode=TwoWay}" />
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding AdvancedPerDay, Mode=TwoWay}"
+        LabelText="Cast advanced times per day" />
 
       <!--  Base list additions  -->
       <CheckBox IsChecked="{Binding AddBasic}" />
@@ -52,22 +51,24 @@
       <CheckBox IsChecked="{Binding IsMantic}" />
       <Label Text="Spell is Mantic" />
 
-      <Label Text="Make spell under 7th Mantic (count)" />
-      <controls:PlusMinusControl AllowMultiple="True" Count="{Binding MakeSpellUnder7thMantic, Mode=TwoWay}" />
-
-      <Label Text="Make basic spell Mantic (count)" />
-      <controls:PlusMinusControl AllowMultiple="True" Count="{Binding MakeBasicSpellMantic, Mode=TwoWay}" />
-
-      <Label Text="Make advanced spell Mantic (count)" />
-      <controls:PlusMinusControl AllowMultiple="True" Count="{Binding MakeAdvancedSpellMantic, Mode=TwoWay}" />
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding MakeSpellUnder7thMantic, Mode=TwoWay}"
+        LabelText="Make spell under 7th Mantic (count)" />
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding MakeBasicSpellMantic, Mode=TwoWay}"
+        LabelText="Make basic spell Mantic (count)" />
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding MakeAdvancedSpellMantic, Mode=TwoWay}"
+        LabelText="Make advanced spell Mantic (count)" />
 
       <!--  Additional power knobs  -->
       <Label FontAttributes="Bold" Text="Additional power" />
-      <Label Text="Additional power" />
-      <controls:PlusMinusControl AllowMultiple="True" Count="{Binding AdditionalPower, Mode=TwoWay}" />
-
-      <Label Text="Additional power of sphere" />
-      <controls:PlusMinusControl AllowMultiple="True" Count="{Binding AdditionalPowerOfSphere, Mode=TwoWay}" />
+      
+      <controls:PlusMinusControl LabelText="Additional power" AllowMultiple="True" Count="{Binding AdditionalPower, Mode=TwoWay}" />
+      <controls:PlusMinusControl LabelText="Additional power of sphere" AllowMultiple="True" Count="{Binding AdditionalPowerOfSphere, Mode=TwoWay}" />
 
       <!--  Flags  -->
       <CheckBox IsChecked="{Binding PowerStoreRegenerates}" />
@@ -83,6 +84,6 @@
         Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
 
       <Button Clicked="OnReturn" Text="Return" />
-  </VerticalStackLayout>
-    </ScrollView>
+    </VerticalStackLayout>
+  </ScrollView>
 </ContentPage>

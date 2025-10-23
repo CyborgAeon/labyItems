@@ -32,11 +32,10 @@
         Text="Search" />
     </Grid>
 
-    <Label Text="Cast basic times per day" />
-    <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BasicPerDay, Mode=TwoWay}" />
+    <Label  />
+    <controls:PlusMinusControl LabelText="Cast basic times per day" AllowMultiple="True" Count="{Binding BasicPerDay, Mode=TwoWay}" />
 
-    <Label Text="Cast advanced times per day" />
-    <controls:PlusMinusControl AllowMultiple="True" Count="{Binding AdvancedPerDay, Mode=TwoWay}" />
+    <controls:PlusMinusControl LabelText="Cast advanced times per day" AllowMultiple="True" Count="{Binding AdvancedPerDay, Mode=TwoWay}" />
 
     <CheckBox IsChecked="{Binding AddBasic}" />
     <Label Text="Add basic to base list (+15)" />
