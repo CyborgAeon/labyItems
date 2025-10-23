@@ -16,8 +16,16 @@
 
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="10">
-      
-      <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="20" />
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10"> 
+        <Label
+          FontAttributes="Bold"
+          FontSize="20"
+          Text="{Binding Title}" /> 
+        <Button
+          Grid.Column="2"
+          Clicked="OnSearchGeneral"
+          Text="Search" /> 
+      </Grid>
       <Label Text="Resistance" Style="{StaticResource SectionHeader}" />
       <controls:PlusMinusControl LabelText="+1 Level of Resistance (all)"
                                  Count="{Binding ResistanceAllLevels, Mode=TwoWay}" />

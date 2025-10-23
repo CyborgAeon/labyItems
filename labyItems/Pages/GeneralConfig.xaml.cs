@@ -9,6 +9,15 @@ namespace labyItems.Pages
 {
     public partial class GeneralConfigPage : ContentPage
     {
+
+ private async void OnSearchGeneral(object sender, EventArgs e)
+    {
+        var picked = await new General().PickAsync(Navigation);
+        if (picked == null) return;
+
+        if (BindingContext is GeneralConfig cfg)
+            cfg.ApplyGeneral(picked);
+    }
         private readonly TaskCompletionSource<CalcResult?> _tcs = new();
         public Task<CalcResult?> Completion => _tcs.Task;
 

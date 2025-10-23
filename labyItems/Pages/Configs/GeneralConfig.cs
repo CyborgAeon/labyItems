@@ -217,5 +217,11 @@ namespace labyItems.Pages.Configs
 
         protected override double ApplyMultipliers(double total)
             => total;
+
+        public void ApplyGeneral(General.Result picked)
+        {
+            Name = picked.Index;
+            Power = picked.Cost;
+        }
     }
 }
