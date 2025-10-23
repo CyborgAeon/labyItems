@@ -8,11 +8,16 @@
 
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="14">
-      <controls:SearchHeaderControl
-        Title="{Binding Title}"
-        ButtonText="Search"
-        SearchCommand="{Binding Source={x:Reference Page}, Path=SearchSpellCommand}" />
-
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10"> 
+        <Label
+          FontAttributes="Bold"
+          FontSize="20"
+          Text="{Binding Title}" /> 
+        <Button
+          Grid.Column="2"
+          Clicked="OnSearchSpell"
+          Text="Search" /> 
+      </Grid>
 
       <controls:PlusMinusControl
         Grid.Column="1"

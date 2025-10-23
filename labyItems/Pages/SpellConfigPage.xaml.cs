@@ -8,13 +8,11 @@ public partial class SpellConfigPage : ContentPage
 {
     private readonly TaskCompletionSource<CalcResult?> _tcs = new();
     public Task<CalcResult?> Completion => _tcs.Task;
-    public ICommand OnSearchClickedCommand => new Command(OnSearchSpell);
 
     public SpellConfigPage()
     {
         InitializeComponent();
         BindingContext = new SpellConfig();
-        SearchSpellCommand = new Command(async () => await OnSearchSpell());
     }
 
     private string BuildSummary(SpellConfig cfg)
@@ -43,7 +41,7 @@ public partial class SpellConfigPage : ContentPage
         return $"{name}: {tagText} → {cfg.Total} ISP";
     }
 
-    private async Task OnSearchSpell()
+    private async void OnSearchSpell(object sender, EventArgs e)
     {
         var picked = await new Spell().PickAsync(Navigation);
         if (picked == null) return;
@@ -51,7 +49,6 @@ public partial class SpellConfigPage : ContentPage
         if (BindingContext is SpellConfig cfg)
             cfg.ApplySpell(picked);
     }
-    public Command SearchSpellCommand { get; }
 
     private async void OnReturn(object sender, EventArgs e)
     {
