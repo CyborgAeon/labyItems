@@ -7,6 +7,19 @@ public partial class PlusMinusControl : ContentView
         InitializeComponent();
     }
 
+    public static readonly BindableProperty LabelTextProperty =
+            BindableProperty.Create(
+                nameof(LabelText),
+                typeof(string),
+                typeof(PlusMinusControl),
+                string.Empty);
+
+    public string LabelText
+    {
+        get => (string)GetValue(LabelTextProperty);
+        set => SetValue(LabelTextProperty, value);
+    }
+
     public static readonly BindableProperty AllowMultipleProperty =
         BindableProperty.Create(nameof(AllowMultiple), typeof(bool), typeof(PlusMinusControl), false);
 

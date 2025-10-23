@@ -50,7 +50,7 @@ Platforms/Tizen/obj/
 Resources/Raw/*.zip
 
 ## Android / Java
-*.apk
+
 *.aab
 *.dex
 *.class

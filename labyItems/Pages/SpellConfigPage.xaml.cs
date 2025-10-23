@@ -1,5 +1,6 @@
 using labyItems.Models;
 using labyItems.Pages.Configs;
+using System.Windows.Input;
 
 namespace labyItems.Pages;
 
@@ -45,9 +46,8 @@ public partial class SpellConfigPage : ContentPage
         var picked = await new Spell().PickAsync(Navigation);
         if (picked == null) return;
 
-        var cfg = (SpellConfig)BindingContext;
-        cfg.ApplySpell(picked);
-
+        if (BindingContext is SpellConfig cfg)
+            cfg.ApplySpell(picked);
     }
 
     private async void OnReturn(object sender, EventArgs e)
