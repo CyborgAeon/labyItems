@@ -8,14 +8,29 @@
     <ToolbarItem Text="Add" Clicked="OnAddClicked" />
   </ContentPage.ToolbarItems>
 
-  <CollectionView x:Name="CharsView" SelectionMode="Single" SelectionChanged="OnSelected">
+  <CollectionView x:Name="CharsView"
+                  SelectionMode="Single"
+                  SelectionChanged="OnSelected"
+                  Margin="0,8">
     <CollectionView.ItemTemplate>
       <DataTemplate>
         <Frame Margin="12" Padding="16" CornerRadius="14" HasShadow="True">
-          <VerticalStackLayout Spacing="4">
-            <Label Text="{Binding Name}" FontSize="20" FontAttributes="Bold" />
-            <Label Text="{Binding Class}" Opacity="0.7" />
-          </VerticalStackLayout>
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <VerticalStackLayout>
+              <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="18" />
+              <Label Text="{Binding Class}" FontSize="12" Opacity="1" />
+            </VerticalStackLayout>
+            <ImageButton Grid.Column="1"
+                         Padding="6"
+                         Clicked="OnEditClicked"
+                         CommandParameter="{Binding}"
+                         HeightRequest="36"
+                         WidthRequest="36">
+              <ImageButton.Source>
+                <FontImageSource Color="Black" Glyph="✎" Size="20" />
+              </ImageButton.Source>
+            </ImageButton>
+          </Grid>
         </Frame>
       </DataTemplate>
     </CollectionView.ItemTemplate>
