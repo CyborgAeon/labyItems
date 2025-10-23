@@ -6,9 +6,15 @@ public partial class RecipientPage : ContentPage
 {
     private readonly TaskCompletionSource<RecipientInfo> _tcs = new();
 
-    public RecipientPage()
+    public RecipientPage(RecipientInfo? existing = null)
     {
         InitializeComponent();
+        if (existing != null)
+        {
+            RecipientPlayerNameEntry.Text = existing.PlayerName;
+            RecipientCharacterNameEntry.Text = existing.CharacterName;
+            RecipientCharacterClassEntry.Text = existing.CharacterClass;
+        }
     }
 
     // Wait for result from parent
@@ -28,7 +34,6 @@ public partial class RecipientPage : ContentPage
     }
 }
 
-// Simple DTO to pass back
 public class RecipientInfo
 {
     public string PlayerName { get; set; } = "";

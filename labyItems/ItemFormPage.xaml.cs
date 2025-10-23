@@ -46,11 +46,31 @@ public partial class ItemFormPage : ContentPage
 
     private async void OnAddRecipientClicked(object sender, EventArgs e)
     {
-        var page = new RecipientPage();
-        await Navigation.PushAsync(page);
+        RecipientInfo? recipient = null;
+        if (!string.IsNullOrWhiteSpace(_recipientName) ||
+            !string.IsNullOrWhiteSpace(_recipientClass) ||
+            !string.IsNullOrWhiteSpace(_recipientPlayerName))
+        {
+            recipient = new RecipientInfo
+            {
+                PlayerName = _recipientPlayerName,
+                CharacterName = _recipientName,
+                CharacterClass = _recipientClass
+            };
 
-        var recipient = await page.GetRecipientAsync();
-        if (recipient != null)
+        }
+        var page = new RecipientPage(recipient);
+            await Navigation.PushAsync(page);    
+            var response = await page.GetRecipientAsync();
+            if (response != null)
+            {
+                _recipientPlayerName = response.PlayerName;
+                _recipientName = response.CharacterName;
+                _recipientClass = response.CharacterClass;
+            }
+        
+        await Navigation.PushAsync(page);            
+        if (await page.GetRecipientAsync() != null)
         {
             _recipientPlayerName = recipient.PlayerName;
             _recipientName = recipient.CharacterName;
@@ -73,7 +93,8 @@ public partial class ItemFormPage : ContentPage
         var page = new IspCalculator(ItemTypePicker.SelectedItem as ItemTypeEnum? ?? ItemTypeEnum.None);
         var result = await page.GetResultAsync(Navigation);
         if (result == null) return;
-        IspEntry.Text = result.TotalIsp.ToString();
+        var isp = int.Parse(IspEntry.Text ?? "0") + result.TotalIsp;
+        IspEntry.Text = isp.ToString();
         if (!string.IsNullOrWhiteSpace(result.Summary))
         {
             DescriptionEditor.Text = string.IsNullOrWhiteSpace(DescriptionEditor.Text)
