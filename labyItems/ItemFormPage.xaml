@@ -1,58 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:labyItems.Models"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             x:Class="labyItems.ItemFormPage"
-             Title="Submit Item">
-<ContentPage.ToolbarItems>
-    <ToolbarItem Text="View Saved" Clicked="OnViewSavedClicked" />
-  </ContentPage.ToolbarItems>
+<ContentPage
+    x:Class="labyItems.ItemFormPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:labyItems.Models"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Title="Submit Item">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Clicked="OnViewSavedClicked" Text="View Saved" />
+    </ContentPage.ToolbarItems>
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
-<Label x:Name="CharacterHeader" FontSize="18" FontAttributes="Bold" />
+            <Label
+                x:Name="CharacterHeader"
+                FontAttributes="Bold"
+                FontSize="18" />
 
-            <Label Text="Item Type" FontAttributes="Bold" />
-            <Picker x:Name="ItemTypePicker"
-                    Title="Select item type" />
+            <Label FontAttributes="Bold" Text="Item Type" />
+            <Picker x:Name="ItemTypePicker" Title="Select item type" />
+            <VerticalStackLayout IsVisible="{Binding ShowPlayerNameField}">
+                <Label FontAttributes="Bold" Text="MakerPlayerName" />
+                <Entry x:Name="MakerPlayerNameEntry" Placeholder="Maker Player name" />
+            </VerticalStackLayout>
+            <VerticalStackLayout IsVisible="{Binding ShowPlayerCharNameField}">
+                <Label FontAttributes="Bold" Text="MakerCharacterName" />
+                <Entry x:Name="MakerCharacterNameEntry" Placeholder="Maker Character name" />
+            </VerticalStackLayout>
 
-            <Label Text="MakerPlayerName" FontAttributes="Bold" />
-            <Entry x:Name="MakerPlayerNameEntry" Placeholder="Maker Player name" />
-            <Label Text="MakerCharacterName" FontAttributes="Bold" />
-            <Entry x:Name="MakerCharacterNameEntry" Placeholder="Maker Character name" />
-
-            <Label Text="WitnessName" FontAttributes="Bold" />
+            <Label FontAttributes="Bold" Text="WitnessName" />
             <Entry x:Name="WitnessNameEntry" Placeholder="Witness name" />
 
-            <Label Text="RecipientPlayerName" FontAttributes="Bold" />
-            <Entry x:Name="RecipientPlayerNameEntry" Placeholder="Recipient player name" />
-            <Label Text="RecipientCharacterName" FontAttributes="Bold" />
-            <Entry x:Name="RecipientCharacterNameEntry" Placeholder="Recipient character name" />
-            <Label Text="RecipientCharacterClass" FontAttributes="Bold" />
-            <Entry x:Name="RecipientCharacterClassEntry" Placeholder="Recipient character class" />
+            <Button
+                x:Name="RecipientButton"
+                Clicked="OnAddRecipientClicked"
+                Text="Add Recipient" />
 
-            <Label Text="Description" FontAttributes="Bold" />
-            <Editor x:Name="DescriptionEditor" Placeholder="Describe the item..." AutoSize="TextChanges" />
+            <Label FontAttributes="Bold" Text="Description" />
+            <Editor
+                x:Name="DescriptionEditor"
+                AutoSize="TextChanges"
+                Placeholder="Describe the item..." />
 
-            <Label Text="ISP" FontAttributes="Bold" />
-<HorizontalStackLayout Spacing="10">
-    <Entry x:Name="IspEntry" Keyboard="Numeric" Placeholder="0" WidthRequest="120" />
-    <Button Text="Calculate" Clicked="OnCalculateIsp" />
-</HorizontalStackLayout>
+            <Label FontAttributes="Bold" Text="ISP" />
+            <HorizontalStackLayout Spacing="10">
+                <Entry
+                    x:Name="IspEntry"
+                    Keyboard="Numeric"
+                    Placeholder="0"
+                    WidthRequest="120" />
+                <Button Clicked="OnCalculateIsp" Text="Calculate" />
+            </HorizontalStackLayout>
 
-            <Label Text="Created Date" FontAttributes="Bold" />
+            <Label FontAttributes="Bold" Text="Created Date" />
             <DatePicker x:Name="CreatedDatePicker" Date="{x:Static sys:DateTime.Now}" />
 
             <HorizontalStackLayout>
-                <Label Text="DNBUOD" FontAttributes="Bold" VerticalOptions="Center" />
+                <Label
+                    FontAttributes="Bold"
+                    Text="DNBUOD"
+                    VerticalOptions="Center" />
                 <Switch x:Name="DnbuodSwitch" />
             </HorizontalStackLayout>
 
-            <Button Text="Submit" Clicked="OnSubmitClicked"
-                    BackgroundColor="#007AFF"
-                    TextColor="White"
-                    CornerRadius="12"
-                    HeightRequest="50" />
+            <Button
+                BackgroundColor="#007AFF"
+                Clicked="OnSubmitClicked"
+                CornerRadius="12"
+                HeightRequest="50"
+                Text="Submit"
+                TextColor="White" />
 
         </VerticalStackLayout>
     </ScrollView>

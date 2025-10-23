@@ -1,21 +1,30 @@
 ﻿using labyItems.Models;
 using labyItems.Services;
 using labyItems.Pages;
+using labyItemsq.Helpers;
 namespace labyItems;
 
 public partial class ItemFormPage : ContentPage
 {
+    public bool ShowPlayerNameField { get; set; } = false;
+    public bool ShowPlayerCharNameField { get; set; } = false;
     private readonly Character _character;
-
+    private string _recipientName;
+    private string _recipientClass;
+    private string _recipientPlayerName;
     public ItemFormPage(Character character)
     {
         InitializeComponent();
         _character = character;
-        CharacterHeader.Text = $"Character: {_character.Name} ({_character.Class})";
+        ShowPlayerNameField = string.IsNullOrWhiteSpace(_character.PlayerName);
+        ShowPlayerCharNameField = string.IsNullOrWhiteSpace(_character.Name);
+        CharacterHeader.Text = $"{_character.Name} ({_character.Class}): {_character.Points.ToKNotation()}";
         CreatedDatePicker.Date = DateTime.Now;
-        ItemTypePicker.ItemsSource = Enum.GetValues(typeof(labyItems.Models.ItemTypeEnum)).Cast<labyItems.Models.ItemTypeEnum>().ToList();
+        ItemTypePicker.ItemsSource = Enum.GetValues(typeof(ItemTypeEnum)).Cast<ItemTypeEnum>().ToList();
+        ItemTypePicker.SelectedItem = ItemTypeEnum.None;
         MakerPlayerNameEntry.Text = _character.PlayerName;
         MakerCharacterNameEntry.Text = _character.Name;
+        BindingContext = this;
     }
 
     private async void OnViewSavedClicked(object sender, EventArgs e)
@@ -41,12 +50,49 @@ public partial class ItemFormPage : ContentPage
         DnbuodSwitch.IsToggled = item.DoesNotBlowUpOnDeath;
     }
 
+    private async void OnAddRecipientClicked(object sender, EventArgs e)
+    {
+        var recipient = new RecipientInfo();
+        if (!string.IsNullOrWhiteSpace(_recipientName) &&
+            !string.IsNullOrWhiteSpace(_recipientClass) &&
+            !string.IsNullOrWhiteSpace(_recipientPlayerName))
+        {
+            recipient = new RecipientInfo
+            {
+                CharacterName = _recipientName,
+                CharacterClass = _recipientClass,
+                PlayerName = _recipientPlayerName,
+            };
+        }
+
+        var page = new RecipientPage(recipient);
+        await Navigation.PushAsync(page);
+        var response = await page.GetRecipientAsync();
+        if (response != null)
+        {
+            _recipientName = response.CharacterName;
+            _recipientClass = response.CharacterClass;
+            _recipientPlayerName = response.PlayerName;
+
+            RecipientButton.Text = "Adjust Recipient";
+        }
+        else
+        {
+            _recipientName = string.Empty;
+            _recipientClass = string.Empty;
+            _recipientPlayerName = string.Empty;
+
+            RecipientButton.Text = "Add Recipient";
+        }
+    }
+
     private async void OnCalculateIsp(object sender, EventArgs e)
     {
         var page = new IspCalculator(ItemTypePicker.SelectedItem as ItemTypeEnum? ?? ItemTypeEnum.None);
         var result = await page.GetResultAsync(Navigation);
         if (result == null) return;
-        IspEntry.Text = result.TotalIsp.ToString();
+        var isp = int.Parse(IspEntry.Text ?? "0") + result.TotalIsp;
+        IspEntry.Text = isp.ToString();
         if (!string.IsNullOrWhiteSpace(result.Summary))
         {
             DescriptionEditor.Text = string.IsNullOrWhiteSpace(DescriptionEditor.Text)
@@ -59,49 +105,47 @@ public partial class ItemFormPage : ContentPage
     {
         try
         {
-            if (ItemTypePicker.SelectedItem is null)
-            {
-                await DisplayAlert("Error", "Please select an Item Type.", "OK");
-                return;
-            }
-
             var item = new Item
             {
                 ItemType = (ItemTypeEnum)ItemTypePicker.SelectedItem,
-                MakerPlayerName = MakerPlayerNameEntry.Text,
-                MakerCharacterName = MakerCharacterNameEntry.Text,
+                MakerPlayerName = _character.PlayerName ?? MakerPlayerNameEntry.Text,
+                MakerCharacterName = _character.Name ?? MakerCharacterNameEntry.Text,
+                MakerCharacterPoints = _character.Points,
                 WitnessName = WitnessNameEntry.Text,
-                RecipientPlayerName = RecipientPlayerNameEntry.Text,
-                RecipientCharacterName = RecipientCharacterNameEntry.Text,
+                RecipientPlayerName = _recipientPlayerName,
+                RecipientCharacterName = _recipientName,
+                RecipientCharacterClass = _recipientClass,
                 Description = DescriptionEditor.Text,
                 DoesNotBlowUpOnDeath = DnbuodSwitch.IsToggled,
                 CreatedDate = CreatedDatePicker.Date,
                 Isp = int.TryParse(IspEntry.Text, out var isp) ? isp : 0
             };
 
+            var recipientText = _recipientPlayerName == string.Empty ?
+                            "\nno recipient" : $"\nRecipient player name: {item.RecipientPlayerName}" +
+                            $"\nRecipient character name: {item.RecipientCharacterName}" +
+                            $"\nRecipient character class: {item.RecipientCharacterClass}";
+
             await DisplayAlert("Item Created",
-                $"\nType: {item.ItemType}" +
                 $"\nMaker player name: {item.MakerPlayerName}" +
                 $"\nMaker character name: {item.MakerCharacterName}" +
+                $"\nMaker character points: {item.MakerCharacterPoints}" +
                 $"\nWitness name: {item.WitnessName}" +
-                $"\nRecipient player name: {item.RecipientPlayerName}" +
-                $"\nRecipient character name: {item.RecipientCharacterName}" +
-                $"\nRecipient character class: {item.RecipientCharacterClass}" +
+                recipientText +
+                $"\nType: {item.ItemType}" +
                 $"\nISP: {item.Isp}\n" +
                 $"\nDNBUOD: {item.DoesNotBlowUpOnDeath}\n" +
                 $"\nCreated: {item.CreatedDate:d}", "OK");
 
             string subject = $"{item.MakerCharacterName} item for {item.RecipientCharacterName}";
-            string body = $"Type: {item.ItemType}\n" +
-                        $"Maker: {item.MakerPlayerName}\n" +
-                        $"Witness name: {item.WitnessName}\n" +
-                        $"Recipient player: {item.RecipientPlayerName}\n" +
-                        $"Recipient character: {item.RecipientCharacterName}\n" +
-                        $"Recipient character: {item.RecipientCharacterClass}\n" +
-                        $"Description: {item.Description}\n" +
-                        $"ISP: {item.Isp}\n" +
-                        $"Dnbuod: {item.DoesNotBlowUpOnDeath}\n" +
-                        $"Created: {item.CreatedDate:d}";
+            string body = $"\nType: {item.ItemType}" +
+                        $"\nMaker: {item.MakerPlayerName}" +
+                        $"\nWitness name: {item.WitnessName}" +
+                        recipientText +
+                        $"\nDescription: {item.Description}" +
+                        $"\nISP: {item.Isp}" +
+                        $"\nDnbuod: {item.DoesNotBlowUpOnDeath}" +
+                        $"\nCreated: {item.CreatedDate:d}";
 
             string mailto = $"mailto:bradleyjamesbarfoot@gmail.com" +
                             $"?subject={Uri.EscapeDataString(subject)}" +

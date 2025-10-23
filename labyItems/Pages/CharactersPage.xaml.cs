@@ -27,6 +27,15 @@ public partial class CharactersPage : ContentPage
         await Navigation.PushAsync(new AddCharacter());
     }
 
+    private async void OnEditClicked(object sender, EventArgs e)
+    {
+        if (sender is BindableObject bo && bo.BindingContext is Character c)
+        {
+            // Populate the form for editing
+            await Navigation.PushAsync(new AddCharacter(c));
+        }
+    }
+
     private async void OnSelected(object sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection.FirstOrDefault() is Character c)

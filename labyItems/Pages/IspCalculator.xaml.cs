@@ -114,7 +114,7 @@ public partial class IspCalculator : ContentPage
     {
         var sum = _contributions.Sum(c => c.Isp);
         if (sum <= 0) return 0;
-        return (int)(Math.Round(sum / 5.0, MidpointRounding.AwayFromZero) * 5);
+        return sum;
     }
     private string BuildSummary()
     {
