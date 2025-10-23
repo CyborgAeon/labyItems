@@ -8,6 +8,7 @@ public class Character {
     public string Name { get; set; } = string.Empty;
     public string Class { get; set; } = string.Empty;
     public string PlayerName { get; set; } = string.Empty;
+    public long Points { get; set; } = 0;
     public List<string> PointsApps { get; set; } = new List<string>();
     public List<Item> ItemTemplates {get;set;   } = new List<Item>();
 }
@@ -20,6 +21,7 @@ public class Item
     public ItemTypeEnum ItemType { get; set; }
     public string MakerPlayerName { get; set; }          = string.Empty;
     public string MakerCharacterName { get; set; } = string.Empty;
+    public long MakerCharacterPoints { get; set; }
     public string WitnessName { get; set; } = string.Empty;
     public string RecipientPlayerName { get; set; } = string.Empty;
     public string RecipientCharacterName { get; set; } = string.Empty;

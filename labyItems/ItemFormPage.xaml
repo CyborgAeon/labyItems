@@ -24,12 +24,7 @@
             <Label Text="WitnessName" FontAttributes="Bold" />
             <Entry x:Name="WitnessNameEntry" Placeholder="Witness name" />
 
-            <Label Text="RecipientPlayerName" FontAttributes="Bold" />
-            <Entry x:Name="RecipientPlayerNameEntry" Placeholder="Recipient player name" />
-            <Label Text="RecipientCharacterName" FontAttributes="Bold" />
-            <Entry x:Name="RecipientCharacterNameEntry" Placeholder="Recipient character name" />
-            <Label Text="RecipientCharacterClass" FontAttributes="Bold" />
-            <Entry x:Name="RecipientCharacterClassEntry" Placeholder="Recipient character class" />
+            <Button Text="Add Recipient" x:Name="RecipientButton" Clicked="OnAddRecipientClicked" />
 
             <Label Text="Description" FontAttributes="Bold" />
             <Editor x:Name="DescriptionEditor" Placeholder="Describe the item..." AutoSize="TextChanges" />

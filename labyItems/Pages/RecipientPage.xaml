@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.RecipientPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Add Recipient">
+
+  <VerticalStackLayout Padding="20" Spacing="10">
+    <Label Text="Recipient Player Name" FontAttributes="Bold" />
+    <Entry x:Name="RecipientPlayerNameEntry" Placeholder="Player name" />
+
+    <Label Text="Recipient Character Name" FontAttributes="Bold" />
+    <Entry x:Name="RecipientCharacterNameEntry" Placeholder="Character name" />
+
+    <Label Text="Recipient Character Class" FontAttributes="Bold" />
+    <Entry x:Name="RecipientCharacterClassEntry" Placeholder="Character class" />
+
+    <Button Text="Save Recipient" Clicked="OnSaveRecipient" />
+  </VerticalStackLayout>
+</ContentPage>
