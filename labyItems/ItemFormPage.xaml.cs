@@ -6,6 +6,8 @@ namespace labyItems;
 
 public partial class ItemFormPage : ContentPage
 {
+    public bool ShowPlayerNameField { get; set; } = false;
+    public bool ShowPlayerCharNameField { get; set; } = false;
     private readonly Character _character;
     private string _recipientName;
     private string _recipientClass;
@@ -14,11 +16,14 @@ public partial class ItemFormPage : ContentPage
     {
         InitializeComponent();
         _character = character;
+        ShowPlayerNameField = string.IsNullOrWhiteSpace(_character.PlayerName);
+        ShowPlayerCharNameField = string.IsNullOrWhiteSpace(_character.Name);
         CharacterHeader.Text = $"Character: {_character.Name} ({_character.Class}): {_character.Points.ToKNotation()}";
         CreatedDatePicker.Date = DateTime.Now;
         ItemTypePicker.ItemsSource = Enum.GetValues(typeof(ItemTypeEnum)).Cast<ItemTypeEnum>().ToList();
         MakerPlayerNameEntry.Text = _character.PlayerName;
         MakerCharacterNameEntry.Text = _character.Name;
+        BindingContext = this;
     }
 
     private async void OnViewSavedClicked(object sender, EventArgs e)
