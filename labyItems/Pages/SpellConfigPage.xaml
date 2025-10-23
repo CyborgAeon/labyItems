@@ -8,16 +8,11 @@
 
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="14">
-      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-        <Label
-          FontAttributes="Bold"
-          FontSize="20"
-          Text="{Binding Title}" />
-        <Button
-          Grid.Column="2"
-          Clicked="OnSearchSpell"
-          Text="Search" />
-      </Grid>
+      <controls:SearchHeaderControl
+        Title="{Binding Title}"
+        ButtonText="Search"
+        SearchCommand="{Binding Source={x:Reference Page}, Path=SearchSpellCommand}" />
+
 
       <controls:PlusMinusControl
         Grid.Column="1"
@@ -34,78 +29,10 @@
         AllowMultiple="True"
         Count="{Binding AdvancedPerDay, Mode=TwoWay}"
         LabelText="Advanced spell innate times per day" />
-      <Grid
-        Padding="0,4"
-        ColumnDefinitions="*,Auto,Auto,Auto"
-        ColumnSpacing="4"
-        VerticalOptions="Center">
-        <Label Text="Add basic spell to base list" FontAttributes="Bold"
-          FontSize="16"
-          HorizontalOptions="Start"
-          HorizontalTextAlignment="Start"
-          LineBreakMode="TailTruncation"
-          VerticalOptions="Center"
-          VerticalTextAlignment="Center"/>
-        <CheckBox
-          Grid.Column="1"
-          HorizontalOptions="End"
-          IsChecked="{Binding AddBasic}"
-          VerticalOptions="Center" />
-      </Grid>
-      <Grid
-        Padding="0,4"
-        ColumnDefinitions="*,Auto,Auto,Auto"
-        ColumnSpacing="4"
-        VerticalOptions="Center">
-        <Label Text="Add advanced spell to base list" FontAttributes="Bold"
-          FontSize="16"
-          HorizontalOptions="Start"
-          HorizontalTextAlignment="Start"
-          LineBreakMode="TailTruncation"
-          VerticalOptions="Center"
-          VerticalTextAlignment="Center"/>
-        <CheckBox
-          Grid.Column="1"
-          HorizontalOptions="End"
-          IsChecked="{Binding AddAdvanced}"
-          VerticalOptions="Center" />
-      </Grid>
-      <Grid
-        Padding="0,4"
-        ColumnDefinitions="*,Auto,Auto,Auto"
-        ColumnSpacing="4"
-        VerticalOptions="Center">
-        <Label Text="Add to base list with 30s prep" FontAttributes="Bold"
-          FontSize="16"
-          HorizontalOptions="Start"
-          HorizontalTextAlignment="Start"
-          LineBreakMode="TailTruncation"
-          VerticalOptions="Center"
-          VerticalTextAlignment="Center"/>
-        <CheckBox
-          Grid.Column="1"
-          HorizontalOptions="End"
-          IsChecked="{Binding AddPrep}"
-          VerticalOptions="Center" />
-      </Grid>
-      <Grid
-        Padding="0,4"
-        ColumnDefinitions="*,Auto,Auto,Auto"
-        ColumnSpacing="4"
-        VerticalOptions="Center">
-        <Label Text="Innate is Mantic" FontAttributes="Bold"
-          FontSize="16"
-          HorizontalOptions="Start"
-          HorizontalTextAlignment="Start"
-          LineBreakMode="TailTruncation"
-          VerticalOptions="Center"
-          VerticalTextAlignment="Center"/>
-        <CheckBox
-          Grid.Column="1"
-          HorizontalOptions="End"
-          IsChecked="{Binding InnateIsMantic}"
-          VerticalOptions="Center" />
-      </Grid>
+      <controls:CheckboxControl IsChecked="{Binding AddBasic}" LabelText="Add basic spell to base list" />
+      <controls:CheckboxControl IsChecked="{Binding AddAdvanced}" LabelText="Add advanced spell to base list" />
+      <controls:CheckboxControl IsChecked="{Binding AddPrep}" LabelText="Add to base list with 30s prep" />
+      <controls:CheckboxControl IsChecked="{Binding InnateIsMantic}" LabelText="Innate is Mantic" />
       <controls:PlusMinusControl
         AllowMultiple="True"
         Count="{Binding MakeSpellUnder7thMantic, Mode=TwoWay}"
@@ -126,45 +53,9 @@
         AllowMultiple="True"
         Count="{Binding AdditionalPowerOfSphere, Mode=TwoWay}"
         LabelText="Additional power of sphere" />
-<Grid
-        Padding="0,4"
-        ColumnDefinitions="*,Auto,Auto,Auto"
-        ColumnSpacing="4"
-        VerticalOptions="Center">
-      <Label Text="Power store regenerates" 
-        FontAttributes="Bold"
-          FontSize="16"
-          HorizontalOptions="Start"
-          HorizontalTextAlignment="Start"
-          LineBreakMode="TailTruncation"
-          VerticalOptions="Center"
-          VerticalTextAlignment="Center"/>
-      <CheckBox
-        Grid.Column="1"
-        HorizontalOptions="End"
-        IsChecked="{Binding PowerStoreRegenerates}"
-        VerticalOptions="Center" />
-        </Grid>
-      <Grid
-        Padding="0,4"
-        ColumnDefinitions="*,Auto,Auto,Auto"
-        ColumnSpacing="4"
-        VerticalOptions="Center">
-        <Label
-          FontAttributes="Bold"
-          FontSize="16"
-          HorizontalOptions="Start"
-          HorizontalTextAlignment="Start"
-          LineBreakMode="TailTruncation"
-          VerticalOptions="Center"
-          VerticalTextAlignment="Center"
-          Text="Is teaching scroll" />
-        <CheckBox
-          Grid.Column="1"
-          HorizontalOptions="End"
-          IsChecked="{Binding IsTeachingScroll}"
-          VerticalOptions="Center" />
-      </Grid>
+      <controls:CheckboxControl IsChecked="{Binding PowerStoreRegenerates}" LabelText="Power store regenerates" />
+      <controls:CheckboxControl IsChecked="{Binding IsTeachingScroll}" LabelText="Is teaching scroll" />
+
       <Label
         FontAttributes="Bold"
         FontSize="18"

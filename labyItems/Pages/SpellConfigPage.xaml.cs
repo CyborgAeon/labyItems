@@ -1,5 +1,6 @@
 using labyItems.Models;
 using labyItems.Pages.Configs;
+using System.Windows.Input;
 
 namespace labyItems.Pages;
 
@@ -7,11 +8,13 @@ public partial class SpellConfigPage : ContentPage
 {
     private readonly TaskCompletionSource<CalcResult?> _tcs = new();
     public Task<CalcResult?> Completion => _tcs.Task;
+    public ICommand OnSearchClickedCommand => new Command(OnSearchSpell);
 
     public SpellConfigPage()
     {
         InitializeComponent();
         BindingContext = new SpellConfig();
+        SearchSpellCommand = new Command(async () => await OnSearchSpell());
     }
 
     private string BuildSummary(SpellConfig cfg)
@@ -40,15 +43,15 @@ public partial class SpellConfigPage : ContentPage
         return $"{name}: {tagText} → {cfg.Total} ISP";
     }
 
-    private async void OnSearchSpell(object sender, EventArgs e)
+    private async Task OnSearchSpell()
     {
         var picked = await new Spell().PickAsync(Navigation);
         if (picked == null) return;
 
-        var cfg = (SpellConfig)BindingContext;
-        cfg.ApplySpell(picked);
-
+        if (BindingContext is SpellConfig cfg)
+            cfg.ApplySpell(picked);
     }
+    public Command SearchSpellCommand { get; }
 
     private async void OnReturn(object sender, EventArgs e)
     {
