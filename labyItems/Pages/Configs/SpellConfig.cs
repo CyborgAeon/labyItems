@@ -15,7 +15,7 @@ public class SpellConfig : INotifyPropertyChanged
     private int _makeSpellUnder7thMantic;
     private int _makeBasicSpellMantic;
     private int _makeAdvancedSpellMantic;
-    private bool _isMantic;
+    private bool _innateIsMantic;
     private int _additionalPower;
     private (int, string) _additionalPowerOfColour;
     private bool _powerStoreRegenerates;
@@ -75,8 +75,8 @@ public class SpellConfig : INotifyPropertyChanged
     
     public bool InnateIsMantic
     {
-        get => _isMantic;
-        set { if (_isMantic == value) return; _isMantic = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
+        get => _innateIsMantic;
+        set { if (_innateIsMantic == value) return; _innateIsMantic = value; OnPropertyChanged(); OnPropertyChanged(nameof(Total)); }
     }
     public int AdditionalPower
     {

@@ -40,19 +40,40 @@
                 x:Name="DescriptionEditor"
                 AutoSize="TextChanges"
                 Placeholder="Describe the item..." />
+            <!--  Replaces HorizontalStackLayout  -->
+            <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="16">
+                <!--  ISP  -->
+                <VerticalStackLayout Grid.Column="0" Spacing="6">
+                    <Label FontAttributes="Bold" Text="ISP" />
+                    <Entry
+                        x:Name="IspEntry"
+                        HorizontalOptions="Fill"
+                        Keyboard="Numeric"
+                        MinimumWidthRequest="120"
+                        Placeholder="0" />
+                </VerticalStackLayout>
 
-            <Label FontAttributes="Bold" Text="ISP" />
-            <HorizontalStackLayout Spacing="10">
-                <Entry
-                    x:Name="IspEntry"
-                    Keyboard="Numeric"
-                    Placeholder="0"
-                    WidthRequest="120" />
-                <Button Clicked="OnCalculateIsp" Text="Calculate" />
-            </HorizontalStackLayout>
+                <!--  Sleek pill button  -->
+                <Button
+                    Grid.Column="1"
+                    Padding="20,8"
+                    Clicked="OnCalculateIsp"
+                    CornerRadius="12"
+                    HeightRequest="44"
+                    HorizontalOptions="Center"
+                    Text="Calculate"
+                    VerticalOptions="End">
+                </Button>
 
-            <Label FontAttributes="Bold" Text="Created Date" />
-            <DatePicker x:Name="CreatedDatePicker" Date="{x:Static sys:DateTime.Now}" />
+                <!--  Created date  -->
+                <VerticalStackLayout Grid.Column="2" Spacing="6">
+                    <Label FontAttributes="Bold" Text="Created Date" />
+                    <DatePicker
+                        x:Name="CreatedDatePicker"
+                        Date="{x:Static sys:DateTime.Now}"
+                        HorizontalOptions="Fill" />
+                </VerticalStackLayout>
+            </Grid>
 
             <HorizontalStackLayout>
                 <Label
@@ -63,7 +84,6 @@
             </HorizontalStackLayout>
 
             <Button
-                BackgroundColor="#007AFF"
                 Clicked="OnSubmitClicked"
                 CornerRadius="12"
                 HeightRequest="50"
