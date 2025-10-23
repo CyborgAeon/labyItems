@@ -4,22 +4,45 @@
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   x:Name="Root">
-
-  <HorizontalStackLayout Spacing="6">
+  <Grid
+    Padding="0,4"
+    ColumnDefinitions="*,Auto,Auto,Auto"
+    ColumnSpacing="4"
+    VerticalOptions="Center">
     <Label
       x:Name="Label"
       FontAttributes="Bold"
       FontSize="16"
       HorizontalOptions="Start"
+      HorizontalTextAlignment="Start"
+      LineBreakMode="TailTruncation"
       Text="{Binding LabelText, Source={x:Reference Name=Root}}"
       VerticalOptions="Center"
       VerticalTextAlignment="Center" />
-    <Button HorizontalOptions="End" Clicked="OnMinus" Text="-" />
+    <Button
+      Grid.Column="1"
+      Padding="4,0"
+      Clicked="OnMinus"
+      HorizontalOptions="End"
+      Text="-"
+      VerticalOptions="Center"
+      WidthRequest="32" />
     <Label
+      Grid.Column="2"
+      HorizontalOptions="Center"
       HorizontalTextAlignment="Center"
-      Text="{Binding Source={x:Reference Name=Root}, Path=Count}"
-      WidthRequest="24" />
+      Text="{Binding Source={x:Reference Root}, Path=Count}"
+      VerticalOptions="Center"
+      VerticalTextAlignment="Center"
+      WidthRequest="30" />
     <!--  Bind to *this control’s* Count via x:Reference, not BindingContext  -->
-    <Button HorizontalOptions="End" Clicked="OnPlus" Text="+" />
-  </HorizontalStackLayout>
+    <Button
+      Grid.Column="3"
+      Padding="4,0"
+      Clicked="OnPlus"
+      HorizontalOptions="End"
+      Text="+"
+      VerticalOptions="Center"
+      WidthRequest="32" />
+  </Grid>
 </ContentView>

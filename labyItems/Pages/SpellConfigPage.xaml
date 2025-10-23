@@ -9,32 +9,32 @@
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="14">
       <!--  Title / selected Spell  -->
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
       <Label
         FontAttributes="Bold"
         FontSize="20"
         Text="{Binding Title}" />
-
-      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-        <controls:PlusMinusControl
-          Grid.Column="1"
-          AllowMultiple="True"
-          Count="{Binding Power, Mode=TwoWay}"
-          LabelText="Mana cost" />
         <Button
           Grid.Column="2"
           Clicked="OnSearchSpell"
           Text="Search" />
       </Grid>
 
+        <controls:PlusMinusControl
+          Grid.Column="1"
+          AllowMultiple="True"
+          Count="{Binding Power, Mode=TwoWay}"
+          LabelText="Mana cost override" />
+
       <controls:PlusMinusControl
         AllowMultiple="True"
         Count="{Binding BasicPerDay, Mode=TwoWay}"
-        LabelText="Cast basic times per day" />
+        LabelText="Basic innate times per day" />
 
       <controls:PlusMinusControl
         AllowMultiple="True"
         Count="{Binding AdvancedPerDay, Mode=TwoWay}"
-        LabelText="Cast advanced times per day" />
+        LabelText="Advanced innate times per day" />
 
       <!--  Base list additions  -->
       <CheckBox IsChecked="{Binding AddBasic}" />
@@ -49,20 +49,20 @@
       <!--  Mantic options  -->
       <Label FontAttributes="Bold" Text="Mantic options" />
       <CheckBox IsChecked="{Binding IsMantic}" />
-      <Label Text="Spell is Mantic" />
+      <Label Text="Innate is Mantic" />
 
       <controls:PlusMinusControl
         AllowMultiple="True"
         Count="{Binding MakeSpellUnder7thMantic, Mode=TwoWay}"
-        LabelText="Make spell under 7th Mantic (count)" />
+        LabelText="Make spell under 7th Mantic" />
       <controls:PlusMinusControl
         AllowMultiple="True"
         Count="{Binding MakeBasicSpellMantic, Mode=TwoWay}"
-        LabelText="Make basic spell Mantic (count)" />
+        LabelText="Make basic spell Mantic" />
       <controls:PlusMinusControl
         AllowMultiple="True"
         Count="{Binding MakeAdvancedSpellMantic, Mode=TwoWay}"
-        LabelText="Make advanced spell Mantic (count)" />
+        LabelText="Make advanced spell Mantic" />
 
       <!--  Additional power knobs  -->
       <Label FontAttributes="Bold" Text="Additional power" />
