@@ -21,6 +21,7 @@ public partial class ItemFormPage : ContentPage
         CharacterHeader.Text = $"Character: {_character.Name} ({_character.Class}): {_character.Points.ToKNotation()}";
         CreatedDatePicker.Date = DateTime.Now;
         ItemTypePicker.ItemsSource = Enum.GetValues(typeof(ItemTypeEnum)).Cast<ItemTypeEnum>().ToList();
+        ItemTypePicker.SelectedItem = ItemTypeEnum.None;
         MakerPlayerNameEntry.Text = _character.PlayerName;
         MakerCharacterNameEntry.Text = _character.Name;
         BindingContext = this;
@@ -51,43 +52,35 @@ public partial class ItemFormPage : ContentPage
 
     private async void OnAddRecipientClicked(object sender, EventArgs e)
     {
-        RecipientInfo? recipient = null;
-        if (!string.IsNullOrWhiteSpace(_recipientName) ||
-            !string.IsNullOrWhiteSpace(_recipientClass) ||
+        var recipient = new RecipientInfo();
+        if (!string.IsNullOrWhiteSpace(_recipientName) &&
+            !string.IsNullOrWhiteSpace(_recipientClass) &&
             !string.IsNullOrWhiteSpace(_recipientPlayerName))
         {
             recipient = new RecipientInfo
             {
-                PlayerName = _recipientPlayerName,
                 CharacterName = _recipientName,
-                CharacterClass = _recipientClass
+                CharacterClass = _recipientClass,
+                PlayerName = _recipientPlayerName,
             };
-
         }
+
         var page = new RecipientPage(recipient);
-            await Navigation.PushAsync(page);    
-            var response = await page.GetRecipientAsync();
-            if (response != null)
-            {
-                _recipientPlayerName = response.PlayerName;
-                _recipientName = response.CharacterName;
-                _recipientClass = response.CharacterClass;
-            }
-        
-        await Navigation.PushAsync(page);            
-        if (await page.GetRecipientAsync() != null)
+        await Navigation.PushAsync(page);
+        var response = await page.GetRecipientAsync();
+        if (response != null)
         {
-            _recipientPlayerName = recipient.PlayerName;
-            _recipientName = recipient.CharacterName;
-            _recipientClass = recipient.CharacterClass;
+            _recipientName = response.CharacterName;
+            _recipientClass = response.CharacterClass;
+            _recipientPlayerName = response.PlayerName;
 
             RecipientButton.Text = "Adjust Recipient";
         }
         else
         {
-            _recipientPlayerName = string.Empty;
             _recipientName = string.Empty;
             _recipientClass = string.Empty;
+            _recipientPlayerName = string.Empty;
 
             RecipientButton.Text = "Add Recipient";
         }
@@ -112,11 +105,6 @@ public partial class ItemFormPage : ContentPage
     {
         try
         {
-            if (ItemTypePicker.SelectedItem is null)
-            {
-                await DisplayAlert("Error", "Please select an Item Type.", "OK");
-                return;
-            }
             var item = new Item
             {
                 ItemType = (ItemTypeEnum)ItemTypePicker.SelectedItem,

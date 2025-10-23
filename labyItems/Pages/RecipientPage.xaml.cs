@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using labyItems.Models;
 
 namespace labyItems.Pages;
 
@@ -15,6 +16,7 @@ public partial class RecipientPage : ContentPage
             RecipientCharacterNameEntry.Text = existing.CharacterName;
             RecipientCharacterClassEntry.Text = existing.CharacterClass;
         }
+        BindingContext = this;
     }
 
     // Wait for result from parent
@@ -24,19 +26,12 @@ public partial class RecipientPage : ContentPage
     {
         var result = new RecipientInfo
         {
-            PlayerName = RecipientPlayerNameEntry.Text?.Trim() ?? "",
-            CharacterName = RecipientCharacterNameEntry.Text?.Trim() ?? "",
-            CharacterClass = RecipientCharacterClassEntry.Text?.Trim() ?? ""
+            PlayerName = RecipientPlayerNameEntry.Text?.Trim() ?? string.Empty,
+            CharacterName = RecipientCharacterNameEntry.Text?.Trim() ?? string.Empty,
+            CharacterClass = RecipientCharacterClassEntry.Text?.Trim() ?? string.Empty
         };
 
         _tcs.TrySetResult(result);
         await Navigation.PopAsync();
     }
-}
-
-public class RecipientInfo
-{
-    public string PlayerName { get; set; } = "";
-    public string CharacterName { get; set; } = "";
-    public string CharacterClass { get; set; } = "";
 }
