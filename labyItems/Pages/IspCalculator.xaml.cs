@@ -75,43 +75,28 @@ public partial class IspCalculator : ContentPage
         UpdateTotal();
     }
 
-    private async void OnCharmSpirit(object sender, EventArgs e)
+    private async void OnCharmMagic(object sender, EventArgs e)
     {
-        // 1) Open SpiritConfig (stub for now)
-        // _categoryLocked = true;
-        // var cfgPage = new SpiritConfigPage();               // new stub page below
-        // await Navigation.PushAsync(cfgPage);
-        // var cfg = await cfgPage.Completion;                 // waits for Return
-        // if (cfg is null) return;
+        _categoryLocked = true;
+        var cfgPage = new SpellConfigPage();               // new stub page below
+        await Navigation.PushAsync(cfgPage);
+        var cfg = await cfgPage.Completion;                 // waits for Return
+        if (cfg is null) return;
 
-        // // 2) Add to calculator contributions
-        // _contributions.Add(new CalcContribution(
-        //     Source: "Charm/Spirit",
-        //     Label: $"{cfg.Name} → {cfg.Total} ISP",
-        //     Isp: cfg.Total));
+        // 2) Add to calculator contributions
+        _contributions.Add(new CalcContribution(
+            Source: "Charm/Magic",
+            Label: cfg.Summary,
+            Isp: cfg.TotalIsp));
 
-        // SpiritCharmPickedLabel.IsVisible = true;
-        // SpiritCharmPickedLabel.Text = string.Join("\n", _contributions
-        //     .Where(c => c.Source.StartsWith("Charm/", StringComparison.OrdinalIgnoreCase))
-        //     .Select(c => c.Label));
+        MagicCharmPickedLabel.IsVisible = true;
+        MagicCharmPickedLabel.Text = string.Join("\n", _contributions
+            .Where(c => c.Source.StartsWith("Charm/", StringComparison.OrdinalIgnoreCase))
+            .Select(c => c.Label));
 
-        // UpdateTotal();
+        UpdateTotal();
     }
-    // When Charm → Evocation is configured, add into _charm.Configured
-    // private async void OnEarthPower(object sender, EventArgs e)
-    // {
-    //     var picker = new Evocation();
-    //     var picked = await picker.PickAsync(Navigation);
-    //     if (picked == null) return;
-
-    //     var configPage = new EvocationConfigPage(picked);
-    //     await Navigation.PushAsync(configPage);
-    //     var config = await configPage.Completion;
-    //     if (config == null) return;
-
-    //     _charm.Configured.Add(config);
-    //     UpdateTotal();
-    // }
+    
     public async Task<CalcResult?> GetResultAsync(INavigation nav)
     {
         _tcs = new TaskCompletionSource<CalcResult?>();

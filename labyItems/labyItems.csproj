@@ -71,7 +71,6 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-		<!-- Raw json blobs for tables of values -->
 		<MauiAsset Include="Resources\Raw\**\*" />
 
 	</ItemGroup>
