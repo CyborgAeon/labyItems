@@ -38,7 +38,7 @@ public static class SpellService
                 return new SpellEntry(name, power, colour);
             })
             .OrderBy(e => e.Name)
-            .Take(10)
+            .Take(6))
             .ToList();
 
         return _cache;
