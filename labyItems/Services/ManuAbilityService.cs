@@ -44,6 +44,7 @@ public static class ManuAbilityService
 
         return all.Where(e =>
                 e.name.ToLowerInvariant().Contains(query))
+                .Take(10)
             .ToList();
     }
 }

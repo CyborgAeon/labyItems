@@ -47,6 +47,7 @@ public static class EarthPowerService
         return all.Where(e =>
                 e.Name.ToLowerInvariant().Contains(query) ||
                 e.Fields.Any(f => f.ToLowerInvariant().Contains(query)))
+                .Take(10)
             .ToList();
     }
 }

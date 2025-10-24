@@ -63,6 +63,7 @@ public static class GeneralService
         _cache = list
             .OrderBy(e => e.Table)
             .ThenBy(e => e.Index, StringComparer.OrdinalIgnoreCase)
+            .Take(10)
             .ToList();
 
         return _cache;
