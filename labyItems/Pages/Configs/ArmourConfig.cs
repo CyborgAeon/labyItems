@@ -4,26 +4,43 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using labyItems.Models.Enums;
 
+
 public class ArmourConfig : INotifyPropertyChanged
 {
     // Inputs
     private int _acBase;
-    public int ACBase { get => _acBase; set { if (_acBase != value) { _acBase = Math.Max(0, value); OnPropertyChanged(); } } }
+    public int ACBase
+    {
+        get => _acBase;
+        set { var v = Math.Max(0, value); if (_acBase != v) { _acBase = v; OnPropertyChanged(); Recalculate(); } }
+    }
 
     private ArmourKind _selectedArmour;
-    public ArmourKind SelectedArmour { get => _selectedArmour; set { if (_selectedArmour != value) { _selectedArmour = value; OnPropertyChanged(); } } }
+    public ArmourKind SelectedArmour
+    {
+        get => _selectedArmour;
+        set { if (_selectedArmour != value) { _selectedArmour = value; OnPropertyChanged(); Recalculate(); } }
+    }
 
     private int _magicalColoursCount;
-    public int MagicalColoursCount { get => _magicalColoursCount; set { var v = Math.Max(0, value); if (_magicalColoursCount != v) { _magicalColoursCount = v; OnPropertyChanged(); } } }
+    public int MagicalColoursCount
+    {
+        get => _magicalColoursCount;
+        set { var v = Math.Max(0, value); if (_magicalColoursCount != v) { _magicalColoursCount = v; OnPropertyChanged(); Recalculate(); } }
+    }
 
     private bool _spiritualNonOpposite;
-    public bool SpiritualNonOpposite { get => _spiritualNonOpposite; set { if (_spiritualNonOpposite != value) { _spiritualNonOpposite = value; OnPropertyChanged(); } } }
+    public bool SpiritualNonOpposite
+    {
+        get => _spiritualNonOpposite;
+        set { if (_spiritualNonOpposite != value) { _spiritualNonOpposite = value; OnPropertyChanged(); Recalculate(); } }
+    }
 
     private int _pac, _dac, _mac, _sac;
-    public int PAC { get => _pac; set { var v = Clamp0To6(value); if (_pac != v) { _pac = v; OnPropertyChanged(); } } }
-    public int DAC { get => _dac; set { var v = Clamp0To6(value); if (_dac != v) { _dac = v; OnPropertyChanged(); } } }
-    public int MAC { get => _mac; set { var v = Clamp0To6(value); if (_mac != v) { _mac = v; OnPropertyChanged(); } } }
-    public int SAC { get => _sac; set { var v = Clamp0To6(value); if (_sac != v) { _sac = v; OnPropertyChanged(); } } }
+    public int PAC { get => _pac; set { var v = Clamp0To6(value); if (_pac != v) { _pac = v; OnPropertyChanged(); Recalculate(); } } }
+    public int DAC { get => _dac; set { var v = Clamp0To6(value); if (_dac != v) { _dac = v; OnPropertyChanged(); Recalculate(); } } }
+    public int MAC { get => _mac; set { var v = Clamp0To6(value); if (_mac != v) { _mac = v; OnPropertyChanged(); Recalculate(); } } }
+    public int SAC { get => _sac; set { var v = Clamp0To6(value); if (_sac != v) { _sac = v; OnPropertyChanged(); Recalculate(); } } }
 
     // Outputs
     private int _total;
