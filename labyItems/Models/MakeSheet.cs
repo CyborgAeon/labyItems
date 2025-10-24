@@ -11,10 +11,7 @@ namespace labyItems.Models
     public class MakeSheet
     {
         // Header
-        public string PlayerName { get; set; } = string.Empty; // e.g., "John Smith"
-        public string CharacterName { get; set; } = string.Empty; // e.g., "Mythos the Red"
-        public string CharacterClass { get; set; } = string.Empty; // e.g., "Red Wizard"
-
+        public Character Character { get; set; }
         // Percentages
         public int BaseMakeChancePercent { get; set; } = 90; // defaults to 90%
         public List<BonusEntry> Bonuses { get; set; } = new(); // +% and reason
@@ -56,34 +53,9 @@ namespace labyItems.Models
         public string Reason { get; set; } = string.Empty; // e.g., "Craft speciality"
     }
 
-    // =============================
-    // Post-8th abilities dictionary types
-    // =============================
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum AvailabilityEnum
-    {
-        Any,
-        Wizard,
-        FirstClassWizard,
-        FirstClassAny,
-        FirstClassDruid,
-        FirstClassNeuronic,
-        FirstClassWarrior,
-        FirstClassScout,
-        WizardBracketAny, // "All within the wizard bracket" style
-        Post6thMagicalCalligrapher,
-        Post6thMagicalArtisan,
-        Post6thSpiritualCalligrapher,
-        Post6thSpiritualArtisan,
-        Post6thNaturalArtisan,
-        Post6thArtisanOfTheMind,
-        Post6thSmith
-    }
-
     public record MakeAbility(
         string Name,
-        AvailabilityEnum Availability,
+        string Availability,
         int Table,
         int Cost,
         bool CanBuyMultiple,

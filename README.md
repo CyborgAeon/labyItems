@@ -1,21 +1,6 @@
-1. install mongosh for mongo shell commands.
-1. 1. this can be done using `brew install mongosh` or by going to mongo and finding the download button, adjusting your env variables etc as normal
-1. install docker from: `https://docs.docker.com/desktop/setup/install/windows-install/` or `https://docs.docker.com/desktop/setup/install/mac-install/`
-1. ensure CLI is working with docker --version
-1. 1. if you need to enable virtualization and don't know about it, google it!
-1. pull mongo image `docker pull mongodb/mongodb-atlas-local:latest`
-1. run mongo in a container `docker run --name laby-items -p 27018:27017 mongodb/mongodb-atlas-local`
-1. 1. if you already have mongo running in another container, remember it has a default routing to `27017`, so use the same image or turn off your existing one.
-1. 1. check your image is running in a container...
-1. connect to your mongo shell `mongosh "mongodb://localhost:27018"`
-## setup dotnet
-1. run these to download .net cli `curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh`; `chmod +x dotnet-install.sh`; `./dotnet-install.sh --channel 8.0`
-1. 1. we're using 8 for .net maui
-1. run this to add dotnet to path `export PATH="$HOME/.dotnet:$PATH"`
-1. run `dotnet --info` to check above worked
-1. run `dotnet workload install maui` to install maui workload
-1. run `dotnet workload install maui-android` to install android workload
-## setup android studio
-to work on this, including generic commands for testing you'll need some basic setup. Download this via the gui, it's more straightforward than CLI
-1. go to https://developer.android.com/studio#cmdline-tools
-1. download, then install as appropriate.
+debug steps:
+PKG=com.companyname.labyitems
+dotnet build -t:Run -f net8.0-android -c Debug
+adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
+PID=$(adb shell pidof -s "$PKG"); echo "$PID"
+adb logcat --pid "$PID" -v time

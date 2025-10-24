@@ -4,7 +4,6 @@ namespace labyItems.Pages.Configs
 {
     public class SpellConfig : ConfigBase
     {
-        // Preserve your public API (SpellName maps to base Name)
         public string SpellName
         {
             get => Name;

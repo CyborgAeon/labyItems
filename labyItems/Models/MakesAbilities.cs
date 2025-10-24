@@ -62,5 +62,6 @@ public static class MakesAbilitiesJson
   ""Leave to Simmer"": { ""Name"": ""Leave to Simmer"", ""Availability"": ""Any"", ""Table"": 7, ""Cost"": 40, ""CanBuyMultiple"": false, ""Description"": ""May use a basic potion make in addition to an advanced make; no cost-reduction enhancers."" },
   ""Rites of Protection (Scout)"": { ""Name"": ""Rites of Protection (Scout)"", ""Availability"": ""FirstClassScout"", ""Table"": 8, ""Cost"": 40, ""CanBuyMultiple"": false, ""Description"": ""May take item perm from Wondrous Elixirs as perm damage on casting stamina at 2:1 (incl. kickout)."" },
   ""Dangerous Escape (Scout)"": { ""Name"": ""Dangerous Escape (Scout)"", ""Availability"": ""FirstClassScout"", ""Table"": 8, ""Cost"": 20, ""CanBuyMultiple"": true, ""Description"": ""Once ever: end manufacture instead of rolling on Failure Table."" },
-  ""A Master of the Trade (Scout)"": { ""Name"": ""A Master of the Trade (Scout)"", ""Availability"": ""FirstClassScout"", ""Table"": 9, ""Cost"": 100, ""CanBuyMultiple"": false, ""Description"": ""When playing: +1 make slot for Wondrous Potions or Recipe Books."" }";
+  ""A Master of the Trade (Scout)"": { ""Name"": ""A Master of the Trade (Scout)"", ""Availability"": ""FirstClassScout"", ""Table"": 9, ""Cost"": 100, ""CanBuyMultiple"": false, ""Description"": ""When playing: +1 make slot for Wondrous Potions or Recipe Books."" }
+}";
 };
