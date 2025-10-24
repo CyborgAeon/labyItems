@@ -10,6 +10,7 @@ public class Character {
     public string PlayerName { get; set; } = string.Empty;
     public long Points { get; set; } = 0;
     public List<string> PointsApps { get; set; } = new List<string>();
+    public MakeSheet? MakeSheet { get; set; }
     public List<Item> ItemTemplates {get;set;   } = new List<Item>();
 }
 

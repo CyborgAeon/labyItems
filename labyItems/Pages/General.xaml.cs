@@ -33,6 +33,7 @@ public partial class General : ContentPage
     {
         var list = await GeneralService.SearchByIndexAsync(q);
         _rows.Clear();
+        // not used?
         _rows.AddRange(list.Select(e => new Row
         {
             Index = e.Index,
