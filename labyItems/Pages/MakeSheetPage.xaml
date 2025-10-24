@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="labyItems.Pages.MakeSheetPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:vm="clr-namespace:labyItems.Pages">
+  x:Class="labyItems.Pages.MakeSheetPage"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:vm="clr-namespace:labyItems.Pages">
 
   <ScrollView>
     <VerticalStackLayout Padding="16" Spacing="8">
 
-      <!-- Headers you set from the Character passed to the ctor -->
-      <Label x:Name="PlayerNameHeader"   FontSize="18" FontAttributes="Bold" />
+      <!--  Headers you set from the Character passed to the ctor  -->
+      <Label
+        x:Name="PlayerNameHeader"
+        FontAttributes="Bold"
+        FontSize="18" />
       <Label x:Name="CharacterNameHeader" />
       <Label x:Name="CharacterClassHeader" />
       <Label Text="Base Make Chance (%)" />
       <HorizontalStackLayout Spacing="8">
-        <Entry Keyboard="Numeric" WidthRequest="120" Text="{Binding Sheet.BaseMakeChancePercent}" />
-        <Button Text="Recalc" Command="{Binding RecalcCommand}" />
+        <Entry
+          Keyboard="Numeric"
+          Text="{Binding Sheet.BaseMakeChancePercent, Mode=TwoWay}"
+          WidthRequest="120" />
+        <Button Command="{Binding RecalcCommand}" Text="Recalc" />
       </HorizontalStackLayout>
 
       <Label Text="Final Normal Chance (%)" />
-      <Entry Keyboard="Numeric" Text="{Binding Sheet.FinalNormalChancePercent}" />
-
-      <!-- Add your CollectionViews etc. here … -->
-
+      <Entry Keyboard="Numeric" Text="{Binding Sheet.FinalNormalChancePercent, Mode=TwoWay}" />
+        <Button
+          Grid.Column="2"
+          Clicked="OnSearchAbility"
+          Text="Search" /> 
+      <Label FontAttributes="Bold" Text="Chosen abilities" />
+      <CollectionView ItemsSource="{Binding Sheet.AbilityDescriptions}">
+        <CollectionView.ItemTemplate>
+          <DataTemplate>
+            <Label
+              LineBreakMode="TailTruncation"
+              MaxLines="1"
+              Text="{Binding}" />
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>
