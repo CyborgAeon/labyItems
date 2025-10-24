@@ -20,6 +20,7 @@ namespace labyItems.Pages
         public MakeAbility()
         {
             InitializeComponent();
+
         }
         protected override async void OnAppearing()
         {

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -21,16 +22,31 @@ namespace labyItems.Pages
             CharacterNameHeader.Text = character.Name;
             CharacterClassHeader.Text = character.Class;
 
-            BindingContext = new ManuAbilityConfig();
+            // BindingContext = new ManuAbilityConfig();
         }
+       public ObservableCollection<string> AbilityDescriptions { get; } = new();
 
         private async void OnSearchAbility(object sender, EventArgs e)
         {
             var picked = await new MakeAbility().PickAsync(Navigation);
             if (picked == null) return;
 
-            if (BindingContext is ManuAbilityConfig cfg)
-                cfg.ApplyManuAbility(picked);
+            var delta = ExtractFirstPercent(picked.Description ?? string.Empty);
+            int.TryParse(FinalNormalChancePercent.Text, out int curr);
+            FinalNormalChancePercent.Text = (curr + delta).ToString();
+
+            var name = picked.Name ?? "Ability";
+            var bullet = delta != 0 ? $"• {name} (+{delta}%)" : $"• {name}";
+            AbilityDescriptions.Add(bullet);
+        }
+
+        private static int ExtractFirstPercent(string s)
+        {
+            var m = Regex.Match(s, @"([+-]?\d+)\s*%");
+            if (m.Success && int.TryParse(m.Groups[1].Value, out var n)) return n;
+            // fallback: capture plain integer if you sometimes store “+2” without %
+            m = Regex.Match(s, @"^[\s\p{P}]*([+-]?\d+)\b");
+            return m.Success && int.TryParse(m.Groups[1].Value, out n) ? n : 0;
         }
 
         private async void OnRecalcClicked(object sender, EventArgs e)

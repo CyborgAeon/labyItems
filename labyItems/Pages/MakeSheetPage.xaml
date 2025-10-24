@@ -3,7 +3,8 @@
   x:Class="labyItems.Pages.MakeSheetPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-  xmlns:vm="clr-namespace:labyItems.Pages">
+  xmlns:vm="clr-namespace:labyItems.Pages"
+  x:Name="Page">
 
   <ScrollView>
     <VerticalStackLayout Padding="16" Spacing="8">
@@ -25,13 +26,16 @@
       </HorizontalStackLayout>
 
       <Label Text="Final Normal Chance (%)" />
-      <Entry Keyboard="Numeric" Text="{Binding FinalNormalChancePercent, Mode=TwoWay}" />
+      <Entry Keyboard="Numeric" 
+        x:Name="FinalNormalChancePercent"
+        Text="{Binding FinalNormalChancePercent, Mode=TwoWay}" />
         <Button
           Grid.Column="2"
           Clicked="OnSearchAbility"
           Text="Search" /> 
       <Label FontAttributes="Bold" Text="Chosen abilities" />
-      <CollectionView ItemsSource="{Binding AbilityDescriptions}">
+      <CollectionView 
+        ItemsSource="{Binding Source={x:Reference Page}, Path=AbilityDescriptions}">
         <CollectionView.ItemTemplate>
           <DataTemplate>
             <Label

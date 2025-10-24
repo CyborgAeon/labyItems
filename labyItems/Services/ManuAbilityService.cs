@@ -21,15 +21,14 @@ public static class ManuAbilityService
     public static async Task<IReadOnlyList<ManuAbilityEntry>> GetAllAsync()
     {
         if (_cache != null) return _cache;
-
-        var dict = JsonSerializer.Deserialize<Dictionary<string, ManuAbilityRaw>>(MakesAbilitiesJson.Json)
+        var opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var dict = JsonSerializer.Deserialize<Dictionary<string, ManuAbilityRaw>>(MakesAbilitiesJson.Json, opts)
                    ?? new Dictionary<string, ManuAbilityRaw>();
 
         _cache = dict
             .Select(kvp =>
             {
-                var name = kvp.Key;
-                return new ManuAbilityEntry(name, kvp.Value.availability, kvp.Value.cost, kvp.Value.table, kvp.Value.description);
+                return new ManuAbilityEntry(kvp.Key, kvp.Value.availability, kvp.Value.cost, kvp.Value.table, kvp.Value.description);
             })
             .OrderBy(e => e.name)
             .ToList();
