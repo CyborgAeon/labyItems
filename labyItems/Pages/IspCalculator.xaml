@@ -29,9 +29,20 @@
           Content="Consumable"
           GroupName="cat" />
       </HorizontalStackLayout>
+        <VerticalStackLayout x:Name="ArmourShieldCategoryPage"
+        IsVisible="False"
+        Spacing="10">
+        <Button Clicked="OnShield" Text="Shield" />
+        <Label x:Name="ShieldPickedLabel" IsVisible="False" />
+        
+        <Button Clicked="OnArmour" Text="Armour" />
+        <Label x:Name="ArmourPickedLabel" IsVisible="False" />
+        
+
+      </VerticalStackLayout>
+   
       <!--  Charm options  -->
-      <VerticalStackLayout
-        x:Name="CharmCategoryPage"
+      <VerticalStackLayout x:Name="CharmCategoryPage"
         IsVisible="False"
         Spacing="10">
         <Button Clicked="OnCharmGeneral" Text="General" />
@@ -46,7 +57,7 @@
 
       </VerticalStackLayout>
       <!--  Weapon options  -->
-      <VerticalStackLayout x:Name="WeaponSection" Spacing="10">
+      <VerticalStackLayout x:Name="WeaponCategoryPage" Spacing="10">
 
         <Label FontAttributes="Bold" Text="Magic / Vs Group" />
         <CollectionView x:Name="MagicRows">

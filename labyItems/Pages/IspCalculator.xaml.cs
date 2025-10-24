@@ -16,14 +16,34 @@ public partial class IspCalculator : ContentPage
     public IspCalculator(ItemTypeEnum category)
     {
         InitializeComponent();
-        RbWeapon.CheckedChanged += (_, e) => WeaponSection.IsVisible = RbWeapon.IsChecked;
-        RbArmour.CheckedChanged += (_, e) => WeaponSection.IsVisible = RbWeapon.IsChecked;
+        RbWeapon.CheckedChanged += (_, e) =>
+        {
+            WeaponCategoryPage.IsVisible = RbWeapon.IsChecked;
+            CharmCategoryPage.IsVisible = false;
+            ArmourShieldCategoryPage.IsVisible = false;
+            // ConsumableCategoryPage.IsVisible = false;
+        };
+        RbArmour.CheckedChanged += (_, e) =>
+        {
+            ArmourShieldCategoryPage.IsVisible = RbArmour.IsChecked;
+            WeaponCategoryPage.IsVisible = false;
+            CharmCategoryPage.IsVisible = false;
+            // ConsumableCategoryPage.IsVisible = false;
+        };
         RbCharm.CheckedChanged += (_, e) =>
         {
-            WeaponSection.IsVisible = false;
+            ArmourShieldCategoryPage.IsVisible = false;
+            WeaponCategoryPage.IsVisible = false;
             CharmCategoryPage.IsVisible = RbCharm.IsChecked;
+            // ConsumableCategoryPage.IsVisible = false;
         };
-        RbConsumable.CheckedChanged += (_, e) => WeaponSection.IsVisible = RbWeapon.IsChecked;
+        RbConsumable.CheckedChanged += (_, e) =>
+        {
+            ArmourShieldCategoryPage.IsVisible = false;
+            WeaponCategoryPage.IsVisible = false;
+            CharmCategoryPage.IsVisible = false;
+            // ConsumableCategoryPage.IsVisible = false;
+        };
     }
 
     private void OnSelectArmour(object s, CheckedChangedEventArgs e) { if (e.Value) SetActive(_armour); }
@@ -35,7 +55,6 @@ public partial class IspCalculator : ContentPage
     {
         if (_categoryLocked) return;
         _active = cat;
-        // update visible sections etc...
         UpdateTotal();
     }
 
@@ -95,7 +114,54 @@ public partial class IspCalculator : ContentPage
 
         UpdateTotal();
     }
+    private async void OnShield(object sender, EventArgs e)
+    {
+        _categoryLocked = true;
 
+        var cfgPage = new ShieldConfigPage();   // your shield-only page
+        await Navigation.PushAsync(cfgPage);
+
+        var cfg = await cfgPage.Completion;     // CalcResult? with Summary + TotalIsp
+        _categoryLocked = false;
+        if (cfg is null) return;
+
+        _contributions.Add(new CalcContribution(
+            Source: "Shield",
+            Label: cfg.Summary,
+            Isp: cfg.TotalIsp));
+
+        // If you keep a per-category label, uncomment and point to it:
+        // ShieldPickedLabel.IsVisible = true;
+        // ShieldPickedLabel.Text = string.Join("\n", _contributions
+        //     .Where(c => c.Source.Equals("Shield", StringComparison.OrdinalIgnoreCase))
+        //     .Select(c => c.Label));
+
+        UpdateTotal();
+    }
+    private async void OnArmour(object sender, EventArgs e)
+    {
+        _categoryLocked = true;
+
+        var cfgPage = new ArmourConfigPage();   // your armour-only page
+        await Navigation.PushAsync(cfgPage);
+
+        var cfg = await cfgPage.Completion;     // CalcResult? with Summary + TotalIsp
+        _categoryLocked = false;
+        if (cfg is null) return;
+
+        _contributions.Add(new CalcContribution(
+            Source: "Armour",
+            Label: cfg.Summary,
+            Isp: cfg.TotalIsp));
+
+        // If you keep a per-category label, uncomment and point to it:
+        // ArmourPickedLabel.IsVisible = true;
+        // ArmourPickedLabel.Text = string.Join("\n", _contributions
+        //     .Where(c => c.Source.Equals("Armour", StringComparison.OrdinalIgnoreCase))
+        //     .Select(c => c.Label));
+
+        UpdateTotal();
+    }
     private async void OnCharmMagic(object sender, EventArgs e)
     {
         _categoryLocked = true;

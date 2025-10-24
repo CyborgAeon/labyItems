@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.ArmourConfigPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:conv="clr-namespace:labyItems.Converters"
+    Title="Configure Armour">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:IntConverter x:Key="IntConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="20"
+                Text="Armour Cost Calculator" />
+
+            <!--  Base AC  -->
+            <Label Text="AC base (optional)" />
+            <Entry
+                Keyboard="Numeric"
+                Placeholder="e.g., 10"
+                Text="{Binding ACBase, Mode=TwoWay, Converter={StaticResource IntConverter}}"
+                TextChanged="OnAcBaseChanged" />
+
+            <!--  Armour type  -->
+            <Label Text="Armour type" />
+            <Picker
+                x:Name="ArmourPicker"
+                Title="Select armour type"
+                SelectedIndexChanged="OnArmourChanged">
+                <Picker.Items>
+                    <x:String>— None —</x:String>
+                    <x:String>Magical Master Crafted Armour (2 per AC)</x:String>
+                    <x:String>Spiritual Master Crafted Armour (2 per AC + 2)</x:String>
+                    <x:String>Mantic Master Crafted Armour (4 per AC + 2)</x:String>
+                </Picker.Items>
+            </Picker>
+                <controls:PlusMinusControl
+                    x:Name="MagicalColoursCount"
+                    AllowMultiple="True"
+                    Count="{Binding MagicalColoursCount, Mode=TwoWay, Converter={StaticResource IntConverter}}"
+                    LabelText="Non-Grey Magic-colours ()" />
+                <controls:CheckboxControl
+                    x:Name="SpiritualNonOppositeSwitch"
+                    IsChecked="{Binding SpiritualNonOpposite, Mode=TwoWay}"
+                    LabelText="Spiritual non-opposite alignment" />
+
+            <Label FontAttributes="Bold" Text="Additional AC (max 6 each)" />
+            <Grid
+                ColumnDefinitions="2*,auto,auto"
+                ColumnSpacing="8"
+                RowDefinitions="auto,auto,auto,auto"
+                RowSpacing="6">
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="PAC"
+                    VerticalTextAlignment="Center" />
+                <Stepper
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Increment="1"
+                    Maximum="6"
+                    Minimum="0"
+                    ValueChanged="OnPacChanged"
+                    Value="{Binding PAC, Mode=TwoWay}" />
+                <Entry
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Keyboard="Numeric"
+                    Text="{Binding PAC, Mode=TwoWay, Converter={StaticResource IntConverter}}"
+                    TextChanged="OnPacChanged"
+                    WidthRequest="60" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Text="DAC"
+                    VerticalTextAlignment="Center" />
+                <Stepper
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Increment="1"
+                    Maximum="6"
+                    Minimum="0"
+                    ValueChanged="OnDacChanged"
+                    Value="{Binding DAC, Mode=TwoWay}" />
+                <Entry
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Keyboard="Numeric"
+                    Text="{Binding DAC, Mode=TwoWay, Converter={StaticResource IntConverter}}"
+                    TextChanged="OnDacChanged"
+                    WidthRequest="60" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Text="MAC"
+                    VerticalTextAlignment="Center" />
+                <Stepper
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Increment="1"
+                    Maximum="6"
+                    Minimum="0"
+                    ValueChanged="OnMacChanged"
+                    Value="{Binding MAC, Mode=TwoWay}" />
+                <Entry
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Keyboard="Numeric"
+                    Text="{Binding MAC, Mode=TwoWay, Converter={StaticResource IntConverter}}"
+                    TextChanged="OnMacChanged"
+                    WidthRequest="60" />
+                <Label
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Text="SAC"
+                    VerticalTextAlignment="Center" />
+                <Stepper
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Increment="1"
+                    Maximum="6"
+                    Minimum="0"
+                    ValueChanged="OnSacChanged"
+                    Value="{Binding SAC, Mode=TwoWay}" />
+                <Entry
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Keyboard="Numeric"
+                    Text="{Binding SAC, Mode=TwoWay, Converter={StaticResource IntConverter}}"
+                    TextChanged="OnSacChanged"
+                    WidthRequest="60" />
+            </Grid>
+            <HorizontalStackLayout Spacing="12">
+                <Button Clicked="OnCalculate" Text="Calculate" />
+                <Button Clicked="OnReturn" Text="Done" />
+            </HorizontalStackLayout>
+            <Label FontAttributes="Bold" Text="Results" />
+            <Label LineBreakMode="WordWrap" Text="{Binding Breakdown}" />
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span FontAttributes="Bold" Text="Total ISP: " />
+                        <Span Text="{Binding Total}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
