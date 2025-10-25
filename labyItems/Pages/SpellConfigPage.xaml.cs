@@ -19,18 +19,17 @@ public partial class SpellConfigPage : ContentPage
     {
         // One-line summary for contribution list:
         var basic = cfg.BasicPerDay > 0 ? $"Basic x{cfg.BasicPerDay}" : null;
-        var adv = cfg.AdvancedPerDay > 0 ? $"Advanced x{cfg.AdvancedPerDay}" : null;
-        var addAnyPow = cfg.AdditionalPower > 0 ? $"Additional {cfg.AdditionalPower} mana store" : null;
-        var addPow = cfg.AdditionalPowerOfColour.Item1 > 0 ? $"Additional {cfg.AdditionalPowerOfColour.Item1} {cfg.AdditionalPowerOfColour.Item2} mana store" : null;
-        var makeUnder7thMantic = cfg.MakeSpellUnder7thMantic > 0 ? $"Turn handbook or basic new colour spell to 6th mantic {cfg.MakeSpellUnder7thMantic}/day" : null;
-        var makeBasicMantic = cfg.MakeBasicSpellMantic > 0 ? $"Turn any basic spell mantic {cfg.MakeBasicSpellMantic}/day" : null;
-        var makeAdvMantic = cfg.MakeAdvancedSpellMantic > 0 ? $"Turn any spell mantic {cfg.MakeAdvancedSpellMantic}/day" : null;
+        var adv = cfg.PublishedPerDay > 0 ? $"Advanced x{cfg.PublishedPerDay}" : null;
+        var addAnyPow = cfg.AdditionalGenericMana > 0 ? $"Additional {cfg.AdditionalGenericMana} mana store" : null;
+        var addPow = cfg.AdditionalManaOfColour > 0 ? $"Additional {cfg.AdditionalManaOfColour} {cfg.AdditionalManaColour} mana store" : null;
+        var makeUnder7thMantic = cfg.TurnHandbookToSixthMantic > 0 ? $"Turn handbook to 6th mantic {cfg.TurnHandbookToSixthMantic}/day" : null;
+        var makeBasicMantic = cfg.TurnAnyBasicMantic > 0 ? $"Turn any basic spell mantic {cfg.TurnAnyBasicMantic}/day" : null;
+        var makeAdvMantic = cfg.TurnAnyPublishedMantic > 0 ? $"Turn any spell mantic {cfg.TurnAnyPublishedMantic}/day" : null;
 
         var tags = new List<string?>([
             basic, adv,
-            cfg.AddBasic ? "+Basic" : null,
-            cfg.AddAdvanced ? "+Advanced" : null,
-            cfg.AddPrep ? "+30s prep" : null,
+            cfg.AddBasicToBaseList ? "+Basic" : null,
+            cfg.AddAdvancedToBaseList ? "+Advanced" : null,
             cfg.InnateIsMantic ? "turn innate mantic" : null,
             cfg.PowerStoreRegenerates ? "Power gained in the specific power store regenerates at 1/15 minutes" : null,
             cfg.IsTeachingScroll ? "Teaching scroll of a spell the character could already learn & read." : null,

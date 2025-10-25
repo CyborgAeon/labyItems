@@ -8,63 +8,112 @@
 
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="14">
-      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10"> 
+
+      <!-- Header: title + search -->
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
         <Label
+          Grid.Column="0"
           FontAttributes="Bold"
           FontSize="20"
-          Text="{Binding Title}" /> 
+          Text="{Binding Title}" />
         <Button
-          Grid.Column="2"
+          Grid.Column="1"
           Clicked="OnSearchSpell"
-          Text="Search" /> 
+          Text="Search" />
       </Grid>
 
+      <!-- Optional: override spell Power (mana cost) -->
       <controls:PlusMinusControl
-        Grid.Column="1"
         AllowMultiple="True"
         Count="{Binding Power, Mode=TwoWay}"
         LabelText="Mana cost override" />
 
+      <!-- Innates (per day) -->
+      <Label Text="Innates (x/day)" FontAttributes="Bold" />
+
       <controls:PlusMinusControl
         AllowMultiple="True"
         Count="{Binding BasicPerDay, Mode=TwoWay}"
-        LabelText="Basic spell innate times per day" />
+        LabelText="Casts basic handbook spell x/day (2 × Power × count)" />
 
       <controls:PlusMinusControl
         AllowMultiple="True"
-        Count="{Binding AdvancedPerDay, Mode=TwoWay}"
-        LabelText="Advanced spell innate times per day" />
-      <controls:CheckboxControl IsChecked="{Binding AddBasic}" LabelText="Add basic spell to base list" />
-      <controls:CheckboxControl IsChecked="{Binding AddAdvanced}" LabelText="Add advanced spell to base list" />
-      <controls:CheckboxControl IsChecked="{Binding AddPrep}" LabelText="Add to base list with 30s prep" />
-      <controls:CheckboxControl IsChecked="{Binding InnateIsMantic}" LabelText="Innate is Mantic" />
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding MakeSpellUnder7thMantic, Mode=TwoWay}"
-        LabelText="Make spell under 7th Mantic" />
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding MakeBasicSpellMantic, Mode=TwoWay}"
-        LabelText="Make basic spell Mantic" />
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding MakeAdvancedSpellMantic, Mode=TwoWay}"
-        LabelText="Make advanced spell Mantic" />
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding AdditionalPower, Mode=TwoWay}"
-        LabelText="Additional power" />
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding AdditionalPowerOfSphere, Mode=TwoWay}"
-        LabelText="Additional power of sphere" />
-      <controls:CheckboxControl IsChecked="{Binding PowerStoreRegenerates}" LabelText="Power store regenerates" />
-      <controls:CheckboxControl IsChecked="{Binding IsTeachingScroll}" LabelText="Is teaching scroll" />
+        Count="{Binding PublishedPerDay, Mode=TwoWay}"
+        LabelText="Casts wizard’s any published spell x/day (3 × Power × count)" />
 
-      <Label
-        FontAttributes="Bold"
-        FontSize="18"
-        Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+      <controls:CheckboxControl
+        IsChecked="{Binding InnateIsMantic}"
+        LabelText="Innate spell (from above) is mantic (×4 above cost)" />
+
+      <!-- Additional mana -->
+      <Label Text="Additional mana" FontAttributes="Bold" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding AdditionalMana4, Mode=TwoWay}"
+        LabelText="Additional mana (+4 each)" />
+
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+        <controls:PlusMinusControl
+          Grid.Column="0"
+          AllowMultiple="True"
+          Count="{Binding AdditionalMana3, Mode=TwoWay}"
+          LabelText="Additional mana of colour (+3 each)" />
+        <Entry
+          Grid.Column="1"
+          WidthRequest="140"
+          Placeholder="Colour/hue"
+          Text="{Binding AdditionalMana3Colour, Mode=TwoWay}" />
+      </Grid>
+
+      <!-- Power store / base list -->
+      <Label Text="Base list / power store" FontAttributes="Bold" />
+
+      <controls:CheckboxControl
+        IsChecked="{Binding PowerStoreRegenerates}"
+        LabelText="Power store regenerates at 1/15 minutes (+25)" />
+
+      <controls:CheckboxControl
+        IsChecked="{Binding AddBasicToBaseList}"
+        LabelText="Add basic spell to base list at the start of the day (+15)" />
+
+      <controls:CheckboxControl
+        IsChecked="{Binding AddAdvancedToBaseList}"
+        LabelText="Add advanced spell to base list at the start of the day (+18)" />
+
+      <!-- Mantic conversions -->
+      <Label Text="Mantic conversions" FontAttributes="Bold" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding TurnHandbookToSixthMantic, Mode=TwoWay}"
+        LabelText="Turn handbook spell to 6th mantic x/day (+40 each)" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding TurnAnyBasicMantic, Mode=TwoWay}"
+        LabelText="Turn any basic spell mantic x/day (+50 each)" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding TurnAnyPublishedToSixthMantic, Mode=TwoWay}"
+        LabelText="Turn any published spell to 6th mantic x/day (+60 each)" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding TurnAnyPublishedMantic, Mode=TwoWay}"
+        LabelText="Turn any published spell mantic x/day (+80 each)" />
+
+      <!-- Teaching scroll/scripture -->
+      <controls:CheckboxControl
+        IsChecked="{Binding IsTeachingScroll}"
+        LabelText="Teaching scroll/scripture of chosen spell (+2 × Power)" />
+
+      <!-- Results -->
+      <Label Text="{Binding Breakdown}" LineBreakMode="WordWrap" />
+      <Label FontAttributes="Bold" FontSize="18"
+             Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+
       <Button Clicked="OnReturn" Text="Return" />
     </VerticalStackLayout>
   </ScrollView>
