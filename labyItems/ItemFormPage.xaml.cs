@@ -30,7 +30,7 @@ public partial class ItemFormPage : ContentPage
     private async void OnViewSavedClicked(object sender, EventArgs e)
     {
         // Push list page; when an item is picked, we’ll get it here
-        await Navigation.PushAsync(new ItemTemplates(OnItemPicked));
+        await Navigation.PushAsync(new ItemTemplates(OnItemPicked, _character));
     }
 
     // This gets called by ItemsListPage when user taps an item
@@ -42,8 +42,8 @@ public partial class ItemFormPage : ContentPage
     private void LoadFromItem(Item item)
     {
         ItemTypePicker.SelectedItem = item.ItemType;
-        MakerPlayerNameEntry.Text = item.MakerPlayerName;
-        MakerCharacterNameEntry.Text = item.MakerCharacterName;
+        MakerPlayerNameEntry.Text = item.Maker.PlayerName;
+        MakerCharacterNameEntry.Text = item.Maker.Name;
         DescriptionEditor.Text = item.Description;
         IspEntry.Text = item.Isp.ToString();
         CreatedDatePicker.Date = item.CreatedDate;
@@ -108,9 +108,12 @@ public partial class ItemFormPage : ContentPage
             var item = new Item
             {
                 ItemType = (ItemTypeEnum)ItemTypePicker.SelectedItem,
-                MakerPlayerName = _character.PlayerName ?? MakerPlayerNameEntry.Text,
-                MakerCharacterName = _character.Name ?? MakerCharacterNameEntry.Text,
-                MakerCharacterPoints = _character.Points,
+                Maker = new Character
+                {
+                    PlayerName = _character.PlayerName ?? MakerPlayerNameEntry.Text,
+                    Name = _character.Name ?? MakerCharacterNameEntry.Text,
+                    Points = _character.Points,
+                },
                 WitnessName = WitnessNameEntry.Text,
                 RecipientPlayerName = _recipientPlayerName,
                 RecipientCharacterName = _recipientName,
@@ -127,9 +130,9 @@ public partial class ItemFormPage : ContentPage
                             $"\nRecipient character class: {item.RecipientCharacterClass}";
 
             await DisplayAlert("Item Created",
-                $"\nMaker player name: {item.MakerPlayerName}" +
-                $"\nMaker character name: {item.MakerCharacterName}" +
-                $"\nMaker character points: {item.MakerCharacterPoints}" +
+                $"\nMaker player name: {item.Maker.PlayerName}" +
+                $"\nMaker character name: {item.Maker.Name}" +
+                $"\nMaker character points: {item.Maker.Points}" +
                 $"\nWitness name: {item.WitnessName}" +
                 recipientText +
                 $"\nType: {item.ItemType}" +
@@ -137,9 +140,9 @@ public partial class ItemFormPage : ContentPage
                 $"\nDNBUOD: {item.DoesNotBlowUpOnDeath}\n" +
                 $"\nCreated: {item.CreatedDate:d}", "OK");
 
-            string subject = $"{item.MakerCharacterName} item for {item.RecipientCharacterName}";
+            string subject = $"{item.Maker.Name} item for {item.RecipientCharacterName}";
             string body = $"\nType: {item.ItemType}" +
-                        $"\nMaker: {item.MakerPlayerName}" +
+                        $"\nMaker: {item.Maker.PlayerName}" +
                         $"\nWitness name: {item.WitnessName}" +
                         recipientText +
                         $"\nDescription: {item.Description}" +

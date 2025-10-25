@@ -1,13 +1,14 @@
 using labyItems.Models;
 using labyItems.Services;
+using LiteDB;
 
 namespace labyItems.Pages;
 
 public partial class ItemTemplates : ContentPage
 {
     private readonly Action<Item> _onPicked;
-
-    public ItemTemplates(Action<Item> onPicked)
+    private readonly Character _character;
+    public ItemTemplates(Action<Item> onPicked, Character character)
     {
         InitializeComponent();
         _onPicked = onPicked;
@@ -16,12 +17,12 @@ public partial class ItemTemplates : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        LoadItems();
+        LoadItems(_character.Id);
     }
 
-    private void LoadItems()
+    private void LoadItems(ObjectId characterId)
     {
-        var items = LiteDbService.GetLatestTemplates().ToList();
+        var items = LiteDbService.GetTemplatesByCharacterId(characterId).ToList();
         ItemsView.ItemsSource = items;
     }
 

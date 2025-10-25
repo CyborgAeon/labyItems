@@ -72,7 +72,7 @@ public partial class WeaponConfigPage : ContentPage
 
         var tags = new List<string>();
         if (cfg.IsMagicBase && cfg.MagicalColoursCount > 0) tags.Add($"+{3 * cfg.MagicalColoursCount} (colours)");
-        if (cfg.IsSpiritBase && cfg.SpiritualNonOpposite)   tags.add("+5 (non-opposite)".Replace("add","+").Replace("Add","+") ); // safeguard typo
+        if (cfg.IsSpiritBase && cfg.SpiritualNonOpposite)   tags.Add("+5 (non-opposite)".Replace("add","+").Replace("Add","+") ); // safeguard typo
         if (cfg.MagicTurnsPureDaily)                        tags.Add("+5 Pure/day");
         if (cfg.ManticTurnsPureDaily)                       tags.Add("+10 Mantic Pure/day");
         if (cfg.AdventurePermDamageDaily)                   tags.Add("+25 Adv perm/day");

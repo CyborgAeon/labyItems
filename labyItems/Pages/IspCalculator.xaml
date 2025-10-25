@@ -18,19 +18,19 @@
         <RadioButton
           x:Name="RbWeapon"
           Content="Weapon"
-          GroupName="cat"
-          IsChecked="True" />
+          GroupName="cat" />
         <RadioButton
           x:Name="RbCharm"
           Content="Charm"
-          GroupName="cat" />
+          GroupName="cat" 
+          IsChecked="True" />
         <RadioButton
           x:Name="RbConsumable"
           Content="Consumable"
           GroupName="cat" />
       </HorizontalStackLayout>
       <!-- armour/shield -->
-        <VerticalStackLayout x:Name="ArmourShieldCategoryPage"
+        <VerticalStackLayout x:Name="ArmourCategoryPage"
         IsVisible="False"
         Spacing="10">
         <Button Clicked="OnShield" Text="Shield" />
@@ -41,7 +41,7 @@
         
 
       </VerticalStackLayout>
-   <VerticalStackLayout x:Name="ArmourShieldCategoryPage"
+   <VerticalStackLayout x:Name="WeaponCategoryPage"
         IsVisible="False"
         Spacing="10">
         
@@ -50,7 +50,7 @@
         </VerticalStackLayout>
       <!--  Charm options  -->
       <VerticalStackLayout x:Name="CharmCategoryPage"
-        IsVisible="False"
+        IsVisible="True"
         Spacing="10">
         <Button Clicked="OnCharmGeneral" Text="General" />
         <Label x:Name="GeneralCharmPickedLabel" IsVisible="False" />
@@ -63,70 +63,21 @@
         
 
       </VerticalStackLayout>
-      <!--  Weapon options  -->
-      <VerticalStackLayout x:Name="WeaponCategoryPage" Spacing="10">
+<VerticalStackLayout x:Name="ConsumableCategoryPage"
+                     IsVisible="False"
+                     Spacing="10">
+  <Button Clicked="OnConsumableMagicScroll" Text="Create magic scroll" />
+  <Label x:Name="ConsumableMagicPickedLabel" IsVisible="False" />
 
-        <Label FontAttributes="Bold" Text="Magic / Vs Group" />
-        <CollectionView x:Name="MagicRows">
-          <CollectionView.ItemTemplate>
-            <DataTemplate>
-              <Grid Padding="6" ColumnDefinitions="*,Auto,120">
-                <Label Text="{Binding Name}" />
-                <Label
-                  Grid.Column="1"
-                  HorizontalTextAlignment="End"
-                  Text="{Binding CostLabel}" />
-              </Grid>
-            </DataTemplate>
-          </CollectionView.ItemTemplate>
-        </CollectionView>
+  <Button Clicked="OnConsumableSpiritScroll" Text="Create spirit scroll" />
+  <Label x:Name="ConsumableSpiritPickedLabel" IsVisible="False" />
 
-        <Label FontAttributes="Bold" Text="Spirit" />
-        <CollectionView x:Name="SpiritRows">
-          <CollectionView.ItemTemplate>
-            <DataTemplate>
-              <Grid Padding="6" ColumnDefinitions="*,Auto,120">
-                <Label
-                  Grid.Column="1"
-                  HorizontalTextAlignment="End"
-                  Text="{Binding CostLabel}" />
-                <controls:PlusMinusControl
-                  LabelText="{Binding Name}" 
-                  Grid.Column="2"
-                  AllowMultiple="{Binding AllowMultiple}"
-                  Count="{Binding Count, Mode=TwoWay}" />
-              </Grid>
-            </DataTemplate>
-          </CollectionView.ItemTemplate>
-        </CollectionView>
+  <Button Clicked="OnConsumableNeuroCrystal" Text="Create Neuro crystal" />
+  <Label x:Name="ConsumableNeuroPickedLabel" IsVisible="False" />
 
-        <Label FontAttributes="Bold" Text="Mantic / Physical / Specials" />
-        <CollectionView x:Name="OtherRows">
-          <CollectionView.ItemTemplate>
-            <DataTemplate>
-              <Grid Padding="6" ColumnDefinitions="*,Auto,120">
-                
-                <Label
-                  Grid.Column="1"
-                  HorizontalTextAlignment="End"
-                  Text="{Binding CostLabel}" />
-                <HorizontalStackLayout
-                  Grid.Column="2"
-                  HorizontalOptions="End"
-                  Spacing="6">
-                  <controls:PlusMinusControl
-                    LabelText="{Binding Name}"
-                    Grid.Column="2"
-                    AllowMultiple="{Binding AllowMultiple}"
-                    Count="{Binding Count, Mode=TwoWay}" />
-                </HorizontalStackLayout>
-              </Grid>
-            </DataTemplate>
-          </CollectionView.ItemTemplate>
-        </CollectionView>
-
-      </VerticalStackLayout>
-
+  <Button Clicked="OnConsumableEPTalisman" Text="Create EP Talisman" />
+  <Label x:Name="ConsumableEPPickedLabel" IsVisible="False" />
+</VerticalStackLayout>
       <!--  Totals + Return  -->
       <VerticalStackLayout Padding="8,16,8,8" Spacing="6">
         <Label

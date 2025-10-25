@@ -1,10 +1,10 @@
 using labyItems.Models;
 namespace labyItems.Categories;
 
-public sealed class ArmourShieldCategory : CategoryBase
+public sealed class ArmourCategory : CategoryBase
 {
     public List<CalcRow> Rows { get; } = new();
-    public ArmourShieldCategory()
+    public ArmourCategory()
     {
         // TODO: fill Rows.Add(new Row { Name="...", Cost=... });
     }

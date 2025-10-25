@@ -20,9 +20,7 @@ public class Item
     public ObjectId Id { get; set; }
 
     public ItemTypeEnum ItemType { get; set; }
-    public string MakerPlayerName { get; set; }          = string.Empty;
-    public string MakerCharacterName { get; set; } = string.Empty;
-    public long MakerCharacterPoints { get; set; }
+    public Character Maker { get; set; } = new();
     public string WitnessName { get; set; } = string.Empty;
     public string RecipientPlayerName { get; set; } = string.Empty;
     public string RecipientCharacterName { get; set; } = string.Empty;

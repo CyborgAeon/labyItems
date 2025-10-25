@@ -1,11 +1,12 @@
 using labyItems.Models;
 using labyItems.Categories;
+using labyItems.Pages.Configs;
 namespace labyItems.Pages;
 
 public partial class IspCalculator : ContentPage
 {
     public sealed record CalcContribution(string Source, string Label, int Isp);
-    private readonly ArmourShieldCategory _armour = new();
+    private readonly ArmourCategory _armour = new();
     private readonly WeaponCategory _weapon = new();
     private readonly CharmCategory _charm = new();
     private readonly ConsumableCategory _consumable = new();
@@ -20,29 +21,29 @@ public partial class IspCalculator : ContentPage
         {
             WeaponCategoryPage.IsVisible = RbWeapon.IsChecked;
             CharmCategoryPage.IsVisible = false;
-            ArmourShieldCategoryPage.IsVisible = false;
-            // ConsumableCategoryPage.IsVisible = false;
+            ArmourCategoryPage.IsVisible = false;
+            ConsumableCategoryPage.IsVisible = false;
         };
         RbArmour.CheckedChanged += (_, e) =>
         {
-            ArmourShieldCategoryPage.IsVisible = RbArmour.IsChecked;
+            ArmourCategoryPage.IsVisible = RbArmour.IsChecked;
             WeaponCategoryPage.IsVisible = false;
             CharmCategoryPage.IsVisible = false;
-            // ConsumableCategoryPage.IsVisible = false;
+            ConsumableCategoryPage.IsVisible = false;
         };
         RbCharm.CheckedChanged += (_, e) =>
         {
-            ArmourShieldCategoryPage.IsVisible = false;
+            ArmourCategoryPage.IsVisible = false;
             WeaponCategoryPage.IsVisible = false;
             CharmCategoryPage.IsVisible = RbCharm.IsChecked;
-            // ConsumableCategoryPage.IsVisible = false;
+            ConsumableCategoryPage.IsVisible = false;
         };
         RbConsumable.CheckedChanged += (_, e) =>
         {
-            ArmourShieldCategoryPage.IsVisible = false;
+            ArmourCategoryPage.IsVisible = false;
             WeaponCategoryPage.IsVisible = false;
             CharmCategoryPage.IsVisible = false;
-            // ConsumableCategoryPage.IsVisible = false;
+            ConsumableCategoryPage.IsVisible = RbConsumable.IsChecked;
         };
     }
 
@@ -96,6 +97,124 @@ private async void OnWeapon(object sender, EventArgs e)
 
     UpdateTotal();
 }
+private async void OnConsumableMagicScroll(object sender, EventArgs e)
+{
+    _categoryLocked = true;
+
+    var cfgPage = new ConsumableConfigPage(ConsumableType.MagicalScroll);
+    await Navigation.PushAsync(cfgPage);
+
+    var cfg = await cfgPage.Completion;
+    _categoryLocked = false;
+    if (cfg is null) return;
+
+    _contributions.Add(new CalcContribution(
+        Source: "Consumable/Magic Scroll",
+        Label: cfg.Summary,
+        Isp: cfg.TotalIsp));
+
+    ConsumableMagicPickedLabel.IsVisible = true;
+    ConsumableMagicPickedLabel.Text = string.Join("\n", _contributions
+        .Where(c => c.Source.Equals("Consumable/Magic Scroll", StringComparison.OrdinalIgnoreCase))
+        .Select(c => c.Label));
+
+    UpdateTotal();
+}
+
+private async void OnConsumableSpiritScroll(object sender, EventArgs e)
+{
+    _categoryLocked = true;
+
+    var cfgPage = new ConsumableConfigPage(ConsumableType.SpiritualScroll);
+    await Navigation.PushAsync(cfgPage);
+
+    var cfg = await cfgPage.Completion;
+    _categoryLocked = false;
+    if (cfg is null) return;
+
+    _contributions.Add(new CalcContribution(
+        Source: "Consumable/Spirit Scroll",
+        Label: cfg.Summary,
+        Isp: cfg.TotalIsp));
+
+    ConsumableSpiritPickedLabel.IsVisible = true;
+    ConsumableSpiritPickedLabel.Text = string.Join("\n", _contributions
+        .Where(c => c.Source.Equals("Consumable/Spirit Scroll", StringComparison.OrdinalIgnoreCase))
+        .Select(c => c.Label));
+
+    UpdateTotal();
+}
+
+private async void OnConsumableNeuroCrystal(object sender, EventArgs e)
+{
+    _categoryLocked = true;
+
+    // Preset with 1 focussing crystal; user can adjust or switch type.
+    var cfgPage = new ConsumableConfigPage(ConsumableType.NeuronicShard, initialFocussingCrystals: 0);
+    await Navigation.PushAsync(cfgPage);
+
+    var cfg = await cfgPage.Completion;
+    _categoryLocked = false;
+    if (cfg is null) return;
+
+    _contributions.Add(new CalcContribution(
+        Source: "Consumable/Neuro Crystal",
+        Label: cfg.Summary,
+        Isp: cfg.TotalIsp));
+
+    ConsumableNeuroPickedLabel.IsVisible = true;
+    ConsumableNeuroPickedLabel.Text = string.Join("\n", _contributions
+        .Where(c => c.Source.Equals("Consumable/Neuro Crystal", StringComparison.OrdinalIgnoreCase))
+        .Select(c => c.Label));
+
+    UpdateTotal();
+}
+
+private async void OnConsumableEPTalisman(object sender, EventArgs e)
+{
+    _categoryLocked = true;
+
+    var cfgPage = new ConsumableConfigPage(ConsumableType.DruidicTalisman);
+    await Navigation.PushAsync(cfgPage);
+
+    var cfg = await cfgPage.Completion;
+    _categoryLocked = false;
+    if (cfg is null) return;
+
+    _contributions.Add(new CalcContribution(
+        Source: "Consumable/EP Talisman",
+        Label: cfg.Summary,
+        Isp: cfg.TotalIsp));
+
+    ConsumableEPPickedLabel.IsVisible = true;
+    ConsumableEPPickedLabel.Text = string.Join("\n", _contributions
+        .Where(c => c.Source.Equals("Consumable/EP Talisman", StringComparison.OrdinalIgnoreCase))
+        .Select(c => c.Label));
+
+    UpdateTotal();
+}
+
+private async void OnConsumable(object sender, EventArgs e)
+{
+    _categoryLocked = true;
+
+    var cfgPage = new ConsumableConfigPage();
+    await Navigation.PushAsync(cfgPage);
+
+    var cfg = await cfgPage.Completion;
+    _categoryLocked = false;
+    if (cfg is null) return;
+
+    _contributions.Add(new CalcContribution(
+        Source: "Consumable",
+        Label: cfg.Summary,
+        Isp: cfg.TotalIsp));
+
+    // Optional category label aggregation here…
+
+    UpdateTotal();
+}
+
 
     private async void OnCharmEarthPower(object sender, EventArgs e)
     {

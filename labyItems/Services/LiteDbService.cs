@@ -27,7 +27,7 @@ public static class LiteDbService
 private static string NormalizeKey(string s) =>
     (s ?? string.Empty).Trim().ToLowerInvariant();
     
-public static IEnumerable<Item> GetLatestTemplates()
+public static IEnumerable<Item> GetTemplatesByCharacterId(ObjectId characterId)
 {
     var items = GetDb().GetCollection<Item>("items")
                        .FindAll()
@@ -36,6 +36,7 @@ public static IEnumerable<Item> GetLatestTemplates()
 
     return items
         .DistinctBy(x => $"{x.ItemType}::{NormalizeKey(x.Description)}")
+        .Where(w => w.Maker.Id == characterId)
         .OrderBy(x => x.ItemType)
         .ThenBy(x => NormalizeKey(x.Description));
 }
