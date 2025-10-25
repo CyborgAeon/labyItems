@@ -29,6 +29,7 @@
           Content="Consumable"
           GroupName="cat" />
       </HorizontalStackLayout>
+      <!-- armour/shield -->
         <VerticalStackLayout x:Name="ArmourShieldCategoryPage"
         IsVisible="False"
         Spacing="10">
@@ -40,7 +41,13 @@
         
 
       </VerticalStackLayout>
-   
+   <VerticalStackLayout x:Name="ArmourShieldCategoryPage"
+        IsVisible="False"
+        Spacing="10">
+        
+        <Button Clicked="OnWeapon" Text="Add Weapon" />
+        <Label x:Name="WeaponPickedLabel" IsVisible="False" />
+        </VerticalStackLayout>
       <!--  Charm options  -->
       <VerticalStackLayout x:Name="CharmCategoryPage"
         IsVisible="False"

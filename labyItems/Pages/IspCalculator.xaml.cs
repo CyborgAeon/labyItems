@@ -72,6 +72,30 @@ public partial class IspCalculator : ContentPage
     }
 
     private readonly List<CalcContribution> _contributions = new();
+private async void OnWeapon(object sender, EventArgs e)
+{
+    _categoryLocked = true;
+
+    var cfgPage = new WeaponConfigPage();
+    await Navigation.PushAsync(cfgPage);
+
+    var cfg = await cfgPage.Completion;
+    _categoryLocked = false;
+    if (cfg is null) return;
+
+    _contributions.Add(new CalcContribution(
+        Source: "Weapon",
+        Label: cfg.Summary,
+        Isp: cfg.TotalIsp));
+
+    // Optional category summary label:
+    WeaponPickedLabel.IsVisible = true;
+    WeaponPickedLabel.Text = string.Join("\n", _contributions
+        .Where(c => c.Source.Equals("Weapon", StringComparison.OrdinalIgnoreCase))
+        .Select(c => c.Label));
+
+    UpdateTotal();
+}
 
     private async void OnCharmEarthPower(object sender, EventArgs e)
     {
