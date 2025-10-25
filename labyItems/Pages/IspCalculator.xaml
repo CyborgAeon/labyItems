@@ -13,7 +13,7 @@
       <HorizontalStackLayout x:Name="CategoryRow" Spacing="12">
         <RadioButton
           x:Name="RbArmour"
-          Content="Armour/Shield"
+          Content="Armour"
           GroupName="cat" />
         <RadioButton
           x:Name="RbWeapon"

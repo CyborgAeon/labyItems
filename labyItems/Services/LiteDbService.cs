@@ -33,7 +33,7 @@ public static IEnumerable<Item> GetTemplatesByCharacterId(ObjectId characterId)
                        .FindAll()
                        .OrderByDescending(x => x.CreatedDate)
                        .ToList();
-
+    Console.WriteLine(characterId);
     return items
         .DistinctBy(x => $"{x.ItemType}::{NormalizeKey(x.Description)}")
         .Where(w => w.Maker.Id == characterId)

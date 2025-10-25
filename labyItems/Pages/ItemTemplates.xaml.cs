@@ -12,6 +12,7 @@ public partial class ItemTemplates : ContentPage
     {
         InitializeComponent();
         _onPicked = onPicked;
+        _character = character;
     }
 
     protected override void OnAppearing()

@@ -110,6 +110,7 @@ public partial class ItemFormPage : ContentPage
                 ItemType = (ItemTypeEnum)ItemTypePicker.SelectedItem,
                 Maker = new Character
                 {
+                    Id = _character.Id,
                     PlayerName = _character.PlayerName ?? MakerPlayerNameEntry.Text,
                     Name = _character.Name ?? MakerCharacterNameEntry.Text,
                     Points = _character.Points,
@@ -130,6 +131,7 @@ public partial class ItemFormPage : ContentPage
                             $"\nRecipient character class: {item.RecipientCharacterClass}";
 
             await DisplayAlert("Item Created",
+                $"\nMaker char id: {item.Maker.Id}" +
                 $"\nMaker player name: {item.Maker.PlayerName}" +
                 $"\nMaker character name: {item.Maker.Name}" +
                 $"\nMaker character points: {item.Maker.Points}" +
