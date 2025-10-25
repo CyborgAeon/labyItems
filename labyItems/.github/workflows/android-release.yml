@@ -3,8 +3,11 @@ name: Build Android (APK) and create Release
 on:
   push:
     tags:
-      - 'v*'           
-  workflow_dispatch:  
+      - 'v*'                 # runs on tags like v1.0.0
+  workflow_dispatch:         # allow manual runs (for smoke tests)
+
+permissions:
+  contents: write            # needed to create a GitHub Release
 
 jobs:
   android:
@@ -13,11 +16,18 @@ jobs:
     env:
       DOTNET_VERSION: '8.0.x'
       PACKAGE_FORMAT: ${{ secrets.APP_PACKAGE_FORMAT || 'apk' }}
-      PROJECT_PATH: 'src/labyItems/labyItems.csproj'
+      PROJECT_PATH: 'labyItems/labyItems.csproj'  # <-- set this correctly
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0     # makes tag info available for actions if needed
+
+      - name: Show tag/ref
+        run: |
+          echo "GITHUB_REF=$GITHUB_REF"
+          git describe --tags --always || true
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
@@ -52,22 +62,31 @@ jobs:
             -p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEY_PASSWORD }} \
             -p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
 
-      - name: Find output
-        id: findapk
+      - name: List publish output
         run: |
-          OUTDIR="**/bin/Release/net8.0-android/publish"
-          FILE=$(ls $OUTDIR/*.{apk,aab} 2>/dev/null | head -n1)
-          echo "file=$FILE" >> $GITHUB_OUTPUT
+          echo "Searching for APK/AAB..."
+          find . -path "*/bin/Release/net8.0-android/publish/*" -maxdepth 1 -type f -printf "%p\n" || true
 
-      - name: Upload artifact
+      - name: Find output
+        id: findpkg
+        run: |
+          FILE=$(ls **/bin/Release/net8.0-android/publish/*.{apk,aab} 2>/dev/null | head -n1 || true)
+          if [ -z "$FILE" ]; then
+            echo "No package found in publish directory!" >&2
+            exit 1
+          fi
+          echo "file=$FILE" >> $GITHUB_OUTPUT
+          echo "Found: $FILE"
+
+      - name: Upload artifact (CI artifact)
         uses: actions/upload-artifact@v4
         with:
           name: android-package
-          path: ${{ steps.findapk.outputs.file }}
+          path: ${{ steps.findpkg.outputs.file }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ${{ steps.findapk.outputs.file }}
+          files: ${{ steps.findpkg.outputs.file }}
           generate_release_notes: true
