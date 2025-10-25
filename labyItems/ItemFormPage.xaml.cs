@@ -139,7 +139,7 @@ public partial class ItemFormPage : ContentPage
                 $"\nType: {item.ItemType}" +
                 $"\nISP: {item.Isp}\n" +
                 $"\nDNBUOD: {item.DoesNotBlowUpOnDeath}\n" +
-                $"\nCreated: {item.CreatedDate:d}", "OK");
+                $"\nCreated: {item.CreatedDate:d}", "Continue");
 
             string subject = $"{item.Maker.Name} item for {item.RecipientCharacterName}";
             string body = $"\nType: {item.ItemType}" +
