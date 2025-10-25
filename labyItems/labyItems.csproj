@@ -29,7 +29,7 @@
 		<ApplicationTitle>labyItems</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.labyitems</ApplicationId>
+		<ApplicationId>labyitems</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>

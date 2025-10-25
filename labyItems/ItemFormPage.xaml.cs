@@ -131,7 +131,6 @@ public partial class ItemFormPage : ContentPage
                             $"\nRecipient character class: {item.RecipientCharacterClass}";
 
             await DisplayAlert("Item Created",
-                $"\nMaker char id: {item.Maker.Id}" +
                 $"\nMaker player name: {item.Maker.PlayerName}" +
                 $"\nMaker character name: {item.Maker.Name}" +
                 $"\nMaker character points: {item.Maker.Points}" +
@@ -152,7 +151,7 @@ public partial class ItemFormPage : ContentPage
                         $"\nDnbuod: {item.DoesNotBlowUpOnDeath}" +
                         $"\nCreated: {item.CreatedDate:d}";
 
-            string mailto = $"mailto:bradleyjamesbarfoot@gmail.com" +
+            string mailto = $"mailto:items@labyrinthe.com" +
                             $"?subject={Uri.EscapeDataString(subject)}" +
                             $"&body={Uri.EscapeDataString(body)}";
 
