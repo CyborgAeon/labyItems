@@ -19,16 +19,16 @@ public partial class EvocationConfigPage : ContentPage
     private string BuildSummary(EvocationConfig cfg)
     {
         // One-line summary for contribution list:
-        var basic = cfg.BasicPerDay > 0 ? $"Basic x{cfg.BasicPerDay}" : null;
-        var adv = cfg.AdvancedPerDay > 0 ? $"Advanced x{cfg.AdvancedPerDay}" : null;
+        var basic = cfg.BasicPerDay > 0 ? $"Cast x {cfg.BasicPerDay}/day" : null;
+        var adv = cfg.AdvancedPerDay > 0 ? $"Cast x {cfg.AdvancedPerDay}/day" : null;
         var tags = new List<string?>(new[]{
             basic, adv,
-            cfg.AddBasic ? "+Basic" : null,
-            cfg.AddAdvanced ? "+Advanced" : null,
-            cfg.AddPrep ? "+30s prep" : null
+            cfg.AddBasic ? $"add {cfg.EvocationName} to base list (B)" : null,
+            cfg.AddAdvanced ? $"add {cfg.EvocationName} to base list (A)" : null,
+            cfg.AddPrep ? $"add {cfg.EvocationName} to base list with 30s prep" : null
         }).Where(s => !string.IsNullOrWhiteSpace(s));
 
-        var tagText = string.Join(", ", tags);
+        var tagText = string.Join(",\n", tags);
         var name = string.IsNullOrWhiteSpace(cfg.EvocationName) ? "Evocation" : cfg.EvocationName;
         return $"{name}: {tagText} → {cfg.Total} ISP";
     }
