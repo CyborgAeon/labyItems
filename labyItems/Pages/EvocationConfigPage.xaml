@@ -9,6 +9,8 @@
   <ContentPage.Resources>
     <ResourceDictionary>
       <conv:IntConverter x:Key="IntConverter" />
+<conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
     </ResourceDictionary>
   </ContentPage.Resources>
   <VerticalStackLayout Padding="20" Spacing="14">
@@ -35,14 +37,19 @@
     <controls:PlusMinusControl
       AllowMultiple="True"
       Count="{Binding BasicPerDay, Mode=TwoWay}"
-      LabelText="Cast basic times per day" />
+      LabelText="Cast basic times per day" 
+      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"/>
 
     <controls:PlusMinusControl
       AllowMultiple="True"
       Count="{Binding AdvancedPerDay, Mode=TwoWay}"
-      LabelText="Cast advanced times per day" />
-    <controls:CheckboxControl IsChecked="{Binding AddBasic}" LabelText="Add basic evocation to base list" />
-    <controls:CheckboxControl IsChecked="{Binding AddAdvanced}" LabelText="Add advanced evocation to base list" />
+      LabelText="Cast advanced times per day" 
+      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"/>
+    <controls:CheckboxControl 
+      IsChecked="{Binding AddBasic}" LabelText="Add basic evocation to base list" 
+      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"/>
+    <controls:CheckboxControl IsChecked="{Binding AddAdvanced}" LabelText="Add advanced evocation to base list" 
+      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"/>
     <controls:CheckboxControl IsChecked="{Binding AddPrep}" LabelText="Add to base list with 30s prep" />
 
     <Label

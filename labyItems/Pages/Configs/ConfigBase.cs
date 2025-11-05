@@ -12,6 +12,7 @@ namespace labyItems.Pages.Configs
         private bool _addBasic;
         private bool _addAdvanced;
         private bool _addPrep;
+        private bool? _isAdvanced;
 
         // Common properties
         public string Name
@@ -19,6 +20,14 @@ namespace labyItems.Pages.Configs
             get => _name;
             set => SetProperty(ref _name, value, affectsTotal: false, alsoNotify: nameof(Title));
         }
+
+        // Common properties
+        public bool? IsAdvanced
+        {
+            get => _isAdvanced;
+            set => SetProperty(ref _isAdvanced, value, affectsTotal: false, alsoNotify: nameof(Title));
+        }
+
 
         // Override to customize the “none selected” text in Title
         protected virtual string NoneSelectedText => "Item (none selected)";

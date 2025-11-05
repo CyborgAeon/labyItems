@@ -38,6 +38,7 @@ namespace labyItems.Pages.Configs
         {
             EvocationName = picked.Name;
             Power = picked.Power;
+            IsAdvanced = picked.IsAdvanced;
         }
     }
 }
