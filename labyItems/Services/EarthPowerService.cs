@@ -15,9 +15,6 @@ public static class EarthPowerService
         public string description { get; set; }
         public bool isAdvanced { get; set; }
     }
-
-    public record EvocEntry(string Name, int Power, List<string> Fields, bool IsAdvanced);
-
     private static List<EvocRaw>? _cache;
 
     public static async Task<IReadOnlyList<EvocRaw>> GetAllAsync()

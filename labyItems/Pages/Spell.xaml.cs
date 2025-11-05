@@ -4,16 +4,15 @@ namespace labyItems.Pages;
 
 public partial class Spell : ContentPage
 {
-    public record Result(string Name, int Power, string colour);
-    public class Row
+    public sealed record Result
     {
         public string Name { get; init; } = string.Empty;
-        public string ColourText { get; init; } = string.Empty;
-        public string PowerText { get; init; } = string.Empty;
-        public Result AsResult { get; init; } = new(string.Empty, 0, string.Empty);
+        public int Power { get; init; } = 0;
+        public string Colour { get; init; } = string.Empty;
+        public bool IsAdvanced { get; init; }
     }
 
-    private readonly List<Row> _rows = new();
+    private readonly List<Result> _rows = new();
     private TaskCompletionSource<Result?>? _tcs;
 
     public Spell()
@@ -31,12 +30,12 @@ public partial class Spell : ContentPage
     {
         var list = await SpellService.SearchAsync(q);
         _rows.Clear();
-        _rows.AddRange(list.Select(e => new Row
+        _rows.AddRange(list.Select(e => new Result
         {
-            Name = e.Name,
-            ColourText = e.Colour,
-            PowerText = $"Power: {e.Power}",
-            AsResult = new Result(e.Name, e.Power, e.Colour)
+            Name = e.name,
+            Colour = e.colour,
+            Power = e.level,
+            IsAdvanced = e.isAdvanced ?? false,
         }));
         Results.ItemsSource = null;
         Results.ItemsSource = _rows;
@@ -49,9 +48,9 @@ public partial class Spell : ContentPage
 
     private async void OnPick(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.CurrentSelection.FirstOrDefault() is Row row)
+        if (e.CurrentSelection.FirstOrDefault() is Result row)
         {
-            _tcs?.TrySetResult(row.AsResult);
+            _tcs?.TrySetResult(row);
             ((CollectionView)sender!).SelectedItem = null;
             await Navigation.PopAsync();
         }

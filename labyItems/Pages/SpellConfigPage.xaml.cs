@@ -18,8 +18,8 @@ public partial class SpellConfigPage : ContentPage
     private string BuildSummary(SpellConfig cfg)
     {
         // One-line summary for contribution list:
-        var basic = cfg.BasicPerDay > 0 ? $"Basic x{cfg.BasicPerDay}" : null;
-        var adv = cfg.PublishedPerDay > 0 ? $"Advanced x{cfg.PublishedPerDay}" : null;
+        var basic = cfg.BasicPerDay > 0 ? $"Basic x {cfg.BasicPerDay}" : null;
+        var adv = cfg.PublishedPerDay > 0 ? $"Advanced x {cfg.PublishedPerDay}" : null;
         var addAnyPow = cfg.AdditionalGenericMana > 0 ? $"Additional {cfg.AdditionalGenericMana} mana store" : null;
         var addPow = cfg.AdditionalManaOfColour > 0 ? $"Additional {cfg.AdditionalManaOfColour} {cfg.AdditionalManaColour} mana store" : null;
         var makeUnder7thMantic = cfg.TurnHandbookToSixthMantic > 0 ? $"Turn handbook to 6th mantic {cfg.TurnHandbookToSixthMantic}/day" : null;

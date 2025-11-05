@@ -4,8 +4,13 @@
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:controls="clr-namespace:labyItems.Controls"
+  xmlns:conv="clr-namespace:labyItems.Converters"
   Title="Configure Spell">
-
+<ContentPage.Resources>
+  <ResourceDictionary>
+    <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+  </ResourceDictionary>
+</ContentPage.Resources>
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="14">
 
@@ -28,61 +33,51 @@
         Count="{Binding Power, Mode=TwoWay}"
         LabelText="Mana cost override" />
 
-      <!-- Innates (per day) -->
-      <Label Text="Innates (x/day)" FontAttributes="Bold" />
+<controls:PlusMinusControl
+      AllowMultiple="True"
+      Count="{Binding BasicPerDay, Mode=TwoWay}"
+      LabelText="Cast basic times per day" 
+      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"/>
 
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding BasicPerDay, Mode=TwoWay}"
-        LabelText="Casts basic handbook spell x/day (2 × Power × count)" />
-
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding PublishedPerDay, Mode=TwoWay}"
-        LabelText="Casts wizard’s any published spell x/day (3 × Power × count)" />
-
+    <controls:PlusMinusControl
+      AllowMultiple="True"
+      Count="{Binding AdvancedPerDay, Mode=TwoWay}"
+      LabelText="Cast advanced times per day" 
+      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"/>
+   
       <controls:CheckboxControl
         IsChecked="{Binding InnateIsMantic}"
-        LabelText="Innate spell (from above) is mantic (×4 above cost)" />
-
-      <!-- Additional mana -->
-      <Label Text="Additional mana" FontAttributes="Bold" />
+        LabelText="Innate (from above) is mantic (×4 ISP cost)" />
 
       <controls:PlusMinusControl
         AllowMultiple="True"
         Count="{Binding AdditionalMana4, Mode=TwoWay}"
-        LabelText="Additional mana (+4 each)" />
+        LabelText="Additional mana (+4 ISP each)" />
 
       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
         <controls:PlusMinusControl
           Grid.Column="0"
           AllowMultiple="True"
           Count="{Binding AdditionalMana3, Mode=TwoWay}"
-          LabelText="Additional mana of colour (+3 each)" />
+          LabelText=" colour (+3 ISP each)" />
         <Entry
           Grid.Column="1"
-          WidthRequest="140"
+          WidthRequest="90"
           Placeholder="Colour/hue"
           Text="{Binding AdditionalMana3Colour, Mode=TwoWay}" />
       </Grid>
 
-      <!-- Power store / base list -->
-      <Label Text="Base list / power store" FontAttributes="Bold" />
-
       <controls:CheckboxControl
         IsChecked="{Binding PowerStoreRegenerates}"
         LabelText="Power store regenerates at 1/15 minutes (+25)" />
-
-      <controls:CheckboxControl
-        IsChecked="{Binding AddBasicToBaseList}"
-        LabelText="Add basic spell to base list at the start of the day (+15)" />
-
-      <controls:CheckboxControl
-        IsChecked="{Binding AddAdvancedToBaseList}"
-        LabelText="Add advanced spell to base list at the start of the day (+18)" />
-
-      <!-- Mantic conversions -->
-      <Label Text="Mantic conversions" FontAttributes="Bold" />
+<controls:CheckboxControl 
+      IsChecked="{Binding AddBasic}" 
+      LabelText="Add basic spell to base list" 
+      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"/>
+    <controls:CheckboxControl 
+      IsChecked="{Binding AddAdvanced}" 
+      LabelText="Add advanced spell to base list" 
+      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
       <controls:PlusMinusControl
         AllowMultiple="True"
