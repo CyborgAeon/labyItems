@@ -4,16 +4,14 @@ namespace labyItems.Pages;
 
 public partial class Evocation : ContentPage
 {
-    public record Result(string Name, int Power, IReadOnlyList<string> Fields);
-    public class Row
+    public sealed record Result
     {
-        public string Name { get; init; } = "";
-        public string FieldsText { get; init; } = "";
-        public string PowerText { get; init; } = "";
-        public Result AsResult { get; init; } = new("", 0, Array.Empty<string>());
+        public string Name { get; init; } = string.Empty;
+        public int Power { get; init; }
+        public string Fields { get; init; } = string.Empty;
+        public bool IsAdvanced { get; init; }
     }
-
-    private readonly List<Row> _rows = new();
+    private readonly List<Result> _rows = new();
     private TaskCompletionSource<Result?>? _tcs;
 
     public Evocation()
@@ -31,12 +29,12 @@ public partial class Evocation : ContentPage
     {
         var list = await EarthPowerService.SearchAsync(q);
         _rows.Clear();
-        _rows.AddRange(list.Select(e => new Row
+        _rows.AddRange(list.Select(e => new Result
         {
-            Name = e.Name,
-            FieldsText = e.Fields.Count > 0 ? string.Join(", ", e.Fields) : "—",
-            PowerText = $"Power: {e.Power}",
-            AsResult = new Result(e.Name, e.Power, e.Fields)
+            Name = e.name,
+            Power = e.power,
+            Fields = e.fields.Count > 0 ? string.Join(", ", e.fields) : "—",
+            IsAdvanced = e.isAdvanced,
         }));
         Results.ItemsSource = null;
         Results.ItemsSource = _rows;
@@ -49,15 +47,14 @@ public partial class Evocation : ContentPage
 
     private async void OnPick(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.CurrentSelection.FirstOrDefault() is Row row)
+        if (e.CurrentSelection.FirstOrDefault() is Result result)
         {
-            _tcs?.TrySetResult(row.AsResult);
+            _tcs?.TrySetResult(result);
             ((CollectionView)sender!).SelectedItem = null;
             await Navigation.PopAsync();
         }
     }
 
-    // Allow calling code to await a picked value
     public async Task<Result?> PickAsync(INavigation nav)
     {
         _tcs = new TaskCompletionSource<Result?>();

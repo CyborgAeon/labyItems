@@ -4,7 +4,7 @@ namespace labyItems.Services;
 
 public static class EarthPowerService
 {
-    private class EvocRaw
+    public class EvocRaw
     {
         public string name { get; set; }
         public int power { get; set; }
@@ -16,47 +16,32 @@ public static class EarthPowerService
         public bool isAdvanced { get; set; }
     }
 
-    public record EvocEntry(string Name, int Power, List<string> Fields);
+    public record EvocEntry(string Name, int Power, List<string> Fields, bool IsAdvanced);
 
-    private static List<EvocEntry>? _cache;
+    private static List<EvocRaw>? _cache;
 
-    public static async Task<IReadOnlyList<EvocEntry>> GetAllAsync()
+    public static async Task<IReadOnlyList<EvocRaw>> GetAllAsync()
     {
         if (_cache != null) return _cache;
 
         using var s = await FileSystem.OpenAppPackageFileAsync("druids_way/evocs.json");
         using var r = new StreamReader(s);
         var json = await r.ReadToEndAsync();
-        var dict = JsonSerializer.Deserialize<List<EvocRaw>>(json)
+        _cache = JsonSerializer.Deserialize<List<EvocRaw>>(json)
                    ?? new List<EvocRaw>();
-        _cache = dict.Select(e =>
-        {
-            return new EvocEntry(e.name, e.power, e.fields);
-        }).ToList();
-        // _cache = dict
-        //     .Select(kvp =>
-        //     {
-        //         var name = kvp.Key;
-        //         var power = int.TryParse(kvp.Value.power, out var p) ? p : 0;
-        //         var fields = kvp.Value.fields ?? new List<string>();
-        //         return new EvocEntry(name, power, fields);
-        //     })
-        //     .OrderBy(e => e.Name)
-        //     .ToList();
 
         return _cache;
     }
 
-    public static async Task<IReadOnlyList<EvocEntry>> SearchAsync(string query)
+    public static async Task<IReadOnlyList<EvocRaw>> SearchAsync(string query)
     {
         var all = await GetAllAsync();
         if (string.IsNullOrWhiteSpace(query)) return all;
         query = query.Trim().ToLowerInvariant();
 
         return all.Where(e =>
-                e.Name.ToLowerInvariant().Contains(query) ||
-                e.Fields.Any(f => f.ToLowerInvariant().Contains(query)))
-                .Take(6)
-            .ToList();
+                e.name.ToLowerInvariant().Contains(query))
+                .Take(20)
+                .ToList();
     }
 }
