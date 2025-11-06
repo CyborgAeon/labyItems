@@ -1,21 +1,19 @@
 using System.ComponentModel;
 using labyItems.Services;
+using static labyItems.Services.GeneralService;
 
 namespace labyItems.Pages;
 
 public partial class General : ContentPage
 {
-    public record Result(string Index, string Description, int Cost, int table);
-    public class Row
-    {
+    public sealed record Result {
         public string Index { get; init; } = string.Empty;
-        public string Description { get; init; } = string.Empty;
-        public string TableText { get; init; } = string.Empty;
-        public string CostText { get; init; } = string.Empty;
-        public Result AsResult { get; init; } = new(string.Empty, string.Empty, 0, 0);
+        public  string Description {get;init;} = string.Empty;
+        public int Cost { get; init; } = 0;
+        public int Table { get; init; } = 0;
+        public bool? IsImmunity { get; init; } = null;
     }
-
-    private readonly List<Row> _rows = new();
+    private readonly List<Result> _rows = new();
     private TaskCompletionSource<Result?>? _tcs;
 
     public General()
@@ -33,15 +31,8 @@ public partial class General : ContentPage
     {
         var list = await GeneralService.SearchByIndexAsync(q);
         _rows.Clear();
-        // not used?
-        _rows.AddRange(list.Select(e => new Row
-        {
-            Index = e.Index,
-            TableText = $"Table: {e.Table.ToString()}",
-            CostText = $"Cost: {e.Cost}",
-Description = e.Description,
-            AsResult = new Result(e.Index, e.Description, e.Cost, e.Table)
-        }));
+        
+        _rows.AddRange(list);
         Results.ItemsSource = null;
         Results.ItemsSource = _rows;
     }
@@ -53,9 +44,9 @@ Description = e.Description,
 
     private async void OnPick(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.CurrentSelection.FirstOrDefault() is Row row)
+        if (e.CurrentSelection.FirstOrDefault() is Result row)
         {
-            _tcs?.TrySetResult(row.AsResult);
+            _tcs?.TrySetResult(row);
             ((CollectionView)sender!).SelectedItem = null;
             await Navigation.PopAsync();
         }

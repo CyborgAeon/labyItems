@@ -3,9 +3,75 @@ using labyItems.Pages.Configs;
 
 namespace labyItems.Pages.Configs
 {
+    public enum AbilityType
+    {
+        Other,
+        Immunity
+    }
+
     public class GeneralConfig : ConfigBase
     {
         protected override string NoneSelectedText => "General (none selected)";
+
+        // -------------------- Ability Calculation Core --------------------
+        public int AbilityTable
+        {
+            get => _abilityTable;
+            set
+            {
+                SetProperty(ref _abilityTable, value, true);
+                Recalculate();
+            }
+        }
+        private int _abilityTable;
+        public bool IsFirstEffect
+        {
+            get => _isFirstEffect;
+            set
+            {
+                SetProperty(ref _isFirstEffect, value, true);
+                Recalculate();
+            }
+        }
+        private bool _isFirstEffect;
+
+        public int TotalIsp
+        {
+            get => _totalIsp;
+            private set => SetProperty(ref _totalIsp, value, true);
+        }
+        private int _totalIsp;
+
+        private void Recalculate()
+        {
+            if (Power <= 0 || Power <= 0)
+            {
+                TotalIsp = 0;
+                return;
+            }
+
+            double rate = GetRate(AbilityTable, IsImmunity, IsFirstEffect);
+            TotalIsp = (int)Math.Round(Power / 10.0 * rate);
+        }
+
+        private static double GetRate(int table, bool isImmunity, bool isFirstFx) =>
+            isImmunity switch
+            {
+                true when isFirstFx && table is >= 1 and <= 9 => 3,
+                true when table is >= 1 and <= 9 => 4,
+                true when table is >= 10 and <= 12 => 8,
+
+                false when table is >= 1 and <= 9 => 2,
+                false when table == 10 => 3,
+                false when table == 11 => 4,
+                false when table == 12 => 6,
+
+                _ => 0
+            };
+
+        // -------------------- Remaining existing config --------------------
+        public bool IsImmunity { get => _isImm; set => SetProperty(ref _isImm, value, true); }
+        private bool _isImm;
 
         // ---------- Resistance ----------
         public int ResistanceAllLevels { get => _resAll; set => SetProperty(ref _resAll, value, true); }
@@ -24,14 +90,12 @@ namespace labyItems.Pages.Configs
         private int _resEpNeuroP2;
 
         // ---------- Casting Levels ----------
-        // “+N Casting Levels (All/One Colour of Magic) 14/7 per level”
         public int CastingLevelsAll { get => _castAll; set => SetProperty(ref _castAll, value, true); }
         private int _castAll;
         public int CastingLevelsOneColour { get => _castOne; set => SetProperty(ref _castOne, value, true); }
         private int _castOne;
 
         // ---------- Strength ----------
-        // “+1 Strength (Non-Stacking/Stacking to +2) 15/20”, “+2 Strength (Non-Stacking) 45”
         public int StrengthPlus1NonStackingCount { get => _str1Non; set => SetProperty(ref _str1Non, value, true); }
         private int _str1Non;
         public int StrengthPlus1StackingTo2Count { get => _str1Stack; set => SetProperty(ref _str1Stack, value, true); }
@@ -55,25 +119,6 @@ namespace labyItems.Pages.Configs
         public int RepelLifePerDayCount { get => _repLife; set => SetProperty(ref _repLife, value, true); }
         private int _repLife;
 
-        // ---------- Abilities by Tier (per 10 CP) ----------
-        public int AbilityTier1to9CpBlocks { get => _abT1_9; set => SetProperty(ref _abT1_9, value, true); }
-        private int _abT1_9;
-        public int AbilityTier10CpBlocks { get => _abT10; set => SetProperty(ref _abT10, value, true); }
-        private int _abT10;
-        public int AbilityTier11CpBlocks { get => _abT11; set => SetProperty(ref _abT11, value, true); }
-        private int _abT11;
-        public int AbilityTier12CpBlocks { get => _abT12; set => SetProperty(ref _abT12, value, true); }
-        private int _abT12;
-
-        // ---------- Immunities by Tier (per 10 CP) ----------
-        public int ImmunityTier1to9CpBlocks { get => _imT1_9; set => SetProperty(ref _imT1_9, value, true); }
-        private int _imT1_9;
-        public int ImmunityTier10to12CpBlocks { get => _imT10_12; set => SetProperty(ref _imT10_12, value, true); }
-        private int _imT10_12;
-        // “Immunity T1–9 vs 1st effect each day & 5 minutes thereafter” — 3 per 10 CP
-        public int ImmunityTier1to9FirstFxCpBlocks { get => _imT1_9First; set => SetProperty(ref _imT1_9First, value, true); }
-        private int _imT1_9First;
-
         // ---------- Misc powers ----------
         public int DisciplinePerDayCount { get => _discipline; set => SetProperty(ref _discipline, value, true); }
         private int _discipline;
@@ -94,16 +139,6 @@ namespace labyItems.Pages.Configs
         public int ExtraAlignmentsForEmpowerments { get => _extraAlignments; set => SetProperty(ref _extraAlignments, value, true); }
         private int _extraAlignments;
 
-        // ---------- Undead-themed (require item types—ignored in cost rules here) ----------
-        public int UndeadTouchPerDayCount { get => _undTouch; set => SetProperty(ref _undTouch, value, true); }
-        private int _undTouch;
-        public int GaseousFormPerDayCount { get => _gasForm; set => SetProperty(ref _gasForm, value, true); }
-        private int _gasForm;
-        public int PlaneShiftPerDayCount { get => _planeShift; set => SetProperty(ref _planeShift, value, true); }
-        private int _planeShift;
-        public int WalkThroughWallsPerDayCount { get => _walkWalls; set => SetProperty(ref _walkWalls, value, true); }
-        private int _walkWalls;
-
         // ---------- Knowledge / Prayers ----------
         public int ScholarlyInterestPerDayCount { get => _scholarly; set => SetProperty(ref _scholarly, value, true); }
         private int _scholarly;
@@ -116,14 +151,11 @@ namespace labyItems.Pages.Configs
         public int MinorPrayerPerDayPowerbaseCount { get => _minPrayer; set => SetProperty(ref _minPrayer, value, true); }
         private int _minPrayer;
 
+        // ---------- Other small items ----------
         public int AdditionalLTMBlocks
         {
             get => _lifeBlocks;
-            set
-            {
-                var v = Math.Clamp(value, 0, 4);
-                SetProperty(ref _lifeBlocks, v, true);
-            }
+            set => SetProperty(ref _lifeBlocks, Math.Clamp(value, 0, 4), true);
         }
         private int _lifeBlocks;
 
@@ -136,10 +168,6 @@ namespace labyItems.Pages.Configs
         private int _inn6;
         public int ElfDraveInnateLevel8Count { get => _inn8; set => SetProperty(ref _inn8, value, true); }
         private int _inn8;
-        public int ExtraInnatesX2From8thCount { get => _x2Inn; set => SetProperty(ref _x2Inn, value, true); }
-        private int _x2Inn;
-        public int ExtraInnatesX3FromX2Count { get => _x3Inn; set => SetProperty(ref _x3Inn, value, true); }
-        private int _x3Inn;
 
         public bool ReadLanguages { get => _readLang; set => SetProperty(ref _readLang, value, true); }
         private bool _readLang;
@@ -156,6 +184,7 @@ namespace labyItems.Pages.Configs
         {
             double t = 0;
 
+            // Existing maths
             t += 20 * ResistanceAllLevels;
             t += 12 * ResistanceMagicOrSpiritLevels;
             t += 8 * ResistanceEpOrNeuroLevels;
@@ -173,13 +202,10 @@ namespace labyItems.Pages.Configs
             t += 6 * RepelAttractOneTypePerDayCount;
             t += 8 * RepelAttractOneGroupPerDayCount;
             t += 10 * RepelLifePerDayCount;
-            t += 2 * AbilityTier1to9CpBlocks;
-            t += 3 * AbilityTier10CpBlocks;
-            t += 4 * AbilityTier11CpBlocks;
-            t += 6 * AbilityTier12CpBlocks;
-            t += 4 * ImmunityTier1to9CpBlocks;
-            t += 8 * ImmunityTier10to12CpBlocks;
-            t += 3 * ImmunityTier1to9FirstFxCpBlocks;
+
+            // New: automatic ability/immunity ISP
+            t += TotalIsp;
+
             t += 15 * DisciplinePerDayCount;
             t += 20 * WardPact8LevelsCount;
             t += 15 * KiOrPrimalStrikePerDayCount;
@@ -188,10 +214,6 @@ namespace labyItems.Pages.Configs
             t += 20 * EmpowerWeaponManticCount;
             t += 2 * ExtraColoursForEmpowerments;
             t += 3 * ExtraAlignmentsForEmpowerments;
-            t += 15 * UndeadTouchPerDayCount;
-            t += 35 * GaseousFormPerDayCount;
-            t += 20 * PlaneShiftPerDayCount;
-            t += 20 * WalkThroughWallsPerDayCount;
             t += 15 * ScholarlyInterestPerDayCount;
             t += 8 * KnowledgeOfArcanePerDayCount;
             t += 10 * MajorPrayerPerDayPowerbaseCount;
@@ -201,11 +223,11 @@ namespace labyItems.Pages.Configs
             var lifeCost = 5 * AdditionalLTMBlocks;
             if (LTMKickInIsMagicOrSpirit) lifeCost *= 2;
             t += lifeCost;
+
             t += 20 * ElfDraveInnateLevel4Count;
             t += 45 * ElfDraveInnateLevel6Count;
             t += 70 * ElfDraveInnateLevel8Count;
-            t += 70 * ExtraInnatesX2From8thCount;
-            t += 70 * ExtraInnatesX3FromX2Count;
+
             if (ReadLanguages) t += 6;
             if (DisarmTrapsAsScout) t += 10;
             t += 5 * PotionRecipesKnownCount;
@@ -215,13 +237,14 @@ namespace labyItems.Pages.Configs
             return t;
         }
 
-        protected override double ApplyMultipliers(double total)
-            => total;
+        protected override double ApplyMultipliers(double total) => total;
 
         public void ApplyGeneral(General.Result picked)
         {
             Name = picked.Index;
             Power = picked.Cost;
+            IsImmune = picked.IsImmunity;
+            AbilityTable = picked.Table;
         }
     }
 }

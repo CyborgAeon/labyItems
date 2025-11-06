@@ -8,7 +8,7 @@ public partial class Spell : ContentPage
     {
         public string Name { get; init; } = string.Empty;
         public int Power { get; init; } = 0;
-        public string Colour { get; init; } = string.Empty;
+        public string Colour { get; init; }
         public bool IsAdvanced { get; init; }
     }
 

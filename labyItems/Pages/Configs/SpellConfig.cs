@@ -17,17 +17,28 @@ public class SpellConfig : INotifyPropertyChanged
     public int Power
     {
         get => _power;
-        set { var v = Math.Max(0, value); if (_power != v) {
+        set
+        {
+            var v = Math.Max(0, value); if (_power != v)
+            {
                 _power = v;
-                OnPropertyChanged(); 
-            OnPropertyChanged(nameof(Power));
-            Recalculate(); } }
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Power));
+                Recalculate();
+            }
+        }
     }
     private bool? _isAdvanced;
     public bool? IsAdvanced
     {
         get => _isAdvanced;
         set { if (_isAdvanced != value) { _isAdvanced = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsAdvanced)); } }
+    }
+    private string _colour;
+    public string Colour
+    {
+        get => _colour;
+        set { if (_colour != value) { _colour = value; OnPropertyChanged(); OnPropertyChanged(nameof(Colour)); } }
     }
 
     public string Title => $"{SpellName} (Power {Power})";
@@ -114,6 +125,7 @@ public class SpellConfig : INotifyPropertyChanged
         SpellName = string.IsNullOrWhiteSpace(picked.Name) ? "Spell" : picked.Name;
         Power = Math.Max(1, picked.Power);
         IsAdvanced = picked.IsAdvanced;
+        Colour = picked.Colour;
     }
 
     public void Recalculate()

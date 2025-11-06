@@ -4,20 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using labyItems.Pages.Configs;
+using labyItems.Models;
 
 namespace labyItems.Pages
 {
     public partial class GeneralConfigPage : ContentPage
     {
+        private async void OnSearchGeneral(object sender, EventArgs e)
+        {
+            var picked = await new General().PickAsync(Navigation);
+            if (picked == null) return;
 
- private async void OnSearchGeneral(object sender, EventArgs e)
-    {
-        var picked = await new General().PickAsync(Navigation);
-        if (picked == null) return;
-
-        if (BindingContext is GeneralConfig cfg)
-            cfg.ApplyGeneral(picked);
-    }
+            if (BindingContext is GeneralConfig cfg)
+                cfg.ApplyGeneral(picked);
+        }
         private readonly TaskCompletionSource<CalcResult?> _tcs = new();
         public Task<CalcResult?> Completion => _tcs.Task;
 
@@ -58,14 +58,6 @@ namespace labyItems.Pages
         private static string BuildSummary(GeneralConfig c)
         {
             var s = new List<string>();
-
-            // Base shared
-            if (c.BasicPerDay > 0) s.Add($"Basic innates: {c.BasicPerDay}/day");
-            if (c.AdvancedPerDay > 0) s.Add($"Advanced innates: {c.AdvancedPerDay}/day");
-            if (c.AddBasic) s.Add("Add basic to base list (+15)");
-            if (c.AddAdvanced) s.Add("Add advanced to base list (+18)");
-            if (c.AddPrep) s.Add("Add to base list with 30s prep (+50%)");
-
             // Resistance
             AddIf(s, c.ResistanceAllLevels, "+1 Resistance (all)", "x");
             AddIf(s, c.ResistanceMagicOrSpiritLevels, "+1 Resistance (magic/spirit)", "x");
@@ -93,15 +85,6 @@ namespace labyItems.Pages
             AddIf(s, c.RepelAttractOneGroupPerDayCount, "Repel/Attract one Group (1/day)", "x");
             AddIf(s, c.RepelLifePerDayCount, "Repel Life (1/day)", "x");
 
-            // Abilities / Immunities (per 10 CP blocks)
-            AddIf(s, c.AbilityTier1to9CpBlocks, "Ability T1–9 blocks (per 10 CP)", "x");
-            AddIf(s, c.AbilityTier10CpBlocks, "Ability T10 blocks (per 10 CP)", "x");
-            AddIf(s, c.AbilityTier11CpBlocks, "Ability T11 blocks (per 10 CP)", "x");
-            AddIf(s, c.AbilityTier12CpBlocks, "Ability T12 blocks (per 10 CP)", "x");
-            AddIf(s, c.ImmunityTier1to9CpBlocks, "Immunity T1–9 blocks (per 10 CP)", "x");
-            AddIf(s, c.ImmunityTier10to12CpBlocks, "Immunity T10–12 blocks (per 10 CP)", "x");
-            AddIf(s, c.ImmunityTier1to9FirstFxCpBlocks, "Immunity T1–9 (1st fx/day) blocks", "x");
-
             // Misc
             AddIf(s, c.DisciplinePerDayCount, "Discipline (1/day)", "x");
             AddIf(s, c.WardPact8LevelsCount, "Ward Pact (8 levels)", "x");
@@ -113,12 +96,6 @@ namespace labyItems.Pages
             AddIf(s, c.EmpowerWeaponManticCount, "Empower weapon: +0 mantic (5 mins)", "x");
             AddIf(s, c.ExtraColoursForEmpowerments, "Extra colours for empowerment", "+");
             AddIf(s, c.ExtraAlignmentsForEmpowerments, "Extra alignments for empowerment", "+");
-
-            // Undead / Forms
-            AddIf(s, c.UndeadTouchPerDayCount, "Undead touch (1/day)", "x");
-            AddIf(s, c.GaseousFormPerDayCount, "Gaseous Form (1/day)", "x");
-            AddIf(s, c.PlaneShiftPerDayCount, "Plane Shift (1/day)", "x");
-            AddIf(s, c.WalkThroughWallsPerDayCount, "Walk Through Walls (1/day)", "x");
 
             // Knowledge / Prayers
             AddIf(s, c.ScholarlyInterestPerDayCount, "Scholarly Interest (1/day)", "x");
@@ -138,8 +115,6 @@ namespace labyItems.Pages
             AddIf(s, c.ElfDraveInnateLevel4Count, "Elf/Drave 4th level innates", "x");
             AddIf(s, c.ElfDraveInnateLevel6Count, "Elf/Drave 6th level innates", "x");
             AddIf(s, c.ElfDraveInnateLevel8Count, "Elf/Drave 8th level innates", "x");
-            AddIf(s, c.ExtraInnatesX2From8thCount, "Innates ×2 (from 8th)", "x");
-            AddIf(s, c.ExtraInnatesX3FromX2Count, "Innates ×3 (from ×2)", "x");
 
             // Utilities
             if (c.ReadLanguages) s.Add("Read languages");
@@ -156,12 +131,5 @@ namespace labyItems.Pages
             if (count <= 0) return;
             s.Add(mode == "x" ? $"{label}: x{count}" : $"{label}: +{count}");
         }
-    }
-
-    // If you already have a CalcResult elsewhere, remove this duplicate.
-    public class CalcResult
-    {
-        public int TotalIsp { get; set; }
-        public string Summary { get; set; }
     }
 }

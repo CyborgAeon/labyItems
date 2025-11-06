@@ -13,6 +13,7 @@ namespace labyItems.Pages.Configs
         private bool _addAdvanced;
         private bool _addPrep;
         private bool? _isAdvanced;
+        private bool? _isImmune;
 
         // Common properties
         public string Name
@@ -21,11 +22,15 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _name, value, affectsTotal: false, alsoNotify: nameof(Title));
         }
 
-        // Common properties
         public bool? IsAdvanced
         {
             get => _isAdvanced;
             set => SetProperty(ref _isAdvanced, value, affectsTotal: false, alsoNotify: nameof(Title));
+        }
+        public bool? IsImmune
+        {
+            get => _isImmune;
+            set => SetProperty(ref _isImmune, value, affectsTotal: false, alsoNotify: nameof(Title));
         }
 
 

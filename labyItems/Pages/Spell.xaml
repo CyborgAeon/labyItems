@@ -11,7 +11,7 @@
     <SearchBar
         x:Name="Search"
         Grid.Row="0"
-        Placeholder="Search by name or colour (e.g. brown, purge the...)"
+        Placeholder="Search by name"
         TextChanged="OnSearchChanged" />
 
     <!-- Results -->
@@ -55,7 +55,7 @@
                 <Label.FormattedText>
                   <FormattedString>
                     <Span Text="Colour: " />
-                    <Span Text="{Binding ColourText}" />
+                    <Span Text="{Binding Colour}" />
                   </FormattedString>
                 </Label.FormattedText>
               </Label>

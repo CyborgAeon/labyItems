@@ -1,29 +1,30 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using labyItems.Pages;
 
 namespace labyItems.Services;
 
+public static class AbilityHelper
+{
+    public static bool IsImmunity(this string fromIndex)
+    {
+        if (fromIndex.Contains("Immunity!")) return true;
+        else return false;
+    }
+}
+
 public static class GeneralService
 {
-    // Public DTO used by the app
-    public sealed record TableEntry(
-        int Table,             // table number: 1..12
-        string Index,          // e.g. "Rebirth"
-        string Description,    // desc
-        int Cost,              // parsed numeric cost
-        string Available       // e.g. "ALL"
-    );
-
     // Raw JSON shape in each file
     private sealed class TableRaw
     {
         [JsonPropertyName("available")] public string? Available { get; set; }
-        [JsonPropertyName("index")] public string? Index { get; set; }
+        [JsonPropertyName("index")] public string Index { get; set; }
         [JsonPropertyName("desc")] public string? Desc { get; set; }
         [JsonPropertyName("cost")] public string? Cost { get; set; }
     }
 
-    private static IReadOnlyList<TableEntry>? _cache;
+    private static IReadOnlyList<General.Result>? _cache;
     private static readonly JsonSerializerOptions _json = new()
     {
         PropertyNameCaseInsensitive = true
@@ -32,11 +33,11 @@ public static class GeneralService
     private const string BasePath = "evolution_classes";
     private const int TableCount = 12;
 
-    public static async Task<IReadOnlyList<TableEntry>> GetAllAsync()
+    public static async Task<IReadOnlyList<General.Result>> GetAllAsync()
     {
         if (_cache is not null) return _cache;
 
-        var list = new List<TableEntry>(256);
+        var list = new List<General.Result>();
 
         for (int t = 1; t <= TableCount; t++)
         {
@@ -52,30 +53,22 @@ public static class GeneralService
                 var desc = (item.Desc ?? "").Trim();
                 var avail = (item.Available ?? "").Trim();
                 var cost = TryParseInt(item.Cost);
-
                 if (string.IsNullOrWhiteSpace(idx))
-                    continue; // skip malformed
-
-                list.Add(new TableEntry(t, idx, desc, cost, avail));
+                    continue;
+                list.Add(new General.Result { Index = idx, Description = desc, Cost = cost, Table = t, IsImmunity = item.Index.IsImmunity() });
             }
         }
 
-        _cache = list
-            .OrderBy(e => e.Table)
-            .ThenBy(e => e.Index, StringComparer.OrdinalIgnoreCase)
-            .Take(6)
-            .ToList();
-
+        _cache = list;
         return _cache;
     }
 
-    /// <summary>Search by index (contains, case-insensitive). If table is supplied, restrict to that table.</summary>
-    public static async Task<IReadOnlyList<TableEntry>> SearchByIndexAsync(string? query, int? table = null)
+    public static async Task<IReadOnlyList<General.Result>> SearchByIndexAsync(string? query, int? table = null)
     {
         var all = await GetAllAsync();
         var q = (query ?? "").Trim();
 
-        IEnumerable<TableEntry> source = all;
+        IEnumerable<General.Result> source = all;
         if (table is { } t && t >= 1 && t <= TableCount)
             source = source.Where(e => e.Table == t);
 
@@ -85,28 +78,7 @@ public static class GeneralService
         q = q.ToLowerInvariant();
         return source.Where(e => e.Index.ToLowerInvariant().Contains(q)).ToList();
     }
-
-    /// <summary>Get all entries from a specific table number (1..12).</summary>
-    public static async Task<IReadOnlyList<TableEntry>> GetByTableAsync(int table)
-    {
-        var all = await GetAllAsync();
-        return all.Where(e => e.Table == table).ToList();
-    }
-
-    /// <summary>Try get exact match on index (optionally within a table).</summary>
-    public static async Task<TableEntry?> TryGetByIndexAsync(string index, int? table = null)
-    {
-        var all = await GetAllAsync();
-        var q = index.Trim();
-
-        IEnumerable<TableEntry> source = all;
-        if (table is { } t && t >= 1 && t <= TableCount)
-            source = source.Where(e => e.Table == t);
-
-        return source.FirstOrDefault(e => string.Equals(e.Index, q, StringComparison.OrdinalIgnoreCase));
-    }
-
-    /// <summary>Clear the in-memory cache (e.g., if you hot-swap files during dev).</summary>
+    
     public static void InvalidateCache() => _cache = null;
 
     private static int TryParseInt(string? s)
