@@ -57,7 +57,7 @@ namespace labyItems.Pages
             _tcs.TrySetResult(result);
             Navigation.PopAsync();
         }
-        private static void AddResistanceLevels(List<string> summary){
+        private static void AddResistanceLevels(List<string> summary, GeneralConfig c){
             summary.AddToSummaryIf(c.ResistAll1, "+1 LoR (all)");
             summary.AddToSummaryIf(c.ResistMagic, "+1 LoR magic");
             summary.AddToSummaryIf(c.ResistSpirit, "+1 LoR spirit");
@@ -74,9 +74,9 @@ namespace labyItems.Pages
         {
             var s = new List<string>();
 
-            AddResistanceLevels(s);
+            AddResistanceLevels(s, c);
             s.AddToSummaryIf(c.CastingLevelsCount, $"+{c.CastingLevelsCount} Casting levels {c.CastingLevelsColour}");
-            
+
             s.AddToSummaryIf(c.StrengthPlus1NonStackingCount, "+1 Strength (non-stacking)");
             s.AddToSummaryIf(c.StrengthPlus1StackingTo2Count, "+1 Strength (stacking to +2)");
             s.AddToSummaryIf(c.StrengthPlus2NonStackingCount, "+2 Strength (non-stacking)");

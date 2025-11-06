@@ -8,7 +8,7 @@
   Title="Configure General Charm">
 
   <ContentPage.Resources>
-    <Style TargetType="Label" x:Key="SectionHeader">
+    <Style x:Key="SectionHeader" TargetType="Label">
       <Setter Property="FontAttributes" Value="Bold" />
       <Setter Property="FontSize" Value="18" />
       <Setter Property="Margin" Value="0,16,0,6" />
@@ -19,146 +19,91 @@
 
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="10">
-      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10"> 
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
         <Label
           FontAttributes="Bold"
           FontSize="20"
-          Text="{Binding Title}" /> 
+          Text="{Binding Title}" />
         <Button
           Grid.Column="2"
           Clicked="OnSearchGeneral"
-          Text="Search" /> 
+          Text="Search" />
       </Grid>
-      <!-- Resistance section header with caret -->
-<Grid ColumnDefinitions="Auto,*" ColumnSpacing="6" Margin="0,10,0,0">
-  <Image
-    Source="caret_right.png"
-    WidthRequest="20"
-    HeightRequest="20"
-    VerticalOptions="Center"
-    Rotation="{Binding ShowResistanceSection, Converter={StaticResource BoolToRotationConverter}}"
-    GestureRecognizers="{TapGestureRecognizer Tapped=ToggleResistanceSection}" />
-  <Label
-    Grid.Column="1"
-    Text="Levels of Resistance (LoR)"
-    Style="{StaticResource SectionHeader}"
-    VerticalOptions="Center">
-    <Label.GestureRecognizers>
-      <TapGestureRecognizer Tapped="ToggleResistanceSection" />
-    </Label.GestureRecognizers>
-  </Label>
-</Grid>
-
-<VerticalStackLayout
-    IsVisible="{Binding ShowResistanceSection}"
-    Padding="10,0,0,0"
-    Spacing="4">
-  <controls:PlusMinusControl LabelText="+1 LoR to (all)"
-                             Count="{Binding ResistAll1, Mode=TwoWay}" />
-  <controls:PlusMinusControl LabelText="+1 LoR Magic"
-                             Count="{Binding ResistMagic1, Mode=TwoWay}" />
-  <controls:PlusMinusControl LabelText="+1 LoR Spirit"
-                             Count="{Binding ResistSpirit1, Mode=TwoWay}" />
-  <controls:PlusMinusControl LabelText="+1 LoR EP"
-                             Count="{Binding ResistEp1, Mode=TwoWay}" />
-  <controls:PlusMinusControl LabelText="+2 LoR (all)"
-                             Count="{Binding ResistAll2, Mode=TwoWay}" />
-  <controls:PlusMinusControl LabelText="+2 LoR Spirit"
-                             Count="{Binding ResistSpirit2, Mode=TwoWay}" />
-  <controls:PlusMinusControl LabelText="+2 LoR Magic"
-                             Count="{Binding ResistMag2, Mode=TwoWay}" />
-  <controls:PlusMinusControl LabelText="+2 LoR EP"
-                             Count="{Binding ResistEp2, Mode=TwoWay}" />
-  <controls:PlusMinusControl LabelText="+2 LoR Neuro"
-                             Count="{Binding ResistNeuro2, Mode=TwoWay}" />
-</VerticalStackLayout>
-      <controls:PlusMinusControl LabelText="+Casting Levels (all magic) — 14/level"
+      <!--  Resistance section header with caret  -->
+      <controls:PlusMinusControl Count="{Binding ResistAll1, Mode=TwoWay}" LabelText=" LoR to " />
+      <controls:PlusMinusControl Count="{Binding ResistMagic1, Mode=TwoWay}" LabelText="+1 LoR Magic" />
+      <controls:PlusMinusControl Count="{Binding ResistSpirit1, Mode=TwoWay}" LabelText="+1 LoR Spirit" />
+      <controls:PlusMinusControl Count="{Binding ResistEp1, Mode=TwoWay}" LabelText="+1 LoR EP" />
+      <controls:PlusMinusControl Count="{Binding ResistAll2, Mode=TwoWay}" LabelText="+2 LoR (all)" />
+      <controls:PlusMinusControl Count="{Binding ResistSpirit2, Mode=TwoWay}" LabelText="+2 LoR Spirit" />
+      <controls:PlusMinusControl Count="{Binding ResistMag2, Mode=TwoWay}" LabelText="+2 LoR Magic" />
+      <controls:PlusMinusControl Count="{Binding ResistEp2, Mode=TwoWay}" LabelText="+2 LoR EP" />
+      <controls:PlusMinusControl Count="{Binding ResistNeuro2, Mode=TwoWay}" LabelText="+2 LoR Neuro" />
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+        <controls:MagicColourPicker 
+          Grid.Column="0"
+          LabelText="Additional Casting levels for..." 
+          SelectedColour="{Binding CastingLevelsColour, Mode=TwoWay}" />
+        <controls:PlusMinusControl
+          Grid.Column="1"
+          AllowMultiple="True"
+          Count="{Binding CastingLevelsCount, Mode=TwoWay}"
+          LabelText=""
+          Max="3" />
+      </Grid>
+      <!-- <controls:PlusMinusControl LabelText="+Casting Levels (all magic) — 14/level"
                                  Count="{Binding CastingLevelsAll, Mode=TwoWay}" />
       <controls:PlusMinusControl LabelText="+Casting Levels (one colour) — 7/level"
                                  Count="{Binding CastingLevelsOneColour, Mode=TwoWay}" />
       <controls:PlusMinusControl LabelText="+1 Str (non-stacking) — 15"
-                                 Count="{Binding StrengthPlus1NonStackingCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="+1 Str (stacking to +2) — 20"
-                                 Count="{Binding StrengthPlus1StackingTo2Count, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="+2 Str (non-stacking) — 45"
-                                 Count="{Binding StrengthPlus2NonStackingCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="25% Cold Rage 1/day — 10"
-                                 Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="50% Berserk Rage 1/day — 25"
-                                 Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="25% Cold Rage vs one Group (always) — 40"
-                                 Count="{Binding ColdRage25VsOneGroupAlwaysCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Repel/Attract one Type 1/day — 6"
-                                 Count="{Binding RepelAttractOneTypePerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Repel/Attract one Group 1/day — 8"
-                                 Count="{Binding RepelAttractOneGroupPerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Repel Life 1/day — 10"
-                                 Count="{Binding RepelLifePerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Discipline 1/day — 15"
-                                 Count="{Binding DisciplinePerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Ward Pact (8 levels) — 20"
-                                 Count="{Binding WardPact8LevelsCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Ki / Primal Strike 1/day — 15"
-                                 Count="{Binding KiOrPrimalStrikePerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Empower +0 magic dmg (5 mins) — 8"
-                                 Count="{Binding EmpowerWeaponMagicCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Empower +0 spirit dmg (5 mins) — 10"
-                                 Count="{Binding EmpowerWeaponSpiritCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Empower +0 mantic dmg (5 mins) — 20"
-                                 Count="{Binding EmpowerWeaponManticCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Extra colours (per) — +2"
-                                 Count="{Binding ExtraColoursForEmpowerments, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Extra alignments (per) — +3"
-                                 Count="{Binding ExtraAlignmentsForEmpowerments, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Undead touch 1/day — 15"
-                                 Count="{Binding UndeadTouchPerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Gaseous Form 1/day — 35"
-                                 Count="{Binding GaseousFormPerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Plane Shift 1/day — 20"
-                                 Count="{Binding PlaneShiftPerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Walk Through Walls 1/day — 20"
-                                 Count="{Binding WalkThroughWallsPerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Scholarly Interest 1/day — 15"
-                                 Count="{Binding ScholarlyInterestPerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Knowledge of the Arcane 1/day — 8"
-                                 Count="{Binding KnowledgeOfArcanePerDayCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Major Prayer 1/day (powerbase) — 10"
-                                 Count="{Binding MajorPrayerPerDayPowerbaseCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Major Prayer 1/day (powerbase+subject) — 6"
-                                 Count="{Binding MajorPrayerPerDayPowerbaseSubjectCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Minor Prayer 1/day (powerbase) — 4"
-                                 Count="{Binding MinorPrayerPerDayPowerbaseCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Blocks of +6 (max 4) — 5/block"
-                                 Count="{Binding AdditionalLifeBlocks, Mode=TwoWay}" />
-      <controls:CheckboxControl LabelText="Kick-in is Magic or Spirit (×2 cost)"
-                                IsChecked="{Binding LifeKickInIsMagicOrSpirit, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="4th level innates — 20"
-                                 Count="{Binding ElfDraveInnateLevel4Count, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="6th level innates — 45"
-                                 Count="{Binding ElfDraveInnateLevel6Count, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="8th level innates — 70"
-                                 Count="{Binding ElfDraveInnateLevel8Count, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="×2 innates (from 8th) — +70"
-                                 Count="{Binding ExtraInnatesX2From8thCount, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="×3 innates (from ×2) — +70"
-                                 Count="{Binding ExtraInnatesX3FromX2Count, Mode=TwoWay}" />
-      <controls:CheckboxControl LabelText="Read languages — 6"
-                                IsChecked="{Binding ReadLanguages, Mode=TwoWay}" />
-      <controls:CheckboxControl LabelText="Disarm traps (as scout) — 10"
-                                IsChecked="{Binding DisarmTrapsAsScout, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="Potion recipes known — 5/recipe"
-                                 Count="{Binding PotionRecipesKnownCount, Mode=TwoWay}" />
-      <controls:CheckboxControl LabelText="Regeneration (non-stacking) — 40"
-                                IsChecked="{Binding Regeneration, Mode=TwoWay}" />
-      <controls:CheckboxControl LabelText="Forearm Parry — 25"
-                                IsChecked="{Binding ForearmParry, Mode=TwoWay}" />
+                                 Count="{Binding StrengthPlus1NonStackingCount, Mode=TwoWay}" />-->
+      <controls:PlusMinusControl Count="{Binding StrengthPlus1StackingTo2Count, Mode=TwoWay}" LabelText="+1 Str (stacking to +2) — 20" />
+      <controls:PlusMinusControl Count="{Binding StrengthPlus2NonStackingCount, Mode=TwoWay}" LabelText="+2 Str (non-stacking) — 45" />
+      <controls:PlusMinusControl Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}" LabelText="25% Cold Rage 1/day — 10" />
+      <controls:PlusMinusControl Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}" LabelText="50% Berserk Rage 1/day — 25" />
+      <controls:PlusMinusControl Count="{Binding ColdRage25VsOneGroupAlwaysCount, Mode=TwoWay}" LabelText="25% Cold Rage vs one Group (always) — 40" />
+      <controls:PlusMinusControl Count="{Binding RepelAttractOneTypePerDayCount, Mode=TwoWay}" LabelText="Repel/Attract one Type 1/day — 6" />
+      <controls:PlusMinusControl Count="{Binding RepelAttractOneGroupPerDayCount, Mode=TwoWay}" LabelText="Repel/Attract one Group 1/day — 8" />
+      <controls:PlusMinusControl Count="{Binding RepelLifePerDayCount, Mode=TwoWay}" LabelText="Repel Life 1/day — 10" />
+      <controls:PlusMinusControl Count="{Binding DisciplinePerDayCount, Mode=TwoWay}" LabelText="Discipline 1/day — 15" />
+      <controls:PlusMinusControl Count="{Binding WardPact8LevelsCount, Mode=TwoWay}" LabelText="Ward Pact (8 levels) — 20" />
+      <controls:PlusMinusControl Count="{Binding KiOrPrimalStrikePerDayCount, Mode=TwoWay}" LabelText="Ki / Primal Strike 1/day — 15" />
+      <controls:PlusMinusControl Count="{Binding EmpowerWeaponMagicCount, Mode=TwoWay}" LabelText="Empower +0 magic dmg (5 mins) — 8" />
+      <controls:PlusMinusControl Count="{Binding EmpowerWeaponSpiritCount, Mode=TwoWay}" LabelText="Empower +0 spirit dmg (5 mins) — 10" />
+      <controls:PlusMinusControl Count="{Binding EmpowerWeaponManticCount, Mode=TwoWay}" LabelText="Empower +0 mantic dmg (5 mins) — 20" />
+      <controls:PlusMinusControl Count="{Binding ExtraColoursForEmpowerments, Mode=TwoWay}" LabelText="Extra colours (per) — +2" />
+      <controls:PlusMinusControl Count="{Binding ExtraAlignmentsForEmpowerments, Mode=TwoWay}" LabelText="Extra alignments (per) — +3" />
+      <controls:PlusMinusControl Count="{Binding UndeadTouchPerDayCount, Mode=TwoWay}" LabelText="Undead touch 1/day — 15" />
+      <controls:PlusMinusControl Count="{Binding GaseousFormPerDayCount, Mode=TwoWay}" LabelText="Gaseous Form 1/day — 35" />
+      <controls:PlusMinusControl Count="{Binding PlaneShiftPerDayCount, Mode=TwoWay}" LabelText="Plane Shift 1/day — 20" />
+      <controls:PlusMinusControl Count="{Binding WalkThroughWallsPerDayCount, Mode=TwoWay}" LabelText="Walk Through Walls 1/day — 20" />
+      <controls:PlusMinusControl Count="{Binding ScholarlyInterestPerDayCount, Mode=TwoWay}" LabelText="Scholarly Interest 1/day — 15" />
+      <controls:PlusMinusControl Count="{Binding KnowledgeOfArcanePerDayCount, Mode=TwoWay}" LabelText="Knowledge of the Arcane 1/day — 8" />
+      <controls:PlusMinusControl Count="{Binding MajorPrayerPerDayPowerbaseCount, Mode=TwoWay}" LabelText="Major Prayer 1/day (powerbase) — 10" />
+      <controls:PlusMinusControl Count="{Binding MajorPrayerPerDayPowerbaseSubjectCount, Mode=TwoWay}" LabelText="Major Prayer 1/day (powerbase+subject) — 6" />
+      <controls:PlusMinusControl Count="{Binding MinorPrayerPerDayPowerbaseCount, Mode=TwoWay}" LabelText="Minor Prayer 1/day (powerbase) — 4" />
+      <controls:PlusMinusControl Count="{Binding AdditionalLifeBlocks, Mode=TwoWay}" LabelText="Blocks of +6 (max 4) — 5/block" />
+      <controls:CheckboxControl IsChecked="{Binding LifeKickInIsMagicOrSpirit, Mode=TwoWay}" LabelText="Kick-in is Magic or Spirit (×2 cost)" />
+      <controls:PlusMinusControl Count="{Binding ElfDraveInnateLevel4Count, Mode=TwoWay}" LabelText="4th level innates — 20" />
+      <controls:PlusMinusControl Count="{Binding ElfDraveInnateLevel6Count, Mode=TwoWay}" LabelText="6th level innates — 45" />
+      <controls:PlusMinusControl Count="{Binding ElfDraveInnateLevel8Count, Mode=TwoWay}" LabelText="8th level innates — 70" />
+      <controls:PlusMinusControl Count="{Binding ExtraInnatesX2From8thCount, Mode=TwoWay}" LabelText="×2 innates (from 8th) — +70" />
+      <controls:PlusMinusControl Count="{Binding ExtraInnatesX3FromX2Count, Mode=TwoWay}" LabelText="×3 innates (from ×2) — +70" />
+      <controls:CheckboxControl IsChecked="{Binding ReadLanguages, Mode=TwoWay}" LabelText="Read languages — 6" />
+      <controls:CheckboxControl IsChecked="{Binding DisarmTrapsAsScout, Mode=TwoWay}" LabelText="Disarm traps (as scout) — 10" />
+      <controls:PlusMinusControl Count="{Binding PotionRecipesKnownCount, Mode=TwoWay}" LabelText="Potion recipes known — 5/recipe" />
+      <controls:CheckboxControl IsChecked="{Binding Regeneration, Mode=TwoWay}" LabelText="Regeneration (non-stacking) — 40" />
+      <controls:CheckboxControl IsChecked="{Binding ForearmParry, Mode=TwoWay}" LabelText="Forearm Parry — 25" />
 
-      <Label FontAttributes="Bold" FontSize="18"
-             Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
-      <Button Text="Return"
-              Clicked="OnReturn"
-              HeightRequest="44"
-              CornerRadius="12" />
+      <Label
+        FontAttributes="Bold"
+        FontSize="18"
+        Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+      <Button
+        Clicked="OnReturn"
+        CornerRadius="12"
+        HeightRequest="44"
+        Text="Return" />
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>
