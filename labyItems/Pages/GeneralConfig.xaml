@@ -4,6 +4,7 @@
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:controls="clr-namespace:labyItems.Controls"
+  xmlns:conv="clr-namespace:labyItems.Converters"
   Title="Configure General Charm">
 
   <ContentPage.Resources>
@@ -12,6 +13,8 @@
       <Setter Property="FontSize" Value="18" />
       <Setter Property="Margin" Value="0,16,0,6" />
     </Style>
+
+    <conv:BoolToRotationConverter x:Key="BoolToRotationConverter" />
   </ContentPage.Resources>
 
   <ScrollView>
@@ -26,18 +29,49 @@
           Clicked="OnSearchGeneral"
           Text="Search" /> 
       </Grid>
-      <controls:PlusMinusControl LabelText="+1 Level of Resistance (all)"
-                                 Count="{Binding ResistanceAllLevels, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="+1 Level of Resistance (Magic/Spirit)"
-                                 Count="{Binding ResistanceMagicOrSpiritLevels, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="+1 Level of Resistance (EP/Neuronics)"
-                                 Count="{Binding ResistanceEpOrNeuroLevels, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="+2 Resistance (all) ×3 cost"
-                                 Count="{Binding ResistanceAllPlus2Count, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="+2 Resistance (Magic/Spirit) ×3 cost"
-                                 Count="{Binding ResistanceMagOrSpiritPlus2Count, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="+2 Resistance (EP/Neuronics) ×3 cost"
-                                 Count="{Binding ResistanceEpOrNeuroPlus2Count, Mode=TwoWay}" />
+      <!-- Resistance section header with caret -->
+<Grid ColumnDefinitions="Auto,*" ColumnSpacing="6" Margin="0,10,0,0">
+  <Image
+    Source="caret_right.png"
+    WidthRequest="20"
+    HeightRequest="20"
+    VerticalOptions="Center"
+    Rotation="{Binding ShowResistanceSection, Converter={StaticResource BoolToRotationConverter}}"
+    GestureRecognizers="{TapGestureRecognizer Tapped=ToggleResistanceSection}" />
+  <Label
+    Grid.Column="1"
+    Text="Levels of Resistance (LoR)"
+    Style="{StaticResource SectionHeader}"
+    VerticalOptions="Center">
+    <Label.GestureRecognizers>
+      <TapGestureRecognizer Tapped="ToggleResistanceSection" />
+    </Label.GestureRecognizers>
+  </Label>
+</Grid>
+
+<VerticalStackLayout
+    IsVisible="{Binding ShowResistanceSection}"
+    Padding="10,0,0,0"
+    Spacing="4">
+  <controls:PlusMinusControl LabelText="+1 LoR to (all)"
+                             Count="{Binding ResistAll1, Mode=TwoWay}" />
+  <controls:PlusMinusControl LabelText="+1 LoR Magic"
+                             Count="{Binding ResistMagic1, Mode=TwoWay}" />
+  <controls:PlusMinusControl LabelText="+1 LoR Spirit"
+                             Count="{Binding ResistSpirit1, Mode=TwoWay}" />
+  <controls:PlusMinusControl LabelText="+1 LoR EP"
+                             Count="{Binding ResistEp1, Mode=TwoWay}" />
+  <controls:PlusMinusControl LabelText="+2 LoR (all)"
+                             Count="{Binding ResistAll2, Mode=TwoWay}" />
+  <controls:PlusMinusControl LabelText="+2 LoR Spirit"
+                             Count="{Binding ResistSpirit2, Mode=TwoWay}" />
+  <controls:PlusMinusControl LabelText="+2 LoR Magic"
+                             Count="{Binding ResistMag2, Mode=TwoWay}" />
+  <controls:PlusMinusControl LabelText="+2 LoR EP"
+                             Count="{Binding ResistEp2, Mode=TwoWay}" />
+  <controls:PlusMinusControl LabelText="+2 LoR Neuro"
+                             Count="{Binding ResistNeuro2, Mode=TwoWay}" />
+</VerticalStackLayout>
       <controls:PlusMinusControl LabelText="+Casting Levels (all magic) — 14/level"
                                  Count="{Binding CastingLevelsAll, Mode=TwoWay}" />
       <controls:PlusMinusControl LabelText="+Casting Levels (one colour) — 7/level"

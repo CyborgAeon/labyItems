@@ -1,5 +1,7 @@
 using System;
+using labyItems.Helpers;
 using labyItems.Pages.Configs;
+using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Configs
 {
@@ -74,26 +76,32 @@ namespace labyItems.Pages.Configs
         private bool _isImm;
 
         // ---------- Resistance ----------
-        public int ResistanceAllLevels { get => _resAll; set => SetProperty(ref _resAll, value, true); }
-        private int _resAll;
-        public int ResistanceMagicOrSpiritLevels { get => _resMagSpi; set => SetProperty(ref _resMagSpi, value, true); }
-        private int _resMagSpi;
-        public int ResistanceEpOrNeuroLevels { get => _resEpNeuro; set => SetProperty(ref _resEpNeuro, value, true); }
-        private int _resEpNeuro;
-
-        // +2 Level of Resistance (from +1 above) = 3× the +1 cost for the same category
-        public int ResistanceAllPlus2Count { get => _resAllP2; set => SetProperty(ref _resAllP2, value, true); }
-        private int _resAllP2;
-        public int ResistanceMagOrSpiritPlus2Count { get => _resMagSpiP2; set => SetProperty(ref _resMagSpiP2, value, true); }
-        private int _resMagSpiP2;
-        public int ResistanceEpOrNeuroPlus2Count { get => _resEpNeuroP2; set => SetProperty(ref _resEpNeuroP2, value, true); }
-        private int _resEpNeuroP2;
+        public bool ResistAll1 { get => _resAll; set => SetProperty(ref _resAll, value, true); }
+        private bool _resAll;
+        public bool ResistMagic { get => _resMag; set => SetProperty(ref _resMag, value, true); }
+        private bool _resMag;
+        public bool ResistSpirit { get => _resSpi; set => SetProperty(ref _resSpi, value, true); }
+        private bool _resSpi;
+        public bool ResistEp { get => _resEp; set => SetProperty(ref _resEp, value, true); }
+        private bool _resEp;
+        public bool ResistNeuro { get => _resNeuro; set => SetProperty(ref _resNeuro, value, true); }
+        private bool _resNeuro;
+        public bool ResistAll2 { get => _resAll2; set => SetProperty(ref _resAll2, value, true); }
+        private bool _resAll2;
+        public bool ResistMagic2 { get => _resMag2; set => SetProperty(ref _resMag2, value, true); }
+        private bool _resMag2;
+        public bool ResistSpirit2 { get => _resSpi2; set => SetProperty(ref _resSpi2, value, true); }
+        private bool _resSpi2;
+        public bool ResistEp2 { get => _resEp2; set => SetProperty(ref _resEp2, value, true); }
+        private bool _resEp2;
+        public bool ResistNeuro2 { get => _resNeuro2; set => SetProperty(ref _resNeuro2, value, true); }
+        private bool _resNeuro2;
 
         // ---------- Casting Levels ----------
-        public int CastingLevelsAll { get => _castAll; set => SetProperty(ref _castAll, value, true); }
-        private int _castAll;
-        public int CastingLevelsOneColour { get => _castOne; set => SetProperty(ref _castOne, value, true); }
-        private int _castOne;
+        public MagicColours CastingLevelsColour { get => _castColour; set => SetProperty(ref _castColour, value, true); }
+        private MagicColours _castColour;
+        public int CastingLevelsCount { get => _castingLevelsCount; set => SetProperty(ref _castingLevelsCount, value, true); }
+        private int _castingLevelsCount;
 
         // ---------- Strength ----------
         public int StrengthPlus1NonStackingCount { get => _str1Non; set => SetProperty(ref _str1Non, value, true); }
@@ -162,13 +170,11 @@ namespace labyItems.Pages.Configs
         public bool LTMKickInIsMagicOrSpirit { get => _LTMKick; set => SetProperty(ref _LTMKick, value, true); }
         private bool _LTMKick;
 
-        public int ElfDraveInnateLevel4Count { get => _inn4; set => SetProperty(ref _inn4, value, true); }
-        private int _inn4;
-        public int ElfDraveInnateLevel6Count { get => _inn6; set => SetProperty(ref _inn6, value, true); }
-        private int _inn6;
-        public int ElfDraveInnateLevel8Count { get => _inn8; set => SetProperty(ref _inn8, value, true); }
-        private int _inn8;
-
+        public ElfColours? ElfInnateColour { get => _elfInnColour; set => SetProperty(ref _elfInnColour, value, true); }
+        private ElfColours? _elfInnColour;
+        public ElfInnateLevel? ElvenInnateLevel { get => _elfInnateLevel; set => SetProperty(ref _elfInnateLevel, value, true); }
+        private ElfInnateLevel? _elfInnateLevel;
+        
         public bool ReadLanguages { get => _readLang; set => SetProperty(ref _readLang, value, true); }
         private bool _readLang;
         public bool DisarmTrapsAsScout { get => _disarm; set => SetProperty(ref _disarm, value, true); }
@@ -180,19 +186,44 @@ namespace labyItems.Pages.Configs
         public bool ForearmParry { get => _parry; set => SetProperty(ref _parry, value, true); }
         private bool _parry;
 
-        protected override double ExtraTotal()
+        public void AddCastingLevels(int total) {
+            var addition = CastingLevelsColour == MagicColours.All
+                                ? 14 * CastingLevelsCount
+                                : 7 * CastingLevelsCount;
+            total += addition;
+        }
+
+        public int AddElvenInnates(int total) {
+          var addition = (ElvenInnateLevel ?? ElfInnateLevel.None) switch
+    {
+        ElfInnateLevel.Four => 20,
+        ElfInnateLevel.Six => 45,
+        ElfInnateLevel.Eight => 70,
+        ElfInnateLevel.Sixteen => 140,
+        ElfInnateLevel.TwentyFour => 210,
+        _ => 0
+    };
+    return addition + total;
+        }
+
+        protected override int ExtraTotal()
         {
-            double t = 0;
+            int t = 0;
 
             // Existing maths
-            t += 20 * ResistanceAllLevels;
-            t += 12 * ResistanceMagicOrSpiritLevels;
-            t += 8 * ResistanceEpOrNeuroLevels;
-            t += (3 * 20) * ResistanceAllPlus2Count;
-            t += (3 * 12) * ResistanceMagOrSpiritPlus2Count;
-            t += (3 * 8) * ResistanceEpOrNeuroPlus2Count;
-            t += 14 * CastingLevelsAll;
-            t += 7 * CastingLevelsOneColour;
+            ResistAll1.AddIf(t, 20);
+            ResistMagic.AddIf(t, 12);
+            ResistSpirit.AddIf(t, 12);
+            ResistEp.AddIf(t, 8);
+            ResistNeuro.AddIf(t, 8);
+            ResistAll2.AddIf(t, 60);
+            ResistMagic2.AddIf(t, 36);
+            ResistSpirit2.AddIf(t, 36);
+            ResistEp2.AddIf(t, 24);
+            ResistNeuro2.AddIf(t, 24);
+            
+            AddCastingLevels(t);
+
             t += 15 * StrengthPlus1NonStackingCount;
             t += 20 * StrengthPlus1StackingTo2Count;
             t += 45 * StrengthPlus2NonStackingCount;
@@ -204,7 +235,7 @@ namespace labyItems.Pages.Configs
             t += 10 * RepelLifePerDayCount;
 
             // New: automatic ability/immunity ISP
-            t += TotalIsp;
+            // t += TotalIsp;
 
             t += 15 * DisciplinePerDayCount;
             t += 20 * WardPact8LevelsCount;
@@ -224,20 +255,18 @@ namespace labyItems.Pages.Configs
             if (LTMKickInIsMagicOrSpirit) lifeCost *= 2;
             t += lifeCost;
 
-            t += 20 * ElfDraveInnateLevel4Count;
-            t += 45 * ElfDraveInnateLevel6Count;
-            t += 70 * ElfDraveInnateLevel8Count;
-
+            AddElvenInnates(t);
             if (ReadLanguages) t += 6;
             if (DisarmTrapsAsScout) t += 10;
-            t += 5 * PotionRecipesKnownCount;
             if (Regeneration) t += 40;
             if (ForearmParry) t += 25;
+
+            t += 5 * PotionRecipesKnownCount;
 
             return t;
         }
 
-        protected override double ApplyMultipliers(double total) => total;
+        protected override int ApplyMultipliers(int total) => total;
 
         public void ApplyGeneral(General.Result picked)
         {

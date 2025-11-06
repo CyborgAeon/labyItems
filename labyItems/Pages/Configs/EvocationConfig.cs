@@ -24,15 +24,15 @@ namespace labyItems.Pages.Configs
 
         protected override string NoneSelectedText => "Evocation (none selected)";
 
-        protected override double ExtraTotal()
+        protected override int ExtraTotal()
         {
-            double t = 0;
+            int t = 0;
             t += 16 * DrawOnEpPerDay;
             return t;
         }
 
         // No extra multipliers for evocation
-        protected override double ApplyMultipliers(double total) => total;
+        protected override int ApplyMultipliers(int total) => total;
 
         public void ApplyEvocation(Evocation.Result picked)
         {

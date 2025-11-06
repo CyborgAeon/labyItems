@@ -17,9 +17,9 @@ namespace labyItems.Pages.Configs
             Description = picked.Description;
             Table = picked.Table;
         }
-        protected override double ExtraTotal()
+        protected override int ExtraTotal()
         {
-            return 50;
+            return 0;
         }
     }
 }

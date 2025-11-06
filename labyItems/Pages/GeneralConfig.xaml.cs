@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using labyItems.Pages.Configs;
 using labyItems.Models;
-
+using labyItems.Helpers;
 namespace labyItems.Pages
 {
     public partial class GeneralConfigPage : ContentPage
     {
+        public bool ShowResistanceSection { get; set; } = false;
+        private void ToggleResistanceSection(object sender, EventArgs e)
+        => ShowResistanceSection = !ShowResistanceSection;
         private async void OnSearchGeneral(object sender, EventArgs e)
         {
             var picked = await new General().PickAsync(Navigation);
@@ -54,82 +57,64 @@ namespace labyItems.Pages
             _tcs.TrySetResult(result);
             Navigation.PopAsync();
         }
+        private static void AddResistanceLevels(List<string> summary){
+            summary.AddToSummaryIf(c.ResistAll1, "+1 LoR (all)");
+            summary.AddToSummaryIf(c.ResistMagic, "+1 LoR magic");
+            summary.AddToSummaryIf(c.ResistSpirit, "+1 LoR spirit");
+            summary.AddToSummaryIf(c.ResistEp, "+1 LoR EP");
+            summary.AddToSummaryIf(c.ResistNeuro, "+1 LoR neuronics");
+            summary.AddToSummaryIf(c.ResistAll2, "+2 LoR (all)");
+            summary.AddToSummaryIf(c.ResistMagic2, "+2 LoR magic");
+            summary.AddToSummaryIf(c.ResistSpirit2, "+2 LoR spirit");
+            summary.AddToSummaryIf(c.ResistEp2, "+2 LoR EP");
+            summary.AddToSummaryIf(c.ResistNeuro2, "+2 LoR neuronics");
+        }
 
         private static string BuildSummary(GeneralConfig c)
         {
             var s = new List<string>();
-            // Resistance
-            AddIf(s, c.ResistanceAllLevels, "+1 Resistance (all)", "x");
-            AddIf(s, c.ResistanceMagicOrSpiritLevels, "+1 Resistance (magic/spirit)", "x");
-            AddIf(s, c.ResistanceEpOrNeuroLevels, "+1 Resistance (EP/neuronics)", "x");
-            AddIf(s, c.ResistanceAllPlus2Count, "+2 Resistance (all) ×3 cost", "x");
-            AddIf(s, c.ResistanceMagOrSpiritPlus2Count, "+2 Resistance (magic/spirit) ×3 cost", "x");
-            AddIf(s, c.ResistanceEpOrNeuroPlus2Count, "+2 Resistance (EP/neuronics) ×3 cost", "x");
 
-            // Casting
-            AddIf(s, c.CastingLevelsAll, "Casting levels (all)", "+");
-            AddIf(s, c.CastingLevelsOneColour, "Casting levels (one colour)", "+");
+            AddResistanceLevels(s);
+            s.AddToSummaryIf(c.CastingLevelsCount, $"+{c.CastingLevelsCount} Casting levels {c.CastingLevelsColour}");
+            
+            s.AddToSummaryIf(c.StrengthPlus1NonStackingCount, "+1 Strength (non-stacking)");
+            s.AddToSummaryIf(c.StrengthPlus1StackingTo2Count, "+1 Strength (stacking to +2)");
+            s.AddToSummaryIf(c.StrengthPlus2NonStackingCount, "+2 Strength (non-stacking)");
+            s.AddToSummaryIf(c.ColdRage25PerDayCount, "25% Cold Rage (1/day)");
+            s.AddToSummaryIf(c.BerserkRage50PerDayCount, "50% Berserk Rage (1/day)");
+            s.AddToSummaryIf(c.ColdRage25VsOneGroupAlwaysCount, "25% Cold Rage vs one group (always)");
+            s.AddToSummaryIf(c.RepelAttractOneTypePerDayCount, "Repel/Attract one Type (1/day)");
+            s.AddToSummaryIf(c.RepelAttractOneGroupPerDayCount, "Repel/Attract one Group (1/day)");
+            s.AddToSummaryIf(c.RepelLifePerDayCount, "Repel Life (1/day)");
+            s.AddToSummaryIf(c.DisciplinePerDayCount, "Discipline (1/day)");
+            s.AddToSummaryIf(c.WardPact8LevelsCount, "Ward Pact (8 levels)");
+            s.AddToSummaryIf(c.KiOrPrimalStrikePerDayCount, "Ki/Primal Strike (1/day)");
+            s.AddToSummaryIf(c.EmpowerWeaponMagicCount, "Empower weapon: +0 magic (5 mins)");
+            s.AddToSummaryIf(c.EmpowerWeaponSpiritCount, "Empower weapon: +0 spirit (5 mins)");
+            s.AddToSummaryIf(c.EmpowerWeaponManticCount, "Empower weapon: +0 mantic (5 mins)");
+            s.AddToSummaryIf(c.ExtraColoursForEmpowerments, "Extra colours for empowerment");
+            s.AddToSummaryIf(c.ExtraAlignmentsForEmpowerments, "Extra alignments for empowerment");
+            s.AddToSummaryIf(c.ScholarlyInterestPerDayCount, "Scholarly Interest (1/day)");
+            s.AddToSummaryIf(c.KnowledgeOfArcanePerDayCount, "Knowledge of the Arcane (1/day)");
+            s.AddToSummaryIf(c.MajorPrayerPerDayPowerbaseCount, "Major Prayer (powerbase) (1/day)");
+            s.AddToSummaryIf(c.MajorPrayerPerDayPowerbaseSubjectCount, "Major Prayer (powerbase+subject) (1/day)");
+            s.AddToSummaryIf(c.MinorPrayerPerDayPowerbaseCount, "Minor Prayer (powerbase) (1/day)");
 
-            // Strength
-            AddIf(s, c.StrengthPlus1NonStackingCount, "+1 Strength (non-stacking)", "x");
-            AddIf(s, c.StrengthPlus1StackingTo2Count, "+1 Strength (stacking to +2)", "x");
-            AddIf(s, c.StrengthPlus2NonStackingCount, "+2 Strength (non-stacking)", "x");
-
-            // Rages
-            AddIf(s, c.ColdRage25PerDayCount, "25% Cold Rage (1/day)", "x");
-            AddIf(s, c.BerserkRage50PerDayCount, "50% Berserk Rage (1/day)", "x");
-            AddIf(s, c.ColdRage25VsOneGroupAlwaysCount, "25% Cold Rage vs one group (always)", "x");
-
-            // Repel / Attract
-            AddIf(s, c.RepelAttractOneTypePerDayCount, "Repel/Attract one Type (1/day)", "x");
-            AddIf(s, c.RepelAttractOneGroupPerDayCount, "Repel/Attract one Group (1/day)", "x");
-            AddIf(s, c.RepelLifePerDayCount, "Repel Life (1/day)", "x");
-
-            // Misc
-            AddIf(s, c.DisciplinePerDayCount, "Discipline (1/day)", "x");
-            AddIf(s, c.WardPact8LevelsCount, "Ward Pact (8 levels)", "x");
-            AddIf(s, c.KiOrPrimalStrikePerDayCount, "Ki/Primal Strike (1/day)", "x");
-
-            // Weapon empowerments
-            AddIf(s, c.EmpowerWeaponMagicCount, "Empower weapon: +0 magic (5 mins)", "x");
-            AddIf(s, c.EmpowerWeaponSpiritCount, "Empower weapon: +0 spirit (5 mins)", "x");
-            AddIf(s, c.EmpowerWeaponManticCount, "Empower weapon: +0 mantic (5 mins)", "x");
-            AddIf(s, c.ExtraColoursForEmpowerments, "Extra colours for empowerment", "+");
-            AddIf(s, c.ExtraAlignmentsForEmpowerments, "Extra alignments for empowerment", "+");
-
-            // Knowledge / Prayers
-            AddIf(s, c.ScholarlyInterestPerDayCount, "Scholarly Interest (1/day)", "x");
-            AddIf(s, c.KnowledgeOfArcanePerDayCount, "Knowledge of the Arcane (1/day)", "x");
-            AddIf(s, c.MajorPrayerPerDayPowerbaseCount, "Major Prayer (powerbase) (1/day)", "x");
-            AddIf(s, c.MajorPrayerPerDayPowerbaseSubjectCount, "Major Prayer (powerbase+subject) (1/day)", "x");
-            AddIf(s, c.MinorPrayerPerDayPowerbaseCount, "Minor Prayer (powerbase) (1/day)", "x");
-
-            // Additional life
             if (c.AdditionalLTMBlocks > 0)
             {
                 var pts = c.AdditionalLTMBlocks * 6;
                 s.Add($"Additional life to minus: +{pts} (5 per 6pts){(c.LTMKickInIsMagicOrSpirit ? ", kick-in Magic/Spirit ×2 cost" : "")}");
             }
 
-            // Elf/Drave innates
-            AddIf(s, c.ElfDraveInnateLevel4Count, "Elf/Drave 4th level innates", "x");
-            AddIf(s, c.ElfDraveInnateLevel6Count, "Elf/Drave 6th level innates", "x");
-            AddIf(s, c.ElfDraveInnateLevel8Count, "Elf/Drave 8th level innates", "x");
-
+            s.AddToSummaryIf((c.ElfInnateColour is not null), $"Lvl: {c.ElvenInnateLevel} {c.ElfInnateColour} Elven Innates");
             // Utilities
             if (c.ReadLanguages) s.Add("Read languages");
             if (c.DisarmTrapsAsScout) s.Add("Disarm traps (as scout)");
-            AddIf(s, c.PotionRecipesKnownCount, "Potion recipes known", "x");
+            s.AddToSummaryIf(c.PotionRecipesKnownCount, "Potion recipes known");
             if (c.Regeneration) s.Add("Regeneration (non-stacking)");
             if (c.ForearmParry) s.Add("Forearm Parry");
 
             return string.Join("\n", s);
-        }
-
-        private static void AddIf(List<string> s, int count, string label, string mode)
-        {
-            if (count <= 0) return;
-            s.Add(mode == "x" ? $"{label}: x{count}" : $"{label}: +{count}");
         }
     }
 }
