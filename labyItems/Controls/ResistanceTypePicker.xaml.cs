@@ -14,7 +14,6 @@ public partial class ResistanceTypePicker : ContentView
                     .ToList();
 
         InitializeComponent();
-        BindingContext = this;
     }
 
     // ----- Label -----

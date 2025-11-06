@@ -2,23 +2,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using labyItems.Models.Enums;
+
 namespace labyItems.Controls;
 
-public partial class MagicColourPicker : ContentView
+public partial class ElfColourPicker : ContentView
 {
-    public MagicColourPicker()
+    public ElfColourPicker()
     {
-        Colours = Enum.GetValues(typeof(MagicColours)).Cast<MagicColours>().ToList();
+        Colours = Enum.GetValues(typeof(ElfColours))
+                      .Cast<ElfColours>()
+                      .ToList();
+
         InitializeComponent();
     }
 
-    // ----- Label text -----
+    // ----- Label -----
     public static readonly BindableProperty LabelTextProperty =
         BindableProperty.Create(
             nameof(LabelText),
             typeof(string),
-            typeof(MagicColourPicker),
-            "Magic Colour");
+            typeof(ElfColourPicker),
+            "Elf Colour");
 
     public string LabelText
     {
@@ -30,17 +34,17 @@ public partial class MagicColourPicker : ContentView
     public static readonly BindableProperty SelectedColourProperty =
         BindableProperty.Create(
             nameof(SelectedColour),
-            typeof(MagicColours?),
-            typeof(MagicColourPicker),
+            typeof(ElfColours?),
+            typeof(ElfColourPicker),
             null,
             BindingMode.TwoWay);
 
-    public MagicColours? SelectedColour
+    public ElfColours? SelectedColour
     {
-        get => (MagicColours?)GetValue(SelectedColourProperty);
+        get => (ElfColours?)GetValue(SelectedColourProperty);
         set => SetValue(SelectedColourProperty, value);
     }
 
-    // ----- Colour list -----
-    public List<MagicColours> Colours { get; }
+    // ----- Enum List -----
+    public List<ElfColours> Colours { get; }
 }

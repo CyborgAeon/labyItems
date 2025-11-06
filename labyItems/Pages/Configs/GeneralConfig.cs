@@ -87,10 +87,21 @@ namespace labyItems.Pages.Configs
         public int CastingLevelsCount { get => _castingLevelsCount; set => SetProperty(ref _castingLevelsCount, value, true); }
         private int _castingLevelsCount;
         
-        public ElfColours? ElfInnateColour { get => _elfInnColour; set => SetProperty(ref _elfInnColour, value, true); }
-        private ElfColours? _elfInnColour;
-        public ElfInnateLevel? ElvenInnateLevel { get => _elfInnateLevel; set => SetProperty(ref _elfInnateLevel, value, true); }
         private ElfInnateLevel? _elfInnateLevel;
+public ElfInnateLevel? ElvenInnateLevel
+{
+    get => _elfInnateLevel;
+    set =>
+        SetProperty(ref _elfInnateLevel, value, true);
+}
+
+private ElfColours? _elfInnColour;
+public ElfColours? ElfInnateColour
+{
+    get => _elfInnColour;
+    set => SetProperty(ref _elfInnColour, value, true);
+}
+
         
         // ---------- Strength ----------
         public int StrengthPlus1NonStackingCount { get => _str1Non; set => SetProperty(ref _str1Non, value, true); }
@@ -171,15 +182,18 @@ namespace labyItems.Pages.Configs
         public bool ForearmParry { get => _parry; set => SetProperty(ref _parry, value, true); }
         private bool _parry;
 
-        public void AddCastingLevels(int total) {
+        public void AddCastingLevels(ref int total) {
             var addition = CastingLevelsColour == MagicColours.All
                                 ? 14 * CastingLevelsCount
                                 : 7 * CastingLevelsCount;
             total += addition;
         }
 
-        public int AddElvenInnates(int total) {
-          var addition = (ElvenInnateLevel ?? ElfInnateLevel.None) switch
+        public void AddElvenInnates(ref int total) {
+            if (ElfInnateColour is not null && ElvenInnateLevel is not null) 
+            {
+
+          var addition = ElvenInnateLevel switch
     {
         ElfInnateLevel.Four => 20,
         ElfInnateLevel.Six => 45,
@@ -188,15 +202,14 @@ namespace labyItems.Pages.Configs
         ElfInnateLevel.TwentyFour => 210,
         _ => 0
     };
-    return addition + total;
+total += addition;
+            }
         }
 
-        public int AddResistanceLevels(int total)
+        public void AddResistanceLevels(ref int total)
         {
-            if (ResistanceType is not { } type) // handles nulls safely
-                return total;
-
-            var addition = type switch
+            if (ResistanceType is not null){
+            var addition = ResistanceType switch
             {
                 GeneralResistanceTypes.All => 20 * ResistanceLevels,
                 GeneralResistanceTypes.Spirit => 12 * ResistanceLevels,
@@ -205,16 +218,16 @@ namespace labyItems.Pages.Configs
                 GeneralResistanceTypes.Neuronic => 8 * ResistanceLevels,
                 _ => 0
             };
-
-            return total + addition;
+        total += addition;
+        }
         }
 
         protected override int ExtraTotal()
         {
             int t = 0;
-            AddResistanceLevels(t);
-            AddCastingLevels(t);
-
+            AddResistanceLevels(ref t);
+            AddCastingLevels(ref t);
+            
             t += 15 * StrengthPlus1NonStackingCount;
             t += 20 * StrengthPlus1StackingTo2Count;
             t += 45 * StrengthPlus2NonStackingCount;
@@ -246,7 +259,7 @@ namespace labyItems.Pages.Configs
             if (LTMKickInIsMagicOrSpirit) lifeCost *= 2;
             t += lifeCost;
 
-            AddElvenInnates(t);
+            AddElvenInnates(ref t);
             if (ReadLanguages) t += 6;
             if (DisarmTrapsAsScout) t += 10;
             if (Regeneration) t += 40;

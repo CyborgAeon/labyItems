@@ -81,8 +81,7 @@ public partial class PlusMinusControl : ContentView
     // ---------- Button Handlers ----------
     private void OnMinus(object sender, EventArgs e)
     {
-        if (Count > Min)
-            Count--;
+        if (Count > Min) Count--;
     }
 
     private void OnPlus(object sender, EventArgs e)

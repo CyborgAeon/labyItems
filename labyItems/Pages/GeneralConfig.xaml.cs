@@ -57,6 +57,7 @@ namespace labyItems.Pages
             _tcs.TrySetResult(result);
             Navigation.PopAsync();
         }
+        
         private static void AddResistanceLevels(List<string> summary, GeneralConfig c){
             summary.AddToSummaryIf(c.ResistanceLevels, $"{c.ResistanceLevels} Levels of Resistance vs {c.ResistanceType}");
         }

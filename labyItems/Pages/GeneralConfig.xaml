@@ -29,12 +29,25 @@
           Clicked="OnSearchGeneral"
           Text="Search" />
       </Grid>
-      <!--  Resistance section header with caret  -->
+
       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-        <controls:MagicColourPicker 
+        <!--  Casting levels  -->
+        <controls:MagicColourPicker
           Grid.Column="0"
-          LabelText="Additional levels of resistance for..." 
-          SelectedColour="{Binding ResistanceType, Mode=TwoWay}" />
+          LabelText="Additional casting levels for..."
+          SelectedColour="{Binding CastingLevelsColour, Mode=TwoWay}" />
+        <controls:PlusMinusControl
+          Grid.Column="1"
+          AllowMultiple="True"
+          Count="{Binding CastingLevelsCount, Mode=TwoWay}"
+          LabelText=""
+          Max="3" />
+      </Grid>
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+        <controls:ResistanceTypePicker
+          Grid.Column="0"
+          LabelText="Additional levels of resistance for..."
+          SelectedType="{Binding ResistanceType, Mode=TwoWay}" />
         <controls:PlusMinusControl
           Grid.Column="1"
           AllowMultiple="True"
@@ -43,23 +56,14 @@
           Max="3" />
       </Grid>
       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-        <controls:ResistanceTypePicker 
+        <!--  Elven innates  -->
+        <controls:ElfColourPicker
           Grid.Column="0"
-          LabelText="Additional Casting levels for..." 
-          SelectedType="{Binding CastingLevelsColour, Mode=TwoWay}" />
-        <controls:PlusMinusControl
-          Grid.Column="1"
-          AllowMultiple="True"
-          Count="{Binding CastingLevelsCount, Mode=TwoWay}"
-          LabelText=""
-          Max="3" />
+          LabelText="Elven innates for..."
+          SelectedColour="{Binding ElfInnateColour, Mode=TwoWay}" />
+        <controls:ElfInnateLevelPicker Grid.Column="1" SelectedLevel="{Binding ElvenInnateLevel, Mode=TwoWay}" />
       </Grid>
-      <!-- <controls:PlusMinusControl LabelText="+Casting Levels (all magic) — 14/level"
-                                 Count="{Binding CastingLevelsAll, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="+Casting Levels (one colour) — 7/level"
-                                 Count="{Binding CastingLevelsOneColour, Mode=TwoWay}" />
-      <controls:PlusMinusControl LabelText="+1 Str (non-stacking) — 15"
-                                 Count="{Binding StrengthPlus1NonStackingCount, Mode=TwoWay}" />-->
+      <controls:PlusMinusControl Count="{Binding StrengthPlus1NonStackingCount, Mode=TwoWay}" LabelText="+1 Str (non-stacking) — 15" />
       <controls:PlusMinusControl Count="{Binding StrengthPlus1StackingTo2Count, Mode=TwoWay}" LabelText="+1 Str (stacking to +2) — 20" />
       <controls:PlusMinusControl Count="{Binding StrengthPlus2NonStackingCount, Mode=TwoWay}" LabelText="+2 Str (non-stacking) — 45" />
       <controls:PlusMinusControl Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}" LabelText="25% Cold Rage 1/day — 10" />
@@ -87,9 +91,7 @@
       <controls:PlusMinusControl Count="{Binding MinorPrayerPerDayPowerbaseCount, Mode=TwoWay}" LabelText="Minor Prayer 1/day (powerbase) — 4" />
       <controls:PlusMinusControl Count="{Binding AdditionalLifeBlocks, Mode=TwoWay}" LabelText="Blocks of +6 (max 4) — 5/block" />
       <controls:CheckboxControl IsChecked="{Binding LifeKickInIsMagicOrSpirit, Mode=TwoWay}" LabelText="Kick-in is Magic or Spirit (×2 cost)" />
-      <controls:PlusMinusControl Count="{Binding ElfDraveInnateLevel4Count, Mode=TwoWay}" LabelText="4th level innates — 20" />
-      <controls:PlusMinusControl Count="{Binding ElfDraveInnateLevel6Count, Mode=TwoWay}" LabelText="6th level innates — 45" />
-      <controls:PlusMinusControl Count="{Binding ElfDraveInnateLevel8Count, Mode=TwoWay}" LabelText="8th level innates — 70" />
+
       <controls:PlusMinusControl Count="{Binding ExtraInnatesX2From8thCount, Mode=TwoWay}" LabelText="×2 innates (from 8th) — +70" />
       <controls:PlusMinusControl Count="{Binding ExtraInnatesX3FromX2Count, Mode=TwoWay}" LabelText="×3 innates (from ×2) — +70" />
       <controls:CheckboxControl IsChecked="{Binding ReadLanguages, Mode=TwoWay}" LabelText="Read languages — 6" />
