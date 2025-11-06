@@ -48,3 +48,7 @@ public enum ElfColours {
 public enum ElfInnateLevel {
     Four, Six, Eight, Sixteen, TwentyFour, None
 }
+
+public enum GeneralResistanceTypes {
+    All, Magic, Spirit, EarthPower, Neuronic
+}

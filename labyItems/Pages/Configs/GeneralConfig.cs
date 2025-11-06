@@ -76,33 +76,22 @@ namespace labyItems.Pages.Configs
         private bool _isImm;
 
         // ---------- Resistance ----------
-        public bool ResistAll1 { get => _resAll; set => SetProperty(ref _resAll, value, true); }
-        private bool _resAll;
-        public bool ResistMagic { get => _resMag; set => SetProperty(ref _resMag, value, true); }
-        private bool _resMag;
-        public bool ResistSpirit { get => _resSpi; set => SetProperty(ref _resSpi, value, true); }
-        private bool _resSpi;
-        public bool ResistEp { get => _resEp; set => SetProperty(ref _resEp, value, true); }
-        private bool _resEp;
-        public bool ResistNeuro { get => _resNeuro; set => SetProperty(ref _resNeuro, value, true); }
-        private bool _resNeuro;
-        public bool ResistAll2 { get => _resAll2; set => SetProperty(ref _resAll2, value, true); }
-        private bool _resAll2;
-        public bool ResistMagic2 { get => _resMag2; set => SetProperty(ref _resMag2, value, true); }
-        private bool _resMag2;
-        public bool ResistSpirit2 { get => _resSpi2; set => SetProperty(ref _resSpi2, value, true); }
-        private bool _resSpi2;
-        public bool ResistEp2 { get => _resEp2; set => SetProperty(ref _resEp2, value, true); }
-        private bool _resEp2;
-        public bool ResistNeuro2 { get => _resNeuro2; set => SetProperty(ref _resNeuro2, value, true); }
-        private bool _resNeuro2;
+        private GeneralResistanceTypes? _resistanceType;
+        public GeneralResistanceTypes? ResistanceType { get => _resistanceType; set => SetProperty(ref _resistanceType, value, true); }
+        private int _resistanceLevels;
+        public int ResistanceLevels { get => _resistanceLevels; set => SetProperty(ref _resistanceLevels, value, true); }
 
         // ---------- Casting Levels ----------
         public MagicColours CastingLevelsColour { get => _castColour; set => SetProperty(ref _castColour, value, true); }
         private MagicColours _castColour;
         public int CastingLevelsCount { get => _castingLevelsCount; set => SetProperty(ref _castingLevelsCount, value, true); }
         private int _castingLevelsCount;
-
+        
+        public ElfColours? ElfInnateColour { get => _elfInnColour; set => SetProperty(ref _elfInnColour, value, true); }
+        private ElfColours? _elfInnColour;
+        public ElfInnateLevel? ElvenInnateLevel { get => _elfInnateLevel; set => SetProperty(ref _elfInnateLevel, value, true); }
+        private ElfInnateLevel? _elfInnateLevel;
+        
         // ---------- Strength ----------
         public int StrengthPlus1NonStackingCount { get => _str1Non; set => SetProperty(ref _str1Non, value, true); }
         private int _str1Non;
@@ -170,10 +159,6 @@ namespace labyItems.Pages.Configs
         public bool LTMKickInIsMagicOrSpirit { get => _LTMKick; set => SetProperty(ref _LTMKick, value, true); }
         private bool _LTMKick;
 
-        public ElfColours? ElfInnateColour { get => _elfInnColour; set => SetProperty(ref _elfInnColour, value, true); }
-        private ElfColours? _elfInnColour;
-        public ElfInnateLevel? ElvenInnateLevel { get => _elfInnateLevel; set => SetProperty(ref _elfInnateLevel, value, true); }
-        private ElfInnateLevel? _elfInnateLevel;
         
         public bool ReadLanguages { get => _readLang; set => SetProperty(ref _readLang, value, true); }
         private bool _readLang;
@@ -206,22 +191,28 @@ namespace labyItems.Pages.Configs
     return addition + total;
         }
 
+        public int AddResistanceLevels(int total)
+        {
+            if (ResistanceType is not { } type) // handles nulls safely
+                return total;
+
+            var addition = type switch
+            {
+                GeneralResistanceTypes.All => 20 * ResistanceLevels,
+                GeneralResistanceTypes.Spirit => 12 * ResistanceLevels,
+                GeneralResistanceTypes.Magic => 12 * ResistanceLevels,
+                GeneralResistanceTypes.EarthPower => 8 * ResistanceLevels,
+                GeneralResistanceTypes.Neuronic => 8 * ResistanceLevels,
+                _ => 0
+            };
+
+            return total + addition;
+        }
+
         protected override int ExtraTotal()
         {
             int t = 0;
-
-            // Existing maths
-            ResistAll1.AddIf(t, 20);
-            ResistMagic.AddIf(t, 12);
-            ResistSpirit.AddIf(t, 12);
-            ResistEp.AddIf(t, 8);
-            ResistNeuro.AddIf(t, 8);
-            ResistAll2.AddIf(t, 60);
-            ResistMagic2.AddIf(t, 36);
-            ResistSpirit2.AddIf(t, 36);
-            ResistEp2.AddIf(t, 24);
-            ResistNeuro2.AddIf(t, 24);
-            
+            AddResistanceLevels(t);
             AddCastingLevels(t);
 
             t += 15 * StrengthPlus1NonStackingCount;

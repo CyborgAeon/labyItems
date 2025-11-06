@@ -30,20 +30,23 @@
           Text="Search" />
       </Grid>
       <!--  Resistance section header with caret  -->
-      <controls:PlusMinusControl Count="{Binding ResistAll1, Mode=TwoWay}" LabelText=" LoR to " />
-      <controls:PlusMinusControl Count="{Binding ResistMagic1, Mode=TwoWay}" LabelText="+1 LoR Magic" />
-      <controls:PlusMinusControl Count="{Binding ResistSpirit1, Mode=TwoWay}" LabelText="+1 LoR Spirit" />
-      <controls:PlusMinusControl Count="{Binding ResistEp1, Mode=TwoWay}" LabelText="+1 LoR EP" />
-      <controls:PlusMinusControl Count="{Binding ResistAll2, Mode=TwoWay}" LabelText="+2 LoR (all)" />
-      <controls:PlusMinusControl Count="{Binding ResistSpirit2, Mode=TwoWay}" LabelText="+2 LoR Spirit" />
-      <controls:PlusMinusControl Count="{Binding ResistMag2, Mode=TwoWay}" LabelText="+2 LoR Magic" />
-      <controls:PlusMinusControl Count="{Binding ResistEp2, Mode=TwoWay}" LabelText="+2 LoR EP" />
-      <controls:PlusMinusControl Count="{Binding ResistNeuro2, Mode=TwoWay}" LabelText="+2 LoR Neuro" />
       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
         <controls:MagicColourPicker 
           Grid.Column="0"
+          LabelText="Additional levels of resistance for..." 
+          SelectedColour="{Binding ResistanceType, Mode=TwoWay}" />
+        <controls:PlusMinusControl
+          Grid.Column="1"
+          AllowMultiple="True"
+          Count="{Binding ResistanceLevels, Mode=TwoWay}"
+          LabelText=""
+          Max="3" />
+      </Grid>
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+        <controls:ResistanceTypePicker 
+          Grid.Column="0"
           LabelText="Additional Casting levels for..." 
-          SelectedColour="{Binding CastingLevelsColour, Mode=TwoWay}" />
+          SelectedType="{Binding CastingLevelsColour, Mode=TwoWay}" />
         <controls:PlusMinusControl
           Grid.Column="1"
           AllowMultiple="True"

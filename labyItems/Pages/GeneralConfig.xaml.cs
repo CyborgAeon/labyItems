@@ -58,16 +58,7 @@ namespace labyItems.Pages
             Navigation.PopAsync();
         }
         private static void AddResistanceLevels(List<string> summary, GeneralConfig c){
-            summary.AddToSummaryIf(c.ResistAll1, "+1 LoR (all)");
-            summary.AddToSummaryIf(c.ResistMagic, "+1 LoR magic");
-            summary.AddToSummaryIf(c.ResistSpirit, "+1 LoR spirit");
-            summary.AddToSummaryIf(c.ResistEp, "+1 LoR EP");
-            summary.AddToSummaryIf(c.ResistNeuro, "+1 LoR neuronics");
-            summary.AddToSummaryIf(c.ResistAll2, "+2 LoR (all)");
-            summary.AddToSummaryIf(c.ResistMagic2, "+2 LoR magic");
-            summary.AddToSummaryIf(c.ResistSpirit2, "+2 LoR spirit");
-            summary.AddToSummaryIf(c.ResistEp2, "+2 LoR EP");
-            summary.AddToSummaryIf(c.ResistNeuro2, "+2 LoR neuronics");
+            summary.AddToSummaryIf(c.ResistanceLevels, $"{c.ResistanceLevels} Levels of Resistance vs {c.ResistanceType}");
         }
 
         private static string BuildSummary(GeneralConfig c)
