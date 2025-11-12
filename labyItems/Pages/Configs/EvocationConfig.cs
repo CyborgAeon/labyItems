@@ -1,8 +1,7 @@
 using System.ComponentModel;
 using labyItems.Services;
-
-namespace labyItems.Pages.Configs
-{
+using labyItems.Pages.Calculator;
+namespace labyItems.Pages.Configs;
     public class EvocationConfig : ConfigBase
     {
         private int _drawOnEpPerDay;
@@ -41,4 +40,3 @@ namespace labyItems.Pages.Configs
             IsAdvanced = picked.IsAdvanced;
         }
     }
-}

@@ -2,6 +2,7 @@ using System;
 using labyItems.Helpers;
 using labyItems.Pages.Configs;
 using labyItems.Models.Enums;
+using labyItems.Pages.Calculator;
 
 namespace labyItems.Pages.Configs
 {

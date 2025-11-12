@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
-
+using labyItems.Pages.Calculator;
 namespace labyItems.Pages.Configs;
 
 public class SpellConfig : INotifyPropertyChanged

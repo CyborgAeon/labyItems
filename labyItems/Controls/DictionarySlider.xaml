@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Controls.DictionarySlider"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <VerticalStackLayout Padding="12" Spacing="8">
+
+        <!-- Current selection display -->
+        <Label x:Name="KeyLabel"
+               FontSize="18"
+               HorizontalOptions="Center" />
+        <Label x:Name="ValueLabel"
+               FontSize="18"
+               HorizontalOptions="Center" />
+
+        <!-- Slider -->
+        <Slider x:Name="Slider"
+                Minimum="0"
+                Maximum="0"
+                StepFrequency="1"
+                ValueChanged="OnSliderValueChanged" />
+
+    </VerticalStackLayout>
+</ContentView>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Calculator.CalcNav.LifeConfigPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    Title="Life">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="Select Item-Life"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- Reusable slider -->
+            <controls:DictionarySlider
+                x:Name="LifeSlider"
+                KeyFormat="Life: {0}"
+                ValueFormat="ISP: {0}" />
+
+            <!-- Live readout (optional) -->
+            <Label Text="{Binding Source={x:Reference LifeSlider}, Path=SelectedKey, StringFormat='Selected: {0}'}"
+                   HorizontalOptions="Center" />
+            <Label Text="{Binding Source={x:Reference LifeSlider}, Path=SelectedValue, StringFormat='ISP: {0}'}"
+                   HorizontalOptions="Center" />
+
+            <!-- This does NOT navigate; it just tells the parent -->
+            <Button Text="Return to calculator"
+                    Clicked="OnReturnToCalculator" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
