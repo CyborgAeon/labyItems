@@ -96,7 +96,7 @@
         Count="{Binding TurnAdvancedAbove6thMantic, Mode=TwoWay}"
         LabelText="Turn advanced miracle mantic" />
 
-      <controls:CheckboxControl IsChecked="{Binding IsTeachingScroll}" LabelText="Is teaching scroll" />
+      <controls:CheckboxControl IsChecked="{Binding IsTeachingScroll}" LabelText="Is scripture of faith" />
 
       <controls:PlusMinusControl
         AllowMultiple="True"
