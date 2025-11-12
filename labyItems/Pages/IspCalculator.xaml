@@ -55,6 +55,9 @@
         <Button Clicked="OnCharmGeneral" Text="General" />
         <Label x:Name="GeneralCharmPickedLabel" IsVisible="False" />
         
+        <Button Clicked="OnCharmSpirit" Text="Spirit" />
+        <Label x:Name="SpiritCharmPickedLabel" IsVisible="False" />
+        
         <Button Clicked="OnCharmMagic" Text="Magic" />
         <Label x:Name="MagicCharmPickedLabel" IsVisible="False" />
         

@@ -327,6 +327,28 @@ private async void OnConsumable(object sender, EventArgs e)
         UpdateTotal();
     }
 
+    private async void OnCharmSpirit(object sender, EventArgs e)
+    {
+        _categoryLocked = true;
+        var cfgPage = new MiracleConfigPage();
+        await Navigation.PushAsync(cfgPage);
+        var cfg = await cfgPage.Completion;
+        if (cfg is null) return;
+
+        // 2) Add to calculator contributions
+        _contributions.Add(new CalcContribution(
+            Source: "Charm/Spirit",
+            Label: cfg.Summary,
+            Isp: cfg.TotalIsp));
+
+        SpiritCharmPickedLabel.IsVisible = true;
+        SpiritCharmPickedLabel.Text = string.Join("\n", _contributions
+            .Where(c => c.Source.StartsWith("Charm/", StringComparison.OrdinalIgnoreCase))
+            .Select(c => c.Label));
+
+        UpdateTotal();
+    }
+
     public async Task<CalcResult?> GetResultAsync(INavigation nav)
     {
         _tcs = new TaskCompletionSource<CalcResult?>();

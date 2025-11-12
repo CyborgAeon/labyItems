@@ -4,49 +4,52 @@ namespace labyItems.Services;
 
 public static class MiracleService
 {
-    private class MiracRaw
+    public sealed record MiracRaw
     {
-        public string? power { get; set; }
-        public List<string>? fields { get; set; }
+        public int power { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public string sphere { get; set; }
+        public bool isAdvanced { get; set; }
+        public string alignment { get; set; }
     }
+    private static List<MiracRaw>? _cache;
 
-    public record MiracEntry(string Name, int Power, IReadOnlyList<string> Fields);
-
-    private static List<MiracEntry>? _cache;
-
-    public static async Task<IReadOnlyList<MiracEntry>> GetAllAsync()
+    public static async Task<IReadOnlyList<MiracRaw>> GetAllAsync()
     {
         if (_cache != null) return _cache;
 
-        using var s = await FileSystem.OpenAppPackageFileAsync("words_from_above/Miracs.json");
+        using var s = await FileSystem.OpenAppPackageFileAsync("words_from_above/miracles.json");
         using var r = new StreamReader(s);
         var json = await r.ReadToEndAsync();
-        var dict = JsonSerializer.Deserialize<Dictionary<string, MiracRaw>>(json)
-                   ?? new Dictionary<string, MiracRaw>();
+        var dict = JsonSerializer.Deserialize<List<MiracRaw>>(json)
+            ?? new List<MiracRaw>();
 
         _cache = dict
-            .Select(kvp =>
+            .Select(e => new MiracRaw
             {
-                var name = kvp.Key;
-                var power = int.TryParse(kvp.Value.power, out var p) ? p : 0;
-                var fields = kvp.Value.fields ?? new List<string>();
-                return new MiracEntry(name, power, fields);
+                power = e.power,
+                name = e.name,
+                description = e.description,
+                sphere = e.sphere,
+                isAdvanced = e.isAdvanced,
+                alignment = e.alignment,
             })
-            .OrderBy(e => e.Name)
+            .OrderBy(e => e.power)
+            .Take(50)
             .ToList();
 
         return _cache;
     }
 
-    public static async Task<IReadOnlyList<MiracEntry>> SearchAsync(string query)
+    public static async Task<IReadOnlyList<MiracRaw>> SearchAsync(string query)
     {
         var all = await GetAllAsync();
         if (string.IsNullOrWhiteSpace(query)) return all;
         query = query.Trim().ToLowerInvariant();
 
         return all.Where(e =>
-                e.Name.ToLowerInvariant().Contains(query) ||
-                e.Fields.Any(f => f.ToLowerInvariant().Contains(query)))
+                e.name.ToLowerInvariant().Contains(query))
             .ToList();
     }
 }
