@@ -18,7 +18,6 @@
         <Slider x:Name="Slider"
                 Minimum="0"
                 Maximum="0"
-                StepFrequency="1"
                 ValueChanged="OnSliderValueChanged" />
 
     </VerticalStackLayout>

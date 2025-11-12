@@ -10,7 +10,7 @@ public partial class LifeConfigPage : ContentPage
     {
         // Parent (IspCalculator) listens to this just like other tabs
         public event Action<CalcContribution>? ContributionAdded;
-
+public LifeConfigPage() : this(null) { }
         public LifeConfigPage(Dictionary<string, int>? items = null)
         {
             InitializeComponent();
@@ -18,14 +18,14 @@ public partial class LifeConfigPage : ContentPage
             // Default mapping (your keys/values)
             var data = items ?? new Dictionary<string, int>
             {
-                new("3/1",  4),
-                new("6/2",  9),
-                new("9/3",  14),
-                new("12/4", 20),
-                new("15/5", 28),
-                new("18/6", 38),
-                new("21/7", 50),
-                new("24/8", 65),
+                {"3/1",  4},
+                {"6/2",  9},
+                {"9/3",  14},
+                {"12/4", 20},
+                {"15/5", 28},
+                {"18/6", 38},
+                {"21/7", 50},
+                {"24/8", 65},
             };
 
             LifeSlider.ItemsSource = data;

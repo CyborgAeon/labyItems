@@ -1,55 +1,27 @@
-using labyItems.Models;
-using labyItems.Services;
-
-namespace labyItems.Pages;
-
-public partial class CharactersPage : ContentPage
-{
-    public CharactersPage()
-    {
-        InitializeComponent();
-    }
-
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-        LoadCharacters();
-    }
-
-    void LoadCharacters()
-    {
-        var list = LiteDbService.GetCharacters().ToList();
-        CharsView.ItemsSource = list;
-    }
-
-    private async void OnAddClicked(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new AddCharacter());
-    }
-
-    private async void OnEditClicked(object sender, EventArgs e)
-    {
-        if (sender is BindableObject bo && bo.BindingContext is Character c)
-        {
-            // Populate the form for editing
-            await Navigation.PushAsync(new AddCharacter(c));
-        }
-    }
-
-    private async void OnMakeSheetClicked(object sender, EventArgs e)
-    {
-        if (sender is BindableObject bo && bo.BindingContext is Character ch)
-        {
-            await Navigation.PushAsync(new MakeSheetPage(ch));
-        }
-    }
-
-    private async void OnSelected(object sender, SelectionChangedEventArgs e)
-    {
-        if (e.CurrentSelection.FirstOrDefault() is Character c)
-        {
-            ((CollectionView)sender).SelectedItem = null; // clear selection
-            await Navigation.PushAsync(new ItemFormPage(c)); // go to form
-        }
-    }
-}
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+  x:Class="labyItems.Pages.AddCharacter"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:models="clr-namespace:labyItems.Models"
+  Title="New Character">
+  <ScrollView>
+    <VerticalStackLayout Padding="20" Spacing="12">
+      <Label Text="Name" />
+      <Entry x:Name="NameEntry" />
+      <Label Text="Class" />
+      <Entry x:Name="ClassEntry" />
+      <Label Text="Points" />
+      <Entry x:Name="PointsEntry" />
+      <Label Text="Player Name (optional)" />
+      <Entry x:Name="PlayerEntry" />
+      
+      
+      <Button
+        Clicked="OnSave"
+        CornerRadius="12"
+        HeightRequest="50"
+        Text="Save" />
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

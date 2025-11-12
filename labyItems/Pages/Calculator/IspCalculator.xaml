@@ -4,21 +4,14 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:controls="clr-namespace:labyItems.Controls"
             xmlns:local="clr-namespace:labyItems.Pages.Calculator.CalcNav"
-            Title="ISP Calculator"
-            Root="Calculator">
+            Title="ISP Calculator">
     <local:ArmourNav     x:Name="ArmourCategoryPage"     Title="Armor"  />
     <local:WeaponNav     x:Name="WeaponCategoryPage"     Title="Weapon" />
     <local:CharmNav      x:Name="CharmCategoryPage"      Title="Charm"  />
     <local:ConsumNav x:Name="ConsumableCategoryPage" Title="1-use" />
     <local:LifeConfigPage       x:Name="LifeCategoryPage"       Title="Life"   />
-        <VerticalStackLayout Spacing="6">
-            <Label x:Name="TotalLabel"
-                   FontAttributes="Bold"
-                   Text="Total: 0 ISP" />
-
-            <Button Clicked="OnReturn"
-                    CornerRadius="12"
-                    HeightRequest="50"
-                    Text="Return to Form" />
-        </VerticalStackLayout>
+       <!-- Put global buttons in the toolbar -->
+    <TabbedPage.ToolbarItems>
+        <ToolbarItem Text="Return to Form" Clicked="OnReturn" />
+    </TabbedPage.ToolbarItems>
 </TabbedPage>
