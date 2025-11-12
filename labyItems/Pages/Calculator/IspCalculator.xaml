@@ -1,0 +1,17 @@
+<TabbedPage 
+            x:Class="labyItems.Pages.Calculator.IspCalculator"
+            xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:controls="clr-namespace:labyItems.Controls"
+            xmlns:local="clr-namespace:labyItems.Pages.Calculator.CalcNav"
+            Title="ISP Calculator">
+    <local:ArmourNav     x:Name="ArmourCategoryPage"     Title="Armor"  />
+    <local:WeaponNav     x:Name="WeaponCategoryPage"     Title="Weapon" />
+    <local:CharmNav      x:Name="CharmCategoryPage"      Title="Charm"  />
+    <local:ConsumNav x:Name="ConsumableCategoryPage" Title="1-use" />
+    <local:LifeConfigPage       x:Name="LifeCategoryPage"       Title="Life"   />
+       <!-- Put global buttons in the toolbar -->
+    <TabbedPage.ToolbarItems>
+        <ToolbarItem Text="Return to Form" Clicked="OnReturn" />
+    </TabbedPage.ToolbarItems>
+</TabbedPage>

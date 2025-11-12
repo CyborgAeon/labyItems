@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="labyItems.Pages.Calculator.CalcNav.ArmourNav"
+             Title="Armour / Shield">
+
+    <!-- Outer layout for the whole tab -->
+    <VerticalStackLayout Padding="8,16,8,8" Spacing="10">
+
+        <!-- Armour / Shield selection area -->
+        <VerticalStackLayout x:Name="ArmourCategoryPage"
+                             Spacing="10">
+            <Button Clicked="OnShield" Text="Shield" />
+            <Label x:Name="ShieldPickedLabel" IsVisible="False" />
+
+            <Button Clicked="OnArmour" Text="Armour" />
+            <Label x:Name="ArmourPickedLabel" IsVisible="False" />
+        <Label
+          x:Name="TotalLabel"
+          FontAttributes="Bold"
+          Text="Total: 0 ISP" />
+        <Button
+          Clicked="OnReturn"
+          CornerRadius="12"
+          HeightRequest="50"
+          Text="Return to Calculator" />
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,9 +1,10 @@
 ﻿using labyItems.Models;
 using labyItems.Services;
 using labyItems.Pages;
+using labyItems.Pages.Calculator;
 using labyItemsq.Helpers;
-namespace labyItems;
 
+namespace labyItems;
 public partial class ItemFormPage : ContentPage
 {
     public bool ShowPlayerNameField { get; set; } = false;

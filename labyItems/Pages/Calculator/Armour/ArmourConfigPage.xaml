@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+  x:Class="labyItems.Pages.Calculator.ArmourConfigPage"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:controls="clr-namespace:labyItems.Controls"
+  Title="Configure Armour">
+
+  <ScrollView>
+    <VerticalStackLayout Padding="20" Spacing="14">
+
+      <Label Text="Armour Cost Calculator" FontSize="20" FontAttributes="Bold" />
+
+      <!-- Base AC -->
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding ACBase, Mode=TwoWay}"
+        LabelText="Base AC" />
+
+      <!-- Armour type -->
+      <Label Text="Armour type" />
+      <Picker
+        x:Name="ArmourPicker"
+        Title="Select armour type"
+        SelectedIndexChanged="OnArmourChanged">
+        <Picker.Items>
+          <x:String>— None —</x:String>
+          <x:String>Magical Master Crafted (2 per AC)</x:String>
+          <x:String>Spiritual Master Crafted (2 per AC + 2)</x:String>
+          <x:String>Mantic Master Crafted (4 per AC + 2)</x:String>
+        </Picker.Items>
+      </Picker>
+
+      <!-- Modifiers -->
+      <Label Text="Modifiers" FontAttributes="Bold" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding MagicalColoursCount, Mode=TwoWay}"
+        LabelText="Magical colours (non-grey) (+2 per colour)" />
+
+      <controls:CheckboxControl
+        IsChecked="{Binding SpiritualNonOpposite}"
+        LabelText="Spiritual non-opposite alignment (+3)" />
+
+      <!-- Extra AC tables (0..6 each) -->
+      <Label Text="Additional AC (max 6 each)" FontAttributes="Bold" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding PAC, Mode=TwoWay}"
+        LabelText="PAC (cost table applied automatically)" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding DAC, Mode=TwoWay}"
+        LabelText="DAC (cost table applied automatically)" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding MAC, Mode=TwoWay}"
+        LabelText="MAC (cost table applied automatically)" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding SAC, Mode=TwoWay}"
+        LabelText="SAC (cost table applied automatically)" />
+
+      <!-- Results (auto-updating) -->
+      <Label Text="Results" FontAttributes="Bold" />
+      <Label Text="{Binding Breakdown}" LineBreakMode="WordWrap" />
+      <Label
+        FontAttributes="Bold"
+        FontSize="18"
+        Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+
+      <!-- Return -->
+      <Button Clicked="OnReturn" Text="Return" />
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

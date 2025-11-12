@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Calculator.CalcNav.ConsumNav"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Consumables">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <!-- Action buttons -->
+            <Button Text="Magic Scroll"
+                    Clicked="OnConsumableMagicScroll" />
+            <Button Text="Spirit Scroll"
+                    Clicked="OnConsumableSpiritScroll" />
+            <Button Text="Neuro Crystal"
+                    Clicked="OnConsumableNeuroCrystal" />
+            <Button Text="EP Talisman"
+                    Clicked="OnConsumableEPTalisman" />
+            <Button Text="Other Consumable"
+                    Clicked="OnConsumableGeneric" />
+
+            <!-- Picked summaries per type (optional) -->
+            <Label x:Name="ConsumableMagicPickedLabel"
+                   IsVisible="False"
+                   LineBreakMode="WordWrap"
+                   Text="(magic scroll picks will appear here)" />
+
+            <Label x:Name="ConsumableSpiritPickedLabel"
+                   IsVisible="False"
+                   LineBreakMode="WordWrap"
+                   Text="(spirit scroll picks will appear here)" />
+
+            <Label x:Name="ConsumableNeuroPickedLabel"
+                   IsVisible="False"
+                   LineBreakMode="WordWrap"
+                   Text="(neuro crystal picks will appear here)" />
+
+            <Label x:Name="ConsumableEPPickedLabel"
+                   IsVisible="False"
+                   LineBreakMode="WordWrap"
+                   Text="(EP talisman picks will appear here)" />
+
+            <!-- Per-tab total -->
+            <Label x:Name="TotalLabel"
+                   FontAttributes="Bold"
+                   Text="Total: 0 ISP" />
+
+            <!-- Optional: Done button if used standalone -->
+            <!-- <Button Text="Done" Clicked="OnReturn" /> -->
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

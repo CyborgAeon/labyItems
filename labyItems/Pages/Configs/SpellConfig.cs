@@ -1,12 +1,11 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
-
+using labyItems.Pages.Calculator;
 namespace labyItems.Pages.Configs;
 
 public class SpellConfig : INotifyPropertyChanged
 {
-    // ===== Inputs from Search =====
     private string _spellName = "Spell";
     public string SpellName
     {
@@ -14,20 +13,36 @@ public class SpellConfig : INotifyPropertyChanged
         set { if (_spellName != value) { _spellName = value; OnPropertyChanged(); OnPropertyChanged(nameof(Title)); } }
     }
 
-    private int _power; // mana cost of the spell (from search, or overridden)
+    private int _power;
     public int Power
     {
         get => _power;
-        set { var v = Math.Max(0, value); if (_power != v) {
+        set
+        {
+            var v = Math.Max(0, value); if (_power != v)
+            {
                 _power = v;
-                OnPropertyChanged(); 
-            OnPropertyChanged(nameof(Title));
-            Recalculate(); } }
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Power));
+                Recalculate();
+            }
+        }
+    }
+    private bool? _isAdvanced;
+    public bool? IsAdvanced
+    {
+        get => _isAdvanced;
+        set { if (_isAdvanced != value) { _isAdvanced = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsAdvanced)); } }
+    }
+    private string _colour;
+    public string Colour
+    {
+        get => _colour;
+        set { if (_colour != value) { _colour = value; OnPropertyChanged(); OnPropertyChanged(nameof(Colour)); } }
     }
 
     public string Title => $"{SpellName} (Power {Power})";
 
-    // ===== Innates =====
     private int _basicPerDay;
     public int BasicPerDay { get => _basicPerDay; set { var v = Math.Max(0, value); if (_basicPerDay != v) { _basicPerDay = v; OnPropertyChanged(); Recalculate(); } } }
 
@@ -99,18 +114,18 @@ public class SpellConfig : INotifyPropertyChanged
     private bool _isTeachingScroll;
     public bool IsTeachingScroll { get => _isTeachingScroll; set { if (_isTeachingScroll != value) { _isTeachingScroll = value; OnPropertyChanged(); Recalculate(); } } }
 
-    // ===== Outputs =====
     private int _total;
     public int Total { get => _total; private set { if (_total != value) { _total = value; OnPropertyChanged(); } } }
 
     private string _breakdown = "";
     public string Breakdown { get => _breakdown; private set { if (_breakdown != value) { _breakdown = value; OnPropertyChanged(); } } }
 
-    // ===== Public API for search integration =====
     public void ApplySpell(Spell.Result picked)
     {
         SpellName = string.IsNullOrWhiteSpace(picked.Name) ? "Spell" : picked.Name;
-        Power = Math.Max(0, picked.Power);
+        Power = Math.Max(1, picked.Power);
+        IsAdvanced = picked.IsAdvanced;
+        Colour = picked.Colour;
     }
 
     public void Recalculate()

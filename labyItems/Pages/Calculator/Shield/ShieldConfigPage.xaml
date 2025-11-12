@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+  x:Class="labyItems.Pages.Calculator.ShieldConfigPage"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:conv="clr-namespace:labyItems.Converters"
+  xmlns:controls="clr-namespace:labyItems.Controls"
+  Title="Configure Shield">
+
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <conv:IntConverter x:Key="IntConverter" />
+    </ResourceDictionary>
+  </ContentPage.Resources>
+
+  <ScrollView>
+    <VerticalStackLayout Padding="16" Spacing="12">
+
+      <Label Text="Shield Cost Calculator" FontSize="20" FontAttributes="Bold" />
+
+      <!-- Shield selection -->
+      <Label Text="Shield" />
+      <Picker
+        x:Name="ShieldPicker"
+        Title="+0 Shield type"
+        SelectedIndexChanged="OnShieldChanged">
+        <Picker.Items>
+          <x:String>— None —</x:String>
+          <x:String>+0 Magical Shield (15)</x:String>
+          <x:String>+0 Spiritual Shield (20)</x:String>
+          <x:String>+0 Mantic Shield (35)</x:String>
+        </Picker.Items>
+      </Picker>
+
+          <controls:PlusMinusControl
+            x:Name="MagicalColoursCount"
+            AllowMultiple="True"
+            Count="{Binding MagicalColoursCount, Mode=TwoWay}"
+            LabelText="Non-Grey Magic-colours ()" />
+          <controls:CheckboxControl
+            x:Name="SpiritualNonOppositeSwitch"
+            IsChecked="{Binding SpiritualNonOpposite, Mode=TwoWay}"
+            LabelText="Spiritual non-opposite alignment" />
+
+      <HorizontalStackLayout Spacing="12">
+        <Button Text="Calculate" Clicked="OnCalculate" />
+        <Button Text="Done" Clicked="OnReturn" />
+      </HorizontalStackLayout>
+
+      <Label Text="Results" FontAttributes="Bold" />
+      <Label Text="{Binding Breakdown}" LineBreakMode="WordWrap" />
+      <Label>
+        <Label.FormattedText>
+          <FormattedString>
+            <Span Text="Total ISP: " FontAttributes="Bold" />
+            <Span Text="{Binding Total}" />
+          </FormattedString>
+        </Label.FormattedText>
+      </Label>
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

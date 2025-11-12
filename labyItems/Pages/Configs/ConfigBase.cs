@@ -12,6 +12,8 @@ namespace labyItems.Pages.Configs
         private bool _addBasic;
         private bool _addAdvanced;
         private bool _addPrep;
+        private bool? _isAdvanced;
+        private bool? _isImmune;
 
         // Common properties
         public string Name
@@ -19,6 +21,18 @@ namespace labyItems.Pages.Configs
             get => _name;
             set => SetProperty(ref _name, value, affectsTotal: false, alsoNotify: nameof(Title));
         }
+
+        public bool? IsAdvanced
+        {
+            get => _isAdvanced;
+            set => SetProperty(ref _isAdvanced, value, affectsTotal: false, alsoNotify: nameof(Title));
+        }
+        public bool? IsImmune
+        {
+            get => _isImmune;
+            set => SetProperty(ref _isImmune, value, affectsTotal: false, alsoNotify: nameof(Title));
+        }
+
 
         // Override to customize the “none selected” text in Title
         protected virtual string NoneSelectedText => "Item (none selected)";
@@ -60,27 +74,21 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _addPrep, value, affectsTotal: true);
         }
 
-        // --- Calculation pipeline ---
-        // 1) Base shared cost
-        protected virtual double BaseTotal()
+        protected virtual int BaseTotal()
         {
-            double t = 0;
+            int t = 0;
             t += 2 * Power * BasicPerDay;
             t += 3 * Power * AdvancedPerDay;
-            if (AddBasic) t += 15;
-            if (AddAdvanced) t += 18;
-            if (AddPrep) t *= 1.5;
+            if (AddBasic) { t += 15; return t; }
+            if (AddAdvanced) { t += 18; return t; }
+            if (AddPrep) { t += t / 2; return t; }
             return t;
         }
 
-        // 2) Config-specific extra additive cost
-        protected abstract double ExtraTotal();
-
-        // 3) Config-specific multipliers (if any)
-        protected virtual double ApplyMultipliers(double total) => total;
-
+        protected abstract int ExtraTotal();
+        protected virtual int ApplyMultipliers(int total) => total;
         public virtual int Total
-            => (int)System.Math.Round(ApplyMultipliers(BaseTotal() + ExtraTotal()));
+            => ApplyMultipliers(BaseTotal() + ExtraTotal());
 
         // --- INotifyPropertyChanged helpers ---
         protected bool SetProperty<T>(ref T storage, T value,

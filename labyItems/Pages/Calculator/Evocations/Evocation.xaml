@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+  x:Class="labyItems.Pages.Calculator.Evocation"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  Title="EarthPower">
+  <Grid Padding="16" RowDefinitions="Auto,*">
+    <SearchBar
+      x:Name="Search"
+      Grid.Row="0"
+      Placeholder="Search by name or field (e.g. Rivers, Horned Man)..."
+      TextChanged="OnSearchChanged" />
+
+    <CollectionView
+      x:Name="Results"
+      Grid.Row="1"
+      ItemsLayout="VerticalList"
+      SelectionChanged="OnPick"
+      SelectionMode="Single">
+      <CollectionView.ItemTemplate>
+        <DataTemplate>
+          <Border
+            Margin="12"
+            Padding="16"
+            BackgroundColor="#21FFFFFF"
+            StrokeShape="RoundRectangle 14">
+
+            <!--  Two rows (top/bottom), two columns (left/right)  -->
+            <Grid
+              ColumnDefinitions="*,Auto"
+              ColumnSpacing="12"
+              RowDefinitions="Auto,Auto"
+              RowSpacing="6">
+
+              <!--  Top-left  -->
+              <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                FontAttributes="Bold"
+                LineBreakMode="TailTruncation"
+                Text="{Binding Name}" />
+
+              <!--  Top-right: Fields  -->
+              <Label
+                Grid.Row="0"
+                Grid.Column="1"
+                FontSize="12"
+                HorizontalTextAlignment="End"
+                Opacity="0.7">
+                <Label.FormattedText>
+                  <FormattedString>
+                    <Span Text="Fields: " />
+                    <Span Text="{Binding Fields}" />
+                  </FormattedString>
+                </Label.FormattedText>
+              </Label>
+
+              <!--  Bottom-right: Power  -->
+              <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                FontSize="12"
+                HorizontalTextAlignment="Start"
+                Opacity="0.7">
+                <Label.FormattedText>
+                  <FormattedString>
+                    <Span Text="Power: " />
+                    <Span Text="{Binding Power}" />
+                  </FormattedString>
+                </Label.FormattedText>
+              </Label>
+              <Label
+                Grid.Row="1"
+                Grid.Column="1"
+                FontSize="12"
+                IsVisible="{Binding IsAdvanced}"
+                Opacity="0.7"
+                HorizontalTextAlignment="End"
+                Text="Advanced" />
+            </Grid>
+          </Border>
+        </DataTemplate>
+
+      </CollectionView.ItemTemplate>
+    </CollectionView>
+  </Grid>
+</ContentPage>
