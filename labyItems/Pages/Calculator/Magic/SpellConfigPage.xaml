@@ -5,13 +5,15 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
+  x:Name="RootPage"
   Title="Configure Spell">
 <ContentPage.Resources>
   <ResourceDictionary>
     <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
   </ResourceDictionary>
 </ContentPage.Resources>
-  <ScrollView>
+<Grid RowDefinitions="*,Auto">
+  <ScrollView Grid.Row="0">
     <VerticalStackLayout Padding="20" Spacing="14">
 
       <!-- Header: title + search -->
@@ -106,10 +108,14 @@
 
       <!-- Results -->
       <Label Text="{Binding Breakdown}" LineBreakMode="WordWrap" />
-      <Label FontAttributes="Bold" FontSize="18"
-             Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
-
-      <Button Clicked="OnReturn" Text="Return" />
     </VerticalStackLayout>
   </ScrollView>
+
+    <controls:StickyFooterControl
+        Grid.Row="1"
+        Total="{Binding Total}"
+        ButtonText="Return to Calculator"
+        ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
+        ReturnCommandParameter="{x:Reference RootPage}" />
+  </Grid>
 </ContentPage>

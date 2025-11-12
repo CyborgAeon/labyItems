@@ -6,6 +6,7 @@ using Microsoft.Maui.Controls;
 using labyItems.Pages.Configs;
 using labyItems.Models;
 using labyItems.Helpers;
+using labyItems.Controls;
 namespace labyItems.Pages.Calculator;
 
 public partial class GeneralConfigPage : ContentPage
@@ -23,12 +24,52 @@ public partial class GeneralConfigPage : ContentPage
     }
     private readonly TaskCompletionSource<CalcResult?> _tcs = new();
     public Task<CalcResult?> Completion => _tcs.Task;
+  public Command ReturnFromConfigCommand { get; }
 
     public GeneralConfigPage(GeneralConfig? model = null)
     {
         InitializeComponent();
         BindingContext = model ?? new GeneralConfig();
+         ReturnFromConfigCommand = new Command(async () =>
+            {
+                if (BindingContext is not GeneralConfig cfg) return;
+
+                var result = new CalcResult
+                {
+                    TotalIsp = cfg.Total,
+                    Summary  = BuildSummary(cfg)
+                };
+
+                _tcs.TrySetResult(result);
+                await StickyFooterControl.DefaultNavigateAsync(this);
+            });
     }
+    private async void OnFooterReturnClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is not GeneralConfig cfg) return;
+
+            var result = new CalcResult
+            {
+                TotalIsp = cfg.Total,
+                Summary  = BuildSummary(cfg)
+            };
+
+            if (Navigation?.NavigationStack?.Count > 1)
+            {
+                _tcs.TrySetResult(result);
+                await Navigation.PopAsync();
+                return;
+            }
+
+            if (Shell.Current is not null)
+            {
+                await Shell.Current.GoToAsync("..");
+                return;
+            }
+
+            _tcs.TrySetResult(result);
+            await Navigation.PopAsync();
+        }
 
     public static async Task<CalcResult?> PickAsync(INavigation nav, GeneralConfig? seed = null)
     {

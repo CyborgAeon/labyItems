@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using labyItems.Controls;
 
 namespace labyItems.Pages.Configs
 {
@@ -14,15 +15,58 @@ namespace labyItems.Pages.Configs
         private readonly TaskCompletionSource<CalcResult?> _tcs = new();
         public Task<CalcResult?> Completion => _tcs.Task;
 
+        public Command ReturnFromConfigCommand { get; }
+
         public MiracleConfigPage()
         {
             InitializeComponent();
             BindingContext = new MiracleConfig();
+
+            ReturnFromConfigCommand = new Command(async () =>
+            {
+                if (BindingContext is not MiracleConfig cfg) return;
+
+                var result = new CalcResult
+                {
+                    TotalIsp = cfg.Total,
+                    Summary  = BuildSummary(cfg)
+                };
+
+                _tcs.TrySetResult(result);
+                await StickyFooterControl.DefaultNavigateAsync(this);
+            });
         }
+
+        private async void OnFooterReturnClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is not MiracleConfig cfg) return;
+
+            var result = new CalcResult
+            {
+                TotalIsp = cfg.Total,
+                Summary  = BuildSummary(cfg)
+            };
+
+            if (Navigation?.NavigationStack?.Count > 1)
+            {
+                _tcs.TrySetResult(result);
+                await Navigation.PopAsync();
+                return;
+            }
+
+            if (Shell.Current is not null)
+            {
+                await Shell.Current.GoToAsync("..");
+                return;
+            }
+
+            _tcs.TrySetResult(result);
+            await Navigation.PopAsync();
+        }
+
 
         private string BuildSummary(MiracleConfig cfg)
         {
-            // Compact tags reflecting the new model
             var tags = new List<string>();
 
             if (cfg.BasicPerDay > 0)     tags.Add($"Basic x{cfg.BasicPerDay}");
@@ -30,17 +74,13 @@ namespace labyItems.Pages.Configs
             if (cfg.InnateIsMantic)      tags.Add("Innates mantic ×4");
 
             if (cfg.GeneralSpiritStore > 0) tags.Add($"{cfg.GeneralSpiritStore} additional spirits (4×{cfg.GeneralSpiritStore})");
-            if (cfg.SphereSpiritStore  > 0) tags.Add($"{cfg.SphereSpiritStore} additional {cfg.SphereSel} spirits (3×{cfg.SphereSpiritStore})");
+            if (cfg.SphereSpiritStore  > 0) tags.Add($"{cfg.SphereSpiritStore} additional {SphereSel} spirits (3×{cfg.SphereSpiritStore})");
             if (cfg.SpiritStoreRegenerates && (cfg.GeneralSpiritStore > 0 || cfg.SphereSpiritStore > 0))
                 tags.Add("Store regenerates +25");
-
-            // Base list flags (only one should apply based on IsAdvanced)
             if (cfg.IsAdvanced == false && cfg.AddBasicToList)    tags.Add($"add {cfg.MiracleName} to base list (B)");
             if (cfg.IsAdvanced == true  && cfg.AddAdvancedToList) tags.Add($"add {cfg.MiracleName} to base list (A)");
 
             if (cfg.AddWithPrep30) tags.Add($"add {cfg.MiracleName} to base list with 30s prep");
-
-            // Mantic conversions
             if (cfg.TurnBasicUpTo5thMantic      > 0) tags.Add($"Turn handbook → ≤5th mantic ×{cfg.TurnBasicUpTo5thMantic} (40×)");
             if (cfg.TurnBasicMantic             > 0) tags.Add($"Turn any handbook mantic ×{cfg.TurnBasicMantic} (50×)");
             if (cfg.TurnAdvancedUpTo6thMantic   > 0) tags.Add($"Turn advanced → ≤6th mantic ×{cfg.TurnAdvancedUpTo6thMantic} (60×)");
@@ -53,7 +93,7 @@ namespace labyItems.Pages.Configs
             var tagText = string.Join(", ", tags);
             return $"{name}: {tagText} → {cfg.Total} ISP";
         }
-
+        
         private async void OnSearchMiracle(object sender, EventArgs e)
         {
             var picked = await new Miracle().PickAsync(Navigation);
@@ -67,12 +107,7 @@ namespace labyItems.Pages.Configs
         {
             if (BindingContext is not MiracleConfig cfg) return;
 
-            var res = new CalcResult
-            {
-                TotalIsp = cfg.Total,
-                Summary  = BuildSummary(cfg)
-            };
-
+            var res = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
             _tcs.TrySetResult(res);
             await Navigation.PopAsync();
         }

@@ -2,7 +2,7 @@ using labyItems.Models;
 using labyItems.Pages.Configs;
 using labyItems.Services;
 using labyItems.Pages.Calculator;
-// using static labyItems.Pages.Evocation;
+using labyItems.Controls;
 
 namespace labyItems.Pages.Calculator;
 
@@ -10,13 +10,52 @@ public partial class EvocationConfigPage : ContentPage
 {
     private readonly TaskCompletionSource<CalcResult?> _tcs = new();
     public Task<CalcResult?> Completion => _tcs.Task;
+        public Command ReturnFromConfigCommand { get; }
 
     public EvocationConfigPage()
     {
         InitializeComponent();
         BindingContext = new EvocationConfig();
-    }
+        ReturnFromConfigCommand = new Command(async () =>
+            {
+                if (BindingContext is not EvocationConfig cfg) return;
 
+                var result = new CalcResult
+                {
+                    TotalIsp = cfg.Total,
+                    Summary  = BuildSummary(cfg)
+                };
+
+                _tcs.TrySetResult(result);
+                await StickyFooterControl.DefaultNavigateAsync(this);
+            });
+    }
+private async void OnFooterReturnClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is not EvocationConfig cfg) return;
+
+            var result = new CalcResult
+            {
+                TotalIsp = cfg.Total,
+                Summary  = BuildSummary(cfg)
+            };
+
+            if (Navigation?.NavigationStack?.Count > 1)
+            {
+                _tcs.TrySetResult(result);
+                await Navigation.PopAsync();
+                return;
+            }
+
+            if (Shell.Current is not null)
+            {
+                await Shell.Current.GoToAsync("..");
+                return;
+            }
+
+            _tcs.TrySetResult(result);
+            await Navigation.PopAsync();
+        }
     private string BuildSummary(EvocationConfig cfg)
     {
         // One-line summary for contribution list:
