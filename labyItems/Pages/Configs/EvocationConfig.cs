@@ -4,21 +4,16 @@ using labyItems.Pages.Calculator;
 namespace labyItems.Pages.Configs;
     public class EvocationConfig : ConfigBase
     {
+        protected override int ExtraTotal() => Total + (DrawOnEpPerDay * 16);
         private int _drawOnEpPerDay;
         public int DrawOnEpPerDay
         {
             get => _drawOnEpPerDay;
             set => SetProperty(ref _drawOnEpPerDay, value, affectsTotal: true);
         }
+        
         public string EvocationName { get; set; } = "";
         protected override string NoneSelectedText => "Evocation (none selected)";
-
-        protected override int ExtraTotal()
-        {
-            int t = 0;
-            t += 16 * DrawOnEpPerDay;
-            return t;
-        }
 
         // No extra multipliers for evocation
         protected override int ApplyMultipliers(int total) => total;

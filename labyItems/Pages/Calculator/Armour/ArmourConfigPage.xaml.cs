@@ -4,32 +4,30 @@ using labyItems.Pages.Configs;
 
 namespace labyItems.Pages.Calculator;
 
-public partial class ArmourConfigPage : ContentPage
+public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
 {
-    private readonly TaskCompletionSource<CalcResult?> _tcs = new();
-    public Task<CalcResult?> Completion => _tcs.Task;
-
     public ArmourConfigPage()
     {
         InitializeComponent();
-        BindingContext = new ArmourConfig(); // auto-recalculates as properties change
     }
 
-    // Map picker index -> enum (and trigger recalculation via setter)
     private void OnArmourChanged(object sender, EventArgs e)
     {
-        var cfg = (ArmourConfig)BindingContext;
-        switch (ArmourPicker.SelectedIndex)
-        {
-            case 1: cfg.SelectedArmour = ArmourKind.MagicalMasterCrafted; break;
-            case 2: cfg.SelectedArmour = ArmourKind.SpiritualMasterCrafted; break;
-            case 3: cfg.SelectedArmour = ArmourKind.ManticMasterCrafted; break;
-            default: cfg.SelectedArmour = ArmourKind.None; break;
-        }
-        // cfg.Recalculate(); // not needed—setters recalc automatically (see config class below)
-    }
+        if (BindingContext is not ArmourConfig cfg) return;
 
-    private string BuildSummary(ArmourConfig cfg)
+        var picker = sender as Picker;
+        var index = picker?.SelectedIndex ?? -1;
+
+        cfg.SelectedArmour = index switch
+        {
+            1 => ArmourKind.MagicalMasterCrafted,
+            2 => ArmourKind.SpiritualMasterCrafted,
+            3 => ArmourKind.ManticMasterCrafted,
+            _ => ArmourKind.None
+        };
+    }
+    
+    protected override string BuildSummary(ArmourConfig cfg)
     {
         var kind = cfg.SelectedArmour switch
         {
@@ -52,17 +50,5 @@ public partial class ArmourConfigPage : ContentPage
 
         var tagText = tags.Count > 0 ? $" [{string.Join(", ", tags)}]" : "";
         return $"{kind}{tagText} → {cfg.Total} ISP";
-    }
-
-    private async void OnReturn(object sender, EventArgs e)
-    {
-        var cfg = (ArmourConfig)BindingContext;
-        var res = new CalcResult
-        {
-            TotalIsp = cfg.Total,
-            Summary = BuildSummary(cfg)
-        };
-        _tcs.TrySetResult(res);
-        await Navigation.PopAsync();
     }
 }

@@ -1,19 +1,39 @@
 using labyItems.Models;
 using labyItems.Categories;
-
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
 namespace labyItems.Pages.Calculator;
 
-public partial class IspCalculator : TabbedPage
+public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
 {
 
     public event Action<int>? TotalChanged;
     private readonly List<CalcContribution> _contributions = new();
     private TaskCompletionSource<CalcResult?>? _tcs;
+public event PropertyChangedEventHandler? PropertyChanged;
+        void OnPropertyChanged([CallerMemberName] string? n = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+
+        private int _total;
+        public int Total { get => _total; private set { if (_total != value) { _total = value; OnPropertyChanged(); } } }
+
+        public ICommand ReturnToFormCommand { get; }
 
     public IspCalculator(ItemTypeEnum category)
     {
-        InitializeComponent();
 
+        InitializeComponent();
+ArmourCategoryPage.BindingContext = this;
+            WeaponCategoryPage.BindingContext = this;
+            CharmCategoryPage.BindingContext = this;
+            ConsumableCategoryPage.BindingContext = this;
+            LifeCategoryPage.BindingContext = this;
+ReturnToFormCommand = new Command(async () =>
+            {
+                var result = new CalcResult { TotalIsp = ComputeTotal(), Summary = BuildSummary() };
+                _tcs?.TrySetResult(result);
+                await Navigation.PopAsync();
+            });
         // Subscribe to tab events
         ArmourCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
         WeaponCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };

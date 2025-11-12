@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<cfg:ConfigPageBase
+  x:TypeArguments="cfg:ArmourConfig"
   x:Class="labyItems.Pages.Calculator.ArmourConfigPage"
+  x:Name="RootPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:controls="clr-namespace:labyItems.Controls"
-  Title="Configure Armour">
-
-  <ScrollView>
+  xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
+  Title="Armour Config">
+<Grid RowDefinitions="*,Auto">
+  <ScrollView Grid.Row="0">
     <VerticalStackLayout Padding="20" Spacing="14">
 
       <Label Text="Armour Cost Calculator" FontSize="20" FontAttributes="Bold" />
@@ -75,7 +78,14 @@
         Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
 
       <!-- Return -->
-      <Button Clicked="OnReturn" Text="Return" />
+      <!-- <Button Clicked="OnReturn" Text="Return" /> -->
     </VerticalStackLayout>
   </ScrollView>
-</ContentPage>
+    <controls:StickyFooterControl
+        Grid.Row="1"
+        Total="{Binding Total}"
+        ButtonText="Return to Calculator"
+        ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
+        ReturnCommandParameter="{x:Reference RootPage}" />
+  </Grid>
+</cfg:ConfigPageBase>

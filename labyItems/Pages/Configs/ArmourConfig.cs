@@ -3,11 +3,11 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using labyItems.Models.Enums;
-
-
-public class ArmourConfig : INotifyPropertyChanged
+using labyItems.Models;
+namespace labyItems.Pages.Configs;
+public class ArmourConfig : ConfigBase, INotifyPropertyChanged
 {
-    // Inputs
+    protected override int ExtraTotal() => 0;
     private int _acBase;
     public int ACBase
     {
