@@ -33,8 +33,6 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _isImmune, value, affectsTotal: false, alsoNotify: nameof(Title));
         }
 
-
-        // Override to customize the “none selected” text in Title
         protected virtual string NoneSelectedText => "Item (none selected)";
         public string Title => string.IsNullOrWhiteSpace(Name) ? NoneSelectedText : Name;
 

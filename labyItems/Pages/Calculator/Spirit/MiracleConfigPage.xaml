@@ -13,8 +13,6 @@
 </ContentPage.Resources>
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="14">
-
-      <!-- Header: title + search -->
       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
         <Label
           Grid.Column="0"

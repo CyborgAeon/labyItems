@@ -7,16 +7,15 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="12">
-
-            <!-- Action buttons -->
-            <Button Text="Earth Power"
-                    Clicked="OnCharmEarthPower" />
             <Button Text="General Charm"
                     Clicked="OnCharmGeneral" />
-            <Button Text="Magic Charm"
+            <Button Text="EarthPower Charm"
+                    Clicked="OnCharmEarthPower" />
+            <Button Text="Magical Charm"
                     Clicked="OnCharmMagic" />
+            <Button Text="Spiritual Charm"
+                    Clicked="OnCharmSpirit" />
 
-            <!-- Picked summaries per charm 'group' (optional) -->
             <Label x:Name="EarthPowerCharmPickedLabel"
                    IsVisible="False"
                    LineBreakMode="WordWrap"
@@ -32,14 +31,14 @@
                    LineBreakMode="WordWrap"
                    Text="(magic charm picks will appear here)" />
 
+            <Label x:Name="SpiritCharmPickedLabel"
+                   IsVisible="False"
+                   LineBreakMode="WordWrap"
+                   Text="(spiritual charm picks will appear here)" />
             <!-- Per-tab total -->
             <Label x:Name="TotalLabel"
                    FontAttributes="Bold"
                    Text="Total: 0 ISP" />
-
-            <!-- Optional: Return button if used as standalone pushed page -->
-            <!-- <Button Text="Done" Clicked="OnReturn" /> -->
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

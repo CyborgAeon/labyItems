@@ -108,6 +108,34 @@ namespace labyItems.Pages.Calculator.CalcNav;
             UpdateTotal();
         }
 
+        private async void OnCharmSpirit(object sender, EventArgs e)
+        {
+            if (_categoryLocked) return;
+            _categoryLocked = true;
+
+            var cfgPage = new MiracleConfigPage();
+            await Navigation.PushAsync(cfgPage);
+
+            var cfg = await cfgPage.Completion;
+            _categoryLocked = false;
+            if (cfg is null) return;
+
+            var added = new CalcContribution(
+                Source: "Charm/Spirit",
+                Label: cfg.Summary,
+                Isp: cfg.TotalIsp);
+
+            _contributions.Add(added);
+            ContributionAdded?.Invoke(added);
+
+            SpiritCharmPickedLabel.IsVisible = true;
+            SpiritCharmPickedLabel.Text = string.Join("\n", _contributions
+                .Where(c => c.Source.StartsWith("Charm/", StringComparison.OrdinalIgnoreCase))
+                .Select(c => c.Label));
+
+            UpdateTotal();
+        }
+
         // ---------- Optional return pattern if you ever push this page standalone ----------
         private async void OnReturn(object sender, EventArgs e)
         {
