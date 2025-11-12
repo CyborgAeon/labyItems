@@ -7,7 +7,7 @@ public partial class Miracle : ContentPage
     public sealed record Result
     {
         public string Name { get; init; } = string.Empty;
-        public int Power { get; init; } = 0;
+        public int Power { get; init; }
         public string Alignment { get; init; }
         public bool IsAdvanced { get; init; }
     }
