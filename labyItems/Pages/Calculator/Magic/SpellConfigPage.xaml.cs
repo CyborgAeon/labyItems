@@ -13,6 +13,33 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
         InitializeComponent();
     }
     
+ private async void OnFooterReturnClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is not SpellConfig cfg) return;
+
+            var result = new CalcResult
+            {
+                TotalIsp = cfg.Total,
+                Summary  = BuildSummary(cfg)
+            };
+
+            if (Navigation?.NavigationStack?.Count > 1)
+            {
+                _tcs.TrySetResult(result);
+                await Navigation.PopAsync();
+                return;
+            }
+
+            if (Shell.Current is not null)
+            {
+                await Shell.Current.GoToAsync("..");
+                return;
+            }
+
+            _tcs.TrySetResult(result);
+            await Navigation.PopAsync();
+        }
+
     protected override string BuildSummary(SpellConfig cfg)
     {
         var basic = cfg.BasicPerDay > 0 ? $"Basic x{cfg.BasicPerDay}" : null;
@@ -46,17 +73,4 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
         if (BindingContext is SpellConfig cfg)
             cfg.ApplySpell(picked);
     }
-
-    // private async void OnReturn(object sender, EventArgs e)
-    // {
-    //     var cfg = (SpellConfig)BindingContext;
-    //     var res = new CalcResult
-    //     {
-    //         TotalIsp = cfg.Total,
-    //         Summary = BuildSummary(cfg)
-    //     };
-
-    //     _tcs.TrySetResult(res);
-    //     await Navigation.PopAsync();
-    // }
 }
