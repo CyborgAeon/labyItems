@@ -5,7 +5,7 @@ using labyItems.Models.DTOs;
 
 namespace labyItems.Pages.Configs;
 
-public class MiracleConfig : INotifyPropertyChanged
+public class MiracleConfig : ConfigBase
 {
     private string _miracleName = "Miracle";
     public string MiracleName
@@ -42,7 +42,7 @@ public class MiracleConfig : INotifyPropertyChanged
         set { if (_alignment != value) { _alignment = value; OnPropertyChanged(); OnPropertyChanged(nameof(Alignment)); } }
     }
 
-    public string Title => $"{MiracleName} (Power {Power})";
+    public string Title => $"{MiracleName} ({Power} Sp)";
 
     private int _basicPerDay;
     public int BasicPerDay { get => _basicPerDay; set { var v = Math.Max(0, value); if (_basicPerDay != v) { _basicPerDay = v; OnPropertyChanged(); Recalculate(); } } }
@@ -76,7 +76,7 @@ public class MiracleConfig : INotifyPropertyChanged
             if (_additionalManaOfColour != v) { _additionalManaOfColour = v; OnPropertyChanged(); Recalculate(); }
         }
     }
-
+    protected override int ExtraTotal() => 0;
     private string _additionalManaColour = "";
     public string AdditionalManaColour
     {
@@ -121,12 +121,13 @@ public class MiracleConfig : INotifyPropertyChanged
     private string _breakdown = "";
     public string Breakdown { get => _breakdown; private set { if (_breakdown != value) { _breakdown = value; OnPropertyChanged(); } } }
 
-    public void ApplyMiracle(labyItems.Models.DTOs.Miracle.Result picked)
+    public void ApplyMiracle(Miracle.Result picked)
     {
+        Power = picked.Power;
         MiracleName = string.IsNullOrWhiteSpace(picked.Name) ? "Miracle" : picked.Name;
-        Power = Math.Max(1, picked.Power);
         IsAdvanced = picked.IsAdvanced;
         Alignment = picked.Alignment;
+        Name = $"{picked.Name} ({picked.Power} SP)";
     }
 
     public void Recalculate()
