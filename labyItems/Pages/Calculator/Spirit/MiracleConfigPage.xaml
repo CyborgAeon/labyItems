@@ -1,112 +1,110 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-  x:Class="labyItems.Pages.MiracleConfigPage"
+  x:Class="labyItems.Pages.Configs.MiracleConfigPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
-  Title="Configure Spirit Charm">
-<ContentPage.Resources>
-  <ResourceDictionary>
-    <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-  </ResourceDictionary>
-</ContentPage.Resources>
+  Title="Miracle Config">
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+      <conv:BoolIsTrueConverter  x:Key="BoolIsTrueConverter" />
+    <conv:BoolIsFalseConverter x:Key="BoolIsFalseConverter" />
+    </ResourceDictionary>
+  </ContentPage.Resources>
   <ScrollView>
-    <VerticalStackLayout Padding="20" Spacing="14">
+    <VerticalStackLayout Padding="16" Spacing="12">
+
+      <!--  Header  -->
+      
       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-        <Label
-          Grid.Column="0"
-          FontAttributes="Bold"
-          FontSize="20"
-          Text="{Binding Title}" />
-        <Button
+      <Label
+        FontAttributes="Bold"
+        FontSize="20"
+        Text="{Binding Title}" />
+          <Button
           Grid.Column="1"
           Clicked="OnSearchMiracle"
           Text="Search" />
-      </Grid>
-
+          </Grid>
       <controls:PlusMinusControl
         AllowMultiple="True"
-        Count="{Binding Power, Mode=TwoWay}"
-        LabelText="Spirit cost override" />
-
-<controls:PlusMinusControl
-      AllowMultiple="True"
-      Count="{Binding BasicPerDay, Mode=TwoWay}"
-      LabelText="Cast basic times per day" 
-      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"/>
-
-    <controls:PlusMinusControl
-      AllowMultiple="True"
-      Count="{Binding AdvancedPerDay, Mode=TwoWay}"
-      LabelText="Cast advanced times per day" 
-      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"/>
-   
+        Count="{Binding BasicPerDay, Mode=TwoWay}"
+        IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolIsFalseConverter}}"
+        LabelText="Cast basic miracle x/day" 
+        />
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding AdvancedPerDay, Mode=TwoWay}"
+        IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolIsTrueConverter}}"
+        LabelText="Cast advanced miracle x/day" />
       <controls:CheckboxControl
         IsChecked="{Binding InnateIsMantic}"
+        IsVisible="{Binding HasInnates, Converter={StaticResource BoolIsTrueConverter}}"
         LabelText="Innate (from above) is mantic (×4 ISP cost)" />
 
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding AdditionalMana4, Mode=TwoWay}"
-        LabelText="Additional mana (+4 ISP each)" />
+      <controls:DictionarySlider
+        KeyFormat="{}{0} Additional spirits"
+        MaxCount="12"
+        MinCount="0"
+        Multiplier="4"
+        SelectedCount="{Binding GeneralSpiritStore, Mode=TwoWay}" />
 
-      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-        <controls:PlusMinusControl
-          Grid.Column="0"
-          AllowMultiple="True"
-          Count="{Binding AdditionalMana3, Mode=TwoWay}"
-          LabelText=" colour (+3 ISP each)" />
-        <Entry
-          Grid.Column="1"
-          WidthRequest="90"
-          Placeholder="Colour/hue"
-          Text="{Binding AdditionalMana3Colour, Mode=TwoWay}" />
-      </Grid>
+ <controls:SpherePicker x:Name="SphereSel" />
+
+<controls:DictionarySlider
+    KeyFormat="{}{0} Additional {1} spirits"
+    MinCount="0"
+    MaxCount="12"
+    Multiplier="3"
+    SelectedCount="{Binding SphereSpiritStore, Mode=TwoWay}"
+    FormatArg1="{Binding Source={x:Reference SphereSel}, Path=SpiritualSphere}"/>
+
 
       <controls:CheckboxControl
-        IsChecked="{Binding PowerStoreRegenerates}"
-        LabelText="Power store regenerates at 1/15 minutes (+25)" />
-<controls:CheckboxControl 
-      IsChecked="{Binding AddBasic}" 
-      LabelText="Add basic miracle to base list" 
-      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"/>
-    <controls:CheckboxControl 
-      IsChecked="{Binding AddAdvanced}" 
-      LabelText="Add advanced miracle to base list" 
-      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        IsChecked="{Binding SpiritStoreRegenerates}"
+        IsVisible="{Binding AnySpiritStore, Converter={StaticResource BoolToVisibilityConverter}}"
+        LabelText="Spirit store regenerates" />
 
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding TurnHandbookToSixthMantic, Mode=TwoWay}"
-        LabelText="Turn handbook miracle to 6th mantic x/day (+40 each)" />
-
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding TurnAnyBasicMantic, Mode=TwoWay}"
-        LabelText="Turn any basic miracle mantic x/day (+50 each)" />
-
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding TurnAnyPublishedToSixthMantic, Mode=TwoWay}"
-        LabelText="Turn any published miracle to 6th mantic x/day (+60 each)" />
-
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding TurnAnyPublishedMantic, Mode=TwoWay}"
-        LabelText="Turn any published miracle mantic x/day (+80 each)" />
-
-      <!-- Teaching scroll/scripture -->
       <controls:CheckboxControl
-        IsChecked="{Binding IsTeachingScroll}"
-        LabelText="Teaching scroll/scripture of chosen miracle" />
+        IsChecked="{Binding AddBasicToList}"
+        IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"
+        LabelText="Add basic miracle to base list" />
 
-      <!-- Results -->
-      <Label Text="{Binding Breakdown}" LineBreakMode="WordWrap" />
-      <Label FontAttributes="Bold" FontSize="18"
-             Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+      <controls:CheckboxControl
+        IsChecked="{Binding AddAdvancedToList}"
+        IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"
+        LabelText="Add advanced miracle to base list" />
 
-      <Button Clicked="OnReturn" Text="Return" />
+      <controls:CheckboxControl IsChecked="{Binding AddWithPrep30}" LabelText="Add miracle to list with 30 secs prep" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding TurnBasicUpTo5thMantic, Mode=TwoWay}"
+        LabelText="Turn basic miracle up to 5th mantic" />
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding TurnBasicMantic, Mode=TwoWay}"
+        LabelText="Turn basic miracle mantic" />
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding TurnAdvancedUpTo6thMantic, Mode=TwoWay}"
+        LabelText="Turn advanced up to 6th miracle mantic" />
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding TurnAdvancedAbove6thMantic, Mode=TwoWay}"
+        LabelText="Turn advanced miracle mantic" />
+
+      <controls:CheckboxControl IsChecked="{Binding IsTeachingScroll}" LabelText="Is teaching scroll" />
+
+      <controls:PlusMinusControl
+        AllowMultiple="True"
+        Count="{Binding TrueBeliever, Mode=TwoWay}"
+        LabelText="True believer" />
+
+      <Label FontAttributes="Bold" Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+      <Label LineBreakMode="WordWrap" Text="{Binding Breakdown}" />
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>

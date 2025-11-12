@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Controls.SpherePicker"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Root">
+
+    <VerticalStackLayout Spacing="4">
+        <Label
+            Text="{Binding LabelText, Source={x:Reference Root}}"
+            FontAttributes="Bold" />
+
+        <!-- RENAME to avoid CS0542 (no member same as enclosing type) -->
+        <Picker
+            x:Name="PickerView"
+            Title="Select a sphere"
+            ItemsSource="{Binding SpiritualSpheres, Source={x:Reference Root}}"
+            ItemDisplayBinding="{Binding .}"
+            SelectedItem="{Binding SpiritualSphere, Source={x:Reference Root}, Mode=TwoWay}" />
+    </VerticalStackLayout>
+</ContentView>

@@ -56,7 +56,7 @@ public partial class PlusMinusControl : ContentView
             nameof(Min),
             typeof(int),
             typeof(PlusMinusControl),
-            0); // default lower bound
+            0); 
 
     public int Min
     {
@@ -70,7 +70,7 @@ public partial class PlusMinusControl : ContentView
             nameof(Max),
             typeof(int?),
             typeof(PlusMinusControl),
-            null); // optional upper bound
+            null); 
 
     public int? Max
     {
