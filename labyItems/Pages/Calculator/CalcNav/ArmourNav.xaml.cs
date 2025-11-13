@@ -6,8 +6,9 @@ namespace labyItems.Pages.Calculator.CalcNav;
 public partial class ArmourNav : ContentPage
 {
     private readonly List<CalcContribution> _contributions = new();
-    private bool _categoryLocked = false;
+    private bool _categoryLocked;
     public event Action<CalcContribution>? ContributionAdded;
+    private TaskCompletionSource<CalcResult?>? _tcs;
 public static readonly BindableProperty TotalProperty =
         BindableProperty.Create(
             nameof(Total),
@@ -20,12 +21,10 @@ public static readonly BindableProperty TotalProperty =
         get => (int)GetValue(TotalProperty);
         set => SetValue(TotalProperty, value);
     }
-    private TaskCompletionSource<CalcResult?>? _tcs;
-
     public ArmourNav()
     {
         InitializeComponent();
-        ComputeTotal();
+        UpdateTotal();
     }
 
     private async void OnShield(object sender, EventArgs e)
@@ -47,6 +46,8 @@ public static readonly BindableProperty TotalProperty =
 
         _contributions.Add(added);
         ContributionAdded?.Invoke(added);
+
+        UpdateTotal();
     }
 
     private async void OnArmour(object sender, EventArgs e)
@@ -68,6 +69,8 @@ public static readonly BindableProperty TotalProperty =
 
         _contributions.Add(added);
         ContributionAdded?.Invoke(added);
+
+        UpdateTotal();
     }
 
     private async void OnReturn(object sender, EventArgs e)
@@ -80,7 +83,7 @@ public static readonly BindableProperty TotalProperty =
 
         var result = new CalcResult
         {
-            TotalIsp = ComputeTotal(),
+            TotalIsp = UpdateTotal(),
             Summary  = BuildSummary()
         };
 
@@ -94,7 +97,7 @@ public static readonly BindableProperty TotalProperty =
         await nav.PushAsync(this);
         return await _tcs.Task;
     }
-
+    private int UpdateTotal() => ComputeTotal();
     private int ComputeTotal()
     {
         var sum = _contributions.Sum(c => c.Isp);

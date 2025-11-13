@@ -61,7 +61,6 @@ namespace labyItems.Pages.Calculator.CalcNav;
             UpdateTotal();
         }
 
-        // Optional: allow pushing this tab standalone and returning a result.
         private async void OnReturn(object sender, EventArgs e)
         {
             if (_tcs is null)
@@ -72,7 +71,7 @@ namespace labyItems.Pages.Calculator.CalcNav;
 
             var result = new CalcResult
             {
-                TotalIsp = ComputeTotal(),
+                TotalIsp = UpdateTotal(),
                 Summary  = BuildSummary()
             };
 
@@ -87,7 +86,7 @@ namespace labyItems.Pages.Calculator.CalcNav;
             return await _tcs.Task;
         }
 
-        private void UpdateTotal() => ComputeTotal();
+        private int UpdateTotal() => ComputeTotal();
         private int ComputeTotal()
         {
             var sum = _contributions.Sum(c => c.Isp);

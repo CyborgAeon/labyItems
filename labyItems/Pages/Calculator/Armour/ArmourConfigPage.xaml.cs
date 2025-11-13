@@ -14,7 +14,7 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
     private void OnArmourChanged(object sender, EventArgs e)
     {
         if (BindingContext is not ArmourConfig cfg) return;
-
+        
         var picker = sender as Picker;
         var index = picker?.SelectedIndex ?? -1;
 

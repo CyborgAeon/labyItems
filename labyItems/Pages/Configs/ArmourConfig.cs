@@ -5,52 +5,51 @@ using System.Text;
 using labyItems.Models.Enums;
 using labyItems.Models;
 namespace labyItems.Pages.Configs;
-public class ArmourConfig : ConfigBase, INotifyPropertyChanged
+public class ArmourConfig : ConfigBase
 {
-    protected override int ExtraTotal() => 0;
     private int _acBase;
     public int ACBase
     {
         get => _acBase;
-        set { var v = Math.Max(0, value); if (_acBase != v) { _acBase = v; OnPropertyChanged(); Recalculate(); } }
+        set { if (SetProperty(ref _acBase, Math.Max(0, value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown));}
+        // var v = ; if (_acBase != v) { _acBase = v; OnPropertyChanged(); Recalculate(); } }
     }
-
     private ArmourKind _selectedArmour;
     public ArmourKind SelectedArmour
     {
         get => _selectedArmour;
-        set { if (_selectedArmour != value) { _selectedArmour = value; OnPropertyChanged(); Recalculate(); } }
+        set { if (SetProperty(ref _selectedArmour, value, affectsTotal: true)) OnPropertyChanged(nameof(Breakdown));}
     }
 
     private int _magicalColoursCount;
     public int MagicalColoursCount
     {
         get => _magicalColoursCount;
-        set { var v = Math.Max(0, value); if (_magicalColoursCount != v) { _magicalColoursCount = v; OnPropertyChanged(); Recalculate(); } }
+        set { if (SetProperty(ref _magicalColoursCount, Math.Max(0, value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown));}
     }
 
     private bool _spiritualNonOpposite;
     public bool SpiritualNonOpposite
     {
         get => _spiritualNonOpposite;
-        set { if (_spiritualNonOpposite != value) { _spiritualNonOpposite = value; OnPropertyChanged(); Recalculate(); } }
+        set { if (SetProperty(ref _spiritualNonOpposite, value, affectsTotal: true)) OnPropertyChanged(nameof(Breakdown));}
     }
 
     private int _pac, _dac, _mac, _sac;
-    public int PAC { get => _pac; set { var v = Clamp0To6(value); if (_pac != v) { _pac = v; OnPropertyChanged(); Recalculate(); } } }
-    public int DAC { get => _dac; set { var v = Clamp0To6(value); if (_dac != v) { _dac = v; OnPropertyChanged(); Recalculate(); } } }
-    public int MAC { get => _mac; set { var v = Clamp0To6(value); if (_mac != v) { _mac = v; OnPropertyChanged(); Recalculate(); } } }
-    public int SAC { get => _sac; set { var v = Clamp0To6(value); if (_sac != v) { _sac = v; OnPropertyChanged(); Recalculate(); } } }
-
+    public int PAC { get => _pac; set { if (SetProperty(ref _pac, Clamp0To6(value), affectsTotal: true))OnPropertyChanged(nameof(Breakdown));} }
+    public int DAC { get => _dac; set { if (SetProperty(ref _dac, Clamp0To6(value), affectsTotal: true))OnPropertyChanged(nameof(Breakdown));} }
+    public int MAC { get => _mac; set { if (SetProperty(ref _mac, Clamp0To6(value), affectsTotal: true))OnPropertyChanged(nameof(Breakdown));} }
+    public int SAC { get => _sac; set { if (SetProperty(ref _sac, Clamp0To6(value), affectsTotal: true))OnPropertyChanged(nameof(Breakdown));} }
+    
     // Outputs
-    private int _total;
-    public int Total { get => _total; private set { if (_total != value) { _total = value; OnPropertyChanged(); } } }
+    // private int _total;
+    // public int Total { get => _total; private set { if (SetProperty(ref _total, value, affectsTotal: false))OnPropertyChanged(nameof(Breakdown)); } }
 
     private string _breakdown = "";
     public string Breakdown { get => _breakdown; private set { if (_breakdown != value) { _breakdown = value; OnPropertyChanged(); } } }
 
-    // Calculation
-    public void Recalculate()
+    // // Calculation
+    protected override int ExtraTotal()
     {
         int total = 0;
         var sb = new StringBuilder();
@@ -94,11 +93,11 @@ public class ArmourConfig : ConfigBase, INotifyPropertyChanged
         total += AddTableCost(MAC, MacTable, "MAC", sb);
         total += AddTableCost(SAC, SacTable, "SAC", sb);
 
-        Total = total;
         Breakdown = sb.ToString().TrimEnd();
+        return total;
     }
 
-    private static int Clamp0To6(int v) => Math.Min(6, Math.Max(0, v));
+    private int Clamp0To6(int v) => Math.Min(6, Math.Max(0, v));
 
     private static readonly int[] PacTable = { 0, 4, 12, 20, 32, 44, 60 };
     private static readonly int[] DacTable = { 0, 6, 18, 30, 48, 66, 90 };
