@@ -11,7 +11,7 @@ public class SpellConfig : ConfigBase
 {
     protected override string NoneSelectedText => "Spell (none selected)";
 
-    private string _spellName = "Spell";
+    private string _spellName;
     public string SpellName
     {
         get => _spellName;
@@ -151,7 +151,7 @@ public class SpellConfig : ConfigBase
 
     public void ApplySpell(Spell.Result picked)
     {
-        SpellName = string.IsNullOrWhiteSpace(picked.Name) ? "Spell" : picked.Name;
+        SpellName = string.IsNullOrWhiteSpace(picked.Name) ? "Configure Spell" : $"{picked.Name} ({picked.Power} Mana)";
         Power = Math.Max(1, picked.Power);
         IsAdvanced = picked.IsAdvanced;
         Colour = picked.Colour;

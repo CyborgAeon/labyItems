@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Microsoft.Maui.Controls;
 using labyItems.Models;
 using labyItems.Pages.Configs;
+
 
 namespace labyItems.Pages.Calculator.CalcNav;
     public partial class WeaponNav : ContentPage
@@ -13,25 +15,23 @@ namespace labyItems.Pages.Calculator.CalcNav;
 
         private readonly List<CalcContribution> _contributions = new();
         private bool _categoryLocked;
-        private TaskCompletionSource<CalcResult?>? _tcs;
  public static readonly BindableProperty TotalProperty =
         BindableProperty.Create(
             nameof(Total),
             typeof(int),
             typeof(WeaponNav),
             0);
-
     public int Total
     {
         get => (int)GetValue(TotalProperty);
         set => SetValue(TotalProperty, value);
     }
+
         public WeaponNav()
         {
             InitializeComponent();
             ComputeTotal();
         }
-
         private async void OnWeapon(object sender, EventArgs e)
         {
             if (_categoryLocked) return;
@@ -61,30 +61,18 @@ namespace labyItems.Pages.Calculator.CalcNav;
             UpdateTotal();
         }
 
-        private async void OnReturn(object sender, EventArgs e)
-        {
-            if (_tcs is null)
-            {
-                await Navigation.PopAsync();
-                return;
-            }
+        public static readonly BindableProperty ReturnToFormCommandProperty =
+    BindableProperty.Create(
+        nameof(ReturnToFormCommand),
+        typeof(ICommand),
+        typeof(WeaponNav),
+        null);
 
-            var result = new CalcResult
-            {
-                TotalIsp = UpdateTotal(),
-                Summary  = BuildSummary()
-            };
-
-            _tcs.TrySetResult(result);
-            await Navigation.PopAsync();
-        }
-
-        public async Task<CalcResult?> GetResultAsync(INavigation nav)
-        {
-            _tcs = new TaskCompletionSource<CalcResult?>();
-            await nav.PushAsync(this);
-            return await _tcs.Task;
-        }
+public ICommand? ReturnToFormCommand
+{
+    get => (ICommand?)GetValue(ReturnToFormCommandProperty);
+    set => SetValue(ReturnToFormCommandProperty, value);
+}
 
         private int UpdateTotal() => ComputeTotal();
         private int ComputeTotal()

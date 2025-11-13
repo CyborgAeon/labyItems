@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Microsoft.Maui.Controls;
 using labyItems.Models;
 using labyItems.Pages.Configs;
 
@@ -8,7 +14,6 @@ public partial class ArmourNav : ContentPage
     private readonly List<CalcContribution> _contributions = new();
     private bool _categoryLocked;
     public event Action<CalcContribution>? ContributionAdded;
-    private TaskCompletionSource<CalcResult?>? _tcs;
 public static readonly BindableProperty TotalProperty =
         BindableProperty.Create(
             nameof(Total),
@@ -21,6 +26,19 @@ public static readonly BindableProperty TotalProperty =
         get => (int)GetValue(TotalProperty);
         set => SetValue(TotalProperty, value);
     }
+
+        public static readonly BindableProperty ReturnToFormCommandProperty =
+    BindableProperty.Create(
+        nameof(ReturnToFormCommand),
+        typeof(ICommand),
+        typeof(ArmourNav),
+        null);
+
+public ICommand? ReturnToFormCommand
+{
+    get => (ICommand?)GetValue(ReturnToFormCommandProperty);
+    set => SetValue(ReturnToFormCommandProperty, value);
+}
     public ArmourNav()
     {
         InitializeComponent();
@@ -72,31 +90,19 @@ public static readonly BindableProperty TotalProperty =
 
         UpdateTotal();
     }
+    private async void OnReturnWrapper(object sender, EventArgs e) => await OnReturn();
 
-    private async void OnReturn(object sender, EventArgs e)
+    private async Task OnReturn()
     {
-        if (_tcs is null)
-        {
-            await Navigation.PopAsync();
-            return;
-        }
-
         var result = new CalcResult
         {
             TotalIsp = UpdateTotal(),
             Summary  = BuildSummary()
         };
 
-        _tcs.TrySetResult(result);
         await Navigation.PopAsync();
     }
 
-    public async Task<CalcResult?> GetResultAsync(INavigation nav)
-    {
-        _tcs = new TaskCompletionSource<CalcResult?>();
-        await nav.PushAsync(this);
-        return await _tcs.Task;
-    }
     private int UpdateTotal() => ComputeTotal();
     private int ComputeTotal()
     {
@@ -107,14 +113,8 @@ public static readonly BindableProperty TotalProperty =
 
     private string BuildSummary()
     {
-        var lines = new List<string>();
-        foreach (var c in _contributions)
-            lines.Add(c.Label);
-
-        var total = ComputeTotal();
-        if (total > 0)
-            lines.Add($"Total ISP: {total}");
-
+        var lines = _contributions.Select(c => c.Label).ToList();
+        if (Total > 0) lines.Add($"Total ISP: {Total}");
         return string.Join("\n", lines);
     }
 }

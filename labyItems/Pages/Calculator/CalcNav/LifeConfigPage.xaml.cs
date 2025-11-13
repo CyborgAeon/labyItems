@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Microsoft.Maui.Controls;
 using labyItems.Models;
+
 
 namespace labyItems.Pages.Calculator.CalcNav;
 public partial class LifeConfigPage : ContentPage
@@ -41,19 +43,29 @@ public partial class LifeConfigPage : ContentPage
             LifeSlider.ItemsSource = data;
         }
 
-        private void OnReturnToCalculator(object sender, EventArgs e)
-        {
+        public static readonly BindableProperty ReturnToFormCommandProperty =
+    BindableProperty.Create(
+        nameof(ReturnToFormCommand),
+        typeof(ICommand),
+        typeof(LifeConfigPage),
+        null);
+
+public ICommand? ReturnToFormCommand
+{
+    get => (ICommand?)GetValue(ReturnToFormCommandProperty);
+    set => SetValue(ReturnToFormCommandProperty, value);
+}
+        private async Task OnReturnCommand() {
             var key   = LifeSlider.SelectedKey;   // e.g. "12/4"
             var value = LifeSlider.SelectedValue; // e.g. 20
-
             var summary = $"+{key} Item-Life -> {value} ISP\n";
-
             ContributionAdded?.Invoke(new CalcContribution(
                 Source: "Life",
                 Label:  summary,
                 Isp:    value
             ));
         }
+        private void OnReturnToCalculator(object sender, EventArgs e) => OnReturnCommand();
         private int ComputeTotal()
         {
             return LifeSlider.SelectedValue;

@@ -6,6 +6,8 @@ using Microsoft.Maui.Controls;
 using labyItems.Models;
 using labyItems.Pages.Configs;
 
+using System.Windows.Input;
+
 namespace labyItems.Pages.Calculator.CalcNav;
     public partial class ConsumNav : ContentPage
     {
@@ -15,14 +17,25 @@ namespace labyItems.Pages.Calculator.CalcNav;
         private readonly List<CalcContribution> _contributions = new();
         private bool _categoryLocked;
 
-        private TaskCompletionSource<CalcResult?>? _tcs;
 public static readonly BindableProperty TotalProperty =
         BindableProperty.Create(
             nameof(Total),
             typeof(int),
             typeof(ConsumNav),
             0);
+            
+        public static readonly BindableProperty ReturnToFormCommandProperty =
+    BindableProperty.Create(
+        nameof(ReturnToFormCommand),
+        typeof(ICommand),
+        typeof(ConsumNav),
+        null);
 
+public ICommand? ReturnToFormCommand
+{
+    get => (ICommand?)GetValue(ReturnToFormCommandProperty);
+    set => SetValue(ReturnToFormCommandProperty, value);
+}
     public int Total
     {
         get => (int)GetValue(TotalProperty);
@@ -33,8 +46,16 @@ public static readonly BindableProperty TotalProperty =
             InitializeComponent();
             ComputeTotal();
         }
+private async Task OnReturnCommand(){
+            var result = new CalcResult
+            {
+                TotalIsp = ComputeTotal(),
+                Summary  = BuildSummary()
+            };
 
-        // ---------- UI event handlers for Consumables ----------
+            await Navigation.PopAsync();
+}
+private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
 
         private async void OnConsumableMagicScroll(object sender, EventArgs e)
         {
@@ -173,33 +194,6 @@ public static readonly BindableProperty TotalProperty =
             UpdateTotal();
         }
 
-        // ---------- Optional return pattern if pushed standalone ----------
-        private async void OnReturn(object sender, EventArgs e)
-        {
-            if (_tcs is null)
-            {
-                await Navigation.PopAsync();
-                return;
-            }
-
-            var result = new CalcResult
-            {
-                TotalIsp = ComputeTotal(),
-                Summary  = BuildSummary()
-            };
-
-            _tcs.TrySetResult(result);
-            await Navigation.PopAsync();
-        }
-
-        public async Task<CalcResult?> GetResultAsync(INavigation nav)
-        {
-            _tcs = new TaskCompletionSource<CalcResult?>();
-            await nav.PushAsync(this);
-            return await _tcs.Task;
-        }
-
-        // ---------- helpers ----------
         private void UpdateTotal()
         {
             TotalLabel.Text = $"Total: {ComputeTotal()} ISP";

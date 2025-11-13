@@ -6,6 +6,8 @@ using Microsoft.Maui.Controls;
 using labyItems.Models;
 using labyItems.Pages.Configs;
 
+using System.Windows.Input;
+
 namespace labyItems.Pages.Calculator.CalcNav;
     public partial class CharmNav : ContentPage
     {
@@ -24,13 +26,35 @@ namespace labyItems.Pages.Calculator.CalcNav;
         get => (int)GetValue(TotalProperty);
         set => SetValue(TotalProperty, value);
     }
-        private TaskCompletionSource<CalcResult?>? _tcs;
 
+        public static readonly BindableProperty ReturnToFormCommandProperty =
+    BindableProperty.Create(
+        nameof(ReturnToFormCommand),
+        typeof(ICommand),
+        typeof(CharmNav),
+        null);
+
+public ICommand? ReturnToFormCommand
+{
+    get => (ICommand?)GetValue(ReturnToFormCommandProperty);
+    set => SetValue(ReturnToFormCommandProperty, value);
+}
         public CharmNav()
         {
             InitializeComponent();
             ComputeTotal();
         }
+private async Task OnReturnCommand(){
+            var result = new CalcResult
+            {
+                TotalIsp = ComputeTotal(),
+                Summary  = BuildSummary()
+            };
+
+            await Navigation.PopAsync();
+}
+private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
+
         private async void OnCharmEarthPower(object sender, EventArgs e)
             => await HandleCharmAsync<EvocationConfigPage, EvocationConfig>();
         private async void OnCharmGeneral(object sender, EventArgs e)
@@ -39,9 +63,6 @@ namespace labyItems.Pages.Calculator.CalcNav;
             => await HandleCharmAsync<SpellConfigPage, SpellConfig>();
         private async void OnCharmSpirit(object sender, EventArgs e)
             => await HandleCharmAsync<MiracleConfigPage, MiracleConfig>();
-
-
-
 
 private async Task HandleCharmAsync<TPage, TConfig>()
     where TPage   : ConfigPageBase<TConfig>, new()

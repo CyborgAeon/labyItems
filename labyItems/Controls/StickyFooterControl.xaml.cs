@@ -51,8 +51,6 @@ namespace labyItems.Controls
         public static readonly BindableProperty ButtonTextProperty =
             BindableProperty.Create(nameof(ButtonText), typeof(string), typeof(StickyFooterControl), "Return");
         public string ButtonText { get => (string)GetValue(ButtonTextProperty); set => SetValue(ButtonTextProperty, value); }
-
-        // Optional command override (use ICommand so MVVM commands bind cleanly)
         public static readonly BindableProperty ReturnCommandProperty =
             BindableProperty.Create(nameof(ReturnCommand), typeof(ICommand), typeof(StickyFooterControl), null);
         public ICommand? ReturnCommand { get => (ICommand?)GetValue(ReturnCommandProperty); set => SetValue(ReturnCommandProperty, value); }
@@ -73,7 +71,7 @@ namespace labyItems.Controls
                 ReturnCommand.Execute(ReturnCommandParameter);
                 return;
             }
-
+            
             var page = FindParentPage();
             if (page is null) return;
             await DefaultNavigateAsync(page, ShellFallbackRoute);
