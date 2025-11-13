@@ -26,10 +26,10 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
     public Task<CalcResult?> Completion => _tcs.Task;
   public Command ReturnFromConfigCommand { get; }
 
-    public GeneralConfigPage(GeneralConfig? model = null)
+    public GeneralConfigPage()
     {
         InitializeComponent();
-        BindingContext = model ?? new GeneralConfig();
+        BindingContext = new GeneralConfig();
          ReturnFromConfigCommand = new Command(async () =>
             {
                 if (BindingContext is not GeneralConfig cfg) return;
@@ -71,9 +71,9 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
             await Navigation.PopAsync();
         }
 
-    public static async Task<CalcResult?> PickAsync(INavigation nav, GeneralConfig? seed = null)
+    public static async Task<CalcResult?> PickAsync(INavigation nav)
     {
-        var page = new GeneralConfigPage(seed);
+        var page = new GeneralConfigPage();
         await nav.PushAsync(page);
         var res = await page._tcs.Task;
         return res;

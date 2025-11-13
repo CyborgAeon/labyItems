@@ -9,169 +9,77 @@ using labyItems.Pages.Configs;
 namespace labyItems.Pages.Calculator.CalcNav;
     public partial class CharmNav : ContentPage
     {
-        // Let the parent know when a contribution is added.
         public event Action<CalcContribution>? ContributionAdded;
-
         private readonly List<CalcContribution> _contributions = new();
         private bool _categoryLocked;
+        public static readonly BindableProperty TotalProperty =
+        BindableProperty.Create(
+            nameof(Total),
+            typeof(int),
+            typeof(CharmNav),
+            0);
 
+    public int Total
+    {
+        get => (int)GetValue(TotalProperty);
+        set => SetValue(TotalProperty, value);
+    }
         private TaskCompletionSource<CalcResult?>? _tcs;
 
         public CharmNav()
         {
             InitializeComponent();
+            BindingContext = this;
         }
-
-        // ---------- UI event handlers for Charm actions ----------
-
         private async void OnCharmEarthPower(object sender, EventArgs e)
-        {
-            if (_categoryLocked) return;
-            _categoryLocked = true;
-
-            var cfgPage = new EvocationConfigPage();
-            await Navigation.PushAsync(cfgPage);
-
-            var cfg = await cfgPage.Completion;
-            _categoryLocked = false;
-            if (cfg is null) return;
-
-            var added = new CalcContribution(
-                Source: "Charm/EarthPower",
-                Label: cfg.Summary,
-                Isp: cfg.TotalIsp);
-
-            _contributions.Add(added);
-            ContributionAdded?.Invoke(added);
-
-            EarthPowerCharmPickedLabel.IsVisible = true;
-            EarthPowerCharmPickedLabel.Text = string.Join("\n", _contributions
-                .Where(c => c.Source.StartsWith("Charm/", StringComparison.OrdinalIgnoreCase))
-                .Select(c => c.Label));
-
-            UpdateTotal();
-        }
-
+            => await HandleCharmAsync<EvocationConfigPage, EvocationConfig>();
         private async void OnCharmGeneral(object sender, EventArgs e)
-        {
-            if (_categoryLocked) return;
-            _categoryLocked = true;
-
-            var cfgPage = new GeneralConfigPage();
-            await Navigation.PushAsync(cfgPage);
-
-            var cfg = await cfgPage.Completion;
-            _categoryLocked = false;
-            if (cfg is null) return;
-
-            var added = new CalcContribution(
-                Source: "Charm/General",
-                Label: cfg.Summary,
-                Isp: cfg.TotalIsp);
-
-            _contributions.Add(added);
-            ContributionAdded?.Invoke(added);
-
-            GeneralCharmPickedLabel.IsVisible = true;
-            GeneralCharmPickedLabel.Text = string.Join("\n", _contributions
-                .Where(c => c.Source.StartsWith("Charm/", StringComparison.OrdinalIgnoreCase))
-                .Select(c => c.Label));
-
-            UpdateTotal();
-        }
-
+            => await HandleCharmAsync<GeneralConfigPage, GeneralConfig>();
         private async void OnCharmMagic(object sender, EventArgs e)
-        {
-            if (_categoryLocked) return;
-            _categoryLocked = true;
-
-            var cfgPage = new SpellConfigPage();
-            await Navigation.PushAsync(cfgPage);
-
-            var cfg = await cfgPage.Completion;
-            _categoryLocked = false;
-            if (cfg is null) return;
-
-            var added = new CalcContribution(
-                Source: "Charm/Magic",
-                Label: cfg.Summary,
-                Isp: cfg.TotalIsp);
-
-            _contributions.Add(added);
-            ContributionAdded?.Invoke(added);
-
-            MagicCharmPickedLabel.IsVisible = true;
-            MagicCharmPickedLabel.Text = string.Join("\n", _contributions
-                .Where(c => c.Source.StartsWith("Charm/", StringComparison.OrdinalIgnoreCase))
-                .Select(c => c.Label));
-
-            UpdateTotal();
-        }
-
+            => await HandleCharmAsync<SpellConfigPage, SpellConfig>();
         private async void OnCharmSpirit(object sender, EventArgs e)
-        {
-            if (_categoryLocked) return;
-            _categoryLocked = true;
+            => await HandleCharmAsync<MiracleConfigPage, MiracleConfig>();
 
-            var cfgPage = new MiracleConfigPage();
-            await Navigation.PushAsync(cfgPage);
 
-            var cfg = await cfgPage.Completion;
-            _categoryLocked = false;
-            if (cfg is null) return;
 
-            var added = new CalcContribution(
-                Source: "Charm/Spirit",
-                Label: cfg.Summary,
-                Isp: cfg.TotalIsp);
 
-            _contributions.Add(added);
-            ContributionAdded?.Invoke(added);
+private async Task HandleCharmAsync<TPage, TConfig>()
+    where TPage   : ConfigPageBase<TConfig>, new()
+    where TConfig : ConfigBase, new()
+{
+    if (_categoryLocked) return;
+    _categoryLocked = true;
 
-            SpiritCharmPickedLabel.IsVisible = true;
-            SpiritCharmPickedLabel.Text = string.Join("\n", _contributions
-                .Where(c => c.Source.StartsWith("Charm/", StringComparison.OrdinalIgnoreCase))
-                .Select(c => c.Label));
+    var cfgPage = new TPage();
+    await Navigation.PushAsync(cfgPage);
 
-            UpdateTotal();
-        }
+    var cfg = await cfgPage.Completion;
+    _categoryLocked = false;
+    if (cfg is null) return;
 
-        // ---------- Optional return pattern if you ever push this page standalone ----------
-        // private async void OnReturn(object sender, EventArgs e)
-        // {
-        //     if (_tcs is null)
-        //     {
-        //         await Navigation.PopAsync();
-        //         return;
-        //     }
+    var pageName = typeof(TPage).Name; 
+    var sourceName = pageName
+        .Replace("ConfigPage", string.Empty) 
+        .Replace("Config", string.Empty);
 
-        //     var result = new CalcResult
-        //     {
-        //         TotalIsp = ComputeTotal(),
-        //         Summary  = BuildSummary()
-        //     };
+    var added = new CalcContribution(
+        Source: $"Charm/{sourceName}",
+        Label: cfg.Summary,
+        Isp: cfg.TotalIsp);
 
-        //     _tcs.TrySetResult(result);
-        //     await Navigation.PopAsync();
-        // }
+    _contributions.Add(added);
+    ContributionAdded?.Invoke(added);
 
-        public async Task<CalcResult?> GetResultAsync(INavigation nav)
-        {
-            _tcs = new TaskCompletionSource<CalcResult?>();
-            await nav.PushAsync(this);
-            return await _tcs.Task;
-        }
+    UpdateTotal();
+}
 
-        // ---------- helpers ----------
-        private void UpdateTotal()
-        {
-            TotalLabel.Text = $"Total: {ComputeTotal()} ISP";
-        }
+        public void UpdateTotal() => ComputeTotal();
 
         private int ComputeTotal()
         {
             var sum = _contributions.Sum(c => c.Isp);
-            return sum <= 0 ? 0 : sum;
+            Total = sum <= 0 ? 0 : sum;
+            return Total;
         }
 
         private string BuildSummary()
