@@ -1,51 +1,62 @@
 using labyItems.Models;
 using labyItems.Categories;
-
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
 namespace labyItems.Pages.Calculator;
 
-public partial class IspCalculator : TabbedPage
+public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
 {
 
     public event Action<int>? TotalChanged;
     private readonly List<CalcContribution> _contributions = new();
     private TaskCompletionSource<CalcResult?>? _tcs;
+    public ICommand? ReturnToFormCommand { get; set;}
+public event PropertyChangedEventHandler? PropertyChanged;
+        void OnPropertyChanged([CallerMemberName] string? n = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+
+        private int _total;
+        public int Total { get => _total; private set { if (_total != value) { _total = value; OnPropertyChanged(); } } }
 
     public IspCalculator(ItemTypeEnum category)
     {
-        InitializeComponent();
 
-        // Subscribe to tab events
+        InitializeComponent();
+        ArmourCategoryPage.BindingContext = this;
+        WeaponCategoryPage.BindingContext = this;
+        CharmCategoryPage.BindingContext = this;
+        ConsumableCategoryPage.BindingContext = this;
+        LifeCategoryPage.BindingContext = this;
+
         ArmourCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
         WeaponCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
         CharmCategoryPage.ContributionAdded  += c => { _contributions.Add(c); UpdateTotal(); };
         ConsumableCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
         LifeCategoryPage.ContributionAdded   += c => { _contributions.Add(c); UpdateTotal(); };
+        
+        ReturnToFormCommand = new Command(async () => await ExecuteReturnAsync());
+        ArmourCategoryPage.ReturnToFormCommand  = ReturnToFormCommand;
+        WeaponCategoryPage.ReturnToFormCommand  = ReturnToFormCommand;
+        CharmCategoryPage.ReturnToFormCommand   = ReturnToFormCommand;
+        ConsumableCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
+        LifeCategoryPage.ReturnToFormCommand    = ReturnToFormCommand;
     }
 
-    // private void OnSelectArmour(object s, CheckedChangedEventArgs e) { if (e.Value) SetActive(_armour); }
-    // private void OnSelectWeapon(object s, CheckedChangedEventArgs e) { if (e.Value) SetActive(_weapon); }
-    // private void OnSelectCharm(object s, CheckedChangedEventArgs e)  { if (e.Value) SetActive(_charm); }
-    // private void OnSelectConsum(object s, CheckedChangedEventArgs e) { if (e.Value) SetActive(_consumable); }
-    // private void OnSelectLife(object s, CheckedChangedEventArgs e)   { if (e.Value) SetActive(_life); }
-
-    // private void SetActive(ICalculatorCategory cat)
-    // {
-    //     if (_categoryLocked) return;
-    //     // _active = cat;
-    //     UpdateTotal();
-    // }
-
-    private async void OnReturn(object sender, EventArgs e)
+    private async Task ExecuteReturnAsync()
     {
         var result = new CalcResult
         {
             TotalIsp = ComputeTotal(),
             Summary  = BuildSummary()
         };
-        // _categoryLocked = false;
+
         _tcs?.TrySetResult(result);
         await Navigation.PopAsync();
     }
+
+    // Existing toolbar handler just delegates:
+    private async void OnReturn(object sender, EventArgs e)
+        => await ExecuteReturnAsync();
 
     public async Task<CalcResult?> GetResultAsync(INavigation nav)
     {

@@ -98,9 +98,9 @@ namespace labyItems.Pages.Configs
                 return false;
 
             storage = value;
-            OnPropertyChanged(propertyName);
-            foreach (var n in alsoNotify) OnPropertyChanged(n);
             if (affectsTotal) OnPropertyChanged(nameof(Total));
+            foreach (var n in alsoNotify) OnPropertyChanged(n);
+            OnPropertyChanged(propertyName);
             return true;
         }
 

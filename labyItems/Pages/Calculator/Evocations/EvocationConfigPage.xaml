@@ -1,62 +1,73 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<cfg:ConfigPageBase
   x:Class="labyItems.Pages.Calculator.EvocationConfigPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
-  Title="Configure Evocation">
+  x:Name="RootPage"
+  x:TypeArguments="cfg:EvocationConfig"
+  Title="Configure Evocation"
+  >
+
   <ContentPage.Resources>
     <ResourceDictionary>
       <conv:IntConverter x:Key="IntConverter" />
-<conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-
+      <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </ResourceDictionary>
   </ContentPage.Resources>
-  <VerticalStackLayout Padding="20" Spacing="14">
 
-    <!--  Title / selected evocation  -->
-    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-      <Label
-        Grid.Column="0"
-        FontAttributes="Bold"
-        FontSize="20"
-        Text="{Binding Title}" />
+  <Grid RowDefinitions="*,Auto">
+    <ScrollView Grid.Row="0">
+      <VerticalStackLayout Padding="20" Spacing="14">
 
-      <Button
-        Grid.Column="1"
-        Clicked="OnSearchEvocation"
-        Text="Search" />
-    </Grid>
-    <Entry
-      Keyboard="Numeric"
-      Placeholder="EarthPower cost"
-      Text="{Binding Power, Mode=TwoWay, Converter={StaticResource IntConverter}}" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+          <Label
+            Grid.Column="0"
+            FontAttributes="Bold"
+            FontSize="20"
+            Text="{Binding Title}" />
+          <Button
+            Grid.Column="1"
+            Clicked="OnSearchEvocation"
+            Text="Search" />
+        </Grid>
 
-    <Label />
-    <controls:PlusMinusControl
-      AllowMultiple="True"
-      Count="{Binding BasicPerDay, Mode=TwoWay}"
-      LabelText="Cast basic times per day" 
-      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"/>
 
-    <controls:PlusMinusControl
-      AllowMultiple="True"
-      Count="{Binding AdvancedPerDay, Mode=TwoWay}"
-      LabelText="Cast advanced times per day" 
-      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"/>
-    <controls:CheckboxControl 
-      IsChecked="{Binding AddBasic}" LabelText="Add basic evocation to base list" 
-      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"/>
-    <controls:CheckboxControl IsChecked="{Binding AddAdvanced}" LabelText="Add advanced evocation to base list" 
-      IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"/>
-    <controls:CheckboxControl IsChecked="{Binding AddPrep}" LabelText="Add to base list with 30s prep" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding BasicPerDay, Mode=TwoWay}"
+          LabelText="Cast basic times per day"
+          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" />
 
-    <Label
-      FontAttributes="Bold"
-      FontSize="18"
-      Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding AdvancedPerDay, Mode=TwoWay}"
+          LabelText="Cast advanced times per day"
+          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}" />
 
-    <Button Clicked="OnReturn" Text="Return" />
-  </VerticalStackLayout>
-</ContentPage>
+        <controls:CheckboxControl
+          IsChecked="{Binding AddBasic}"
+          LabelText="Add basic evocation to base list"
+          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" />
+
+        <controls:CheckboxControl
+          IsChecked="{Binding AddAdvanced}"
+          LabelText="Add advanced evocation to base list"
+          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+        <controls:CheckboxControl
+          IsChecked="{Binding AddPrep}"
+          LabelText="Add to base list with 30s prep" />
+
+      </VerticalStackLayout>
+    </ScrollView>
+    <controls:StickyFooterControl
+        Grid.Row="1"
+        Total="{Binding Total}"
+        ButtonText="Return to Calculator"
+        ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
+        ReturnCommandParameter="{x:Reference RootPage}" />
+  </Grid>
+</cfg:ConfigPageBase>

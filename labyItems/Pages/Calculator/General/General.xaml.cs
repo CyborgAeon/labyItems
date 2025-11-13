@@ -7,11 +7,11 @@ namespace labyItems.Pages.Calculator;
 public partial class General : ContentPage
 {
     public sealed record Result {
-        public string Index { get; init; } = string.Empty;
-        public  string Description {get;init;} = string.Empty;
-        public int Cost { get; init; } = 0;
-        public int Table { get; init; } = 0;
-        public bool? IsImmunity { get; init; } = null;
+        public string Index { get; init; }
+        public  string Description {get;init;}
+        public int Cost { get; init; }
+        public int Table { get; init; }
+        public bool? IsImmunity { get; init; }
     }
     private readonly List<Result> _rows = new();
     private TaskCompletionSource<Result?>? _tcs;

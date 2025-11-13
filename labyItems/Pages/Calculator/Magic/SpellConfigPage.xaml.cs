@@ -1,42 +1,67 @@
 using labyItems.Models;
+using labyItems.Controls;
 using labyItems.Pages.Configs;
 using System.Windows.Input;
-
+using System.Collections.Generic;
+using System.Linq;
 namespace labyItems.Pages.Calculator;
 
-public partial class SpellConfigPage : ContentPage
+public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
 {
-    private readonly TaskCompletionSource<CalcResult?> _tcs = new();
-    public Task<CalcResult?> Completion => _tcs.Task;
-
     public SpellConfigPage()
     {
         InitializeComponent();
-        BindingContext = new SpellConfig();
     }
+    
+ private async void OnFooterReturnClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is not SpellConfig cfg) return;
 
-    private string BuildSummary(SpellConfig cfg)
+            var result = new CalcResult
+            {
+                TotalIsp = cfg.Total,
+                Summary  = BuildSummary(cfg)
+            };
+
+            if (Navigation?.NavigationStack?.Count > 1)
+            {
+                _tcs.TrySetResult(result);
+                await Navigation.PopAsync();
+                return;
+            }
+
+            if (Shell.Current is not null)
+            {
+                await Shell.Current.GoToAsync("..");
+                return;
+            }
+
+            _tcs.TrySetResult(result);
+            await Navigation.PopAsync();
+        }
+
+    protected override string BuildSummary(SpellConfig cfg)
     {
-        // One-line summary for contribution list:
-        var basic = cfg.BasicPerDay > 0 ? $"Basic x {cfg.BasicPerDay}" : null;
-        var adv = cfg.PublishedPerDay > 0 ? $"Advanced x {cfg.PublishedPerDay}" : null;
+        var basic = cfg.BasicPerDay > 0 ? $"Basic x{cfg.BasicPerDay}" : null;
+        var adv = cfg.PublishedPerDay > 0 ? $"Advanced x{cfg.PublishedPerDay}" : null;
         var addAnyPow = cfg.AdditionalGenericMana > 0 ? $"Additional {cfg.AdditionalGenericMana} mana store" : null;
         var addPow = cfg.AdditionalManaOfColour > 0 ? $"Additional {cfg.AdditionalManaOfColour} {cfg.AdditionalManaColour} mana store" : null;
-        var makeUnder7thMantic = cfg.TurnHandbookToSixthMantic > 0 ? $"Turn handbook to 6th mantic {cfg.TurnHandbookToSixthMantic}/day" : null;
-        var makeBasicMantic = cfg.TurnAnyBasicMantic > 0 ? $"Turn any basic spell mantic {cfg.TurnAnyBasicMantic}/day" : null;
-        var makeAdvMantic = cfg.TurnAnyPublishedMantic > 0 ? $"Turn any spell mantic {cfg.TurnAnyPublishedMantic}/day" : null;
+        var under6th = cfg.TurnHandbookToSixthMantic > 0 ? $"Turn handbook→6th mantic {cfg.TurnHandbookToSixthMantic}/day" : null;
+        var basicMantic = cfg.TurnAnyBasicMantic > 0 ? $"Any basic→mantic {cfg.TurnAnyBasicMantic}/day" : null;
+        var anyMantic = cfg.TurnAnyPublishedMantic > 0 ? $"Any spell→mantic {cfg.TurnAnyPublishedMantic}/day" : null;
 
-        var tags = new List<string?>([
-            basic, adv,
+        var tags = new List<string?>
+        {
+            basic, adv, addAnyPow, addPow, under6th, basicMantic, anyMantic,
             cfg.AddBasicToBaseList ? "+Basic" : null,
             cfg.AddAdvancedToBaseList ? "+Advanced" : null,
-            cfg.InnateIsMantic ? "turn innate mantic" : null,
-            cfg.PowerStoreRegenerates ? "Power gained in the specific power store regenerates at 1/15 minutes" : null,
-            cfg.IsTeachingScroll ? "Teaching scroll of a spell the character could already learn & read." : null,
-        ]).Where(s => !string.IsNullOrWhiteSpace(s));
+            cfg.InnateIsMantic ? "innates mantic ×4" : null,
+            cfg.PowerStoreRegenerates ? "store regenerates +25" : null,
+            cfg.IsTeachingScroll ? $"teaching scroll (2×Power={2 * cfg.Power})" : null
+        }.Where(s => !string.IsNullOrWhiteSpace(s));
 
-        var tagText = string.Join(", ", tags);
         var name = string.IsNullOrWhiteSpace(cfg.SpellName) ? "Spell" : cfg.SpellName;
+        var tagText = string.Join(", ", tags);
         return $"{name}: {tagText} → {cfg.Total} ISP";
     }
 
@@ -47,18 +72,5 @@ public partial class SpellConfigPage : ContentPage
 
         if (BindingContext is SpellConfig cfg)
             cfg.ApplySpell(picked);
-    }
-
-    private async void OnReturn(object sender, EventArgs e)
-    {
-        var cfg = (SpellConfig)BindingContext;
-        var res = new CalcResult
-        {
-            TotalIsp = cfg.Total,
-            Summary = BuildSummary(cfg)
-        };
-
-        _tcs.TrySetResult(res);
-        await Navigation.PopAsync();
     }
 }

@@ -1,44 +1,49 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="labyItems.Pages.Calculator.CalcNav.CharmNav"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Charm">
+	x:Class="labyItems.Pages.Calculator.CalcNav.CharmNav"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:cfg="clr-namespace:labyItems.Pages.Calculator"
+	xmlns:controls="clr-namespace:labyItems.Controls"
+	x:Name="RootPage"
+	Title="Charm">
+	<Grid RowDefinitions="*,Auto">
+		<ScrollView Grid.Row="0">
+			<VerticalStackLayout Padding="16" Spacing="12">
+				<Button Clicked="OnCharmEarthPower" Text="Earthpower Charm" />
+				<Button Clicked="OnCharmGeneral" Text="General Charm" />
+				<Button Clicked="OnCharmMagic" Text="Magic Charm" />
+				<Button Clicked="OnCharmSpirit" Text="Spirit Charm" />
+				<Label
+					x:Name="EarthPowerCharmPickedLabel"
+					IsVisible="False"
+					LineBreakMode="WordWrap"
+					Text="(earth power picks will appear here)" />
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="12">
-            <Button Text="General Charm"
-                    Clicked="OnCharmGeneral" />
-            <Button Text="EarthPower Charm"
-                    Clicked="OnCharmEarthPower" />
-            <Button Text="Magical Charm"
-                    Clicked="OnCharmMagic" />
-            <Button Text="Spiritual Charm"
-                    Clicked="OnCharmSpirit" />
+				<Label
+					x:Name="GeneralCharmPickedLabel"
+					IsVisible="False"
+					LineBreakMode="WordWrap"
+					Text="(general charm picks will appear here)" />
 
-            <Label x:Name="EarthPowerCharmPickedLabel"
-                   IsVisible="False"
-                   LineBreakMode="WordWrap"
-                   Text="(earth power picks will appear here)" />
+				<Label
+					x:Name="MagicCharmPickedLabel"
+					IsVisible="False"
+					LineBreakMode="WordWrap"
+					Text="(magic charm picks will appear here)" />
 
-            <Label x:Name="GeneralCharmPickedLabel"
-                   IsVisible="False"
-                   LineBreakMode="WordWrap"
-                   Text="(general charm picks will appear here)" />
-
-            <Label x:Name="MagicCharmPickedLabel"
-                   IsVisible="False"
-                   LineBreakMode="WordWrap"
-                   Text="(magic charm picks will appear here)" />
-
-            <Label x:Name="SpiritCharmPickedLabel"
-                   IsVisible="False"
-                   LineBreakMode="WordWrap"
-                   Text="(spiritual charm picks will appear here)" />
-            <!-- Per-tab total -->
-            <Label x:Name="TotalLabel"
-                   FontAttributes="Bold"
-                   Text="Total: 0 ISP" />
-        </VerticalStackLayout>
-    </ScrollView>
+				<Label
+					x:Name="SpiritCharmPickedLabel"
+					IsVisible="False"
+					LineBreakMode="WordWrap"
+					Text="(spiritual charm picks will appear here)" />
+			</VerticalStackLayout>
+		</ScrollView>
+		<controls:StickyFooterControl
+			Grid.Row="1"
+			ButtonText="Return to Form"
+			ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
+			ReturnCommandParameter="{x:Reference RootPage}"
+			Total="{Binding Source={x:Reference RootPage}, Path=Total}" />
+	</Grid>
 </ContentPage>

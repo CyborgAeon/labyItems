@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Microsoft.Maui.Controls;
 using labyItems.Models;
 using labyItems.Pages.Configs;
 
@@ -6,128 +12,109 @@ namespace labyItems.Pages.Calculator.CalcNav;
 public partial class ArmourNav : ContentPage
 {
     private readonly List<CalcContribution> _contributions = new();
-    private bool _categoryLocked = false;
+    private bool _categoryLocked;
     public event Action<CalcContribution>? ContributionAdded;
+public static readonly BindableProperty TotalProperty =
+        BindableProperty.Create(
+            nameof(Total),
+            typeof(int),
+            typeof(ArmourNav),
+            0);
 
-    private TaskCompletionSource<CalcResult?>? _tcs;
+    public int Total
+    {
+        get => (int)GetValue(TotalProperty);
+        set => SetValue(TotalProperty, value);
+    }
 
+        public static readonly BindableProperty ReturnToFormCommandProperty =
+    BindableProperty.Create(
+        nameof(ReturnToFormCommand),
+        typeof(ICommand),
+        typeof(ArmourNav),
+        null);
+
+public ICommand? ReturnToFormCommand
+{
+    get => (ICommand?)GetValue(ReturnToFormCommandProperty);
+    set => SetValue(ReturnToFormCommandProperty, value);
+}
     public ArmourNav()
     {
         InitializeComponent();
+        UpdateTotal();
     }
 
-    /// <summary>
-    /// Called when the user taps the "Shield" button in the Armour tab.
-    /// </summary>
     private async void OnShield(object sender, EventArgs e)
     {
         if (_categoryLocked) return;
         _categoryLocked = true;
 
-        var cfgPage = new ShieldConfigPage();   // your shield-only config page
+        var cfgPage = new ShieldConfigPage();
         await Navigation.PushAsync(cfgPage);
 
-        var cfg = await cfgPage.Completion;     // CalcResult? with Summary + TotalIsp
+        var cfg = await cfgPage.Completion;
         _categoryLocked = false;
         if (cfg is null) return;
+
         var added = new CalcContribution(
             Source: "Shield",
             Label: cfg.Summary,
             Isp: cfg.TotalIsp);
+
         _contributions.Add(added);
         ContributionAdded?.Invoke(added);
+
         UpdateTotal();
     }
 
-    /// <summary>
-    /// Called when the user taps the "Armour" button in the Armour tab.
-    /// </summary>
     private async void OnArmour(object sender, EventArgs e)
     {
         if (_categoryLocked) return;
         _categoryLocked = true;
 
-        var cfgPage = new ArmourConfigPage();   // your armour-only config page
+        var cfgPage = new ArmourConfigPage();
         await Navigation.PushAsync(cfgPage);
 
-        var cfg = await cfgPage.Completion;     // CalcResult? with Summary + TotalIsp
+        var cfg = await cfgPage.Completion;
         _categoryLocked = false;
         if (cfg is null) return;
 
-        _contributions.Add(new CalcContribution(
+        var added = new CalcContribution(
             Source: "Armour",
             Label: cfg.Summary,
-            Isp: cfg.TotalIsp));
+            Isp: cfg.TotalIsp);
 
-        // If you have a label in armour.xaml to show chosen armour, uncomment & rename as needed:
-        // ArmourPickedLabel.IsVisible = true;
-        // ArmourPickedLabel.Text = string.Join("\n", _contributions
-        //     .Where(c => c.Source.Equals("Armour", StringComparison.OrdinalIgnoreCase))
-        //     .Select(c => c.Label));
+        _contributions.Add(added);
+        ContributionAdded?.Invoke(added);
 
         UpdateTotal();
     }
+    private async void OnReturnWrapper(object sender, EventArgs e) => await OnReturn();
 
-    /// <summary>
-    /// Optional: if this tab needs to return a combined result to its caller.
-    /// </summary>
-    private async void OnReturn(object sender, EventArgs e)
+    private async Task OnReturn()
     {
-        if (_tcs is null)
-        {
-            // This tab is probably being used directly in a TabbedPage and
-            // not via GetResultAsync – nothing to return to.
-            await Navigation.PopAsync();
-            return;
-        }
-
         var result = new CalcResult
         {
-            TotalIsp = ComputeTotal(),
+            TotalIsp = UpdateTotal(),
             Summary  = BuildSummary()
         };
 
-        _tcs.TrySetResult(result);
         await Navigation.PopAsync();
     }
 
-    /// <summary>
-    /// If the parent wants to navigate to this tab as a modal-like page
-    /// and await a CalcResult.
-    /// </summary>
-    public async Task<CalcResult?> GetResultAsync(INavigation nav)
-    {
-        _tcs = new TaskCompletionSource<CalcResult?>();
-        await nav.PushAsync(this);
-        return await _tcs.Task;
-    }
-
-    // ------------ helpers for total / summary ------------
-
-    private void UpdateTotal()
-    {
-        // Assuming armour.xaml has a Label named "TotalLabel".
-        // If not, rename this to match your XAML name.
-        TotalLabel.Text = $"Total: {ComputeTotal()} ISP";
-    }
-
+    private int UpdateTotal() => ComputeTotal();
     private int ComputeTotal()
     {
         var sum = _contributions.Sum(c => c.Isp);
-        return sum <= 0 ? 0 : sum;
+        Total = sum <= 0 ? 0 : sum;
+        return Total;
     }
 
     private string BuildSummary()
     {
-        var lines = new List<string>();
-
-        foreach (var c in _contributions)
-            lines.Add(c.Label);
-
-        var total = ComputeTotal();
-        if (total > 0)
-            lines.Add($"Total ISP: {total}");
-
+        var lines = _contributions.Select(c => c.Label).ToList();
+        if (Total > 0) lines.Add($"Total ISP: {Total}");
         return string.Join("\n", lines);
     }
 }

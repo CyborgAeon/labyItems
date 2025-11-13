@@ -4,9 +4,10 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
+    x:Name="RootPage"
     Title="Life">
-
-    <ScrollView>
+<Grid RowDefinitions="*,Auto">
+    <ScrollView Grid.Row="0">
         <VerticalStackLayout Padding="20" Spacing="16">
 
             <Label Text="Select Item-Life"
@@ -19,17 +20,13 @@
                 x:Name="LifeSlider"
                 KeyFormat="Life: {0}"
                 ValueFormat="ISP: {0}" />
-
-            <!-- Live readout (optional) -->
-            <Label Text="{Binding Source={x:Reference LifeSlider}, Path=SelectedKey, StringFormat='Selected: {0}'}"
-                   HorizontalOptions="Center" />
-            <Label Text="{Binding Source={x:Reference LifeSlider}, Path=SelectedValue, StringFormat='ISP: {0}'}"
-                   HorizontalOptions="Center" />
-
-            <!-- This does NOT navigate; it just tells the parent -->
-            <Button Text="Return to calculator"
-                    Clicked="OnReturnToCalculator" />
-
         </VerticalStackLayout>
     </ScrollView>
+     <controls:StickyFooterControl
+      Grid.Row="1"
+      ButtonText="Return to Form"
+      ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
+      ReturnCommandParameter="{x:Reference RootPage}"
+      Total="{Binding Source={x:Reference RootPage}, Path=Total}" />
+  </Grid>
 </ContentPage>

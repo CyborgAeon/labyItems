@@ -2,220 +2,158 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using labyItems.Pages.Calculator;
+using System;
+using labyItems.Pages.Configs;
+
 namespace labyItems.Pages.Configs;
 
-public class SpellConfig : INotifyPropertyChanged
+public class SpellConfig : ConfigBase
 {
-    private string _spellName = "Spell";
+    protected override string NoneSelectedText => "Spell (none selected)";
+
+    private string _spellName;
     public string SpellName
     {
         get => _spellName;
-        set { if (_spellName != value) { _spellName = value; OnPropertyChanged(); OnPropertyChanged(nameof(Title)); } }
-    }
-
-    private int _power;
-    public int Power
-    {
-        get => _power;
         set
         {
-            var v = Math.Max(0, value); if (_power != v)
-            {
-                _power = v;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Power));
-                Recalculate();
-            }
+            if (SetProperty(ref _spellName, value, affectsTotal: false))
+                Name = value;
         }
     }
-    private bool? _isAdvanced;
-    public bool? IsAdvanced
-    {
-        get => _isAdvanced;
-        set { if (_isAdvanced != value) { _isAdvanced = value; OnPropertyChanged(); OnPropertyChanged(nameof(IsAdvanced)); } }
-    }
-    private string _colour;
+
+    private string _colour = "";
     public string Colour
     {
         get => _colour;
-        set { if (_colour != value) { _colour = value; OnPropertyChanged(); OnPropertyChanged(nameof(Colour)); } }
+        set => SetProperty(ref _colour, value, affectsTotal: false);
     }
 
-    public string Title => $"{SpellName} (Power {Power})";
+    private bool _innateIsMantic;
+    public bool InnateIsMantic
+    {
+        get => _innateIsMantic;
+        set => SetProperty(ref _innateIsMantic, value, affectsTotal: true);
+    }
 
-    private int _basicPerDay;
-    public int BasicPerDay { get => _basicPerDay; set { var v = Math.Max(0, value); if (_basicPerDay != v) { _basicPerDay = v; OnPropertyChanged(); Recalculate(); } } }
-
-    private int _publishedPerDay; // “wizard’s any published spell x/day”
-    public int PublishedPerDay { get => _publishedPerDay; set { var v = Math.Max(0, value); if (_publishedPerDay != v) { _publishedPerDay = v; OnPropertyChanged(); Recalculate(); } } }
-
-    private bool _innateIsMantic; // ×4 to the innate block
-    public bool InnateIsMantic { get => _innateIsMantic; set { if (_innateIsMantic != value) { _innateIsMantic = value; OnPropertyChanged(); Recalculate(); } } }
-
-    // ===== Additional mana =====
     private int _additionalGenericMana;
     public int AdditionalGenericMana
     {
-        get => _additionalGenericMana; set
-        {
-            var v = Math.Max(0, value);
-            if (v > 12) return;
-            if (_additionalGenericMana != v) { _additionalGenericMana = v; OnPropertyChanged(); Recalculate(); }
-        }
+        get => _additionalGenericMana;
+        set => SetProperty(ref _additionalGenericMana, Math.Clamp(value, 0, 12), affectsTotal: true);
     }
 
     private int _additionalManaOfColour;
     public int AdditionalManaOfColour
     {
         get => _additionalManaOfColour;
-        set
-        {
-            var v = Math.Max(0, value);
-            if (v > 12) return;
-            if (_additionalManaOfColour != v) { _additionalManaOfColour = v; OnPropertyChanged(); Recalculate(); }
-        }
+        set => SetProperty(ref _additionalManaOfColour, Math.Clamp(value, 0, 12), affectsTotal: true);
     }
 
     private string _additionalManaColour = "";
     public string AdditionalManaColour
     {
         get => _additionalManaColour;
-        set
-        {
-            var v = value ?? "";
-            if (_additionalManaColour != v) { _additionalManaColour = v; OnPropertyChanged(); /* purely cosmetic */ }
-        }
+        set => SetProperty(ref _additionalManaColour, value ?? "", affectsTotal: false);
     }
 
-    // ===== Base list / power store =====
     private bool _powerStoreRegenerates;
-    public bool PowerStoreRegenerates { get => _powerStoreRegenerates; set { if (_powerStoreRegenerates != value) { _powerStoreRegenerates = value; OnPropertyChanged(); Recalculate(); } } }
+    public bool PowerStoreRegenerates
+    {
+        get => _powerStoreRegenerates;
+        set => SetProperty(ref _powerStoreRegenerates, value, affectsTotal: true);
+    }
 
-    private bool _addBasicToBaseList;
-    public bool AddBasicToBaseList { get => _addBasicToBaseList; set { if (_addBasicToBaseList != value) { _addBasicToBaseList = value; OnPropertyChanged(); Recalculate(); } } }
-
-    private bool _addAdvancedToBaseList;
-    public bool AddAdvancedToBaseList { get => _addAdvancedToBaseList; set { if (_addAdvancedToBaseList != value) { _addAdvancedToBaseList = value; OnPropertyChanged(); Recalculate(); } } }
-
-    // ===== Mantic conversions =====
     private int _turnHandbookToSixthMantic;
-    public int TurnHandbookToSixthMantic { get => _turnHandbookToSixthMantic; set { var v = Math.Max(0, value); if (_turnHandbookToSixthMantic != v) { _turnHandbookToSixthMantic = v; OnPropertyChanged(); Recalculate(); } } }
+    public int TurnHandbookToSixthMantic
+    {
+        get => _turnHandbookToSixthMantic;
+        set => SetProperty(ref _turnHandbookToSixthMantic, Math.Max(0, value), affectsTotal: true);
+    }
 
     private int _turnAnyBasicMantic;
-    public int TurnAnyBasicMantic { get => _turnAnyBasicMantic; set { var v = Math.Max(0, value); if (_turnAnyBasicMantic != v) { _turnAnyBasicMantic = v; OnPropertyChanged(); Recalculate(); } } }
+    public int TurnAnyBasicMantic
+    {
+        get => _turnAnyBasicMantic;
+        set => SetProperty(ref _turnAnyBasicMantic, Math.Max(0, value), affectsTotal: true);
+    }
 
     private int _turnAnyPublishedToSixthMantic;
-    public int TurnAnyPublishedToSixthMantic { get => _turnAnyPublishedToSixthMantic; set { var v = Math.Max(0, value); if (_turnAnyPublishedToSixthMantic != v) { _turnAnyPublishedToSixthMantic = v; OnPropertyChanged(); Recalculate(); } } }
+    public int TurnAnyPublishedToSixthMantic
+    {
+        get => _turnAnyPublishedToSixthMantic;
+        set => SetProperty(ref _turnAnyPublishedToSixthMantic, Math.Max(0, value), affectsTotal: true);
+    }
 
     private int _turnAnyPublishedMantic;
-    public int TurnAnyPublishedMantic { get => _turnAnyPublishedMantic; set { var v = Math.Max(0, value); if (_turnAnyPublishedMantic != v) { _turnAnyPublishedMantic = v; OnPropertyChanged(); Recalculate(); } } }
+    public int TurnAnyPublishedMantic
+    {
+        get => _turnAnyPublishedMantic;
+        set => SetProperty(ref _turnAnyPublishedMantic, Math.Max(0, value), affectsTotal: true);
+    }
 
-    // ===== Teaching scroll/scripture =====
     private bool _isTeachingScroll;
-    public bool IsTeachingScroll { get => _isTeachingScroll; set { if (_isTeachingScroll != value) { _isTeachingScroll = value; OnPropertyChanged(); Recalculate(); } } }
+    public bool IsTeachingScroll
+    {
+        get => _isTeachingScroll;
+        set => SetProperty(ref _isTeachingScroll, value, affectsTotal: true);
+    }
 
-    private int _total;
-    public int Total { get => _total; private set { if (_total != value) { _total = value; OnPropertyChanged(); } } }
+    public int PublishedPerDay
+    {
+        get => AdvancedPerDay;
+        set => AdvancedPerDay = value;
+    }
 
-    private string _breakdown = "";
-    public string Breakdown { get => _breakdown; private set { if (_breakdown != value) { _breakdown = value; OnPropertyChanged(); } } }
+    public bool AddBasicToBaseList
+    {
+        get => AddBasic;
+        set => AddBasic = value;
+    }
+
+    public bool AddAdvancedToBaseList
+    {
+        get => AddAdvanced;
+        set => AddAdvanced = value;
+    }
+
+    protected override int BaseTotal()
+    {
+        int innates = (2 * Power * Math.Max(0, BasicPerDay)) +
+                      (3 * Power * Math.Max(0, AdvancedPerDay));
+        if (InnateIsMantic) innates *= 4;
+
+        int t = innates;
+        if (AddBasic) t += 15;
+        if (AddAdvanced) t += 18;
+        if (AddPrep) t += (int)Math.Round(Power / 2.0, MidpointRounding.AwayFromZero);
+        return t;
+    }
+
+    protected override int ExtraTotal()
+    {
+        int t = 0;
+
+        if (AdditionalGenericMana > 0) t += 4 * AdditionalGenericMana;
+        if (AdditionalManaOfColour > 0) t += 3 * AdditionalManaOfColour;
+
+        if (PowerStoreRegenerates) t += 25;
+
+        if (TurnHandbookToSixthMantic > 0) t += 40 * TurnHandbookToSixthMantic;
+        if (TurnAnyBasicMantic > 0) t += 50 * TurnAnyBasicMantic;
+        if (TurnAnyPublishedToSixthMantic > 0) t += 60 * TurnAnyPublishedToSixthMantic;
+        if (TurnAnyPublishedMantic > 0) t += 80 * TurnAnyPublishedMantic;
+
+        if (IsTeachingScroll) t += 2 * Power;
+
+        return t;
+    }
 
     public void ApplySpell(Spell.Result picked)
     {
-        SpellName = string.IsNullOrWhiteSpace(picked.Name) ? "Spell" : picked.Name;
+        SpellName = string.IsNullOrWhiteSpace(picked.Name) ? "Configure Spell" : $"{picked.Name} ({picked.Power} Mana)";
         Power = Math.Max(1, picked.Power);
         IsAdvanced = picked.IsAdvanced;
         Colour = picked.Colour;
     }
-
-    public void Recalculate()
-    {
-        int total = 0;
-        var sb = new StringBuilder();
-        int innates =
-            (2 * Power * Math.Max(0, BasicPerDay)) +
-            (3 * Power * Math.Max(0, PublishedPerDay));
-
-        if (innates > 0)
-        {
-            if (InnateIsMantic)
-            {
-                int before = innates;
-                innates *= 4;
-
-                sb.AppendLine($"{BasicPerDay} innates of mantic {SpellName} ({Power}) × 4 \nRegular = {before} Mantic = {innates}");
-            }
-            else
-            {
-                sb.AppendLine($"{BasicPerDay} innates of {SpellName} ({Power}): 2×{Power}×{Math.Max(BasicPerDay, PublishedPerDay)} = {innates}");
-            }
-            total += innates;
-        }
-
-        // Additional mana
-        if (AdditionalGenericMana > 0)
-        {
-            int c = 4 * AdditionalGenericMana;
-            total += c;
-            sb.AppendLine($"+ Additional mana: 4 × {AdditionalGenericMana} = {c}");
-        }
-
-        if (AdditionalManaOfColour > 0)
-        {
-            int c = 3 * AdditionalManaOfColour;
-            total += c;
-            var col = string.IsNullOrWhiteSpace(AdditionalManaColour) ? "" : $" ({AdditionalManaColour})";
-            sb.AppendLine($"+ Additional mana of colour {col}: 3 × {AdditionalManaOfColour} = {c}");
-        }
-
-        // Power store / base list flags
-        if (PowerStoreRegenerates) { total += 25; sb.AppendLine("+ Power store regenerates at 1/15 minutes: 25"); }
-        if (AddBasicToBaseList) { total += 15; sb.AppendLine("+ Add basic spell to base list: 15"); }
-        if (AddAdvancedToBaseList) { total += 18; sb.AppendLine("+ Add advanced spell to base list: 18"); }
-
-        // Mantic conversions
-        if (TurnHandbookToSixthMantic > 0)
-        {
-            int c = 40 * TurnHandbookToSixthMantic;
-            total += c;
-            sb.AppendLine($"+ Turn handbook spell to 6th mantic: 40 × {TurnHandbookToSixthMantic} = {c}");
-        }
-
-        if (TurnAnyBasicMantic > 0)
-        {
-            int c = 50 * TurnAnyBasicMantic;
-            total += c;
-            sb.AppendLine($"+ Turn any basic spell mantic: 50 × {TurnAnyBasicMantic} = {c}");
-        }
-
-        if (TurnAnyPublishedToSixthMantic > 0)
-        {
-            int c = 60 * TurnAnyPublishedToSixthMantic;
-            total += c;
-            sb.AppendLine($"+ Turn any published spell to 6th mantic: 60 × {TurnAnyPublishedToSixthMantic} = {c}");
-        }
-
-        if (TurnAnyPublishedMantic > 0)
-        {
-            int c = 80 * TurnAnyPublishedMantic;
-            total += c;
-            sb.AppendLine($"+ Turn any published spell mantic: 80 × {TurnAnyPublishedMantic} = {c}");
-        }
-
-        // Teaching scroll/scripture
-        if (IsTeachingScroll)
-        {
-            int c = 2 * Power;
-            total += c;
-            sb.AppendLine($"+ Teaching scroll/scripture of chosen spell: 2 × Power ({Power}) = {c}");
-        }
-
-        Total = total;
-        Breakdown = sb.ToString().TrimEnd();
-    }
-
-    // INotifyPropertyChanged
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string? name = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }

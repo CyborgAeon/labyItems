@@ -3,9 +3,11 @@
     x:Class="labyItems.Pages.Calculator.CalcNav.WeaponNav"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:controls="clr-namespace:labyItems.Controls"
+  x:Name="RootPage"
     Title="Weapon">
-
-    <ScrollView>
+<Grid RowDefinitions="*,Auto">
+    <ScrollView Grid.Row="0">
         <VerticalStackLayout Padding="16" Spacing="12">
 
             <Button Text="Configure Weapon"
@@ -22,4 +24,11 @@
 
         </VerticalStackLayout>
     </ScrollView>
+    <controls:StickyFooterControl
+      Grid.Row="1"
+      ButtonText="Return to Form"
+      ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
+      ReturnCommandParameter="{x:Reference RootPage}"
+      Total="{Binding Source={x:Reference RootPage}, Path=Total}" />
+  </Grid>
 </ContentPage>

@@ -6,9 +6,10 @@ using Microsoft.Maui.Controls;
 using labyItems.Pages.Configs;
 using labyItems.Models;
 using labyItems.Helpers;
+using labyItems.Controls;
 namespace labyItems.Pages.Calculator;
 
-public partial class GeneralConfigPage : ContentPage
+public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
 {
     public bool ShowResistanceSection { get; set; } = false;
     private void ToggleResistanceSection(object sender, EventArgs e)
@@ -23,16 +24,56 @@ public partial class GeneralConfigPage : ContentPage
     }
     private readonly TaskCompletionSource<CalcResult?> _tcs = new();
     public Task<CalcResult?> Completion => _tcs.Task;
+  public Command ReturnFromConfigCommand { get; }
 
-    public GeneralConfigPage(GeneralConfig? model = null)
+    public GeneralConfigPage()
     {
         InitializeComponent();
-        BindingContext = model ?? new GeneralConfig();
-    }
+        BindingContext = new GeneralConfig();
+         ReturnFromConfigCommand = new Command(async () =>
+            {
+                if (BindingContext is not GeneralConfig cfg) return;
 
-    public static async Task<CalcResult?> PickAsync(INavigation nav, GeneralConfig? seed = null)
+                var result = new CalcResult
+                {
+                    TotalIsp = cfg.Total,
+                    Summary  = BuildSummary(cfg)
+                };
+
+                _tcs.TrySetResult(result);
+                await StickyFooterControl.DefaultNavigateAsync(this);
+            });
+    }
+    private async void OnFooterReturnClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is not GeneralConfig cfg) return;
+
+            var result = new CalcResult
+            {
+                TotalIsp = cfg.Total,
+                Summary  = BuildSummary(cfg)
+            };
+
+            if (Navigation?.NavigationStack?.Count > 1)
+            {
+                _tcs.TrySetResult(result);
+                await Navigation.PopAsync();
+                return;
+            }
+
+            if (Shell.Current is not null)
+            {
+                await Shell.Current.GoToAsync("..");
+                return;
+            }
+
+            _tcs.TrySetResult(result);
+            await Navigation.PopAsync();
+        }
+
+    public static async Task<CalcResult?> PickAsync(INavigation nav)
     {
-        var page = new GeneralConfigPage(seed);
+        var page = new GeneralConfigPage();
         await nav.PushAsync(page);
         var res = await page._tcs.Task;
         return res;
@@ -63,7 +104,7 @@ public partial class GeneralConfigPage : ContentPage
         summary.AddToSummaryIf(c.ResistanceLevels, $"{c.ResistanceLevels} Levels of Resistance vs {c.ResistanceType}");
     }
 
-    private static string BuildSummary(GeneralConfig c)
+    protected override string BuildSummary(GeneralConfig c)
     {
         var s = new List<string>();
 

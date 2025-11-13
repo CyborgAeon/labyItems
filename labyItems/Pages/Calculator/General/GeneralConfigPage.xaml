@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<cfg:ConfigPageBase
   x:Class="labyItems.Pages.Calculator.GeneralConfigPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
-  Title="Configure General Charm">
+  Title="Configure General Charm"
+  x:TypeArguments="cfg:GeneralConfig"
+  x:Name="RootPage">
 
   <ContentPage.Resources>
     <Style x:Key="SectionHeader" TargetType="Label">
@@ -16,8 +19,8 @@
 
     <conv:BoolToRotationConverter x:Key="BoolToRotationConverter" />
   </ContentPage.Resources>
-
-  <ScrollView>
+<Grid RowDefinitions="*,Auto">
+  <ScrollView Grid.Row="0">
     <VerticalStackLayout Padding="20" Spacing="10">
       <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
         <Label
@@ -99,16 +102,14 @@
       <controls:PlusMinusControl Count="{Binding PotionRecipesKnownCount, Mode=TwoWay}" LabelText="Potion recipes known — 5/recipe" />
       <controls:CheckboxControl IsChecked="{Binding Regeneration, Mode=TwoWay}" LabelText="Regeneration (non-stacking) — 40" />
       <controls:CheckboxControl IsChecked="{Binding ForearmParry, Mode=TwoWay}" LabelText="Forearm Parry — 25" />
-
-      <Label
-        FontAttributes="Bold"
-        FontSize="18"
-        Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
-      <Button
-        Clicked="OnReturn"
-        CornerRadius="12"
-        HeightRequest="44"
-        Text="Return" />
     </VerticalStackLayout>
   </ScrollView>
-</ContentPage>
+
+    <controls:StickyFooterControl
+        Grid.Row="1"
+        Total="{Binding Total}"
+        ButtonText="Return to Calculator"
+        ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
+        ReturnCommandParameter="{x:Reference RootPage}" />
+  </Grid>
+</cfg:ConfigPageBase>

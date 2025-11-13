@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text;
 
 namespace labyItems.Pages.Configs;
 
@@ -8,88 +9,106 @@ public enum ConsumableType
 {
     None,
     BatchOfPotions,
-    MagicalScroll,     // basic magical scroll
-    SpiritualScroll,   // basic spiritual scroll
-    DruidicTalisman,   // any druidic talisman
+    MagicalScroll,
+    SpiritualScroll,
+    DruidicTalisman,
     NeuronicShard
 }
 
-public record ConsumableEntry(string Name, int Value); 
-// Value is: difficulty / MP / SP / EP / TBLPcost depending on Type
+public record ConsumableEntry(string Name, int Value);
 
-public class ConsumableConfig : INotifyPropertyChanged
+public class ConsumableConfig : ConfigBase
 {
     private ConsumableType _type = ConsumableType.None;
     public ConsumableType Type
     {
         get => _type;
-        set { if (_type != value) { _type = value; OnPropertyChanged(); Recalculate(); } }
+        set => SetProperty(ref _type, value, affectsTotal: true, alsoNotify: nameof(SelectedText));
     }
 
-    // Selected from search
     private string _selectedName = "(none)";
-    public string SelectedName { get => _selectedName; private set { if (_selectedName != value) { _selectedName = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedText)); } } }
+    public string SelectedName
+    {
+        get => _selectedName;
+        set => SetProperty(ref _selectedName, value, affectsTotal: true, alsoNotify: nameof(SelectedText));
+    }
 
-    private int _selectedValue; // difficulty / MP / SP / EP / TBLPcost
-    public int SelectedValue { get => _selectedValue; private set { if (_selectedValue != value) { _selectedValue = value; OnPropertyChanged(); Recalculate(); } } }
+    private int _selectedValue;
+    public int SelectedValue
+    {
+        get => _selectedValue;
+        set
+        {
+            var v = Math.Max(0, value);
+            SetProperty(ref _selectedValue, v, affectsTotal: true, nameof(SelectedText));
+        }
+    }
 
-    // Modifiers
-    private int _focussingCrystals; // +2 each
+    private int _focussingCrystals;
     public int FocussingCrystals
     {
         get => _focussingCrystals;
-        set { var v = Math.Max(0, value); if (_focussingCrystals != v) { _focussingCrystals = v; OnPropertyChanged(); Recalculate(); } }
+        set
+        {
+            var v = Math.Max(0, value);
+            SetProperty(ref _focussingCrystals, v, affectsTotal: true);
+        }
     }
 
-    private int _batches500Grulls; // +1 each
+    private int _batches500Grulls;
     public int Batches500Grulls
     {
         get => _batches500Grulls;
-        set { var v = Math.Max(0, value); if (_batches500Grulls != v) { _batches500Grulls = v; OnPropertyChanged(); Recalculate(); } }
+        set
+        {
+            var v = Math.Max(0, value);
+            SetProperty(ref _batches500Grulls, v, affectsTotal: true);
+        }
     }
 
-    // Outputs
-    private int _total;
-    public int Total { get => _total; private set { if (_total != value) { _total = value; OnPropertyChanged(); } } }
-
     private string _breakdown = "";
-    public string Breakdown { get => _breakdown; private set { if (_breakdown != value) { _breakdown = value; OnPropertyChanged(); } } }
+    public string Breakdown
+    {
+        get => _breakdown;
+        private set => SetProperty(ref _breakdown, value, affectsTotal: false);
+    }
 
-    public string SelectedText
-        => Type switch
+    protected override string NoneSelectedText => "Consumable (none selected)";
+
+    public string SelectedText =>
+        Type switch
         {
-            ConsumableType.BatchOfPotions => $"{SelectedName} (difficulty {SelectedValue})",
-            ConsumableType.MagicalScroll  => $"{SelectedName} (MP {SelectedValue})",
-            ConsumableType.SpiritualScroll=> $"{SelectedName} (SP {SelectedValue})",
-            ConsumableType.DruidicTalisman=> $"{SelectedName} (EP {SelectedValue})",
-            ConsumableType.NeuronicShard  => $"{SelectedName} (TBLPcost {SelectedValue})",
-            _ => "(none)"
+            ConsumableType.BatchOfPotions  => $"{SelectedName} (difficulty {SelectedValue})",
+            ConsumableType.MagicalScroll   => $"{SelectedName} (MP {SelectedValue})",
+            ConsumableType.SpiritualScroll => $"{SelectedName} (SP {SelectedValue})",
+            ConsumableType.DruidicTalisman => $"{SelectedName} (EP {SelectedValue})",
+            ConsumableType.NeuronicShard   => $"{SelectedName} (TBLPcost {SelectedValue})",
+            _                              => "(none)"
         };
 
     public void ApplyEntry(ConsumableEntry e)
     {
-        SelectedName  = e.Name;
-        SelectedValue = Math.Max(0, e.Value);
-        Recalculate();
+        SelectedName = e.Name;
+        SelectedValue = e.Value;
     }
 
-    public void Recalculate()
+    protected override int ExtraTotal()
     {
         int total = 0;
         var sb = new StringBuilder();
 
-        // Base (from selected item)
         if (Type != ConsumableType.None && SelectedValue > 0)
         {
             int baseCost = Type switch
             {
-                ConsumableType.BatchOfPotions => 1 * SelectedValue, // 1 * difficulty
-                ConsumableType.MagicalScroll  => 1 * SelectedValue, // 1 * MP
-                ConsumableType.SpiritualScroll=> 1 * SelectedValue, // 1 * SP
-                ConsumableType.DruidicTalisman=> 1 * SelectedValue, // 1 * EP
-                ConsumableType.NeuronicShard  => 1 * SelectedValue, // 1 * TBLPcost
-                _ => 0
+                ConsumableType.BatchOfPotions  => SelectedValue,
+                ConsumableType.MagicalScroll   => SelectedValue,
+                ConsumableType.SpiritualScroll => SelectedValue,
+                ConsumableType.DruidicTalisman => SelectedValue,
+                ConsumableType.NeuronicShard   => SelectedValue,
+                _                              => 0
             };
+
             total += baseCost;
             sb.AppendLine($"Selected: {SelectedText} = {baseCost}");
         }
@@ -99,7 +118,6 @@ public class ConsumableConfig : INotifyPropertyChanged
                 sb.AppendLine("Selected: (missing search result)");
         }
 
-        // Modifiers
         if (FocussingCrystals > 0)
         {
             int c = 2 * FocussingCrystals;
@@ -109,17 +127,14 @@ public class ConsumableConfig : INotifyPropertyChanged
 
         if (Batches500Grulls > 0)
         {
-            int c = 1 * Batches500Grulls;
+            int c = Batches500Grulls;
             total += c;
             sb.AppendLine($"+ 500 grulls: 1 × {Batches500Grulls} = {c}");
         }
 
-        Total = total;
         Breakdown = sb.ToString().TrimEnd();
+        return total;
     }
 
-    // INotifyPropertyChanged
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string? name = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    protected override int ApplyMultipliers(int total) => total;
 }
