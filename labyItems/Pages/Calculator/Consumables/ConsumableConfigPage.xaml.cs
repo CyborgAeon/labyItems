@@ -3,16 +3,39 @@ using labyItems.Pages.Configs;
 using labyItems.Services;
 namespace labyItems.Pages.Calculator;
 
-public partial class ConsumableConfigPage : ContentPage
+public partial class ConsumableConfigPage : ConfigPageBase<ConsumableConfig>
 {
-    private readonly TaskCompletionSource<CalcResult?> _tcs = new();
-    public Task<CalcResult?> Completion => _tcs.Task;
-
     public ConsumableConfigPage()
     {
         InitializeComponent();
-        BindingContext = new ConsumableConfig();
     }
+
+ private async void OnFooterReturnClicked(object sender, EventArgs e)
+        {
+            if (BindingContext is not ConsumableConfig cfg) return;
+
+            var result = new CalcResult
+            {
+                TotalIsp = cfg.Total,
+                Summary  = BuildSummary(cfg)
+            };
+
+            if (Navigation?.NavigationStack?.Count > 1)
+            {
+                _tcs.TrySetResult(result);
+                await Navigation.PopAsync();
+                return;
+            }
+
+            if (Shell.Current is not null)
+            {
+                await Shell.Current.GoToAsync("..");
+                return;
+            }
+
+            _tcs.TrySetResult(result);
+            await Navigation.PopAsync();
+        }
 
     public ConsumableConfigPage(ConsumableType presetType, int initialFocussingCrystals = 0)
     {
@@ -60,7 +83,7 @@ public partial class ConsumableConfigPage : ContentPage
         cfg.ApplyEntry(entry);
     }
 
-    private string BuildSummary(ConsumableConfig cfg)
+    protected override string BuildSummary(ConsumableConfig cfg)
         => $"{cfg.SelectedText} → {cfg.Total} ISP";
 
     private async void OnReturn(object sender, EventArgs e)
