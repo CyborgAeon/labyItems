@@ -8,12 +8,24 @@ public partial class ArmourNav : ContentPage
     private readonly List<CalcContribution> _contributions = new();
     private bool _categoryLocked = false;
     public event Action<CalcContribution>? ContributionAdded;
+public static readonly BindableProperty TotalProperty =
+        BindableProperty.Create(
+            nameof(Total),
+            typeof(int),
+            typeof(ArmourNav),
+            0);
 
+    public int Total
+    {
+        get => (int)GetValue(TotalProperty);
+        set => SetValue(TotalProperty, value);
+    }
     private TaskCompletionSource<CalcResult?>? _tcs;
 
     public ArmourNav()
     {
         InitializeComponent();
+        ComputeTotal();
     }
 
     private async void OnShield(object sender, EventArgs e)
@@ -86,7 +98,8 @@ public partial class ArmourNav : ContentPage
     private int ComputeTotal()
     {
         var sum = _contributions.Sum(c => c.Isp);
-        return sum <= 0 ? 0 : sum;
+        Total = sum <= 0 ? 0 : sum;
+        return Total;
     }
 
     private string BuildSummary()

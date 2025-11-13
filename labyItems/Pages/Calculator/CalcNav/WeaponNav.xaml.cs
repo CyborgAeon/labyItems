@@ -18,7 +18,7 @@ namespace labyItems.Pages.Calculator.CalcNav;
         BindableProperty.Create(
             nameof(Total),
             typeof(int),
-            typeof(CharmNav),
+            typeof(WeaponNav),
             0);
 
     public int Total

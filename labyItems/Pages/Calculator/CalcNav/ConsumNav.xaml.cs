@@ -16,10 +16,22 @@ namespace labyItems.Pages.Calculator.CalcNav;
         private bool _categoryLocked;
 
         private TaskCompletionSource<CalcResult?>? _tcs;
+public static readonly BindableProperty TotalProperty =
+        BindableProperty.Create(
+            nameof(Total),
+            typeof(int),
+            typeof(ConsumNav),
+            0);
 
+    public int Total
+    {
+        get => (int)GetValue(TotalProperty);
+        set => SetValue(TotalProperty, value);
+    }
         public ConsumNav()
         {
             InitializeComponent();
+            ComputeTotal();
         }
 
         // ---------- UI event handlers for Consumables ----------
@@ -196,7 +208,8 @@ namespace labyItems.Pages.Calculator.CalcNav;
         private int ComputeTotal()
         {
             var sum = _contributions.Sum(c => c.Isp);
-            return sum <= 0 ? 0 : sum;
+            Total = sum <= 0 ? 0 : sum;
+            return Total;
         }
 
         private string BuildSummary()
