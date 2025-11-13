@@ -137,23 +137,23 @@ namespace labyItems.Pages.Calculator.CalcNav;
         }
 
         // ---------- Optional return pattern if you ever push this page standalone ----------
-        private async void OnReturn(object sender, EventArgs e)
-        {
-            if (_tcs is null)
-            {
-                await Navigation.PopAsync();
-                return;
-            }
+        // private async void OnReturn(object sender, EventArgs e)
+        // {
+        //     if (_tcs is null)
+        //     {
+        //         await Navigation.PopAsync();
+        //         return;
+        //     }
 
-            var result = new CalcResult
-            {
-                TotalIsp = ComputeTotal(),
-                Summary  = BuildSummary()
-            };
+        //     var result = new CalcResult
+        //     {
+        //         TotalIsp = ComputeTotal(),
+        //         Summary  = BuildSummary()
+        //     };
 
-            _tcs.TrySetResult(result);
-            await Navigation.PopAsync();
-        }
+        //     _tcs.TrySetResult(result);
+        //     await Navigation.PopAsync();
+        // }
 
         public async Task<CalcResult?> GetResultAsync(INavigation nav)
         {

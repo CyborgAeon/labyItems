@@ -6,25 +6,15 @@ using labyItems.Pages.Calculator;
 
 namespace labyItems.Pages.Configs
 {
-    public enum AbilityType
-    {
-        Other,
-        Immunity
-    }
-
     public class GeneralConfig : ConfigBase
     {
-        protected override string NoneSelectedText => "General (none selected)";
+        protected override string NoneSelectedText => "Ability (none selected)";
 
         // -------------------- Ability Calculation Core --------------------
         public int AbilityTable
         {
             get => _abilityTable;
-            set
-            {
-                SetProperty(ref _abilityTable, value, true);
-                Recalculate();
-            }
+            set {SetProperty(ref _abilityTable, value, true); }
         }
         private int _abilityTable;
         public bool IsFirstEffect
@@ -33,42 +23,20 @@ namespace labyItems.Pages.Configs
             set
             {
                 SetProperty(ref _isFirstEffect, value, true);
-                Recalculate();
             }
         }
         private bool _isFirstEffect;
 
-        public int TotalIsp
-        {
-            get => _totalIsp;
-            private set => SetProperty(ref _totalIsp, value, true);
-        }
-        private int _totalIsp;
-
-        private void Recalculate()
-        {
-            if (Power <= 0 || Power <= 0)
+        private int GetRate() =>
+            IsImmunity switch
             {
-                TotalIsp = 0;
-                return;
-            }
-
-            double rate = GetRate(AbilityTable, IsImmunity, IsFirstEffect);
-            TotalIsp = (int)Math.Round(Power / 10.0 * rate);
-        }
-
-        private static double GetRate(int table, bool isImmunity, bool isFirstFx) =>
-            isImmunity switch
-            {
-                true when isFirstFx && table is >= 1 and <= 9 => 3,
-                true when table is >= 1 and <= 9 => 4,
-                true when table is >= 10 and <= 12 => 8,
-
-                false when table is >= 1 and <= 9 => 2,
-                false when table == 10 => 3,
-                false when table == 11 => 4,
-                false when table == 12 => 6,
-
+                false when AbilityTable is >= 1 and <= 9 => 2,
+                true when IsFirstEffect && AbilityTable is >= 1 and <= 9 => 3,
+                false when AbilityTable == 10 => 3,
+                false when AbilityTable == 11 => 4,
+                true when AbilityTable is >= 1 and <= 9 => 4,
+                false when AbilityTable == 12 => 6,
+                true when AbilityTable is >= 10 and <= 12 => 8,
                 _ => 0
             };
 
@@ -226,6 +194,7 @@ total += addition;
         protected override int ExtraTotal()
         {
             int t = 0;
+            t += ((Power/10) * GetRate());
             AddResistanceLevels(ref t);
             AddCastingLevels(ref t);
             
@@ -275,10 +244,10 @@ total += addition;
 
         public void ApplyGeneral(General.Result picked)
         {
-            Name = picked.Index;
             Power = picked.Cost;
             IsImmune = picked.IsImmunity;
             AbilityTable = picked.Table;
+            Name = picked.Index;
         }
     }
 }

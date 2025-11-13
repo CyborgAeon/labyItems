@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<cfg:ConfigPageBase
   x:Class="labyItems.Pages.Calculator.EvocationConfigPage"
-  x:Name="RootPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
-  Title="Configure Evocation">
+  x:Name="RootPage"
+  x:TypeArguments="cfg:EvocationConfig"
+  Title="Configure Evocation"
+  >
 
   <ContentPage.Resources>
     <ResourceDictionary>
@@ -60,7 +63,6 @@
 
       </VerticalStackLayout>
     </ScrollView>
-
     <controls:StickyFooterControl
         Grid.Row="1"
         Total="{Binding Total}"
@@ -68,4 +70,4 @@
         ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
         ReturnCommandParameter="{x:Reference RootPage}" />
   </Grid>
-</ContentPage>
+</cfg:ConfigPageBase>

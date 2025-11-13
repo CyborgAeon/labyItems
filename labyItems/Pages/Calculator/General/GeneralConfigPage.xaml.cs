@@ -9,7 +9,7 @@ using labyItems.Helpers;
 using labyItems.Controls;
 namespace labyItems.Pages.Calculator;
 
-public partial class GeneralConfigPage : ContentPage
+public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
 {
     public bool ShowResistanceSection { get; set; } = false;
     private void ToggleResistanceSection(object sender, EventArgs e)
@@ -104,7 +104,7 @@ public partial class GeneralConfigPage : ContentPage
         summary.AddToSummaryIf(c.ResistanceLevels, $"{c.ResistanceLevels} Levels of Resistance vs {c.ResistanceType}");
     }
 
-    private static string BuildSummary(GeneralConfig c)
+    protected override string BuildSummary(GeneralConfig c)
     {
         var s = new List<string>();
 

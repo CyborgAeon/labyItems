@@ -52,7 +52,7 @@ public static class GeneralService
                 var idx = (item.Index ?? "").Trim();
                 var desc = (item.Desc ?? "").Trim();
                 var avail = (item.Available ?? "").Trim();
-                var cost = TryParseInt(item.Cost);
+                var cost = TryParseCost(item.Cost);
                 if (string.IsNullOrWhiteSpace(idx))
                     continue;
                 list.Add(new General.Result { Index = idx, Description = desc, Cost = cost, Table = t, IsImmunity = item.Index.IsImmunity() });
@@ -81,6 +81,12 @@ public static class GeneralService
     
     public static void InvalidateCache() => _cache = null;
 
-    private static int TryParseInt(string? s)
-        => int.TryParse((s ?? "").Trim(), out var n) ? n : 0;
+    private static int TryParseCost(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return 0;
+
+        var digitsOnly = System.Text.RegularExpressions.Regex.Replace(input, "[^0-9]", "");
+        return int.TryParse(digitsOnly, out var value) ? value : 0;
+    }
 }
