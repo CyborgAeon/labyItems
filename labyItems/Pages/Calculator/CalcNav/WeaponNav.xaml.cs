@@ -14,10 +14,22 @@ namespace labyItems.Pages.Calculator.CalcNav;
         private readonly List<CalcContribution> _contributions = new();
         private bool _categoryLocked;
         private TaskCompletionSource<CalcResult?>? _tcs;
+ public static readonly BindableProperty TotalProperty =
+        BindableProperty.Create(
+            nameof(Total),
+            typeof(int),
+            typeof(CharmNav),
+            0);
 
+    public int Total
+    {
+        get => (int)GetValue(TotalProperty);
+        set => SetValue(TotalProperty, value);
+    }
         public WeaponNav()
         {
             InitializeComponent();
+            ComputeTotal();
         }
 
         private async void OnWeapon(object sender, EventArgs e)
@@ -75,15 +87,12 @@ namespace labyItems.Pages.Calculator.CalcNav;
             return await _tcs.Task;
         }
 
-        private void UpdateTotal()
-        {
-            TotalLabel.Text = $"Total: {ComputeTotal()} ISP";
-        }
-
+        private void UpdateTotal() => ComputeTotal();
         private int ComputeTotal()
         {
             var sum = _contributions.Sum(c => c.Isp);
-            return sum <= 0 ? 0 : sum;
+            Total = sum <= 0 ? 0 : sum;
+            return Total;
         }
 
         private string BuildSummary()

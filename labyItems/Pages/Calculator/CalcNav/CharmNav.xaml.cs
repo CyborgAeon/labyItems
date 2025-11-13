@@ -29,7 +29,7 @@ namespace labyItems.Pages.Calculator.CalcNav;
         public CharmNav()
         {
             InitializeComponent();
-            BindingContext = this;
+            ComputeTotal();
         }
         private async void OnCharmEarthPower(object sender, EventArgs e)
             => await HandleCharmAsync<EvocationConfigPage, EvocationConfig>();
