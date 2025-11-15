@@ -6,9 +6,9 @@
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
+  x:Name="RootPage"
   Title="Configure General Charm"
-  x:TypeArguments="cfg:GeneralConfig"
-  x:Name="RootPage">
+  x:TypeArguments="cfg:GeneralConfig">
 
   <ContentPage.Resources>
     <Style x:Key="SectionHeader" TargetType="Label">
@@ -17,99 +17,187 @@
       <Setter Property="Margin" Value="0,16,0,6" />
     </Style>
 
-    <conv:BoolToRotationConverter x:Key="BoolToRotationConverter" />
+    <!-- <conv:BoolToRotationConverter x:Key="BoolToRotationConverter" /> -->
+    <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <conv:BoolIsTrueConverter x:Key="BoolIsTrueConverter" />
+    <conv:BoolIsFalseConverter x:Key="BoolIsFalseConverter" />
   </ContentPage.Resources>
-<Grid RowDefinitions="*,Auto">
-  <ScrollView Grid.Row="0">
-    <VerticalStackLayout Padding="20" Spacing="10">
-      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-        <Label
-          FontAttributes="Bold"
-          FontSize="20"
-          Text="{Binding Title}" />
-        <Button
-          Grid.Column="2"
-          Clicked="OnSearchGeneral"
-          Text="Search" />
-      </Grid>
+  <Grid RowDefinitions="*,Auto">
+    <ScrollView Grid.Row="0">
+      <VerticalStackLayout Padding="20" Spacing="10">
+        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+          <Label
+            FontAttributes="Bold"
+            FontSize="20"
+            Text="{Binding Title}" />
+          <Button
+            Grid.Column="2"
+            Clicked="OnSearchGeneral"
+            Text="Search" />
+        </Grid>
 
-      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-        <!--  Casting levels  -->
-        <controls:MagicColourPicker
-          Grid.Column="0"
-          LabelText="Additional casting levels for..."
-          SelectedColour="{Binding CastingLevelsColour, Mode=TwoWay}" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+          <!--  Casting levels  -->
+          <controls:MagicColourPicker
+            Grid.Column="0"
+            LabelText="Additional casting levels for..."
+            SelectedColour="{Binding CastingLevelsColour, Mode=TwoWay}" />
+          <controls:PlusMinusControl
+            Grid.Column="1"
+            AllowMultiple="True"
+            Count="{Binding CastingLevelsCount, Mode=TwoWay}"
+            LabelText=""
+            Max="3" />
+        </Grid>
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+          <controls:ResistanceTypePicker
+            Grid.Column="0"
+            LabelText="Additional levels of resistance for..."
+            SelectedType="{Binding ResistanceType, Mode=TwoWay}" />
+          <controls:PlusMinusControl
+            Grid.Column="1"
+            AllowMultiple="True"
+            Count="{Binding ResistanceLevels, Mode=TwoWay}"
+            LabelText=""
+            Max="3" />
+        </Grid>
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+          <!--  Elven innates  -->
+          <controls:ElfColourPicker
+            Grid.Column="0"
+            LabelText="Elven innates for..."
+            SelectedColour="{Binding ElfInnateColour, Mode=TwoWay}" />
+          <controls:ElfInnateLevelPicker Grid.Column="1" SelectedLevel="{Binding ElvenInnateLevel, Mode=TwoWay}" />
+        </Grid>
+        <controls:DictionarySlider
+          Labels="{Binding StrengthLabels}"
+          MaxCount="3"
+          MinCount="0"
+          Multiplier="1"
+          SelectedCount="{Binding StrengthEnchantIndex, Mode=TwoWay}" />
         <controls:PlusMinusControl
-          Grid.Column="1"
           AllowMultiple="True"
-          Count="{Binding CastingLevelsCount, Mode=TwoWay}"
-          LabelText=""
-          Max="3" />
-      </Grid>
-      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-        <controls:ResistanceTypePicker
-          Grid.Column="0"
-          LabelText="Additional levels of resistance for..."
-          SelectedType="{Binding ResistanceType, Mode=TwoWay}" />
+          Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}"
+          LabelText="25% Cold Rage" />
         <controls:PlusMinusControl
-          Grid.Column="1"
           AllowMultiple="True"
-          Count="{Binding ResistanceLevels, Mode=TwoWay}"
-          LabelText=""
-          Max="3" />
-      </Grid>
-      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-        <!--  Elven innates  -->
-        <controls:ElfColourPicker
-          Grid.Column="0"
-          LabelText="Elven innates for..."
-          SelectedColour="{Binding ElfInnateColour, Mode=TwoWay}" />
-        <controls:ElfInnateLevelPicker Grid.Column="1" SelectedLevel="{Binding ElvenInnateLevel, Mode=TwoWay}" />
-      </Grid>
-      <controls:PlusMinusControl Count="{Binding StrengthPlus1NonStackingCount, Mode=TwoWay}" LabelText="+1 Str (non-stacking) — 15" />
-      <controls:PlusMinusControl Count="{Binding StrengthPlus1StackingTo2Count, Mode=TwoWay}" LabelText="+1 Str (stacking to +2) — 20" />
-      <controls:PlusMinusControl Count="{Binding StrengthPlus2NonStackingCount, Mode=TwoWay}" LabelText="+2 Str (non-stacking) — 45" />
-      <controls:PlusMinusControl Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}" LabelText="25% Cold Rage 1/day — 10" />
-      <controls:PlusMinusControl Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}" LabelText="50% Berserk Rage 1/day — 25" />
-      <controls:PlusMinusControl Count="{Binding ColdRage25VsOneGroupAlwaysCount, Mode=TwoWay}" LabelText="25% Cold Rage vs one Group (always) — 40" />
-      <controls:PlusMinusControl Count="{Binding RepelAttractOneTypePerDayCount, Mode=TwoWay}" LabelText="Repel/Attract one Type 1/day — 6" />
-      <controls:PlusMinusControl Count="{Binding RepelAttractOneGroupPerDayCount, Mode=TwoWay}" LabelText="Repel/Attract one Group 1/day — 8" />
-      <controls:PlusMinusControl Count="{Binding RepelLifePerDayCount, Mode=TwoWay}" LabelText="Repel Life 1/day — 10" />
-      <controls:PlusMinusControl Count="{Binding DisciplinePerDayCount, Mode=TwoWay}" LabelText="Discipline 1/day — 15" />
-      <controls:PlusMinusControl Count="{Binding WardPact8LevelsCount, Mode=TwoWay}" LabelText="Ward Pact (8 levels) — 20" />
-      <controls:PlusMinusControl Count="{Binding KiOrPrimalStrikePerDayCount, Mode=TwoWay}" LabelText="Ki / Primal Strike 1/day — 15" />
-      <controls:PlusMinusControl Count="{Binding EmpowerWeaponMagicCount, Mode=TwoWay}" LabelText="Empower +0 magic dmg (5 mins) — 8" />
-      <controls:PlusMinusControl Count="{Binding EmpowerWeaponSpiritCount, Mode=TwoWay}" LabelText="Empower +0 spirit dmg (5 mins) — 10" />
-      <controls:PlusMinusControl Count="{Binding EmpowerWeaponManticCount, Mode=TwoWay}" LabelText="Empower +0 mantic dmg (5 mins) — 20" />
-      <controls:PlusMinusControl Count="{Binding ExtraColoursForEmpowerments, Mode=TwoWay}" LabelText="Extra colours (per) — +2" />
-      <controls:PlusMinusControl Count="{Binding ExtraAlignmentsForEmpowerments, Mode=TwoWay}" LabelText="Extra alignments (per) — +3" />
-      <controls:PlusMinusControl Count="{Binding UndeadTouchPerDayCount, Mode=TwoWay}" LabelText="Undead touch 1/day — 15" />
-      <controls:PlusMinusControl Count="{Binding GaseousFormPerDayCount, Mode=TwoWay}" LabelText="Gaseous Form 1/day — 35" />
-      <controls:PlusMinusControl Count="{Binding PlaneShiftPerDayCount, Mode=TwoWay}" LabelText="Plane Shift 1/day — 20" />
-      <controls:PlusMinusControl Count="{Binding WalkThroughWallsPerDayCount, Mode=TwoWay}" LabelText="Walk Through Walls 1/day — 20" />
-      <controls:PlusMinusControl Count="{Binding ScholarlyInterestPerDayCount, Mode=TwoWay}" LabelText="Scholarly Interest 1/day — 15" />
-      <controls:PlusMinusControl Count="{Binding KnowledgeOfArcanePerDayCount, Mode=TwoWay}" LabelText="Knowledge of the Arcane 1/day — 8" />
-      <controls:PlusMinusControl Count="{Binding MajorPrayerPerDayPowerbaseCount, Mode=TwoWay}" LabelText="Major Prayer 1/day (powerbase) — 10" />
-      <controls:PlusMinusControl Count="{Binding MajorPrayerPerDayPowerbaseSubjectCount, Mode=TwoWay}" LabelText="Major Prayer 1/day (powerbase+subject) — 6" />
-      <controls:PlusMinusControl Count="{Binding MinorPrayerPerDayPowerbaseCount, Mode=TwoWay}" LabelText="Minor Prayer 1/day (powerbase) — 4" />
-      <controls:PlusMinusControl Count="{Binding AdditionalLifeBlocks, Mode=TwoWay}" LabelText="Blocks of +6 (max 4) — 5/block" />
-      <controls:CheckboxControl IsChecked="{Binding LifeKickInIsMagicOrSpirit, Mode=TwoWay}" LabelText="Kick-in is Magic or Spirit (×2 cost)" />
+          Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}"
+          LabelText="50% Berserk Rage" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding ColdRage25VsOneGroupAlwaysCount, Mode=TwoWay}"
+          LabelText="Perm 25% Cold Rage vs " />
+        <!--  free-text field, summary of both together  -->
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding RepelAttractOneTypePerDayCount, Mode=TwoWay}"
+          LabelText="Repel/Attract one Type" />
+        <!--  Count, free text, toggle  -->
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding RepelAttractOneGroupPerDayCount, Mode=TwoWay}"
+          LabelText="Repel/Attract one Group" />
+        <!--  Count, free text, toggle  -->
 
-      <controls:PlusMinusControl Count="{Binding ExtraInnatesX2From8thCount, Mode=TwoWay}" LabelText="×2 innates (from 8th) — +70" />
-      <controls:PlusMinusControl Count="{Binding ExtraInnatesX3FromX2Count, Mode=TwoWay}" LabelText="×3 innates (from ×2) — +70" />
-      <controls:CheckboxControl IsChecked="{Binding ReadLanguages, Mode=TwoWay}" LabelText="Read languages — 6" />
-      <controls:CheckboxControl IsChecked="{Binding DisarmTrapsAsScout, Mode=TwoWay}" LabelText="Disarm traps (as scout) — 10" />
-      <controls:PlusMinusControl Count="{Binding PotionRecipesKnownCount, Mode=TwoWay}" LabelText="Potion recipes known — 5/recipe" />
-      <controls:CheckboxControl IsChecked="{Binding Regeneration, Mode=TwoWay}" LabelText="Regeneration (non-stacking) — 40" />
-      <controls:CheckboxControl IsChecked="{Binding ForearmParry, Mode=TwoWay}" LabelText="Forearm Parry — 25" />
-    </VerticalStackLayout>
-  </ScrollView>
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding RepelLifePerDayCount, Mode=TwoWay}"
+          LabelText="Repel Life" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding DisciplinePerDayCount, Mode=TwoWay}"
+          LabelText="Discipline" />
+        <controls:PlusMinusControl Count="{Binding WardPact8LevelsCount, Mode=TwoWay}" LabelText="Ward Pact (8 levels)" />
+        <!--  free text; add another (listControl?)  -->
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding KiOrPrimalStrikePerDayCount, Mode=TwoWay}"
+          LabelText="Ki / Primal Strike" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding EmpowerWeaponMagicCount, Mode=TwoWay}"
+          LabelText="+0 Magic dmg (5 mins)" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding EmpowerWeaponSpiritCount, Mode=TwoWay}"
+          LabelText="+0 spirit dmg (5 mins)" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding EmpowerWeaponManticCount, Mode=TwoWay}"
+          LabelText="+0 mantic dmg (5 mins)" />
+        <controls:PlusMinusControl Count="{Binding ExtraColoursForEmpowerments, Mode=TwoWay}" LabelText="Extra colours (per) — +2" />
+        <!--  ListControl with picker! Visible only if one of 'empower' above are used  -->
+        <controls:PlusMinusControl Count="{Binding ExtraAlignmentsForEmpowerments, Mode=TwoWay}" LabelText="Extra alignments (per) — +3" />
+        <!--  ListControl with picker!  -->
+
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding UndeadTouchPerDayCount, Mode=TwoWay}"
+          LabelText="Undead touch" />
+        <!--  Picker & plusMinus for undead touch fx  -->
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding GaseousFormPerDayCount, Mode=TwoWay}"
+          LabelText="Gaseous Form" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding PlaneShiftPerDayCount, Mode=TwoWay}"
+          LabelText="Plane Shift" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding WalkThroughWallsPerDayCount, Mode=TwoWay}"
+          LabelText="Walk Through Walls" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding ScholarlyInterestPerDayCount, Mode=TwoWay}"
+          LabelText="Scholarly Interest" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding KnowledgeOfArcanePerDayCount, Mode=TwoWay}"
+          LabelText="Knowledge of the Arcane" />
+
+        <!--  toggle? Major/Minor  -->
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding MajorPrayerPerDayPowerbaseCount, Mode=TwoWay}"
+          LabelText="Major Prayer" />
+        <!--  pick powerbase  -->
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding MajorPrayerPerDayPowerbaseSubjectCount, Mode=TwoWay}"
+          LabelText="Major Prayer" />
+        <!--  pick powerbase AND string subject  -->
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding MinorPrayerPerDayPowerbaseCount, Mode=TwoWay}"
+          LabelText="Minor Prayer" />
+        <!--  pick powerbase  -->
+
+        <controls:PlusMinusControl Count="{Binding AdditionalLifeBlocks, Mode=TwoWay}" LabelText="Live to minus" />
+        <!--  slider (max 24, blocks of 6)  -->
+        <controls:CheckboxControl IsChecked="{Binding LifeKickInIsMagicOrSpirit, Mode=TwoWay}" LabelText="Live to minus is Magic or Spirit" />
+        <!--  Toggle on/off/null  -->
+
+        <controls:PlusMinusControl Count="{Binding ExtraInnatesX2From8thCount, Mode=TwoWay}" LabelText="×2 innates (from 8th) — +70" />
+        <controls:PlusMinusControl Count="{Binding ExtraInnatesX3FromX2Count, Mode=TwoWay}" LabelText="×3 innates (from ×2) — +70" />
+        <!--  removed by elf slider  -->
+
+        <controls:CheckboxControl IsChecked="{Binding ReadLanguages, Mode=TwoWay}" LabelText="Read languages — 6" />
+        <controls:CheckboxControl IsChecked="{Binding DisarmTrapsAsScout, Mode=TwoWay}" LabelText="Disarm traps (as scout) — 10" />
+
+        <!-- <controls:PlusMinusControl
+          Count="{Binding PotionRecipesKnownCount, Mode=TwoWay}" LabelText="Potion recipes known — 5/recipe" />-->
+        <!--  UGH, this'll suck - it's a search way down here... another one. Not sure how to implement  -->
+        <controls:CheckboxControl IsChecked="{Binding Regeneration, Mode=TwoWay}" LabelText="Regeneration" />
+        <controls:CheckboxControl IsChecked="{Binding ForearmParry, Mode=TwoWay}" LabelText="Forearm Parry" />
+      </VerticalStackLayout>
+    </ScrollView>
 
     <controls:StickyFooterControl
-        Grid.Row="1"
-        Total="{Binding Total}"
-        ButtonText="Return to Calculator"
-        ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
-        ReturnCommandParameter="{x:Reference RootPage}" />
+      Grid.Row="1"
+      ButtonText="Return to Calculator"
+      ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
+      ReturnCommandParameter="{x:Reference RootPage}"
+      Total="{Binding Total}" />
   </Grid>
 </cfg:ConfigPageBase>

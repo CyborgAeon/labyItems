@@ -111,9 +111,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         AddResistanceLevels(s, c);
         s.AddToSummaryIf(c.CastingLevelsCount, $"+{c.CastingLevelsCount} Casting levels {c.CastingLevelsColour}");
 
-        s.AddToSummaryIf(c.StrengthPlus1NonStackingCount, "+1 Strength (non-stacking)");
-        s.AddToSummaryIf(c.StrengthPlus1StackingTo2Count, "+1 Strength (stacking to +2)");
-        s.AddToSummaryIf(c.StrengthPlus2NonStackingCount, "+2 Strength (non-stacking)");
+        s.AddToSummaryIf(c.StrengthEnchantCost, c.StrengthEnchantDescription);
         s.AddToSummaryIf(c.ColdRage25PerDayCount, "25% Cold Rage (1/day)");
         s.AddToSummaryIf(c.BerserkRage50PerDayCount, "50% Berserk Rage (1/day)");
         s.AddToSummaryIf(c.ColdRage25VsOneGroupAlwaysCount, "25% Cold Rage vs one group (always)");
