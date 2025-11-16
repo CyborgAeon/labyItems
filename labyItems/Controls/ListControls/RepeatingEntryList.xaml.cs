@@ -1,8 +1,8 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using Microsoft.Maui.Controls;
 using labyItems.Helpers;
+using Microsoft.Maui.Controls;
 
 namespace labyItems.Controls;
 
@@ -125,7 +125,17 @@ public partial class RepeatingEntryList : ContentView
 
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        RebuildRows();
+        if (
+            e.Action == NotifyCollectionChangedAction.Add
+            || e.Action == NotifyCollectionChangedAction.Remove
+            || e.Action == NotifyCollectionChangedAction.Move
+            || e.Action == NotifyCollectionChangedAction.Reset
+        )
+        {
+            RebuildRows();
+        }
+
+        // Always update summary + count
         UpdateSummaryAndCount();
     }
 
