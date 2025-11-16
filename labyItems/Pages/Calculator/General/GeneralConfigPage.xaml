@@ -37,11 +37,9 @@
         </Grid>
 
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-          <!--  Casting levels  -->
-          <controls:MagicColourPicker
-            Grid.Column="0"
-            LabelText="Additional casting levels for..."
-            SelectedColour="{Binding CastingLevelsColour, Mode=TwoWay}" />
+          <controls:MagicColourPicker 
+            LabelText="Additional casting levels for..." 
+            SelectedValue="{Binding MagicColour, Mode=TwoWay}" />
           <controls:PlusMinusControl
             Grid.Column="1"
             AllowMultiple="True"
@@ -51,9 +49,9 @@
         </Grid>
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
           <controls:ResistanceTypePicker
-            Grid.Column="0"
             LabelText="Additional levels of resistance for..."
-            SelectedType="{Binding ResistanceType, Mode=TwoWay}" />
+            PlaceholderText="Select a type" 
+            SelectedValue="{Binding ResistanceType, Mode=TwoWay}" />
           <controls:PlusMinusControl
             Grid.Column="1"
             AllowMultiple="True"
@@ -63,11 +61,19 @@
         </Grid>
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
           <!--  Elven innates  -->
-          <controls:ElfColourPicker
+          <controls:ElfColourPicker 
+            Grid.Column="0"
+            LabelText="Elven innates for..." 
+            SelectedValue="{Binding ElfInnateColour, Mode=TwoWay}" />
+          <!-- <controls:ElfColourPicker
             Grid.Column="0"
             LabelText="Elven innates for..."
-            SelectedColour="{Binding ElfInnateColour, Mode=TwoWay}" />
-          <controls:ElfInnateLevelPicker Grid.Column="1" SelectedLevel="{Binding ElvenInnateLevel, Mode=TwoWay}" />
+            SelectedColour="{Binding ElfInnateColour, Mode=TwoWay}" /> -->
+          <!-- <controls:ElfInnateLevelPicker Grid.Column="1" SelectedLevel="{Binding ElvenInnateLevel, Mode=TwoWay}" /> -->
+          <controls:ElfInnateLevelPicker 
+            Grid.Column="1"
+            LabelText="Elven innates for..." 
+            SelectedValue="{Binding ElvenInnateLevel, Mode=TwoWay}" />
         </Grid>
         <controls:DictionarySlider
           Labels="{Binding StrengthLabels}"
@@ -83,10 +89,21 @@
           AllowMultiple="True"
           Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}"
           LabelText="50% Berserk Rage" />
-        <controls:PlusMinusControl
+        <!-- <Label Text="{Binding PermRageLabel}" />
+        -->
+        <Label Text="{Binding RageCategoriesCountLabel}" />
+
+        <controls:RepeatingEntryList
+          CountLabelFormat="Fields with values: {0}"
+          CountLabelText="{Binding RageCategoriesCountLabel, Mode=OneWayToSource}"
+          Items="{Binding PermRageCategoryItems, Mode=TwoWay}"
+          MaxItems="5"
+          SummaryText="{Binding PermRageCategoriesSummary, Mode=OneWayToSource}"
+          ValueCount="{Binding RageCategoriesCount, Mode=OneWayToSource}" />
+        <!-- <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding ColdRage25VsOneGroupAlwaysCount, Mode=TwoWay}"
-          LabelText="Perm 25% Cold Rage vs " />
+          LabelText="Perm 25% Cold Rage vs " />-->
         <!--  free-text field, summary of both together  -->
         <controls:PlusMinusControl
           AllowMultiple="True"

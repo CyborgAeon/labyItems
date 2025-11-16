@@ -1,4 +1,6 @@
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Pages.Calculator;
@@ -298,6 +300,46 @@ namespace labyItems.Pages.Configs
             total += addition;
         }
 
+        // Collection feeding the control
+        public ObservableCollection<string?> PermRageCategoryItems { get; } =
+            new ObservableCollection<string?> { null }; // start with a single empty row
+
+        // Summary text the control will fill
+        private string _permRageCategoriesSummary;
+        public string PermRageCategoriesSummary
+        {
+            get => _permRageCategoriesSummary;
+            set
+            {
+                _permRageCategoriesSummary = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Count of fields with values
+        private int _rageCategoriesCount;
+        public int RageCategoriesCount
+        {
+            get => _rageCategoriesCount;
+            set
+            {
+                _rageCategoriesCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Human-readable label, built by the control using CountLabelFormat
+        private string _rageCategoriesCountLabel;
+        public string RageCategoriesCountLabel
+        {
+            get => _rageCategoriesCountLabel;
+            set
+            {
+                _rageCategoriesCountLabel = value;
+                OnPropertyChanged();
+            }
+        }
+
         public void AddElvenInnates(ref int total)
         {
             if (ElfInnateColour is not null && ElvenInnateLevel is not null)
@@ -342,14 +384,11 @@ namespace labyItems.Pages.Configs
             t += StrengthEnchantCost;
             t += 10 * ColdRage25PerDayCount;
             t += 25 * BerserkRage50PerDayCount;
-            t += 40 * ColdRage25VsOneGroupAlwaysCount;
+            t += 40 * RageCategoriesCount;
+
             t += 6 * RepelAttractOneTypePerDayCount;
             t += 8 * RepelAttractOneGroupPerDayCount;
             t += 10 * RepelLifePerDayCount;
-
-            // New: automatic ability/immunity ISP
-            // t += TotalIsp;
-
             t += 15 * DisciplinePerDayCount;
             t += 20 * WardPact8LevelsCount;
             t += 15 * KiOrPrimalStrikePerDayCount;

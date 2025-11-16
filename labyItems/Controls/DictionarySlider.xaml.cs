@@ -295,7 +295,6 @@ namespace labyItems.Controls
             Slider.Maximum = max;
         }
 
-        // ------- Slider handler -------
 
         private void OnSliderValueChanged(object sender, ValueChangedEventArgs e)
         {
@@ -313,105 +312,98 @@ namespace labyItems.Controls
             }
         }
 
-        // ------- Core updater -------
-
         private void UpdateFromGeneratedOrIndex(bool raiseEvent, int? previousIndex = null)
-{
-    if (_entries.Count == 0)
-    {
-        RenderEmpty();
-        return;
-    }
-
-    if (_usingGenerated)
-    {
-        // clamp to slider range
-        int min = (int)Slider.Minimum;
-        int max = (int)Slider.Maximum;
-        int count = Math.Clamp(SelectedCount, min, max);
-
-        // keep slider in sync
-        if ((int)Math.Round(Slider.Value) != count)
-            Slider.Value = count;
-
-        var kv = _entries[count - min]; // entries are sequential
-        SelectedKey = kv.Key;
-        SelectedValue = kv.Value;
-
-        // --- NEW: prefer Labels over KeyFormat if available ---
-        string keyText;
-        int labelIndex = count - min; // logical index from slider position
-
-        if (Labels != null &&
-            labelIndex >= 0 &&
-            labelIndex < Labels.Count)
         {
-            keyText = Labels[labelIndex];
+            if (_entries.Count == 0)
+            {
+                RenderEmpty();
+                return;
+            }
+
+            if (_usingGenerated)
+            {
+                // clamp to slider range
+                int min = (int)Slider.Minimum;
+                int max = (int)Slider.Maximum;
+                int count = Math.Clamp(SelectedCount, min, max);
+
+                // keep slider in sync
+                if ((int)Math.Round(Slider.Value) != count)
+                    Slider.Value = count;
+
+                var kv = _entries[count - min]; // entries are sequential
+                SelectedKey = kv.Key;
+                SelectedValue = kv.Value;
+
+                // --- NEW: prefer Labels over KeyFormat if available ---
+                string keyText;
+                int labelIndex = count - min; // logical index from slider position
+
+                if (Labels != null && labelIndex >= 0 && labelIndex < Labels.Count)
+                {
+                    keyText = Labels[labelIndex];
+                }
+                else
+                {
+                    keyText = SafeFormat(KeyFormat, kv.Key, FormatArg1);
+                }
+
+                KeyLabel.Text = keyText;
+                // ------------------------------------------------------
+
+                ValueLabel.Text = SafeFormat(ValueFormat, kv.Value);
+
+                if (raiseEvent)
+                    SelectionChanged?.Invoke(
+                        this,
+                        new DictionarySelectionChangedEventArgs(
+                            previousIndex ?? count,
+                            count,
+                            kv.Key,
+                            kv.Value
+                        )
+                    );
+            }
+            else
+            {
+                int idx = Math.Clamp(SelectedIndex, 0, _entries.Count - 1);
+
+                if ((int)Math.Round(Slider.Value) != idx)
+                    Slider.Value = idx;
+
+                var kv = _entries[idx];
+                SelectedKey = kv.Key;
+                SelectedValue = kv.Value;
+
+                // --- NEW: prefer Labels over KeyFormat if available ---
+                string keyText;
+
+                if (Labels != null && idx >= 0 && idx < Labels.Count)
+                {
+                    keyText = Labels[idx];
+                }
+                else
+                {
+                    keyText = string.Format(KeyFormat, kv.Key);
+                }
+
+                KeyLabel.Text = keyText;
+                // ------------------------------------------------------
+
+                ValueLabel.Text = string.Format(ValueFormat, kv.Value);
+
+                if (raiseEvent)
+                    SelectionChanged?.Invoke(
+                        this,
+                        new DictionarySelectionChangedEventArgs(
+                            previousIndex ?? idx,
+                            idx,
+                            kv.Key,
+                            kv.Value
+                        )
+                    );
+            }
         }
-        else
-        {
-            keyText = SafeFormat(KeyFormat, kv.Key, FormatArg1);
-        }
-
-        KeyLabel.Text = keyText;
-        // ------------------------------------------------------
-
-        ValueLabel.Text = SafeFormat(ValueFormat, kv.Value);
-
-        if (raiseEvent)
-            SelectionChanged?.Invoke(
-                this,
-                new DictionarySelectionChangedEventArgs(
-                    previousIndex ?? count,
-                    count,
-                    kv.Key,
-                    kv.Value
-                )
-            );
-    }
-    else
-    {
-        int idx = Math.Clamp(SelectedIndex, 0, _entries.Count - 1);
-
-        if ((int)Math.Round(Slider.Value) != idx)
-            Slider.Value = idx;
-
-        var kv = _entries[idx];
-        SelectedKey = kv.Key;
-        SelectedValue = kv.Value;
-
-        // --- NEW: prefer Labels over KeyFormat if available ---
-        string keyText;
-
-        if (Labels != null &&
-            idx >= 0 &&
-            idx < Labels.Count)
-        {
-            keyText = Labels[idx];
-        }
-        else
-        {
-            keyText = string.Format(KeyFormat, kv.Key);
-        }
-
-        KeyLabel.Text = keyText;
-        // ------------------------------------------------------
-
-        ValueLabel.Text = string.Format(ValueFormat, kv.Value);
-
-        if (raiseEvent)
-            SelectionChanged?.Invoke(
-                this,
-                new DictionarySelectionChangedEventArgs(
-                    previousIndex ?? idx,
-                    idx,
-                    kv.Key,
-                    kv.Value
-                )
-            );
-    }
-}
-
 
         private void RenderEmpty()
         {
