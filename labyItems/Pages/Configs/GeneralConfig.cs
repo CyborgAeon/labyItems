@@ -340,6 +340,28 @@ namespace labyItems.Pages.Configs
             }
         }
 
+        private string _repelOrAttract;
+        public string RepelOrAttract
+        {
+            get => _repelOrAttract;
+            set
+            {
+                _repelOrAttract = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _repelAttractGroupName;
+        public string RepelAttractGroupName
+        {
+            get => _repelAttractGroupName;
+            set
+            {
+                _repelAttractGroupName = value;
+                OnPropertyChanged();
+            }
+        }
+
         public void AddElvenInnates(ref int total)
         {
             if (ElfInnateColour is not null && ElvenInnateLevel is not null)

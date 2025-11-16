@@ -21,6 +21,7 @@
     <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <conv:BoolIsTrueConverter x:Key="BoolIsTrueConverter" />
     <conv:BoolIsFalseConverter x:Key="BoolIsFalseConverter" />
+    <conv:TogglePlaceholderConverter x:Key="RepelAttractPlaceholderConverter" />
   </ContentPage.Resources>
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
@@ -37,9 +38,7 @@
         </Grid>
 
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-          <controls:MagicColourPicker 
-            LabelText="Additional casting levels for..." 
-            SelectedValue="{Binding MagicColour, Mode=TwoWay}" />
+          <controls:MagicColourPicker LabelText="Additional casting levels for..." SelectedValue="{Binding MagicColour, Mode=TwoWay}" />
           <controls:PlusMinusControl
             Grid.Column="1"
             AllowMultiple="True"
@@ -50,7 +49,7 @@
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
           <controls:ResistanceTypePicker
             LabelText="Additional levels of resistance for..."
-            PlaceholderText="Select a type" 
+            PlaceholderText="Select a type"
             SelectedValue="{Binding ResistanceType, Mode=TwoWay}" />
           <controls:PlusMinusControl
             Grid.Column="1"
@@ -60,19 +59,13 @@
             Max="3" />
         </Grid>
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-          <!--  Elven innates  -->
-          <controls:ElfColourPicker 
-            Grid.Column="0"
-            LabelText="Elven innates for..." 
-            SelectedValue="{Binding ElfInnateColour, Mode=TwoWay}" />
-          <!-- <controls:ElfColourPicker
+          <controls:ElfColourPicker
             Grid.Column="0"
             LabelText="Elven innates for..."
-            SelectedColour="{Binding ElfInnateColour, Mode=TwoWay}" /> -->
-          <!-- <controls:ElfInnateLevelPicker Grid.Column="1" SelectedLevel="{Binding ElvenInnateLevel, Mode=TwoWay}" /> -->
-          <controls:ElfInnateLevelPicker 
+            SelectedValue="{Binding ElfInnateColour, Mode=TwoWay}" />
+          <controls:ElfInnateLevelPicker
             Grid.Column="1"
-            LabelText="Elven innates for..." 
+            LabelText="Elven innates for..."
             SelectedValue="{Binding ElvenInnateLevel, Mode=TwoWay}" />
         </Grid>
         <controls:DictionarySlider
@@ -89,33 +82,37 @@
           AllowMultiple="True"
           Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}"
           LabelText="50% Berserk Rage" />
-        <!-- <Label Text="{Binding PermRageLabel}" />
-        -->
         <Label Text="{Binding RageCategoriesCountLabel}" />
-
         <controls:RepeatingEntryList
-          CountLabelFormat="Fields with values: {0}"
+          CountLabelFormat="Perm 25% rage vs {0} groups"
           CountLabelText="{Binding RageCategoriesCountLabel, Mode=OneWayToSource}"
           Items="{Binding PermRageCategoryItems, Mode=TwoWay}"
           MaxItems="5"
           SummaryText="{Binding PermRageCategoriesSummary, Mode=OneWayToSource}"
           ValueCount="{Binding RageCategoriesCount, Mode=OneWayToSource}" />
-        <!-- <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding ColdRage25VsOneGroupAlwaysCount, Mode=TwoWay}"
-          LabelText="Perm 25% Cold Rage vs " />-->
-        <!--  free-text field, summary of both together  -->
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding RepelAttractOneTypePerDayCount, Mode=TwoWay}"
-          LabelText="Repel/Attract one Type" />
-        <!--  Count, free text, toggle  -->
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding RepelAttractOneGroupPerDayCount, Mode=TwoWay}"
-          LabelText="Repel/Attract one Group" />
-        <!--  Count, free text, toggle  -->
-
+        <Label
+          FontAttributes="Bold"
+          FontSize="16"
+          HorizontalOptions="Start"
+          HorizontalTextAlignment="Start"
+          Text="Repel or Attract a group x times / day"
+          VerticalOptions="Center"
+          VerticalTextAlignment="Center" />
+        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+          <controls:TwoOptionSwitch
+            Grid.Column="0"
+            LeftValue="repel"
+            RightValue="attract"
+            SelectedValue="{Binding RepelOrAttract, Mode=TwoWay}" />
+          <Entry
+            Grid.Column="1"
+            Placeholder="{Binding RepelOrAttract, Converter={StaticResource RepelAttractPlaceholderConverter}}"
+            Text="{Binding RepelAttractGroupName, Mode=TwoWay}" />
+          <controls:PlusMinusControl
+            Grid.Column="2"
+            AllowMultiple="True"
+            Count="{Binding RepelAttractOneTypePerDayCount, Mode=TwoWay}" />
+        </Grid>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding RepelLifePerDayCount, Mode=TwoWay}"
@@ -124,7 +121,23 @@
           AllowMultiple="True"
           Count="{Binding DisciplinePerDayCount, Mode=TwoWay}"
           LabelText="Discipline" />
-        <controls:PlusMinusControl Count="{Binding WardPact8LevelsCount, Mode=TwoWay}" LabelText="Ward Pact (8 levels)" />
+        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+          <Label
+            Grid.Column="0"
+            FontAttributes="Bold"
+            FontSize="16"
+            HorizontalOptions="Start"
+            HorizontalTextAlignment="Start"
+            Text="Ward Pact (8 levels) vs"
+            VerticalOptions="Center"
+            VerticalTextAlignment="Center" />
+          <Entry
+            Grid.Column="1"
+            Placeholder="Ward pact group"
+            Text="{Binding WardPactEntry, Mode=TwoWay}"
+            VerticalTextAlignment="End" />
+          <controls:PlusMinusControl Grid.Column="2" Count="{Binding WardPact8LevelsCount, Mode=TwoWay}" />
+        </Grid>
         <!--  free text; add another (listControl?)  -->
         <controls:PlusMinusControl
           AllowMultiple="True"

@@ -2,74 +2,74 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
-using labyItems.Pages.Configs;
-using labyItems.Models;
-using labyItems.Helpers;
 using labyItems.Controls;
+using labyItems.Helpers;
+using labyItems.Models;
+using labyItems.Pages.Configs;
+using Microsoft.Maui.Controls;
+
 namespace labyItems.Pages.Calculator;
 
 public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
 {
     public bool ShowResistanceSection { get; set; } = false;
-    private void ToggleResistanceSection(object sender, EventArgs e)
-    => ShowResistanceSection = !ShowResistanceSection;
+
+    private void ToggleResistanceSection(object sender, EventArgs e) =>
+        ShowResistanceSection = !ShowResistanceSection;
+
     private async void OnSearchGeneral(object sender, EventArgs e)
     {
         var picked = await new General().PickAsync(Navigation);
-        if (picked == null) return;
+        if (picked == null)
+            return;
 
         if (BindingContext is GeneralConfig cfg)
             cfg.ApplyGeneral(picked);
     }
+
     private readonly TaskCompletionSource<CalcResult?> _tcs = new();
     public Task<CalcResult?> Completion => _tcs.Task;
-  public Command ReturnFromConfigCommand { get; }
+    public Command ReturnFromConfigCommand { get; }
 
     public GeneralConfigPage()
     {
         InitializeComponent();
         BindingContext = new GeneralConfig();
-         ReturnFromConfigCommand = new Command(async () =>
-            {
-                if (BindingContext is not GeneralConfig cfg) return;
-
-                var result = new CalcResult
-                {
-                    TotalIsp = cfg.Total,
-                    Summary  = BuildSummary(cfg)
-                };
-
-                _tcs.TrySetResult(result);
-                await StickyFooterControl.DefaultNavigateAsync(this);
-            });
-    }
-    private async void OnFooterReturnClicked(object sender, EventArgs e)
+        ReturnFromConfigCommand = new Command(async () =>
         {
-            if (BindingContext is not GeneralConfig cfg) return;
-
-            var result = new CalcResult
-            {
-                TotalIsp = cfg.Total,
-                Summary  = BuildSummary(cfg)
-            };
-
-            if (Navigation?.NavigationStack?.Count > 1)
-            {
-                _tcs.TrySetResult(result);
-                await Navigation.PopAsync();
+            if (BindingContext is not GeneralConfig cfg)
                 return;
-            }
 
-            if (Shell.Current is not null)
-            {
-                await Shell.Current.GoToAsync("..");
-                return;
-            }
+            var result = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
 
             _tcs.TrySetResult(result);
+            await StickyFooterControl.DefaultNavigateAsync(this);
+        });
+    }
+
+    private async void OnFooterReturnClicked(object sender, EventArgs e)
+    {
+        if (BindingContext is not GeneralConfig cfg)
+            return;
+
+        var result = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
+
+        if (Navigation?.NavigationStack?.Count > 1)
+        {
+            _tcs.TrySetResult(result);
             await Navigation.PopAsync();
+            return;
         }
+
+        if (Shell.Current is not null)
+        {
+            await Shell.Current.GoToAsync("..");
+            return;
+        }
+
+        _tcs.TrySetResult(result);
+        await Navigation.PopAsync();
+    }
 
     public static async Task<CalcResult?> PickAsync(INavigation nav)
     {
@@ -89,11 +89,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         }
 
         var lines = BuildSummary(cfg);
-        var result = new CalcResult
-        {
-            TotalIsp = cfg.Total,
-            Summary = lines
-        };
+        var result = new CalcResult { TotalIsp = cfg.Total, Summary = lines };
 
         _tcs.TrySetResult(result);
         Navigation.PopAsync();
@@ -101,7 +97,10 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
 
     private static void AddResistanceLevels(List<string> summary, GeneralConfig c)
     {
-        summary.AddToSummaryIf(c.ResistanceLevels, $"{c.ResistanceLevels} Levels of Resistance vs {c.ResistanceType}");
+        summary.AddToSummaryIf(
+            c.ResistanceLevels,
+            $"{c.ResistanceLevels} Levels of Resistance vs {c.ResistanceType}"
+        );
     }
 
     protected override string BuildSummary(GeneralConfig c)
@@ -109,7 +108,10 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         var s = new List<string>();
 
         AddResistanceLevels(s, c);
-        s.AddToSummaryIf(c.CastingLevelsCount, $"+{c.CastingLevelsCount} Casting levels {c.CastingLevelsColour}");
+        s.AddToSummaryIf(
+            c.CastingLevelsCount,
+            $"+{c.CastingLevelsCount} Casting levels {c.CastingLevelsColour}"
+        );
 
         s.AddToSummaryIf(c.StrengthEnchantCost, c.StrengthEnchantDescription);
         s.AddToSummaryIf(c.ColdRage25PerDayCount, "25% Cold Rage (1/day)");
@@ -129,22 +131,34 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         s.AddToSummaryIf(c.ScholarlyInterestPerDayCount, "Scholarly Interest (1/day)");
         s.AddToSummaryIf(c.KnowledgeOfArcanePerDayCount, "Knowledge of the Arcane (1/day)");
         s.AddToSummaryIf(c.MajorPrayerPerDayPowerbaseCount, "Major Prayer (powerbase) (1/day)");
-        s.AddToSummaryIf(c.MajorPrayerPerDayPowerbaseSubjectCount, "Major Prayer (powerbase+subject) (1/day)");
+        s.AddToSummaryIf(
+            c.MajorPrayerPerDayPowerbaseSubjectCount,
+            "Major Prayer (powerbase+subject) (1/day)"
+        );
         s.AddToSummaryIf(c.MinorPrayerPerDayPowerbaseCount, "Minor Prayer (powerbase) (1/day)");
 
         if (c.AdditionalLTMBlocks > 0)
         {
             var pts = c.AdditionalLTMBlocks * 6;
-            s.Add($"Additional life to minus: +{pts} (5 per 6pts){(c.LTMKickInIsMagicOrSpirit ? ", kick-in Magic/Spirit ×2 cost" : "")}");
+            s.Add(
+                $"Additional life to minus: +{pts} (5 per 6pts){(c.LTMKickInIsMagicOrSpirit ? ", kick-in Magic/Spirit ×2 cost" : "")}"
+            );
         }
 
-        s.AddToSummaryIf((c.ElfInnateColour is not null), $"Lvl: {c.ElvenInnateLevel} {c.ElfInnateColour} Elven Innates");
+        s.AddToSummaryIf(
+            (c.ElfInnateColour is not null),
+            $"Lvl: {c.ElvenInnateLevel} {c.ElfInnateColour} Elven Innates"
+        );
         // Utilities
-        if (c.ReadLanguages) s.Add("Read languages");
-        if (c.DisarmTrapsAsScout) s.Add("Disarm traps (as scout)");
+        if (c.ReadLanguages)
+            s.Add("Read languages");
+        if (c.DisarmTrapsAsScout)
+            s.Add("Disarm traps (as scout)");
         s.AddToSummaryIf(c.PotionRecipesKnownCount, "Potion recipes known");
-        if (c.Regeneration) s.Add("Regeneration (non-stacking)");
-        if (c.ForearmParry) s.Add("Forearm Parry");
+        if (c.Regeneration)
+            s.Add("Regeneration (non-stacking)");
+        if (c.ForearmParry)
+            s.Add("Forearm Parry");
 
         return string.Join("\n", s);
     }
