@@ -182,12 +182,57 @@ namespace labyItems.Pages.Configs
         private int _ki;
 
         // ---------- Weapon empowerments ----------
+        private int _empMagic;
+        private int _empowerWeaponMagicCount;
         public int EmpowerWeaponMagicCount
         {
-            get => _empMagic;
-            set => SetProperty(ref _empMagic, value, true);
+            get => _empowerWeaponMagicCount;
+            set
+            {
+                _empowerWeaponMagicCount = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowExtraColours));
+            }
         }
-        private int _empMagic;
+
+        public bool ShowExtraColours =>
+            EmpowerWeaponMagicCount > 0 || EmpowerWeaponManticCount > 0;
+
+        public ObservableCollection<MagicColours?> ExtraColours { get; } =
+            new ObservableCollection<MagicColours?> { null }; // start with one empty row
+
+        private string _extraColoursSummary;
+        public string ExtraColoursSummary
+        {
+            get => _extraColoursSummary;
+            set
+            {
+                _extraColoursSummary = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _extraColoursCount;
+        public int ExtraColoursCount
+        {
+            get => _extraColoursCount;
+            set
+            {
+                _extraColoursCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _extraColoursCountLabel;
+        public string ExtraColoursCountLabel
+        {
+            get => _extraColoursCountLabel;
+            set
+            {
+                _extraColoursCountLabel = value;
+                OnPropertyChanged();
+            }
+        }
         private int _empowerWeaponSpiritCount;
         public int EmpowerWeaponSpiritCount
         {
@@ -209,6 +254,7 @@ namespace labyItems.Pages.Configs
                 _empowerWeaponManticCount = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ShowExtraAlignments));
+                OnPropertyChanged(nameof(ShowExtraColours));
             }
         }
 

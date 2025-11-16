@@ -169,8 +169,23 @@
           MaxItems="3"
           SummaryText="{Binding ExtraAlignmentsSummary, Mode=OneWayToSource}"
           ValueCount="{Binding ExtraAlignmentsCount, Mode=OneWayToSource}" />
-
-        <controls:PlusMinusControl Count="{Binding ExtraColoursForEmpowerments, Mode=TwoWay}" LabelText="Extra colours (per) — +2" />
+        <Label
+          FontAttributes="Bold"
+          FontSize="16"
+          HorizontalOptions="Start"
+          HorizontalTextAlignment="Start"
+          Text="{Binding ExtraColoursCountLabel}"
+          VerticalOptions="Center"
+          VerticalTextAlignment="Center" 
+          IsVisible="{Binding ShowExtraColours}" />
+        <controls:ListColourPickerControl
+          CountLabelFormat="{}{0} Extra colours chosen"
+          CountLabelText="{Binding ExtraColoursCountLabel, Mode=OneWayToSource}"
+          IsVisible="{Binding ShowExtraColours}"
+          Items="{Binding ExtraColours, Mode=TwoWay}"
+          MaxItems="15"
+          SummaryText="{Binding ExtraColoursSummary, Mode=OneWayToSource}"
+          ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}" />
 
         <controls:PlusMinusControl
           AllowMultiple="True"
