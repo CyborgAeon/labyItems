@@ -186,11 +186,20 @@
           MaxItems="15"
           SummaryText="{Binding ExtraColoursSummary, Mode=OneWayToSource}"
           ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}" />
-
-        <controls:PlusMinusControl
+       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+          <controls:UndeadTouchEffectPicker
+            LabelText="Undead touch effects..."
+            PlaceholderText="Select an effect"
+            SelectedValue="{Binding UndeadTouchEffect, Mode=TwoWay}" />
+          <controls:PlusMinusControl
+            Grid.Column="1"
+            AllowMultiple="True"
+            Count="{Binding UndeadTouchPerDayCount, Mode=TwoWay}"/>
+        </Grid>
+        <!-- <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding UndeadTouchPerDayCount, Mode=TwoWay}"
-          LabelText="Undead touch" />
+          LabelText="Undead touch" /> -->
         <!--  Picker & plusMinus for undead touch fx  -->
         <controls:PlusMinusControl
           AllowMultiple="True"
