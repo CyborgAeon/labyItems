@@ -121,24 +121,14 @@
           AllowMultiple="True"
           Count="{Binding DisciplinePerDayCount, Mode=TwoWay}"
           LabelText="Discipline" />
-        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-          <Label
-            Grid.Column="0"
-            FontAttributes="Bold"
-            FontSize="16"
-            HorizontalOptions="Start"
-            HorizontalTextAlignment="Start"
-            Text="Ward Pact (8 levels) vs"
-            VerticalOptions="Center"
-            VerticalTextAlignment="Center" />
-          <Entry
-            Grid.Column="1"
-            Placeholder="Ward pact group"
-            Text="{Binding WardPactEntry, Mode=TwoWay}"
-            VerticalTextAlignment="End" />
-          <controls:PlusMinusControl Grid.Column="2" Count="{Binding WardPact8LevelsCount, Mode=TwoWay}" />
-        </Grid>
-        <!--  free text; add another (listControl?)  -->
+          <Label Text="{Binding WardPactsCountLabel}" />
+          <controls:RepeatingEntryList
+          CountLabelFormat="Ward pact 8lvls vs {0} groups"
+          CountLabelText="{Binding WardPactsCountLabel, Mode=OneWayToSource}"
+          Items="{Binding WardPacts, Mode=TwoWay}"
+          MaxItems="5"
+          SummaryText="{Binding WardPactsSummary, Mode=OneWayToSource}"
+          ValueCount="{Binding WardPactsCount, Mode=OneWayToSource}" />
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding KiOrPrimalStrikePerDayCount, Mode=TwoWay}"

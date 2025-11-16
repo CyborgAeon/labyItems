@@ -340,6 +340,46 @@ namespace labyItems.Pages.Configs
             }
         }
 
+        // Collection feeding the control
+        public ObservableCollection<string?> WardPacts { get; } =
+            new ObservableCollection<string?> { null }; // start with a single empty row
+
+        // Summary text the control will fill
+        private string _wardPactsSummary;
+        public string WardPactsSummary
+        {
+            get => _wardPactsSummary;
+            set
+            {
+                _wardPactsSummary = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Count of fields with values
+        private int _wardPactsCount;
+        public int WardPactsCount
+        {
+            get => _wardPactsCount;
+            set
+            {
+                _wardPactsCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Human-readable label, built by the control using CountLabelFormat
+        private string _wardPactsCountLabel;
+        public string WardPactsCountLabel
+        {
+            get => _wardPactsCountLabel;
+            set
+            {
+                _wardPactsCountLabel = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _repelOrAttract;
         public string RepelOrAttract
         {
@@ -412,7 +452,7 @@ namespace labyItems.Pages.Configs
             t += 8 * RepelAttractOneGroupPerDayCount;
             t += 10 * RepelLifePerDayCount;
             t += 15 * DisciplinePerDayCount;
-            t += 20 * WardPact8LevelsCount;
+            t += 20 * WardPactsCount;
             t += 15 * KiOrPrimalStrikePerDayCount;
             t += 8 * EmpowerWeaponMagicCount;
             t += 10 * EmpowerWeaponSpiritCount;
