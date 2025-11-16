@@ -126,8 +126,8 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         s.AddToSummaryIf(c.EmpowerWeaponMagicCount, "Empower weapon: +0 magic (5 mins)");
         s.AddToSummaryIf(c.EmpowerWeaponSpiritCount, "Empower weapon: +0 spirit (5 mins)");
         s.AddToSummaryIf(c.EmpowerWeaponManticCount, "Empower weapon: +0 mantic (5 mins)");
-        s.AddToSummaryIf(c.ExtraColoursForEmpowerments, "Extra colours for empowerment");
-        s.AddToSummaryIf(c.ExtraAlignmentsForEmpowerments, "Extra alignments for empowerment");
+        // s.AddToSummaryIf(c.ExtraColoursForEmpowerments, "Extra colours for empowerment");
+        // s.AddToSummaryIf(c.ExtraAlignmentsForEmpowerments, "Extra alignments for empowerment");
         s.AddToSummaryIf(c.ScholarlyInterestPerDayCount, "Scholarly Interest (1/day)");
         s.AddToSummaryIf(c.KnowledgeOfArcanePerDayCount, "Knowledge of the Arcane (1/day)");
         s.AddToSummaryIf(c.MajorPrayerPerDayPowerbaseCount, "Major Prayer (powerbase) (1/day)");

@@ -121,8 +121,15 @@
           AllowMultiple="True"
           Count="{Binding DisciplinePerDayCount, Mode=TwoWay}"
           LabelText="Discipline" />
-          <Label Text="{Binding WardPactsCountLabel}" />
-          <controls:RepeatingEntryList
+          <Label
+          FontAttributes="Bold"
+          FontSize="16"
+          HorizontalOptions="Start"
+          HorizontalTextAlignment="Start"
+          Text="{Binding WardPactsCountLabel}"
+          VerticalOptions="Center"
+          VerticalTextAlignment="Center" />
+        <controls:RepeatingEntryList
           CountLabelFormat="Ward pact 8lvls vs {0} groups"
           CountLabelText="{Binding WardPactsCountLabel, Mode=OneWayToSource}"
           Items="{Binding WardPacts, Mode=TwoWay}"
@@ -145,10 +152,25 @@
           AllowMultiple="True"
           Count="{Binding EmpowerWeaponManticCount, Mode=TwoWay}"
           LabelText="+0 mantic dmg (5 mins)" />
+           <Label
+          FontAttributes="Bold"
+          FontSize="16"
+          HorizontalOptions="Start"
+          HorizontalTextAlignment="Start"
+          Text="{Binding ExtraAlignmentsCountLabel}"
+          VerticalOptions="Center"
+          VerticalTextAlignment="Center" 
+          IsVisible="{Binding ShowExtraAlignments}" />
+        <controls:ListAlignmentPickerControl
+          CountLabelFormat="{}{0} extra alignments chosen"
+          CountLabelText="{Binding ExtraAlignmentsCountLabel, Mode=OneWayToSource}"
+          IsVisible="{Binding ShowExtraAlignments}"
+          Items="{Binding ExtraAlignments, Mode=TwoWay}"
+          MaxItems="3"
+          SummaryText="{Binding ExtraAlignmentsSummary, Mode=OneWayToSource}"
+          ValueCount="{Binding ExtraAlignmentsCount, Mode=OneWayToSource}" />
+
         <controls:PlusMinusControl Count="{Binding ExtraColoursForEmpowerments, Mode=TwoWay}" LabelText="Extra colours (per) — +2" />
-        <!--  ListControl with picker! Visible only if one of 'empower' above are used  -->
-        <controls:PlusMinusControl Count="{Binding ExtraAlignmentsForEmpowerments, Mode=TwoWay}" LabelText="Extra alignments (per) — +3" />
-        <!--  ListControl with picker!  -->
 
         <controls:PlusMinusControl
           AllowMultiple="True"

@@ -188,30 +188,68 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _empMagic, value, true);
         }
         private int _empMagic;
+        private int _empowerWeaponSpiritCount;
         public int EmpowerWeaponSpiritCount
         {
-            get => _empSpirit;
-            set => SetProperty(ref _empSpirit, value, true);
+            get => _empowerWeaponSpiritCount;
+            set
+            {
+                _empowerWeaponSpiritCount = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowExtraAlignments));
+            }
         }
-        private int _empSpirit;
+
+        private int _empowerWeaponManticCount;
         public int EmpowerWeaponManticCount
         {
-            get => _empMantic;
-            set => SetProperty(ref _empMantic, value, true);
+            get => _empowerWeaponManticCount;
+            set
+            {
+                _empowerWeaponManticCount = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowExtraAlignments));
+            }
         }
-        private int _empMantic;
-        public int ExtraColoursForEmpowerments
+
+        public bool ShowExtraAlignments =>
+            EmpowerWeaponSpiritCount > 0 || EmpowerWeaponManticCount > 0;
+
+        public ObservableCollection<Alignments?> ExtraAlignments { get; } =
+            new ObservableCollection<Alignments?> { null }; // start with one empty row
+
+        private string _extraAlignmentsSummary;
+        public string ExtraAlignmentsSummary
         {
-            get => _extraColours;
-            set => SetProperty(ref _extraColours, value, true);
+            get => _extraAlignmentsSummary;
+            set
+            {
+                _extraAlignmentsSummary = value;
+                OnPropertyChanged();
+            }
         }
-        private int _extraColours;
-        public int ExtraAlignmentsForEmpowerments
+
+        private int _extraAlignmentsCount;
+        public int ExtraAlignmentsCount
         {
-            get => _extraAlignments;
-            set => SetProperty(ref _extraAlignments, value, true);
+            get => _extraAlignmentsCount;
+            set
+            {
+                _extraAlignmentsCount = value;
+                OnPropertyChanged();
+            }
         }
-        private int _extraAlignments;
+
+        private string _extraAlignmentsCountLabel;
+        public string ExtraAlignmentsCountLabel
+        {
+            get => _extraAlignmentsCountLabel;
+            set
+            {
+                _extraAlignmentsCountLabel = value;
+                OnPropertyChanged();
+            }
+        }
 
         // ---------- Knowledge / Prayers ----------
         public int ScholarlyInterestPerDayCount
@@ -457,8 +495,8 @@ namespace labyItems.Pages.Configs
             t += 8 * EmpowerWeaponMagicCount;
             t += 10 * EmpowerWeaponSpiritCount;
             t += 20 * EmpowerWeaponManticCount;
-            t += 2 * ExtraColoursForEmpowerments;
-            t += 3 * ExtraAlignmentsForEmpowerments;
+            // t += 2 * ExtraColoursForEmpowerments;
+            // t += 3 * ExtraAlignmentsForEmpowerments;
             t += 15 * ScholarlyInterestPerDayCount;
             t += 8 * KnowledgeOfArcanePerDayCount;
             t += 10 * MajorPrayerPerDayPowerbaseCount;
