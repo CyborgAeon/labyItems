@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<controls:EnumPicker
+    x:Class="labyItems.Controls.PowerbaseEnumPicker"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:enums="clr-namespace:labyItems.Models.Enums"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    x:Name="Root"
+    x:TypeArguments="enums:PowerbaseEnum">
+
+    <VerticalStackLayout Spacing="4">
+        <!--  Label bound to LabelText on the base class  -->
+        <Label Text="{Binding LabelText, Source={x:Reference Root}}" />
+
+        <!--  Inner MAUI Picker  -->
+        <Picker
+            x:Name="InnerPicker"
+            ItemsSource="{Binding Options, Source={x:Reference Root}}"
+            SelectedItem="{Binding SelectedValue, Source={x:Reference Root}}" />
+    </VerticalStackLayout>
+</controls:EnumPicker>

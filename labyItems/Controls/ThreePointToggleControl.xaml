@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Grid x:Class="labyItems.Controls.ThreeOptionSelector"
+      x:Name="Root"
+      xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+      ColumnDefinitions="*,*,*"
+      Padding="4">
+
+    <Button x:Name="Btn0"
+            Grid.Column="0"
+            Text="{Binding Option0Text, Source={x:Reference Root}}"
+            Command="{Binding SelectCommand, Source={x:Reference Root}}"
+            CommandParameter="0" />
+
+    <Button x:Name="Btn1"
+            Grid.Column="1"
+            Text="{Binding Option1Text, Source={x:Reference Root}}"
+            Command="{Binding SelectCommand, Source={x:Reference Root}}"
+            CommandParameter="1" />
+
+    <Button x:Name="Btn2"
+            Grid.Column="2"
+            Text="{Binding Option2Text, Source={x:Reference Root}}"
+            Command="{Binding SelectCommand, Source={x:Reference Root}}"
+            CommandParameter="2" />
+
+</Grid>
