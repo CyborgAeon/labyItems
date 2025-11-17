@@ -75,18 +75,82 @@ namespace labyItems.Pages.Configs
         }
         private int _castingLevelsCount;
 
+        // --------- Elf innates -------------
+        public IReadOnlyList<string> ElfInnateLevelLabels { get; } =
+            new[] { "None", "4th", "6th", "8th", "8th (doubled)", "8th (tripled)" };
+
+        // Slider index 0..5 <-> enum
+        public int ElfInnateLevelIndex
+        {
+            get =>
+                ElvenInnateLevel switch
+                {
+                    ElfInnateLevel.None => 0,
+                    ElfInnateLevel.Four => 1,
+                    ElfInnateLevel.Six => 2,
+                    ElfInnateLevel.Eight => 3,
+                    ElfInnateLevel.Sixteen => 4, // 8th doubled
+                    ElfInnateLevel.TwentyFour => 5, // 8th tripled
+                    _ => 0,
+                };
+            set
+            {
+                var newLevel = value switch
+                {
+                    0 => ElfInnateLevel.None,
+                    1 => ElfInnateLevel.Four,
+                    2 => ElfInnateLevel.Six,
+                    3 => ElfInnateLevel.Eight,
+                    4 => ElfInnateLevel.Sixteen,
+                    5 => ElfInnateLevel.TwentyFour,
+                    _ => ElfInnateLevel.None,
+                };
+
+                if (ElvenInnateLevel != newLevel)
+                {
+                    ElvenInnateLevel = newLevel;
+                    OnPropertyChanged(nameof(ElvenInnateLevel));
+                    OnPropertyChanged(nameof(ElfInnateLevelIndex));
+                    OnPropertyChanged(nameof(ElfInnateSummary));
+                }
+            }
+        }
+
+        // text used in the summary (matches labels)
+        private string GetElfInnateLevelText() =>
+            ElvenInnateLevel switch
+            {
+                ElfInnateLevel.None => "0",
+                ElfInnateLevel.Four => "4th",
+                ElfInnateLevel.Six => "6th",
+                ElfInnateLevel.Eight => "8th",
+                ElfInnateLevel.Sixteen => "8th (doubled)",
+                ElfInnateLevel.TwentyFour => "8th (tripled)",
+                _ => "0",
+            };
+
+        public string ElfInnateSummary =>
+            $"{GetElfInnateLevelText()} {ElfInnateColour} Elf innates per day.";
         private ElfInnateLevel? _elfInnateLevel;
         public ElfInnateLevel? ElvenInnateLevel
         {
             get => _elfInnateLevel;
-            set => SetProperty(ref _elfInnateLevel, value, true);
+            set
+            {
+                SetProperty(ref _elfInnateLevel, value, true);
+                OnPropertyChanged(nameof(ElfInnateSummary));
+            }
         }
 
         private ElfColours? _elfInnColour;
         public ElfColours? ElfInnateColour
         {
             get => _elfInnColour;
-            set => SetProperty(ref _elfInnColour, value, true);
+            set
+            {
+                SetProperty(ref _elfInnColour, value, true);
+                OnPropertyChanged(nameof(ElfInnateSummary));
+            }
         }
 
         // -1 = none, 0 = +1 non-stack, 1 = +1 stack to +2, 2 = +2 non-stack
@@ -142,10 +206,16 @@ namespace labyItems.Pages.Configs
         private int _cold25Always;
 
         // ---------- Repel/Attract ----------
+        public string RepelOrAttractLabel =>
+            $"{(string.IsNullOrEmpty(RepelOrAttract) ? "Repel/Attract" : RepelOrAttract)} {(string.IsNullOrEmpty(RepelAttractGroupName) ? "a group" : RepelAttractGroupName)} {RepelAttractOneTypePerDayCount} times per day.";
         public int RepelAttractOneTypePerDayCount
         {
             get => _repType;
-            set => SetProperty(ref _repType, value, true);
+            set
+            {
+                SetProperty(ref _repType, value, true);
+                OnPropertyChanged(nameof(RepelOrAttractLabel));
+            }
         }
         private int _repType;
         public int RepelAttractOneGroupPerDayCount
@@ -160,6 +230,30 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _repLife, value, true);
         }
         private int _repLife;
+
+        private string _repelOrAttract;
+        public string RepelOrAttract
+        {
+            get => _repelOrAttract;
+            set
+            {
+                _repelOrAttract = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RepelOrAttractLabel));
+            }
+        }
+
+        private string _repelAttractGroupName;
+        public string RepelAttractGroupName
+        {
+            get => _repelAttractGroupName;
+            set
+            {
+                _repelAttractGroupName = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RepelOrAttractLabel));
+            }
+        }
 
         // ---------- Misc powers ----------
         public int DisciplinePerDayCount
@@ -384,7 +478,8 @@ namespace labyItems.Pages.Configs
         public ObservableCollection<string> MagicSpiritOptions { get; } =
             new() { "🪄 Magic", "👻 Spirit" };
 
-        public string LtmSummary => $"{LtmValue} Additional {LtmType ?? string.Empty}{(LtmType == null ? string.Empty : " ")}Live-to-minus";
+        public string LtmSummary =>
+            $"{LtmValue} Additional {LtmType ?? string.Empty}{(LtmType == null ? string.Empty : " ")}Live-to-minus";
         private string _ltmType;
         public string LtmType
         {
@@ -513,28 +608,6 @@ namespace labyItems.Pages.Configs
             set
             {
                 _wardPactsCountLabel = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _repelOrAttract;
-        public string RepelOrAttract
-        {
-            get => _repelOrAttract;
-            set
-            {
-                _repelOrAttract = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _repelAttractGroupName;
-        public string RepelAttractGroupName
-        {
-            get => _repelAttractGroupName;
-            set
-            {
-                _repelAttractGroupName = value;
                 OnPropertyChanged();
             }
         }

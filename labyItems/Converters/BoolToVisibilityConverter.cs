@@ -7,16 +7,37 @@ public class BoolToVisibilityConverter : IValueConverter
     // If true → visible, false → hidden
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value == null) return true; // show both if IsAdvanced is null
+        bool visible;
+
         if (value is bool b)
         {
-            if (parameter?.ToString() == "Invert")
-                b = !b;
-            return b;
+            visible = b;
         }
-        return true;
+        else if (value is string s)
+        {
+            // string: visible if not null/whitespace
+            visible = !string.IsNullOrWhiteSpace(s);
+        }
+        else if (value == null)
+        {
+            visible = false;
+        }
+        else
+        {
+            // fallback: show
+            visible = true;
+        }
+
+        if (parameter?.ToString() == "Invert")
+            visible = !visible;
+
+        return visible;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        => throw new NotImplementedException();
+    public object ConvertBack(
+        object value,
+        Type targetType,
+        object parameter,
+        CultureInfo culture
+    ) => throw new NotImplementedException();
 }

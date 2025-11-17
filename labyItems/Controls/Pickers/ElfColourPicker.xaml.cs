@@ -11,8 +11,6 @@ public partial class ElfColourPicker : EnumPicker<ElfColours>
     {
         InitializeComponent();
         RegisterInnerPicker(InnerPicker);
-        if (string.IsNullOrEmpty(LabelText))
-            LabelText = "Elf Colour";
         if (string.IsNullOrEmpty(PlaceholderText))
             PlaceholderText = "Select a color";
     }

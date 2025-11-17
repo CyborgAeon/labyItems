@@ -210,6 +210,7 @@ public partial class RepeatingEntryList : ContentView
         var entry = new Entry
         {
             Text = initialValue,
+            Placeholder = "Type a group",
             HorizontalOptions = LayoutOptions.FillAndExpand,
         };
 
@@ -239,8 +240,13 @@ public partial class RepeatingEntryList : ContentView
 
         deleteButton.Clicked += (s, e) =>
         {
-            if (Items == null || (Items.Count - 1) == 0)
+            if (Items == null)
                 return;
+            if ((Items.Count - 1) == 0)
+            {
+                entry.Text = string.Empty;
+                return;
+            }
 
             Items.RemoveAt(index);
         };
@@ -265,10 +271,10 @@ public partial class RepeatingEntryList : ContentView
             if (Items.Count >= MaxItems)
                 return;
 
-            var currentValue = (index >= 0 && index < Items.Count) ? Items[index] : null;
-
             var insertIndex = Math.Clamp(index + 1, 0, Items.Count);
-            Items.Insert(insertIndex, currentValue);
+
+            // Always insert a *new empty* row
+            Items.Insert(insertIndex, null);
         };
 
         grid.Add(entry, 0, 0);

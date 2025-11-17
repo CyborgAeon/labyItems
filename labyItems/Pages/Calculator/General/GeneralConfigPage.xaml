@@ -58,15 +58,27 @@
             LabelText=""
             Max="3" />
         </Grid>
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+        <Label
+          Margin="0,4,0,0"
+          FontAttributes="Bold"
+          HorizontalOptions="Start"
+          Text="{Binding ElfInnateSummary}" />
+        <Grid ColumnDefinitions="Auto,*">
           <controls:ElfColourPicker
             Grid.Column="0"
-            LabelText="Elven innates for..."
-            SelectedValue="{Binding ElfInnateColour, Mode=TwoWay}" />
-          <controls:ElfInnateLevelPicker
+            SelectedValue="{Binding ElfInnateColour, Mode=TwoWay}"
+            VerticalOptions="Center" />
+          <controls:DictionarySlider
             Grid.Column="1"
-            LabelText="Elven innates for..."
-            SelectedValue="{Binding ElvenInnateLevel, Mode=TwoWay}" />
+            Compact="True"
+            KeyFormat=""
+            Labels="{Binding ElfInnateLevelLabels}"
+            MaxCount="5"
+            MinCount="0"
+            Multiplier="1"
+            SelectedCount="{Binding ElfInnateLevelIndex, Mode=TwoWay}"
+            ValueFormat=""
+            VerticalOptions="Center" />
         </Grid>
         <controls:DictionarySlider
           Labels="{Binding StrengthLabels}"
@@ -95,14 +107,14 @@
           FontSize="16"
           HorizontalOptions="Start"
           HorizontalTextAlignment="Start"
-          Text="Repel or Attract a group x times / day"
+          Text="{Binding RepelOrAttractLabel}"
           VerticalOptions="Center"
           VerticalTextAlignment="Center" />
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
           <controls:TwoOptionSwitch
             Grid.Column="0"
-            LeftValue="repel"
-            RightValue="attract"
+            LeftValue="Repel"
+            RightValue="Attract"
             SelectedValue="{Binding RepelOrAttract, Mode=TwoWay}" />
           <Entry
             Grid.Column="1"
@@ -261,38 +273,35 @@
             Placeholder="Optional subject"
             Text="{Binding PrayerSubject, Mode=TwoWay}" />
         </Grid>
-        <Label Text="{Binding LtmSummary}" />
+        <Label
+          FontAttributes="Bold"
+          FontSize="16"
+          HorizontalOptions="Start"
+          HorizontalTextAlignment="Start"
+          Text="{Binding LtmSummary}"
+          VerticalOptions="Center"
+          VerticalTextAlignment="Center" />
         <Grid ColumnDefinitions="Auto, *">
           <controls:ChipGroup
             Grid.Column="0"
-            VerticalOptions="Center"
             Items="{Binding MagicSpiritOptions}"
-            SelectedItem="{Binding LtmType, Mode=TwoWay}" />
+            SelectedItem="{Binding LtmType, Mode=TwoWay}"
+            VerticalOptions="Center" />
           <controls:DictionarySlider
             Grid.Column="1"
-            VerticalOptions="Center"
+            Compact="True"
             FormatArg1="{Binding LtmType}"
             MaxCount="24"
             MinCount="0"
             Multiplier="5"
             SelectedCount="{Binding LtmValue, Mode=TwoWay}"
             SnapToStep="True"
-            StepSize="6" 
-            Compact="True"/>
+            StepSize="6"
+            VerticalOptions="Center" />
         </Grid>
-        <!--  IsVisible="{Binding HasLtm}"  -->
-        <!-- <controls:CheckboxControl
-          IsVisible="{Binding HasLtm}"
-          IsChecked="{Binding LtmType, Mode=TwoWay}"
-           LabelText="Live to minus is Magic or Spirit" />-->
         <!--  Toggle on/off/null  -->
-
-        <controls:PlusMinusControl Count="{Binding ExtraInnatesX2From8thCount, Mode=TwoWay}" LabelText="×2 innates (from 8th) — +70" />
-        <controls:PlusMinusControl Count="{Binding ExtraInnatesX3FromX2Count, Mode=TwoWay}" LabelText="×3 innates (from ×2) — +70" />
-        <!--  removed by elf slider  -->
-
-        <controls:CheckboxControl IsChecked="{Binding ReadLanguages, Mode=TwoWay}" LabelText="Read languages — 6" />
-        <controls:CheckboxControl IsChecked="{Binding DisarmTrapsAsScout, Mode=TwoWay}" LabelText="Disarm traps (as scout) — 10" />
+        <controls:CheckboxControl IsChecked="{Binding ReadLanguages, Mode=TwoWay}" LabelText="Read languages" />
+        <controls:CheckboxControl IsChecked="{Binding DisarmTrapsAsScout, Mode=TwoWay}" LabelText="Disarm traps" />
 
         <!-- <controls:PlusMinusControl
           Count="{Binding PotionRecipesKnownCount, Mode=TwoWay}" LabelText="Potion recipes known — 5/recipe" />-->
