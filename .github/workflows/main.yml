@@ -28,7 +28,7 @@ jobs:
       - name: Restore keystore
         run: |
           mkdir -p labyItems/labyItems
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > labyItems/labyItems/labyItems.keystore
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > labyItems/labyItems.keystore
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
 
@@ -38,7 +38,7 @@ jobs:
           AndroidSigningStorePass: ${{ secrets.ANDROID_SIGNING_STORE_PASS }}
         run: >
           dotnet publish
-          labyItems/labyItems/labyItems.csproj
+          labyItems/labyItems.csproj
           -f net8.0-android
           -c Release
           -p:AndroidPackageFormat=apk
