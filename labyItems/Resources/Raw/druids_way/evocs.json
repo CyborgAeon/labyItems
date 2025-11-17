@@ -1,0 +1,472 @@
+[
+  {
+    "name": "Control Animal",
+    "power": 1,
+    "range": "20",
+    "duration": "5 minutes",
+    "fields": ["Forest", "Father of the World"],
+    "verbal": "[Animal type] of the [terrain type] heed my call",
+    "description": "Stacking evocation: costs 1 EP per resistance level of a natural animal (up to the caster’s level). EP reductions apply to the total cost. Can be cast open-ended, paying after resolution.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Create Water",
+    "power": 1,
+    "range": "Fingertips",
+    "duration": "Instant",
+    "fields": ["Spring", "Rivers", "Mother Nature"],
+    "verbal": "Purest Water come unto me.",
+    "description": "Creates a pint of pure, fresh drinking water seen to appear from the caster’s fingertips.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Predict Weather",
+    "power": 1,
+    "range": "Self",
+    "duration": "Instant",
+    "fields": ["Skies", "Keeper of the Winds"],
+    "verbal": "Air and water reveal to me thy course",
+    "description": "Reasonably predicts the next 24 hours of weather for the area; may hint if manipulated (ref’s discretion).",
+    "isAdvanced": false
+  },
+  {
+    "name": "Barkskin",
+    "power": 2,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Summer", "Forest", "Horned Man"],
+    "verbal": "Oak and Elm I beseech thee, cover my/their skin with bark",
+    "description": "+2 innate PAC; stacks with other AC but not with itself.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Ensnare",
+    "power": 2,
+    "range": "20’",
+    "duration": "5 minutes",
+    "fields": ["Autumn", "Forest", "Horned Man"],
+    "verbal": "May the powers of Nature hold thee!",
+    "description": "Animates nearby vegetation to entangle in a 3’×3’ area (typically legs). Non-magical; may be cut free at ref’s discretion.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Slow Poison",
+    "power": 2,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Rivers", "Mother Nature"],
+    "verbal": "May the power of water slow this poison",
+    "description": "Delays poisons in a flesh-and-blood (non-elvenkind) target until expiry; excess healing beyond tblp offsets delayed poison when it ends.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Camouflage",
+    "power": 3,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Autumn", "Forest", "Horned Man"],
+    "verbal": "Branches and leaves hide me/him/her from my/his/her foes",
+    "description": "While standing against natural vegetation, recipient is indiscernible to the naked eye; moving/casting reveals them.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Druidic Heal",
+    "power": 3,
+    "range": "Touch",
+    "duration": "Instant",
+    "fields": ["Spring", "Rivers", "Mother Nature"],
+    "verbal": "Water heal and fire seal!",
+    "description": "Heals a flesh-and-blood target (not elvenkind) for 12 tblp and 12 locational damage (split as desired).",
+    "isAdvanced": false
+  },
+  {
+    "name": "Invisibility to Animals",
+    "power": 3,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Spring", "Autumn", "Forest", "Horned Man"],
+    "verbal": "Air shield me from the sight, smell and ear of all animals",
+    "description": "Caster is undetectable to normal and giant animals (sight, smell, sound). Ends if caster attacks or uses other power.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Speak With Animals",
+    "power": 3,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Forest", "Father of the World"],
+    "verbal": "Powers of Nature allow me to converse with animals",
+    "description": "Caster converses with animals; does not grant extra intelligence or friendliness beyond understanding.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Speak With Plants",
+    "power": 3,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Forest", "Father of the World"],
+    "verbal": "Plants, speak with me and relate what thou knowest",
+    "description": "Caster converses with plants; normal plants are friendly but know little beyond their nature/interactions.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Cudgel",
+    "power": 4,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Summer", "Forest", "Horned Man"],
+    "verbal": "May Earthpower infuse this club",
+    "description": "Touched wooden weapon becomes +1 (for the caster) and immune to destruction effects like Shatter.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Neutrality to Animals",
+    "power": 4,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Winter", "Forest", "Father of the World"],
+    "verbal": "Let the trust of the animals be upon me",
+    "description": "Animals will not attack the caster. If the caster attacks any animal, the effect ends and is locked for 1 real-year.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Neutrality to Plants",
+    "power": 4,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Winter", "Forest", "Father of the World"],
+    "verbal": "Let the trust of the plants be upon me",
+    "description": "Plants will not attack the caster. If the caster attacks any plant, the effect ends and is locked for 1 real-year.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Resist Fire",
+    "power": 4,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Winter", "Rivers", "Keeper of the Winds"],
+    "verbal": "May water shield me/thee from scorching heat",
+    "description": "Immunity to normal fire and half effect from supernatural fire for the duration; cumulative with published resistances.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Resist Cold",
+    "power": 4,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Summer", "Deserts", "Father of the World"],
+    "verbal": "Let the warmth of the sun be upon me/thee",
+    "description": "No effect from natural cold and half effect from supernatural cold for the duration.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Wall of Thorns",
+    "power": 4,
+    "range": "20’",
+    "duration": "5 minutes",
+    "fields": ["Spring", "Forest", "Father of the World"],
+    "verbal": "Powers of Earth grow for me a wall of thorns",
+    "description": "Creates a 20’×10’ thorn wall. +1 Strength to push through (8 hits on success). Can be cut down with 200 sharp hits; fire does double.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Animate Small Tree",
+    "power": 5,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Spring", "Forest", "Horned Man", "Father of the World"],
+    "verbal": "Earthpower infuse this tree as a treant to do as I direct",
+    "description": "Animates a small tree as a treant (15 hits; 9-pt double unarmed; 4th-level resistances). Double damage from fire/axes; half from blunt; ¾ move.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Cure Disease",
+    "power": 5,
+    "range": "Touch",
+    "duration": "Instant",
+    "fields": ["Spring", "Rivers", "Mother Nature"],
+    "verbal": "Purifying flame destroy this infection",
+    "description": "Removes all diseases from one target/object; works on the disease (so can cure elves and supernatural diseases).",
+    "isAdvanced": false
+  },
+  {
+    "name": "Animate Medium Tree",
+    "power": 6,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Spring", "Forest", "Horned Man", "Father of the World"],
+    "verbal": "Greater Earthpower, infuse this tree with thy power as a treant to do as I direct",
+    "description": "Animates a medium tree as a treant (25 hits; 12-pt double unarmed; 5th-level resistances). Fire/axes double; blunt half; ¾ move.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Gust of Wind",
+    "power": 6,
+    "range": "20’",
+    "duration": "Instant",
+    "fields": ["Autumn", "Skies", "Keeper of the Winds"],
+    "verbal": "By the greater powers of air and sky—gust of wind",
+    "description": "All in a 60° cone (20’ length) are blown back 10 paces (or 5 paces with +1 Str).",
+    "isAdvanced": false
+  },
+  {
+    "name": "Neutralise Poison",
+    "power": 6,
+    "range": "Touch",
+    "duration": "Instant",
+    "fields": ["Rivers", "Mother Nature"],
+    "verbal": "Fire and water purify this poisoned [object/person].",
+    "description": "Removes all poisons from one creature/object; on liquids up to 60 hits of poison or 1000 cubic feet (whichever less).",
+    "isAdvanced": false
+  },
+  {
+    "name": "Forest Shift",
+    "power": 7,
+    "range": "Special",
+    "duration": "Instant/Walk Time",
+    "fields": ["Summer", "Forest", "Horned Man"],
+    "verbal": "Powers of the Forest take me away!",
+    "description": "Shift between trees/forests in LoS, or to memorised ‘home tree’. Travel time equals walking time (max 15 minutes).",
+    "isAdvanced": false
+  },
+  {
+    "name": "Animate Large Tree",
+    "power": 8,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Spring", "Forest", "Horned Man", "Father of the World"],
+    "verbal": "All the greater powers of the earth come into this tree and animate it as a greater treant to do as I direct",
+    "description": "Animates a large tree as a treant (50 hits; 15-pt triple unarmed; 6th-level resistances). Fire/axes double; blunt half; ¾ move.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Call Lightning",
+    "power": 8,
+    "range": "50’",
+    "duration": "Instant",
+    "fields": ["Spring", "Skies", "Keeper of the Winds"],
+    "verbal": "By the powers of air, wind and thunder...Call Lightning!",
+    "description": "Must be under a reasonably cloudy sky (usually outdoors). One target takes 36/6 electrical damage (12 hits to monsters).",
+    "isAdvanced": false
+  },
+  {
+    "name": "Joining",
+    "power": 0,
+    "range": "Touch",
+    "duration": "Adventure",
+    "fields": ["All"],
+    "verbal": "May your ties to the world be reaffirmed by this act of joining",
+    "description": "An EP Mark Ally. Costs 1 tblp; only on willing targets not immune to beneficial Earthpower (elves are not immune). Counts as a 1 EP evocation to learn. Certain evocations can only be cast upon those under this effect, and the mark is specific to the Druid who applied it.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Bandage Infusion",
+    "power": 1,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Autumn", "Mother Nature"],
+    "verbal": "May the strength of the world abide here for a time and may its strength replenish thine own",
+    "description": "Tie a bandage; after 30s the target receives 4/4 curing (1 HTK). Bandage must remain for full duration; stacks with published bandaging where relevant.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Handfire",
+    "power": 1,
+    "range": "10’",
+    "duration": "5 minutes",
+    "fields": ["Summer", "Deserts"],
+    "verbal": "Fire come and light my way",
+    "description": "Creates a small pillar of mystic fire as light; hovers near caster; requires concentration to move; fails if caster runs/fights/casts.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Hasten Venom",
+    "power": 1,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Rivers", "Horned Man"],
+    "verbal": "May poisons flow as raging rivers!",
+    "description": "Speeds the onset/effects of venoms per full write-up.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Breeze",
+    "power": 3,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Spring", "Skies", "Keeper of the Winds"],
+    "verbal": "",
+    "description": "As per advanced listing; minor wind manipulation per write-up.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Druidic Harm",
+    "power": 3,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Winter", "Deserts", "Shadow of the Dawn"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Greater Water of Life",
+    "power": 3,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Spring", "Rivers", "Mother Nature"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Greater Water of Spite",
+    "power": 3,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Rivers", "Horned Man"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Owl’s Vision",
+    "power": 4,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Skies", "Horned Man", "Father of the World"],
+    "verbal": "May the world grant [me/thee] the bright eyes of the owl",
+    "description": "See through all forms of supernatural darkness for the duration. Self or recipient of Joining only.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Hail Storm",
+    "power": 5,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Winter", "Skies", "Keeper of the Winds"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Greater Druidic Heal",
+    "power": 6,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Spring", "Rivers", "Mother Nature"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Greater Druidic Harm",
+    "power": 6,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Winter", "Deserts", "Shadow of the Dawn"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Greater Ensnare",
+    "power": 6,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Autumn", "Forest", "Horned Man"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Endurance of the Mountains",
+    "power": 7,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Mountains", "Father of the World"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Envenom",
+    "power": 7,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Rivers", "Horned Man"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Grand Howl",
+    "power": 7,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Forest", "Horned Man"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Greater Cudgel",
+    "power": 7,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Summer", "Forest", "Horned Man"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Meld With Earth",
+    "power": 7,
+    "range": "—",
+    "duration": "—",
+    "fields": ["Autumn", "Mountains", "Father of the World"],
+    "verbal": "",
+    "description": "As per advanced listing.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Well of Knowledge",
+    "power": 10,
+    "range": "Caster",
+    "duration": "2 minutes",
+    "fields": ["Rivers", "Father of the World"],
+    "verbal": "As I drink from the Well of Knowledge I abjure thee, open my eyes and let me see the truth of all things!",
+    "description": "3 questions as a Communication II miracle (up to 7 words each) about physical/natural matters; must ritually drink water before each.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Walk Through Earth",
+    "power": 10,
+    "range": "Caster",
+    "duration": "5 minutes",
+    "fields": ["Mountains", "Father of the World"],
+    "verbal": "Powers of Earth embrace me and let me pass unhindered",
+    "description": "Pass through non-supernatural earth/stone at will; brief disorientation emerging (cf. Walk Through Walls).",
+    "isAdvanced": true
+  },
+  {
+    "name": "Travelling the World Tree",
+    "power": 12,
+    "range": "Touch",
+    "duration": "30 seconds",
+    "fields": ["Forest", "Father of the World"],
+    "verbal": "From here to there we wish to travel! May the pathways open! Each must pay a toll, which the World Tree seeks",
+    "description": "Opens a portal between trees (LoS or memorised). Travel takes 15 minutes; each traveller takes 12 tblp; 12 EP to open + 1 EP per traveller.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Spring's Soothing Rain",
+    "power": 20,
+    "range": "Caster",
+    "duration": "24 hours",
+    "fields": ["Spring", "Mother Nature"],
+    "verbal": "Let the cleansing touch of spring’s rain be upon be and allow me to nurture the ills of the world for a time",
+    "description": "Caster may cast Druidic Heal once per 5 minutes for 6 tblp; EP cannot be regained while active; only one at a time; cannot be enhanced.",
+    "isAdvanced": true
+  }
+]
