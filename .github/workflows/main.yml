@@ -23,7 +23,7 @@ jobs:
         run: dotnet workload install maui
 
       - name: Restore
-        run: dotnet restore labyItems/labyItems/labyItems.csproj
+        run: dotnet restore labyItems/labyItems.csproj
 
       - name: Restore keystore
         run: |
