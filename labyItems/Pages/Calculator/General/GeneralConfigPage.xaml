@@ -21,7 +21,7 @@
     <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <conv:BoolIsTrueConverter x:Key="BoolIsTrueConverter" />
     <conv:BoolIsFalseConverter x:Key="BoolIsFalseConverter" />
-    <conv:TogglePlaceholderConverter x:Key="RepelAttractPlaceholderConverter" />
+    <conv:TogglePlaceholderConverter x:Key="TogglePlaceholderConverter" />
   </ContentPage.Resources>
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
@@ -106,7 +106,9 @@
             SelectedValue="{Binding RepelOrAttract, Mode=TwoWay}" />
           <Entry
             Grid.Column="1"
-            Placeholder="{Binding RepelOrAttract, Converter={StaticResource RepelAttractPlaceholderConverter}}"
+            Placeholder="{Binding RepelOrAttract, 
+            Converter={StaticResource TogglePlaceholderConverter},
+            ConverterParameter='test'}"
             Text="{Binding RepelAttractGroupName, Mode=TwoWay}" />
           <controls:PlusMinusControl
             Grid.Column="2"
@@ -121,7 +123,7 @@
           AllowMultiple="True"
           Count="{Binding DisciplinePerDayCount, Mode=TwoWay}"
           LabelText="Discipline" />
-          <Label
+        <Label
           FontAttributes="Bold"
           FontSize="16"
           HorizontalOptions="Start"
@@ -152,15 +154,15 @@
           AllowMultiple="True"
           Count="{Binding EmpowerWeaponManticCount, Mode=TwoWay}"
           LabelText="+0 mantic dmg (5 mins)" />
-           <Label
+        <Label
           FontAttributes="Bold"
           FontSize="16"
           HorizontalOptions="Start"
           HorizontalTextAlignment="Start"
+          IsVisible="{Binding ShowExtraAlignments}"
           Text="{Binding ExtraAlignmentsCountLabel}"
           VerticalOptions="Center"
-          VerticalTextAlignment="Center" 
-          IsVisible="{Binding ShowExtraAlignments}" />
+          VerticalTextAlignment="Center" />
         <controls:ListAlignmentPickerControl
           CountLabelFormat="{}{0} extra alignments chosen"
           CountLabelText="{Binding ExtraAlignmentsCountLabel, Mode=OneWayToSource}"
@@ -174,10 +176,10 @@
           FontSize="16"
           HorizontalOptions="Start"
           HorizontalTextAlignment="Start"
+          IsVisible="{Binding ShowExtraColours}"
           Text="{Binding ExtraColoursCountLabel}"
           VerticalOptions="Center"
-          VerticalTextAlignment="Center" 
-          IsVisible="{Binding ShowExtraColours}" />
+          VerticalTextAlignment="Center" />
         <controls:ListColourPickerControl
           CountLabelFormat="{}{0} Extra colours chosen"
           CountLabelText="{Binding ExtraColoursCountLabel, Mode=OneWayToSource}"
@@ -186,7 +188,7 @@
           MaxItems="15"
           SummaryText="{Binding ExtraColoursSummary, Mode=OneWayToSource}"
           ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}" />
-       <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
           <controls:UndeadTouchEffectPicker
             LabelText="Undead touch effects..."
             PlaceholderText="Select an effect"
@@ -194,13 +196,8 @@
           <controls:PlusMinusControl
             Grid.Column="1"
             AllowMultiple="True"
-            Count="{Binding UndeadTouchPerDayCount, Mode=TwoWay}"/>
+            Count="{Binding UndeadTouchPerDayCount, Mode=TwoWay}" />
         </Grid>
-        <!-- <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding UndeadTouchPerDayCount, Mode=TwoWay}"
-          LabelText="Undead touch" /> -->
-        <!--  Picker & plusMinus for undead touch fx  -->
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding GaseousFormPerDayCount, Mode=TwoWay}"
@@ -221,25 +218,62 @@
           AllowMultiple="True"
           Count="{Binding KnowledgeOfArcanePerDayCount, Mode=TwoWay}"
           LabelText="Knowledge of the Arcane" />
+        <Label
+          FontAttributes="Bold"
+          FontSize="16"
+          HorizontalOptions="Start"
+          HorizontalTextAlignment="Start"
+          Text="{Binding PrayerTimesPerDayLabel}"
+          VerticalOptions="Center"
+          VerticalTextAlignment="Center" />
+        <Grid
+          ColumnDefinitions="Auto,*,Auto"
+          ColumnSpacing="10"
+          RowDefinitions="Auto,Auto">
+          <controls:TwoOptionSwitch
+            Grid.Row="0"
+            Grid.Column="0"
+            LeftValue="minor"
+            RightValue="major"
+            SelectedValue="{Binding PrayerSize, Mode=TwoWay}" />
 
-        <!--  toggle? Major/Minor  -->
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding MajorPrayerPerDayPowerbaseCount, Mode=TwoWay}"
-          LabelText="Major Prayer" />
-        <!--  pick powerbase  -->
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding MajorPrayerPerDayPowerbaseSubjectCount, Mode=TwoWay}"
-          LabelText="Major Prayer" />
-        <!--  pick powerbase AND string subject  -->
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding MinorPrayerPerDayPowerbaseCount, Mode=TwoWay}"
-          LabelText="Minor Prayer" />
-        <!--  pick powerbase  -->
+          <controls:PowerbaseEnumPicker
+            Grid.Row="0"
+            Grid.Column="1"
+            SelectedValue="{Binding PrayerPowerbase, Mode=TwoWay}" />
 
-        <controls:PlusMinusControl Count="{Binding AdditionalLifeBlocks, Mode=TwoWay}" LabelText="Live to minus" />
+          <controls:PlusMinusControl
+            Grid.Row="0"
+            Grid.Column="2"
+            AllowMultiple="True"
+            Count="{Binding PrayerTimesPerDay, Mode=TwoWay}" />
+
+          <Label
+            Grid.Row="1"
+            Grid.Column="0"
+            FontAttributes="Bold"
+            HorizontalOptions="Start"
+            Text="Subject"
+            VerticalOptions="Center" />
+
+          <Entry
+            Grid.Row="1"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Placeholder="Optional subject"
+            Text="{Binding PrayerSubject, Mode=TwoWay}" />
+        </Grid>
+
+<controls:DictionarySlider
+          KeyFormat="{}{0} Additional Live-to-minus"
+          MaxCount="24"
+          MinCount="0"
+          StepSize="6"
+          SnapToStep="True"
+          Multiplier="5"
+          SelectedCount="{Binding LtmValue, Mode=TwoWay}" />
+
+        <!-- <controls:PlusMinusControl Count="{Binding AdditionalLifeBlocks, Mode=TwoWay}" LabelText="Live to minus" /> -->
         <!--  slider (max 24, blocks of 6)  -->
         <controls:CheckboxControl IsChecked="{Binding LifeKickInIsMagicOrSpirit, Mode=TwoWay}" LabelText="Live to minus is Magic or Spirit" />
         <!--  Toggle on/off/null  -->

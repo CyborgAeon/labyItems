@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models;
+using labyItems.Models.Enums;
 using labyItems.Pages.Configs;
 using Microsoft.Maui.Controls;
 
@@ -39,7 +40,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         {
             if (BindingContext is not GeneralConfig cfg)
                 return;
-
+            cfg.LtmType = PowerbaseEnum.Physical;
             var result = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
 
             _tcs.TrySetResult(result);
@@ -130,18 +131,18 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         // s.AddToSummaryIf(c.ExtraAlignmentsForEmpowerments, "Extra alignments for empowerment");
         s.AddToSummaryIf(c.ScholarlyInterestPerDayCount, "Scholarly Interest (1/day)");
         s.AddToSummaryIf(c.KnowledgeOfArcanePerDayCount, "Knowledge of the Arcane (1/day)");
-        s.AddToSummaryIf(c.MajorPrayerPerDayPowerbaseCount, "Major Prayer (powerbase) (1/day)");
-        s.AddToSummaryIf(
-            c.MajorPrayerPerDayPowerbaseSubjectCount,
-            "Major Prayer (powerbase+subject) (1/day)"
-        );
-        s.AddToSummaryIf(c.MinorPrayerPerDayPowerbaseCount, "Minor Prayer (powerbase) (1/day)");
+        // s.AddToSummaryIf(c.MajorPrayerPerDayPowerbaseCount, "Major Prayer (powerbase) (1/day)");
+        // s.AddToSummaryIf(
+        //     c.MajorPrayerPerDayPowerbaseSubjectCount,
+        //     "Major Prayer (powerbase+subject) (1/day)"
+        // );
+        // s.AddToSummaryIf(c.MinorPrayerPerDayPowerbaseCount, "Minor Prayer (powerbase) (1/day)");
 
-        if (c.AdditionalLTMBlocks > 0)
+        if (c.LtmValue > 0)
         {
-            var pts = c.AdditionalLTMBlocks * 6;
+            var pts = c.LtmValue * 6;
             s.Add(
-                $"Additional life to minus: +{pts} (5 per 6pts){(c.LTMKickInIsMagicOrSpirit ? ", kick-in Magic/Spirit ×2 cost" : "")}"
+                $"Additional life to minus: +{pts} (5 per 6pts){(c.LtmType != PowerbaseEnum.Physical ? ", kick-in Magic/Spirit ×2 cost" : "")}"
             );
         }
 

@@ -120,7 +120,6 @@ namespace labyItems.Pages.Configs
                 "+2 strength (not-stacking)", // 2
                 "+2 strength", // 3
             };
-
         // ---------- Rages ----------
         public int ColdRage25PerDayCount
         {
@@ -195,8 +194,7 @@ namespace labyItems.Pages.Configs
             }
         }
 
-        public bool ShowExtraColours =>
-            EmpowerWeaponMagicCount > 0 || EmpowerWeaponManticCount > 0;
+        public bool ShowExtraColours => EmpowerWeaponMagicCount > 0 || EmpowerWeaponManticCount > 0;
 
         public ObservableCollection<MagicColours?> ExtraColours { get; } =
             new ObservableCollection<MagicColours?> { null }; // start with one empty row
@@ -310,39 +308,78 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _knowArcane, value, true);
         }
         private int _knowArcane;
-        public int MajorPrayerPerDayPowerbaseCount
+
+        // minor / major – reuse TwoOptionSwitch's string values
+        public string PrayerTimesPerDayLabel =>
+            $"{PrayerPowerbase} {(string.IsNullOrWhiteSpace(PrayerSize) ? "Minor" : char.ToUpper(PrayerSize[0]) + PrayerSize[1..])} prayer {PrayerTimesPerDay} times per day {(string.IsNullOrEmpty(PrayerSubject) ? string.Empty : "on " + PrayerSubject)}";
+        private string _prayerSize; // "minor" or "major"
+        public string PrayerSize
         {
-            get => _majPrayerPb;
-            set => SetProperty(ref _majPrayerPb, value, true);
+            get => _prayerSize;
+            set
+            {
+                _prayerSize = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(PrayerTimesPerDayLabel));
+            }
         }
-        private int _majPrayerPb;
-        public int MajorPrayerPerDayPowerbaseSubjectCount
+
+        // Powerbase: Earthpower, Neuro, Spirit, Magic, etc.
+        private PowerbaseEnum? _prayerPowerbase;
+        public PowerbaseEnum? PrayerPowerbase
         {
-            get => _majPrayerPbs;
-            set => SetProperty(ref _majPrayerPbs, value, true);
+            get => _prayerPowerbase;
+            set
+            {
+                _prayerPowerbase = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(PrayerTimesPerDayLabel));
+            }
         }
-        private int _majPrayerPbs;
-        public int MinorPrayerPerDayPowerbaseCount
+
+        // Times per day
+
+        private int _prayerTimesPerDay;
+        public int PrayerTimesPerDay
         {
-            get => _minPrayer;
-            set => SetProperty(ref _minPrayer, value, true);
+            get => _prayerTimesPerDay;
+            set
+            {
+                _prayerTimesPerDay = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(PrayerTimesPerDayLabel));
+            }
         }
-        private int _minPrayer;
+
+        // Optional subject text
+        private string _prayerSubject;
+        public string PrayerSubject
+        {
+            get => _prayerSubject;
+            set
+            {
+                _prayerSubject = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(PrayerTimesPerDayLabel));
+            }
+        }
 
         // ---------- Other small items ----------
-        public int AdditionalLTMBlocks
+        public int LtmValue
         {
-            get => _lifeBlocks;
-            set => SetProperty(ref _lifeBlocks, Math.Clamp(value, 0, 4), true);
+            get => _ltmValue;
+            set => SetProperty(ref _ltmValue, Math.Clamp(value, 0, 24), true);
         }
-        private int _lifeBlocks;
+        private int _ltmValue;
 
-        public bool LTMKickInIsMagicOrSpirit
+        public bool hasLtm => LtmValue > 0;
+
+        public PowerbaseEnum LtmType
         {
-            get => _LTMKick;
-            set => SetProperty(ref _LTMKick, value, true);
+            get => _ltmType;
+            set => SetProperty(ref _ltmType, value, true);
         }
-        private bool _LTMKick;
+        private PowerbaseEnum _ltmType;
 
         public bool ReadLanguages
         {
@@ -545,12 +582,12 @@ namespace labyItems.Pages.Configs
             // t += 3 * ExtraAlignmentsForEmpowerments;
             t += 15 * ScholarlyInterestPerDayCount;
             t += 8 * KnowledgeOfArcanePerDayCount;
-            t += 10 * MajorPrayerPerDayPowerbaseCount;
-            t += 6 * MajorPrayerPerDayPowerbaseSubjectCount;
-            t += 4 * MinorPrayerPerDayPowerbaseCount;
+            // t += 10 * MajorPrayerPerDayPowerbaseCount;
+            // t += 6 * MajorPrayerPerDayPowerbaseSubjectCount;
+            // t += 4 * MinorPrayerPerDayPowerbaseCount;
 
-            var lifeCost = 5 * AdditionalLTMBlocks;
-            if (LTMKickInIsMagicOrSpirit)
+            var lifeCost = 5 * LtmValue;
+            if (LtmType != PowerbaseEnum.Physical)
                 lifeCost *= 2;
             t += lifeCost;
 

@@ -6,14 +6,21 @@ namespace labyItems.Converters
 {
     public class TogglePlaceholderConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string action && !string.IsNullOrWhiteSpace(action))
+            // if parameter provided, we insert value after it:
+            //   Example: parameter = "Prayer"
+            //   minor → "Minor Prayer"
+            //   major → "Major Prayer"
+            if (parameter is string prefix && 
+                value is string option && 
+                !string.IsNullOrWhiteSpace(option))
             {
-                return $"Group to {action}";
+                return $"{char.ToUpper(option[0]) + option[1..]} {prefix}";
             }
 
-            return "Group to repel"; // Default
+            // Default fallback text
+            return "Enter value";
         }
 
         public object ConvertBack(
