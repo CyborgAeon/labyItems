@@ -1,0 +1,116 @@
+[
+    {
+      "available": "ALL",
+      "cost": "40",
+      "index": "Discern Innate Abilities",
+      "desc": "Discern remaining daily innate abilities"
+    },
+    {
+      "available": "ALL",
+      "cost": "50 each",
+      "index": "Kin",
+      "desc": "\"Kin\", Two characters must purchase this ability simultaneously. It enables each character to use touch range discerns on each other up to line of sight, both characters know of each other's approximate location, and if they are alive or dead."
+    },
+    {
+      "available": "ALL",
+      "cost": "+25 each",
+      "index": "Kin!True",
+      "desc": "\"True Kin\" from \"Kin\" the two characters may send messages (as per improved message the neuronic skill, but it is not neuronic in nature between each other at the cost of 3 tblp per use."
+    },
+    {
+      "available": "ALL",
+      "cost": "+50",
+      "index": "Casting Stamina!4: 24 TBLP",
+      "desc": "Casting Stamina 4 +24 tblp (from +18) for casting damage only"
+    },
+    {
+      "available": "ALL",
+      "cost": "50",
+      "index": "Live to Minus!1: 6 TBLP",
+      "desc": "Live to -6 tblp"
+    },
+    {
+      "available": "ALL",
+      "cost": "60",
+      "index": "Resistance!Ward of Power",
+      "desc": "½ Damage from Minor and Major Ward of Power"
+    },
+    {
+      "available": "ALL",
+      "cost": "100",
+      "index": "Sixth Sense",
+      "desc": "Sixth Sense - Prohibits the need for the character to role-play something that appears in the characters rear arc. This allows the player to O.O.C. keep an eye on people moving around behind them with their hands in the air. It does not let them tell others, it is an odd feeling moments before danger happens. (Note this no longer requires DAC 6)."
+    },
+    {
+      "available": "ALL",
+      "cost": "+120",
+      "index": "Resistance!Magic/Spirits!10th Level",
+      "desc": "10th Level Resistance to Magic and Spirits, from 9th level"
+    },
+    {
+      "available": "ALL",
+      "cost": "+100",
+      "index": "Resistance!Magic!11th Level",
+      "desc": "only, from 10th level 11th level Resistance to Magic"
+    },
+    {
+      "available": "ALL bar Wizard",
+      "cost": "50",
+      "index": "War Cry",
+      "desc": "\"War Cry\" negates one listed stopping effect and grants immunity to that effect for the following five minutes x1/day (NB this ability can no longer be purchased multiple times)"
+    },
+    {
+      "available": "ALL bar Warrior Sub class",
+      "cost": "+50",
+      "index": "Extra TBLP/LOC!4th Level",
+      "desc": "4th Extra Level of tblp/loc., take able only once on this table (max +5/2) 4"
+    },
+    {
+      "available": "ALL bar Warrior Sub class",
+      "cost": "+60",
+      "index": "Extra TBLP/LOC!5th Level",
+      "desc": "5th Extra Level of tblp/loc., take able only once on this table (max +5/2) 5"
+    },
+    {
+      "available": "ALL bar Wizard",
+      "cost": "+50",
+      "index": "Live to Minus!2: 12 TBLP",
+      "desc": "Live to -12 tblp. (from -6)"
+    },
+    {
+      "available": "ALL bar Wizard",
+      "cost": "+45",
+      "index": "Enhanced Reflexes!3rd",
+      "desc": "Enhanced Reflexes +3 (total) from +2"
+    },
+    {
+      "available": "ALL bar Wizard",
+      "cost": "+50",
+      "index": "Enhanced Reflexes!4th",
+      "desc": "Enhanced Reflexes +4 (total) from +3"
+    },
+    {
+      "available": "ALL bar Wizard",
+      "cost": "+70",
+      "index": "Max AC!2",
+      "desc": "Max. AC. increased to +2 (total) from +1"
+    },
+    {
+      "available": "ALL bar ½-Orc Scout, Wizard, Halfling,",
+      "cost": "100",
+      "index": "Strength!1st",
+      "desc": "+1 (total) Strength"
+    },
+    {
+      "available": "Scholar",
+      "cost": "60",
+      "index": "Magical Scholar",
+      "desc": "Magical Scholar: May now read and utilise magical scrolls with skill level based on the Scholar multiclass. Not available those in the Priest bracket. User must be able to utilise magic etc."
+    },
+    {
+      "available": "Scholar",
+      "cost": "100",
+      "index": "Spiritual Scholar",
+      "desc": "Spiritual Scholar: May now read and utilise spiritual scrolls up to 4th level of own alignment. Not available those in the Wizard bracket. User must possess a spirit etc."
+    }
+  ]

@@ -91,7 +91,7 @@ DerivedData/
 *.xcuserstate
 
 ## macOS system
-.DS_Store
+*.DS_Store
 .AppleDouble
 .LSOverride
 Icon?
@@ -157,14 +157,13 @@ appsettings.Development.json
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+*/project.nuget.cache
+*/.DS_Store
+
+.DS_Store
+labyItems/.DS_Store
+labyItems/Resources/.DS_Store
 
 # ================================
 # End of .gitignore
 # ================================
-*/project.nuget.cache
-*/.DS_Store
-
-labyItems/Resources/Raw/*
-.DS_Store
-labyItems/.DS_Store
-labyItems/Resources/.DS_Store

@@ -1,0 +1,429 @@
+{
+  "12pt tblp Herbal Cure": {
+    "difficulty": 4,
+    "costPerDose": "150",
+    "ingredients": ["Shining Tamarisk", "Merry Woundwort"],
+    "description": "Cures 12 tblp per dose, as per a 6pt herbal cure potion.",
+    "type": "healing"
+  },
+  "Purgative": {
+    "difficulty": 5,
+    "costPerDose": "200",
+    "ingredients": ["Jambul Seed"],
+    "description": "5 minutes of queasiness (-2 DAC, -1 weapon mastery; mins 0). Halts and then negates non-supernatural disease; resets supernatural diseases to zero minutes.",
+    "type": "healing"
+  },
+  "Lembas": {
+    "difficulty": 3,
+    "costPerDose": "90",
+    "ingredients": [],
+    "description": "Only for characters who can racially make Lembas; manufactures that type as normal; can be done in addition to racial Lembas make.",
+    "type": "general"
+  },
+  "Burn Salve": {
+    "difficulty": 5,
+    "costPerDose": "90",
+    "ingredients": ["Merry Woundwort", "Hang-Tree Sap"],
+    "description": "Within 15 min of fire injury, heals 6 tblp and up to 6 pts locational fire damage (spread across locations).",
+    "type": "healing"
+  },
+  "Venom ‘8’ Antidote": {
+    "difficulty": 7,
+    "costPerDose": "150",
+    "ingredients": ["Giant Leech Saliva"],
+    "description": "Negates 8 grades of poison. If taken in advance, lasts 1 hour and negates first incoming poison up to 8 grades.",
+    "type": "healing"
+  },
+  "Strength": {
+    "difficulty": 4,
+    "costPerDose": "60",
+    "ingredients": ["Distilled Ogre’s Blood"],
+    "description": "+1 stacking Strength (max +2) for 5 min; Brute intelligence; no casting/neuronics/weapon masteries; 12 tblp kick-out at end.",
+    "type": "general"
+  },
+  "Endurance": {
+    "difficulty": 4,
+    "costPerDose": "60",
+    "ingredients": ["Jurubera Flowers"],
+    "description": "Next 18 tblp taken in 5 min is ignored (locational still applies); 12 tblp kick-out at end.",
+    "type": "general"
+  },
+  "Dexterity": {
+    "difficulty": 3,
+    "costPerDose": "60",
+    "ingredients": ["Baby Pixie’s eyelashes"],
+    "description": "+2 DAC for 15 minutes.",
+    "type": "general"
+  },
+  "Strengthening Salve": {
+    "difficulty": 4,
+    "costPerDose": "60",
+    "ingredients": ["Opal Dust"],
+    "description": "+2 PAC for 15 minutes when rubbed in; coats all humanoid locations; doesn’t stack with Barkskin or racial PAC.",
+    "type": "general"
+  },
+  "Numbing Elixir": {
+    "difficulty": 5,
+    "costPerDose": "120",
+    "ingredients": ["Black Feathergrass"],
+    "description": "Numbs sensations for 15 min: -1 DAC (min 0) but half effect from Pain/pain-based attacks.",
+    "type": "general"
+  },
+  "Ingestive Illness": {
+    "difficulty": 5,
+    "costPerDose": "120",
+    "ingredients": ["Berberis Berries"],
+    "description": "As Cause Disease (non-spiritual). With 7th resist ends at 30-min stage; with 9th ends at 10-min stage; nausea after 2 min.",
+    "type": "poison"
+  },
+  "2pt Locational Salve": {
+    "difficulty": 5,
+    "costPerDose": "90",
+    "ingredients": ["Merry Woundwort", "Hang-Tree Sap"],
+    "description": "Rub on a wounded location to heal 2 pts locational (no tblp).",
+    "type": "healing"
+  },
+  "18pt tblp Cure": {
+    "difficulty": 6,
+    "costPerDose": "180",
+    "ingredients": ["Merry Woundwort", "Shining Tamarisk"],
+    "description": "Cures 18 tblp. Requires 12pt cure recipe.",
+    "type": "healing"
+  },
+  "Anti-Venom Salve": {
+    "difficulty": 7,
+    "costPerDose": "120",
+    "ingredients": ["Hang-Tree Sap", "Giant Leech Saliva"],
+    "description": "Applied before kick-in, counters one dose of Blade Venom on the blow that caused the wound.",
+    "type": "healing"
+  },
+  "Treated Bandages": {
+    "difficulty": 6,
+    "costPerDose": "180",
+    "ingredients": ["Merry Woundwort", "Hang-Tree Sap"],
+    "description": "Applied 30s; heals 4 locational; if applier knows the recipe also heals 4 tblp. Leave in place 5 min.",
+    "type": "healing"
+  },
+  "Studied Lembas": {
+    "difficulty": 6,
+    "costPerDose": "120",
+    "ingredients": ["Appropriate piece of Lembas"],
+    "description": "Make as many of the same Lembas as skill allows; certain races get +1 skill; elves making own type can do it in addition; those making own racial type can reduce cost to 60G/dose.",
+    "type": "general"
+  },
+  "Resuscitation Balm": {
+    "difficulty": 6,
+    "costPerDose": "180",
+    "ingredients": ["Merry Woundwort", "Hang-Tree Sap", "Shining Tamarisk"],
+    "description": "Requires 2pt Locational Salve. Cures 6 tblp and 2 pts locational when applied.",
+    "type": "healing"
+  },
+  "Wireweed": {
+    "difficulty": 6,
+    "costPerDose": "120",
+    "ingredients": ["Kasnian Wireweed"],
+    "description": "Mixed into one ingestive healing dose: for up to 5 min makes it a contact paste; after 5 min the dose is ruined.",
+    "type": "general"
+  },
+  "Ingestive Venom ‘8’": {
+    "difficulty": 7,
+    "costPerDose": "150",
+    "ingredients": ["Berberis Berries", "Chimera Dung"],
+    "description": "As Ingestive Venom ‘6’ but inflicts 48 tblp after 30s.",
+    "type": "poison"
+  },
+  "Wooden Horse": {
+    "difficulty": 5,
+    "costPerDose": "180",
+    "ingredients": ["Sherbet Ambrosiac", "Berberis Berries"],
+    "description": "Cures 6 tblp immediately; 5 min later inflicts 18 tblp poison; does not discern as poison.",
+    "type": "healing"
+  },
+  "Ingested Nerve Venom": {
+    "difficulty": 6,
+    "costPerDose": "180",
+    "ingredients": ["Berberis Berries", "Black Feathergrass"],
+    "description": "30s after drinking: -2 DAC permanently (until Regen or similar); no effect on elves/elven-immunity.",
+    "type": "poison"
+  },
+  "Scent Neutraliser": {
+    "difficulty": 6,
+    "costPerDose": "120",
+    "ingredients": ["Stinkwort Flower", "Hang-Tree Sap"],
+    "description": "Salve applied to all body; for 1 hour grants neutral smell; immunity to Sniff/Locational Sniff and similar.",
+    "type": "general"
+  },
+  "Scent Inhibitor": {
+    "difficulty": 4,
+    "costPerDose": "90",
+    "ingredients": ["Stinkwort Flower", "Giant Skunk Spittle"],
+    "description": "Apply to face; 1 hour immunity to olfactory attacks; prevents use of Sniff/Locational Sniff.",
+    "type": "general"
+  },
+  "Mind Dull": {
+    "difficulty": 5,
+    "costPerDose": "120",
+    "ingredients": ["Cloudweaver’s Essence"],
+    "description": "15 min Psionic Retardation (Mind Block as Monk; no neuronics). 6 tblp kick-out (3 to head).",
+    "type": "general"
+  },
+  "Frog-Leg": {
+    "difficulty": 4,
+    "costPerDose": "60",
+    "ingredients": ["Cave-Cricket Le", "Red Khakao Beans"],
+    "description": "Jump once within 15 min (twice if recipe known).",
+    "type": "general"
+  },
+  "Zombie": {
+    "difficulty": 4,
+    "costPerDose": "90",
+    "ingredients": ["Torsland Frog Gunk", "Dead Man’s Breath"],
+    "description": "Applied to temples: immunity to fear/emotion/rage, -1 resistance; lasts 5 min (15 if applier knows the recipe).",
+    "type": "general"
+  },
+  "Blade-True": {
+    "difficulty": 6,
+    "costPerDose": "210",
+    "ingredients": ["Galeb Duhr Blood", "Diamond Dust"],
+    "description": "Coat metal object <27 ft³; 30 min indestructible (immune to Shatter/Disintegrate); bladed weapons count +1.",
+    "type": "general"
+  },
+  "Acid": {
+    "difficulty": 5,
+    "costPerDose": "120",
+    "ingredients": ["Green Slime", "Sherbet Ambrosia"],
+    "description": "Acts as Shatter (t) on small objects; careful application needed; harmful if mishandled; specific effects detailed.",
+    "type": "general"
+  },
+  "Stomach-Lining": {
+    "difficulty": 5,
+    "costPerDose": "120",
+    "ingredients": ["Black Feathergrass", "Powdered Stirge Egg-Shell"],
+    "description": "Immediately 6 tblp (3 abdomen). For 1 hour immune to ingested potions (beneficial or harmful). Lembas halved.",
+    "type": "general"
+  },
+  "Star-Metal": {
+    "difficulty": 5,
+    "costPerDose": "120",
+    "ingredients": ["Star-Iron Filings", "Shining Tamarisk"],
+    "description": "+1 cumulative MAC for 5 min; -3 casting levels for magic spells; won’t stack with Plate spells.",
+    "type": "general"
+  },
+  "Vibrance": {
+    "difficulty": 5,
+    "costPerDose": "120",
+    "ingredients": ["Merry Woundwort", "Cloudweaver’s Essence"],
+    "description": "No immediate effect; 5 min later the drinker is cured 12 tblp.",
+    "type": "healing"
+  },
+  "Magical Baffle Salve": {
+    "difficulty": 5,
+    "costPerDose": "90",
+    "ingredients": ["Star-Iron Filings", "Giant Spider’s Web"],
+    "description": "Scout-only apply to magical object <27 ft³ to hide magic for up to 8 hours or until triggered/used.",
+    "type": "general"
+  },
+  "Rejuvenation": {
+    "difficulty": 10,
+    "costPerDose": "300",
+    "ingredients": ["Hang-Tree Sap", "Merry Woundwort", "Angel’s Feather"],
+    "description": "Prereq: Resuscitation Balm. If within live-to-minus/survive unconscious, after 30s restores to weak consciousness; wears off after 5 min.",
+    "type": "healing"
+  },
+  "Regenerative Elixir": {
+    "difficulty": 10,
+    "costPerDose": "450",
+    "ingredients": ["Shining Tamarisk", "Troll’s Blood", "Jurubera Berries"],
+    "description": "1 hour: stops bleeding, regenerates regularly; double if resting; then half benefit from other healing for duration+1h.",
+    "type": "healing"
+  },
+  "Mystic Honey": {
+    "difficulty": 10,
+    "costPerDose": "450",
+    "ingredients": ["Fireweed", "Bees Honey", "Spiced Ambrosia"],
+    "description": "Requires Purgative. Choose one: cure diseases; restore one level lost to casting; restore any lost grades of strength.",
+    "type": "healing"
+  },
+  "Buckland Hoby’s Essence Binding Powder": {
+    "difficulty": 12,
+    "costPerDose": "300",
+    "ingredients": ["Boleq Powder", "Avalorash Essence", "Mana Shard Stone Dust"],
+    "description": "Complex ritual to solidify an elf’s essence for transport/restoration point; prerequisites and limits apply.",
+    "type": "general"
+  },
+  "Medicated Bandages": {
+    "difficulty": 8,
+    "costPerDose": "450",
+    "ingredients": ["Merry Woundwort", "Hang-Tree Sap", "Sprite’s Tears"],
+    "description": "Prereq: Treated Bandages. If applier knows recipe: 2 loc + tblp, then +2/5min to max 18. Otherwise reduced effect.",
+    "type": "healing"
+  },
+  "36pt tblp Cure": {
+    "difficulty": 9,
+    "costPerDose": "450",
+    "ingredients": ["Merry Woundwort", "Shining Tamarisk", "Sprite’s Tears", "Twilight Elf Lembas"],
+    "description": "Cures 36 tblp; requires 18 tblp Cure recipe.",
+    "type": "healing"
+  },
+  "Embalming Salve": {
+    "difficulty": 10,
+    "costPerDose": "900",
+    "ingredients": ["Hang-Tree Sap", "Troll’s Blood", "Graveroot"],
+    "description": "Preserves a corpse (within 1 hour); grants benefits of fated hero; application time and details specified.",
+    "type": "general"
+  },
+  "Anti-Venom True": {
+    "difficulty": 9,
+    "costPerDose": "450",
+    "ingredients": ["Giant Leech Saliva", "Powdered Stirge Eggshell", "Sprite’s Tears"],
+    "description": "Completely negates poison effects; if drunk in advance, negates next three doses within 1 hour.",
+    "type": "healing"
+  },
+  "Holy/Unholy Water": {
+    "difficulty": 7,
+    "costPerDose": "600",
+    "ingredients": ["Graveroot", "Opal Dust or Black Opal Dust", "Cherub’s Kiss or Devil’s Spit"],
+    "description": "Requires 24h Bless/Curse during manufacture; multiple uses (warding, balm, weapon application). Alignment restrictions apply.",
+    "type": "general"
+  },
+  "Deadening Elixir": {
+    "difficulty": 8,
+    "costPerDose": "360",
+    "ingredients": ["Black Feathergrass", "Jurubera Flowers", "Bronze Golem’s Ichor"],
+    "description": "15 min: no touch; -3 DAC (min 0); no Rage; immunity to Pain; 25% off all damage types.",
+    "type": "general"
+  },
+  "Crystal-Glitter": {
+    "difficulty": 8,
+    "costPerDose": "240",
+    "ingredients": ["Diamond Dust", "Giant Spider’s Web", "Sprite’s Tears"],
+    "description": "Thrown powder prevents Chameleon/Invisibility etc. for 5 min; removable by brushing for 2 min.",
+    "type": "general"
+  },
+  "Dragon’s Blood": {
+    "difficulty": 8,
+    "costPerDose": "300",
+    "ingredients": ["Dragons Blood", "Ground Volcano Rock"],
+    "description": "+2 MAC and +1 resist vs magical effects for 15 min; not cumulative; at end take 12/2 physical fire damage.",
+    "type": "general"
+  },
+  "Protection from Psionics": {
+    "difficulty": 7,
+    "costPerDose": "360",
+    "ingredients": ["Cloudweaver’s Essence", "Black Feathergrass", "Jurubera Berries"],
+    "description": "Full immunity to neuronics for 15 min; then 6 head damage and 12 tblp kick-out; reduced effect if recipe not known.",
+    "type": "general"
+  },
+  "Anger": {
+    "difficulty": 7,
+    "costPerDose": "360",
+    "ingredients": ["Bronze Golem’s Ichor", "Sherbet Ambrosia", "Powdered Stirge Egg-shell"],
+    "description": "Choice: take periodic tblp or enter 25% rage for 1 hour; post-effects include kick-out and Strength lockout.",
+    "type": "general"
+  },
+  "Super Endurance": {
+    "difficulty": 10,
+    "costPerDose": "300",
+    "ingredients": ["Jurubera Flowers", "Dwarven Perspiration"],
+    "description": "As Endurance but 36 tblp temp life; at end take 30 tblp; requires Endurance recipe.",
+    "type": "general"
+  },
+  "Will-Focus": {
+    "difficulty": 7,
+    "costPerDose": "300",
+    "ingredients": ["Pixies’ Hair", "Shining Tamarisk", "Red Khakao Beans"],
+    "description": "For 1 hour, act as +2 resistance levels; each use deals 6 tblp; afterwards -1 resistance for 5 min and 18 tblp kick-out.",
+    "type": "general"
+  },
+  "Vision Salve": {
+    "difficulty": 7,
+    "costPerDose": "240",
+    "ingredients": ["Galeb Duhr’s Blood", "Hang-Tree Sap", "Sprite’s Tears"],
+    "description": "Apply around eyes; see in supernatural darkness/Mists/blindness; 5 min (30 if user knows recipe).",
+    "type": "general"
+  },
+  "Hyper-Action": {
+    "difficulty": 10,
+    "costPerDose": "600",
+    "ingredients": ["Sherbet Ambrosia", "Baby Pixie Eyelashes", "Quickling Brain Fluid"],
+    "description": "1 hour: +4 DAC and Determination-like effects; then 24 tblp kick-out.",
+    "type": "general"
+  },
+  "Wild Frenzy": {
+    "difficulty": 8,
+    "costPerDose": "300",
+    "ingredients": ["Black Powder", "Berserker’s Blood"],
+    "description": "5 min: 33% berserk rage and attitude; at end 36 tblp and 2 min unavoidable unconsciousness.",
+    "type": "general"
+  },
+  "Smelling Salts": {
+    "difficulty": 9,
+    "costPerDose": "300",
+    "ingredients": ["Sasanat War Tiger Essence", "Crushed Halgar Roses"],
+    "description": "Breaks a stopping effect for 5 min on a helpless/willing target; target then cannot use Strength or Dex AC for 5 min.",
+    "type": "general"
+  },
+  "Sweet Dreams": {
+    "difficulty": 9,
+    "costPerDose": "300",
+    "ingredients": [],
+    "description": "Requires 30s calm prep; deep sleep (cannot be woken) up to 15 min; if uninterrupted grants 30 min meditation equivalent.",
+    "type": "general"
+  },
+  "Blade Blindness": {
+    "difficulty": 9,
+    "costPerDose": "450",
+    "ingredients": ["Berberis Berries", "Galeb Duhr’s Blood", "Shadow’s Laughter"],
+    "description": "Blade venom variant: 30s after entry, target is blind for 5 min; standard immunities/antidotes apply.",
+    "type": "poison"
+  },
+  "Blade Paralysis": {
+    "difficulty": 9,
+    "costPerDose": "450",
+    "ingredients": ["Berberis Berries", "Galeb Duhr’s Blood", "Black Feathergrass"],
+    "description": "Blade venom variant: 30s after entry, target is paralysed for 5 min; standard immunities/cures apply.",
+    "type": "poison"
+  },
+  "Blade Venom ‘8’": {
+    "difficulty": 8,
+    "costPerDose": "180",
+    "ingredients": ["Berberis Berries", "Galeb Duhr’s Blood", "Medusa’s Scale"],
+    "description": "As Blade Venom ‘6’ but inflicts 48 tblp; requires Ingestive Venom ‘8’ recipe.",
+    "type": "poison"
+  },
+  "Blade Dumbness": {
+    "difficulty": 8,
+    "costPerDose": "210",
+    "ingredients": ["Berberis Berries", "Galeb Duhr’s Blood", "Harpy’s Tongue"],
+    "description": "Blade venom variant: 30s after entry, target is struck dumb for 5 min; standard immunities/antidotes apply.",
+    "type": "poison"
+  },
+  "Blade Sleep": {
+    "difficulty": 9,
+    "costPerDose": "450",
+    "ingredients": ["Berberis Berries", "Galeb Duhr’s Blood", "Bronze Golem’s Ichor"],
+    "description": "Blade venom variant: 30s after entry, target sleeps for 10 min; early waking leaves -2 DAC until proper end.",
+    "type": "poison"
+  },
+  "Blade Deafness": {
+    "difficulty": 8,
+    "costPerDose": "180",
+    "ingredients": ["Berberis Berries", "Galeb Duhr’s Blood", "Banshee’s Hair"],
+    "description": "Blade venom variant: 30s after entry, target is deaf for 5 min; standard immunities/antidotes apply.",
+    "type": "poison"
+  },
+  "Venom Concealment": {
+    "difficulty": 9,
+    "costPerDose": "300",
+    "ingredients": ["Shadow’s Laughter", "Pixie Hair", "Shining Tamarisk"],
+    "description": "10 ml dose; added to another liquid poison, hides it from discernment for 1 hour (then both become useless).",
+    "type": "poison"
+  },
+  "Blade Nerve Venom": {
+    "difficulty": 9,
+    "costPerDose": "300",
+    "ingredients": ["Berberis Berries", "Black Feathergrass", "Galeb Duhr’s Blood"],
+    "description": "Blade venom variant: 30s after entry, target suffers -2 DAC permanently until regeneration; no effect on elves/elven-immunity.",
+    "type": "poison"
+  }
+}

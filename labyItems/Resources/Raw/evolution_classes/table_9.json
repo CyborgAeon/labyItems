@@ -1,0 +1,32 @@
+[
+    {
+      "available": "ALL",
+      "cost": "50",
+      "index": "Answer 'Clear' to Auric Colour",
+      "desc": "Answer 'Clear' to Auric Colour - must be able to 'cast' Auric Colour"
+    },
+    {
+      "available": "ALL",
+      "cost": "125",
+      "index": "Monk Locational Curing (TBLP)",
+      "desc": "Monk Locational Curing, if already possessed, now also heals a like amount of tblp damage"
+    },
+    {
+      "available": "ALL",
+      "cost": "100",
+      "index": "Immunity!Blast Effects!All",
+      "desc": "Immunity to Blast Effects which ignore MAC, such as Super Missile or similar spell, not Sabre Blasts."
+    },
+    {
+      "available": "ALL Good/Evil",
+      "cost": "+50",
+      "index": "Immunity!Blast Effects!Good/Evil",
+      "desc": "Immunity to Blast Effects which ignore MAC, such as Super Missile or similar spell, from Immunity to Sabre Blasts."
+    },
+    {
+      "available": "Devout Believer or Mancer",
+      "cost": "50",
+      "index": "Priestly Discerns",
+      "desc": "Now gains standard priestly discerns as a priest."
+    }
+  ]

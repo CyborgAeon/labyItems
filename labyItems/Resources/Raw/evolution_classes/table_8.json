@@ -1,0 +1,110 @@
+[
+    {
+      "available": "ALL",
+      "cost": "+20",
+      "index": "Rebirth!Enhance (8th Level)",
+      "desc": "Enhance Rebirth to rebirth at 8th level."
+    },
+    {
+      "available": "ALL",
+      "cost": "45",
+      "index": "Immunity!Hand of Purity/Putrefaction",
+      "desc": "Immunity to destruction by Hand of Purity/Putrefaction"
+    },
+    {
+      "available": "ALL",
+      "cost": "50",
+      "index": "Resistance!Avenging Spirit",
+      "desc": "Resistance to Avenging Spirit - instead of being slain you are only knocked unconscious for 5 minutes"
+    },
+    {
+      "available": "ALL",
+      "cost": "100",
+      "index": "Resistance!Wrath of the Lord",
+      "desc": "Resistance (½ effect) to \"Wrath of the Lord\" miracle"
+    },
+    {
+      "available": "ALL",
+      "cost": "160",
+      "index": "Elemental Effect!¼",
+      "desc": "¼ Effect from one element, from ½ effect"
+    },
+    {
+      "available": "ALL",
+      "cost": "+120",
+      "index": "NAC!3",
+      "desc": "+3 NAC (From + 2)"
+    },
+    {
+      "available": "ALL",
+      "cost": "+120",
+      "index": "NAC!4",
+      "desc": "+4 NAC (from + 3)"
+    },
+    {
+      "available": "ALL bar priest",
+      "cost": "50",
+      "index": "Immunity!Bruising (Magic)",
+      "desc": "Immunity to Bruising using MAC and DAC vs. Pure Magic blows"
+    },
+    {
+      "available": "ALL bar priest",
+      "cost": "175",
+      "index": "MAC!3",
+      "desc": "+3 MAC from +2 MAC"
+    },
+    {
+      "available": "ALL bar priest",
+      "cost": "175",
+      "index": "MAC!4",
+      "desc": "+4 MAC from +3 MAC"
+    },
+    {
+      "available": "ALL bar Wizard",
+      "cost": "50",
+      "index": "Immunity!Bruising (SAC & DAC)",
+      "desc": "Immunity to Bruising using SAC and DAC vs. Pure Spirit blows"
+    },
+    {
+      "available": "ALL bar Wizard",
+      "cost": "120",
+      "index": "SAC!3",
+      "desc": "+3 SAC from +2 SAC"
+    },
+    {
+      "available": "ALL bar Wizard",
+      "cost": "120",
+      "index": "SAC!4",
+      "desc": "+4 SAC from +3 SAC"
+    },
+    {
+      "available": "All bar Wizard",
+      "cost": "40*",
+      "index": "Strike to Stun",
+      "desc": "Strike to Stun, as Halt miracle, but it is physical in origin, it will \"Halt\" a target of 9 levels or lower for ten seconds or until struck.\nRequires a non damaging blow to inflict, immunity to halt applies."
+    },
+    {
+      "available": "All bar Wizard",
+      "cost": "+100",
+      "index": "Strike to Stun!Enhanced",
+      "desc": "Enhance all of characters Strike to Stun abilities, if bought from above to no level/hit limit"
+    },
+    {
+      "available": "ALL bar Wizard",
+      "cost": "+125",
+      "index": "Distancing Combat!Enhanced",
+      "desc": "Enhanced Distancing Combat. Unarmed attacks reduced from -6 pts  damage to -9pts damage. O-class weapon attack reduced by -3 pts damage.\nMust have Distancing Combat and use a B-class weapon"
+    },
+    {
+      "available": "Bounty-Hunter",
+      "cost": "50",
+      "index": "Discern Outlaw!Enhanced",
+      "desc": "Enhanced Discern Outlaw - as Assassin"
+    },
+    {
+      "available": "Devout Believer",
+      "cost": "80",
+      "index": "Read Spiritual Scrolls",
+      "desc": "May now read spiritual scrolls of own alignment (Good/Evil/Neutral) of  up to 4th level."
+    }
+  ]

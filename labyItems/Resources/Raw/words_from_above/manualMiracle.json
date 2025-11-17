@@ -1,0 +1,784 @@
+[
+  {
+    "power": 1,
+    "name": "Dismiss Zombie",
+    "description": "Backs a level-1 undead (e.g., Zombie) to a barrier and dismisses its spirit; caster must maintain the dismissal until it collapses.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 1,
+    "name": "Cure Wound",
+    "description": "Cures 6 tblp to total body and touched location (or 2 Hits to monsters). Does not affect the undead.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 2,
+    "name": "Temporary Bless",
+    "description": "Places a temporary blessing on a target for 1 hour.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 2,
+    "name": "Dismiss Skeleton",
+    "description": "As Dismiss Zombie but for level-2 (or level-1) undead; forces it back and collapses it when cornered.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Befriend Spirit",
+    "description": "Target treats the priest as a very trusted friend; retains free will. If betrayed, the spirit strikes back for level-based tblp.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Bless",
+    "description": "Blesses a person or item (generally 24 hours; special permanent cases as noted for specific classes).",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Cure Disease",
+    "description": "Removes physical or spiritual diseases (not magically inflicted ones).",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 3,
+    "name": "Control Skeleton",
+    "description": "Controls one level-2 or level-1 undead as per Control Zombie with noted differences.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Protection from Spirits",
+    "description": "Creates a chalk line that bars spirits of a chosen alignment (Good or Evil) from crossing/attacking through it within listed limits.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Spirit Shield",
+    "description": "Absorbs the first 18 tblp of purely spiritual damage or undead touch effects (6 pts per touch) on the recipient.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 4,
+    "name": "Communication",
+    "description": "Ask three yes/no questions of knowledgeable spirits within five minutes; silence if unknown.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 4,
+    "name": "Spirit Bolt",
+    "description": "Ranged spiritual attack: 18 tblp to characters (applies SAC of least-protected location) or 6 Hits to monsters.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 4,
+    "name": "Control Ghoul",
+    "description": "Controls one Ghoul (or other level-3 or lower undead) for the duration; can perform complex tasks.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 4,
+    "name": "Rune of Power",
+    "description": "Inscribe and set a spiritual rune that triggers as described in its rules.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 2,
+    "name": "Halt Undead",
+    "description": "Halts undead as per standard Halt; the phrase 'spirit of... I dismiss thee hence' counts as a blow for this miracle.",
+    "alignment": "Good",
+    "sphere": "Minor Dismissal",
+    "isAdvanced": true
+  },
+  {
+    "power": 2,
+    "name": "Repel Undead",
+    "description": "Repels undead up to 21' as per the Paladinic effect.",
+    "alignment": "Good",
+    "sphere": "Minor Dismissal / Minor Force / Minor Warding",
+    "isAdvanced": true
+  },
+  {
+    "power": 3,
+    "name": "Cure Insanity",
+    "description": "Removes all insanities currently afflicting the target.",
+    "alignment": "Good",
+    "sphere": "Minor Benediction / Minor Healing",
+    "isAdvanced": true
+  },
+  {
+    "power": 3,
+    "name": "Warming Touch",
+    "description": "Removes spiritual freeze effects from one target.",
+    "alignment": "Good",
+    "sphere": "Minor Benediction / Minor Dismissal / Minor Healing",
+    "isAdvanced": true
+  },
+
+  {
+    "power": 1,
+    "name": "Remove Rune of Power",
+    "description": "Negates an untriggered Rune of Power.",
+    "alignment": "Neutral",
+    "sphere": "Minor Warding",
+    "isAdvanced": true
+  },
+  {
+    "power": 1,
+    "name": "Spirit Dart",
+    "description": "As Spirit Bolt but 6 tblp (or 2 Hits to monsters).",
+    "alignment": "Neutral",
+    "sphere": "Minor Force",
+    "isAdvanced": true
+  },
+  {
+    "power": 1,
+    "name": "Milly’s Detect Spirits",
+    "description": "Reveals location of all spirits within 20' of the caster.",
+    "alignment": "Neutral",
+    "sphere": "Minor Communication",
+    "isAdvanced": true
+  },
+  {
+    "power": 2,
+    "name": "Halt Undead",
+    "description": "Neutral version of Halt that works as per the basic Halt; counts initial phrase as a blow.",
+    "alignment": "Neutral",
+    "sphere": "Minor Warding / Minor Dominion",
+    "isAdvanced": true
+  },
+  {
+    "power": 2,
+    "name": "Set Ward",
+    "description": "Allows the caster to freely pass in/out of their own Ward of Power without collapse or harm.",
+    "alignment": "Neutral",
+    "sphere": "Minor Warding",
+    "isAdvanced": true
+  },
+  {
+    "power": 2,
+    "name": "Runed Ally",
+    "description": "Marks a target to be immune to the caster’s own Warding-tree baneful effects for the adventure (releasable).",
+    "alignment": "Neutral",
+    "sphere": "Minor Warding",
+    "isAdvanced": true
+  },
+  {
+    "power": 2,
+    "name": "Enhance Rune of Power",
+    "description": "Upgrades a just-placed Rune of Power to affect up to 11 levels of spiritual resistance.",
+    "alignment": "Neutral",
+    "sphere": "Minor Warding",
+    "isAdvanced": true
+  },
+  {
+    "power": 3,
+    "name": "Enhance Rune of Power",
+    "description": "Universal version that upgrades a just-placed Rune of Power to affect up to 11 levels of spiritual resistance.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": true
+  },
+  {
+    "power": 2,
+    "name": "Minor Prayer",
+    "description": "One Communication-style yes/no question (single question) within 30 seconds.",
+    "alignment": "Neutral",
+    "sphere": "Minor Communication",
+    "isAdvanced": true
+  },
+  {
+    "power": 3,
+    "name": "Enhance Stasis",
+    "description": "As Stasis but affects targets up to caster level; 20-second duration; does not affect undead.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": true
+  },
+  {
+    "power": 3,
+    "name": "Force Touch",
+    "description": "Short-duration force imbue (touch-based) as described in the entry.",
+    "alignment": "Neutral",
+    "sphere": "Minor Force",
+    "isAdvanced": true
+  },
+  {
+    "power": 6,
+    "name": "Spirit Sundering",
+    "description": "Double-effect Spirit Bolt for 36 tblp neutral spirit damage; normal Spirit Bolt resistances/SAC apply.",
+    "alignment": "Neutral",
+    "sphere": "Major Force",
+    "isAdvanced": true
+  },
+  {
+    "power": 6,
+    "name": "Overwhelming Force",
+    "description": "Within 30s, touch a spirit to inflict Repel 20', Knockdown, and a non-level-based Halt.",
+    "alignment": "Neutral",
+    "sphere": "Major Force",
+    "isAdvanced": true
+  },
+  {
+    "power": 6,
+    "name": "Greater Spirit Shield",
+    "description": "As Spirit Shield but absorbs 36 tblp; Minor Warding/Benediction sphere.",
+    "alignment": "Neutral",
+    "sphere": "Minor Warding / Minor Benediction",
+    "isAdvanced": true
+  },
+  {
+    "power": 6,
+    "name": "Bar Spirit",
+    "description": "Bars a named (or indicated) spirit from crossing a Protection-style barrier for the duration.",
+    "alignment": "Neutral",
+    "sphere": "Minor Warding",
+    "isAdvanced": true
+  },
+  {
+    "power": 6,
+    "name": "Warding Rune of Defence",
+    "description": "Self-inscribed defensive rune that retaliates on aggressors as described.",
+    "alignment": "Neutral",
+    "sphere": "Major Warding",
+    "isAdvanced": true
+  },
+
+  {
+    "power": 6,
+    "name": "Dark Sundering",
+    "description": "36 tblp evil spirit damage (12 Hits to monsters). Spirit Bolt resistances and SAC apply; Causes resistances do not.",
+    "alignment": "Evil",
+    "sphere": "Minor Causing / Major Force",
+    "isAdvanced": true
+  },
+  {
+    "power": 14,
+    "name": "Command Undead",
+    "description": "Controls undead up to level 9; spirit cost scales by undead level up to 14sp max; special exception for Animate-Life’d PCs.",
+    "alignment": "Evil",
+    "sphere": "Major Dominion / Major Necromancy",
+    "isAdvanced": true
+  },
+  {
+    "power": 6,
+    "name": "Weakness",
+    "description": "On touch within 30s, target loses 1 strength grade (cannot stack); immunity to strength-drain applies; does not affect undead.",
+    "alignment": "Evil",
+    "sphere": "Major Dominion",
+    "isAdvanced": true
+  },
+  {
+    "power": 6,
+    "name": "Walk Through Walls",
+    "description": "Caster moves through walls like a wraith for 5 minutes with noted casting/usage limits.",
+    "alignment": "Evil",
+    "sphere": "Major Necromancy",
+    "isAdvanced": true
+  },
+  {
+    "power": 6,
+    "name": "Touched by Evil",
+    "description": "Protective undead-realm shroud around a target; details as per entry.",
+    "alignment": "Evil",
+    "sphere": "Major Necromancy",
+    "isAdvanced": true
+  },
+  {
+    "power": 8,
+    "name": "Wither",
+    "description": "Touch causes a non-critical limb to become unusable; releasable; regeneration counters; does not affect undead.",
+    "alignment": "Evil",
+    "sphere": "Major Necromancy / Major Causing",
+    "isAdvanced": true
+  },
+  {
+    "power": 8,
+    "name": "Mass Paralysis",
+    "description": "Paralyses all within 10' as per Paralysis; releasable (releases all at once); affects undead.",
+    "alignment": "Evil",
+    "sphere": "Major Necromancy",
+    "isAdvanced": true
+  },
+  {
+    "power": 8,
+    "name": "Mallerstang’s Cloak of the Inconsequential",
+    "description": "Others ignore the caster as if not there until they attack or draw attention; domination/perception immunities apply; releasable.",
+    "alignment": "Evil",
+    "sphere": "Major Dominion",
+    "isAdvanced": true
+  },
+  {
+    "power": 8,
+    "name": "Flood of Putrescence",
+    "description": "Inflicts spiritual Disease on all in range (including caster); releasable releases all diseases simultaneously.",
+    "alignment": "Evil",
+    "sphere": "Major Causing",
+    "isAdvanced": true
+  },
+  {
+    "power": 8,
+    "name": "Lack of Faith",
+    "description": "Target cannot cast sub-8th-level miracles for 60s; Resistances to Lack of Faith halve duration and restore casting by 1 level band.",
+    "alignment": "Evil",
+    "sphere": "Major Dominion",
+    "isAdvanced": true
+  },
+
+  {
+    "power": 1,
+    "name": "Spiritual Candles",
+    "description": "Creates four spiritual candles suitable for Restore Life (Good) or Animate Life (Evil).",
+    "alignment": "Good or Evil",
+    "sphere": "Universal",
+    "isAdvanced": true
+  },
+  {
+    "power": 8,
+    "name": "Voice of Retribution",
+    "description": "As Voice of Power but only the command “Die!”; affects up to caster level and only vs. the opposite alignment; does not affect undead.",
+    "alignment": "Good or Evil",
+    "sphere": "Universal",
+    "isAdvanced": true
+  },
+  {
+    "power": 8,
+    "name": "Spirit Strike",
+    "description": "Like Spirit Bolt but 36 tblp (12 Hits to monsters) AND a Halt (up to 8 levels); Halt doesn’t affect undead.",
+    "alignment": "Good or Evil",
+    "sphere": "Universal",
+    "isAdvanced": true
+  },
+  {
+    "power": 10,
+    "name": "Rod of Righteousness",
+    "description": "Creates a purely spiritual O-class rod of caster’s alignment (+1 vs. opposite-aligned spirits) usable only by the caster.",
+    "alignment": "Good or Evil",
+    "sphere": "Universal",
+    "isAdvanced": true
+  },
+
+  {
+    "power": 10,
+    "name": "Create Skeletal Knight",
+    "description": "As Animate Skeleton but tougher: not bound to point, blunt/spiritual only damage, +1 strength, DL 7, triple normal skeleton Hits.",
+    "alignment": "Evil",
+    "sphere": "Major Necromancy",
+    "isAdvanced": true
+  },
+  {
+    "power": 10,
+    "name": "Animate Life",
+    "description": "Evil resurrection analogue that returns a target as ‘Animate Life’; has unique undead interactions and protection requirements.",
+    "alignment": "Evil",
+    "sphere": "Major Necromancy",
+    "isAdvanced": true
+  },
+  {
+    "power": 10,
+    "name": "Embody Wight Spirit",
+    "description": "Caster mingles with a Wight’s spirit to gain its dark travel for the duration.",
+    "alignment": "Evil",
+    "sphere": "Major Necromancy",
+    "isAdvanced": true
+  },
+  {
+    "power": 1,
+    "name": "Halt",
+    "description": "Freeze a lower-level target in place for ~10 seconds; broken by any touch/damage; does not affect undead.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 1,
+    "name": "Power Meld",
+    "description": "Touch a willing lower-level priest to transfer all their remaining spirits to you (donor also loses 1 life per spirit); excess dissipates after 5 minutes.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 1,
+    "name": "Detect Spirit’s Nature",
+    "description": "Discerns the alignment of a target spirit (Good/Neutral/Evil); no response if no spirit.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 1,
+    "name": "Spirit of Seeing",
+    "description": "Send a spirit to look and report; short, immediate informational glimpse in a pointed direction.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 2,
+    "name": "Cure Serious Wounds",
+    "description": "Cure 12 tblp (or 4 Hits to a monster) distributed across locations as desired; not effective on undead.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 2,
+    "name": "Control Zombie",
+    "description": "Take control of a zombie’s spirit (or other level-1 undead by name) for 30 minutes, overcoming equal/lower controller level.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 3,
+    "name": "Talk to Spirit",
+    "description": "Ask three yes/no (one-word) questions of a spirit within range; powerful living/intelligent undead may lie, lesser cannot.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Control Skeleton",
+    "description": "Control one level-2 (or level-1) undead for 30 minutes as per Control Zombie.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Protection from Spirits",
+    "description": "Chalk line barrier that bars either Good or Evil spirits (chosen when cast); level-based; blocks attacks through the line.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Spirit Shield",
+    "description": "Absorbs first 18 tblp of purely spiritual damage or undead touch effects (6 shield points per touch) on the recipient.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 3,
+    "name": "Bless",
+    "description": "Bless a person or item for 24h (+2 DAC to people; special object rules); interacts with Curses per class rules.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Befriend Spirit",
+    "description": "Target treats you as a very trusted friend (not controlled). If your actions directly cause their death, you suffer level-scaled tblp backlash.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Cure Disease",
+    "description": "Remove physical or spiritual diseases (not magically inflicted ones); works on items; does not affect undead.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Dismiss Ghoul",
+    "description": "Dismiss one level-3 undead (e.g., Ghoul) by forcing it back to a barrier and completing the dismissal phrase at ~9’ distance.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 4,
+    "name": "Communication",
+    "description": "Ask three yes/no questions of knowledgeable spirits within five minutes; silence if unknown.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 4,
+    "name": "Spirit Bolt",
+    "description": "Ranged spiritual attack: 18 tblp to characters (SAC of least-protected location applies) or 6 Hits to monsters.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 4,
+    "name": "Control Ghoul",
+    "description": "Control one ghoul or other level-3 or lower undead; can perform complex tasks; duration as per control rules.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 4,
+    "name": "Rune of Power",
+    "description": "Inscribe a rune (Fear/Paralysis/Insanity; Disturbance or Transgression) that triggers and persists per entry until released by Bless/beneficial Curse.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 4,
+    "name": "Dismiss Mummy",
+    "description": "Dismiss one level-4 undead (e.g., Mummy) by forcing it back; it can still attack others who come too close during dismissal.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 4,
+    "name": "Heal",
+    "description": "Cure up to 36 tblp (or 12 Hits to a monster), distributed across locations; does not affect undead.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 5,
+    "name": "Minor Ward of Power",
+    "description": "Draw a four-cornered ward that bars low-level undead and creatures ≤4th level; inflicts spiritual damage on crossing; absorbs 10sp of directed miracles.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 5,
+    "name": "Remove Voice of Power",
+    "description": "Cancel one Voice of Power currently affecting a target; also removes Halt/Stasis-type effects.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 5,
+    "name": "Voice of Power",
+    "description": "Command a single-word imperative a lower-level target must obey (e.g., Sleep/Flee/Obey); listed stopping effect; does not affect undead.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 5,
+    "name": "Dismiss Wraith",
+    "description": "Dismiss one level-5 undead (e.g., Wraith); when dismissal begins it cannot walk through walls; complete at ~9’ with the release phrase.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 5,
+    "name": "Remove Fear and Paralysis",
+    "description": "Touch to end fear and paralysis effects currently afflicting the target; standard limitations per entry.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 6,
+    "name": "Control Wraith",
+    "description": "Control one level-5 (or lower) undead; if cast immediately after you summon it, control lasts 30 minutes, otherwise 5 minutes.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 8,
+    "name": "Greater Communication",
+    "description": "As Communication but answers are short phrases/sentences (≈7 relevant words); three questions in five minutes.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 8,
+    "name": "Major Ward of Power",
+    "description": "As Minor Ward but stronger: bars all undead; bars creatures with resistance levels up to 7th; deals heavy spiritual damage on crossing; absorbs 20sp of directed miracles.",
+    "alignment": "Neutral",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 1,
+    "name": "Cause Minor Wound",
+    "description": "Touch to inflict minor spiritual injury to a living target.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 2,
+    "name": "Cause Wound",
+    "description": "Stronger touch-based spiritual injury to a living target.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Cause Serious Wounds",
+    "description": "Touch to inflict serious spiritual injury to a living target.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Curse",
+    "description": "Either impose −2 DAC for 24h or grant +2 DAC for 1h to an evil target behaving evilly; can also curse objects; special dying-curse rules apply.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 3,
+    "name": "Animate Skeleton",
+    "description": "Raise one skeleton from a suitable corpse; gains hits based on your level; half damage from sharp; weak inherent control for 30 minutes.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 4,
+    "name": "Cause Disease",
+    "description": "Inflict a spiritual or physical disease on a living target, per ref notes; object-cursing interactions as noted.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 2,
+    "name": "Cause Fear",
+    "description": "Instil fear in a living target, per listed stopping/level rules.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Beguile Spirit",
+    "description": "Charm-like sway over a living target’s spirit (not full control), as per entry’s limits.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 4,
+    "name": "Create Ghoul",
+    "description": "Create a ghoul from a suitable corpse with stats per system; under your control per create/control rules.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 5,
+    "name": "Create Mummy",
+    "description": "Create a mummy from a suitable corpse with stats per system; under your control per create/control rules.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 5,
+    "name": "Cause Grievous Wounds",
+    "description": "Impose grievous, location-spreading spiritual damage on a living target as described in the entry.",
+    "alignment": "Evil",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+
+  {
+    "power": 2,
+    "name": "Dismiss Skeleton",
+    "description": "Dismiss a level-2 undead (or other level-1–2 by name) by forcing it back to a barrier and releasing it at ~9’.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 3,
+    "name": "Dismiss Ghoul",
+    "description": "Dismiss a level-3 undead (e.g., Ghoul) as above; complete with the release phrase at ~9’.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 4,
+    "name": "Dismiss Mummy",
+    "description": "Dismiss a level-4 undead (e.g., Mummy); it may still attack others who come too close while being driven back.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 5,
+    "name": "Dismiss Wraith",
+    "description": "Dismiss a level-5 undead (e.g., Wraith); once dismissal starts it cannot walk through walls.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  },
+  {
+    "power": 6,
+    "name": "Dismiss Vampire",
+    "description": "Dismiss a level-6 undead (e.g., Vampire) by forcing it back to a barrier and completing the release phrase at the end.",
+    "alignment": "Good",
+    "sphere": "Universal",
+    "isAdvanced": false
+  }
+]
