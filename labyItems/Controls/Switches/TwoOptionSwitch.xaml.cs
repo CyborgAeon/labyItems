@@ -11,36 +11,19 @@ public partial class TwoOptionSwitch : ContentView
     }
 
     #region Bindable Properties
+    public static readonly BindableProperty AllowNullProperty = BindableProperty.Create(
+        nameof(AllowNull),
+        typeof(bool),
+        typeof(TwoOptionSwitch),
+        defaultValue: false
+    );
 
-    // Text shown to the left of the switch
-    // public static readonly BindableProperty LeftTextProperty = BindableProperty.Create(
-    //     nameof(LeftText),
-    //     typeof(string),
-    //     typeof(TwoOptionSwitch),
-    //     defaultValue: "Left"
-    // );
+    public bool AllowNull
+    {
+        get => (bool)GetValue(AllowNullProperty);
+        set => SetValue(AllowNullProperty, value);
+    }
 
-    // public string LeftText
-    // {
-    //     get => (string)GetValue(LeftTextProperty);
-    //     set => SetValue(LeftTextProperty, value);
-    // }
-
-    // // Text shown to the right of the switch
-    // public static readonly BindableProperty RightTextProperty =
-    //     BindableProperty.Create(
-    //         nameof(RightText),
-    //         typeof(string),
-    //         typeof(TwoOptionSwitch),
-    //         defaultValue: "Right");
-
-    // public string RightText
-    // {
-    //     get => (string)GetValue(RightTextProperty);
-    //     set => SetValue(RightTextProperty, value);
-    // }
-
-    // Logical value when switch is OFF (left side)
     public static readonly BindableProperty LeftValueProperty = BindableProperty.Create(
         nameof(LeftValue),
         typeof(string),
@@ -112,8 +95,18 @@ public partial class TwoOptionSwitch : ContentView
 
     private void InnerSwitch_OnToggled(object sender, ToggledEventArgs e)
     {
-        // Switch ON → RightValue; OFF → LeftValue
-        SelectedValue = e.Value ? RightValue : LeftValue;
+        if (!AllowNull)
+        {
+            SelectedValue = e.Value ? RightValue : LeftValue;
+            return;
+        }
+
+        SelectedValue = SelectedValue switch
+        {
+            null => RightValue,
+            var v when v == RightValue => LeftValue,
+            _ => null, // covers LeftValue and any other value
+        };
     }
 
     private void UpdateSwitchFromSelectedValue()
@@ -121,19 +114,9 @@ public partial class TwoOptionSwitch : ContentView
         if (InnerSwitch == null)
             return;
 
-        // If SelectedValue matches RightValue → switch ON, else OFF.
-        // If SelectedValue is null, default to LeftValue.
-        if (SelectedValue == null)
-        {
-            InnerSwitch.IsToggled = false;
-            return;
-        }
-
-        InnerSwitch.IsToggled = string.Equals(
-            SelectedValue,
-            RightValue,
-            StringComparison.OrdinalIgnoreCase
-        );
+        InnerSwitch.IsToggled =
+            SelectedValue != null
+            && string.Equals(SelectedValue, RightValue, StringComparison.OrdinalIgnoreCase);
     }
 
     #endregion

@@ -120,6 +120,7 @@ namespace labyItems.Pages.Configs
                 "+2 strength (not-stacking)", // 2
                 "+2 strength", // 3
             };
+
         // ---------- Rages ----------
         public int ColdRage25PerDayCount
         {
@@ -368,18 +369,33 @@ namespace labyItems.Pages.Configs
         public int LtmValue
         {
             get => _ltmValue;
-            set => SetProperty(ref _ltmValue, Math.Clamp(value, 0, 24), true);
+            set
+            {
+                SetProperty(ref _ltmValue, Math.Clamp(value, 0, 24), true);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(HasLtm));
+                OnPropertyChanged(nameof(LtmSummary));
+            }
         }
         private int _ltmValue;
 
-        public bool hasLtm => LtmValue > 0;
+        public bool HasLtm => LtmValue > 0;
 
-        public PowerbaseEnum LtmType
+        public ObservableCollection<string> MagicSpiritOptions { get; } =
+            new() { "🪄 Magic", "👻 Spirit" };
+
+        public string LtmSummary => $"{LtmValue} Additional {LtmType ?? string.Empty}{(LtmType == null ? string.Empty : " ")}Live-to-minus";
+        private string _ltmType;
+        public string LtmType
         {
             get => _ltmType;
-            set => SetProperty(ref _ltmType, value, true);
+            set
+            {
+                _ltmType = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(LtmSummary));
+            }
         }
-        private PowerbaseEnum _ltmType;
 
         public bool ReadLanguages
         {
@@ -557,6 +573,8 @@ namespace labyItems.Pages.Configs
             }
         }
 
+        private int CalculateLtmCost() => LtmType == null ? 5 * LtmValue : (LtmValue * 5) * 2;
+
         protected override int ExtraTotal()
         {
             int t = 0;
@@ -586,10 +604,7 @@ namespace labyItems.Pages.Configs
             // t += 6 * MajorPrayerPerDayPowerbaseSubjectCount;
             // t += 4 * MinorPrayerPerDayPowerbaseCount;
 
-            var lifeCost = 5 * LtmValue;
-            if (LtmType != PowerbaseEnum.Physical)
-                lifeCost *= 2;
-            t += lifeCost;
+            t += CalculateLtmCost();
 
             AddElvenInnates(ref t);
             if (ReadLanguages)

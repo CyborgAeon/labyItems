@@ -106,9 +106,7 @@
             SelectedValue="{Binding RepelOrAttract, Mode=TwoWay}" />
           <Entry
             Grid.Column="1"
-            Placeholder="{Binding RepelOrAttract, 
-            Converter={StaticResource TogglePlaceholderConverter},
-            ConverterParameter='test'}"
+            Placeholder="{Binding RepelOrAttract, Converter={StaticResource TogglePlaceholderConverter}, ConverterParameter='test'}"
             Text="{Binding RepelAttractGroupName, Mode=TwoWay}" />
           <controls:PlusMinusControl
             Grid.Column="2"
@@ -263,19 +261,30 @@
             Placeholder="Optional subject"
             Text="{Binding PrayerSubject, Mode=TwoWay}" />
         </Grid>
-
-<controls:DictionarySlider
-          KeyFormat="{}{0} Additional Live-to-minus"
-          MaxCount="24"
-          MinCount="0"
-          StepSize="6"
-          SnapToStep="True"
-          Multiplier="5"
-          SelectedCount="{Binding LtmValue, Mode=TwoWay}" />
-
-        <!-- <controls:PlusMinusControl Count="{Binding AdditionalLifeBlocks, Mode=TwoWay}" LabelText="Live to minus" /> -->
-        <!--  slider (max 24, blocks of 6)  -->
-        <controls:CheckboxControl IsChecked="{Binding LifeKickInIsMagicOrSpirit, Mode=TwoWay}" LabelText="Live to minus is Magic or Spirit" />
+        <Label Text="{Binding LtmSummary}" />
+        <Grid ColumnDefinitions="Auto, *">
+          <controls:ChipGroup
+            Grid.Column="0"
+            VerticalOptions="Center"
+            Items="{Binding MagicSpiritOptions}"
+            SelectedItem="{Binding LtmType, Mode=TwoWay}" />
+          <controls:DictionarySlider
+            Grid.Column="1"
+            VerticalOptions="Center"
+            FormatArg1="{Binding LtmType}"
+            MaxCount="24"
+            MinCount="0"
+            Multiplier="5"
+            SelectedCount="{Binding LtmValue, Mode=TwoWay}"
+            SnapToStep="True"
+            StepSize="6" 
+            Compact="True"/>
+        </Grid>
+        <!--  IsVisible="{Binding HasLtm}"  -->
+        <!-- <controls:CheckboxControl
+          IsVisible="{Binding HasLtm}"
+          IsChecked="{Binding LtmType, Mode=TwoWay}"
+           LabelText="Live to minus is Magic or Spirit" />-->
         <!--  Toggle on/off/null  -->
 
         <controls:PlusMinusControl Count="{Binding ExtraInnatesX2From8thCount, Mode=TwoWay}" LabelText="×2 innates (from 8th) — +70" />

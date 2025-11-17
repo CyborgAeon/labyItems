@@ -40,7 +40,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         {
             if (BindingContext is not GeneralConfig cfg)
                 return;
-            cfg.LtmType = PowerbaseEnum.Physical;
+            // cfg.LtmType = PowerbaseEnum.Physical;
             var result = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
 
             _tcs.TrySetResult(result);
@@ -142,7 +142,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         {
             var pts = c.LtmValue * 6;
             s.Add(
-                $"Additional life to minus: +{pts} (5 per 6pts){(c.LtmType != PowerbaseEnum.Physical ? ", kick-in Magic/Spirit ×2 cost" : "")}"
+                $"Additional life to minus: +{pts} (5 per 6pts){(string.IsNullOrEmpty(c.LtmType) ? ", is " + c.LtmType + " ×2 cost" : string.Empty)}"
             );
         }
 

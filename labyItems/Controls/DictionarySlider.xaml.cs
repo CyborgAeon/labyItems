@@ -9,12 +9,12 @@ namespace labyItems.Controls
     {
         // -------- Step snapping --------
 
-        public static readonly BindableProperty StepSizeProperty =
-            BindableProperty.Create(
-                nameof(StepSize),
-                typeof(double),
-                typeof(DictionarySlider),
-                defaultValue: 1.0);
+        public static readonly BindableProperty StepSizeProperty = BindableProperty.Create(
+            nameof(StepSize),
+            typeof(double),
+            typeof(DictionarySlider),
+            defaultValue: 1.0
+        );
 
         public double StepSize
         {
@@ -22,12 +22,12 @@ namespace labyItems.Controls
             set => SetValue(StepSizeProperty, value);
         }
 
-        public static readonly BindableProperty SnapToStepProperty =
-            BindableProperty.Create(
-                nameof(SnapToStep),
-                typeof(bool),
-                typeof(DictionarySlider),
-                defaultValue: true);
+        public static readonly BindableProperty SnapToStepProperty = BindableProperty.Create(
+            nameof(SnapToStep),
+            typeof(bool),
+            typeof(DictionarySlider),
+            defaultValue: true
+        );
 
         public bool SnapToStep
         {
@@ -42,7 +42,8 @@ namespace labyItems.Controls
             typeof(object),
             typeof(DictionarySlider),
             defaultValue: null,
-            propertyChanged: OnFormatChanged);
+            propertyChanged: OnFormatChanged
+        );
 
         public object? FormatArg1
         {
@@ -57,7 +58,8 @@ namespace labyItems.Controls
             typeof(IDictionary<string, int>),
             typeof(DictionarySlider),
             defaultValue: null,
-            propertyChanged: OnItemsSourceChanged);
+            propertyChanged: OnItemsSourceChanged
+        );
 
         public IDictionary<string, int>? ItemsSource
         {
@@ -72,7 +74,8 @@ namespace labyItems.Controls
             typeof(int),
             typeof(DictionarySlider),
             defaultValue: 0,
-            propertyChanged: OnGeneratedParamsChanged);
+            propertyChanged: OnGeneratedParamsChanged
+        );
 
         public int MinCount
         {
@@ -85,7 +88,8 @@ namespace labyItems.Controls
             typeof(int),
             typeof(DictionarySlider),
             defaultValue: 12,
-            propertyChanged: OnGeneratedParamsChanged);
+            propertyChanged: OnGeneratedParamsChanged
+        );
 
         public int MaxCount
         {
@@ -98,7 +102,8 @@ namespace labyItems.Controls
             typeof(int),
             typeof(DictionarySlider),
             defaultValue: 4,
-            propertyChanged: OnGeneratedParamsChanged);
+            propertyChanged: OnGeneratedParamsChanged
+        );
 
         public int Multiplier
         {
@@ -114,7 +119,8 @@ namespace labyItems.Controls
             typeof(DictionarySlider),
             defaultValue: 0,
             defaultBindingMode: BindingMode.TwoWay,
-            propertyChanged: OnSelectedIndexChanged);
+            propertyChanged: OnSelectedIndexChanged
+        );
 
         public int SelectedIndex
         {
@@ -128,7 +134,8 @@ namespace labyItems.Controls
             typeof(DictionarySlider),
             defaultValue: 0,
             defaultBindingMode: BindingMode.TwoWay,
-            propertyChanged: OnSelectedCountChanged);
+            propertyChanged: OnSelectedCountChanged
+        );
 
         /// <summary>
         /// In generated mode, bind this to your VM (e.g., GeneralSpiritStore / SphereSpiritStore).
@@ -146,7 +153,8 @@ namespace labyItems.Controls
             nameof(SelectedKey),
             typeof(string),
             typeof(DictionarySlider),
-            defaultValue: string.Empty);
+            defaultValue: string.Empty
+        );
 
         public string SelectedKey
         {
@@ -158,7 +166,8 @@ namespace labyItems.Controls
             nameof(SelectedValue),
             typeof(int),
             typeof(DictionarySlider),
-            defaultValue: 0);
+            defaultValue: 0
+        );
 
         public int SelectedValue
         {
@@ -172,8 +181,9 @@ namespace labyItems.Controls
             nameof(KeyFormat),
             typeof(string),
             typeof(DictionarySlider),
-            defaultValue: "Key: {0}",
-            propertyChanged: OnFormatChanged);
+            defaultValue: string.Empty,
+            propertyChanged: OnFormatChanged
+        );
 
         public string KeyFormat
         {
@@ -185,7 +195,8 @@ namespace labyItems.Controls
             nameof(Labels),
             typeof(IList<string>),
             typeof(DictionarySlider),
-            default(IList<string>));
+            default(IList<string>)
+        );
 
         public IList<string> Labels
         {
@@ -198,7 +209,8 @@ namespace labyItems.Controls
             typeof(string),
             typeof(DictionarySlider),
             defaultValue: string.Empty,
-            propertyChanged: OnFormatChanged);
+            propertyChanged: OnFormatChanged
+        );
 
         public string ValueFormat
         {
@@ -241,14 +253,22 @@ namespace labyItems.Controls
 
         // -------- Property change plumbing --------
 
-        private static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnItemsSourceChanged(
+            BindableObject bindable,
+            object oldValue,
+            object newValue
+        )
         {
             var control = (DictionarySlider)bindable;
             control.RebuildEntries();
             control.UpdateFromGeneratedOrIndex(raiseEvent: false);
         }
 
-        private static void OnGeneratedParamsChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnGeneratedParamsChanged(
+            BindableObject bindable,
+            object oldValue,
+            object newValue
+        )
         {
             var control = (DictionarySlider)bindable;
             if (control._usingGenerated)
@@ -258,7 +278,11 @@ namespace labyItems.Controls
             }
         }
 
-        private static void OnSelectedIndexChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnSelectedIndexChanged(
+            BindableObject bindable,
+            object oldValue,
+            object newValue
+        )
         {
             var control = (DictionarySlider)bindable;
             if (control._usingGenerated)
@@ -267,7 +291,11 @@ namespace labyItems.Controls
             control.UpdateFromGeneratedOrIndex(raiseEvent: true, previousIndex: (int)oldValue);
         }
 
-        private static void OnSelectedCountChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnSelectedCountChanged(
+            BindableObject bindable,
+            object oldValue,
+            object newValue
+        )
         {
             var control = (DictionarySlider)bindable;
             if (!control._usingGenerated)
@@ -276,7 +304,11 @@ namespace labyItems.Controls
             control.UpdateFromGeneratedOrIndex(raiseEvent: true);
         }
 
-        private static void OnFormatChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnFormatChanged(
+            BindableObject bindable,
+            object oldValue,
+            object newValue
+        )
         {
             var control = (DictionarySlider)bindable;
             control.UpdateFromGeneratedOrIndex(raiseEvent: false);
@@ -391,7 +423,9 @@ namespace labyItems.Controls
                             previousIndex ?? count,
                             count,
                             kv.Key,
-                            kv.Value));
+                            kv.Value
+                        )
+                    );
                 }
             }
             else
@@ -427,7 +461,9 @@ namespace labyItems.Controls
                             previousIndex ?? idx,
                             idx,
                             kv.Key,
-                            kv.Value));
+                            kv.Value
+                        )
+                    );
                 }
             }
         }
@@ -439,6 +475,56 @@ namespace labyItems.Controls
             KeyLabel.Text = SafeFormat(KeyFormat, string.Empty, FormatArg1);
             ValueLabel.Text = SafeFormat(ValueFormat, 0);
         }
+
+        public static readonly BindableProperty CompactProperty = BindableProperty.Create(
+            nameof(Compact),
+            typeof(bool),
+            typeof(DictionarySlider),
+            defaultValue: false,
+            propertyChanged: OnCompactChanged
+        );
+
+        public bool Compact
+        {
+            get => (bool)GetValue(CompactProperty);
+            set => SetValue(CompactProperty, value);
+        }
+
+        public static readonly BindableProperty ShowLabelsProperty = BindableProperty.Create(
+            nameof(ShowLabels),
+            typeof(bool),
+            typeof(DictionarySlider),
+            defaultValue: true
+        );
+
+        public bool ShowLabels
+        {
+            get => (bool)GetValue(ShowLabelsProperty);
+            set => SetValue(ShowLabelsProperty, value);
+        }
+
+        private static void OnCompactChanged(
+            BindableObject bindable,
+            object oldValue,
+            object newValue
+        )
+        {
+            var control = (DictionarySlider)bindable;
+            bool compact = (bool)newValue;
+
+            if (compact)
+            {
+                control.ShowLabels = false;
+                control.RootLayout.Padding = new Thickness(0, 0, 0, 0);
+                control.RootLayout.Spacing = 0;
+            }
+            else
+            {
+                control.ShowLabels = true;
+                control.RootLayout.Padding = new Thickness(12);
+                control.RootLayout.Spacing = 8;
+            }
+        }
     }
 
     public sealed class DictionarySelectionChangedEventArgs : EventArgs
@@ -448,7 +534,12 @@ namespace labyItems.Controls
         public string Key { get; }
         public int Value { get; }
 
-        public DictionarySelectionChangedEventArgs(int oldIndex, int newIndex, string key, int value)
+        public DictionarySelectionChangedEventArgs(
+            int oldIndex,
+            int newIndex,
+            string key,
+            int value
+        )
         {
             OldIndex = oldIndex;
             NewIndex = newIndex;
