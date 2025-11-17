@@ -4,10 +4,11 @@ on:
   push:
     tags:
       - 'v*'       # e.g. v1.0.0, v1.2.3
+  workflow_dispatch: {}   # lets you run it manually from the Actions tab
 
 jobs:
   build-android:
-    runs-on: macos-latest  # MAUI Android needs macOS or Windows on Actions
+    runs-on: macos-latest
 
     steps:
       - name: Check out code
@@ -16,17 +17,21 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'   # or 7.0.x depending on your MAUI version
+          dotnet-version: '8.0.x'
 
-      # If you need workloads (first time on a clean runner)
       - name: Install MAUI workload
         run: dotnet workload install maui
 
-      # Restore
       - name: Restore
         run: dotnet restore labyItems/labyItems/labyItems.csproj
 
-      # Build/publish Android APK (signed via your csproj/proj properties)
+      - name: Restore keystore
+        run: |
+          mkdir -p labyItems/labyItems
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > labyItems/labyItems/labyItems.keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
       - name: Publish Android Release
         env:
           AndroidSigningKeyPass: ${{ secrets.ANDROID_SIGNING_KEY_PASS }}
@@ -38,10 +43,6 @@ jobs:
           -c Release
           -p:AndroidPackageFormat=apk
           -p:GenerateAppBundle=false
-
-
-      # The APK usually ends up under:
-      # bin/Release/net8.0-android/*-Signed.apk (or similar; you can adjust path)
 
       - name: Find APK
         id: apk
