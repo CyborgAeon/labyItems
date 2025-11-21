@@ -18,6 +18,12 @@ public partial class ShieldConfigPage : ContentPage
         BindingContext = new ShieldConfig();
     }
 
+    public void ApplyBaseTotal(int baseTotal)
+    {
+        if (BindingContext is ShieldConfig cfg)
+            cfg.BaseIsp = baseTotal;
+    }
+
     private string BuildSummary(ShieldConfig cfg)
     {
         var kind = cfg.SelectedShield switch

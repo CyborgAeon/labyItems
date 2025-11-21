@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using labyItems.Models;
+using labyItems.Pages.Calculator;
 using labyItems.Pages.Configs;
 
 using System.Windows.Input;
@@ -72,6 +73,7 @@ private async Task HandleCharmAsync<TPage, TConfig>()
     _categoryLocked = true;
 
     var cfgPage = new TPage();
+    cfgPage.ApplyBaseTotal(GetBaseIsp());
     await Navigation.PushAsync(cfgPage);
 
     var cfg = await cfgPage.Completion;
@@ -115,4 +117,7 @@ private async Task HandleCharmAsync<TPage, TConfig>()
 
             return string.Join("\n", lines);
         }
+
+        private int GetBaseIsp() =>
+            (BindingContext as IspCalculator)?.BaseTotal ?? 0;
     }

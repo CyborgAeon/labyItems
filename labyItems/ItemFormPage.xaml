@@ -50,7 +50,8 @@
                         HorizontalOptions="Fill"
                         Keyboard="Numeric"
                         MinimumWidthRequest="120"
-                        Placeholder="0" />
+                        Placeholder="0"
+                        Text="{Binding IspTotal}" />
                 </VerticalStackLayout>
 
                 <!--  Sleek pill button  -->

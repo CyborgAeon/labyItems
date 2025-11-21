@@ -1,62 +1,94 @@
-using labyItems.Models;
-using labyItems.Categories;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using labyItems.Categories;
+using labyItems.Models;
+
 namespace labyItems.Pages.Calculator;
 
 public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
 {
-
     public event Action<int>? TotalChanged;
     private readonly List<CalcContribution> _contributions = new();
+
+    private readonly int _baseTotal;
     private TaskCompletionSource<CalcResult?>? _tcs;
-    public ICommand? ReturnToFormCommand { get; set;}
-public event PropertyChangedEventHandler? PropertyChanged;
-        void OnPropertyChanged([CallerMemberName] string? n = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+    public ICommand? ReturnToFormCommand { get; set; }
+    public int BaseTotal => _baseTotal;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-        private int _total;
-        public int Total { get => _total; private set { if (_total != value) { _total = value; OnPropertyChanged(); } } }
+    void OnPropertyChanged([CallerMemberName] string? n = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
 
-    public IspCalculator(ItemTypeEnum category)
+    private int _total;
+    public int Total
     {
+        get => _total;
+        private set
+        {
+            if (_total != value)
+            {
+                _total = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
+    public IspCalculator(int runningTotal)
+    {
         InitializeComponent();
+        _baseTotal = runningTotal;
+        Total = runningTotal;
         ArmourCategoryPage.BindingContext = this;
         WeaponCategoryPage.BindingContext = this;
         CharmCategoryPage.BindingContext = this;
         ConsumableCategoryPage.BindingContext = this;
         LifeCategoryPage.BindingContext = this;
 
-        ArmourCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
-        WeaponCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
-        CharmCategoryPage.ContributionAdded  += c => { _contributions.Add(c); UpdateTotal(); };
-        ConsumableCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
-        LifeCategoryPage.ContributionAdded   += c => { _contributions.Add(c); UpdateTotal(); };
-        
+        ArmourCategoryPage.ContributionAdded += c =>
+        {
+            _contributions.Add(c);
+            UpdateTotal();
+        };
+        WeaponCategoryPage.ContributionAdded += c =>
+        {
+            _contributions.Add(c);
+            UpdateTotal();
+        };
+        CharmCategoryPage.ContributionAdded += c =>
+        {
+            _contributions.Add(c);
+            UpdateTotal();
+        };
+        ConsumableCategoryPage.ContributionAdded += c =>
+        {
+            _contributions.Add(c);
+            UpdateTotal();
+        };
+        LifeCategoryPage.ContributionAdded += c =>
+        {
+            _contributions.Add(c);
+            UpdateTotal();
+        };
+
         ReturnToFormCommand = new Command(async () => await ExecuteReturnAsync());
-        ArmourCategoryPage.ReturnToFormCommand  = ReturnToFormCommand;
-        WeaponCategoryPage.ReturnToFormCommand  = ReturnToFormCommand;
-        CharmCategoryPage.ReturnToFormCommand   = ReturnToFormCommand;
+        ArmourCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
+        WeaponCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
+        CharmCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
         ConsumableCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
-        LifeCategoryPage.ReturnToFormCommand    = ReturnToFormCommand;
+        LifeCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
     }
 
     private async Task ExecuteReturnAsync()
     {
-        var result = new CalcResult
-        {
-            TotalIsp = ComputeTotal(),
-            Summary  = BuildSummary()
-        };
+        var result = new CalcResult { TotalIsp = ComputeTotalWithBase(), Summary = BuildSummary() };
 
         _tcs?.TrySetResult(result);
         await Navigation.PopAsync();
     }
 
     // Existing toolbar handler just delegates:
-    private async void OnReturn(object sender, EventArgs e)
-        => await ExecuteReturnAsync();
+    private async void OnReturn(object sender, EventArgs e) => await ExecuteReturnAsync();
 
     public async Task<CalcResult?> GetResultAsync(INavigation nav)
     {
@@ -65,9 +97,12 @@ public event PropertyChangedEventHandler? PropertyChanged;
         return await _tcs.Task;
     }
 
+    private int ComputeTotalWithBase() => _baseTotal + ComputeTotal();
+
     private void UpdateTotal()
     {
-        var total = ComputeTotal();
+        var total = ComputeTotalWithBase();
+        Total = total;
         TotalChanged?.Invoke(total);
     }
 
@@ -80,8 +115,9 @@ public event PropertyChangedEventHandler? PropertyChanged;
     private string BuildSummary()
     {
         var lines = _contributions.Select(c => c.Label).ToList();
-        var total = ComputeTotal();
-        if (total > 0) lines.Add($"Total ISP: {total}");
+        var total = ComputeTotalWithBase();
+        if (total > 0)
+            lines.Add($"Total ISP: {total}");
         return string.Join("\n", lines);
     }
 }

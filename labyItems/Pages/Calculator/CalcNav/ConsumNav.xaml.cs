@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using labyItems.Models;
+using labyItems.Pages.Calculator;
 using labyItems.Pages.Configs;
 
 using System.Windows.Input;
@@ -59,11 +60,12 @@ private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
 
         private async void OnConsumableMagicScroll(object sender, EventArgs e)
         {
-            if (_categoryLocked) return;
-            _categoryLocked = true;
+        if (_categoryLocked) return;
+        _categoryLocked = true;
 
-            var cfgPage = new ConsumableConfigPage(ConsumableType.MagicalScroll);
-            await Navigation.PushAsync(cfgPage);
+        var cfgPage = new ConsumableConfigPage(ConsumableType.MagicalScroll);
+        cfgPage.ApplyBaseTotal(GetBaseIsp());
+        await Navigation.PushAsync(cfgPage);
 
             var cfg = await cfgPage.Completion;
             _categoryLocked = false;
@@ -87,11 +89,12 @@ private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
 
         private async void OnConsumableSpiritScroll(object sender, EventArgs e)
         {
-            if (_categoryLocked) return;
-            _categoryLocked = true;
+        if (_categoryLocked) return;
+        _categoryLocked = true;
 
-            var cfgPage = new ConsumableConfigPage(ConsumableType.SpiritualScroll);
-            await Navigation.PushAsync(cfgPage);
+        var cfgPage = new ConsumableConfigPage(ConsumableType.SpiritualScroll);
+        cfgPage.ApplyBaseTotal(GetBaseIsp());
+        await Navigation.PushAsync(cfgPage);
 
             var cfg = await cfgPage.Completion;
             _categoryLocked = false;
@@ -115,12 +118,13 @@ private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
 
         private async void OnConsumableNeuroCrystal(object sender, EventArgs e)
         {
-            if (_categoryLocked) return;
-            _categoryLocked = true;
+        if (_categoryLocked) return;
+        _categoryLocked = true;
 
-            // Preset with focussing crystals if you want, here set to 0 as in your snippet.
-            var cfgPage = new ConsumableConfigPage(ConsumableType.NeuronicShard, initialFocussingCrystals: 0);
-            await Navigation.PushAsync(cfgPage);
+        // Preset with focussing crystals if you want, here set to 0 as in your snippet.
+        var cfgPage = new ConsumableConfigPage(ConsumableType.NeuronicShard, initialFocussingCrystals: 0);
+        cfgPage.ApplyBaseTotal(GetBaseIsp());
+        await Navigation.PushAsync(cfgPage);
 
             var cfg = await cfgPage.Completion;
             _categoryLocked = false;
@@ -144,11 +148,12 @@ private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
 
         private async void OnConsumableEPTalisman(object sender, EventArgs e)
         {
-            if (_categoryLocked) return;
-            _categoryLocked = true;
+        if (_categoryLocked) return;
+        _categoryLocked = true;
 
-            var cfgPage = new ConsumableConfigPage(ConsumableType.DruidicTalisman);
-            await Navigation.PushAsync(cfgPage);
+        var cfgPage = new ConsumableConfigPage(ConsumableType.DruidicTalisman);
+        cfgPage.ApplyBaseTotal(GetBaseIsp());
+        await Navigation.PushAsync(cfgPage);
 
             var cfg = await cfgPage.Completion;
             _categoryLocked = false;
@@ -172,11 +177,12 @@ private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
 
         private async void OnConsumableGeneric(object sender, EventArgs e)
         {
-            if (_categoryLocked) return;
-            _categoryLocked = true;
+        if (_categoryLocked) return;
+        _categoryLocked = true;
 
-            var cfgPage = new ConsumableConfigPage();
-            await Navigation.PushAsync(cfgPage);
+        var cfgPage = new ConsumableConfigPage();
+        cfgPage.ApplyBaseTotal(GetBaseIsp());
+        await Navigation.PushAsync(cfgPage);
 
             var cfg = await cfgPage.Completion;
             _categoryLocked = false;
@@ -218,4 +224,7 @@ private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
 
             return string.Join("\n", lines);
         }
+
+        private int GetBaseIsp() =>
+            (BindingContext as IspCalculator)?.BaseTotal ?? 0;
     }

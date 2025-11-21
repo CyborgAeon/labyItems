@@ -112,6 +112,6 @@
       ButtonText="Return to Calculator"
       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"
-      Total="{Binding Total}" />
+      Total="{Binding TotalWithBase}" />
   </Grid>
 </cfg:ConfigPageBase>

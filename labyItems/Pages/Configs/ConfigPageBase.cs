@@ -31,5 +31,10 @@ namespace labyItems.Pages.Configs;
             });
         }
 
+        public void ApplyBaseTotal(int baseTotal)
+        {
+            Config.BaseIsp = baseTotal;
+        }
+
         protected abstract string BuildSummary(TConfig cfg);
     }

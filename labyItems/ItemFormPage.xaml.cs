@@ -7,6 +7,7 @@ using labyItemsq.Helpers;
 namespace labyItems;
 public partial class ItemFormPage : ContentPage
 {
+    public int IspTotal {get;set;} = 0;
     public bool ShowPlayerNameField { get; set; } = false;
     public bool ShowPlayerCharNameField { get; set; } = false;
     private readonly Character _character;
@@ -46,7 +47,7 @@ public partial class ItemFormPage : ContentPage
         MakerPlayerNameEntry.Text = item.Maker.PlayerName;
         MakerCharacterNameEntry.Text = item.Maker.Name;
         DescriptionEditor.Text = item.Description;
-        IspEntry.Text = item.Isp.ToString();
+        IspTotal = item.Isp;
         CreatedDatePicker.Date = item.CreatedDate;
         DnbuodSwitch.IsToggled = item.DoesNotBlowUpOnDeath;
     }
@@ -89,11 +90,11 @@ public partial class ItemFormPage : ContentPage
 
     private async void OnCalculateIsp(object sender, EventArgs e)
     {
-        var page = new IspCalculator(ItemTypePicker.SelectedItem as ItemTypeEnum? ?? ItemTypeEnum.None);
+        var page = new IspCalculator(IspTotal);
         var result = await page.GetResultAsync(Navigation);
         if (result == null) return;
-        var isp = int.Parse(IspEntry.Text ?? "0") + result.TotalIsp;
-        IspEntry.Text = isp.ToString();
+        IspEntry.Text = result.TotalIsp.ToString();
+        IspTotal = result.TotalIsp;
         if (!string.IsNullOrWhiteSpace(result.Summary))
         {
             DescriptionEditor.Text = string.IsNullOrWhiteSpace(DescriptionEditor.Text)
@@ -123,7 +124,7 @@ public partial class ItemFormPage : ContentPage
                 Description = DescriptionEditor.Text,
                 DoesNotBlowUpOnDeath = DnbuodSwitch.IsToggled,
                 CreatedDate = CreatedDatePicker.Date,
-                Isp = int.TryParse(IspEntry.Text, out var isp) ? isp : 0
+                Isp = IspTotal,
             };
 
             var recipientText = _recipientPlayerName == string.Empty ?
@@ -172,4 +173,3 @@ public partial class ItemFormPage : ContentPage
         }
     }
 }
-

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
 using labyItems.Models;
+using labyItems.Pages.Calculator;
 using labyItems.Pages.Configs;
 
 namespace labyItems.Pages.Calculator.CalcNav;
@@ -51,6 +52,7 @@ public ICommand? ReturnToFormCommand
         _categoryLocked = true;
 
         var cfgPage = new ShieldConfigPage();
+        cfgPage.ApplyBaseTotal(GetBaseIsp());
         await Navigation.PushAsync(cfgPage);
 
         var cfg = await cfgPage.Completion;
@@ -74,6 +76,7 @@ public ICommand? ReturnToFormCommand
         _categoryLocked = true;
 
         var cfgPage = new ArmourConfigPage();
+        cfgPage.ApplyBaseTotal(GetBaseIsp());
         await Navigation.PushAsync(cfgPage);
 
         var cfg = await cfgPage.Completion;
@@ -117,4 +120,7 @@ public ICommand? ReturnToFormCommand
         if (Total > 0) lines.Add($"Total ISP: {Total}");
         return string.Join("\n", lines);
     }
+
+    private int GetBaseIsp() =>
+        (BindingContext as IspCalculator)?.BaseTotal ?? 0;
 }

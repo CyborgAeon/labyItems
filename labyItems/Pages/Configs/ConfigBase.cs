@@ -14,6 +14,14 @@ namespace labyItems.Pages.Configs
         private bool _addPrep;
         private bool? _isAdvanced;
         private bool? _isImmune;
+        private int _baseIsp;
+
+        // Carries the starting ISP from the form into config pages for display-only totals.
+        public int BaseIsp
+        {
+            get => _baseIsp;
+            set => SetProperty(ref _baseIsp, value, affectsTotal: false, alsoNotify: nameof(TotalWithBase));
+        }
 
         // Common properties
         public string Name
@@ -87,6 +95,7 @@ namespace labyItems.Pages.Configs
         protected virtual int ApplyMultipliers(int total) => total;
         public virtual int Total =>
             BaseTotal() + ExtraTotal();
+        public int TotalWithBase => BaseIsp + Total;
 
         // --- INotifyPropertyChanged helpers ---
         protected bool SetProperty<T>(ref T storage, T value,
@@ -98,7 +107,11 @@ namespace labyItems.Pages.Configs
                 return false;
 
             storage = value;
-            if (affectsTotal) OnPropertyChanged(nameof(Total));
+            if (affectsTotal)
+            {
+                OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(TotalWithBase));
+            }
             foreach (var n in alsoNotify) OnPropertyChanged(n);
             OnPropertyChanged(propertyName);
             return true;

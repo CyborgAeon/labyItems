@@ -40,10 +40,9 @@ public partial class ConsumableConfigPage : ConfigPageBase<ConsumableConfig>
     public ConsumableConfigPage(ConsumableType presetType, int initialFocussingCrystals = 0)
     {
         InitializeComponent();
-        var cfg = new ConsumableConfig { Type = presetType };
+        Config.Type = presetType;
         if (presetType == ConsumableType.None && initialFocussingCrystals > 0)
-            cfg.FocussingCrystals = initialFocussingCrystals; // for “Create Neuro crystal”
-        BindingContext = cfg;
+            Config.FocussingCrystals = initialFocussingCrystals; // for “Create Neuro crystal”
 
         // Preselect the picker (still overridable by user)
         TypePicker.SelectedIndex = MapTypeToIndex(presetType);

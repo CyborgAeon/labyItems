@@ -51,9 +51,9 @@
       <Label Text="{Binding Breakdown}" LineBreakMode="WordWrap" />
       <Label>
         <Label.FormattedText>
-          <FormattedString>
+            <FormattedString>
             <Span Text="Total ISP: " FontAttributes="Bold" />
-            <Span Text="{Binding Total}" />
+            <Span Text="{Binding TotalWithBase}" />
           </FormattedString>
         </Label.FormattedText>
       </Label>

@@ -29,6 +29,6 @@
       ButtonText="Return to Form"
       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"
-      Total="{Binding Source={x:Reference RootPage}, Path=Total}" />
+      Total="{Binding Source={x:Reference RootPage}, Path=BindingContext.Total}" />
   </Grid>
 </ContentPage>
