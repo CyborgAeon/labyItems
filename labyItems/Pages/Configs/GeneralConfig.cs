@@ -1,10 +1,11 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+// using System.Collections.Specialized; // Seems unused in this file
 using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Pages.Calculator;
-using labyItems.Pages.Configs;
+
+// using labyItems.Pages.Configs; // Redundant: same namespace as this file
 
 namespace labyItems.Pages.Configs
 {
@@ -19,6 +20,7 @@ namespace labyItems.Pages.Configs
             set { SetProperty(ref _abilityTable, value, true); }
         }
         private int _abilityTable;
+
         public bool IsFirstEffect
         {
             get => _isFirstEffect;
@@ -54,11 +56,47 @@ namespace labyItems.Pages.Configs
             get => _resistanceType;
             set => SetProperty(ref _resistanceType, value, true);
         }
+
         private int _resistanceLevels;
         public int ResistanceLevels
         {
             get => _resistanceLevels;
             set => SetProperty(ref _resistanceLevels, value, true);
+        }
+
+        //--------- Undead touch fx ---------------
+        private UndeadTouchEffects? _undeadTouchEffect;
+        public UndeadTouchEffects? UndeadTouchEffect
+        {
+            get => _undeadTouchEffect;
+            set => SetProperty(ref _undeadTouchEffect, value, true);
+        }
+
+        private int _undeadTouchEffectCount;
+        public int UndeadTouchEffectCount
+        {
+            get => _undeadTouchEffectCount;
+            set => SetProperty(ref _undeadTouchEffectCount, value, UndeadTouchEffect.HasValue);
+        }
+
+        //--------------Other undead bits-------------//
+        private int _gaseousFormPerDayCount;
+        public int GaseousFormPerDayCount
+        {
+            get => _gaseousFormPerDayCount;
+            set => SetProperty(ref _gaseousFormPerDayCount, value, true);
+        }
+        private int _planeShiftPerDayCount;
+        public int PlaneShiftPerDayCount
+        {
+            get => _planeShiftPerDayCount;
+            set => SetProperty(ref _planeShiftPerDayCount, value, true);
+        }
+        private int _walkThroughWallsPerDayCount;
+        public int WalkThroughWallsPerDayCount
+        {
+            get => _walkThroughWallsPerDayCount;
+            set => SetProperty(ref _walkThroughWallsPerDayCount, value, true);
         }
 
         // ---------- Casting Levels ----------
@@ -68,6 +106,7 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _castColour, value, true);
         }
         private MagicColours _castColour;
+
         public int CastingLevelsCount
         {
             get => _castingLevelsCount;
@@ -79,7 +118,6 @@ namespace labyItems.Pages.Configs
         public IReadOnlyList<string> ElfInnateLevelLabels { get; } =
             new[] { "None", "4th", "6th", "8th", "8th (doubled)", "8th (tripled)" };
 
-        // Slider index 0..5 <-> enum
         public int ElfInnateLevelIndex
         {
             get =>
@@ -116,7 +154,6 @@ namespace labyItems.Pages.Configs
             }
         }
 
-        // text used in the summary (matches labels)
         private string GetElfInnateLevelText() =>
             ElvenInnateLevel switch
             {
@@ -131,6 +168,7 @@ namespace labyItems.Pages.Configs
 
         public string ElfInnateSummary =>
             $"{GetElfInnateLevelText()} {ElfInnateColour} Elf innates per day.";
+
         private ElfInnateLevel? _elfInnateLevel;
         public ElfInnateLevel? ElvenInnateLevel
         {
@@ -153,21 +191,22 @@ namespace labyItems.Pages.Configs
             }
         }
 
-        // -1 = none, 0 = +1 non-stack, 1 = +1 stack to +2, 2 = +2 non-stack
         private int _strengthEnchantIndex = -1;
         public int StrengthEnchantIndex
         {
             get => _strengthEnchantIndex;
             set => SetProperty(ref _strengthEnchantIndex, value, true);
         }
+
         public int StrengthEnchantCost =>
             StrengthEnchantIndex switch
             {
-                1 => 15, // +1 Str (non-stacking)
-                2 => 20, // +1 Str (stacking to +2)
-                3 => 45, // +2 Str (non-stacking)
-                _ => 0, // none selected
+                1 => 15,
+                2 => 20,
+                3 => 45,
+                _ => 0,
             };
+
         public string StrengthEnchantDescription =>
             StrengthEnchantIndex switch
             {
@@ -176,70 +215,93 @@ namespace labyItems.Pages.Configs
                 2 => "+2 Str (non-stacking)",
                 _ => "No Strength enchantment",
             };
+
         public IList<string> StrengthLabels { get; } =
             new[]
             {
-                "slide to add strength", // 0
-                "+1 strength", // 1
-                "+2 strength (not-stacking)", // 2
-                "+2 strength", // 3
+                "slide to add strength",
+                "+1 strength",
+                "+2 strength (not-stacking)",
+                "+2 strength",
             };
 
         // ---------- Rages ----------
+        private int _cold25;
         public int ColdRage25PerDayCount
         {
             get => _cold25;
             set => SetProperty(ref _cold25, value, true);
         }
-        private int _cold25;
+
+        private int _ber50;
         public int BerserkRage50PerDayCount
         {
             get => _ber50;
             set => SetProperty(ref _ber50, value, true);
         }
-        private int _ber50;
-        public int ColdRage25VsOneGroupAlwaysCount
-        {
-            get => _cold25Always;
-            set => SetProperty(ref _cold25Always, value, true);
-        }
-        private int _cold25Always;
 
-        // ---------- Repel/Attract ----------
-        public string RepelOrAttractLabel =>
-            $"{(string.IsNullOrEmpty(RepelOrAttract) ? "Repel/Attract" : RepelOrAttract)} {(string.IsNullOrEmpty(RepelAttractGroupName) ? "a group" : RepelAttractGroupName)} {RepelAttractOneTypePerDayCount} times per day.";
-        public int RepelAttractOneTypePerDayCount
+        public ObservableCollection<string?> PermRageCategoryItems { get; } =
+            new ObservableCollection<string?> { null };
+
+        private string _permRageCategoriesSummary;
+        public string PermRageCategoriesSummary
         {
-            get => _repType;
+            get => _permRageCategoriesSummary;
             set
             {
-                SetProperty(ref _repType, value, true);
-                OnPropertyChanged(nameof(RepelOrAttractLabel));
+                _permRageCategoriesSummary = value;
+                OnPropertyChanged();
             }
         }
-        private int _repType;
-        public int RepelAttractOneGroupPerDayCount
-        {
-            get => _repGroup;
-            set => SetProperty(ref _repGroup, value, true);
-        }
-        private int _repGroup;
-        public int RepelLifePerDayCount
-        {
-            get => _repLife;
-            set => SetProperty(ref _repLife, value, true);
-        }
-        private int _repLife;
 
-        private string _repelOrAttract;
-        public string RepelOrAttract
+        private int _rageCategoriesCount;
+        public int RageCategoriesCount
         {
-            get => _repelOrAttract;
+            get => _rageCategoriesCount;
             set
             {
-                _repelOrAttract = value;
+                SetProperty(ref _rageCategoriesCount, value, true);
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(RepelOrAttractLabel));
+            }
+        }
+
+        private string _rageCategoriesCountLabel;
+        public string RageCategoriesCountLabel
+        {
+            get => _rageCategoriesCountLabel;
+            set
+            {
+                _rageCategoriesCountLabel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int CalculatePermRage() => 40 * RageCategoriesCount;
+
+        // ---------- Repel/Attract ----------
+
+        private int _repGroup;
+        public string RepelAttractGroupLabel =>
+            $"{(string.IsNullOrEmpty(RepelAttractGroupName) ? "Repel/Attract" : RepelAttractGroup)} {(string.IsNullOrEmpty(RepelAttractGroupName) ? "one group" : RepelAttractGroupName)} {RepelAttractGroupCount} times per day.";
+
+        public int RepelAttractGroupCount
+        {
+            get => _repGroup;
+            set
+            {
+                SetProperty(ref _repGroup, value, !string.IsNullOrEmpty(RepelAttractGroup));
+                OnPropertyChanged(nameof(RepelAttractGroupLabel));
+            }
+        }
+        private string _repelAttractGroup;
+        public string RepelAttractGroup
+        {
+            get => _repelAttractGroup;
+            set
+            {
+                _repelAttractGroup = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RepelAttractGroupLabel));
             }
         }
 
@@ -251,8 +313,56 @@ namespace labyItems.Pages.Configs
             {
                 _repelAttractGroupName = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(RepelOrAttractLabel));
+                OnPropertyChanged(nameof(RepelAttractGroupCount));
+                OnPropertyChanged(nameof(RepelAttractGroupLabel));
             }
+        }
+
+        // --------------------------- //
+        private int _repType;
+        public string RepelAttractTypeLabel =>
+            $"{(string.IsNullOrEmpty(RepelAttractType) ? "Repel/Attract" : RepelAttractType)} {(string.IsNullOrEmpty(RepelAttractTypeName) ? "one type" : RepelAttractTypeName)} {RepelAttractTypeCount} times per day.";
+
+        public int RepelAttractTypeCount
+        {
+            get => _repType;
+            set
+            {
+                SetProperty(ref _repType, value, !string.IsNullOrEmpty(RepelAttractTypeName));
+                OnPropertyChanged(nameof(RepelAttractTypeLabel));
+            }
+        }
+        private string _repelAttractType;
+        public string RepelAttractType
+        {
+            get => _repelAttractType;
+            set
+            {
+                _repelAttractType = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RepelAttractTypeLabel));
+            }
+        }
+
+        private string _repelAttractTypeName;
+        public string RepelAttractTypeName
+        {
+            get => _repelAttractTypeName;
+            set
+            {
+                _repelAttractTypeName = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RepelAttractTypeCount));
+                OnPropertyChanged(nameof(RepelAttractTypeLabel));
+            }
+        }
+
+        // ---------------------------
+        private int _repLife;
+        public int RepelLifeCount
+        {
+            get => _repLife;
+            set => SetProperty(ref _repLife, value, true);
         }
 
         // ---------- Misc powers ----------
@@ -262,12 +372,14 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _discipline, value, true);
         }
         private int _discipline;
+
         public int WardPact8LevelsCount
         {
             get => _wardPact;
             set => SetProperty(ref _wardPact, value, true);
         }
         private int _wardPact;
+
         public int KiOrPrimalStrikePerDayCount
         {
             get => _ki;
@@ -276,14 +388,13 @@ namespace labyItems.Pages.Configs
         private int _ki;
 
         // ---------- Weapon empowerments ----------
-        private int _empMagic;
         private int _empowerWeaponMagicCount;
         public int EmpowerWeaponMagicCount
         {
             get => _empowerWeaponMagicCount;
             set
             {
-                _empowerWeaponMagicCount = value;
+                SetProperty(ref _empowerWeaponMagicCount, value, true);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ShowExtraColours));
             }
@@ -300,7 +411,7 @@ namespace labyItems.Pages.Configs
             get => _extraColoursSummary;
             set
             {
-                _extraColoursSummary = value;
+                SetProperty(ref _extraColoursSummary, value, true);
                 OnPropertyChanged();
             }
         }
@@ -311,7 +422,7 @@ namespace labyItems.Pages.Configs
             get => _extraColoursCount;
             set
             {
-                _extraColoursCount = value;
+                SetProperty(ref _extraColoursCount, value, true);
                 OnPropertyChanged();
             }
         }
@@ -326,13 +437,14 @@ namespace labyItems.Pages.Configs
                 OnPropertyChanged();
             }
         }
+
         private int _empowerWeaponSpiritCount;
         public int EmpowerWeaponSpiritCount
         {
             get => _empowerWeaponSpiritCount;
             set
             {
-                _empowerWeaponSpiritCount = value;
+                SetProperty(ref _empowerWeaponSpiritCount, value, true);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ShowExtraAlignments));
             }
@@ -344,7 +456,7 @@ namespace labyItems.Pages.Configs
             get => _empowerWeaponManticCount;
             set
             {
-                _empowerWeaponManticCount = value;
+                SetProperty(ref _empowerWeaponManticCount, value, true);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ShowExtraAlignments));
                 OnPropertyChanged(nameof(ShowExtraColours));
@@ -363,7 +475,7 @@ namespace labyItems.Pages.Configs
             get => _extraAlignmentsSummary;
             set
             {
-                _extraAlignmentsSummary = value;
+                SetProperty(ref _extraAlignmentsSummary, value, true);
                 OnPropertyChanged();
             }
         }
@@ -375,6 +487,7 @@ namespace labyItems.Pages.Configs
             set
             {
                 _extraAlignmentsCount = value;
+                SetProperty(ref _extraAlignmentsCount, value, true);
                 OnPropertyChanged();
             }
         }
@@ -397,6 +510,7 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _scholarly, value, true);
         }
         private int _scholarly;
+
         public int KnowledgeOfArcanePerDayCount
         {
             get => _knowArcane;
@@ -407,19 +521,19 @@ namespace labyItems.Pages.Configs
         // minor / major – reuse TwoOptionSwitch's string values
         public string PrayerTimesPerDayLabel =>
             $"{PrayerPowerbase} {(string.IsNullOrWhiteSpace(PrayerSize) ? "Minor" : char.ToUpper(PrayerSize[0]) + PrayerSize[1..])} prayer {PrayerTimesPerDay} times per day {(string.IsNullOrEmpty(PrayerSubject) ? string.Empty : "on " + PrayerSubject)}";
-        private string _prayerSize; // "minor" or "major"
+
+        private string _prayerSize;
         public string PrayerSize
         {
             get => _prayerSize;
             set
             {
-                _prayerSize = value;
+                SetProperty(ref _prayerSize, value, true);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(PrayerTimesPerDayLabel));
             }
         }
 
-        // Powerbase: Earthpower, Neuro, Spirit, Magic, etc.
         private PowerbaseEnum? _prayerPowerbase;
         public PowerbaseEnum? PrayerPowerbase
         {
@@ -432,21 +546,18 @@ namespace labyItems.Pages.Configs
             }
         }
 
-        // Times per day
-
         private int _prayerTimesPerDay;
         public int PrayerTimesPerDay
         {
             get => _prayerTimesPerDay;
             set
             {
-                _prayerTimesPerDay = value;
+                SetProperty(ref _prayerTimesPerDay, value, true);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(PrayerTimesPerDayLabel));
             }
         }
 
-        // Optional subject text
         private string _prayerSubject;
         public string PrayerSubject
         {
@@ -480,6 +591,7 @@ namespace labyItems.Pages.Configs
 
         public string LtmSummary =>
             $"{LtmValue} Additional {LtmType ?? string.Empty}{(LtmType == null ? string.Empty : " ")}Live-to-minus";
+
         private string _ltmType;
         public string LtmType
         {
@@ -498,24 +610,28 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _readLang, value, true);
         }
         private bool _readLang;
+
         public bool DisarmTrapsAsScout
         {
             get => _disarm;
             set => SetProperty(ref _disarm, value, true);
         }
         private bool _disarm;
+
         public int PotionRecipesKnownCount
         {
             get => _recipes;
             set => SetProperty(ref _recipes, value, true);
         }
         private int _recipes;
+
         public bool Regeneration
         {
             get => _regen;
             set => SetProperty(ref _regen, value, true);
         }
         private bool _regen;
+
         public bool ForearmParry
         {
             get => _parry;
@@ -523,84 +639,36 @@ namespace labyItems.Pages.Configs
         }
         private bool _parry;
 
-        public void AddCastingLevels(ref int total)
-        {
-            var addition =
-                CastingLevelsColour == MagicColours.All
-                    ? 14 * CastingLevelsCount
-                    : 7 * CastingLevelsCount;
-            total += addition;
-        }
+        public int AddCastingLevels() =>
+            CastingLevelsColour == MagicColours.All
+                ? 14 * CastingLevelsCount
+                : 7 * CastingLevelsCount;
 
-        // Collection feeding the control
-        public ObservableCollection<string?> PermRageCategoryItems { get; } =
-            new ObservableCollection<string?> { null }; // start with a single empty row
-
-        // Summary text the control will fill
-        private string _permRageCategoriesSummary;
-        public string PermRageCategoriesSummary
-        {
-            get => _permRageCategoriesSummary;
-            set
-            {
-                _permRageCategoriesSummary = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Count of fields with values
-        private int _rageCategoriesCount;
-        public int RageCategoriesCount
-        {
-            get => _rageCategoriesCount;
-            set
-            {
-                _rageCategoriesCount = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Human-readable label, built by the control using CountLabelFormat
-        private string _rageCategoriesCountLabel;
-        public string RageCategoriesCountLabel
-        {
-            get => _rageCategoriesCountLabel;
-            set
-            {
-                _rageCategoriesCountLabel = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Collection feeding the control
         public ObservableCollection<string?> WardPacts { get; } =
-            new ObservableCollection<string?> { null }; // start with a single empty row
+            new ObservableCollection<string?> { null };
 
-        // Summary text the control will fill
         private string _wardPactsSummary;
         public string WardPactsSummary
         {
             get => _wardPactsSummary;
             set
             {
-                _wardPactsSummary = value;
+                SetProperty(ref _wardPactsSummary, value, true);
                 OnPropertyChanged();
             }
         }
 
-        // Count of fields with values
         private int _wardPactsCount;
         public int WardPactsCount
         {
             get => _wardPactsCount;
             set
             {
-                _wardPactsCount = value;
+                SetProperty(ref _wardPactsCount, value, true);
                 OnPropertyChanged();
             }
         }
 
-        // Human-readable label, built by the control using CountLabelFormat
         private string _wardPactsCountLabel;
         public string WardPactsCountLabel
         {
@@ -612,11 +680,12 @@ namespace labyItems.Pages.Configs
             }
         }
 
-        public void AddElvenInnates(ref int total)
+        public int AddElvenInnates()
         {
+            int addition = 0;
             if (ElfInnateColour is not null && ElvenInnateLevel is not null)
             {
-                var addition = ElvenInnateLevel switch
+                addition = ElvenInnateLevel switch
                 {
                     ElfInnateLevel.Four => 20,
                     ElfInnateLevel.Six => 45,
@@ -625,15 +694,16 @@ namespace labyItems.Pages.Configs
                     ElfInnateLevel.TwentyFour => 210,
                     _ => 0,
                 };
-                total += addition;
             }
+            return addition;
         }
 
-        public void AddResistanceLevels(ref int total)
+        public int AddResistanceLevels()
         {
-            if (ResistanceType is not null)
+            int addition = 0;
+            if (ResistanceType is not null && ResistanceLevels > 0)
             {
-                var addition = ResistanceType switch
+                addition = ResistanceType switch
                 {
                     GeneralResistanceTypes.All => 20 * ResistanceLevels,
                     GeneralResistanceTypes.Spirit => 12 * ResistanceLevels,
@@ -642,44 +712,67 @@ namespace labyItems.Pages.Configs
                     GeneralResistanceTypes.Neuronic => 8 * ResistanceLevels,
                     _ => 0,
                 };
-                total += addition;
             }
+            return addition;
         }
 
         private int CalculateLtmCost() => LtmType == null ? 5 * LtmValue : (LtmValue * 5) * 2;
+
+        private int CalculatePrayerCost()
+        {
+            if (string.IsNullOrEmpty(PrayerSubject) && PrayerTimesPerDay > 0)
+            {
+                return PrayerSize == "Major" ? 10 * PrayerTimesPerDay : 6 * PrayerTimesPerDay;
+            }
+            return 4 * PrayerTimesPerDay;
+        }
+
+        private int CalculateExtraColours()
+        {
+            var colours = ExtraColours.Where(e => e.HasValue).ToList();
+            if (colours.Count() == 0)
+                return 0;
+            if (colours.Any(e => e == MagicColours.All))
+                return 30;
+
+            return 2 * (Math.Max(colours.Count(), 1) - 1);
+        }
+
+        private int CalculateExtraAligns() => 
+        3 * (Math.Max(ExtraAlignments.Count(c => c.HasValue), 1) - 1);
+
+        private int CalculateUndeadTouchFx() =>
+            (UndeadTouchEffect.HasValue && UndeadTouchEffectCount > 0)
+                ? 15 * UndeadTouchEffectCount
+                : 0;
 
         protected override int ExtraTotal()
         {
             int t = 0;
             t += ((Power / 10) * GetRate());
-            AddResistanceLevels(ref t);
-            AddCastingLevels(ref t);
-
+            t += AddCastingLevels();
+            t += AddResistanceLevels();
+            t += CalculatePermRage();
+            t += CalculateExtraColours();
+            t += CalculateExtraAligns();
+            t += CalculatePrayerCost();
+            t += CalculateLtmCost();
+            t += AddElvenInnates();
+            t += CalculateUndeadTouchFx();
             t += StrengthEnchantCost;
             t += 10 * ColdRage25PerDayCount;
             t += 25 * BerserkRage50PerDayCount;
-            t += 40 * RageCategoriesCount;
-
-            t += 6 * RepelAttractOneTypePerDayCount;
-            t += 8 * RepelAttractOneGroupPerDayCount;
-            t += 10 * RepelLifePerDayCount;
+            t += 6 * RepelAttractGroupCount;
+            t += 8 * RepelAttractTypeCount;
+            t += 10 * RepelLifeCount;
             t += 15 * DisciplinePerDayCount;
             t += 20 * WardPactsCount;
             t += 15 * KiOrPrimalStrikePerDayCount;
             t += 8 * EmpowerWeaponMagicCount;
             t += 10 * EmpowerWeaponSpiritCount;
             t += 20 * EmpowerWeaponManticCount;
-            // t += 2 * ExtraColoursForEmpowerments;
-            // t += 3 * ExtraAlignmentsForEmpowerments;
             t += 15 * ScholarlyInterestPerDayCount;
             t += 8 * KnowledgeOfArcanePerDayCount;
-            // t += 10 * MajorPrayerPerDayPowerbaseCount;
-            // t += 6 * MajorPrayerPerDayPowerbaseSubjectCount;
-            // t += 4 * MinorPrayerPerDayPowerbaseCount;
-
-            t += CalculateLtmCost();
-
-            AddElvenInnates(ref t);
             if (ReadLanguages)
                 t += 6;
             if (DisarmTrapsAsScout)
@@ -693,8 +786,6 @@ namespace labyItems.Pages.Configs
 
             return t;
         }
-
-        protected override int ApplyMultipliers(int total) => total;
 
         public void ApplyGeneral(General.Result picked)
         {

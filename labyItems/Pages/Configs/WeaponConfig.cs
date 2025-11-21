@@ -98,8 +98,6 @@ public class WeaponConfig : ConfigBase
         private set { if (_breakdown != value) { _breakdown = value; OnPropertyChanged(); } }
     }
 
-    protected override int ApplyMultipliers(int total) => total;
-    
     protected override int ExtraTotal()
     {
         int total = 0;

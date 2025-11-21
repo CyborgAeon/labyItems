@@ -13,10 +13,108 @@ namespace labyItems.Pages.Calculator;
 
 public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
 {
-    public bool ShowResistanceSection { get; set; } = false;
+    public GeneralConfigPage()
+    {
+        InitializeComponent();
+        // BindingContext = new GeneralConfig();
+        // ReturnFromConfigCommand = new Command(async () =>
+        // {
+        //     if (BindingContext is not GeneralConfig cfg)
+        //         return;
+        //     // cfg.LtmType = PowerbaseEnum.Physical;
+        //     var result = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
 
-    private void ToggleResistanceSection(object sender, EventArgs e) =>
-        ShowResistanceSection = !ShowResistanceSection;
+        //     _tcs.TrySetResult(result);
+        //     await StickyFooterControl.DefaultNavigateAsync(this);
+        // });
+    }
+
+    protected override string BuildSummary(GeneralConfig c)
+    {
+        var s = new List<string>();
+
+        AddResistanceLevels(s, c);
+        s.AddToSummaryIf(
+            c.CastingLevelsCount,
+            $"+{c.CastingLevelsCount} Casting levels {c.CastingLevelsColour}"
+        );
+
+        s.AddToSummaryIf(c.StrengthEnchantCost, c.StrengthEnchantDescription);
+        s.AddToSummaryIf(c.ColdRage25PerDayCount, $"25% Cold Rage ({c.ColdRage25PerDayCount}/day)");
+        s.AddToSummaryIf(
+            c.BerserkRage50PerDayCount,
+            $"50% Berserk Rage ({c.BerserkRage50PerDayCount}/day)"
+        );
+        s.AddToSummaryIf(
+            c.RageCategoriesCount,
+            $"Perm 25% rage vs {ListSummaryHelper.JoinWithAnd(c.PermRageCategoryItems)}"
+        );
+        s.AddToSummaryIf(c.RepelAttractTypeCount, c.RepelAttractGroupLabel);
+        s.AddToSummaryIf(c.RepelAttractGroupCount, c.RepelAttractTypeLabel);
+        s.AddToSummaryIf(c.RepelLifeCount, $"Repel Life ({c.RepelLifeCount}/day)");
+        s.AddToSummaryIf(c.DisciplinePerDayCount, $"Discipline ({c.DisciplinePerDayCount}/day)");
+        s.AddToSummaryIf(
+            c.WardPact8LevelsCount,
+            $"Ward Pact (8 levels) vs {ListSummaryHelper.JoinWithAnd(c.WardPacts)}"
+        );
+        s.AddToSummaryIf(
+            c.KiOrPrimalStrikePerDayCount,
+            $"Ki/Primal Strike ({c.KiOrPrimalStrikePerDayCount}/day)"
+        );
+        s.AddToSummaryIf(
+            c.EmpowerWeaponMagicCount,
+            ListSummaryHelper.BuildEmpowerMagicSummary(
+                c.EmpowerWeaponMagicCount,
+                c.ExtraColours
+            )
+        );
+
+        s.AddToSummaryIf(
+            c.EmpowerWeaponSpiritCount,
+            ListSummaryHelper.BuildEmpowerSpiritSummary(
+                c.EmpowerWeaponSpiritCount,
+                c.ExtraAlignments
+            )
+        );
+
+        s.AddToSummaryIf(
+            c.EmpowerWeaponManticCount,
+            ListSummaryHelper.BuildEmpowerManticSummary(
+                c.EmpowerWeaponManticCount,
+                c.ExtraAlignments,
+                c.ExtraColours
+            )
+        );
+
+        s.AddToSummaryIf(c.ScholarlyInterestPerDayCount, "Scholarly Interest (1/day)");
+        s.AddToSummaryIf(c.KnowledgeOfArcanePerDayCount, $"Knowledge of the Arcane ({c.KnowledgeOfArcanePerDayCount}/day)");
+        s.AddToSummaryIf(c.PrayerTimesPerDay, $"{c.PrayerSize} Prayer ({c.PrayerPowerbase}){(string.IsNullOrEmpty(c.PrayerSubject) ? string.Empty : $" {c.PrayerSubject} ")}({c.PrayerTimesPerDay}/day)");
+
+        if (c.LtmValue > 0)
+        {
+            var pts = c.LtmValue * 6;
+            s.Add(
+                $"Additional life to minus: +{pts} (5 per 6pts){(string.IsNullOrEmpty(c.LtmType) ? ", is " + c.LtmType + " ×2 cost" : string.Empty)}"
+            );
+        }
+
+        s.AddToSummaryIf(
+            (c.ElfInnateColour is not null),
+            $"Lvl: {c.ElvenInnateLevel} {c.ElfInnateColour} Elven Innates"
+        );
+        // Utilities
+        if (c.ReadLanguages)
+            s.Add("Read languages");
+        if (c.DisarmTrapsAsScout)
+            s.Add("Disarm traps (as scout)");
+        s.AddToSummaryIf(c.PotionRecipesKnownCount, "Potion recipes known");
+        if (c.Regeneration)
+            s.Add("Regeneration (non-stacking)");
+        if (c.ForearmParry)
+            s.Add("Forearm Parry");
+
+        return string.Join("\n", s);
+    }
 
     private async void OnSearchGeneral(object sender, EventArgs e)
     {
@@ -28,25 +126,10 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
             cfg.ApplyGeneral(picked);
     }
 
-    private readonly TaskCompletionSource<CalcResult?> _tcs = new();
-    public Task<CalcResult?> Completion => _tcs.Task;
-    public Command ReturnFromConfigCommand { get; }
+    // private readonly TaskCompletionSource<CalcResult?> _tcs = new();
+    // public Task<CalcResult?> Completion => _tcs.Task;
+    // public Command ReturnFromConfigCommand { get; }
 
-    public GeneralConfigPage()
-    {
-        InitializeComponent();
-        BindingContext = new GeneralConfig();
-        ReturnFromConfigCommand = new Command(async () =>
-        {
-            if (BindingContext is not GeneralConfig cfg)
-                return;
-            // cfg.LtmType = PowerbaseEnum.Physical;
-            var result = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
-
-            _tcs.TrySetResult(result);
-            await StickyFooterControl.DefaultNavigateAsync(this);
-        });
-    }
 
     private async void OnFooterReturnClicked(object sender, EventArgs e)
     {
@@ -102,65 +185,5 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
             c.ResistanceLevels,
             $"{c.ResistanceLevels} Levels of Resistance vs {c.ResistanceType}"
         );
-    }
-
-    protected override string BuildSummary(GeneralConfig c)
-    {
-        var s = new List<string>();
-
-        AddResistanceLevels(s, c);
-        s.AddToSummaryIf(
-            c.CastingLevelsCount,
-            $"+{c.CastingLevelsCount} Casting levels {c.CastingLevelsColour}"
-        );
-
-        s.AddToSummaryIf(c.StrengthEnchantCost, c.StrengthEnchantDescription);
-        s.AddToSummaryIf(c.ColdRage25PerDayCount, "25% Cold Rage (1/day)");
-        s.AddToSummaryIf(c.BerserkRage50PerDayCount, "50% Berserk Rage (1/day)");
-        s.AddToSummaryIf(c.ColdRage25VsOneGroupAlwaysCount, "25% Cold Rage vs one group (always)");
-        s.AddToSummaryIf(c.RepelAttractOneTypePerDayCount, "Repel/Attract one Type (1/day)");
-        s.AddToSummaryIf(c.RepelAttractOneGroupPerDayCount, "Repel/Attract one Group (1/day)");
-        s.AddToSummaryIf(c.RepelLifePerDayCount, "Repel Life (1/day)");
-        s.AddToSummaryIf(c.DisciplinePerDayCount, "Discipline (1/day)");
-        s.AddToSummaryIf(c.WardPact8LevelsCount, "Ward Pact (8 levels)");
-        s.AddToSummaryIf(c.KiOrPrimalStrikePerDayCount, "Ki/Primal Strike (1/day)");
-        s.AddToSummaryIf(c.EmpowerWeaponMagicCount, "Empower weapon: +0 magic (5 mins)");
-        s.AddToSummaryIf(c.EmpowerWeaponSpiritCount, "Empower weapon: +0 spirit (5 mins)");
-        s.AddToSummaryIf(c.EmpowerWeaponManticCount, "Empower weapon: +0 mantic (5 mins)");
-        // s.AddToSummaryIf(c.ExtraColoursForEmpowerments, "Extra colours for empowerment");
-        // s.AddToSummaryIf(c.ExtraAlignmentsForEmpowerments, "Extra alignments for empowerment");
-        s.AddToSummaryIf(c.ScholarlyInterestPerDayCount, "Scholarly Interest (1/day)");
-        s.AddToSummaryIf(c.KnowledgeOfArcanePerDayCount, "Knowledge of the Arcane (1/day)");
-        // s.AddToSummaryIf(c.MajorPrayerPerDayPowerbaseCount, "Major Prayer (powerbase) (1/day)");
-        // s.AddToSummaryIf(
-        //     c.MajorPrayerPerDayPowerbaseSubjectCount,
-        //     "Major Prayer (powerbase+subject) (1/day)"
-        // );
-        // s.AddToSummaryIf(c.MinorPrayerPerDayPowerbaseCount, "Minor Prayer (powerbase) (1/day)");
-
-        if (c.LtmValue > 0)
-        {
-            var pts = c.LtmValue * 6;
-            s.Add(
-                $"Additional life to minus: +{pts} (5 per 6pts){(string.IsNullOrEmpty(c.LtmType) ? ", is " + c.LtmType + " ×2 cost" : string.Empty)}"
-            );
-        }
-
-        s.AddToSummaryIf(
-            (c.ElfInnateColour is not null),
-            $"Lvl: {c.ElvenInnateLevel} {c.ElfInnateColour} Elven Innates"
-        );
-        // Utilities
-        if (c.ReadLanguages)
-            s.Add("Read languages");
-        if (c.DisarmTrapsAsScout)
-            s.Add("Disarm traps (as scout)");
-        s.AddToSummaryIf(c.PotionRecipesKnownCount, "Potion recipes known");
-        if (c.Regeneration)
-            s.Add("Regeneration (non-stacking)");
-        if (c.ForearmParry)
-            s.Add("Forearm Parry");
-
-        return string.Join("\n", s);
     }
 }

@@ -107,7 +107,7 @@
           FontSize="16"
           HorizontalOptions="Start"
           HorizontalTextAlignment="Start"
-          Text="{Binding RepelOrAttractLabel}"
+          Text="{Binding RepelAttractGroupLabel}"
           VerticalOptions="Center"
           VerticalTextAlignment="Center" />
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
@@ -115,19 +115,42 @@
             Grid.Column="0"
             LeftValue="Repel"
             RightValue="Attract"
-            SelectedValue="{Binding RepelOrAttract, Mode=TwoWay}" />
+            SelectedValue="{Binding RepelAttractGroup, Mode=TwoWay}" />
           <Entry
             Grid.Column="1"
-            Placeholder="{Binding RepelOrAttract, Converter={StaticResource TogglePlaceholderConverter}, ConverterParameter='test'}"
+            Placeholder="{Binding RepelAttractGroup, Converter={StaticResource TogglePlaceholderConverter}, ConverterParameter='test'}"
             Text="{Binding RepelAttractGroupName, Mode=TwoWay}" />
           <controls:PlusMinusControl
             Grid.Column="2"
             AllowMultiple="True"
-            Count="{Binding RepelAttractOneTypePerDayCount, Mode=TwoWay}" />
+            Count="{Binding RepelAttractGroupCount, Mode=TwoWay}" />
+        </Grid>
+        <Label
+          FontAttributes="Bold"
+          FontSize="16"
+          HorizontalOptions="Start"
+          HorizontalTextAlignment="Start"
+          Text="{Binding RepelAttractTypeLabel}"
+          VerticalOptions="Center"
+          VerticalTextAlignment="Center" />
+        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+          <controls:TwoOptionSwitch
+            Grid.Column="0"
+            LeftValue="Repel"
+            RightValue="Attract"
+            SelectedValue="{Binding RepelAttractType, Mode=TwoWay}" />
+          <Entry
+            Grid.Column="1"
+            Placeholder="{Binding RepelAttractType, Converter={StaticResource TogglePlaceholderConverter}, ConverterParameter='test'}"
+            Text="{Binding RepelAttractTypeName, Mode=TwoWay}" />
+          <controls:PlusMinusControl
+            Grid.Column="2"
+            AllowMultiple="True"
+            Count="{Binding RepelAttractTypeCount, Mode=TwoWay}" />
         </Grid>
         <controls:PlusMinusControl
           AllowMultiple="True"
-          Count="{Binding RepelLifePerDayCount, Mode=TwoWay}"
+          Count="{Binding RepelLifeCount, Mode=TwoWay}"
           LabelText="Repel Life" />
         <controls:PlusMinusControl
           AllowMultiple="True"
@@ -200,13 +223,15 @@
           ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}" />
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
           <controls:UndeadTouchEffectPicker
-            LabelText="Undead touch effects..."
-            PlaceholderText="Select an effect"
+            LabelText="May use an undead touch effect..."
+            PlaceholderText="Select a type"
             SelectedValue="{Binding UndeadTouchEffect, Mode=TwoWay}" />
           <controls:PlusMinusControl
             Grid.Column="1"
             AllowMultiple="True"
-            Count="{Binding UndeadTouchPerDayCount, Mode=TwoWay}" />
+            Count="{Binding UndeadTouchEffectCount, Mode=TwoWay}"
+            LabelText=""
+            Max="3" />
         </Grid>
         <controls:PlusMinusControl
           AllowMultiple="True"
@@ -246,18 +271,15 @@
             LeftValue="minor"
             RightValue="major"
             SelectedValue="{Binding PrayerSize, Mode=TwoWay}" />
-
           <controls:PowerbaseEnumPicker
             Grid.Row="0"
             Grid.Column="1"
             SelectedValue="{Binding PrayerPowerbase, Mode=TwoWay}" />
-
           <controls:PlusMinusControl
             Grid.Row="0"
             Grid.Column="2"
             AllowMultiple="True"
             Count="{Binding PrayerTimesPerDay, Mode=TwoWay}" />
-
           <Label
             Grid.Row="1"
             Grid.Column="0"
@@ -265,7 +287,6 @@
             HorizontalOptions="Start"
             Text="Subject"
             VerticalOptions="Center" />
-
           <Entry
             Grid.Row="1"
             Grid.Column="1"
