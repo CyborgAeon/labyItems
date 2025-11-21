@@ -135,6 +135,4 @@ public class ConsumableConfig : ConfigBase
         Breakdown = sb.ToString().TrimEnd();
         return total;
     }
-
-    protected override int ApplyMultipliers(int total) => total;
 }

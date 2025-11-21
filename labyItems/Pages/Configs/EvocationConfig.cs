@@ -19,8 +19,6 @@ public class EvocationConfig : ConfigBase
         return DrawOnEpPerDay * 16;
     }
 
-    protected override int ApplyMultipliers(int total) => total;
-
     public void ApplyEvocation(Evocation.Result picked)
     {
         Name = $"{picked.Name} ({picked.Power} EP)";

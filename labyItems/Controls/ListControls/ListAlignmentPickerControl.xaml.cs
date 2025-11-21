@@ -221,8 +221,10 @@ public class ListAlignmentPickerControl : ContentView
 
         deleteButton.Clicked += (s, e) =>
         {
-            if (Items == null || Items.Count <= 1)
+            if (Items == null)
                 return;
+            if (Items.Count <= 1)
+                Items[0] = null;
 
             Items.RemoveAt(index);
         };

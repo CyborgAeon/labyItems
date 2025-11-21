@@ -85,8 +85,8 @@ namespace labyItems.Pages.Configs
 
         protected abstract int ExtraTotal();
         protected virtual int ApplyMultipliers(int total) => total;
-        public virtual int Total
-            => ApplyMultipliers(BaseTotal() + ExtraTotal());
+        public virtual int Total =>
+            BaseTotal() + ExtraTotal();
 
         // --- INotifyPropertyChanged helpers ---
         protected bool SetProperty<T>(ref T storage, T value,
