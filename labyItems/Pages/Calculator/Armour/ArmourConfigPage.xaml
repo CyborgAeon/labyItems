@@ -22,7 +22,9 @@
 
       <!-- Armour type -->
       <Label Text="Armour type" />
-      <Picker
+      <controls:ArmourPicker LabelText="Armour type"
+        SelectedValue="{Binding SelectedArmour, Mode=TwoWay}" />
+      <!-- <Picker
         x:Name="ArmourPicker"
         Title="Select armour type"
         SelectedIndexChanged="OnArmourChanged">
@@ -32,7 +34,7 @@
           <x:String>Spiritual Master Crafted (2 per AC + 2)</x:String>
           <x:String>Mantic Master Crafted (4 per AC + 2)</x:String>
         </Picker.Items>
-      </Picker>
+      </Picker> -->
 
       <!-- Modifiers -->
       <Label Text="Modifiers" FontAttributes="Bold" />
@@ -49,25 +51,45 @@
       <!-- Extra AC tables (0..6 each) -->
       <Label Text="Additional AC (max 6 each)" FontAttributes="Bold" />
 
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding PAC, Mode=TwoWay}"
-        LabelText="PAC (cost table applied automatically)" />
+      <controls:DictionarySlider
+        x:Name="PacSlider"
+        SelectedIndex="{Binding PAC, Mode=TwoWay}"
+        KeyFormat="PAC: {0}"
+        ValueFormat="ISP: {0}"
+        SnapToStep="True"
+        StepSize="1"
+        MinCount="0"
+        MaxCount="6" />
 
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding DAC, Mode=TwoWay}"
-        LabelText="DAC (cost table applied automatically)" />
+      <controls:DictionarySlider
+        x:Name="DacSlider"
+        SelectedIndex="{Binding DAC, Mode=TwoWay}"
+        KeyFormat="DAC: {0}"
+        ValueFormat="ISP: {0}"
+        SnapToStep="True"
+        StepSize="1"
+        MinCount="0"
+        MaxCount="6" />
 
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding MAC, Mode=TwoWay}"
-        LabelText="MAC (cost table applied automatically)" />
+      <controls:DictionarySlider
+        x:Name="MacSlider"
+        SelectedIndex="{Binding MAC, Mode=TwoWay}"
+        KeyFormat="MAC: {0}"
+        ValueFormat="ISP: {0}"
+        SnapToStep="True"
+        StepSize="1"
+        MinCount="0"
+        MaxCount="6" />
 
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding SAC, Mode=TwoWay}"
-        LabelText="SAC (cost table applied automatically)" />
+      <controls:DictionarySlider
+        x:Name="SacSlider"
+        SelectedIndex="{Binding SAC, Mode=TwoWay}"
+        KeyFormat="SAC: {0}"
+        ValueFormat="ISP: {0}"
+        SnapToStep="True"
+        StepSize="1"
+        MinCount="0"
+        MaxCount="6" />
 
       <!-- Results (auto-updating) -->
       <Label Text="Results" FontAttributes="Bold" />
@@ -75,7 +97,7 @@
       <Label
         FontAttributes="Bold"
         FontSize="18"
-        Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+        Text="{Binding TotalWithBase, StringFormat='Total ISP: {0}'}" />
 
       <!-- Return -->
       <!-- <Button Clicked="OnReturn" Text="Return" /> -->
@@ -83,9 +105,11 @@
   </ScrollView>
     <controls:StickyFooterControl
         Grid.Row="1"
-        Total="{Binding Total}"
+        Total="{Binding TotalWithBase}"
         ButtonText="Return to Calculator"
         ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
-        ReturnCommandParameter="{x:Reference RootPage}" />
+        ReturnCommandParameter="{x:Reference RootPage}"
+        BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
+        RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
   </Grid>
 </cfg:ConfigPageBase>

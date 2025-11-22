@@ -29,7 +29,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         // });
     }
 
-    protected override string BuildSummary(GeneralConfig c)
+    private string BuildNotes(GeneralConfig c)
     {
         var s = new List<string>();
 
@@ -136,7 +136,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         if (BindingContext is not GeneralConfig cfg)
             return;
 
-        var result = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
+        var result = BuildResult(cfg);
 
         if (Navigation?.NavigationStack?.Count > 1)
         {
@@ -172,11 +172,39 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
             return;
         }
 
-        var lines = BuildSummary(cfg);
-        var result = new CalcResult { TotalIsp = cfg.Total, Summary = lines };
+        var result = BuildResult(cfg);
 
         _tcs.TrySetResult(result);
         Navigation.PopAsync();
+    }
+
+    protected override CalcResult BuildResult(GeneralConfig cfg)
+    {
+        var details = new Dictionary<string, object?>();
+        var notes = BuildNotes(cfg);
+        if (!string.IsNullOrWhiteSpace(notes))
+            details["notes"] = notes;
+
+        if (cfg.EmpowerWeaponSpiritCount > 0) details["empowerWeaponSpirit"] = cfg.EmpowerWeaponSpiritCount;
+        if (cfg.EmpowerWeaponManticCount > 0) details["empowerWeaponMantic"] = cfg.EmpowerWeaponManticCount;
+        if (cfg.UndeadTouchEffect.HasValue && cfg.UndeadTouchEffectCount > 0)
+            details["undeadTouchEffect"] = new { effect = cfg.UndeadTouchEffect.ToString(), count = cfg.UndeadTouchEffectCount };
+        if (cfg.GaseousFormPerDayCount > 0) details["gaseousForm"] = cfg.GaseousFormPerDayCount;
+        if (cfg.WalkThroughWallsPerDayCount > 0) details["walkThroughWalls"] = cfg.WalkThroughWallsPerDayCount;
+        if (cfg.PlaneShiftPerDayCount > 0) details["planeShift"] = cfg.PlaneShiftPerDayCount;
+        if (cfg.PrayerTimesPerDay > 0 && cfg.PrayerPowerbase.HasValue)
+        {
+            details["prayerPowerbase"] = cfg.PrayerPowerbase.ToString();
+            details["prayerTimesPerDay"] = cfg.PrayerTimesPerDay;
+        }
+
+        return new CalcResult
+        {
+            AbilityType = "General",
+            AbilityName = string.IsNullOrWhiteSpace(cfg.Name) ? "General Charm" : cfg.Name,
+            TotalIsp = cfg.Total,
+            Details = details
+        };
     }
 
     private static void AddResistanceLevels(List<string> summary, GeneralConfig c)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using labyItems.Models;
+using labyItems.Pages.Calculator;
 using labyItems.Pages.Configs;
 
 using System.Windows.Input;
@@ -72,6 +73,8 @@ private async Task HandleCharmAsync<TPage, TConfig>()
     _categoryLocked = true;
 
     var cfgPage = new TPage();
+    cfgPage.CalculatorContext = BindingContext as IspCalculator;
+    cfgPage.ApplyBaseTotal(GetBaseIsp());
     await Navigation.PushAsync(cfgPage);
 
     var cfg = await cfgPage.Completion;
@@ -84,9 +87,10 @@ private async Task HandleCharmAsync<TPage, TConfig>()
         .Replace("Config", string.Empty);
 
     var added = new CalcContribution(
+        Id: Guid.NewGuid().ToString(),
         Source: $"Charm/{sourceName}",
-        Label: cfg.Summary,
-        Isp: cfg.TotalIsp);
+        Result: cfg,
+        OnRemove: cfgPage.ResetConfig);
 
     _contributions.Add(added);
     ContributionAdded?.Invoke(added);
@@ -98,7 +102,7 @@ private async Task HandleCharmAsync<TPage, TConfig>()
 
         private int ComputeTotal()
         {
-            var sum = _contributions.Sum(c => c.Isp);
+            var sum = _contributions.Sum(c => c.Result.TotalIsp);
             Total = sum <= 0 ? 0 : sum;
             return Total;
         }
@@ -107,7 +111,7 @@ private async Task HandleCharmAsync<TPage, TConfig>()
         {
             var lines = new List<string>();
             foreach (var c in _contributions)
-                lines.Add(c.Label);
+                lines.Add(c.Result.Summary);
 
             var total = ComputeTotal();
             if (total > 0)
@@ -115,4 +119,7 @@ private async Task HandleCharmAsync<TPage, TConfig>()
 
             return string.Join("\n", lines);
         }
+
+        private int GetBaseIsp() =>
+            (BindingContext as IspCalculator)?.BaseTotal ?? 0;
     }

@@ -10,10 +10,10 @@
 	<Grid RowDefinitions="*,Auto">
 		<ScrollView Grid.Row="0">
 			<VerticalStackLayout Padding="16" Spacing="12">
-				<Button Clicked="OnCharmEarthPower" Text="Earthpower Charm" />
-				<Button Clicked="OnCharmGeneral" Text="General Charm" />
-				<Button Clicked="OnCharmMagic" Text="Magic Charm" />
-				<Button Clicked="OnCharmSpirit" Text="Spirit Charm" />
+				<Button Clicked="OnCharmEarthPower" Text="Earthpower" />
+				<Button Clicked="OnCharmGeneral" Text="General" />
+				<Button Clicked="OnCharmMagic" Text="Magic" />
+				<Button Clicked="OnCharmSpirit" Text="Spirit" />
 				<Label
 					x:Name="EarthPowerCharmPickedLabel"
 					IsVisible="False"
@@ -44,6 +44,8 @@
 			ButtonText="Return to Form"
 			ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
 			ReturnCommandParameter="{x:Reference RootPage}"
-			Total="{Binding Source={x:Reference RootPage}, Path=Total}" />
+			Total="{Binding Source={x:Reference RootPage}, Path=BindingContext.Total}"
+			BreakdownItems="{Binding Source={x:Reference RootPage}, Path=BindingContext.BreakdownItems}"
+			RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=BindingContext.RemoveContributionCommand}" />
 	</Grid>
 </ContentPage>

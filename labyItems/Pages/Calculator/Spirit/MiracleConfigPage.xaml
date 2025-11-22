@@ -106,15 +106,17 @@
           Count="{Binding TrueBeliever, Mode=TwoWay}"
           LabelText="True believer" />
 
-        <Label FontAttributes="Bold" Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+        <Label FontAttributes="Bold" Text="{Binding TotalWithBase, StringFormat='Total ISP: {0}'}" />
         <Label LineBreakMode="WordWrap" Text="{Binding Breakdown}" />
       </VerticalStackLayout>
     </ScrollView>
     <controls:StickyFooterControl
     Grid.Row="1"
-    Total="{Binding Total}"
+    Total="{Binding TotalWithBase}"
     ButtonText="Return to Calculator"
     ReturnCommand="{Binding ReturnFromConfigCommand}"
-    ReturnCommandParameter="{x:Reference RootPage}"/>
+    ReturnCommandParameter="{x:Reference RootPage}"
+    BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
+    RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}"/>
   </Grid>
 </cfg:ConfigPageBase>

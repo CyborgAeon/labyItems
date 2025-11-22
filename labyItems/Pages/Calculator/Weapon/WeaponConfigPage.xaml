@@ -70,15 +70,17 @@
       <Label
         FontAttributes="Bold"
         FontSize="18"
-        Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+        Text="{Binding TotalWithBase, StringFormat='Total ISP: {0}'}" />
 
     </VerticalStackLayout>
   </ScrollView>
   <controls:StickyFooterControl
         Grid.Row="1"
-        Total="{Binding Total}"
+        Total="{Binding TotalWithBase}"
         ButtonText="Return to Calculator"
         ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
-        ReturnCommandParameter="{x:Reference RootPage}" />
+        ReturnCommandParameter="{x:Reference RootPage}"
+        BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
+        RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
   </Grid>
 </cfg:ConfigPageBase>

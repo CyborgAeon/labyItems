@@ -1,4 +1,6 @@
-﻿using labyItems.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using labyItems.Models;
 using labyItems.Services;
 using labyItems.Pages;
 using labyItems.Pages.Calculator;
@@ -7,12 +9,16 @@ using labyItemsq.Helpers;
 namespace labyItems;
 public partial class ItemFormPage : ContentPage
 {
+    public int IspTotal {get;set;} = 0;
     public bool ShowPlayerNameField { get; set; } = false;
     public bool ShowPlayerCharNameField { get; set; } = false;
     private readonly Character _character;
     private string _recipientName;
     private string _recipientClass;
     private string _recipientPlayerName;
+    private List<CalcResult> _abilities = new();
+    private bool _userSetBase;
+    private int _manualBaseIsp;
     public ItemFormPage(Character character)
     {
         InitializeComponent();
@@ -21,8 +27,6 @@ public partial class ItemFormPage : ContentPage
         ShowPlayerCharNameField = string.IsNullOrWhiteSpace(_character.Name);
         CharacterHeader.Text = $"{_character.Name} ({_character.Class}): {_character.Points.ToKNotation()}";
         CreatedDatePicker.Date = DateTime.Now;
-        ItemTypePicker.ItemsSource = Enum.GetValues(typeof(ItemTypeEnum)).Cast<ItemTypeEnum>().ToList();
-        ItemTypePicker.SelectedItem = ItemTypeEnum.None;
         MakerPlayerNameEntry.Text = _character.PlayerName;
         MakerCharacterNameEntry.Text = _character.Name;
         BindingContext = this;
@@ -42,13 +46,15 @@ public partial class ItemFormPage : ContentPage
 
     private void LoadFromItem(Item item)
     {
-        ItemTypePicker.SelectedItem = item.ItemType;
         MakerPlayerNameEntry.Text = item.Maker.PlayerName;
         MakerCharacterNameEntry.Text = item.Maker.Name;
         DescriptionEditor.Text = item.Description;
-        IspEntry.Text = item.Isp.ToString();
+        IspTotal = item.Isp;
         CreatedDatePicker.Date = item.CreatedDate;
         DnbuodSwitch.IsToggled = item.DoesNotBlowUpOnDeath;
+        _abilities = new();
+        _userSetBase = true;
+        _manualBaseIsp = item.Isp;
     }
 
     private async void OnAddRecipientClicked(object sender, EventArgs e)
@@ -89,16 +95,22 @@ public partial class ItemFormPage : ContentPage
 
     private async void OnCalculateIsp(object sender, EventArgs e)
     {
-        var page = new IspCalculator(ItemTypePicker.SelectedItem as ItemTypeEnum? ?? ItemTypeEnum.None);
+        var baseForCalc = _userSetBase ? _manualBaseIsp : ExtractBaseFromAbilities();
+        var page = new IspCalculator(baseForCalc, _abilities);
         var result = await page.GetResultAsync(Navigation);
         if (result == null) return;
-        var isp = int.Parse(IspEntry.Text ?? "0") + result.TotalIsp;
-        IspEntry.Text = isp.ToString();
-        if (!string.IsNullOrWhiteSpace(result.Summary))
+        _abilities = result.Abilities ?? new();
+        var baseAbility = _abilities.FirstOrDefault(a => string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase));
+        _manualBaseIsp = baseAbility?.TotalIsp ?? 0;
+        _userSetBase = baseAbility != null;
+        IspTotal = result.TotalIsp;
+        IspEntry.Text = result.TotalIsp.ToString();
+
+        if (!string.IsNullOrWhiteSpace(result.SummaryText))
         {
             DescriptionEditor.Text = string.IsNullOrWhiteSpace(DescriptionEditor.Text)
-                ? result.Summary
-                : $"{DescriptionEditor.Text}\n{result.Summary}";
+                ? result.SummaryText
+                : $"{DescriptionEditor.Text}\n{result.SummaryText}";
         }
     }
 
@@ -106,12 +118,11 @@ public partial class ItemFormPage : ContentPage
     {
         try
         {
-            var item = new Item
+        var item = new Item
+        {
+            Maker = new Character
             {
-                ItemType = (ItemTypeEnum)ItemTypePicker.SelectedItem,
-                Maker = new Character
-                {
-                    Id = _character.Id,
+                Id = _character.Id,
                     PlayerName = _character.PlayerName ?? MakerPlayerNameEntry.Text,
                     Name = _character.Name ?? MakerCharacterNameEntry.Text,
                     Points = _character.Points,
@@ -123,7 +134,7 @@ public partial class ItemFormPage : ContentPage
                 Description = DescriptionEditor.Text,
                 DoesNotBlowUpOnDeath = DnbuodSwitch.IsToggled,
                 CreatedDate = CreatedDatePicker.Date,
-                Isp = int.TryParse(IspEntry.Text, out var isp) ? isp : 0
+                Isp = IspTotal,
             };
 
             var recipientText = _recipientPlayerName == string.Empty ?
@@ -171,5 +182,10 @@ public partial class ItemFormPage : ContentPage
             await DisplayAlert("Error", ex.Message, "OK");
         }
     }
-}
 
+    private int ExtractBaseFromAbilities()
+    {
+        var baseAbility = _abilities.FirstOrDefault(a => string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase));
+        return baseAbility?.TotalIsp ?? 0;
+    }
+}

@@ -63,7 +63,7 @@
       <Label
         FontAttributes="Bold"
         FontSize="18"
-        Text="{Binding Total, StringFormat='Total ISP: {0}'}" />
+        Text="{Binding TotalWithBase, StringFormat='Total ISP: {0}'}" />
 
       <!-- Return -->
       <Button Clicked="OnReturn" Text="Return" />
@@ -75,6 +75,8 @@
       ButtonText="Return to Calculator"
       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"
-      Total="{Binding Total}" />
+      Total="{Binding TotalWithBase}"
+      BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
+      RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
   </Grid>
 </cfg:ConfigPageBase>

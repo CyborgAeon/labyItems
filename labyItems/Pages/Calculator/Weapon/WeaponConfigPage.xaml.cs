@@ -1,7 +1,12 @@
+using System.Collections.Generic;
+using labyItems.Controls;
 using labyItems.Models;
 using labyItems.Pages.Configs;
-using labyItems.Controls;
 using labyItems.Pages.Configs;
+
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Microsoft.Maui.Controls;
 
 namespace labyItems.Pages.Calculator;
 
@@ -12,23 +17,50 @@ public partial class WeaponConfigPage : ConfigPageBase<WeaponConfig>
         InitializeComponent();
     }
 
-    protected override string BuildSummary(WeaponConfig cfg)
+    protected override CalcResult BuildResult(WeaponConfig cfg)
     {
-        var tags = new List<string>();
+        var details = new Dictionary<string, object?> { ["base"] = cfg.Base.ToString() };
 
-        tags.Add(cfg.Base.ToString());
-        if (cfg.IsMagicBase && cfg.MagicalColoursCount > 0) tags.Add($"+{3 * cfg.MagicalColoursCount} colours");
-        if (cfg.IsSpiritBase && cfg.SpiritualNonOpposite)    tags.Add("+5 non-opposite");
+        if (cfg.IsMagicBase && cfg.MagicalColoursCount > 0)
+            details["magicalColours"] = cfg.MagicalColoursCount;
+        if (cfg.IsSpiritBase && cfg.SpiritualNonOpposite)
+            details["spiritualNonOpposite"] = true;
 
-        if (cfg.MagicTurnsPureDaily)      tags.Add("Magic/Spirit→Pure 1/day");
-        if (cfg.ManticTurnsPureDaily)     tags.Add("Mantic→Pure 1/day");
-        if (cfg.AdventurePermDamageDaily) tags.Add("Adventure perm dmg 1/day");
-        if (cfg.ThruPacAlways)            tags.Add("Thru PAC always");
-        if (cfg.BladeSharpenTooGreat)     tags.Add("Blade sharpen (too great)");
-        if (cfg.SupernaturalBladeSharpen) tags.Add("Supernatural sharpen");
-        if (cfg.CutThroughAuraDaily)      tags.Add("Cut through Aura 1/day");
+        if (cfg.MagicTurnsPureDaily)
+            details["magicTurnsPureDaily"] = true;
+        if (cfg.ManticTurnsPureDaily)
+            details["manticTurnsPureDaily"] = true;
+        if (cfg.AdventurePermDamageDaily)
+            details["adventurePermDamageDaily"] = true;
+        if (cfg.ThruPacAlways)
+            details["thruPacAlways"] = true;
+        if (cfg.BladeSharpenTooGreat)
+            details["bladeSharpenTooGreat"] = true;
+        if (cfg.SupernaturalBladeSharpen)
+            details["supernaturalBladeSharpen"] = true;
+        if (cfg.CutThroughAuraDaily)
+            details["cutThroughAuraDaily"] = true;
 
-        var text = string.Join(", ", tags.Where(t => !string.IsNullOrWhiteSpace(t)));
-        return $"{text} → {cfg.Total} ISP";
+        return new CalcResult
+        {
+            AbilityType = "Weapon",
+            AbilityName = cfg.Base.ToString(),
+            TotalIsp = cfg.Total,
+            Details = details,
+        };
     }
+
+    public static readonly BindableProperty ReturnToFormCommandProperty = BindableProperty.Create(
+        nameof(ReturnToFormCommand),
+        typeof(ICommand),
+        typeof(WeaponConfigPage),
+        null
+    );
+
+    public ICommand? ReturnToFormCommand
+    {
+        get => (ICommand?)GetValue(ReturnToFormCommandProperty);
+        set => SetValue(ReturnToFormCommandProperty, value);
+    }
+
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
   x:Class="labyItems.Pages.Calculator.ShieldConfigPage"
+  x:Name="RootPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:conv="clr-namespace:labyItems.Converters"
@@ -13,7 +14,8 @@
     </ResourceDictionary>
   </ContentPage.Resources>
 
-  <ScrollView>
+  <Grid RowDefinitions="*,Auto">
+    <ScrollView Grid.Row="0">
     <VerticalStackLayout Padding="16" Spacing="12">
 
       <Label Text="Shield Cost Calculator" FontSize="20" FontAttributes="Bold" />
@@ -53,10 +55,19 @@
         <Label.FormattedText>
           <FormattedString>
             <Span Text="Total ISP: " FontAttributes="Bold" />
-            <Span Text="{Binding Total}" />
+            <Span Text="{Binding TotalWithBase}" />
           </FormattedString>
         </Label.FormattedText>
       </Label>
     </VerticalStackLayout>
   </ScrollView>
+  <controls:StickyFooterControl
+      Grid.Row="1"
+      Total="{Binding TotalWithBase}"
+      ButtonText="Return to Calculator"
+      ReturnCommand="{Binding ReturnCommand}"
+      ReturnCommandParameter="{x:Reference RootPage}"
+      BreakdownItems="{Binding CalculatorContext.BreakdownItems, Source={x:Reference RootPage}}"
+      RemoveContributionCommand="{Binding CalculatorContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
+  </Grid>
 </ContentPage>

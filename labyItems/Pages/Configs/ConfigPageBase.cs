@@ -2,6 +2,7 @@ using Microsoft.Maui.Controls;
 using System.Threading.Tasks;
 using labyItems.Controls;
 using labyItems.Models;
+using labyItems.Pages.Calculator;
 
 namespace labyItems.Pages.Configs;
     public abstract class ConfigPageBase<TConfig> : ContentPage
@@ -10,8 +11,9 @@ namespace labyItems.Pages.Configs;
         protected readonly TaskCompletionSource<CalcResult?> _tcs = new();
         public Task<CalcResult?> Completion => _tcs.Task;
 
-        public TConfig Config { get; }
+        public TConfig Config { get; private set; }
         public Command ReturnFromConfigCommand { get; }
+        public Pages.Calculator.IspCalculator? CalculatorContext { get; set; }
 
         protected ConfigPageBase()
         {
@@ -20,16 +22,24 @@ namespace labyItems.Pages.Configs;
 
             ReturnFromConfigCommand = new Command(async () =>
             {
-                var result = new CalcResult
-                {
-                    TotalIsp = Config.Total,
-                    Summary  = BuildSummary(Config)
-                };
+                var result = BuildResult(Config);
 
                 _tcs.TrySetResult(result);
                 await StickyFooterControl.DefaultNavigateAsync(this);
             });
         }
 
-        protected abstract string BuildSummary(TConfig cfg);
+        public void ApplyBaseTotal(int baseTotal)
+        {
+            Config.BaseIsp = baseTotal;
+        }
+
+        public void ResetConfig()
+        {
+            var baseIsp = Config.BaseIsp;
+            Config = new TConfig { BaseIsp = baseIsp };
+            BindingContext = Config;
+        }
+
+        protected abstract CalcResult BuildResult(TConfig cfg);
     }

@@ -19,7 +19,8 @@
             <controls:DictionarySlider
                 x:Name="LifeSlider"
                 KeyFormat="Life: {0}"
-                ValueFormat="ISP: {0}" />
+                ValueFormat="ISP: {0}"
+                SelectionChanged="OnLifeSelectionChanged" />
         </VerticalStackLayout>
     </ScrollView>
      <controls:StickyFooterControl
@@ -27,6 +28,8 @@
       ButtonText="Return to Form"
       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"
-      Total="{Binding Source={x:Reference RootPage}, Path=Total}" />
+      Total="{Binding Source={x:Reference RootPage}, Path=BindingContext.Total}"
+      BreakdownItems="{Binding Source={x:Reference RootPage}, Path=BindingContext.BreakdownItems}"
+      RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=BindingContext.RemoveContributionCommand}" />
   </Grid>
 </ContentPage>
