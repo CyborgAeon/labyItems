@@ -10,10 +10,10 @@
 	<Grid RowDefinitions="*,Auto">
 		<ScrollView Grid.Row="0">
 			<VerticalStackLayout Padding="16" Spacing="12">
-				<Button Clicked="OnCharmEarthPower" Text="Earthpower Charm" />
-				<Button Clicked="OnCharmGeneral" Text="General Charm" />
-				<Button Clicked="OnCharmMagic" Text="Magic Charm" />
-				<Button Clicked="OnCharmSpirit" Text="Spirit Charm" />
+				<Button Clicked="OnCharmEarthPower" Text="Earthpower" />
+				<Button Clicked="OnCharmGeneral" Text="General" />
+				<Button Clicked="OnCharmMagic" Text="Magic" />
+				<Button Clicked="OnCharmSpirit" Text="Spirit" />
 				<Label
 					x:Name="EarthPowerCharmPickedLabel"
 					IsVisible="False"

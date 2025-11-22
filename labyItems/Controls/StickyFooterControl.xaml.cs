@@ -96,6 +96,7 @@ namespace labyItems.Controls
             IsExpanded = !IsExpanded;
         }
 
+
         public static async Task DefaultNavigateAsync(Page page, string shellFallbackRoute = "..")
         {
             if (page?.Navigation?.NavigationStack?.Count > 1)

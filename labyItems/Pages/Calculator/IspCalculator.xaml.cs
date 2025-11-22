@@ -50,7 +50,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         LifeCategoryPage.BindingContext = this;
 
         ArmourCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
-        WeaponCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
+        // Weapon config page already returns a CalcResult via Completion; we add manually when returned.
         CharmCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
         ConsumableCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
         LifeCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
@@ -172,13 +172,6 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
     private void RemoveContributionById(string? id)
     {
         if (string.IsNullOrWhiteSpace(id)) return;
-
-        if (id == "base")
-        {
-            _baseIsp = 0;
-            UpdateTotal();
-            return;
-        }
 
         var existing = _contributions.FirstOrDefault(c => c.Id == id);
         if (existing is null) return;
