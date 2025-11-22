@@ -4,6 +4,8 @@ using System.Text;
 using labyItems.Models;
 using labyItems.Models.Enums;
 using labyItems.Pages.Configs;
+using labyItems.Pages.Calculator;
+using System.Windows.Input;
 
 namespace labyItems.Pages.Calculator;
 
@@ -11,11 +13,19 @@ public partial class ShieldConfigPage : ContentPage
 {
     private readonly TaskCompletionSource<CalcResult?> _tcs = new();
     public Task<CalcResult?> Completion => _tcs.Task;
+    public IspCalculator? CalculatorContext { get; set; }
+    public ICommand ReturnCommand { get; }
 
     public ShieldConfigPage()
     {
         InitializeComponent();
         BindingContext = new ShieldConfig();
+        ReturnCommand = new Command(async () => await OnReturnInternal());
+    }
+
+    public void ResetConfig()
+    {
+        BindingContext = new ShieldConfig { BaseIsp = (BindingContext as ShieldConfig)?.BaseIsp ?? 0 };
     }
 
     public void ApplyBaseTotal(int baseTotal)
@@ -24,7 +34,7 @@ public partial class ShieldConfigPage : ContentPage
             cfg.BaseIsp = baseTotal;
     }
 
-    private string BuildSummary(ShieldConfig cfg)
+    private CalcResult BuildResult(ShieldConfig cfg)
     {
         var kind = cfg.SelectedShield switch
         {
@@ -34,14 +44,19 @@ public partial class ShieldConfigPage : ContentPage
             _                     => "No Shield"
         };
 
-        var tags = new List<string>();
+        var details = new Dictionary<string, object?>();
         if (cfg.SelectedShield == ShieldKind.Magical0 && cfg.MagicalColoursCount > 0)
-            tags.Add($"+{2 * cfg.MagicalColoursCount} (colours)");
+            details["magicalColours"] = cfg.MagicalColoursCount;
         if (cfg.SelectedShield == ShieldKind.Spiritual0 && cfg.SpiritualNonOpposite)
-            tags.Add("+3 (non-opposite)");
+            details["spiritualNonOpposite"] = true;
 
-        var tagText = tags.Count > 0 ? $" [{string.Join(", ", tags)}]" : "";
-        return $"{kind}{tagText} → {cfg.Total} ISP";
+        return new CalcResult
+        {
+            AbilityType = "Shield",
+            AbilityName = kind,
+            TotalIsp = cfg.Total,
+            Details = details
+        };
     }
 
     // ---- Event handlers to wire from XAML ----
@@ -74,12 +89,13 @@ public partial class ShieldConfigPage : ContentPage
 
     private async void OnReturn(object sender, EventArgs e)
     {
+        await OnReturnInternal();
+    }
+
+    private async Task OnReturnInternal()
+    {
         var cfg = (ShieldConfig)BindingContext;
-        var res = new CalcResult
-        {
-            TotalIsp = cfg.Total,
-            Summary = BuildSummary(cfg)
-        };
+        var res = BuildResult(cfg);
         _tcs.TrySetResult(res);
         await Navigation.PopAsync();
     }

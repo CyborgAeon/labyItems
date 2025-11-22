@@ -1,6 +1,7 @@
 using labyItems.Models;
 using labyItems.Pages.Configs;
 using labyItems.Services;
+using System.Collections.Generic;
 namespace labyItems.Pages.Calculator;
 
 public partial class ConsumableConfigPage : ConfigPageBase<ConsumableConfig>
@@ -14,11 +15,7 @@ public partial class ConsumableConfigPage : ConfigPageBase<ConsumableConfig>
         {
             if (BindingContext is not ConsumableConfig cfg) return;
 
-            var result = new CalcResult
-            {
-                TotalIsp = cfg.Total,
-                Summary  = BuildSummary(cfg)
-            };
+            var result = BuildResult(cfg);
 
             if (Navigation?.NavigationStack?.Count > 1)
             {
@@ -82,13 +79,35 @@ public partial class ConsumableConfigPage : ConfigPageBase<ConsumableConfig>
         cfg.ApplyEntry(entry);
     }
 
-    protected override string BuildSummary(ConsumableConfig cfg)
-        => $"{cfg.SelectedText} → {cfg.Total} ISP";
+    protected override CalcResult BuildResult(ConsumableConfig cfg)
+    {
+        var details = new Dictionary<string, object?>
+        {
+            ["type"] = cfg.Type.ToString()
+        };
+
+        if (!string.IsNullOrWhiteSpace(cfg.SelectedName))
+            details["name"] = cfg.SelectedName;
+        if (cfg.SelectedValue > 0)
+            details["value"] = cfg.SelectedValue;
+        if (cfg.FocussingCrystals > 0)
+            details["focussingCrystals"] = cfg.FocussingCrystals;
+        if (cfg.Batches500Grulls > 0)
+            details["batches500Grulls"] = cfg.Batches500Grulls;
+
+        return new CalcResult
+        {
+            AbilityType = "Consumable",
+            AbilityName = cfg.Type.ToString(),
+            TotalIsp = cfg.Total,
+            Details = details
+        };
+    }
 
     private async void OnReturn(object sender, EventArgs e)
     {
         var cfg = (ConsumableConfig)BindingContext;
-        var res = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
+        var res = BuildResult(cfg);
         _tcs.TrySetResult(res);
         await Navigation.PopAsync();
     }

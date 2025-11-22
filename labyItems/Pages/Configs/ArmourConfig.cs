@@ -58,16 +58,16 @@ public class ArmourConfig : ConfigBase
         {
             int perAc = SelectedArmour switch
             {
-                ArmourKind.MagicalMasterCrafted   => 2,
-                ArmourKind.SpiritualMasterCrafted => 2,
-                ArmourKind.ManticMasterCrafted    => 4,
+                ArmourKind.Magical   => 2,
+                ArmourKind.Spiritual => 2,
+                ArmourKind.Mantic    => 4,
                 _ => 0
             };
             int flat = SelectedArmour switch
             {
-                ArmourKind.MagicalMasterCrafted   => 0,
-                ArmourKind.SpiritualMasterCrafted => 2,
-                ArmourKind.ManticMasterCrafted    => 2,
+                ArmourKind.Magical   => 0,
+                ArmourKind.Spiritual => 2,
+                ArmourKind.Mantic    => 2,
                 _ => 0
             };
             int armourCost = perAc * ACBase + flat;
@@ -75,14 +75,14 @@ public class ArmourConfig : ConfigBase
             sb.AppendLine($"Armour: {perAc} × AC({ACBase}) + {flat} = {armourCost}");
         }
 
-        if (SelectedArmour == ArmourKind.MagicalMasterCrafted && MagicalColoursCount > 0)
+        if (SelectedArmour == ArmourKind.Magical && MagicalColoursCount > 0)
         {
             int c = 2 * MagicalColoursCount;
             total += c;
             sb.AppendLine($"+ Magical colours: 2 × {MagicalColoursCount} = {c}");
         }
 
-        if (SelectedArmour == ArmourKind.SpiritualMasterCrafted && SpiritualNonOpposite)
+        if (SelectedArmour == ArmourKind.Spiritual && SpiritualNonOpposite)
         {
             total += 3;
             sb.AppendLine("+ Spiritual non-opposite: 3");
@@ -99,12 +99,12 @@ public class ArmourConfig : ConfigBase
 
     private int Clamp0To6(int v) => Math.Min(6, Math.Max(0, v));
 
-    private static readonly int[] PacTable = { 0, 4, 12, 20, 32, 44, 60 };
-    private static readonly int[] DacTable = { 0, 6, 18, 30, 48, 66, 90 };
-    private static readonly int[] MacTable = { 0, 8, 24, 40, 64, 88, 120 };
-    private static readonly int[] SacTable = { 0, 6, 18, 30, 48, 66, 90 };
+    public static readonly IReadOnlyList<int> PacTable = new[] { 0, 4, 12, 20, 32, 44, 60 };
+    public static readonly IReadOnlyList<int> DacTable = new[] { 0, 6, 18, 30, 48, 66, 90 };
+    public static readonly IReadOnlyList<int> MacTable = new[] { 0, 8, 24, 40, 64, 88, 120 };
+    public static readonly IReadOnlyList<int> SacTable = new[] { 0, 6, 18, 30, 48, 66, 90 };
 
-    private static int AddTableCost(int ac, int[] table, string label, StringBuilder sb)
+    private static int AddTableCost(int ac, IReadOnlyList<int> table, string label, StringBuilder sb)
     {
         int a = Math.Min(6, Math.Max(0, ac));
         int cost = table[a];

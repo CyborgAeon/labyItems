@@ -16,8 +16,6 @@
                 FontAttributes="Bold"
                 FontSize="18" />
 
-            <Label FontAttributes="Bold" Text="Item Type" />
-            <Picker x:Name="ItemTypePicker" Title="Select item type" />
             <VerticalStackLayout IsVisible="{Binding ShowPlayerNameField}">
                 <Label FontAttributes="Bold" Text="MakerPlayerName" />
                 <Entry x:Name="MakerPlayerNameEntry" Placeholder="Maker Player name" />
@@ -63,8 +61,7 @@
                     HeightRequest="44"
                     HorizontalOptions="Center"
                     Text="Calculate"
-                    VerticalOptions="End">
-                </Button>
+                    VerticalOptions="End" />
 
                 <!--  Created date  -->
                 <VerticalStackLayout Grid.Column="2" Spacing="6">

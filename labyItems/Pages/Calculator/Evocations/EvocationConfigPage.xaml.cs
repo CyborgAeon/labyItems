@@ -1,6 +1,7 @@
 using labyItems.Models;
 using labyItems.Pages.Configs;
 using labyItems.Services;
+using System.Collections.Generic;
 
 namespace labyItems.Pages.Calculator;
 
@@ -11,24 +12,27 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
         InitializeComponent();
     }
 
-    protected override string BuildSummary(EvocationConfig cfg)
+    protected override CalcResult BuildResult(EvocationConfig cfg)
     {
         var basic = cfg.BasicPerDay > 0 ? $"Cast x {cfg.BasicPerDay}/day" : null;
         var adv   = cfg.AdvancedPerDay > 0 ? $"Cast x {cfg.AdvancedPerDay}/day" : null;
 
-        var tags = new List<string?>(new[]
-        {
-            basic,
-            adv,
-            cfg.AddBasic ? $"add {cfg.EvocationName} to base list (B)" : null,
-            cfg.AddAdvanced ? $"add {cfg.EvocationName} to base list (A)" : null,
-            cfg.AddPrep ? $"add {cfg.EvocationName} to base list with 30s prep" : null,
-            cfg.DrawOnEpPerDay > 0 ? $"draw on EP {cfg.DrawOnEpPerDay}/day (16×)" : null
-        }).Where(s => !string.IsNullOrWhiteSpace(s));
+        var details = new Dictionary<string, object?>();
+        if (basic is not null) details["basicPerDay"] = cfg.BasicPerDay;
+        if (adv is not null) details["advancedPerDay"] = cfg.AdvancedPerDay;
+        if (cfg.AddBasic) details["addBasicToList"] = true;
+        if (cfg.AddAdvanced) details["addAdvancedToList"] = true;
+        if (cfg.AddPrep) details["addWithPrep30"] = true;
+        if (cfg.DrawOnEpPerDay > 0) details["drawOnEpPerDay"] = cfg.DrawOnEpPerDay;
 
-        var tagText = string.Join(",\n", tags);
         var name = string.IsNullOrWhiteSpace(cfg.EvocationName) ? "Evocation" : cfg.EvocationName;
-        return $"{name}: {tagText} → {cfg.Total} ISP";
+        return new CalcResult
+        {
+            AbilityType = "Evocation",
+            AbilityName = name,
+            TotalIsp = cfg.Total,
+            Details = details
+        };
     }
 
     private async void OnSearchEvocation(object sender, EventArgs e)

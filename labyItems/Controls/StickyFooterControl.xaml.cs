@@ -1,5 +1,7 @@
 using Microsoft.Maui.Controls;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -32,6 +34,18 @@ namespace labyItems.Controls
             BindableProperty.Create(
                 nameof(FormattedTotal), typeof(string), typeof(StickyFooterControl), "Total ISP: 0");
         public string FormattedTotal { get => (string)GetValue(FormattedTotalProperty); private set => SetValue(FormattedTotalProperty, value); }
+
+        public static readonly BindableProperty BreakdownItemsProperty =
+            BindableProperty.Create(nameof(BreakdownItems), typeof(IEnumerable<ContributionRow>), typeof(StickyFooterControl), Enumerable.Empty<ContributionRow>());
+        public IEnumerable<ContributionRow> BreakdownItems { get => (IEnumerable<ContributionRow>)GetValue(BreakdownItemsProperty); set => SetValue(BreakdownItemsProperty, value); }
+
+        public static readonly BindableProperty RemoveContributionCommandProperty =
+            BindableProperty.Create(nameof(RemoveContributionCommand), typeof(ICommand), typeof(StickyFooterControl), null);
+        public ICommand? RemoveContributionCommand { get => (ICommand?)GetValue(RemoveContributionCommandProperty); set => SetValue(RemoveContributionCommandProperty, value); }
+
+        public static readonly BindableProperty IsExpandedProperty =
+            BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(StickyFooterControl), false);
+        public bool IsExpanded { get => (bool)GetValue(IsExpandedProperty); set => SetValue(IsExpandedProperty, value); }
 
         void UpdateFormattedTotal()
         {
@@ -75,6 +89,11 @@ namespace labyItems.Controls
             var page = FindParentPage();
             if (page is null) return;
             await DefaultNavigateAsync(page, ShellFallbackRoute);
+        }
+
+        private void OnToggleExpanded(object sender, EventArgs e)
+        {
+            IsExpanded = !IsExpanded;
         }
 
         public static async Task DefaultNavigateAsync(Page page, string shellFallbackRoute = "..")

@@ -39,6 +39,7 @@ namespace labyItems.Pages.Calculator.CalcNav;
             _categoryLocked = true;
 
             var cfgPage = new WeaponConfigPage();
+            cfgPage.CalculatorContext = BindingContext as IspCalculator;
             cfgPage.ApplyBaseTotal(GetBaseIsp());
             await Navigation.PushAsync(cfgPage);
 
@@ -47,9 +48,10 @@ namespace labyItems.Pages.Calculator.CalcNav;
             if (cfg is null) return;
 
             var added = new CalcContribution(
+                Id: Guid.NewGuid().ToString(),
                 Source: "Weapon",
-                Label: cfg.Summary,
-                Isp:   cfg.TotalIsp);
+                Result: cfg,
+                OnRemove: cfgPage.ResetConfig);
 
             _contributions.Add(added);
             ContributionAdded?.Invoke(added);
@@ -58,7 +60,7 @@ namespace labyItems.Pages.Calculator.CalcNav;
             WeaponPickedLabel.Text = string.Join("\n",
                 _contributions
                     .Where(c => c.Source.Equals("Weapon", StringComparison.OrdinalIgnoreCase))
-                    .Select(c => c.Label));
+                    .Select(c => c.Result.Summary));
 
             UpdateTotal();
         }
@@ -79,14 +81,14 @@ public ICommand? ReturnToFormCommand
         private int UpdateTotal() => ComputeTotal();
         private int ComputeTotal()
         {
-            var sum = _contributions.Sum(c => c.Isp);
+            var sum = _contributions.Sum(c => c.Result.TotalIsp);
             Total = sum <= 0 ? 0 : sum;
             return Total;
         }
 
         private string BuildSummary()
         {
-            var lines = _contributions.Select(c => c.Label).ToList();
+            var lines = _contributions.Select(c => c.Result.Summary).ToList();
             var total = ComputeTotal();
             if (total > 0) lines.Add($"Total ISP: {total}");
             return string.Join("\n", lines);

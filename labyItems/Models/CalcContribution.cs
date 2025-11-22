@@ -1,2 +1,2 @@
 namespace labyItems.Models;
-public sealed record CalcContribution(string Source, string Label, int Isp);
+public sealed record CalcContribution(string Id, string Source, CalcResult Result, Action? OnRemove = null);

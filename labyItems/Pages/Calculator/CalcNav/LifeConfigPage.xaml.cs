@@ -58,16 +58,28 @@ public ICommand? ReturnToFormCommand
         private async Task OnReturnCommand() {
             var key   = LifeSlider.SelectedKey;   // e.g. "12/4"
             var value = LifeSlider.SelectedValue; // e.g. 20
-            var summary = $"+{key} Item-Life -> {value} ISP\n";
+            var result = new CalcResult
+            {
+                AbilityType = "Life",
+                AbilityName = key,
+                TotalIsp = value,
+                Details = new Dictionary<string, object?> { ["life"] = key }
+            };
             ContributionAdded?.Invoke(new CalcContribution(
+                Id: Guid.NewGuid().ToString(),
                 Source: "Life",
-                Label:  summary,
-                Isp:    value
+                Result:  result,
+                OnRemove: ResetSelection
             ));
         }
         private void OnReturnToCalculator(object sender, EventArgs e) => OnReturnCommand();
         private int ComputeTotal()
         {
             return LifeSlider.SelectedValue;
+        }
+
+        private void ResetSelection()
+        {
+            LifeSlider.SelectedIndex = -1;
         }
     }

@@ -2,229 +2,249 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
+using System.Windows.Input;
 using labyItems.Models;
 using labyItems.Pages.Calculator;
 using labyItems.Pages.Configs;
-
-using System.Windows.Input;
+using Microsoft.Maui.Controls;
 
 namespace labyItems.Pages.Calculator.CalcNav;
-    public partial class ConsumNav : ContentPage
-    {
-        // Let the parent know when a contribution is added.
-        public event Action<CalcContribution>? ContributionAdded;
 
-        private readonly List<CalcContribution> _contributions = new();
-        private bool _categoryLocked;
+public partial class ConsumNav : ContentPage
+{
+    public event Action<CalcContribution>? ContributionAdded;
+    private readonly List<CalcContribution> _contributions = new();
+    private bool _categoryLocked;
 
-public static readonly BindableProperty TotalProperty =
-        BindableProperty.Create(
-            nameof(Total),
-            typeof(int),
-            typeof(ConsumNav),
-            0);
-            
-        public static readonly BindableProperty ReturnToFormCommandProperty =
-    BindableProperty.Create(
+    public static readonly BindableProperty TotalProperty = BindableProperty.Create(
+        nameof(Total),
+        typeof(int),
+        typeof(ConsumNav),
+        0
+    );
+
+    public static readonly BindableProperty ReturnToFormCommandProperty = BindableProperty.Create(
         nameof(ReturnToFormCommand),
         typeof(ICommand),
         typeof(ConsumNav),
-        null);
+        null
+    );
 
-public ICommand? ReturnToFormCommand
-{
-    get => (ICommand?)GetValue(ReturnToFormCommandProperty);
-    set => SetValue(ReturnToFormCommandProperty, value);
-}
+    public ICommand? ReturnToFormCommand
+    {
+        get => (ICommand?)GetValue(ReturnToFormCommandProperty);
+        set => SetValue(ReturnToFormCommandProperty, value);
+    }
     public int Total
     {
         get => (int)GetValue(TotalProperty);
         set => SetValue(TotalProperty, value);
     }
-        public ConsumNav()
-        {
-            InitializeComponent();
-            ComputeTotal();
-        }
-private async Task OnReturnCommand(){
-            var result = new CalcResult
-            {
-                TotalIsp = ComputeTotal(),
-                Summary  = BuildSummary()
-            };
 
-            await Navigation.PopAsync();
-}
-private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
+    public ConsumNav()
+    {
+        InitializeComponent();
+        ComputeTotal();
+    }
 
-        private async void OnConsumableMagicScroll(object sender, EventArgs e)
-        {
-        if (_categoryLocked) return;
+    private async Task OnReturnCommand()
+    {
+        var result = new CalcResult { TotalIsp = ComputeTotal(), Summary = BuildSummary() };
+
+        await Navigation.PopAsync();
+    }
+
+    private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
+
+    private async void OnConsumableMagicScroll(object sender, EventArgs e)
+    {
+        if (_categoryLocked)
+            return;
         _categoryLocked = true;
 
         var cfgPage = new ConsumableConfigPage(ConsumableType.MagicalScroll);
+        cfgPage.CalculatorContext = BindingContext as IspCalculator;
         cfgPage.ApplyBaseTotal(GetBaseIsp());
         await Navigation.PushAsync(cfgPage);
 
-            var cfg = await cfgPage.Completion;
-            _categoryLocked = false;
-            if (cfg is null) return;
+        var cfg = await cfgPage.Completion;
+        _categoryLocked = false;
+        if (cfg is null)
+            return;
 
-            var added = new CalcContribution(
-                Source: "Consumable/Magic Scroll",
-                Label: cfg.Summary,
-                Isp:   cfg.TotalIsp);
+        var added = new CalcContribution(Id: Guid.NewGuid().ToString(), Source: "Consumable/Magic Scroll", Result: cfg, OnRemove: cfgPage.ResetConfig);
 
-            _contributions.Add(added);
-            ContributionAdded?.Invoke(added);
+        _contributions.Add(added);
+        ContributionAdded?.Invoke(added);
 
-            ConsumableMagicPickedLabel.IsVisible = true;
-            ConsumableMagicPickedLabel.Text = string.Join("\n", _contributions
-                .Where(c => c.Source.Equals("Consumable/Magic Scroll", StringComparison.OrdinalIgnoreCase))
-                .Select(c => c.Label));
+        ConsumableMagicPickedLabel.IsVisible = true;
+        ConsumableMagicPickedLabel.Text = string.Join(
+            "\n",
+            _contributions
+                .Where(c =>
+                    c.Source.Equals("Consumable/Magic Scroll", StringComparison.OrdinalIgnoreCase)
+                )
+                .Select(c => c.Result.Summary)
+        );
 
-            UpdateTotal();
-        }
+        UpdateTotal();
+    }
 
-        private async void OnConsumableSpiritScroll(object sender, EventArgs e)
-        {
-        if (_categoryLocked) return;
+    private async void OnConsumableSpiritScroll(object sender, EventArgs e)
+    {
+        if (_categoryLocked)
+            return;
         _categoryLocked = true;
 
         var cfgPage = new ConsumableConfigPage(ConsumableType.SpiritualScroll);
+        cfgPage.CalculatorContext = BindingContext as IspCalculator;
         cfgPage.ApplyBaseTotal(GetBaseIsp());
         await Navigation.PushAsync(cfgPage);
 
-            var cfg = await cfgPage.Completion;
-            _categoryLocked = false;
-            if (cfg is null) return;
+        var cfg = await cfgPage.Completion;
+        _categoryLocked = false;
+        if (cfg is null)
+            return;
 
-            var added = new CalcContribution(
-                Source: "Consumable/Spirit Scroll",
-                Label: cfg.Summary,
-                Isp:   cfg.TotalIsp);
+        var added = new CalcContribution(Id: Guid.NewGuid().ToString(), Source: "Consumable/Spirit Scroll", Result: cfg, OnRemove: cfgPage.ResetConfig);
 
-            _contributions.Add(added);
-            ContributionAdded?.Invoke(added);
+        _contributions.Add(added);
+        ContributionAdded?.Invoke(added);
 
-            ConsumableSpiritPickedLabel.IsVisible = true;
-            ConsumableSpiritPickedLabel.Text = string.Join("\n", _contributions
-                .Where(c => c.Source.Equals("Consumable/Spirit Scroll", StringComparison.OrdinalIgnoreCase))
-                .Select(c => c.Label));
+        ConsumableSpiritPickedLabel.IsVisible = true;
+        ConsumableSpiritPickedLabel.Text = string.Join(
+            "\n",
+            _contributions
+                .Where(c =>
+                    c.Source.Equals("Consumable/Spirit Scroll", StringComparison.OrdinalIgnoreCase)
+                )
+                .Select(c => c.Result.Summary)
+        );
 
-            UpdateTotal();
-        }
+        UpdateTotal();
+    }
 
-        private async void OnConsumableNeuroCrystal(object sender, EventArgs e)
-        {
-        if (_categoryLocked) return;
+    private async void OnConsumableNeuroCrystal(object sender, EventArgs e)
+    {
+        if (_categoryLocked)
+            return;
         _categoryLocked = true;
 
         // Preset with focussing crystals if you want, here set to 0 as in your snippet.
-        var cfgPage = new ConsumableConfigPage(ConsumableType.NeuronicShard, initialFocussingCrystals: 0);
+        var cfgPage = new ConsumableConfigPage(
+            ConsumableType.NeuronicShard,
+            initialFocussingCrystals: 0
+        );
+        cfgPage.CalculatorContext = BindingContext as IspCalculator;
         cfgPage.ApplyBaseTotal(GetBaseIsp());
         await Navigation.PushAsync(cfgPage);
 
-            var cfg = await cfgPage.Completion;
-            _categoryLocked = false;
-            if (cfg is null) return;
+        var cfg = await cfgPage.Completion;
+        _categoryLocked = false;
+        if (cfg is null)
+            return;
 
-            var added = new CalcContribution(
-                Source: "Consumable/Neuro Crystal",
-                Label: cfg.Summary,
-                Isp:   cfg.TotalIsp);
+        var added = new CalcContribution(Id: Guid.NewGuid().ToString(), Source: "Consumable/Neuro Crystal", Result: cfg, OnRemove: cfgPage.ResetConfig);
 
-            _contributions.Add(added);
-            ContributionAdded?.Invoke(added);
+        _contributions.Add(added);
+        ContributionAdded?.Invoke(added);
 
-            ConsumableNeuroPickedLabel.IsVisible = true;
-            ConsumableNeuroPickedLabel.Text = string.Join("\n", _contributions
-                .Where(c => c.Source.Equals("Consumable/Neuro Crystal", StringComparison.OrdinalIgnoreCase))
-                .Select(c => c.Label));
+        ConsumableNeuroPickedLabel.IsVisible = true;
+        ConsumableNeuroPickedLabel.Text = string.Join(
+            "\n",
+            _contributions
+                .Where(c =>
+                    c.Source.Equals("Consumable/Neuro Crystal", StringComparison.OrdinalIgnoreCase)
+                )
+                .Select(c => c.Result.Summary)
+        );
 
-            UpdateTotal();
-        }
+        UpdateTotal();
+    }
 
-        private async void OnConsumableEPTalisman(object sender, EventArgs e)
-        {
-        if (_categoryLocked) return;
+    private async void OnConsumableEPTalisman(object sender, EventArgs e)
+    {
+        if (_categoryLocked)
+            return;
         _categoryLocked = true;
 
         var cfgPage = new ConsumableConfigPage(ConsumableType.DruidicTalisman);
+        cfgPage.CalculatorContext = BindingContext as IspCalculator;
         cfgPage.ApplyBaseTotal(GetBaseIsp());
         await Navigation.PushAsync(cfgPage);
 
-            var cfg = await cfgPage.Completion;
-            _categoryLocked = false;
-            if (cfg is null) return;
+        var cfg = await cfgPage.Completion;
+        _categoryLocked = false;
+        if (cfg is null)
+            return;
 
-            var added = new CalcContribution(
-                Source: "Consumable/EP Talisman",
-                Label: cfg.Summary,
-                Isp:   cfg.TotalIsp);
+        var added = new CalcContribution(Id: Guid.NewGuid().ToString(), Source: "Consumable/EP Talisman", Result: cfg, OnRemove: cfgPage.ResetConfig);
 
-            _contributions.Add(added);
-            ContributionAdded?.Invoke(added);
+        _contributions.Add(added);
+        ContributionAdded?.Invoke(added);
 
-            ConsumableEPPickedLabel.IsVisible = true;
-            ConsumableEPPickedLabel.Text = string.Join("\n", _contributions
-                .Where(c => c.Source.Equals("Consumable/EP Talisman", StringComparison.OrdinalIgnoreCase))
-                .Select(c => c.Label));
+        ConsumableEPPickedLabel.IsVisible = true;
+        ConsumableEPPickedLabel.Text = string.Join(
+            "\n",
+            _contributions
+                .Where(c =>
+                    c.Source.Equals("Consumable/EP Talisman", StringComparison.OrdinalIgnoreCase)
+                )
+                .Select(c => c.Result.Summary)
+        );
 
-            UpdateTotal();
-        }
+        UpdateTotal();
+    }
 
-        private async void OnConsumableGeneric(object sender, EventArgs e)
-        {
-        if (_categoryLocked) return;
+    private async void OnConsumableGeneric(object sender, EventArgs e)
+    {
+        if (_categoryLocked)
+            return;
         _categoryLocked = true;
 
         var cfgPage = new ConsumableConfigPage();
+        cfgPage.CalculatorContext = BindingContext as IspCalculator;
         cfgPage.ApplyBaseTotal(GetBaseIsp());
         await Navigation.PushAsync(cfgPage);
 
-            var cfg = await cfgPage.Completion;
-            _categoryLocked = false;
-            if (cfg is null) return;
+        var cfg = await cfgPage.Completion;
+        _categoryLocked = false;
+        if (cfg is null)
+            return;
 
-            var added = new CalcContribution(
-                Source: "Consumable",
-                Label: cfg.Summary,
-                Isp:   cfg.TotalIsp);
+        var added = new CalcContribution(Id: Guid.NewGuid().ToString(), Source: "Consumable", Result: cfg, OnRemove: cfgPage.ResetConfig);
 
-            _contributions.Add(added);
-            ContributionAdded?.Invoke(added);
+        _contributions.Add(added);
+        ContributionAdded?.Invoke(added);
 
-            // If you want an aggregated per-consumable summary label, put it here.
-            UpdateTotal();
-        }
-
-        private void UpdateTotal()
-        {
-            TotalLabel.Text = $"Total: {ComputeTotal()} ISP";
-        }
-
-        private int ComputeTotal()
-        {
-            var sum = _contributions.Sum(c => c.Isp);
-            Total = sum <= 0 ? 0 : sum;
-            return Total;
-        }
-
-        private string BuildSummary()
-        {
-            var lines = new List<string>();
-            foreach (var c in _contributions)
-                lines.Add(c.Label);
-
-            var total = ComputeTotal();
-            if (total > 0)
-                lines.Add($"Total ISP: {total}");
-
-            return string.Join("\n", lines);
-        }
-
-        private int GetBaseIsp() =>
-            (BindingContext as IspCalculator)?.BaseTotal ?? 0;
+        // If you want an aggregated per-consumable summary label, put it here.
+        UpdateTotal();
     }
+
+    private void UpdateTotal()
+    {
+        TotalLabel.Text = $"Total: {ComputeTotal()} ISP";
+    }
+
+    private int ComputeTotal()
+    {
+        var sum = _contributions.Sum(c => c.Result.TotalIsp);
+        Total = sum <= 0 ? 0 : sum;
+        return Total;
+    }
+
+    private string BuildSummary()
+    {
+        var lines = new List<string>();
+        foreach (var c in _contributions)
+            lines.Add(c.Result.Summary);
+
+        var total = ComputeTotal();
+        if (total > 0)
+            lines.Add($"Total ISP: {total}");
+
+        return string.Join("\n", lines);
+    }
+
+    private int GetBaseIsp() => (BindingContext as IspCalculator)?.BaseTotal ?? 0;
+}

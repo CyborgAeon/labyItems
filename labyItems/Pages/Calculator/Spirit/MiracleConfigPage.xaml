@@ -115,6 +115,8 @@
     Total="{Binding TotalWithBase}"
     ButtonText="Return to Calculator"
     ReturnCommand="{Binding ReturnFromConfigCommand}"
-    ReturnCommandParameter="{x:Reference RootPage}"/>
+    ReturnCommandParameter="{x:Reference RootPage}"
+    BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
+    RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}"/>
   </Grid>
 </cfg:ConfigPageBase>

@@ -23,7 +23,9 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
         var result = new CalcResult
         {
             TotalIsp = cfg.Total,
-            Summary  = BuildSummary(cfg)
+            AbilityType = "Miracle",
+            AbilityName = string.IsNullOrWhiteSpace(cfg.Name) ? "Miracle" : cfg.Name,
+            Details = BuildDetails(cfg)
         };
 
         if (Navigation?.NavigationStack?.Count > 1)
@@ -44,34 +46,14 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
     }
 
 
-    protected override string BuildSummary(MiracleConfig cfg)
-    {
-        var tags = new List<string>();
-
-        if (cfg.BasicPerDay > 0)     tags.Add($"Basic x{cfg.BasicPerDay}");
-        if (cfg.AdvancedPerDay > 0)  tags.Add($"Advanced x{cfg.AdvancedPerDay}");
-        if (cfg.InnateIsMantic)      tags.Add("Innates mantic ×4");
-
-        if (cfg.GeneralSpiritStore > 0) tags.Add($"{cfg.GeneralSpiritStore} additional spirits (4×{cfg.GeneralSpiritStore})");
-        if (cfg.SphereSpiritStore  > 0) tags.Add($"{cfg.SphereSpiritStore} additional {SphereSel} spirits (3×{cfg.SphereSpiritStore})");
-        if (cfg.SpiritStoreRegenerates && (cfg.GeneralSpiritStore > 0 || cfg.SphereSpiritStore > 0))
-            tags.Add("Store regenerates +25");
-        if (cfg.IsAdvanced == false && cfg.AddBasicToList)    tags.Add($"add {cfg.Name} to base list (B)");
-        if (cfg.IsAdvanced == true  && cfg.AddAdvancedToList) tags.Add($"add {cfg.Name} to base list (A)");
-
-        if (cfg.AddWithPrep30) tags.Add($"add {cfg.Name} to base list with 30s prep");
-        if (cfg.TurnBasicUpTo5thMantic      > 0) tags.Add($"Turn handbook → ≤5th mantic ×{cfg.TurnBasicUpTo5thMantic} (40×)");
-        if (cfg.TurnBasicMantic             > 0) tags.Add($"Turn any handbook mantic ×{cfg.TurnBasicMantic} (50×)");
-        if (cfg.TurnAdvancedUpTo6thMantic   > 0) tags.Add($"Turn advanced → ≤6th mantic ×{cfg.TurnAdvancedUpTo6thMantic} (60×)");
-        if (cfg.TurnAdvancedAbove6thMantic  > 0) tags.Add($"Turn any advanced mantic ×{cfg.TurnAdvancedAbove6thMantic} (80×)");
-
-        if (cfg.IsTeachingScroll) tags.Add($"Teaching scroll (3×Power={3 * cfg.Power})");
-        if (cfg.TrueBeliever > 0) tags.Add($"True believer ×{cfg.TrueBeliever} (16×)");
-
-        var name = string.IsNullOrWhiteSpace(cfg.Name) ? "Miracle" : cfg.Name;
-        var tagText = string.Join(", ", tags);
-        return $"{name}: {tagText} → {cfg.Total} ISP";
-    }
+    protected override CalcResult BuildResult(MiracleConfig cfg) =>
+        new()
+        {
+            AbilityType = "Miracle",
+            AbilityName = string.IsNullOrWhiteSpace(cfg.Name) ? "Miracle" : cfg.Name,
+            TotalIsp = cfg.Total,
+            Details = BuildDetails(cfg)
+        };
     
     private async void OnSearchMiracle(object sender, EventArgs e)
     {
@@ -86,8 +68,31 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
     {
         if (BindingContext is not MiracleConfig cfg) return;
 
-        var res = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
+        var res = BuildResult(cfg);
         _tcs.TrySetResult(res);
         await Navigation.PopAsync();
+    }
+
+    private Dictionary<string, object?> BuildDetails(MiracleConfig cfg)
+    {
+        var details = new Dictionary<string, object?>();
+
+        if (cfg.BasicPerDay > 0) details["basicPerDay"] = cfg.BasicPerDay;
+        if (cfg.AdvancedPerDay > 0) details["advancedPerDay"] = cfg.AdvancedPerDay;
+        if (cfg.InnateIsMantic) details["innateIsMantic"] = true;
+        if (cfg.GeneralSpiritStore > 0) details["generalSpiritStore"] = cfg.GeneralSpiritStore;
+        if (cfg.SphereSpiritStore > 0) details["sphereSpiritStore"] = cfg.SphereSpiritStore;
+        if (cfg.SpiritStoreRegenerates) details["spiritStoreRegenerates"] = cfg.SpiritStoreRegenerates;
+        if (cfg.AddBasicToList) details["addBasicToList"] = true;
+        if (cfg.AddAdvancedToList) details["addAdvancedToList"] = true;
+        if (cfg.AddWithPrep30) details["addWithPrep30"] = true;
+        if (cfg.TurnBasicUpTo5thMantic > 0) details["turnBasicUpTo5thMantic"] = cfg.TurnBasicUpTo5thMantic;
+        if (cfg.TurnBasicMantic > 0) details["turnBasicMantic"] = cfg.TurnBasicMantic;
+        if (cfg.TurnAdvancedUpTo6thMantic > 0) details["turnAdvancedUpTo6thMantic"] = cfg.TurnAdvancedUpTo6thMantic;
+        if (cfg.TurnAdvancedAbove6thMantic > 0) details["turnAdvancedAbove6thMantic"] = cfg.TurnAdvancedAbove6thMantic;
+        if (cfg.IsTeachingScroll) details["isTeachingScroll"] = true;
+        if (cfg.TrueBeliever > 0) details["trueBeliever"] = cfg.TrueBeliever;
+
+        return details;
     }
 }
