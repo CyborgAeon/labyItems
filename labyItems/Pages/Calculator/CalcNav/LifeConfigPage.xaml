@@ -19,7 +19,8 @@
             <controls:DictionarySlider
                 x:Name="LifeSlider"
                 KeyFormat="Life: {0}"
-                ValueFormat="ISP: {0}" />
+                ValueFormat="ISP: {0}"
+                SelectionChanged="OnLifeSelectionChanged" />
         </VerticalStackLayout>
     </ScrollView>
      <controls:StickyFooterControl

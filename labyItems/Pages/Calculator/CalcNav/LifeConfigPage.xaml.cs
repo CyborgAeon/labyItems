@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Models;
 using Microsoft.Maui.Controls;
+using labyItems.Controls;
 
 namespace labyItems.Pages.Calculator.CalcNav;
 
@@ -31,6 +30,7 @@ public partial class LifeConfigPage : ContentPage
         // Default mapping (your keys/values)
         var data = new Dictionary<string, int>
         {
+            {"No additional life", 0},
             { "3/1", 4 },
             { "6/2", 9 },
             { "9/3", 14 },
@@ -88,5 +88,27 @@ public partial class LifeConfigPage : ContentPage
     private void ResetSelection()
     {
         LifeSlider.SelectedIndex = -1;
+    }
+
+    private void OnLifeSelectionChanged(object sender, DictionarySelectionChangedEventArgs e)
+    {
+        Total = LifeSlider.SelectedValue;
+        var key = LifeSlider.SelectedKey;
+        var result = new CalcResult
+        {
+            AbilityType = "Life",
+            AbilityName = key,
+            TotalIsp = Total,
+            Details = new Dictionary<string, object?> { ["life"] = key },
+        };
+
+        ContributionAdded?.Invoke(
+            new CalcContribution(
+                Id: "life",
+                Source: "Life",
+                Result: result,
+                OnRemove: ResetSelection
+            )
+        );
     }
 }

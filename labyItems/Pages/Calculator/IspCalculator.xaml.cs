@@ -49,11 +49,11 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         ConsumableCategoryPage.BindingContext = this;
         LifeCategoryPage.BindingContext = this;
 
-        ArmourCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
+        ArmourCategoryPage.ContributionAdded += AddContribution;
         // Weapon config page already returns a CalcResult via Completion; we add manually when returned.
-        CharmCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
-        ConsumableCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
-        LifeCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
+        CharmCategoryPage.ContributionAdded += AddContribution;
+        ConsumableCategoryPage.ContributionAdded += AddContribution;
+        LifeCategoryPage.ContributionAdded += AddContribution;
 
         ReturnToFormCommand = new Command(async () => await ExecuteReturnAsync());
         ArmourCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
@@ -81,7 +81,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
             if (string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            _contributions.Add(new CalcContribution(Guid.NewGuid().ToString(), a.AbilityType, a));
+            AddContribution(new CalcContribution(Guid.NewGuid().ToString(), a.AbilityType, a));
         }
     }
 
@@ -167,6 +167,14 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
             running += c.Result.TotalIsp;
             BreakdownItems.Add(new ContributionRow { Id = c.Id, Text = c.Result.Summary, RunningTotal = running });
         }
+    }
+
+    private void AddContribution(CalcContribution contribution)
+    {
+        var existing = _contributions.FirstOrDefault(c => c.Id == contribution.Id);
+        if (existing != null) _contributions.Remove(existing);
+        _contributions.Add(contribution);
+        UpdateTotal();
     }
 
     private void RemoveContributionById(string? id)
