@@ -22,7 +22,9 @@
 
       <!-- Armour type -->
       <Label Text="Armour type" />
-      <Picker
+      <controls:ArmourPicker LabelText="Armour type"
+        SelectedValue="{Binding SelectedArmour, Mode=TwoWay}" />
+      <!-- <Picker
         x:Name="ArmourPicker"
         Title="Select armour type"
         SelectedIndexChanged="OnArmourChanged">
@@ -32,7 +34,7 @@
           <x:String>Spiritual Master Crafted (2 per AC + 2)</x:String>
           <x:String>Mantic Master Crafted (4 per AC + 2)</x:String>
         </Picker.Items>
-      </Picker>
+      </Picker> -->
 
       <!-- Modifiers -->
       <Label Text="Modifiers" FontAttributes="Bold" />
