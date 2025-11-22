@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using labyItems.Categories;
@@ -15,11 +14,13 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
 
     private readonly List<CalcContribution> _contributions = new();
     private int _baseIsp;
-
-    private TaskCompletionSource<CalcResult?>? _tcs; // or whatever your result type is
+    private TaskCompletionSource<IspCalculationResult?>? _tcsCalc;
 
     public ICommand? ReturnToFormCommand { get; set; }
+    public ICommand RemoveContributionCommand { get; }
+    public ObservableCollection<ContributionRow> BreakdownItems { get; } = new();
     public event PropertyChangedEventHandler? PropertyChanged;
+    public int BaseTotal => _baseIsp;
 
     private int _total;
     public int Total
@@ -48,31 +49,11 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         ConsumableCategoryPage.BindingContext = this;
         LifeCategoryPage.BindingContext = this;
 
-        ArmourCategoryPage.ContributionAdded += c =>
-        {
-            _contributions.Add(c);
-            UpdateTotal();
-        };
-        WeaponCategoryPage.ContributionAdded += c =>
-        {
-            _contributions.Add(c);
-            UpdateTotal();
-        };
-        CharmCategoryPage.ContributionAdded += c =>
-        {
-            _contributions.Add(c);
-            UpdateTotal();
-        };
-        ConsumableCategoryPage.ContributionAdded += c =>
-        {
-            _contributions.Add(c);
-            UpdateTotal();
-        };
-        LifeCategoryPage.ContributionAdded += c =>
-        {
-            _contributions.Add(c);
-            UpdateTotal();
-        };
+        ArmourCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
+        WeaponCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
+        CharmCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
+        ConsumableCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
+        LifeCategoryPage.ContributionAdded += c => { _contributions.Add(c); UpdateTotal(); };
 
         ReturnToFormCommand = new Command(async () => await ExecuteReturnAsync());
         ArmourCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
@@ -81,24 +62,18 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         ConsumableCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
         LifeCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
 
-        if (existingAbilities != null && existingAbilities.Any())
-        {
+        RemoveContributionCommand = new Command<string>(RemoveContributionById);
+
+        if (existingAbilities != null)
             SeedExisting(existingAbilities);
-        }
-        else
-        {
-            UpdateTotal(); // just baseIsp
-        }
+
+        UpdateTotal();
     }
 
     private void SeedExisting(IEnumerable<CalcResult> abilities)
     {
         _contributions.Clear();
-
-        var baseAbility = abilities.FirstOrDefault(a =>
-            string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase)
-        );
-
+        var baseAbility = abilities.FirstOrDefault(a => string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase));
         _baseIsp = baseAbility?.TotalIsp ?? _baseIsp;
 
         foreach (var a in abilities)
@@ -106,49 +81,23 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
             if (string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            _contributions.Add(
-                new CalcContribution(
-                    Id: Guid.NewGuid().ToString(),
-                    Source: a.AbilityType,
-                    Result: a
-                )
-            );
+            _contributions.Add(new CalcContribution(Guid.NewGuid().ToString(), a.AbilityType, a));
         }
-
-        UpdateTotal();
     }
 
     private async Task ExecuteReturnAsync()
     {
-        var abilities = new List<CalcResult>();
-
-        if (_baseIsp > 0)
-        {
-            abilities.Add(
-                new CalcResult
-                {
-                    AbilityType = "Base",
-                    AbilityName = "Base ISP",
-                    TotalIsp = _baseIsp,
-                    // Details, Summary, etc.
-                }
-            );
-        }
-
-        abilities.AddRange(_contributions.Select(c => c.Result));
-
-        var result = new CalcResult
+        var result = new IspCalculationResult
         {
             TotalIsp = ComputeTotal(),
-            Abilities = abilities,
-            SummaryText = BuildSummary(),
+            Abilities = BuildAbilityList(),
+            SummaryText = BuildSummary()
         };
 
-        _tcs?.TrySetResult(result);
+        _tcsCalc?.TrySetResult(result);
         await Navigation.PopAsync();
     }
 
-    // Existing toolbar handler just delegates:
     private async void OnReturn(object sender, EventArgs e) => await ExecuteReturnAsync();
 
     public async Task<IspCalculationResult?> GetResultAsync(INavigation nav)
@@ -160,15 +109,15 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
 
     private int ComputeTotal()
     {
-        var sum = _baseIsp + _contributions.Sum(c => c.Isp);
+        var sum = _baseIsp + _contributions.Sum(c => c.Result.TotalIsp);
         return sum <= 0 ? 0 : sum;
     }
 
     private void UpdateTotal()
     {
-        var total = ComputeTotal();
-        Total = total; // this is what StickyFooter binds to
-        TotalChanged?.Invoke(total);
+        Total = ComputeTotal();
+        TotalChanged?.Invoke(Total);
+        RefreshBreakdown();
     }
 
     private string BuildSummary()
@@ -178,11 +127,10 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         if (_baseIsp > 0)
             lines.Add($"Base ISP: {_baseIsp}");
 
-        lines.AddRange(_contributions.Select(c => c.Label));
+        lines.AddRange(_contributions.Select(c => c.Result.Summary));
 
-        var total = ComputeTotal();
-        if (total > 0)
-            lines.Add($"Total ISP: {total}");
+        if (Total > 0)
+            lines.Add($"Total ISP: {Total}");
 
         return string.Join("\n", lines);
     }
@@ -190,20 +138,16 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
     private List<CalcResult> BuildAbilityList()
     {
         var list = _contributions.Select(c => c.Result).ToList();
-        if (_baseTotal > 0)
+        if (_baseIsp > 0)
         {
-            list.Insert(
-                0,
-                new CalcResult
-                {
-                    AbilityType = "Base",
-                    AbilityName = "Manual ISP entry",
-                    TotalIsp = _baseTotal,
-                    Details = new() { ["source"] = "ItemForm" },
-                }
-            );
+            list.Insert(0, new CalcResult
+            {
+                AbilityType = "Base",
+                AbilityName = "Manual ISP entry",
+                TotalIsp = _baseIsp,
+                Details = new() { ["source"] = "ItemForm" }
+            });
         }
-
         return list;
     }
 
@@ -212,51 +156,38 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         BreakdownItems.Clear();
         int running = 0;
 
-        if (_baseTotal > 0)
+        if (_baseIsp > 0)
         {
-            running += _baseTotal;
-            BreakdownItems.Add(
-                new ContributionRow
-                {
-                    Id = "base",
-                    Text = $"Base ISP: {_baseTotal}",
-                    RunningTotal = running,
-                }
-            );
+            running += _baseIsp;
+            BreakdownItems.Add(new ContributionRow { Id = "base", Text = $"Base ISP: {_baseIsp}", RunningTotal = running });
         }
 
         foreach (var c in _contributions)
         {
             running += c.Result.TotalIsp;
-            BreakdownItems.Add(
-                new ContributionRow
-                {
-                    Id = c.Id,
-                    Text = c.Result.Summary,
-                    RunningTotal = running,
-                }
-            );
+            BreakdownItems.Add(new ContributionRow { Id = c.Id, Text = c.Result.Summary, RunningTotal = running });
         }
     }
 
     private void RemoveContributionById(string? id)
     {
-        if (string.IsNullOrWhiteSpace(id))
-            return;
+        if (string.IsNullOrWhiteSpace(id)) return;
 
         if (id == "base")
         {
-            _baseTotal = 0;
+            _baseIsp = 0;
             UpdateTotal();
             return;
         }
 
         var existing = _contributions.FirstOrDefault(c => c.Id == id);
-        if (existing is null)
-            return;
+        if (existing is null) return;
 
         _contributions.Remove(existing);
         existing.OnRemove?.Invoke();
         UpdateTotal();
     }
+
+    private void OnPropertyChanged([CallerMemberName] string? name = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }
