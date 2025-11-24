@@ -44,13 +44,12 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         Total = baseTotal;
 
         ArmourCategoryPage.BindingContext = this;
-        WeaponCategoryPage.BindingContext = this;
+        // WeaponCategoryPage.BindingContext = this;
         CharmCategoryPage.BindingContext = this;
         ConsumableCategoryPage.BindingContext = this;
         LifeCategoryPage.BindingContext = this;
 
         ArmourCategoryPage.ContributionAdded += AddContribution;
-        // Weapon config page already returns a CalcResult via Completion; we add manually when returned.
         CharmCategoryPage.ContributionAdded += AddContribution;
         ConsumableCategoryPage.ContributionAdded += AddContribution;
         LifeCategoryPage.ContributionAdded += AddContribution;

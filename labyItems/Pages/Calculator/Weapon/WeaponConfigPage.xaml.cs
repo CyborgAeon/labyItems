@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using labyItems.Controls;
 using labyItems.Models;
 using labyItems.Pages.Configs;
-using labyItems.Pages.Configs;
 
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -15,11 +14,12 @@ public partial class WeaponConfigPage : ConfigPageBase<WeaponConfig>
     public WeaponConfigPage()
     {
         InitializeComponent();
+        // BindingContext = new TConfig();
     }
 
     protected override CalcResult BuildResult(WeaponConfig cfg)
     {
-        var details = new Dictionary<string, object?> { ["base"] = cfg.Base.ToString() };
+        var details = new Dictionary<string, object?> { ["base"] = cfg.WeaponBase.ToString() };
 
         if (cfg.IsMagicBase && cfg.MagicalColoursCount > 0)
             details["magicalColours"] = cfg.MagicalColoursCount;
@@ -41,10 +41,20 @@ public partial class WeaponConfigPage : ConfigPageBase<WeaponConfig>
         if (cfg.CutThroughAuraDaily)
             details["cutThroughAuraDaily"] = true;
 
+        if (!string.IsNullOrWhiteSpace(cfg.MagicVsType)) details["magicVsType"] = cfg.MagicVsType;
+        if (!string.IsNullOrWhiteSpace(cfg.MagicVsGroup)) details["magicVsGroup"] = cfg.MagicVsGroup;
+        if (!string.IsNullOrWhiteSpace(cfg.SpiritVsType)) details["spiritVsType"] = cfg.SpiritVsType;
+        if (!string.IsNullOrWhiteSpace(cfg.SpiritVsGroup)) details["spiritVsGroup"] = cfg.SpiritVsGroup;
+
+        if ((cfg.IsMagicBase || cfg.IsManticBase) && cfg.ExtraColoursCount > 1)
+            details["extraColours"] = cfg.ExtraColoursSummary;
+        if ((cfg.IsSpiritBase || cfg.IsManticBase) && cfg.ExtraAlignmentsCount > 1)
+            details["extraAlignments"] = cfg.ExtraAlignmentsSummary;
+
         return new CalcResult
         {
             AbilityType = "Weapon",
-            AbilityName = cfg.Base.ToString(),
+            AbilityName = cfg.WeaponBase.ToString(),
             TotalIsp = cfg.Total,
             Details = details,
         };
