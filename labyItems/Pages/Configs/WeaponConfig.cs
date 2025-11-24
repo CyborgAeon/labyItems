@@ -6,6 +6,20 @@ namespace labyItems.Pages.Configs;
 
 public class WeaponConfig : ConfigBase
 {
+    private WeaponType? _weaponType;
+    public WeaponType? WeaponType
+    {
+        get => _weaponType;
+        set
+        {
+            if (SetProperty(ref _weaponType, value, true))
+            {
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSubmit));
+            }
+        }
+    }
+    public bool CanSubmit => WeaponType.HasValue;
     private WeaponBaseOption _weaponBase;
     public WeaponBaseOption WeaponBase
     {
@@ -47,63 +61,62 @@ public class WeaponConfig : ConfigBase
             if (SetProperty(ref _magicalColoursCount, Math.Max(0, value), true))
             {
                 // This influences the total & breakdown only
-                OnPropertyChanged();              // MagicalColoursCount
+                OnPropertyChanged(); // MagicalColoursCount
                 OnPropertyChanged(nameof(Breakdown));
             }
         }
     }
 
-    private bool _spiritualNonOpposite;
-    public bool SpiritualNonOpposite
+    private int _spiritTurnsPureDailyCount;
+    public int SpiritTurnsPureDailyCount
     {
-        get => _spiritualNonOpposite;
+        get => _spiritTurnsPureDailyCount;
         set
         {
-            if (SetProperty(ref _spiritualNonOpposite, value, true))
+            if (SetProperty(ref _spiritTurnsPureDailyCount, value, true))
             {
-                OnPropertyChanged();              // SpiritualNonOpposite
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Breakdown));
+            }
+        }
+    }
+    private int _magicTurnsPureDailyCount;
+    public int MagicTurnsPureDailyCount
+    {
+        get => _magicTurnsPureDailyCount;
+        set
+        {
+            if (SetProperty(ref _magicTurnsPureDailyCount, value, true))
+            {
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(Breakdown));
             }
         }
     }
 
-    private bool _magicTurnsPureDaily;
-    public bool MagicTurnsPureDaily
+    private int _manticTurnsPureDailyCount;
+    public int ManticTurnsPureDailyCount
     {
-        get => _magicTurnsPureDaily;
+        get => _manticTurnsPureDailyCount;
         set
         {
-            if (SetProperty(ref _magicTurnsPureDaily, value, true))
+            if (SetProperty(ref _manticTurnsPureDailyCount, value, true))
             {
-                OnPropertyChanged();              // MagicTurnsPureDaily
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(Breakdown));
             }
         }
     }
 
-    private bool _manticTurnsPureDaily;
-    public bool ManticTurnsPureDaily
+    private int _adventurePermDamageDailyCount;
+    public int AdventurePermDamageDailyCount
     {
-        get => _manticTurnsPureDaily;
+        get => _adventurePermDamageDailyCount;
         set
         {
-            if (SetProperty(ref _manticTurnsPureDaily, value, true))
+            if (SetProperty(ref _adventurePermDamageDailyCount, value, true))
             {
-                OnPropertyChanged();              // ManticTurnsPureDaily
-                OnPropertyChanged(nameof(Breakdown));
-            }
-        }
-    }
-
-    private bool _adventurePermDamageDaily;
-    public bool AdventurePermDamageDaily
-    {
-        get => _adventurePermDamageDaily;
-        set
-        {
-            if (SetProperty(ref _adventurePermDamageDaily, value, true))
-            {
-                OnPropertyChanged();              // AdventurePermDamageDaily
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(Breakdown));
             }
         }
@@ -117,7 +130,7 @@ public class WeaponConfig : ConfigBase
         {
             if (SetProperty(ref _thruPacAlways, value, true))
             {
-                OnPropertyChanged();              // ThruPacAlways
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(Breakdown));
             }
         }
@@ -131,7 +144,7 @@ public class WeaponConfig : ConfigBase
         {
             if (SetProperty(ref _bladeSharpenTooGreat, value, true))
             {
-                OnPropertyChanged();              // BladeSharpenTooGreat
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(Breakdown));
             }
         }
@@ -145,26 +158,27 @@ public class WeaponConfig : ConfigBase
         {
             if (SetProperty(ref _supernaturalBladeSharpen, value, true))
             {
-                OnPropertyChanged();              // SupernaturalBladeSharpen
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(Breakdown));
             }
         }
     }
 
-    private bool _cutThroughAuraDaily;
-    public bool CutThroughAuraDaily
+    private int _cutThroughAuraDaily;
+    public int CutThroughAuraDaily
     {
         get => _cutThroughAuraDaily;
         set
         {
             if (SetProperty(ref _cutThroughAuraDaily, value, true))
             {
-                OnPropertyChanged();              // CutThroughAuraDaily
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(Breakdown));
             }
         }
     }
 
+    public bool IsSupernatural => (IsMagicBase || IsSpiritBase || IsManticBase);
     public bool IsMagicBase =>
         WeaponBase
             is WeaponBaseOption.Magic0
@@ -242,7 +256,7 @@ public class WeaponConfig : ConfigBase
         {
             if (SetProperty(ref _extraColoursCount, value, true))
             {
-                OnPropertyChanged();              // ExtraColoursCount
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(Breakdown));
             }
         }
@@ -273,7 +287,7 @@ public class WeaponConfig : ConfigBase
         {
             if (SetProperty(ref _extraAlignmentsCount, value, true))
             {
-                OnPropertyChanged();              // ExtraAlignmentsCount
+                OnPropertyChanged();
                 OnPropertyChanged(nameof(Breakdown));
             }
         }
@@ -334,33 +348,39 @@ public class WeaponConfig : ConfigBase
             sb.AppendLine($"Base: {WeaponBase} = {baseCost}");
         }
 
-        if (IsMagicBase && MagicalColoursCount > 0)
+        if (ExtraColoursCount > 1)
         {
-            int c = 3 * MagicalColoursCount;
-            total += c;
-            sb.AppendLine($"+ Magical colours: 3 × {MagicalColoursCount} = {c}");
+            int extra = (ExtraColoursCount - 1) * 3;
+            total += extra * 3;
+            sb.AppendLine($"+ Extra colours: {ExtraColoursCount} ({extra})");
         }
 
-        if (IsSpiritBase && SpiritualNonOpposite)
+        if (ExtraAlignmentsCount > 1)
         {
-            total += 5;
-            sb.AppendLine("+ Spiritual non-opposite: 5");
+            int extra = (ExtraAlignmentsCount - 1) * 3;
+            total += extra * 5;
+            sb.AppendLine($"+ Extra alignments: {ExtraAlignmentsCount} ({extra})");
         }
 
-        if (MagicTurnsPureDaily)
+        if (ManticTurnsPureDailyCount > 0)
         {
-            total += 5;
-            sb.AppendLine("+ Magic/Spirit turns Pure 1/day (5)");
+            total += ManticTurnsPureDailyCount * 10;
+            sb.AppendLine($"+ Mantic turns Pure {ManticTurnsPureDailyCount}/day (10)");
         }
-        if (ManticTurnsPureDaily)
+        if (MagicTurnsPureDailyCount > 0)
         {
-            total += 10;
-            sb.AppendLine("+ Mantic turns Pure 1/day (10)");
+            total += MagicTurnsPureDailyCount * 5;
+            sb.AppendLine($"+ Magic turns Pure {MagicTurnsPureDailyCount}/day (5)");
         }
-        if (AdventurePermDamageDaily)
+        if (SpiritTurnsPureDailyCount > 0)
         {
-            total += 25;
-            sb.AppendLine("+ Adventure perm dmg 1/day (25)");
+            total += SpiritTurnsPureDailyCount * 5;
+            sb.AppendLine($"+ Spirit turns Pure {SpiritTurnsPureDailyCount}/day (5)");
+        }
+        if (AdventurePermDamageDailyCount > 0)
+        {
+            total += AdventurePermDamageDailyCount * 25;
+            sb.AppendLine($"+ Adventure perm dmg {AdventurePermDamageDailyCount}/day (25)");
         }
         if (ThruPacAlways)
         {
@@ -370,31 +390,17 @@ public class WeaponConfig : ConfigBase
         if (BladeSharpenTooGreat)
         {
             total += 5;
-            sb.AppendLine("+ Blade sharpen (too great) (5)");
+            sb.AppendLine("+ Can sharpen oversized weapon (5)");
         }
         if (SupernaturalBladeSharpen)
         {
             total += 10;
             sb.AppendLine("+ Supernatural blade sharpen (10)");
         }
-        if (CutThroughAuraDaily)
+        if (CutThroughAuraDaily > 0)
         {
-            total += 25;
-            sb.AppendLine("+ Cut through Aura of Defence 1/day (25)");
-        }
-
-        if ((IsMagicBase || IsManticBase) && ExtraColoursCount > 1)
-        {
-            int extra = (ExtraColoursCount - 1) * 3;
-            total += extra;
-            sb.AppendLine($"+ Extra colours: {ExtraColoursCount} ({extra})");
-        }
-
-        if ((IsSpiritBase || IsManticBase) && ExtraAlignmentsCount > 1)
-        {
-            int extra = (ExtraAlignmentsCount - 1) * 3;
-            total += extra;
-            sb.AppendLine($"+ Extra alignments: {ExtraAlignmentsCount} ({extra})");
+            total += CutThroughAuraDaily * 25;
+            sb.AppendLine($"+ Cut through Aura of Defence {CutThroughAuraDaily}/day (25)");
         }
 
         Breakdown = sb.ToString().TrimEnd();

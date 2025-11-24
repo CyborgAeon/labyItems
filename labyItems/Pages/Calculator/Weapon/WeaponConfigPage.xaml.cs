@@ -23,14 +23,15 @@ public partial class WeaponConfigPage : ConfigPageBase<WeaponConfig>
 
         if (cfg.IsMagicBase && cfg.MagicalColoursCount > 0)
             details["magicalColours"] = cfg.MagicalColoursCount;
-        if (cfg.IsSpiritBase && cfg.SpiritualNonOpposite)
-            details["spiritualNonOpposite"] = true;
-
-        if (cfg.MagicTurnsPureDaily)
+        if (cfg.IsSpiritBase)
+            details["spiritual"] = true;
+        if (cfg.SpiritTurnsPureDailyCount > 0)
+            details["spiritTurnsPureDaily"] = true;
+        if (cfg.MagicTurnsPureDailyCount > 0)
             details["magicTurnsPureDaily"] = true;
-        if (cfg.ManticTurnsPureDaily)
+        if (cfg.ManticTurnsPureDailyCount > 0)
             details["manticTurnsPureDaily"] = true;
-        if (cfg.AdventurePermDamageDaily)
+        if (cfg.AdventurePermDamageDailyCount > 0)
             details["adventurePermDamageDaily"] = true;
         if (cfg.ThruPacAlways)
             details["thruPacAlways"] = true;
@@ -38,7 +39,7 @@ public partial class WeaponConfigPage : ConfigPageBase<WeaponConfig>
             details["bladeSharpenTooGreat"] = true;
         if (cfg.SupernaturalBladeSharpen)
             details["supernaturalBladeSharpen"] = true;
-        if (cfg.CutThroughAuraDaily)
+        if (cfg.CutThroughAuraDaily > 0)
             details["cutThroughAuraDaily"] = true;
 
         if (!string.IsNullOrWhiteSpace(cfg.MagicVsType)) details["magicVsType"] = cfg.MagicVsType;

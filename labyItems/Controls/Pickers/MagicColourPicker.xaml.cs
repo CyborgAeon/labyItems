@@ -8,11 +8,8 @@ public partial class MagicColourPicker : EnumPicker<MagicColours>
     {
         InitializeComponent();
         RegisterInnerPicker(InnerPicker);
-        if (string.IsNullOrEmpty(LabelText))
-            LabelText = "Magic Colour";
         if (string.IsNullOrEmpty(PlaceholderText))
             PlaceholderText = "Select a colour";
-
     }
 
     public MagicColours? SelectedColour
@@ -20,5 +17,4 @@ public partial class MagicColourPicker : EnumPicker<MagicColours>
         get => SelectedValue;
         set => SelectedValue = value;
     }
-    
 }
