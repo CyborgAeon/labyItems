@@ -96,9 +96,9 @@
     </ScrollView>
     <controls:StickyFooterControl
       Grid.Row="1"
-      BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
-      ButtonText="Return to Calculator"
-      RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}"
+      BreakdownItems="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.BreakdownItems}"
+      ButtonText="Return to Form"
+      RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}"
       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"
       Total="{Binding TotalWithBase}" 

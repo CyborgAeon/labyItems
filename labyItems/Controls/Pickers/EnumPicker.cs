@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using labyItems.Helpers;
 using Microsoft.Maui.Controls;
-using System.Globalization;
-namespace labyItems.Controls;
 
+namespace labyItems.Controls;
 
 public class EnumPicker<TEnum> : ContentView
     where TEnum : struct, Enum
@@ -91,7 +91,7 @@ public class EnumPicker<TEnum> : ContentView
         // Hook up a single generic converter that uses DisplayFormatter
         InnerPicker.ItemDisplayBinding = new Binding(".")
         {
-            Converter = new EnumDisplayConverter<TEnum>(this)
+            Converter = new EnumDisplayConverter<TEnum>(this),
         };
     }
 
@@ -106,7 +106,8 @@ public class EnumPicker<TEnum> : ContentView
 }
 
 // Single generic converter for all EnumPicker<TEnum>
-public class EnumDisplayConverter<TEnum> : IValueConverter where TEnum : struct, Enum
+public class EnumDisplayConverter<TEnum> : IValueConverter
+    where TEnum : struct, Enum
 {
     private readonly EnumPicker<TEnum> _owner;
 
@@ -127,6 +128,10 @@ public class EnumDisplayConverter<TEnum> : IValueConverter where TEnum : struct,
         return string.Empty;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        => throw new NotSupportedException();
+    public object ConvertBack(
+        object value,
+        Type targetType,
+        object parameter,
+        CultureInfo culture
+    ) => throw new NotSupportedException();
 }

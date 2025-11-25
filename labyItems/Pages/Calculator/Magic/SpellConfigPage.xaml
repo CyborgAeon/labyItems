@@ -17,8 +17,6 @@
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="14">
-
-        <!--  Header: title + search  -->
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
           <Label
             Grid.Column="0"
@@ -30,13 +28,12 @@
             Clicked="OnSearchSpell"
             Text="Search" />
         </Grid>
-
-        <!--  Optional: override spell Power (mana cost)  -->
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding Power, Mode=TwoWay}"
-          LabelText="Mana cost override" />
-
+        <!--  Teaching scroll/scripture  -->
+        <controls:CheckboxControl 
+          IsVisible="{Binding SpellPicked}"
+          IsChecked="{Binding IsTeachingScroll}"
+          LabelText="Is a Teaching scroll" />
+          
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding BasicPerDay, Mode=TwoWay}"
@@ -49,58 +46,70 @@
           IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"
           LabelText="Cast advanced times per day" />
 
-        <controls:CheckboxControl IsChecked="{Binding InnateIsMantic}" LabelText="Innate (from above) is mantic (×4 ISP cost)" />
-
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding AdditionalMana4, Mode=TwoWay}"
-          LabelText="Additional mana (+4 ISP each)" />
-
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-          <controls:PlusMinusControl
+        <controls:CheckboxControl
+          IsChecked="{Binding InnateIsMantic}"
+          IsVisible="{Binding}"
+          LabelText="Innate (from above) is mantic" />
+        <controls:DictionarySlider
+          Grid.Column="1"
+          KeyFormat="Store of {0} Additional mana"
+          MaxCount="12"
+          MinCount="0"
+          Multiplier="4"
+          SelectedCount="{Binding AdditionalGenericMana, Mode=TwoWay}"
+          ValueFormat=""
+          VerticalOptions="Center" />
+        <Grid ColumnDefinitions="Auto,*">
+          <controls:MagicColourPicker
+            x:Name="ManaColourPicker"
             Grid.Column="0"
-            AllowMultiple="True"
-            Count="{Binding AdditionalMana3, Mode=TwoWay}"
-            LabelText=" colour (+3 ISP each)" />
-          <Entry
+            SelectedValue="{Binding AdditionalManaColour, Mode=TwoWay}"
+            VerticalOptions="Center" />
+          <controls:DictionarySlider
             Grid.Column="1"
-            Placeholder="Colour/hue"
-            Text="{Binding AdditionalMana3Colour, Mode=TwoWay}"
-            WidthRequest="90" />
+            KeyFormat="{}{1} Additional {0} mana store"
+            FormatArg1="{Binding SelectedValue, Source={x:Reference ManaColourPicker}}"
+            MaxCount="12"
+            MinCount="0"
+            Multiplier="3"
+            SelectedCount="{Binding AdditionalManaOfColour, Mode=TwoWay}"
+            ValueFormat=""
+            VerticalOptions="Center" />
         </Grid>
-
-        <controls:CheckboxControl IsChecked="{Binding PowerStoreRegenerates}" LabelText="Power store regenerates at 1/15 minutes (+25)" />
+        <controls:CheckboxControl
+          IsChecked="{Binding PowerStoreRegenerates}"
+          IsVisible="{Binding IsPowerStore}"
+          LabelText="Power store regenerates 1/15 minutes" />
         <controls:CheckboxControl
           IsChecked="{Binding AddBasic}"
-          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"
+          IsVisible="{Binding ShowAddBasic}"
           LabelText="Add basic spell to base list" />
         <controls:CheckboxControl
           IsChecked="{Binding AddAdvanced}"
-          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"
+          IsVisible="{Binding ShowAddAdvanced}"
           LabelText="Add advanced spell to base list" />
 
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding TurnHandbookToSixthMantic, Mode=TwoWay}"
-          LabelText="Turn handbook spell to 6th mantic x/day (+40 each)" />
+          LabelText="Turn basic spell to 6th mantic" />
 
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding TurnAnyBasicMantic, Mode=TwoWay}"
-          LabelText="Turn any basic spell mantic x/day (+50 each)" />
+          LabelText="Turn basic spell mantic" />
+        
 
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding TurnAnyPublishedToSixthMantic, Mode=TwoWay}"
-          LabelText="Turn any published spell to 6th mantic x/day (+60 each)" />
+          LabelText="Turn published spell to 6th mantic" />
 
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding TurnAnyPublishedMantic, Mode=TwoWay}"
-          LabelText="Turn any published spell mantic x/day (+80 each)" />
+          LabelText="Turn any published spell mantic" />
 
-        <!--  Teaching scroll/scripture  -->
-        <controls:CheckboxControl IsChecked="{Binding IsTeachingScroll}" LabelText="Teaching scroll/scripture of chosen spell (+2 × Power)" />
 
         <!--  Results  -->
         <Label LineBreakMode="WordWrap" Text="{Binding Breakdown}" />
@@ -109,11 +118,11 @@
 
     <controls:StickyFooterControl
       Grid.Row="1"
+      BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
       ButtonText="Return to Calculator"
+      RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}"
       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"
-      Total="{Binding TotalWithBase}"
-      BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
-      RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
+      Total="{Binding TotalWithBase}" />
   </Grid>
 </cfg:ConfigPageBase>

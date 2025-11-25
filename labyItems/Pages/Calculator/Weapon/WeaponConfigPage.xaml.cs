@@ -1,10 +1,9 @@
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Models;
 using labyItems.Pages.Configs;
-
-using System.Threading.Tasks;
-using System.Windows.Input;
+using labyItems.Services;
 using Microsoft.Maui.Controls;
 
 namespace labyItems.Pages.Calculator;
@@ -13,65 +12,33 @@ public partial class WeaponConfigPage : ConfigPageBase<WeaponConfig>
 {
     public WeaponConfigPage()
     {
+        ReturnFromConfigCommand = new Command(async () => await OnReturnWithContributionAsync());
         InitializeComponent();
-        // BindingContext = new TConfig();
+
+        OnPropertyChanged(nameof(ReturnFromConfigCommand));
     }
 
-    protected override CalcResult BuildResult(WeaponConfig cfg)
+    public event Action<CalcContribution>? ContributionAdded;
+    protected override CalcResult BuildResult(WeaponConfig cfg) => ConfigSummaryService.BuildWeaponResult(cfg);
+    private async Task OnReturnWithContributionAsync()
     {
-        var details = new Dictionary<string, object?> { ["base"] = cfg.WeaponBase.ToString() };
+        var result = BuildResult(Config);
+        ContributionAdded?.Invoke(
+            new CalcContribution(
+                Id: "weapon",
+                Source: "Weapon",
+                Result: result,
+                OnRemove: ResetConfig
+            )
+        );
 
-        if (cfg.IsMagicBase && cfg.MagicalColoursCount > 0)
-            details["magicalColours"] = cfg.MagicalColoursCount;
-        if (cfg.IsSpiritBase)
-            details["spiritual"] = true;
-        if (cfg.SpiritTurnsPureDailyCount > 0)
-            details["spiritTurnsPureDaily"] = true;
-        if (cfg.MagicTurnsPureDailyCount > 0)
-            details["magicTurnsPureDaily"] = true;
-        if (cfg.ManticTurnsPureDailyCount > 0)
-            details["manticTurnsPureDaily"] = true;
-        if (cfg.AdventurePermDamageDailyCount > 0)
-            details["adventurePermDamageDaily"] = true;
-        if (cfg.ThruPacAlways)
-            details["thruPacAlways"] = true;
-        if (cfg.BladeSharpenTooGreat)
-            details["bladeSharpenTooGreat"] = true;
-        if (cfg.SupernaturalBladeSharpen)
-            details["supernaturalBladeSharpen"] = true;
-        if (cfg.CutThroughAuraDaily > 0)
-            details["cutThroughAuraDaily"] = true;
-
-        if (!string.IsNullOrWhiteSpace(cfg.MagicVsType)) details["magicVsType"] = cfg.MagicVsType;
-        if (!string.IsNullOrWhiteSpace(cfg.MagicVsGroup)) details["magicVsGroup"] = cfg.MagicVsGroup;
-        if (!string.IsNullOrWhiteSpace(cfg.SpiritVsType)) details["spiritVsType"] = cfg.SpiritVsType;
-        if (!string.IsNullOrWhiteSpace(cfg.SpiritVsGroup)) details["spiritVsGroup"] = cfg.SpiritVsGroup;
-
-        if ((cfg.IsMagicBase || cfg.IsManticBase) && cfg.ExtraColoursCount > 1)
-            details["extraColours"] = cfg.ExtraColoursSummary;
-        if ((cfg.IsSpiritBase || cfg.IsManticBase) && cfg.ExtraAlignmentsCount > 1)
-            details["extraAlignments"] = cfg.ExtraAlignmentsSummary;
-
-        return new CalcResult
+        if (CalculatorContext?.ReturnToFormCommand?.CanExecute(null) == true)
         {
-            AbilityType = "Weapon",
-            AbilityName = cfg.WeaponBase.ToString(),
-            TotalIsp = cfg.Total,
-            Details = details,
-        };
+            CalculatorContext.ReturnToFormCommand.Execute(null);
+            return;
+        }
+
+        // Fallback: only used if somehow not inside the calculator
+        await StickyFooterControl.DefaultNavigateAsync(this);
     }
-
-    public static readonly BindableProperty ReturnToFormCommandProperty = BindableProperty.Create(
-        nameof(ReturnToFormCommand),
-        typeof(ICommand),
-        typeof(WeaponConfigPage),
-        null
-    );
-
-    public ICommand? ReturnToFormCommand
-    {
-        get => (ICommand?)GetValue(ReturnToFormCommandProperty);
-        set => SetValue(ReturnToFormCommandProperty, value);
-    }
-
 }

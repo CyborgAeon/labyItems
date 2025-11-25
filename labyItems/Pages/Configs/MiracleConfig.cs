@@ -3,12 +3,26 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using labyItems.Models.DTOs;
+using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Configs;
 
 public class MiracleConfig : ConfigBase
 {
-    
+    private SpiritualSpheres? _additionalSphereSelected = null;
+    public SpiritualSpheres? AdditionalSphereSelected
+    {
+        get => _additionalSphereSelected;
+        set =>
+            SetProperty(
+                ref _additionalSphereSelected,
+                value,
+                affectsTotal: false,
+                nameof(IsPowerStore)
+            );
+    }
+    public bool IsPowerStore =>
+        (GeneralSpiritStore > 0 || (SphereSpiritStore > 0 && AdditionalSphereSelected.HasValue));
     private string _alignment = "";
     public string Alignment
     {
@@ -25,18 +39,30 @@ public class MiracleConfig : ConfigBase
         set => SetProperty(ref _innateIsMantic, value, affectsTotal: true);
     }
 
-    private int _generalSpiritStore;   // 0..12
+    private int _generalSpiritStore; // 0..12
     public int GeneralSpiritStore
     {
         get => _generalSpiritStore;
-        set => SetProperty(ref _generalSpiritStore, Math.Clamp(value, 0, 12), affectsTotal: true, nameof(AnySpiritStore));
+        set =>
+            SetProperty(
+                ref _generalSpiritStore,
+                Math.Clamp(value, 0, 12),
+                affectsTotal: true,
+                nameof(AnySpiritStore)
+            );
     }
 
-    private int _sphereSpiritStore;    // 0..12
+    private int _sphereSpiritStore; // 0..12
     public int SphereSpiritStore
     {
         get => _sphereSpiritStore;
-        set => SetProperty(ref _sphereSpiritStore, Math.Clamp(value, 0, 12), affectsTotal: true, nameof(AnySpiritStore));
+        set =>
+            SetProperty(
+                ref _sphereSpiritStore,
+                Math.Clamp(value, 0, 12),
+                affectsTotal: true,
+                nameof(AnySpiritStore)
+            );
     }
 
     public bool AnySpiritStore => (GeneralSpiritStore > 0) || (SphereSpiritStore > 0);
@@ -115,32 +141,43 @@ public class MiracleConfig : ConfigBase
     {
         int extra = 0;
 
-        int innates = (2 * Power * Math.Max(0, BasicPerDay)) +
-                      (3 * Power * Math.Max(0, AdvancedPerDay));
+        int innates =
+            (2 * Power * Math.Max(0, BasicPerDay)) + (3 * Power * Math.Max(0, AdvancedPerDay));
 
         if (InnateIsMantic && innates > 0)
             extra += 3 * innates;
 
-        if (GeneralSpiritStore > 0) extra += 4 * GeneralSpiritStore;
-        if (SphereSpiritStore  > 0) extra += 3 * SphereSpiritStore;
-        if (AnySpiritStore && SpiritStoreRegenerates) extra += 25;
+        if (GeneralSpiritStore > 0)
+            extra += 4 * GeneralSpiritStore;
+        if (SphereSpiritStore > 0)
+            extra += 3 * SphereSpiritStore;
+        if (AnySpiritStore && SpiritStoreRegenerates)
+            extra += 25;
 
         bool isAdv = IsAdvanced == true;
         bool isBasic = IsAdvanced == false;
 
-        if (isBasic  && AddBasicToList)   extra += 15;
-        if (isAdv    && AddAdvancedToList) extra += 18;
+        if (isBasic && AddBasicToList)
+            extra += 15;
+        if (isAdv && AddAdvancedToList)
+            extra += 18;
 
         if (AddWithPrep30)
             extra += (int)Math.Round(Power / 2.0, MidpointRounding.AwayFromZero);
 
-        if (TurnBasicUpTo5thMantic     > 0) extra += 40 * TurnBasicUpTo5thMantic;
-        if (TurnBasicMantic            > 0) extra += 50 * TurnBasicMantic;
-        if (TurnAdvancedUpTo6thMantic  > 0) extra += 60 * TurnAdvancedUpTo6thMantic;
-        if (TurnAdvancedAbove6thMantic > 0) extra += 80 * TurnAdvancedAbove6thMantic;
+        if (TurnBasicUpTo5thMantic > 0)
+            extra += 40 * TurnBasicUpTo5thMantic;
+        if (TurnBasicMantic > 0)
+            extra += 50 * TurnBasicMantic;
+        if (TurnAdvancedUpTo6thMantic > 0)
+            extra += 60 * TurnAdvancedUpTo6thMantic;
+        if (TurnAdvancedAbove6thMantic > 0)
+            extra += 80 * TurnAdvancedAbove6thMantic;
 
-        if (IsTeachingScroll) extra += 3 * Power;
-        if (TrueBeliever > 0) extra += 16 * TrueBeliever;
+        if (IsTeachingScroll)
+            extra += 3 * Power;
+        if (TrueBeliever > 0)
+            extra += 16 * TrueBeliever;
 
         return extra;
     }
@@ -150,7 +187,7 @@ public class MiracleConfig : ConfigBase
         Power = Math.Max(0, picked.Power);
         Name = string.IsNullOrWhiteSpace(picked.Name) ? "Miracle" : picked.Name;
         IsAdvanced = picked.IsAdvanced;
-        Alignment  = picked.Alignment;
+        Alignment = picked.Alignment;
         OnPropertyChanged(nameof(Title));
     }
 }
