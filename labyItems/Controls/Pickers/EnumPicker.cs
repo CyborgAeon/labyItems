@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using labyItems.Helpers;
 using Microsoft.Maui.Controls;
 
 namespace labyItems.Controls;
 
-// NOTE: name it something that does NOT conflict with MAUI's Picker
 public class EnumPicker<TEnum> : ContentView
     where TEnum : struct, Enum
 {
-    protected Microsoft.Maui.Controls.Picker? InnerPicker { get; private set; }
+    protected Picker? InnerPicker { get; private set; }
 
     public EnumPicker()
     {
@@ -19,6 +19,10 @@ public class EnumPicker<TEnum> : ContentView
 
     // Expose the enum options to bind to the inner Picker's ItemsSource
     public List<TEnum> Options { get; }
+
+    // NEW: Optional custom formatter for displaying enum values
+    public Func<TEnum, string>? DisplayFormatter { get; set; }
+
     public static readonly BindableProperty PlaceholderTextProperty = BindableProperty.Create(
         nameof(PlaceholderText),
         typeof(string),
@@ -47,12 +51,10 @@ public class EnumPicker<TEnum> : ContentView
     {
         if (InnerPicker != null)
         {
-            // On MAUI Picker, Title acts as the placeholder text
             InnerPicker.Title = PlaceholderText;
         }
     }
 
-    // Label text for the control ("Magic Colour", "Rage Type", etc.)
     public static readonly BindableProperty LabelTextProperty = BindableProperty.Create(
         nameof(LabelText),
         typeof(string),
@@ -66,7 +68,6 @@ public class EnumPicker<TEnum> : ContentView
         set => SetValue(LabelTextProperty, value);
     }
 
-    // Selected enum value (nullable)
     public static readonly BindableProperty SelectedValueProperty = BindableProperty.Create(
         nameof(SelectedValue),
         typeof(TEnum?),
@@ -81,11 +82,17 @@ public class EnumPicker<TEnum> : ContentView
         set => SetValue(SelectedValueProperty, value);
     }
 
-    protected void RegisterInnerPicker(Microsoft.Maui.Controls.Picker picker)
+    protected void RegisterInnerPicker(Picker picker)
     {
         InnerPicker = picker;
         UpdatePlaceholder();
         AndroidPickerHelper.PreventTypingOpeningPicker(picker);
+
+        // Hook up a single generic converter that uses DisplayFormatter
+        InnerPicker.ItemDisplayBinding = new Binding(".")
+        {
+            Converter = new EnumDisplayConverter<TEnum>(this),
+        };
     }
 
     protected override void OnHandlerChanged()
@@ -96,4 +103,35 @@ public class EnumPicker<TEnum> : ContentView
             AndroidPickerHelper.PreventTypingOpeningPicker(InnerPicker);
         }
     }
+}
+
+// Single generic converter for all EnumPicker<TEnum>
+public class EnumDisplayConverter<TEnum> : IValueConverter
+    where TEnum : struct, Enum
+{
+    private readonly EnumPicker<TEnum> _owner;
+
+    public EnumDisplayConverter(EnumPicker<TEnum> owner)
+    {
+        _owner = owner;
+    }
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is TEnum enumValue)
+        {
+            // Use custom formatter if provided; fall back to ToString()
+            var formatter = _owner.DisplayFormatter;
+            return formatter != null ? formatter(enumValue) : enumValue.ToString();
+        }
+
+        return string.Empty;
+    }
+
+    public object ConvertBack(
+        object value,
+        Type targetType,
+        object parameter,
+        CultureInfo culture
+    ) => throw new NotSupportedException();
 }

@@ -1,86 +1,107 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <cfg:ConfigPageBase
-  x:TypeArguments="cfg:WeaponConfig"
   x:Class="labyItems.Pages.Calculator.WeaponConfigPage"
-  x:Name="RootPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-  xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
-  Title="Configure Weapon">
-<Grid RowDefinitions="*,Auto">
-  <ScrollView Grid.Row="0">
-    <VerticalStackLayout Padding="20" Spacing="14">
+  xmlns:controls="clr-namespace:labyItems.Controls"
+  xmlns:conv="clr-namespace:labyItems.Converters"
+  x:Name="RootPage"
+  Title="Configure Weapon"
+  x:TypeArguments="cfg:WeaponConfig">
+  <Grid RowDefinitions="*,Auto">
+    <ScrollView Grid.Row="0">
+      <VerticalStackLayout Padding="20" Spacing="14">
+        <Label Text="Weapon type" />
+        <controls:WeaponTypePicker SelectedValue="{Binding WeaponType, Mode=TwoWay}" />
+        <Label Text="Base power profile" />
+        <controls:WeaponBasePicker SelectedValue="{Binding WeaponBase, Mode=TwoWay}" />
+        <Entry
+          IsVisible="{Binding ShowMagicVsType}"
+          Placeholder="Enter Type (e.g. Undead)"
+          Text="{Binding MagicVsType, Mode=TwoWay}" />
+        <Entry
+          IsVisible="{Binding ShowMagicVsGroup}"
+          Placeholder="Enter Group (e.g. Humanoid)"
+          Text="{Binding MagicVsGroup, Mode=TwoWay}" />
+        <Entry
+          IsVisible="{Binding ShowSpiritVsType}"
+          Placeholder="Enter Type (e.g. Undead)"
+          Text="{Binding SpiritVsType, Mode=TwoWay}" />
+        <Entry
+          IsVisible="{Binding ShowSpiritVsGroup}"
+          Placeholder="Enter Group (e.g. Humanoid)"
+          Text="{Binding SpiritVsGroup, Mode=TwoWay}" />
 
-      <Label Text="Weapon Cost Calculator" FontSize="20" FontAttributes="Bold" />
+        <!--  Multi-select colours / alignments  -->
+        <Label IsVisible="{Binding ShowExtraColours}" Text="{Binding ExtraColoursCountLabel}" />
+        <controls:ListColourPickerControl
+          CountLabelFormat="{}{0} Extra colours chosen"
+          CountLabelText="{Binding ExtraColoursCountLabel, Mode=OneWayToSource}"
+          IsVisible="{Binding ShowExtraColours}"
+          Items="{Binding ExtraColours, Mode=TwoWay}"
+          SummaryText="{Binding ExtraColoursSummary, Mode=OneWayToSource}"
+          ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}" />
+        <Label IsVisible="{Binding ShowExtraAlignments}" Text="{Binding ExtraAlignmentsCountLabel}" />
+        <controls:ListAlignmentPickerControl
+          CountLabelFormat="{}{0} Extra alignments (non-opposite) chosen"
+          CountLabelText="{Binding ExtraAlignmentsCountLabel, Mode=OneWayToSource}"
+          IsVisible="{Binding ShowExtraAlignments}"
+          Items="{Binding ExtraAlignments, Mode=TwoWay}"
+          SummaryText="{Binding ExtraAlignmentsSummary, Mode=OneWayToSource}"
+          ValueCount="{Binding ExtraAlignmentsCount, Mode=OneWayToSource}" />
 
-      <!-- Base power / profile -->
-      <Label Text="Base power profile" />
-     <controls:WeaponBasePicker
-    LabelText="Weapon base"
-    SelectedBase="{Binding Base, Mode=TwoWay}" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding MagicTurnsPureDailyCount, Mode=TwoWay}"
+          IsVisible="{Binding IsMagicBase}"
+          LabelText="Magic weapon turns pure for 5 minutes" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding SpiritTurnsPureDailyCount, Mode=TwoWay}"
+          IsVisible="{Binding IsSpiritBase}"
+          LabelText="Spirit weapon turns pure for 5 minutes" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding ManticTurnsPureDailyCount, Mode=TwoWay}"
+          IsVisible="{Binding IsManticBase}"
+          LabelText="Mantic weapon turns pure for 5 minutes" />
 
+        <controls:CheckboxControl 
+          IsChecked="{Binding ThruPacAlways}" LabelText="Inflicts damage 'thru' PAC at all times" />
 
-      <!-- Magic/Spirit specific modifiers -->
-      <Label Text="Modifiers" FontAttributes="Bold" />
+        <controls:CheckboxControl 
+          IsChecked="{Binding BladeSharpenTooGreat}" 
+          LabelText="Oversized Weapon can be sharpened" />
 
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding MagicalColoursCount, Mode=TwoWay}"
-        LabelText="Add non-grey magical colours/hues (+3 per colour) — only if Magic base" />
+        <controls:CheckboxControl 
+          IsVisible="{Binding IsSupernatural}"
+          IsChecked="{Binding SupernaturalBladeSharpen}" 
+          LabelText="Supernatural weapon can be blade sharpened" />
+        <controls:PlusMinusControl
+          AllowMultiple="True"
+          Count="{Binding CutThroughAuraDaily, Mode=TwoWay}"
+          LabelText="Cut through Aura of Defence for 5 minutes" />
 
-      <controls:CheckboxControl
-        IsChecked="{Binding SpiritualNonOpposite}"
-        LabelText="Add non-opposite alignment to spiritual weapon (+5) — only if Spirit base" />
+        <!--  Results (auto-updating)  -->
+        <!-- <Label FontAttributes="Bold" Text="Results" />
+        <Label LineBreakMode="WordWrap" Text="{Binding Breakdown}" />
+        <Label
+          FontAttributes="Bold"
+          FontSize="18"
+          Text="{Binding TotalWithBase, StringFormat='Total ISP: {0}'}" />
+          Ffs, this bit is perfect - this is what I want to show in the fuckin' footer when expanded.-->
 
-      <!-- General add-ons -->
-      <Label Text="Special options" FontAttributes="Bold" />
-
-      <controls:CheckboxControl
-        IsChecked="{Binding MagicTurnsPureDaily}"
-        LabelText="Magic/Spirit weapon turns pure 1/day for 5 minutes (+5)" />
-
-      <controls:CheckboxControl
-        IsChecked="{Binding ManticTurnsPureDaily}"
-        LabelText="Mantic weapon turns pure 1/day for 5 minutes (+10)" />
-
-      <controls:CheckboxControl
-        IsChecked="{Binding AdventurePermDamageDaily}"
-        LabelText="Inflicts adventure perm damage 1/day for 5 minutes (+25)" />
-
-      <controls:CheckboxControl
-        IsChecked="{Binding ThruPacAlways}"
-        LabelText="Inflicts damage 'thru' PAC at all times (+30)" />
-
-      <controls:CheckboxControl
-        IsChecked="{Binding BladeSharpenTooGreat}"
-        LabelText="Weapon can be blade sharpened even though too great in size (+5)" />
-
-      <controls:CheckboxControl
-        IsChecked="{Binding SupernaturalBladeSharpen}"
-        LabelText="Supernatural weapon can be blade sharpened (+10)" />
-
-      <controls:CheckboxControl
-        IsChecked="{Binding CutThroughAuraDaily}"
-        LabelText="Cut through Aura of Defence 1/day for 5 minutes (+25)" />
-
-      <!-- Results (auto-updating) -->
-      <Label Text="Results" FontAttributes="Bold" />
-      <Label Text="{Binding Breakdown}" LineBreakMode="WordWrap" />
-      <Label
-        FontAttributes="Bold"
-        FontSize="18"
-        Text="{Binding TotalWithBase, StringFormat='Total ISP: {0}'}" />
-
-    </VerticalStackLayout>
-  </ScrollView>
-  <controls:StickyFooterControl
-        Grid.Row="1"
-        Total="{Binding TotalWithBase}"
-        ButtonText="Return to Calculator"
-        ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
-        ReturnCommandParameter="{x:Reference RootPage}"
-        BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
-        RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
+      </VerticalStackLayout>
+    </ScrollView>
+    <controls:StickyFooterControl
+      Grid.Row="1"
+      BreakdownItems="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.BreakdownItems}"
+      ButtonText="Return to Form"
+      RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}"
+      ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
+      ReturnCommandParameter="{x:Reference RootPage}"
+      Total="{Binding TotalWithBase}" 
+      IsEnabled="{Binding CanSubmit}"/>
   </Grid>
 </cfg:ConfigPageBase>

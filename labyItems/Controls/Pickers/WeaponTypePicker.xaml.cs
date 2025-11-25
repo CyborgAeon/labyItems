@@ -5,17 +5,20 @@ using labyItems.Models.Enums;
 
 namespace labyItems.Controls;
 
-public partial class SpherePicker : EnumPicker<SpiritualSpheres>
+public partial class WeaponTypePicker : EnumPicker<WeaponType>
 {
-    public SpherePicker()
+    public WeaponTypePicker()
     {
         InitializeComponent();
         RegisterInnerPicker(InnerPicker);
+        if (string.IsNullOrEmpty(LabelText))
+            LabelText = "Select a weapon type";
         if (string.IsNullOrEmpty(PlaceholderText))
-            PlaceholderText = "Spiritual spheres";
+            PlaceholderText = "Select a weapon type";
+
     }
 
-    public SpiritualSpheres? SelectedSphere
+    public WeaponType? SelectedType
     {
         get => SelectedValue;
         set => SelectedValue = value;

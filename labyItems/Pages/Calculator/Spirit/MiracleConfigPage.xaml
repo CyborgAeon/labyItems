@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <cfg:ConfigPageBase
-  x:TypeArguments="cfg:MiracleConfig"
   x:Class="labyItems.Pages.Configs.MiracleConfigPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-  xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
+  x:Name="RootPage"
   Title="Miracle Config"
-  x:Name="RootPage">
+  x:TypeArguments="cfg:MiracleConfig">
   <ContentPage.Resources>
     <ResourceDictionary>
       <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -19,9 +19,6 @@
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="16" Spacing="12">
-
-        <!--  Header  -->
-
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
           <Label
             FontAttributes="Bold"
@@ -45,24 +42,31 @@
         <controls:CheckboxControl
           IsChecked="{Binding InnateIsMantic}"
           IsVisible="{Binding HasInnates, Converter={StaticResource BoolIsTrueConverter}}"
-          LabelText="Innate (from above) is mantic (×4 ISP cost)" />
-
+          LabelText="Innate is mantic" />
         <controls:DictionarySlider
-          KeyFormat="{}{0} Additional spirits"
+          KeyFormat="{}{0} Additional spirit store"
           MaxCount="12"
           MinCount="0"
           Multiplier="4"
-          SelectedCount="{Binding GeneralSpiritStore, Mode=TwoWay}" />
+          SelectedCount="{Binding GeneralSpiritStore, Mode=TwoWay}"
+          VerticalOptions="Center" />
+        <Grid ColumnDefinitions="Auto,*">
+          <controls:SpherePicker
+            x:Name="SphereSel"
+            Grid.Column="0"
+            SelectedValue="{Binding AdditionalSphereSelected, Mode=TwoWay}"
+            VerticalOptions="Center" />
+          <controls:DictionarySlider
+            Grid.Column="1"
+            FormatArg1="{Binding SelectedValue, Source={x:Reference SphereSel}}"
+            KeyFormat="{}{0} Additional {1} spirits"
+            MaxCount="12"
+            MinCount="0"
+            Multiplier="3"
+            SelectedCount="{Binding SphereSpiritStore, Mode=TwoWay}"
+            VerticalOptions="Center" />
+        </Grid>
 
-        <controls:SpherePicker x:Name="SphereSel" />
-
-        <controls:DictionarySlider
-          FormatArg1="{Binding Source={x:Reference SphereSel}, Path=SpiritualSphere}"
-          KeyFormat="{}{0} Additional {1} spirits"
-          MaxCount="12"
-          MinCount="0"
-          Multiplier="3"
-          SelectedCount="{Binding SphereSpiritStore, Mode=TwoWay}" />
 
 
         <controls:CheckboxControl
@@ -111,12 +115,12 @@
       </VerticalStackLayout>
     </ScrollView>
     <controls:StickyFooterControl
-    Grid.Row="1"
-    Total="{Binding TotalWithBase}"
-    ButtonText="Return to Calculator"
-    ReturnCommand="{Binding ReturnFromConfigCommand}"
-    ReturnCommandParameter="{x:Reference RootPage}"
-    BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
-    RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}"/>
+      Grid.Row="1"
+      BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
+      ButtonText="Return to Calculator"
+      RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}"
+      ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
+      ReturnCommandParameter="{x:Reference RootPage}"
+      Total="{Binding TotalWithBase}" />
   </Grid>
 </cfg:ConfigPageBase>

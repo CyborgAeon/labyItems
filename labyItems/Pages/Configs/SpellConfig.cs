@@ -1,8 +1,9 @@
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using labyItems.Models.Enums;
 using labyItems.Pages.Calculator;
-using System;
 using labyItems.Pages.Configs;
 
 namespace labyItems.Pages.Configs;
@@ -17,7 +18,15 @@ public class SpellConfig : ConfigBase
         get => _spellName;
         set
         {
-            if (SetProperty(ref _spellName, value, affectsTotal: false))
+            if (
+                SetProperty(
+                    ref _spellName,
+                    value,
+                    affectsTotal: false,
+                    nameof(ShowAddBasic),
+                    nameof(ShowAddAdvanced)
+                )
+            )
                 Name = value;
         }
     }
@@ -40,22 +49,48 @@ public class SpellConfig : ConfigBase
     public int AdditionalGenericMana
     {
         get => _additionalGenericMana;
-        set => SetProperty(ref _additionalGenericMana, Math.Clamp(value, 0, 12), affectsTotal: true);
+        set =>
+            SetProperty(
+                ref _additionalGenericMana,
+                Math.Clamp(value, 0, 12),
+                affectsTotal: true,
+                nameof(IsPowerStore)
+            );
     }
 
     private int _additionalManaOfColour;
     public int AdditionalManaOfColour
     {
         get => _additionalManaOfColour;
-        set => SetProperty(ref _additionalManaOfColour, Math.Clamp(value, 0, 12), affectsTotal: true);
+        set =>
+            SetProperty(
+                ref _additionalManaOfColour,
+                Math.Clamp(value, 0, 12),
+                affectsTotal: true,
+                nameof(IsPowerStore)
+            );
     }
 
-    private string _additionalManaColour = "";
-    public string AdditionalManaColour
+    private MagicColours? _additionalManaColour = null;
+    public MagicColours? AdditionalManaColour
     {
         get => _additionalManaColour;
-        set => SetProperty(ref _additionalManaColour, value ?? "", affectsTotal: false);
+        set =>
+            SetProperty(
+                ref _additionalManaColour,
+                value,
+                affectsTotal: false,
+                nameof(IsPowerStore)
+            );
     }
+
+    public bool IsPowerStore =>
+        (
+            AdditionalGenericMana > 0
+            || (AdditionalManaOfColour > 0 && AdditionalManaColour.HasValue)
+        );
+    public bool ShowAddBasic => IsAdvanced == false;
+    public bool ShowAddAdvanced => IsAdvanced == true;
 
     private bool _powerStoreRegenerates;
     public bool PowerStoreRegenerates
@@ -82,7 +117,8 @@ public class SpellConfig : ConfigBase
     public int TurnAnyPublishedToSixthMantic
     {
         get => _turnAnyPublishedToSixthMantic;
-        set => SetProperty(ref _turnAnyPublishedToSixthMantic, Math.Max(0, value), affectsTotal: true);
+        set =>
+            SetProperty(ref _turnAnyPublishedToSixthMantic, Math.Max(0, value), affectsTotal: true);
     }
 
     private int _turnAnyPublishedMantic;
@@ -119,14 +155,18 @@ public class SpellConfig : ConfigBase
 
     protected override int BaseTotal()
     {
-        int innates = (2 * Power * Math.Max(0, BasicPerDay)) +
-                      (3 * Power * Math.Max(0, AdvancedPerDay));
-        if (InnateIsMantic) innates *= 4;
+        int innates =
+            (2 * Power * Math.Max(0, BasicPerDay)) + (3 * Power * Math.Max(0, AdvancedPerDay));
+        if (InnateIsMantic)
+            innates *= 4;
 
         int t = innates;
-        if (AddBasic) t += 15;
-        if (AddAdvanced) t += 18;
-        if (AddPrep) t += (int)Math.Round(Power / 2.0, MidpointRounding.AwayFromZero);
+        if (AddBasic)
+            t += 15;
+        if (AddAdvanced)
+            t += 18;
+        if (AddPrep)
+            t += (int)Math.Round(Power / 2.0, MidpointRounding.AwayFromZero);
         return t;
     }
 
@@ -134,26 +174,52 @@ public class SpellConfig : ConfigBase
     {
         int t = 0;
 
-        if (AdditionalGenericMana > 0) t += 4 * AdditionalGenericMana;
-        if (AdditionalManaOfColour > 0) t += 3 * AdditionalManaOfColour;
+        if (AdditionalGenericMana > 0)
+            t += 4 * AdditionalGenericMana;
+        if (AdditionalManaOfColour > 0 && AdditionalManaColour.HasValue)
+            t += 3 * AdditionalManaOfColour;
 
-        if (PowerStoreRegenerates) t += 25;
+        if (PowerStoreRegenerates)
+            t += 25;
 
-        if (TurnHandbookToSixthMantic > 0) t += 40 * TurnHandbookToSixthMantic;
-        if (TurnAnyBasicMantic > 0) t += 50 * TurnAnyBasicMantic;
-        if (TurnAnyPublishedToSixthMantic > 0) t += 60 * TurnAnyPublishedToSixthMantic;
-        if (TurnAnyPublishedMantic > 0) t += 80 * TurnAnyPublishedMantic;
+        if (TurnHandbookToSixthMantic > 0)
+            t += 40 * TurnHandbookToSixthMantic;
+        if (TurnAnyBasicMantic > 0)
+            t += 50 * TurnAnyBasicMantic;
+        if (TurnAnyPublishedToSixthMantic > 0)
+            t += 60 * TurnAnyPublishedToSixthMantic;
+        if (TurnAnyPublishedMantic > 0)
+            t += 80 * TurnAnyPublishedMantic;
 
-        if (IsTeachingScroll) t += 2 * Power;
+        if (IsTeachingScroll)
+            t += 2 * Power;
 
         return t;
     }
 
+    private bool? ShowIsAdvanced()
+    {
+        if (string.IsNullOrEmpty(SpellName))
+        {
+            return null;
+        }
+        return IsAdvanced;
+    }
+
+    public bool SpellPicked { get; set; } = false;
+    public bool? IsAdvancedToggled => ShowIsAdvanced();
+
     public void ApplySpell(Spell.Result picked)
     {
-        SpellName = string.IsNullOrWhiteSpace(picked.Name) ? "Configure Spell" : $"{picked.Name} ({picked.Power} Mana)";
-        Power = Math.Max(1, picked.Power);
-        IsAdvanced = picked.IsAdvanced;
+        SpellName = string.IsNullOrWhiteSpace(picked.Name)
+            ? "Configure Spell"
+            : $"{picked.Name} ({picked.Power} Mana)";
+        SpellPicked = true;
         Colour = picked.Colour;
+        IsAdvanced = picked.IsAdvanced;
+        Power = Math.Max(1, picked.Power);
+        OnPropertyChanged(nameof(ShowAddBasic));
+        OnPropertyChanged(nameof(ShowAddAdvanced));
+        OnPropertyChanged(nameof(SpellPicked));
     }
 }

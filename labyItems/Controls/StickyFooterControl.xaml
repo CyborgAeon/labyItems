@@ -35,7 +35,8 @@
                 HeightRequest="44"
                 CornerRadius="10"
                 Text="{Binding Source={x:Reference Root}, Path=ButtonText}"
-                Clicked="OnReturnClicked" />
+                Clicked="OnReturnClicked" 
+                IsEnabled="{Binding Source={x:Reference Root}, Path=IsEnabled}"/>
       </Grid>
 
       <CollectionView
@@ -58,7 +59,8 @@
                       Text="🗑️"
                       Padding="8,4"
                       Command="{Binding Source={x:Reference Root}, Path=RemoveContributionCommand}"
-                      CommandParameter="{Binding Id}" />
+                      CommandParameter="{Binding Id}" 
+                      IsEnabled="{Binding Source={x:Reference Root}, Path=IsEnabled}"/>
             </Grid>
           </DataTemplate>
         </CollectionView.ItemTemplate>

@@ -59,7 +59,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         );
         s.AddToSummaryIf(
             c.KiOrPrimalStrikePerDayCount,
-            $"Ki/Primal Strike ({c.KiOrPrimalStrikePerDayCount}/day)"
+            $"{c.KiOrPrimalStrike} Strike ({c.KiOrPrimalStrikePerDayCount}/day)"
         );
         s.AddToSummaryIf(
             c.EmpowerWeaponMagicCount,

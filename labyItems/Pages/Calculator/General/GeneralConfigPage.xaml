@@ -171,10 +171,24 @@
           MaxItems="5"
           SummaryText="{Binding WardPactsSummary, Mode=OneWayToSource}"
           ValueCount="{Binding WardPactsCount, Mode=OneWayToSource}" />
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding KiOrPrimalStrikePerDayCount, Mode=TwoWay}"
-          LabelText="Ki / Primal Strike" />
+          <Label
+          FontAttributes="Bold"
+          FontSize="16"
+          HorizontalOptions="Start"
+          HorizontalTextAlignment="Start"
+          Text="{Binding KiStrikeSummary}"
+          VerticalOptions="Center"
+          VerticalTextAlignment="Center" />
+        <Grid ColumnDefinitions="*, Auto">
+          <controls:ChipGroup
+            Grid.Column="0"
+            Items="{Binding KiOrPrimalStrikeItems}"
+            SelectedItem="{Binding KiOrPrimalStrike, Mode=TwoWay}"
+            VerticalOptions="Center" />
+          <controls:PlusMinusControl
+            AllowMultiple="True"
+            Count="{Binding KiOrPrimalStrikePerDayCount, Mode=TwoWay}"/>
+        </Grid>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding EmpowerWeaponMagicCount, Mode=TwoWay}"

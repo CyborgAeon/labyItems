@@ -379,14 +379,6 @@ namespace labyItems.Pages.Configs
             set => SetProperty(ref _wardPact, value, true);
         }
         private int _wardPact;
-
-        public int KiOrPrimalStrikePerDayCount
-        {
-            get => _ki;
-            set => SetProperty(ref _ki, value, true);
-        }
-        private int _ki;
-
         // ---------- Weapon empowerments ----------
         private int _empowerWeaponMagicCount;
         public int EmpowerWeaponMagicCount
@@ -601,6 +593,35 @@ namespace labyItems.Pages.Configs
                 _ltmType = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(LtmSummary));
+            }
+        }
+
+        public int KiOrPrimalStrikePerDayCount
+        {
+            get => _kiOrPrimalStrikePerDayCount;
+            set
+            {
+                SetProperty(ref _kiOrPrimalStrikePerDayCount, value, true);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(KiStrikeSummary));
+            }
+        }
+        private int _kiOrPrimalStrikePerDayCount;
+        public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
+            new() { "🐉 Ki", "🧸 Primal" };
+
+        public string KiStrikeSummary =>
+            $"{KiOrPrimalStrike} strike ({KiOrPrimalStrikePerDayCount}/day)";
+
+        private string _kiOrPrimalStrike;
+        public string KiOrPrimalStrike
+        {
+            get => _kiOrPrimalStrike;
+            set
+            {
+                _kiOrPrimalStrike = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(KiStrikeSummary));
             }
         }
 
