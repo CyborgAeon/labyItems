@@ -2,11 +2,9 @@
   <PropertyGroup>
     <AcceptAndroidSDKLicenses>true</AcceptAndroidSDKLicenses>
   </PropertyGroup>
-  <!-- <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
-  <AndroidKeyStore>true</AndroidKeyStore>
-  <AndroidSigningKeyStore>labyItems.keystore</AndroidSigningKeyStore>
-  <AndroidSigningKeyAlias>labyItemsSigningKey</AndroidSigningKeyAlias>
-  <AndroidSigningKeyPass>$(AndroidSigningKeyPass)</AndroidSigningKeyPass>
-  <AndroidSigningStorePass>$(AndroidSigningStorePass)</AndroidSigningStorePass>
-</PropertyGroup> -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+    <AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>$(MSBuildProjectDirectory)/labyItems.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyAlias Condition="'$(AndroidSigningKeyAlias)' == ''">labyItemsSigningKey</AndroidSigningKeyAlias>
+  </PropertyGroup>
 </Project>
