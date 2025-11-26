@@ -1,6 +1,6 @@
 namespace labyItems.Models.Enums;
 
-public enum ArmourKind
+public enum ShieldType
 {
     None,
     Magical,

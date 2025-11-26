@@ -1,61 +1,59 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
 using labyItems.Models;
 using labyItems.Models.Enums;
 using labyItems.Pages.Configs;
-using labyItems.Pages.Calculator;
-using System.Windows.Input;
 
 namespace labyItems.Pages.Calculator;
 
-public partial class ShieldConfigPage : ContentPage
+public partial class ShieldConfigPage : ConfigPageBase<ShieldConfig>
 {
-    private readonly TaskCompletionSource<CalcResult?> _tcs = new();
-    public Task<CalcResult?> Completion => _tcs.Task;
-    public IspCalculator? CalculatorContext { get; set; }
-    public ICommand ReturnCommand { get; }
-
     public ShieldConfigPage()
     {
         InitializeComponent();
-        BindingContext = new ShieldConfig();
-        ReturnCommand = new Command(async () => await OnReturnInternal());
     }
 
-    public void ResetConfig()
+    protected override CalcResult BuildResult(ShieldConfig cfg)
     {
-        BindingContext = new ShieldConfig { BaseIsp = (BindingContext as ShieldConfig)?.BaseIsp ?? 0 };
-    }
-
-    public void ApplyBaseTotal(int baseTotal)
-    {
-        if (BindingContext is ShieldConfig cfg)
-            cfg.BaseIsp = baseTotal;
-    }
-
-    private CalcResult BuildResult(ShieldConfig cfg)
-    {
+        // cfg.Recalculate();
         var kind = cfg.SelectedShield switch
         {
-            ShieldKind.Magical0   => "+0 Magical Shield",
-            ShieldKind.Spiritual0 => "+0 Spiritual Shield",
-            ShieldKind.Mantic0    => "+0 Mantic Shield",
-            _                     => "No Shield"
+            ShieldType.Magical => "Magical Shield",
+            ShieldType.Spiritual => "Spiritual Shield",
+            ShieldType.Mantic => "Mantic Shield",
+            _ => "No Shield",
         };
 
         var details = new Dictionary<string, object?>();
-        if (cfg.SelectedShield == ShieldKind.Magical0 && cfg.MagicalColoursCount > 0)
+        if (cfg.SelectedShield == ShieldType.Magical && cfg.MagicalColoursCount > 0)
             details["magicalColours"] = cfg.MagicalColoursCount;
-        if (cfg.SelectedShield == ShieldKind.Spiritual0 && cfg.SpiritualNonOpposite)
+        if (cfg.SelectedShield == ShieldType.Spiritual && cfg.SpiritualNonOpposite)
             details["spiritualNonOpposite"] = true;
+        if (cfg.ShowShieldColours && cfg.ShieldColourCount > 0)
+            details["shieldColours"] = cfg.ShieldColourCount;
+        if (cfg.ShowShieldAlignments && cfg.ShieldAlignmentCount > 0)
+            details["shieldAlignments"] = cfg.ShieldAlignmentCount;
+        if (cfg.PAC > 0)
+            details["PAC"] = cfg.PAC;
+        if (cfg.DAC > 0)
+            details["DAC"] = cfg.DAC;
+        if (cfg.MAC > 0)
+        {
+            details["MAC"] = cfg.MAC;
+            if (cfg.MacColoursCount > 0)
+                details["macColours"] = cfg.MacColoursCount;
+        }
+        if (cfg.SAC > 0)
+        {
+            details["SAC"] = cfg.SAC;
+            if (cfg.SacAlignmentCount > 0)
+                details["sacAlignment"] = cfg.SacAlignmentCount;
+        }
 
         return new CalcResult
         {
             AbilityType = "Shield",
             AbilityName = kind,
             TotalIsp = cfg.Total,
-            Details = details
+            Details = details,
         };
     }
 
@@ -63,41 +61,28 @@ public partial class ShieldConfigPage : ContentPage
 
     private void OnCalculate(object sender, EventArgs e)
     {
-        var cfg = (ShieldConfig)BindingContext;
-        cfg.Recalculate();
+        _ = Config.Total;
     }
 
     private void OnShieldChanged(object sender, EventArgs e)
     {
         var cfg = (ShieldConfig)BindingContext;
-        cfg.Recalculate();
+        _ = cfg.Total;
     }
 
     private void OnMagicalColoursChanged(object sender, TextChangedEventArgs e)
     {
         var cfg = (ShieldConfig)BindingContext;
         cfg.MagicalColoursCount = Math.Max(0, TryParseInt(e.NewTextValue));
-        cfg.Recalculate();
+        _ = cfg.Total;
     }
 
     private void OnSpiritualNonOppositeToggled(object sender, ToggledEventArgs e)
     {
         var cfg = (ShieldConfig)BindingContext;
         cfg.SpiritualNonOpposite = e.Value;
-        cfg.Recalculate();
+        _ = cfg.Total;
     }
 
-    private async void OnReturn(object sender, EventArgs e)
-    {
-        await OnReturnInternal();
-    }
-
-    private async Task OnReturnInternal()
-    {
-        var cfg = (ShieldConfig)BindingContext;
-        var res = BuildResult(cfg);
-        _tcs.TrySetResult(res);
-        await Navigation.PopAsync();
-    }
     private static int TryParseInt(string? s) => int.TryParse(s, out var v) ? v : 0;
 }

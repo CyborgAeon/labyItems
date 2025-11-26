@@ -14,38 +14,16 @@
 				<Button Clicked="OnCharmGeneral" Text="General" />
 				<Button Clicked="OnCharmMagic" Text="Magic" />
 				<Button Clicked="OnCharmSpirit" Text="Spirit" />
-				<Label
-					x:Name="EarthPowerCharmPickedLabel"
-					IsVisible="False"
-					LineBreakMode="WordWrap"
-					Text="(earth power picks will appear here)" />
-
-				<Label
-					x:Name="GeneralCharmPickedLabel"
-					IsVisible="False"
-					LineBreakMode="WordWrap"
-					Text="(general charm picks will appear here)" />
-
-				<Label
-					x:Name="MagicCharmPickedLabel"
-					IsVisible="False"
-					LineBreakMode="WordWrap"
-					Text="(magic charm picks will appear here)" />
-
-				<Label
-					x:Name="SpiritCharmPickedLabel"
-					IsVisible="False"
-					LineBreakMode="WordWrap"
-					Text="(spiritual charm picks will appear here)" />
+				<Button IsEnabled="False" Text="Neuronic" />
 			</VerticalStackLayout>
 		</ScrollView>
 		<controls:StickyFooterControl
 			Grid.Row="1"
+			BreakdownItems="{Binding Source={x:Reference RootPage}, Path=BindingContext.BreakdownItems}"
 			ButtonText="Return to Form"
+			RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=BindingContext.RemoveContributionCommand}"
 			ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
 			ReturnCommandParameter="{x:Reference RootPage}"
-			Total="{Binding Source={x:Reference RootPage}, Path=BindingContext.Total}"
-			BreakdownItems="{Binding Source={x:Reference RootPage}, Path=BindingContext.BreakdownItems}"
-			RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=BindingContext.RemoveContributionCommand}" />
+			Total="{Binding Source={x:Reference RootPage}, Path=BindingContext.Total}" />
 	</Grid>
 </ContentPage>

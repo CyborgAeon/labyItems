@@ -224,9 +224,16 @@ public class ListAlignmentPickerControl : ContentView
             if (Items == null)
                 return;
             if (Items.Count <= 1)
+            {
                 Items[0] = null;
+            }
+            else
+            {
+                Items[index] = null;
+            }
 
-            Items.RemoveAt(index);
+            picker.SelectedValue = null;
+            UpdateSummaryAndCount();
         };
 
         var addButton = new Button
@@ -273,10 +280,14 @@ public class ListAlignmentPickerControl : ContentView
             return;
         }
 
-        var nonEmpty = Items.Where(x => x.HasValue).ToList();
+        var distinctSelected = Items
+            .Where(x => x.HasValue)
+            .Select(x => x.Value)
+            .Distinct()
+            .ToList();
 
-        ValueCount = nonEmpty.Count;
-        SummaryText = string.Join(", ", nonEmpty); // relies on enum ToString()
+        ValueCount = distinctSelected.Count;
+        SummaryText = string.Join(", ", distinctSelected); // relies on enum ToString()
 
         var format = CountLabelFormat ?? "{0}";
         CountLabelText = string.Format(format, ValueCount);
