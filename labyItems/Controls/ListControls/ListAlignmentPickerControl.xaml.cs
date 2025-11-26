@@ -254,9 +254,8 @@ public class ListAlignmentPickerControl : ContentView
             if (Items == null) return;
             if (Items.Count >= MaxItems) return;
 
-            var currentValue = (index >= 0 && index < Items.Count) ? Items[index] : null;
             var insertIndex = System.Math.Clamp(index + 1, 0, Items.Count);
-            Items.Insert(insertIndex, currentValue);
+            Items.Insert(insertIndex, null);
         };
 
         grid.Add(picker, 0, 0);

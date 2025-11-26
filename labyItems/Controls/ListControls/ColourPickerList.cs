@@ -192,6 +192,9 @@ public class ListColourPickerControl : ContentView
 
     private View CreateRow(int index, MagicColours? initialValue)
     {
+        if (initialValue == MagicColours.Grey && Items != null && index >= 0 && index < Items.Count)
+            Items[index] = null;
+
         var grid = new Grid
         {
             ColumnDefinitions =
@@ -205,7 +208,7 @@ public class ListColourPickerControl : ContentView
 
         // Your existing picker for Colour
         var picker = new MagicColourPicker { HorizontalOptions = LayoutOptions.FillAndExpand };
-        picker.SelectedValue = initialValue;
+        picker.SelectedValue = initialValue == MagicColours.Grey ? null : initialValue;
         picker.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(MagicColourPicker.SelectedValue))
@@ -235,11 +238,26 @@ public class ListColourPickerControl : ContentView
             if (Items == null)
                 return;
 
-            if (index >= 0 && index < Items.Count)
-                Items[index] = null;
+            if (Items.Count == 0)
+            {
+                return;
+            }
 
-            picker.SelectedValue = null;
-            UpdateSummaryAndCount();
+            if (Items.Count <= 1)
+            {
+                // Only one row: clear it if it has a value, otherwise do nothing
+                if (Items[0].HasValue)
+                {
+                    Items[0] = null;
+                    picker.SelectedValue = null;
+                    UpdateSummaryAndCount();
+                }
+            }
+            else if (index >= 0 && index < Items.Count)
+            {
+                Items.RemoveAt(index);
+                UpdateSummaryAndCount();
+            }
         };
 
         var addButton = new Button
@@ -262,9 +280,8 @@ public class ListColourPickerControl : ContentView
             if (Items.Count >= MaxItems)
                 return;
 
-            var currentValue = (index >= 0 && index < Items.Count) ? Items[index] : null;
             var insertIndex = System.Math.Clamp(index + 1, 0, Items.Count);
-            Items.Insert(insertIndex, currentValue);
+            Items.Insert(insertIndex, null);
         };
 
         grid.Add(picker, 0, 0);
@@ -289,7 +306,7 @@ public class ListColourPickerControl : ContentView
         }
 
         var distinctSelected = Items
-            .Where(x => x.HasValue)
+            .Where(x => x.HasValue && x.Value != MagicColours.Grey)
             .Select(x => x.Value)
             .Distinct()
             .ToList();

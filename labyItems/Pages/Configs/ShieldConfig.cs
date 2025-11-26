@@ -93,10 +93,8 @@ public class ShieldConfig : ConfigBase
         set => SetProperty(ref _sacAlignmentCount, Math.Max(0, value), affectsTotal: true);
     }
 
-    public bool ShowMacColours =>
-        MAC > 0 || SelectedShield == ShieldType.Magical || SelectedShield == ShieldType.Mantic;
-    public bool ShowSacAlignment =>
-        SAC > 0 || SelectedShield == ShieldType.Mantic || SelectedShield == ShieldType.Spiritual;
+    public bool ShowMacColours => MAC > 0;
+    public bool ShowSacAlignment => SAC > 0;
 
     public ObservableCollection<MagicColours?> ShieldColours { get; }
     public ObservableCollection<Alignments?> ShieldAlignments { get; }

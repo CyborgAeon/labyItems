@@ -7,16 +7,15 @@
   Title="New Character">
   <ScrollView>
     <VerticalStackLayout Padding="20" Spacing="12">
-      <Label Text="Name" />
+      <Label Text="Player Name" />
+      <Entry x:Name="PlayerEntry" />
+      <Label Text="Character Name" />
       <Entry x:Name="NameEntry" />
-      <Label Text="Class" />
+      <Label Text="Character Class" />
       <Entry x:Name="ClassEntry" />
       <Label Text="Points" />
       <Entry x:Name="PointsEntry" />
-      <Label Text="Player Name (optional)" />
-      <Entry x:Name="PlayerEntry" />
-      
-      
+
       <Button
         Clicked="OnSave"
         CornerRadius="12"

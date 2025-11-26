@@ -6,6 +6,7 @@ public partial class MagicColourPicker : EnumPicker<MagicColours>
 {
     public MagicColourPicker()
     {
+        Options.Remove(MagicColours.Grey);
         InitializeComponent();
         RegisterInnerPicker(InnerPicker);
         if (string.IsNullOrEmpty(PlaceholderText))

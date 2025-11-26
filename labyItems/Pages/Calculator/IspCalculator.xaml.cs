@@ -5,6 +5,8 @@ using System.Windows.Input;
 using labyItems.Categories;
 using labyItems.Controls;
 using labyItems.Models;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Devices;
 
 namespace labyItems.Pages.Calculator;
 
@@ -15,6 +17,8 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
     private int _baseIsp;
     private readonly List<CalcContribution> _contributions = new();
     private TaskCompletionSource<IspCalculationResult?>? _tcsCalc;
+    private double _lastAppliedTabFontSize;
+    private double _lastMeasuredWidth;
 
     public ICommand? ReturnToFormCommand { get; set; }
     public ICommand RemoveContributionCommand { get; }
@@ -62,6 +66,8 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         LifeCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
 
         RemoveContributionCommand = new Command<string>(RemoveContributionById);
+        Loaded += OnLoaded;
+        SizeChanged += OnSizeChanged;
 
         if (existingAbilities != null)
             SeedExisting(existingAbilities);
@@ -110,6 +116,8 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
     }
 
     private async void OnReturn(object sender, EventArgs e) => await ExecuteReturnAsync();
+    private void OnLoaded(object? sender, EventArgs e) => UpdateTabFontSize();
+    private void OnSizeChanged(object? sender, EventArgs e) => UpdateTabFontSize();
 
     public async Task<IspCalculationResult?> GetResultAsync(INavigation nav)
     {
@@ -213,4 +221,45 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
 
     private void OnPropertyChanged([CallerMemberName] string? name = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+    private void UpdateTabFontSize()
+    {
+        double width = Width > 0
+            ? Width
+            : DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
+
+        // Avoid excessive churn when size hasn't meaningfully changed
+        if (Math.Abs(width - _lastMeasuredWidth) < 1 && _lastAppliedTabFontSize > 0)
+            return;
+
+        _lastMeasuredWidth = width;
+        double targetFontSize = CalculateTabFontSize(width);
+
+        if (Math.Abs(targetFontSize - _lastAppliedTabFontSize) < 0.1)
+            return;
+
+        _lastAppliedTabFontSize = targetFontSize;
+        MainThread.BeginInvokeOnMainThread(() => ApplyPlatformTabFontSize(targetFontSize));
+    }
+
+    private double CalculateTabFontSize(double availableWidth)
+    {
+        if (availableWidth <= 0 || Children.Count == 0)
+            return 12;
+
+        double perTabWidth = availableWidth / Children.Count;
+
+        // Scale font size linearly between small and large widths
+        const double minFont = 11;
+        const double maxFont = 14;
+        const double minWidth = 70;  // typical small-phone width per tab
+        const double maxWidth = 140; // roomy tablet width per tab
+
+        double clamped = Math.Clamp(perTabWidth, minWidth, maxWidth);
+        double ratio = (clamped - minWidth) / (maxWidth - minWidth);
+
+        return Math.Round(minFont + (maxFont - minFont) * ratio, 1);
+    }
+
+    partial void ApplyPlatformTabFontSize(double fontSize);
 }
