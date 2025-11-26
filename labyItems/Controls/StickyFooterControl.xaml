@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView
-    x:Class="labyItems.Controls.StickyFooterControl"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:conv="clr-namespace:labyItems.Converters"
-    x:Name="Root">
+  x:Class="labyItems.Controls.StickyFooterControl"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:conv="clr-namespace:labyItems.Converters"
+  x:Name="Root">
 
   <ContentView.Resources>
     <conv:BoolToRotationConverter x:Key="BoolToRotationConverter" />
   </ContentView.Resources>
 
   <Border
-      StrokeThickness="1"
-      Stroke="#22000000"
-      BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E1E}"
-      Padding="12,8">
+    Padding="12,8"
+    BackgroundColor="{AppThemeBinding Light=#FFFFFF,
+                                      Dark=#1E1E1E}"
+    Stroke="#22000000"
+    StrokeThickness="1">
     <VerticalStackLayout Spacing="8">
-      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+      <Grid ColumnDefinitions="18,*,Auto" ColumnSpacing="8">
         <Label
+          Grid.Column="0"
+          FontSize="30"
+          HorizontalTextAlignment="End"
+          Rotation="{Binding Source={x:Reference Root}, Path=IsExpanded, Converter={StaticResource BoolToRotationConverter}}"
           Text="›"
-          FontSize="18"
-          VerticalTextAlignment="Center"
-          Rotation="{Binding Source={x:Reference Root}, Path=IsExpanded, Converter={StaticResource BoolToRotationConverter}}">
+          VerticalTextAlignment="Center">
           <Label.GestureRecognizers>
             <TapGestureRecognizer Tapped="OnToggleExpanded" />
           </Label.GestureRecognizers>
@@ -30,21 +33,20 @@
           Grid.Column="1"
           VerticalOptions="Center"
           FontAttributes="Bold"
-          Text="{Binding Source={x:Reference Root}, Path=FormattedTotal}" />
-        <Button Grid.Column="2"
-                HeightRequest="44"
-                CornerRadius="10"
-                Text="{Binding Source={x:Reference Root}, Path=ButtonText}"
-                Clicked="OnReturnClicked" 
-                IsEnabled="{Binding Source={x:Reference Root}, Path=IsEnabled}"/>
+          Text="{Binding Source={x:Reference Root}, Path=FormattedTotal}"/>
+        <Button
+          Grid.Column="2"
+          Clicked="OnReturnClicked"
+          CornerRadius="10"
+          HeightRequest="44"
+          IsEnabled="{Binding Source={x:Reference Root}, Path=IsEnabled}"
+          Text="{Binding Source={x:Reference Root}, Path=ButtonText}" />
       </Grid>
 
-      <CollectionView
-        IsVisible="{Binding Source={x:Reference Root}, Path=IsExpanded}"
-        ItemsSource="{Binding Source={x:Reference Root}, Path=BreakdownItems}">
+      <CollectionView IsVisible="{Binding Source={x:Reference Root}, Path=IsExpanded}" ItemsSource="{Binding Source={x:Reference Root}, Path=BreakdownItems}">
         <CollectionView.ItemTemplate>
           <DataTemplate>
-            <Grid ColumnDefinitions="*,Auto" Padding="0,2">
+            <Grid Padding="0,2" ColumnDefinitions="*,Auto">
               <Label>
                 <Label.FormattedText>
                   <FormattedString>
@@ -55,12 +57,13 @@
                   </FormattedString>
                 </Label.FormattedText>
               </Label>
-              <Button Grid.Column="1"
-                      Text="🗑️"
-                      Padding="8,4"
-                      Command="{Binding Source={x:Reference Root}, Path=RemoveContributionCommand}"
-                      CommandParameter="{Binding Id}" 
-                      IsEnabled="{Binding Source={x:Reference Root}, Path=IsEnabled}"/>
+              <Button
+                Grid.Column="1"
+                Padding="8,4"
+                Command="{Binding Source={x:Reference Root}, Path=RemoveContributionCommand}"
+                CommandParameter="{Binding Id}"
+                IsEnabled="{Binding Source={x:Reference Root}, Path=IsEnabled}"
+                Text="🗑️" />
             </Grid>
           </DataTemplate>
         </CollectionView.ItemTemplate>
