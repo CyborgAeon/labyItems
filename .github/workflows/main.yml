@@ -3,8 +3,8 @@ name: MAUI Android Release
 on:
   push:
     tags:
-      - 'v*'       # e.g. v1.0.0, v1.2.3
-  workflow_dispatch: {}   # lets you run it manually from the Actions tab
+      - 'v*'
+  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -32,12 +32,14 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Install MAUI workload
+      - name: Install workload ios 
         run: dotnet workload install ios
-      - name: Install MAUI workload
+      - name: Install workload Maui-android
         run: dotnet workload install maui-android
-      - name: Install MAUI workload
+      - name: Install workload Maui-ios
         run: dotnet workload install maui-ios
+      - name: Install workload maccatalyst
+        run: dotnet workload install maccatalyst
 
       - name: Restore
         run: dotnet restore labyItems/labyItems.csproj
