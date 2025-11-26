@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<cfg:ConfigPageBase
   x:Class="labyItems.Pages.Calculator.ShieldConfigPage"
   x:Name="RootPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:conv="clr-namespace:labyItems.Converters"
   xmlns:controls="clr-namespace:labyItems.Controls"
-  Title="Configure Shield">
+  xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
+  Title="Configure Shield"
+  x:TypeArguments="cfg:ShieldConfig">
 
   <ContentPage.Resources>
     <ResourceDictionary>
@@ -22,52 +24,65 @@
 
       <!-- Shield selection -->
       <Label Text="Shield" />
-      <Picker
+      <controls:ShieldTypePicker
         x:Name="ShieldPicker"
-        Title="+0 Shield type"
-        SelectedIndexChanged="OnShieldChanged">
-        <Picker.Items>
-          <x:String>— None —</x:String>
-          <x:String>+0 Magical Shield (15)</x:String>
-          <x:String>+0 Spiritual Shield (20)</x:String>
-          <x:String>+0 Mantic Shield (35)</x:String>
-        </Picker.Items>
-      </Picker>
+        LabelText="Shield type"
+        SelectedValue="{Binding SelectedShield, Mode=TwoWay}" />
+          <controls:DictionarySlider
+            ItemsSource="{Binding PacOptions}"
+            KeyFormat="PAC {0}"
+            SelectedIndex="{Binding PAC, Mode=TwoWay}"
+            ValueFormat="ISP: {0}" />
+          <controls:DictionarySlider
+            ItemsSource="{Binding DacOptions}"
+            KeyFormat="DAC {0}"
+            SelectedIndex="{Binding DAC, Mode=TwoWay}"
+            ValueFormat="ISP: {0}" />
+          <controls:DictionarySlider
+            ItemsSource="{Binding MacOptions}"
+            KeyFormat="MAC {0}"
+            SelectedIndex="{Binding MAC, Mode=TwoWay}"
+            ValueFormat="ISP: {0}" />
+          <controls:ListColourPickerControl
+            IsVisible="{Binding ShowMacColours}"
+            Items="{Binding MacColours}"
+            MaxItems="2"
+            ValueCount="{Binding MacColoursCount, Mode=OneWayToSource}" />
+          <controls:ListColourPickerControl
+            IsVisible="{Binding ShowShieldColours}"
+            Items="{Binding ShieldColours}"
+            MaxItems="3"
+            ValueCount="{Binding ShieldColourCount, Mode=OneWayToSource}" />
+          <controls:DictionarySlider
+            ItemsSource="{Binding SacOptions}"
+            KeyFormat="SAC {0}"
+            SelectedIndex="{Binding SAC, Mode=TwoWay}"
+            ValueFormat="ISP: {0}" />
+          <controls:ListAlignmentPickerControl
+            IsVisible="{Binding ShowSacAlignment}"
+            Items="{Binding SacAlignments}"
+            MaxItems="1"
+            ValueCount="{Binding SacAlignmentCount, Mode=OneWayToSource}" />
+          <controls:ListAlignmentPickerControl
+            IsVisible="{Binding ShowShieldAlignments}"
+            Items="{Binding ShieldAlignments}"
+            MaxItems="2"
+            ValueCount="{Binding ShieldAlignmentCount, Mode=OneWayToSource}" />
 
-          <controls:PlusMinusControl
-            x:Name="MagicalColoursCount"
-            AllowMultiple="True"
-            Count="{Binding MagicalColoursCount, Mode=TwoWay}"
-            LabelText="Non-Grey Magic-colours ()" />
-          <controls:CheckboxControl
-            x:Name="SpiritualNonOppositeSwitch"
-            IsChecked="{Binding SpiritualNonOpposite, Mode=TwoWay}"
-            LabelText="Spiritual non-opposite alignment" />
+          <HorizontalStackLayout Spacing="12">
+            <Button Text="Calculate" Clicked="OnCalculate" />
+            <Button Text="Done" Command="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" />
+          </HorizontalStackLayout>
 
-      <HorizontalStackLayout Spacing="12">
-        <Button Text="Calculate" Clicked="OnCalculate" />
-        <Button Text="Done" Clicked="OnReturn" />
-      </HorizontalStackLayout>
-
-      <Label Text="Results" FontAttributes="Bold" />
-      <Label Text="{Binding Breakdown}" LineBreakMode="WordWrap" />
-      <Label>
-        <Label.FormattedText>
-          <FormattedString>
-            <Span Text="Total ISP: " FontAttributes="Bold" />
-            <Span Text="{Binding TotalWithBase}" />
-          </FormattedString>
-        </Label.FormattedText>
-      </Label>
     </VerticalStackLayout>
   </ScrollView>
   <controls:StickyFooterControl
       Grid.Row="1"
       Total="{Binding TotalWithBase}"
       ButtonText="Return to Calculator"
-      ReturnCommand="{Binding ReturnCommand}"
+      ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"
-      BreakdownItems="{Binding CalculatorContext.BreakdownItems, Source={x:Reference RootPage}}"
+      BreakdownItems="{Binding BreakdownItems}"
       RemoveContributionCommand="{Binding CalculatorContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
   </Grid>
-</ContentPage>
+</cfg:ConfigPageBase>
