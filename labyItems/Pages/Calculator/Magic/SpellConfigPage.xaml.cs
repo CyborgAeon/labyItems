@@ -53,7 +53,7 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
             cfg.AddAdvancedToBaseList ? "+Advanced" : null,
             cfg.InnateIsMantic ? "innates mantic ×4" : null,
             cfg.PowerStoreRegenerates ? "store regenerates +25" : null,
-            cfg.IsTeachingScroll ? $"teaching scroll (2×Power={2 * cfg.Power})" : null
+            cfg.IsTeachingScroll ? $"teaching scroll (2×Power={2 * Math.Max(cfg.Power, 1)})" : null
         }.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
 
         var name = string.IsNullOrWhiteSpace(cfg.SpellName) ? "Spell" : cfg.SpellName;

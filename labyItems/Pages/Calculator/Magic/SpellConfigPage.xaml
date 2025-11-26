@@ -38,7 +38,7 @@
           AllowMultiple="True"
           Count="{Binding BasicPerDay, Mode=TwoWay}"
           IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"
-          LabelText="Cast basic times per day" />
+        LabelText="Cast basic times per day" />
 
         <controls:PlusMinusControl
           AllowMultiple="True"

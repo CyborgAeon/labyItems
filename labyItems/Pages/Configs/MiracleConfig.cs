@@ -9,6 +9,19 @@ namespace labyItems.Pages.Configs;
 
 public class MiracleConfig : ConfigBase
 {
+    public MiracleConfig()
+    {
+        PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(IsAdvanced) || e.PropertyName == nameof(Name))
+            {
+                OnPropertyChanged(nameof(HasSelection));
+                OnPropertyChanged(nameof(ShowBasicPerDay));
+                OnPropertyChanged(nameof(ShowAdvancedPerDay));
+            }
+        };
+    }
+
     private SpiritualSpheres? _additionalSphereSelected = null;
     public SpiritualSpheres? AdditionalSphereSelected
     {
@@ -23,6 +36,9 @@ public class MiracleConfig : ConfigBase
     }
     public bool IsPowerStore =>
         (GeneralSpiritStore > 0 || (SphereSpiritStore > 0 && AdditionalSphereSelected.HasValue));
+    public bool HasSelection => !string.IsNullOrWhiteSpace(Name);
+    public bool ShowBasicPerDay => HasSelection && IsAdvanced == false;
+    public bool ShowAdvancedPerDay => HasSelection && IsAdvanced == true;
     private string _alignment = "";
     public string Alignment
     {
@@ -184,10 +200,13 @@ public class MiracleConfig : ConfigBase
 
     public void ApplyMiracle(Miracle.Result picked)
     {
-        Power = Math.Max(0, picked.Power);
+        Power = picked.Power;
         Name = string.IsNullOrWhiteSpace(picked.Name) ? "Miracle" : picked.Name;
         IsAdvanced = picked.IsAdvanced;
         Alignment = picked.Alignment;
         OnPropertyChanged(nameof(Title));
+        OnPropertyChanged(nameof(HasSelection));
+        OnPropertyChanged(nameof(ShowBasicPerDay));
+        OnPropertyChanged(nameof(ShowAdvancedPerDay));
     }
 }

@@ -70,6 +70,14 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
     }
 
     public void UpsertContribution(CalcContribution contribution) => AddContribution(contribution);
+    private void AddContribution(CalcContribution contribution)
+    {
+        var existing = _contributions.FirstOrDefault(c => c.Id == contribution.Id);
+        if (existing != null)
+            _contributions.Remove(existing);
+        _contributions.Add(contribution);
+        UpdateTotal();
+    }
 
     private void SeedExisting(IEnumerable<CalcResult> abilities)
     {
@@ -187,15 +195,6 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
                 }
             );
         }
-    }
-
-    private void AddContribution(CalcContribution contribution)
-    {
-        var existing = _contributions.FirstOrDefault(c => c.Id == contribution.Id);
-        if (existing != null)
-            _contributions.Remove(existing);
-        _contributions.Add(contribution);
-        UpdateTotal();
     }
 
     private void RemoveContributionById(string? id)

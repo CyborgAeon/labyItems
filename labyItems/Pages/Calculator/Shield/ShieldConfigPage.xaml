@@ -68,12 +68,6 @@
             Items="{Binding ShieldAlignments}"
             MaxItems="2"
             ValueCount="{Binding ShieldAlignmentCount, Mode=OneWayToSource}" />
-
-          <HorizontalStackLayout Spacing="12">
-            <Button Text="Calculate" Clicked="OnCalculate" />
-            <Button Text="Done" Command="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" />
-          </HorizontalStackLayout>
-
     </VerticalStackLayout>
   </ScrollView>
   <controls:StickyFooterControl

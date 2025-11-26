@@ -32,12 +32,12 @@
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding BasicPerDay, Mode=TwoWay}"
-          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolIsFalseConverter}}"
-          LabelText="Cast basic miracle x/day" />
+          IsVisible="{Binding ShowBasicPerDay}"
+          LabelText="Cast basic miracle" />
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding AdvancedPerDay, Mode=TwoWay}"
-          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolIsTrueConverter}}"
+          IsVisible="{Binding ShowAdvancedPerDay}"
           LabelText="Cast advanced miracle x/day" />
         <controls:CheckboxControl
           IsChecked="{Binding InnateIsMantic}"
@@ -76,12 +76,12 @@
 
         <controls:CheckboxControl
           IsChecked="{Binding AddBasicToList}"
-          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"
+          IsVisible="{Binding ShowBasicPerDay}"
           LabelText="Add basic miracle to base list" />
 
         <controls:CheckboxControl
           IsChecked="{Binding AddAdvancedToList}"
-          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"
+          IsVisible="{Binding ShowAdvancedPerDay}"
           LabelText="Add advanced miracle to base list" />
 
         <controls:CheckboxControl IsChecked="{Binding AddWithPrep30}" LabelText="Add miracle to list with 30 secs prep" />
