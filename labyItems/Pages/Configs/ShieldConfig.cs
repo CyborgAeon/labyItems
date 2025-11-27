@@ -27,16 +27,24 @@ public class ShieldConfig : ConfigBase
     public ShieldType SelectedShield
     {
         get => _selectedShield;
-        set =>
-            SetProperty(
-                ref _selectedShield,
-                value,
-                affectsTotal: true,
-                nameof(ShowMacColours),
-                nameof(ShowSacAlignment),
-                nameof(ShowShieldColours),
-                nameof(ShowShieldAlignments)
-            );
+        set
+        {
+            var previous = _selectedShield;
+            if (
+                SetProperty(
+                    ref _selectedShield,
+                    value,
+                    affectsTotal: true,
+                    nameof(ShowMacColours),
+                    nameof(ShowSacAlignment),
+                    nameof(ShowShieldColours),
+                    nameof(ShowShieldAlignments)
+                )
+            )
+            {
+                ResetHiddenSelections(previous, value);
+            }
+        }
     }
 
     private int _magicalColoursCount;
@@ -271,5 +279,22 @@ public class ShieldConfig : ConfigBase
             }
         );
         sb.AppendLine(text);
+    }
+
+    private void ResetHiddenSelections(ShieldType previous, ShieldType current)
+    {
+        if (!ShowShieldColours)
+        {
+            ShieldColours.Clear();
+            ShieldColours.Add(null);
+            ShieldColourCount = 0;
+        }
+
+        if (!ShowShieldAlignments)
+        {
+            ShieldAlignments.Clear();
+            ShieldAlignments.Add(null);
+            ShieldAlignmentCount = 0;
+        }
     }
 }
