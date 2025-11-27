@@ -27,15 +27,16 @@ public class ShieldConfig : ConfigBase
     public ShieldType SelectedShield
     {
         get => _selectedShield;
-        set => SetProperty(
-            ref _selectedShield,
-            value,
-            affectsTotal: true,
-            nameof(ShowMacColours),
-            nameof(ShowSacAlignment),
-            nameof(ShowShieldColours),
-            nameof(ShowShieldAlignments)
-        );
+        set =>
+            SetProperty(
+                ref _selectedShield,
+                value,
+                affectsTotal: true,
+                nameof(ShowMacColours),
+                nameof(ShowSacAlignment),
+                nameof(ShowShieldColours),
+                nameof(ShowShieldAlignments)
+            );
     }
 
     private int _magicalColoursCount;
@@ -45,14 +46,10 @@ public class ShieldConfig : ConfigBase
         set => SetProperty(ref _magicalColoursCount, Math.Max(0, value), affectsTotal: true);
     }
 
-    private bool _spiritualNonOpposite;
-    public bool SpiritualNonOpposite
-    {
-        get => _spiritualNonOpposite;
-        set => SetProperty(ref _spiritualNonOpposite, value, affectsTotal: true);
-    }
-
-    private int _pac, _dac, _mac, _sac;
+    private int _pac,
+        _dac,
+        _mac,
+        _sac;
     public int PAC
     {
         get => _pac;
@@ -68,13 +65,25 @@ public class ShieldConfig : ConfigBase
     public int MAC
     {
         get => _mac;
-        set => SetProperty(ref _mac, Clamp0To6(value), affectsTotal: true, alsoNotify: nameof(ShowMacColours));
+        set =>
+            SetProperty(
+                ref _mac,
+                Clamp0To6(value),
+                affectsTotal: true,
+                alsoNotify: nameof(ShowMacColours)
+            );
     }
 
     public int SAC
     {
         get => _sac;
-        set => SetProperty(ref _sac, Clamp0To6(value), affectsTotal: true, alsoNotify: nameof(ShowSacAlignment));
+        set =>
+            SetProperty(
+                ref _sac,
+                Clamp0To6(value),
+                affectsTotal: true,
+                alsoNotify: nameof(ShowSacAlignment)
+            );
     }
 
     public ObservableCollection<MagicColours?> MacColours { get; }
@@ -112,8 +121,10 @@ public class ShieldConfig : ConfigBase
         set => SetProperty(ref _shieldAlignmentCount, Math.Max(0, value), affectsTotal: true);
     }
 
-    public bool ShowShieldColours => SelectedShield == ShieldType.Magical || SelectedShield == ShieldType.Mantic;
-    public bool ShowShieldAlignments => SelectedShield == ShieldType.Mantic || SelectedShield == ShieldType.Spiritual;
+    public bool ShowShieldColours =>
+        SelectedShield == ShieldType.Magical || SelectedShield == ShieldType.Mantic;
+    public bool ShowShieldAlignments =>
+        SelectedShield == ShieldType.Mantic || SelectedShield == ShieldType.Spiritual;
 
     public ObservableCollection<ContributionRow> BreakdownItems { get; }
 
@@ -137,36 +148,40 @@ public class ShieldConfig : ConfigBase
         int running = 0;
         var sb = new StringBuilder();
 
+        var shieldColours =
+            ShieldColours?.Where(c => c.HasValue).Select(c => c!.Value).ToList()
+            ?? new List<MagicColours>();
+        var shieldAlignments =
+            ShieldAlignments?.Where(a => a.HasValue).Select(a => a!.Value).ToList()
+            ?? new List<Alignments>();
+
         int baseCost = SelectedShield switch
         {
             ShieldType.Magical => 15,
             ShieldType.Spiritual => 20,
             ShieldType.Mantic => 35,
-            _ => 0
+            _ => 0,
         };
-        AddCost($"Shield base: {SelectedShield} = {baseCost}", baseCost, ref running, sb);
+        AddCost($"{SelectedShield} Shield {baseCost}", baseCost, ref running, sb);
 
-        if (SelectedShield == ShieldType.Magical && MagicalColoursCount > 0)
+        foreach (var entry in shieldColours.Select((c, i) => (c, i)))
         {
-            int c = 2 * MagicalColoursCount;
-            AddCost($"+ Magical colours: 2 × {MagicalColoursCount} = {c}", c, ref running, sb);
+            AddCost(
+                entry.i == 0 ? $"Shield is {entry.c}" : $"Shield is also {entry.c} (+2)",
+                entry.i == 0 ? 0 : 2,
+                ref running,
+                sb
+            );
         }
 
-        if (SelectedShield == ShieldType.Spiritual && SpiritualNonOpposite)
+        foreach (var entry in shieldAlignments.Select((a, i) => (a, i)))
         {
-            AddCost("+ Spiritual non-opposite: 3", 3, ref running, sb);
-        }
-
-        if (ShowShieldColours && ShieldColourCount > 0)
-        {
-            int c = 2 * ShieldColourCount;
-            AddCost($"+ Shield colours: 2 × {ShieldColourCount} = {c}", c, ref running, sb);
-        }
-
-        if (ShowShieldAlignments && ShieldAlignmentCount > 0)
-        {
-            int c = 3 * ShieldAlignmentCount;
-            AddCost($"+ Shield alignments: 3 × {ShieldAlignmentCount} = {c}", c, ref running, sb);
+            AddCost(
+                entry.i == 0 ? $"Shield is {entry.a}" : $"Shield is also {entry.a} (+3)",
+                entry.i == 0 ? 0 : 3,
+                ref running,
+                sb
+            );
         }
 
         AddTableCost(PAC, ArmourConfig.PacTable, "PAC", ref running, sb);
@@ -189,11 +204,17 @@ public class ShieldConfig : ConfigBase
         {
             0 => 1.0,
             1 => 0.5,
-            _ => 2.0 / 3.0
+            _ => 2.0 / 3.0,
         };
 
         int adjusted = (int)Math.Round(baseCost * factor, MidpointRounding.AwayFromZero);
-        AddCost($"MAC: {MAC} AC → {baseCost} (×{factor:0.##}) = {adjusted}", adjusted, ref running, sb);
+        var adjustedText = $" (×{factor:0.##}) = {adjusted}";
+        AddCost(
+            $"+{MAC} MAC:{baseCost}{(MacColoursCount == 0 ? string.Empty : adjustedText)}",
+            adjusted,
+            ref running,
+            sb
+        );
         return adjusted;
     }
 
@@ -205,16 +226,29 @@ public class ShieldConfig : ConfigBase
 
         double factor = SacAlignmentCount > 0 ? 2.0 / 3.0 : 1.0;
         int adjusted = (int)Math.Round(baseCost * factor, MidpointRounding.AwayFromZero);
-        AddCost($"SAC: {SAC} AC → {baseCost} (×{factor:0.##}) = {adjusted}", adjusted, ref running, sb);
+        AddCost(
+            $"SAC: {SAC} AC → {baseCost} (×{factor:0.##}) = {adjusted}",
+            adjusted,
+            ref running,
+            sb
+        );
         return adjusted;
     }
 
     private static IDictionary<string, int> BuildTableDictionary(IReadOnlyList<int> table) =>
-        table.Select((v, i) => new KeyValuePair<string, int>(i.ToString(), v)).ToDictionary(k => k.Key, v => v.Value);
+        table
+            .Select((v, i) => new KeyValuePair<string, int>(i.ToString(), v))
+            .ToDictionary(k => k.Key, v => v.Value);
 
     private static int Clamp0To6(int v) => Math.Min(6, Math.Max(0, v));
 
-    private int AddTableCost(int ac, IReadOnlyList<int> table, string label, ref int running, StringBuilder sb)
+    private int AddTableCost(
+        int ac,
+        IReadOnlyList<int> table,
+        string label,
+        ref int running,
+        StringBuilder sb
+    )
     {
         int a = Clamp0To6(ac);
         int cost = table[a];
@@ -225,16 +259,15 @@ public class ShieldConfig : ConfigBase
 
     private void AddCost(string text, int cost, ref int running, StringBuilder sb)
     {
-        if (cost <= 0)
-            return;
+        if (cost > 0)
+            running += cost;
 
-        running += cost;
         BreakdownItems.Add(
             new ContributionRow
             {
                 Id = Guid.NewGuid().ToString(),
                 Text = text,
-                RunningTotal = running
+                RunningTotal = running,
             }
         );
         sb.AppendLine(text);
