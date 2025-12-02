@@ -7,7 +7,7 @@ namespace labyItems.Pages;
 public partial class AddCharacter : ContentPage
 {
     private ObjectId _charId;
-    private bool CanBeDeleted { get; set; } = false;
+    public bool CanBeDeleted { get; private set; } = false;
 
     public AddCharacter(Character? character = null)
     {
