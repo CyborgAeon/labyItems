@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using labyItems.Controls;
+using labyItems.Helpers;
 using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Configs;
@@ -216,9 +217,10 @@ public class ShieldConfig : ConfigBase
         };
 
         int adjusted = (int)Math.Round(baseCost * factor, MidpointRounding.AwayFromZero);
-        var adjustedText = $" (×{factor:0.##}) = {adjusted}";
+        var macColourList = CostStringHelper.JoinSelections(MacColours);
+        var adjustedText = CostStringHelper.FormatAdjustedText(macColourList, factor, adjusted);
         AddCost(
-            $"+{MAC} MAC:{baseCost}{(MacColoursCount == 0 ? string.Empty : adjustedText)}",
+            $"+{MAC} MAC {(MacColoursCount == 0 ? $"= {baseCost}" : adjustedText)}",
             adjusted,
             ref running,
             sb
@@ -234,8 +236,10 @@ public class ShieldConfig : ConfigBase
 
         double factor = SacAlignmentCount > 0 ? 2.0 / 3.0 : 1.0;
         int adjusted = (int)Math.Round(baseCost * factor, MidpointRounding.AwayFromZero);
+        var sacAlignmentList = CostStringHelper.JoinSelections(SacAlignments);
+        var adjustedText = CostStringHelper.FormatAdjustedText(sacAlignmentList, factor, adjusted);
         AddCost(
-            $"SAC: {SAC} AC → {baseCost} (×{factor:0.##}) = {adjusted}",
+            $"SAC: {SAC} AC → {baseCost} {(SacAlignmentCount == 0 ? string.Empty : adjustedText)}",
             adjusted,
             ref running,
             sb
@@ -261,7 +265,7 @@ public class ShieldConfig : ConfigBase
         int a = Clamp0To6(ac);
         int cost = table[a];
         if (a > 0)
-            AddCost($"{label}: {a} AC → {cost}", cost, ref running, sb);
+            AddCost(CostStringHelper.FormatAcTableLine(label, a, cost), cost, ref running, sb);
         return cost;
     }
 

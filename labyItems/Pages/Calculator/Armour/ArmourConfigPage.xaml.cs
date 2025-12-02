@@ -43,21 +43,42 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
         };
 
         var details = new Dictionary<string, object?>();
+        details["armourType"] = cfg.SelectedArmour.ToString();
         if (cfg.ACBase > 0) details["AC"] = cfg.ACBase;
+        if (!string.IsNullOrWhiteSpace(cfg.LayeredSummary))
+            details["layeredSummary"] = cfg.LayeredSummary;
         if (cfg.SelectedArmour == ArmourKind.Magical && cfg.MagicalColoursCount > 0)
             details["magicalColours"] = cfg.MagicalColoursCount;
         if (cfg.SelectedArmour == ArmourKind.Spiritual && cfg.SpiritualNonOpposite)
             details["spiritualNonOpposite"] = true;
-        if (cfg.PAC > 0) details["PAC"] = cfg.PAC;
-        if (cfg.DAC > 0) details["DAC"] = cfg.DAC;
-        if (cfg.MAC > 0) details["MAC"] = cfg.MAC;
-        if (cfg.SAC > 0) details["SAC"] = cfg.SAC;
+
+        var enhancements = new List<Dictionary<string, object>>();
+        void AddEnh(string type, int value, int isp)
+        {
+            if (value <= 0 || isp <= 0)
+                return;
+            enhancements.Add(new Dictionary<string, object>
+            {
+                ["type"] = type,
+                ["value"] = value,
+                ["isp"] = isp
+            });
+        }
+
+        AddEnh("PAC", cfg.PAC, ArmourConfig.GetTableCost(cfg.PAC, ArmourConfig.PacTable));
+        AddEnh("DAC", cfg.DAC, ArmourConfig.GetTableCost(cfg.DAC, ArmourConfig.DacTable));
+        AddEnh("MAC", cfg.MAC, ArmourConfig.GetTableCost(cfg.MAC, ArmourConfig.MacTable));
+        AddEnh("SAC", cfg.SAC, ArmourConfig.GetTableCost(cfg.SAC, ArmourConfig.SacTable));
+
+        if (enhancements.Count > 0)
+            details["enhancementBonuses"] = enhancements;
 
         return new CalcResult
         {
             AbilityType = "Armour",
             AbilityName = kind,
             TotalIsp = cfg.Total,
+            Summary = cfg.Breakdown,
             Details = details
         };
     }

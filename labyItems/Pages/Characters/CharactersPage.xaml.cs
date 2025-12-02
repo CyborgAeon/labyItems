@@ -24,7 +24,7 @@ public partial class CharactersPage : ContentPage
 
     private async void OnAddClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new AddCharacter());
+        await Navigation.PushAsync(new AddCharacter(null));
     }
 
     private async void OnEditClicked(object sender, EventArgs e)

@@ -67,7 +67,7 @@
         <controls:ListAlignmentPickerControl
           IsVisible="{Binding ShowSacAlignment}"
           Items="{Binding SacAlignments}"
-          MaxItems="1"
+          MaxItems="2"
           ValueCount="{Binding SacAlignmentCount, Mode=OneWayToSource}" />
       </VerticalStackLayout>
     </ScrollView>

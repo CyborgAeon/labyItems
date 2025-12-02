@@ -21,6 +21,12 @@
         CornerRadius="12"
         HeightRequest="50"
         Text="Save" />
+      <Button
+        Clicked="OnDelete"
+        CornerRadius="12"
+        HeightRequest="50"
+        IsVisible="{Binding CanBeDeleted}"
+        Text="Delete" />
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>

@@ -1,12 +1,19 @@
 
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Collections.ObjectModel;
+using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Models;
+using labyItems.Controls;
 namespace labyItems.Pages.Configs;
 public class ArmourConfig : ConfigBase
 {
+    public ObservableCollection<int?> ArmourLayers { get; } = new() { 0 };
+    public ObservableCollection<ContributionRow> BreakdownItems { get; } = new();
+
     private int _acBase;
     public int ACBase
     {
@@ -45,14 +52,39 @@ public class ArmourConfig : ConfigBase
     // private int _total;
     // public int Total { get => _total; private set { if (SetProperty(ref _total, value, affectsTotal: false))OnPropertyChanged(nameof(Breakdown)); } }
 
+    private string _layeredSummary = string.Empty;
+    public string LayeredSummary
+    {
+        get => _layeredSummary;
+        set => SetProperty(ref _layeredSummary, value, affectsTotal: false);
+    }
+
+    private string _layeredBreakdown = string.Empty;
+    public string LayeredBreakdown
+    {
+        get => _layeredBreakdown;
+        set => SetProperty(ref _layeredBreakdown, value, affectsTotal: false);
+    }
+
     private string _breakdown = "";
     public string Breakdown { get => _breakdown; private set { if (_breakdown != value) { _breakdown = value; OnPropertyChanged(); } } }
 
     // // Calculation
     protected override int ExtraTotal()
     {
+        BreakdownItems.Clear();
         int total = 0;
         var sb = new StringBuilder();
+
+        if (!string.IsNullOrWhiteSpace(LayeredBreakdown))
+        {
+            foreach (var line in LayeredBreakdown.Split('\n'))
+            {
+                var trimmed = line?.TrimEnd();
+                if (!string.IsNullOrWhiteSpace(trimmed))
+                    AddCost(trimmed!, 0, ref total, sb);
+            }
+        }
 
         if (SelectedArmour != ArmourKind.None && ACBase > 0)
         {
@@ -71,27 +103,24 @@ public class ArmourConfig : ConfigBase
                 _ => 0
             };
             int armourCost = perAc * ACBase + flat;
-            total += armourCost;
-            sb.AppendLine($"Armour: {perAc} × AC({ACBase}) + {flat} = {armourCost}");
+            AddCost($"{SelectedArmour} armour: {perAc} × AC({ACBase}) {(flat > 0 ? $"+ {flat} " : string.Empty)}= {armourCost}", armourCost, ref total, sb);
         }
 
         if (SelectedArmour == ArmourKind.Magical && MagicalColoursCount > 0)
         {
             int c = 2 * MagicalColoursCount;
-            total += c;
-            sb.AppendLine($"+ Magical colours: 2 × {MagicalColoursCount} = {c}");
+            AddCost($"+ Magical colours: 2 × {MagicalColoursCount} = {c}", c, ref total, sb);
         }
 
         if (SelectedArmour == ArmourKind.Spiritual && SpiritualNonOpposite)
         {
-            total += 3;
-            sb.AppendLine("+ Spiritual non-opposite: 3");
+            AddCost("+ Spiritual non-opposite: 3", 3, ref total, sb);
         }
 
-        total += AddTableCost(PAC, PacTable, "PAC", sb);
-        total += AddTableCost(DAC, DacTable, "DAC", sb);
-        total += AddTableCost(MAC, MacTable, "MAC", sb);
-        total += AddTableCost(SAC, SacTable, "SAC", sb);
+        AddTableCost(PAC, PacTable, "PAC", sb, ref total);
+        AddTableCost(DAC, DacTable, "DAC", sb, ref total);
+        AddTableCost(MAC, MacTable, "MAC", sb, ref total);
+        AddTableCost(SAC, SacTable, "SAC", sb, ref total);
 
         Breakdown = sb.ToString().TrimEnd();
         return total;
@@ -104,12 +133,29 @@ public class ArmourConfig : ConfigBase
     public static readonly IReadOnlyList<int> MacTable = new[] { 0, 8, 24, 40, 64, 88, 120 };
     public static readonly IReadOnlyList<int> SacTable = new[] { 0, 6, 18, 30, 48, 66, 90 };
 
-    private static int AddTableCost(int ac, IReadOnlyList<int> table, string label, StringBuilder sb)
+    public static int GetTableCost(int ac, IReadOnlyList<int> table) =>
+        table[Math.Min(table.Count - 1, Math.Max(0, ac))];
+
+    private void AddTableCost(int ac, IReadOnlyList<int> table, string label, StringBuilder sb, ref int running)
     {
         int a = Math.Min(6, Math.Max(0, ac));
         int cost = table[a];
-        if (a > 0) sb.AppendLine($"{label}: {a} AC → {cost}");
-        return cost;
+        if (a > 0)
+            AddCost($"+{a} {label} = {cost}", cost, ref running, sb);
+    }
+
+    private void AddCost(string text, int cost, ref int running, StringBuilder builder)
+    {
+        if (cost > 0)
+            running += cost;
+
+        BreakdownItems.Add(new ContributionRow
+        {
+            Id = Guid.NewGuid().ToString(),
+            Text = text,
+            RunningTotal = running
+        });
+        builder.AppendLine(text);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
