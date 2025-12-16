@@ -9,6 +9,7 @@ curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
   && dotnet --info \
   && dotnet workload install maui \
   && dotnet workload install maui-android \
+  && dotnet build -t:InstallAndroidDependencies -f net8.0-android \
   && brew install --cask temurin@17
 ```
 
@@ -16,11 +17,11 @@ If you want the PATH change to persist, add `export PATH="$HOME/.dotnet:$PATH"` 
 
 ## debug steps:
 
-`PKG=bard.uk.labyitems`
-`dotnet build -t:Run -f net8.0-android -c Debug`
-`adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1`
-`PID=$(adb shell pidof -s "$PKG"); echo "$PID"`
-`adb logcat --pid "$PID" -v time`
+Single shot debug launch + logcat:
+
+```bash
+PKG=bard.uk.labyitems; dotnet build -t:Run -f net8.0-android -c Debug && adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 && PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); echo "PID=$PID"; adb logcat --pid "$PID" -v time
+```
 
 ## view debug logs
 
