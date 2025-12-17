@@ -15,18 +15,30 @@ curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
 
 If you want the PATH change to persist, add `export PATH="$HOME/.dotnet:$PATH"` to your shell profile.
 
+## hot reload (android)
+
+Make sure an emulator or device is running, then:
+
+```bash
+DOTNET_USE_POLLING_FILE_WATCHER=1 $HOME/.dotnet/dotnet watch --project labyItems/labyItems.csproj --framework net8.0-android run
+```
+
+If you hit `NETSDK1147` (missing `maui-android`) or similar, you’re probably running the system `dotnet` instead of the one installed by `dotnet-install.sh` — the command above pins to `$HOME/.dotnet/dotnet`.
+
+If watch ever complains about launch profiles, ensure `Properties/launchSettings.json` contains the `Android` profile (added in this repo).
+
 ## debug steps:
 
 Single shot debug launch + logcat:
 
 ```bash
-PKG=bard.uk.labyitems; dotnet build -t:Run -f net8.0-android -c Debug && adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 && PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); echo "PID=$PID"; adb logcat --pid "$PID" -v time
+PKG=bard.uk.labyitems; $HOME/.dotnet/dotnet build -t:Run -f net8.0-android -c Debug && adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 && PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); echo "PID=$PID"; adb logcat --pid "$PID" -v time
 ```
 
 ## view debug logs
 
 `PKG=bard.uk.labyitems`
-`dotnet build -t:Run -f net8.0-android -c Debug`
+`$HOME/.dotnet/dotnet build -t:Run -f net8.0-android -c Debug`
 
 `PID=$(adb shell pidof -s "$PKG" | tr -d '\r')`
 `echo "PID=$PID"`
@@ -46,4 +58,4 @@ PKG=bard.uk.labyitems; dotnet build -t:Run -f net8.0-android -c Debug && adb she
    - `ANDROID_KEY_PASSWORD` = `<keypass>`
    - `ANDROID_KEYSTORE_PASSWORD` = `<storepass>`
 4. For local release builds, place the keystore at `labyItems/labyItems.keystore` and pass passwords/alias when publishing, e.g.:
-   `AndroidSigningKeyPass=<keypass> AndroidSigningStorePass=<storepass> dotnet publish labyItems/labyItems.csproj -f net8.0-android -c Release -p:AndroidSigningKeyAlias=labyItemsSigningKey -p:AndroidPackageFormat=apk -p:GenerateAppBundle=false`
+   `AndroidSigningKeyPass=<keypass> AndroidSigningStorePass=<storepass> $HOME/.dotnet/dotnet publish labyItems/labyItems.csproj -f net8.0-android -c Release -p:AndroidSigningKeyAlias=labyItemsSigningKey -p:AndroidPackageFormat=apk -p:GenerateAppBundle=false`
