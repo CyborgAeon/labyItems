@@ -1,115 +1,72 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <cfg:ConfigPageBase
-  x:TypeArguments="cfg:ArmourConfig"
   x:Class="labyItems.Pages.Calculator.ArmourConfigPage"
-  x:Name="RootPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-  xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
-  Title="Armour Config">
-<Grid RowDefinitions="*,Auto">
-  <ScrollView Grid.Row="0">
-    <VerticalStackLayout Padding="20" Spacing="14">
+  xmlns:controls="clr-namespace:labyItems.Controls"
+  x:Name="RootPage"
+  Title="Armour Config"
+  x:TypeArguments="cfg:ArmourConfig">
+  <Grid RowDefinitions="*,Auto">
+    <ScrollView Grid.Row="0">
+      <VerticalStackLayout Padding="20" Spacing="14">
+        <Label Text="Armour" />
+        <controls:ArmourLayerControl
+          Layers="{Binding ArmourLayers}"
+          TotalPac="{Binding ACBase, Mode=OneWayToSource}"
+          SummaryText="{Binding LayeredSummary, Mode=OneWayToSource}"
+          BreakdownText="{Binding LayeredBreakdown, Mode=OneWayToSource}" />
+        <controls:ArmourPicker LabelText="Armour type" SelectedValue="{Binding SelectedArmour, Mode=TwoWay}" />
+        <Label FontAttributes="Bold" Text="Enhancement bonus (max 6 each)" />
+        <controls:DictionarySlider
+          x:Name="PacSlider"
+          KeyFormat="PAC: {0}"
+          MaxCount="6"
+          MinCount="0"
+          SelectedIndex="{Binding PAC, Mode=TwoWay}"
+          SnapToStep="True"
+          StepSize="1"
+          ValueFormat="" />
 
-      <Label Text="Armour Cost Calculator" FontSize="20" FontAttributes="Bold" />
+        <controls:DictionarySlider
+          x:Name="DacSlider"
+          KeyFormat="DAC: {0}"
+          MaxCount="6"
+          MinCount="0"
+          SelectedIndex="{Binding DAC, Mode=TwoWay}"
+          SnapToStep="True"
+          StepSize="1"
+          ValueFormat="" />
 
-      <!-- Base AC -->
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding ACBase, Mode=TwoWay}"
-        LabelText="Base AC" />
+        <controls:DictionarySlider
+          x:Name="MacSlider"
+          KeyFormat="MAC: {0}"
+          MaxCount="6"
+          MinCount="0"
+          SelectedIndex="{Binding MAC, Mode=TwoWay}"
+          SnapToStep="True"
+          StepSize="1"
+          ValueFormat="" />
 
-      <!-- Armour type -->
-      <Label Text="Armour type" />
-      <controls:ArmourPicker LabelText="Armour type"
-        SelectedValue="{Binding SelectedArmour, Mode=TwoWay}" />
-      <!-- <Picker
-        x:Name="ArmourPicker"
-        Title="Select armour type"
-        SelectedIndexChanged="OnArmourChanged">
-        <Picker.Items>
-          <x:String>— None —</x:String>
-          <x:String>Magical Master Crafted (2 per AC)</x:String>
-          <x:String>Spiritual Master Crafted (2 per AC + 2)</x:String>
-          <x:String>Mantic Master Crafted (4 per AC + 2)</x:String>
-        </Picker.Items>
-      </Picker> -->
-
-      <!-- Modifiers -->
-      <Label Text="Modifiers" FontAttributes="Bold" />
-
-      <controls:PlusMinusControl
-        AllowMultiple="True"
-        Count="{Binding MagicalColoursCount, Mode=TwoWay}"
-        LabelText="Magical colours (non-grey) (+2 per colour)" />
-
-      <controls:CheckboxControl
-        IsChecked="{Binding SpiritualNonOpposite}"
-        LabelText="Spiritual non-opposite alignment (+3)" />
-
-      <!-- Extra AC tables (0..6 each) -->
-      <Label Text="Additional AC (max 6 each)" FontAttributes="Bold" />
-
-      <controls:DictionarySlider
-        x:Name="PacSlider"
-        SelectedIndex="{Binding PAC, Mode=TwoWay}"
-        KeyFormat="PAC: {0}"
-        ValueFormat=""
-        SnapToStep="True"
-        StepSize="1"
-        MinCount="0"
-        MaxCount="6" />
-
-      <controls:DictionarySlider
-        x:Name="DacSlider"
-        SelectedIndex="{Binding DAC, Mode=TwoWay}"
-        KeyFormat="DAC: {0}"
-        ValueFormat=""
-        SnapToStep="True"
-        StepSize="1"
-        MinCount="0"
-        MaxCount="6" />
-
-      <controls:DictionarySlider
-        x:Name="MacSlider"
-        SelectedIndex="{Binding MAC, Mode=TwoWay}"
-        KeyFormat="MAC: {0}"
-        ValueFormat=""
-        SnapToStep="True"
-        StepSize="1"
-        MinCount="0"
-        MaxCount="6" />
-
-      <controls:DictionarySlider
-        x:Name="SacSlider"
-        SelectedIndex="{Binding SAC, Mode=TwoWay}"
-        KeyFormat="SAC: {0}"
-        ValueFormat=""
-        SnapToStep="True"
-        StepSize="1"
-        MinCount="0"
-        MaxCount="6" />
-
-      <!-- Results (auto-updating) -->
-      <Label Text="Results" FontAttributes="Bold" />
-      <Label Text="{Binding Breakdown}" LineBreakMode="WordWrap" />
-      <Label
-        FontAttributes="Bold"
-        FontSize="18"
-        Text="{Binding TotalWithBase, StringFormat='Total ISP: {0}'}" />
-
-      <!-- Return -->
-      <!-- <Button Clicked="OnReturn" Text="Return" /> -->
-    </VerticalStackLayout>
-  </ScrollView>
+        <controls:DictionarySlider
+          x:Name="SacSlider"
+          KeyFormat="SAC: {0}"
+          MaxCount="6"
+          MinCount="0"
+          SelectedIndex="{Binding SAC, Mode=TwoWay}"
+          SnapToStep="True"
+          StepSize="1"
+          ValueFormat="" />
+      </VerticalStackLayout>
+    </ScrollView>
     <controls:StickyFooterControl
-        Grid.Row="1"
-        Total="{Binding TotalWithBase}"
-        ButtonText="Return to Calculator"
-        ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
-        ReturnCommandParameter="{x:Reference RootPage}"
-        BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
-        RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
+      Grid.Row="1"
+      BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
+      ButtonText="Return to Calculator"
+      RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}"
+      ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
+      ReturnCommandParameter="{x:Reference RootPage}"
+      Total="{Binding TotalWithBase}" />
   </Grid>
 </cfg:ConfigPageBase>

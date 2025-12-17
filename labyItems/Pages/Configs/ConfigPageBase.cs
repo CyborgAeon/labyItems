@@ -24,6 +24,7 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
             OnPropertyChanged();
         }
     }
+    private bool CompletionSet => _tcs.Task.IsCompleted;
 
     protected ConfigPageBase()
     {
@@ -32,9 +33,7 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
 
         ReturnFromConfigCommand = new Command(async () =>
         {
-            var result = BuildResult(Config);
-
-            _tcs.TrySetResult(result);
+            Complete(BuildResult(Config));
             await StickyFooterControl.DefaultNavigateAsync(this);
         });
     }
@@ -52,4 +51,24 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
     }
 
     protected abstract CalcResult BuildResult(TConfig cfg);
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        Complete(null); // ensure awaiting callers resume even if user navigates back
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        Complete(null);
+        return base.OnBackButtonPressed();
+    }
+
+    private void Complete(CalcResult? result)
+    {
+        if (CompletionSet)
+            return;
+
+        _tcs.TrySetResult(result);
+    }
 }

@@ -13,7 +13,6 @@ public partial class ShieldConfigPage : ConfigPageBase<ShieldConfig>
 
     protected override CalcResult BuildResult(ShieldConfig cfg)
     {
-        // cfg.Recalculate();
         var kind = cfg.SelectedShield switch
         {
             ShieldType.Magical => "Magical Shield",
@@ -23,12 +22,10 @@ public partial class ShieldConfigPage : ConfigPageBase<ShieldConfig>
         };
 
         var details = new Dictionary<string, object?>();
-        if (cfg.SelectedShield == ShieldType.Magical && cfg.MagicalColoursCount > 0)
-            details["magicalColours"] = cfg.MagicalColoursCount;
-        if (cfg.SelectedShield == ShieldType.Spiritual && cfg.SpiritualNonOpposite)
-            details["spiritualNonOpposite"] = true;
-        if (cfg.ShowShieldColours && cfg.ShieldColourCount > 0)
+        if (cfg.SelectedShield == ShieldType.Magical && cfg.ShieldColourCount > 0)
             details["shieldColours"] = cfg.ShieldColourCount;
+        if (cfg.SelectedShield == ShieldType.Spiritual)
+            details["spiritualNonOpposite"] = true;
         if (cfg.ShowShieldAlignments && cfg.ShieldAlignmentCount > 0)
             details["shieldAlignments"] = cfg.ShieldAlignmentCount;
         if (cfg.PAC > 0)
@@ -53,6 +50,7 @@ public partial class ShieldConfigPage : ConfigPageBase<ShieldConfig>
             AbilityType = "Shield",
             AbilityName = kind,
             TotalIsp = cfg.Total,
+            Summary = cfg.Breakdown,
             Details = details,
         };
     }
@@ -73,14 +71,7 @@ public partial class ShieldConfigPage : ConfigPageBase<ShieldConfig>
     private void OnMagicalColoursChanged(object sender, TextChangedEventArgs e)
     {
         var cfg = (ShieldConfig)BindingContext;
-        cfg.MagicalColoursCount = Math.Max(0, TryParseInt(e.NewTextValue));
-        _ = cfg.Total;
-    }
-
-    private void OnSpiritualNonOppositeToggled(object sender, ToggledEventArgs e)
-    {
-        var cfg = (ShieldConfig)BindingContext;
-        cfg.SpiritualNonOpposite = e.Value;
+        cfg.ShieldColourCount = Math.Max(0, TryParseInt(e.NewTextValue));
         _ = cfg.Total;
     }
 

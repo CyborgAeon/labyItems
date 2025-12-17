@@ -34,10 +34,18 @@
                 Text="Add Recipient" />
 
             <Label FontAttributes="Bold" Text="Description" />
-            <Editor
-                x:Name="DescriptionEditor"
-                AutoSize="TextChanges"
-                Placeholder="Describe the item..." />
+            <VerticalStackLayout
+                x:Name="DescriptionList"
+                BindableLayout.ItemsSource="{Binding DescriptionLines}"
+                Spacing="8">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="#DDD" CornerRadius="8" Padding="10" HasShadow="False">
+                            <Label LineBreakMode="WordWrap" Text="{Binding .}" />
+                        </Frame>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
             <!--  Replaces HorizontalStackLayout  -->
             <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="16">
                 <!--  ISP  -->

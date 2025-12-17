@@ -239,7 +239,7 @@ public class WeaponConfig : ConfigBase
         set => SetProperty(ref _spiritVsGroup, value, false);
     }
 
-    public ObservableCollection<MagicColours?> ExtraColours { get; } = new() { MagicColours.Grey };
+    public ObservableCollection<MagicColours?> ExtraColours { get; } = new() { null };
 
     private string _extraColoursSummary = string.Empty;
     public string ExtraColoursSummary

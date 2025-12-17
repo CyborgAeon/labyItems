@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -19,6 +20,7 @@ public partial class ItemFormPage : ContentPage
     public int IspTotal { get; set; } = 0;
     public bool ShowPlayerNameField { get; set; } = false;
     public bool ShowPlayerCharNameField { get; set; } = false;
+    public ObservableCollection<string> DescriptionLines { get; } = new();
     private readonly Character _character;
     private string _recipientName;
     private string _recipientClass;
@@ -57,7 +59,7 @@ public partial class ItemFormPage : ContentPage
     {
         MakerPlayerNameEntry.Text = item.Maker.PlayerName;
         MakerCharacterNameEntry.Text = item.Maker.Name;
-        DescriptionEditor.Text = item.Description;
+        SetDescriptionFromText(item.Description);
         IspTotal = item.Isp;
         CreatedDatePicker.Date = item.CreatedDate;
         DnbuodSwitch.IsToggled = item.DoesNotBlowUpOnDeath;
@@ -120,12 +122,7 @@ public partial class ItemFormPage : ContentPage
         IspTotal = result.TotalIsp;
         IspEntry.Text = result.TotalIsp.ToString();
 
-        if (!string.IsNullOrWhiteSpace(result.SummaryText))
-        {
-            DescriptionEditor.Text = string.IsNullOrWhiteSpace(DescriptionEditor.Text)
-                ? result.SummaryText
-                : $"{DescriptionEditor.Text}\n{result.SummaryText}";
-        }
+        AppendDescriptionLine(result.SummaryText);
     }
 
     private async void OnSubmitClicked(object sender, EventArgs e)
@@ -145,7 +142,7 @@ public partial class ItemFormPage : ContentPage
             RecipientPlayerName = _recipientPlayerName,
             RecipientCharacterName = _recipientName,
             RecipientCharacterClass = _recipientClass,
-            Description = DescriptionEditor.Text,
+            Description = GetDescriptionText(),
             DoesNotBlowUpOnDeath = DnbuodSwitch.IsToggled,
             CreatedDate = CreatedDatePicker.Date,
             Isp = IspTotal,
@@ -227,6 +224,31 @@ public partial class ItemFormPage : ContentPage
         );
         return baseAbility?.TotalIsp ?? 0;
     }
+
+    private void SetDescriptionFromText(string? text)
+    {
+        DescriptionLines.Clear();
+        if (string.IsNullOrWhiteSpace(text))
+            return;
+
+        var lines = text
+            .Split('\n')
+            .Select(l => l.Trim())
+            .Where(l => !string.IsNullOrWhiteSpace(l));
+
+        foreach (var line in lines)
+            DescriptionLines.Add(line);
+    }
+
+    private void AppendDescriptionLine(string? line)
+    {
+        if (string.IsNullOrWhiteSpace(line))
+            return;
+
+        DescriptionLines.Add(line.Trim());
+    }
+
+    private string GetDescriptionText() => string.Join("\n", DescriptionLines);
 
     private ItemJsonPayload BuildJsonPayload(Item item)
     {

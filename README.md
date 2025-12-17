@@ -1,29 +1,54 @@
 ## setup local: you'll need dotnet 8
-`curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh; chmod +x dotnet-install.sh; ./dotnet-install.sh --channel 8.0`
-1. run this to add dotnet to path export PATH="$HOME/.dotnet:$PATH" 
-1. run dotnet --info to check above worked 
-1. run dotnet workload install maui to install maui workload 
-1. run dotnet workload install maui-android to install android workload
-`brew install --cask temurin17`
+
+```bash
+# one-shot bootstrap for new dev machines/containers (macOS: brew needed for Java 17)
+curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
+  && chmod +x dotnet-install.sh \
+  && ./dotnet-install.sh --channel 8.0 \
+  && export PATH="$HOME/.dotnet:$PATH" \
+  && dotnet --info \
+  && dotnet workload install maui \
+  && dotnet workload install maui-android \
+  && dotnet build -t:InstallAndroidDependencies -f net8.0-android \
+  && brew install --cask temurin@17
+```
+
+If you want the PATH change to persist, add `export PATH="$HOME/.dotnet:$PATH"` to your shell profile.
+
+## hot reload (android)
+
+Make sure an emulator or device is running, then:
+
+```bash
+DOTNET_USE_POLLING_FILE_WATCHER=1 $HOME/.dotnet/dotnet watch --project labyItems/labyItems.csproj --framework net8.0-android run
+```
+
+If you hit `NETSDK1147` (missing `maui-android`) or similar, you’re probably running the system `dotnet` instead of the one installed by `dotnet-install.sh` — the command above pins to `$HOME/.dotnet/dotnet`.
+
+If watch ever complains about launch profiles, ensure `Properties/launchSettings.json` contains the `Android` profile (added in this repo).
 
 ## debug steps:
-`PKG=bard.uk.labyitems`
-`dotnet build -t:Run -f net8.0-android -c Debug`
-`adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1`
-`PID=$(adb shell pidof -s "$PKG"); echo "$PID"`
-`adb logcat --pid "$PID" -v time`
+
+Single shot debug launch + logcat:
+
+```bash
+PKG=bard.uk.labyitems; $HOME/.dotnet/dotnet build -t:Run -f net8.0-android -c Debug && adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 && PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); echo "PID=$PID"; adb logcat --pid "$PID" -v time
+```
 
 ## view debug logs
+
 `PKG=bard.uk.labyitems`
-`dotnet build -t:Run -f net8.0-android -c Debug`
+`$HOME/.dotnet/dotnet build -t:Run -f net8.0-android -c Debug`
 
 `PID=$(adb shell pidof -s "$PKG" | tr -d '\r')`
 `echo "PID=$PID"`
 
 # Show ALL levels (Verbose, Debug, Info, etc.)
+
 `adb logcat --pid "$PID" -v time --regex '^\[.*'`
 
 ## Android release signing (CI)
+
 1. Create a fresh keystore (default alias `labyItemsSigningKey` matches Directory.Build.props):
    `keytool -genkeypair -v -storetype JKS -keystore labyItems/labyItems.keystore -alias labyItemsSigningKey -keyalg RSA -keysize 2048 -validity 10000 -storepass "<storepass>" -keypass "<keypass>" -dname "CN=labyItems, OU=Mobile, O=laby, L=, S=, C="`
 2. Base64 the keystore so the workflow can restore it: `base64 -i labyItems/labyItems.keystore -o labyItems.keystore.b64`
@@ -33,4 +58,4 @@
    - `ANDROID_KEY_PASSWORD` = `<keypass>`
    - `ANDROID_KEYSTORE_PASSWORD` = `<storepass>`
 4. For local release builds, place the keystore at `labyItems/labyItems.keystore` and pass passwords/alias when publishing, e.g.:
-   `AndroidSigningKeyPass=<keypass> AndroidSigningStorePass=<storepass> dotnet publish labyItems/labyItems.csproj -f net8.0-android -c Release -p:AndroidSigningKeyAlias=labyItemsSigningKey -p:AndroidPackageFormat=apk -p:GenerateAppBundle=false`
+   `AndroidSigningKeyPass=<keypass> AndroidSigningStorePass=<storepass> $HOME/.dotnet/dotnet publish labyItems/labyItems.csproj -f net8.0-android -c Release -p:AndroidSigningKeyAlias=labyItemsSigningKey -p:AndroidPackageFormat=apk -p:GenerateAppBundle=false`
