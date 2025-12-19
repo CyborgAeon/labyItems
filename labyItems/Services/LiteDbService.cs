@@ -15,8 +15,18 @@ public static class LiteDbService
         var path = Path.Combine(FileSystem.AppDataDirectory, "items.db");
         _db = new LiteDatabase($"Filename={path};Connection=shared");
 
-        _db.GetCollection<Item>("items").EnsureIndex(x => x.CreatedDate);
-        _db.GetCollection<Character>("characters").EnsureIndex(x => x.Name);
+        // Items indexes: sorted by created date + compound index for type & description lookups
+        var itemsCol = _db.GetCollection<Item>("items");
+        itemsCol.EnsureIndex(x => x.CreatedDate);
+        itemsCol.EnsureIndex(x => x.ItemType);
+        itemsCol.EnsureIndex(x => x.Description);
+        itemsCol.EnsureIndex("idx_type_desc", x => new { x.ItemType, x.Description });
+
+        // Characters index: fast lookup by name
+        var charCol = _db.GetCollection<Character>("characters");
+        charCol.EnsureIndex(x => x.Name);
+        charCol.EnsureIndex(x => x.Id);
+
         return _db;
     }
 

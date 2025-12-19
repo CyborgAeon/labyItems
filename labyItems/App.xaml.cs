@@ -8,7 +8,7 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
-        MainPage = new NavigationPage(new CharactersPage()); // first screen
+        MainPage = new AppShell();
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
         {
             System.Diagnostics.Debug.WriteLine($"[UNHANDLED] {e.ExceptionObject}");

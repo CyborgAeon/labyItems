@@ -40,6 +40,10 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         }
     }
 
+    public IspCalculator() : this(0, null)
+    {
+    }
+
     public IspCalculator(int baseTotal, IEnumerable<CalcResult>? existingAbilities = null)
     {
         InitializeComponent();
@@ -111,8 +115,18 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
             SummaryText = BuildSummary(),
         };
 
-        _tcsCalc?.TrySetResult(result);
-        await Navigation.PopAsync();
+        // If we're in modal mode (called via GetResultAsync), complete the task
+        if (_tcsCalc != null)
+        {
+            _tcsCalc.TrySetResult(result);
+            await Navigation.PopAsync();
+        }
+        else
+        {
+            // Direct mode: navigate to summary page
+            var summaryPage = new ItemSummaryPage(result.TotalIsp, result.Abilities);
+            await Navigation.PushAsync(summaryPage);
+        }
     }
 
     private async void OnReturn(object sender, EventArgs e) => await ExecuteReturnAsync();

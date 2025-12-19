@@ -63,7 +63,7 @@ namespace labyItems.Controls
 
         // Button text
         public static readonly BindableProperty ButtonTextProperty =
-            BindableProperty.Create(nameof(ButtonText), typeof(string), typeof(StickyFooterControl), "Return");
+            BindableProperty.Create(nameof(ButtonText), typeof(string), typeof(StickyFooterControl), "Complete Item");
         public string ButtonText { get => (string)GetValue(ButtonTextProperty); set => SetValue(ButtonTextProperty, value); }
         public static readonly BindableProperty ReturnCommandProperty =
             BindableProperty.Create(nameof(ReturnCommand), typeof(ICommand), typeof(StickyFooterControl), null);

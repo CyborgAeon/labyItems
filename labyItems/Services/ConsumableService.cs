@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using labyItems.Pages.Configs;
+using labyItems.Services.Helpers;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 
@@ -17,21 +18,47 @@ public static class ConsumableService
         public bool isAdvanced { get; set; }
     }
 
-    // Must be static because the class and methods are static
-    private static List<GenericRaw>? _cache;
+    private static IndexedCache<GenericRaw>? _indexedCache;
+
+    private static string NormalizeKey(string s) => (s ?? string.Empty).Trim().ToLowerInvariant();
 
     public static async Task<List<GenericRaw>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        var cache = await GetIndexedCacheAsync();
+        return cache.Items.Select(x => x.Item).ToList();
+    }
+
+    private static async Task<IndexedCache<GenericRaw>> GetIndexedCacheAsync()
+    {
+        if (_indexedCache != null) return _indexedCache;
 
         using var s = await FileSystem.OpenAppPackageFileAsync("grimoire/new_standard.json");
         using var r = new StreamReader(s);
         var json = await r.ReadToEndAsync();
 
-        _cache = JsonSerializer.Deserialize<List<GenericRaw>>(json)
+        var consumables = JsonSerializer.Deserialize<List<GenericRaw>>(json)
                  ?? new List<GenericRaw>();
 
-        return _cache;
+        var exactMatches = new Dictionary<string, GenericRaw>();
+        var indexed = new List<IndexedCache<GenericRaw>.IndexedItem>();
+
+        foreach (var consumable in consumables)
+        {
+            var normalized = NormalizeKey(consumable.name);
+            if (!string.IsNullOrWhiteSpace(normalized))
+            {
+                exactMatches[normalized] = consumable;
+                indexed.Add(new IndexedCache<GenericRaw>.IndexedItem(normalized, consumable));
+            }
+        }
+
+        _indexedCache = new IndexedCache<GenericRaw>
+        {
+            ExactMatches = exactMatches,
+            Items = indexed
+        };
+
+        return _indexedCache;
     }
 
     public static Task<ConsumableEntry?> PickAsync(INavigation nav, ConsumableType type) =>

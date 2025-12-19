@@ -12,6 +12,6 @@
     <nav:ConsumNav       x:Name="ConsumableCategoryPage" Title="1-use" />
     <nav:LifeConfigPage  x:Name="LifeCategoryPage"       Title="Life"   />
     <TabbedPage.ToolbarItems>
-        <ToolbarItem Text="Return to Form" Clicked="OnReturn" />
+        <ToolbarItem Text="Complete Item" Clicked="OnReturn" />
     </TabbedPage.ToolbarItems>
 </TabbedPage>

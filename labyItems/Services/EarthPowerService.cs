@@ -1,4 +1,5 @@
 using System.Text.Json;
+using labyItems.Services.Helpers;
 
 namespace labyItems.Services;
 
@@ -15,30 +16,52 @@ public static class EarthPowerService
         public string description { get; set; }
         public bool isAdvanced { get; set; }
     }
-    private static List<EvocRaw>? _cache;
+    private static IndexedCache<EvocRaw>? _indexedCache;
+
+    private static string NormalizeKey(string s) => (s ?? string.Empty).Trim().ToLowerInvariant();
 
     public static async Task<IReadOnlyList<EvocRaw>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        var cache = await GetIndexedCacheAsync();
+        return cache.Items.Select(x => x.Item).ToList();
+    }
+
+    private static async Task<IndexedCache<EvocRaw>> GetIndexedCacheAsync()
+    {
+        if (_indexedCache != null) return _indexedCache;
 
         using var s = await FileSystem.OpenAppPackageFileAsync("druids_way/evocs.json");
         using var r = new StreamReader(s);
         var json = await r.ReadToEndAsync();
-        _cache = JsonSerializer.Deserialize<List<EvocRaw>>(json)
+        var evocs = JsonSerializer.Deserialize<List<EvocRaw>>(json)
                    ?? new List<EvocRaw>();
 
-        return _cache;
+        var exactMatches = new Dictionary<string, EvocRaw>();
+        var indexed = new List<IndexedCache<EvocRaw>.IndexedItem>();
+
+        foreach (var evoc in evocs)
+        {
+            var normalized = NormalizeKey(evoc.name);
+            if (!string.IsNullOrWhiteSpace(normalized))
+            {
+                exactMatches[normalized] = evoc;
+                indexed.Add(new IndexedCache<EvocRaw>.IndexedItem(normalized, evoc));
+            }
+        }
+
+        _indexedCache = new IndexedCache<EvocRaw>
+        {
+            ExactMatches = exactMatches,
+            Items = indexed
+        };
+
+        return _indexedCache;
     }
 
     public static async Task<IReadOnlyList<EvocRaw>> SearchAsync(string query)
     {
-        var all = await GetAllAsync();
-        if (string.IsNullOrWhiteSpace(query)) return all;
-        query = query.Trim().ToLowerInvariant();
-
-        return all.Where(e =>
-                e.name.ToLowerInvariant().Contains(query))
-                .Take(20)
-                .ToList();
+        var cache = await GetIndexedCacheAsync();
+        var results = cache.SearchByContains(query);
+        return results.Take(20).ToList();
     }
 }

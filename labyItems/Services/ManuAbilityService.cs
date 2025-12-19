@@ -1,4 +1,5 @@
 using System.Text.Json;
+using labyItems.Services.Helpers;
 
 namespace labyItems.Services;
 
@@ -16,35 +17,54 @@ public static class ManuAbilityService
 
     public record ManuAbilityEntry(string name, string availability, int cost, int table, string description);
 
-    private static List<ManuAbilityEntry>? _cache;
+    private static IndexedCache<ManuAbilityEntry>? _indexedCache;
+
+    private static string NormalizeKey(string s) => (s ?? string.Empty).Trim().ToLowerInvariant();
 
     public static async Task<IReadOnlyList<ManuAbilityEntry>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        var cache = await GetIndexedCacheAsync();
+        return cache.Items.Select(x => x.Item).ToList();
+    }
+
+    private static async Task<IndexedCache<ManuAbilityEntry>> GetIndexedCacheAsync()
+    {
+        if (_indexedCache != null) return _indexedCache;
         var opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var dict = JsonSerializer.Deserialize<Dictionary<string, ManuAbilityRaw>>(MakesAbilitiesJson.Json, opts)
                    ?? new Dictionary<string, ManuAbilityRaw>();
 
-        _cache = dict
-            .Select(kvp =>
-            {
-                return new ManuAbilityEntry(kvp.Key, kvp.Value.availability, kvp.Value.cost, kvp.Value.table, kvp.Value.description);
-            })
+        var entries = dict
+            .Select(kvp => new ManuAbilityEntry(kvp.Key, kvp.Value.availability, kvp.Value.cost, kvp.Value.table, kvp.Value.description))
             .OrderBy(e => e.name)
             .ToList();
 
-        return _cache;
+        var exactMatches = new Dictionary<string, ManuAbilityEntry>();
+        var indexed = new List<IndexedCache<ManuAbilityEntry>.IndexedItem>();
+
+        foreach (var entry in entries)
+        {
+            var normalized = NormalizeKey(entry.name);
+            if (!string.IsNullOrWhiteSpace(normalized))
+            {
+                exactMatches[normalized] = entry;
+                indexed.Add(new IndexedCache<ManuAbilityEntry>.IndexedItem(normalized, entry));
+            }
+        }
+
+        _indexedCache = new IndexedCache<ManuAbilityEntry>
+        {
+            ExactMatches = exactMatches,
+            Items = indexed
+        };
+
+        return _indexedCache;
     }
 
     public static async Task<IReadOnlyList<ManuAbilityEntry>> SearchAsync(string query)
     {
-        var all = await GetAllAsync();
-        if (string.IsNullOrWhiteSpace(query)) return all;
-        query = query.Trim().ToLowerInvariant();
-
-        return all.Where(e =>
-                e.name.ToLowerInvariant().Contains(query))
-                .Take(6)
-            .ToList();
+        var cache = await GetIndexedCacheAsync();
+        var results = cache.SearchByContains(query);
+        return results.Take(6).ToList();
     }
 }

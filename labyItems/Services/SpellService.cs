@@ -1,4 +1,5 @@
 using System.Text.Json;
+using labyItems.Services.Helpers;
 
 namespace labyItems.Services;
 
@@ -16,28 +17,51 @@ public static class SpellService
         public bool? isAdvanced { get; set; } = false;
     }
 
-    private static List<SpellRaw>? _cache;
+    private static IndexedCache<SpellRaw>? _indexedCache;
+
+    private static string NormalizeKey(string s) => (s ?? string.Empty).Trim().ToLowerInvariant();
 
     public static async Task<List<SpellRaw>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        var cache = await GetIndexedCacheAsync();
+        return cache.Items.Select(x => x.Item).ToList();
+    }
+
+    private static async Task<IndexedCache<SpellRaw>> GetIndexedCacheAsync()
+    {
+        if (_indexedCache != null) return _indexedCache;
 
         using var s = await FileSystem.OpenAppPackageFileAsync("grimoire/new_standard.json");
         using var r = new StreamReader(s);
         var json = await r.ReadToEndAsync();
-        _cache = JsonSerializer.Deserialize<List<SpellRaw>>(json)
+        var spells = JsonSerializer.Deserialize<List<SpellRaw>>(json)
                    ?? new List<SpellRaw>();
-        return _cache;
+
+        var exactMatches = new Dictionary<string, SpellRaw>();
+        var indexed = new List<IndexedCache<SpellRaw>.IndexedItem>();
+
+        foreach (var spell in spells)
+        {
+            var normalized = NormalizeKey(spell.name);
+            if (!string.IsNullOrWhiteSpace(normalized))
+            {
+                exactMatches[normalized] = spell;
+                indexed.Add(new IndexedCache<SpellRaw>.IndexedItem(normalized, spell));
+            }
+        }
+
+        _indexedCache = new IndexedCache<SpellRaw>
+        {
+            ExactMatches = exactMatches,
+            Items = indexed
+        };
+
+        return _indexedCache;
     }
 
     public static async Task<List<SpellRaw>> SearchAsync(string query)
     {
-        var all = await GetAllAsync();
-        if (string.IsNullOrWhiteSpace(query)) return all;
-        query = query.Trim().ToLowerInvariant();
-
-        return all.Where(e =>
-                e.name.ToLowerInvariant().Contains(query))
-            .ToList();
+        var cache = await GetIndexedCacheAsync();
+        return cache.SearchByContains(query);
     }
 }
