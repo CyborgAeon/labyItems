@@ -1,5 +1,6 @@
 using System;
 using labyItems.Models.Enums;
+using Microsoft.Maui.Controls;
 
 namespace labyItems.Controls;
 
@@ -7,6 +8,9 @@ public partial class WeaponBasePicker : EnumPicker<WeaponBaseOption>
 {
     public WeaponBasePicker()
     {
+        Resources ??= new ResourceDictionary();
+        Resources[nameof(DisplayConverter)] = DisplayConverter;
+
         InitializeComponent();
 
         // Custom display text for this enum, via a lambda:
@@ -32,15 +36,22 @@ public partial class WeaponBasePicker : EnumPicker<WeaponBaseOption>
                 _ => opt.ToString(),
             };
 
-        RegisterInnerPicker(InnerPicker);
+        RegisterSearchEntry(SearchEntry, SuggestionsView);
 
         if (string.IsNullOrEmpty(PlaceholderText))
             PlaceholderText = "Select weapon base";
+        if (string.IsNullOrEmpty(LabelText))
+            LabelText = "Base power profile";
     }
 
     public WeaponBaseOption? SelectedWeaponBase
     {
         get => SelectedValue;
         set => SelectedValue = value;
+    }
+
+    private void OnToggleTapped(object? sender, TappedEventArgs e)
+    {
+        SearchEntry?.Focus();
     }
 }

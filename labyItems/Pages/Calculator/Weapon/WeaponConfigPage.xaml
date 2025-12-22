@@ -11,77 +11,79 @@
   x:TypeArguments="cfg:WeaponConfig">
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
-      <VerticalStackLayout Padding="20" Spacing="14">
-        <Label Text="Weapon type" />
-        <controls:WeaponTypePicker SelectedValue="{Binding WeaponType, Mode=TwoWay}" />
-        <Label Text="Base power profile" />
-        <controls:WeaponBasePicker SelectedValue="{Binding WeaponBase, Mode=TwoWay}" />
+      <VerticalStackLayout Padding="20"
+          Spacing="14">
+        <controls:WeaponTypePicker SelectedValue="{Binding WeaponType, Mode=TwoWay}"/>
+        <controls:WeaponBasePicker SelectedValue="{Binding WeaponBase, Mode=TwoWay}"/>
         <Entry
           IsVisible="{Binding ShowMagicVsType}"
           Placeholder="Enter Type (e.g. Undead)"
-          Text="{Binding MagicVsType, Mode=TwoWay}" />
+          Text="{Binding MagicVsType, Mode=TwoWay}"/>
         <Entry
           IsVisible="{Binding ShowMagicVsGroup}"
           Placeholder="Enter Group (e.g. Humanoid)"
-          Text="{Binding MagicVsGroup, Mode=TwoWay}" />
+          Text="{Binding MagicVsGroup, Mode=TwoWay}"/>
         <Entry
           IsVisible="{Binding ShowSpiritVsType}"
           Placeholder="Enter Type (e.g. Undead)"
-          Text="{Binding SpiritVsType, Mode=TwoWay}" />
+          Text="{Binding SpiritVsType, Mode=TwoWay}"/>
         <Entry
           IsVisible="{Binding ShowSpiritVsGroup}"
           Placeholder="Enter Group (e.g. Humanoid)"
-          Text="{Binding SpiritVsGroup, Mode=TwoWay}" />
+          Text="{Binding SpiritVsGroup, Mode=TwoWay}"/>
 
         <!--  Multi-select colours / alignments  -->
-        <Label IsVisible="{Binding ShowExtraColours}" Text="{Binding ExtraColoursCountLabel}" />
+        <Label IsVisible="{Binding ShowExtraColours}"
+            Text="{Binding ExtraColoursCountLabel}"/>
         <controls:ListColourPickerControl
           CountLabelFormat="{}{0} Extra colours chosen"
           CountLabelText="{Binding ExtraColoursCountLabel, Mode=OneWayToSource}"
           IsVisible="{Binding ShowExtraColours}"
           Items="{Binding ExtraColours, Mode=TwoWay}"
           SummaryText="{Binding ExtraColoursSummary, Mode=OneWayToSource}"
-          ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}" />
-        <Label IsVisible="{Binding ShowExtraAlignments}" Text="{Binding ExtraAlignmentsCountLabel}" />
+          ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}"/>
+        <Label IsVisible="{Binding ShowExtraAlignments}"
+            Text="{Binding ExtraAlignmentsCountLabel}"/>
         <controls:ListAlignmentPickerControl
           CountLabelFormat="{}{0} Extra alignments (non-opposite) chosen"
           CountLabelText="{Binding ExtraAlignmentsCountLabel, Mode=OneWayToSource}"
           IsVisible="{Binding ShowExtraAlignments}"
           Items="{Binding ExtraAlignments, Mode=TwoWay}"
           SummaryText="{Binding ExtraAlignmentsSummary, Mode=OneWayToSource}"
-          ValueCount="{Binding ExtraAlignmentsCount, Mode=OneWayToSource}" />
+          ValueCount="{Binding ExtraAlignmentsCount, Mode=OneWayToSource}"/>
 
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding MagicTurnsPureDailyCount, Mode=TwoWay}"
           IsVisible="{Binding IsMagicBase}"
-          LabelText="Magic weapon turns pure for 5 minutes" />
+          LabelText="Magic weapon turns pure for 5 minutes"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding SpiritTurnsPureDailyCount, Mode=TwoWay}"
           IsVisible="{Binding IsSpiritBase}"
-          LabelText="Spirit weapon turns pure for 5 minutes" />
+          LabelText="Spirit weapon turns pure for 5 minutes"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding ManticTurnsPureDailyCount, Mode=TwoWay}"
           IsVisible="{Binding IsManticBase}"
-          LabelText="Mantic weapon turns pure for 5 minutes" />
+          LabelText="Mantic weapon turns pure for 5 minutes"/>
 
-        <controls:CheckboxControl 
-          IsChecked="{Binding ThruPacAlways}" LabelText="Inflicts damage 'thru' PAC at all times" />
+        <controls:CheckboxControl
+          IsChecked="{Binding ThruPacAlways}"
+            LabelText="Inflicts damage 'thru' PAC at all times"/>
 
-        <controls:CheckboxControl 
-          IsChecked="{Binding BladeSharpenTooGreat}" 
-          LabelText="Oversized Weapon can be sharpened" />
+        <controls:CheckboxControl
+          IsChecked="{Binding BladeSharpenTooGreat}"
+          LabelText="Oversized Weapon can be sharpened"/>
 
-        <controls:CheckboxControl 
+        <controls:CheckboxControl
           IsVisible="{Binding IsSupernatural}"
-          IsChecked="{Binding SupernaturalBladeSharpen}" 
-          LabelText="Supernatural weapon can be blade sharpened" />
+          IsChecked="{Binding SupernaturalBladeSharpen}"
+          LabelText="Supernatural weapon can be blade sharpened"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding CutThroughAuraDaily, Mode=TwoWay}"
-          LabelText="Cut through Aura of Defence for 5 minutes" />
+          LabelText="Cut through Aura of Defence for 5 minutes"/>
 
         <!--  Results (auto-updating)  -->
         <!-- <Label FontAttributes="Bold" Text="Results" />
@@ -101,7 +103,7 @@
       RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}"
       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"
-      Total="{Binding TotalWithBase}" 
+      Total="{Binding TotalWithBase}"
       IsEnabled="{Binding CanSubmit}"/>
   </Grid>
 </cfg:ConfigPageBase>

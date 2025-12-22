@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using labyItems.Helpers;
@@ -11,6 +12,13 @@ public class EnumPicker<TEnum> : ContentView
     where TEnum : struct, Enum
 {
     protected Picker? InnerPicker { get; private set; }
+    protected Entry? SearchEntry { get; private set; }
+    protected CollectionView? SuggestionsView { get; private set; }
+    private EnumDisplayConverter<TEnum>? _displayConverter;
+    private bool _suppressTextEvents;
+    private bool _areSuggestionsVisible;
+
+    public ObservableCollection<TEnum> FilteredOptions { get; } = new();
 
     public EnumPicker()
     {
@@ -22,6 +30,9 @@ public class EnumPicker<TEnum> : ContentView
 
     // NEW: Optional custom formatter for displaying enum values
     public Func<TEnum, string>? DisplayFormatter { get; set; }
+
+    public IValueConverter DisplayConverter =>
+        _displayConverter ??= new EnumDisplayConverter<TEnum>(this);
 
     public static readonly BindableProperty PlaceholderTextProperty = BindableProperty.Create(
         nameof(PlaceholderText),
@@ -53,6 +64,11 @@ public class EnumPicker<TEnum> : ContentView
         {
             InnerPicker.Title = PlaceholderText;
         }
+
+        if (SearchEntry != null)
+        {
+            SearchEntry.Placeholder = PlaceholderText;
+        }
     }
 
     public static readonly BindableProperty LabelTextProperty = BindableProperty.Create(
@@ -73,13 +89,26 @@ public class EnumPicker<TEnum> : ContentView
         typeof(TEnum?),
         typeof(EnumPicker<TEnum>),
         default(TEnum?),
-        BindingMode.TwoWay
+        BindingMode.TwoWay,
+        propertyChanged: OnSelectedValueChanged
     );
 
     public TEnum? SelectedValue
     {
         get => (TEnum?)GetValue(SelectedValueProperty);
         set => SetValue(SelectedValueProperty, value);
+    }
+
+    public bool AreSuggestionsVisible
+    {
+        get => _areSuggestionsVisible;
+        private set
+        {
+            if (_areSuggestionsVisible == value)
+                return;
+            _areSuggestionsVisible = value;
+            OnPropertyChanged(nameof(AreSuggestionsVisible));
+        }
     }
 
     protected void RegisterInnerPicker(Picker picker)
@@ -89,10 +118,24 @@ public class EnumPicker<TEnum> : ContentView
         AndroidPickerHelper.PreventTypingOpeningPicker(picker);
 
         // Hook up a single generic converter that uses DisplayFormatter
-        InnerPicker.ItemDisplayBinding = new Binding(".")
-        {
-            Converter = new EnumDisplayConverter<TEnum>(this),
-        };
+        InnerPicker.ItemDisplayBinding = new Binding(".") { Converter = DisplayConverter, };
+    }
+
+    protected void RegisterSearchEntry(Entry entry, CollectionView suggestionsView)
+    {
+        SearchEntry = entry;
+        SuggestionsView = suggestionsView;
+
+        SuggestionsView.ItemsSource = FilteredOptions;
+        SuggestionsView.SelectionChanged += OnSuggestionSelected;
+
+        entry.TextChanged += OnSearchTextChanged;
+        entry.Focused += OnSearchEntryFocused;
+        entry.Unfocused += OnSearchEntryUnfocused;
+
+        UpdatePlaceholder();
+        RefreshFilteredOptions(entry.Text);
+        SyncSearchTextToSelection();
     }
 
     protected override void OnHandlerChanged()
@@ -102,6 +145,111 @@ public class EnumPicker<TEnum> : ContentView
         {
             AndroidPickerHelper.PreventTypingOpeningPicker(InnerPicker);
         }
+    }
+
+    private static void OnSelectedValueChanged(
+        BindableObject bindable,
+        object oldValue,
+        object newValue
+    )
+    {
+        var control = (EnumPicker<TEnum>)bindable;
+        control.SyncSearchTextToSelection();
+    }
+
+    private void OnSearchEntryFocused(object? sender, FocusEventArgs e)
+    {
+        RefreshFilteredOptions(SearchEntry?.Text);
+    }
+
+    private void OnSearchEntryUnfocused(object? sender, FocusEventArgs e)
+    {
+        AreSuggestionsVisible = false;
+    }
+
+    private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_suppressTextEvents)
+            return;
+
+        RefreshFilteredOptions(e.NewTextValue);
+
+        if (!MatchesSelectedValue(e.NewTextValue))
+        {
+            SelectedValue = null;
+        }
+    }
+
+    private void OnSuggestionSelected(object? sender, SelectionChangedEventArgs e)
+    {
+        if (e.CurrentSelection.FirstOrDefault() is TEnum selected)
+        {
+            _suppressTextEvents = true;
+            SelectedValue = selected;
+            if (SearchEntry != null)
+            {
+                SearchEntry.Text = FormatOption(selected);
+                SearchEntry.Unfocus();
+            }
+
+            _suppressTextEvents = false;
+        }
+
+        if (SuggestionsView != null)
+        {
+            SuggestionsView.SelectedItem = null;
+        }
+
+        AreSuggestionsVisible = false;
+    }
+
+    private void RefreshFilteredOptions(string? searchText)
+    {
+        var query = searchText?.Trim() ?? string.Empty;
+        var matches = Options
+            .Where(option =>
+                string.IsNullOrEmpty(query)
+                    || FormatOption(option).Contains(query, StringComparison.OrdinalIgnoreCase)
+            )
+            .ToList();
+
+        FilteredOptions.Clear();
+        foreach (var match in matches)
+        {
+            FilteredOptions.Add(match);
+        }
+
+        AreSuggestionsVisible = (SearchEntry?.IsFocused ?? false) && FilteredOptions.Any();
+    }
+
+    private void SyncSearchTextToSelection()
+    {
+        if (SearchEntry == null)
+            return;
+
+        _suppressTextEvents = true;
+        SearchEntry.Text = SelectedValue.HasValue ? FormatOption(SelectedValue.Value) : string.Empty;
+        _suppressTextEvents = false;
+
+        RefreshFilteredOptions(SearchEntry.Text);
+    }
+
+    private bool MatchesSelectedValue(string? text)
+    {
+        if (!SelectedValue.HasValue)
+            return string.IsNullOrWhiteSpace(text);
+
+        return string.Equals(
+            FormatOption(SelectedValue.Value),
+            text?.Trim(),
+            StringComparison.OrdinalIgnoreCase
+        );
+    }
+
+    protected string FormatOption(TEnum value)
+    {
+        var formatter = DisplayFormatter;
+        return formatter != null ? formatter(value) : value.ToString();
     }
 }
 

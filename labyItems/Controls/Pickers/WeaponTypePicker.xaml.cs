@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using labyItems.Models.Enums;
+using Microsoft.Maui.Controls;
 
 namespace labyItems.Controls;
 
@@ -9,8 +7,11 @@ public partial class WeaponTypePicker : EnumPicker<WeaponType>
 {
     public WeaponTypePicker()
     {
+        Resources ??= new ResourceDictionary();
+        Resources[nameof(DisplayConverter)] = DisplayConverter;
+
         InitializeComponent();
-        RegisterInnerPicker(InnerPicker);
+        RegisterSearchEntry(SearchEntry, SuggestionsView);
         if (string.IsNullOrEmpty(LabelText))
             LabelText = "Select a weapon type";
         if (string.IsNullOrEmpty(PlaceholderText))
@@ -22,5 +23,10 @@ public partial class WeaponTypePicker : EnumPicker<WeaponType>
     {
         get => SelectedValue;
         set => SelectedValue = value;
+    }
+
+    private void OnToggleTapped(object? sender, TappedEventArgs e)
+    {
+        SearchEntry?.Focus();
     }
 }
