@@ -187,7 +187,6 @@ public class WeaponConfig : ConfigBase
                 or WeaponBaseOption.MagicPlus1
                 or WeaponBaseOption.MagicPlus2
                 or WeaponBaseOption.PureMagic0;
-
     public bool IsSpiritBase =>
         WeaponBase
             is WeaponBaseOption.Spirit0

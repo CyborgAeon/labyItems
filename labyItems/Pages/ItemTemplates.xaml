@@ -3,18 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="labyItems.Pages.ItemTemplates"
              Title="Saved Items">
-  <CollectionView x:Name="ItemsView" SelectionMode="Single" SelectionChanged="OnSelected">
+  <CollectionView x:Name="ItemsView"
+      SelectionMode="Single"
+      SelectionChanged="OnSelected">
     <CollectionView.ItemTemplate>
       <DataTemplate>
-        <Border Margin="12" Padding="16" BackgroundColor="#21FFFFFF"  StrokeShape="RoundRectangle 14">
+        <Border Margin="12"
+            Padding="16"
+            BackgroundColor="#21FFFFFF"
+            StrokeShape="RoundRectangle 14">
           <VerticalStackLayout Spacing="4">
-            <Label Text="{Binding ItemType}" FontAttributes="Bold" />
-            <Label Text="{Binding Description}" LineBreakMode="TailTruncation" MaxLines="2" />
+            <Label Text="{Binding ItemType}"
+                FontAttributes="Bold"/>
+            <Label Text="{Binding Description}"
+                LineBreakMode="TailTruncation"
+                MaxLines="2"/>
             <HorizontalStackLayout Spacing="12">
-              <Label Text="{Binding MakerPlayerName}" Opacity="0.7" />
-              <Label Text="{Binding MakerCharacterName}" Opacity="0.7" />
+              <Label Text="{Binding MakerPlayerName}"/>
+              <Label Text="{Binding MakerCharacterName}"/>
             </HorizontalStackLayout>
-            <Label Text="{Binding CreatedDate, StringFormat='{}{0:d}'}" Opacity="0.6" />
+            <Label Text="{Binding CreatedDate, StringFormat='{}{0:d}'}"/>
           </VerticalStackLayout>
         </Border>
       </DataTemplate>

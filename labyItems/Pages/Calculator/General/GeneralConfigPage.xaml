@@ -11,63 +11,74 @@
   x:TypeArguments="cfg:GeneralConfig">
 
   <ContentPage.Resources>
-    <Style x:Key="SectionHeader" TargetType="Label">
-      <Setter Property="FontAttributes" Value="Bold" />
-      <Setter Property="FontSize" Value="18" />
-      <Setter Property="Margin" Value="0,16,0,6" />
+    <Style x:Key="SectionHeader"
+        TargetType="Label">
+      <Setter Property="FontAttributes"
+          Value="Bold"/>
+      <Setter Property="FontSize"
+          Value="18"/>
+      <Setter Property="Margin"
+          Value="0,16,0,6"/>
     </Style>
 
     <!-- <conv:BoolToRotationConverter x:Key="BoolToRotationConverter" /> -->
-    <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    <conv:BoolIsTrueConverter x:Key="BoolIsTrueConverter" />
-    <conv:BoolIsFalseConverter x:Key="BoolIsFalseConverter" />
-    <conv:TogglePlaceholderConverter x:Key="TogglePlaceholderConverter" />
+    <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <conv:BoolIsTrueConverter x:Key="BoolIsTrueConverter"/>
+    <conv:BoolIsFalseConverter x:Key="BoolIsFalseConverter"/>
+    <conv:TogglePlaceholderConverter x:Key="TogglePlaceholderConverter"/>
   </ContentPage.Resources>
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
-      <VerticalStackLayout Padding="20" Spacing="10">
-        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+      <VerticalStackLayout Padding="20"
+          Spacing="10">
+        <Grid ColumnDefinitions="Auto,*,Auto"
+            ColumnSpacing="10">
           <Label
             FontAttributes="Bold"
             FontSize="20"
-            Text="{Binding Title}" />
+            Text="{Binding Title}"/>
           <Button
             Grid.Column="2"
             Clicked="OnSearchGeneral"
-            Text="Search" />
+            Text="Search"/>
         </Grid>
 
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-          <controls:MagicColourPicker LabelText="Additional casting levels for..." SelectedValue="{Binding MagicColour, Mode=TwoWay}" />
+        <Grid ColumnDefinitions="*,Auto"
+            ColumnSpacing="10">
+          <controls:MagicColourPicker
+            IsCompact="True"
+            LabelText="Additional casting levels for..."
+            SelectedValue="{Binding MagicColour, Mode=TwoWay}"/>
           <controls:PlusMinusControl
             Grid.Column="1"
             AllowMultiple="True"
             Count="{Binding CastingLevelsCount, Mode=TwoWay}"
             LabelText=""
-            Max="3" />
+            Max="3"/>
         </Grid>
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+        <Grid ColumnDefinitions="*,Auto"
+            ColumnSpacing="10">
           <controls:ResistanceTypePicker
             LabelText="Additional levels of resistance for..."
             PlaceholderText="Select a type"
-            SelectedValue="{Binding ResistanceType, Mode=TwoWay}" />
+            SelectedValue="{Binding ResistanceType, Mode=TwoWay}"/>
           <controls:PlusMinusControl
             Grid.Column="1"
             AllowMultiple="True"
             Count="{Binding ResistanceLevels, Mode=TwoWay}"
             LabelText=""
-            Max="3" />
+            Max="3"/>
         </Grid>
         <Label
           Margin="0,4,0,0"
           FontAttributes="Bold"
           HorizontalOptions="Start"
-          Text="{Binding ElfInnateSummary}" />
+          Text="{Binding ElfInnateSummary}"/>
         <Grid ColumnDefinitions="Auto,*">
           <controls:ElfColourPicker
             Grid.Column="0"
             SelectedValue="{Binding ElfInnateColour, Mode=TwoWay}"
-            VerticalOptions="Center" />
+            VerticalOptions="Center"/>
           <controls:DictionarySlider
             Grid.Column="1"
             Compact="True"
@@ -78,30 +89,30 @@
             Multiplier="1"
             SelectedCount="{Binding ElfInnateLevelIndex, Mode=TwoWay}"
             ValueFormat=""
-            VerticalOptions="Center" />
+            VerticalOptions="Center"/>
         </Grid>
         <controls:DictionarySlider
           Labels="{Binding StrengthLabels}"
           MaxCount="3"
           MinCount="0"
           Multiplier="1"
-          SelectedCount="{Binding StrengthEnchantIndex, Mode=TwoWay}" />
+          SelectedCount="{Binding StrengthEnchantIndex, Mode=TwoWay}"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}"
-          LabelText="25% Cold Rage" />
+          LabelText="25% Cold Rage"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}"
-          LabelText="50% Berserk Rage" />
-        <Label Text="{Binding RageCategoriesCountLabel}" />
+          LabelText="50% Berserk Rage"/>
+        <Label Text="{Binding RageCategoriesCountLabel}"/>
         <controls:RepeatingEntryList
           CountLabelFormat="Perm 25% rage vs {0} groups"
           CountLabelText="{Binding RageCategoriesCountLabel, Mode=OneWayToSource}"
           Items="{Binding PermRageCategoryItems, Mode=TwoWay}"
           MaxItems="5"
           SummaryText="{Binding PermRageCategoriesSummary, Mode=OneWayToSource}"
-          ValueCount="{Binding RageCategoriesCount, Mode=OneWayToSource}" />
+          ValueCount="{Binding RageCategoriesCount, Mode=OneWayToSource}"/>
         <Label
           FontAttributes="Bold"
           FontSize="16"
@@ -109,21 +120,22 @@
           HorizontalTextAlignment="Start"
           Text="{Binding RepelAttractGroupLabel}"
           VerticalOptions="Center"
-          VerticalTextAlignment="Center" />
-        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+          VerticalTextAlignment="Center"/>
+        <Grid ColumnDefinitions="Auto,*,Auto"
+            ColumnSpacing="10">
           <controls:TwoOptionSwitch
             Grid.Column="0"
             LeftValue="Repel"
             RightValue="Attract"
-            SelectedValue="{Binding RepelAttractGroup, Mode=TwoWay}" />
+            SelectedValue="{Binding RepelAttractGroup, Mode=TwoWay}"/>
           <Entry
             Grid.Column="1"
             Placeholder="{Binding RepelAttractGroup, Converter={StaticResource TogglePlaceholderConverter}, ConverterParameter='test'}"
-            Text="{Binding RepelAttractGroupName, Mode=TwoWay}" />
+            Text="{Binding RepelAttractGroupName, Mode=TwoWay}"/>
           <controls:PlusMinusControl
             Grid.Column="2"
             AllowMultiple="True"
-            Count="{Binding RepelAttractGroupCount, Mode=TwoWay}" />
+            Count="{Binding RepelAttractGroupCount, Mode=TwoWay}"/>
         </Grid>
         <Label
           FontAttributes="Bold"
@@ -132,30 +144,31 @@
           HorizontalTextAlignment="Start"
           Text="{Binding RepelAttractTypeLabel}"
           VerticalOptions="Center"
-          VerticalTextAlignment="Center" />
-        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+          VerticalTextAlignment="Center"/>
+        <Grid ColumnDefinitions="Auto,*,Auto"
+            ColumnSpacing="10">
           <controls:TwoOptionSwitch
             Grid.Column="0"
             LeftValue="Repel"
             RightValue="Attract"
-            SelectedValue="{Binding RepelAttractType, Mode=TwoWay}" />
+            SelectedValue="{Binding RepelAttractType, Mode=TwoWay}"/>
           <Entry
             Grid.Column="1"
             Placeholder="{Binding RepelAttractType, Converter={StaticResource TogglePlaceholderConverter}, ConverterParameter='test'}"
-            Text="{Binding RepelAttractTypeName, Mode=TwoWay}" />
+            Text="{Binding RepelAttractTypeName, Mode=TwoWay}"/>
           <controls:PlusMinusControl
             Grid.Column="2"
             AllowMultiple="True"
-            Count="{Binding RepelAttractTypeCount, Mode=TwoWay}" />
+            Count="{Binding RepelAttractTypeCount, Mode=TwoWay}"/>
         </Grid>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding RepelLifeCount, Mode=TwoWay}"
-          LabelText="Repel Life" />
+          LabelText="Repel Life"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding DisciplinePerDayCount, Mode=TwoWay}"
-          LabelText="Discipline" />
+          LabelText="Discipline"/>
         <Label
           FontAttributes="Bold"
           FontSize="16"
@@ -163,28 +176,28 @@
           HorizontalTextAlignment="Start"
           Text="{Binding WardPactsCountLabel}"
           VerticalOptions="Center"
-          VerticalTextAlignment="Center" />
+          VerticalTextAlignment="Center"/>
         <controls:RepeatingEntryList
           CountLabelFormat="Ward pact 8lvls vs {0} groups"
           CountLabelText="{Binding WardPactsCountLabel, Mode=OneWayToSource}"
           Items="{Binding WardPacts, Mode=TwoWay}"
           MaxItems="5"
           SummaryText="{Binding WardPactsSummary, Mode=OneWayToSource}"
-          ValueCount="{Binding WardPactsCount, Mode=OneWayToSource}" />
-          <Label
+          ValueCount="{Binding WardPactsCount, Mode=OneWayToSource}"/>
+        <Label
           FontAttributes="Bold"
           FontSize="16"
           HorizontalOptions="Start"
           HorizontalTextAlignment="Start"
           Text="{Binding KiStrikeSummary}"
           VerticalOptions="Center"
-          VerticalTextAlignment="Center" />
+          VerticalTextAlignment="Center"/>
         <Grid ColumnDefinitions="*, Auto">
           <controls:ChipGroup
             Grid.Column="0"
             Items="{Binding KiOrPrimalStrikeItems}"
             SelectedItem="{Binding KiOrPrimalStrike, Mode=TwoWay}"
-            VerticalOptions="Center" />
+            VerticalOptions="Center"/>
           <controls:PlusMinusControl
             AllowMultiple="True"
             Count="{Binding KiOrPrimalStrikePerDayCount, Mode=TwoWay}"/>
@@ -192,15 +205,15 @@
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding EmpowerWeaponMagicCount, Mode=TwoWay}"
-          LabelText="+0 Magic dmg (5 mins)" />
+          LabelText="+0 Magic dmg (5 mins)"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding EmpowerWeaponSpiritCount, Mode=TwoWay}"
-          LabelText="+0 spirit dmg (5 mins)" />
+          LabelText="+0 spirit dmg (5 mins)"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding EmpowerWeaponManticCount, Mode=TwoWay}"
-          LabelText="+0 mantic dmg (5 mins)" />
+          LabelText="+0 mantic dmg (5 mins)"/>
         <Label
           FontAttributes="Bold"
           FontSize="16"
@@ -209,7 +222,7 @@
           IsVisible="{Binding ShowExtraAlignments}"
           Text="{Binding ExtraAlignmentsCountLabel}"
           VerticalOptions="Center"
-          VerticalTextAlignment="Center" />
+          VerticalTextAlignment="Center"/>
         <controls:ListAlignmentPickerControl
           CountLabelFormat="{}{0} extra alignments chosen"
           CountLabelText="{Binding ExtraAlignmentsCountLabel, Mode=OneWayToSource}"
@@ -217,7 +230,7 @@
           Items="{Binding ExtraAlignments, Mode=TwoWay}"
           MaxItems="3"
           SummaryText="{Binding ExtraAlignmentsSummary, Mode=OneWayToSource}"
-          ValueCount="{Binding ExtraAlignmentsCount, Mode=OneWayToSource}" />
+          ValueCount="{Binding ExtraAlignmentsCount, Mode=OneWayToSource}"/>
         <Label
           FontAttributes="Bold"
           FontSize="16"
@@ -226,7 +239,7 @@
           IsVisible="{Binding ShowExtraColours}"
           Text="{Binding ExtraColoursCountLabel}"
           VerticalOptions="Center"
-          VerticalTextAlignment="Center" />
+          VerticalTextAlignment="Center"/>
         <controls:ListColourPickerControl
           CountLabelFormat="{}{0} Extra colours chosen"
           CountLabelText="{Binding ExtraColoursCountLabel, Mode=OneWayToSource}"
@@ -234,39 +247,40 @@
           Items="{Binding ExtraColours, Mode=TwoWay}"
           MaxItems="15"
           SummaryText="{Binding ExtraColoursSummary, Mode=OneWayToSource}"
-          ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}" />
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+          ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}"/>
+        <Grid ColumnDefinitions="*,Auto"
+            ColumnSpacing="10">
           <controls:UndeadTouchEffectPicker
             LabelText="May use an undead touch effect..."
             PlaceholderText="Select a type"
-            SelectedValue="{Binding UndeadTouchEffect, Mode=TwoWay}" />
+            SelectedValue="{Binding UndeadTouchEffect, Mode=TwoWay}"/>
           <controls:PlusMinusControl
             Grid.Column="1"
             AllowMultiple="True"
             Count="{Binding UndeadTouchEffectCount, Mode=TwoWay}"
             LabelText=""
-            Max="3" />
+            Max="3"/>
         </Grid>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding GaseousFormPerDayCount, Mode=TwoWay}"
-          LabelText="Gaseous Form" />
+          LabelText="Gaseous Form"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding PlaneShiftPerDayCount, Mode=TwoWay}"
-          LabelText="Plane Shift" />
+          LabelText="Plane Shift"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding WalkThroughWallsPerDayCount, Mode=TwoWay}"
-          LabelText="Walk Through Walls" />
+          LabelText="Walk Through Walls"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding ScholarlyInterestPerDayCount, Mode=TwoWay}"
-          LabelText="Scholarly Interest" />
+          LabelText="Scholarly Interest"/>
         <controls:PlusMinusControl
           AllowMultiple="True"
           Count="{Binding KnowledgeOfArcanePerDayCount, Mode=TwoWay}"
-          LabelText="Knowledge of the Arcane" />
+          LabelText="Knowledge of the Arcane"/>
         <Label
           FontAttributes="Bold"
           FontSize="16"
@@ -274,7 +288,7 @@
           HorizontalTextAlignment="Start"
           Text="{Binding PrayerTimesPerDayLabel}"
           VerticalOptions="Center"
-          VerticalTextAlignment="Center" />
+          VerticalTextAlignment="Center"/>
         <Grid
           ColumnDefinitions="Auto,*,Auto"
           ColumnSpacing="10"
@@ -284,29 +298,29 @@
             Grid.Column="0"
             LeftValue="minor"
             RightValue="major"
-            SelectedValue="{Binding PrayerSize, Mode=TwoWay}" />
+            SelectedValue="{Binding PrayerSize, Mode=TwoWay}"/>
           <controls:PowerbaseEnumPicker
             Grid.Row="0"
             Grid.Column="1"
-            SelectedValue="{Binding PrayerPowerbase, Mode=TwoWay}" />
+            SelectedValue="{Binding PrayerPowerbase, Mode=TwoWay}"/>
           <controls:PlusMinusControl
             Grid.Row="0"
             Grid.Column="2"
             AllowMultiple="True"
-            Count="{Binding PrayerTimesPerDay, Mode=TwoWay}" />
+            Count="{Binding PrayerTimesPerDay, Mode=TwoWay}"/>
           <Label
             Grid.Row="1"
             Grid.Column="0"
             FontAttributes="Bold"
             HorizontalOptions="Start"
             Text="Subject"
-            VerticalOptions="Center" />
+            VerticalOptions="Center"/>
           <Entry
             Grid.Row="1"
             Grid.Column="1"
             Grid.ColumnSpan="2"
             Placeholder="Optional subject"
-            Text="{Binding PrayerSubject, Mode=TwoWay}" />
+            Text="{Binding PrayerSubject, Mode=TwoWay}"/>
         </Grid>
         <Label
           FontAttributes="Bold"
@@ -315,13 +329,13 @@
           HorizontalTextAlignment="Start"
           Text="{Binding LtmSummary}"
           VerticalOptions="Center"
-          VerticalTextAlignment="Center" />
+          VerticalTextAlignment="Center"/>
         <Grid ColumnDefinitions="Auto, *">
           <controls:ChipGroup
             Grid.Column="0"
             Items="{Binding MagicSpiritOptions}"
             SelectedItem="{Binding LtmType, Mode=TwoWay}"
-            VerticalOptions="Center" />
+            VerticalOptions="Center"/>
           <controls:DictionarySlider
             Grid.Column="1"
             Compact="True"
@@ -332,17 +346,21 @@
             SelectedCount="{Binding LtmValue, Mode=TwoWay}"
             SnapToStep="True"
             StepSize="6"
-            VerticalOptions="Center" />
+            VerticalOptions="Center"/>
         </Grid>
         <!--  Toggle on/off/null  -->
-        <controls:CheckboxControl IsChecked="{Binding ReadLanguages, Mode=TwoWay}" LabelText="Read languages" />
-        <controls:CheckboxControl IsChecked="{Binding DisarmTrapsAsScout, Mode=TwoWay}" LabelText="Disarm traps" />
+        <controls:CheckboxControl IsChecked="{Binding ReadLanguages, Mode=TwoWay}"
+            LabelText="Read languages"/>
+        <controls:CheckboxControl IsChecked="{Binding DisarmTrapsAsScout, Mode=TwoWay}"
+            LabelText="Disarm traps"/>
 
         <!-- <controls:PlusMinusControl
           Count="{Binding PotionRecipesKnownCount, Mode=TwoWay}" LabelText="Potion recipes known — 5/recipe" />-->
         <!--  UGH, this'll suck - it's a search way down here... another one. Not sure how to implement  -->
-        <controls:CheckboxControl IsChecked="{Binding Regeneration, Mode=TwoWay}" LabelText="Regeneration" />
-        <controls:CheckboxControl IsChecked="{Binding ForearmParry, Mode=TwoWay}" LabelText="Forearm Parry" />
+        <controls:CheckboxControl IsChecked="{Binding Regeneration, Mode=TwoWay}"
+            LabelText="Regeneration"/>
+        <controls:CheckboxControl IsChecked="{Binding ForearmParry, Mode=TwoWay}"
+            LabelText="Forearm Parry"/>
       </VerticalStackLayout>
     </ScrollView>
 
@@ -353,6 +371,6 @@
       ReturnCommandParameter="{x:Reference RootPage}"
       Total="{Binding TotalWithBase}"
       BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
-      RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
+      RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}"/>
   </Grid>
 </cfg:ConfigPageBase>

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using labyItems.Helpers;
+using labyItems.Controls.Pickers;
 using Microsoft.Maui.Controls;
 
 namespace labyItems.Controls;
@@ -17,12 +18,117 @@ public class EnumPicker<TEnum> : ContentView
     private EnumDisplayConverter<TEnum>? _displayConverter;
     private bool _suppressTextEvents;
     private bool _areSuggestionsVisible;
+    private object? _activeOverlay;
 
     public ObservableCollection<TEnum> FilteredOptions { get; } = new();
+
+    public static readonly BindableProperty IsCompactProperty = BindableProperty.Create(
+        nameof(IsCompact),
+        typeof(bool),
+        typeof(EnumPicker<TEnum>),
+        defaultValue: false
+    );
 
     public EnumPicker()
     {
         Options = Enum.GetValues(typeof(TEnum)).Cast<TEnum>().ToList();
+        VerticalOptions = LayoutOptions.Start;
+    }
+
+    // Show suggestions using an inline overlay attached to the page root
+    private async System.Threading.Tasks.Task ShowInlineSuggestionsAsync()
+    {
+        // Prevent multiple overlays
+        if (_activeOverlay != null)
+            return;
+
+        try
+        {
+            var items = FilteredOptions.ToList();
+            if (!items.Any())
+                return;
+
+            if (SearchEntry != null)
+            {
+                var pos = await NativeCoordinateHelper.GetAbsolutePositionAsync(SearchEntry);
+
+                // Set width to match the entry if available
+                var entryWidth = SearchEntry.Width > 0 ? SearchEntry.Width : 200;
+
+                // Determine a suitable max height for the list
+                double maxHeight = Math.Min(320, (FilteredOptions.Count * 56) + 16);
+                // Also don't exceed half the page height
+                try
+                {
+                    var pageHeight = Application.Current?.MainPage?.Height ?? double.PositiveInfinity;
+                    maxHeight = Math.Min(maxHeight, pageHeight * 0.5);
+                }
+                catch { }
+
+                // Compute initial x/y relative to page coordinates and clamp to page
+                double x = pos.X;
+                // Place popup just below the search entry with a small gap so the search bar remains visible
+                double y = pos.Y + (SearchEntry?.Height ?? 0) + 6; // 6px gap to avoid edge overlap
+
+                try
+                {
+                    var pageWidth = Application.Current?.MainPage?.Width ?? double.PositiveInfinity;
+                    if (x + entryWidth + 12 > pageWidth)
+                    {
+                        x = Math.Max(8, pageWidth - entryWidth - 12);
+                    }
+
+                    var pageHeight = Application.Current?.MainPage?.Height ?? double.PositiveInfinity;
+                    if (y + maxHeight + 12 > pageHeight)
+                    {
+                        // Not enough space below; open above the entry if possible
+                        var aboveY = pos.Y - maxHeight;
+                        if (aboveY > 8)
+                            y = aboveY;
+                        else
+                            y = Math.Max(8, pageHeight - maxHeight - 12);
+                    }
+                }
+                catch { }
+
+                // Show the inline overlay
+                _activeOverlay = new object(); // marker
+                TEnum? result = await InlineSuggestionsOverlay.ShowAsync(
+                    SearchEntry,
+                    items,
+                    FormatOption,
+                    entryWidth,
+                    x,
+                    y,
+                    maxHeight
+                );
+
+                if (result.HasValue)
+                {
+                    _suppressTextEvents = true;
+                    var selected = result.Value;
+                    SelectedValue = selected;
+                    SearchEntry.Text = FormatOption(selected);
+                    SearchEntry.Unfocus();
+                    _suppressTextEvents = false;
+                }
+                else
+                {
+                    // Dismissed without selection - clear entry
+                    _suppressTextEvents = true;
+                    SearchEntry.Text = string.Empty;
+                    SearchEntry.Unfocus();
+                    _suppressTextEvents = false;
+                }
+
+                _activeOverlay = null;
+            }
+        }
+        catch (Exception)
+        {
+            // ignore overlay errors
+            _activeOverlay = null;
+        }
     }
 
     // Expose the enum options to bind to the inner Picker's ItemsSource
@@ -111,6 +217,12 @@ public class EnumPicker<TEnum> : ContentView
         }
     }
 
+    public bool IsCompact
+    {
+        get => (bool)GetValue(IsCompactProperty);
+        set => SetValue(IsCompactProperty, value);
+    }
+
     protected void RegisterInnerPicker(Picker picker)
     {
         InnerPicker = picker;
@@ -160,11 +272,38 @@ public class EnumPicker<TEnum> : ContentView
     private void OnSearchEntryFocused(object? sender, FocusEventArgs e)
     {
         RefreshFilteredOptions(SearchEntry?.Text);
+
+        // Show Popup overlay for suggestions
+        if ((SearchEntry?.IsFocused ?? false) && FilteredOptions.Any())
+        {
+            _ = ShowInlineSuggestionsAsync();
+            // keep inline suggestions hidden
+            AreSuggestionsVisible = false;
+        }
     }
 
     private void OnSearchEntryUnfocused(object? sender, FocusEventArgs e)
     {
         AreSuggestionsVisible = false;
+
+        // Dismiss any inline overlay if open
+        try
+        {
+            InlineSuggestionsOverlay.Dismiss();
+        }
+        catch
+        {
+            // ignore
+        }
+    }
+
+    protected void HideSuggestions()
+    {
+        AreSuggestionsVisible = false;
+        if (SearchEntry?.IsFocused == true)
+        {
+            SearchEntry.Unfocus();
+        }
     }
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
@@ -219,7 +358,17 @@ public class EnumPicker<TEnum> : ContentView
             FilteredOptions.Add(match);
         }
 
-        AreSuggestionsVisible = (SearchEntry?.IsFocused ?? false) && FilteredOptions.Any();
+        // If the user is focused in the search entry, show a top-level popup overlay
+        if ((SearchEntry?.IsFocused ?? false) && FilteredOptions.Any())
+        {
+            // Show inline overlay (async fire-and-forget)
+            _ = ShowInlineSuggestionsAsync();
+            AreSuggestionsVisible = false; // keep inline suggestions hidden
+        }
+        else
+        {
+            AreSuggestionsVisible = false;
+        }
     }
 
     private void SyncSearchTextToSelection()

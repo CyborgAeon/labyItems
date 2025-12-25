@@ -8,43 +8,73 @@
     x:Name="Root"
     x:TypeArguments="enums:MagicColours">
 
-    <VerticalStackLayout Spacing="10">
-        <Label
-            FontAttributes="Bold"
-            Text="{Binding LabelText, Source={x:Reference Root}}"
-            TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+    <Grid x:Name="RootGrid"
+          IsClippedToBounds="False">
+        <VerticalStackLayout x:Name="Container"
+                             Spacing="10">
+            <VerticalStackLayout.Triggers>
+                <DataTrigger
+                    TargetType="VerticalStackLayout"
+                    Binding="{Binding Source={x:Reference Root}, Path=IsCompact}"
+                    Value="True">
+                    <Setter Property="Spacing"
+                            Value="2"/>
+                    <Setter Property="VerticalOptions"
+                            Value="Center"/>
+                </DataTrigger>
+            </VerticalStackLayout.Triggers>
 
-        <Grid RowDefinitions="Auto,Auto" ColumnSpacing="0">
+            <Label
+                x:Name="TitleLabel"
+                FontAttributes="Bold"
+                VerticalOptions="Center"
+                Text="{Binding LabelText, Source={x:Reference Root}}"
+                TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+
             <Border
+                x:Name="InputBorder"
                 Padding="12,10"
                 Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
                 StrokeThickness="1"
                 Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+                <Border.Triggers>
+                    <DataTrigger
+                        TargetType="Border"
+                        Binding="{Binding Source={x:Reference Root}, Path=IsCompact}"
+                        Value="True">
+                        <Setter Property="StrokeThickness"
+                                Value="0"/>
+                        <Setter Property="Background"
+                                Value="White"/>
+                        <Setter Property="Padding"
+                                Value="0"/>
+                    </DataTrigger>
+                </Border.Triggers>
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12" />
+                    <RoundRectangle CornerRadius="12"/>
                 </Border.StrokeShape>
 
-                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                <Grid ColumnDefinitions="Auto,*,Auto"
+                      ColumnSpacing="10">
                     <Grid.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnToggleTapped" />
+                        <TapGestureRecognizer Tapped="OnToggleTapped"/>
                     </Grid.GestureRecognizers>
 
                     <Label
-                        Text="COLOUR"
                         Padding="6,2"
                         VerticalOptions="Center"
                         HorizontalOptions="Start"
                         FontAttributes="Bold"
-                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
+                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"/>
 
                     <Entry
                         Grid.Column="1"
                         x:Name="SearchEntry"
-                        BackgroundColor="Transparent"
+                        BackgroundColor="White"
                         Placeholder="{Binding PlaceholderText, Source={x:Reference Root}}"
                         TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
                         PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
-                        Margin="0" />
+                        Margin="0"/>
 
                     <Label
                         Grid.Column="2"
@@ -52,31 +82,56 @@
                         VerticalOptions="Center"
                         Text="v"
                         FontSize="18"
-                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
+                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"/>
                 </Grid>
             </Border>
+        </VerticalStackLayout>
 
+        <AbsoluteLayout
+            IsVisible="{Binding AreSuggestionsVisible, Source={x:Reference Root}}"
+            InputTransparent="False"
+            IsClippedToBounds="False"
+            HeightRequest="0"
+            VerticalOptions="Start"
+            HorizontalOptions="FillAndExpand"
+            ZIndex="200"
+            AbsoluteLayout.LayoutFlags="All"
+            AbsoluteLayout.LayoutBounds="0,0,1,1">
+            <BoxView
+                Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"
+                Opacity="1"
+                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnOverlayTapped"/>
+                </BoxView.GestureRecognizers>
+            </BoxView>
             <Border
-                Grid.Row="1"
-                Margin="0,8,0,0"
+                Margin="0,6,0,0"
                 Padding="4"
                 StrokeThickness="1"
                 Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
                 Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"
-                IsVisible="{Binding AreSuggestionsVisible, Source={x:Reference Root}}">
+                Opacity="1"
+                AbsoluteLayout.LayoutBounds="0,0,1,220"
+                AbsoluteLayout.LayoutFlags="WidthProportional"
+                TranslationY="{Binding Source={x:Reference InputBorder}, Path=Height}">
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="12" />
+                    <RoundRectangle CornerRadius="12"/>
                 </Border.StrokeShape>
                 <Border.Shadow>
-                    <Shadow Brush="{StaticResource PrimaryBrush}" Opacity="0.12" Radius="10" Offset="0,2" />
+                    <Shadow Brush="{StaticResource PrimaryBrush}"
+                            Radius="10"
+                            Offset="0,2"/>
                 </Border.Shadow>
 
                 <CollectionView
                     x:Name="SuggestionsView"
-                    HeightRequest="220"
-                    SelectionMode="Single">
+                    SelectionMode="Single"
+                    BackgroundColor="White">
                     <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="6" />
+                        <LinearItemsLayout Orientation="Vertical"
+                                           ItemSpacing="6"/>
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
@@ -86,25 +141,27 @@
                                 StrokeThickness="1"
                                 Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
                                 <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="10" />
+                                    <RoundRectangle CornerRadius="10"/>
                                 </Border.StrokeShape>
-                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                <Grid ColumnDefinitions="Auto,*"
+                                      ColumnSpacing="8">
                                     <BoxView
                                         WidthRequest="10"
                                         HeightRequest="10"
                                         VerticalOptions="Center"
                                         CornerRadius="3"
-                                        Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
+                                        Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                                        BackgroundColor="White"/>
                                     <Label
                                         VerticalOptions="Center"
                                         TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
-                                        Text="{Binding ., Converter={StaticResource DisplayConverter}}" />
+                                        Text="{Binding ., Converter={StaticResource DisplayConverter}}"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </Border>
-        </Grid>
-    </VerticalStackLayout>
+        </AbsoluteLayout>
+    </Grid>
 </controls:EnumPicker>

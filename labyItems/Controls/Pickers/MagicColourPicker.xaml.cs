@@ -28,4 +28,9 @@ public partial class MagicColourPicker : EnumPicker<MagicColours>
     {
         SearchEntry?.Focus();
     }
+
+    private void OnOverlayTapped(object? sender, TappedEventArgs e)
+    {
+        HideSuggestions();
+    }
 }
