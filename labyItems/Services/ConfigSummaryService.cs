@@ -109,25 +109,25 @@ public static class ConfigSummaryService
 
         var kind = cfg.SelectedArmour switch
         {
-            ArmourKind.Magical => "Magical MC Armour",
-            ArmourKind.Spiritual => "Spiritual MC Armour",
-            ArmourKind.Mantic => "Mantic MC Armour",
+            ArmourConfig.magicString => "Magical MC Armour",
+            ArmourConfig.spiritString => "Spiritual MC Armour",
+            ArmourConfig.manticString => "Mantic MC Armour",
             _ => "No Armour"
         };
 
-        if (cfg.ACBase > 0 && cfg.SelectedArmour != ArmourKind.None)
+        if (cfg.ACBase > 0)
         {
             details["AC"] = cfg.ACBase;
             lines.Add($"AC: {cfg.ACBase} ({kind})");
         }
 
-        if (cfg.SelectedArmour == ArmourKind.Magical && cfg.MagicalColoursCount > 0)
+        if (cfg.MagicalColoursCount > 0)
         {
             details["magicalColours"] = cfg.MagicalColoursCount;
             lines.Add($"Magical colours: {cfg.MagicalColoursCount}");
         }
 
-        if (cfg.SelectedArmour == ArmourKind.Spiritual && cfg.SpiritualNonOpposite)
+        if (cfg.SpiritualNonOpposite)
         {
             details["spiritualNonOpposite"] = true;
             lines.Add("Spiritual alignment (non-opposite)");

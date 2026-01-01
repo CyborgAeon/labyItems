@@ -33,10 +33,10 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
     {
         var s = new List<string>();
 
-        AddResistanceLevels(s, c);
+    AddResistanceLevels(s, c);
         s.AddToSummaryIf(
             c.CastingLevelsCount,
-            $"+{c.CastingLevelsCount} Casting levels {c.CastingLevelsColour}"
+            $"+{c.CastingLevelsCount} Casting levels {(c.CastingLevelsColour?.ToString() ?? "None")}"
         );
 
         s.AddToSummaryIf(c.StrengthEnchantCost, c.StrengthEnchantDescription);

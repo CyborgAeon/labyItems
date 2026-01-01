@@ -220,12 +220,15 @@ public class ShieldConfig : ConfigBase
         var macColourList = CostStringHelper.JoinSelections(MacColours);
         var adjustedText = CostStringHelper.FormatAdjustedText(macColourList, factor, adjusted);
         AddCost(
-            $"+{MAC} MAC {(MacColoursCount == 0 ? $"= {baseCost}" : adjustedText)}",
-            adjusted,
-            ref running,
-            sb
-        );
-        return adjusted;
+            CostStringHelper.FormatBreakdownLine(
+                $"{MAC} MAC{(MacColoursCount == 0 ? ":" : adjustedText)}",
+                baseCost, 
+                ref running, 
+                sb),
+            baseCost, 
+            ref running, 
+            sb);
+        return running;
     }
 
     private int AddSacCost(ref int running, StringBuilder sb)
@@ -239,7 +242,11 @@ public class ShieldConfig : ConfigBase
         var sacAlignmentList = CostStringHelper.JoinSelections(SacAlignments);
         var adjustedText = CostStringHelper.FormatAdjustedText(sacAlignmentList, factor, adjusted);
         AddCost(
-            $"SAC: {SAC} AC → {baseCost} {(SacAlignmentCount == 0 ? string.Empty : adjustedText)}",
+            CostStringHelper.FormatBreakdownLine(
+                    $"{SAC} SAC{(SacAlignmentCount == 0 ? ":" : adjustedText)}", 
+                    baseCost, 
+                    ref running, 
+                    sb),
             adjusted,
             ref running,
             sb

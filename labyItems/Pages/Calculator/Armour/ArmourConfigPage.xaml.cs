@@ -25,10 +25,10 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
 
         cfg.SelectedArmour = index switch
         {
-            1 => ArmourKind.Magical,
-            2 => ArmourKind.Spiritual,
-            3 => ArmourKind.Mantic,
-            _ => ArmourKind.None
+            1 => ArmourConfig.magicString,
+            2 => ArmourConfig.spiritString,
+            3 => ArmourConfig.manticString,
+            _ => string.Empty
         };
     }
 
@@ -36,10 +36,10 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
     {
         var kind = cfg.SelectedArmour switch
         {
-            ArmourKind.Magical   => "Magical MC Armour",
-            ArmourKind.Spiritual => "Spiritual MC Armour",
-            ArmourKind.Mantic    => "Mantic MC Armour",
-            _                    => "No Armour"
+            ArmourConfig.magicString  => "Magical MC Armour",
+            ArmourConfig.spiritString => "Spiritual MC Armour",
+            ArmourConfig.manticString => "Mantic MC Armour",
+            _                         => "No Armour"
         };
 
         var details = new Dictionary<string, object?>();
@@ -47,9 +47,9 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
         if (cfg.ACBase > 0) details["AC"] = cfg.ACBase;
         if (!string.IsNullOrWhiteSpace(cfg.LayeredSummary))
             details["layeredSummary"] = cfg.LayeredSummary;
-        if (cfg.SelectedArmour == ArmourKind.Magical && cfg.MagicalColoursCount > 0)
+        if (cfg.MagicalColoursCount > 0)
             details["magicalColours"] = cfg.MagicalColoursCount;
-        if (cfg.SelectedArmour == ArmourKind.Spiritual && cfg.SpiritualNonOpposite)
+        if (cfg.SpiritualNonOpposite)
             details["spiritualNonOpposite"] = true;
 
         var enhancements = new List<Dictionary<string, object>>();

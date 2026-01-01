@@ -93,15 +93,7 @@ public class EnumPicker<TEnum> : ContentView
 
                 // Show the inline overlay
                 _activeOverlay = new object(); // marker
-                TEnum? result = await InlineSuggestionsOverlay.ShowAsync(
-                    SearchEntry,
-                    items,
-                    FormatOption,
-                    entryWidth,
-                    x,
-                    y,
-                    maxHeight
-                );
+                TEnum? result = await InlineSuggestionsOverlay.ShowAsync(SearchEntry, items, FormatOption, entryWidth, maxHeight);
 
                 if (result.HasValue)
                 {
@@ -357,6 +349,9 @@ public class EnumPicker<TEnum> : ContentView
         {
             FilteredOptions.Add(match);
         }
+
+        // Keep any active overlay list in sync with the latest filter
+        InlineSuggestionsOverlay.UpdateItems(FilteredOptions);
 
         // If the user is focused in the search entry, show a top-level popup overlay
         if ((SearchEntry?.IsFocused ?? false) && FilteredOptions.Any())
