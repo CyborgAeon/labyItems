@@ -77,5 +77,17 @@ jobs:
             output/default.db
             output/default.db.sha256
 
+      - name: Run migrations against seed DB
+        run: |
+          set -euo pipefail
+          echo "Running migrator against output/default.db"
+          dotnet build tools/migrator -c Release --no-restore
+          dotnet run --project tools/migrator -c Release --no-build -- output/default.db
+
+      - name: Verify updated seed_metadata.schema_version
+        run: |
+          set -euo pipefail
+          sqlite3 output/default.db "SELECT 'schema_version:' || schema_version FROM seed_metadata ORDER BY rowid DESC LIMIT 1;"
+
       - name: Output artifact size
         run: du -h output/default.db || true
