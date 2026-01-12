@@ -12,7 +12,7 @@
     <EnableAndroidSigning Condition="'$(EnableAndroidSigning)'==''">false</EnableAndroidSigning>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+  <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
     <AndroidKeyStore>$(EnableAndroidSigning)</AndroidKeyStore>
     <AndroidSigningKeyStore>$(MSBuildProjectDirectory)/labyItems.keystore</AndroidSigningKeyStore>
     <AndroidSigningKeyAlias Condition="'$(AndroidSigningKeyAlias)' == ''">labyItemsSigningKey</AndroidSigningKeyAlias>
