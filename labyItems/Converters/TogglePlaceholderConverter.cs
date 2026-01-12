@@ -6,21 +6,54 @@ namespace labyItems.Converters
 {
     public class TogglePlaceholderConverter : IValueConverter
     {
-         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        private static string Capitalize(string? text)
         {
-            // if parameter provided, we insert value after it:
-            //   Example: parameter = "Prayer"
-            //   minor → "Minor Prayer"
-            //   major → "Major Prayer"
-            if (parameter is string prefix && 
-                value is string option && 
-                !string.IsNullOrWhiteSpace(option))
+            if (string.IsNullOrWhiteSpace(text))
             {
-                return $"{char.ToUpper(option[0]) + option[1..]} {prefix}";
+                return string.Empty;
+            }
+
+            return char.ToUpper(text[0]) + text[1..];
+        }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            // parameter format:
+            //   "option1|option2|prefix"
+            // Examples:
+            //   "Minor|Major|Prayer" => Minor/Major Prayer
+            //   "Repel|Attract|group" => Repel/Attract group
+            var parameterParts = (parameter as string)?.Split(
+                '|',
+                StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
+            ) ?? Array.Empty<string>();
+
+            var hasOptionPair = parameterParts.Length >= 2;
+            var leftOption = hasOptionPair ? parameterParts[0] : null;
+            var rightOption = hasOptionPair ? parameterParts[1] : null;
+            var prefix = string.Empty;
+
+            if (hasOptionPair)
+            {
+                prefix = parameterParts.Length > 2 ? parameterParts[2] : string.Empty;
+            }
+            else if (parameterParts.Length == 1)
+            {
+                prefix = parameterParts[0];
+            }
+
+            if (value is string option && !string.IsNullOrWhiteSpace(option))
+            {
+                return $"{Capitalize(option)} {prefix}".Trim();
+            }
+
+            if (hasOptionPair && !string.IsNullOrWhiteSpace(leftOption) && !string.IsNullOrWhiteSpace(rightOption))
+            {
+                return $"{Capitalize(leftOption)}/{Capitalize(rightOption)} {prefix}".Trim();
             }
 
             // Default fallback text
-            return "Enter value";
+            return prefix;
         }
 
         public object ConvertBack(

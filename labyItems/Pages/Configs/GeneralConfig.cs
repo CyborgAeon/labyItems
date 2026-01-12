@@ -288,7 +288,7 @@ namespace labyItems.Pages.Configs
 
         private int _repGroup;
         public string RepelAttractGroupLabel =>
-            $"{(string.IsNullOrEmpty(RepelAttractGroupName) ? "Repel/Attract" : RepelAttractGroup)} {(string.IsNullOrEmpty(RepelAttractGroupName) ? "one group" : RepelAttractGroupName)} {RepelAttractGroupCount} times per day.";
+            $"{(string.IsNullOrEmpty(RepelAttractGroup) ? "Repel/Attract" : RepelAttractGroup)} {(string.IsNullOrEmpty(RepelAttractGroupName) ? "one group" : RepelAttractGroupName)} {RepelAttractGroupCount} times per day.";
 
         public int RepelAttractGroupCount
         {
@@ -559,7 +559,7 @@ namespace labyItems.Pages.Configs
             get => _prayerSubject;
             set
             {
-                _prayerSubject = value;
+                SetProperty(ref _prayerSubject, value, true);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(PrayerTimesPerDayLabel));
             }
@@ -624,7 +624,7 @@ public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
         }
         private int _kiOrPrimalStrikePerDayCount;
         public string KiStrikeSummary =>
-            $"{KiOrPrimalStrike} strike ({KiOrPrimalStrikePerDayCount}/day)";
+            $"{(string.IsNullOrWhiteSpace(KiOrPrimalStrike) ? "🐉 Ki/🧸 Primal" : KiOrPrimalStrike)} strike ({KiOrPrimalStrikePerDayCount}/day)";
 
 
         public bool ReadLanguages
@@ -801,6 +801,9 @@ public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
             t += 20 * EmpowerWeaponManticCount;
             t += 15 * ScholarlyInterestPerDayCount;
             t += 8 * KnowledgeOfArcanePerDayCount;
+            t += 35 * GaseousFormPerDayCount;
+            t += 20 * PlaneShiftPerDayCount;
+            t += 20 * WalkThroughWallsPerDayCount;
             if (ReadLanguages)
                 t += 6;
             if (DisarmTrapsAsScout)

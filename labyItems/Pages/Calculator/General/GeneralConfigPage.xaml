@@ -46,13 +46,13 @@
         <Label FontAttributes="Bold" FontSize="16" HorizontalOptions="Start" HorizontalTextAlignment="Start" Text="{Binding RepelAttractGroupLabel}" VerticalOptions="Center" VerticalTextAlignment="Center"/>
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
           <controls:TwoOptionSwitch Grid.Column="0" LeftValue="Repel" RightValue="Attract" SelectedValue="{Binding RepelAttractGroup, Mode=TwoWay}"/>
-          <Entry Grid.Column="1" Placeholder="{Binding RepelAttractGroup, Converter={StaticResource TogglePlaceholderConverter}, ConverterParameter='test'}" Text="{Binding RepelAttractGroupName, Mode=TwoWay}"/>
+          <Entry Grid.Column="1" Placeholder="{Binding RepelAttractGroup, Converter={StaticResource TogglePlaceholderConverter}, ConverterParameter='Repel|Attract|group'}" Text="{Binding RepelAttractGroupName, Mode=TwoWay}"/>
           <controls:PlusMinusControl Grid.Column="2" AllowMultiple="True" Count="{Binding RepelAttractGroupCount, Mode=TwoWay}"/>
         </Grid>
         <Label FontAttributes="Bold" FontSize="16" HorizontalOptions="Start" HorizontalTextAlignment="Start" Text="{Binding RepelAttractTypeLabel}" VerticalOptions="Center" VerticalTextAlignment="Center"/>
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
           <controls:TwoOptionSwitch Grid.Column="0" LeftValue="Repel" RightValue="Attract" SelectedValue="{Binding RepelAttractType, Mode=TwoWay}"/>
-          <Entry Grid.Column="1" Placeholder="{Binding RepelAttractType, Converter={StaticResource TogglePlaceholderConverter}, ConverterParameter='test'}" Text="{Binding RepelAttractTypeName, Mode=TwoWay}"/>
+          <Entry Grid.Column="1" Placeholder="{Binding RepelAttractType, Converter={StaticResource TogglePlaceholderConverter}, ConverterParameter='Repel|Attract|type'}" Text="{Binding RepelAttractTypeName, Mode=TwoWay}"/>
           <controls:PlusMinusControl Grid.Column="2" AllowMultiple="True" Count="{Binding RepelAttractTypeCount, Mode=TwoWay}"/>
         </Grid>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding RepelLifeCount, Mode=TwoWay}" LabelText="Repel Life"/>
@@ -82,7 +82,7 @@
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding KnowledgeOfArcanePerDayCount, Mode=TwoWay}" LabelText="Knowledge of the Arcane"/>
         <Label FontAttributes="Bold" FontSize="16" HorizontalOptions="Start" HorizontalTextAlignment="Start" Text="{Binding PrayerTimesPerDayLabel}" VerticalOptions="Center" VerticalTextAlignment="Center"/>
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" RowDefinitions="Auto,Auto">
-          <controls:TwoOptionSwitch Grid.Row="0" Grid.Column="0" LeftValue="minor" RightValue="major" SelectedValue="{Binding PrayerSize, Mode=TwoWay}"/>
+          <controls:TwoOptionSwitch Grid.Row="0" Grid.Column="0" LeftValue="Minor" RightValue="Major" SelectedValue="{Binding PrayerSize, Mode=TwoWay}"/>
           <controls:PowerbaseEnumPicker Grid.Row="0" Grid.Column="1" SelectedValue="{Binding PrayerPowerbase, Mode=TwoWay}"/>
           <controls:PlusMinusControl Grid.Row="0" Grid.Column="2" AllowMultiple="True" Count="{Binding PrayerTimesPerDay, Mode=TwoWay}"/>
           <Label Grid.Row="1" Grid.Column="0" FontAttributes="Bold" HorizontalOptions="Start" Text="Subject" VerticalOptions="Center"/>
