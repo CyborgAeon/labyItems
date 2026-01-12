@@ -13,9 +13,6 @@ public class ArmourConfig : ConfigBase
 {
     public ObservableCollection<int?> ArmourLayers { get; } = new() { 0 };
     public ObservableCollection<ContributionRow> BreakdownItems { get; } = new();
-    public const string magicString = "🪄 Magic";
-    public const string spiritString = "⽰ Spirit";
-    public const string manticString = "🍥 Mantic";
     private int _acBase;
     public int ACBase
     {
@@ -25,12 +22,12 @@ public class ArmourConfig : ConfigBase
     }
 
     public bool ShowArmourColours =>
-        SelectedArmour == magicString || SelectedArmour == manticString;
+        SelectedArmour == SupernaturalTypes.Magic || SelectedArmour == SupernaturalTypes.Mantic;
     public bool ShowArmourAlignments =>
-        SelectedArmour == spiritString || SelectedArmour == manticString;
+        SelectedArmour == SupernaturalTypes.Spirit || SelectedArmour == SupernaturalTypes.Mantic;
 
     public ObservableCollection<string> ArmourTypes { get; } =
-        new() { magicString, spiritString, manticString };
+        new(SupernaturalTypes.All);
     private string _selectedArmour;
     public string SelectedArmour
     {
@@ -104,28 +101,28 @@ public class ArmourConfig : ConfigBase
         {
             int perAc = SelectedArmour switch
             {
-                magicString  => 2,
-                spiritString => 2,
-                manticString => 4,
+                SupernaturalTypes.Magic  => 2,
+                SupernaturalTypes.Spirit => 2,
+                SupernaturalTypes.Mantic => 4,
                 _ => 0
             };
             int flat = SelectedArmour switch
             {
-                spiritString => 2,
-                manticString => 2,
+                SupernaturalTypes.Spirit => 2,
+                SupernaturalTypes.Mantic => 2,
                 _ => 0
             };
             int armourCost = perAc * ACBase + flat;
             AddCost($"{SelectedArmour} armour: {perAc} × AC {ACBase} {(flat > 0 ? $"+ {flat} " : string.Empty)}= {armourCost}", armourCost, ref total, sb);
         }
 
-        if (SelectedArmour == magicString && MagicalColoursCount > 0)
+        if (SelectedArmour == SupernaturalTypes.Magic && MagicalColoursCount > 0)
         {
             int c = 2 * MagicalColoursCount;
             AddCost($"+ Magical colours: 2 × {MagicalColoursCount} = {c}", c, ref total, sb);
         }
 
-        if (SelectedArmour == spiritString && SpiritualNonOpposite)
+        if (SelectedArmour == SupernaturalTypes.Spirit && SpiritualNonOpposite)
         {
             AddCost("+ Spiritual non-opposite: 3", 3, ref total, sb);
         }

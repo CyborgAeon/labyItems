@@ -109,9 +109,9 @@ public static class ConfigSummaryService
 
         var kind = cfg.SelectedArmour switch
         {
-            ArmourConfig.magicString => "Magical MC Armour",
-            ArmourConfig.spiritString => "Spiritual MC Armour",
-            ArmourConfig.manticString => "Mantic MC Armour",
+            SupernaturalTypes.Magic => "Magical MC Armour",
+            SupernaturalTypes.Spirit => "Spiritual MC Armour",
+            SupernaturalTypes.Mantic => "Mantic MC Armour",
             _ => "No Armour"
         };
 

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using labyItems.Models;
 using labyItems.Models.Enums;
 using labyItems.Pages.Configs;
+using labyItems.Models;
 
 namespace labyItems.Pages.Calculator;
 
@@ -25,9 +26,9 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
 
         cfg.SelectedArmour = index switch
         {
-            1 => ArmourConfig.magicString,
-            2 => ArmourConfig.spiritString,
-            3 => ArmourConfig.manticString,
+            1 => SupernaturalTypes.Magic,
+            2 => SupernaturalTypes.Spirit,
+            3 => SupernaturalTypes.Mantic,
             _ => string.Empty
         };
     }
@@ -36,9 +37,9 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
     {
         var kind = cfg.SelectedArmour switch
         {
-            ArmourConfig.magicString  => "Magical MC Armour",
-            ArmourConfig.spiritString => "Spiritual MC Armour",
-            ArmourConfig.manticString => "Mantic MC Armour",
+            SupernaturalTypes.Magic  => "Magical MC Armour",
+            SupernaturalTypes.Spirit => "Spiritual MC Armour",
+            SupernaturalTypes.Mantic => "Mantic MC Armour",
             _                         => "No Armour"
         };
 

@@ -43,7 +43,7 @@ public class EnumDictionaryExtension : IMarkupExtension
             if (exclusions.Contains(name))
                 continue;
 
-            dict[name] = value!;
+            dict[EnumDisplayFormatter.FormatName(name)] = value!;
         }
 
         return dict;

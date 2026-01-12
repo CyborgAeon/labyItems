@@ -30,11 +30,10 @@
           <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding ResistanceLevels, Mode=TwoWay}" LabelText="" Max="3"/>
         </Grid>
         <Label Margin="0,4,0,0" FontAttributes="Bold" HorizontalOptions="Start" Text="{Binding ElfInnateSummary}"/>
-        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+        <Grid ColumnDefinitions="0.5*,*" ColumnSpacing="10">
           <controls:DictionarySearchBar Grid.Column="0" x:Name="ElfColourSearch" x:TypeArguments="enums:ElfColours" PlaceholderText="Pick a colour" ItemsSource="{controls:EnumDictionary Type={x:Type enums:ElfColours}}" SelectedValue="{Binding ElfInnateColour, Mode=TwoWay}"/>
           <controls:DictionarySlider Grid.Column="1" Compact="True" KeyFormat="" Labels="{Binding ElfInnateLevelLabels}" MaxCount="5" MinCount="0" Multiplier="1" SelectedCount="{Binding ElfInnateLevelIndex, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center"/>
         </Grid>
-        <controls:DictionarySearchBar x:Name="WeaponSearch" x:TypeArguments="enums:WeaponType" PlaceholderText="Pick a weapon" ItemsSource="{controls:EnumDictionary Type={x:Type enums:WeaponType}}" SelectedValue="{Binding WeaponType, Mode=TwoWay}"/>
         <controls:DictionarySlider Labels="{Binding StrengthLabels}" MaxCount="3" MinCount="0" Multiplier="1" SelectedCount="{Binding StrengthEnchantIndex, Mode=TwoWay}"/>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}" LabelText="25% Cold Rage"/>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}" LabelText="50% Berserk Rage"/>

@@ -14,7 +14,6 @@ public partial class WeaponConfigPage : ConfigPageBase<WeaponConfig>
     {
         ReturnFromConfigCommand = new Command(async () => await OnReturnWithContributionAsync());
         InitializeComponent();
-
         OnPropertyChanged(nameof(ReturnFromConfigCommand));
     }
 

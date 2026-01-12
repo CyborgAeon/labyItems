@@ -6,17 +6,54 @@
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
   xmlns:enums="clr-namespace:labyItems.Models.Enums" x:Name="RootPage" Title="Configure Weapon" x:TypeArguments="cfg:WeaponConfig">
+  <cfg:ConfigPageBase.Resources>
+    <ResourceDictionary>
+      <conv:EnumEqualsConverter x:Key="EnumEqualsConverter" />
+    </ResourceDictionary>
+  </cfg:ConfigPageBase.Resources>
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="14">
-        <controls:DictionarySearchBar x:Name="WeaponSearch" x:TypeArguments="enums:WeaponType" PlaceholderText="Pick a weapon" ItemsSource="{controls:EnumDictionary Type={x:Type enums:WeaponType}, Exclude='Grey'}" SelectedValue="{Binding WeaponType, Mode=TwoWay}"/>
-        <controls:WeaponBasePicker SelectedValue="{Binding WeaponBase, Mode=TwoWay}"/>
+        <Label FontAttributes="Bold" Text="Base type" />
+        <controls:ChipGroup Items="{Binding BaseTypes}" SelectedItem="{Binding SelectedBaseType, Mode=TwoWay}" VerticalOptions="Center"/>
+
+        <VerticalStackLayout IsVisible="{Binding ShowMagicBaseOptions}" Spacing="6">
+          <Label FontAttributes="Bold" Text="Magic power profile" />
+          <RadioButton Content="+0 Magic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Magic0}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Magic0}}" />
+          <RadioButton Content="+0 Magic, +1 vs one type" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Magic0Plus1VsType}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Magic0Plus1VsType}}" />
+          <RadioButton Content="+0 Magic, +1 vs one group" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Magic0Plus1VsGroup}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Magic0Plus1VsGroup}}" />
+          <RadioButton Content="+1 Magic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.MagicPlus1}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.MagicPlus1}}" />
+          <RadioButton Content="+2 Magic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.MagicPlus2}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.MagicPlus2}}" />
+          <RadioButton Content="+0 Pure Magic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.PureMagic0}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.PureMagic0}}" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout IsVisible="{Binding ShowSpiritBaseOptions}" Spacing="6">
+          <Label FontAttributes="Bold" Text="Spirit power profile" />
+          <RadioButton Content="+0 Spirit" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Spirit0}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Spirit0}}" />
+          <RadioButton Content="+0 Spirit, +1 vs one type" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Spirit0Plus1VsType}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Spirit0Plus1VsType}}" />
+          <RadioButton Content="+0 Spirit, +1 vs one group" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Spirit0Plus1VsGroup}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Spirit0Plus1VsGroup}}" />
+          <RadioButton Content="+1 Spirit" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.SpiritPlus1}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.SpiritPlus1}}" />
+          <RadioButton Content="+2 Spirit" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.SpiritPlus2}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.SpiritPlus2}}" />
+          <RadioButton Content="+0 Pure Spirit" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.PureSpirit0}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.PureSpirit0}}" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout IsVisible="{Binding ShowManticBaseOptions}" Spacing="6">
+          <Label FontAttributes="Bold" Text="Mantic power profile" />
+          <RadioButton Content="+0 Mantic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.Mantic0}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.Mantic0}}" />
+          <RadioButton Content="+1 Mantic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.ManticPlus1}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.ManticPlus1}}" />
+          <RadioButton Content="+0 Pure Mantic" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.PureMantic0}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.PureMantic0}}" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout IsVisible="{Binding ShowPhysicalBaseOptions}" Spacing="6">
+          <Label FontAttributes="Bold" Text="Physical power profile" />
+          <RadioButton Content="+1 Physical" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.PhysicalPlus1}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.PhysicalPlus1}}" />
+        </VerticalStackLayout>
+
+        <controls:DictionarySearchBar x:Name="WeaponSearch" x:TypeArguments="enums:WeaponType" PlaceholderText="Pick a weapon" ItemsSource="{controls:EnumDictionary Type={x:Type enums:WeaponType}}" SelectedValue="{Binding WeaponType, Mode=TwoWay}"/>
         <Entry IsVisible="{Binding ShowMagicVsType}" Placeholder="Enter Type (e.g. Undead)" Text="{Binding MagicVsType, Mode=TwoWay}"/>
         <Entry IsVisible="{Binding ShowMagicVsGroup}" Placeholder="Enter Group (e.g. Bandits)" Text="{Binding MagicVsGroup, Mode=TwoWay}"/>
         <Entry IsVisible="{Binding ShowSpiritVsType}" Placeholder="Enter Type (e.g. Undead)" Text="{Binding SpiritVsType, Mode=TwoWay}"/>
         <Entry IsVisible="{Binding ShowSpiritVsGroup}" Placeholder="Enter Group (e.g. Bandits)" Text="{Binding SpiritVsGroup, Mode=TwoWay}"/>
-
-        <!--  Multi-select colours / alignments  -->
         <Label IsVisible="{Binding ShowExtraColours}" Text="{Binding ExtraColoursCountLabel}"/>
         <controls:ListColourPickerControl CountLabelFormat="{}{0} Extra colours chosen" CountLabelText="{Binding ExtraColoursCountLabel, Mode=OneWayToSource}" IsVisible="{Binding ShowExtraColours}" Items="{Binding ExtraColours, Mode=TwoWay}" SummaryText="{Binding ExtraColoursSummary, Mode=OneWayToSource}" ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}"/>
         <Label IsVisible="{Binding ShowExtraAlignments}" Text="{Binding ExtraAlignmentsCountLabel}"/>
