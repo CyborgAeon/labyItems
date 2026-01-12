@@ -28,11 +28,12 @@
         <controls:CheckboxControl IsChecked="{Binding AddAdvanced}" IsVisible="{Binding ShowAdvancedPerDay}" LabelText="Add advanced evocation to base list" />
 
         <controls:CheckboxControl IsChecked="{Binding AddPrep}" LabelText="Add to base list with 30s prep" />
-        <controls:DictionarySlider KeyFormat="Additional {0} EP store" MaxCount="12" MinCount="0" Multiplier="4" SelectedCount="{Binding GeneralEpStore, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center" />
-        <Grid ColumnDefinitions="Auto,*">
-          <controls:DictionarySearchBar Grid.Column="0" x:Name="FieldSearch" x:TypeArguments="enums:EvocationFields" PlaceholderText="Pick a field" ItemsSource="{controls:EnumDictionary Type={x:Type enums:EvocationFields}, Exclude='Grey'}" SelectedValue="{Binding SelectedField, Mode=TwoWay}"/>
-          <!-- SelectedValue="{Binding CastingLevelsColour, Mode=TwoWay}"/> -->
-          <controls:DictionarySlider Grid.Column="1" FormatArg1="{Binding SelectedValue, Source={x:Reference FieldPicker}}" KeyFormat="Additional {0} {1} EP store" MaxCount="12" MinCount="0" Multiplier="3" SelectedCount="{Binding FieldEpStore, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference GeneralEpSlider}}" ValueText="{Binding ValueText, Source={x:Reference GeneralEpSlider}}" />
+        <controls:DictionarySlider x:Name="GeneralEpSlider" KeyFormat="Additional {0} EP store" MaxCount="12" MinCount="0" Multiplier="4" SelectedCount="{Binding GeneralEpStore, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference FieldEpSlider}}" ValueText="{Binding ValueText, Source={x:Reference FieldEpSlider}}" />
+        <Grid ColumnDefinitions="0.4*,*">
+          <controls:DictionarySearchBar Grid.Column="0" x:Name="FieldSearch" x:TypeArguments="enums:EvocationFields" PlaceholderText="Pick a field" ItemsSource="{controls:EnumDictionary Type={x:Type enums:EvocationFields}}" SelectedValue="{Binding SelectedField, Mode=TwoWay}"/>
+          <controls:DictionarySlider Grid.Column="1" x:Name="FieldEpSlider" FormatArg1="{Binding SelectedValue, Source={x:Reference FieldSearch}}" KeyFormat="Additional {0} {1} EP store" MaxCount="12" MinCount="0" Multiplier="3" SelectedCount="{Binding FieldEpStore, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center" />
         </Grid>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding DrawOnEpPerDay, Mode=TwoWay}" LabelText="Draw on EP per day" />
       </VerticalStackLayout>

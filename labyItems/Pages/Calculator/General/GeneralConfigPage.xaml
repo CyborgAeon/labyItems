@@ -32,9 +32,13 @@
         <Label Margin="0,4,0,0" FontAttributes="Bold" HorizontalOptions="Start" Text="{Binding ElfInnateSummary}"/>
         <Grid ColumnDefinitions="0.5*,*" ColumnSpacing="10">
           <controls:DictionarySearchBar Grid.Column="0" x:Name="ElfColourSearch" x:TypeArguments="enums:ElfColours" PlaceholderText="Pick a colour" ItemsSource="{controls:EnumDictionary Type={x:Type enums:ElfColours}}" SelectedValue="{Binding ElfInnateColour, Mode=TwoWay}"/>
-          <controls:DictionarySlider Grid.Column="1" Compact="True" KeyFormat="" Labels="{Binding ElfInnateLevelLabels}" MaxCount="5" MinCount="0" Multiplier="1" SelectedCount="{Binding ElfInnateLevelIndex, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center"/>
+          <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+            <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference ElfInnateSlider}}" ValueText="{Binding ValueText, Source={x:Reference ElfInnateSlider}}" />
+            <controls:DictionarySlider x:Name="ElfInnateSlider" Compact="True" KeyFormat="" Labels="{Binding ElfInnateLevelLabels}" MaxCount="5" MinCount="0" Multiplier="1" SelectedCount="{Binding ElfInnateLevelIndex, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center"/>
+          </VerticalStackLayout>
         </Grid>
-        <controls:DictionarySlider Labels="{Binding StrengthLabels}" MaxCount="3" MinCount="0" Multiplier="1" SelectedCount="{Binding StrengthEnchantIndex, Mode=TwoWay}"/>
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference StrengthSlider}}" ValueText="{Binding ValueText, Source={x:Reference StrengthSlider}}" />
+        <controls:DictionarySlider x:Name="StrengthSlider" Labels="{Binding StrengthLabels}" MaxCount="3" MinCount="0" Multiplier="1" SelectedCount="{Binding StrengthEnchantIndex, Mode=TwoWay}"/>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}" LabelText="25% Cold Rage"/>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}" LabelText="50% Berserk Rage"/>
         <Label Text="{Binding RageCategoriesCountLabel}"/>
@@ -87,7 +91,10 @@
         <Label FontAttributes="Bold" FontSize="16" HorizontalOptions="Start" HorizontalTextAlignment="Start" Text="{Binding LtmSummary}" VerticalOptions="Center" VerticalTextAlignment="Center"/>
         <Grid ColumnDefinitions="Auto, *">
           <controls:ChipGroup Grid.Column="0" Items="{Binding MagicSpiritOptions}" SelectedItem="{Binding LtmType, Mode=TwoWay}" VerticalOptions="Center"/>
-          <controls:DictionarySlider Grid.Column="1" Compact="True" FormatArg1="{Binding LtmType}" MaxCount="24" MinCount="0" Multiplier="5" SelectedCount="{Binding LtmValue, Mode=TwoWay}" SnapToStep="True" StepSize="6" VerticalOptions="Center"/>
+          <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+            <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference LtmSlider}}" ValueText="{Binding ValueText, Source={x:Reference LtmSlider}}" />
+            <controls:DictionarySlider x:Name="LtmSlider" Compact="True" FormatArg1="{Binding LtmType}" MaxCount="24" MinCount="0" Multiplier="5" SelectedCount="{Binding LtmValue, Mode=TwoWay}" SnapToStep="True" StepSize="6" VerticalOptions="Center"/>
+          </VerticalStackLayout>
         </Grid>
         <!--  Toggle on/off/null  -->
         <controls:CheckboxControl IsChecked="{Binding ReadLanguages, Mode=TwoWay}" LabelText="Read languages"/>

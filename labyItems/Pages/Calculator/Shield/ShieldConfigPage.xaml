@@ -39,17 +39,23 @@
           MaxItems="2"
           ValueCount="{Binding ShieldAlignmentCount, Mode=OneWayToSource}" />
 
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference ShieldPacSlider}}" ValueText="{Binding ValueText, Source={x:Reference ShieldPacSlider}}" />
         <controls:DictionarySlider
+          x:Name="ShieldPacSlider"
           ItemsSource="{Binding PacOptions}"
           KeyFormat="PAC {0}"
           SelectedIndex="{Binding PAC, Mode=TwoWay}"
           ValueFormat="ISP: {0}" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference ShieldDacSlider}}" ValueText="{Binding ValueText, Source={x:Reference ShieldDacSlider}}" />
         <controls:DictionarySlider
+          x:Name="ShieldDacSlider"
           ItemsSource="{Binding DacOptions}"
           KeyFormat="DAC {0}"
           SelectedIndex="{Binding DAC, Mode=TwoWay}"
           ValueFormat="ISP: {0}" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference ShieldMacSlider}}" ValueText="{Binding ValueText, Source={x:Reference ShieldMacSlider}}" />
         <controls:DictionarySlider
+          x:Name="ShieldMacSlider"
           ItemsSource="{Binding MacOptions}"
           KeyFormat="MAC {0}"
           SelectedIndex="{Binding MAC, Mode=TwoWay}"
@@ -59,7 +65,9 @@
           Items="{Binding MacColours}"
           MaxItems="2"
           ValueCount="{Binding MacColoursCount, Mode=OneWayToSource}" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference ShieldSacSlider}}" ValueText="{Binding ValueText, Source={x:Reference ShieldSacSlider}}" />
         <controls:DictionarySlider
+          x:Name="ShieldSacSlider"
           ItemsSource="{Binding SacOptions}"
           KeyFormat="SAC {0}"
           SelectedIndex="{Binding SAC, Mode=TwoWay}"

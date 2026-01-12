@@ -175,6 +175,32 @@ namespace labyItems.Controls
             private set => SetValue(SelectedValueProperty, value);
         }
 
+        public static readonly BindableProperty KeyTextProperty = BindableProperty.Create(
+            nameof(KeyText),
+            typeof(string),
+            typeof(DictionarySlider),
+            defaultValue: string.Empty
+        );
+
+        public string KeyText
+        {
+            get => (string)GetValue(KeyTextProperty);
+            private set => SetValue(KeyTextProperty, value);
+        }
+
+        public static readonly BindableProperty ValueTextProperty = BindableProperty.Create(
+            nameof(ValueText),
+            typeof(string),
+            typeof(DictionarySlider),
+            defaultValue: string.Empty
+        );
+
+        public string ValueText
+        {
+            get => (string)GetValue(ValueTextProperty);
+            private set => SetValue(ValueTextProperty, value);
+        }
+
         // -------- Label formats --------
 
         public static readonly BindableProperty KeyFormatProperty = BindableProperty.Create(
@@ -412,8 +438,8 @@ namespace labyItems.Controls
                     keyText = SafeFormat(KeyFormat, kv.Key, FormatArg1);
                 }
 
-                KeyLabel.Text = keyText;
-                ValueLabel.Text = SafeFormat(ValueFormat, kv.Value);
+                KeyText = keyText;
+                ValueText = SafeFormat(ValueFormat, kv.Value);
 
                 if (raiseEvent)
                 {
@@ -450,8 +476,8 @@ namespace labyItems.Controls
                     keyText = string.Format(KeyFormat, kv.Key);
                 }
 
-                KeyLabel.Text = keyText;
-                ValueLabel.Text = string.Format(ValueFormat, kv.Value);
+                KeyText = keyText;
+                ValueText = SafeFormat(ValueFormat, kv.Value);
 
                 if (raiseEvent)
                 {
@@ -472,8 +498,8 @@ namespace labyItems.Controls
         {
             SelectedKey = string.Empty;
             SelectedValue = 0;
-            KeyLabel.Text = SafeFormat(KeyFormat, string.Empty, FormatArg1);
-            ValueLabel.Text = SafeFormat(ValueFormat, 0);
+            KeyText = SafeFormat(KeyFormat, string.Empty, FormatArg1);
+            ValueText = SafeFormat(ValueFormat, 0);
         }
 
         public static readonly BindableProperty CompactProperty = BindableProperty.Create(
@@ -514,13 +540,11 @@ namespace labyItems.Controls
 
             if (compact)
             {
-                control.ShowLabels = false;
                 control.RootLayout.Padding = new Thickness(0, 0, 0, 0);
                 control.RootLayout.Spacing = 0;
             }
             else
             {
-                control.ShowLabels = true;
                 control.RootLayout.Padding = new Thickness(12);
                 control.RootLayout.Spacing = 8;
             }

@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<cfg:ConfigPageBase
-  x:Class="labyItems.Pages.Calculator.SpellConfigPage"
+<cfg:ConfigPageBase x:Class="labyItems.Pages.Calculator.SpellConfigPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
-  xmlns:enums="clr-namespace:labyItems.Models.Enums"
-  x:Name="RootPage"
-  Title="Configure Spell"
-  x:TypeArguments="cfg:SpellConfig">
+  xmlns:enums="clr-namespace:labyItems.Models.Enums" x:Name="RootPage" Title="Configure Spell" x:TypeArguments="cfg:SpellConfig">
   <ContentPage.Resources>
     <ResourceDictionary>
       <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -19,106 +15,40 @@
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="14">
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-          <Label
-            Grid.Column="0"
-            FontAttributes="Bold"
-            FontSize="20"
-            Text="{Binding Title}" />
-          <Button
-            Grid.Column="1"
-            Clicked="OnSearchSpell"
-            Text="Search" />
+          <Label Grid.Column="0" FontAttributes="Bold" FontSize="20" Text="{Binding Title}" />
+          <Button Grid.Column="1" Clicked="OnSearchSpell" Text="Search" />
         </Grid>
         <!--  Teaching scroll/scripture  -->
-        <controls:CheckboxControl 
-          IsVisible="{Binding SpellPicked}"
-          IsChecked="{Binding IsTeachingScroll}"
-          LabelText="Is a Teaching scroll" />
-          
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding BasicPerDay, Mode=TwoWay}"
-          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"
-        LabelText="Cast basic times per day" />
+        <controls:CheckboxControl IsVisible="{Binding SpellPicked}" IsChecked="{Binding IsTeachingScroll}" LabelText="Is a Teaching scroll" />
 
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding AdvancedPerDay, Mode=TwoWay}"
-          IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}"
-          LabelText="Cast advanced times per day" />
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BasicPerDay, Mode=TwoWay}" IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" LabelText="Cast basic times per day" />
 
-        <controls:CheckboxControl
-          IsChecked="{Binding InnateIsMantic}"
-          IsVisible="{Binding}"
-          LabelText="Innate (from above) is mantic" />
-        <controls:DictionarySlider
-          Grid.Column="1"
-          KeyFormat="Store of {0} Additional mana"
-          MaxCount="12"
-          MinCount="0"
-          Multiplier="4"
-          SelectedCount="{Binding AdditionalGenericMana, Mode=TwoWay}"
-          ValueFormat=""
-          VerticalOptions="Center" />
-        <Grid ColumnDefinitions="Auto,*">
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding AdvancedPerDay, Mode=TwoWay}" IsVisible="{Binding IsAdvanced, Converter={StaticResource BoolToVisibilityConverter}}" LabelText="Cast advanced times per day" />
+
+        <controls:CheckboxControl IsChecked="{Binding InnateIsMantic}" IsVisible="{Binding}" LabelText="Innate (from above) is mantic" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference AdditionalGenericManaSlider}}" ValueText="{Binding ValueText, Source={x:Reference AdditionalGenericManaSlider}}" />
+        <controls:DictionarySlider x:Name="AdditionalGenericManaSlider" Grid.Column="1" KeyFormat="Store of {0} Additional mana" MaxCount="12" MinCount="0" Multiplier="4" SelectedCount="{Binding AdditionalGenericMana, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center" />
+        <Grid ColumnDefinitions="0.3*,*">
           <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
-            <Label
-              FontAttributes="Bold"
-              Text="Select a colour"
-              TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-            <controls:DictionarySearchBar
-              x:Name="ManaColourPicker"
-              x:TypeArguments="enums:MagicColours"
-              AllowCustomOptions="False"
-              ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}, Exclude='Grey'}"
-              PlaceholderText="Select a colour"
-              SelectedValue="{Binding AdditionalManaColour, Mode=TwoWay}"
-              VerticalOptions="Center" />
+            <controls:DictionarySearchBar x:Name="ManaColourPicker" x:TypeArguments="enums:MagicColours" AllowCustomOptions="False" ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}, Exclude='Grey'}" PlaceholderText="Select a colour" SelectedValue="{Binding AdditionalManaColour, Mode=TwoWay}" VerticalOptions="Center" />
           </VerticalStackLayout>
-          <controls:DictionarySlider
-            Grid.Column="1"
-            KeyFormat="{}{1} Additional {0} mana store"
-            FormatArg1="{Binding SelectedValue, Source={x:Reference ManaColourPicker}}"
-            MaxCount="12"
-            MinCount="0"
-            Multiplier="3"
-            SelectedCount="{Binding AdditionalManaOfColour, Mode=TwoWay}"
-            ValueFormat=""
-            VerticalOptions="Center" />
+          <VerticalStackLayout Grid.Column="1" Spacing="4">
+            <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference AdditionalManaColourSlider}}" ValueText="{Binding ValueText, Source={x:Reference AdditionalManaColourSlider}}" />
+            <controls:DictionarySlider x:Name="AdditionalManaColourSlider" Grid.Column="1" KeyFormat="{}{1} Additional {0} mana store" FormatArg1="{Binding SelectedValue, Source={x:Reference ManaColourPicker}}" MaxCount="12" MinCount="0" Multiplier="3" SelectedCount="{Binding AdditionalManaOfColour, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center" />
+          </VerticalStackLayout>
         </Grid>
-        <controls:CheckboxControl
-          IsChecked="{Binding PowerStoreRegenerates}"
-          IsVisible="{Binding IsPowerStore}"
-          LabelText="Power store regenerates 1/15 minutes" />
-        <controls:CheckboxControl
-          IsChecked="{Binding AddBasic}"
-          IsVisible="{Binding ShowAddBasic}"
-          LabelText="Add basic spell to base list" />
-        <controls:CheckboxControl
-          IsChecked="{Binding AddAdvanced}"
-          IsVisible="{Binding ShowAddAdvanced}"
-          LabelText="Add advanced spell to base list" />
+        <controls:CheckboxControl IsChecked="{Binding PowerStoreRegenerates}" IsVisible="{Binding IsPowerStore}" LabelText="Power store regenerates 1/15 minutes" />
+        <controls:CheckboxControl IsChecked="{Binding AddBasic}" IsVisible="{Binding ShowAddBasic}" LabelText="Add basic spell to base list" />
+        <controls:CheckboxControl IsChecked="{Binding AddAdvanced}" IsVisible="{Binding ShowAddAdvanced}" LabelText="Add advanced spell to base list" />
 
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding TurnHandbookToSixthMantic, Mode=TwoWay}"
-          LabelText="Turn basic spell to 6th mantic" />
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding TurnHandbookToSixthMantic, Mode=TwoWay}" LabelText="Turn basic spell to 6th mantic" />
 
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding TurnAnyBasicMantic, Mode=TwoWay}"
-          LabelText="Turn basic spell mantic" />
-        
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding TurnAnyBasicMantic, Mode=TwoWay}" LabelText="Turn basic spell mantic" />
 
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding TurnAnyPublishedToSixthMantic, Mode=TwoWay}"
-          LabelText="Turn published spell to 6th mantic" />
 
-        <controls:PlusMinusControl
-          AllowMultiple="True"
-          Count="{Binding TurnAnyPublishedMantic, Mode=TwoWay}"
-          LabelText="Turn any published spell mantic" />
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding TurnAnyPublishedToSixthMantic, Mode=TwoWay}" LabelText="Turn published spell to 6th mantic" />
+
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding TurnAnyPublishedMantic, Mode=TwoWay}" LabelText="Turn any published spell mantic" />
 
 
         <!--  Results  -->
@@ -126,13 +56,6 @@
       </VerticalStackLayout>
     </ScrollView>
 
-    <controls:StickyFooterControl
-      Grid.Row="1"
-      BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
-      ButtonText="Return to Calculator"
-      RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}"
-      ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
-      ReturnCommandParameter="{x:Reference RootPage}"
-      Total="{Binding TotalWithBase}" />
+    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}" ButtonText="Return to Calculator" RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding TotalWithBase}" />
   </Grid>
 </cfg:ConfigPageBase>

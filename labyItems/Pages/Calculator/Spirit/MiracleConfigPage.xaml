@@ -23,12 +23,16 @@
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BasicPerDay, Mode=TwoWay}" IsVisible="{Binding ShowBasicPerDay}" LabelText="Cast basic miracle" />
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding AdvancedPerDay, Mode=TwoWay}" IsVisible="{Binding ShowAdvancedPerDay}" LabelText="Cast advanced miracle x/day" />
         <controls:CheckboxControl IsChecked="{Binding InnateIsMantic}" IsVisible="{Binding HasInnates, Converter={StaticResource BoolIsTrueConverter}}" LabelText="Innate is mantic" />
-        <controls:DictionarySlider KeyFormat="{}{0} Additional spirit store" MaxCount="12" MinCount="0" Multiplier="4" SelectedCount="{Binding GeneralSpiritStore, Mode=TwoWay}" VerticalOptions="Center" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference GeneralSpiritSlider}}" ValueText="{Binding ValueText, Source={x:Reference GeneralSpiritSlider}}" />
+        <controls:DictionarySlider x:Name="GeneralSpiritSlider" KeyFormat="{}{0} Additional spirit store" MaxCount="12" MinCount="0" Multiplier="4" SelectedCount="{Binding GeneralSpiritStore, Mode=TwoWay}" VerticalOptions="Center" />
         <Grid ColumnDefinitions="0.3*,*">
-          <controls:DictionarySearchBar x:Name="SphereSel" Grid.Column="0" x:TypeArguments="enums:SpiritualSpheres" AllowCustomOptions="False" PlaceholderText="Pick a weapon" ItemsSource="{controls:EnumDictionary Type={x:Type enums:SpiritualSpheres}}" SelectedText="{Binding AdditionalSphereSelected, Mode=TwoWay}"/>
+          <controls:DictionarySearchBar x:Name="SphereSel" Grid.Column="0" x:TypeArguments="enums:SpiritualSpheres" AllowCustomOptions="False" PlaceholderText="Pick a sphere" ItemsSource="{controls:EnumDictionary Type={x:Type enums:SpiritualSpheres}}" SelectedText="{Binding AdditionalSphereSelected, Mode=TwoWay}"/>
 
           <!-- <controls:SpherePicker x:Name="SphereSel" Grid.Column="0" SelectedValue="{Binding AdditionalSphereSelected, Mode=TwoWay}" VerticalOptions="Center" /> -->
-          <controls:DictionarySlider Grid.Column="1" FormatArg1="{Binding SelectedValue, Source={x:Reference SphereSel}}" KeyFormat="{}{0} Additional {1} spirits" MaxCount="12" MinCount="0" Multiplier="3" SelectedCount="{Binding SphereSpiritStore, Mode=TwoWay}" VerticalOptions="Center" />
+          <VerticalStackLayout Grid.Column="1" Spacing="4">
+            <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference SphereSpiritSlider}}" ValueText="{Binding ValueText, Source={x:Reference SphereSpiritSlider}}" />
+            <controls:DictionarySlider x:Name="SphereSpiritSlider" FormatArg1="{Binding SelectedValue, Source={x:Reference SphereSel}}" KeyFormat="{}{0} Additional {1} spirits" MaxCount="12" MinCount="0" Multiplier="3" SelectedCount="{Binding SphereSpiritStore, Mode=TwoWay}" VerticalOptions="Center" />
+          </VerticalStackLayout>
         </Grid>
 
 
