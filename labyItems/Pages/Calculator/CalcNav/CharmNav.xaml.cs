@@ -15,6 +15,7 @@ namespace labyItems.Pages.Calculator.CalcNav;
         public event Action<CalcContribution>? ContributionAdded;
         private readonly List<CalcContribution> _contributions = new();
         private bool _categoryLocked;
+        private readonly Dictionary<Type, object> _cachedPages = new();
         public static readonly BindableProperty TotalProperty =
         BindableProperty.Create(
             nameof(Total),
@@ -65,6 +66,18 @@ private async void OnReturn(object sender, EventArgs e) => OnReturnCommand();
         private async void OnCharmSpirit(object sender, EventArgs e)
             => await HandleCharmAsync<MiracleConfigPage, MiracleConfig>();
 
+private TPage GetOrCreatePage<TPage, TConfig>()
+    where TPage   : ConfigPageBase<TConfig>, new()
+    where TConfig : ConfigBase, new()
+{
+    if (_cachedPages.TryGetValue(typeof(TPage), out var existing) && existing is TPage page)
+        return page;
+
+    var created = new TPage();
+    _cachedPages[typeof(TPage)] = created;
+    return created;
+}
+
 private async Task HandleCharmAsync<TPage, TConfig>()
     where TPage   : ConfigPageBase<TConfig>, new()
     where TConfig : ConfigBase, new()
@@ -72,12 +85,13 @@ private async Task HandleCharmAsync<TPage, TConfig>()
     if (_categoryLocked) return;
     _categoryLocked = true;
 
-    var cfgPage = new TPage();
+    var cfgPage = GetOrCreatePage<TPage, TConfig>();
     cfgPage.CalculatorContext = BindingContext as IspCalculator;
     cfgPage.ApplyBaseTotal(GetBaseIsp());
+    var completion = cfgPage.Completion;
     await Navigation.PushAsync(cfgPage);
 
-    var cfg = await cfgPage.Completion;
+    var cfg = await completion;
     _categoryLocked = false;
     if (cfg is null) return;
 
@@ -86,16 +100,14 @@ private async Task HandleCharmAsync<TPage, TConfig>()
         .Replace("ConfigPage", string.Empty) 
         .Replace("Config", string.Empty);
 
+    var id = $"Charm/{sourceName}";
     var added = new CalcContribution(
-        Id: Guid.NewGuid().ToString(),
-        Source: $"Charm/{sourceName}",
+        Id: id,
+        Source: id,
         Result: cfg,
         OnRemove: cfgPage.ResetConfig);
 
-    _contributions.Add(added);
-    ContributionAdded?.Invoke(added);
-
-    UpdateTotal();
+    AddOrReplaceContribution(added);
 }
 
         public void UpdateTotal() => ComputeTotal();
@@ -122,4 +134,15 @@ private async Task HandleCharmAsync<TPage, TConfig>()
 
         private int GetBaseIsp() =>
             (BindingContext as IspCalculator)?.BaseTotal ?? 0;
+
+        private void AddOrReplaceContribution(CalcContribution contribution)
+        {
+            var existing = _contributions.FirstOrDefault(c => c.Id == contribution.Id);
+            if (existing != null)
+                _contributions.Remove(existing);
+
+            _contributions.Add(contribution);
+            ContributionAdded?.Invoke(contribution);
+            UpdateTotal();
+        }
     }
