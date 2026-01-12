@@ -192,10 +192,22 @@ public class ArmourLayerControl : ContentView
             StepSize = 1,
         };
 
-        int selectedPac =
-            currentPac.HasValue && allowedOptions.Any(o => o.Pac == currentPac.Value)
-                ? currentPac.Value
-                : allowedOptions.First().Pac;
+        int selectedPac;
+        if (currentPac.HasValue && allowedOptions.Any(o => o.Pac == currentPac.Value))
+            selectedPac = currentPac.Value;
+        else if (allowedOptions.Any(o => o.Pac == 0))
+            selectedPac = 0;
+        else
+            selectedPac = allowedOptions.First().Pac;
+
+        // If an existing explicit selection is no longer allowed, reset it to 'None' (0) and persist.
+        if (currentPac.HasValue && currentPac.Value != selectedPac && Layers != null)
+        {
+            _suppressUpdates = true;
+            Layers[index] = selectedPac;
+            _suppressUpdates = false;
+            Recalculate();
+        }
 
         slider.SelectedIndex = allowedOptions.FindIndex(o => o.Pac == selectedPac);
 
@@ -204,10 +216,23 @@ public class ArmourLayerControl : ContentView
             if (_suppressUpdates || Layers == null)
                 return;
 
-            int selected = allowedOptions[
-                Math.Clamp(args.NewIndex, 0, allowedOptions.Count - 1)
-            ].Pac;
+            // Guard against the row being removed/reduced concurrently.
+            if (index < 0 || index >= Layers.Count)
+                return;
+
+            // Recompute allowed options for current state to avoid stale lists.
+            var currentAllowed = GetAllowedOptions(index).ToList();
+            if (currentAllowed.Count == 0)
+                return;
+
+            int newIdx = Math.Clamp(args.NewIndex, 0, currentAllowed.Count - 1);
+            int selected = currentAllowed[newIdx].Pac;
+
+            // Persist change without triggering nested OnCollectionChanged handling.
+            _suppressUpdates = true;
             Layers[index] = selected;
+            _suppressUpdates = false;
+
             Recalculate();
             RebuildRows();
         };
@@ -239,6 +264,17 @@ public class ArmourLayerControl : ContentView
             RebuildRows();
         };
 
+        // Per-row add-button rules:
+        // - only enabled when overall layer count allows adding
+        // - only enabled on the last visible row (index == Layers.Count - 1)
+        // - the current row's category must be Medium (2) or Heavy (3)
+        // - third row (index >= 2) cannot add
+        var overallCanAdd = CanAddLayer();
+        bool isLastRow = Layers != null && index == Layers.Count - 1;
+        int thisPac = Layers != null && Layers.Count > index && Layers[index].HasValue ? Layers[index]!.Value : 0;
+        bool thisHasAddCategory = CategoryForPac(thisPac) >= 2; // medium or heavy
+        bool rowCanAdd = overallCanAdd && isLastRow && thisHasAddCategory && index < 2;
+
         var addButton = new Button
         {
             Text = "+",
@@ -246,9 +282,10 @@ public class ArmourLayerControl : ContentView
             WidthRequest = 40,
             HeightRequest = 40,
             Padding = new Thickness(0),
-            BackgroundColor = (Color?)Application.Current?.Resources["Primary"] ?? Colors.Purple,
+            IsEnabled = rowCanAdd,
+            BackgroundColor = rowCanAdd ? (Color?)Application.Current?.Resources["Primary"] ?? Colors.Purple : Colors.Gray,
             TextColor = Colors.White,
-            IsEnabled = CanAddLayer(),
+            Opacity = rowCanAdd ? 1.0 : 0.5,
         };
         addButton.Clicked += (_, __) =>
         {
@@ -271,24 +308,41 @@ public class ArmourLayerControl : ContentView
     private IEnumerable<ArmourOption> GetAllowedOptions(int forIndex)
     {
         if (Layers == null || forIndex == 0)
-            return Options.OrderBy(o => o.Pac);
+        {
+            // Base layer: allow any option except values already taken by other rows
+            var takenBase = Layers?.Where((v, idx) => idx != forIndex && v.HasValue).Select(v => v!.Value).ToHashSet() ?? new HashSet<int>();
+            var baseAllowed = Options.Where(o => !takenBase.Contains(o.Pac)).OrderBy(o => o.Pac).ToList();
+            if (!baseAllowed.Any(o => o.Pac == 0))
+                baseAllowed.Insert(0, Options.First(o => o.Pac == 0));
+            return baseAllowed;
+        }
 
-        var selectedOthers = Layers
-            .Where((v, idx) => idx != forIndex && v.HasValue)
-            .Select(v => v!.Value)
-            .ToList();
+        // Taken values in other rows (exclude this row)
+        var taken = Layers.Where((v, idx) => idx != forIndex && v.HasValue).Select(v => v!.Value).ToHashSet();
 
-        int minOther = selectedOthers.Count > 0 ? selectedOthers.Min() : int.MaxValue;
-        var taken = selectedOthers.ToHashSet();
+        // The previous layer (the row just below this one) determines the category ceiling.
+        int prevPac = (forIndex - 1) >= 0 && Layers.Count > (forIndex - 1) && Layers[forIndex - 1].HasValue ? Layers[forIndex - 1]!.Value : 0;
+        int prevCategory = CategoryForPac(prevPac);
 
+        // If previous is None (0) or undefined, only allow None to avoid nonsensical stacking.
+        if (prevCategory == 0)
+        {
+            return new List<ArmourOption> { Options.First(o => o.Pac == 0) };
+        }
+
+        // Allow only options that are strictly lighter category than the previous layer, and not already taken.
         var allowed = Options
             .Where(o => !taken.Contains(o.Pac))
-            .Where(o => minOther == int.MaxValue || o.Pac < minOther)
+            .Where(o => CategoryForPac(o.Pac) < prevCategory)
             .OrderBy(o => o.Pac)
             .ToList();
 
-        // If everything is filtered out, fall back to the smallest available option.
-        if (allowed.Count == 0)
+        // Ensure None (0) is always available as a choice
+        if (!allowed.Any(o => o.Pac == 0))
+            allowed.Insert(0, Options.First(o => o.Pac == 0));
+
+        // If nothing else, at least offer None
+        if (!allowed.Any())
             allowed.Add(Options.First(o => o.Pac == 0));
 
         return allowed;
@@ -357,10 +411,9 @@ public class ArmourLayerControl : ContentView
         for (int i = 1; i < selected.Count; i++)
         {
             int layer = selected[i];
-            int added =
-                layer > 6 ? 2
-                : layer > 3 && layer < 7 ? 1
-                : 0;
+            int added = (layer == 5 || layer == 6) ? 2
+                      : (layer == 3 || layer == 4) ? 1
+                      : 0;
             bonus += added;
             contributions.Add(added);
         }
@@ -390,10 +443,10 @@ public class ArmourLayerControl : ContentView
         };
 
         SummaryText =
-            $"{pacText} {(Layers.Count() > 1 ? $"(layered) {layeredPhrase}" : string.Empty)}.";
+            $"{pacText} {(Layers.Count() > 1 ? $" (layered) {layeredPhrase}" : string.Empty)}";
 
         var sb = new StringBuilder();
-        sb.AppendLine($"AC {TotalPac} (layered)");
+        sb.AppendLine($" AC {SummaryText}");
         for (int i = 0; i < names.Count; i++)
         {
             sb.AppendLine($"| {names[i]} ({contributions[i]})");
@@ -401,6 +454,13 @@ public class ArmourLayerControl : ContentView
 
         BreakdownText = sb.ToString().TrimEnd();
     }
+
+    private static int CategoryForPac(int pac) =>
+        pac == 0 ? 0
+        : (pac >= 3 && pac <= 4) ? 1
+        : (pac >= 5 && pac <= 6) ? 2
+        : (pac >= 7) ? 3
+        : 0;
 
     private static string GetShortName(int pac) =>
         Options.FirstOrDefault(o => o.Pac == pac)?.ShortLabel ?? $"PAC {pac}";

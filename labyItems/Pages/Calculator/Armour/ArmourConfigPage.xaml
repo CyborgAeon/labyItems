@@ -8,7 +8,6 @@
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="14">
         <controls:ChipGroup Grid.Column="0" Items="{Binding ArmourTypes}" SelectedItem="{Binding SelectedArmour, Mode=TwoWay}" VerticalOptions="Center"/>
-        <Label Text="Armour" />
         <controls:ArmourLayerControl Layers="{Binding ArmourLayers}" TotalPac="{Binding ACBase, Mode=OneWayToSource}" SummaryText="{Binding LayeredSummary, Mode=OneWayToSource}" BreakdownText="{Binding LayeredBreakdown, Mode=OneWayToSource}" />
         <Label FontAttributes="Bold" Text="Enhancement bonus (max 6 each)" />
         <controls:DictionarySlider x:Name="PacSlider" KeyFormat="PAC: {0}" MaxCount="6" MinCount="0" SelectedIndex="{Binding PAC, Mode=TwoWay}" SnapToStep="True" StepSize="1" ValueFormat="" />

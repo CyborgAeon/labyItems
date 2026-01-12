@@ -70,14 +70,14 @@ public class ArmourConfig : ConfigBase
     public string LayeredSummary
     {
         get => _layeredSummary;
-        set => SetProperty(ref _layeredSummary, value, affectsTotal: false);
+        set => SetProperty(ref _layeredSummary, value, affectsTotal: true);
     }
 
     private string _layeredBreakdown = string.Empty;
     public string LayeredBreakdown
     {
         get => _layeredBreakdown;
-        set => SetProperty(ref _layeredBreakdown, value, affectsTotal: false);
+        set => SetProperty(ref _layeredBreakdown, value, affectsTotal: true);
     }
 
     private string _breakdown = "";
@@ -116,7 +116,7 @@ public class ArmourConfig : ConfigBase
                 _ => 0
             };
             int armourCost = perAc * ACBase + flat;
-            AddCost($"{SelectedArmour} armour: {perAc} × AC({ACBase}) {(flat > 0 ? $"+ {flat} " : string.Empty)}= {armourCost}", armourCost, ref total, sb);
+            AddCost($"{SelectedArmour} armour: {perAc} × AC {ACBase} {(flat > 0 ? $"+ {flat} " : string.Empty)}= {armourCost}", armourCost, ref total, sb);
         }
 
         if (SelectedArmour == magicString && MagicalColoursCount > 0)
