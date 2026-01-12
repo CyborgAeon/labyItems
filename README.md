@@ -1,3 +1,6 @@
+## task board
+https://trello.com/b/UmbW9Vwl/laby-automation
+
 ## setup local: you'll need dotnet 10
 
 ```bash
