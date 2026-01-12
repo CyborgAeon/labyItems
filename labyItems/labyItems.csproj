@@ -53,6 +53,11 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 		<MauiAsset Include="Resources\Raw\**\*" />
 
+		<!-- In Release builds, exclude JSON raw assets (we ship a pre-built default.db instead) -->
+		<ItemGroup Condition="'$(Configuration)' == 'Release'">
+			<MauiAsset Remove="Resources\Raw\**\*.json" />
+		</ItemGroup>
+
 	</ItemGroup>
 
 	<ItemGroup>
@@ -60,6 +65,11 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+		<!-- SQLite access using sqlite-net-pcl -->
+		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+		<!-- FluentMigrator for schema migrations -->
+		<PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
+		<PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
 
 	</ItemGroup>
 

@@ -162,8 +162,7 @@ $RECYCLE.BIN/
 
 .DS_Store
 labyItems/.DS_Store
-labyItems/Resources/.DS_Store
-
+labyItems/Resources/.DS_StorelabyItems/Resources/Raw/default.db
 # ================================
 # End of .gitignore
 # ================================

@@ -42,6 +42,44 @@ jobs:
       - name: Install workload maccatalyst
         run: dotnet workload install maccatalyst
 
+      - name: Ensure jq is available
+        run: |
+          if ! command -v jq >/dev/null; then
+            brew install jq || true
+          fi
+
+      - name: Download seeded DB artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "Looking for latest successful seed-db.yml run on branch 'main'"
+          runs_api="https://api.github.com/repos/${{ github.repository }}/actions/workflows/seed-db.yml/runs?status=success&branch=main&per_page=5"
+          run_id=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "$runs_api" | jq -r '.workflow_runs[0].id // empty')
+          if [ -z "$run_id" ]; then
+            echo "No successful seed-db workflow run found; continuing without packaged DB."
+          else
+            echo "Found run id: $run_id. Checking artifacts..."
+            artifacts=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/runs/${run_id}/artifacts")
+            artifact_id=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name=="default.db") | .id // empty')
+            if [ -z "$artifact_id" ]; then
+              echo "No default.db artifact found in run $run_id; continuing without packaged DB."
+            else
+              echo "Found artifact id $artifact_id; downloading..."
+              curl -s -L -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${artifact_id}/zip" --output artifact.zip
+              mkdir -p artifact && unzip -q artifact.zip -d artifact
+              mkdir -p labyItems/Resources/Raw
+              dbfile=$(find artifact -type f -name 'default.db' | head -n1 || true)
+              if [ -z "$dbfile" ]; then
+                echo "default.db not found in artifact zip" >&2
+                exit 1
+              fi
+              cp "$dbfile" labyItems/Resources/Raw/default.db
+              echo "Copied default.db into labyItems/Resources/Raw/default.db"
+              rm -rf artifact artifact.zip
+            fi
+          fi
+
       - name: Restore
         run: dotnet restore labyItems/labyItems.csproj
 

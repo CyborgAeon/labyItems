@@ -1,0 +1,68 @@
+name: Build and publish seeded DB
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "tools/evocdbgen/**"
+      - ".github/workflows/seed-db.yml"
+  workflow_dispatch: {}
+
+jobs:
+  build-and-seed:
+    name: Build evocdbgen and publish DB
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build evocdbgen
+        run: dotnet build tools/evocdbgen -c Release --no-restore
+
+      - name: Run evocdbgen to generate DB
+        run: dotnet run --project tools/evocdbgen -c Release --no-build
+
+      - name: Ensure output exists
+        run: ls -la output || true
+
+      - name: Install sqlite3 for verification
+        run: sudo apt-get update && sudo apt-get install -y sqlite3
+
+      - name: Verify DB contents (counts)
+        run: |
+          if [ -f output/evocs.db ]; then
+            echo "DB exists, checking counts..."
+            sqlite3 output/evocs.db "SELECT 'evocs:' || count(*) FROM evocs; SELECT 'evolution:' || count(*) FROM evolution;"
+          else
+            echo "output/evocs.db not found" >&2
+            exit 1
+          fi
+
+      - name: Prepare artifact (copy to default.db)
+        run: mkdir -p output && cp output/evocs.db output/default.db
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: default.db
+          path: output/default.db
+
+      - name: Output artifact size
+        run: du -h output/default.db || true
