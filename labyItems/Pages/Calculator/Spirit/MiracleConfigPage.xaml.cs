@@ -25,6 +25,7 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
             TotalIsp = cfg.Total,
             AbilityType = "Miracle",
             AbilityName = string.IsNullOrWhiteSpace(cfg.Name) ? "Miracle" : cfg.Name,
+            Summary = cfg.Breakdown,
             Details = BuildDetails(cfg)
         };
 
@@ -52,6 +53,7 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
             AbilityType = "Miracle",
             AbilityName = string.IsNullOrWhiteSpace(cfg.Name) ? "Miracle" : cfg.Name,
             TotalIsp = cfg.Total,
+            Summary = cfg.Breakdown,
             Details = BuildDetails(cfg)
         };
     

@@ -3,6 +3,7 @@ using labyItems.Controls;
 using labyItems.Models;
 using labyItems.Pages.Calculator;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Configs;
 
@@ -63,7 +64,17 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-        Complete(null); // ensure awaiting callers resume even if user navigates back
+
+        // OnDisappearing fires when a child page is pushed (search, etc) as well as when this
+        // page is popped. Delay and check the navigation stack so we only complete on a true pop.
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Task.Delay(25);
+
+            var stillInStack = Navigation?.NavigationStack?.Contains(this) == true;
+            if (!stillInStack && !CompletionSet)
+                Complete(null);
+        });
     }
 
     protected override bool OnBackButtonPressed()

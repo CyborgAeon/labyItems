@@ -81,9 +81,13 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
 
         if (c.LtmValue > 0)
         {
-            var pts = c.LtmValue * 6;
+            var ltmDescription = c.LtmType switch{
+                SupernaturalTypes.Magic => "Magical ",
+                SupernaturalTypes.Spirit => "Spiritual ",
+            };
+            var pts = string.IsNullOrEmpty(c.LtmType) ? c.LtmValue * 12  : c.LtmValue * 6;
             s.Add(
-                $"Additional life to minus: +{pts} (5 per 6pts){(string.IsNullOrEmpty(c.LtmType) ? ", is " + c.LtmType + " ×2 cost" : string.Empty)}"
+                $"Additional {ltmDescription}live to minus: +{pts} ({(string.IsNullOrEmpty(c.LtmType) ? "10" : "5")} per 6pts)"
             );
         }
 

@@ -48,21 +48,24 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
 
         ArmourCategoryPage.BindingContext = this;
         CharmCategoryPage.BindingContext = this;
-        ConsumableCategoryPage.BindingContext = this;
+        // Consumable tab temporarily removed per request:
+        // ConsumableCategoryPage.BindingContext = this;
         LifeCategoryPage.BindingContext = this;
         WeaponCategoryPage.CalculatorContext = this;
 
         ArmourCategoryPage.ContributionAdded += AddContribution;
         WeaponCategoryPage.ContributionAdded += AddContribution;
         CharmCategoryPage.ContributionAdded += AddContribution;
-        ConsumableCategoryPage.ContributionAdded += AddContribution;
+        // Consumable tab temporarily removed per request:
+        // ConsumableCategoryPage.ContributionAdded += AddContribution;
         LifeCategoryPage.ContributionAdded += AddContribution;
 
         ReturnToFormCommand = new Command(async () => await ExecuteReturnAsync());
         ArmourCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
         CharmCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
         // WeaponCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
-        ConsumableCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
+        // Consumable tab temporarily removed per request:
+        // ConsumableCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
         LifeCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
 
         RemoveContributionCommand = new Command<string>(RemoveContributionById);

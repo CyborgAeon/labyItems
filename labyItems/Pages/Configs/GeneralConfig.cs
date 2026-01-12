@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Pages.Calculator;
-
+using labyItems.Models;
 // using labyItems.Pages.Configs; // Redundant: same namespace as this file
 
 namespace labyItems.Pages.Configs
@@ -288,7 +288,7 @@ namespace labyItems.Pages.Configs
 
         private int _repGroup;
         public string RepelAttractGroupLabel =>
-            $"{(string.IsNullOrEmpty(RepelAttractGroupName) ? "Repel/Attract" : RepelAttractGroup)} {(string.IsNullOrEmpty(RepelAttractGroupName) ? "one group" : RepelAttractGroupName)} {RepelAttractGroupCount} times per day.";
+            $"{(string.IsNullOrEmpty(RepelAttractGroup) ? "Repel/Attract" : RepelAttractGroup)} {(string.IsNullOrEmpty(RepelAttractGroupName) ? "one group" : RepelAttractGroupName)} {RepelAttractGroupCount} times per day.";
 
         public int RepelAttractGroupCount
         {
@@ -559,7 +559,7 @@ namespace labyItems.Pages.Configs
             get => _prayerSubject;
             set
             {
-                _prayerSubject = value;
+                SetProperty(ref _prayerSubject, value, true);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(PrayerTimesPerDayLabel));
             }
@@ -581,7 +581,7 @@ namespace labyItems.Pages.Configs
         public bool HasLtm => LtmValue > 0;
 
         public ObservableCollection<string> MagicSpiritOptions { get; } =
-            new() { "🪄 Magic", "⽰ Spirit" };
+            new() { SupernaturalTypes.Magic, SupernaturalTypes.Spirit };
 
 
         private string _ltmType;
@@ -597,6 +597,7 @@ namespace labyItems.Pages.Configs
         }
         public string LtmSummary =>
             $"{LtmValue} Additional {LtmType ?? string.Empty}{(LtmType == null ? string.Empty : " ")}Live-to-minus";
+        // ---------- Ki / Primal strike ----------
 public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
             new() { "🐉 Ki", "🧸 Primal" };
 
@@ -623,7 +624,7 @@ public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
         }
         private int _kiOrPrimalStrikePerDayCount;
         public string KiStrikeSummary =>
-            $"{KiOrPrimalStrike} strike ({KiOrPrimalStrikePerDayCount}/day)";
+            $"{(string.IsNullOrWhiteSpace(KiOrPrimalStrike) ? "🐉 Ki/🧸 Primal" : KiOrPrimalStrike)} strike ({KiOrPrimalStrikePerDayCount}/day)";
 
 
         public bool ReadLanguages
@@ -800,6 +801,9 @@ public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
             t += 20 * EmpowerWeaponManticCount;
             t += 15 * ScholarlyInterestPerDayCount;
             t += 8 * KnowledgeOfArcanePerDayCount;
+            t += 35 * GaseousFormPerDayCount;
+            t += 20 * PlaneShiftPerDayCount;
+            t += 20 * WalkThroughWallsPerDayCount;
             if (ReadLanguages)
                 t += 6;
             if (DisarmTrapsAsScout)

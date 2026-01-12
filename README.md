@@ -38,6 +38,53 @@ Single shot debug launch + logcat (add `-clp:ErrorsOnly` to keep noisy XamlC war
 PKG=bard.uk.labyitems; $HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c Debug -clp:ErrorsOnly && adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 && PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); echo "PID=$PID"; adb logcat --pid "$PID" -v time
 ```
 
+---
+
+### Debugging the seeded database (quick local workflow)
+
+If you want to reproduce and debug runtime DB queries locally (recommended):
+
+1. Build the seed DB locally (creates `output/default.db` by default):
+
+```bash
+$HOME/.dotnet/dotnet build tools/evocdbgen -c Release
+$HOME/.dotnet/dotnet run --project tools/evocdbgen -c Release -- labyItems/Resources/Raw/druids_way/evocs.json output/default.db
+```
+
+2. Optionally apply migrations (updates `seed_metadata.schema_version`):
+
+```bash
+$HOME/.dotnet/dotnet build tools/migrator -c Release
+$HOME/.dotnet/dotnet run --project tools/migrator -c Release -- output/default.db
+```
+
+3. To test against a running emulator/device, push the DB into a place the app can access and copy it into the app's files directory (debug builds are debuggable so `run-as` should work):
+
+```bash
+adb push output/default.db /data/local/tmp/default.db
+PKG=bard.uk.labyitems
+adb shell run-as $PKG cp /data/local/tmp/default.db files/default.db
+adb shell run-as $PKG ls -l files/default.db
+```
+
+4. Launch the app and capture logs that include our service debug lines (`[GeneralService]` / `[EarthPowerService]`):
+
+```bash
+PKG=bard.uk.labyitems
+$HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c Debug -clp:ErrorsOnly
+adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
+PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); echo "PID=$PID"
+# show only lines starting with [  e.g. our service debug prefixes ]
+adb logcat --pid "$PID" -v time --regex '^(\[GeneralService\]|\[EarthPowerService\]|\[.*)'
+```
+
+Notes:
+
+- The local conversion tool produces `output/default.db` (CI artifact uses the same filename). The app will accept `output/evocs.db` or `output/default.db` when running locally.
+- If a release build is used, the CI pipeline already copies the canonical `default.db` into `labyItems/Resources/Raw/default.db` during release preparation.
+
+---
+
 ## view debug logs
 
 `PKG=bard.uk.labyitems`

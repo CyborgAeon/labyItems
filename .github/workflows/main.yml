@@ -3,7 +3,7 @@ name: MAUI Android Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch: {}
 
 permissions:
@@ -24,16 +24,16 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: "10.0.x"
           global-json-file: global.json
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
-      - name: Install workload ios 
+      - name: Install workload ios
         run: dotnet workload install ios
       - name: Install workload Maui-android
         run: dotnet workload install maui-android
@@ -41,6 +41,87 @@ jobs:
         run: dotnet workload install maui-ios
       - name: Install workload maccatalyst
         run: dotnet workload install maccatalyst
+
+      - name: Ensure jq is available
+        run: |
+          if ! command -v jq >/dev/null; then
+            brew install jq || true
+          fi
+
+      - name: Trigger seed-db workflow and wait for completion
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "Release build detected (tag). Triggering seed-db workflow on 'main' and waiting for success..."
+          now=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          # Trigger a new run on main
+          curl -s -X POST -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/seed-db.yml/dispatches" \
+            -d '{"ref":"main"}'
+
+          echo "Triggered dispatch at $now; waiting for the run to appear and complete (timeout: 15m)..."
+
+          for i in $(seq 1 90); do
+            sleep 10
+            runs_json=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/workflows/seed-db.yml/runs?branch=main&event=workflow_dispatch&per_page=10")
+
+            run_id=$(echo "$runs_json" | jq -r --arg now "$now" '.workflow_runs[] | select(.created_at > $now) | .id' | head -n1 || true)
+            if [ -n "$run_id" ]; then
+              status=$(echo "$runs_json" | jq -r --arg id "$run_id" '.workflow_runs[] | select(.id == ($id|tonumber)) | .status')
+              conclusion=$(echo "$runs_json" | jq -r --arg id "$run_id" '.workflow_runs[] | select(.id == ($id|tonumber)) | .conclusion')
+              echo "Seed run $run_id status=$status conclusion=$conclusion"
+              if [ "$status" = "completed" ]; then
+                if [ "$conclusion" = "success" ]; then
+                  echo "Seed workflow completed successfully (run id: $run_id)."
+                  break
+                else
+                  echo "Seed workflow completed with conclusion: $conclusion" >&2
+                  exit 1
+                fi
+              fi
+            fi
+            if [ "$i" -eq 90 ]; then
+              echo "Timeout waiting for seed-db workflow to complete" >&2
+              exit 1
+            fi
+          done
+
+      - name: Download seeded DB artifact
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "Fetching latest successful seed-db run artifacts (should exist after the trigger)..."
+          runs_api="https://api.github.com/repos/${{ github.repository }}/actions/workflows/seed-db.yml/runs?status=success&branch=main&per_page=5"
+          run_id=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "$runs_api" | jq -r '.workflow_runs[0].id // empty')
+          if [ -z "$run_id" ]; then
+            echo "No successful seed-db workflow run found after triggering; aborting release." >&2
+            exit 1
+          fi
+
+          echo "Found run id: $run_id. Downloading artifact..."
+          artifacts=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/runs/${run_id}/artifacts")
+          artifact_id=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name=="default.db") | .id // empty')
+          if [ -z "$artifact_id" ]; then
+            echo "No default.db artifact found in run $run_id; aborting release." >&2
+            exit 1
+          fi
+
+          curl -s -L -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${artifact_id}/zip" --output artifact.zip
+          mkdir -p artifact && unzip -q artifact.zip -d artifact
+          dbfile=$(find artifact -type f -name 'default.db' | head -n1 || true)
+          if [ -z "$dbfile" ]; then
+            echo "default.db not found in artifact zip" >&2
+            exit 1
+          fi
+          mkdir -p labyItems/Resources/Raw
+          cp "$dbfile" labyItems/Resources/Raw/default.db
+          echo "Copied default.db into labyItems/Resources/Raw/default.db"
+          rm -rf artifact artifact.zip
 
       - name: Restore
         run: dotnet restore labyItems/labyItems.csproj

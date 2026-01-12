@@ -1,3 +1,6 @@
+using System.Collections.ObjectModel;
+using labyItems.Controls;
+using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Pages.Calculator;
 using labyItems.Services;
@@ -6,6 +9,22 @@ namespace labyItems.Pages.Configs;
 
 public class EvocationConfig : ConfigBase
 {
+    public ObservableCollection<ContributionRow> BreakdownItems { get; } = new();
+
+    private string _breakdown = string.Empty;
+    public string Breakdown
+    {
+        get => _breakdown;
+        private set
+        {
+            if (_breakdown != value)
+            {
+                _breakdown = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     public EvocationConfig()
     {
         PropertyChanged += (_, e) =>
@@ -20,7 +39,12 @@ public class EvocationConfig : ConfigBase
                 OnPropertyChanged(nameof(ShowBasicPerDay));
                 OnPropertyChanged(nameof(ShowAdvancedPerDay));
             }
+
+            if (e.PropertyName != nameof(Breakdown) && e.PropertyName != nameof(BreakdownItems))
+                RecalculateBreakdown();
         };
+
+        RecalculateBreakdown();
     }
 
     private int _drawOnEpPerDay;
@@ -86,5 +110,61 @@ public class EvocationConfig : ConfigBase
         EvocationName = picked.Name;
         Power = picked.Power;
         IsAdvanced = picked.IsAdvanced;
+    }
+
+    private void RecalculateBreakdown()
+    {
+        var builder = new BreakdownBuilder();
+        BreakdownItems.Clear();
+
+        int basicCost = 2 * Power * Math.Max(0, BasicPerDay);
+        if (basicCost > 0)
+            builder.Add($"Basic casts x{BasicPerDay} @2×Power {Power} = {basicCost}", basicCost);
+
+        int advancedCost = 3 * Power * Math.Max(0, AdvancedPerDay);
+        if (advancedCost > 0)
+            builder.Add($"Advanced casts x{AdvancedPerDay} @3×Power {Power} = {advancedCost}", advancedCost);
+
+        int baseTotal = basicCost + advancedCost;
+
+        if (AddBasic)
+        {
+            builder.Add("Add basic evocation to base list = 15", 15, includeWhenZero: true);
+            baseTotal += 15;
+        }
+        else if (AddAdvanced)
+        {
+            builder.Add("Add advanced evocation to base list = 18", 18, includeWhenZero: true);
+            baseTotal += 18;
+        }
+        else if (AddPrep)
+        {
+            int prep = baseTotal / 2;
+            builder.Add($"Add to base list with 30s prep (50%) = {prep}", prep, includeWhenZero: baseTotal > 0);
+            baseTotal += prep;
+        }
+
+        if (GeneralEpStore > 0)
+        {
+            int storeCost = 4 * GeneralEpStore;
+            builder.Add($"General EP store +{GeneralEpStore} @4 each = {storeCost}", storeCost);
+        }
+
+        if (FieldEpStore > 0)
+        {
+            int fieldCost = 3 * FieldEpStore;
+            builder.Add($"Field EP store {(SelectedField?.ToString() ?? "Field")} +{FieldEpStore} @3 each = {fieldCost}", fieldCost);
+        }
+
+        if (DrawOnEpPerDay > 0)
+        {
+            int drawCost = DrawOnEpPerDay * 16;
+            builder.Add($"Draw on EP per day x{DrawOnEpPerDay} @16 = {drawCost}", drawCost);
+        }
+
+        foreach (var row in builder.Rows)
+            BreakdownItems.Add(row);
+
+        Breakdown = builder.BuildSummary(Title, Total);
     }
 }

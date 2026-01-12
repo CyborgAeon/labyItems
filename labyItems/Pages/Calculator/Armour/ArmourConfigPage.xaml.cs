@@ -44,7 +44,9 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
         };
 
         var details = new Dictionary<string, object?>();
-        details["armourType"] = cfg.SelectedArmour.ToString();
+        details["armourType"] = string.IsNullOrWhiteSpace(cfg.SelectedArmour)
+            ? "None"
+            : cfg.SelectedArmour;
         if (cfg.ACBase > 0) details["AC"] = cfg.ACBase;
         if (!string.IsNullOrWhiteSpace(cfg.LayeredSummary))
             details["layeredSummary"] = cfg.LayeredSummary;
