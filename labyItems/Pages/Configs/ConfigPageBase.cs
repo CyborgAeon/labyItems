@@ -9,8 +9,16 @@ namespace labyItems.Pages.Configs;
 public abstract class ConfigPageBase<TConfig> : ContentPage
     where TConfig : ConfigBase, new()
 {
-    protected readonly TaskCompletionSource<CalcResult?> _tcs = new();
-    public Task<CalcResult?> Completion => _tcs.Task;
+    private TaskCompletionSource<CalcResult?> _tcs = new();
+    public Task<CalcResult?> Completion
+    {
+        get
+        {
+            if (_tcs.Task.IsCompleted)
+                _tcs = new TaskCompletionSource<CalcResult?>();
+            return _tcs.Task;
+        }
+    }
 
     public TConfig Config { get; private set; }
     public Command ReturnFromConfigCommand { get; set; }
@@ -64,7 +72,7 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
         return base.OnBackButtonPressed();
     }
 
-    private void Complete(CalcResult? result)
+    protected void Complete(CalcResult? result)
     {
         if (CompletionSet)
             return;

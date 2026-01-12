@@ -14,6 +14,8 @@ public partial class ArmourNav : ContentPage
 {
     private readonly List<CalcContribution> _contributions = new();
     private bool _categoryLocked;
+    private ShieldConfigPage? _shieldConfigPage;
+    private ArmourConfigPage? _armourConfigPage;
     public event Action<CalcContribution>? ContributionAdded;
 public static readonly BindableProperty TotalProperty =
         BindableProperty.Create(
@@ -51,12 +53,13 @@ public ICommand? ReturnToFormCommand
         if (_categoryLocked) return;
         _categoryLocked = true;
 
-        var cfgPage = new ShieldConfigPage();
+        var cfgPage = _shieldConfigPage ??= new ShieldConfigPage();
         cfgPage.CalculatorContext = BindingContext as IspCalculator;
         cfgPage.ApplyBaseTotal(GetBaseIsp());
+        var completion = cfgPage.Completion;
         await Navigation.PushAsync(cfgPage);
 
-        var cfg = await cfgPage.Completion;
+        var cfg = await completion;
         _categoryLocked = false;
         if (cfg is null) return;
 
@@ -77,12 +80,13 @@ public ICommand? ReturnToFormCommand
         if (_categoryLocked) return;
         _categoryLocked = true;
 
-        var cfgPage = new ArmourConfigPage();
+        var cfgPage = _armourConfigPage ??= new ArmourConfigPage();
         cfgPage.CalculatorContext = BindingContext as IspCalculator;
         cfgPage.ApplyBaseTotal(GetBaseIsp());
+        var completion = cfgPage.Completion;
         await Navigation.PushAsync(cfgPage);
 
-        var cfg = await cfgPage.Completion;
+        var cfg = await completion;
         _categoryLocked = false;
         if (cfg is null) return;
 

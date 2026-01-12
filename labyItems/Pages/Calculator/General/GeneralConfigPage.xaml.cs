@@ -129,7 +129,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
 
         if (Navigation?.NavigationStack?.Count > 1)
         {
-            _tcs.TrySetResult(result);
+            Complete(result);
             await Navigation.PopAsync();
             return;
         }
@@ -140,7 +140,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
             return;
         }
 
-        _tcs.TrySetResult(result);
+        Complete(result);
         await Navigation.PopAsync();
     }
 
@@ -148,7 +148,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
     {
         var page = new GeneralConfigPage();
         await nav.PushAsync(page);
-        var res = await page._tcs.Task;
+        var res = await page.Completion;
         return res;
     }
 
@@ -156,14 +156,14 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
     {
         if (BindingContext is not GeneralConfig cfg)
         {
-            _tcs.TrySetResult(null);
+            Complete(null);
             Navigation.PopAsync();
             return;
         }
 
         var result = BuildResult(cfg);
 
-        _tcs.TrySetResult(result);
+        Complete(result);
         Navigation.PopAsync();
     }
 

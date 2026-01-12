@@ -19,7 +19,7 @@ public partial class ConsumableConfigPage : ConfigPageBase<ConsumableConfig>
 
             if (Navigation?.NavigationStack?.Count > 1)
             {
-                _tcs.TrySetResult(result);
+                Complete(result);
                 await Navigation.PopAsync();
                 return;
             }
@@ -30,7 +30,7 @@ public partial class ConsumableConfigPage : ConfigPageBase<ConsumableConfig>
                 return;
             }
 
-            _tcs.TrySetResult(result);
+            Complete(result);
             await Navigation.PopAsync();
         }
 
@@ -108,7 +108,7 @@ public partial class ConsumableConfigPage : ConfigPageBase<ConsumableConfig>
     {
         var cfg = (ConsumableConfig)BindingContext;
         var res = BuildResult(cfg);
-        _tcs.TrySetResult(res);
+        Complete(res);
         await Navigation.PopAsync();
     }
 }
