@@ -103,6 +103,15 @@ CREATE INDEX idx_evolution_idx_lower ON evolution(idx_lower);
 CREATE TABLE evolution_ngrams(token TEXT, evolution_id TEXT);
 CREATE INDEX idx_evolution_ngrams_token ON evolution_ngrams(token);
 CREATE INDEX idx_evolution_ngrams_evolution_id ON evolution_ngrams(evolution_id);
+
+-- Seed metadata for CI and runtime to validate seed provenance
+CREATE TABLE seed_metadata (
+  seed_version TEXT,
+  schema_version INTEGER,
+  build_id TEXT,
+  checksum TEXT,
+  created_at TEXT
+);
 ";
             cmd.ExecuteNonQuery();
         }
@@ -250,7 +259,36 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
         tx.Commit();
         conn.Close();
 
-        Console.WriteLine("[evocdbgen] Done.");
+        // Compute SHA256 checksum of the produced DB and insert seed metadata row
+        var buildId = Environment.GetEnvironmentVariable("GITHUB_RUN_ID") ?? Environment.GetEnvironmentVariable("SEED_BUILD_ID") ?? Guid.NewGuid().ToString();
+        var seedVersion = Environment.GetEnvironmentVariable("SEED_VERSION") ?? DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+        var schemaVersion = 1; // base schema applied by this generator; migrations may bump this later
+
+        string checksum;
+        using (var sha = SHA256.Create())
+        using (var fs = File.OpenRead(output))
+        {
+            var hash = sha.ComputeHash(fs);
+            checksum = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+        }
+
+        using (var conn2 = new SqliteConnection($"Data Source={output}"))
+        {
+            conn2.Open();
+            using (var cmd = conn2.CreateCommand())
+            {
+                cmd.CommandText = @"INSERT INTO seed_metadata (seed_version, schema_version, build_id, checksum, created_at) VALUES (@seed_version, @schema_version, @build_id, @checksum, @created_at);";
+                cmd.Parameters.AddWithValue("@seed_version", seedVersion);
+                cmd.Parameters.AddWithValue("@schema_version", schemaVersion);
+                cmd.Parameters.AddWithValue("@build_id", buildId);
+                cmd.Parameters.AddWithValue("@checksum", checksum);
+                cmd.Parameters.AddWithValue("@created_at", DateTime.UtcNow.ToString("o"));
+                cmd.ExecuteNonQuery();
+            }
+            conn2.Close();
+        }
+
+        Console.WriteLine($"[evocdbgen] Done. seed_version={seedVersion} build_id={buildId} checksum={checksum}");
         return 0;
     }
 

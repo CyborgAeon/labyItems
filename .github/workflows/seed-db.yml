@@ -45,15 +45,26 @@ jobs:
       - name: Install sqlite3 for verification
         run: sudo apt-get update && sudo apt-get install -y sqlite3
 
-      - name: Verify DB contents (counts)
+      - name: Verify DB contents (counts + seed metadata)
         run: |
           if [ -f output/evocs.db ]; then
             echo "DB exists, checking counts..."
-            sqlite3 output/evocs.db "SELECT 'evocs:' || count(*) FROM evocs; SELECT 'evolution:' || count(*) FROM evolution;"
+            sqlite3 output/evocs.db "SELECT 'evocs:' || count(*) FROM evocs; SELECT 'evolution:' || count(*) FROM evolution; SELECT 'ngrams_evoc:' || count(*) FROM evoc_ngrams; SELECT 'seed_rows:' || count(*) FROM seed_metadata;"
+            # Validate basic sanity
+            evoc_count=$(sqlite3 output/evocs.db "SELECT count(*) FROM evocs;")
+            if [ "$evoc_count" -le 0 ]; then
+              echo "evocs table is empty; aborting." >&2
+              exit 1
+            fi
           else
             echo "output/evocs.db not found" >&2
             exit 1
           fi
+
+      - name: Compute and save checksum
+        run: |
+          sha256sum output/evocs.db | awk '{print $1}' > output/default.db.sha256
+          echo "checksum: $(cat output/default.db.sha256)"
 
       - name: Prepare artifact (copy to default.db)
         run: mkdir -p output && cp output/evocs.db output/default.db
@@ -62,7 +73,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: default.db
-          path: output/default.db
+          path: |
+            output/default.db
+            output/default.db.sha256
 
       - name: Output artifact size
         run: du -h output/default.db || true
