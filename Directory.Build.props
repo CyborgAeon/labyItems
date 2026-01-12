@@ -9,7 +9,7 @@
   <!-- Only enable signing when credentials are present (default: Debug builds unsigned) -->
   <PropertyGroup>
     <EnableAndroidSigning Condition="'$(EnableAndroidSigning)'=='' and '$(Configuration)'=='Release' and '$(AndroidSigningKeyPass)' != '' and '$(AndroidSigningStorePass)' != ''">true</EnableAndroidSigning>
-    <EnableAndroidSigning Condition="'$(EnableAndroidSigning)'==''">false</EnableAndroidSigning>
+    <!-- <EnableAndroidSigning Condition="'$(EnableAndroidSigning)'==''">false</EnableAndroidSigning> -->
   </PropertyGroup>
 
   <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
