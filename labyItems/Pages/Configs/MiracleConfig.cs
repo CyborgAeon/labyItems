@@ -1,9 +1,9 @@
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
+using System.Collections.ObjectModel;
 using labyItems.Models.DTOs;
 using labyItems.Models.Enums;
+using labyItems.Controls;
+using labyItems.Helpers;
 
 namespace labyItems.Pages.Configs;
 
@@ -19,7 +19,12 @@ public class MiracleConfig : ConfigBase
                 OnPropertyChanged(nameof(ShowBasicPerDay));
                 OnPropertyChanged(nameof(ShowAdvancedPerDay));
             }
+
+            if (e.PropertyName != nameof(Breakdown) && e.PropertyName != nameof(BreakdownItems))
+                RecalculateBreakdown();
         };
+
+        RecalculateBreakdown();
     }
 
     private SpiritualSpheres? _additionalSphereSelected = null;
@@ -153,6 +158,22 @@ public class MiracleConfig : ConfigBase
         set => SetProperty(ref _trueBeliever, Math.Max(0, value), affectsTotal: true);
     }
 
+    public ObservableCollection<ContributionRow> BreakdownItems { get; } = new();
+
+    private string _breakdown = string.Empty;
+    public string Breakdown
+    {
+        get => _breakdown;
+        private set
+        {
+            if (_breakdown != value)
+            {
+                _breakdown = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
     protected override int ExtraTotal()
     {
         int extra = 0;
@@ -208,5 +229,113 @@ public class MiracleConfig : ConfigBase
         OnPropertyChanged(nameof(HasSelection));
         OnPropertyChanged(nameof(ShowBasicPerDay));
         OnPropertyChanged(nameof(ShowAdvancedPerDay));
+    }
+
+    private void RecalculateBreakdown()
+    {
+        var builder = new BreakdownBuilder();
+        BreakdownItems.Clear();
+
+        int basicCost = 2 * Power * Math.Max(0, BasicPerDay);
+        if (basicCost > 0)
+            builder.Add($"Basic miracles x{BasicPerDay} @2×Power {Power} = {basicCost}", basicCost);
+
+        int advancedCost = 3 * Power * Math.Max(0, AdvancedPerDay);
+        if (advancedCost > 0)
+            builder.Add($"Advanced miracles x{AdvancedPerDay} @3×Power {Power} = {advancedCost}", advancedCost);
+
+        int innateCost = basicCost + advancedCost;
+
+        if (AddBasicToList)
+        {
+            builder.Add("Add basic miracle to base list = 15", 15, includeWhenZero: true);
+            // BaseTotal accounts for this once; extra handles conditional add later.
+        }
+        else if (AddAdvancedToList)
+        {
+            builder.Add("Add advanced miracle to base list = 18", 18, includeWhenZero: true);
+        }
+        else if (AddWithPrep30)
+        {
+            int prepBase = innateCost / 2;
+            builder.Add($"Add miracle with 30s prep (50%) = {prepBase}", prepBase, includeWhenZero: innateCost > 0);
+        }
+
+        if (InnateIsMantic && innateCost > 0)
+            builder.Add($"Innates are mantic ×4 = {innateCost * 3}", innateCost * 3);
+
+        if (GeneralSpiritStore > 0)
+        {
+            int generalCost = 4 * GeneralSpiritStore;
+            builder.Add($"General spirit store +{GeneralSpiritStore} @4 each = {generalCost}", generalCost);
+        }
+
+        if (SphereSpiritStore > 0)
+        {
+            var sphereLabel = AdditionalSphereSelected?.ToString() ?? "Sphere";
+            int sphereCost = 3 * SphereSpiritStore;
+            builder.Add($"{sphereLabel} spirit store +{SphereSpiritStore} @3 each = {sphereCost}", sphereCost);
+        }
+
+        if (AnySpiritStore && SpiritStoreRegenerates)
+            builder.Add("Spirit store regenerates = 25", 25);
+
+        bool isAdv = IsAdvanced == true;
+        bool isBasic = IsAdvanced == false;
+
+        if (isBasic && AddBasicToList)
+            builder.Add("Add basic miracle to list (basic) = 15", 15, includeWhenZero: true);
+
+        if (isAdv && AddAdvancedToList)
+            builder.Add("Add advanced miracle to list (advanced) = 18", 18, includeWhenZero: true);
+
+        if (AddWithPrep30)
+        {
+            int prepCost = (int)Math.Round(Power / 2.0, MidpointRounding.AwayFromZero);
+            builder.Add($"Add to list with 30s prep (Power/2) = {prepCost}", prepCost, includeWhenZero: Power > 0);
+        }
+
+        if (TurnBasicUpTo5thMantic > 0)
+        {
+            int cost = 40 * TurnBasicUpTo5thMantic;
+            builder.Add($"Turn basic to 5th mantic x{TurnBasicUpTo5thMantic} = {cost}", cost);
+        }
+
+        if (TurnBasicMantic > 0)
+        {
+            int cost = 50 * TurnBasicMantic;
+            builder.Add($"Turn basic miracle mantic x{TurnBasicMantic} = {cost}", cost);
+        }
+
+        if (TurnAdvancedUpTo6thMantic > 0)
+        {
+            int cost = 60 * TurnAdvancedUpTo6thMantic;
+            builder.Add($"Turn advanced to 6th mantic x{TurnAdvancedUpTo6thMantic} = {cost}", cost);
+        }
+
+        if (TurnAdvancedAbove6thMantic > 0)
+        {
+            int cost = 80 * TurnAdvancedAbove6thMantic;
+            builder.Add($"Turn advanced above 6th mantic x{TurnAdvancedAbove6thMantic} = {cost}", cost);
+        }
+
+        if (IsTeachingScroll)
+        {
+            int teachingCost = 3 * Power;
+            builder.Add($"Teaching scripture (3×Power) = {teachingCost}", teachingCost);
+        }
+
+        if (TrueBeliever > 0)
+        {
+            int cost = 16 * TrueBeliever;
+            builder.Add($"True Believer x{TrueBeliever} @16 = {cost}", cost);
+        }
+
+        foreach (var row in builder.Rows)
+            BreakdownItems.Add(row);
+
+        var headerBase = string.IsNullOrWhiteSpace(Name) ? "Miracle" : Name;
+        var header = Power > 0 ? $"{headerBase} ({Power} Power)" : headerBase;
+        Breakdown = builder.BuildSummary(header, Total);
     }
 }

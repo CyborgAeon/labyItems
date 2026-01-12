@@ -77,6 +77,7 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
             AbilityType = "Spell",
             AbilityName = name,
             TotalIsp = cfg.Total,
+            Summary = cfg.Breakdown,
             Details = details
         };
     }

@@ -158,17 +158,6 @@ public class ArmourLayerControl : ContentView
 
     private View CreateRow(int index, int? currentPac)
     {
-        var grid = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = GridLength.Star },
-                new ColumnDefinition { Width = GridLength.Auto },
-                new ColumnDefinition { Width = GridLength.Auto },
-            },
-            ColumnSpacing = 4,
-        };
-
         var allowedOptions = GetAllowedOptions(index).ToList();
         var labels = allowedOptions
             .Select(o =>
@@ -191,6 +180,16 @@ public class ArmourLayerControl : ContentView
             SnapToStep = true,
             StepSize = 1,
         };
+
+        var header = new DictionarySliderHeader();
+        header.SetBinding(
+            DictionarySliderHeader.KeyTextProperty,
+            new Binding(nameof(DictionarySlider.KeyText), source: slider)
+        );
+        header.SetBinding(
+            DictionarySliderHeader.ValueTextProperty,
+            new Binding(nameof(DictionarySlider.ValueText), source: slider)
+        );
 
         int selectedPac;
         if (currentPac.HasValue && allowedOptions.Any(o => o.Pac == currentPac.Value))
@@ -298,11 +297,26 @@ public class ArmourLayerControl : ContentView
             Recalculate();
         };
 
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Star },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
+            ColumnSpacing = 4,
+        };
+
         grid.Add(slider, 0, 0);
         grid.Add(deleteButton, 1, 0);
         grid.Add(addButton, 2, 0);
 
-        return grid;
+        var rowLayout = new VerticalStackLayout { Spacing = 4 };
+        rowLayout.Add(header);
+        rowLayout.Add(grid);
+
+        return rowLayout;
     }
 
     private IEnumerable<ArmourOption> GetAllowedOptions(int forIndex)

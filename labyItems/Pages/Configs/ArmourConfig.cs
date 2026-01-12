@@ -28,17 +28,22 @@ public class ArmourConfig : ConfigBase
 
     public ObservableCollection<string> ArmourTypes { get; } =
         new(SupernaturalTypes.All);
-    private string _selectedArmour;
+    private string _selectedArmour = string.Empty;
     public string SelectedArmour
     {
         get => _selectedArmour;
         set
         {
-            SetProperty(ref _selectedArmour, value, true);
+            var normalized = value ?? string.Empty;
+            SetProperty(ref _selectedArmour, normalized, true);
             OnPropertyChanged();
             OnPropertyChanged(nameof(SelectedArmour));
         }
     }
+    private bool HasSelectedArmour =>
+        SelectedArmour == SupernaturalTypes.Magic
+        || SelectedArmour == SupernaturalTypes.Spirit
+        || SelectedArmour == SupernaturalTypes.Mantic;
     private int _magicalColoursCount;
     public int MagicalColoursCount
     {
@@ -97,7 +102,7 @@ public class ArmourConfig : ConfigBase
             }
         }
 
-        if (SelectedArmour != null && ACBase > 0)
+        if (HasSelectedArmour && ACBase > 0)
         {
             int perAc = SelectedArmour switch
             {

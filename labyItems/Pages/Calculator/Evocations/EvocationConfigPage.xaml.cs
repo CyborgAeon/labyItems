@@ -31,6 +31,7 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
             AbilityType = "Evocation",
             AbilityName = name,
             TotalIsp = cfg.Total,
+            Summary = cfg.Breakdown,
             Details = details
         };
     }

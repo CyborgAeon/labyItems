@@ -7,7 +7,8 @@
     <nav:ArmourNav x:Name="ArmourCategoryPage" Title="Armour" />
     <local:WeaponConfigPage x:Name="WeaponCategoryPage" Title="Weapon" />
     <nav:CharmNav x:Name="CharmCategoryPage" Title="Charm" />
-    <nav:ConsumNav x:Name="ConsumableCategoryPage" Title="1-use" />
+    <!-- Commented out per request: Remove 1-use/consumable tab for now
+    <nav:ConsumNav x:Name="ConsumableCategoryPage" Title="1-use" /> -->
     <nav:LifeConfigPage x:Name="LifeCategoryPage" Title="Life" />
     <TabbedPage.ToolbarItems>
         <ToolbarItem Text="Return to Form" Clicked="OnReturn" />

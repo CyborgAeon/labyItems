@@ -34,7 +34,7 @@
           </VerticalStackLayout>
           <VerticalStackLayout Grid.Column="1" Spacing="4">
             <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference AdditionalManaColourSlider}}" ValueText="{Binding ValueText, Source={x:Reference AdditionalManaColourSlider}}" />
-            <controls:DictionarySlider x:Name="AdditionalManaColourSlider" Grid.Column="1" KeyFormat="{}{1} Additional {0} mana store" FormatArg1="{Binding SelectedValue, Source={x:Reference ManaColourPicker}}" MaxCount="12" MinCount="0" Multiplier="3" SelectedCount="{Binding AdditionalManaOfColour, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center" />
+            <controls:DictionarySlider x:Name="AdditionalManaColourSlider" Grid.Column="1" KeyFormat="Additional {0} {1} mana store" FormatArg1="{Binding SelectedValue, Source={x:Reference ManaColourPicker}}" MaxCount="12" MinCount="0" Multiplier="3" SelectedCount="{Binding AdditionalManaOfColour, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center" />
           </VerticalStackLayout>
         </Grid>
         <controls:CheckboxControl IsChecked="{Binding PowerStoreRegenerates}" IsVisible="{Binding IsPowerStore}" LabelText="Power store regenerates 1/15 minutes" />
