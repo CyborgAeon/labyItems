@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Pages.Calculator;
-
+using labyItems.Models;
 // using labyItems.Pages.Configs; // Redundant: same namespace as this file
 
 namespace labyItems.Pages.Configs
@@ -581,7 +581,7 @@ namespace labyItems.Pages.Configs
         public bool HasLtm => LtmValue > 0;
 
         public ObservableCollection<string> MagicSpiritOptions { get; } =
-            new() { "🪄 Magic", "⽰ Spirit" };
+            new() { SupernaturalTypes.Magic, SupernaturalTypes.Spirit };
 
 
         private string _ltmType;
@@ -597,6 +597,7 @@ namespace labyItems.Pages.Configs
         }
         public string LtmSummary =>
             $"{LtmValue} Additional {LtmType ?? string.Empty}{(LtmType == null ? string.Empty : " ")}Live-to-minus";
+        // ---------- Ki / Primal strike ----------
 public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
             new() { "🐉 Ki", "🧸 Primal" };
 
