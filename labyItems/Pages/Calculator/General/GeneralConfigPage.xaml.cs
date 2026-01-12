@@ -16,17 +16,6 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
     public GeneralConfigPage()
     {
         InitializeComponent();
-        // BindingContext = new GeneralConfig();
-        // ReturnFromConfigCommand = new Command(async () =>
-        // {
-        //     if (BindingContext is not GeneralConfig cfg)
-        //         return;
-        //     // cfg.LtmType = PowerbaseEnum.Physical;
-        //     var result = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
-
-        //     _tcs.TrySetResult(result);
-        //     await StickyFooterControl.DefaultNavigateAsync(this);
-        // });
     }
 
     private string BuildNotes(GeneralConfig c)
@@ -36,7 +25,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         AddResistanceLevels(s, c);
         s.AddToSummaryIf(
             c.CastingLevelsCount,
-            $"+{c.CastingLevelsCount} Casting levels {c.CastingLevelsColour}"
+            $"+{c.CastingLevelsCount} Casting levels {(c.CastingLevelsColour?.ToString() ?? "None")}"
         );
 
         s.AddToSummaryIf(c.StrengthEnchantCost, c.StrengthEnchantDescription);
@@ -140,7 +129,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
 
         if (Navigation?.NavigationStack?.Count > 1)
         {
-            _tcs.TrySetResult(result);
+            Complete(result);
             await Navigation.PopAsync();
             return;
         }
@@ -151,7 +140,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
             return;
         }
 
-        _tcs.TrySetResult(result);
+        Complete(result);
         await Navigation.PopAsync();
     }
 
@@ -159,7 +148,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
     {
         var page = new GeneralConfigPage();
         await nav.PushAsync(page);
-        var res = await page._tcs.Task;
+        var res = await page.Completion;
         return res;
     }
 
@@ -167,14 +156,14 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
     {
         if (BindingContext is not GeneralConfig cfg)
         {
-            _tcs.TrySetResult(null);
+            Complete(null);
             Navigation.PopAsync();
             return;
         }
 
         var result = BuildResult(cfg);
 
-        _tcs.TrySetResult(result);
+        Complete(result);
         Navigation.PopAsync();
     }
 

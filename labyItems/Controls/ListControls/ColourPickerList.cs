@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -10,6 +11,11 @@ namespace labyItems.Controls;
 public class ListColourPickerControl : ContentView
 {
     private readonly VerticalStackLayout _rowsHost;
+    private static readonly IDictionary<string, MagicColours> ColourOptions =
+        Enum.GetValues(typeof(MagicColours))
+            .Cast<MagicColours>()
+            .Where(c => c != MagicColours.Grey)
+            .ToDictionary(EnumDisplayFormatter.Format, c => c);
 
     public ListColourPickerControl()
     {
@@ -206,12 +212,19 @@ public class ListColourPickerControl : ContentView
             ColumnSpacing = 4,
         };
 
-        // Your existing picker for Colour
-        var picker = new MagicColourPicker { HorizontalOptions = LayoutOptions.FillAndExpand };
+        // Enum search picker for colour selection (no custom entries)
+        var picker = new DictionarySearchBar<MagicColours>
+        {
+            HorizontalOptions = LayoutOptions.FillAndExpand,
+            AllowCustomOptions = false,
+            ItemsSource = ColourOptions,
+            PlaceholderText = "Select a colour",
+        };
+
         picker.SelectedValue = initialValue == MagicColours.Grey ? null : initialValue;
         picker.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName == nameof(MagicColourPicker.SelectedValue))
+            if (e.PropertyName == nameof(DictionarySearchBar<MagicColours>.SelectedValue))
             {
                 if (Items == null || index < 0 || index >= Items.Count)
                     return;

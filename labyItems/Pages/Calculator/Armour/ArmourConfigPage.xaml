@@ -1,72 +1,31 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<cfg:ConfigPageBase
-  x:Class="labyItems.Pages.Calculator.ArmourConfigPage"
+<cfg:ConfigPageBase x:Class="labyItems.Pages.Calculator.ArmourConfigPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
-  xmlns:controls="clr-namespace:labyItems.Controls"
-  x:Name="RootPage"
-  Title="Armour Config"
-  x:TypeArguments="cfg:ArmourConfig">
+  xmlns:controls="clr-namespace:labyItems.Controls" x:Name="RootPage" Title="Armour Config" x:TypeArguments="cfg:ArmourConfig">
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="14">
-        <Label Text="Armour" />
-        <controls:ArmourLayerControl
-          Layers="{Binding ArmourLayers}"
-          TotalPac="{Binding ACBase, Mode=OneWayToSource}"
-          SummaryText="{Binding LayeredSummary, Mode=OneWayToSource}"
-          BreakdownText="{Binding LayeredBreakdown, Mode=OneWayToSource}" />
-        <controls:ArmourPicker LabelText="Armour type" SelectedValue="{Binding SelectedArmour, Mode=TwoWay}" />
+        <controls:ChipGroup Grid.Column="0" Items="{Binding ArmourTypes}" SelectedItem="{Binding SelectedArmour, Mode=TwoWay}" VerticalOptions="Center"/>
+        <controls:ArmourLayerControl Layers="{Binding ArmourLayers}" TotalPac="{Binding ACBase, Mode=OneWayToSource}" SummaryText="{Binding LayeredSummary, Mode=OneWayToSource}" BreakdownText="{Binding LayeredBreakdown, Mode=OneWayToSource}" />
         <Label FontAttributes="Bold" Text="Enhancement bonus (max 6 each)" />
-        <controls:DictionarySlider
-          x:Name="PacSlider"
-          KeyFormat="PAC: {0}"
-          MaxCount="6"
-          MinCount="0"
-          SelectedIndex="{Binding PAC, Mode=TwoWay}"
-          SnapToStep="True"
-          StepSize="1"
-          ValueFormat="" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference PacSlider}}" ValueText="{Binding ValueText, Source={x:Reference PacSlider}}" />
+        <controls:DictionarySlider x:Name="PacSlider" KeyFormat="PAC: {0}" MaxCount="6" MinCount="0" SelectedIndex="{Binding PAC, Mode=TwoWay}" SnapToStep="True" StepSize="1" ValueFormat="" />
 
-        <controls:DictionarySlider
-          x:Name="DacSlider"
-          KeyFormat="DAC: {0}"
-          MaxCount="6"
-          MinCount="0"
-          SelectedIndex="{Binding DAC, Mode=TwoWay}"
-          SnapToStep="True"
-          StepSize="1"
-          ValueFormat="" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference DacSlider}}" ValueText="{Binding ValueText, Source={x:Reference DacSlider}}" />
+        <controls:DictionarySlider x:Name="DacSlider" KeyFormat="DAC: {0}" MaxCount="6" MinCount="0" SelectedIndex="{Binding DAC, Mode=TwoWay}" SnapToStep="True" StepSize="1" ValueFormat="" />
 
-        <controls:DictionarySlider
-          x:Name="MacSlider"
-          KeyFormat="MAC: {0}"
-          MaxCount="6"
-          MinCount="0"
-          SelectedIndex="{Binding MAC, Mode=TwoWay}"
-          SnapToStep="True"
-          StepSize="1"
-          ValueFormat="" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference MacSlider}}" ValueText="{Binding ValueText, Source={x:Reference MacSlider}}" />
+        <controls:DictionarySlider x:Name="MacSlider" KeyFormat="MAC: {0}" MaxCount="6" MinCount="0" SelectedIndex="{Binding MAC, Mode=TwoWay}" SnapToStep="True" StepSize="1" ValueFormat="" />
+        <controls:ListColourPickerControl IsVisible="{Binding ShowMacColours}" Items="{Binding MacColours}" MaxItems="2" ValueCount="{Binding MacColoursCount, Mode=OneWayToSource}" />
 
-        <controls:DictionarySlider
-          x:Name="SacSlider"
-          KeyFormat="SAC: {0}"
-          MaxCount="6"
-          MinCount="0"
-          SelectedIndex="{Binding SAC, Mode=TwoWay}"
-          SnapToStep="True"
-          StepSize="1"
-          ValueFormat="" />
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference SacSlider}}" ValueText="{Binding ValueText, Source={x:Reference SacSlider}}" />
+        <controls:DictionarySlider x:Name="SacSlider" KeyFormat="SAC: {0}" MaxCount="6" MinCount="0" SelectedIndex="{Binding SAC, Mode=TwoWay}" SnapToStep="True" StepSize="1" ValueFormat="" />
+        <controls:ListAlignmentPickerControl IsVisible="{Binding ShowSacAlignment}" Items="{Binding SacAlignments}" MaxItems="2" ValueCount="{Binding SacAlignmentCount, Mode=OneWayToSource}" />
+
       </VerticalStackLayout>
     </ScrollView>
-    <controls:StickyFooterControl
-      Grid.Row="1"
-      BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}"
-      ButtonText="Return to Calculator"
-      RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}"
-      ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
-      ReturnCommandParameter="{x:Reference RootPage}"
-      Total="{Binding TotalWithBase}" />
+    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}" ButtonText="Return to Calculator" RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding TotalWithBase}" />
   </Grid>
 </cfg:ConfigPageBase>

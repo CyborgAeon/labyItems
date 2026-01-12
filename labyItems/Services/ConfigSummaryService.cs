@@ -17,10 +17,10 @@ public static class ConfigSummaryService
         var details = new Dictionary<string, object?> { ["base"] = cfg.WeaponBase.ToString() };
         var lines = new List<string> { $"Base: {cfg.WeaponBase}" };
 
-        if (cfg.WeaponType is not null)
+        if (!string.IsNullOrWhiteSpace(cfg.WeaponTypeText))
         {
-            details["type"] = cfg.WeaponType.ToString();
-            lines.Add($"Type: {cfg.WeaponType}");
+            details["type"] = cfg.WeaponTypeText;
+            lines.Add($"Type: {cfg.WeaponTypeText}");
         }
 
         if (cfg.IsMagicBase && cfg.MagicalColoursCount > 0)
@@ -109,25 +109,25 @@ public static class ConfigSummaryService
 
         var kind = cfg.SelectedArmour switch
         {
-            ArmourKind.Magical => "Magical MC Armour",
-            ArmourKind.Spiritual => "Spiritual MC Armour",
-            ArmourKind.Mantic => "Mantic MC Armour",
+            SupernaturalTypes.Magic => "Magical MC Armour",
+            SupernaturalTypes.Spirit => "Spiritual MC Armour",
+            SupernaturalTypes.Mantic => "Mantic MC Armour",
             _ => "No Armour"
         };
 
-        if (cfg.ACBase > 0 && cfg.SelectedArmour != ArmourKind.None)
+        if (cfg.ACBase > 0)
         {
             details["AC"] = cfg.ACBase;
             lines.Add($"AC: {cfg.ACBase} ({kind})");
         }
 
-        if (cfg.SelectedArmour == ArmourKind.Magical && cfg.MagicalColoursCount > 0)
+        if (cfg.MagicalColoursCount > 0)
         {
             details["magicalColours"] = cfg.MagicalColoursCount;
             lines.Add($"Magical colours: {cfg.MagicalColoursCount}");
         }
 
-        if (cfg.SelectedArmour == ArmourKind.Spiritual && cfg.SpiritualNonOpposite)
+        if (cfg.SpiritualNonOpposite)
         {
             details["spiritualNonOpposite"] = true;
             lines.Add("Spiritual alignment (non-opposite)");

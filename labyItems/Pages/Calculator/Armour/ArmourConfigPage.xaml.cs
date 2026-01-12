@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using labyItems.Models;
 using labyItems.Models.Enums;
 using labyItems.Pages.Configs;
+using labyItems.Models;
 
 namespace labyItems.Pages.Calculator;
 
@@ -25,10 +26,10 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
 
         cfg.SelectedArmour = index switch
         {
-            1 => ArmourKind.Magical,
-            2 => ArmourKind.Spiritual,
-            3 => ArmourKind.Mantic,
-            _ => ArmourKind.None
+            1 => SupernaturalTypes.Magic,
+            2 => SupernaturalTypes.Spirit,
+            3 => SupernaturalTypes.Mantic,
+            _ => string.Empty
         };
     }
 
@@ -36,10 +37,10 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
     {
         var kind = cfg.SelectedArmour switch
         {
-            ArmourKind.Magical   => "Magical MC Armour",
-            ArmourKind.Spiritual => "Spiritual MC Armour",
-            ArmourKind.Mantic    => "Mantic MC Armour",
-            _                    => "No Armour"
+            SupernaturalTypes.Magic  => "Magical MC Armour",
+            SupernaturalTypes.Spirit => "Spiritual MC Armour",
+            SupernaturalTypes.Mantic => "Mantic MC Armour",
+            _                         => "No Armour"
         };
 
         var details = new Dictionary<string, object?>();
@@ -47,9 +48,9 @@ public partial class ArmourConfigPage : ConfigPageBase<ArmourConfig>
         if (cfg.ACBase > 0) details["AC"] = cfg.ACBase;
         if (!string.IsNullOrWhiteSpace(cfg.LayeredSummary))
             details["layeredSummary"] = cfg.LayeredSummary;
-        if (cfg.SelectedArmour == ArmourKind.Magical && cfg.MagicalColoursCount > 0)
+        if (cfg.MagicalColoursCount > 0)
             details["magicalColours"] = cfg.MagicalColoursCount;
-        if (cfg.SelectedArmour == ArmourKind.Spiritual && cfg.SpiritualNonOpposite)
+        if (cfg.SpiritualNonOpposite)
             details["spiritualNonOpposite"] = true;
 
         var enhancements = new List<Dictionary<string, object>>();

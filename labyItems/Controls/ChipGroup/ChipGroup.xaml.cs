@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Layouts;
 
 namespace labyItems.Controls;
 
@@ -91,10 +92,13 @@ public partial class ChipGroup : ContentView
             CornerRadius = 4, // rounder pill
             BorderColor = primary,
             BorderWidth = 1,
-            HorizontalOptions = LayoutOptions.Center,
+            HorizontalOptions = LayoutOptions.Start,
             VerticalOptions = LayoutOptions.Center,
+            Margin = new Thickness(4),
             MinimumHeightRequest = 28, // helps maintain a clean shape
         };
+
+        // Do not force chips to grow — let them size to their content so the layout measures height correctly
 
         button.Clicked += (_, __) =>
         {

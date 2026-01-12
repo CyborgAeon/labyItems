@@ -14,6 +14,10 @@ public partial class ArmourNav : ContentPage
 {
     private readonly List<CalcContribution> _contributions = new();
     private bool _categoryLocked;
+    private ShieldConfigPage? _shieldConfigPage;
+    private ArmourConfigPage? _armourConfigPage;
+    private const string ShieldContributionId = "Shield";
+    private const string ArmourContributionId = "Armour";
     public event Action<CalcContribution>? ContributionAdded;
 public static readonly BindableProperty TotalProperty =
         BindableProperty.Create(
@@ -51,25 +55,23 @@ public ICommand? ReturnToFormCommand
         if (_categoryLocked) return;
         _categoryLocked = true;
 
-        var cfgPage = new ShieldConfigPage();
+        var cfgPage = _shieldConfigPage ??= new ShieldConfigPage();
         cfgPage.CalculatorContext = BindingContext as IspCalculator;
         cfgPage.ApplyBaseTotal(GetBaseIsp());
+        var completion = cfgPage.Completion;
         await Navigation.PushAsync(cfgPage);
 
-        var cfg = await cfgPage.Completion;
+        var cfg = await completion;
         _categoryLocked = false;
         if (cfg is null) return;
 
         var added = new CalcContribution(
-            Id: Guid.NewGuid().ToString(),
-            Source: "Shield",
+            Id: ShieldContributionId,
+            Source: ShieldContributionId,
             Result: cfg,
             OnRemove: cfgPage.ResetConfig);
 
-        _contributions.Add(added);
-        ContributionAdded?.Invoke(added);
-
-        UpdateTotal();
+        AddOrReplaceContribution(added);
     }
 
     private async void OnArmour(object sender, EventArgs e)
@@ -77,25 +79,23 @@ public ICommand? ReturnToFormCommand
         if (_categoryLocked) return;
         _categoryLocked = true;
 
-        var cfgPage = new ArmourConfigPage();
+        var cfgPage = _armourConfigPage ??= new ArmourConfigPage();
         cfgPage.CalculatorContext = BindingContext as IspCalculator;
         cfgPage.ApplyBaseTotal(GetBaseIsp());
+        var completion = cfgPage.Completion;
         await Navigation.PushAsync(cfgPage);
 
-        var cfg = await cfgPage.Completion;
+        var cfg = await completion;
         _categoryLocked = false;
         if (cfg is null) return;
 
         var added = new CalcContribution(
-            Id: Guid.NewGuid().ToString(),
-            Source: "Armour",
+            Id: ArmourContributionId,
+            Source: ArmourContributionId,
             Result: cfg,
             OnRemove: cfgPage.ResetConfig);
 
-        _contributions.Add(added);
-        ContributionAdded?.Invoke(added);
-
-        UpdateTotal();
+        AddOrReplaceContribution(added);
     }
     private async void OnReturnWrapper(object sender, EventArgs e) => await OnReturn();
 
@@ -123,6 +123,17 @@ public ICommand? ReturnToFormCommand
         var lines = _contributions.Select(c => c.Result.Summary).ToList();
         if (Total > 0) lines.Add($"Total ISP: {Total}");
         return string.Join("\n", lines);
+    }
+
+    private void AddOrReplaceContribution(CalcContribution contribution)
+    {
+        var existing = _contributions.FirstOrDefault(c => c.Id == contribution.Id);
+        if (existing != null)
+            _contributions.Remove(existing);
+
+        _contributions.Add(contribution);
+        ContributionAdded?.Invoke(contribution);
+        UpdateTotal();
     }
 
     private int GetBaseIsp() =>

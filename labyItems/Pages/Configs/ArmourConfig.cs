@@ -13,7 +13,6 @@ public class ArmourConfig : ConfigBase
 {
     public ObservableCollection<int?> ArmourLayers { get; } = new() { 0 };
     public ObservableCollection<ContributionRow> BreakdownItems { get; } = new();
-
     private int _acBase;
     public int ACBase
     {
@@ -21,13 +20,25 @@ public class ArmourConfig : ConfigBase
         set { if (SetProperty(ref _acBase, Math.Max(0, value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown));}
         // var v = ; if (_acBase != v) { _acBase = v; OnPropertyChanged(); Recalculate(); } }
     }
-    private ArmourKind _selectedArmour;
-    public ArmourKind SelectedArmour
+
+    public bool ShowArmourColours =>
+        SelectedArmour == SupernaturalTypes.Magic || SelectedArmour == SupernaturalTypes.Mantic;
+    public bool ShowArmourAlignments =>
+        SelectedArmour == SupernaturalTypes.Spirit || SelectedArmour == SupernaturalTypes.Mantic;
+
+    public ObservableCollection<string> ArmourTypes { get; } =
+        new(SupernaturalTypes.All);
+    private string _selectedArmour;
+    public string SelectedArmour
     {
         get => _selectedArmour;
-        set { if (SetProperty(ref _selectedArmour, value, affectsTotal: true)) OnPropertyChanged(nameof(Breakdown));}
+        set
+        {
+            SetProperty(ref _selectedArmour, value, true);
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(SelectedArmour));
+        }
     }
-
     private int _magicalColoursCount;
     public int MagicalColoursCount
     {
@@ -56,14 +67,14 @@ public class ArmourConfig : ConfigBase
     public string LayeredSummary
     {
         get => _layeredSummary;
-        set => SetProperty(ref _layeredSummary, value, affectsTotal: false);
+        set => SetProperty(ref _layeredSummary, value, affectsTotal: true);
     }
 
     private string _layeredBreakdown = string.Empty;
     public string LayeredBreakdown
     {
         get => _layeredBreakdown;
-        set => SetProperty(ref _layeredBreakdown, value, affectsTotal: false);
+        set => SetProperty(ref _layeredBreakdown, value, affectsTotal: true);
     }
 
     private string _breakdown = "";
@@ -86,33 +97,32 @@ public class ArmourConfig : ConfigBase
             }
         }
 
-        if (SelectedArmour != ArmourKind.None && ACBase > 0)
+        if (SelectedArmour != null && ACBase > 0)
         {
             int perAc = SelectedArmour switch
             {
-                ArmourKind.Magical   => 2,
-                ArmourKind.Spiritual => 2,
-                ArmourKind.Mantic    => 4,
+                SupernaturalTypes.Magic  => 2,
+                SupernaturalTypes.Spirit => 2,
+                SupernaturalTypes.Mantic => 4,
                 _ => 0
             };
             int flat = SelectedArmour switch
             {
-                ArmourKind.Magical   => 0,
-                ArmourKind.Spiritual => 2,
-                ArmourKind.Mantic    => 2,
+                SupernaturalTypes.Spirit => 2,
+                SupernaturalTypes.Mantic => 2,
                 _ => 0
             };
             int armourCost = perAc * ACBase + flat;
-            AddCost($"{SelectedArmour} armour: {perAc} × AC({ACBase}) {(flat > 0 ? $"+ {flat} " : string.Empty)}= {armourCost}", armourCost, ref total, sb);
+            AddCost($"{SelectedArmour} armour: {perAc} × AC {ACBase} {(flat > 0 ? $"+ {flat} " : string.Empty)}= {armourCost}", armourCost, ref total, sb);
         }
 
-        if (SelectedArmour == ArmourKind.Magical && MagicalColoursCount > 0)
+        if (SelectedArmour == SupernaturalTypes.Magic && MagicalColoursCount > 0)
         {
             int c = 2 * MagicalColoursCount;
             AddCost($"+ Magical colours: 2 × {MagicalColoursCount} = {c}", c, ref total, sb);
         }
 
-        if (SelectedArmour == ArmourKind.Spiritual && SpiritualNonOpposite)
+        if (SelectedArmour == SupernaturalTypes.Spirit && SpiritualNonOpposite)
         {
             AddCost("+ Spiritual non-opposite: 3", 3, ref total, sb);
         }
@@ -133,6 +143,43 @@ public class ArmourConfig : ConfigBase
     public static readonly IReadOnlyList<int> MacTable = new[] { 0, 8, 24, 40, 64, 88, 120 };
     public static readonly IReadOnlyList<int> SacTable = new[] { 0, 6, 18, 30, 48, 66, 90 };
 
+
+    public ObservableCollection<MagicColours?> MacColours { get; }
+    private int _macColoursCount;
+    public int MacColoursCount
+    {
+        get => _macColoursCount;
+        set => SetProperty(ref _macColoursCount, Math.Max(0, value), affectsTotal: true);
+    }
+
+    public ObservableCollection<Alignments?> SacAlignments { get; }
+    private int _sacAlignmentCount;
+    public int SacAlignmentCount
+    {
+        get => _sacAlignmentCount;
+        set => SetProperty(ref _sacAlignmentCount, Math.Max(0, value), affectsTotal: true);
+    }
+
+    public bool ShowMacColours => MAC > 0;
+    public bool ShowSacAlignment => SAC > 0;
+
+    public ObservableCollection<MagicColours?> ArmourColours { get; }
+    public ObservableCollection<Alignments?> ArmourAlignments { get; }
+    private int _armourColourCount;
+    public int ArmourColourCount
+    {
+        get => _armourColourCount;
+        set => SetProperty(ref _armourColourCount, Math.Max(0, value), affectsTotal: true);
+    }
+
+    private int _armourAlignmentCount;
+    public int ArmourAlignmentCount
+    {
+        get => _armourAlignmentCount;
+        set => SetProperty(ref _armourAlignmentCount, Math.Max(0, value), affectsTotal: true);
+    }
+
+    
     public static int GetTableCost(int ac, IReadOnlyList<int> table) =>
         table[Math.Min(table.Count - 1, Math.Max(0, ac))];
 

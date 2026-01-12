@@ -6,20 +6,9 @@
     x:Name="Root">
 
     <VerticalStackLayout x:Name="RootLayout">
-        <Label x:Name="KeyLabel"
-               FontSize="18"
-               HorizontalOptions="Center" 
-               IsVisible="{Binding Source={x:Reference Root}, Path=ShowLabels}" />
-        <Label x:Name="ValueLabel"
-               FontSize="18"
-               HorizontalOptions="Center" 
-               IsVisible="{Binding Source={x:Reference Root}, Path=ShowLabels}" />
-
-        <!-- Slider -->
         <Slider x:Name="Slider"
                 Minimum="0"
                 Maximum="0"
                 ValueChanged="OnSliderValueChanged" />
-
     </VerticalStackLayout>
 </ContentView>

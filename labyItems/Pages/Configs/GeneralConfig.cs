@@ -84,7 +84,10 @@ namespace labyItems.Pages.Configs
         public int GaseousFormPerDayCount
         {
             get => _gaseousFormPerDayCount;
-            set => SetProperty(ref _gaseousFormPerDayCount, value, true);
+            set {
+                OnPropertyChanged();
+            SetProperty(ref _gaseousFormPerDayCount, value, true);
+            } 
         }
         private int _planeShiftPerDayCount;
         public int PlaneShiftPerDayCount
@@ -96,16 +99,19 @@ namespace labyItems.Pages.Configs
         public int WalkThroughWallsPerDayCount
         {
             get => _walkThroughWallsPerDayCount;
-            set => SetProperty(ref _walkThroughWallsPerDayCount, value, true);
+            set {
+                OnPropertyChanged();
+                SetProperty(ref _walkThroughWallsPerDayCount, value, true);
+            }
         }
 
         // ---------- Casting Levels ----------
-        public MagicColours CastingLevelsColour
+        public ExtendedMagicColours? CastingLevelsColour
         {
             get => _castColour;
             set => SetProperty(ref _castColour, value, true);
         }
-        private MagicColours _castColour;
+        private ExtendedMagicColours? _castColour;
 
         public int CastingLevelsCount
         {
@@ -211,7 +217,7 @@ namespace labyItems.Pages.Configs
             StrengthEnchantIndex switch
             {
                 0 => "+1 Str (non-stacking)",
-                1 => "+1 Str (stacking to +2)",
+                1 => "+1 Str (stacking)",
                 2 => "+2 Str (non-stacking)",
                 _ => "No Strength enchantment",
             };
@@ -220,9 +226,9 @@ namespace labyItems.Pages.Configs
             new[]
             {
                 "slide to add strength",
-                "+1 strength",
-                "+2 strength (not-stacking)",
-                "+2 strength",
+                "+1 strength (non-stacking)",
+                "+1 strength (stacking)",
+                "+2 strength (non-stacking)",
             };
 
         // ---------- Rages ----------
@@ -394,9 +400,8 @@ namespace labyItems.Pages.Configs
 
         public bool ShowExtraColours => EmpowerWeaponMagicCount > 0 || EmpowerWeaponManticCount > 0;
 
-        public ObservableCollection<MagicColours?> ExtraColours { get; } =
-            new ObservableCollection<MagicColours?> { null }; // start with one empty row
-
+        public ObservableCollection<ExtendedMagicColours?> ExtraColours { get; } =
+            new ObservableCollection<ExtendedMagicColours?> { null };
         private string _extraColoursSummary;
         public string ExtraColoursSummary
         {
@@ -459,8 +464,7 @@ namespace labyItems.Pages.Configs
             EmpowerWeaponSpiritCount > 0 || EmpowerWeaponManticCount > 0;
 
         public ObservableCollection<Alignments?> ExtraAlignments { get; } =
-            new ObservableCollection<Alignments?> { null }; // start with one empty row
-
+            new ObservableCollection<Alignments?> { null };
         private string _extraAlignmentsSummary;
         public string ExtraAlignmentsSummary
         {
@@ -510,7 +514,6 @@ namespace labyItems.Pages.Configs
         }
         private int _knowArcane;
 
-        // minor / major – reuse TwoOptionSwitch's string values
         public string PrayerTimesPerDayLabel =>
             $"{PrayerPowerbase} {(string.IsNullOrWhiteSpace(PrayerSize) ? "Minor" : char.ToUpper(PrayerSize[0]) + PrayerSize[1..])} prayer {PrayerTimesPerDay} times per day {(string.IsNullOrEmpty(PrayerSubject) ? string.Empty : "on " + PrayerSubject)}";
 
@@ -561,8 +564,7 @@ namespace labyItems.Pages.Configs
                 OnPropertyChanged(nameof(PrayerTimesPerDayLabel));
             }
         }
-
-        // ---------- Other small items ----------
+        // ------- Ltm / Live to minus stuff
         public int LtmValue
         {
             get => _ltmValue;
@@ -575,14 +577,12 @@ namespace labyItems.Pages.Configs
             }
         }
         private int _ltmValue;
-
+ 
         public bool HasLtm => LtmValue > 0;
 
         public ObservableCollection<string> MagicSpiritOptions { get; } =
-            new() { "🪄 Magic", "👻 Spirit" };
+            new() { "🪄 Magic", "⽰ Spirit" };
 
-        public string LtmSummary =>
-            $"{LtmValue} Additional {LtmType ?? string.Empty}{(LtmType == null ? string.Empty : " ")}Live-to-minus";
 
         private string _ltmType;
         public string LtmType
@@ -590,28 +590,15 @@ namespace labyItems.Pages.Configs
             get => _ltmType;
             set
             {
-                _ltmType = value;
+                SetProperty(ref _ltmType, value, true);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(LtmSummary));
             }
         }
-
-        public int KiOrPrimalStrikePerDayCount
-        {
-            get => _kiOrPrimalStrikePerDayCount;
-            set
-            {
-                SetProperty(ref _kiOrPrimalStrikePerDayCount, value, true);
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(KiStrikeSummary));
-            }
-        }
-        private int _kiOrPrimalStrikePerDayCount;
-        public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
+        public string LtmSummary =>
+            $"{LtmValue} Additional {LtmType ?? string.Empty}{(LtmType == null ? string.Empty : " ")}Live-to-minus";
+public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
             new() { "🐉 Ki", "🧸 Primal" };
-
-        public string KiStrikeSummary =>
-            $"{KiOrPrimalStrike} strike ({KiOrPrimalStrikePerDayCount}/day)";
 
         private string _kiOrPrimalStrike;
         public string KiOrPrimalStrike
@@ -624,6 +611,20 @@ namespace labyItems.Pages.Configs
                 OnPropertyChanged(nameof(KiStrikeSummary));
             }
         }
+        public int KiOrPrimalStrikePerDayCount
+        {
+            get => _kiOrPrimalStrikePerDayCount;
+            set
+            {
+                SetProperty(ref _kiOrPrimalStrikePerDayCount, value, true);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(KiStrikeSummary));
+            }
+        }
+        private int _kiOrPrimalStrikePerDayCount;
+        public string KiStrikeSummary =>
+            $"{KiOrPrimalStrike} strike ({KiOrPrimalStrikePerDayCount}/day)";
+
 
         public bool ReadLanguages
         {
@@ -660,10 +661,15 @@ namespace labyItems.Pages.Configs
         }
         private bool _parry;
 
-        public int AddCastingLevels() =>
-            CastingLevelsColour == MagicColours.All
+        public int AddCastingLevels()
+        {
+            if (!CastingLevelsColour.HasValue || CastingLevelsCount <= 0)
+                return 0;
+
+            return CastingLevelsColour == ExtendedMagicColours.All
                 ? 14 * CastingLevelsCount
                 : 7 * CastingLevelsCount;
+        }
 
         public ObservableCollection<string?> WardPacts { get; } =
             new ObservableCollection<string?> { null };
@@ -753,7 +759,7 @@ namespace labyItems.Pages.Configs
             var colours = ExtraColours.Where(e => e.HasValue).ToList();
             if (colours.Count() == 0)
                 return 0;
-            if (colours.Any(e => e == MagicColours.All))
+            if (colours.Any(e => e == ExtendedMagicColours.All))
                 return 30;
 
             return 2 * (Math.Max(colours.Count(), 1) - 1);

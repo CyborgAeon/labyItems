@@ -1,25 +1,64 @@
 using System.Collections.ObjectModel;
 using System.Text;
+using labyItems.Models;
 using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Configs;
 
 public class WeaponConfig : ConfigBase
 {
-    private WeaponType? _weaponType;
-    public WeaponType? WeaponType
+    private string? _weaponTypeText;
+    public string? WeaponTypeText
     {
-        get => _weaponType;
+        get => _weaponTypeText;
         set
         {
-            if (SetProperty(ref _weaponType, value, true))
+            if (SetProperty(ref _weaponTypeText, value, true))
             {
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSubmit));
             }
         }
     }
-    public bool CanSubmit => WeaponType.HasValue;
+    public bool CanSubmit => !string.IsNullOrWhiteSpace(WeaponTypeText);
+    public ObservableCollection<string> BaseTypes { get; } = new(SupernaturalTypes.All);
+    private string? _selectedBaseType;
+    public string? SelectedBaseType
+    {
+        get => _selectedBaseType;
+        set
+        {
+            if (SetProperty(ref _selectedBaseType, value, false))
+            {
+                OnPropertyChanged(nameof(ShowMagicBaseOptions));
+                OnPropertyChanged(nameof(ShowSpiritBaseOptions));
+                OnPropertyChanged(nameof(ShowManticBaseOptions));
+                OnPropertyChanged(nameof(ShowPhysicalBaseOptions));
+
+                if (value is null)
+                {
+                    if (IsMagicBase || IsSpiritBase || IsManticBase)
+                        WeaponBase = WeaponBaseOption.None;
+                }
+                else if (value == SupernaturalTypes.Magic && !IsMagicBase)
+                {
+                    WeaponBase = WeaponBaseOption.Magic0;
+                }
+                else if (value == SupernaturalTypes.Spirit && !IsSpiritBase)
+                {
+                    WeaponBase = WeaponBaseOption.Spirit0;
+                }
+                else if (value == SupernaturalTypes.Mantic && !IsManticBase)
+                {
+                    WeaponBase = WeaponBaseOption.Mantic0;
+                }
+            }
+        }
+    }
+    public bool ShowMagicBaseOptions => SelectedBaseType == SupernaturalTypes.Magic;
+    public bool ShowSpiritBaseOptions => SelectedBaseType == SupernaturalTypes.Spirit;
+    public bool ShowManticBaseOptions => SelectedBaseType == SupernaturalTypes.Mantic;
+    public bool ShowPhysicalBaseOptions => SelectedBaseType is null;
     private WeaponBaseOption _weaponBase;
     public WeaponBaseOption WeaponBase
     {
@@ -45,6 +84,9 @@ public class WeaponConfig : ConfigBase
                 OnPropertyChanged(nameof(ShowMagicVsGroup));
                 OnPropertyChanged(nameof(ShowSpiritVsType));
                 OnPropertyChanged(nameof(ShowSpiritVsGroup));
+
+                OnPropertyChanged(nameof(IsSupernatural));
+                SyncSelectedBaseTypeFromWeaponBase();
 
                 // And the breakdown text
                 OnPropertyChanged(nameof(Breakdown));
@@ -187,7 +229,6 @@ public class WeaponConfig : ConfigBase
                 or WeaponBaseOption.MagicPlus1
                 or WeaponBaseOption.MagicPlus2
                 or WeaponBaseOption.PureMagic0;
-
     public bool IsSpiritBase =>
         WeaponBase
             is WeaponBaseOption.Spirit0
@@ -210,6 +251,31 @@ public class WeaponConfig : ConfigBase
     public bool ShowMagicVsGroup => WeaponBase is WeaponBaseOption.Magic0Plus1VsGroup;
     public bool ShowSpiritVsType => WeaponBase is WeaponBaseOption.Spirit0Plus1VsType;
     public bool ShowSpiritVsGroup => WeaponBase is WeaponBaseOption.Spirit0Plus1VsGroup;
+    private void SyncSelectedBaseTypeFromWeaponBase()
+    {
+        string? category = WeaponBase switch
+        {
+            WeaponBaseOption.Magic0
+                or WeaponBaseOption.Magic0Plus1VsType
+                or WeaponBaseOption.Magic0Plus1VsGroup
+                or WeaponBaseOption.MagicPlus1
+                or WeaponBaseOption.MagicPlus2
+                or WeaponBaseOption.PureMagic0 => SupernaturalTypes.Magic,
+            WeaponBaseOption.Spirit0
+                or WeaponBaseOption.Spirit0Plus1VsType
+                or WeaponBaseOption.Spirit0Plus1VsGroup
+                or WeaponBaseOption.SpiritPlus1
+                or WeaponBaseOption.SpiritPlus2
+                or WeaponBaseOption.PureSpirit0 => SupernaturalTypes.Spirit,
+            WeaponBaseOption.Mantic0
+                or WeaponBaseOption.ManticPlus1
+                or WeaponBaseOption.PureMantic0 => SupernaturalTypes.Mantic,
+            _ => null
+        };
+
+        if (category != SelectedBaseType)
+            SelectedBaseType = category;
+    }
 
     private string _magicVsType = string.Empty;
     public string MagicVsType

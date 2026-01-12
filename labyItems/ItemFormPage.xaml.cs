@@ -144,7 +144,7 @@ public partial class ItemFormPage : ContentPage
             RecipientCharacterClass = _recipientClass,
             Description = GetDescriptionText(),
             DoesNotBlowUpOnDeath = DnbuodSwitch.IsToggled,
-            CreatedDate = CreatedDatePicker.Date,
+            CreatedDate = CreatedDatePicker.Date ?? DateTime.Now,
             Isp = IspTotal,
         };
 

@@ -16,6 +16,9 @@
                    HorizontalOptions="Center" />
 
             <!-- Reusable slider -->
+            <controls:DictionarySliderHeader
+                KeyText="{Binding KeyText, Source={x:Reference LifeSlider}}"
+                ValueText="{Binding ValueText, Source={x:Reference LifeSlider}}" />
             <controls:DictionarySlider
                 x:Name="LifeSlider"
                 KeyFormat="Life: {0}"

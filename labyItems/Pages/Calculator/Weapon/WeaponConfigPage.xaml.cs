@@ -14,7 +14,6 @@ public partial class WeaponConfigPage : ConfigPageBase<WeaponConfig>
     {
         ReturnFromConfigCommand = new Command(async () => await OnReturnWithContributionAsync());
         InitializeComponent();
-
         OnPropertyChanged(nameof(ReturnFromConfigCommand));
     }
 
@@ -38,7 +37,6 @@ public partial class WeaponConfigPage : ConfigPageBase<WeaponConfig>
             return;
         }
 
-        // Fallback: only used if somehow not inside the calculator
         await StickyFooterControl.DefaultNavigateAsync(this);
     }
 }

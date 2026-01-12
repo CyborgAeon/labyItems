@@ -21,7 +21,7 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
 
             if (Navigation?.NavigationStack?.Count > 1)
             {
-                _tcs.TrySetResult(result);
+                Complete(result);
                 await Navigation.PopAsync();
                 return;
             }
@@ -32,7 +32,7 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
                 return;
             }
 
-            _tcs.TrySetResult(result);
+            Complete(result);
             await Navigation.PopAsync();
         }
 

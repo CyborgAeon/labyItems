@@ -167,3 +167,12 @@ labyItems/Resources/.DS_Store
 # ================================
 # End of .gitignore
 # ================================
+.DS_Store
+dotnet-install.sh
+labyItems/.DS_Store
+labyItems/obj/labyItems.csproj.nuget.dgspec.json
+labyItems/obj/labyItems.csproj.nuget.g.props
+labyItems/obj/labyItems.csproj.nuget.g.targets
+labyItems/obj/project.assets.json
+labyItems/obj/project.nuget.cache
+labyItems/obj/Debug/net8.0-android/labyItems.assets.cache

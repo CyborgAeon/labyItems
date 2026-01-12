@@ -76,9 +76,9 @@ public static class GeneralService
             return source.ToList();
 
         q = q.ToLowerInvariant();
-        return source.Where(e => e.Index.ToLowerInvariant().Contains(q)).ToList();
+        return source.Where(e => e.Index.ToLowerInvariant().Contains(q)).Take(20).ToList();
     }
-    
+
     public static void InvalidateCache() => _cache = null;
 
     private static int TryParseCost(string input)
