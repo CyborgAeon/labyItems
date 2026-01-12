@@ -27,6 +27,7 @@ public class DictionarySearchBar<TValue> : ContentView
     private List<SearchResult> _filteredResults = new();
     private Dictionary<string, TValue> _defaultOptions;
     private bool _suppressTextChanged;
+    private bool _suppressSelectedTextChanged;
 
     public DictionarySearchBar()
     {
@@ -42,6 +43,7 @@ public class DictionarySearchBar<TValue> : ContentView
         _searchBar.Focused += OnSearchFocused;
         _searchBar.Unfocused += OnSearchUnfocused;
         _searchBar.TextChanged += OnSearchTextChanged;
+        _searchBar.Completed += OnSearchCompleted;
 
         _resultsView = BuildResultsView();
 
@@ -85,6 +87,40 @@ public class DictionarySearchBar<TValue> : ContentView
     /// Ignored when a custom ItemsSource is provided.
     /// </summary>
     public Func<TValue, string>? DisplayFormatter { get; set; }
+
+    public static readonly BindableProperty AllowCustomOptionsProperty = BindableProperty.Create(
+        nameof(AllowCustomOptions),
+        typeof(bool),
+        typeof(DictionarySearchBar<TValue>),
+        defaultValue: false);
+
+    /// <summary>
+    /// When true, the search bar will surface a custom option based on the user's text entry
+    /// and allow binding to that free-form text via SelectedText.
+    /// </summary>
+    public bool AllowCustomOptions
+    {
+        get => (bool)GetValue(AllowCustomOptionsProperty);
+        set => SetValue(AllowCustomOptionsProperty, value);
+    }
+
+    public static readonly BindableProperty SelectedTextProperty = BindableProperty.Create(
+        nameof(SelectedText),
+        typeof(string),
+        typeof(DictionarySearchBar<TValue>),
+        defaultValue: default(string),
+        BindingMode.TwoWay,
+        propertyChanged: OnSelectedTextChanged);
+
+    /// <summary>
+    /// Current text selected or entered by the user. When AllowCustomOptions is true this will
+    /// include custom free-form values; otherwise it mirrors the current enum selection.
+    /// </summary>
+    public string? SelectedText
+    {
+        get => (string?)GetValue(SelectedTextProperty);
+        set => SetValue(SelectedTextProperty, value);
+    }
 
     public static readonly BindableProperty DropdownWidthProperty = BindableProperty.Create(
         nameof(DropdownWidth),
@@ -168,6 +204,12 @@ public class DictionarySearchBar<TValue> : ContentView
         control.SyncTextToSelection();
     }
 
+    private static void OnSelectedTextChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (DictionarySearchBar<TValue>)bindable;
+        control.SyncEntryToSelectedText(newValue as string);
+    }
+
     private void OnSearchFocused(object? sender, FocusEventArgs e)
     {
         // When focused, show the full list then present inline overlay
@@ -180,6 +222,7 @@ public class DictionarySearchBar<TValue> : ContentView
         // Dismiss any active inline overlay when losing focus
         DismissLocalOverlay();
         _resultsView.IsVisible = false;
+        CommitTextSelection(_searchBar.Text);
     }
 
     private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
@@ -196,6 +239,10 @@ public class DictionarySearchBar<TValue> : ContentView
             _ = ShowOverlayAsync();
     }
 
+    private void OnSearchCompleted(object? sender, EventArgs e)
+    {
+        CommitTextSelection(_searchBar.Text);
+    }
 
     private void RefreshFilteredResults(string? query)
     {
@@ -211,8 +258,15 @@ public class DictionarySearchBar<TValue> : ContentView
 
         _filteredResults = source
             .Where(kvp => string.IsNullOrWhiteSpace(text) || kvp.Key.Contains(text, StringComparison.OrdinalIgnoreCase))
-            .Select(kvp => new SearchResult(kvp.Key, kvp.Value))
+            .Select(kvp => SearchResult.FromDictionary(kvp.Key, kvp.Value))
             .ToList();
+
+        if (AllowCustomOptions && !string.IsNullOrWhiteSpace(text))
+        {
+            var hasExactMatch = _filteredResults.Any(r => string.Equals(r.DisplayText, text, StringComparison.OrdinalIgnoreCase));
+            if (!hasExactMatch)
+                _filteredResults.Insert(0, SearchResult.Custom(text));
+        }
     }
 
     private void UpdateResultsVisibility()
@@ -234,14 +288,96 @@ public class DictionarySearchBar<TValue> : ContentView
 
         if (SelectedValue.HasValue)
         {
-            _searchBar.Text = FindLabelForValue(SelectedValue.Value);
+            var label = FindLabelForValue(SelectedValue.Value);
+            SetSelectedTextInternal(label);
+            _searchBar.Text = label;
+        }
+        else if (AllowCustomOptions && !string.IsNullOrWhiteSpace(SelectedText))
+        {
+            _searchBar.Text = SelectedText;
         }
         else
         {
+            SetSelectedTextInternal(string.Empty);
             _searchBar.Text = string.Empty;
         }
 
         _suppressTextChanged = false;
+    }
+
+    private void SyncEntryToSelectedText(string? newText)
+    {
+        if (_suppressSelectedTextChanged)
+            return;
+
+        _suppressTextChanged = true;
+        _searchBar.Text = newText ?? string.Empty;
+        _suppressTextChanged = false;
+
+        if (AllowCustomOptions)
+            CommitTextSelection(newText);
+    }
+
+    private void CommitTextSelection(string? rawText)
+    {
+        if (!AllowCustomOptions)
+            return;
+
+        var text = rawText?.Trim() ?? string.Empty;
+        _suppressTextChanged = true;
+
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            SetSelectedTextInternal(string.Empty);
+            SelectedValue = null;
+            _searchBar.Text = string.Empty;
+            _suppressTextChanged = false;
+            return;
+        }
+
+        var match = FindMatchingOption(text);
+        if (match != null)
+        {
+            SelectedValue = match.Value;
+            SetSelectedTextInternal(match.DisplayText);
+            _searchBar.Text = match.DisplayText;
+        }
+        else
+        {
+            SetSelectedTextInternal(text);
+            SelectedValue = null;
+            _searchBar.Text = text;
+        }
+
+        _suppressTextChanged = false;
+    }
+
+    private SearchResult? FindMatchingOption(string text)
+    {
+        var source = ItemsSource ?? _defaultOptions;
+        if (source == null)
+            return null;
+
+        foreach (var kvp in source)
+        {
+            if (string.Equals(kvp.Key, text, StringComparison.OrdinalIgnoreCase))
+                return SearchResult.FromDictionary(kvp.Key, kvp.Value);
+        }
+
+        return null;
+    }
+
+    private void SetSelectedTextInternal(string? text)
+    {
+        try
+        {
+            _suppressSelectedTextChanged = true;
+            SetValue(SelectedTextProperty, text);
+        }
+        finally
+        {
+            _suppressSelectedTextChanged = false;
+        }
     }
 
     private string FindLabelForValue(TValue value)
@@ -301,11 +437,7 @@ public class DictionarySearchBar<TValue> : ContentView
     {
         if (e.CurrentSelection.FirstOrDefault() is SearchResult result)
         {
-            _suppressTextChanged = true;
-            SelectedValue = result.Value;
-            _searchBar.Text = result.DisplayText;
-            _suppressTextChanged = false;
-            _searchBar.Unfocus();
+            ApplySelection(result);
         }
 
         if (sender is CollectionView cv)
@@ -316,17 +448,46 @@ public class DictionarySearchBar<TValue> : ContentView
         _resultsView.IsVisible = false;
     }
 
+    private void ApplySelection(SearchResult result)
+    {
+        _suppressTextChanged = true;
+
+        if (result.IsCustom)
+        {
+            SetSelectedTextInternal(result.DisplayText);
+            SelectedValue = null;
+            _searchBar.Text = result.DisplayText;
+        }
+        else
+        {
+            SelectedValue = result.Value;
+            SetSelectedTextInternal(result.DisplayText);
+            _searchBar.Text = result.DisplayText;
+        }
+
+        _suppressTextChanged = false;
+        _searchBar.Unfocus();
+        DismissLocalOverlay();
+    }
+
     private class SearchResult
     {
-        public SearchResult(string displayText, TValue value)
+        private SearchResult(string displayText, TValue? value, bool isCustom)
         {
             DisplayText = displayText;
             Value = value;
+            IsCustom = isCustom;
         }
 
         public string DisplayText { get; }
 
-        public TValue Value { get; }
+        public TValue? Value { get; }
+
+        public bool IsCustom { get; }
+
+        public static SearchResult FromDictionary(string displayText, TValue value) => new(displayText, value, false);
+
+        public static SearchResult Custom(string displayText) => new(displayText, null, true);
     }
 
     // Local overlay state
@@ -397,7 +558,7 @@ public class DictionarySearchBar<TValue> : ContentView
                 {
                     if (s is VisualElement ve && ve.BindingContext is SearchResult sr)
                     {
-                        SelectResult(sr);
+                        ApplySelection(sr);
                     }
                 };
                 grid.GestureRecognizers.Add(tap);
@@ -512,16 +673,6 @@ public class DictionarySearchBar<TValue> : ContentView
             }
         }
         catch { }
-    }
-
-    private void SelectResult(SearchResult sr)
-    {
-        _suppressTextChanged = true;
-        SelectedValue = sr.Value;
-        _searchBar.Text = sr.DisplayText;
-        _suppressTextChanged = false;
-        _searchBar.Unfocus();
-        DismissLocalOverlay();
     }
 
     private void DismissLocalOverlay()

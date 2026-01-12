@@ -49,7 +49,7 @@
           <RadioButton Content="+1 Physical" GroupName="WeaponBaseGroup" Value="{x:Static enums:WeaponBaseOption.PhysicalPlus1}" IsChecked="{Binding WeaponBase, Mode=TwoWay, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static enums:WeaponBaseOption.PhysicalPlus1}}" />
         </VerticalStackLayout>
 
-        <controls:DictionarySearchBar x:Name="WeaponSearch" x:TypeArguments="enums:WeaponType" PlaceholderText="Pick a weapon" ItemsSource="{controls:EnumDictionary Type={x:Type enums:WeaponType}}" SelectedValue="{Binding WeaponType, Mode=TwoWay}"/>
+        <controls:DictionarySearchBar x:Name="WeaponSearch" x:TypeArguments="enums:WeaponType" AllowCustomOptions="True" PlaceholderText="Pick a weapon" ItemsSource="{controls:EnumDictionary Type={x:Type enums:WeaponType}}" SelectedText="{Binding WeaponTypeText, Mode=TwoWay}"/>
         <Entry IsVisible="{Binding ShowMagicVsType}" Placeholder="Enter Type (e.g. Undead)" Text="{Binding MagicVsType, Mode=TwoWay}"/>
         <Entry IsVisible="{Binding ShowMagicVsGroup}" Placeholder="Enter Group (e.g. Bandits)" Text="{Binding MagicVsGroup, Mode=TwoWay}"/>
         <Entry IsVisible="{Binding ShowSpiritVsType}" Placeholder="Enter Type (e.g. Undead)" Text="{Binding SpiritVsType, Mode=TwoWay}"/>

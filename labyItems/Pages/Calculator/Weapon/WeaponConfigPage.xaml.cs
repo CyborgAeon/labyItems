@@ -37,7 +37,6 @@ public partial class WeaponConfigPage : ConfigPageBase<WeaponConfig>
             return;
         }
 
-        // Fallback: only used if somehow not inside the calculator
         await StickyFooterControl.DefaultNavigateAsync(this);
     }
 }

@@ -17,10 +17,10 @@ public static class ConfigSummaryService
         var details = new Dictionary<string, object?> { ["base"] = cfg.WeaponBase.ToString() };
         var lines = new List<string> { $"Base: {cfg.WeaponBase}" };
 
-        if (cfg.WeaponType is not null)
+        if (!string.IsNullOrWhiteSpace(cfg.WeaponTypeText))
         {
-            details["type"] = cfg.WeaponType.ToString();
-            lines.Add($"Type: {cfg.WeaponType}");
+            details["type"] = cfg.WeaponTypeText;
+            lines.Add($"Type: {cfg.WeaponTypeText}");
         }
 
         if (cfg.IsMagicBase && cfg.MagicalColoursCount > 0)

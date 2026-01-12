@@ -7,20 +7,20 @@ namespace labyItems.Pages.Configs;
 
 public class WeaponConfig : ConfigBase
 {
-    private WeaponType? _weaponType;
-    public WeaponType? WeaponType
+    private string? _weaponTypeText;
+    public string? WeaponTypeText
     {
-        get => _weaponType;
+        get => _weaponTypeText;
         set
         {
-            if (SetProperty(ref _weaponType, value, true))
+            if (SetProperty(ref _weaponTypeText, value, true))
             {
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanSubmit));
             }
         }
     }
-    public bool CanSubmit => WeaponType.HasValue;
+    public bool CanSubmit => !string.IsNullOrWhiteSpace(WeaponTypeText);
     public ObservableCollection<string> BaseTypes { get; } = new(SupernaturalTypes.All);
     private string? _selectedBaseType;
     public string? SelectedBaseType
