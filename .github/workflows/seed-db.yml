@@ -61,11 +61,6 @@ jobs:
             exit 1
           fi
 
-      - name: Compute and save checksum
-        run: |
-          sha256sum output/evocs.db | awk '{print $1}' > output/default.db.sha256
-          echo "checksum: $(cat output/default.db.sha256)"
-
       - name: Prepare artifact (copy to default.db)
         run: mkdir -p output && cp output/evocs.db output/default.db
 
@@ -73,9 +68,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: default.db
-          path: |
-            output/default.db
-            output/default.db.sha256
+          path: output/default.db
 
       - name: Run migrations against seed DB
         run: |

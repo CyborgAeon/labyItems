@@ -4,6 +4,7 @@ using System.Reflection;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Storage;
+using MigrationsLib.Migrations;
 
 namespace labyItems;
 
@@ -30,7 +31,7 @@ public static class MauiProgram
 			.ConfigureRunner(rb => rb
 				.AddSQLite()
 				.WithGlobalConnectionString($"Data Source={dbPath}")
-				.ScanIn(Assembly.GetExecutingAssembly()).For.Migrations())
+				.ScanIn(typeof(MigrationsLib.Migrations.InitialMigration).Assembly).For.Migrations())
 			.AddLogging(lb => lb.AddFluentMigratorConsole());
 
 		// Register default-db installer which will copy a packaged default.db on first-run (if present)

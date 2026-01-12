@@ -259,36 +259,27 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
         tx.Commit();
         conn.Close();
 
-        // Compute SHA256 checksum of the produced DB and insert seed metadata row
+        // Insert seed metadata (seed_version & build id). Checksum handling is intentionally skipped.
         var buildId = Environment.GetEnvironmentVariable("GITHUB_RUN_ID") ?? Environment.GetEnvironmentVariable("SEED_BUILD_ID") ?? Guid.NewGuid().ToString();
         var seedVersion = Environment.GetEnvironmentVariable("SEED_VERSION") ?? DateTime.UtcNow.ToString("yyyyMMddHHmmss");
         var schemaVersion = 1; // base schema applied by this generator; migrations may bump this later
-
-        string checksum;
-        using (var sha = SHA256.Create())
-        using (var fs = File.OpenRead(output))
-        {
-            var hash = sha.ComputeHash(fs);
-            checksum = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-        }
 
         using (var conn2 = new SqliteConnection($"Data Source={output}"))
         {
             conn2.Open();
             using (var cmd = conn2.CreateCommand())
             {
-                cmd.CommandText = @"INSERT INTO seed_metadata (seed_version, schema_version, build_id, checksum, created_at) VALUES (@seed_version, @schema_version, @build_id, @checksum, @created_at);";
+                cmd.CommandText = @"INSERT INTO seed_metadata (seed_version, schema_version, build_id, created_at) VALUES (@seed_version, @schema_version, @build_id, @created_at);";
                 cmd.Parameters.AddWithValue("@seed_version", seedVersion);
                 cmd.Parameters.AddWithValue("@schema_version", schemaVersion);
                 cmd.Parameters.AddWithValue("@build_id", buildId);
-                cmd.Parameters.AddWithValue("@checksum", checksum);
                 cmd.Parameters.AddWithValue("@created_at", DateTime.UtcNow.ToString("o"));
                 cmd.ExecuteNonQuery();
             }
             conn2.Close();
         }
 
-        Console.WriteLine($"[evocdbgen] Done. seed_version={seedVersion} build_id={buildId} checksum={checksum}");
+        Console.WriteLine($"[evocdbgen] Done. seed_version={seedVersion} build_id={buildId}");
         return 0;
     }
 

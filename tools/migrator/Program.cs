@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.Sqlite;
+using MigrationsLib.Migrations;
 
 namespace migrator
 {
@@ -28,7 +29,7 @@ namespace migrator
                 .ConfigureRunner(rb => rb
                     .AddSQLite()
                     .WithGlobalConnectionString($"Data Source={dbPath}")
-                    .ScanIn(typeof(Migrations.CreateInitial).Assembly).For.Migrations())
+                    .ScanIn(typeof(MigrationsLib.Migrations.InitialMigration).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddConsole())
                 .BuildServiceProvider(false);
 
@@ -45,7 +46,8 @@ namespace migrator
                 using var conn = new SqliteConnection($"Data Source={dbPath}");
                 conn.Open();
                 using var cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT MAX(version) FROM VersionInfo;";
+                cmd.CommandText = "SELECT MAX(version) FROM VersionInfo;"; // VersionInfo is maintained by FluentMigrator
+
                 var res = cmd.ExecuteScalar();
                 long schemaVersion = 0;
                 if (res != null && long.TryParse(res.ToString(), out var v)) schemaVersion = v;
