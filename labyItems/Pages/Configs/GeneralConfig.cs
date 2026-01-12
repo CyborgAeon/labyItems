@@ -106,12 +106,12 @@ namespace labyItems.Pages.Configs
         }
 
         // ---------- Casting Levels ----------
-        public MagicColours? CastingLevelsColour
+        public ExtendedMagicColours? CastingLevelsColour
         {
             get => _castColour;
             set => SetProperty(ref _castColour, value, true);
         }
-        private MagicColours? _castColour;
+        private ExtendedMagicColours? _castColour;
 
         public int CastingLevelsCount
         {
@@ -400,8 +400,8 @@ namespace labyItems.Pages.Configs
 
         public bool ShowExtraColours => EmpowerWeaponMagicCount > 0 || EmpowerWeaponManticCount > 0;
 
-        public ObservableCollection<MagicColours?> ExtraColours { get; } =
-            new ObservableCollection<MagicColours?> { null };
+        public ObservableCollection<ExtendedMagicColours?> ExtraColours { get; } =
+            new ObservableCollection<ExtendedMagicColours?> { null };
         private string _extraColoursSummary;
         public string ExtraColoursSummary
         {
@@ -666,7 +666,7 @@ public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
             if (!CastingLevelsColour.HasValue || CastingLevelsCount <= 0)
                 return 0;
 
-            return CastingLevelsColour == MagicColours.All
+            return CastingLevelsColour == ExtendedMagicColours.All
                 ? 14 * CastingLevelsCount
                 : 7 * CastingLevelsCount;
         }
@@ -759,7 +759,7 @@ public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
             var colours = ExtraColours.Where(e => e.HasValue).ToList();
             if (colours.Count() == 0)
                 return 0;
-            if (colours.Any(e => e == MagicColours.All))
+            if (colours.Any(e => e == ExtendedMagicColours.All))
                 return 30;
 
             return 2 * (Math.Max(colours.Count(), 1) - 1);

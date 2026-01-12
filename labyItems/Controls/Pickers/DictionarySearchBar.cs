@@ -28,6 +28,8 @@ public class DictionarySearchBar<TValue> : ContentView
     private Dictionary<string, TValue> _defaultOptions;
     private bool _suppressTextChanged;
     private bool _suppressSelectedTextChanged;
+    private bool _overlayHostInitialized;
+    private bool _suppressNextUnfocus;
 
     public DictionarySearchBar()
     {
@@ -80,6 +82,13 @@ public class DictionarySearchBar<TValue> : ContentView
 
         UpdatePlaceholder();
         SyncTextToSelection();
+    }
+
+    protected override void OnParentSet()
+    {
+        base.OnParentSet();
+        // Build the overlay host early so first focus doesn't re-parent and steal focus
+        InitializeOverlayHostIfNeeded();
     }
 
     /// <summary>
@@ -219,6 +228,13 @@ public class DictionarySearchBar<TValue> : ContentView
 
     private void OnSearchUnfocused(object? sender, FocusEventArgs e)
     {
+        if (_suppressNextUnfocus)
+        {
+            _suppressNextUnfocus = false;
+            _ = Device.InvokeOnMainThreadAsync(() => _searchBar.Focus());
+            return;
+        }
+
         // Dismiss any active inline overlay when losing focus
         DismissLocalOverlay();
         _resultsView.IsVisible = false;
@@ -512,9 +528,12 @@ public class DictionarySearchBar<TValue> : ContentView
             if (page == null)
                 return;
 
-            var host = EnsureOverlayHost(page);
+            var host = EnsureOverlayHost(page, out var createdHost);
             if (host == null)
                 return;
+
+            if (createdHost)
+                _suppressNextUnfocus = true;
 
             _overlay = new AbsoluteLayout { BackgroundColor = Colors.Transparent, InputTransparent = false };
 
@@ -726,8 +745,9 @@ public class DictionarySearchBar<TValue> : ContentView
             };
     }
 
-    private Grid? EnsureOverlayHost(ContentPage page)
+    private Grid? EnsureOverlayHost(ContentPage page, out bool createdHost)
     {
+        createdHost = false;
         if (page.Content == null)
             return null;
 
@@ -740,7 +760,28 @@ public class DictionarySearchBar<TValue> : ContentView
         // Mark the grid so we don't re-wrap repeatedly
         root.StyleId = "__overlay_host__";
         page.Content = root;
+        createdHost = true;
         return root;
+    }
+
+    private void InitializeOverlayHostIfNeeded()
+    {
+        if (_overlayHostInitialized)
+            return;
+
+        var page = GetTopPage();
+        if (page == null)
+            return;
+
+        _ = Device.InvokeOnMainThreadAsync(() =>
+        {
+            if (_overlayHostInitialized)
+                return;
+
+            var host = EnsureOverlayHost(page, out _);
+            if (host != null)
+                _overlayHostInitialized = true;
+        });
     }
 
     private static T? FindAncestorOfType<T>(Element? start) where T : VisualElement

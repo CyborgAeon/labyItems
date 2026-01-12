@@ -34,9 +34,9 @@ public static class ListSummaryHelper
         return JoinWithAnd(list);
     }
 
-    public static string BuildEmpowerMagicSummary(int count, ObservableCollection<MagicColours?> colours)
+    public static string BuildEmpowerMagicSummary(int count, ObservableCollection<ExtendedMagicColours?> colours)
     {
-        var colourText = ListOrDefault(colours, MagicColours.Grey.ToString());
+        var colourText = ListOrDefault(colours, ExtendedMagicColours.Grey.ToString());
 
         return $"+0 {colourText} magic, Empower weapon {count}/day for 5 minutes.";
     }
@@ -51,7 +51,7 @@ public static class ListSummaryHelper
     public static string BuildEmpowerManticSummary(
         int count,
         ObservableCollection<Alignments?> alignments,
-        ObservableCollection<MagicColours?> colours
+        ObservableCollection<ExtendedMagicColours?> colours
     )
     {
         var alignmentText = ListOrDefault(alignments, Alignments.Neutral.ToString());

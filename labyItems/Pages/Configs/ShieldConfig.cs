@@ -5,12 +5,15 @@ using System.Linq;
 using System.Text;
 using labyItems.Controls;
 using labyItems.Helpers;
+using labyItems.Models;
 using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Configs;
 
 public class ShieldConfig : ConfigBase
 {
+    private bool _suppressShieldTypeSync;
+
     public ShieldConfig()
     {
         PacOptions = BuildTableDictionary(ArmourConfig.PacTable);
@@ -22,6 +25,7 @@ public class ShieldConfig : ConfigBase
         ShieldColours = new ObservableCollection<MagicColours?> { null };
         ShieldAlignments = new ObservableCollection<Alignments?> { null };
         BreakdownItems = new ObservableCollection<ContributionRow>();
+        ShieldTypes = new ObservableCollection<string>(SupernaturalTypes.All);
     }
 
     private ShieldType _selectedShield;
@@ -44,6 +48,33 @@ public class ShieldConfig : ConfigBase
             )
             {
                 ResetHiddenSelections(previous, value);
+                SyncSelectedShieldTypeFromEnum(value);
+            }
+        }
+    }
+
+    public ObservableCollection<string> ShieldTypes { get; }
+
+    private string? _selectedShieldType;
+    public string? SelectedShieldType
+    {
+        get => _selectedShieldType;
+        set
+        {
+            if (SetProperty(ref _selectedShieldType, value, false))
+            {
+                if (_suppressShieldTypeSync)
+                    return;
+
+                _suppressShieldTypeSync = true;
+                SelectedShield = value switch
+                {
+                    SupernaturalTypes.Magic => ShieldType.Magical,
+                    SupernaturalTypes.Spirit => ShieldType.Spiritual,
+                    SupernaturalTypes.Mantic => ShieldType.Mantic,
+                    _ => ShieldType.None
+                };
+                _suppressShieldTypeSync = false;
             }
         }
     }
@@ -290,6 +321,29 @@ public class ShieldConfig : ConfigBase
             }
         );
         sb.AppendLine(text);
+    }
+
+    private void SyncSelectedShieldTypeFromEnum(ShieldType value)
+    {
+        if (_suppressShieldTypeSync)
+            return;
+
+        _suppressShieldTypeSync = true;
+        var mapped = value switch
+        {
+            ShieldType.Magical => SupernaturalTypes.Magic,
+            ShieldType.Spiritual => SupernaturalTypes.Spirit,
+            ShieldType.Mantic => SupernaturalTypes.Mantic,
+            _ => null
+        };
+
+        if (_selectedShieldType != mapped)
+        {
+            _selectedShieldType = mapped;
+            OnPropertyChanged(nameof(SelectedShieldType));
+        }
+
+        _suppressShieldTypeSync = false;
     }
 
     private void ResetHiddenSelections(ShieldType previous, ShieldType current)

@@ -23,11 +23,11 @@
         <Label Text="Shield Cost Calculator" FontSize="20" FontAttributes="Bold" />
 
         <!-- Shield selection -->
-        <Label Text="Shield" />
-        <controls:ShieldTypePicker
-          x:Name="ShieldPicker"
-          LabelText="Shield type"
-          SelectedValue="{Binding SelectedShield, Mode=TwoWay}" />
+        <Label Text="Shield type" />
+        <controls:ChipGroup
+          Items="{Binding ShieldTypes}"
+          SelectedItem="{Binding SelectedShieldType, Mode=TwoWay}"
+          VerticalOptions="Center" />
         <controls:ListColourPickerControl
           IsVisible="{Binding ShowShieldColours}"
           Items="{Binding ShieldColours}"

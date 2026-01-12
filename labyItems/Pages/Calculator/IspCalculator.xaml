@@ -1,16 +1,14 @@
-<TabbedPage 
-            x:Class="labyItems.Pages.Calculator.IspCalculator"
-            xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            xmlns:controls="clr-namespace:labyItems.Controls"
-            xmlns:local="clr-namespace:labyItems.Pages.Calculator"
-            xmlns:nav="clr-namespace:labyItems.Pages.Calculator.CalcNav"
-            Title="ISP Calculator">
-    <nav:ArmourNav       x:Name="ArmourCategoryPage"     Title="Armour"  />
-    <local:WeaponConfigPage x:Name="WeaponCategoryPage"  Title="Weapon" />
-    <nav:CharmNav        x:Name="CharmCategoryPage"      Title="Charm"  />
-    <nav:ConsumNav       x:Name="ConsumableCategoryPage" Title="1-use" />
-    <nav:LifeConfigPage  x:Name="LifeCategoryPage"       Title="Life"   />
+<TabbedPage x:Class="labyItems.Pages.Calculator.IspCalculator"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:local="clr-namespace:labyItems.Pages.Calculator"
+    xmlns:nav="clr-namespace:labyItems.Pages.Calculator.CalcNav" Title="ISP Calculator">
+    <nav:ArmourNav x:Name="ArmourCategoryPage" Title="Armour" />
+    <local:WeaponConfigPage x:Name="WeaponCategoryPage" Title="Weapon" />
+    <nav:CharmNav x:Name="CharmCategoryPage" Title="Charm" />
+    <nav:ConsumNav x:Name="ConsumableCategoryPage" Title="1-use" />
+    <nav:LifeConfigPage x:Name="LifeCategoryPage" Title="Life" />
     <TabbedPage.ToolbarItems>
         <ToolbarItem Text="Return to Form" Clicked="OnReturn" />
     </TabbedPage.ToolbarItems>

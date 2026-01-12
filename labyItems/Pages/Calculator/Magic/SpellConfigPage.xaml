@@ -6,6 +6,7 @@
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
+  xmlns:enums="clr-namespace:labyItems.Models.Enums"
   x:Name="RootPage"
   Title="Configure Spell"
   x:TypeArguments="cfg:SpellConfig">
@@ -60,11 +61,20 @@
           ValueFormat=""
           VerticalOptions="Center" />
         <Grid ColumnDefinitions="Auto,*">
-          <controls:MagicColourPicker
-            x:Name="ManaColourPicker"
-            Grid.Column="0"
-            SelectedValue="{Binding AdditionalManaColour, Mode=TwoWay}"
-            VerticalOptions="Center" />
+          <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
+            <Label
+              FontAttributes="Bold"
+              Text="Select a colour"
+              TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+            <controls:DictionarySearchBar
+              x:Name="ManaColourPicker"
+              x:TypeArguments="enums:MagicColours"
+              AllowCustomOptions="False"
+              ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}, Exclude='Grey'}"
+              PlaceholderText="Select a colour"
+              SelectedValue="{Binding AdditionalManaColour, Mode=TwoWay}"
+              VerticalOptions="Center" />
+          </VerticalStackLayout>
           <controls:DictionarySlider
             Grid.Column="1"
             KeyFormat="{}{1} Additional {0} mana store"
