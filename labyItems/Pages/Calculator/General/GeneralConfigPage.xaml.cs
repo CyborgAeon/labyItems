@@ -16,24 +16,13 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
     public GeneralConfigPage()
     {
         InitializeComponent();
-        // BindingContext = new GeneralConfig();
-        // ReturnFromConfigCommand = new Command(async () =>
-        // {
-        //     if (BindingContext is not GeneralConfig cfg)
-        //         return;
-        //     // cfg.LtmType = PowerbaseEnum.Physical;
-        //     var result = new CalcResult { TotalIsp = cfg.Total, Summary = BuildSummary(cfg) };
-
-        //     _tcs.TrySetResult(result);
-        //     await StickyFooterControl.DefaultNavigateAsync(this);
-        // });
     }
 
     private string BuildNotes(GeneralConfig c)
     {
         var s = new List<string>();
 
-    AddResistanceLevels(s, c);
+        AddResistanceLevels(s, c);
         s.AddToSummaryIf(
             c.CastingLevelsCount,
             $"+{c.CastingLevelsCount} Casting levels {(c.CastingLevelsColour?.ToString() ?? "None")}"

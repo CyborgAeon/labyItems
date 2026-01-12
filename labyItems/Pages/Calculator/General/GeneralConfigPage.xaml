@@ -6,7 +6,6 @@
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
   xmlns:enums="clr-namespace:labyItems.Models.Enums" x:Name="RootPage" Title="Configure General Charm" x:TypeArguments="cfg:GeneralConfig">
-
   <ContentPage.Resources>
     <Style x:Key="SectionHeader" TargetType="Label">
       <Setter Property="FontAttributes" Value="Bold"/>
@@ -22,7 +21,6 @@
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="10">
-        <controls:DictionarySearchBar x:Name="MagicColourSearch" x:TypeArguments="enums:MagicColours" PlaceholderText="Pick a colour" ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}, Exclude='Grey'}" SelectedValue="{Binding CastingLevelsColour, Mode=TwoWay}"/>
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
           <Label FontAttributes="Bold" FontSize="20" Text="{Binding Title}"/>
           <Button Grid.Column="2" Clicked="OnSearchGeneral" Text="Search"/>
@@ -32,10 +30,11 @@
           <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding ResistanceLevels, Mode=TwoWay}" LabelText="" Max="3"/>
         </Grid>
         <Label Margin="0,4,0,0" FontAttributes="Bold" HorizontalOptions="Start" Text="{Binding ElfInnateSummary}"/>
-        <Grid ColumnDefinitions="Auto,*">
-          <controls:ElfColourPicker Grid.Column="0" SelectedValue="{Binding ElfInnateColour, Mode=TwoWay}" VerticalOptions="Center"/>
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+          <controls:DictionarySearchBar Grid.Column="0" x:Name="ElfColourSearch" x:TypeArguments="enums:ElfColours" PlaceholderText="Pick a colour" ItemsSource="{controls:EnumDictionary Type={x:Type enums:ElfColours}}" SelectedValue="{Binding ElfInnateColour, Mode=TwoWay}"/>
           <controls:DictionarySlider Grid.Column="1" Compact="True" KeyFormat="" Labels="{Binding ElfInnateLevelLabels}" MaxCount="5" MinCount="0" Multiplier="1" SelectedCount="{Binding ElfInnateLevelIndex, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center"/>
         </Grid>
+        <controls:DictionarySearchBar x:Name="WeaponSearch" x:TypeArguments="enums:WeaponType" PlaceholderText="Pick a weapon" ItemsSource="{controls:EnumDictionary Type={x:Type enums:WeaponType}}" SelectedValue="{Binding WeaponType, Mode=TwoWay}"/>
         <controls:DictionarySlider Labels="{Binding StrengthLabels}" MaxCount="3" MinCount="0" Multiplier="1" SelectedCount="{Binding StrengthEnchantIndex, Mode=TwoWay}"/>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}" LabelText="25% Cold Rage"/>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}" LabelText="50% Berserk Rage"/>
@@ -71,7 +70,7 @@
         <controls:ListColourPickerControl CountLabelFormat="{}{0} Extra colours chosen" CountLabelText="{Binding ExtraColoursCountLabel, Mode=OneWayToSource}" IsVisible="{Binding ShowExtraColours}" Items="{Binding ExtraColours, Mode=TwoWay}" MaxItems="15" SummaryText="{Binding ExtraColoursSummary, Mode=OneWayToSource}" ValueCount="{Binding ExtraColoursCount, Mode=OneWayToSource}"/>
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
           <controls:UndeadTouchEffectPicker LabelText="May use an undead touch effect..." PlaceholderText="Select a type" SelectedValue="{Binding UndeadTouchEffect, Mode=TwoWay}"/>
-          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding UndeadTouchEffectCount, Mode=TwoWay}" LabelText="" Max="3"/>
+          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding UndeadTouchEffectCount, Mode=TwoWay}" LabelText=""/>
         </Grid>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding GaseousFormPerDayCount, Mode=TwoWay}" LabelText="Gaseous Form"/>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding PlaneShiftPerDayCount, Mode=TwoWay}" LabelText="Plane Shift"/>
