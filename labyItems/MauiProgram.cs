@@ -18,6 +18,15 @@ public static class MauiProgram
 		var dbPath = Path.Combine(FileSystem.AppDataDirectory, "default.db");
 		Directory.CreateDirectory(Path.GetDirectoryName(dbPath) ?? FileSystem.AppDataDirectory);
 
+		// Initialize SQLite raw provider on platforms (ensures native libs are available)
+		try
+		{
+			SQLitePCL.Batteries_V2.Init();
+		}
+		catch
+		{
+			// If Batteries init fails, migrations that require ADO.NET may still fail later; we catch to avoid startup crash here.
+		}
 		builder
 			.UseMauiApp<App>()
 			.ConfigureFonts(fonts =>
@@ -32,7 +41,18 @@ public static class MauiProgram
 				.AddSQLite()
 				.WithGlobalConnectionString($"Data Source={dbPath}")
 				.ScanIn(typeof(MigrationsLib.Migrations.InitialMigration).Assembly).For.Migrations())
-			.AddLogging(lb => lb.AddFluentMigratorConsole());
+			.AddLogging(lb => {
+				// FluentMigratorConsole uses Console APIs which may not be available on mobile platforms (Android/iOS/MacCatalyst).
+				// Register the console logger only on platforms that support Console; otherwise use the Debug logger.
+				if (!OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsMacCatalyst())
+				{
+					lb.AddFluentMigratorConsole();
+				}
+				else
+				{
+					lb.AddDebug();
+				}
+			});
 
 		// Register default-db installer which will copy a packaged default.db on first-run (if present)
 		builder.Services.AddSingleton<Services.IDefaultDatabaseInstaller, Services.DefaultDatabaseInstaller>();
@@ -58,10 +78,30 @@ var app = builder.Build();
 					// Do not rethrow - allow app to continue (migrations may still create DB)
 				}
 
+			var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
+			var log2 = loggerFactory.CreateLogger("Migrations");
+			try
+			{
 				var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 				runner.MigrateUp();
+				log2.LogInformation("FluentMigrator applied migrations successfully.");
 			}
+			catch (Exception ex)
+			{
+				// FluentMigrator couldn't run (likely missing ADO.NET provider on this platform). Fall back to lightweight SQL-based schema application.
+				log2.LogWarning(ex, "FluentMigrator failed to run (platform/provider issue). Falling back to lightweight schema runner.");
+				try
+				{
+					Services.LightweightMigrator.ApplyInitialSchema(dbPath, scope.ServiceProvider.GetService<ILogger>());
+					log2.LogInformation("Lightweight migrations applied successfully.");
+				}
+				catch (Exception inner)
+				{
+					log2.LogError(inner, "Lightweight migrations also failed: {Message}", inner.Message);
+				}
+			}
+		}
 
-			return app;
+		return app;
 	}
 }

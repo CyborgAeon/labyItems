@@ -1,17 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
-    <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
+        <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+    </ItemGroup>
 
+    <ItemGroup>
+        <!-- Reference shared migrations library so migrator scans the same migrations assembly -->
+        <ProjectReference Include="../migrationslib/migrationslib.csproj" />
+    </ItemGroup>
 </Project>

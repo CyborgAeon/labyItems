@@ -25,21 +25,31 @@ public static class EarthPowerService
 
     static EarthPowerService()
     {
-        // First look for a writable copy in app data (production scenario)
         var appDb = Path.Combine(FileSystem.AppDataDirectory, "default.db");
         if (File.Exists(appDb))
         {
             _dbPath = appDb;
+            Console.WriteLine($"[EarthPowerService] Using app DB: {_dbPath}");
+            return;
         }
-        else
+
+        var devCandidates = new[]
         {
-            // For local dev / POC, accept an "output/default.db" at repo root
-            var devDb = Path.Combine(Directory.GetCurrentDirectory(), "output", "evocs.db");
-            if (File.Exists(devDb))
-                _dbPath = devDb;
-            else
-                _dbPath = null;
+            Path.Combine(Directory.GetCurrentDirectory(), "output", "evocs.db"),
+            Path.Combine(Directory.GetCurrentDirectory(), "output", "default.db")
+        };
+        foreach (var candidate in devCandidates)
+        {
+            if (File.Exists(candidate))
+            {
+                _dbPath = candidate;
+                Console.WriteLine($"[EarthPowerService] Using dev DB: {_dbPath}");
+                return;
+            }
         }
+
+        _dbPath = null;
+        Console.WriteLine("[EarthPowerService] No DB found; set _dbPath = null");
     }
 
     public static async Task<IReadOnlyList<EvocRaw>> GetAllAsync()
@@ -48,7 +58,19 @@ public static class EarthPowerService
 
         if (!string.IsNullOrEmpty(_dbPath) && File.Exists(_dbPath))
         {
+            Console.WriteLine($"[EarthPowerService] Opening DB at {_dbPath}");
             using var conn = new SQLiteConnection(_dbPath, SQLiteOpenFlags.ReadOnly);
+            try
+            {
+                var total = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM evocs;");
+                var ngrams = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM evoc_ngrams;");
+                Console.WriteLine($"[EarthPowerService] evocs rows={total} evoc_ngrams={ngrams}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[EarthPowerService] Warning: failed to read counts: {ex.Message}");
+            }
+
             var rows = conn.Query<DbRow>("SELECT data_json FROM evocs ORDER BY name;");
             var list = new List<EvocRaw>();
             foreach (var row in rows)
@@ -82,6 +104,7 @@ public static class EarthPowerService
             {
                 var normalized = NormalizeForNgrams(query.ToLowerInvariant());
                 var tokens = GenerateNGrams(normalized, NGRAM_N).Distinct().ToList();
+                Console.WriteLine($"[EarthPowerService] Search query='{query}' normalized='{normalized}' tokens=[{string.Join(',', tokens)}]");
                 if (tokens.Count == 0)
                     return Array.Empty<EvocRaw>();
 
@@ -99,8 +122,10 @@ public static class EarthPowerService
 
                 var inClause = string.Join(",", paramNames);
                 var sql = $"SELECT e.data_json FROM evocs e JOIN (SELECT evoc_id, COUNT(*) as ct FROM evoc_ngrams WHERE token IN ({inClause}) GROUP BY evoc_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evoc_id;";
+                Console.WriteLine($"[EarthPowerService] SQL={sql} params=[{string.Join(',', args)}]");
 
                 var rows = conn.Query<DbRow>(sql, args.ToArray());
+                Console.WriteLine($"[EarthPowerService] Rows returned: {rows.Count}");
                 var list = new List<EvocRaw>();
                 foreach (var row in rows)
                 {
