@@ -11,7 +11,7 @@ namespace labyItems.Controls;
 public class ListColourPickerControl : ContentView
 {
     private readonly VerticalStackLayout _rowsHost;
-    private static readonly IDictionary<string, MagicColours> ColourOptions =
+    private static readonly Dictionary<string, MagicColours> ColourOptions =
         Enum.GetValues(typeof(MagicColours))
             .Cast<MagicColours>()
             .Where(c => c != MagicColours.Grey)

@@ -149,18 +149,18 @@ public class DictionarySearchBar<TValue> : ContentView
 
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
         nameof(ItemsSource),
-        typeof(IDictionary<string, TValue>),
+        typeof(Dictionary<string, TValue>),
         typeof(DictionarySearchBar<TValue>),
-        defaultValue: default(IDictionary<string, TValue>),
+        defaultValue: default(Dictionary<string, TValue>),
         propertyChanged: OnItemsSourceChanged
     );
 
     /// <summary>
     /// Dictionary of display text to values used for filtering and selection.
     /// </summary>
-    public IDictionary<string, TValue>? ItemsSource
+    public Dictionary<string, TValue>? ItemsSource
     {
-        get => (IDictionary<string, TValue>?)GetValue(ItemsSourceProperty);
+        get => (Dictionary<string, TValue>?)GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);
     }
 
