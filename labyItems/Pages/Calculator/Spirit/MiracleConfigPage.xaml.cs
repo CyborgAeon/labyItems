@@ -30,7 +30,7 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
 
         if (Navigation?.NavigationStack?.Count > 1)
         {
-            _tcs.TrySetResult(result);
+            Complete(result);
             await Navigation.PopAsync();
             return;
         }
@@ -41,7 +41,7 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
             return;
         }
 
-        _tcs.TrySetResult(result);
+        Complete(result);
         await Navigation.PopAsync();
     }
 
@@ -69,7 +69,7 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
         if (BindingContext is not MiracleConfig cfg) return;
 
         var res = BuildResult(cfg);
-        _tcs.TrySetResult(res);
+        Complete(res);
         await Navigation.PopAsync();
     }
 
