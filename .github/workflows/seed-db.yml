@@ -39,7 +39,7 @@ jobs:
         run: dotnet build tools/evocdbgen/evocdbgen.csproj -c Release --no-restore
 
       - name: Run evocdbgen to generate DB
-        run: dotnet run --project tools/evocdbgen/evocdbgen.csproj -c Release --no-build --no-restore
+        run: dotnet run --project tools/evocdbgen/evocdbgen.csproj -c Release --no-build --no-restore -- "labyItems/Resources/Raw/druids_way/evocs.json" "output/evocs.db"
 
       - name: Ensure output exists
         run: ls -la output || true
