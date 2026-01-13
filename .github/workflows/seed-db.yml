@@ -2,7 +2,7 @@ name: Build and publish seeded DB
 
 on:
   push:
-    branches: ["main"]
+    branches: ["init"]
     paths:
       - "tools/evocdbgen/**"
       - ".github/workflows/seed-db.yml"
