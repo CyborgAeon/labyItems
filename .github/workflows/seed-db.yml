@@ -30,8 +30,10 @@ jobs:
           restore-keys: |
             nuget-${{ runner.os }}-
 
-      - name: Restore
-        run: dotnet restore
+      - name: Restore tools projects
+        run: |
+          dotnet restore tools/evocdbgen/evocdbgen.csproj
+          dotnet restore tools/migrator/migrator.csproj
 
       - name: Build evocdbgen
         run: dotnet build tools/evocdbgen -c Release --no-restore
