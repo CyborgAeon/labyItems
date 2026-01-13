@@ -2,7 +2,7 @@ name: Build and publish seeded DB
 
 on:
   push:
-    branches: ["main"]
+    branches: ["init"]
     paths:
       - "tools/evocdbgen/**"
       - ".github/workflows/seed-db.yml"
@@ -30,14 +30,16 @@ jobs:
           restore-keys: |
             nuget-${{ runner.os }}-
 
-      - name: Restore
-        run: dotnet restore
+      - name: Restore tools projects
+        run: |
+          dotnet restore tools/evocdbgen/evocdbgen.csproj
+          dotnet restore tools/migrator/migrator.csproj
 
       - name: Build evocdbgen
-        run: dotnet build tools/evocdbgen -c Release --no-restore
+        run: dotnet build tools/evocdbgen/evocdbgen.csproj -c Release --no-restore
 
       - name: Run evocdbgen to generate DB
-        run: dotnet run --project tools/evocdbgen -c Release --no-build
+        run: dotnet run --project tools/evocdbgen/evocdbgen.csproj -c Release --no-build --no-restore
 
       - name: Ensure output exists
         run: ls -la output || true
@@ -74,8 +76,8 @@ jobs:
         run: |
           set -euo pipefail
           echo "Running migrator against output/default.db"
-          dotnet build tools/migrator -c Release --no-restore
-          dotnet run --project tools/migrator -c Release --no-build -- output/default.db
+          dotnet build tools/migrator/migrator.csproj -c Release --no-restore
+          dotnet run --project tools/migrator/migrator.csproj -c Release --no-build --no-restore -- output/default.db
 
       - name: Verify updated seed_metadata.schema_version
         run: |
