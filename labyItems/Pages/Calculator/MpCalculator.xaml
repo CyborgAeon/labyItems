@@ -5,19 +5,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:local="clr-namespace:labyItems.Pages.Calculator"
   Title="MP Calculator">
-  <local:MpBasicPage Title="Basic" />
-  <ContentPage Title="Crew">
-    <ScrollView>
-      <VerticalStackLayout Padding="20" Spacing="12">
-        <Label Text="Crew" FontAttributes="Bold" FontSize="18" />
-      </VerticalStackLayout>
-    </ScrollView>
-  </ContentPage>
-  <ContentPage Title="Themeday">
-    <ScrollView>
-      <VerticalStackLayout Padding="20" Spacing="12">
-        <Label Text="Themeday" FontAttributes="Bold" FontSize="18" />
-      </VerticalStackLayout>
-    </ScrollView>
-  </ContentPage>
+  <local:MpBasicPage />
+  <local:MpCrewPage />
+  <local:MpThemedayPage />
 </TabbedPage>

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<local:MpCalculatorPageBase x:Class="labyItems.Pages.Calculator.MpBasicPage"
+<local:MpCalculatorPageBase x:Class="labyItems.Pages.Calculator.MpCrewPage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:enums="clr-namespace:labyItems.Models.Enums"
-  xmlns:local="clr-namespace:labyItems.Pages.Calculator" x:Name="RootPage" Title="Basic">
+  xmlns:local="clr-namespace:labyItems.Pages.Calculator" x:Name="RootPage" Title="Crew">
 
   <Grid RowDefinitions="*,Auto">
     <ScrollView>
       <VerticalStackLayout Padding="20" Spacing="12">
         <!-- Spells -->
-        <Label Text="Add 1st-6th standard spell" FontAttributes="Bold" />
+        <Label Text="Add standard spell (1st-10th) or advanced (0-3)" FontAttributes="Bold" />
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-          <controls:DictionarySearchBar Grid.Column="0" x:Name="SpellSearch" x:TypeArguments="local:SpellOption" PlaceholderText="Type spell name)" SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}" />
+          <controls:DictionarySearchBar Grid.Column="0" x:Name="SpellSearch" x:TypeArguments="local:SpellOption" PlaceholderText="Type spell name" SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}" />
           <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding SpellCount, Mode=TwoWay}" Min="0" />
         </Grid>
 
         <!-- Miracles -->
-        <Label Text="Add 1st-5th standard miracle" FontAttributes="Bold" />
+        <Label Text="Add standard miracle (1st-5th) or advanced (1-3)" FontAttributes="Bold" />
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
           <controls:DictionarySearchBar Grid.Column="0" x:Name="MiracleSearch" x:TypeArguments="local:MiracleOption" PlaceholderText="Type miracle name" SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}" />
           <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding MiracleCount, Mode=TwoWay}" Min="0" />
@@ -43,22 +43,30 @@
 
         <!-- AC bumps -->
         <VerticalStackLayout Spacing="8">
-          <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+          <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
             <HorizontalStackLayout Grid.Column="0" Grid.Row="0" Spacing="6">
               <CheckBox IsChecked="{Binding PacChecked, Mode=TwoWay}" />
-              <Label Text="+1 PAC" VerticalTextAlignment="Center" />
+              <Label Text="+1 PAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
             </HorizontalStackLayout>
             <HorizontalStackLayout Grid.Column="1" Grid.Row="0" Spacing="6">
               <CheckBox IsChecked="{Binding DacChecked, Mode=TwoWay}" />
-              <Label Text="+1 DAC" VerticalTextAlignment="Center" />
+              <Label Text="+1 DAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
             </HorizontalStackLayout>
             <HorizontalStackLayout Grid.Column="0" Grid.Row="1" Spacing="6">
               <CheckBox IsChecked="{Binding MacChecked, Mode=TwoWay}" />
-              <Label Text="+1 MAC" VerticalTextAlignment="Center" />
+              <Label Text="+1 MAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
             </HorizontalStackLayout>
             <HorizontalStackLayout Grid.Column="1" Grid.Row="1" Spacing="6">
               <CheckBox IsChecked="{Binding SacChecked, Mode=TwoWay}" />
-              <Label Text="+1 SAC" VerticalTextAlignment="Center" />
+              <Label Text="+1 SAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Grid.Column="0" Grid.Row="2" Spacing="6">
+              <CheckBox IsChecked="{Binding Mac2Checked, Mode=TwoWay}" />
+              <Label Text="+2 MAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Grid.Column="1" Grid.Row="2" Spacing="6">
+              <CheckBox IsChecked="{Binding Sac2Checked, Mode=TwoWay}" />
+              <Label Text="+2 SAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
             </HorizontalStackLayout>
           </Grid>
         </VerticalStackLayout>
@@ -77,11 +85,21 @@
           </Grid>
         </VerticalStackLayout>
 
-        <!-- Apprentice crafted -->
-        <Label Text="Apprentice crafted" FontAttributes="Bold"/>
-        <Grid ColumnDefinitions="*,*" ColumnSpacing="6">
-          <controls:ChipGroup Grid.Column="0" Items="{Binding ApprenticeTypeOptions}" SelectedItem="{Binding ApprenticeType, Mode=TwoWay}" />
-          <controls:DictionarySearchBar Grid.Column="1" x:Name="WeaponSearch" IsVisible="{Binding IsApprenticeWeapon}" x:TypeArguments="enums:WeaponType" PlaceholderText="Pick weapon type" SelectedValue="{Binding SelectedWeapon, Mode=TwoWay}" />
+        <Label Text="Weapon" FontAttributes="Bold" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+          <controls:ChipGroup Grid.Column="0" Items="{Binding WeaponPowerOptions}" SelectedItem="{Binding SelectedWeaponPowerType, Mode=TwoWay}" />
+          <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+            <CheckBox IsChecked="{Binding WeaponApprenticeStatus, Mode=TwoWay}" />
+            <Label Text="Apprentice status" FontAttributes="Bold" VerticalTextAlignment="Center" />
+          </HorizontalStackLayout>
+        </Grid>
+        <controls:DictionarySearchBar Grid.Column="0" x:Name="CrewWeaponSearch" IsVisible="{Binding IsWeaponSelectionVisible}" x:TypeArguments="enums:WeaponType" PlaceholderText="Pick weapon type" ItemsSource="{controls:EnumDictionary Type={x:Type enums:WeaponType}}" SelectedValue="{Binding SelectedWeaponType, Mode=TwoWay}" />
+        <controls:DictionarySearchBar x:Name="CrewWeaponColourSearch" x:TypeArguments="enums:MagicColours" IsVisible="{Binding IsWeaponColourVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}}" PlaceholderText="Pick colour" SelectedValue="{Binding SelectedWeaponColour, Mode=TwoWay}" />
+        <controls:DictionarySearchBar x:Name="CrewWeaponAlignmentSearch" x:TypeArguments="enums:Alignments" IsVisible="{Binding IsWeaponAlignmentVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:Alignments}}" PlaceholderText="Pick alignment" SelectedValue="{Binding SelectedWeaponAlignment, Mode=TwoWay}" />
+
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+          <controls:ChipGroup Grid.Column="0" Items="{Binding StatusBagOptions}" SelectedItem="{Binding SelectedBagType, Mode=TwoWay}" />
+          <Label Grid.Column="1" Text="Status bag" FontAttributes="Bold" VerticalTextAlignment="Center" />
         </Grid>
       </VerticalStackLayout>
     </ScrollView>

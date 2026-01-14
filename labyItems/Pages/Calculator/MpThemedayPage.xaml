@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<local:MpCalculatorPageBase x:Class="labyItems.Pages.Calculator.MpThemedayPage"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:controls="clr-namespace:labyItems.Controls"
+  xmlns:enums="clr-namespace:labyItems.Models.Enums"
+  xmlns:local="clr-namespace:labyItems.Pages.Calculator" x:Name="RootPage" Title="Themeday">
+
+  <Grid RowDefinitions="*,Auto">
+    <ScrollView x:Name="ThemedayScroll">
+      <VerticalStackLayout Padding="20" Spacing="12">
+        <!-- Spells -->
+        <Label Text="Add standard spell (1st-10th) or advanced (0-3)" FontAttributes="Bold" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+          <controls:DictionarySearchBar Grid.Column="0" x:Name="SpellSearch" x:TypeArguments="local:SpellOption" PlaceholderText="Type spell name" SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}" />
+          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding SpellCount, Mode=TwoWay}" Min="0" />
+        </Grid>
+
+        <!-- Miracles -->
+        <Label Text="Add standard miracle (1st-5th) or advanced (1-3)" FontAttributes="Bold" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+          <controls:DictionarySearchBar Grid.Column="0" x:Name="MiracleSearch" x:TypeArguments="local:MiracleOption" PlaceholderText="Type miracle name" SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}" />
+          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding MiracleCount, Mode=TwoWay}" Min="0" />
+        </Grid>
+
+        <!-- Evocations -->
+        <Label Text="Add 0-4th standard evocation" FontAttributes="Bold" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+          <controls:DictionarySearchBar IsEnabled="{Binding DbEnabled}" Grid.Column="0" x:Name="EvocationSearch" x:TypeArguments="local:EvocationOption" PlaceholderText="Type evocation name" SelectedValue="{Binding SelectedEvocationOption, Mode=TwoWay}" />
+          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding EvocationCount, Mode=TwoWay}" Min="0" />
+        </Grid>
+
+        <VerticalStackLayout Spacing="8">
+          <controls:PlusMinusControl LabelText="Active neuro" AllowMultiple="True" Count="{Binding ActiveNeuroCount, Mode=TwoWay}" IsEnabled="False" />
+          <controls:PlusMinusControl LabelText="Passive neuro" AllowMultiple="True" Count="{Binding PassiveNeuroCount, Mode=TwoWay}" IsEnabled="False" />
+        </VerticalStackLayout>
+
+        <!-- Life slider -->
+        <VerticalStackLayout Spacing="4">
+          <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference LifeSlider}}" ValueText="{Binding ValueText, Source={x:Reference LifeSlider}}" />
+          <controls:DictionarySlider x:Name="LifeSlider" KeyFormat="Life: {0}" ValueFormat="" SelectionChanged="OnLifeSelectionChanged" />
+        </VerticalStackLayout>
+
+        <!-- AC bumps -->
+        <VerticalStackLayout Spacing="8">
+          <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+            <HorizontalStackLayout Grid.Column="0" Grid.Row="0" Spacing="6">
+              <CheckBox IsChecked="{Binding PacChecked, Mode=TwoWay}" />
+              <Label Text="+1 PAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Grid.Column="1" Grid.Row="0" Spacing="6">
+              <CheckBox IsChecked="{Binding DacChecked, Mode=TwoWay}" />
+              <Label Text="+1 DAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Grid.Column="0" Grid.Row="1" Spacing="6">
+              <CheckBox IsChecked="{Binding MacChecked, Mode=TwoWay}" />
+              <Label Text="+1 MAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Grid.Column="1" Grid.Row="1" Spacing="6">
+              <CheckBox IsChecked="{Binding SacChecked, Mode=TwoWay}" />
+              <Label Text="+1 SAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+          </Grid>
+        </VerticalStackLayout>
+
+        <!-- Repel -->
+        <VerticalStackLayout Spacing="8">
+          <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+            <Label Grid.Column="0" Text="Repel" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            <controls:ChipGroup Grid.Column="1" Items="{Binding RepelGoodEvilOptions}" SelectedItem="{Binding RepelGoodEvilTarget, Mode=TwoWay}" VerticalOptions="Center" />
+            <controls:PlusMinusControl Grid.Column="2" AllowMultiple="True" Count="{Binding RepelGoodEvilCount, Mode=TwoWay}" Min="0" />
+          </Grid>
+
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <Label Grid.Column="0" FontAttributes="Bold" Text="Repel Life" VerticalTextAlignment="Center" />
+            <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding RepelLifeCount, Mode=TwoWay}" Min="0" />
+          </Grid>
+        </VerticalStackLayout>
+
+        <!-- Themeday weapon -->
+        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="6">
+          <Label Grid.Row="0" Grid.Column="0" Text="Weapon" FontAttributes="Bold" FontSize="16" VerticalTextAlignment="Center" />
+          <HorizontalStackLayout Grid.Row="0" Grid.Column="2" Spacing="6" VerticalOptions="Center">
+            <CheckBox IsChecked="{Binding WeaponApprenticeStatus, Mode=TwoWay}" />
+            <Label Text="Apprentice status" FontAttributes="Bold" VerticalTextAlignment="Center" />
+          </HorizontalStackLayout>
+          <controls:ChipGroup Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Items="{Binding WeaponTypeOptions}" SelectedItem="{Binding SelectedWeaponKind, Mode=TwoWay}" />
+        </Grid>
+        <VerticalStackLayout Spacing="6" IsVisible="{Binding IsWeaponSelectionVisible}">
+          <controls:DictionarySearchBar x:Name="WeaponTypeSearch" x:TypeArguments="enums:WeaponType" ItemsSource="{controls:EnumDictionary Type={x:Type enums:WeaponType}}" PlaceholderText="Pick weapon type" SelectedValue="{Binding SelectedWeaponType, Mode=TwoWay}" />
+          <controls:DictionarySearchBar x:Name="WeaponColourSearch" x:TypeArguments="enums:MagicColours" IsVisible="{Binding IsWeaponColourVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}}" PlaceholderText="Pick colour" SelectedValue="{Binding SelectedWeaponColour, Mode=TwoWay}" />
+          <controls:DictionarySearchBar x:Name="WeaponAlignmentSearch" x:TypeArguments="enums:Alignments" IsVisible="{Binding IsWeaponAlignmentVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:Alignments}}" PlaceholderText="Pick alignment" SelectedValue="{Binding SelectedWeaponAlignment, Mode=TwoWay}" />
+        </VerticalStackLayout>
+
+        <!-- Shield -->
+        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="6">
+          <Label Grid.Row="0" Grid.Column="0" Text="Shield" FontAttributes="Bold" FontSize="16" VerticalTextAlignment="Center" />
+          <HorizontalStackLayout Grid.Row="0" Grid.Column="2" Spacing="6" VerticalOptions="Center">
+            <CheckBox IsChecked="{Binding ShieldApprenticeStatus, Mode=TwoWay}" />
+            <Label Text="Apprentice status" FontAttributes="Bold" VerticalTextAlignment="Center" />
+          </HorizontalStackLayout>
+          <controls:ChipGroup Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Items="{Binding ShieldTypeOptions}" SelectedItem="{Binding SelectedShieldType, Mode=TwoWay}" />
+        </Grid>
+        <VerticalStackLayout Spacing="6">
+          <controls:DictionarySearchBar x:Name="ShieldColourSearch" x:TypeArguments="enums:MagicColours" IsVisible="{Binding IsShieldColourVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}}" PlaceholderText="Pick colour" SelectedValue="{Binding SelectedShieldColour, Mode=TwoWay}" />
+          <controls:DictionarySearchBar x:Name="ShieldAlignmentSearch" x:TypeArguments="enums:Alignments" IsVisible="{Binding IsShieldAlignmentVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:Alignments}}" PlaceholderText="Pick alignment" SelectedValue="{Binding SelectedShieldAlignment, Mode=TwoWay}" />
+        </VerticalStackLayout>
+
+        <!-- Power stores -->
+        <Label Text="Power stores" FontAttributes="Bold" FontSize="16" />
+        <VerticalStackLayout Spacing="10">
+          <Grid ColumnDefinitions="0.45*,*" ColumnSpacing="10">
+            <controls:DictionarySearchBar Grid.Column="0" x:Name="SpiritSphereSearch" x:TypeArguments="enums:SpiritualSpheres" ItemsSource="{controls:EnumDictionary Type={x:Type enums:SpiritualSpheres}}" PlaceholderText="Pick sphere" SelectedValue="{Binding SelectedSpiritSphere, Mode=TwoWay}" />
+            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+              <Label Text="{Binding KeyText, Source={x:Reference SpiritStoreSlider}}" />
+              <controls:DictionarySlider x:Name="SpiritStoreSlider" KeyFormat="{}{0} additional spirits" ValueFormat="{}{0}" MinCount="0" MaxCount="5" Multiplier="1" SelectedCount="{Binding SpiritPowerStorePoints, Mode=TwoWay}" />
+            </VerticalStackLayout>
+          </Grid>
+
+          <Grid ColumnDefinitions="0.45*,*" ColumnSpacing="10">
+            <controls:DictionarySearchBar Grid.Column="0" x:Name="MagicStoreColourSearch" x:TypeArguments="enums:MagicColours" ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}}" PlaceholderText="Pick colour" SelectedValue="{Binding SelectedMagicStoreColour, Mode=TwoWay}" />
+            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+              <Label Text="{Binding KeyText, Source={x:Reference MagicStoreSlider}}" />
+              <controls:DictionarySlider x:Name="MagicStoreSlider" KeyFormat="{}{0} additional mana" ValueFormat="{}{0}" MinCount="0" MaxCount="5" Multiplier="1" SelectedCount="{Binding MagicPowerStorePoints, Mode=TwoWay}" />
+            </VerticalStackLayout>
+          </Grid>
+
+          <Grid ColumnDefinitions="0.45*,*" ColumnSpacing="10">
+            <controls:DictionarySearchBar Grid.Column="0" x:Name="EarthpowerFieldSearch" x:TypeArguments="enums:EvocationFields" ItemsSource="{controls:EnumDictionary Type={x:Type enums:EvocationFields}}" PlaceholderText="Pick field" SelectedValue="{Binding SelectedEarthpowerField, Mode=TwoWay}" />
+            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+              <Label Text="{Binding KeyText, Source={x:Reference EarthpowerStoreSlider}}" />
+              <controls:DictionarySlider x:Name="EarthpowerStoreSlider" KeyFormat="{}{0} additional Earthpower" ValueFormat="{}{0}" MinCount="0" MaxCount="5" Multiplier="1" SelectedCount="{Binding EarthpowerStorePoints, Mode=TwoWay}" />
+            </VerticalStackLayout>
+          </Grid>
+        </VerticalStackLayout>
+
+        <Label Text="CP benefit" FontAttributes="Bold" FontSize="16" />
+        <controls:ChipGroup Items="{Binding CpOptions}" SelectedItem="{Binding SelectedCpOption, Mode=TwoWay}" />
+        <VerticalStackLayout IsVisible="{Binding IsCpLocationRequired}" Spacing="4">
+          <Label Text="Pick a location" />
+          <controls:DictionarySearchBar x:Name="CpLocationSearch" x:TypeArguments="local:LocationOption" AllowCustomOptions="True" PlaceholderText="Type a city or enter a custom location" ItemsSource="{Binding CpLocationOptions}" SelectedValue="{Binding SelectedCpLocation, Mode=TwoWay}" SelectedText="{Binding CpLocationText, Mode=TwoWay}" />
+        </VerticalStackLayout>
+
+      </VerticalStackLayout>
+    </ScrollView>
+
+    <controls:StickyFooterControl Grid.Row="1" ButtonText="Continue" ReturnCommand="{Binding ContinueCommand}" Total="{Binding TotalMp}" TotalFormat="MP cost: {0}/500" BreakdownItems="{Binding Breakdown}" />
+  </Grid>
+</local:MpCalculatorPageBase>
