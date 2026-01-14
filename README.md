@@ -40,48 +40,24 @@ PKG=bard.uk.labyitems; $HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c D
 
 ---
 
-### Debugging the seeded database (quick local workflow)
+### Debugging the seeded database (single-shot local workflow)
 
-If you want to reproduce and debug runtime DB queries locally (recommended):
-
-1. Build the seed DB locally (creates `output/default.db` by default):
+With an emulator running, this one liner will generate the DB, apply migrations, push it into the app sandbox, and launch the app:
 
 ```bash
-$HOME/.dotnet/dotnet build tools/evocdbgen -c Release
-$HOME/.dotnet/dotnet run --project tools/evocdbgen -c Release -- labyItems/Resources/Raw/druids_way/evocs.json output/default.db
-```
-
-2. Optionally apply migrations (updates `seed_metadata.schema_version`):
-
-```bash
-$HOME/.dotnet/dotnet build tools/migrator -c Release
-$HOME/.dotnet/dotnet run --project tools/migrator -c Release -- output/default.db
-```
-
-3. To test against a running emulator/device, push the DB into a place the app can access and copy it into the app's files directory (debug builds are debuggable so `run-as` should work):
-
-```bash
-adb push output/default.db /data/local/tmp/default.db
-PKG=bard.uk.labyitems
-adb shell run-as $PKG cp /data/local/tmp/default.db files/default.db
-adb shell run-as $PKG ls -l files/default.db
-```
-
-4. Launch the app and capture logs that include our service debug lines (`[GeneralService]` / `[EarthPowerService]`):
-
-```bash
-PKG=bard.uk.labyitems
-$HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c Debug -clp:ErrorsOnly
+PKG=bard.uk.labyitems DB=output/default.db && \
+$HOME/.dotnet/dotnet run --project tools/evocdbgen -c Release -- labyItems/Resources/Raw/druids_way/evocs.json "$DB" && \
+$HOME/.dotnet/dotnet run --project tools/migrator -c Release -- "$DB" && \
+adb push "$DB" /data/local/tmp/default.db && \
+adb shell run-as "$PKG" sh -c 'mkdir -p files && cp /data/local/tmp/default.db files/default.db && ls -l files/default.db' && \
+$HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c Debug -clp:ErrorsOnly && \
 adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
-PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); echo "PID=$PID"
-# show only lines starting with [  e.g. our service debug prefixes ]
-adb logcat --pid "$PID" -v time --regex '^(\[GeneralService\]|\[EarthPowerService\]|\[.*)'
 ```
 
 Notes:
 
-- The local conversion tool produces `output/default.db` (CI artifact uses the same filename). The app will accept `output/evocs.db` or `output/default.db` when running locally.
-- If a release build is used, the CI pipeline already copies the canonical `default.db` into `labyItems/Resources/Raw/default.db` during release preparation.
+- The app must have been launched once (or the `mkdir -p files` step will create the sandbox folder).
+- If you want logs after launch: `PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); adb logcat --pid "$PID" -v time --regex '^\[.*'`.
 
 ---
 

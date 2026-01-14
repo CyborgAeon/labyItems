@@ -32,6 +32,17 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     private const int DefaultMacCost = 80;
     private const int DefaultSacCost = 100;
 
+    private static readonly Dictionary<string, int> LifeIspLookup = new(StringComparer.OrdinalIgnoreCase)
+    {
+        { "0", 0 },
+        { "3/1", 4 },
+        { "4/2", 6 },
+        { "6/2", 9 },
+        { "9/3", 14 },
+        { "12/4", 20 },
+        { "15/5", 28 }
+    };
+
     private static readonly string[] ApprenticeTypeChipOptions = { "🛡️ Shield", "🗡️ Weapon" };
     private static readonly string[] RepelGoodEvilChipOptions = { "👼 Good", "😈 Evil" };
 
@@ -203,10 +214,13 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     protected virtual MpSubmissionPayload BuildSubmissionPayload()
     {
+        var ispBreakdown = BuildIspBreakdown(out var totalIsp);
         return new MpSubmissionPayload
         {
             TotalMp = TotalMp,
-            Breakdown = Breakdown.ToList()
+            Breakdown = Breakdown.ToList(),
+            TotalIsp = totalIsp,
+            IspBreakdown = ispBreakdown
         };
     }
 
@@ -420,6 +434,89 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     {
     }
 
+    private List<ContributionRow> BuildIspBreakdown(out int total)
+    {
+        var items = new List<ContributionRow>();
+        int running = 0;
+
+        var spellCount = Math.Max(0, SpellCount);
+        if (SelectedSpellOption is SpellOption spell && spellCount > 0)
+        {
+            var power = Math.Max(0, spell.Level);
+            var unit = spell.IsAdvanced ? 3 : 2;
+            var cost = unit * power * spellCount;
+            AddIspContribution(items, ref running, "spell", $"Spell: {FormatSpellLabel(spell)} x{spellCount}", cost);
+        }
+
+        var miracleCount = Math.Max(0, MiracleCount);
+        if (SelectedMiracleOption is MiracleOption miracle && miracleCount > 0)
+        {
+            var power = Math.Max(0, miracle.Power);
+            var unit = miracle.IsAdvanced ? 3 : 2;
+            var cost = unit * power * miracleCount;
+            AddIspContribution(items, ref running, "miracle", $"Miracle: {FormatMiracleLabel(miracle)} x{miracleCount}", cost);
+        }
+
+        var evocationCount = Math.Max(0, EvocationCount);
+        if (SelectedEvocationOption is EvocationOption evocation && evocationCount > 0)
+        {
+            var power = Math.Max(0, evocation.Power);
+            var unit = evocation.IsAdvanced ? 3 : 2;
+            var cost = unit * power * evocationCount;
+            AddIspContribution(items, ref running, "evocation", $"Evocation: {evocation.Name} x{evocationCount}", cost);
+        }
+
+        if (LifeSliderControl.SelectedIndex >= 0)
+        {
+            var key = LifeSliderControl.SelectedKey;
+            var cost = GetLifeIspCost(key);
+            AddIspContribution(items, ref running, "life", $"Life {key}", cost);
+        }
+
+        if (PacChecked) AddIspContribution(items, ref running, "pac", "+1 PAC", 4);
+        if (DacChecked) AddIspContribution(items, ref running, "dac", "+1 DAC", 6);
+        if (MacChecked) AddIspContribution(items, ref running, "mac", "+1 MAC", 8);
+        if (SacChecked) AddIspContribution(items, ref running, "sac", "+1 SAC", 6);
+
+        var repelTarget = TrimChipLabel(RepelGoodEvilTarget) ?? RepelGoodEvilTarget;
+        if (RepelGoodEvilCount > 0 && !string.IsNullOrWhiteSpace(repelTarget))
+        {
+            int cost = RepelGoodEvilCount * 8;
+            AddIspContribution(items, ref running, "repel-ge", $"Repel {repelTarget} x{RepelGoodEvilCount}", cost);
+        }
+        if (RepelLifeCount > 0)
+        {
+            int cost = RepelLifeCount * 10;
+            AddIspContribution(items, ref running, "repel-life", $"Repel Life x{RepelLifeCount}", cost);
+        }
+
+        if (!string.IsNullOrWhiteSpace(ApprenticeType))
+        {
+            var typeLabel = TrimChipLabel(ApprenticeType) ?? ApprenticeType;
+            var label = $"Apprentice crafted {typeLabel}";
+            if (IsApprenticeWeapon && SelectedWeapon.HasValue)
+                label += $" ({EnumDisplayFormatter.FormatName(SelectedWeapon.Value.ToString())})";
+            AddIspContribution(items, ref running, "apprentice", label, 10);
+        }
+
+        AddCustomIspContributions(items, ref running);
+
+        total = running;
+        return items;
+    }
+
+    protected virtual void AddCustomIspContributions(List<ContributionRow> items, ref int running)
+    {
+    }
+
+    protected virtual int GetLifeIspCost(string? lifeKey)
+    {
+        if (string.IsNullOrWhiteSpace(lifeKey))
+            return 0;
+
+        return LifeIspLookup.TryGetValue(lifeKey.Trim(), out var isp) ? isp : 0;
+    }
+
     protected virtual int CalculateSpellCost(SpellOption option, int count)
     {
         int sanitizedLevel = Math.Max(0, option.Level);
@@ -471,6 +568,18 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         });
     }
 
+    protected static void AddIspContribution(List<ContributionRow> items, ref int running, string id, string label, int cost, bool includeWhenZero = false)
+    {
+        if (cost <= 0 && !includeWhenZero) return;
+        running += cost;
+        items.Add(new ContributionRow
+        {
+            Id = $"isp-{id}",
+            Text = $"{label} = {cost}",
+            RunningTotal = running
+        });
+    }
+
     protected static string? TrimChipLabel(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -503,4 +612,6 @@ public class MpSubmissionPayload
 {
     public int TotalMp { get; set; }
     public List<ContributionRow> Breakdown { get; set; } = new();
+    public int TotalIsp { get; set; }
+    public List<ContributionRow> IspBreakdown { get; set; } = new();
 }

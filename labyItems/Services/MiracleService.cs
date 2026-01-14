@@ -1,4 +1,5 @@
 using System.Text.Json;
+using SQLite;
 
 namespace labyItems.Services;
 
@@ -15,32 +16,60 @@ public static class MiracleService
 
     }
     private static List<MiracRaw>? _cache;
+    private static readonly string? _dbPath = ResolveDbPath();
 
     public static async Task<IReadOnlyList<MiracRaw>> GetAllAsync()
     {
         if (_cache != null) return _cache;
 
-        using var s = await FileSystem.OpenAppPackageFileAsync("words_from_above/miracles1.json");
-        using var r = new StreamReader(s);
-        var json = await r.ReadToEndAsync();
-        var dict = JsonSerializer.Deserialize<List<MiracRaw>>(json)
-            ?? new List<MiracRaw>();
+        var dbList = LoadFromDatabase();
+        if (dbList is { Count: > 0 })
+        {
+            _cache = dbList;
+            return _cache;
+        }
 
-        _cache = dict
+        throw new InvalidOperationException("Miracles DB not found or empty; ensure default.db is installed.");
+    }
+
+    private static List<MiracRaw>? LoadFromDatabase()
+    {
+        if (string.IsNullOrEmpty(_dbPath) || !File.Exists(_dbPath))
+            return null;
+
+        try
+        {
+            using var conn = new SQLiteConnection(_dbPath, SQLiteOpenFlags.ReadOnly);
+            var rows = conn.Query<DbRow>("SELECT data_json FROM miracles ORDER BY power, name;");
+            var list = new List<MiracRaw>();
+            foreach (var row in rows)
+            {
+                var e = JsonSerializer.Deserialize<MiracRaw>(row.data_json);
+                if (e != null) list.Add(e);
+            }
+
+            return Normalize(list);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static List<MiracRaw> Normalize(IEnumerable<MiracRaw> source) =>
+        source
             .Select(e => new MiracRaw
             {
                 power = e.power,
-                name = e.name,
-                description = e.description,
-                sphere = e.sphere,
+                name = e.name ?? string.Empty,
+                description = e.description ?? string.Empty,
+                sphere = e.sphere ?? string.Empty,
                 isAdvanced = e.isAdvanced,
-                alignment = e.alignment,
+                alignment = e.alignment ?? string.Empty,
             })
             .OrderBy(e => e.power)
+            .ThenBy(e => e.name)
             .ToList();
-
-        return _cache;
-    }
 
     public static async Task<IReadOnlyList<MiracRaw>> SearchAsync(string query)
     {
@@ -51,5 +80,34 @@ public static class MiracleService
         return all.Where(e =>
                 e.name.ToLowerInvariant().Contains(query))
             .ToList();
+    }
+
+    private sealed class DbRow
+    {
+        public string data_json { get; set; } = string.Empty;
+    }
+
+    private static string? ResolveDbPath()
+    {
+        var appDb = Path.Combine(FileSystem.AppDataDirectory, "default.db");
+        if (File.Exists(appDb))
+        {
+            return appDb;
+        }
+
+        var devCandidates = new[]
+        {
+            Path.Combine(Directory.GetCurrentDirectory(), "output", "default.db"),
+        };
+
+        foreach (var candidate in devCandidates)
+        {
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        return null;
     }
 }

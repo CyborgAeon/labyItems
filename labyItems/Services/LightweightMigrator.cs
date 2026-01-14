@@ -34,6 +34,38 @@ CREATE TABLE IF NOT EXISTS evocs (
   updated_at TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_evocs_name_lower ON evocs(name_lower);
+
+CREATE TABLE IF NOT EXISTS miracles (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  name_lower TEXT,
+  power INTEGER,
+  sphere TEXT,
+  alignment TEXT,
+  description TEXT,
+  is_advanced INTEGER,
+  data_json TEXT,
+  created_at TEXT,
+  updated_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_miracles_name_lower ON miracles(name_lower);
+
+CREATE TABLE IF NOT EXISTS spells (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  name_lower TEXT,
+  level INTEGER,
+  colour TEXT,
+  range TEXT,
+  duration TEXT,
+  verbal TEXT,
+  description TEXT,
+  is_advanced INTEGER,
+  data_json TEXT,
+  created_at TEXT,
+  updated_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_spells_name_lower ON spells(name_lower);
 ";
 				cmd.ExecuteNonQuery();
 

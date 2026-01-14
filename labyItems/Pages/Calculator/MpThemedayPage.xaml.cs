@@ -26,6 +26,17 @@ public partial class MpThemedayPage : MpCalculatorPageBase
     private const int CpBenefitCost = 250;
     private const int PowerStoreUnitCost = 30;
     private const int PowerStoreMax = 5;
+    private const int IspManticWeaponCost = 50;
+    private const int IspPureMagicWeaponCost = 40;
+    private const int IspPureSpiritWeaponCost = 45;
+    private const int IspMagicShieldCost = 15;
+    private const int IspSpiritShieldCost = 20;
+    private const int IspMacPlusTwoCost = 24;
+    private const int IspSacPlusTwoCost = 18;
+    private const int IspPowerStoreUnitCost = 3;
+    private const int IspApprenticeStatusCost = 10;
+    private const int IspApprenticeBagCost = 10;
+    private const int IspJourneymanBagCost = 15;
 
     private readonly IReadOnlyList<CpBenefitOption> _cpBenefits = new List<CpBenefitOption>
     {
@@ -291,6 +302,19 @@ public partial class MpThemedayPage : MpCalculatorPageBase
         AddStatusBagContribution(items, ref running);
     }
 
+    protected override void AddCustomIspContributions(List<ContributionRow> items, ref int running)
+    {
+        AddWeaponIspContribution(items, ref running);
+        AddShieldIspContribution(items, ref running);
+        AddPowerStoreIsp(items, ref running);
+        AddCpIspContribution(items, ref running);
+        if (Mac2Checked)
+            AddIspContribution(items, ref running, "mac2", "+2 MAC", IspMacPlusTwoCost);
+        if (Sac2Checked)
+            AddIspContribution(items, ref running, "sac2", "+2 SAC", IspSacPlusTwoCost);
+        AddStatusBagIspContribution(items, ref running);
+    }
+
     private void AddWeaponContribution(List<ContributionRow> items, ref int running)
     {
         if (WeaponApprenticeStatus)
@@ -399,6 +423,111 @@ public partial class MpThemedayPage : MpCalculatorPageBase
         AddContribution(items, ref running, "cp-benefit", label, CpBenefitCost);
     }
 
+    private void AddWeaponIspContribution(List<ContributionRow> items, ref int running)
+    {
+        if (WeaponApprenticeStatus)
+            AddIspContribution(items, ref running, "weapon-apprentice", "Weapon apprentice status", IspApprenticeStatusCost);
+
+        if (string.IsNullOrWhiteSpace(SelectedWeaponKind) || !SelectedWeaponType.HasValue)
+            return;
+
+        var trimmed = TrimChipLabel(SelectedWeaponKind) ?? SelectedWeaponKind;
+        var cost = GetWeaponIspCost(trimmed);
+        if (cost <= 0)
+            return;
+
+        if (IsWeaponColourVisible && !SelectedWeaponColour.HasValue)
+            return;
+        if (IsWeaponAlignmentVisible && !SelectedWeaponAlignment.HasValue)
+            return;
+
+        var parts = new List<string> { FormatWeapon(SelectedWeaponType.Value) };
+        if (IsWeaponColourVisible && SelectedWeaponColour.HasValue)
+            parts.Add(FormatColour(SelectedWeaponColour.Value));
+        if (IsWeaponAlignmentVisible && SelectedWeaponAlignment.HasValue)
+            parts.Add(FormatAlignment(SelectedWeaponAlignment.Value));
+
+        var detail = string.Join(", ", parts);
+        AddIspContribution(items, ref running, "themeday-weapon", $"{trimmed} weapon ({detail})", cost);
+    }
+
+    private void AddShieldIspContribution(List<ContributionRow> items, ref int running)
+    {
+        if (ShieldApprenticeStatus)
+            AddIspContribution(items, ref running, "shield-apprentice", "Shield apprentice status", IspApprenticeStatusCost);
+
+        var trimmed = TrimChipLabel(SelectedShieldType) ?? SelectedShieldType;
+        if (string.IsNullOrWhiteSpace(trimmed))
+            return;
+
+        if (string.Equals(trimmed, "Magic", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!SelectedShieldColour.HasValue)
+                return;
+            AddIspContribution(items, ref running, "magic-shield", $"Magic shield ({FormatColour(SelectedShieldColour.Value)})", IspMagicShieldCost);
+        }
+        else if (string.Equals(trimmed, "Spirit", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!SelectedShieldAlignment.HasValue)
+                return;
+            AddIspContribution(items, ref running, "spirit-shield", $"Spirit shield ({FormatAlignment(SelectedShieldAlignment.Value)})", IspSpiritShieldCost);
+        }
+    }
+
+    private void AddStatusBagIspContribution(List<ContributionRow> items, ref int running)
+    {
+        if (string.IsNullOrWhiteSpace(SelectedBagType))
+            return;
+
+        var trimmed = TrimChipLabel(SelectedBagType) ?? SelectedBagType;
+        var unit = GetBagIspCost(trimmed);
+        AddIspContribution(items, ref running, "status-bag", $"{trimmed} status bag", unit, includeWhenZero: unit == 0);
+    }
+
+    private void AddPowerStoreIsp(List<ContributionRow> items, ref int running)
+    {
+        if (SpiritPowerStorePoints > 0 && SelectedSpiritSphere.HasValue)
+        {
+            var cost = SpiritPowerStorePoints * IspPowerStoreUnitCost;
+            var label = $"Spirit power store ({FormatEnum(SelectedSpiritSphere.Value)}) x{SpiritPowerStorePoints}";
+            AddIspContribution(items, ref running, "spirit-store", label, cost);
+        }
+
+        if (MagicPowerStorePoints > 0 && SelectedMagicStoreColour.HasValue)
+        {
+            var cost = MagicPowerStorePoints * IspPowerStoreUnitCost;
+            var label = $"Magic power store ({FormatColour(SelectedMagicStoreColour.Value)}) x{MagicPowerStorePoints}";
+            AddIspContribution(items, ref running, "magic-store", label, cost);
+        }
+
+        if (EarthpowerStorePoints > 0 && SelectedEarthpowerField.HasValue)
+        {
+            var cost = EarthpowerStorePoints * IspPowerStoreUnitCost;
+            var label = $"Earthpower store ({FormatEnum(SelectedEarthpowerField.Value)}) x{EarthpowerStorePoints}";
+            AddIspContribution(items, ref running, "earthpower-store", label, cost);
+        }
+    }
+
+    private void AddCpIspContribution(List<ContributionRow> items, ref int running)
+    {
+        if (string.IsNullOrWhiteSpace(SelectedCpOption))
+            return;
+
+        var selected = _cpBenefits.FirstOrDefault(c => c.Label.Equals(SelectedCpOption, StringComparison.Ordinal));
+        if (selected == null)
+            return;
+
+        if (selected.RequiresLocation && string.IsNullOrWhiteSpace(GetLocationLabel()))
+            return;
+
+        var label = selected.Label;
+        var location = GetLocationLabel();
+        if (!string.IsNullOrWhiteSpace(location))
+            label += $" ({location})";
+
+        AddIspContribution(items, ref running, "cp-benefit", label, 0, includeWhenZero: true);
+    }
+
     private static int GetWeaponCost(string? kind)
     {
         if (string.Equals(kind, "Pure Magic", StringComparison.OrdinalIgnoreCase))
@@ -416,6 +545,26 @@ public partial class MpThemedayPage : MpCalculatorPageBase
             return ApprenticeBagUnitCost;
         if (string.Equals(trimmedType, "Journeyman", StringComparison.OrdinalIgnoreCase))
             return JourneymanBagUnitCost;
+        return 0;
+    }
+
+    private static int GetWeaponIspCost(string? kind)
+    {
+        if (string.Equals(kind, "Pure Magic", StringComparison.OrdinalIgnoreCase))
+            return IspPureMagicWeaponCost;
+        if (string.Equals(kind, "Pure Spirit", StringComparison.OrdinalIgnoreCase))
+            return IspPureSpiritWeaponCost;
+        if (string.Equals(kind, "Mantic", StringComparison.OrdinalIgnoreCase))
+            return IspManticWeaponCost;
+        return 0;
+    }
+
+    private static int GetBagIspCost(string? trimmedType)
+    {
+        if (string.Equals(trimmedType, "Apprentice", StringComparison.OrdinalIgnoreCase))
+            return IspApprenticeBagCost;
+        if (string.Equals(trimmedType, "Journeyman", StringComparison.OrdinalIgnoreCase))
+            return IspJourneymanBagCost;
         return 0;
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -53,9 +54,9 @@ public partial class RecipientPage : ContentPage
         var playerName = string.IsNullOrWhiteSpace(recipient.PlayerName) ? "unknown" : recipient.PlayerName;
         var subject = $"monster point item for {playerName}";
 
-        int isp = payload.TotalMp;
-        var breakdownLines = payload.Breakdown?.Select(b => b.Text) ?? Enumerable.Empty<string>();
-        var breakdownText = string.Join("\n", breakdownLines);
+        int isp = payload.TotalIsp;
+        var mpBreakdownLines = payload.Breakdown?.Select(b => b.Text).ToList() ?? new List<string>();
+        var ispBreakdownLines = payload.IspBreakdown?.Select(b => b.Text).ToList() ?? new List<string>();
 
         var summaryBuilder = new StringBuilder();
         summaryBuilder.AppendLine($"ISP total: {isp}");
@@ -63,15 +64,25 @@ public partial class RecipientPage : ContentPage
         summaryBuilder.AppendLine($"Recipient player: {recipient.PlayerName}");
         summaryBuilder.AppendLine($"Recipient character: {recipient.CharacterName}");
         summaryBuilder.AppendLine($"Recipient class: {recipient.CharacterClass}");
-        summaryBuilder.AppendLine();
-        summaryBuilder.AppendLine("Breakdown:");
-        summaryBuilder.AppendLine(breakdownText);
+        if (mpBreakdownLines.Count > 0)
+        {
+            summaryBuilder.AppendLine();
+            summaryBuilder.AppendLine("MP breakdown:");
+            summaryBuilder.AppendLine(string.Join("\n", mpBreakdownLines));
+        }
+        if (ispBreakdownLines.Count > 0)
+        {
+            summaryBuilder.AppendLine();
+            summaryBuilder.AppendLine("ISP breakdown:");
+            summaryBuilder.AppendLine(string.Join("\n", ispBreakdownLines));
+        }
 
         var config = new
         {
             ispTotal = isp,
             mpTotal = payload.TotalMp,
             breakdown = payload.Breakdown?.Select(b => new { b.Id, b.Text, b.RunningTotal }).ToList(),
+            ispBreakdown = payload.IspBreakdown?.Select(b => new { b.Id, b.Text, b.RunningTotal }).ToList(),
             recipient = recipient
         };
 

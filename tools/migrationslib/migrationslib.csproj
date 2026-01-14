@@ -8,4 +8,11 @@
         <PackageReference Include="FluentMigrator" Version="3.3.2" />
         <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
     </ItemGroup>
+
+    <ItemGroup>
+        <!-- Embed miracles seed data so migrations can populate the table even when raw assets are stripped -->
+        <EmbeddedResource Include="..\..\labyItems\Resources\Raw\words_from_above\base-miracles1.json" Link="Resources/Raw/words_from_above/base-miracles1.json" />
+        <!-- Embed spell seed data -->
+        <EmbeddedResource Include="..\..\labyItems\Resources\Raw\grimoire\new_standard.json" Link="Resources/Raw/grimoire/new_standard.json" />
+    </ItemGroup>
 </Project>

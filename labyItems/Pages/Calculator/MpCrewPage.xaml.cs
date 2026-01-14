@@ -16,6 +16,13 @@ public partial class MpCrewPage : MpCalculatorPageBase
     private const int SpiritualWeaponUnitCost = 200;
     private const int ApprenticeBagUnitCost = 100;
     private const int JourneymanBagUnitCost = 250;
+    private const int IspMacPlusTwoCost = 24;
+    private const int IspSacPlusTwoCost = 18;
+    private const int IspMagicWeaponCost = 20;
+    private const int IspSpiritWeaponCost = 25;
+    private const int IspApprenticeStatusCost = 10;
+    private const int IspApprenticeBagCost = 10;
+    private const int IspJourneymanBagCost = 15;
     private static readonly string[] BagChipOptions = { "🎒 Apprentice", "🛡️ Journeyman" };
 
     public MpCrewPage()
@@ -206,7 +213,49 @@ AfterWeapon:
             var trimmed = TrimChipLabel(SelectedBagType) ?? SelectedBagType;
             var unit = GetBagUnitCost(trimmed);
             if (unit > 0)
-                AddContribution(items, ref running, "status-bag", $"{trimmed} status bag", unit);
+            AddContribution(items, ref running, "status-bag", $"{trimmed} status bag", unit);
+        }
+    }
+
+    protected override void AddCustomIspContributions(List<ContributionRow> items, ref int running)
+    {
+        if (Mac2Checked)
+            AddIspContribution(items, ref running, "mac2", "+2 MAC", IspMacPlusTwoCost);
+
+        if (Sac2Checked)
+            AddIspContribution(items, ref running, "sac2", "+2 SAC", IspSacPlusTwoCost);
+
+        if (WeaponApprenticeStatus)
+            AddIspContribution(items, ref running, "weapon-apprentice", "Weapon apprentice status", IspApprenticeStatusCost);
+
+        if (!string.IsNullOrWhiteSpace(SelectedWeaponPowerType) && SelectedWeaponType.HasValue)
+        {
+            var trimmed = TrimChipLabel(SelectedWeaponPowerType) ?? SelectedWeaponPowerType;
+            var unit = GetWeaponIspCost(trimmed);
+            if (unit > 0)
+            {
+                if (IsWeaponColourVisible && !SelectedWeaponColour.HasValue)
+                    goto AfterWeapon;
+                if (IsWeaponAlignmentVisible && !SelectedWeaponAlignment.HasValue)
+                    goto AfterWeapon;
+
+                var parts = new List<string> { EnumDisplayFormatter.FormatName(SelectedWeaponType.Value.ToString()) };
+                if (IsWeaponColourVisible && SelectedWeaponColour.HasValue)
+                    parts.Add(EnumDisplayFormatter.FormatName(SelectedWeaponColour.Value.ToString()));
+                if (IsWeaponAlignmentVisible && SelectedWeaponAlignment.HasValue)
+                    parts.Add(EnumDisplayFormatter.FormatName(SelectedWeaponAlignment.Value.ToString()));
+
+                var detail = string.Join(", ", parts);
+                AddIspContribution(items, ref running, "crew-weapon", $"{trimmed} weapon ({detail})", unit);
+            }
+        }
+
+    AfterWeapon:
+        if (!string.IsNullOrWhiteSpace(SelectedBagType))
+        {
+            var trimmed = TrimChipLabel(SelectedBagType) ?? SelectedBagType;
+            var unit = GetBagIspCost(trimmed);
+            AddIspContribution(items, ref running, "status-bag", $"{trimmed} status bag", unit, includeWhenZero: unit == 0);
         }
     }
 
@@ -225,6 +274,24 @@ AfterWeapon:
             return ApprenticeBagUnitCost;
         if (string.Equals(trimmedType, "Journeyman", StringComparison.OrdinalIgnoreCase))
             return JourneymanBagUnitCost;
+        return 0;
+    }
+
+    private static int GetWeaponIspCost(string? trimmedPower)
+    {
+        if (string.Equals(trimmedPower, "Magic", StringComparison.OrdinalIgnoreCase))
+            return IspMagicWeaponCost;
+        if (string.Equals(trimmedPower, "Spirit", StringComparison.OrdinalIgnoreCase))
+            return IspSpiritWeaponCost;
+        return 0;
+    }
+
+    private static int GetBagIspCost(string? trimmedType)
+    {
+        if (string.Equals(trimmedType, "Apprentice", StringComparison.OrdinalIgnoreCase))
+            return IspApprenticeBagCost;
+        if (string.Equals(trimmedType, "Journeyman", StringComparison.OrdinalIgnoreCase))
+            return IspJourneymanBagCost;
         return 0;
     }
 
