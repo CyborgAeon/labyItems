@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Models.Enums;
+using labyItems.Pages;
 using labyItems.Services;
 
 namespace labyItems.Pages.Calculator;
@@ -36,7 +37,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     public ObservableCollection<ContributionRow> Breakdown => _breakdown;
 
-    public ICommand ContinueCommand => new Command(async () => await Navigation.PopAsync());
+    public ICommand ContinueCommand => new Command(async () => await HandleSubmitAsync());
 
     public int TotalMp
     {
@@ -186,6 +187,27 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         LifeSliderControl.SelectedIndex = 0;
         _isReady = true;
         Recalculate();
+    }
+
+    private async Task HandleSubmitAsync()
+    {
+        if (TotalMp > 500)
+        {
+            await DisplayAlert("Limit reached", "Must not exceed limit", "OK");
+            return;
+        }
+
+        var payload = BuildSubmissionPayload();
+        await Navigation.PushAsync(new RecipientPage(null, payload));
+    }
+
+    protected virtual MpSubmissionPayload BuildSubmissionPayload()
+    {
+        return new MpSubmissionPayload
+        {
+            TotalMp = TotalMp,
+            Breakdown = Breakdown.ToList()
+        };
     }
 
     protected override async void OnAppearing()
@@ -475,4 +497,10 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     #endregion
+}
+
+public class MpSubmissionPayload
+{
+    public int TotalMp { get; set; }
+    public List<ContributionRow> Breakdown { get; set; } = new();
 }

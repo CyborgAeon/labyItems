@@ -79,10 +79,17 @@
 
         <!-- Apprentice crafted -->
         <Label Text="Apprentice crafted" FontAttributes="Bold"/>
-        <Grid ColumnDefinitions="*,*" ColumnSpacing="6">
-          <controls:ChipGroup Grid.Column="0" Items="{Binding ApprenticeTypeOptions}" SelectedItem="{Binding ApprenticeType, Mode=TwoWay}" />
-          <controls:DictionarySearchBar Grid.Column="1" x:Name="WeaponSearch" IsVisible="{Binding IsApprenticeWeapon}" x:TypeArguments="enums:WeaponType" PlaceholderText="Pick weapon type" SelectedValue="{Binding SelectedWeapon, Mode=TwoWay}" />
-        </Grid>
+        <VerticalStackLayout Spacing="6">
+          <HorizontalStackLayout Spacing="6">
+            <CheckBox IsChecked="{Binding ApprenticeShieldChecked, Mode=TwoWay}" />
+            <Label Text="Apprentice crafted shield" FontAttributes="Bold" VerticalTextAlignment="Center" />
+          </HorizontalStackLayout>
+          <HorizontalStackLayout Spacing="6">
+            <CheckBox IsChecked="{Binding ApprenticeWeaponChecked, Mode=TwoWay}" />
+            <Label Text="Apprentice crafted weapon" FontAttributes="Bold" VerticalTextAlignment="Center" />
+          </HorizontalStackLayout>
+        </VerticalStackLayout>
+        <controls:DictionarySearchBar x:Name="WeaponSearch" IsVisible="False" HeightRequest="0" x:TypeArguments="enums:WeaponType" />
       </VerticalStackLayout>
     </ScrollView>
 

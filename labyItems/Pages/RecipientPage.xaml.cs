@@ -1,15 +1,24 @@
+using System;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using labyItems.Controls;
 using labyItems.Models;
+using labyItems.Pages.Calculator;
+using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages;
 
 public partial class RecipientPage : ContentPage
 {
     private readonly TaskCompletionSource<RecipientInfo> _tcs = new();
+    private readonly MpSubmissionPayload? _submission;
 
-    public RecipientPage(RecipientInfo? existing = null)
+    public RecipientPage(RecipientInfo? existing = null, MpSubmissionPayload? submission = null)
     {
         InitializeComponent();
+        _submission = submission;
         if (existing != null)
         {
             RecipientPlayerNameEntry.Text = existing.PlayerName;
@@ -22,7 +31,7 @@ public partial class RecipientPage : ContentPage
     // Wait for result from parent
     public Task<RecipientInfo> GetRecipientAsync() => _tcs.Task;
 
-    private async void OnSaveRecipient(object sender, EventArgs e)
+    private async void OnSubmit(object sender, EventArgs e)
     {
         var result = new RecipientInfo
         {
@@ -32,6 +41,59 @@ public partial class RecipientPage : ContentPage
         };
 
         _tcs.TrySetResult(result);
+
+        if (_submission != null)
+            await SendSubmissionEmailAsync(result, _submission);
+
         await Navigation.PopAsync();
+    }
+
+    private async Task SendSubmissionEmailAsync(RecipientInfo recipient, MpSubmissionPayload payload)
+    {
+        var playerName = string.IsNullOrWhiteSpace(recipient.PlayerName) ? "unknown" : recipient.PlayerName;
+        var subject = $"monster point item for {playerName}";
+
+        int isp = payload.TotalMp;
+        var breakdownLines = payload.Breakdown?.Select(b => b.Text) ?? Enumerable.Empty<string>();
+        var breakdownText = string.Join("\n", breakdownLines);
+
+        var summaryBuilder = new StringBuilder();
+        summaryBuilder.AppendLine($"ISP total: {isp}");
+        summaryBuilder.AppendLine($"MP cost: {payload.TotalMp}");
+        summaryBuilder.AppendLine($"Recipient player: {recipient.PlayerName}");
+        summaryBuilder.AppendLine($"Recipient character: {recipient.CharacterName}");
+        summaryBuilder.AppendLine($"Recipient class: {recipient.CharacterClass}");
+        summaryBuilder.AppendLine();
+        summaryBuilder.AppendLine("Breakdown:");
+        summaryBuilder.AppendLine(breakdownText);
+
+        var config = new
+        {
+            ispTotal = isp,
+            mpTotal = payload.TotalMp,
+            breakdown = payload.Breakdown?.Select(b => new { b.Id, b.Text, b.RunningTotal }).ToList(),
+            recipient = recipient
+        };
+
+        var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+        var token = JsonTokenCompressor.CompressToBase64(json);
+
+        summaryBuilder.AppendLine();
+        summaryBuilder.AppendLine("Encrypted token:");
+        summaryBuilder.AppendLine(token);
+
+        var mailto =
+            $"mailto:items@labyrinthe.com"
+            + $"?subject={Uri.EscapeDataString(subject)}"
+            + $"&body={Uri.EscapeDataString(summaryBuilder.ToString())}";
+
+        try
+        {
+            await Launcher.OpenAsync(mailto);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Could not open mail client: {ex.Message}", "OK");
+        }
     }
 }

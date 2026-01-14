@@ -1,20 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="labyItems.ItemFormPage"
+<ContentPage x:Class="labyItems.ItemFormPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:labyItems.Models"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    Title="Submit Item">
+    xmlns:sys="clr-namespace:System;assembly=mscorlib" Title="Submit Item">
     <ContentPage.ToolbarItems>
         <ToolbarItem Clicked="OnViewSavedClicked" Text="View Saved" />
     </ContentPage.ToolbarItems>
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
-            <Label
-                x:Name="CharacterHeader"
-                FontAttributes="Bold"
-                FontSize="18" />
+            <Label x:Name="CharacterHeader" FontAttributes="Bold" FontSize="18" />
 
             <VerticalStackLayout IsVisible="{Binding ShowPlayerNameField}">
                 <Label FontAttributes="Bold" Text="MakerPlayerName" />
@@ -28,16 +23,10 @@
             <Label FontAttributes="Bold" Text="WitnessName" />
             <Entry x:Name="WitnessNameEntry" Placeholder="Witness name" />
 
-            <Button
-                x:Name="RecipientButton"
-                Clicked="OnAddRecipientClicked"
-                Text="Add Recipient" />
+            <Button IsEnabled="False" x:Name="RecipientButton" Clicked="OnAddRecipientClicked" Text="Add Recipient" />
 
             <Label FontAttributes="Bold" Text="Description" />
-            <VerticalStackLayout
-                x:Name="DescriptionList"
-                BindableLayout.ItemsSource="{Binding DescriptionLines}"
-                Spacing="8">
+            <VerticalStackLayout x:Name="DescriptionList" BindableLayout.ItemsSource="{Binding DescriptionLines}" Spacing="8">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
                         <Frame BorderColor="#DDD" CornerRadius="8" Padding="10" HasShadow="False">
@@ -51,50 +40,25 @@
                 <!--  ISP  -->
                 <VerticalStackLayout Grid.Column="0" Spacing="6">
                     <Label FontAttributes="Bold" Text="ISP" />
-                    <Entry
-                        x:Name="IspEntry"
-                        HorizontalOptions="Fill"
-                        Keyboard="Numeric"
-                        MinimumWidthRequest="120"
-                        Placeholder="0"
-                        Text="{Binding IspTotal}" />
+                    <Entry x:Name="IspEntry" HorizontalOptions="Fill" Keyboard="Numeric" MinimumWidthRequest="120" Placeholder="0" Text="{Binding IspTotal}" />
                 </VerticalStackLayout>
 
                 <!--  Sleek pill button  -->
-                <Button
-                    Grid.Column="1"
-                    Padding="20,8"
-                    Clicked="OnCalculateIsp"
-                    CornerRadius="12"
-                    HeightRequest="44"
-                    HorizontalOptions="Center"
-                    Text="Calculate"
-                    VerticalOptions="End" />
+                <Button Grid.Column="1" Padding="20,8" Clicked="OnCalculateIsp" CornerRadius="12" HeightRequest="44" HorizontalOptions="Center" Text="Calculate" VerticalOptions="End" />
 
                 <!--  Created date  -->
                 <VerticalStackLayout Grid.Column="2" Spacing="6">
                     <Label FontAttributes="Bold" Text="Created Date" />
-                    <DatePicker
-                        x:Name="CreatedDatePicker"
-                        Date="{x:Static sys:DateTime.Now}"
-                        HorizontalOptions="Fill" />
+                    <DatePicker x:Name="CreatedDatePicker" Date="{x:Static sys:DateTime.Now}" HorizontalOptions="Fill" />
                 </VerticalStackLayout>
             </Grid>
 
             <HorizontalStackLayout>
-                <Label
-                    FontAttributes="Bold"
-                    Text="DNBUOD"
-                    VerticalOptions="Center" />
+                <Label FontAttributes="Bold" Text="DNBUOD" VerticalOptions="Center" />
                 <Switch x:Name="DnbuodSwitch" />
             </HorizontalStackLayout>
 
-            <Button
-                Clicked="OnSubmitClicked"
-                CornerRadius="12"
-                HeightRequest="50"
-                Text="Submit"
-                TextColor="White" />
+            <Button Clicked="OnSubmitClicked" CornerRadius="12" HeightRequest="50" Text="Submit" TextColor="White" />
 
         </VerticalStackLayout>
     </ScrollView>

@@ -19,6 +19,10 @@ public partial class MpThemedayPage : MpCalculatorPageBase
     private const int PureSpiritWeaponCost = 500;
     private const int MagicShieldCost = 150;
     private const int SpiritShieldCost = 200;
+    private const int MacPlusTwoCost = 240;
+    private const int SacPlusTwoCost = 180;
+    private const int ApprenticeBagUnitCost = 100;
+    private const int JourneymanBagUnitCost = 250;
     private const int CpBenefitCost = 250;
     private const int PowerStoreUnitCost = 30;
     private const int PowerStoreMax = 5;
@@ -55,6 +59,7 @@ public partial class MpThemedayPage : MpCalculatorPageBase
     private readonly Dictionary<string, LocationOption> _locationOptions;
     private static readonly string[] WeaponKindChipOptions = { SupernaturalTypes.PureMagic, SupernaturalTypes.PureSpirit, SupernaturalTypes.Mantic };
     private static readonly string[] ShieldChipOptions = { SupernaturalTypes.Magic, SupernaturalTypes.Spirit };
+    private static readonly string[] BagChipOptions = { "🎒 Apprentice", "🛡️ Journeyman" };
 
     public MpThemedayPage()
     {
@@ -65,6 +70,7 @@ public partial class MpThemedayPage : MpCalculatorPageBase
 
     public IEnumerable<string> WeaponTypeOptions => WeaponKindChipOptions;
     public IEnumerable<string> ShieldTypeOptions => ShieldChipOptions;
+    public IEnumerable<string> StatusBagOptions => BagChipOptions;
 
     public string? SelectedWeaponKind
     {
@@ -133,6 +139,43 @@ public partial class MpThemedayPage : MpCalculatorPageBase
 
     public bool IsShieldColourVisible => IsShieldKind("Magic");
     public bool IsShieldAlignmentVisible => IsShieldKind("Spirit");
+
+    public string? SelectedBagType
+    {
+        get => _selectedBagType;
+        set { if (SetProperty(ref _selectedBagType, value)) Recalculate(); }
+    }
+    private string? _selectedBagType;
+
+    public bool Mac2Checked
+    {
+        get => _mac2Checked;
+        set
+        {
+            if (SetProperty(ref _mac2Checked, value))
+            {
+                if (value && MacChecked)
+                    MacChecked = false;
+                Recalculate();
+            }
+        }
+    }
+    private bool _mac2Checked;
+
+    public bool Sac2Checked
+    {
+        get => _sac2Checked;
+        set
+        {
+            if (SetProperty(ref _sac2Checked, value))
+            {
+                if (value && SacChecked)
+                    SacChecked = false;
+                Recalculate();
+            }
+        }
+    }
+    private bool _sac2Checked;
 
     public int SpiritPowerStorePoints { get => _spiritPowerStorePoints; set { if (SetProperty(ref _spiritPowerStorePoints, Math.Clamp(value, 0, PowerStoreMax))) Recalculate(); } }
     private int _spiritPowerStorePoints;
@@ -241,6 +284,11 @@ public partial class MpThemedayPage : MpCalculatorPageBase
         AddShieldContributions(items, ref running);
         AddPowerStores(items, ref running);
         AddCpContribution(items, ref running);
+        if (Mac2Checked)
+            AddContribution(items, ref running, "mac2", "+2 MAC", MacPlusTwoCost);
+        if (Sac2Checked)
+            AddContribution(items, ref running, "sac2", "+2 SAC", SacPlusTwoCost);
+        AddStatusBagContribution(items, ref running);
     }
 
     private void AddWeaponContribution(List<ContributionRow> items, ref int running)
@@ -292,6 +340,19 @@ public partial class MpThemedayPage : MpCalculatorPageBase
                 return;
             AddContribution(items, ref running, "spirit-shield", $"Spirit shield ({FormatAlignment(SelectedShieldAlignment.Value)})", SpiritShieldCost);
         }
+    }
+
+    private void AddStatusBagContribution(List<ContributionRow> items, ref int running)
+    {
+        if (string.IsNullOrWhiteSpace(SelectedBagType))
+            return;
+
+        var trimmed = TrimChipLabel(SelectedBagType) ?? SelectedBagType;
+        var unit = GetBagUnitCost(trimmed);
+        if (unit <= 0)
+            return;
+
+        AddContribution(items, ref running, "status-bag", $"{trimmed} status bag", unit);
     }
 
     private void AddPowerStores(List<ContributionRow> items, ref int running)
@@ -346,6 +407,15 @@ public partial class MpThemedayPage : MpCalculatorPageBase
             return PureSpiritWeaponCost;
         if (string.Equals(kind, "Mantic", StringComparison.OrdinalIgnoreCase))
             return ManticWeaponCost;
+        return 0;
+    }
+
+    private static int GetBagUnitCost(string? trimmedType)
+    {
+        if (string.Equals(trimmedType, "Apprentice", StringComparison.OrdinalIgnoreCase))
+            return ApprenticeBagUnitCost;
+        if (string.Equals(trimmedType, "Journeyman", StringComparison.OrdinalIgnoreCase))
+            return JourneymanBagUnitCost;
         return 0;
     }
 

@@ -15,6 +15,6 @@
     <Label Text="Recipient Character Class" FontAttributes="Bold" />
     <Entry x:Name="RecipientCharacterClassEntry" Placeholder="Character class" />
 
-    <Button Text="Save Recipient" Clicked="OnSaveRecipient" />
+    <Button Text="Submit" Clicked="OnSubmit" />
   </VerticalStackLayout>
 </ContentPage>

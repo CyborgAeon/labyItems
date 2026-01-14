@@ -60,6 +60,14 @@
               <CheckBox IsChecked="{Binding SacChecked, Mode=TwoWay}" />
               <Label Text="+1 SAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
             </HorizontalStackLayout>
+            <HorizontalStackLayout Grid.Column="0" Grid.Row="2" Spacing="6">
+              <CheckBox IsChecked="{Binding Mac2Checked, Mode=TwoWay}" />
+              <Label Text="+2 MAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Grid.Column="1" Grid.Row="2" Spacing="6">
+              <CheckBox IsChecked="{Binding Sac2Checked, Mode=TwoWay}" />
+              <Label Text="+2 SAC" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
           </Grid>
         </VerticalStackLayout>
 
@@ -105,6 +113,11 @@
           <controls:DictionarySearchBar x:Name="ShieldColourSearch" x:TypeArguments="enums:MagicColours" IsVisible="{Binding IsShieldColourVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}}" PlaceholderText="Pick colour" SelectedValue="{Binding SelectedShieldColour, Mode=TwoWay}" />
           <controls:DictionarySearchBar x:Name="ShieldAlignmentSearch" x:TypeArguments="enums:Alignments" IsVisible="{Binding IsShieldAlignmentVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:Alignments}}" PlaceholderText="Pick alignment" SelectedValue="{Binding SelectedShieldAlignment, Mode=TwoWay}" />
         </VerticalStackLayout>
+
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+          <Label Grid.Column="0" Text="Status bag" FontAttributes="Bold" VerticalTextAlignment="Center" />
+          <controls:ChipGroup Grid.Column="1" Items="{Binding StatusBagOptions}" SelectedItem="{Binding SelectedBagType, Mode=TwoWay}" />
+        </Grid>
 
         <!-- Power stores -->
         <Label Text="Power stores" FontAttributes="Bold" FontSize="16" />
