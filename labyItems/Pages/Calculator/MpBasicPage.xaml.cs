@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Models.Enums;
-using labyItems.Pages.Configs;
 using labyItems.Services;
 
 namespace labyItems.Pages.Calculator;
@@ -24,12 +23,14 @@ public partial class MpBasicPage : ContentPage, INotifyPropertyChanged
     private readonly ObservableCollection<ContributionRow> _breakdown = new();
 
     // Costs (tweak easily)
-    private const int SpellCostPerLevel = 10;
-    private const int MiracleCostPerPower = 12;
-    private const int EvocationCostPerPower = 10;
-    private const int RepelGoodEvilPerUse = 6;
-    private const int RepelLifePerUse = 10;
-    private const int ApprenticeCost = 20;
+    private const int RepelGoodEvilPerUse = 50;
+    private const int RepelLifePerUse = 40;
+    private const int ApprenticeCost = 60;
+
+    private const int PacCost = 40;
+    private const int DacCost = 60;
+    private const int MacCost = 80;
+    private const int SacCost = 100;
 
     private static readonly string[] ApprenticeTypeChipOptions = { "🛡️ Shield", "🗡️ Weapon" };
     private static readonly string[] RepelGoodEvilChipOptions = { "👼 Good", "😈 Evil" };
@@ -140,10 +141,10 @@ public partial class MpBasicPage : ContentPage, INotifyPropertyChanged
     private readonly Dictionary<string, int> _lifeOptions = new()
     {
         { "0", 0 },
-        { "3/1", 4 },
-        { "4/2", 6 },
-        { "6/2", 9 },
-        { "9/3", 14 }
+        { "3/1", 30 },
+        { "4/2", 40 },
+        { "6/2", 60 },
+        { "9/3", 90 }
     };
 
     public MpBasicPage()
@@ -189,7 +190,7 @@ public partial class MpBasicPage : ContentPage, INotifyPropertyChanged
                 .Where(m => m.power >= 1 && m.power <= 5 && m.isAdvanced == false)
                 .OrderBy(m => m.power)
                 .ThenBy(m => m.name)
-                .Select(m => new KeyValuePair<string, MiracleOption>($"{m.name} (power {m.power})", new MiracleOption(m.name, m.power)))
+                .Select(m => new KeyValuePair<string, MiracleOption>($"{m.name} ({m.power})", new MiracleOption(m.name, m.power)))
                 .GroupBy(k => k.Key, StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
             MiracleSearch.ItemsSource = miracles;
@@ -216,7 +217,7 @@ public partial class MpBasicPage : ContentPage, INotifyPropertyChanged
             .Where(ev => ev.power <= 4 && ev.isAdvanced == false)
             .OrderBy(ev => ev.power)
             .ThenBy(ev => ev.name)
-            .Select(ev => new KeyValuePair<string, EvocationOption>($"{ev.name} (power {ev.power})", new EvocationOption(ev.name, ev.power)))
+            .Select(ev => new KeyValuePair<string, EvocationOption>($"{ev.name} ({ev.power})", new EvocationOption(ev.name, ev.power)))
             .GroupBy(k => k.Key, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
     }
@@ -261,23 +262,22 @@ public partial class MpBasicPage : ContentPage, INotifyPropertyChanged
 
         if (SelectedSpellOption is SpellOption s && SpellCount > 0)
         {
-            int cost = SpellCount * Math.Max(0, s.Level) * SpellCostPerLevel;
+            int cost = CalculateSpellCost(s.Level, SpellCount);
             Add("spell", $"Spell: {s.Name} x{SpellCount}", cost);
         }
 
         if (SelectedMiracleOption is MiracleOption m && MiracleCount > 0)
         {
-            int cost = MiracleCount * Math.Max(0, m.Power) * MiracleCostPerPower;
+            int cost = CalculateMiracleCost(m.Power, MiracleCount);
             Add("miracle", $"Miracle: {m.Name} x{MiracleCount}", cost);
         }
 
         if (SelectedEvocationOption is EvocationOption ev && EvocationCount > 0)
         {
-            int cost = EvocationCount * Math.Max(0, ev.Power) * EvocationCostPerPower;
+            int cost = CalculateEvocationCost(ev.Power, EvocationCount);
             Add("evocation", $"Evocation: {ev.Name} x{EvocationCount}", cost);
         }
 
-        // Neuro (kept for completeness; disabled by request)
         if (ActiveNeuroCount > 0)
         {
             Add("neuro-active", $"Active neuro x{ActiveNeuroCount}", 0);
@@ -296,10 +296,10 @@ public partial class MpBasicPage : ContentPage, INotifyPropertyChanged
         }
 
         // AC bumps
-        if (PacChecked) Add("pac", "+1 PAC", ArmourConfig.PacTable[1]);
-        if (DacChecked) Add("dac", "+1 DAC", ArmourConfig.DacTable[1]);
-        if (MacChecked) Add("mac", "+1 MAC", ArmourConfig.MacTable[1]);
-        if (SacChecked) Add("sac", "+1 SAC", ArmourConfig.SacTable[1]);
+        if (PacChecked) Add("pac", "+1 PAC", PacCost);
+        if (DacChecked) Add("dac", "+1 DAC", DacCost);
+        if (MacChecked) Add("mac", "+1 MAC", MacCost);
+        if (SacChecked) Add("sac", "+1 SAC", SacCost);
 
         // Repels
         var repelTarget = TrimChipLabel(RepelGoodEvilTarget) ?? RepelGoodEvilTarget;
@@ -329,6 +329,45 @@ public partial class MpBasicPage : ContentPage, INotifyPropertyChanged
             _breakdown.Add(item);
 
         TotalMp = running;
+    }
+
+    private static int CalculateSpellCost(int level, int count)
+    {
+        int sanitizedLevel = Math.Max(0, level);
+        int sanitizedCount = Math.Max(0, count);
+        if (sanitizedCount == 0)
+            return 0;
+
+        if (sanitizedLevel == 0)
+            return 5 * sanitizedCount;
+
+        if (sanitizedLevel <= 4)
+            return 10 * sanitizedLevel * sanitizedCount;
+
+        return 10 + 10 * sanitizedLevel * sanitizedCount;
+    }
+
+    private static int CalculateMiracleCost(int power, int count)
+    {
+        int sanitizedPower = Math.Max(0, power);
+        int sanitizedCount = Math.Max(0, count);
+        if (sanitizedPower == 0 || sanitizedCount == 0)
+            return 0;
+
+        if (sanitizedPower <= 3)
+            return 10 + 10 * sanitizedPower * sanitizedCount;
+
+        return 20 + 10 * sanitizedPower * sanitizedCount;
+    }
+
+    private static int CalculateEvocationCost(int power, int count)
+    {
+        int sanitizedPower = Math.Max(0, power);
+        int sanitizedCount = Math.Max(0, count);
+        if (sanitizedCount == 0)
+            return 0;
+
+        return 10 + 10 * sanitizedPower * sanitizedCount;
     }
 
     private static string? TrimChipLabel(string? value)
