@@ -30,12 +30,8 @@ class Program
         var input = args.Length > 0 ? args[0] : "../labyItems/Resources/Raw/druids_way/evocs.json";
         var output = args.Length > 1 ? args[1] : "output/default.db";
 
-        Console.WriteLine($"[evocdbgen] Input: {input}");
-        Console.WriteLine($"[evocdbgen] Output: {output}");
-
         if (!File.Exists(input))
         {
-            Console.Error.WriteLine("Input file not found: " + input);
             return 2;
         }
 
@@ -43,7 +39,6 @@ class Program
 
         var json = File.ReadAllText(input);
         var list = JsonSerializer.Deserialize<List<EvocRaw>>(json) ?? new List<EvocRaw>();
-        Console.WriteLine($"[evocdbgen] Loaded {list.Count} entries");
 
         if (File.Exists(output))
             File.Delete(output);
@@ -198,14 +193,12 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
             var path = Path.GetFullPath(Path.Combine(resourcesRoot, "evolution_classes", $"table_{tableNum}.json"));
             if (!File.Exists(path))
             {
-                Console.WriteLine($"[evocdbgen] Evolution file not found: {path} (skipping)");
                 continue;
             }
 
             var jsonTable = File.ReadAllText(path);
             var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var rawTable = JsonSerializer.Deserialize<List<TableRaw>>(jsonTable, jsonOptions) ?? new List<TableRaw>();
-            Console.WriteLine($"[evocdbgen] Loaded {rawTable.Count} rows for table_{tableNum}");
 
             var insertEvoCmd = conn.CreateCommand();
             insertEvoCmd.CommandText = @"INSERT INTO evolution (id, idx, idx_lower, description, cost, available, table_id, data_json, is_default, created_at, updated_at) VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @data_json, @is_default, @created_at, @updated_at);";
@@ -253,7 +246,6 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                     }
                 }
             }
-            Console.WriteLine($"[evocdbgen] Inserted {insertedCount} rows for table_{tableNum}");
         }
 
         tx.Commit();
@@ -279,7 +271,6 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
             conn2.Close();
         }
 
-        Console.WriteLine($"[evocdbgen] Done. seed_version={seedVersion} build_id={buildId}");
         return 0;
     }
 

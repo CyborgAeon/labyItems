@@ -100,6 +100,7 @@ public partial class ConsumableConfigPage : ConfigPageBase<ConsumableConfig>
             AbilityType = "Consumable",
             AbilityName = cfg.Type.ToString(),
             TotalIsp = cfg.Total,
+            Summary = cfg.Breakdown,
             Details = details
         };
     }

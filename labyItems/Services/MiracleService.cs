@@ -37,7 +37,6 @@ public static class MiracleService
                 alignment = e.alignment,
             })
             .OrderBy(e => e.power)
-            .Take(50)
             .ToList();
 
         return _cache;

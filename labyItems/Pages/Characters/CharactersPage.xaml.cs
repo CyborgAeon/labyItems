@@ -20,6 +20,7 @@ public partial class CharactersPage : ContentPage
     {
         var list = LiteDbService.GetCharacters().ToList();
         CharsView.ItemsSource = list;
+        AddCharacterButton.IsVisible = list.Count == 0;
     }
 
     private async void OnAddClicked(object sender, EventArgs e)

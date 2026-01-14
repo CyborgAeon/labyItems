@@ -38,6 +38,6 @@
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding DrawOnEpPerDay, Mode=TwoWay}" LabelText="Draw on EP per day" />
       </VerticalStackLayout>
     </ScrollView>
-    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding BindingContext.BreakdownItems, Source={x:Reference RootPage}}" ButtonText="Return to Calculator" RemoveContributionCommand="{Binding BindingContext.RemoveContributionCommand, Source={x:Reference RootPage}}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding TotalWithBase}" />
+    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}" ButtonText="Return to Calculator" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding TotalWithBase}" />
   </Grid>
 </cfg:ConfigPageBase>

@@ -78,6 +78,6 @@
 
       </VerticalStackLayout>
     </ScrollView>
-    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.BreakdownItems}" ButtonText="Return to Form" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding TotalWithBase}" IsEnabled="{Binding CanSubmit}"/>
+    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}" ButtonText="Return to Form" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding TotalWithBase}" IsReturnEnabled="{Binding CanSubmit}"/>
   </Grid>
 </cfg:ConfigPageBase>

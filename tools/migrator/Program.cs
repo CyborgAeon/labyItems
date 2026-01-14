@@ -13,14 +13,12 @@ namespace migrator
         {
             if (args.Length == 0)
             {
-                Console.Error.WriteLine("Usage: migrator <path-to-db>");
                 return 2;
             }
 
             var dbPath = args[0];
             if (!System.IO.File.Exists(dbPath))
             {
-                Console.Error.WriteLine($"DB file not found: {dbPath}");
                 return 3;
             }
 
@@ -30,15 +28,13 @@ namespace migrator
                     .AddSQLite()
                     .WithGlobalConnectionString($"Data Source={dbPath}")
                     .ScanIn(typeof(MigrationsLib.Migrations.InitialMigration).Assembly).For.Migrations())
-                .AddLogging(lb => lb.AddConsole())
+                .AddLogging(lb => lb.ClearProviders())
                 .BuildServiceProvider(false);
 
             using (var scope = services.CreateScope())
             {
                 var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-                Console.WriteLine("Running migrations...");
                 runner.MigrateUp();
-                Console.WriteLine("Migrations complete.");
             }
 
             try
@@ -58,17 +54,11 @@ namespace migrator
                     upd.CommandText = "UPDATE seed_metadata SET schema_version = @schema WHERE rowid = (SELECT rowid FROM seed_metadata ORDER BY rowid DESC LIMIT 1);";
                     upd.Parameters.AddWithValue("@schema", schemaVersion);
                     var r = upd.ExecuteNonQuery();
-                    Console.WriteLine($"Updated seed_metadata.schema_version to {schemaVersion} (rows affected: {r})");
-                }
-                else
-                {
-                    Console.WriteLine("No VersionInfo entries found; leaving seed_metadata.schema_version unchanged.");
                 }
                 conn.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.Error.WriteLine("Error updating seed metadata: " + ex.Message);
                 return 4;
             }
 

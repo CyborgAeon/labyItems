@@ -27,7 +27,6 @@ public partial class ItemFormPage : ContentPage
     private string _recipientPlayerName;
     private List<CalcResult> _abilities = new();
     private bool _userSetBase;
-    private int _manualBaseIsp;
 
     public ItemFormPage(Character character)
     {
@@ -65,7 +64,6 @@ public partial class ItemFormPage : ContentPage
         DnbuodSwitch.IsToggled = item.DoesNotBlowUpOnDeath;
         _abilities = new();
         _userSetBase = true;
-        _manualBaseIsp = item.Isp;
     }
 
     private async void OnAddRecipientClicked(object sender, EventArgs e)
@@ -108,8 +106,7 @@ public partial class ItemFormPage : ContentPage
 
     private async void OnCalculateIsp(object sender, EventArgs e)
     {
-        var baseForCalc = _userSetBase ? _manualBaseIsp : ExtractBaseFromAbilities();
-        var page = new IspCalculator(baseForCalc, _abilities);
+        var page = new IspCalculator(0, _abilities);
         var result = await page.GetResultAsync(Navigation);
         if (result == null)
             return;
@@ -117,7 +114,6 @@ public partial class ItemFormPage : ContentPage
         var baseAbility = _abilities.FirstOrDefault(a =>
             string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase)
         );
-        _manualBaseIsp = baseAbility?.TotalIsp ?? 0;
         _userSetBase = baseAbility != null;
         IspTotal = result.TotalIsp;
         IspEntry.Text = result.TotalIsp.ToString();
@@ -131,22 +127,22 @@ public partial class ItemFormPage : ContentPage
         {
             var item = new Item
             {
-            Maker = new Character
-            {
-                Id = _character.Id,
-                PlayerName = _character.PlayerName ?? MakerPlayerNameEntry.Text,
-                Name = _character.Name ?? MakerCharacterNameEntry.Text,
-                Points = _character.Points,
-            },
-            WitnessName = WitnessNameEntry.Text,
-            RecipientPlayerName = _recipientPlayerName,
-            RecipientCharacterName = _recipientName,
-            RecipientCharacterClass = _recipientClass,
-            Description = GetDescriptionText(),
-            DoesNotBlowUpOnDeath = DnbuodSwitch.IsToggled,
-            CreatedDate = CreatedDatePicker.Date ?? DateTime.Now,
-            Isp = IspTotal,
-        };
+                Maker = new Character
+                {
+                    Id = _character.Id,
+                    PlayerName = _character.PlayerName ?? MakerPlayerNameEntry.Text,
+                    Name = _character.Name ?? MakerCharacterNameEntry.Text,
+                    Points = _character.Points,
+                },
+                WitnessName = WitnessNameEntry.Text,
+                RecipientPlayerName = _recipientPlayerName,
+                RecipientCharacterName = _recipientName,
+                RecipientCharacterClass = _recipientClass,
+                Description = GetDescriptionText(),
+                DoesNotBlowUpOnDeath = DnbuodSwitch.IsToggled,
+                CreatedDate = CreatedDatePicker.Date ?? DateTime.Now,
+                Isp = IspTotal,
+            };
 
             var recipientText =
                 _recipientPlayerName == string.Empty
@@ -205,6 +201,7 @@ public partial class ItemFormPage : ContentPage
             {
                 await Launcher.OpenAsync(mailto);
                 LiteDbService.InsertItem(item);
+                RemoveItemFromPage();
             }
             catch (Exception ex)
             {
@@ -217,12 +214,15 @@ public partial class ItemFormPage : ContentPage
         }
     }
 
-    private int ExtractBaseFromAbilities()
-    {
-        var baseAbility = _abilities.FirstOrDefault(a =>
-            string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase)
-        );
-        return baseAbility?.TotalIsp ?? 0;
+    private void RemoveItemFromPage(){
+        IspTotal = 0;
+        _abilities = new();
+        _recipientName = string.Empty;
+        _recipientClass = string.Empty;
+        DnbuodSwitch.IsToggled = false;
+        _recipientPlayerName = string.Empty;
+        WitnessNameEntry.Text = string.Empty;
+        CreatedDatePicker.Date = DateTime.Now;
     }
 
     private void SetDescriptionFromText(string? text)

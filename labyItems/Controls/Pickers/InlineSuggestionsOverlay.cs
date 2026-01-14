@@ -91,7 +91,7 @@ public static class InlineSuggestionsOverlay
             var scrimTap = new TapGestureRecognizer();
             scrimTap.Tapped += (s, e) =>
             {
-                try { _activeAnchor?.Unfocus(); } catch { }
+                _activeAnchor?.Unfocus();
                 // dismiss
                 Dismiss();
             };
@@ -170,15 +170,11 @@ public static class InlineSuggestionsOverlay
         // Subscribe to page size changes (keyboard show/hide) to reposition and keep anchor visible
         _pageSizeChangedHandler = async (s, e) =>
         {
-            try
+            if (_activeAnchor != null)
             {
-                if (_activeAnchor != null)
-                {
-                    var desired = Math.Min(_activeMaxHeight, Math.Min(4, Math.Max(1, _activeItemCount)) * ItemHeight);
-                    await EnsureAnchorVisibleAsync(_activeAnchor, desired);
-                }
+                var desired = Math.Min(_activeMaxHeight, Math.Min(4, Math.Max(1, _activeItemCount)) * ItemHeight);
+                await EnsureAnchorVisibleAsync(_activeAnchor, desired);
             }
-            catch { }
 
             _ = RepositionOverlayAsync();
         };
@@ -218,7 +214,7 @@ public static class InlineSuggestionsOverlay
     {
         RemoveOverlayFromHost();
         DetachHandlers();
-        try { _activeAnchor?.Unfocus(); } catch { }
+        _activeAnchor?.Unfocus();
         ResetState();
 
         _currentTcs?.TrySetResult(result);
@@ -227,31 +223,23 @@ public static class InlineSuggestionsOverlay
 
     private static void RemoveOverlayFromHost()
     {
-        try
+        if (_activeHost != null && _activeOverlay != null && _activeHost.Children.Contains(_activeOverlay))
         {
-            if (_activeHost != null && _activeOverlay != null && _activeHost.Children.Contains(_activeOverlay))
-            {
-                _activeHost.Children.Remove(_activeOverlay);
-            }
+            _activeHost.Children.Remove(_activeOverlay);
         }
-        catch { }
     }
 
     private static void DetachHandlers()
     {
-        try
+        if (_activePage != null && _pageSizeChangedHandler != null)
         {
-            if (_activePage != null && _pageSizeChangedHandler != null)
-            {
-                _activePage.SizeChanged -= _pageSizeChangedHandler;
-            }
-
-            if (_activeScrollView != null && _scrollHandler != null)
-            {
-                _activeScrollView.Scrolled -= _scrollHandler;
-            }
+            _activePage.SizeChanged -= _pageSizeChangedHandler;
         }
-        catch { }
+
+        if (_activeScrollView != null && _scrollHandler != null)
+        {
+            _activeScrollView.Scrolled -= _scrollHandler;
+        }
 
         _pageSizeChangedHandler = null;
         _scrollHandler = null;
@@ -296,16 +284,24 @@ public static class InlineSuggestionsOverlay
 
     private static Brush GetThemeBrush()
     {
-        try
+        if (Application.Current?.Resources is ResourceDictionary resources)
         {
-            if (Application.Current?.RequestedTheme == AppTheme.Dark && Application.Current?.Resources.ContainsKey("OffBlack") == true)
-                return new SolidColorBrush((Color)Application.Current.Resources["OffBlack"]);
-            return new SolidColorBrush((Color)Application.Current.Resources["White"]);
+            if (
+                Application.Current.RequestedTheme == AppTheme.Dark
+                && resources.TryGetValue("OffBlack", out var offBlack)
+                && offBlack is Color offBlackColor
+            )
+            {
+                return new SolidColorBrush(offBlackColor);
+            }
+
+            if (resources.TryGetValue("White", out var white) && white is Color whiteColor)
+            {
+                return new SolidColorBrush(whiteColor);
+            }
         }
-        catch
-        {
-            return new SolidColorBrush(Colors.White);
-        }
+
+        return new SolidColorBrush(Colors.White);
     }
 
     private static async Task EnsureAnchorVisibleAsync(VisualElement anchor, double desiredDropdownHeight)
@@ -313,24 +309,20 @@ public static class InlineSuggestionsOverlay
         var scroll = FindAncestorOfType<ScrollView>(anchor);
         if (scroll == null) return;
 
-        try
-        {
-            var anchorPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(anchor);
-            var scrollPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(scroll);
+        var anchorPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(anchor);
+        var scrollPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(scroll);
 
-            var anchorTop = anchorPos.Y - scrollPos.Y;
-            var availableBelow = scroll.Height - (anchorTop + anchor.Height);
-            var requiredSpace = Math.Max(0, desiredDropdownHeight + VerticalGap);
+        var anchorTop = anchorPos.Y - scrollPos.Y;
+        var availableBelow = scroll.Height - (anchorTop + anchor.Height);
+        var requiredSpace = Math.Max(0, desiredDropdownHeight + VerticalGap);
 
-            if (availableBelow >= requiredSpace)
-                return;
+        if (availableBelow >= requiredSpace)
+            return;
 
-            var deficit = requiredSpace - availableBelow;
-            // Nudge the scroll a bit more than the deficit so the entry isn't glued to the top edge
-            var target = Math.Max(0, scroll.ScrollY + deficit + (anchor.Height * 0.25));
-            await scroll.ScrollToAsync(scroll.ScrollX, target, true);
-        }
-        catch { }
+        var deficit = requiredSpace - availableBelow;
+        // Nudge the scroll a bit more than the deficit so the entry isn't glued to the top edge
+        var target = Math.Max(0, scroll.ScrollY + deficit + (anchor.Height * 0.25));
+        await scroll.ScrollToAsync(scroll.ScrollX, target, true);
     }
 
     private static T? FindAncestorOfType<T>(VisualElement? element) where T : VisualElement
@@ -387,73 +379,65 @@ public static class InlineSuggestionsOverlay
         if (_activeHost == null || _activeOverlay == null || _activeContainer == null || _activeAnchor == null)
             return;
 
-        try
+        var hostPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(_activeHost);
+        var anchorPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(_activeAnchor);
+        var anchorHeight = _activeAnchor.Height;
+
+        var localX = Math.Max(8, anchorPos.X - hostPos.X);
+        // Start at the anchor's bottom with a small gap so the entry remains visible
+        var localY = anchorPos.Y - hostPos.Y + anchorHeight + VerticalGap;
+
+        // compute available space below and above (relative to host)
+        var pageHeight = _activeHost.Height > 0 ? _activeHost.Height : (Application.Current?.MainPage?.Height ?? 0);
+        var availableBelow = Math.Max(0, pageHeight - localY - 8);
+        var availableAbove = Math.Max(0, anchorPos.Y - hostPos.Y - 8);
+
+        // Target showing the top 4 results when possible
+        var visibleItems = Math.Min(4, Math.Max(1, _activeItemCount));
+        var desiredHeight = Math.Min(_activeMaxHeight, visibleItems * ItemHeight);
+
+        double finalHeight = desiredHeight;
+
+        // Prefer showing below if enough space; otherwise try above, otherwise shrink to fit
+        if (availableBelow < desiredHeight && availableAbove >= desiredHeight)
         {
-            var hostPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(_activeHost);
-            var anchorPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(_activeAnchor);
-            var anchorHeight = _activeAnchor.Height;
-
-            var localX = Math.Max(8, anchorPos.X - hostPos.X);
-            // Start at the anchor's bottom with a small gap so the entry remains visible
-            var localY = anchorPos.Y - hostPos.Y + anchorHeight + VerticalGap;
-
-            // compute available space below and above (relative to host)
-            var pageHeight = _activeHost.Height > 0 ? _activeHost.Height : (Application.Current?.MainPage?.Height ?? 0);
-            var availableBelow = Math.Max(0, pageHeight - localY - 8);
-            var availableAbove = Math.Max(0, anchorPos.Y - hostPos.Y - 8);
-
-            // Target showing the top 4 results when possible
-            var visibleItems = Math.Min(4, Math.Max(1, _activeItemCount));
-            var desiredHeight = Math.Min(_activeMaxHeight, visibleItems * ItemHeight);
-
-            double finalHeight = desiredHeight;
-
-            // Prefer showing below if enough space; otherwise try above, otherwise shrink to fit
-            if (availableBelow >= desiredHeight)
+            // Put above the anchor
+            localY = Math.Max(8, anchorPos.Y - hostPos.Y - desiredHeight - VerticalGap);
+        }
+        else if (availableBelow < desiredHeight && availableAbove < desiredHeight)
+        {
+            // Not enough space either side - pick the larger available area and fit
+            if (availableBelow >= availableAbove)
             {
-                // OK keep below
-            }
-            else if (availableAbove >= desiredHeight)
-            {
-                // Put above the anchor
-                localY = Math.Max(8, anchorPos.Y - hostPos.Y - desiredHeight - VerticalGap);
+                finalHeight = Math.Max(48, availableBelow);
             }
             else
             {
-                // Not enough space either side - pick the larger available area and fit
-                if (availableBelow >= availableAbove)
-                {
-                    finalHeight = Math.Max(48, availableBelow);
-                }
-                else
-                {
-                    finalHeight = Math.Max(48, availableAbove);
-                    localY = Math.Max(8, anchorPos.Y - hostPos.Y - finalHeight - VerticalGap);
-                }
-            }
-
-            // Clamp X so container doesn't overflow to the right and set width
-            var pageWidth = _activeHost.Width > 0 ? _activeHost.Width : (Application.Current?.MainPage?.Width ?? 0);
-            var width = _activePreferredWidth;
-            if (_activeAnchor.Width > 0)
-                width = Math.Max(width, _activeAnchor.Width);
-            width = Math.Min(width, pageWidth - 16);
-            if (localX + width + 8 > pageWidth)
-            {
-                localX = Math.Max(8, pageWidth - width - 8);
-            }
-
-            // Apply layout bounds
-            AbsoluteLayout.SetLayoutBounds(_activeContainer, new Rect(localX, localY, width, finalHeight));
-            AbsoluteLayout.SetLayoutFlags(_activeContainer, AbsoluteLayoutFlags.None);
-
-            // Ensure internal CollectionView height respects container
-            if (_activeContainer.Content is CollectionView cv)
-            {
-                cv.HeightRequest = finalHeight;
+                finalHeight = Math.Max(48, availableAbove);
+                localY = Math.Max(8, anchorPos.Y - hostPos.Y - finalHeight - VerticalGap);
             }
         }
-        catch { }
+
+        // Clamp X so container doesn't overflow to the right and set width
+        var pageWidth = _activeHost.Width > 0 ? _activeHost.Width : (Application.Current?.MainPage?.Width ?? 0);
+        var width = _activePreferredWidth;
+        if (_activeAnchor.Width > 0)
+            width = Math.Max(width, _activeAnchor.Width);
+        width = Math.Min(width, pageWidth - 16);
+        if (localX + width + 8 > pageWidth)
+        {
+            localX = Math.Max(8, pageWidth - width - 8);
+        }
+
+        // Apply layout bounds
+        AbsoluteLayout.SetLayoutBounds(_activeContainer, new Rect(localX, localY, width, finalHeight));
+        AbsoluteLayout.SetLayoutFlags(_activeContainer, AbsoluteLayoutFlags.None);
+
+        // Ensure internal CollectionView height respects container
+        if (_activeContainer.Content is CollectionView cv)
+        {
+            cv.HeightRequest = finalHeight;
+        }
     }
 
     private static int FilteredCountEstimate(Border container)

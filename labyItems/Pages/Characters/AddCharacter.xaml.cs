@@ -21,7 +21,6 @@ public partial class AddCharacter : ContentPage
             ClassEntry.Text = character.Class;
             PointsEntry.Text = character.Points.ToString();
             PlayerEntry.Text = character.PlayerName;
-            Console.WriteLine($"found character, name: {character.Name}");
         }
         BindingContext = this;
     }

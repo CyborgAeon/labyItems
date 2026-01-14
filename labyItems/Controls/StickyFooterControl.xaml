@@ -9,15 +9,16 @@
   </ContentView.Resources>
 
   <Border Padding="12,8" BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E1E}" Stroke="#22000000" StrokeThickness="1">
+    <Border.GestureRecognizers>
+      <TapGestureRecognizer Tapped="OnToggleExpanded" />
+    </Border.GestureRecognizers>
     <VerticalStackLayout Spacing="8">
       <Grid ColumnDefinitions="18,*,Auto" ColumnSpacing="8">
-        <Label Grid.Column="0" FontSize="30" HorizontalTextAlignment="End" Rotation="{Binding Source={x:Reference Root}, Path=IsExpanded, Converter={StaticResource BoolToRotationConverter}}" Text="›" VerticalTextAlignment="Center">
-          <Label.GestureRecognizers>
-            <TapGestureRecognizer Tapped="OnToggleExpanded" />
-          </Label.GestureRecognizers>
-        </Label>
-        <Label Grid.Column="1" VerticalOptions="Center" FontAttributes="Bold" Text="{Binding Source={x:Reference Root}, Path=FormattedTotal}"/>
-        <Button Grid.Column="2" Clicked="OnReturnClicked" CornerRadius="10" HeightRequest="44" IsEnabled="{Binding Source={x:Reference Root}, Path=IsEnabled}" Text="{Binding Source={x:Reference Root}, Path=ButtonText}" />
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="18,*" ColumnSpacing="8" BackgroundColor="Transparent">
+          <Label Grid.Column="0" FontSize="30" HorizontalTextAlignment="End" InputTransparent="True" Rotation="{Binding Source={x:Reference Root}, Path=IsExpanded, Converter={StaticResource BoolToRotationConverter}}" Text="›" VerticalTextAlignment="Center" />
+          <Label Grid.Column="1" VerticalOptions="Center" FontAttributes="Bold" InputTransparent="True" Text="{Binding Source={x:Reference Root}, Path=FormattedTotal}"/>
+        </Grid>
+        <Button Grid.Column="2" Clicked="OnReturnClicked" CornerRadius="10" HeightRequest="44" IsEnabled="{Binding Source={x:Reference Root}, Path=IsReturnEnabled}" Text="{Binding Source={x:Reference Root}, Path=ButtonText}" />
       </Grid>
 
       <CollectionView IsVisible="{Binding Source={x:Reference Root}, Path=IsExpanded}" ItemsSource="{Binding Source={x:Reference Root}, Path=BreakdownItems}">

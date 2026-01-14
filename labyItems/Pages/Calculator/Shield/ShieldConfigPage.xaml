@@ -85,7 +85,7 @@
       ButtonText="Return to Calculator"
       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"
-      BreakdownItems="{Binding BreakdownItems}"
+      BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}"
       RemoveContributionCommand="{Binding CalculatorContext.RemoveContributionCommand, Source={x:Reference RootPage}}" />
   </Grid>
 </cfg:ConfigPageBase>

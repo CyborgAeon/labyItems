@@ -42,57 +42,46 @@ public class EnumPicker<TEnum> : ContentView
         if (_activeOverlay != null)
             return;
 
-        try
+        var items = FilteredOptions.ToList();
+        if (!items.Any())
+            return;
+
+        if (SearchEntry != null)
         {
-            var items = FilteredOptions.ToList();
-            if (!items.Any())
-                return;
+            var pos = await NativeCoordinateHelper.GetAbsolutePositionAsync(SearchEntry);
 
-            if (SearchEntry != null)
+            // Set width to match the entry if available
+            var entryWidth = SearchEntry.Width > 0 ? SearchEntry.Width : 200;
+
+            // Determine a suitable max height for the list
+            double maxHeight = Math.Min(320, (FilteredOptions.Count * 56) + 16);
+            var pageHeight = Application.Current?.MainPage?.Height ?? double.PositiveInfinity;
+            maxHeight = Math.Min(maxHeight, pageHeight * 0.5);
+
+            // Compute initial x/y relative to page coordinates and clamp to page
+            double x = pos.X;
+            // Place popup just below the search entry with a small gap so the search bar remains visible
+            double y = pos.Y + (SearchEntry?.Height ?? 0) + 6; // 6px gap to avoid edge overlap
+
+            var pageWidth = Application.Current?.MainPage?.Width ?? double.PositiveInfinity;
+            if (x + entryWidth + 12 > pageWidth)
             {
-                var pos = await NativeCoordinateHelper.GetAbsolutePositionAsync(SearchEntry);
+                x = Math.Max(8, pageWidth - entryWidth - 12);
+            }
 
-                // Set width to match the entry if available
-                var entryWidth = SearchEntry.Width > 0 ? SearchEntry.Width : 200;
+            if (y + maxHeight + 12 > pageHeight)
+            {
+                // Not enough space below; open above the entry if possible
+                var aboveY = pos.Y - maxHeight;
+                if (aboveY > 8)
+                    y = aboveY;
+                else
+                    y = Math.Max(8, pageHeight - maxHeight - 12);
+            }
 
-                // Determine a suitable max height for the list
-                double maxHeight = Math.Min(320, (FilteredOptions.Count * 56) + 16);
-                // Also don't exceed half the page height
-                try
-                {
-                    var pageHeight = Application.Current?.MainPage?.Height ?? double.PositiveInfinity;
-                    maxHeight = Math.Min(maxHeight, pageHeight * 0.5);
-                }
-                catch { }
-
-                // Compute initial x/y relative to page coordinates and clamp to page
-                double x = pos.X;
-                // Place popup just below the search entry with a small gap so the search bar remains visible
-                double y = pos.Y + (SearchEntry?.Height ?? 0) + 6; // 6px gap to avoid edge overlap
-
-                try
-                {
-                    var pageWidth = Application.Current?.MainPage?.Width ?? double.PositiveInfinity;
-                    if (x + entryWidth + 12 > pageWidth)
-                    {
-                        x = Math.Max(8, pageWidth - entryWidth - 12);
-                    }
-
-                    var pageHeight = Application.Current?.MainPage?.Height ?? double.PositiveInfinity;
-                    if (y + maxHeight + 12 > pageHeight)
-                    {
-                        // Not enough space below; open above the entry if possible
-                        var aboveY = pos.Y - maxHeight;
-                        if (aboveY > 8)
-                            y = aboveY;
-                        else
-                            y = Math.Max(8, pageHeight - maxHeight - 12);
-                    }
-                }
-                catch { }
-
-                // Show the inline overlay
-                _activeOverlay = new object(); // marker
+            _activeOverlay = new object(); // marker
+            try
+            {
                 TEnum? result = await InlineSuggestionsOverlay.ShowAsync(SearchEntry, items, FormatOption, entryWidth, maxHeight);
 
                 if (result.HasValue)
@@ -112,14 +101,11 @@ public class EnumPicker<TEnum> : ContentView
                     SearchEntry.Unfocus();
                     _suppressTextEvents = false;
                 }
-
+            }
+            finally
+            {
                 _activeOverlay = null;
             }
-        }
-        catch (Exception)
-        {
-            // ignore overlay errors
-            _activeOverlay = null;
         }
     }
 

@@ -12,7 +12,7 @@ public partial class App : Application
     {
         _dbInitializer = dbInitializer;
         InitializeComponent();
-        MainPage = new NavigationPage(new CharactersPage()); // first screen
+        MainPage = new NavigationPage(new ItemRoutePage());
         MainPage.Appearing += OnMainPageAppearing;
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
         {
@@ -44,4 +44,3 @@ public partial class App : Application
         });
     }
 }
-

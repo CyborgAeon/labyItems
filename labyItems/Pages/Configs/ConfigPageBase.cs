@@ -1,3 +1,7 @@
+using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using labyItems.Controls;
 using labyItems.Models;
@@ -22,15 +26,28 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
     }
 
     public TConfig Config { get; private set; }
+    public ObservableCollection<ContributionRow> FooterBreakdownItems { get; } = new();
     public Command ReturnFromConfigCommand { get; set; }
     private Pages.Calculator.IspCalculator? _calculatorContext;
+    private bool _isUpdatingFooter;
     public Pages.Calculator.IspCalculator? CalculatorContext
     {
         get => _calculatorContext;
         set
         {
+            if (_calculatorContext == value)
+                return;
+
+            if (_calculatorContext is not null)
+                _calculatorContext.BreakdownItems.CollectionChanged -= OnCalculatorBreakdownChanged;
+
             _calculatorContext = value;
+
+            if (_calculatorContext is not null)
+                _calculatorContext.BreakdownItems.CollectionChanged += OnCalculatorBreakdownChanged;
+
             OnPropertyChanged();
+            UpdateFooterBreakdown();
         }
     }
     private bool CompletionSet => _tcs.Task.IsCompleted;
@@ -39,12 +56,15 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
     {
         Config = new TConfig();
         BindingContext = Config;
+        Config.PropertyChanged += OnConfigPropertyChanged;
 
         ReturnFromConfigCommand = new Command(async () =>
         {
             Complete(BuildResult(Config));
             await StickyFooterControl.DefaultNavigateAsync(this);
         });
+
+        UpdateFooterBreakdown();
     }
 
     public void ApplyBaseTotal(int baseTotal)
@@ -55,8 +75,11 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
     public void ResetConfig()
     {
         var baseIsp = Config.BaseIsp;
+        Config.PropertyChanged -= OnConfigPropertyChanged;
         Config = new TConfig { BaseIsp = baseIsp };
+        Config.PropertyChanged += OnConfigPropertyChanged;
         BindingContext = Config;
+        UpdateFooterBreakdown();
     }
 
     protected abstract CalcResult BuildResult(TConfig cfg);
@@ -89,5 +112,75 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
             return;
 
         _tcs.TrySetResult(result);
+    }
+
+    private void OnConfigPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (_isUpdatingFooter)
+            return;
+
+        UpdateFooterBreakdown();
+    }
+
+    private void OnCalculatorBreakdownChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (_isUpdatingFooter)
+            return;
+
+        UpdateFooterBreakdown();
+    }
+
+    private void UpdateFooterBreakdown()
+    {
+        if (_isUpdatingFooter)
+            return;
+
+        _isUpdatingFooter = true;
+        try
+        {
+            FooterBreakdownItems.Clear();
+
+            int running = 0;
+            if (CalculatorContext is not null)
+            {
+                foreach (var row in CalculatorContext.BreakdownItems)
+                {
+                    FooterBreakdownItems.Add(row);
+                    running = row.RunningTotal;
+                }
+            }
+
+            var preview = BuildPreviewRow(running);
+            if (preview is not null)
+                FooterBreakdownItems.Add(preview);
+        }
+        finally
+        {
+            _isUpdatingFooter = false;
+        }
+    }
+
+    private ContributionRow? BuildPreviewRow(int baseRunning)
+    {
+        CalcResult previewResult;
+        try
+        {
+            previewResult = BuildResult(Config);
+        }
+        catch
+        {
+            return null;
+        }
+
+        var summary = previewResult.Summary?.Trim();
+        if (string.IsNullOrWhiteSpace(summary))
+            return null;
+
+        return new ContributionRow
+        {
+            Id = "current-preview",
+            Text = summary,
+            RunningTotal = baseRunning + previewResult.TotalIsp,
+        };
     }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+  x:Class="labyItems.Pages.ItemRoutePage"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  Title="Create Item">
+  <VerticalStackLayout Padding="20" Spacing="12">
+    <Button
+      Clicked="OnCreateIspClicked"
+      Text="Create ISP Item" />
+    <Button
+      Clicked="OnCreateMpClicked"
+      Text="Create MP Item" />
+  </VerticalStackLayout>
+</ContentPage>

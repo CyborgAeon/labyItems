@@ -30,58 +30,39 @@ public static class NativeCoordinateHelper
         }
 
 #if ANDROID
-        try
+        if (element.Handler?.PlatformView is Android.Views.View nativeView)
         {
-            if (element.Handler?.PlatformView is Android.Views.View nativeView)
-            {
-                var loc = new int[2];
-                nativeView.GetLocationOnScreen(loc);
-                var density = nativeView.Resources.DisplayMetrics.Density;
-                return new Point(loc[0] / density, loc[1] / density);
-            }
+            var loc = new int[2];
+            nativeView.GetLocationOnScreen(loc);
+            var density = nativeView.Resources.DisplayMetrics.Density;
+            return new Point(loc[0] / density, loc[1] / density);
         }
-        catch { }
 #elif IOS || MACCATALYST
-        try
+        if (element.Handler?.PlatformView is UIKit.UIView nativeView)
         {
-            if (element.Handler?.PlatformView is UIKit.UIView nativeView)
-            {
-                var window = nativeView.Window ?? UIKit.UIApplication.SharedApplication.KeyWindow;
-                var pt = nativeView.ConvertPointToView(CoreGraphics.CGPoint.Empty, window);
-                return new Point(pt.X, pt.Y);
-            }
+            var window = nativeView.Window ?? UIKit.UIApplication.SharedApplication.KeyWindow;
+            var pt = nativeView.ConvertPointToView(CoreGraphics.CGPoint.Empty, window);
+            return new Point(pt.X, pt.Y);
         }
-        catch { }
 #elif WINDOWS
-        try
+        if (element.Handler?.PlatformView is Microsoft.UI.Xaml.FrameworkElement fe)
         {
-            if (element.Handler?.PlatformView is Microsoft.UI.Xaml.FrameworkElement fe)
-            {
-                var transform = fe.TransformToVisual(null);
-                var pt = transform.TransformPoint(new Windows.Foundation.Point(0, 0));
-                return new Point(pt.X, pt.Y);
-            }
+            var transform = fe.TransformToVisual(null);
+            var pt = transform.TransformPoint(new Windows.Foundation.Point(0, 0));
+            return new Point(pt.X, pt.Y);
         }
-        catch { }
 #endif
 
         // Fallback: accumulate offsets
-        try
+        double fallbackX = 0, fallbackY = 0;
+        var current = (VisualElement?)element;
+        while (current != null)
         {
-            double x = 0, y = 0;
-            var current = (VisualElement?)element;
-            while (current != null)
-            {
-                x += current.X;
-                y += current.Y;
-                current = current.Parent as VisualElement;
-            }
+            fallbackX += current.X;
+            fallbackY += current.Y;
+            current = current.Parent as VisualElement;
+        }
 
-            return new Point(x, y);
-        }
-        catch
-        {
-            return new Point(0, 0);
-        }
+        return new Point(fallbackX, fallbackY);
     }
 }

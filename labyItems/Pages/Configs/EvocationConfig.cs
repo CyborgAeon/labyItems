@@ -119,11 +119,11 @@ public class EvocationConfig : ConfigBase
 
         int basicCost = 2 * Power * Math.Max(0, BasicPerDay);
         if (basicCost > 0)
-            builder.Add($"Basic casts x{BasicPerDay} @2×Power {Power} = {basicCost}", basicCost);
+            builder.Add($"{BasicPerDay}/Basic casts @2 × {Power} = {basicCost}", basicCost);
 
         int advancedCost = 3 * Power * Math.Max(0, AdvancedPerDay);
         if (advancedCost > 0)
-            builder.Add($"Advanced casts x{AdvancedPerDay} @3×Power {Power} = {advancedCost}", advancedCost);
+            builder.Add($"{AdvancedPerDay}/Advanced casts @3 × {Power} = {advancedCost}", advancedCost);
 
         int baseTotal = basicCost + advancedCost;
 
@@ -159,7 +159,7 @@ public class EvocationConfig : ConfigBase
         if (DrawOnEpPerDay > 0)
         {
             int drawCost = DrawOnEpPerDay * 16;
-            builder.Add($"Draw on EP per day x{DrawOnEpPerDay} @16 = {drawCost}", drawCost);
+            builder.Add($"{DrawOnEpPerDay}/Draw on EP @16 = {drawCost}", drawCost);
         }
 
         foreach (var row in builder.Rows)

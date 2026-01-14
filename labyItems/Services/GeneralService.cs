@@ -37,7 +37,6 @@ public static class GeneralService
         if (File.Exists(appDb))
         {
             _dbPath = appDb;
-            Console.WriteLine($"[GeneralService] Using app DB: {_dbPath}");
             return;
         }
 
@@ -53,13 +52,11 @@ public static class GeneralService
             if (File.Exists(candidate))
             {
                 _dbPath = candidate;
-                Console.WriteLine($"[GeneralService] Using dev DB: {_dbPath}");
                 return;
             }
         }
 
         _dbPath = null;
-        Console.WriteLine("[GeneralService] No DB found; set _dbPath = null");
     }
 
     public static async Task<IReadOnlyList<General.Result>> GetAllAsync()
@@ -69,19 +66,7 @@ public static class GeneralService
         if (string.IsNullOrEmpty(_dbPath) || !File.Exists(_dbPath))
             throw new InvalidOperationException("Evolution DB not found; ensure default.db is present in app data or available during development.");
 
-        Console.WriteLine($"[GeneralService] Opening DB at {_dbPath}");
         using var conn = new SQLite.SQLiteConnection(_dbPath, SQLite.SQLiteOpenFlags.ReadOnly);
-
-        try
-        {
-            var total = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM evolution;");
-            var ngrams = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM evolution_ngrams;");
-            Console.WriteLine($"[GeneralService] evolution rows={total} evolution_ngrams={ngrams}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[GeneralService] Warning: failed to read counts: {ex.Message}");
-        }
 
         var rows = conn.Query<EvoRow>("SELECT idx, description, cost, table_id FROM evolution ORDER BY table_id, idx;");
         var list = new List<General.Result>();
@@ -105,7 +90,6 @@ public static class GeneralService
         var q = query.Trim();
         var normalized = NormalizeForNgrams(q.ToLowerInvariant());
         var tokens = GenerateNGrams(normalized, NGRAM_N).Distinct().ToList();
-        Console.WriteLine($"[GeneralService] Search query='{q}' normalized='{normalized}' tokens=[{string.Join(',', tokens)}]");
         if (tokens.Count == 0) return new List<General.Result>();
 
         using var conn = new SQLite.SQLiteConnection(_dbPath, SQLite.SQLiteOpenFlags.ReadOnly);
@@ -121,10 +105,8 @@ public static class GeneralService
 
         var inClause = string.Join(",", paramNames);
         var sql = $"SELECT e.idx, e.description, e.cost, e.table_id FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
-        Console.WriteLine($"[GeneralService] SQL={sql} params=[{string.Join(',', args)}]");
 
         var rows = conn.Query<EvoRow>(sql, args.ToArray());
-        Console.WriteLine($"[GeneralService] Rows returned: {rows.Count}");
         var list = rows.Select(r => new General.Result { Index = r.idx, Description = r.description ?? string.Empty, Cost = r.cost, Table = r.table_id, IsImmunity = r.idx.IsImmunity() }).Take(20).ToList();
 
         if (table is { } t && t >= 1)

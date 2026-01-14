@@ -42,16 +42,8 @@ public static class MauiProgram
 				.WithGlobalConnectionString($"Data Source={dbPath}")
 				.ScanIn(typeof(MigrationsLib.Migrations.InitialMigration).Assembly).For.Migrations())
 			.AddLogging(lb => {
-				// FluentMigratorConsole uses Console APIs which may not be available on mobile platforms (Android/iOS/MacCatalyst).
-				// Register the console logger only on platforms that support Console; otherwise use the Debug logger.
-				if (!OperatingSystem.IsAndroid() && !OperatingSystem.IsIOS() && !OperatingSystem.IsMacCatalyst())
-				{
-					lb.AddFluentMigratorConsole();
-				}
-				else
-				{
-					lb.AddDebug();
-				}
+				lb.ClearProviders();
+				lb.AddDebug();
 			});
 
 		// Register default-db installer which will copy a packaged default.db on first-run (if present)

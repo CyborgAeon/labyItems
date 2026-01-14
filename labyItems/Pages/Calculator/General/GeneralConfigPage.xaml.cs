@@ -191,11 +191,17 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
             details["prayerTimesPerDay"] = cfg.PrayerTimesPerDay;
         }
 
+        var summaryHeader = $"{cfg.Title} ({cfg.Total})";
+        var summary = string.IsNullOrWhiteSpace(notes)
+            ? summaryHeader
+            : $"{summaryHeader}\n{notes}";
+
         return new CalcResult
         {
             AbilityType = "General",
             AbilityName = string.IsNullOrWhiteSpace(cfg.Name) ? "General Charm" : cfg.Name,
             TotalIsp = cfg.Total,
+            Summary = summary,
             Details = details
         };
     }
