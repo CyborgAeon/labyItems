@@ -1,0 +1,13 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="labyItems.Pages.Wizard" Title="Character builder">
+    <Grid RowDefinitions="Auto,*,Auto">
+        <controls:StepIndicator Steps="{Binding StepSteps}" CurrentStep="{Binding CurrentStep}" StepClickCommand="{Binding StepClickCommand}" />
+
+        <ContentPresenter Grid.Row="1" Content="{Binding CurrentStepView}" />
+
+        <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto" Padding="16">
+            <Button Text="Back" Command="{Binding BackCommand}" />
+            <Button Grid.Column="2" Text="{Binding NextButtonText}" Command="{Binding NextCommand}" IsEnabled="{Binding CanGoNext}" />
+        </Grid>
+    </Grid>
+</ContentPage>

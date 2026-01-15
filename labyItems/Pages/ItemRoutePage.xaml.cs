@@ -9,6 +9,11 @@ public partial class ItemRoutePage : ContentPage
         InitializeComponent();
     }
 
+    private async void OnMakeCharacterClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new CharacterBuilderPage());
+    }
+
     private async void OnCreateIspClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new CharactersPage());

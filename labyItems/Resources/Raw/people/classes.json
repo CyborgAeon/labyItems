@@ -1,0 +1,18 @@
+{
+  "Warrior-Priest": {
+    "Brackets": ["Warrior", "Priest"],
+    "Levels": {
+      "1": ["O & U", "Medium armour", "Light armour"],
+      "2": [],
+      "3": ["E"],
+      "4": [],
+      "5": ["B"],
+      "6": ["H"],
+      "7": ["1st Weapon Mastery O"],
+      "8": ["Warrior specialist"]
+    },
+    "Max AC": 7,
+    "Powerbase": ["示 Spirit"],
+    "PowerPerLevel": 3
+  }
+}
