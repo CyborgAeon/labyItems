@@ -43,7 +43,7 @@
 
         <!-- AC bumps -->
         <VerticalStackLayout Spacing="8">
-          <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+          <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
             <HorizontalStackLayout Grid.Column="0" Grid.Row="0" Spacing="6">
               <CheckBox IsChecked="{Binding PacChecked, Mode=TwoWay}" />
               <Label Text="+1 PAC" FontAttributes="Bold" VerticalTextAlignment="Center" />

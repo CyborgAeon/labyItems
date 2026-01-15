@@ -15,6 +15,17 @@
     <Label Text="Recipient Character Class" FontAttributes="Bold" />
     <Entry x:Name="RecipientCharacterClassEntry" Placeholder="Character class" />
 
+    <Label Text="Item Summary" FontAttributes="Bold" IsVisible="{Binding HasSubmissionSummary}" />
+    <VerticalStackLayout BindableLayout.ItemsSource="{Binding SubmissionSummaryLines}" IsVisible="{Binding HasSubmissionSummary}" Spacing="8">
+      <BindableLayout.ItemTemplate>
+        <DataTemplate>
+          <Frame BorderColor="#DDD" CornerRadius="8" HasShadow="False" Padding="10">
+            <Label LineBreakMode="WordWrap" Text="{Binding .}" />
+          </Frame>
+        </DataTemplate>
+      </BindableLayout.ItemTemplate>
+    </VerticalStackLayout>
+
     <Button Text="Submit" Clicked="OnSubmit" />
   </VerticalStackLayout>
 </ContentPage>
