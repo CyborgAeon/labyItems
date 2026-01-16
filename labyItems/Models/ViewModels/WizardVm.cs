@@ -1,44 +1,38 @@
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using labyItems.Infrastructure;
-using labyItems.Models.DTOs;
-using labyItems.Pages;
+using labyItems.Controls;
+using labyItems.Models.Characters;
+using labyItems.Pages.Characters;
 
-namespace labyItems.Models.ViewModels;
+namespace labyItems.Pages.Characters.ViewModels;
 
-public sealed class ClassCardVm
+public sealed class WizardVm : INotifyPropertyChanged
 {
-    public int Id { get; init; }
-    public string Name { get; init; } = "";
-    public string Category { get; init; } = "";
-    public string Summary { get; init; } = "";
-    public string FullDetails { get; init; } = "";
-    public string Tag1 { get; init; } = "AC 9";
-    public string Tag2 { get; init; } = "72 HP";
-    public string Tag3 { get; init; } = "Shield";
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    public bool IsExpanded { get; set; }
-}
+    private void Raise([CallerMemberName] string? name = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-public sealed class RaceCardVm
-{
-    public int Id { get; init; }
-    public string Name { get; init; } = "";
-    public string Summary { get; init; } = "";
-}
+    private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        Raise(name);
+        return true;
+    }
 
-
-public sealed class WizardViewModel : ObservableObject
-{
     public CharacterDraft Draft { get; } = new();
 
-    // StepIndicator data source
-    public IList<StepItem> StepSteps { get; } = new List<StepItem>
+    // Steps displayed in StepIndicator
+    public ObservableCollection<StepItem> StepSteps { get; } = new()
     {
-        new() { Id = 1, Label = "Race/Class" },
-        new() { Id = 2, Label = "Info" },
-        new() { Id = 3, Label = "Guilds" },
-        new() { Id = 4, Label = "Buffs" },
-        new() { Id = 5, Label = "Review" },
+        new StepItem { Id = 1, Label = "Race & Class" },
+        new StepItem { Id = 2, Label = "Info" },
+        new StepItem { Id = 3, Label = "Guilds" },
+        new StepItem { Id = 4, Label = "Status" },
+        new StepItem { Id = 5, Label = "Review" },
     };
 
     private int _currentStep;
@@ -47,129 +41,149 @@ public sealed class WizardViewModel : ObservableObject
         get => _currentStep;
         set
         {
-            if (!SetProperty(ref _currentStep, value)) return;
+            if (!Set(ref _currentStep, value)) return;
             UpdateStepView();
+            Raise(nameof(CanGoBack));
             Raise(nameof(CanGoNext));
             Raise(nameof(NextButtonText));
-            Raise(nameof(CanGoBack));
         }
     }
 
-    // The view displayed by ContentPresenter
     private View? _currentStepView;
     public View? CurrentStepView
     {
         get => _currentStepView;
-        private set => SetProperty(ref _currentStepView, value);
+        private set => Set(ref _currentStepView, value);
     }
 
     public bool CanGoBack => CurrentStep > 0;
 
-    public bool CanGoNext => CanNavigateToStep(CurrentStep + 1);
+    public bool CanGoNext
+    {
+        get
+        {
+            if (CurrentStep >= StepSteps.Count - 1) return true; // "Save & Continue" enabled when review is reachable
+            return CanNavigateToStep(CurrentStep + 1);
+        }
+    }
 
     public string NextButtonText => CurrentStep == StepSteps.Count - 1 ? "Save & Continue" : "Next";
 
-    // Commands
     public ICommand BackCommand { get; }
     public ICommand NextCommand { get; }
     public Command<int> StepClickCommand { get; }
 
-    public WizardViewModel()
-    {
-        BackCommand = new Command(OnBack, () => CanGoBack);
-        NextCommand = new Command(OnNext);
+    // Step VMs (created once to preserve state)
+    public CharacterBuilderVm CharacterBuilderVm { get; }
 
-        // This is what StepIndicator calls when a bubble is clicked
+    public WizardVm()
+    {
+        CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
+
+        BackCommand = new Command(OnBack);
+        NextCommand = new Command(OnNext);
         StepClickCommand = new Command<int>(TryGoToStep);
 
-        // Start at step 0
         CurrentStep = 0;
+        UpdateStepView();
+    }
+
+    public void NotifyGatingChanged()
+    {
+        // Called by step VMs whenever user selection changes
+        Raise(nameof(CanGoNext));
+        Raise(nameof(NextButtonText));
     }
 
     private void OnBack()
     {
-        if (CurrentStep <= 0) return;
+        if (!CanGoBack) return;
         CurrentStep--;
-        (BackCommand as Command)?.ChangeCanExecute();
     }
 
     private async void OnNext()
     {
-        // Last step: save and navigate away
+        // Final step: save & continue
         if (CurrentStep == StepSteps.Count - 1)
         {
-            // TODO: persist Draft -> create character record
-            // TODO: navigate to Characters screen
-            // Example:
-            // await Shell.Current.GoToAsync("//CharactersPage");
+            // TODO: Persist Draft to storage and navigate to your Characters screen.
+            // Example with Shell routes:
+            // await Shell.Current.GoToAsync("//Characters");
+            await Task.CompletedTask;
             return;
         }
 
         var target = CurrentStep + 1;
         if (!CanNavigateToStep(target)) return;
-
         CurrentStep = target;
-        (BackCommand as Command)?.ChangeCanExecute();
     }
 
     private void TryGoToStep(int targetIndex)
     {
-        // Bubble click from StepIndicator ends up here
         if (targetIndex == CurrentStep) return;
 
-        if (!CanNavigateToStep(targetIndex))
+        // Always allow backward navigation
+        if (targetIndex < CurrentStep)
+        {
+            CurrentStep = targetIndex;
             return;
+        }
 
+        // Forward navigation is gated
+        if (!CanNavigateToStep(targetIndex)) return;
         CurrentStep = targetIndex;
-        (BackCommand as Command)?.ChangeCanExecute();
     }
 
     private bool CanNavigateToStep(int targetIndex)
     {
-        // bounds
         if (targetIndex < 0 || targetIndex >= StepSteps.Count) return false;
 
-        // Always allow going backwards
-        if (targetIndex <= CurrentStep) return true;
+        // Always allow step 0
+        if (targetIndex == 0) return true;
 
-        // Forward gating rules
+        // Gate forward steps
         return targetIndex switch
         {
-            0 => true,
-            1 => Draft.IsRaceAndClassSelected,            // info requires race/class
-            2 => Draft.IsRaceAndClassSelected,            // guilds requires race/class
-            3 => Draft.IsRaceAndClassSelected && IsStep2Valid(),
-            4 => Draft.IsRaceAndClassSelected && IsStep2Valid(),
+            1 => Draft.IsRaceAndClassSelected,
+            2 => Draft.IsRaceAndClassSelected,                 // Guilds needs race/class for availability filtering
+            3 => Draft.IsRaceAndClassSelected && IsStep2Valid(),// Status needs info valid
+            4 => Draft.IsRaceAndClassSelected && IsStep2Valid(),// Review needs everything required
             _ => false
         };
     }
 
     private bool IsStep2Valid()
     {
-        // replace with your real validation logic
+        // Placeholder. Replace with your real step-2 validations.
+        // Example: name required
         return !string.IsNullOrWhiteSpace(Draft.Name);
     }
 
     private void UpdateStepView()
     {
-        // IMPORTANT: Step views are ContentViews (not ContentPages)
-        // Pass Draft/VM into step views as BindingContext.
         CurrentStepView = CurrentStep switch
         {
-            0 => new CharacterBuilderPage { BindingContext = this },
-            1 => new Step2InfoView { BindingContext = this },
-            2 => new Step3GuildsView { BindingContext = this },
-            3 => new Step4BuffsView { BindingContext = this },
-            4 => new Step5ReviewView { BindingContext = this },
-            _ => new ContentView()
+            0 => new CharacterBuilder(CharacterBuilderVm),
+            1 => BuildPlaceholder("Step 2 - Character Info (not implemented here)"),
+            2 => BuildPlaceholder("Step 3 - Guilds (not implemented here)"),
+            3 => BuildPlaceholder("Step 4 - Status/Buffs (not implemented here)"),
+            4 => BuildPlaceholder("Step 5 - Review (not implemented here)"),
+            _ => BuildPlaceholder("Unknown step")
         };
     }
 
-    // Call this from step views whenever something changes that affects gating
-    public void NotifyGatingChanged()
-    {
-        Raise(nameof(CanGoNext));
-        Raise(nameof(NextButtonText));
-        (BackCommand as Command)?.ChangeCanExecute();
-    }
+
+    private static View BuildPlaceholder(string text)
+        => new ContentView
+        {
+            Content = new VerticalStackLayout
+            {
+                Padding = 16,
+                Children =
+                {
+                    new Label { Text = text, FontAttributes = FontAttributes.Bold, FontSize = 18 },
+                    new Label { Text = "Wire this step into the wizard the same way as CharacterBuilder.", Opacity = 0.7 }
+                }
+            }
+        };
 }

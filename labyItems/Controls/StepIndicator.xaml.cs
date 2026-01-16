@@ -1,7 +1,8 @@
 using System.Collections.ObjectModel;
+using labyItems.Infrastructure;
 using labyItems.Pages.Characters;
-namespace labyItems.Controls;
 
+namespace labyItems.Controls;
 
 public class StepItem
 {
@@ -86,7 +87,7 @@ public partial class StepIndicator : ContentView
         // Map "bg-border", "bg-primary", etc. to MAUI theme resources if you have them.
         // Fallbacks here if resources don't exist.
         LineBg.Color = TryGetColor("BorderColor", Colors.LightGray);
-        LineFg.Color = TryGetColor("PrimaryColor", Colors.DodgerBlue);
+        LineFg.Color = TryGetColor("PrimaryColor", ColourScheme.Primary);
     }
 
     private Color TryGetColor(string key, Color fallback)
@@ -99,7 +100,16 @@ public partial class StepIndicator : ContentView
 
     private void Rebuild()
     {
-        StepsGrid.Children.Clear();
+        // Remove only dynamically-added children (keep the line BoxViews)
+        for (int i = StepsGrid.Children.Count - 1; i >= 0; i--)
+        {
+            var child = StepsGrid.Children[i];
+            if (child == LineBg || child == LineFg)
+                continue;
+
+            StepsGrid.Children.RemoveAt(i);
+        }
+
         StepsGrid.ColumnDefinitions.Clear();
         _items.Clear();
 
@@ -110,6 +120,11 @@ public partial class StepIndicator : ContentView
             return;
         }
 
+        // Ensure row structure exists (line + bubbles in row 0, captions in row 1)
+        StepsGrid.RowDefinitions.Clear();
+        StepsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+        StepsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+
         // Create N equal columns
         for (int i = 0; i < steps.Count; i++)
             StepsGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
@@ -118,18 +133,6 @@ public partial class StepIndicator : ContentView
         for (int i = 0; i < steps.Count; i++)
         {
             var step = steps[i];
-
-            var container = new Grid
-            {
-                RowDefinitions =
-                {
-                    new RowDefinition(GridLength.Auto),
-                    new RowDefinition(GridLength.Auto)
-                },
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center,
-                Margin = new Thickness(0, 0, 0, 0)
-            };
 
             // Bubble button
             var bubble = new Button
@@ -144,7 +147,6 @@ public partial class StepIndicator : ContentView
                 VerticalOptions = LayoutOptions.Center
             };
 
-            // Use a label overlay so we can switch between number and check easily
             var bubbleText = new Label
             {
                 HorizontalTextAlignment = TextAlignment.Center,
@@ -165,7 +167,6 @@ public partial class StepIndicator : ContentView
             bubbleOverlay.Children.Add(bubble);
             bubbleOverlay.Children.Add(bubbleText);
 
-            // Label (below bubble)
             var caption = new Label
             {
                 Text = step.Label,
@@ -187,13 +188,13 @@ public partial class StepIndicator : ContentView
                 StepClickCommand?.Execute(stepIndex);
             };
 
-            container.Add(bubbleOverlay);
-            container.Add(caption, 0, 1);
-
-            StepsGrid.Add(container, i, 0);
+            // IMPORTANT: add to StepsGrid directly (no container)
+            StepsGrid.Add(bubbleOverlay, i, 0); // row 0 aligns with the line
+            StepsGrid.Add(caption, i, 1);       // row 1
 
             _items.Add((bubble, bubbleText, caption, i));
-            _ = AnimateAppear(container, i);
+            _ = AnimateAppear(bubbleOverlay, i);
+            _ = AnimateAppear(caption, i);
         }
 
         UpdateVisualStates();
@@ -230,7 +231,7 @@ public partial class StepIndicator : ContentView
         var current = Math.Max(0, Math.Min(CurrentStep, stepsCount - 1));
         if (current != CurrentStep) CurrentStep = current;
 
-        var primary = TryGetColor("PrimaryColor", Colors.DodgerBlue);
+        var primary = TryGetColor("PrimaryColor", ColourScheme.Primary);
         var primaryText = TryGetColor("PrimaryForegroundColor", Colors.White);
 
         var secondary = TryGetColor("SecondaryColor", Colors.Gainsboro);
@@ -302,6 +303,13 @@ public partial class StepIndicator : ContentView
 
         var ratio = (double)CurrentStep / (stepsCount - 1);
         ratio = Math.Max(0, Math.Min(1, ratio));
-        LineFg.WidthRequest = totalWidth * ratio;
+        var columnWidth = totalWidth / stepsCount;
+        var inset = columnWidth / 2;
+        var span = Math.Max(0, totalWidth - columnWidth);
+
+        LineBg.Margin = new Thickness(inset, 0, inset, 0);
+        LineFg.Margin = new Thickness(inset, 0, 0, 0);
+
+        LineFg.WidthRequest = span * ratio;
     }
 }

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Pages.Characters.RaceCardView"
+    x:Name="Self"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Grid>
+        <Frame
+            CornerRadius="12"
+            Padding="0"
+            HasShadow="False"
+            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
+            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1B1B1B}">
+
+            <Grid RowDefinitions="Auto,Auto">
+
+                <Grid Padding="16"
+                      RowDefinitions="Auto,Auto"
+                      RowSpacing="10">
+
+                    <Grid ColumnDefinitions="Auto,*,40"
+                          ColumnSpacing="12">
+
+                        <Frame
+                            Grid.Column="0"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            CornerRadius="20"
+                            Padding="0"
+                            HasShadow="False"
+                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
+                            BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#2A2A2A}">
+                            <Label
+                                Text="{Binding Icon}"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                FontSize="18"/>
+                        </Frame>
+
+                        <VerticalStackLayout Grid.Column="1"
+                                             Spacing="1"
+                                             VerticalOptions="Center">
+                            <Label Text="{Binding Name}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"/>
+                            <Label Text="{Binding PeopleType}"
+                                   FontSize="12"
+                                   FontAttributes="Italic"
+                                   Opacity="0.75"/>
+                        </VerticalStackLayout>
+
+                        <Button
+                            Grid.Column="2"
+                            Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                            FontSize="18"
+                            Padding="0"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            HorizontalOptions="End"
+                            VerticalOptions="Center"
+                            Command="{Binding ToggleRaceExpandedCommand, Source={x:Reference Self}}"
+                            CommandParameter="{Binding .}"/>
+                    </Grid>
+
+                    <Label Grid.Row="1"
+                           Text="{Binding Description}"
+                           FontSize="13"
+                           Opacity="0.8"
+                           LineBreakMode="TailTruncation"
+                           MaxLines="2"/>
+                </Grid>
+
+                <Grid Grid.Row="1"
+                      IsVisible="{Binding IsExpanded}"
+                      BackgroundColor="Transparent">
+                    <Grid Padding="16"
+                          RowDefinitions="Auto,Auto,Auto"
+                          RowSpacing="12"
+                          BackgroundColor="Transparent">
+
+                        <Grid IsVisible="{Binding HasAnyAbilities}">
+                            <CollectionView ItemsSource="{Binding LevelRows}"
+                                            SelectionMode="None">
+                                <CollectionView.Header>
+                                    <Grid RowDefinitions="Auto,Auto"
+                                          RowSpacing="6">
+                                        <Label Grid.Row="0"
+                                               Text="Level Progression"
+                                               FontSize="13"
+                                               FontAttributes="Bold"/>
+                                        <Grid Grid.Row="1"
+                                              Grid.ColumnDefinitions="50,*"
+                                              ColumnSpacing="8"
+                                              Opacity="0.7">
+                                            <Label Text="Lvl"/>
+                                            <Label Grid.Column="1"
+                                                   Text="Abilities"/>
+                                        </Grid>
+                                    </Grid>
+                                </CollectionView.Header>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="50,*"
+                                              ColumnSpacing="8"
+                                              Padding="0,2">
+                                            <Label Text="{Binding Level}"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding Abilities}"
+                                                   Opacity="0.8"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </Grid>
+
+                        <Grid Grid.Row="1"
+                              IsVisible="{Binding HasAnyAbilities, Converter={StaticResource InverseBoolConverter}}">
+                            <Label Text="{Binding Description}"
+                                   FontSize="13"
+                                   Opacity="0.85"
+                                   LineBreakMode="TailTruncation"
+                                   MaxLines="3"/>
+                        </Grid>
+
+                        <Grid Grid.Row="2"
+                              IsVisible="{Binding BuyAsChips.Count, Converter={StaticResource GreaterThanZeroConverter}}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Buy as"
+                                       FontSize="13"
+                                       FontAttributes="Bold"/>
+                                <!-- <FlexLayout Wrap="Wrap"
+                                            Direction="Row"
+                                            AlignItems="Start"
+                                            JustifyContent="Start">
+                                    <BindableLayout.ItemsSource>
+                                        <x:Reference Name="Self"/>
+                                    </BindableLayout.ItemsSource>
+                                </FlexLayout> -->
+
+                                <FlexLayout Wrap="Wrap"
+                                            Direction="Row"
+                                            AlignItems="Start"
+                                            JustifyContent="Start"
+                                            BindableLayout.ItemsSource="{Binding BuyAsChips}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Frame Padding="8,2"
+                                                   CornerRadius="999"
+                                                   Margin="0,0,8,8"
+                                                   HasShadow="False"
+                                                   BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
+                                                   BackgroundColor="Transparent">
+                                                <Label Text="{Binding .}"
+                                                       FontSize="12"/>
+                                            </Frame>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                    <Grid Grid.Row="2"
+                                          IsVisible="{Binding BuyAsChips.Count, Converter={StaticResource GreaterThanZeroConverter}}">
+                                        <VerticalStackLayout Spacing="8">
+                                            <Label Text="Buy as"
+                                                   FontSize="13"
+                                                   FontAttributes="Bold"/>
+                                            <FlexLayout Wrap="Wrap"
+                                                        Direction="Row"
+                                                        AlignItems="Start"
+                                                        JustifyContent="Start"
+                                                        BindableLayout.ItemsSource="{Binding BuyAsChips}">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Frame Padding="8,2"
+                                                               CornerRadius="999"
+                                                               Margin="0,0,8,8"
+                                                               HasShadow="False"
+                                                               BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
+                                                               BackgroundColor="Transparent">
+                                                            <Label Text="{Binding .}"
+                                                                   FontSize="12"/>
+                                                        </Frame>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </FlexLayout>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                    </Grid>
+                </Grid>
+
+            </Grid>
+        </Frame>
+    </Grid>
+</ContentView>

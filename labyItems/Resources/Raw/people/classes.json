@@ -1,6 +1,21 @@
 {
+  "Warrior": {
+    "Brackets": ["🛡️ Warrior"],
+    "Levels": {
+      "1": ["O & U", "Light, Medium & Heavy armour"],
+      "2": ["E, H & MP"],
+      "3": ["B"],
+      "4": [],
+      "5": [],
+      "6": ["Specialist Skill"],
+      "7": ["Specialist Skill"],
+      "8": ["Specialist Skill"]
+    },
+    "Max AC": 9,
+    "Buy as": ["1st class Warrior"]
+  },
   "Warrior-Priest": {
-    "Brackets": ["Warrior", "Priest"],
+    "Brackets": ["🛡️ Warrior", "🙏 Priest"],
     "Levels": {
       "1": ["O & U", "Medium armour", "Light armour"],
       "2": [],
@@ -14,5 +29,165 @@
     "Max AC": 7,
     "Powerbase": ["示 Spirit"],
     "PowerPerLevel": 3
+  },
+  "Power Warrior (Jewel)": {
+    "Brackets": ["🛡️ Warrior"],
+    "Levels": {
+      "1": ["O & U"],
+      "2": ["E", "Flash 1/level"],
+      "3": ["B", "Light (Self) 1/2 levels"],
+      "4": ["Walk on Light (Self) 1/3 levels"],
+      "5": [],
+      "6": ["Immunity to Befriend, Beguile, Spiritual Mastery"],
+      "7": ["Specialist Skill", "Sabre of Light & Truth 1/4 levels"],
+      "8": ["Specialist Skill"]
+    },
+    "Max AC": 8
+  },
+  "Power Warrior (Gem)": {
+    "Brackets": ["🛡️ Warrior"],
+    "Levels": {
+      "1": ["O & U"],
+      "2": ["E", "Extinguish (Range) 1/level"],
+      "3": ["B", "Darkness (Self) 1/2 levels"],
+      "4": [],
+      "5": ["See through Magical Darkness (s) 1/2 levels"],
+      "6": ["Immunity to Befriend, Beguile, Spiritual Mastery"],
+      "7": ["Black Blade 1/4 levels", "Specialist Skill"],
+      "8": ["Specialist Skill"]
+    },
+    "Max AC": 8
+  },
+  "Power Master": {
+    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Levels": {
+      "1": ["O&E", "Recognise Mana"],
+      "2": ["1 DAC"],
+      "3": ["Immunity to Bless/Curse"],
+      "4": ["2 DAC"],
+      "5": ["Weapon Mastery (any)"],
+      "6": ["Immunity to Befriend, Beguile, Spiritual Mastery", "3 DAC"],
+      "7": ["Resistance to own element", "Specialist skill"],
+      "8": ["4 DAC", "Specialist Skill"]
+    },
+    "Max AC": "8",
+    "Powerbase": ["🪄 Magic"],
+    "PowerPerLevel": "3"
+  },
+  "Wind Dancer": {
+    "Brackets": ["🛡️ Warrior"],
+    "Levels": {
+      "1": ["O"],
+      "2": ["E & H"],
+      "3": ["1 DAC"],
+      "4": ["B", "Salmon Leap 1/2 levels"],
+      "5": [],
+      "6": ["Contra Mastery 1/4 levels", "2 DAC"],
+      "7": ["3 DAC"],
+      "8": []
+    },
+    "Max AC": 9
+  },
+  "Valdstayn": {
+    "Brackets": ["🛡️ Warrior"],
+    "Levels": {
+      "1": ["O & U"],
+      "2": [],
+      "3": ["E & H", "I Shall Defend the Master 1/2 levels"],
+      "4": ["Innate MAC1"],
+      "5": ["B", "I Shall Shield the Master @will"],
+      "6": [],
+      "7": [
+        "Specialist Skill",
+        "I Shall Stand by the Master 1/4 levels",
+        "Innate MAC2"
+      ],
+      "8": ["Specialist Skill"]
+    },
+    "Max AC": 8
+  },
+  "Rovfuger": {
+    "Brackets": ["🛡️ Warrior"],
+    "Levels": {
+      "1": ["O"],
+      "2": ["E & H", "1 DAC"],
+      "3": ["Weapon Mastery O class weapon"],
+      "4": ["B", "War Cry 1/4 levels"],
+      "5": ["2 DAC"],
+      "6": [],
+      "7": ["Specialist Skill", "Burst of Strength 1/4 levels", "3 DAC"],
+      "8": ["Specialist Skill", "4 DAC"]
+    },
+    "Max AC": 9
+  },
+  "Kensai / Blade Master": {
+    "Brackets": ["🛡️ Warrior"],
+    "Levels": {
+      "1": ["O & B"],
+      "2": ["E", "1 DAC"],
+      "3": ["Weapon Mastery (any)", "2 DAC"],
+      "4": [],
+      "5": [],
+      "6": ["3 DAC"],
+      "7": ["Ki Strike"],
+      "8": ["Weapon Mastery (any)", "4 DAC"]
+    },
+    "Max AC": 9,
+    "Buy as": ["Kensai", "2nd class Warrior"]
+  },
+  "Forest Guardian": {
+    "Brackets": ["🛡️ Warrior", "🌿 Druid"],
+    "Levels": {
+      "1": [
+        "O & U",
+        "Medium armour",
+        "Light armour",
+        "Rec EP",
+        "Tell Direction",
+        "Tell Time",
+        "Tell Plant Type",
+        "Immunity to Bless/Curse"
+      ],
+      "2": ["H & E", "Tell Wounds"],
+      "3": ["Tell Animal Type", "Read Tracks"],
+      "4": ["B"],
+      "5": ["Tell Disease", "Stop Bleeding"],
+      "6": [],
+      "7": ["Warrior Specialist", "Tell poison"],
+      "8": ["Warrior Specialist"]
+    },
+    "Max AC": 8,
+    "Powerbase": ["🌍 Earthpower"],
+    "PowerPerLevel": 2
+  },
+  "Kallah Beggar": {
+    "Brackets": ["⚔ Scout", "🛡️ Warrior"],
+    "Levels": {
+      "1": ["O & U"],
+      "2": ["Scout Skill"],
+      "3": ["1 DAC", "Scout Skill"],
+      "4": ["B", "Scout Skill"],
+      "5": ["2 DAC", "Scout Skill"],
+      "6": ["Backstab"],
+      "7": ["3 DAC", "Scout Specialist Skill"],
+      "8": ["Scout Specialist Skill", "Weapon Mastery (dagger)"]
+    },
+    "Max AC": 7,
+    "Buy as": ["Kallah Beggar", "2nd class Assassin", "2nd class Warrior"]
+  },
+  "Hanot Beggar": {
+    "Brackets": ["⚔ Scout", "🛡️ Warrior"],
+    "Levels": {
+      "1": ["O & U", "Light armour", "3 PAC", "Trusty & Old (armour)"],
+      "2": ["Scout Skill"],
+      "3": ["H", "Scout Skill", "4 PAC"],
+      "4": [],
+      "5": ["E", "Scout Skill"],
+      "6": ["Warrior Specialist", "5 PAC"],
+      "7": ["1st Weapon Mastery (O)", "Half effect Natural Cold"],
+      "8": ["Scout Specialist Skill"]
+    },
+    "Max AC": 8,
+    "Buy as": ["Hanot Beggar", "2nd class Pathfinder", "2nd class Warrior"]
   }
 }

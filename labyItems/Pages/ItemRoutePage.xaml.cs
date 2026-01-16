@@ -11,7 +11,14 @@ public partial class ItemRoutePage : ContentPage
 
     private async void OnMakeCharacterClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new CharacterBuilderPage());
+        try
+        {
+            await Navigation.PushAsync(new labyItems.Pages.Characters.Wizard());
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Wizard failed", ex.ToString(), "OK");
+        }
     }
 
     private async void OnCreateIspClicked(object sender, EventArgs e)

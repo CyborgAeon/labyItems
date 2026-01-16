@@ -5,7 +5,6 @@ using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Storage;
 using MigrationsLib.Migrations;
-using CommunityToolkit.Maui;
 
 namespace labyItems;
 
@@ -35,8 +34,7 @@ public static class MauiProgram
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			})
-				   .UseMauiCommunityToolkit();
+			});
 
 		// Register FluentMigrator runner to apply migrations against the app DB (use local file for testing)
 		builder.Services.AddFluentMigratorCore()

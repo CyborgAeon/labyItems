@@ -9,10 +9,10 @@
     x:TypeArguments="enums:Alignments">
 
     <VerticalStackLayout Spacing="4">
-        <Label Text="{Binding LabelText, Source={x:Reference Root}}" />
+        <Label Text="{Binding LabelText, Source={x:Reference Root}}"/>
         <Picker
             x:Name="InnerPicker"
             ItemsSource="{Binding Options, Source={x:Reference Root}}"
-            SelectedItem="{Binding SelectedValue, Source={x:Reference Root}}" />
+            SelectedItem="{Binding SelectedValue, Source={x:Reference Root}}"/>
     </VerticalStackLayout>
 </controls:EnumPicker>

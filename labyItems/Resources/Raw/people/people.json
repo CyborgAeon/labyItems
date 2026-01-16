@@ -23,10 +23,10 @@
         "1/2 effect magic",
         "3/4 effect paralysis",
         "3/4 effect poison",
-        "+1 DAC"
+        "1 DAC"
       ],
       "2nd": [],
-      "3rd": ["+2 DAC (from +1)"],
+      "3rd": ["2 DAC"],
       "4th": ["Weapon mastery with H or MP weapon"],
       "5th": [],
       "6th": [],
@@ -186,14 +186,14 @@
     "PeopleType": "Tribal",
     "Description": "Goblins are Warriors or Pathfinders and are tribal. They may have a Shaman, Druid and a Witch-Doctor for each tribe, as normal. In appearance they are usually small, with dirty brown, yellow, green or blue skin and a dirty, raggish costume. Goblins have lower life points than Humans, but gain certain abilities due to their race. At first level they gain + 1 DAC in Darkness, at second they gain double DAC whilst in full retreat, performing no action other than fleeing. At 3rd, 5th, 7th and 8th they gain a point of DAC (for 4 in total) and at 6th they gain the first grade of backstab. The backstab skill is as per assassin.",
     "levelledAbilities": {
-      "1st": ["+1 DAC in Darkness"],
+      "1st": ["1 DAC in Darkness"],
       "2nd": ["Double DAC while Fleeing"],
-      "3rd": ["+1 DAC"],
+      "3rd": ["1 DAC"],
       "4th": [],
-      "5th": ["+2 DAC (from +1)"],
+      "5th": ["2 DAC"],
       "6th": ["1st Grade of Backstab"],
-      "7th": ["+3 DAC (from +2)"],
-      "8th": ["+4 DAC (from +3)"]
+      "7th": ["3 DAC"],
+      "8th": ["4 DAC"]
     },
     "AdditionalInfo": "No goblin may wear armour heavier than light armour. Goblins are also too small and physically weak to wield two-handed weapons, including bastard-length, or even a weapon in either hand - they do not gain B or E skill as they normally would from their class, and may not use bastard weapons in one hand. They can use shields as normal.\nGoblins may never benefit from greater than +1 strength.\nAdditionally a Goblins base life may never be above 48 TBLP for the purposes of life capping."
   },
@@ -228,7 +228,7 @@
     "AdditionalInfo": ""
   },
   "Elf": {
-    "PeopleType": "Children of Magic",
+    "PeopleType": "Magic-Kin",
     "Variants": [
       "Red",
       "Blue",
@@ -263,7 +263,7 @@
     "AdditionalInfo": ""
   },
   "Draves": {
-    "PeopleType": "Children of Magic",
+    "PeopleType": "Magic-Kin",
     "Description": "",
     "levelledAbilities": {
       "1st": [],
@@ -278,7 +278,7 @@
     "AdditionalInfo": ""
   },
   "Half Elves and Draves": {
-    "PeopleType": "Children of Magic",
+    "PeopleType": "Magic-Kin",
     "Description": "",
     "levelledAbilities": {
       "1st": [],
