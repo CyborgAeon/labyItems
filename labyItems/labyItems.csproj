@@ -40,7 +40,7 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\Splash\logo.svg" Color="#FFFFFF" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\logo.svg" Color="#000000"/>
+		<MauiSplashScreen Include="Resources\Splash\logo.svg" Color="#000000" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -61,9 +61,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
 		<PackageReference Include="LiteDB" Version="5.0.21" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.10" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
 		<!-- SQLite access using sqlite-net-pcl -->
 		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />

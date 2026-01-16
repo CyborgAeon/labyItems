@@ -5,6 +5,7 @@ using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Storage;
 using MigrationsLib.Migrations;
+using CommunityToolkit.Maui;
 
 namespace labyItems;
 
@@ -13,6 +14,7 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
+
 
 		// Path for the app's DB used by migrations and runtime. For local testing this will be in AppData.
 		var dbPath = Path.Combine(FileSystem.AppDataDirectory, "default.db");
@@ -33,7 +35,8 @@ public static class MauiProgram
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			});
+			})
+				   .UseMauiCommunityToolkit();
 
 		// Register FluentMigrator runner to apply migrations against the app DB (use local file for testing)
 		builder.Services.AddFluentMigratorCore()
@@ -41,7 +44,8 @@ public static class MauiProgram
 				.AddSQLite()
 				.WithGlobalConnectionString($"Data Source={dbPath}")
 				.ScanIn(typeof(MigrationsLib.Migrations.InitialMigration).Assembly).For.Migrations())
-			.AddLogging(lb => {
+			.AddLogging(lb =>
+			{
 				lb.ClearProviders();
 				lb.AddDebug();
 			});
