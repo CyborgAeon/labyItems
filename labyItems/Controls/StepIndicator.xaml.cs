@@ -1,7 +1,7 @@
 using System.Collections.Specialized;
-using System.ComponentModel;
 using Microsoft.Maui.ApplicationModel;
 using labyItems.Infrastructure;
+using Microsoft.Maui.Controls.Shapes;
 
 namespace labyItems.Controls;
 
@@ -19,17 +19,17 @@ public partial class StepIndicator : ContentView
 
         ApplyThemeDefaults();
 
-        // Keep the line updated as layout changes
+        // Recompute line when layout changes
         SizeChanged += (_, __) => UpdateProgressLine();
         StepsGrid.SizeChanged += (_, __) => UpdateProgressLine();
 
-        // When binding context is set/swapped, rebuild (marshal to UI thread)
-        BindingContextChanged += (_, __) => MainThread.BeginInvokeOnMainThread(Rebuild);
+        BindingContextChanged += (_, __) =>
+            MainThread.BeginInvokeOnMainThread(Rebuild);
     }
 
-    // ----------------------------
+    // -----------------------------
     // Bindable Properties
-    // ----------------------------
+    // -----------------------------
 
     public static readonly BindableProperty StepsProperty =
         BindableProperty.Create(
@@ -42,36 +42,20 @@ public partial class StepIndicator : ContentView
 
     private INotifyCollectionChanged? _stepsNotify;
 
-    private void OnStepsChanged(IList<StepItem>? oldSteps, IList<StepItem>? newSteps)
-    {
-        if (_stepsNotify != null)
-            _stepsNotify.CollectionChanged -= Steps_CollectionChanged;
-
-        _stepsNotify = newSteps as INotifyCollectionChanged;
-
-        if (_stepsNotify != null)
-            _stepsNotify.CollectionChanged += Steps_CollectionChanged;
-
-        MainThread.BeginInvokeOnMainThread(Rebuild);
-    }
-
-    private void Steps_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        => MainThread.BeginInvokeOnMainThread(Rebuild);
-
     public IList<StepItem> Steps
     {
         get => (GetValue(StepsProperty) as IList<StepItem>) ?? Array.Empty<StepItem>();
         set => SetValue(StepsProperty, value);
     }
 
-    // 0-based current step index
     public static readonly BindableProperty CurrentStepProperty =
         BindableProperty.Create(
             nameof(CurrentStep),
             typeof(int),
             typeof(StepIndicator),
-            defaultValue: 0,
-            propertyChanged: (b, o, n) => ((StepIndicator)b).UpdateVisualStates());
+            0,
+            propertyChanged: (b, o, n) =>
+                ((StepIndicator)b).UpdateVisualStates());
 
     public int CurrentStep
     {
@@ -98,7 +82,8 @@ public partial class StepIndicator : ContentView
             typeof(double),
             typeof(StepIndicator),
             40d,
-            propertyChanged: (b, o, n) => ((StepIndicator)b).Rebuild());
+            propertyChanged: (b, o, n) =>
+                ((StepIndicator)b).Rebuild());
 
     public double BubbleSize
     {
@@ -106,13 +91,57 @@ public partial class StepIndicator : ContentView
         set => SetValue(BubbleSizeProperty, value);
     }
 
+    public static readonly BindableProperty StepSpacingProperty =
+        BindableProperty.Create(
+            nameof(StepSpacing),
+            typeof(double),
+            typeof(StepIndicator),
+            22d, // adjust to taste
+            propertyChanged: (b, o, n) =>
+                ((StepIndicator)b).Rebuild());
+
+    /// <summary>
+    /// Fixed spacing between bubbles. Keeps bubbles stable as the page width changes.
+    /// </summary>
+    public double StepSpacing
+    {
+        get => (double)GetValue(StepSpacingProperty);
+        set => SetValue(StepSpacingProperty, value);
+    }
+
     public event EventHandler<int>? StepClicked;
 
-    // ----------------------------
+    // -----------------------------
     // Internals
-    // ----------------------------
+    // -----------------------------
 
-    private readonly List<(Button bubble, Grid bubbleOverlay, Label bubbleText, Label caption, int index)> _items = new();
+    private sealed class StepVisual
+    {
+        public required Grid Overlay;
+        public required Border Halo;
+        public required Button Bubble;
+        public required Label BubbleText;
+        public required Label Caption;
+        public required int Index;
+    }
+
+    private readonly List<StepVisual> _items = new();
+
+    private void OnStepsChanged(IList<StepItem>? oldSteps, IList<StepItem>? newSteps)
+    {
+        if (_stepsNotify != null)
+            _stepsNotify.CollectionChanged -= Steps_CollectionChanged;
+
+        _stepsNotify = newSteps as INotifyCollectionChanged;
+
+        if (_stepsNotify != null)
+            _stepsNotify.CollectionChanged += Steps_CollectionChanged;
+
+        Rebuild();
+    }
+
+    private void Steps_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        => MainThread.BeginInvokeOnMainThread(Rebuild);
 
     private void ApplyThemeDefaults()
     {
@@ -128,9 +157,8 @@ public partial class StepIndicator : ContentView
         return fallback;
     }
 
-    private void Rebuild()
+    private void ClearDynamicChildren()
     {
-        // Remove only dynamically-added children (keep the line BoxViews)
         for (int i = StepsGrid.Children.Count - 1; i >= 0; i--)
         {
             var child = StepsGrid.Children[i];
@@ -139,32 +167,61 @@ public partial class StepIndicator : ContentView
 
             StepsGrid.Children.RemoveAt(i);
         }
+    }
 
+    private void Rebuild()
+    {
+        ClearDynamicChildren();
         StepsGrid.ColumnDefinitions.Clear();
-        StepsGrid.RowDefinitions.Clear();
         _items.Clear();
 
         var steps = Steps ?? Array.Empty<StepItem>();
         if (steps.Count == 0)
         {
-            // No steps => only the line will be visible (expected)
             UpdateProgressLine();
             return;
         }
 
-        // Ensure row structure exists (line + bubbles in row 0, captions in row 1)
+        // Ensure row structure exists (row 0: line + bubbles, row 1: captions)
+        StepsGrid.RowDefinitions.Clear();
         StepsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
         StepsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
 
-        // Create N equal columns
+        // Fixed spacing + fixed bubble widths = stable layout
+        StepsGrid.ColumnSpacing = StepSpacing;
+
+        // IMPORTANT: use Auto columns so bubble positions do NOT redistribute with width
         for (int i = 0; i < steps.Count; i++)
-            StepsGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+            StepsGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
 
-        // Build step UI
+        // Make the line span all columns (otherwise it is only in column 0)
+        Grid.SetColumn(LineBg, 0);
+        Grid.SetColumnSpan(LineBg, steps.Count);
+        Grid.SetColumn(LineFg, 0);
+        Grid.SetColumnSpan(LineFg, steps.Count);
+
+        var haloDiameter = BubbleSize + 14;
+
         for (int i = 0; i < steps.Count; i++)
         {
             var step = steps[i];
-            var stepIndex = i;
+
+            var halo = new Border
+            {
+                WidthRequest = haloDiameter,
+                HeightRequest = haloDiameter,
+                StrokeThickness = 2,
+                Stroke = new SolidColorBrush(Colors.Transparent),
+                BackgroundColor = Colors.Transparent,
+                Opacity = 0,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
+                InputTransparent = true,
+                StrokeShape = new RoundRectangle
+                {
+                    CornerRadius = (float)(haloDiameter / 2)
+                }
+            };
 
             var bubble = new Button
             {
@@ -185,18 +242,22 @@ public partial class StepIndicator : ContentView
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
                 FontSize = 14,
-                FontAttributes = FontAttributes.Bold
+                FontAttributes = FontAttributes.Bold,
+                InputTransparent = true
             };
 
-            var bubbleOverlay = new Grid
+            var overlay = new Grid
             {
-                WidthRequest = BubbleSize,
-                HeightRequest = BubbleSize,
+                WidthRequest = haloDiameter,
+                HeightRequest = haloDiameter,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center
             };
-            bubbleOverlay.Children.Add(bubble);
-            bubbleOverlay.Children.Add(bubbleText);
+
+            // Order matters: halo behind, bubble middle, text on top
+            overlay.Children.Add(halo);
+            overlay.Children.Add(bubble);
+            overlay.Children.Add(bubbleText);
 
             var caption = new Label
             {
@@ -208,68 +269,56 @@ public partial class StepIndicator : ContentView
                 Margin = new Thickness(0, 8, 0, 0)
             };
 
+            var stepIndex = i;
             bubble.Clicked += async (_, __) =>
             {
-                // Optional: if you want the UI to prevent forward clicks, re-enable this:
-                // if (stepIndex > CurrentStep) return;
+                // Keep your existing rule: can only click current or previous
+                if (stepIndex > CurrentStep) return;
 
-                // Micro-tap feedback
-                await bubbleOverlay.ScaleTo(0.95, 70, Easing.CubicInOut);
-                await bubbleOverlay.ScaleTo(1.00, 70, Easing.CubicInOut);
+                await overlay.ScaleTo(0.97, 70, Easing.CubicInOut);
+                await overlay.ScaleTo(1.00, 70, Easing.CubicInOut);
 
                 StepClicked?.Invoke(this, stepIndex);
                 StepClickCommand?.Execute(stepIndex);
             };
 
-            StepsGrid.Add(bubbleOverlay, i, 0);
+            StepsGrid.Add(overlay, i, 0);
             StepsGrid.Add(caption, i, 1);
 
-            _items.Add((bubble, bubbleOverlay, bubbleText, caption, i));
-
-            _ = AnimateAppear(bubbleOverlay, i);
-            _ = AnimateAppear(caption, i);
+            _items.Add(new StepVisual
+            {
+                Overlay = overlay,
+                Halo = halo,
+                Bubble = bubble,
+                BubbleText = bubbleText,
+                Caption = caption,
+                Index = i
+            });
         }
 
         UpdateVisualStates();
-    }
 
-    private async Task AnimateAppear(VisualElement element, int index)
-    {
-        try
+        // Ensure line updates after layout positions settle
+        MainThread.BeginInvokeOnMainThread(async () =>
         {
-            element.Opacity = 0;
-            element.Scale = 0.9;
-
-            await Task.Delay(index * 80);
-
-            await Task.WhenAll(
-                element.FadeTo(1, 180, Easing.CubicOut),
-                element.ScaleTo(1, 180, Easing.CubicOut)
-            );
-        }
-        catch
-        {
-            // Ignore if disposed during navigation
-        }
+            await Task.Delay(1);
+            UpdateProgressLine();
+        });
     }
 
     private void UpdateVisualStates()
     {
-        var stepsCount = Steps?.Count ?? 0;
-        if (stepsCount == 0 || _items.Count == 0)
+        var count = Steps?.Count ?? 0;
+        if (count == 0 || _items.Count == 0)
         {
             UpdateProgressLine();
             return;
         }
 
-        // Clamp CurrentStep safely (avoid recursion storms)
-        var clamped = Math.Max(0, Math.Min(CurrentStep, stepsCount - 1));
-        if (clamped != CurrentStep)
-        {
-            // Setting the bindable property will call UpdateVisualStates again; that's fine.
-            CurrentStep = clamped;
-            return;
-        }
+        // Clamp to valid range
+        var current = Math.Max(0, Math.Min(CurrentStep, count - 1));
+        if (current != CurrentStep)
+            CurrentStep = current;
 
         var primary = TryGetColor("PrimaryColor", ColourScheme.Primary);
         var primaryText = TryGetColor("PrimaryForegroundColor", Colors.White);
@@ -277,107 +326,110 @@ public partial class StepIndicator : ContentView
         var secondary = TryGetColor("SecondaryColor", Colors.Gainsboro);
         var mutedText = TryGetColor("MutedForegroundColor", Colors.Gray);
 
-        // First: stop all pulses except the current (this fixes the “everyone pulses” bug)
         for (int i = 0; i < _items.Count; i++)
         {
-            var (bubble, _, _, _, idx) = _items[i];
+            var v = _items[i];
 
-            if (idx != CurrentStep)
-            {
-                bubble.AbortAnimation("pulse");
-                bubble.Scale = 1.0; // ensure no leftover scale
-            }
-        }
+            // Stop any previous halo animation when state changes
+            v.Halo.AbortAnimation("halo");
+            v.Halo.Opacity = 0;
+            v.Halo.Scale = 1;
 
-        // Then: set colors/text and pulse only current
-        for (int i = 0; i < _items.Count; i++)
-        {
-            var (bubble, _, bubbleText, caption, idx) = _items[i];
+            var isCompleted = v.Index < CurrentStep;
+            var isCurrent = v.Index == CurrentStep;
+            var isClickable = v.Index <= CurrentStep;
 
-            var isCompleted = idx < CurrentStep;
-            var isCurrent = idx == CurrentStep;
-
-            // Visual fill
             if (isCompleted || isCurrent)
             {
-                bubble.BackgroundColor = primary;
-                bubbleText.TextColor = primaryText;
+                v.Bubble.BackgroundColor = primary;
+                v.BubbleText.TextColor = primaryText;
             }
             else
             {
-                bubble.BackgroundColor = secondary;
-                bubbleText.TextColor = mutedText;
+                v.Bubble.BackgroundColor = secondary;
+                v.BubbleText.TextColor = mutedText;
             }
 
-            // Text inside bubble
             if (isCompleted)
             {
-                bubbleText.Text = "✓";
-                bubbleText.FontSize = 18;
+                v.BubbleText.Text = "✓";
+                v.BubbleText.FontSize = 18;
             }
             else
             {
-                bubbleText.Text = (idx + 1).ToString();
-                bubbleText.FontSize = 14;
+                v.BubbleText.Text = (v.Index + 1).ToString();
+                v.BubbleText.FontSize = 14;
             }
 
-            // Caption style
-            caption.TextColor = isCurrent ? primary : mutedText;
-            caption.FontAttributes = isCurrent ? FontAttributes.Bold : FontAttributes.None;
+            v.Caption.TextColor = isCurrent ? primary : mutedText;
+            v.Caption.FontAttributes = isCurrent ? FontAttributes.Bold : FontAttributes.None;
 
-            // Let VM handle gating; keep UI enabled by default
-            // If you want “only <= current step clickable” then change to: bubble.IsEnabled = idx <= CurrentStep;
-            bubble.IsEnabled = true;
-            bubble.Opacity = 1.0;
+            v.Bubble.IsEnabled = isClickable;
+            v.Bubble.Opacity = isClickable ? 1.0 : 0.6;
 
             if (isCurrent)
-                _ = Pulse(bubble);
+                StartHaloPulse(v.Halo, primary);
         }
 
         UpdateProgressLine();
     }
 
-    private Task Pulse(VisualElement bubble)
+    private void StartHaloPulse(VisualElement halo, Color primary)
     {
-        if (bubble.AnimationIsRunning("pulse"))
-            return Task.CompletedTask;
+        if (halo.AnimationIsRunning("halo")) return;
+
+        if (halo is Border b)
+            b.Stroke = new SolidColorBrush(primary);
 
         var animation = new Animation();
-        animation.Add(0, 0.5, new Animation(v => bubble.Scale = v, 1.0, 1.06, Easing.CubicInOut));
-        animation.Add(0.5, 1, new Animation(v => bubble.Scale = v, 1.06, 1.0, Easing.CubicInOut));
 
-        // Repeat while visible; we explicitly abort when not current
-        bubble.Animate("pulse", animation, length: 900, repeat: () => bubble.IsVisible);
+        // A subtle “glow”: fade in/out + slight scale
+        animation.Add(0.00, 0.50, new Animation(v => halo.Opacity = v, 0.00, 0.35, Easing.CubicInOut));
+        animation.Add(0.50, 1.00, new Animation(v => halo.Opacity = v, 0.35, 0.00, Easing.CubicInOut));
 
-        return Task.CompletedTask;
+        animation.Add(0.00, 0.50, new Animation(v => halo.Scale = v, 1.00, 1.08, Easing.CubicInOut));
+        animation.Add(0.50, 1.00, new Animation(v => halo.Scale = v, 1.08, 1.00, Easing.CubicInOut));
+
+        halo.Animate("halo", animation, length: 1100, repeat: () => halo.IsVisible);
     }
 
     private void UpdateProgressLine()
     {
-        var stepsCount = Steps?.Count ?? 0;
-
-        if (stepsCount <= 1)
+        var count = Steps?.Count ?? 0;
+        if (count <= 1 || _items.Count < 2)
         {
             LineFg.WidthRequest = 0;
             return;
         }
 
-        var totalWidth = StepsGrid.Width;
-        if (totalWidth <= 0)
-            return;
+        // We want: background line from first bubble center to last bubble center
+        // and foreground line from first bubble center to current bubble center.
 
-        var current = Math.Max(0, Math.Min(CurrentStep, stepsCount - 1));
-        var ratio = (double)current / (stepsCount - 1);
-        ratio = Math.Max(0, Math.Min(1, ratio));
+        if (StepsGrid.Width <= 0) return;
 
-        // The grid has Star columns; approximate the half-column inset for the ends
-        var columnWidth = totalWidth / stepsCount;
-        var inset = columnWidth / 2;
-        var span = Math.Max(0, totalWidth - columnWidth);
+        var first = _items[0].Overlay;
+        var last = _items[count - 1].Overlay;
 
-        LineBg.Margin = new Thickness(inset, 0, inset, 0);
-        LineFg.Margin = new Thickness(inset, 0, 0, 0);
+        // If layout hasn't produced positions yet, bail and let SizeChanged retry
+        if (first.Width <= 0 || last.Width <= 0) return;
 
-        LineFg.WidthRequest = span * ratio;
+        var firstCenter = first.X + (first.Width / 2);
+        var lastCenter = last.X + (last.Width / 2);
+
+        var currentIndex = Math.Max(0, Math.Min(CurrentStep, count - 1));
+        var current = _items[currentIndex].Overlay;
+
+        if (current.Width <= 0) return;
+        var currentCenter = current.X + (current.Width / 2);
+
+        // Margins are relative to StepsGrid's full width
+        var leftMargin = Math.Max(0, firstCenter);
+        var rightMargin = Math.Max(0, StepsGrid.Width - lastCenter);
+
+        LineBg.Margin = new Thickness(leftMargin, 0, rightMargin, 0);
+        LineFg.Margin = new Thickness(leftMargin, 0, 0, 0);
+
+        var fgWidth = Math.Max(0, Math.Min(lastCenter - firstCenter, currentCenter - firstCenter));
+        LineFg.WidthRequest = fgWidth;
     }
 }
