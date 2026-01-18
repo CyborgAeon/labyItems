@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "QbdlPx12dns=",
+  "dgSpecHash": "LbYeqxFZk30=",
   "success": true,
   "projectFilePath": "/Users/brbar/Source/labyItems/labyItems/labyItems.csproj",
   "expectedPackageFiles": [
@@ -25,7 +25,7 @@
     "/Users/brbar/.nuget/packages/fluentmigrator.runner.sqlserverce/3.3.2/fluentmigrator.runner.sqlserverce.3.3.2.nupkg.sha512",
     "/Users/brbar/.nuget/packages/googlegson/2.13.1.1/googlegson.2.13.1.1.nupkg.sha512",
     "/Users/brbar/.nuget/packages/litedb/5.0.21/litedb.5.0.21.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.data.sqlclient/2.1.2/microsoft.data.sqlclient.2.1.2.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.data.sqlclient/2.1.7/microsoft.data.sqlclient.2.1.7.nupkg.sha512",
     "/Users/brbar/.nuget/packages/microsoft.data.sqlclient.sni.runtime/2.1.1/microsoft.data.sqlclient.sni.runtime.2.1.1.nupkg.sha512",
     "/Users/brbar/.nuget/packages/microsoft.data.sqlite/8.0.11/microsoft.data.sqlite.8.0.11.nupkg.sha512",
     "/Users/brbar/.nuget/packages/microsoft.data.sqlite.core/8.0.11/microsoft.data.sqlite.core.8.0.11.nupkg.sha512",
@@ -42,31 +42,32 @@
     "/Users/brbar/.nuget/packages/microsoft.extensions.options/10.0.0/microsoft.extensions.options.10.0.0.nupkg.sha512",
     "/Users/brbar/.nuget/packages/microsoft.extensions.primitives/10.0.0/microsoft.extensions.primitives.10.0.0.nupkg.sha512",
     "/Users/brbar/.nuget/packages/microsoft.identity.client/4.21.1/microsoft.identity.client.4.21.1.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.identitymodel.jsonwebtokens/6.8.0/microsoft.identitymodel.jsonwebtokens.6.8.0.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.identitymodel.logging/6.8.0/microsoft.identitymodel.logging.6.8.0.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.identitymodel.abstractions/6.34.0/microsoft.identitymodel.abstractions.6.34.0.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.identitymodel.jsonwebtokens/6.34.0/microsoft.identitymodel.jsonwebtokens.6.34.0.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.identitymodel.logging/6.34.0/microsoft.identitymodel.logging.6.34.0.nupkg.sha512",
     "/Users/brbar/.nuget/packages/microsoft.identitymodel.protocols/6.8.0/microsoft.identitymodel.protocols.6.8.0.nupkg.sha512",
     "/Users/brbar/.nuget/packages/microsoft.identitymodel.protocols.openidconnect/6.8.0/microsoft.identitymodel.protocols.openidconnect.6.8.0.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.identitymodel.tokens/6.8.0/microsoft.identitymodel.tokens.6.8.0.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.maui.controls/10.0.1/microsoft.maui.controls.10.0.1.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.maui.controls.build.tasks/10.0.1/microsoft.maui.controls.build.tasks.10.0.1.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.maui.controls.compatibility/10.0.1/microsoft.maui.controls.compatibility.10.0.1.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.maui.controls.core/10.0.1/microsoft.maui.controls.core.10.0.1.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.maui.controls.xaml/10.0.1/microsoft.maui.controls.xaml.10.0.1.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.maui.core/10.0.1/microsoft.maui.core.10.0.1.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.maui.essentials/10.0.1/microsoft.maui.essentials.10.0.1.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.maui.graphics/10.0.1/microsoft.maui.graphics.10.0.1.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/microsoft.maui.resizetizer/10.0.1/microsoft.maui.resizetizer.10.0.1.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.identitymodel.tokens/6.34.0/microsoft.identitymodel.tokens.6.34.0.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.maui.controls/10.0.10/microsoft.maui.controls.10.0.10.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.maui.controls.build.tasks/10.0.10/microsoft.maui.controls.build.tasks.10.0.10.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.maui.controls.compatibility/10.0.10/microsoft.maui.controls.compatibility.10.0.10.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.maui.controls.core/10.0.10/microsoft.maui.controls.core.10.0.10.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.maui.controls.xaml/10.0.10/microsoft.maui.controls.xaml.10.0.10.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.maui.core/10.0.10/microsoft.maui.core.10.0.10.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.maui.essentials/10.0.10/microsoft.maui.essentials.10.0.10.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.maui.graphics/10.0.10/microsoft.maui.graphics.10.0.10.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/microsoft.maui.resizetizer/10.0.10/microsoft.maui.resizetizer.10.0.10.nupkg.sha512",
     "/Users/brbar/.nuget/packages/microsoft.net.illink.tasks/10.0.1/microsoft.net.illink.tasks.10.0.1.nupkg.sha512",
     "/Users/brbar/.nuget/packages/sqlite-net-pcl/1.8.116/sqlite-net-pcl.1.8.116.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.6/sqlitepclraw.bundle_e_sqlite3.2.1.6.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.11/sqlitepclraw.bundle_e_sqlite3.2.1.11.nupkg.sha512",
     "/Users/brbar/.nuget/packages/sqlitepclraw.bundle_green/2.0.4/sqlitepclraw.bundle_green.2.0.4.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/sqlitepclraw.core/2.1.6/sqlitepclraw.core.2.1.6.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/sqlitepclraw.lib.e_sqlite3.android/2.1.6/sqlitepclraw.lib.e_sqlite3.android.2.1.6.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.6/sqlitepclraw.provider.e_sqlite3.2.1.6.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/sqlitepclraw.core/2.1.11/sqlitepclraw.core.2.1.11.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/sqlitepclraw.lib.e_sqlite3.android/2.1.11/sqlitepclraw.lib.e_sqlite3.android.2.1.11.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.11/sqlitepclraw.provider.e_sqlite3.2.1.11.nupkg.sha512",
     "/Users/brbar/.nuget/packages/system.componentmodel.annotations/4.4.1/system.componentmodel.annotations.4.4.1.nupkg.sha512",
     "/Users/brbar/.nuget/packages/system.configuration.configurationmanager/4.7.0/system.configuration.configurationmanager.4.7.0.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/system.drawing.common/4.7.0/system.drawing.common.4.7.0.nupkg.sha512",
-    "/Users/brbar/.nuget/packages/system.identitymodel.tokens.jwt/6.8.0/system.identitymodel.tokens.jwt.6.8.0.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/system.drawing.common/4.7.2/system.drawing.common.4.7.2.nupkg.sha512",
+    "/Users/brbar/.nuget/packages/system.identitymodel.tokens.jwt/6.34.0/system.identitymodel.tokens.jwt.6.34.0.nupkg.sha512",
     "/Users/brbar/.nuget/packages/system.runtime.caching/4.7.0/system.runtime.caching.4.7.0.nupkg.sha512",
     "/Users/brbar/.nuget/packages/system.security.permissions/4.7.0/system.security.permissions.4.7.0.nupkg.sha512",
     "/Users/brbar/.nuget/packages/system.windows.extensions/4.7.0/system.windows.extensions.4.7.0.nupkg.sha512",
@@ -163,62 +164,5 @@
     "/Users/brbar/.nuget/packages/xamarin.kotlinx.serialization.core/1.9.0.1/xamarin.kotlinx.serialization.core.1.9.0.1.nupkg.sha512",
     "/Users/brbar/.nuget/packages/xamarin.kotlinx.serialization.core.jvm/1.9.0.1/xamarin.kotlinx.serialization.core.jvm.1.9.0.1.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "message": "Package 'Microsoft.Data.SqlClient' 2.1.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-98g6-xh36-x2p7",
-      "projectPath": "/Users/brbar/Source/labyItems/labyItems/labyItems.csproj",
-      "warningLevel": 1,
-      "filePath": "/Users/brbar/Source/labyItems/labyItems/labyItems.csproj",
-      "libraryId": "Microsoft.Data.SqlClient",
-      "targetGraphs": [
-        "net10.0-android36.0",
-        "net10.0-android36.0/android-arm64",
-        "net10.0-android36.0/android-x64"
-      ]
-    },
-    {
-      "code": "NU1902",
-      "level": "Warning",
-      "message": "Package 'Microsoft.IdentityModel.JsonWebTokens' 6.8.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-59j7-ghrg-fj52",
-      "projectPath": "/Users/brbar/Source/labyItems/labyItems/labyItems.csproj",
-      "warningLevel": 1,
-      "filePath": "/Users/brbar/Source/labyItems/labyItems/labyItems.csproj",
-      "libraryId": "Microsoft.IdentityModel.JsonWebTokens",
-      "targetGraphs": [
-        "net10.0-android36.0",
-        "net10.0-android36.0/android-arm64",
-        "net10.0-android36.0/android-x64"
-      ]
-    },
-    {
-      "code": "NU1904",
-      "level": "Warning",
-      "message": "Package 'System.Drawing.Common' 4.7.0 has a known critical severity vulnerability, https://github.com/advisories/GHSA-rxg9-xrhp-64gj",
-      "projectPath": "/Users/brbar/Source/labyItems/labyItems/labyItems.csproj",
-      "warningLevel": 1,
-      "filePath": "/Users/brbar/Source/labyItems/labyItems/labyItems.csproj",
-      "libraryId": "System.Drawing.Common",
-      "targetGraphs": [
-        "net10.0-android36.0",
-        "net10.0-android36.0/android-arm64",
-        "net10.0-android36.0/android-x64"
-      ]
-    },
-    {
-      "code": "NU1902",
-      "level": "Warning",
-      "message": "Package 'System.IdentityModel.Tokens.Jwt' 6.8.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-59j7-ghrg-fj52",
-      "projectPath": "/Users/brbar/Source/labyItems/labyItems/labyItems.csproj",
-      "warningLevel": 1,
-      "filePath": "/Users/brbar/Source/labyItems/labyItems/labyItems.csproj",
-      "libraryId": "System.IdentityModel.Tokens.Jwt",
-      "targetGraphs": [
-        "net10.0-android36.0",
-        "net10.0-android36.0/android-arm64",
-        "net10.0-android36.0/android-x64"
-      ]
-    }
-  ]
+  "logs": []
 }

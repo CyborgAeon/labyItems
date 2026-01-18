@@ -53,6 +53,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             SelectedRaceFilter = string.IsNullOrWhiteSpace(s) ? "All" : s;
         });
         ClassFilters = new ObservableCollection<string> { "All" };
+        RaceFilters = new ObservableCollection<string> { "All" };
+
         _selectedClassFilter = "All";
         _selectedRaceFilter = "All";
 
@@ -86,7 +88,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         item.IsExpanded = !item.IsExpanded;
         RefilterRaces();
     }
-
     private async Task LoadRacesAsync()
     {
         var all = await PeopleService.GetAllAsync();
@@ -99,6 +100,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         {
             var name = ordered[idx].Key;
             var record = ordered[idx].Value;
+            if (record == null) continue;
 
             var peopleType = record.PeopleType ?? "";
             if (!string.IsNullOrWhiteSpace(peopleType)) types.Add(peopleType);
@@ -117,17 +119,19 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             list.Add(vm);
         }
 
-        MainThread.BeginInvokeOnMainThread(() =>
-        {
-            AllRaces.Clear();
-            foreach (var vm in list)
-                AllRaces.Add(vm);
+        AllRaces.Clear();
+        foreach (var vm in list)
+            AllRaces.Add(vm);
 
-            RaceFilters.Clear();
-            RaceFilters.Add("All");
-            foreach (var t in types.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
-                RaceFilters.Add(t);
-        });
+        RaceFilters.Clear();
+        RaceFilters.Add("All");
+        foreach (var t in types.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
+            RaceFilters.Add(t);
+
+        if (string.IsNullOrWhiteSpace(SelectedRaceFilter) || !RaceFilters.Contains(SelectedRaceFilter))
+            SelectedRaceFilter = "All";
+
+        RefilterRaces();
     }
 
     private static string IconForPeopleType(string peopleType)
@@ -375,5 +379,4 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         FilteredRaces = new ObservableCollection<RaceCardVm>(list);
     }
-
 }

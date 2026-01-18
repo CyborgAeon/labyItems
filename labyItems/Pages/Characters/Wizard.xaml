@@ -5,22 +5,35 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
     x:Name="Root"
-    Title="Character Builder">
+    Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto"
+          RowSpacing="5">
+        <Grid Padding="16,10"
+              ColumnDefinitions="Auto,*,Auto"
+              RowDefinitions="Auto,Auto"
+              RowSpacing="6">
+            <Label Grid.Column="1"
+                   Text="{Binding CurrentStepTitle}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   FontAttributes="Bold"
+                   LineBreakMode="TailTruncation"/>
 
-        <!-- Step indicator (assumes you already have this control implemented) -->
-        <controls:StepIndicator
-            Steps="{Binding StepSteps}"
-            CurrentStep="{Binding CurrentStep}"
-            StepClickCommand="{Binding StepClickCommand}"/>
+            <Label Grid.Column="2"
+                   Text="{Binding StepCounterText}"/>
+            <controls:StepIndicator
+                Grid.Row="1"
+                HorizontalOptions="FillAndExpand"
+                Steps="{Binding StepSteps}"
+                CurrentStep="{Binding CurrentStep}"
+                StepClickCommand="{Binding StepClickCommand}"
+                BubbleSize="40"/>
 
-        <!-- Current step view -->
+        </Grid>
         <ContentView
             Grid.Row="1"
             Content="{Binding CurrentStepView}"/>
-
-        <!-- Bottom nav -->
         <Grid Grid.Row="2"
               ColumnDefinitions="Auto,*,Auto"
               Padding="16">
