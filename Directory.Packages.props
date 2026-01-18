@@ -1,0 +1,35 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- App direct dependencies -->
+    <PackageVersion Include="LiteDB" Version="5.0.21" />
+
+    <!-- MAUI (aligned with your workload: maui 10.0.10) -->
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.10" />
+
+    <!-- Logging -->
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+
+    <!-- SQLite / data access -->
+    <PackageVersion Include="sqlite-net-pcl" Version="1.8.116" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="8.0.11" />
+
+    <!-- Use bundle_e_sqlite3 (2.1.10+) to avoid XA0141 for Android 16 / 16 KB page-size devices -->
+    <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.11" />
+
+    <!-- FluentMigrator (used by tools/migrationslib and by the app) -->
+    <PackageVersion Include="FluentMigrator" Version="3.3.2" />
+    <PackageVersion Include="FluentMigrator.Runner" Version="3.3.2" />
+    <PackageVersion Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
+
+    <!-- Security/vulnerability overrides for transitive dependencies -->
+    <PackageVersion Include="Microsoft.Data.SqlClient" Version="2.1.7" />
+    <PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.34.0" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="6.34.0" />
+    <PackageVersion Include="System.Drawing.Common" Version="4.7.2" />
+  </ItemGroup>
+</Project>
