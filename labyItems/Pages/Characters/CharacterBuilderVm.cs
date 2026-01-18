@@ -134,7 +134,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         RefilterRaces();
     }
 
-
     private static string IconForPeopleType(string peopleType)
     {
         var t = (peopleType ?? "").Trim().ToLowerInvariant();

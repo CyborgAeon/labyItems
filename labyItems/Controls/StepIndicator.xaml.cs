@@ -1,8 +1,7 @@
-using System.Collections.ObjectModel;
-using labyItems.Infrastructure;
-using labyItems.Pages.Characters;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using Microsoft.Maui.ApplicationModel;
+using labyItems.Infrastructure;
 
 namespace labyItems.Controls;
 
@@ -17,12 +16,20 @@ public partial class StepIndicator : ContentView
     public StepIndicator()
     {
         InitializeComponent();
-        SizeChanged += (_, __) => UpdateProgressLine();
-        StepsGrid.SizeChanged += (_, __) => UpdateProgressLine();
+
         ApplyThemeDefaults();
 
+        // Keep the line updated as layout changes
+        SizeChanged += (_, __) => UpdateProgressLine();
+        StepsGrid.SizeChanged += (_, __) => UpdateProgressLine();
+
+        // When binding context is set/swapped, rebuild (marshal to UI thread)
         BindingContextChanged += (_, __) => MainThread.BeginInvokeOnMainThread(Rebuild);
     }
+
+    // ----------------------------
+    // Bindable Properties
+    // ----------------------------
 
     public static readonly BindableProperty StepsProperty =
         BindableProperty.Create(
@@ -30,29 +37,26 @@ public partial class StepIndicator : ContentView
             typeof(IList<StepItem>),
             typeof(StepIndicator),
             defaultValue: Array.Empty<StepItem>(),
-            propertyChanged: (b, o, n) => ((StepIndicator)b).OnStepsChanged(o as IList<StepItem>, n as IList<StepItem>));
+            propertyChanged: (b, o, n) =>
+                ((StepIndicator)b).OnStepsChanged(o as IList<StepItem>, n as IList<StepItem>));
 
     private INotifyCollectionChanged? _stepsNotify;
 
     private void OnStepsChanged(IList<StepItem>? oldSteps, IList<StepItem>? newSteps)
     {
-        // Unhook old
         if (_stepsNotify != null)
             _stepsNotify.CollectionChanged -= Steps_CollectionChanged;
 
-        // Hook new (if observable)
         _stepsNotify = newSteps as INotifyCollectionChanged;
+
         if (_stepsNotify != null)
             _stepsNotify.CollectionChanged += Steps_CollectionChanged;
 
-        Rebuild();
+        MainThread.BeginInvokeOnMainThread(Rebuild);
     }
 
     private void Steps_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        // Always marshal to UI thread
-        MainThread.BeginInvokeOnMainThread(Rebuild);
-    }
+        => MainThread.BeginInvokeOnMainThread(Rebuild);
 
     public IList<StepItem> Steps
     {
@@ -60,7 +64,7 @@ public partial class StepIndicator : ContentView
         set => SetValue(StepsProperty, value);
     }
 
-    // 0-based index (matches your React logic)
+    // 0-based current step index
     public static readonly BindableProperty CurrentStepProperty =
         BindableProperty.Create(
             nameof(CurrentStep),
@@ -74,9 +78,6 @@ public partial class StepIndicator : ContentView
         get => (int)GetValue(CurrentStepProperty);
         set => SetValue(CurrentStepProperty, value);
     }
-
-
-    public event EventHandler<int>? StepClicked;
 
     public static readonly BindableProperty StepClickCommandProperty =
         BindableProperty.Create(
@@ -92,8 +93,12 @@ public partial class StepIndicator : ContentView
     }
 
     public static readonly BindableProperty BubbleSizeProperty =
-        BindableProperty.Create(nameof(BubbleSize), typeof(double), typeof(StepIndicator), 40d,
-            propertyChanged: (b, o, n) => ((StepIndicator)b).UpdateVisualStates());
+        BindableProperty.Create(
+            nameof(BubbleSize),
+            typeof(double),
+            typeof(StepIndicator),
+            40d,
+            propertyChanged: (b, o, n) => ((StepIndicator)b).Rebuild());
 
     public double BubbleSize
     {
@@ -101,13 +106,16 @@ public partial class StepIndicator : ContentView
         set => SetValue(BubbleSizeProperty, value);
     }
 
+    public event EventHandler<int>? StepClicked;
+
+    // ----------------------------
     // Internals
-    private readonly List<(Button bubble, Label bubbleText, Label label, int index)> _items = new();
+    // ----------------------------
+
+    private readonly List<(Button bubble, Grid bubbleOverlay, Label bubbleText, Label caption, int index)> _items = new();
 
     private void ApplyThemeDefaults()
     {
-        // Map "bg-border", "bg-primary", etc. to MAUI theme resources if you have them.
-        // Fallbacks here if resources don't exist.
         LineBg.Color = TryGetColor("BorderColor", Colors.LightGray);
         LineFg.Color = TryGetColor("PrimaryColor", ColourScheme.Primary);
     }
@@ -133,17 +141,18 @@ public partial class StepIndicator : ContentView
         }
 
         StepsGrid.ColumnDefinitions.Clear();
+        StepsGrid.RowDefinitions.Clear();
         _items.Clear();
 
         var steps = Steps ?? Array.Empty<StepItem>();
         if (steps.Count == 0)
         {
+            // No steps => only the line will be visible (expected)
             UpdateProgressLine();
             return;
         }
 
         // Ensure row structure exists (line + bubbles in row 0, captions in row 1)
-        StepsGrid.RowDefinitions.Clear();
         StepsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
         StepsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
 
@@ -151,12 +160,12 @@ public partial class StepIndicator : ContentView
         for (int i = 0; i < steps.Count; i++)
             StepsGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
 
-        // Create step UI per column
+        // Build step UI
         for (int i = 0; i < steps.Count; i++)
         {
             var step = steps[i];
+            var stepIndex = i;
 
-            // Bubble button
             var bubble = new Button
             {
                 WidthRequest = BubbleSize,
@@ -199,10 +208,12 @@ public partial class StepIndicator : ContentView
                 Margin = new Thickness(0, 8, 0, 0)
             };
 
-            var stepIndex = i;
             bubble.Clicked += async (_, __) =>
             {
-                if (stepIndex > CurrentStep) return;
+                // Optional: if you want the UI to prevent forward clicks, re-enable this:
+                // if (stepIndex > CurrentStep) return;
+
+                // Micro-tap feedback
                 await bubbleOverlay.ScaleTo(0.95, 70, Easing.CubicInOut);
                 await bubbleOverlay.ScaleTo(1.00, 70, Easing.CubicInOut);
 
@@ -210,11 +221,11 @@ public partial class StepIndicator : ContentView
                 StepClickCommand?.Execute(stepIndex);
             };
 
-            // IMPORTANT: add to StepsGrid directly (no container)
-            StepsGrid.Add(bubbleOverlay, i, 0); // row 0 aligns with the line
-            StepsGrid.Add(caption, i, 1);       // row 1
+            StepsGrid.Add(bubbleOverlay, i, 0);
+            StepsGrid.Add(caption, i, 1);
 
-            _items.Add((bubble, bubbleText, caption, i));
+            _items.Add((bubble, bubbleOverlay, bubbleText, caption, i));
+
             _ = AnimateAppear(bubbleOverlay, i);
             _ = AnimateAppear(caption, i);
         }
@@ -228,7 +239,9 @@ public partial class StepIndicator : ContentView
         {
             element.Opacity = 0;
             element.Scale = 0.9;
+
             await Task.Delay(index * 80);
+
             await Task.WhenAll(
                 element.FadeTo(1, 180, Easing.CubicOut),
                 element.ScaleTo(1, 180, Easing.CubicOut)
@@ -236,22 +249,27 @@ public partial class StepIndicator : ContentView
         }
         catch
         {
-            // ignore if disposed during navigation
+            // Ignore if disposed during navigation
         }
     }
 
     private void UpdateVisualStates()
     {
         var stepsCount = Steps?.Count ?? 0;
-        if (stepsCount == 0)
+        if (stepsCount == 0 || _items.Count == 0)
         {
             UpdateProgressLine();
             return;
         }
 
-        // Clamp current step
-        var current = Math.Max(0, Math.Min(CurrentStep, stepsCount - 1));
-        if (current != CurrentStep) CurrentStep = current;
+        // Clamp CurrentStep safely (avoid recursion storms)
+        var clamped = Math.Max(0, Math.Min(CurrentStep, stepsCount - 1));
+        if (clamped != CurrentStep)
+        {
+            // Setting the bindable property will call UpdateVisualStates again; that's fine.
+            CurrentStep = clamped;
+            return;
+        }
 
         var primary = TryGetColor("PrimaryColor", ColourScheme.Primary);
         var primaryText = TryGetColor("PrimaryForegroundColor", Colors.White);
@@ -259,13 +277,27 @@ public partial class StepIndicator : ContentView
         var secondary = TryGetColor("SecondaryColor", Colors.Gainsboro);
         var mutedText = TryGetColor("MutedForegroundColor", Colors.Gray);
 
+        // First: stop all pulses except the current (this fixes the “everyone pulses” bug)
         for (int i = 0; i < _items.Count; i++)
         {
-            var (bubble, bubbleText, caption, idx) = _items[i];
+            var (bubble, _, _, _, idx) = _items[i];
+
+            if (idx != CurrentStep)
+            {
+                bubble.AbortAnimation("pulse");
+                bubble.Scale = 1.0; // ensure no leftover scale
+            }
+        }
+
+        // Then: set colors/text and pulse only current
+        for (int i = 0; i < _items.Count; i++)
+        {
+            var (bubble, _, bubbleText, caption, idx) = _items[i];
 
             var isCompleted = idx < CurrentStep;
             var isCurrent = idx == CurrentStep;
-            var isClickable = idx <= CurrentStep;
+
+            // Visual fill
             if (isCompleted || isCurrent)
             {
                 bubble.BackgroundColor = primary;
@@ -277,6 +309,7 @@ public partial class StepIndicator : ContentView
                 bubbleText.TextColor = mutedText;
             }
 
+            // Text inside bubble
             if (isCompleted)
             {
                 bubbleText.Text = "✓";
@@ -288,10 +321,15 @@ public partial class StepIndicator : ContentView
                 bubbleText.FontSize = 14;
             }
 
+            // Caption style
             caption.TextColor = isCurrent ? primary : mutedText;
             caption.FontAttributes = isCurrent ? FontAttributes.Bold : FontAttributes.None;
-            bubble.IsEnabled = isClickable;
-            bubble.Opacity = isClickable ? 1.0 : 0.6;
+
+            // Let VM handle gating; keep UI enabled by default
+            // If you want “only <= current step clickable” then change to: bubble.IsEnabled = idx <= CurrentStep;
+            bubble.IsEnabled = true;
+            bubble.Opacity = 1.0;
+
             if (isCurrent)
                 _ = Pulse(bubble);
         }
@@ -299,21 +337,25 @@ public partial class StepIndicator : ContentView
         UpdateProgressLine();
     }
 
-    private async Task Pulse(VisualElement bubble)
+    private Task Pulse(VisualElement bubble)
     {
-        if (bubble.AnimationIsRunning("pulse")) return;
+        if (bubble.AnimationIsRunning("pulse"))
+            return Task.CompletedTask;
 
         var animation = new Animation();
         animation.Add(0, 0.5, new Animation(v => bubble.Scale = v, 1.0, 1.06, Easing.CubicInOut));
         animation.Add(0.5, 1, new Animation(v => bubble.Scale = v, 1.06, 1.0, Easing.CubicInOut));
 
+        // Repeat while visible; we explicitly abort when not current
         bubble.Animate("pulse", animation, length: 900, repeat: () => bubble.IsVisible);
-        await Task.CompletedTask;
+
+        return Task.CompletedTask;
     }
 
     private void UpdateProgressLine()
     {
         var stepsCount = Steps?.Count ?? 0;
+
         if (stepsCount <= 1)
         {
             LineFg.WidthRequest = 0;
@@ -321,10 +363,14 @@ public partial class StepIndicator : ContentView
         }
 
         var totalWidth = StepsGrid.Width;
-        if (totalWidth <= 0) return;
+        if (totalWidth <= 0)
+            return;
 
-        var ratio = (double)CurrentStep / (stepsCount - 1);
+        var current = Math.Max(0, Math.Min(CurrentStep, stepsCount - 1));
+        var ratio = (double)current / (stepsCount - 1);
         ratio = Math.Max(0, Math.Min(1, ratio));
+
+        // The grid has Star columns; approximate the half-column inset for the ends
         var columnWidth = totalWidth / stepsCount;
         var inset = columnWidth / 2;
         var span = Math.Max(0, totalWidth - columnWidth);

@@ -22,10 +22,14 @@
 
             <Label Grid.Column="2"
                    Text="{Binding StepCounterText}"/>
+            <controls:StepIndicator
+                Grid.Row="1"
+                HorizontalOptions="FillAndExpand"
+                Steps="{Binding StepSteps}"
+                CurrentStep="{Binding CurrentStep}"
+                StepClickCommand="{Binding StepClickCommand}"
+                BubbleSize="40"/>
 
-            <ProgressBar Grid.Row="1"
-                         Grid.ColumnSpan="3"
-                         Progress="{Binding StepProgress}"/>
         </Grid>
         <ContentView
             Grid.Row="1"
