@@ -1,0 +1,1351 @@
+{
+  "The Brightest Light": {
+    "Type": "political",
+    "Restrictions": "No guild member is allowed to hurt another except in purest self defence or in a duel.",
+    "Benefits": {
+      "Basic": [
+        "The Light Within – Gains immunity to alignment change. If already owned can spend 1 minute in prayer with another goodly individual and grant them immunity to alignment change.",
+        "Gaze upon the light 1/day - Acts as a mantic light range centred on the user only.",
+        "I drive the Evil back 1/day – Acts as per the Gold Spell Warding, but only functions on Evil."
+      ],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "The Brood": {
+    "Type": "political",
+    "Restrictions": "Anyone found to have knowingly placed their own self interest or other such selfish motives above the welfare of\nthe land and its people will be cast out. It is acceptable to favour your own homeland, but when it would not cause\nconflict to your oaths and loyalties, you should endeavour to improve the lives of the people of all lands across\nthe cosmos. Equally you must never be found to have deliberately, of your own volition, sought to bring harm to\nany other member of The Brood or Sons and Daughters of Sirac.\nInvariably complex situations arise, Sirac is more than familiar with those, and will judge each case accordingly.\nThe expectation is simply for members of The Brood to do their best for all lands and their peoples, and to treat\neach other as family, do that and there will be no problem.\nCastings out will be at the guild heads discretion entirely, but can have significant ramifications if the guild head\nfeels such is truly deserved.",
+    "Benefits": {
+      "Basic": [
+        "Gains 4th level Gold Drave innate. These will stack with any already owned, but cannot be “liquidated”",
+        "Gains a Magical True Believer 1/day – This can be used to cast a standard Gold spell. Daughter of the Ivory Dragon:",
+        "Strength of the Ivory Dragon 1/day – Acts as a single rune of Ivory warrior, but lasts for 1 hour. Additional extra runes of Ivory warrior can be cast on top of this lasting their normal duration with this counting as the 1st. Labyrinthe Almanac – October 2023 – Page 47 ===PAGE 49==="
+      ],
+      "Intermediate": [
+        "Diverse Family 1/day acts as a major prayer about any subject. However the answer must be spun into some odd story involving a tale someone told you about Sirac. Others can never hear this comm or",
+        "therwise get the answer until you tell the tale. Son of the Gold Dragon:",
+        "Now gains 8th level Gold Drave innates, these can still not be liquidated.",
+        "Gains Mark ally at will for 1 TBLP. If owned already then now costs 0 TBLP.",
+        "Gold Drave innates gained from the guild can now be cast as the other version. Daughter of the Ivory Dragon:",
+        "Gains 8th Level Ivory Drave innates, these will stack with any already owned but cannot be “liquidated”.",
+        "Use of Runes of Ivory warrior from innates gained from the guild will last for 1 hour if stacking with the basic tier benefit."
+      ],
+      "Advanced": [
+        "Strength of family - Gains 1 point of live to minus per fellow guild member on dungeon, this will not stack with any form of temp life.",
+        "Embrace the Magic 1/day at the point of casting can double the duration of a published Ivory or Gold spell that would normally last 5 minutes. This can be one cast on self by self, or on self by someone else,",
+        "r by self on someone else. Son of the Gold Dragon:",
+        "Can use basic tier true believer to cast any published gold spell up to 12 mana. Daughter of the Ivory Dragon:",
+        "May trigger Mobility gained from intermediate tier guild benefits as per a War Cry."
+      ]
+    }
+  },
+  "Claws of the Circle": {
+    "Type": "political",
+    "Restrictions": "• If it is within their means then guild members should attempt to capture or kill any Baronial hedge wizard\nthey encounter in the Baronies.\n• Must support the basic political principles of the Southern Baronies.",
+    "Benefits": {
+      "Basic": [
+        "Discern Supernatural Power User: (Y/N) This may be of whatever power base the user possesses. If they do not possess a supernatural power base then it is a physical effect.",
+        "Counter Rite: 1/Day As per a mantic Deny Power in all ways except with the verbal: “The Circle denies thy power!” but only applies against effects targeting self or another Circle member.",
+        "Elemental Rite of Defence: +1 MAC applicable versus attacks from Hedge Wizards, Demonkind or Fey. Rises to +2 MAC if 2 additional guild members are on adventure.",
+        "Spiritual Rite of Defence: +1 SAC applicable versus attacks from Hedge Wizards, Demonkind or Fey. Rises to +2 SAC if 2 additional guild members are on adventure. Labyrinthe Almanac – October 2023 – Page 48 ===PAGE 50==="
+      ],
+      "Intermediate": [
+        "May enhance the discern Supernatural Power User so it now reveals the type of power owned If used in this way costs 3 TBLP per use.",
+        "Counter Rite may instead now act as a Mantic Pure force if desire.",
+        "The first point of MAC from Elemental rite of defence now applies vs all attacks"
+      ],
+      "Advanced": [
+        "The first point of SAC from spiritual rite of defence now applies vs all spiritual attacks.",
+        "Counter Rite may be used to counter multiple simultaneous attacks from the same source (e.g. 5 Shadow Strikes at the same time).",
+        "Enhanced Discern Supernatural power user (intermediate benefit) will now reveal if an individual is a member of the Circle, a Hedge, or other power user. Ritually Warded - Guild Status Watched Over - Tier 1: 60 Table 1",
+        "Discern Supernatural power user is now a physical, Magical, Spirit, and Neuronic info effect.",
+        "Gains + 1 Level of resistance vs Effects from Demonkind, Fey, and Hedge. Protections of the Circle - Tier 2: + 100 Table 5",
+        "Gains a second innate counter rite.",
+        "Counter rites can now be used vs Neuronic attacks Master of Rites - Tier 3: + 120 Table 8",
+        "1/day One counter rite can be enhanced so that it grants all circle/claws members immunity to the effect that it is used against.",
+        "Counter rites may now be used vs any and all supernatural power bases."
+      ]
+    }
+  },
+  "The Deci Gentlemen’s Club": {
+    "Type": "political",
+    "Restrictions": "Guild Members are required to act in the best interests of the city of Deci. Those failing to do so may be cast from\nthe guild, and while within the City of Deci are at -1 level of resistance.",
+    "Benefits": {
+      "Basic": [
+        "Hard Upbringing: gains +3/1 Life",
+        "Agile: gains +1 DAC",
+        "Shrouded: Club Member may call upon the ritual shroud that protects the privacy of the club. This grants complete immunity to all forms of information effects for 5 minutes. Requires 30 seconds of quiet preparation in order to be able to call upon the ritual shroud. Labyrinthe Almanac – October 2023 – Page 49 ===PAGE 51==="
+      ],
+      "Intermediate": [
+        "Hard Upbringing: now gains +6/2 Life",
+        "When using Shrouded can choose to also gain the benefits of a Mantic Pass Unknown.",
+        "The Darkness of Deci 1/day – Grants See through Supernatural Darkness for 5 minutes. If already owned instead gains Senseless Vision."
+      ],
+      "Advanced": []
+    }
+  },
+  "Department of Recoveries and Collections": {
+    "Type": "political",
+    "Restrictions": "Characters cannot be outlawed and cannot gain any benefits while they are outlawed. They must never fail to hand\nin a dangerous artefact to their employer or if not to an Inquisition office (desk).",
+    "Benefits": {
+      "Basic": [
+        "An Eye for the Unusual 1/day ~ Acts as a one use enhanced evaluate vs an object/relic (e.g. a treasure Indiana jones might want to grab).",
+        "Gains well equipped with a dungeon temp (no cards issued) item of a single use standard spell to 6th level, or handbook miracle to 4th.",
+        "Tagged and bagged: If returning a \"dangerous artefact\" to the inquisition that had an ISP value gains 500 grulls per ISP as payment. This must be done at the debrief and the ISP are used in doing this. The guild must have been battle boarded that day to use this."
+      ],
+      "Intermediate": [
+        "Gains a second use of an Eye for the Unusual. An Eye for the Unusual may now also be used on active rituals, altars or similar.",
+        "You might need this ~ Gains well equipped with 10 power (mana or spirits) of useful scrolls chosen by the ref at the start of the day.",
+        "Gains danger sense with regards to approaching/touching/using relics/artefacts based on the object (e.g. anyone touching this suffers a touch of death would trigger danger sense, the unconnected trap that happens to be under it would not).",
+        "Tagged and bagged now provides 750 grulls per ISP."
+      ],
+      "Advanced": [
+        "Now counts as having the relevant “Rec” for an Eye for the Unusual if effected by the relevant powerbase (e.g. Elves cannot count as having rec spirit, but can have rec mana).",
+        "Gains a Third use of an Eye for the Unusual.",
+        "Can use all three innate an Eye for the Unusual’s on an object and it will act as an Investigation (as the Silver spell) of the relevant power bases.",
+        "Well equipped item from basic tier can now be any standard spell or miracle. Labyrinthe Almanac – October 2023 – Page 50 ===PAGE 52==="
+      ]
+    }
+  },
+  "Hell Company": {
+    "Type": "political",
+    "Restrictions": "Members of Hell Company must be willing to fight the denizens of the hells wherever they raise their heads. If a\nmember leaves an adventure where any evil Demonkind that they are aware of and were able to affect remain\nalive, and not on their own plane, then the member gains no points or levels for the adventure. This does not apply\nif the Demon has fled beyond reach.",
+    "Benefits": {
+      "Basic": [
+        "Demon shield: This grants +1 MAC and +1 SAC only versus attacks from Demonkind.",
+        "Demon bane: 1/day may call forth ‘holy fire’ to cover any one normal weapon, whatever it may be. Whilst wielded by a goodly target it inflicts +0 light-based white mana damage for the next 5 minutes versus Demonkind only with the verbal “Powers of light imbue this weapon of vengeance with thy strength, to spell the downfall of Demonkind”."
+      ],
+      "Intermediate": [
+        "Sight Through Shadow: 1/Day user is to see through magical and spiritual darkness for 5 minutes, with the verbal “I call upon the powers of light and truth, let me walk unhindered through midnight’s shadow”.",
+        "Empowered defence: Any member may apply their guild MAC and SAC versus red or black mana, and against evil spirits, regardless of the source, as well as against attacks from Demonkind.",
+        "Discern Demonkind: 20’ Y/N mantic info effect.",
+        "Enhanced Discern Demonkind: 1/day 20’ Y/N mantic info effect that reveals the demonic racial name [or approximately if a unique creature] and up to 3 useful words describing the creatures powers of an identified Demonkind. E.g. Shadow Demon – assassin fears light."
+      ],
+      "Advanced": [
+        "Heavens Shield: 1/day acts as a 36 point mantic Shield against the Dark vs attacks from Demonkind.",
+        "Gains a Second Enhanced Discern Demon kind.",
+        "Hand of Truth: 1/day Acts as a Hand of purity, only vs Demonkind. Death from casting is not permanent. Labyrinthe Almanac – October 2023 – Page 53 ===PAGE 55=== DEFENDER OF HEAVEN - GUILD STATUS Enemy of the Hells - Stage One: Cost: 75 Table: 5",
+        "Demon shield – The guild ability now grants an additional +1 MAC and SAC versus demons only (not red / black etc).",
+        "Enhanced Discern Demon Kind – Gains a further Innate as per the base abilities. Demonbane - Stage Two: Cost: +125 Table: 8",
+        "Hand of Truth – A second innate from the base abilities.",
+        "Sight through Shadow – This innate now additionally grants wanderers hunch versus Demonkind for 5 minutes. Champion of Heaven - Stage Three: Cost: +75 Table: 9",
+        "Demon Slayer; Demonbane from base tier acts as per a “Summon Weapon of Retribution” from level 6 Demonslayer.",
+        "Heavens Shield now acts as a last line of defence vs attacks from Demonkind (i.e. applies after A/C and all reductions)."
+      ]
+    }
+  },
+  "In Purity": {
+    "Type": "political",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Members gain discern nature of Undead (as priestly discern). If this is already owned they gain a single use of a “know your foe” (as privileged ability) but only vs Undead.",
+        "Blessing of purity 1/day – Takes a 30 second prayer and works on either a living goodly individual (including self) or a dead body (of any alignment) and grants a fortified spirit as tables except the individual cannot choose to be raised as Undead even if they wish. If used on the living this lasts until the end of the dungeon. If used on a dead body it lasts until they are restored to life. Immunity to slayer may be applied by an unwilling dead body.",
+        "Gains a holy word “Purity” 1/day ~ Acts as a 60ft radius halt Undead (as the miracle)."
+      ],
+      "Intermediate": [
+        "Lifes cry: 1/day (as life’s avenger).",
+        "Infused with light: 1/day - covers one weapon in a dose of holy water vs Undead for the next blow, does not need to be the users weapon.",
+        "Repel Undead: 1/day",
+        "If the basic tier “Know your foe” has been used vs a single Undead then gains contra mastery vs that Undead for the first 5 minutes of combat. ADVANCE TIER",
+        "Gains a second use of Infused with Light. May use both innates at the same time to turn a weapon +0 spirit (goodly) vs Undead for 5 minutes.",
+        "Attract Undead: 1/day",
+        "Gains a second use of the \"Purity\" Holy word.",
+        "If has used the basic tier \"Know your foe\" ability vs a single specific Undead gains the benefits of a know foe vs them, this also grants immunity to any Undead touch effects they may have. Labyrinthe Almanac – October 2023 – Page 54 ===PAGE 56=== PUREST LIFE - GUILD STATUS Life Defender - Stage One: Cost: 50 Table: 4",
+        "If Discern Nature of Undead is already owned then the Discern Nature of Undead becomes mantic.",
+        "Uses of Holy Word Purity now halts the Undead in a similar manner to stasis, so it lasts 20 seconds and",
+        "nly breaks when the Undead suffers damage (beginning a dismiss is also sufficient to break the stasis). Undead Bane - Stage Two: Cost: +80 Table: 7",
+        "1/day can cause a Holy word Purity to also act as a mass Dismiss 3 (in a similar manner to the Paladin Holy word) to all Undead within range.",
+        "If uses a “Know your Foe” guild benefit and multiple Undead of the same type are present then it applies vs all of them. Paragon of Life - Stage Three: Cost: +125 Table: 9",
+        "Gains a second use of Know your Foe vs Undead (as per the guild benefit including the upgrades).",
+        "If uses both infused with light innates on a weapon already capable of inflicting spirit damage then the weapon counts as being covered in Holy water for Undead purposes for 5 minutes."
+      ],
+      "Advanced": []
+    }
+  },
+  "Knights of Legend": {
+    "Type": "political",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Inspiration: 1/day the guild member may seek Inspiration as per a Lucky Idea. This takes 10 secs to activate.",
+        "‘For the Land’: 1/day and activated as per a War Cry; for 5 minutes gains Determination as per the post 8th tables ability i.e. taking 6 TBLP from any stopping effect suffered but not the stopping effect."
+      ],
+      "Intermediate": [
+        "Chosen of Imrazil: As per published ability Chosen of the Faithful [+2 DAC], but will affect any guild member, including elves etc. The DAC from this watching will not stack with any other chosen/watching/blessing. If this ability or similar blessing is already possessed then this ability instead grants +1 DAC, stacking with other KOTL guilds but no other.",
+        "Mobility: ‘For the Land’ innates may now be used against effects listed as per Mobility, if used in this way costs 12tblp per use.",
+        "Resistance to Avenging Spirit: As per the tables resistance – should this already be possessed it can used to grant Immunity to Dying Effects 1/day as per the tables resistance."
+      ],
+      "Advanced": [
+        "‘For the Land’: A second use per day total.",
+        "‘Determined’: ‘For the Land’ innates may now be used against listed Domination effects, however user suffers 18tblp per use rather than 6tblp. Labyrinthe Almanac – October 2023 – Page 55 ===PAGE 57===",
+        "Resolute: Grants +1 level of resistance to all effects. After the work of Solomon is strengthening the Virtue of Unity the Blessing of Unity can be gained by Knights",
+        "f Legend. The guild status is available to any Knight of Legend. KNIGHT OF THE VIRTUE OF UNITY – GUILD STATUS Squire of Virtue - Stage One: Cost: 75 Table 1",
+        "Gains 4 “Unity power”. This can be used to cast a beneficial Spell/Miracle/Evocation on another Knight",
+        "f the Land (the character must be able to cast the effect), OR it may be used to allow a beneficial effect to be cast by another Knight of the Land on the character (e.g. a wizard could use the unity power to cast a plate other on a KOTL, or a warrior could use the unity power to let a priest cast a spirit shield on them rather than using the priests spirits). This power is separate to other pools and cannot be combined with a character’s normal power.",
+        "Gains a live to minus 1 (not stacking with other Status live to minus) per other KOTL on dungeon (max 3 at this stage) Defender of Virtue - Stage Two: Cost: + 100 points Table: 5",
+        "Gains an additional 4 (8 total) Unity power as stage one.",
+        "May choose one of the following innates at the start of the day:",
+        "Unity in power 1/day - Allows a self affecting standard spell, miracle or evocation to be cast on a fellow willing KOTL. No enhancement may be used on this effect, and it must be cast using Unity power.",
+        "Unity in Strength 1/day - May allow another KOTL power user to cast a standard spell/miracle/evocation that would normally be self only on them. No enhancements may be used and this must be cast using the benefiting characters unity power.",
+        "Live to Minus from stage 1 is now capped at 6. Knight of the Virtues - Stage Three: Cost: +125 Table: 7",
+        "Gains an additional 4 (12 total) Unity power as stage one.",
+        "Unity in power/Unity in strength may now be used to cast any published spell/miracle/evocation. It still requires unity power and may not be enhanced beyond its base effect.",
+        "Live to minus is now gained at 2 per other KotL on dungeon, still capped at 6 points.",
+        "The live to minus from this status now applies to locations as well, increasing the amount of damage they need to suffer before being severed (e.g. if a character has 20 to a loc, and 6 live to minus from this status they would need to suffer 46 points of damage to the location to sever it rather than 40)."
+      ]
+    }
+  },
+  "Knights of the Risen Phoenix": {
+    "Type": "political",
+    "Restrictions": "Members of the Knights of the Risen Phoenix may not attack peons and other weak or defenseless creatures except\nin defense of self or the party and will actively seek to protect non-aggressive peons/defenseless creatures against\nthe un-warranted aggressive actions of others, including those of the party.",
+    "Benefits": {
+      "Basic": [
+        "Life of the phoenix – 1/day with 30 seconds meditation triggers benefits as per a regeneration Elixir on self, but is not a flesh and blood effect, rather mantic (Gold/Red/Good spirit).",
+        "Fires of the Phoenix – 1/day acts as a mantic (Red/Goodly) fire blade, guild members that are not evil gain utilise good spirit item for this.",
+        "Heart of the Fire – 1st time a day needed gains live to minus 6 TBLP that cannot be inflicted by fire and while in this live to minus regens 1/1 to the most injured location per 30 seconds, or until out of the live to."
+      ],
+      "Intermediate": [
+        "Life of the Phoenix from basic tier may now be used on other guild members. Alternatively if 2 minutes",
+        "f calm meditation is used it instead acts as per a power master self-heal, but only curing 36/36.",
+        "Fire of the Phoenix may instead be used as one of:",
+        "Mantic Summon Salamander Child",
+        "Mantic Talk to Salamander",
+        "Mantic sword of power (again gaining utilise goodly spirit item as above).",
+        "Shield of fire: Gains mantic walk through fire (self) 1/day."
+      ],
+      "Advanced": [
+        "Life of the phoenix may instead be used as a mantic Life Overwhelms (as Jade spell) but is red/gold/good spirit in nature. Verbal: The Phoenix overwhelms!",
+        "Fire of the phoenix – If unused then upon death can be triggered acting as a Mantic (flaming) Avenging spirit on the guild members slayer.",
+        "Heart of the Fire – When triggered the live to minus is empowered so that for the first minute of it it can",
+        "nly be inflicted by evil spirits, cold, or water based attacks.",
+        "Shield of fire: If the user already has table 3 Immunity to Fire then when used it grants either:",
+        "Complete immunity to fire for 5 minutes",
+        "Resilience (as per Pasha status) equal to the users table vs fire."
+      ]
+    }
+  },
+  "Obsidian Cabal": {
+    "Type": "political",
+    "Restrictions": "Any guild member who kills another member of the Cabal is kicked out. This can be over ridden by the guild\nhead.",
+    "Benefits": {
+      "Basic": [
+        "Gains Kin with other guild members on dungeon.",
+        "If guild members have a restriction that would require them to attack other guild members it does not apply (e.g. a Silverfolk and a non-silverfolk neuronicist). Labyrinthe Almanac – October 2023 – Page 57 ===PAGE 59===",
+        "Heart of Evil - Members cannot be forced to attack other guild members, e.g. spiritually mastered with",
+        "rders to kill someone. Additionally when raging they are able to identify fellow guild members and do not have to attack them. None of this means they can’t attack fellow guild members, just they don’t have to.",
+        "Members gain Monk Loc skill. If monk loc is already owned this stacks with it."
+      ],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "Of the North": {
+    "Type": "political",
+    "Restrictions": "No kind of non violence pact between the ‘men’ of the North will ever be put in place. The place is wild and so\nare its people, sometimes they will disagree!\nENTRY REQUIREMENTS:\nAnyone with a position of power within the Empire (e.g. a Title) or anyone seeking to bring the North under the\nEmpire’s control may not join.\nNOTE\nFollowing extensive work in establishing a grand guild hall – a focal place for those hardy folk of the north to\ngather, meet, feast and remember those who have fallen, telling tales of their exploits and “quaffing” – guild\nmembers now gain the benefits of a Crypt.",
+    "Benefits": {
+      "Basic": [
+        "Hardened upbringing – Gains live to minus 6 first time each day it is needed.",
+        "Touched by the Cor Sam Gain – ½ effect natural cold.",
+        "The Tales of the North 1/day – Acts as a seven word lucky idea about beasts/mystical foes, be they giants, dragons, giant snakes etc."
+      ],
+      "Intermediate": [
+        "Touched by the Cor Sam – Now Gains Immunity to Cold (as tables)",
+        "Hardened up bringing now grants live to minus 6 at all times, and the first time it is needed each day all live to minus owned is doubled.",
+        "The Wild lands – Can see through Blizzards and similar snow based visual impairments."
+      ],
+      "Advanced": [
+        "Cor Sam in the heart – gains completed immunity to all forms of cold.",
+        "Brutal Childhood – 1st time a day it is needed all live to minus also applies to locations, increasing the amount of damage they need to suffer to be severed.",
+        "The Brutal North – Gains +6/2 life. The Stories of Tomorrow – Guild Status Tundra Walker - Stage One: Cost: 75 Table: 1",
+        "Tales of the North can provide more general information about heroic tales of the north, its history and similar.",
+        "Gains Immunity to Tracking/Sniff/Acute hearing while in the Far North/the Chilling fields and similar terrain (in a similar manner to Alfar).",
+        "+ 1 Level of Resistance vs Domination effects. Tale Weaver - Stage Two: Cost: + 75 Table: 5",
+        "Gains an Innate Discipline 1/day",
+        "When using a Tales of the North about a specific foe that is present it acts as per the Privileged tradition ability Know your Foe.",
+        "Gains an additional level of resistance vs those individuals that hold an Imperial position or title. Elder Speaker - Stage Three: Cost: +100 Table: 7",
+        "Gains an extra innate of Tales of the North.",
+        "Brutal North guild life is increased from 6/2 to 9/3.",
+        "Can use stage two discipline innates on another member of the guild within 10ft. Labyrinthe Almanac – October 2023 – Page 59 ===PAGE 61==="
+      ]
+    }
+  },
+  "Sakura": {
+    "Type": "political",
+    "Restrictions": "Action against the emperor or outlawing results in immediate expulsion from guild and you cannot re-join unless\nyou have cleared your honour by Seppuku or with the Kotei",
+    "Benefits": {
+      "Basic": [
+        "Loyalty to the Jade Emperor – If the individual does not have a status within the Jade Empire (EG is a Thun) then membership of the guild means most people Loyal to the Empire will treat them with civility and courtesy.",
+        "Honour the Dragon – At the start of the day can chose to gain + 2 MAC vs one Elemental colour of magic, but – 1 vs the opposite colour. If Grey is chosen only 1 MAC is gained, but no mac is lost vs other colours. 3 days either side of the Thanks to the Dragons (10th December) the gains, and loses, are doubled.",
+        "I will honour the Code 1/day – As Discipline."
+      ],
+      "Intermediate": [
+        "Blessing of the Fates – At the start of the day can choose to be blessed by Amlalt and gain + 2 SAC vs Evil, or Avral and gain + 2 SAC vs Good, or they may choose the Twins as a whole and gain + 1 SAC vs all alignments. 3 days either side of the Day of Fates (27th September) these benefits are doubled.",
+        "Call to the Dragons 1/day with 30 seconds prep can cast a handbook spell of the same colour as the Dragon chosen for Honour the dragons.",
+        "I will honour the code when used also grants the benefits of a War Cry."
+      ],
+      "Advanced": [
+        "I will honour the code now gains benefits as per a mobility in addition to its normal benefits, but applies vs all powerbases.",
+        "Honour of the dead Gains fated hero as tables, if owned then gains undecided destiny. Three days either side of the Birth of the Celestial Emperor (7th October) a member may instead choose to gain the Celestial Emperors blessing which means their first death of the day will cost 5% less res chance (if ressed on dungeon) providing the resurrection is begun within 15 minutes of death.",
+        "Blessing be upon the Jade Emperor – The 1st time a day it is required the member gains live to minus 6 that also applies to crits. This live to minus is magical or spirit chosen at the battleboard. 3 days either side of the Emperors Birthday (4th January) the live minus is ‘Mantic. The Dragon’s Chosen – Guild Status Respect of the Dragons - Stage One: Cost: 100 Table: 5",
+        "I have honoured the Dragons and they accept me: No longer suffers negative MAC vs the opposite colour. If Grey was chosen the MAC applies vs all colours.",
+        "I respect you all: 1/day with 5 minutes prayer can change the chosen dragon for “Honour the Dragon”.",
+        "After 30 seconds talking to an Amlesian individual is aware if they support the treaty or not. This is a physical information effect, but if an individual is immune to physical info effects then it cannot be determined either way. Labyrinthe Almanac – October 2023 – Page 60 ===PAGE 62=== Draconic Diplomacy - Stage Two: Cost: + 75 Table: 8",
+        "Gains an additional innate of Call to the Dragons.",
+        "Gains a mantic Major prayer about a clan, individual, group or similar and their position on the “treaty”. Honour Amongst Dragons - Stage Three: Cost: +75 Table: 9",
+        "Can use 2 innates of Call to the Dragons to cast an advanced spell of the chosen colour up to the characters table post 8th.",
+        "Can use “I will honour the Code” on a fellow guild member within 20ft if desired.",
+        "A second Dragon can be chosen when using Honour the Dragon; this does benefit from stage 1 of this status. However opposite colours cannot be chosen."
+      ]
+    }
+  },
+  "The White Lotus Society": {
+    "Type": "political",
+    "Restrictions": "Guild members must be loyal to the Jade Emperor or his Empire; should a member show extreme disloyalty to\neither of these things they are instantly removed from the guild and may only rejoin the guild should an adequate\nshow of loyalty be given. This will be judged by either the guild master or the Jade Emperor. No member of The\nWhite Lotus Society will leave another behind on a mission; should this occur no points for the day will be gained.",
+    "Benefits": {
+      "Basic": [],
+      "Intermediate": [
+        "Song for the dead can instead be used to remove a slayer effect and/or the taint of undeath from the person being returned to life.",
+        "Petals of Life will always grant a minimum of 6 points of live to minus, and now grants 2 points of live to minus per guild member.",
+        "Heart of the Lotus now grants +6/2 guild life.",
+        "To defend with honour 1/day – If a fellow Amlesian or guild member has been incapacitated/rendered helpless this innate may be used granting +12/4 temp life and one of (chosen when the innate is used): A War Cry, a discipline or a cold rage. The benefits last for 5 minutes and if the innate is not used it is lost.",
+        "Educated individual - Gains Read Languages for Arcadd, if already owned gains a major prayer about Arcadd, poetry, or relevant Amlesian writings. Labyrinthe Almanac – October 2023 – Page 61 ===PAGE 63==="
+      ],
+      "Advanced": [
+        "Song for the dead can instead be used to reduce the ritual prep of the restore life to 1 minute, but the individual being restored to life will not gain the benefits a total heal until after resting for 5 minutes.",
+        "Petals of Life live to minus now applies to locations.",
+        "Heart of the lotus now grants +9/3 guild life.",
+        "The Fates decide – is immune to any random acts of misfortune or similar. This could include “one person in the party is randomly ritual struck” - it would never be a guild member unless there are only guild members present. This is refs discretion and the spirit should be followed. This also grants fated hero, and if already owned undecided destiny.",
+        "Will of the Empire now applies at all times.",
+        "To Defend with honour no longer requires an Amlesian or fellow guild member to be incapacitated/helpless. Floating Petal, Dancing Lotus – Guild Status Fates Favour – Stage One: Cost: 80 Table: 5",
+        "Gains Fates Decide (as advanced tier). If already claiming this then random acts will generally come out in the characters favour (refs discretion).",
+        "If battle boarding Petals of Life gains the base tier Heart of the Lotus benefits as well, and vice versa.",
+        "Dagger Catching 1/stage – Grants immunity to one MP/HP attack as the character actually caught it, in their off hand. The Fates Sing – Stage Two: Cost: + 100 Table: 7",
+        "If battle boarding Petals of life now gains intermediate tier Heart of the Lotus benefits as well, and vice versa.",
+        "When using Song for the Dead can gain two of the benefits from the options available.",
+        "Dagger catching may now also be used on cache style attacks that land within 5ft of the character, stopping them from triggering. Off Hand Masters – Stage Three: Cost: + 120 Table: 8",
+        "If battle boarding Petals of life gains advanced tier Heart of the Lotus benefits as well, and vice versa.",
+        "Song for the Dead now grants all listed benefits when used.",
+        "If uses Dagger catching on a cache can use a second innate to throw it back causing it trigger where the re-thrown cache lands."
+      ]
+    }
+  },
+  "Totemic Guardians": {
+    "Type": "political",
+    "Restrictions": "If asked must always lend aid in any form or help other tribals, unless you’re fighting against them...then kill them\nand eat them!!\nAny guild member who attacks and kills a fellow tribal guild member will be cast out of the guild\nLabyrinthe Almanac – October 2023 – Page 62\n===PAGE 64===\nThe Totemic guardians understand that your tribe always comes first, but you must always seek to aid and stand\nby your fellow Guild members.\nOutlaws must ask permission from guild heads before joining.",
+    "Benefits": {
+      "Basic": [],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "Wahadamune": {
+    "Type": "political",
+    "Restrictions": "Wahadamune is a collective from all clans, you may be a member of Wahadamune and your original clan chosen\nat creation, or just Wahadamune.\nMust be Ishmaic to join, you may not join if you are Outlawed or Ostracised within Ishma (however those\nOutlawed or Ostracised by the Imperial Seers rather than Rainfinders may appeal this decision to the Guild Head).\nBecoming Outlawed or Orstracised in Ishma may cause you to be cast out, potentially immediately at ref discretion\nif the crime should be severe enough.",
+    "Benefits": {
+      "Basic": [
+        "Invoke the Winds Protection 1/day ~ Grants the user the next level of the “Winds”. If the 1st Wind is",
+        "wned then this grants immunity to magic for 5 minutes.",
+        "Stand with the Confederacy 1/day ~ Usable if a fellow member of the Ishmaic confederacy is incapacitated or killed by a foe. Grants +6/2 life and an innate War Cry. The benefits last 5 minutes even if the individual recovers.",
+        "Aid of the Clan ~ At the start of the day can choose to gain the aid of one of the Ishmaic Clans as follows:",
+        "Galahbhad – Armour is tinkered by the clans armourers, granting immunity to accuracy.",
+        "Buladajn – Venoms Whisper 1/day ~ Gains Immunity to poison for 5 minutes.",
+        "Benhai – Gains an innate Jump that also grants the benefits of Trap wary",
+        "Salahmen – 1/day gains double level of resistance vs magic for 5 minutes",
+        "Harazaen – Consume the Curse 1/day – Grants immunity to one Curse, must be used within 2 seconds of the curse being suffered",
+        "Rain – Draw on the winds 1/day Takes 30 seconds prep and can act as a standard Elemental spell up to 4th level. Labyrinthe Almanac – October 2023 – Page 64 ===PAGE 66==="
+      ],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "Yeomen of the Empire": {
+    "Type": "political",
+    "Restrictions": "Any Member who is outlawed ceases to be a member of this guild from the moment they are outlawed. They may\nre enter upon being cleared of any charges with the permission of the Guild Head or his deputy.\nA Yeoman must always think of Primus first. Peons are to be helped, not looked on as an inconvenience and\nmembers have purest self-defence restrictions against Peons.\nThe Nobility should be respected and protected as well as the common folk of the Land. It is, after all, those\nNobles whose blood is linked to the Land.\nReferees should be MOST harsh on any member of this guild who openly encourages attacks on, or is dismissive\nof, the folk of Primus.",
+    "Benefits": {
+      "Basic": [
+        "Gains Kin to all other Yeoman on dungeon.",
+        "Strength of the yeoman – Gain + 3/1 life per yeoman on dungeon, to a max of +6/2.",
+        "Memories of the Yeoman – 1/day with 30 seconds concentration acts as a major prayer about matters previous Yeoman may have known. This includes rituals, ancient foes, lost treasures etc. It should be a broad interpretation of what can be covered, but it could be slightly cryptic or incomplete. Labyrinthe Almanac – October 2023 – Page 65 ===PAGE 67=== Professional Open Guilds For ease of reference churches have been split out from other professional guilds, but are still professional guilds."
+      ],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "Church of Certizal, Shadow of the First Evil": {
+    "Type": "professional",
+    "Restrictions": "The Guild is a full black guild (as per WFA rules).\nIf a member ever ceases to be Evil they are instantly Excommunicated.\nNote - If slain a member of the church, or a character with Pact to Certizal, claiming Kallah benefits linked to\nCertizal or if they are Demon Touched by Certizal, can choose to Word of Recall to Lomo who can cast a Mantic\n(Ebony/Evil Spirit) Command Life on the individual. This costs 20% (10% if fated hero is owned). For reference:\nCommand Life is as animate life except the individual does not become Undead. Instead they discern as spiritually\nmastered, and if removed they die. It does not function on those immune to spiritual mastery.\nThis should be written on the individuals card.\nCHAOTIC EVIL MIRACLE LIST\n1st Halt, Lesser Wings of Darkness\n2nd Cause Wound, Animate Zombie\n3rd Cause Serious Wounds, Curse, Protection from Spirits, Writhe\n4th Cause Disease, Conceal Lie, Create Ghoul, Beguile, Control Ghoul\n5th Voice of Power, Cause Grievous Wounds.\n6th Walk Through Walls, Spiritual Mastery.\n7th Suspend Life\nDENOMINATIONAL MIRACLE\nThis miracle may be learnt as normal by priests of Certizal post 8th.\nThe Evil Within\nLevel: 6sp Alignment: Evil Duration: 5 minutes Range: 20ft\nVerbal: “Let the touch of the Shadow be upon thee.”\nDescription: The target counts as evil for the duration. Immunity to alignment change applies. Willingly\naccepting this miracle is an Evil act and causes the person to gain a black mark.",
+    "Benefits": {
+      "Basic": [
+        "Embraced by Evil 1/day – Grants immunity to one effect that contains an evil spiritual component. Must be used within 2 seconds of the effect. For 5 minutes afterwards cannot benefit from goodly spirits, or effects that contain goodly spirits.",
+        "Shroud of Evil 1/day – Grants immunity to goodly spirits for 30 seconds. This is not retroactive.",
+        "Words of Certizal 1/day – Upgrades a conceal lie so it grants spiritual Deception at will for 5 minutes vs all spiritual effects. Labyrinthe Almanac – October 2023 – Page 66 ===PAGE 68==="
+      ],
+      "Intermediate": [
+        "Embraced by Evil now lasts for 30 seconds granting immunity to any effect with an evil spiritual component.",
+        "Shroud of Evil may now be used in response to an attack (CF. War Cry) but only applies vs that attack.",
+        "Feed on Evil – Gains +1 spirit per evil individual with a spirit in the party (it takes a while to feed on the evil), includes self."
+      ],
+      "Advanced": [
+        "Shroud of Evil now lasts 5 minutes (does not work if intermediate enhancement is used).",
+        "Instead of normal benefits from Embraced by Evil can instead gain immunity to evil spirits for 5 minutes. While active cannot benefit from goodly spirits.",
+        "Can either add the miracle “Strength of Evil” (as per Pact with Certizal status) to list, or gain an innate",
+        "f it.",
+        "Gains a second Embraced by Evil."
+      ]
+    }
+  },
+  "Church of Dead Heroes": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Personal Faith: Each Priest of the Dead Heroes has a Personal Faith, and may design their own miracle list following the rules for a Hermit Priest. The Priest uses the miracle list even if not battle-boarding the Church’s basic benefits.",
+        "Lay Believer: Any character who is both Primal and Imperial in origin may purchase Lay Believer for 40pts Tb1.",
+        "Call on Heroes Past [Beginning]: After 30 seconds appropriate prayer may cast any one handbook miracle of own alignment (Good / Neutral / Evil) of up to 4th level. Labyrinthe Almanac – October 2023 – Page 67 ===PAGE 69==="
+      ],
+      "Intermediate": [
+        "Note for the below abilities “Member” of the Church includes Priests and any who have purchased Lay Believer.",
+        "Enlightened: Gains free 8th level miracle on Miracle list as per Hermit Priest.",
+        "Call on Heroes Past [Middle]: After 60 seconds of appropriate prayer may cast any one handbook miracle",
+        "f own alignment (Good / Neutral / Evil) of up to 6th level.",
+        "The Strength of Heroes Past: At the start of the day one of the following 1/day innates may be selected:-",
+        "Allied Hero: One Undead summoned by the Priest will be helpful and act in a friendly or respectful manner towards the Priest and their allies. (Sphere ~ Necromancy)",
+        "Knowledgeable Guidance: One Comm I will yield 1 word answers, not just Yes / No answers. (Sphere ~ Communication)",
+        "Reviving Strength: One Handbook healing tree miracle cast upon a Member of the Church grants +25% effect. (System limit of 72 pts for an unprepared healing miracle applies). (Sphere"
+      ],
+      "Advanced": [
+        "Aid of Heroes Past: The Intermediate Tier innate chosen above is now upgraded to ‘at will’, provided that the Priest has purchased Major Sphere in the relevant sphere as noted.",
+        "Embody Milo 1/Day: Grants full Undead immunities for 5 minutes. However for the duration the Priest’s left arm ceases to exist for any purpose as if it had been cut off (no damage is taken for this and no other disadvantages associated with losing a limb, such as a dwarf dying, are suffered). This means that whilst embodied miracles / abilities that require both hands to be able to cast / activate cannot be used.",
+        "Call on Heroes Past [End]: After 2 minutes appropriate prayer may cast any one handbook miracle of",
+        "wn alignment (Good / Neutral / Evil) of up to 8th level, if not on own miracle list then this costs tblp/spirits as normal. CALLER OF HEROES - CHURCH STATUS Faith Found - Stage One: Cost: 90 Table: 1",
+        "Speak with dead - 1/day talk to spirit - only useable on dead people or similar (20, 3).",
+        "Heroes Insight 1/day – Can use a call on heroes past (1st to 4th level only) to instead of normal benefit add a 1st to 4th level miracle the priest could normally learn to their list for the day. Requires prep time for the innate as normal.",
+        "Knowledge of heroes past - 1/day - a major prayer about a hero (dead or alive), or a major prayer that a dead hero would know the answer to (40, 1). Heroes Called - Stage Two: Cost: +100 Table: 7",
+        "The Converse with dead 1/day - upgrades speak with dead to a converse with dead (40, 1).",
+        "When using Heroes insight if uses a Call on Heroes past (1st to 6th) then while it can still only add 1st to 4th level miracles they count as being part of the priests base list, so can now be any sphere.",
+        "Embody Milo can now be ended early if desired.",
+        "While under an Embody Milo is still effected by beneficial miracles from self as if not Undead (assuming the individual is not Undead themselves). Labyrinthe Almanac – October 2023 – Page 68 ===PAGE 70=== Remembered Glory - Stage Three: Cost: +100 Table: 9",
+        "Awaken the dead 1/day - upgrades converse with dead to a mass converse with spirit (20ft) on all dead spirits.",
+        "Embody Milo may now be used in response to an attack (CF War Cry), but must be declared within 2 seconds of the effect being suffered.",
+        "Call on Heroes no longer costs spirits if the miracle is not known."
+      ]
+    }
+  },
+  "Church of the Empress Goddess": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Fires of the Empress 1/day: May turn a standard offensive miracle mantic (red mana/flaming).",
+        "Empresses Force: May choose to benefit from one of the following: 1. Pure Force is now considered a Universal Sphere miracles, but costs a level to cast. 2. Pure Force remains a Major force sphere miracle, but now only costs 6 spirits to cast. 3. Gains an innate pure force.",
+        "Mistress of the Throne: At the start of each day may add up to 10 spirits of standard miracles to the priest’s miracle list. These may be changed dungeon to dungeon (or day to day on extended lengths). They CANNOT be used for making items/writing scrolls or similar. Labyrinthe Almanac – October 2023 – Page 69 ===PAGE 71==="
+      ],
+      "Intermediate": [
+        "Mistress of the Throne from basic tier may now be used to learn advanced miracles (WFA), but the priest must be able to learn them normally (e.g. relevant sphere, alignment etc.)",
+        "Will of the Empress 1/day - Acts as a one word minor prayer but the answer is from the broad opinion",
+        "f the Empress (religiously).",
+        "Force of Glass 1/day - One use of a pure force grants immunity to the effect for 10 seconds."
+      ],
+      "Advanced": [
+        "Will of the Empress now acts as a full major prayer.",
+        "Force of Glass now lasts for 30 seconds.",
+        "Fire of the Empress may now be used to empower non-offensive standard miracles.",
+        "Strength of the Realm – Members gain + 1 Spirit per member of the Church or Noble of the Blood on dungeon (a person can only count once), to a maximum of their table. Non-spirit using classes (EG spirit warriors) may battle board these spirits as innates of miracles on their list. As a note Tarquin Stoneheart (Lee Dale) has Spirit Link to all Guild members, so they may freely tell him if they have been killed. Referees should note this may result in Lee asking for the “Circumstances of the death” as per the ability in Words From Above. Servant of Glass - Church status Squire of Glass - Stage One: Cost: 110 Table: 5",
+        "Will of the Empress now becomes all power bases.",
+        "Gains an innate Pure Force 1/day. Chosen of Glass - Stage Two: Cost: +80 Table: 7",
+        "Gains a second Will of the Empress innate.",
+        "Empresses Fires – 1/day for 5 minutes. If casting offensive miracles can choose for them to be “Flaming”. They remain goodly spiritual, but if relevant count as fire (and as such resistances to fire apply). Throne Defender - Stage Three: Cost: +100 Table: 9",
+        "Gains Injunction (as tables Ability) for Will of the Empress innates.",
+        "Gains a second Force of Glass innate."
+      ]
+    }
+  },
+  "Church of Iron & Empire January 2024": {
+    "Type": "professional",
+    "Restrictions": "Should a member become Outlawed or Ostracised by the Empire they are automatically excommunicated until\nthe matter is resolved. In game terms they cannot cast any miracle from the Church list, nor miracles learnt whilst\na member. However this does not trigger Dedicated Power restrictions unless the individual refuses to hand\nthemselves in for trial.\nNote: The Lord of Feldraken Isle can remove the High Priest from their role if they are not acting in the best\ninterest of the Church, or simply fails to fulfil their duties.\nMIRACLE LIST\n1st Souls Hunger, Halt, Lesser Wings Of Darkness\n2nd Cause Wound, Animate Zombie, Halt Undead\n3rd Cause Serious Wounds, Curse, Protection From Spirits, Spirit Shield, Talk To Spirits, Animate skeleton\n4th Cause Disease, Create Ghoul, Cause Fear, Control Ghoul\n5th Cause Grievous Wounds\n6th Summon Wraith, Cause Critical wounds\n8th Suspend Life\nDENOMINATIONAL MIRACLE\nThis miracle may be learnt by priests of the Church post 8th.\nHeart of Iron\nLevel: 4sp Alignment: Evil Duration: Range: 20’\nInstant/10secs\nGesture: Point at Target\nVerbal: “The willing dark spirits of the Empire strike thee…Heart of Iron”\nDescription: One nominated target within 20’ range suffers a Cause Serious Miracle targeted to their chest.\nShould the target also be an Outlaw, Ostracised by the Empire, or a clear enemy of the Empire then they also\nsuffer a non-level based Halt.",
+    "Benefits": {
+      "Basic": [
+        "Gains Spiritual Discern Outlaw (20ft range) at will. This also reveals individuals Ostracised by the Empire.",
+        "Power of the Zombie: Counts as one level higher (stacks with published increases) for the purposes of Raising/Controlling Undead.",
+        "Soul of Death: Gains a Fortified Spirit, and if raised as Undead by a member of the Iron and Empire the members body is not tainted, so can still be returned to life (or animated again)."
+      ],
+      "Intermediate": [
+        "Strength of the Isle: 1/day. When raising a published Undead they gain Depraved Cunning, Darkened Potence, Utilise strength with pure and Undead Alacrity. If the priest already has Depraved Cunning or Darkened Potence then the Undead instead gains an extra 5 Hits. The Undead summoned in this way is also controlled by the caster until they (the Undead) are slain (this included Vampires).",
+        "Loyalist’s Feast: If using a Souls Hunger on an Outlaw, Wolfshead or individual ostracised by the Empire then the healing gained is doubled.",
+        "Mastery of the Dead: When using Talk to Spirit on intelligent Undead the Undead cannot lie to it.",
+        "Dark Feast Claimed: 1/day Can cast a Souls Hunger onto a causing miracle that is cast with Lesser Wings",
+        "f darkness."
+      ],
+      "Advanced": [
+        "Gain a Second Strength of the Isle innate.",
+        "Gain a second Dark Feast Claimed innate.",
+        "Purity in Death ~ If raised as Undead then gains Depraved Cunning and retains own personality. Labyrinthe Almanac – October 2023 – Page 71 ===PAGE 73===",
+        "Threat to the Empire 1/day ~ For 5 minutes vs one Target that is an Outlaw/Ostracised by the Empire all causing used by the priest inflicts permanent damage. Alternatively, the priest gains + 1 max damage (max quin) vs them. Chosen when used. STRENGTH OF IRON - CHURCH STATUS Bound by Iron - Stage One: Cost: 30 Table: 1",
+        "Basic tier discern outlaw is upgraded so that it is now also a physical discern.",
+        "If being raised as an Undead by a member of the church then can choose to use a Strength of the Isle innate on self (if one is owned), gaining all the benefits. However rather than being controlled by the summoner is instead free to act and is immune to all other controls based on being an Undead. Forged in Iron - Stage Two: Cost: +75 Table: 5",
+        "The Dead will speak! 1/day can enhance a talk to spirit used on an Undead to act as a converse with spirit.",
+        "Death within us all: 1/day grants the user full Undead immunities for 5 minutes. While active discerns as a level six “Conduit to the Isle” and if dismissed the innate ends. This can be released with release",
+        "wn miracle if the user wishes. Heart of Iron - Stage Three: Cost: +100 Table: 8",
+        "Heart of the Empire: 1/day can enhance a casting of Heart of Iron so that it acts as a causing based loc to zero vs an outlaw/individual ostracised by the Empire/Enemy of the Empire.",
+        "Righteous Bounty – Loyalist’s Feast is enhanced so that the curing gained from the souls hunger is not reduced by the targets resistances to causing/similar. May buy extra:",
+        "The Dead will speak for 50 points, max 2",
+        "Death within us all for 100 points, max 1",
+        "Heart of the Empire for 60 points, max 1"
+      ]
+    }
+  },
+  "Church of the Lady of The Stars": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Innate Cure Serious miracle: Gains an innate ‘cure serious’ miracle 2/day.",
+        "Fortified Spirit: As published ability.",
+        "Immunity Beguile Spirit: As published immunity."
+      ],
+      "Intermediate": [
+        "Sight of the Stars: 1/Day, grants See Through Supernatural Darkness and Fully Active Spirit sight for 5 minutes. Verbal: “By her grace is darkness banished!”",
+        "Innate Cure Serious miracle: Gains an innate ‘cure serious’ miracle 5/day in total (from Tier 1).",
+        "Looks Familiar: 1/day, after 10 seconds of inspecting an Undead creature that responds as “unknown” can recall the name and level (as per Reveal Undead Name)"
+      ],
+      "Advanced": [
+        "Immunity to Befriend Spirit and Spiritual Mastery, as published immunity.",
+        "Looks Familiar: 3/day [total] from Intermediate Tier",
+        "Wise to the Ways of Undeath: Gains Remember Undead Name."
+      ]
+    }
+  },
+  "Church of Mortai": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Guild Miracle: Reveal Undead Name added to own miracle list. If desired may instead battle-board this miracle as a 1/day innate.",
+        "Sanctified Ground: 1/day may cast a Protection from Spirits [Evil] solely against Undead, in which case it does not require a line/circle to be drawn but is created around the caster in a radius of up to 6’ or in a line up to 15’ across up to 3’ distance from the caster.",
+        "The Enemy Predictable: Gains Combat Wary against Undead. The skill level is equal to the highest dismiss miracle known. [Max 10pts]."
+      ],
+      "Intermediate": [
+        "Guild Miracle: Righteous Aura 8th level [10spirits]",
+        "The priest's spirit is concentrated more fully in opposition of Undead spirits. For the duration, the priest may not cast any miracle unless directly against Undead. However, any Undead creature of level 5 or below which touches or is touched by the priest is destroyed instantly, costing the priest 3 TBLP per level of the Undead. Undead of level 6 take 12 TBLP (4 hits) of goodly spiritual damage for each touch. This is a releasable miracle, and does affect the Undead.",
+        "If desired may instead battle-board this miracle as a 1/day innate.",
+        "Enhanced Sanctified Ground: Either may use a second innate of the Basic Tier ability or use it to act as per an innate of ‘The Light of Faith’, but with only a 15 minute duration.",
+        "Fortified Spirit: as per the tables ability, If already possessed then gains Immunity to Slayer and similar effects."
+      ],
+      "Advanced": [
+        "The Shield of Mortai: 1/day as Spirit Shield but only against Undead Touch Effects, the user may choose whether to apply it or not against the attacks suffered. This innate only works on members of the Church",
+        "f Mortai.",
+        "Stalwart Against Undeath: Gains +18tblp casting stamina for the purposes of Dismissal Tree and Sphere miracles, Righteous Aura, and Hand of Purity.",
+        "Undead Sense: As per the tables ability Spirit Sense but only applies against Undead. If Spirit Sense is already owned, then this ability is enhanced to grant Spiritual Vigilance against Undead. LIFE’S DEFENDERS – CHURCH STATUS Holy Squire - Stage one: Cost: 50 Table: 1",
+        "One use of Sanctified Ground is upgraded to act as a stronghold of goodness vs undead.",
+        "Gains + 2 levels of combat wary for The Enemy predictable (max 12). Righteous Champion - Stage Two: Cost: +75 Table: 5",
+        "Gains an additional Innate of sanctified ground.",
+        "Members gain 3 spirits of published dismissal innates (chosen at the start of the day) per member of the Church of Mortai that has this ability on dungeon (including self). Radiant Archon - Stage Three: Cost: +125 Table: 9",
+        "Gains an additional shield of Mortai innate.",
+        "1/day May enhanced a shield of Mortai innate to act as a Ward against the dead.",
+        "1/day May enhance a sanctified ground so that rather than acting as a prot all goodly individuals with a spirit (not undead) within 20ft of where it was used gains the benefits of a spiritual sanctuary vs undead. This lasts 5 minutes. Labyrinthe Almanac – October 2023 – Page 74 ===PAGE 76==="
+      ]
+    }
+  },
+  "Church of Primal Darkness": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "Church of Shaehan": {
+    "Type": "professional",
+    "Restrictions": "They must never kill, or they will be instantly excommunicated by the goddess (referee), unless it is against\nUndead or evil supernatural creatures which are antagonistic. May never manufacture anything supernatural\nexcept spiritual scrolls.\nMESSAGE FROM THE HIGH PRIEST\nFaithful, please find me to receive the blessings of our lady, so that I can ensure that you are protected. The church\nand our Ladies power has much to provide. Keep safe whilst travelling the lands of Primus and beyond. And\nabove all, embrace Her light wherever you walk.\nMiracle List\n1st Cure Wound, Detect Spirit’s Nature, Halt\n2nd Cure Serious Wounds\n3rd Cure Disease, Talk to Spirit, Dismiss Ghoul, Protection from Spirits, Spirit Shield, Bless\n4th Heal\n5th Dismiss Wraith, Remove Fear and Paralysis, Spiritual Invisibility\n6th Total Heal, Dismiss Vampire, Spiritual Freedom\n8th Restore Life",
+    "Benefits": {
+      "Basic": [
+        "Discern Associated Spirits: If already possessed then gains Discern Nature of wounds to 20’ .",
+        "Extra Miracle: If battle boarding the Church as a Professional Guild gains the miracle Spirit Shift: As Words From Above but is a 4sp goodly miracle. Verbal: “Shaehan, Take me hence!”",
+        "Haven: 1/Day. The Shaehan priest must audibly and clearly speak the Prayer of Haven immediately before meditating, the priest then speaks no further words before going into the meditative trance (Max. 3 seconds later). As the meditation starts the priest disappears from the point of meditation and appears at Shaehan's side where he/she is totally safe and gains +x1 meditation rate [max 5]. However the meditation ends after the pre-set time or when on full spirits which ever happens first, and cannot end before. The priest re-appears at the point where he/she started, unless the party have moved on in which case the priest will reappear at the safest place within 20' of the party. Labyrinthe Almanac – October 2023 – Page 75 ===PAGE 77===",
+        "Should any person within the party which the priest left call the name of the priest three times while they are in Haven, the priest becomes aware that they are being called and may elect to end the meditation early and return at that time. The meditation is not broken if they do not choose to do so. Oh Mistress Shaehan, Lady of Light Listen I plea to the prayer of Haven Oh Lady of Mercy Grant me sanctuary In which to meditate Protect and watch over me As I pray for the power To continue your work Shelter me under the wings Of the sacred dove Bathe me in your Holy Light Oh Lady Shaehan Goddess of Forgiveness and Mercy Let thy love shine over the lands Let me spread the word of your love As I preach your message of peace Grant me the power with which to heal And cure the wounds This mortal life doth cause Show kindness to me thy priest And mercy to the persecuted Grant me thy servant The shelter of thy sacred abode I beseech thee Show your humble servant The tender mercies that this Mortal world doth lack Defend me from those who Would strike the defenceless Protect me from those Who would show no mercy. NOTE: As Haven exists within the very essence of the goddess, entrance to it is barred to all except Priests of Shaehan. It is not possible to use means of interplanar transport to enter Haven."
+      ],
+      "Intermediate": [
+        "Haven: 2nd innate of Haven ability from Basic Tier.",
+        "Strengthened: +4/2 life, non cumulative with any other life from guild abilities",
+        "Death Link: Death Link to the High priest - dead member may inform Tirama, Torwin, Latona or Chernobyl, s/he is then considered to have retrieved the corpse by spiritually shifting the body to them in the manner of a Word of Recall. If performed on adventure this costs the summoning priest 10 spirits.",
+        "Guild Link: Tirama, Torwin, Chernobyl and Gysmo are linked to all guild-members, and all guild- members are linked to them. This allows the sending of spiritual messages via this link. Any guild- member may send a message, as per Improved Message except spiritual, to any of these four, or to any Church of Shaehan member on adventure. Each such message costs 18 tblp, or may be sent at no life cost after 5 minutes concentration. Messages sent ‘off-adventure’ to a high priest cannot generally be acted on until after the end of adventure. All members also gain Death Link with other guild members",
+        "n adventure."
+      ],
+      "Advanced": [
+        "Haven: 3rd innate of Haven ability from Basic Tier.",
+        "Temple Altars: The altars of the three main temples of Shaehan, in Scarlene, Sellville and the Halgar, are empowered to allow transport between them. A guild member may spend 30 seconds in prayer before",
+        "ne, name one of the other two and touch the altar to be transported to it instantly. This may be done",
+        "nce per day from each altar for each guild member, and may be repeated at will with the addition of Labyrinthe Almanac – October 2023 – Page 76 ===PAGE 78=== casting the Spirit-Shift miracle after the prayer. This only transports guild members to one of the other two altars.",
+        "Passive Heal: Member is aided by the Lady Shaehan such that they are considered to have a ‘Passive Heal’ miracle active on them at all times. This means that should a Heal miracle be cast specifically into this ‘receptacle’ it will be held in abeyance, and only activate on the priest should they be down more than 36 life, or have a location fall to zero or below. In all respects this functions like the Words from Above miracle, except that it has no duration, and may be replenished if desired whenever it is used. SHAEHAN CHURCH STATUS Individuals can choose to follow either the Path of Torwin or Latona and buy one status. Path of Torwin Mercy’s Champion - Stage One: Cost: 75 Table: 1",
+        "Gains Forearm Parry.",
+        "Gains Discern Demonkind. Defender of the Innocent - Stage Two: Cost: +90 Table: 7",
+        "+3/1 status life.",
+        "Gains Summon Sun Sword 1/day, As sabre of light and truth but spiritual in nature and can only harm Demonkind and Undead. Beloved of Torwin - Stage Three: Cost: +150 Table: 9",
+        "+6/2 (total) life,",
+        "Gains a 2nd innate Sun sword.",
+        "If a dismiss cast by the priest would directly kill a living being that isn’t a Demonkind it fails and the power is wasted (e.g. dismissing a living person using an Embody Wight). Path of Latona Bringer of Peace - Stage One: Cost: 60 Table: 5",
+        "Can never use a weapon.",
+        "Gains 3 healing spirits.",
+        "If ever uses an ability that would harm a living being the ability fails and the power is wasted. Embodiment of Love - Stage Two: Cost: +90 Table: 7",
+        "Gains 6 healing spirits (total)",
+        "If using Prayer to Aid to cast a Heal into the Shaehan Passive heal then the passive heal will kick in when the priest is down 48 tblp, not 36, IF they wish to have it do so. Must be chosen at the point of casting the Heal. Beloved of Latona - Stage Three: Cost: +150 Table: 9",
+        "Gains 9 healing spirits (total)",
+        "When casting a passive Heal (the miracle) on self can choose for it to have no duration and only kick in when a crit reaches 0 or lower, rather than when down 36 TBLP or any loc reaching 0. Labyrinthe Almanac – October 2023 – Page 77 ===PAGE 79==="
+      ]
+    }
+  },
+  "Church of Saint Michael": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "r miracles that grant extra life, AC or a bless unless the ability is from a St Michael member. This effect can be discerned by the use of the Priestly Discern Bless ability."
+      ],
+      "Intermediate": [],
+      "Advanced": [
+        "Michaels Blessing now grants + 2 (from +1) DAC.",
+        "Gains Discern Destroyer Worshipper at will (20ft range, Y/N, is a spiritual discern)",
+        "If ever excommunicated from St Michael the benefits of “Michaels blessing” are permanently suffered in reverse (this includes enhancements from this status). Righteous Champion - Stage Two: Cost: +125 Table: 5",
+        "Michaels Blessing now grants +9/3 life total (from 6/2).",
+        "Prayer to the Creator – Acts as per True Believer in St Michael 1/day",
+        "Discern Destroyer Worshipper provides a simple description of the type of worshipper they are (Priest, Demon in service, Zealot, forced into it etc.). Labyrinthe Almanac – October 2023 – Page 78 ===PAGE 80=== Light’s Fury - Stage Three: Cost: +75 Table: 8",
+        "Michaels Blessing now grants +12/4 life total (from 9/3).",
+        "Prayer to the Creator can now cast any miracle on the St Michael base list, alternatively it can be used to add a handbook goodly miracle to the characters miracle list for the rest of the day."
+      ]
+    }
+  },
+  "Church of the Soul Forger": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Bonds of the Soul: Gains +1 spirit (max 4) for every member of the Soul Forger church on dungeon (includes ley believers).",
+        "The Master Forge provides: Members are well equipped with a suit of apprentice crafted armour, an apprentice crafted weapon, and an apprentice crafted shield – these are for themselves only.",
+        "Blessings of the Forge: 1/day, enhances a normal bless in one of the following ways chosen when used: Labyrinthe Almanac – October 2023 – Page 79 ===PAGE 81=== 1. To act as a Shield Blessing 2. To turn a normal suit of armour, shield or weapon apprentice crafted for the day. 3. To turn a normal weapon +0 goodly spirit for 5 mins 4. To enhance an object from “The Master Forge provides” to become journeyman status for the day."
+      ],
+      "Intermediate": [
+        "Bonds of the Soul is no longer limited to 4 spirits, and will always grant a minimum of 4 spirits.",
+        "The Master Forge continues to provide: One of the objects from the Master Forge Provides (basic tier) is now Journeyman status. If Blessing of the Forge is used on it then it becomes Master Status.",
+        "Forges Light: 1/day, enhances a single casting of a passive heal so that it lasts until triggered."
+      ],
+      "Advanced": [
+        "The Masters Forge: Two of the objects gained are now journeyman status objects as intermediate tier. Alternatively can take a single object from the list as Master status.",
+        "If using Blessing of the forge on a suit of armour it also grants that armour immunity to accuracy.",
+        "The passive heal from forges light can now be set to only trigger when a Crit or TBLP reaches 0. This is chosen when cast. BLESSED OF THE FORGE - CHURCH STATUS The Sacred Craft - Stage One: Cost: 50 Table: 1",
+        "Gains a second Blessing of the Forge innate.",
+        "The Heat of the Fire 1/day – Acts as a spiritual Walk through fire (self) Blessed Forger - Stage Two: Cost: +125 Table: 5",
+        "Gains 1 spirit off casting beneficial miracles on members of the faith (inc self).",
+        "Dedicated Mind 1/day – As per Discipline. Holy Creator - Stage Three: Cost: +75 Table: 8",
+        "When using Heat of the Fire if already has the tables ability Immunity to Natural Fire gains complete immunity to all forms of fire for the duration.",
+        "Bonds of Faith 1/day – Can cast a published (inc denominational miracle listed above) self only miracle at touch range on a fellow member of the faith."
+      ]
+    }
+  },
+  "Church of the Sun": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "The Rings of Talthar": {
+    "Type": "professional",
+    "Restrictions": "Guild Members must choose to align themselves to one of the seven aspects of Talthar, which must be recorded\non their character card. They may only battleboard the guild benefits of that ring.\nMiracle List\n1st Cure Wound, Halt\n2nd Cure Serious Wounds\n3rd Cure Disease, Protection from Spirits, Talk to Spirits, Spirit Shield, Bless\n4th Spirit Bolt, Heal\n5th Voice of Power, Remove Voice of Power, Spiritual Invisibility\n6th Total Heal, Dismiss Vampire, Regeneration\n8th Restore Life",
+    "Benefits": {
+      "Basic": [
+        "Paladinic Oath: Any Paladin may join and benefit from this guild as full members.",
+        "Blesséd of Talthar: Grants a Paladinic Bless. If a Paladin able to enter the Priest Bracket then their Paladinic Bless increases by 1pt of DAC.",
+        "Extra Miracle: If battle boarding the Church as a Professional Guild gains the miracle Dismiss Ghoul.",
+        "Hope Eternal: Grants complete immunity to any emotional effect or attack that would cause the guild member to despair or lose hope in any fashion.",
+        "Ring Benefit: Gains the appropriate benefit for the ring they follow; Subtlety Hidden From Sight: 1/day, Acts in all ways as the White Spell Invisibility but only hides the user from Spirit Sight (Active & Passive) and goes down under the same conditions. Renewal Constant Renewal: When “at rest” (i.e. seated/in repose/meditating – not whilst walking/casting/in combat) is replenished by Talthar’s Hope; now regenerates as a ½ Troll. Unity Unified Hope: All those touching the Priest become immune to any emotional effect or attack that would cause them to despair of lose hope. Labyrinthe Almanac – October 2023 – Page 81 ===PAGE 83=== Serenity Meditation Focus: Grants +x1 Meditation Rate but does not stack with Triple Meditation Rate from the tables. If used to grant Triple Meditation Rate then it may be used for those abilities for which Triple Med Rate is a pre- requisite. Diplomacy Calming Voice: 1/day, Requires the user to speak in a peaceful and calming manner for 30 seconds. Acts in a manner similar to the miracle Befriend Spirit, except that all those present when used, who hear the casting, are affected. Targets remain befriended for 5 minutes or until any violence occurs, whichever comes first. This will",
+        "nly affect targets with 8th level resistance to spirits or lower, and even then Immunity to Befriend applies. Justice Holy Word “Castigatio”: 1/Day, 20ft range. May be used upon anyone who has just cast an evil miracle {within the last 30 seconds}. Target suffers 3 TBLP (1 HTK) for each spirit point of the evil miracle (e.g. someone who has just cast a Touch of Death would suffer 30 TBLP). Imm. to Holy Words applies. SAC applies to this damage at 1 for 1. Adversity The Last Hope: Gains +3/1 temp life every time an ally flees (i.e. leaves the dungeon) or is incapacitated in combat. Once an ally has fled from combat the character cannot then gain any additional life from them through use of this ability, for the remainder of the day. This life lasts until end of combat."
+      ],
+      "Intermediate": [],
+      "Advanced": [
+        "riginate from a Worshipper of Talthar (Priest / Paladin / Devout Believer). Gains an additional Hidden From Sight innate. Renewal Renewed Form: 1 in every 6pts of spiritual healing received from a Talthar Priest / Paladin will heal damage that is otherwise incurable or permanent. (But only damage suffered on that event). Unity Harmony: 1/day. Anyone meditating within 20’ of the point of casting does so at +1 additional meditation rate. This ability lasts as long as the caster meditates and remains within the area of effect. Serenity Active Meditation: Regains 1 spirit every 15 minutes the character remains “serene” regardless of meditation rate. This is broken if the character suffers harm, casts, attacks, moves faster than a slow walk, or uses any other ability that requires concentration. Diplomacy Strengthened voice: Gains an additional Calming Voice innate and Calming Voice innates now affect an additional 1 level, cumulative for every 10 seconds spent speaking beyond the first 30 seconds. Justice Authority: When using a Justice holy word, the victim is now freed of the evil spiritual effect even if the caster is immune to it but not if the caster is immune to Holy Words. Gains an additional Holy Word “Justice!” innate. Adversity Desperate Fury: 1/Day, When fighting an opponent who is inflicting a greater damage grade than the Talthar worshiper, they gain +1 Damage Grade and +1 Max Damage versus that opponent. DEVOTEE OF THE RINGS - CHURCH STATUS Caller of Hope - Stage One: Cost: 100 Table: 5",
+        "Word of Hope 1/day – Is a holy word that can trigger any one of the effects in this status, chosen when used. A single effect can be used no more than once in a given day. The word used must be shouted and has a range of 20ft unless stated otherwise.",
+        "“Adversity” – Grants the chosen goodly individual +24/8 temp life (as per an enhanced spirit) for 5 minutes.",
+        "“Renewal” – As per the Paladin Healing holy word. Champion of Hope - Stage Two: Cost: +100 Table: 7",
+        "Gains a 2nd Word of Hope innate.",
+        "“Diplomacy” - Pax, as per the intermediate diplomacy benefit",
+        "“Serenity” - Grants one chosen Talthar priest (not self) that is about to start meditation for spirits the benefits (and restrictions) of a Flow of the Divine (as per WFA)",
+        "“Unity” - Acts in a similar manner to Mark of the Totems, but only benefits a goodly individual and goodly individuals focussing count for numbers. Bringer of Hope - Stage Three: Cost: +100 Table: 9",
+        "Gains a 3rd Word of Hope innate.",
+        "“Justice” – As the Guild Ability. Labyrinthe Almanac – October 2023 – Page 83 ===PAGE 85===",
+        "“Subtlety”- Grants the target, who must be goodly, the benefits of hidden from sight (as guild benefit)",
+        "“Hope” - Grants the target, who must be goodly and have a spirit, immunity to fear, emotion attacks and insanity for 5 minutes."
+      ]
+    }
+  },
+  "Church of the Tryst": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Shadow of the Imbaiu 1/day - allows the priest to invoke the shadow of an Imbaiu to share their form. This takes 30 seconds and grants them 1/2 effect all bar spirit for 5 minutes. While active discerns as a demon kind and if banished the power ends.",
+        "The ways of Mephastofolies - gains bar spirit on base list while battle boarding the church.",
+        "The High Guardian of the Church of Tryst is always aware of church members dying. Should you die on dungeon it should be reported OOC to Duncan Matthias. Additionally should your body be left “on dungeon” it is deemed to be collected, and the character card should be left OOC in an envelope behind the desk for Duncan."
+      ],
+      "Intermediate": [
+        "Basic tier shadow of the Imbaiu now acts as a spirit form.",
+        "The dark bargains 1/day - takes 1 minute to open a link to the Imbaiu costing 24 TBLP of the casters blood/essence in sacrifice. Acts as a mantic comm 2 but each question asked costs the user a level (c.f. casting a TOD, but reductions in level loss from casting miracles do not apply)."
+      ],
+      "Advanced": [
+        "Invoke the abysmal power 1/day - can turn a published evil miracle demonic (black/red/evil spirit) taking 10 seconds ritual/calling on the Imbaiu per spirit of the miracle. If used for a TOD/animate life/similar miracle that requires a prot this also allows the prot to be cast mantically (taking an extra 30 seconds prep).",
+        "Shadow of the Imbaiu now acts as a full embody abashi (including disadvantages) but does not grant 12 spirits. Labyrinthe Almanac – October 2023 – Page 84 ===PAGE 86==="
+      ]
+    }
+  },
+  "Church of the Destroyer": {
+    "Type": "professional",
+    "Restrictions": "The Guild is a full black guild (as per WFA rules).\nMIRACLE LIST\n1st Halt, Lesser Wings of Darkness, Soul’s Hunger, Millie’s Detect Spirits\n2nd Cause Wound, Spirit of Seeing and Hearing\n3rd Cure Serious Wounds, Protection from Spirits, Spirit Shield, Writhe, Force of Will\n4th Cause Disease, Spirit Bolt\n5th Voice of Power, Cause Grievous Wounds, Spiritual Invisibility\n6th Spiritual Mastery\n7th Suspend Life\n8th Touch of Death\nDENOMINATIONAL MIRACLE\nThis miracle may be learnt by priests of the Church post 8th.\nFated Destruction\nLevel: 7th level (8sp) Alignment: Evil Duration: 1 minute Range: Self\nGesture: Palms out and facing upwards\nVerbal: Spirits of destruction cluster around my form to lay the souls of the weak to rest.\nDescription: Grants the caster + 1 destiny maker for the next touch of death cast and discharged within the\nduration. This can stack to three destiny makers, however if used to gain a 3rd destiny maker the caster cannot\nreduce the level loss from the Touch of Death.\nThe effects of the third destiny maker are that the minimum effect of the Touch of Death is a suspend life.\nDespite this miracle being published secondary resistance can be applied to this. Undecided Destiny still grants\nimmunity.\nLabyrinthe Almanac – October 2023 – Page 85\n===PAGE 87===",
+    "Benefits": {
+      "Basic": [
+        "Obliterate the spirit 1/day – Vs a non-animate spirit (so not an Undead, but could be an active miracle, line etc.) with 30 seconds clear prayer to the destroyer can destroy the spirit (in a similar manner to a dispel). This is a non-published dispelling effect for immunity purposes and costs the user 3 TBLP per spirit of the miracle destroyed (or 60 TBLP if it does not have a level). Range 10ft, and can only target",
+        "ne spirit (if a line has more than one spirit in it this destroys one of them).",
+        "Word of Destruction 1/day – As per the published Unholy Word for causing, except does not affect Destroyer worshippers."
+      ],
+      "Intermediate": [
+        "Prayer of Destruction 1/day – Takes 30 seconds prayer over a dead body that had a spirit. Acts as per a slayer, but if successful also heals the user 3/3 per level of resistance the victim had. 1/2 a spirit and similar does not increase the healing gained, instead it actually halves it. A dead person can only be affected by this once.",
+        "Feed on Suffering 1/day – With 30 seconds prep can cast a causing miracle on self and instead be healed half the amount it would normally inflict (before resistances). Only works with damaging miracles."
+      ],
+      "Advanced": [
+        "Eye for Suffering: With 10 seconds observation of a target within 20ft, can discern how many resistances to causing and Touch of Death the target has. Is a spiritual informational effect costing 1 TBLP per use. Enemy of the Weak - Stage Two: Cost: +75 Table: 9",
+        "Weakness Exposed. Following a successful use of Eye for Suffering gains 1 spirit off the next causing miracle cast on that target, stacking with published 1 spirit off reductions if the miracle is 6 spirits or more base. Useable x1/15 mins max. Force of Destruction - Stage Three: Cost: +75 Table: 10",
+        "Focussed Destruction x1/day. A single Word of Destruction innate may be focussed on one target inflicting a Touch of Death rather than a mass Cause Serious.",
+        "Enhance Prayer of Destruction x1/day. May be used to regain 1 spirit back per resistance level a target has rather than 3/3 curing. 1/2 a spirit still reduces this. Labyrinthe Almanac – October 2023 – Page 86 ===PAGE 88=== Other Professional Guilds"
+      ]
+    }
+  },
+  "Arcanum": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Meta-Magic: Any member who would not normally be able to do so (e.g. if pathed or cannot cast grey) is now capable of casting the Dispel 1, 2, and 3 glyphs. Members who can cast these glyphs may spend 30 seconds in calm, quiet observation before casting a Detect Magic, at which point it functions as per the advanced grey glyph Improved Detect Magic instead.",
+        "Scholarly Interest: 1/Day a member may examine a source of magic identified by Rec Mana, at 1” range. For every 30 seconds they examine the source of mana they gain a Magical Major Prayer about this source i.e. may use a Major Prayer about the source, examine it for another 30 seconds and then use another and so on. During the 30 seconds concentration conversation may be held as long as it is about the source in question."
+      ],
+      "Intermediate": [
+        "Scholarly Interest: Additional use of the innate as above.",
+        "Learned Knowledge: Gains 3 extra Specialist Slots. These may be filled with any glyph that could normally be learnt as a handbook specialist by that character, chosen at the start of the day.",
+        "Understanding of Magic: May cast touch-range Dispels of up to 5th level for one mana less than their standard cost, to a minimum of 1 mana-point. Non-cumulative with any other cost reduction.",
+        "Elemental Awareness: Whilst using Recognise Mana at 1” range it may after 10 secs concentration reveal the colour of magic. ADVANCE TIER",
+        "Greater Awareness: Elemental Awareness now reveals the broad type of magic present (Warding, Offensive, Defensive etc.). It will also reveal if another powerbase is combined with the magic but not what it is (e.g. a mantic effect would reveal as magical and something else).",
+        "Greater Understanding of Magic: Understanding of Magic now applies to dispels up to 10th level.",
+        "The Towers Training: Members gain + 1 level of casting and + 3 mana of their own colour. If they hold multiple colours they must choose which colour this applies too. Student of the Towers - Guild status Initiate of the Towers - Stage One: Cost: 50 Table: 1",
+        "The 3 Mana and plus one casting level gained from advanced tier now applies to all published colours the wizard holds (2nd Colour/Dual/Tri etc.) If not able to claim advanced tier then the benefit is gained upon buying this.",
+        "Call the strength of the Tower; 1/day can call on the strength of their tower to gain 4 casting levels for the next spell they cast of their 1st Colour (Either if Dual). Labyrinthe Almanac – October 2023 – Page 87 ===PAGE 89=== Apprentice of the Towers - Stage Two: Cost: +60 Table: 7",
+        "The Dragon is my own; 1/Day grants the user complete immunity to one Glyph targeted on them of their primary colour (Either if Dual). Must be used within 2 seconds as per Warcry. Master of the Towers - Stage Three: Cost: +100 Table: 8",
+        "Gains 1 mana (only stacking with expertise) off the first spell cast in each 5 minute period.",
+        "Gains a fourth additional specialist slot (total).",
+        "Gain an Innate Deny Dragon 1/day. This acts as Deny power vs the wizards opposite colour (includes",
+        "pposites to Dual, 2nd Colour, etc.). Verbal “My Dragon Denies thee power!”",
+        "For 1st Colour Grey Wizards a Full Deny power as Disenchanter is gained.",
+        "Those with Silver as a Colour can instead gain an innate Foretold.",
+        "Elemental Knowledge now reveals the name of the spell that is present. May buy Extra Deny Dragons at 80 points each, max 1, and extra The Dragon is my own for 60 points each, max 2."
+      ],
+      "Advanced": []
+    }
+  },
+  "Earthen Conclave": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Armour of Earth: Plate (O) cast on self grants MAC 6 / PAC 6.",
+        "Grounding 1/day: Whilst in contact with Earth or stone grants complete immunity to one blue mana or electric attack.",
+        "Alliance of Earth: 1/day: Remove a Brown spell currently on them for 1 TBLP per MP (Max 12 TBLP)",
+        "r negate it as it happens, for 2 TBLP per MP (to a max cost of 18 TBLP). Verbal: “The Earth is my ally!”"
+      ],
+      "Intermediate": [
+        "Passage: As a cantrip may release a Wall of Stone that the guild member has previously cast. Range 20’. Verbal: “Gnomes of Earth I release thee”.",
+        "Earthen Armour: Tables Immunity to Electricity.",
+        "Grounding: 2nd daily innate as above.",
+        "Earthen Window: 1/day for 5 minutes member can see through a Wall of Stone they cast if they remain in contact with the wall."
+      ],
+      "Advanced": [
+        "Grounding: 3rd daily innate as above.",
+        "Earthen Window: 2nd daily innate as above.",
+        "Conducting: Grounding can be used on electric or blue mana attacks within 20’ of guild member.",
+        "Might of Rock: The Wizard’s Grimoire Rock Skin spell also grants a resistance to Sever/loc to zero.",
+        "Sure Footed: grants Stability whilst in contact with Earth or Stone. EARTHEN MASTERS - GUILD STATUS Squire of the Earth - Stage One: Cost: 30 Table: 1",
+        "1/day: The Passage Cantrip now becomes useable on any 4 MP wall of stone spell. Labyrinthe Almanac – October 2023 – Page 88 ===PAGE 90===",
+        "Earthen Window may now be used on any wall of stone, even if cast by another. Master of the Earth - Stage Two: Cost: +100 Table: 5",
+        "Alliance of Earth is now uncapped on the level it can remove and can do non level based brown magic. The maximum life it can inflict is now 20 TBLP for static magic or 40 TBLP as it happens. Additionally the wizard regains ½ the Mana of the removed magic (to a maximum of 12 Mana if no mana cost associated) instead of costing them mana.",
+        "Gains immunity to bind, entangle, earthern encasement and similar. Lord of the Earth - Stage Three: +75 Table: 9",
+        "Grounding now grants immunity to any Effect or Attack with a Blue Mana component to it or can be used a Deny Power vs any Blue mana or Electrical effect (inc. mass effects)."
+      ]
+    }
+  },
+  "Frontline": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Nimble: +1 DAC",
+        "Combat Hardened: +3/1 Life",
+        "Additional Training: +1 warrior specialist at 8th level."
+      ],
+      "Intermediate": [
+        "Combat Hardened: Grants +9/3 Life (total)",
+        "Roll With It: 1/day may roll with a weapon blow such that only takes rockskin style damage of 1pt per damage grade, must be fully aware of and able to see blow coming.",
+        "Bulking Up 1/day ~ Gains +12/4 temp life for the next 5 minutes, does not stack with supernaturally generated temp life."
+      ],
+      "Advanced": [
+        "Combat Hardened: Now gains +12/4 life (total)",
+        "Gains a second innate Roll With It.",
+        "The Battle Line 1/day ~ Gains Immunity to Repels, Involuntary Mystical Transportation, Disarm and Supernatural Fumble effects. Lasts 5 minutes and may be used in response to an effect (CF War Cry within 2 seconds of the effect).",
+        "Bulking Up now grants +24/8 (from 12/4) temp life for the next 5 minutes. HOLD THE LINE – GUILD STATUS Glorious Battle - Stage One: Cost: 50 Table: 5",
+        "Enhances Roll With It innates so that the character no longer needs to be aware of the blow. Labyrinthe Almanac – October 2023 – Page 89 ===PAGE 91===",
+        "Can use a Battle Line innate on a fellow guild member with 10ft. I am the Frontline - Stage Two: Cost: +75 Table: 7",
+        "Gains a second Battle Line innate",
+        "Bulking up now grants +36/12 temp life Battle Titan - Stage Three: +100 Table: 8",
+        "One use of a Roll With It will last for 5 seconds.",
+        "Strength in Numbers – Gains +3/1 status life per member of the Front line on dungeon (including self) to a max of 12/4."
+      ]
+    }
+  },
+  "The Hovel": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "When casting a bless or curse can choose to count as being goodly, neutral, or evil.",
+        "Hovels Strength - Gains + 1 Spirit per member of the hovel on dungeon.",
+        "Coven of the Hovel - The Hovel counts as a “Church” for the sharing of Scriptures of the Faith of Basic miracles. Must be battle boarding the guild to use them.",
+        "Familiar – May select a suitable witches familiar and gains neutrality to natural animals of that type. Once chosen cannot be changed, so should be noted on the card."
+      ],
+      "Intermediate": [
+        "Hovels Strength now grants a minimum of 4 spirits.",
+        "Coven of the hovel now works for all published miracles within normal scripture of faith rules.",
+        "If casting power meld on a fellow member of the hovel the caster/recipient levels and alignment no longer matter. Additionally the number of spirits taken can be determined at the time of casting.",
+        "The hovel member may now talk to animals of their familiar type as per the talk to animal evocation."
+      ],
+      "Advanced": [
+        "Witches Broom 1/day if has a suitable Witches Broom phys rep gains a spiritual Walk on Air, and can carry up to one person. Cannot engage in melee combat while using this or it ends (probably with the witch falling off, falling only to be saved by the broom just before hitting the ground). Lasts 5 minutes",
+        "r this can also be cast for 3 spirits.",
+        "Dreams of tomorrow – Gains a pre-dungeon lucky idea about the day ahead in a visionary style. If multiple members of the guild are on dungeon they all gain the same dream but more information is gained.",
+        "Familiars knowledge 1/day – Acts as a spiritual major prayer about witchcraft or something relevant to your familiar (so a familiar of a Cobra could be about poison). Labyrinthe Almanac – October 2023 – Page 90 ===PAGE 92===",
+        "Wonderous Talent – Either gains well equipped with a single dungeon temp dose of a published Wonderous Elixir, or if able to make Wonderous Elixirs can choose to be able to use on dungeon makes to make them. They do not require set up components, and take 2 of the relevant make slot per dose made."
+      ]
+    }
+  },
+  "The Inward Eye": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Internal fortitude – Gain +6 casting stamina",
+        "Guid members may choose to either gain an adventure temp focussing crystal or a shard of a neuronic costing 9 TBLP or less.",
+        "Insight of the Mind – Gains Rec Neuronics. If owned then 1/day gains a Neuronic Major prayer about a thing identified with Rec Neuronics (and whilst still using it).",
+        "Resolute mind 1/day – A member may choose to gain one of the following benefits for the next neuronic used within 10 seconds",
+        "2 additional foci",
+        "Reduce the casting damage by 1 (this can reduce below 1/3rd and even to 0)",
+        "If touching another guild member split the casting damage evenly (round up in both cases if an",
+        "dd number) between both members. This is after foci/reductions"
+      ],
+      "Intermediate": [
+        "Gains a second use of resolute mind. These may be used at the same time for two benefits if desired.",
+        "Mental Transfer 1/day – With 30 seconds contact with a fellow guild member can grant them the use of",
+        "ne published neuronic the user of this can use. This requires casting the innate being granted (using an innate if an innate and taking casting damage). For at will neuronics a single innate is gained.",
+        "Inner reserves: 1/day can use a published neuronic that is owned as an innate even when all innates have been used for the day. Casting damage cannot be reduced and the user becomes unable to use that neuronic for the remainder of the day (even if it could be regained).",
+        "Instead of gaining an adventure temp focusing crystal or neuronic shard members may choose to gain + 2 foci as tables. Labyrinthe Almanac – October 2023 – Page 91 ===PAGE 93==="
+      ],
+      "Advanced": []
+    }
+  },
+  "Natural Trust": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Circle of Druids: For each guild member on the adventure, gains +1EP",
+        "Life’s Memories: Life’s Memories 1/day",
+        "Chosen Familiar: Attune to an animal, requires a symbol of the creature, a piece of the creature, or incorporate that type of creatures appearance into a worn makeup design. Gain one of Jump 1/day, Assisted Climb 1/day, Sniff skill, +1 DAC or +1 innate PAC relevant to the creature chosen."
+      ],
+      "Intermediate": [
+        "Circle of Druids now grants a minimum of 1 level of EP.",
+        "Innate Life’s memories from basic tier can now be upgraded to a Toughened Hide if desired.",
+        "Gains Draw on EP 1/day (as Alfar ability, but functions in any natural environment)."
+      ],
+      "Advanced": [
+        "Chosen Familiar now grants a second ability from the list.",
+        "Gains Hand of Banishment 1/day (as post 8th druid tables). When using this innate can reduce the life suffered by sacrificing levels of resistance for 1 hour. Each level reduces the life by 5.",
+        "Objects under Life’s Memories from basic tier (or Toughened Hide if intermediate tier upgrade is used) are now considered master status. EMBRACED OF PRIMUS - GUILD STATUS Understanding - Stage 1: Cost 75 Table 8",
+        "Loss of a level when using the guild Hand of Banishment now reduces life cost by 10 per level from 5.",
+        "Guild Draw on EP may now be used on any published evocation the user knows. Submerged - Stage 2: + 125 Table 8",
+        "Gains a 2nd Hand of Banishment (as guild ability).",
+        "Can use a Draw on EP gained from the Guild (or this status) to learn a published evocation (that could normally be learnt) for the rest of the day. Blossomed - Stage 3: + 100 Table 9",
+        "Circle of Druids now grants 2 EP per guild member on dungeon (still to a minimum of a level of EP).",
+        "Gains a second Draw on EP innate. Labyrinthe Almanac – October 2023 – Page 92 ===PAGE 94==="
+      ]
+    }
+  },
+  "Shadow Legion": {
+    "Type": "professional",
+    "Restrictions": "Must follow the Warriors code:\n• Respect each other – the strength of the company aids the strength of the individual. Obey your senior\nofficers and never leave a fallen brother on the battlefield.\n• Never compromise your dignity, your pride or your beliefs.\n• Always strive for a fair deal, and when one is made honour it.\n• Taking any life is done with honour and dignity.",
+    "Benefits": {
+      "Basic": [
+        "Shadow Legion! As war cry 1/day",
+        "First Aid: Character gains 15pts of Bandage Curing. As monk loc but requires bandaging not massage.",
+        "Improvised Weaponry: 1/day, the character gains the first weapon mastery in a weapon after 30 secs examination of it, lasting for the rest of the day."
+      ],
+      "Intermediate": [
+        "Battle Training: either +6/2 life or +2 PAC while wearing armour or +1 DAC.",
+        "Battle Fury: Coldrage 1/Day",
+        "Battle Cry: Whilst using the Shadow Legion War Cry above may also ignore other listed stopping effects for the duration for 6tblp/fx as per Determination."
+      ],
+      "Advanced": [
+        "Advanced Battle Training: 2nd choice from ‘battle training’ above.",
+        "Legion’s Blow: 1/Day As per the Sell Sword ability ‘Primal Strike’.",
+        "Mercenary Soldier: Gains ONE of the following – chosen at the start of the day:",
+        "Additional “Shadow Legion” War Cry as basic tier – and enhanceable as per Intermediate Tier.",
+        "Additional ‘Battle Fury’ as above",
+        "Medic: Bandaging from Basic Tier is now increased to 36pts of curing which may also cure TBLP. LEGIONNAIRE - GUILD STATUS Recruit - Stage 1: Cost 60 Table 1",
+        "Improvised Weapon Mastery now grants + 1 mastery in the chosen weapon, not first.",
+        "Gains Monk Loc skill, must be phys repped with bandages. Stacks with other monk loc owned. This is added to the monk loc gained from First Aid guild benefits. Officer - Stage 2: + 80 Table 7",
+        "Gains Bandaging skill, as per scout skill.",
+        "1/day can enhance a Battle Cry (guild innate only) so that the determination element no longer costs any life. Command - Stage 3: + 80 Table 8",
+        "Legion’s Blow now inflicts mantic damage rather than magic or spirit.",
+        "One Cold rage gained from Shadow Legion is enhanced to act as per an Adrenal Surge. Labyrinthe Almanac – October 2023 – Page 93 ===PAGE 95==="
+      ]
+    }
+  },
+  "Sons and Daughters of Sirac": {
+    "Type": "professional",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Gains + 3 Gold mana and + 1 Level of Casting for Gold spells.",
+        "At the start of the day can add a standard Gold spell to list without taking a specialist slot. If has Gold as a colour can choose to add a published gold spell up to 10th level to list for the day.",
+        "1/day can cast a published Ivory spell that can normally be cast as a gold spell not ivory. Purpose:",
+        "Purpose – Gains + 3 Ivory mana and + 1 Level of Casting for Ivory spells.",
+        "At the start of the day can add a standard Ivory spell to list without taking a specialist slot. If has Ivory as a colour can choose to add a published Ivory spell up to 10th level to list for the day.",
+        "1/day can cast a published Gold spell that can normally be cast as an Ivory spell not Gold."
+      ],
+      "Intermediate": [
+        "Family Strength: 1/day can enhance a published Ivory or Gold spell (without any non-standard enhancements) to have + 50% effect if numerical (e.g. Ivory Warriors) or + 50% duration if not (e.g. Ivory armour) when cast on self or a fellow guild member.",
+        "Those aligned to Harmony can cast a published self only Gold spell on a fellow guild member 1/day.",
+        "Those aligned to Purpose gain an innate discipline but it can only be used on fellow guild members not self."
+      ],
+      "Advanced": [
+        "Gains a second family strength.",
+        "The basic tier benefits to learn a Gold or Ivory spell at the start of the day can instead be used at any time, but take 1 minute of prep to use.",
+        "The mana and casting levels gained as a basic tier benefit can now be used on Gold or Ivory mana, not just a specific colour. Labyrinthe Almanac – October 2023 – Page 94 ===PAGE 96==="
+      ]
+    }
+  },
+  "Top Secret": {
+    "Type": "professional",
+    "Restrictions": "Members must seek to support the guild and fellow guild members.\nAnyone killing a fellow guild member whilst under their own free will is immediately expelled from the guild,\nand if on a guild special may do nothing except to seek to leave the adventure. The guild head may chose to\noverride this.",
+    "Benefits": {
+      "Basic": [
+        "Last nights lessons – Gains a standard scout skill not owned already, or + 1 level in a skill owned (on dungeon only) to a max of 12.",
+        "Ear to the ground – Acts a pre-dungeon major prayer about useful things to know, this could be equipment to have, skills to know, or anything else relevant.",
+        "Evade 2/day – Grants combat wary (which must be owned) vs one blow (even if used in the last 5 minutes), must be declared within 2 seconds of the blow.",
+        "Members gain their basic 6 point allowance for free. If they already gain it for another reason then they gain an extra three additional 6 points."
+      ],
+      "Intermediate": [
+        "Retreat 1/day acts as a Jump away from a foe. Combat wary applies to all blows taken during the jump.",
+        "Concealed 1/day – Enhance a stealth so that it grants immunity to all forms of sights. Does not work with Greater stealth.",
+        "Gains a second Last night’s lessons, these can be used to add 2 levels to the same skill if desired.",
+        "Can use both innate evades to gain combat wary vs one opponent for 10 seconds."
+      ],
+      "Advanced": [
+        "Gains a second innate retreat.",
+        "Gains a second innate Concealed.",
+        "Concealed innates can now be used with Greater Stealth’s. Labyrinthe Almanac – October 2023 – Page 95 ===PAGE 97=== Social Open Guilds"
+      ]
+    }
+  },
+  "18th Imperial Legion": {
+    "Type": "social",
+    "Restrictions": "No Outlaws, Ostracized, convicted criminals or members of any guilds which are in some fashion anti Empire.\nNo tribals or non-tribal characters who are members of any tribal guilds either directly or as hangers on may join.\nParty killing is strictly forbidden unless later ratified by the Inquisition or a local Magistrate as a legitimate and\nlawful act. No members of any faith or groups which are opposed to the concept of undead or demons may join\nthis Legion. Members must be able to use weapons or abilities to harm and not have self defense restrictions.",
+    "Benefits": {
+      "Basic": [
+        "Gains either + 6/2 guild life, or can gain the 1st Stamina.",
+        "Gains monk loc usable only on members of the 18th legion.",
+        "Together 1/day – Can only be used while on dungeon with another legion member, and is declared as a war cry. For 5 minutes gains immunity to one of the following: Fear, Emotion attacks, or Insanity."
+      ],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "Buggledexters": {
+    "Type": "social",
+    "Restrictions": "It is expected that the spirit of the guild restrictions are adhered to, not just the letter:\nThe 'wilful' killing of living creatures from this world or any other should be regarded as a last resort and to attack\na truly defenceless creature, unless that creature is Undead or similarly irrevocably evil, without due compassion\nis to be avoided.\nSimilarly, members are discouraged from 'wilfully' striking any helpless target unless that creature is Undead or\nsimilarly irrevocably evil or still posing a threat. Any member that does so of their own volition without due cause\nwill suffer a perm -2 pt curse of conscience to which Immunity to Curses does not apply.\nGuild members will be ready to lend aid and assistance to their fellow members. Any disagreements should be\nresolved as peaceably as possible and never with bloodshed. To wilfully attack another fully sworn guild member\nwill result in the offender being struck from the roles and a perm -2pt curse of conscience to which Immunity to\nCurses does not apply (These curses will stack with each other should multiple offences be committed by the\nsame guild member).",
+    "Benefits": {
+      "Basic": [
+        "Shield of the Meek: No normal non-evil peon will attack the guild member, as they are supernaturally guided away from doing so by the forces of Light. Guild members are aware of these peons, and should they strike or injure one they are immediately cast out from the guild.",
+        "Inspiration: Guild member may grant one non-evil person an additional live to minus 6, which will stack with their own live to minus (but not guild abilities). This may be the guild member themselves if desired. If it not self, requires 30 seconds of friendly or inspiring conversation with the beneficiary.",
+        "Turn Away the Evil: 1st Innate of a mantic Repel Supernatural Evil – as per the paladinic ability to repel evil – but will only work on evil supernatural creatures such as demons and Undead"
+      ],
+      "Intermediate": [
+        "Words of Comfort 1/day – May touch a single target and act as a Mantic Hearten and Pacification on the target for as long as the guild member remains touching them and focussing on them. This ends if the recipient or the guild member take any damage or use any powers.",
+        "Words of Harmony 1/day – Acts as per the Hospitaller ability Voice of Reason.",
+        "Gain a second Turn Away the Evil. May use both innates at the same time to act as a mantic warding (the gold spell) vs one supernatural evil creature."
+      ],
+      "Advanced": [
+        "Wisdom in the Words of Light – Until the next dawn any person that has been affected by at least 60 seconds of “Words of Harmony” gains benefits as per Inspiriation (basic tier) unless evil. If that person is a non-evil peon, then the live to minus is doubled. The user of this innate also gains death link to all those affected – revealing the location, time and nature of their death (is a mantic information effect).",
+        "Words of Harmony 1/day – Acts as per the Hospitaller ability Voice of Reason.",
+        "Gains a third Turn Away the Evil. May use all three innates at the same time to act as a Hand of Banishment style effect which specifically only works on supernatural evil creatures which could in general terms affect the user – so an Elf could not banish a Wight – but a human could. If this ability is successful then they suffer 10TBLP per resistance level that the creature had."
+      ]
+    }
+  },
+  "Children of the Dusk": {
+    "Type": "social",
+    "Restrictions": "Generally speaking members must try to strengthen the guild and hold up to its ethos. Working to weaken\nmagic/the dragons/sources of power will have you cast out of the guild. Depending on the severity of your actions\nthis may happen immediately at the refs discretion.",
+    "Benefits": {
+      "Basic": [
+        "Draw on Magic 2/day ~ May expend “X” mana of racial innates (max 12) to cure a guild member (not self) X TBLP/Loc damage.",
+        "Evade Death 1/day ~ First time the guild member would die on TBLP they may instead fall unconscious and gain a stacking live to minus 12 TBLP. To use this costs them 6 mana of racial innates.",
+        "Magic is magic isn’t it? 1/day may expend up to 6 mana of racial innates to regain a racial innate of up to 6 mana."
+      ],
+      "Intermediate": [
+        "Draw on Magic innates may now use used to cure up to 24 points of damage.",
+        "Gains a second Magic is Magic isn’t it?",
+        "Can now eat any lembas."
+      ],
+      "Advanced": [
+        "Draw on Magic may now be used on self.",
+        "Live to minus from Evade death is now magic only.",
+        "Explosive Death 1/day - Upon death can expend X mana of racial innates (these are used) and cause their slayer to suffer TBLP damage equal to three times the mana expended (1 hit to monsters per 3 TBLP). MAC applies at 1 for 1 and the damage is of the colour of innates used. This is a dying effect. ALL THE MAGIC – GUILD STATUS Pure Magic - Stage 1: Cost 75 Table 5",
+        "Live to minus from Evade Death now applies to critical locations as well.",
+        "Draw on magic healing is now capped at 36 points. Big ol magick - Stage 2: + 50 Table 7",
+        "Instead of using Magic is Magic to regain a racial innate it may instead be used to cast a standard spell",
+        "f the same colour as the racial innates used (still up to 6 mana).",
+        "Live to minus from Evade Death now applies to all locations. I am the magickest - Stage 3: + 125 Table 9",
+        "Explosive death no longer uses the innates expended to fuel it, it is simply based on the amount of innates left at death.",
+        "Gains a set of basic 8th level elven innates. Chosen at the start of the day. These may not be the opposite",
+        "f any colour already owned, may not be “liquidated”, or have the number increased. They may be the same as a set already owned. Labyrinthe Almanac – October 2023 – Page 98 ===PAGE 100==="
+      ]
+    }
+  },
+  "Council of Jade": {
+    "Type": "social",
+    "Restrictions": "Modern Laws- No member of the Council of Jade may be outlawed, if they become so they no longer gain any\nbenefits until the crime is resolved at which time they may appeal to the Council for full membership again (only\nby the Guild Sire’s approval).\nUnified Council - No member may attack or bring purposeful harm to another member, should this come to be\nthey lose all benefits until the incident is resolved at which time they may appeal to the Council for full\nmembership again (only by the Guild Sire’s approval). Any disagreements will be civilly dealt with by the Leaders\nof the Council; their decision is final in every case. The only exception in this rule will be cases of Seppuku. All\ncases of this restriction can be judged and dealt with by the Council Leaders in the same fashion as the outlaw\nrestriction\nOnce Clan always Clan - Once you have joined the Council you may never leave unless expelled by a unified\nvote of the council (rebirthing releases you also).",
+    "Benefits": {
+      "Basic": [
+        "The Councils Honour – Members cannot be supernatural forced to attack each other. Additionally while raging/similar they can identify fellow Council members and do not need to attack them.",
+        "The families provide – Members are well equipped with either a suit of armour (this may be master crafted) of their choosing or a single apprentice crafted weapon. If lost a new one can be regained for the next dungeon.",
+        "The Ways of the Families - Member may choose one ability from below. These are chosen at the start of each dungeon, though it may be that on extended lengths it is possible to select new benefits at the start",
+        "f a new day.",
+        "The Teachings of the Crane – Members may call upon the family craftsmen and start with one",
+        "f the following items: +6/2 item life, MAC 1, SAC 1. These require a phys rep and act as normal dungeon temp items. When higher tiers are gained an individual may choose this benefit multiple times for different items.",
+        "The Heart of the Dragon – Gains Immunity to fear.",
+        "The Honour of Jade – The member cannot be supernaturally forced to break the laws and codes",
+        "f the Jade Empire or the council.",
+        "The Ox’s Strength – Gains an innate Disciple.",
+        "The Lions Roar – Acts as per the Wolfs Howl evocation, but is physical not in EP in source.",
+        "Blessing of the Fates – The first time a day it is needed the members gain a kick in live to minus 12 that stacks with other live to minus. Labyrinthe Almanac – October 2023 – Page 99 ===PAGE 101==="
+      ],
+      "Intermediate": [
+        "The Ways of the Families - Members may now choose three (total) of the options from the basic tier.",
+        "The Family Honours (from the family provides) – The member may now chose to be well equipped with armour and an apprentice crafted weapon as the basic tier, or a suit of apprentice crafted armour, or a journeyman crafted weapon."
+      ],
+      "Advanced": [
+        "The Ways of the Families - Members may now choose five (total) of the options from the basic tier.",
+        "The Family gifts (from the family Honours) – The member may now choose to be well equipped with apprentice crafted armour and a Journeyman crafted weapon as the basic tier, or a suit of journeyman crafted armour, or a journeyman crafted weapon.",
+        "Dishonoured reveal themselves – Acts as a Mantic discern that reveals individuals that are Ostracised/enemies of the Jade Empire. Members of the Guild cannot be immune to this discern."
+      ]
+    }
+  },
+  "Earthsunder": {
+    "Type": "social",
+    "Restrictions": "For the people: The people come first, we are the guardians and protectors above all. To bring destruction or wilful\nharm to the people will result in immediate and unequivocal exile from the clan, resulting in being ostracised\nwhen dealing with dwarves only.\nFor the clan: The clan home is always important and second only to the people. Wilful betrayal of the clan will\nresult in exile as above.\nA guild member that has been outlawed by the seers for party killing may remain with the Thane's permission.",
+    "Benefits": {
+      "Basic": [
+        "From ½ effect poison now gains immunity to poison.",
+        "Strength of the Hearth – Members gain + 3/1 life.",
+        "A Strange Sense – When using the racial evaluate members gain an instinct if there are supernatural qualities to an object, or something more than its grull value. They do not gain exact details just a sense that there is something there."
+      ],
+      "Intermediate": [
+        "Strength of the Heart – Now gains +6/2 life.",
+        "Locations are now calculated as half permanent TBLP.",
+        "From ½ effect paralysis now gains immunity to paralysis. Labyrinthe Almanac – October 2023 – Page 100 ===PAGE 102==="
+      ],
+      "Advanced": [
+        "Well Armoured – When wearing Master crafter metal armour gains + 1 Max A/C and the armour grants an additional point of PAC.",
+        "The Clan Defenders 1/day – If a member of the guild is unconscious or incapacitated the guild member gains +6/2 life and an innate war cry. This lasts 5 minutes or until the threat is resolved, even if the guild members becomes active again. STRENGTH OF THE HEARTH – GUILD STATUS Clan Defender - Stage One: Cost: 70 Table 5",
+        "At One with the Armour - 1/day for 5 minutes all worn armour PAC counts as innate PAC.",
+        "Gains Danger sense with regards to rockfalls, and similar subterranean dangers. This functions when close to others. Hearth Protector - Stage Two: Cost: + 90 Table 7",
+        "Eyes of the Deep 1/day for 5 minutes upgrades the Dwarves natural ability to see in the dark to act as per Senseless Vision.",
+        "Even better armour ~ Well Armoured (from Advanced Tier) now grants +1 Max A/C and 2 additional points of PAC total. Protector of Heart and Home - Stage Three: Cost: +130 Table 9",
+        "Denounce the Magic 1/day for 5 minutes enhance the dwarves racial ½ effect magic to grant complete immunity to magic. This cannot be ended early.",
+        "Gains a second innate of At One with the Armour."
+      ]
+    }
+  },
+  "The Highborn Assembly": {
+    "Type": "social",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Heroic Stand 1/day ~ Grants one member of the guild (does not have to be the person using the benefits) the benefits as per Illusions of Grandeur but it is physical in nature and not an insanity. Lasts 5 minutes as normal.",
+        "Strength of Numbers ~ Gain Live to Minus equal to twice the number of the guild members on dungeon, max 12 points. Labyrinthe Almanac – October 2023 – Page 101 ===PAGE 103===",
+        "The Greater Good 1/day ~ Acts as a lucky idea about a “plan” and if it is broadly beneficial or dis- beneficial to the greater good."
+      ],
+      "Intermediate": [
+        "Lucky idea is now a full major prayer.",
+        "Take Killing blow/effect for a peasant/innocent type at own resistances 1/day",
+        "Discipline 1/day",
+        "Live to minus from the guild now applies to critical locations"
+      ],
+      "Advanced": [
+        "Ref can now trigger the lucky idea.",
+        "Take killing blow from lvl 2 can be used for guild members now.",
+        "Can use lvl 2 discipline on someone else."
+      ]
+    }
+  },
+  "House D’treal": {
+    "Type": "social",
+    "Restrictions": "Those individuals with legal issues with the Empire (Outlaw, Wolfshead, Ostracised etc.) can only remain a\nmember with the Guild Heads permission.\nIndividuals found to be acting against House D’treal or the Empire may be cast out of the guild by the Guild Head,\nand cannot re-join without the guild heads permission.",
+    "Benefits": {
+      "Basic": [
+        "Ancient Family Pacts: Once per day member of House D'treal can call on the House’s extensive catalogue",
+        "f pacts to announce a published ancient folk pact. They gain this pact for 5 minutes and if they do not have a level for pacts it is gained at 8 levels.",
+        "Pact with the Dragons: The House has Pacts with all the Dragons and Drakes; this grants the house member one rune of a pact with a Dragon or Drake (4 Levels) of their choice (chosen at the start of the day) as per the published spell. To cast the rune requires 30 seconds invoking the dragons power.",
+        "Power behind the Throne: The D'treals have a great deal of clout in the Empire due to their elevated status and large numbers of Nobles, 1/day acts as a Befriend versus any NPC Imperial Official as they realise that getting in with House D'treal may help their career. Labyrinthe Almanac – October 2023 – Page 102 ===PAGE 104==="
+      ],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "Khaniabad Archaeologist and Cartographers Association": {
+    "Type": "social",
+    "Restrictions": "Only available to people interested in the myth of Khaniabhad, sharing tales of the city if they have briefly\nmanaged to see it, hopeful of meeting a Khazak or just wanting to emulate a notorious Denizen!\nNo middlers. Contribute or get kicked out.\nBeing part of this Society is a criminal offence in the eyes of the Confederecy. This doesn’t result in outlawhood\nor ostracism, but it does come up on relevant criminal discerns.",
+    "Benefits": {
+      "Basic": [
+        "Are you sure this is a good idea? 1/day – Gains a ref triggered lucky idea if a fellow guild member is about to do something that could have bad consequences.",
+        "We’re in this together 1/day – Acts as per war cry but can be used on other guild members at 20ft range.",
+        "What did we all bring to the party – At the start of the day gains an item of a 1st to 3rd level handbook miracle, or 1st to 4th level standard spell. These are chosen by the ref and should be useful on the dungeon. The items can only be used a member of the guild, who requires the relevant utilise skill. Additionally the item cannot be used by the person that arrives on dungeon with it."
+      ],
+      "Intermediate": [
+        "We’re in this together can instead be used as a Discipline.",
+        "There’s a short cut in this ward 1/day – Acts as a mantic evasion vs one warding. If already has similar (EG Ghost and the relevant immunities) then can use this innate on a fellow guild member at touch range.",
+        "Is aware of where Khanibad is, but this information is immune to all informational effects. It can be used as a known “teleport” location, though the person arrives in caves nearby not in the city. If leaves the guild this information is mystically lost even if immune to forget."
+      ],
+      "Advanced": [
+        "We’re in this together now effects all guild members within 20ft of the user, but not self.",
+        "Knowledge of the Cults – If in Khannibad gains a major prayers worth of broad info if meets a new Cult, Sect, or group. This is public knowledge about their aims, and it might be nothing, and it is likely all guild members will gain the same information.",
+        "Look Reast Trusts Me 1/day – For 5 minutes counts as being Neutral rather than evil for effects that target the guild member based on alignment (EG immune to repel evil, answers neutral to auric colour, is effected by soul lance).",
+        "I’m on my own!!!! If on dungeon without any other guild members can use we’re in this together and What did we bring to the party on self/use the item. Labyrinthe Almanac – October 2023 – Page 103 ===PAGE 105=== CARTOGRAPHIC - GUILD STATUS You Can Count On Me! - Stage One: Cost 75 Table 5",
+        "Gains a second “What did we all bring to the party” innate",
+        "Ties to the cults of the city – Gains 6 ISP of dungeon temp ISP, chosen at start of day personalised to self. Items cannot be goodly spirit or Jade Team Player - Stage Two: Cost +100 Table 8",
+        "Gain a second “Look Reast trusts me” innate. If uses both innates at same time can count as goodly (not usable when dead).",
+        "Ties to the cults of the city is increased to 12ISP. Totally Legit - Stage Three: Cost +120 Table 9",
+        "There’s a short cut! 1/day can either be used to allow crossing wards without triggering any effects for 30 seconds or it can be used to apply vs a single ward for the day.",
+        "Knowledge of cults can, at refs discretion, apply to cults outside of Khaniabhad.",
+        "Ties to the cults of the city is increased to 20ISP"
+      ]
+    }
+  },
+  "Knights Errant": {
+    "Type": "social",
+    "Restrictions": "Never Act without reason – All things should be done with purpose and intention.\nEverything has a value, but not always a price – All things hold value to someone, and this should be considered\nwhen acting. However just because something holds value does not mean it can be traded or have a price set to it.\nIf there has been a wrong, there can be no peace – The core of the heroisim for the order. Where they find wrongs\nhave been done they will not rest until they have been righted, or those responsible dealt with.",
+    "Benefits": {
+      "Basic": [
+        "Standing against the darks ~ Members gain either + 1 MAC vs Red/Blue/Green/Brown magic or + 1 SAC vs Evil.",
+        "Ward against the darks 1/day ~ Grants the user ½ effect one of: fire, Electricity, green mana, or brown mana for 5 minutes.",
+        "Never act without reason – Acts as per a discipline innate, but only lasts for 30 seconds."
+      ],
+      "Intermediate": [
+        "Standing against the darks can now grants MAC and SAC still as above.",
+        "Empowered by the Forgotten knights ~ Allows the user to empower one weapon so it inflicts either magic (Red, Green, Blue, and brown at the same time) or spirit (Goodly) damage for 5 minutes. While active the weapon also inflicts Flaming, Electrical, Water, and Earth based damage (of the chosen power base)."
+      ],
+      "Advanced": [
+        "Shield against the Enemy 1/day ~ Acts as a mantic Shield against the dark but only applies vs damage from Red, Blue, Green, Brown or evil spirit damage. ~",
+        "Gains a second never act without reason.",
+        "Gains a second ward against the darks BULWARK AGAINST THE DARK - GUILD STATUS Radiant - Stage 1: Cost 75 Table 7",
+        "Protection of the darks: Ward against the darks now grants 1/2 effect all four power elements, and acts as Elemental Resistance for those four colours. Luminescent - Stage 2: + 50 Table 8",
+        "Empowered by the Forgotten Knight can now inflict magic (of the four colours) and spirit damage at the same time, chosen when the innate it used.",
+        "When using a Ward against the darks instead of normal benefit (and stage one enhancement) can instead gain 1/2 effect damage from Demonkind for 5 minutes. Dazzling Defender - Stage 3: + 75 Table 9",
+        "Shield against the dark gains benefits as per last line (CF Spiritual warden).",
+        "Gains a second innate of Empowered by the Forgotten Knight."
+      ]
+    }
+  },
+  "Knights of The Land": {
+    "Type": "social",
+    "Restrictions": "• You must not harm knights directly or indirectly and are required to help each other to the extent of\nsharing all equipment during an adventure, acting honourably and without treachery at any time.\n• A knight will never hide his membership as it is a thing to be proud of.\n• Anyone ostracised, outlawed or Wolfshead in any place (Empire, Amles, Ishma, Baronies etc) must have\nthe current Lord Knight’s permission to join – or remain a knight (must be signed on to character card).\n• Any individual who is completely immune to comms/info effects must be signed in/have their\nmembership of the Order’s countersigned by the current Lord Knight, Lord Unity, or Lord Seeker.\n• Members are no longer cast out for striking a Knight, only willing killing them.\n• Treachery is defined as working against another Knight, or the oath.\n• No level or points are earned from an adventure if a fellow knight is left behind on an adventure, dead or\nalive. If this does happen then the Lord Knight and the GSM must be notified by the referee. They will\nthen discuss if this warrants casting out or not.\n• It should be clear that once a Knight of the Land has been ‘cast out’ for whatever reason they may not\nrejoin the guild.\n• At the beginning of each adventure each knight must announce their presence by clearly and audibly\naffirming their oath:\n“Shield on arm, sword in hand,\nBrothers together, we defend the land”\nFailure to perform as above may result in the knight being ~ cast out ~ as detailed below:\n• They may never again be Immune to Fear.\n• All previous Knight of the Land abilities are applied in reverse.\n• Any knight cast out for cowardice will never be able to use a sword or shield again. Cowardice\ninvolves leaving another Knight of the Land behind on an adventure (alive or dead)\n• Any Knight who refused aid to another Knight or is cast out for for acts of treason will never\nagain be able to use strength in combat.\n• Any Knight cast out for acts of treason also suffers -6 max. AC to attacks to their back, from\nsurprise or from range.\nThe Lord Knight has decreed that those outlawed for party-killing may not remain members of the guild. The only\ncircumstances in which there may be clemency are if the killing occurred in defence of a Knight of the Land, even\nself. If you believe this to be the case for you, speak to the Lord Knight quickly, as unless your guild membership\nis countersigned by the Lord Knight or the Game System Manager you may not adventure while a party-killing\noutlaw and a Knight.\nWhen an individual is cast out for whatever reason, the Lord Knight may choose to apply none, any or all of the\n“punishments” as he/she deems fit.\nThe Lord Knight can be removed by a majority decision of the Lords of Orders, if they deem him/her unfit. This\ndoes not mean the Lord Knight is cast out, just that they are not fit for the job. The Lord Unity will act as Lord\nKnight until a new Lord Knight is elected. The Lord Unity/Voice must begin the election process again.",
+    "Benefits": {
+      "Basic": [],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "Lo": {
+    "Type": "social",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Bear’s Skill: Gains either Tracking, Perception or Survival as per Ranger",
+        "Owl’s Wisdom: Minor Prayer 1/day.",
+        "Totemic Boon: Grants a Primal Soul Minor or Medium talent from the Prey or Predator options. Chosen at the start of the dungeon."
+      ],
+      "Intermediate": [
+        "Owls Wisdom is now a full major prayer.",
+        "Totemic markings – If wearing tribal markings (made of white, red, and black make up) gains + 1 MAC and + 1 SAC."
+      ],
+      "Advanced": [
+        "Gains a second Owl’s Wisdom.",
+        "Totemic Boon can now either grant a Minor and Medium talent or a Major talent as base tier.",
+        "Totemic markings – now also grant +6/2 guild life. DREAM STALKER - GUILD STATUS Sleeping Youngling - Stage One: Cost 30 Table 1",
+        "Spirit Quest; Can enter a meditative state for 1 minute (full eyes closed) and Major prayers from Guild and above become visionary with no limit on the words to helpfully convey what is required. This can also Comm the future. Dreaming Slumberer - Stage Two: Cost +120 Table 5",
+        "Watching of the Owl: One use of Owls Wisdom can be triggered by the referee.",
+        "Totemic Scarring: From years of having their markings scored into their skin it now grants +1 Innate PAC and +1 Max AC. Awakened Dreamer - Stage Three: Cost +200 Table 8",
+        "Now gains Minor / Medium / Major talent from the advanced tier ability rather than Minor / Medium OR Major.",
+        "Gains a 3rd Owls Wisdom Labyrinthe Almanac – October 2023 – Page 109 ===PAGE 111==="
+      ]
+    }
+  },
+  "The Marauders": {
+    "Type": "social",
+    "Restrictions": "May not be a member of a pro Imperial guild.\nWe are tribal’s – that’s enough.",
+    "Benefits": {
+      "Basic": [
+        "Knowledge of the Tribes – After 30 seconds talking to a tribal creature can identify if they are not really a tribal creature (EG are in disguise). This is a physical informational effect and if a person is immune they appear as a genuine tribal creature.",
+        "Free Will of the Tribes – Gains + 1 level of resistance to domination effects not from tribal creatures.",
+        "Hardened by the world – Gains + 1 innate PAC, this is doubled against non-weapon blow attacks (e.g. Call Lightning)."
+      ],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "The Order of Mercenaries": {
+    "Type": "social",
+    "Restrictions": "If a member kills another member the guild master may cast the individual from the guild, resulting in them being\nunable to join/benefit from a social guild for a year.",
+    "Benefits": {
+      "Basic": [
+        "+3/1 life Labyrinthe Almanac – October 2023 – Page 110 ===PAGE 112===",
+        "Mercenary Problems 1/day – If has been stuck at a line/ward/puzzle or something similar for at least 5 minutes gains a major prayer about how to solve the situation.",
+        "Mercenaries Defence 1/day – Acts as per War Cry, but only applies to the effect it was used against not for 5 minutes.",
+        "Strength in numbers: Gains + 1 DAC if on dungeon with another guild member who is claiming guild benefits."
+      ],
+      "Intermediate": [
+        "+6/2 life (total)",
+        "Mercenary Solutions – If has used mercenary problems then for every minute still trying to solve the problem gains an extra major prayer until the problem is solved, or it’s tavern time.",
+        "Mercenaries Defence now grants immunity to the stopping effect for 30 seconds.",
+        "Strength in numbers now grants + 1 DAC or + 1 PAC if on dungeon with another guild member claiming guild benefits. If on dungeon with two other guild members claiming guild benefits gains both."
+      ],
+      "Advanced": [
+        "+9/3 life (total)",
+        "Mercenaries Defence now acts as per a full war cry.",
+        "Mercenaries Return - Gains Fated Hero (as table 1). If already owned gains immunity to slayer and fortified spirit.",
+        "Mercenaries Unite! 1/day can use a published self only ability on a guild member within 5ft. This could include a war cry, a cast spell, or similar. Must be to their benefit, to benefit from this must be claiming guild benefits.",
+        "Strength in Numbers: Gains One of the following per other guild member claiming guild benefits on dungeon. Can only take each option once: +1 DAC, + 1 PAC, + 1 MAC, + 1 SAC. The Mercenary Way – Guild Status Junior Mercenary - Stage one: Cost 50 Table 1",
+        "While on dungeon with at least two other member of the guild life gained from OoM is increased by 3/1.",
+        "Mercenary Defence can be used as a Discipline innate, instead of a War cry. Experienced Mercenary - Stage two: Cost + 75 Table 5",
+        "Mercenary Problems (not solutions) may now to be used on “items” to determine what they do.",
+        "Gains a Second innate of Mercenaries Unite Jaded Mercenary - Stage three: Cost +125 Table 8",
+        "Gains a second innate Mercenary Defence.",
+        "Can now take each option from Strength in Numbers twice (guild members permitting)."
+      ]
+    }
+  },
+  "Panama Clan": {
+    "Type": "social",
+    "Restrictions": "• Must always be Lawful of alignment.\n• No insult which the offending person refuses to apologise for will ever go unavenged.\n• Anyone who breaks one of these codes must report to the clan head for execution.\nLabyrinthe Almanac – October 2023 – Page 111\n===PAGE 113===\n• No member may refuse to report to the clan head, by any means whatsoever.\n• Must follow the code of the family's honour. If on adventure with guild Master failing to do so to their\nsatisfaction means they may require execution as above. If not on adventure, character may refuse to\nreport for execution on these grounds, in which case they are cast from the Clan as a Ronin, and may\nnever use Forearm Parry, nor more than one mastery in a weapon. All members of Panama immediately\nrecognise such a Ronin on sight unless the Ronin is immune to physical, magical and spiritual\ninformational effects, and disguised.\n• No contracts may be sought by any member of the clan without the authorisation of the guildmaster.\n• May not become immune to the guilds disbenefits (as is true for any guild disbenefits – if you choose to\njoin a guild you accept their disadvantages).\n• In order to leave the guild in ANY fashion must have guild leaders permission to do so which must be\nsigned on character card. If this is not done then becomes a Ronin as above.\nNote: Woodrow Panama has Spirit Link to all Panama members, and others loyal to the Jade Empire. If you die\nyou are free to contact him and inform him.",
+    "Benefits": {
+      "Basic": [
+        "Talk To Ancestors: 1/day. When at least one other member is present on adventure, gains an innate Speak with Ancestors, as per a Communication II of whatever power-base (including physical) the character has. If the character is not with another family-member, this is reduced to two Major Prayers of the same power-base as above. In either case the prayer requires 30 seconds calm contemplation. OR",
+        "Forearm Parry: Attained at 8th level, and only if the character is a Warrior Subclass. May be learnt pre- 8th level if the teaching of Forearm Parry is done on adventure with Khyrhym personally (and signed",
+        "nto the character by Khyrym and countersigned by the desk)"
+      ],
+      "Intermediate": [
+        "Spiritual Defence: Gains + 1 SAC",
+        "Awareness: 6th Sense, as per tables BUT no DAC requirement.",
+        "Mind Block: As per Monk ability.",
+        "Coldrage: 1/day as per published tables ability.",
+        "Minor Prayer: 1/day asking the Panama Ancestors, same powerbase as ability above.",
+        "Panama: 1/day as per Warcry"
+      ],
+      "Advanced": [
+        "Magical Defence: Gains + 1MAC",
+        "Minor Prayer: Extra innate as above (2/day in total)",
+        "Major Prayer: 1/Day asking the Panama Ancestors, same powerbase as ability above.",
+        "Potion Tolerance: If has a potion restriction may now drink 10 extra potions per day CALL OF THE ANCESTORS - GUILD STATUS Sight Beyond all Sight - Stage one: Cost 50 Table 5",
+        "If spends 30 seconds in calm perpetration before using a Panama related Talk to Ancestor ability (Guild benefit, or from this status) gains the benefits of injunction (as priest ability) and visionary. Clear Thoughts Bring a Focused Mind - Stage two: Cost +150 Table 7",
+        "Enlightened by the Ancestors; 1/day - Acts as per a Commune with the Gods, but the powerbase is as per the guild Talk to Ancestors. However cannot vocalise the answers to questions nor may they relay answers received until the comm is ended.",
+        "Panthers Surge 1/day - When using the Panama War Cry benefit can choose to gain immunity to a second listed stopping effect at the time of use. Family gives Strength - Stage Three: Cost +150 Table 9",
+        "When on dungeon with another member of the Panama Family, Spiritual and Magical defence is now increased to grant + 2 MAC and + 2 SAC. These are still considered guild benefit AC. Labyrinthe Almanac – October 2023 – Page 112 ===PAGE 114==="
+      ]
+    }
+  },
+  "Spider Tribe": {
+    "Type": "social",
+    "Restrictions": "May only ever attack from a position of perceived strength; in most cases this will mean a helpless opponent,\nattacking from behind, or outnumbering the enemy.\nMay not leave the tribe without the permission of the chieftain.",
+    "Benefits": {
+      "Basic": [
+        "Stabby: Gains E skill in daggers",
+        "Sneaky: Gains +1 DAC",
+        "Camouflage: 1/day as druidic evocation but does not require a verbal or need woodland setting and may not be done in sight of foes."
+      ],
+      "Intermediate": [
+        "Web: 1/day as bind but is physical and doesn’t require footwear. A webbed target may be cut free after 30 seconds of doing nothing else with a sharp weapon (but it is too sticky to break with bare hands or brute strength)",
+        "Camouflage: 2nd use of above innate"
+      ],
+      "Advanced": [
+        "Camouflage: 3rd use of above innate",
+        "Web: 2nd use of above innate",
+        "Vicious Goblin: +1 cumulative Weapon Mastery with daggers. SPIDER GOBLIN - GUILD STATUS Stabby Git - Stage one: Cost 60 Table 1",
+        "1/day Spiders Caress – Gains immunity to poison for 5 minutes. This can be used while poisoned but before it kicks in.",
+        "1/day Panic – Gains 12 points of combat wary vs the blow that just struck them, but they must immediately flee the person they used this versus and cannot engage them for at least 30 seconds. Must be declared within 2 seconds of the blow, and only applies to one blow. Sneaky Git - Stage two: Cost +80 Table 5",
+        "1/day Sneaky Goblin – Can enhance a guild benefit camouflage to allow movement, as per an invisibility.",
+        "Panic now grants combat wary vs 3 blows from the target, but the user is feared of them for 5 minutes (even if normally immune to fear). Flaky Git - Stage Three: Cost +110 Table 7",
+        "Panic now allows the goblin to count as in full retreat vs the attacks, but no longer grants combat wary. However the goblin is fear of the target for the rest of the day.",
+        "1/day Massive Web!!! Enhances a spider tribe webs innate to effect all within a 3ft by 3ft square.",
+        "Spiders love – If the Spider tribe member is already immune to poison (but not flesh and blood) then while the spiders caress is in use any poison heals ½ the damage it would inflict. This does not include supernaturally generated poisons. If receives any healing that isn’t from poison during this time the innate ends. Labyrinthe Almanac – October 2023 – Page 113 ===PAGE 115==="
+      ]
+    }
+  },
+  "The Swarm": {
+    "Type": "social",
+    "Restrictions": "",
+    "Benefits": {
+      "Basic": [
+        "Scurry 1/day – Acts as per a physical lightstep.",
+        "Sneaky rat 1/day – Acts in a similar manner to Evasion, but works regardless of the wards power base.",
+        "Feed on the Plague 1/day – If struck by a disease then can feed on it acting as a 12/12 cure of the same power base as the disease."
+      ],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  },
+  "The White Wind": {
+    "Type": "social",
+    "Restrictions": "Labyrinthe Almanac – October 2023 – Page 114\n===PAGE 116===\nAll members are expected to carry their guild marker with them on all mercenary missions.\nNo guild member may return or aid in the return of an evil being to life, the only exception being those who are\nredeemed at the point of their resurrection (OOC definition: No to anyone who remains evilly aligned).\nA member of The White Wind that knowingly leaves behind another member be they unconscious or dead where\nthey or their body was retrievable receives no points for the adventure.\nNo guild member is able to deceive or interfere with communications by guild members although being protected\nfrom communications is not an issue.\nAny member that is “Black Marked” by their own actions has their membership immediately suspended and\ncannot claim guild benefits until the Guild Sire has reviewed the situation and countersigned their membership\nonce more.\nThe Guild Sire may de-list any member he believes has not acted or does not act in the true spirit of The White\nWind and need not be on adventure to do so.",
+    "Benefits": {
+      "Basic": [
+        "Ward against Sin 1/day – Declared as per a war cry and lasts for 5 minutes gains + 1 MAC, + 1 SAC, and + 1 Level of Resistance vs effects from someone evil, or that by their nature are evil (i.e. evil miracles).",
+        "The White Ribbon – Requires a white ribbon with the guild motto on it in red spirit runes to use. 1/day with 30 seconds prep acts as either a mantic slayer or a mantic fire blade."
+      ],
+      "Intermediate": [
+        "Gains a second ward against sin, and can use both at the same time.",
+        "Gains a second the White Ribbon innate.",
+        "Can use a white ribbon innate to turn a protection vs evil Mantic at the point it is cast.",
+        "Can use 2 white ribbon innates (taking one minute prep total) to act as a mantic (white/red/good spirit) heal."
+      ],
+      "Advanced": [
+        "Gains a 3rd innate ward against sin; can use all 3 at the same time if desired.",
+        "Gains a 3rd White Ribbon innate",
+        "If uses a White Ribbon to slayer an evil person on dungeon then they (the target) can choose to have their alignment changed to goodly (they must then see the GSM for appropriate respending) instead of being slayered. A person redeemed in this way will perm die if they ever cease to be goodly.",
+        "If a person has a White Ribbon innate left and is slain they can choose to unleash one (max) as a mantic (goodly spirit, red mana) disruption dying effect. This uses the innate. Labyrinthe Almanac – October 2023 – Page 115 ===PAGE 117=== Other Churches The following churches are not listed in Divine Guidance, but individuals can be members as normal. Also listed below are changes to the details in Divine Guidance (such as changes to High Priest or similar)."
+      ]
+    }
+  },
+  "Church of Tsu": {
+    "Type": "social",
+    "Restrictions": "May never use rages, May only attack in self defence. Suffers Item restrictions as Paladin. May only kill living\ncreatures as a last resort.\nMIRACLE LIST\n1st Cure Wound, Summon Spiritual Candles, Halt\n2nd Cure Serious Wounds\n3rd Cure Disease, Healing Hand, Bless, Talk To Spirits, Spirit Shield, Protection From Spirits\n4th Heal\n5th Remove Fear And Paralysis, Remove Voice of Power, Spiritual Invisibility\n6th Total Heal, Spiritual Freedom, Stronghold of Goodness\n8th Restore Life\nBENEFITS\nPeaceful Gathering: Hermit Priests, Vivomancers and Friars may align to the guild and retain their own miracle\nlists.\nLabyrinthe Almanac – October 2023 – Page 117\n===PAGE 119===\n~ The Church of Levity ~\nHigh Priest: Mallerstang Laght\nPRE-REQUISITES\nThe church is open to priests of any evil alignment (despite its list below). Additionally neutral priests may join,\nbut may not battle board the benefits of any other professional guild and may only cast neutral or evil miracles\nregardless of their alignment.\nETHOS\nThe Church/Faith of Levity is one of knowledge that seeks to recover and harness the power of the secrets and\nknowledge lost within the Night of Levity for the good of the Empire. It believes that through knowledge comes\nwisdom and through wisdom comes power and understanding. In understanding comes the power to defend those\nwho cannot defend themselves; in knowledge can the powerless become empowered, and so the Empire grows\nstronger.\nThe faith believes that knowledge, lore & secrets lost in ages past should be recovered and once more shared with\nthe world, and that in doing so the Empress and Empire will grow stronger. It believes that it is far better to know\nand understand, than to simply hide or imprison something away from the world.\nThe church is strongly opposed to the Cult of Thanatar and its members who would seek to steal knowledge and\nmemories rather than learn, investigate and understand. Knowledge is to be learned and understood not stolen by\ndesecrating the souls of the dead.\nAt present the faith is small though growing and would welcome further priests to join its ranks. The high priest\nis Mallerstang Laght, a noble, librarian, historian and member of the 13th Imperial Legion. The primary temple\nof the faith is a grand library in Halgar, within the grounds of the Raven Manor of House Laght.\nMIRACLE LIST\nPlease note while the list is N/N members can learn Neutral and Evil miracles post 8th/via scriptures.\n1st Spirit of Seeing, Detect Spirits Nature, Halt\n2nd Spirit of Seeing & Hearing, Stasis, Control Zombie\n3rd Talk to Spirit, Spirit Shield, Protection from Spirits, Detect Lie\n4th Communication, Spirit Bolt, Reveal Undead name, Control Ghoul\n5th Spiritual Invisibility, Remove Voice of Power, Voice of Power, Identify Spirit\n6th Control Wight\n8th Greater Communication.\n~ The Church of Condesecration ~\nHigh Priest: Flock\nAll other details are as per Divine Guidance.\nNote: The High priest has Spirit Link to all Guild Members. Additionally he can choose to summon dead members\nto his side if he wishes, with his Animate life having additional benefit.\n~ The Church of Cenric ~\nHigh Priest: Letholdas of Rodanne\nETHOS\nThe Guardian, also known as the watchful one, the unsleeping, or the towering guard. Most often depicted in a\nsuit of plate armour with a closed helm, with a shield on his left arm and then either a hammer or a book in his\nLabyrinthe Almanac – October 2023 – Page 118\n===PAGE 120===\nright. Sometimes he is depicted holding his shield flat before him with the book and the hammer upon it. Cenric\nis a god of law, and of pacts and treaties, priests are expected to be consistent and just in their verdicts as well as\nfair in their negotiations.\nMEMBERSHIP\nPriests may be of any neutral alignment. While the churches base list is neutral members may align to either the\nspirits of Light, or Darkness, as any other neutral priest. Once chosen the person cannot change this.\nThere are four orders within the church, priests of the shield tend to cast goodly miracles and specialise in warding\nmiracles. Priests of the book are a diverse group and tend to specialise in communication. Priests of the hammer\ntend to choose evil miracles and their path varies.\nThe fourth order – that of the sentinels is there to keep the three main orders in check, and to ensure that no order\ncomes to dominate the others. They are mainly comprised of grey knights, however; rarely priests may join the\nsentinels and would use the below miracle list choosing goodly or evil miracles, their major sphere and major\nward of power or greater communication as their free 8th level miracle.\nMIRACLE LIST\n1st Halt, Detect Spirits Nature, Spirit of Seeing, Remove rune of power\n2nd Stasis, Spirit of Seeing and Hearing, Halt Undead\n3rd Protection from Spirits, Talk to Spirit, Enhanced Stasis, Detect Lie\n4th Spirit Bolt, Communication, Spirit Shift, Rune of Power, Control Ghoul\n5th Minor Ward of Power, Spiritual Invisibility, Voice of Power\n8th Greater Communication\nDENOMINATIONAL MIRACLE\nThis miracle may be learnt by priests of the church post 8th. Deliberate abuse and breaking of it could be\nconsidered an excommunicable offence.\nPact of the Guardian\nLevel: 5sp Alignment: Neutral Duration: 15 minutes Range: Self\nGesture: Scribe the pact\nVerbal: “By the power vested in me I invoke the watchful one, protect me from all (insert name of targets here\neg. Undead) you are compelled to negotiate!”\nDescription: The caster must spend at least 2 minutes scribing the pact immediately before casting.\nThis miracle grants the caster a temporary wardpact as per the ancient folk racial ability (see Evolution –\nRaces). This pact cannot be vs Elements, Elves or Supernatural minions of Dragons/Drakes. While active the\ncaster cannot attack those he has the pact with except in purest self-defence, even if it has not been announced,\ndoing so is considered breaking the pact.\nIf the priest breaks the pact they may never cast this miracle again, nor may they ever benefit from any form\nof Ward Pact.\nThis miracle may be cast for 10 spirits without the need to spend 2 minutes to scribe the pact.\nLabyrinthe Almanac – October 2023 – Page 119\n===PAGE 121===\nDruid Conclaves\n~ Imperial Nature~\nFounding Druid: Crepitus\nAs the Empress rose to be the Realm Spirit of the Empire so was she empowered by the elemental strength of the\nEmpire itself and the creatures within. Now she can, if she so desires, influence and direct this strength. It is this\nfacet of the Empress or personification of Nature that is revered by the Druids of the Legions and some of those\nDruids residing within the Empire itself.\nThis Conclave was founded by the High Druid Crepitus as a home for those fellow Druids who were loyal to the\nEmpire. Following many years service in the 28th Imperial Legion and time spent serving as Inquisitorial Gaius\nhe sought to provide a place to help strengthen Nature’s place within the Empire itself.\nEVOCATION LIST\n1st Control Animals, Control Plants\n2nd Barkskin, Entangle, Life’s memories, Slow Poison, Stoneskin (s)\n3rd Druidic Heal\n4th Cudgel, Owl’s Vision, Resist Cold, Resist Fire, Wall of Thorns\n6th Neutralise Poison, Petrification, Toughen Hide\n7th Endurance of the Mountains\nTalisman: Imperial Nature\nNotes: This talisman may be purchased by druids of the Imperial Nature Conclave.\nDescription: When casting a city field evocation can choose to count as if in any city of the Empire where\nrelevant (eg. for EP reductions in Blessing of the City, counts as in the city, or could cast The City Speaks as\nif in a different city. Everywhere in the Empire is considered a Natural Environment (NB. This wouldn’t\ninclude the Mittlenacht, a Fey Realm in the Empire or similar).\nCost: 40 points\n~ The Verdant Grove ~\nFounding Druid: Triek Marrowmud\nTriek believes that the power of the Verdant Grove, that of mother nature, the rivers, and spring is ready to flow\nforth into Primus in the form of a druid’s circle, which any druid can call upon. Druids of this conclave focus on\ndrawing upon the healing powers of nature to heal their companions to aid them in their tasks.\nEVOCATION LIST\n1st Control Animals, Joining\n2nd Slow Poison\n3rd Druidic Heal\n4th Cudgel, Neutrality to Animals, Neutrality to Plants, Resist Cold, Resist Fire\n5th Cure Disease\n8th Slow Healing\n10th Druidic Total Heal, Breath of Life\nLabyrinthe Almanac – October 2023 – Page 120\n===PAGE 122===\nTalisman: Acorn of the Grove\nNotes: This talisman may be purchased by druids of the Verdant Grove Conclave.\nDescription: Can empower an acorn with an unenhanced druidic “healing” evocation. The EP for this\nevocation cannot be regained while active, and this takes 1 minutes concentration.\nIf the druid falls unconscious due to damage while the Acorn is in their possession the evocation kicks in.\nEvocations remain in the acorn for a max of 15 minutes.\nCost: 75 points\nLabyrinthe Almanac – October 2023 – Page 121\n===PAGE 123===\nAcknowledgements\nParticular thanks for their contributions and assistance go to: Lee Dale, Duncan Matthias, Edd Insley and Will\nPower.\nThanks in general to anyone (and everyone!) who has played, monstered or otherwise taken part in any of the\nadventures that brought this material to life.\nPost to:\nThe Labyrinthe Club Ltd.\nChislehurst Caves, Caves Side Close, Chislehurst, BR7 5NL\nTel 020 8295 0552\nReg Office: 17 Church Road, Tunbridge Wells, TN1 1LG\nCompany No: 13244176 Vat No: 378315963\n bookings@labyrinthe.co.uk\nwww.labyrinthe.co.uk\nWant to be in the Almanac\nSo, you got something you want in the Almanac? An in-character statement? Questions for Ask the GSM? A ref\nwith bits of plot you want put in? Places people might want to start characters from?\n• OOC write ups, CPs and WP's should be sent to Lee and Will. Please remember to include relevant CC\ncontract numbers and remember you can't earn CPs for a contract without one. Please use their email\naddresses below!\nEmail Address Reminders\nIf you need to get in touch please use the right email:\n• Points apps and CC contracts should go to pointsapp@labyrinthe.co.uk\n• GSM questions, including on apps, and anything else for Lee go to lee@labyrinthe.co.uk\n• Dungeon bookings and enquiries go to bookings@labyrinthe.co.uk\n• Things for Duncan go to duncan@labyrinthe.co.uk\n• Things for Edd go to edd@labyrinthe.co.uk\n• Almanac, CC questions or contributions to will@labyrinthe.co.uk\nPlease remember we have full time jobs so replies are unlikely to be instant. Give us a couple of weeks to get to\nstuff before nudging.\nLabyrinthe Almanac – January 2023 – Page 122",
+    "Benefits": {
+      "Basic": [],
+      "Intermediate": [],
+      "Advanced": []
+    }
+  }
+}

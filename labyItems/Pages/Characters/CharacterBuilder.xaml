@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+  x:Class="labyItems.Pages.Characters.CharacterBuilder"
+  x:Name="Root"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:vm="clr-namespace:labyItems.Pages.Characters">
+
+  <ContentView.Resources>
+    <ResourceDictionary>
+      <DataTemplate x:Key="ClassCardTemplate"
+                    x:DataType="vm:ClassCardVm">
+        <vm:ClassCardView
+          ToggleExpandedCommand="{Binding BindingContext.ToggleClassExpandedCommand, Source={x:Reference Root}}"/>
+      </DataTemplate>
+
+      <DataTemplate x:Key="RaceCardTemplate"
+                    x:DataType="vm:RaceCardVm">
+        <vm:RaceCardView
+          ToggleRaceExpandedCommand="{Binding BindingContext.ToggleRaceExpandedCommand, Source={x:Reference Root}}"/>
+      </DataTemplate>
+    </ResourceDictionary>
+  </ContentView.Resources>
+
+  <Grid RowDefinitions="Auto,*"
+        RowSpacing="12"
+        Padding="16">
+
+    <Grid ColumnDefinitions="*,*"
+          ColumnSpacing="8">
+      <Button Text="Class"
+              Command="{Binding SelectTabCommand}"
+              CommandParameter="0">
+        <Button.Triggers>
+          <DataTrigger TargetType="Button"
+                       Binding="{Binding SelectedTabIndex}"
+                       Value="0">
+            <Setter Property="FontAttributes"
+                    Value="Bold"/>
+          </DataTrigger>
+        </Button.Triggers>
+      </Button>
+
+      <Button Grid.Column="1"
+              Text="Race"
+              Command="{Binding SelectTabCommand}"
+              CommandParameter="1">
+        <Button.Triggers>
+          <DataTrigger TargetType="Button"
+                       Binding="{Binding SelectedTabIndex}"
+                       Value="1">
+            <Setter Property="FontAttributes"
+                    Value="Bold"/>
+          </DataTrigger>
+        </Button.Triggers>
+      </Button>
+    </Grid>
+
+    <Grid Grid.Row="1">
+      <ContentView IsVisible="{Binding IsClassTabSelected}">
+        <Grid RowDefinitions="Auto,*"
+              RowSpacing="12">
+          <SearchBar Placeholder="Search classes..."
+                     Text="{Binding ClassSearchText}"/>
+
+          <CollectionView Grid.Row="1"
+                          ItemsSource="{Binding FilteredClasses}"
+                          ItemTemplate="{StaticResource ClassCardTemplate}"
+                          SelectionMode="None"/>
+        </Grid>
+      </ContentView>
+
+      <ContentView IsVisible="{Binding IsRaceTabSelected}">
+        <Grid RowDefinitions="Auto,Auto,*"
+              RowSpacing="12">
+
+          <SearchBar Placeholder="Search races..."
+                     Text="{Binding RaceSearchText}"/>
+
+          <CollectionView Grid.Row="1"
+                          ItemsSource="{Binding RaceFilters}"
+                          SelectionMode="None"
+                          ItemsLayout="HorizontalList"
+                          HeightRequest="44">
+            <CollectionView.ItemTemplate>
+              <DataTemplate>
+                <Button Text="{Binding .}"
+                        FontSize="12"
+                        Padding="12,6"
+                        BackgroundColor="#6D000000"
+                        TextColor="White"
+                        BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
+                        BorderWidth="1"
+                        CornerRadius="999"
+                        Command="{Binding BindingContext.SelectRaceFilterCommand, Source={x:Reference Root}}"
+                        CommandParameter="{Binding .}">
+                  <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding BindingContext.SelectedRaceFilter, Source={x:Reference Root}}"
+                                 Value="{Binding .}">
+                      <Setter Property="FontAttributes"
+                              Value="Bold"/>
+                      <Setter Property="TextColor"
+                              Value="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}"/>
+                      <Setter Property="BorderColor"
+                              Value="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}"/>
+                    </DataTrigger>
+                  </Button.Triggers>
+                </Button>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+          </CollectionView>
+
+          <CollectionView Grid.Row="2"
+                          ItemsSource="{Binding FilteredRaces}"
+                          ItemTemplate="{StaticResource RaceCardTemplate}"
+                          SelectionMode="None"/>
+        </Grid>
+      </ContentView>
+    </Grid>
+
+  </Grid>
+</ContentView>

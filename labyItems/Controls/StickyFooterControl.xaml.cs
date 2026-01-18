@@ -98,6 +98,7 @@ namespace labyItems.Controls
 
         private void OnToggleExpanded(object sender, EventArgs e)
         {
+            DictionaryOverlayRegistry.DismissAll();
             IsExpanded = !IsExpanded;
         }
 

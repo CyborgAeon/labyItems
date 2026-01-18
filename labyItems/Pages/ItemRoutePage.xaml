@@ -6,6 +6,9 @@
   Title="Create Item">
   <VerticalStackLayout Padding="20" Spacing="12">
     <Button
+      Clicked="OnMakeCharacterClicked"
+      Text="Make a character" />
+    <Button
       Clicked="OnCreateIspClicked"
       Text="Create ISP Item" />
     <Button

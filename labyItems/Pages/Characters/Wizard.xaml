@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Characters.Wizard"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    x:Name="Root"
+    Title="Character Builder">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Step indicator (assumes you already have this control implemented) -->
+        <controls:StepIndicator
+            Steps="{Binding StepSteps}"
+            CurrentStep="{Binding CurrentStep}"
+            StepClickCommand="{Binding StepClickCommand}"/>
+
+        <!-- Current step view -->
+        <ContentView
+            Grid.Row="1"
+            Content="{Binding CurrentStepView}"/>
+
+        <!-- Bottom nav -->
+        <Grid Grid.Row="2"
+              ColumnDefinitions="Auto,*,Auto"
+              Padding="16">
+            <Button Text="Back"
+                    Command="{Binding BackCommand}"
+                    IsEnabled="{Binding CanGoBack}"/>
+
+            <Button Grid.Column="2"
+                    Text="{Binding NextButtonText}"
+                    Command="{Binding NextCommand}"
+                    IsEnabled="{Binding CanGoNext}"/>
+        </Grid>
+
+    </Grid>
+</ContentPage>

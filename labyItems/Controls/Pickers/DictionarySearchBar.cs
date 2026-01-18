@@ -20,6 +20,7 @@ namespace labyItems.Controls;
 public class DictionarySearchBar<TValue> : ContentView
     where TValue : struct
 {
+    private readonly Action _selfDismisser;
     private const double DefaultDropdownMaxHeight = 320;
     private string Exclude = string.Empty;
     private readonly Entry _searchBar;
@@ -36,6 +37,8 @@ public class DictionarySearchBar<TValue> : ContentView
 
     public DictionarySearchBar()
     {
+        _selfDismisser = DismissLocalOverlay;
+        DictionaryOverlayRegistry.Register(_selfDismisser);
         _defaultOptions = BuildDefaultOptions();
 
         _searchBar = new Entry
@@ -88,6 +91,13 @@ public class DictionarySearchBar<TValue> : ContentView
         base.OnParentSet();
         // Build the overlay host early so first focus doesn't re-parent and steal focus
         InitializeOverlayHostIfNeeded();
+    }
+
+    protected override void OnHandlerChanging(HandlerChangingEventArgs args)
+    {
+        base.OnHandlerChanging(args);
+        if (args.NewHandler == null)
+            DictionaryOverlayRegistry.Unregister(_selfDismisser);
     }
 
     /// <summary>
@@ -250,6 +260,10 @@ public class DictionarySearchBar<TValue> : ContentView
 
     private void OnSearchUnfocused(object? sender, FocusEventArgs e)
     {
+        // Always clear any dropdown overlay so it doesn't block other taps
+        DismissLocalOverlay();
+        _resultsView.IsVisible = false;
+
         if (_suppressNextUnfocus)
         {
             _suppressNextUnfocus = false;
@@ -257,9 +271,6 @@ public class DictionarySearchBar<TValue> : ContentView
             return;
         }
 
-        // Dismiss any active inline overlay when losing focus
-        DismissLocalOverlay();
-        _resultsView.IsVisible = false;
         CommitTextSelection(_searchBar.Text);
     }
 
@@ -837,5 +848,44 @@ public class DictionarySearchBar<TValue> : ContentView
         }
 
         return null;
+    }
+}
+
+internal static class DictionaryOverlayRegistry
+{
+    private static readonly List<Action> _dismissors = new();
+    private static readonly object _gate = new();
+
+    public static void Register(Action dismissor)
+    {
+        if (dismissor == null) return;
+        lock (_gate)
+        {
+            if (!_dismissors.Contains(dismissor))
+                _dismissors.Add(dismissor);
+        }
+    }
+
+    public static void Unregister(Action dismissor)
+    {
+        if (dismissor == null) return;
+        lock (_gate)
+        {
+            _dismissors.Remove(dismissor);
+        }
+    }
+
+    public static void DismissAll()
+    {
+        Action[] snapshot;
+        lock (_gate)
+        {
+            snapshot = _dismissors.ToArray();
+        }
+
+        foreach (var dismiss in snapshot)
+        {
+            try { dismiss(); } catch { /* best effort */ }
+        }
     }
 }

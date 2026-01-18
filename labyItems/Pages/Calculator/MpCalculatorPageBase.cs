@@ -23,8 +23,8 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     private bool _isReady;
     private readonly ObservableCollection<ContributionRow> _breakdown = new();
 
-    private const int DefaultRepelGoodEvilPerUse = 50;
-    private const int DefaultRepelLifePerUse = 40;
+    private const int DefaultRepelGoodEvilPerUse = 40;
+    private const int DefaultRepelLifePerUse = 50;
     private const int DefaultApprenticeCost = 60;
 
     private const int DefaultPacCost = 40;
@@ -357,6 +357,8 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     {
         if (!_isReady || LifeSliderControl == null)
             return;
+
+        DictionaryOverlayRegistry.DismissAll();
 
         var items = new List<ContributionRow>();
         int running = 0;

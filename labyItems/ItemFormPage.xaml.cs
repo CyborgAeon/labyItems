@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using labyItems.Helpers;
 using labyItems.Models;
 using labyItems.Pages;
 using labyItems.Pages.Calculator;
 using labyItems.Services;
-using labyItemsq.Helpers;
 
 namespace labyItems;
 
@@ -169,12 +165,9 @@ public partial class ItemFormPage : ContentPage
             var payload = BuildJsonPayload(item);
             var jsonOptions = new JsonSerializerOptions
             {
-                WriteIndented = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             };
-            jsonOptions.Converters.Add(
-                new System.Text.Json.Serialization.JsonStringEnumConverter()
-            );
+            jsonOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
             var json = JsonSerializer.Serialize(payload, jsonOptions);
             var compressedJson = JsonTokenCompressor.CompressToBase64(json);
 
@@ -187,9 +180,7 @@ public partial class ItemFormPage : ContentPage
                 + $"\nISP: {item.Isp}"
                 + $"\nDnbuod: {item.DoesNotBlowUpOnDeath}"
                 + $"\nCreated: {item.CreatedDate:d}"
-                + "\n\nJSON:\n"
-                + json
-                + "\n\nCompressed JSON (base64 gzip):\n"
+                + "\n\n Token:\n"
                 + compressedJson;
 
             string mailto =
@@ -202,6 +193,7 @@ public partial class ItemFormPage : ContentPage
                 await Launcher.OpenAsync(mailto);
                 LiteDbService.InsertItem(item);
                 RemoveItemFromPage();
+                await Navigation.PopToRootAsync();
             }
             catch (Exception ex)
             {
@@ -214,7 +206,8 @@ public partial class ItemFormPage : ContentPage
         }
     }
 
-    private void RemoveItemFromPage(){
+    private void RemoveItemFromPage()
+    {
         IspTotal = 0;
         _abilities = new();
         _recipientName = string.Empty;

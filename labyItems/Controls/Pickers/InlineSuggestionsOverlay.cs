@@ -9,11 +9,6 @@ using Microsoft.Maui.Layouts;
 
 namespace labyItems.Controls.Pickers;
 
-/// <summary>
-/// Inline overlay manager that attaches an AbsoluteLayout overlay to the current page,
-/// positions a suggestions container beneath an anchor element, and returns selection/dismiss results.
-/// This avoids using CommunityToolkit popups and does not change page navigation.
-/// </summary>
 public static class InlineSuggestionsOverlay
 {
     private const double ItemHeight = 48;

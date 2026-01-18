@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using labyItems.Infrastructure;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Layouts;
 
@@ -80,7 +81,7 @@ public partial class ChipGroup : ContentView
     private Button CreateChip(string text)
     {
         var primary = GetPrimaryColor();
-        var primaryText = Colors.White;
+        var primaryText = Colors.Black;
 
         var button = new Button
         {
@@ -115,7 +116,7 @@ public partial class ChipGroup : ContentView
     private void UpdateVisualState()
     {
         var primary = GetPrimaryColor();
-        var primaryText = Colors.White;
+        var primaryText = Colors.Black;
 
         foreach (var child in Container.Children.OfType<Button>())
         {
@@ -129,7 +130,6 @@ public partial class ChipGroup : ContentView
 
     private Color GetPrimaryColor()
     {
-        // Try to use your "Primary" resource; fall back if missing
         if (
             Application.Current?.Resources != null
             && Application.Current.Resources.TryGetValue("Primary", out var value)
@@ -139,6 +139,6 @@ public partial class ChipGroup : ContentView
             return c;
         }
 
-        return Colors.Blue; // safe fallback
+        return ColourScheme.Primary;
     }
 }
