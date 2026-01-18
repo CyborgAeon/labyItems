@@ -4,36 +4,36 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Grid Padding="0,50,0,50"
+  <Grid Padding="0,8,0,8"
+        RowDefinitions="Auto"
+        ColumnDefinitions="*">
+    <Grid x:Name="StepsHost"
           RowDefinitions="Auto"
           ColumnDefinitions="*">
-        <Grid x:Name="StepsHost"
-              RowDefinitions="Auto"
-              ColumnDefinitions="*">
-            <Grid x:Name="StepsGrid"
-                  RowDefinitions="Auto,Auto"
-                  ColumnDefinitions=""
-                  ColumnSpacing="0"
-                  VerticalOptions="Center"
-                  HorizontalOptions="Fill">
-                <BoxView x:Name="LineBg"
-                         Grid.Row="0"
-                         HeightRequest="2"
-                         VerticalOptions="Center"
-                         HorizontalOptions="Fill"
-                         Opacity="1"
-                         InputTransparent="True"/>
+      <Grid x:Name="StepsGrid"
+            RowDefinitions="Auto,Auto"
+            ColumnDefinitions=""
+            ColumnSpacing="0"
+            VerticalOptions="Center"
+            HorizontalOptions="Fill">
+        <BoxView x:Name="LineBg"
+                 Grid.Row="0"
+                 HeightRequest="2"
+                 VerticalOptions="Center"
+                 HorizontalOptions="Fill"
+                 Opacity="1"
+                 InputTransparent="True"/>
 
-                <BoxView x:Name="LineFg"
-                         Grid.Row="0"
-                         HeightRequest="2"
-                         VerticalOptions="Center"
-                         HorizontalOptions="Start"
-                         Opacity="1"
-                         WidthRequest="0"
-                         InputTransparent="True"/>
-            </Grid>
+        <BoxView x:Name="LineFg"
+                 Grid.Row="0"
+                 HeightRequest="2"
+                 VerticalOptions="Center"
+                 HorizontalOptions="Start"
+                 Opacity="1"
+                 WidthRequest="0"
+                 InputTransparent="True"/>
+      </Grid>
 
-        </Grid>
     </Grid>
+  </Grid>
 </ContentView>

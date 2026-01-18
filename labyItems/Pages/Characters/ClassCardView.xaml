@@ -5,14 +5,27 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Grid>
+    <Grid
+        Margin="0,0,0,5">
         <Frame
+            x:Name="CardFrame"
             CornerRadius="12"
             Padding="0"
             HasShadow="False"
             BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
             BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1B1B1B}">
-
+            <Frame.Triggers>
+                <DataTrigger TargetType="Frame"
+                             Binding="{Binding IsSelected}"
+                             Value="True">
+                    <Setter Property="HasShadow"
+                            Value="True"/>
+                    <Setter Property="BorderColor"
+                            Value="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}"/>
+                    <Setter Property="BackgroundColor"
+                            Value="{AppThemeBinding Light=#FFF7ED, Dark=#241010}"/>
+                </DataTrigger>
+            </Frame.Triggers>
             <Grid RowDefinitions="Auto,Auto">
 
                 <Grid Padding="16"
@@ -21,7 +34,11 @@
 
                     <Grid ColumnDefinitions="Auto,*,40"
                           ColumnSpacing="12">
-
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding SelectCommand, Source={x:Reference Self}}"
+                                CommandParameter="{Binding .}"/>
+                        </Grid.GestureRecognizers>
                         <Frame
                             Grid.Column="0"
                             WidthRequest="40"

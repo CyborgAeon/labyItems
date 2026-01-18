@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
 using labyItems.Infrastructure;
 using labyItems.Pages.Characters;
+using System.Collections.Specialized;
+using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Controls;
 
@@ -15,26 +17,46 @@ public partial class StepIndicator : ContentView
     public StepIndicator()
     {
         InitializeComponent();
-
-        // Update line width whenever size changes.
         SizeChanged += (_, __) => UpdateProgressLine();
         StepsGrid.SizeChanged += (_, __) => UpdateProgressLine();
-
         ApplyThemeDefaults();
+
+        BindingContextChanged += (_, __) => MainThread.BeginInvokeOnMainThread(Rebuild);
     }
 
-    // Steps collection
     public static readonly BindableProperty StepsProperty =
         BindableProperty.Create(
             nameof(Steps),
             typeof(IList<StepItem>),
             typeof(StepIndicator),
-            defaultValue: new ObservableCollection<StepItem>(),
-            propertyChanged: (b, o, n) => ((StepIndicator)b).Rebuild());
+            defaultValue: Array.Empty<StepItem>(),
+            propertyChanged: (b, o, n) => ((StepIndicator)b).OnStepsChanged(o as IList<StepItem>, n as IList<StepItem>));
+
+    private INotifyCollectionChanged? _stepsNotify;
+
+    private void OnStepsChanged(IList<StepItem>? oldSteps, IList<StepItem>? newSteps)
+    {
+        // Unhook old
+        if (_stepsNotify != null)
+            _stepsNotify.CollectionChanged -= Steps_CollectionChanged;
+
+        // Hook new (if observable)
+        _stepsNotify = newSteps as INotifyCollectionChanged;
+        if (_stepsNotify != null)
+            _stepsNotify.CollectionChanged += Steps_CollectionChanged;
+
+        Rebuild();
+    }
+
+    private void Steps_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        // Always marshal to UI thread
+        MainThread.BeginInvokeOnMainThread(Rebuild);
+    }
 
     public IList<StepItem> Steps
     {
-        get => (IList<StepItem>)GetValue(StepsProperty);
+        get => (GetValue(StepsProperty) as IList<StepItem>) ?? Array.Empty<StepItem>();
         set => SetValue(StepsProperty, value);
     }
 

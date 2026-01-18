@@ -11,12 +11,14 @@
       <DataTemplate x:Key="ClassCardTemplate"
                     x:DataType="vm:ClassCardVm">
         <vm:ClassCardView
+          SelectCommand="{Binding BindingContext.SelectClassCommand, Source={x:Reference Root}}"
           ToggleExpandedCommand="{Binding BindingContext.ToggleClassExpandedCommand, Source={x:Reference Root}}"/>
       </DataTemplate>
 
       <DataTemplate x:Key="RaceCardTemplate"
                     x:DataType="vm:RaceCardVm">
         <vm:RaceCardView
+          SelectCommand="{Binding BindingContext.SelectRaceCommand, Source={x:Reference Root}}"
           ToggleRaceExpandedCommand="{Binding BindingContext.ToggleRaceExpandedCommand, Source={x:Reference Root}}"/>
       </DataTemplate>
     </ResourceDictionary>
@@ -59,14 +61,15 @@
     <Grid Grid.Row="1">
       <ContentView IsVisible="{Binding IsClassTabSelected}">
         <Grid RowDefinitions="Auto,*"
-              RowSpacing="12">
+              RowSpacing="8"
+              Padding="12,8">
           <SearchBar Placeholder="Search classes..."
                      Text="{Binding ClassSearchText}"/>
 
           <CollectionView Grid.Row="1"
                           ItemsSource="{Binding FilteredClasses}"
                           ItemTemplate="{StaticResource ClassCardTemplate}"
-                          SelectionMode="None"/>
+                          SelectionMode="None"x/>
         </Grid>
       </ContentView>
 
@@ -81,7 +84,7 @@
                           ItemsSource="{Binding RaceFilters}"
                           SelectionMode="None"
                           ItemsLayout="HorizontalList"
-                          HeightRequest="44">
+                          HeightRequest="30">
             <CollectionView.ItemTemplate>
               <DataTemplate>
                 <Button Text="{Binding .}"
