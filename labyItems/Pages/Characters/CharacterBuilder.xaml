@@ -69,7 +69,7 @@
           <CollectionView Grid.Row="1"
                           ItemsSource="{Binding FilteredClasses}"
                           ItemTemplate="{StaticResource ClassCardTemplate}"
-                          SelectionMode="None"x/>
+                          SelectionMode="None"/>
         </Grid>
       </ContentView>
 
