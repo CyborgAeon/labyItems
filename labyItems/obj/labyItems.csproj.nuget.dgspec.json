@@ -13,6 +13,7 @@
         "packagesPath": "/Users/brbar/.nuget/packages/",
         "outputPath": "/Users/brbar/Source/labyItems/labyItems/obj/",
         "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
         "configFilePaths": [
           "/Users/brbar/.nuget/NuGet/NuGet.Config"
         ],
@@ -20,7 +21,7 @@
           "net10.0-android"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
+          "/Users/brbar/.dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -51,31 +52,48 @@
           "dependencies": {
             "FluentMigrator.Runner": {
               "target": "Package",
-              "version": "[3.3.2, )"
+              "version": "[3.3.2, )",
+              "versionCentrallyManaged": true
             },
             "FluentMigrator.Runner.SQLite": {
               "target": "Package",
-              "version": "[3.3.2, )"
+              "version": "[3.3.2, )",
+              "versionCentrallyManaged": true
             },
             "LiteDB": {
               "target": "Package",
-              "version": "[5.0.21, )"
+              "version": "[5.0.21, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[2.1.7, )",
+              "versionCentrallyManaged": true
             },
             "Microsoft.Data.Sqlite": {
               "target": "Package",
-              "version": "[8.0.11, )"
+              "version": "[8.0.11, )",
+              "versionCentrallyManaged": true
             },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
-              "version": "[8.0.1, )"
+              "version": "[8.0.1, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.IdentityModel.JsonWebTokens": {
+              "target": "Package",
+              "version": "[6.34.0, )",
+              "versionCentrallyManaged": true
             },
             "Microsoft.Maui.Controls": {
               "target": "Package",
-              "version": "[10.0.1, )"
+              "version": "[10.0.10, )",
+              "versionCentrallyManaged": true
             },
             "Microsoft.Maui.Controls.Compatibility": {
               "target": "Package",
-              "version": "[10.0.1, )"
+              "version": "[10.0.10, )",
+              "versionCentrallyManaged": true
             },
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
@@ -83,14 +101,42 @@
               "version": "[10.0.1, )",
               "autoReferenced": true
             },
-            "SQLitePCLRaw.bundle_green": {
+            "SQLitePCLRaw.bundle_e_sqlite3": {
               "target": "Package",
-              "version": "[2.0.4, )"
+              "version": "[2.1.11, )",
+              "versionCentrallyManaged": true
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[4.7.2, )",
+              "versionCentrallyManaged": true
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.34.0, )",
+              "versionCentrallyManaged": true
             },
             "sqlite-net-pcl": {
               "target": "Package",
-              "version": "[1.8.116, )"
+              "version": "[1.8.116, )",
+              "versionCentrallyManaged": true
             }
+          },
+          "centralPackageVersions": {
+            "FluentMigrator": "3.3.2",
+            "FluentMigrator.Runner": "3.3.2",
+            "FluentMigrator.Runner.SQLite": "3.3.2",
+            "LiteDB": "5.0.21",
+            "Microsoft.Data.SqlClient": "2.1.7",
+            "Microsoft.Data.Sqlite": "8.0.11",
+            "Microsoft.Extensions.Logging.Debug": "8.0.1",
+            "Microsoft.IdentityModel.JsonWebTokens": "6.34.0",
+            "Microsoft.Maui.Controls": "10.0.10",
+            "Microsoft.Maui.Controls.Compatibility": "10.0.10",
+            "sqlite-net-pcl": "1.8.116",
+            "SQLitePCLRaw.bundle_e_sqlite3": "2.1.11",
+            "System.Drawing.Common": "4.7.2",
+            "System.IdentityModel.Tokens.Jwt": "6.34.0"
           },
           "imports": [
             "net461",
@@ -114,7 +160,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/Users/brbar/.dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -409,6 +455,7 @@
         "packagesPath": "/Users/brbar/.nuget/packages/",
         "outputPath": "/Users/brbar/Source/labyItems/tools/migrationslib/obj/",
         "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
         "configFilePaths": [
           "/Users/brbar/.nuget/NuGet/NuGet.Config"
         ],
@@ -416,7 +463,7 @@
           "net10.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
+          "/Users/brbar/.dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -443,12 +490,50 @@
           "dependencies": {
             "FluentMigrator": {
               "target": "Package",
-              "version": "[3.3.2, )"
+              "version": "[3.3.2, )",
+              "versionCentrallyManaged": true
             },
             "FluentMigrator.Runner": {
               "target": "Package",
-              "version": "[3.3.2, )"
+              "version": "[3.3.2, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[2.1.7, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.IdentityModel.JsonWebTokens": {
+              "target": "Package",
+              "version": "[6.34.0, )",
+              "versionCentrallyManaged": true
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[4.7.2, )",
+              "versionCentrallyManaged": true
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[6.34.0, )",
+              "versionCentrallyManaged": true
             }
+          },
+          "centralPackageVersions": {
+            "FluentMigrator": "3.3.2",
+            "FluentMigrator.Runner": "3.3.2",
+            "FluentMigrator.Runner.SQLite": "3.3.2",
+            "LiteDB": "5.0.21",
+            "Microsoft.Data.SqlClient": "2.1.7",
+            "Microsoft.Data.Sqlite": "8.0.11",
+            "Microsoft.Extensions.Logging.Debug": "8.0.1",
+            "Microsoft.IdentityModel.JsonWebTokens": "6.34.0",
+            "Microsoft.Maui.Controls": "10.0.10",
+            "Microsoft.Maui.Controls.Compatibility": "10.0.10",
+            "sqlite-net-pcl": "1.8.116",
+            "SQLitePCLRaw.bundle_e_sqlite3": "2.1.11",
+            "System.Drawing.Common": "4.7.2",
+            "System.IdentityModel.Tokens.Jwt": "6.34.0"
           },
           "imports": [
             "net461",
@@ -466,7 +551,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/Users/brbar/.dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

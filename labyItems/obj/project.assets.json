@@ -372,7 +372,7 @@
           }
         }
       },
-      "Microsoft.Data.SqlClient/2.1.2": {
+      "Microsoft.Data.SqlClient/2.1.7": {
         "type": "package",
         "dependencies": {
           "Microsoft.Data.SqlClient.SNI.runtime": "2.1.1",
@@ -702,31 +702,47 @@
           }
         }
       },
-      "Microsoft.IdentityModel.JsonWebTokens/6.8.0": {
+      "Microsoft.IdentityModel.Abstractions/6.34.0": {
         "type": "package",
-        "dependencies": {
-          "Microsoft.IdentityModel.Tokens": "6.8.0"
-        },
         "compile": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
             "related": ".xml"
           }
         }
       },
-      "Microsoft.IdentityModel.Logging/6.8.0": {
+      "Microsoft.IdentityModel.JsonWebTokens/6.34.0": {
         "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Tokens": "6.34.0"
+        },
         "compile": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Logging/6.34.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Abstractions": "6.34.0"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.IdentityModel.Logging.dll": {
             "related": ".xml"
           }
         }
@@ -765,49 +781,49 @@
           }
         }
       },
-      "Microsoft.IdentityModel.Tokens/6.8.0": {
+      "Microsoft.IdentityModel.Tokens/6.34.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Logging": "6.8.0"
+          "Microsoft.IdentityModel.Logging": "6.34.0"
         },
         "compile": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Tokens.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Tokens.dll": {
             "related": ".xml"
           }
         }
       },
-      "Microsoft.Maui.Controls/10.0.1": {
+      "Microsoft.Maui.Controls/10.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Maui.Controls.Build.Tasks": "10.0.1",
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Controls.Xaml": "10.0.1",
-          "Microsoft.Maui.Resizetizer": "10.0.1"
+          "Microsoft.Maui.Controls.Build.Tasks": "10.0.10",
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Controls.Xaml": "10.0.10",
+          "Microsoft.Maui.Resizetizer": "10.0.10"
         }
       },
-      "Microsoft.Maui.Controls.Build.Tasks/10.0.1": {
+      "Microsoft.Maui.Controls.Build.Tasks/10.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Controls.Xaml": "10.0.1"
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Controls.Xaml": "10.0.10"
         },
         "build": {
           "buildTransitive/netstandard2.0/Microsoft.Maui.Controls.Build.Tasks.props": {},
           "buildTransitive/netstandard2.0/Microsoft.Maui.Controls.Build.Tasks.targets": {}
         }
       },
-      "Microsoft.Maui.Controls.Compatibility/10.0.1": {
+      "Microsoft.Maui.Controls.Compatibility/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Controls.Xaml": "10.0.1"
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Controls.Xaml": "10.0.10"
         },
         "compile": {
           "lib/net10.0-android36.0/Microsoft.Maui.Controls.Compatibility.dll": {
@@ -820,14 +836,14 @@
           }
         }
       },
-      "Microsoft.Maui.Controls.Core/10.0.1": {
+      "Microsoft.Maui.Controls.Core/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
           "Microsoft.Extensions.DependencyInjection": "10.0.0",
           "Microsoft.Extensions.Logging": "10.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Maui.Core": "10.0.1",
+          "Microsoft.Maui.Core": "10.0.10",
           "Xamarin.AndroidX.DynamicAnimation": "1.1.0.3"
         },
         "compile": {
@@ -945,12 +961,12 @@
           }
         }
       },
-      "Microsoft.Maui.Controls.Xaml/10.0.1": {
+      "Microsoft.Maui.Controls.Xaml/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Core": "10.0.1"
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Core": "10.0.10"
         },
         "compile": {
           "lib/net10.0-android36.0/Microsoft.Maui.Controls.Xaml.dll": {
@@ -963,7 +979,7 @@
           }
         }
       },
-      "Microsoft.Maui.Core/10.0.1": {
+      "Microsoft.Maui.Core/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
@@ -971,8 +987,8 @@
           "Microsoft.Extensions.Hosting.Abstractions": "10.0.0",
           "Microsoft.Extensions.Logging": "10.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Maui.Essentials": "10.0.1",
-          "Microsoft.Maui.Graphics": "10.0.1",
+          "Microsoft.Maui.Essentials": "10.0.10",
+          "Microsoft.Maui.Graphics": "10.0.10",
           "Xamarin.Android.Glide": "4.16.0.14",
           "Xamarin.AndroidX.Lifecycle.LiveData": "2.9.2.1",
           "Xamarin.AndroidX.Navigation.Common": "2.9.2.1",
@@ -997,10 +1013,10 @@
           "buildTransitive/Microsoft.Maui.Core.targets": {}
         }
       },
-      "Microsoft.Maui.Essentials/10.0.1": {
+      "Microsoft.Maui.Essentials/10.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Maui.Graphics": "10.0.1",
+          "Microsoft.Maui.Graphics": "10.0.10",
           "Xamarin.AndroidX.Activity": "1.10.1.3",
           "Xamarin.AndroidX.Browser": "1.8.0.11",
           "Xamarin.AndroidX.Security.SecurityCrypto": "1.1.0.4-alpha07",
@@ -1017,7 +1033,7 @@
           }
         }
       },
-      "Microsoft.Maui.Graphics/10.0.1": {
+      "Microsoft.Maui.Graphics/10.0.10": {
         "type": "package",
         "compile": {
           "lib/net10.0-android36.0/Microsoft.Maui.Graphics.dll": {
@@ -1030,7 +1046,7 @@
           }
         }
       },
-      "Microsoft.Maui.Resizetizer/10.0.1": {
+      "Microsoft.Maui.Resizetizer/10.0.10": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Maui.Resizetizer.props": {},
@@ -1059,11 +1075,11 @@
           }
         }
       },
-      "SQLitePCLRaw.bundle_e_sqlite3/2.1.6": {
+      "SQLitePCLRaw.bundle_e_sqlite3/2.1.11": {
         "type": "package",
         "dependencies": {
-          "SQLitePCLRaw.lib.e_sqlite3.android": "2.1.6",
-          "SQLitePCLRaw.provider.e_sqlite3": "2.1.6"
+          "SQLitePCLRaw.lib.e_sqlite3.android": "2.1.11",
+          "SQLitePCLRaw.provider.e_sqlite3": "2.1.11"
         },
         "compile": {
           "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.dll": {
@@ -1092,7 +1108,7 @@
           "lib/netcoreapp3.1/SQLitePCLRaw.nativelibrary.dll": {}
         }
       },
-      "SQLitePCLRaw.core/2.1.6": {
+      "SQLitePCLRaw.core/2.1.11": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
@@ -1101,7 +1117,7 @@
           "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
         }
       },
-      "SQLitePCLRaw.lib.e_sqlite3.android/2.1.6": {
+      "SQLitePCLRaw.lib.e_sqlite3.android/2.1.11": {
         "type": "package",
         "compile": {
           "lib/net6.0-android31.0/SQLitePCLRaw.lib.e_sqlite3.android.dll": {
@@ -1114,10 +1130,10 @@
           }
         }
       },
-      "SQLitePCLRaw.provider.e_sqlite3/2.1.6": {
+      "SQLitePCLRaw.provider.e_sqlite3/2.1.11": {
         "type": "package",
         "dependencies": {
-          "SQLitePCLRaw.core": "2.1.6"
+          "SQLitePCLRaw.core": "2.1.11"
         },
         "compile": {
           "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
@@ -1151,7 +1167,7 @@
           }
         }
       },
-      "System.Drawing.Common/4.7.0": {
+      "System.Drawing.Common/4.7.2": {
         "type": "package",
         "compile": {
           "ref/MonoAndroid10/_._": {}
@@ -1170,19 +1186,19 @@
           }
         }
       },
-      "System.IdentityModel.Tokens.Jwt/6.8.0": {
+      "System.IdentityModel.Tokens.Jwt/6.34.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.JsonWebTokens": "6.8.0",
-          "Microsoft.IdentityModel.Tokens": "6.8.0"
+          "Microsoft.IdentityModel.JsonWebTokens": "6.34.0",
+          "Microsoft.IdentityModel.Tokens": "6.34.0"
         },
         "compile": {
-          "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll": {
+          "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll": {
+          "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll": {
             "related": ".xml"
           }
         }
@@ -3236,7 +3252,11 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "FluentMigrator": "3.3.2",
-          "FluentMigrator.Runner": "3.3.2"
+          "FluentMigrator.Runner": "3.3.2",
+          "Microsoft.Data.SqlClient": "2.1.7",
+          "Microsoft.IdentityModel.JsonWebTokens": "6.34.0",
+          "System.Drawing.Common": "4.7.2",
+          "System.IdentityModel.Tokens.Jwt": "6.34.0"
         },
         "compile": {
           "bin/placeholder/migrationslib.dll": {}
@@ -3617,7 +3637,7 @@
           }
         }
       },
-      "Microsoft.Data.SqlClient/2.1.2": {
+      "Microsoft.Data.SqlClient/2.1.7": {
         "type": "package",
         "dependencies": {
           "Microsoft.Data.SqlClient.SNI.runtime": "2.1.1",
@@ -3919,31 +3939,47 @@
           }
         }
       },
-      "Microsoft.IdentityModel.JsonWebTokens/6.8.0": {
+      "Microsoft.IdentityModel.Abstractions/6.34.0": {
         "type": "package",
-        "dependencies": {
-          "Microsoft.IdentityModel.Tokens": "6.8.0"
-        },
         "compile": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
             "related": ".xml"
           }
         }
       },
-      "Microsoft.IdentityModel.Logging/6.8.0": {
+      "Microsoft.IdentityModel.JsonWebTokens/6.34.0": {
         "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Tokens": "6.34.0"
+        },
         "compile": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Logging/6.34.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Abstractions": "6.34.0"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.IdentityModel.Logging.dll": {
             "related": ".xml"
           }
         }
@@ -3982,49 +4018,49 @@
           }
         }
       },
-      "Microsoft.IdentityModel.Tokens/6.8.0": {
+      "Microsoft.IdentityModel.Tokens/6.34.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Logging": "6.8.0"
+          "Microsoft.IdentityModel.Logging": "6.34.0"
         },
         "compile": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Tokens.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Tokens.dll": {
             "related": ".xml"
           }
         }
       },
-      "Microsoft.Maui.Controls/10.0.1": {
+      "Microsoft.Maui.Controls/10.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Maui.Controls.Build.Tasks": "10.0.1",
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Controls.Xaml": "10.0.1",
-          "Microsoft.Maui.Resizetizer": "10.0.1"
+          "Microsoft.Maui.Controls.Build.Tasks": "10.0.10",
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Controls.Xaml": "10.0.10",
+          "Microsoft.Maui.Resizetizer": "10.0.10"
         }
       },
-      "Microsoft.Maui.Controls.Build.Tasks/10.0.1": {
+      "Microsoft.Maui.Controls.Build.Tasks/10.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Controls.Xaml": "10.0.1"
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Controls.Xaml": "10.0.10"
         },
         "build": {
           "buildTransitive/netstandard2.0/Microsoft.Maui.Controls.Build.Tasks.props": {},
           "buildTransitive/netstandard2.0/Microsoft.Maui.Controls.Build.Tasks.targets": {}
         }
       },
-      "Microsoft.Maui.Controls.Compatibility/10.0.1": {
+      "Microsoft.Maui.Controls.Compatibility/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Controls.Xaml": "10.0.1"
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Controls.Xaml": "10.0.10"
         },
         "compile": {
           "lib/net10.0-android36.0/Microsoft.Maui.Controls.Compatibility.dll": {
@@ -4037,14 +4073,14 @@
           }
         }
       },
-      "Microsoft.Maui.Controls.Core/10.0.1": {
+      "Microsoft.Maui.Controls.Core/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
           "Microsoft.Extensions.DependencyInjection": "10.0.0",
           "Microsoft.Extensions.Logging": "10.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Maui.Core": "10.0.1",
+          "Microsoft.Maui.Core": "10.0.10",
           "Xamarin.AndroidX.DynamicAnimation": "1.1.0.3"
         },
         "compile": {
@@ -4162,12 +4198,12 @@
           }
         }
       },
-      "Microsoft.Maui.Controls.Xaml/10.0.1": {
+      "Microsoft.Maui.Controls.Xaml/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Core": "10.0.1"
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Core": "10.0.10"
         },
         "compile": {
           "lib/net10.0-android36.0/Microsoft.Maui.Controls.Xaml.dll": {
@@ -4180,7 +4216,7 @@
           }
         }
       },
-      "Microsoft.Maui.Core/10.0.1": {
+      "Microsoft.Maui.Core/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
@@ -4188,8 +4224,8 @@
           "Microsoft.Extensions.Hosting.Abstractions": "10.0.0",
           "Microsoft.Extensions.Logging": "10.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Maui.Essentials": "10.0.1",
-          "Microsoft.Maui.Graphics": "10.0.1",
+          "Microsoft.Maui.Essentials": "10.0.10",
+          "Microsoft.Maui.Graphics": "10.0.10",
           "Xamarin.Android.Glide": "4.16.0.14",
           "Xamarin.AndroidX.Lifecycle.LiveData": "2.9.2.1",
           "Xamarin.AndroidX.Navigation.Common": "2.9.2.1",
@@ -4214,10 +4250,10 @@
           "buildTransitive/Microsoft.Maui.Core.targets": {}
         }
       },
-      "Microsoft.Maui.Essentials/10.0.1": {
+      "Microsoft.Maui.Essentials/10.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Maui.Graphics": "10.0.1",
+          "Microsoft.Maui.Graphics": "10.0.10",
           "Xamarin.AndroidX.Activity": "1.10.1.3",
           "Xamarin.AndroidX.Browser": "1.8.0.11",
           "Xamarin.AndroidX.Security.SecurityCrypto": "1.1.0.4-alpha07",
@@ -4234,7 +4270,7 @@
           }
         }
       },
-      "Microsoft.Maui.Graphics/10.0.1": {
+      "Microsoft.Maui.Graphics/10.0.10": {
         "type": "package",
         "compile": {
           "lib/net10.0-android36.0/Microsoft.Maui.Graphics.dll": {
@@ -4247,7 +4283,7 @@
           }
         }
       },
-      "Microsoft.Maui.Resizetizer/10.0.1": {
+      "Microsoft.Maui.Resizetizer/10.0.10": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Maui.Resizetizer.props": {},
@@ -4276,11 +4312,11 @@
           }
         }
       },
-      "SQLitePCLRaw.bundle_e_sqlite3/2.1.6": {
+      "SQLitePCLRaw.bundle_e_sqlite3/2.1.11": {
         "type": "package",
         "dependencies": {
-          "SQLitePCLRaw.lib.e_sqlite3.android": "2.1.6",
-          "SQLitePCLRaw.provider.e_sqlite3": "2.1.6"
+          "SQLitePCLRaw.lib.e_sqlite3.android": "2.1.11",
+          "SQLitePCLRaw.provider.e_sqlite3": "2.1.11"
         },
         "compile": {
           "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.dll": {
@@ -4309,7 +4345,7 @@
           "lib/netcoreapp3.1/SQLitePCLRaw.nativelibrary.dll": {}
         }
       },
-      "SQLitePCLRaw.core/2.1.6": {
+      "SQLitePCLRaw.core/2.1.11": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
@@ -4318,7 +4354,7 @@
           "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
         }
       },
-      "SQLitePCLRaw.lib.e_sqlite3.android/2.1.6": {
+      "SQLitePCLRaw.lib.e_sqlite3.android/2.1.11": {
         "type": "package",
         "compile": {
           "lib/net6.0-android31.0/SQLitePCLRaw.lib.e_sqlite3.android.dll": {
@@ -4331,10 +4367,10 @@
           }
         }
       },
-      "SQLitePCLRaw.provider.e_sqlite3/2.1.6": {
+      "SQLitePCLRaw.provider.e_sqlite3/2.1.11": {
         "type": "package",
         "dependencies": {
-          "SQLitePCLRaw.core": "2.1.6"
+          "SQLitePCLRaw.core": "2.1.11"
         },
         "compile": {
           "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
@@ -4368,7 +4404,7 @@
           }
         }
       },
-      "System.Drawing.Common/4.7.0": {
+      "System.Drawing.Common/4.7.2": {
         "type": "package",
         "compile": {
           "ref/MonoAndroid10/_._": {}
@@ -4379,19 +4415,19 @@
           }
         }
       },
-      "System.IdentityModel.Tokens.Jwt/6.8.0": {
+      "System.IdentityModel.Tokens.Jwt/6.34.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.JsonWebTokens": "6.8.0",
-          "Microsoft.IdentityModel.Tokens": "6.8.0"
+          "Microsoft.IdentityModel.JsonWebTokens": "6.34.0",
+          "Microsoft.IdentityModel.Tokens": "6.34.0"
         },
         "compile": {
-          "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll": {
+          "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll": {
+          "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll": {
             "related": ".xml"
           }
         }
@@ -6433,7 +6469,11 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "FluentMigrator": "3.3.2",
-          "FluentMigrator.Runner": "3.3.2"
+          "FluentMigrator.Runner": "3.3.2",
+          "Microsoft.Data.SqlClient": "2.1.7",
+          "Microsoft.IdentityModel.JsonWebTokens": "6.34.0",
+          "System.Drawing.Common": "4.7.2",
+          "System.IdentityModel.Tokens.Jwt": "6.34.0"
         },
         "compile": {
           "bin/placeholder/migrationslib.dll": {}
@@ -6814,7 +6854,7 @@
           }
         }
       },
-      "Microsoft.Data.SqlClient/2.1.2": {
+      "Microsoft.Data.SqlClient/2.1.7": {
         "type": "package",
         "dependencies": {
           "Microsoft.Data.SqlClient.SNI.runtime": "2.1.1",
@@ -7116,31 +7156,47 @@
           }
         }
       },
-      "Microsoft.IdentityModel.JsonWebTokens/6.8.0": {
+      "Microsoft.IdentityModel.Abstractions/6.34.0": {
         "type": "package",
-        "dependencies": {
-          "Microsoft.IdentityModel.Tokens": "6.8.0"
-        },
         "compile": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
             "related": ".xml"
           }
         }
       },
-      "Microsoft.IdentityModel.Logging/6.8.0": {
+      "Microsoft.IdentityModel.JsonWebTokens/6.34.0": {
         "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Tokens": "6.34.0"
+        },
         "compile": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Logging/6.34.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Abstractions": "6.34.0"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.IdentityModel.Logging.dll": {
             "related": ".xml"
           }
         }
@@ -7179,49 +7235,49 @@
           }
         }
       },
-      "Microsoft.IdentityModel.Tokens/6.8.0": {
+      "Microsoft.IdentityModel.Tokens/6.34.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Logging": "6.8.0"
+          "Microsoft.IdentityModel.Logging": "6.34.0"
         },
         "compile": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Tokens.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll": {
+          "lib/net6.0/Microsoft.IdentityModel.Tokens.dll": {
             "related": ".xml"
           }
         }
       },
-      "Microsoft.Maui.Controls/10.0.1": {
+      "Microsoft.Maui.Controls/10.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Maui.Controls.Build.Tasks": "10.0.1",
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Controls.Xaml": "10.0.1",
-          "Microsoft.Maui.Resizetizer": "10.0.1"
+          "Microsoft.Maui.Controls.Build.Tasks": "10.0.10",
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Controls.Xaml": "10.0.10",
+          "Microsoft.Maui.Resizetizer": "10.0.10"
         }
       },
-      "Microsoft.Maui.Controls.Build.Tasks/10.0.1": {
+      "Microsoft.Maui.Controls.Build.Tasks/10.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Controls.Xaml": "10.0.1"
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Controls.Xaml": "10.0.10"
         },
         "build": {
           "buildTransitive/netstandard2.0/Microsoft.Maui.Controls.Build.Tasks.props": {},
           "buildTransitive/netstandard2.0/Microsoft.Maui.Controls.Build.Tasks.targets": {}
         }
       },
-      "Microsoft.Maui.Controls.Compatibility/10.0.1": {
+      "Microsoft.Maui.Controls.Compatibility/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Controls.Xaml": "10.0.1"
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Controls.Xaml": "10.0.10"
         },
         "compile": {
           "lib/net10.0-android36.0/Microsoft.Maui.Controls.Compatibility.dll": {
@@ -7234,14 +7290,14 @@
           }
         }
       },
-      "Microsoft.Maui.Controls.Core/10.0.1": {
+      "Microsoft.Maui.Controls.Core/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
           "Microsoft.Extensions.DependencyInjection": "10.0.0",
           "Microsoft.Extensions.Logging": "10.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Maui.Core": "10.0.1",
+          "Microsoft.Maui.Core": "10.0.10",
           "Xamarin.AndroidX.DynamicAnimation": "1.1.0.3"
         },
         "compile": {
@@ -7359,12 +7415,12 @@
           }
         }
       },
-      "Microsoft.Maui.Controls.Xaml/10.0.1": {
+      "Microsoft.Maui.Controls.Xaml/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
-          "Microsoft.Maui.Controls.Core": "10.0.1",
-          "Microsoft.Maui.Core": "10.0.1"
+          "Microsoft.Maui.Controls.Core": "10.0.10",
+          "Microsoft.Maui.Core": "10.0.10"
         },
         "compile": {
           "lib/net10.0-android36.0/Microsoft.Maui.Controls.Xaml.dll": {
@@ -7377,7 +7433,7 @@
           }
         }
       },
-      "Microsoft.Maui.Core/10.0.1": {
+      "Microsoft.Maui.Core/10.0.10": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "10.0.0",
@@ -7385,8 +7441,8 @@
           "Microsoft.Extensions.Hosting.Abstractions": "10.0.0",
           "Microsoft.Extensions.Logging": "10.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Maui.Essentials": "10.0.1",
-          "Microsoft.Maui.Graphics": "10.0.1",
+          "Microsoft.Maui.Essentials": "10.0.10",
+          "Microsoft.Maui.Graphics": "10.0.10",
           "Xamarin.Android.Glide": "4.16.0.14",
           "Xamarin.AndroidX.Lifecycle.LiveData": "2.9.2.1",
           "Xamarin.AndroidX.Navigation.Common": "2.9.2.1",
@@ -7411,10 +7467,10 @@
           "buildTransitive/Microsoft.Maui.Core.targets": {}
         }
       },
-      "Microsoft.Maui.Essentials/10.0.1": {
+      "Microsoft.Maui.Essentials/10.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Maui.Graphics": "10.0.1",
+          "Microsoft.Maui.Graphics": "10.0.10",
           "Xamarin.AndroidX.Activity": "1.10.1.3",
           "Xamarin.AndroidX.Browser": "1.8.0.11",
           "Xamarin.AndroidX.Security.SecurityCrypto": "1.1.0.4-alpha07",
@@ -7431,7 +7487,7 @@
           }
         }
       },
-      "Microsoft.Maui.Graphics/10.0.1": {
+      "Microsoft.Maui.Graphics/10.0.10": {
         "type": "package",
         "compile": {
           "lib/net10.0-android36.0/Microsoft.Maui.Graphics.dll": {
@@ -7444,7 +7500,7 @@
           }
         }
       },
-      "Microsoft.Maui.Resizetizer/10.0.1": {
+      "Microsoft.Maui.Resizetizer/10.0.10": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Maui.Resizetizer.props": {},
@@ -7473,11 +7529,11 @@
           }
         }
       },
-      "SQLitePCLRaw.bundle_e_sqlite3/2.1.6": {
+      "SQLitePCLRaw.bundle_e_sqlite3/2.1.11": {
         "type": "package",
         "dependencies": {
-          "SQLitePCLRaw.lib.e_sqlite3.android": "2.1.6",
-          "SQLitePCLRaw.provider.e_sqlite3": "2.1.6"
+          "SQLitePCLRaw.lib.e_sqlite3.android": "2.1.11",
+          "SQLitePCLRaw.provider.e_sqlite3": "2.1.11"
         },
         "compile": {
           "lib/net6.0-android31.0/SQLitePCLRaw.batteries_v2.dll": {
@@ -7506,7 +7562,7 @@
           "lib/netcoreapp3.1/SQLitePCLRaw.nativelibrary.dll": {}
         }
       },
-      "SQLitePCLRaw.core/2.1.6": {
+      "SQLitePCLRaw.core/2.1.11": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
@@ -7515,7 +7571,7 @@
           "lib/netstandard2.0/SQLitePCLRaw.core.dll": {}
         }
       },
-      "SQLitePCLRaw.lib.e_sqlite3.android/2.1.6": {
+      "SQLitePCLRaw.lib.e_sqlite3.android/2.1.11": {
         "type": "package",
         "compile": {
           "lib/net6.0-android31.0/SQLitePCLRaw.lib.e_sqlite3.android.dll": {
@@ -7528,10 +7584,10 @@
           }
         }
       },
-      "SQLitePCLRaw.provider.e_sqlite3/2.1.6": {
+      "SQLitePCLRaw.provider.e_sqlite3/2.1.11": {
         "type": "package",
         "dependencies": {
-          "SQLitePCLRaw.core": "2.1.6"
+          "SQLitePCLRaw.core": "2.1.11"
         },
         "compile": {
           "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
@@ -7565,7 +7621,7 @@
           }
         }
       },
-      "System.Drawing.Common/4.7.0": {
+      "System.Drawing.Common/4.7.2": {
         "type": "package",
         "compile": {
           "ref/MonoAndroid10/_._": {}
@@ -7576,19 +7632,19 @@
           }
         }
       },
-      "System.IdentityModel.Tokens.Jwt/6.8.0": {
+      "System.IdentityModel.Tokens.Jwt/6.34.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.JsonWebTokens": "6.8.0",
-          "Microsoft.IdentityModel.Tokens": "6.8.0"
+          "Microsoft.IdentityModel.JsonWebTokens": "6.34.0",
+          "Microsoft.IdentityModel.Tokens": "6.34.0"
         },
         "compile": {
-          "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll": {
+          "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll": {
+          "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll": {
             "related": ".xml"
           }
         }
@@ -9630,7 +9686,11 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "FluentMigrator": "3.3.2",
-          "FluentMigrator.Runner": "3.3.2"
+          "FluentMigrator.Runner": "3.3.2",
+          "Microsoft.Data.SqlClient": "2.1.7",
+          "Microsoft.IdentityModel.JsonWebTokens": "6.34.0",
+          "System.Drawing.Common": "4.7.2",
+          "System.IdentityModel.Tokens.Jwt": "6.34.0"
         },
         "compile": {
           "bin/placeholder/migrationslib.dll": {}
@@ -10030,10 +10090,10 @@
         "litedb.nuspec"
       ]
     },
-    "Microsoft.Data.SqlClient/2.1.2": {
-      "sha512": "FCR+H1Fs4908IZMBhCBiWbyqc7vTABkF2EF9S/TViCtE6Di0XN+WcKInWOVCfh5qLOQXswHD1b5A4i1d92ubgw==",
+    "Microsoft.Data.SqlClient/2.1.7": {
+      "sha512": "dSdlcXPszeOjjDX9a0buMFgYqKrI5bTxdSgX3JyCa+OL80NUstJSxOJr0j9oOn8mpP5PgWeRC2bVf/Zf2Cjv+g==",
       "type": "package",
-      "path": "microsoft.data.sqlclient/2.1.2",
+      "path": "microsoft.data.sqlclient/2.1.7",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -10063,7 +10123,7 @@
         "lib/netstandard2.1/Microsoft.Data.SqlClient.dll",
         "lib/netstandard2.1/Microsoft.Data.SqlClient.pdb",
         "lib/netstandard2.1/Microsoft.Data.SqlClient.xml",
-        "microsoft.data.sqlclient.2.1.2.nupkg.sha512",
+        "microsoft.data.sqlclient.2.1.7.nupkg.sha512",
         "microsoft.data.sqlclient.nuspec",
         "ref/net46/Microsoft.Data.SqlClient.dll",
         "ref/net46/Microsoft.Data.SqlClient.pdb",
@@ -10614,10 +10674,33 @@
         "ref/xamarinmac20/Microsoft.Identity.Client.xml"
       ]
     },
-    "Microsoft.IdentityModel.JsonWebTokens/6.8.0": {
-      "sha512": "+7JIww64PkMt7NWFxoe4Y/joeF7TAtA/fQ0b2GFGcagzB59sKkTt/sMZWR6aSZht5YC7SdHi3W6yM1yylRGJCQ==",
+    "Microsoft.IdentityModel.Abstractions/6.34.0": {
+      "sha512": "5nInt1KKSpKQBlhe6gXz4yKxRzRUQa21vCvSIIKKzAI2e1r9PHQOZc7aRzBA8L/JCvBxLbCxelvUqun6qwWPJg==",
       "type": "package",
-      "path": "microsoft.identitymodel.jsonwebtokens/6.8.0",
+      "path": "microsoft.identitymodel.abstractions/6.34.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net45/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net461/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net461/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net462/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net462/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net472/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net472/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.xml",
+        "microsoft.identitymodel.abstractions.6.34.0.nupkg.sha512",
+        "microsoft.identitymodel.abstractions.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.JsonWebTokens/6.34.0": {
+      "sha512": "CZMom/ZoWcgjxLMxmCmcEkuoA0OA4swN1CGeMBQyxF/hEZgRbWK9EnWVJ9/oMUq3D1+OGJjnbN+W6gFq9kZcEg==",
+      "type": "package",
+      "path": "microsoft.identitymodel.jsonwebtokens/6.34.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -10625,16 +10708,22 @@
         "lib/net45/Microsoft.IdentityModel.JsonWebTokens.xml",
         "lib/net461/Microsoft.IdentityModel.JsonWebTokens.dll",
         "lib/net461/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net462/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net462/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net472/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net472/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.xml",
         "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.xml",
-        "microsoft.identitymodel.jsonwebtokens.6.8.0.nupkg.sha512",
+        "microsoft.identitymodel.jsonwebtokens.6.34.0.nupkg.sha512",
         "microsoft.identitymodel.jsonwebtokens.nuspec"
       ]
     },
-    "Microsoft.IdentityModel.Logging/6.8.0": {
-      "sha512": "Rfh/p4MaN4gkmhPxwbu8IjrmoDncGfHHPh1sTnc0AcM/Oc39/fzC9doKNWvUAjzFb8LqA6lgZyblTrIsX/wDXg==",
+    "Microsoft.IdentityModel.Logging/6.34.0": {
+      "sha512": "E0AbluNkI30/VKa96PxJhhFZDx/NGYIXFrRIRq1N5/V0TToaiuc3hM90QLFszT2BBQefnp/wjm12ilSudmt9bg==",
       "type": "package",
-      "path": "microsoft.identitymodel.logging/6.8.0",
+      "path": "microsoft.identitymodel.logging/6.34.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -10642,9 +10731,15 @@
         "lib/net45/Microsoft.IdentityModel.Logging.xml",
         "lib/net461/Microsoft.IdentityModel.Logging.dll",
         "lib/net461/Microsoft.IdentityModel.Logging.xml",
+        "lib/net462/Microsoft.IdentityModel.Logging.dll",
+        "lib/net462/Microsoft.IdentityModel.Logging.xml",
+        "lib/net472/Microsoft.IdentityModel.Logging.dll",
+        "lib/net472/Microsoft.IdentityModel.Logging.xml",
+        "lib/net6.0/Microsoft.IdentityModel.Logging.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Logging.xml",
         "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.Logging.xml",
-        "microsoft.identitymodel.logging.6.8.0.nupkg.sha512",
+        "microsoft.identitymodel.logging.6.34.0.nupkg.sha512",
         "microsoft.identitymodel.logging.nuspec"
       ]
     },
@@ -10682,10 +10777,10 @@
         "microsoft.identitymodel.protocols.openidconnect.nuspec"
       ]
     },
-    "Microsoft.IdentityModel.Tokens/6.8.0": {
-      "sha512": "gTqzsGcmD13HgtNePPcuVHZ/NXWmyV+InJgalW/FhWpII1D7V1k0obIseGlWMeA4G+tZfeGMfXr0klnWbMR/mQ==",
+    "Microsoft.IdentityModel.Tokens/6.34.0": {
+      "sha512": "PEPcGMqbEwEwbpQ6nTld9Nqq6V5BPZSOfk71qXZ7h7DuGuxa13bWvjImhJba5Ko88YvIuZuOBJWFZmjLfwbNXA==",
       "type": "package",
-      "path": "microsoft.identitymodel.tokens/6.8.0",
+      "path": "microsoft.identitymodel.tokens/6.34.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -10693,16 +10788,22 @@
         "lib/net45/Microsoft.IdentityModel.Tokens.xml",
         "lib/net461/Microsoft.IdentityModel.Tokens.dll",
         "lib/net461/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net462/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net462/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net472/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net472/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net6.0/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Tokens.xml",
         "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.xml",
-        "microsoft.identitymodel.tokens.6.8.0.nupkg.sha512",
+        "microsoft.identitymodel.tokens.6.34.0.nupkg.sha512",
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
-    "Microsoft.Maui.Controls/10.0.1": {
-      "sha512": "u9pTenkUr5G9YM/KPCoPSpt7cSgS68IMK5Ker2xWDQU0Qdyjt0J0tN/paLkB19Lzt3DpdBWwMu7/coZy+rajlg==",
+    "Microsoft.Maui.Controls/10.0.10": {
+      "sha512": "LotAr22hwGyiIcJmUre+itXfPZnFcyfcqNZw/OjumbLD6M2X7egv+tsh7rPTkD+JxIbxd1Doa7iRFa6J7I0T3w==",
       "type": "package",
-      "path": "microsoft.maui.controls/10.0.1",
+      "path": "microsoft.maui.controls/10.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -10710,14 +10811,14 @@
         "LICENSE.TXT",
         "README.md",
         "THIRD-PARTY-NOTICES.TXT",
-        "microsoft.maui.controls.10.0.1.nupkg.sha512",
+        "microsoft.maui.controls.10.0.10.nupkg.sha512",
         "microsoft.maui.controls.nuspec"
       ]
     },
-    "Microsoft.Maui.Controls.Build.Tasks/10.0.1": {
-      "sha512": "TbZnpoVn1eKIrBN6TH20FVEzo9qJhY1ymatOYMYchM2R5VWnJlooPho+u+H1MxTc14OZEv9W7pvsUu5a71wzbw==",
+    "Microsoft.Maui.Controls.Build.Tasks/10.0.10": {
+      "sha512": "06lC3fFzFyk7bmy/Oaf1sKSFZvG9Ml8ijlej4k/+x0MqKhHNvqA2TxiZnd/wKaoA9Vcy6SyF2mtoiFGn3eWMng==",
       "type": "package",
-      "path": "microsoft.maui.controls.build.tasks/10.0.1",
+      "path": "microsoft.maui.controls.build.tasks/10.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -10799,14 +10900,14 @@
         "buildTransitive/netstandard2.0/zh-HK/Microsoft.Maui.Controls.Build.Tasks.resources.dll",
         "buildTransitive/netstandard2.0/zh-Hans/Microsoft.Maui.Controls.Build.Tasks.resources.dll",
         "buildTransitive/netstandard2.0/zh-Hant/Microsoft.Maui.Controls.Build.Tasks.resources.dll",
-        "microsoft.maui.controls.build.tasks.10.0.1.nupkg.sha512",
+        "microsoft.maui.controls.build.tasks.10.0.10.nupkg.sha512",
         "microsoft.maui.controls.build.tasks.nuspec"
       ]
     },
-    "Microsoft.Maui.Controls.Compatibility/10.0.1": {
-      "sha512": "j8mEyg5OJ7E4zHpPjmL3SOhH7x+tDaOYKPFABDTOuSkY+D3YsJze9oO7GkWD8KiBOXDDlTWtKe6riuFNGNi0HA==",
+    "Microsoft.Maui.Controls.Compatibility/10.0.10": {
+      "sha512": "KEJBo0OWnMXrUAbvSAeQ2Qw2C+SXDXivkPX/COPzcU29aKiJaREbHx2QxTIqeQtQUtSVuAw4OLiVvWDG/IGaeA==",
       "type": "package",
-      "path": "microsoft.maui.controls.compatibility/10.0.1",
+      "path": "microsoft.maui.controls.compatibility/10.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -10841,14 +10942,14 @@
         "lib/netstandard2.1/Microsoft.Maui.Controls.Compatibility.dll",
         "lib/netstandard2.1/Microsoft.Maui.Controls.Compatibility.pdb",
         "lib/netstandard2.1/Microsoft.Maui.Controls.Compatibility.xml",
-        "microsoft.maui.controls.compatibility.10.0.1.nupkg.sha512",
+        "microsoft.maui.controls.compatibility.10.0.10.nupkg.sha512",
         "microsoft.maui.controls.compatibility.nuspec"
       ]
     },
-    "Microsoft.Maui.Controls.Core/10.0.1": {
-      "sha512": "PGEP7je96JxwIiqH6wPido7B4yM/7qkqCIWNW1Fz6lp6iAdhe56mKfwNq1ahfr4Rjb5C7TPXU8oTgwPKilezCQ==",
+    "Microsoft.Maui.Controls.Core/10.0.10": {
+      "sha512": "4aVpkrg5WbZyfy+cNXD38yAOvBOVfX8zfQteruuWhyGEQ2PvBdVu1wqkvy91m84drq4G8yoVBv4rQOV+O4VKMQ==",
       "type": "package",
-      "path": "microsoft.maui.controls.core/10.0.1",
+      "path": "microsoft.maui.controls.core/10.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -11171,14 +11272,14 @@
         "lib/netstandard2.1/zh-HK/Microsoft.Maui.Controls.resources.dll",
         "lib/netstandard2.1/zh-Hans/Microsoft.Maui.Controls.resources.dll",
         "lib/netstandard2.1/zh-Hant/Microsoft.Maui.Controls.resources.dll",
-        "microsoft.maui.controls.core.10.0.1.nupkg.sha512",
+        "microsoft.maui.controls.core.10.0.10.nupkg.sha512",
         "microsoft.maui.controls.core.nuspec"
       ]
     },
-    "Microsoft.Maui.Controls.Xaml/10.0.1": {
-      "sha512": "8z5REKP8MHbHwY2Rz9XIWqrMsImVGAjYQYXFa0QMLRO+tGXWguj85Igl7Q6fARe1rbIdNy8Off9N9470WJ64vw==",
+    "Microsoft.Maui.Controls.Xaml/10.0.10": {
+      "sha512": "lkxsRGRdd0ccjQy7eTbcsNwzp8lbuE2fwiuu2n188H/UtrIFdnq3oxc1EiIVovHFLGWWAuWKSFj7gislYrfhhw==",
       "type": "package",
-      "path": "microsoft.maui.controls.xaml/10.0.1",
+      "path": "microsoft.maui.controls.xaml/10.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -11226,14 +11327,14 @@
         "lib/netstandard2.1/Microsoft.Maui.Controls.Xaml.dll",
         "lib/netstandard2.1/Microsoft.Maui.Controls.Xaml.pdb",
         "lib/netstandard2.1/Microsoft.Maui.Controls.Xaml.xml",
-        "microsoft.maui.controls.xaml.10.0.1.nupkg.sha512",
+        "microsoft.maui.controls.xaml.10.0.10.nupkg.sha512",
         "microsoft.maui.controls.xaml.nuspec"
       ]
     },
-    "Microsoft.Maui.Core/10.0.1": {
-      "sha512": "gADO5xRQtjNj7Cvp/mrvyN5OPc2dBP69EegrseCrJTlF34QiNhzPYrSP6ukmRECbQO7/M1lQhzD6ejGkWGvfjQ==",
+    "Microsoft.Maui.Core/10.0.10": {
+      "sha512": "oxi232O5093Fj9zU6YpuRgfYSA0jahawxODCtDmKg5OG7c9xvYPe4h7n3LWq3+1+T4eTgrSZMLLFow4tH+PJCQ==",
       "type": "package",
-      "path": "microsoft.maui.core/10.0.1",
+      "path": "microsoft.maui.core/10.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -11277,14 +11378,14 @@
         "lib/netstandard2.1/Microsoft.Maui.dll",
         "lib/netstandard2.1/Microsoft.Maui.pdb",
         "lib/netstandard2.1/Microsoft.Maui.xml",
-        "microsoft.maui.core.10.0.1.nupkg.sha512",
+        "microsoft.maui.core.10.0.10.nupkg.sha512",
         "microsoft.maui.core.nuspec"
       ]
     },
-    "Microsoft.Maui.Essentials/10.0.1": {
-      "sha512": "7LYVsZa8NYbxiMjshPR1H0tJlAluJcHNk9Jf+iBgjpZmF1LGwXslN5NPUSikAPaQKU8xyJ7Rs7Yfl30CCaNTlw==",
+    "Microsoft.Maui.Essentials/10.0.10": {
+      "sha512": "TO/G2vLskHOh5PatuuFW9Q0P6O17hWRIfnMmTHQWXHcwCklf95C4X3gNR+EFCMe2+5vwhY9C19FxMKD/Nn3ZCg==",
       "type": "package",
-      "path": "microsoft.maui.essentials/10.0.1",
+      "path": "microsoft.maui.essentials/10.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -11317,14 +11418,14 @@
         "lib/netstandard2.1/Microsoft.Maui.Essentials.dll",
         "lib/netstandard2.1/Microsoft.Maui.Essentials.pdb",
         "lib/netstandard2.1/Microsoft.Maui.Essentials.xml",
-        "microsoft.maui.essentials.10.0.1.nupkg.sha512",
+        "microsoft.maui.essentials.10.0.10.nupkg.sha512",
         "microsoft.maui.essentials.nuspec"
       ]
     },
-    "Microsoft.Maui.Graphics/10.0.1": {
-      "sha512": "CoOqzAmEwOcePVe+STZi37Ccvs+PF6xwIiObIXR89M0jQitFPuuMFWdmnjbebIfvYHN6LJflejVtGzennI0zsg==",
+    "Microsoft.Maui.Graphics/10.0.10": {
+      "sha512": "lOW/106rOybMkpXfzZ8bJWpBB12I1/DFRpdi2Hoy4w0ybtZFX5nvwXPhPc1OWXloDpKifuCJ7omoTm4v/xuXzw==",
       "type": "package",
-      "path": "microsoft.maui.graphics/10.0.1",
+      "path": "microsoft.maui.graphics/10.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -11359,14 +11460,14 @@
         "lib/netstandard2.1/Microsoft.Maui.Graphics.dll",
         "lib/netstandard2.1/Microsoft.Maui.Graphics.pdb",
         "lib/netstandard2.1/Microsoft.Maui.Graphics.xml",
-        "microsoft.maui.graphics.10.0.1.nupkg.sha512",
+        "microsoft.maui.graphics.10.0.10.nupkg.sha512",
         "microsoft.maui.graphics.nuspec"
       ]
     },
-    "Microsoft.Maui.Resizetizer/10.0.1": {
-      "sha512": "gKzY4mon1EsIaMdp0TAaQV/UoSMFMIzb5Rtsjj9Uimi9m5AWJM2hEAYRsU0kezjvnFVhfxJf79LgO681nxDnyQ==",
+    "Microsoft.Maui.Resizetizer/10.0.10": {
+      "sha512": "pDfYfXIMmZKCeTvc4r7h5ch6pAL90F/kqpbAm718URtJ30ci5cdu4M0gMMfIU6Lkbn+vlH3HGpSH6+uveyMZrQ==",
       "type": "package",
-      "path": "microsoft.maui.resizetizer/10.0.1",
+      "path": "microsoft.maui.resizetizer/10.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -11415,7 +11516,7 @@
         "buildTransitive/x64/libSkiaSharp.so",
         "buildTransitive/x86/libHarfBuzzSharp.dll",
         "buildTransitive/x86/libSkiaSharp.dll",
-        "microsoft.maui.resizetizer.10.0.1.nupkg.sha512",
+        "microsoft.maui.resizetizer.10.0.10.nupkg.sha512",
         "microsoft.maui.resizetizer.nuspec"
       ]
     },
@@ -11484,10 +11585,10 @@
         "sqlite-net-pcl.nuspec"
       ]
     },
-    "SQLitePCLRaw.bundle_e_sqlite3/2.1.6": {
-      "sha512": "BmAf6XWt4TqtowmiWe4/5rRot6GerAeklmOPfviOvwLoF5WwgxcJHAxZtySuyW9r9w+HLILnm8VfJFLCUJYW8A==",
+    "SQLitePCLRaw.bundle_e_sqlite3/2.1.11": {
+      "sha512": "DC4nA7yWnf4UZdgJDF+9Mus4/cb0Y3Sfgi3gDnAoKNAIBwzkskNAbNbyu+u4atT0ruVlZNJfwZmwiEwE5oz9LQ==",
       "type": "package",
-      "path": "sqlitepclraw.bundle_e_sqlite3/2.1.6",
+      "path": "sqlitepclraw.bundle_e_sqlite3/2.1.11",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -11500,7 +11601,7 @@
         "lib/net6.0-tvos10.0/SQLitePCLRaw.batteries_v2.dll",
         "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll",
         "lib/xamarinios10/SQLitePCLRaw.batteries_v2.dll",
-        "sqlitepclraw.bundle_e_sqlite3.2.1.6.nupkg.sha512",
+        "sqlitepclraw.bundle_e_sqlite3.2.1.11.nupkg.sha512",
         "sqlitepclraw.bundle_e_sqlite3.nuspec"
       ]
     },
@@ -11522,22 +11623,22 @@
         "sqlitepclraw.bundle_green.nuspec"
       ]
     },
-    "SQLitePCLRaw.core/2.1.6": {
-      "sha512": "wO6v9GeMx9CUngAet8hbO7xdm+M42p1XeJq47ogyRoYSvNSp0NGLI+MgC0bhrMk9C17MTVFlLiN6ylyExLCc5w==",
+    "SQLitePCLRaw.core/2.1.11": {
+      "sha512": "PK0GLFkfhZzLQeR3PJf71FmhtHox+U3vcY6ZtswoMjrefkB9k6ErNJEnwXqc5KgXDSjige2XXrezqS39gkpQKA==",
       "type": "package",
-      "path": "sqlitepclraw.core/2.1.6",
+      "path": "sqlitepclraw.core/2.1.11",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/SQLitePCLRaw.core.dll",
-        "sqlitepclraw.core.2.1.6.nupkg.sha512",
+        "sqlitepclraw.core.2.1.11.nupkg.sha512",
         "sqlitepclraw.core.nuspec"
       ]
     },
-    "SQLitePCLRaw.lib.e_sqlite3.android/2.1.6": {
-      "sha512": "+tk9RhueA0EkPWCK2yx8QttdjDo8neHIpEYZaAwSDNLRV/q8zwDWBsjXBw/GIQb5ncg/VOLKoKCJSCks3QpLFQ==",
+    "SQLitePCLRaw.lib.e_sqlite3.android/2.1.11": {
+      "sha512": "1eOZAlWkI57o/XJv2rDxwM1HD9rbJBBgsDYSSr5sQ9UG4Bg3ysl2eaNjBG/p+B2LB8KsDVTkG/VxYPD/P/mgjA==",
       "type": "package",
-      "path": "sqlitepclraw.lib.e_sqlite3.android/2.1.6",
+      "path": "sqlitepclraw.lib.e_sqlite3.android/2.1.11",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -11545,21 +11646,22 @@
         "lib/net6.0-android31.0/SQLitePCLRaw.lib.e_sqlite3.android.aar",
         "lib/net6.0-android31.0/SQLitePCLRaw.lib.e_sqlite3.android.dll",
         "lib/net6.0-android31.0/SQLitePCLRaw.lib.e_sqlite3.android.xml",
-        "sqlitepclraw.lib.e_sqlite3.android.2.1.6.nupkg.sha512",
+        "lib/netstandard2.0/SQLitePCLRaw.lib.e_sqlite3.android.dll",
+        "sqlitepclraw.lib.e_sqlite3.android.2.1.11.nupkg.sha512",
         "sqlitepclraw.lib.e_sqlite3.android.nuspec"
       ]
     },
-    "SQLitePCLRaw.provider.e_sqlite3/2.1.6": {
-      "sha512": "PQ2Oq3yepLY4P7ll145P3xtx2bX8xF4PzaKPRpw9jZlKvfe4LE/saAV82inND9usn1XRpmxXk7Lal3MTI+6CNg==",
+    "SQLitePCLRaw.provider.e_sqlite3/2.1.11": {
+      "sha512": "Y/0ZkR+r0Cg3DQFuCl1RBnv/tmxpIZRU3HUvelPw6MVaKHwYYR8YNvgs0vuNuXCMvlyJ+Fh88U1D4tah1tt6qw==",
       "type": "package",
-      "path": "sqlitepclraw.provider.e_sqlite3/2.1.6",
+      "path": "sqlitepclraw.provider.e_sqlite3/2.1.11",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/net6.0-windows7.0/SQLitePCLRaw.provider.e_sqlite3.dll",
         "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll",
         "lib/netstandard2.0/SQLitePCLRaw.provider.e_sqlite3.dll",
-        "sqlitepclraw.provider.e_sqlite3.2.1.6.nupkg.sha512",
+        "sqlitepclraw.provider.e_sqlite3.2.1.11.nupkg.sha512",
         "sqlitepclraw.provider.e_sqlite3.nuspec"
       ]
     },
@@ -11673,13 +11775,14 @@
         "version.txt"
       ]
     },
-    "System.Drawing.Common/4.7.0": {
-      "sha512": "v+XbyYHaZjDfn0ENmJEV1VYLgGgCTx1gnfOBcppowbpOAriglYgGCvFCPr2EEZyBvXlpxbEsTwkOlInl107ahA==",
+    "System.Drawing.Common/4.7.2": {
+      "sha512": "I2y4KBK3VCvU/WqE2xv7NjQ67maXHttkFSHYKgU2evrG9Yqh0oFjfORXt5hZTk+BVjdyFo2h0/YQZsca33BGmg==",
       "type": "package",
-      "path": "system.drawing.common/4.7.0",
+      "path": "system.drawing.common/4.7.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/MonoAndroid10/_._",
@@ -11706,16 +11809,16 @@
         "runtimes/win/lib/netcoreapp2.0/System.Drawing.Common.dll",
         "runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.dll",
         "runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.xml",
-        "system.drawing.common.4.7.0.nupkg.sha512",
+        "system.drawing.common.4.7.2.nupkg.sha512",
         "system.drawing.common.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
     },
-    "System.IdentityModel.Tokens.Jwt/6.8.0": {
-      "sha512": "5tBCjAub2Bhd5qmcd0WhR5s354e4oLYa//kOWrkX+6/7ZbDDJjMTfwLSOiZ/MMpWdE4DWPLOfTLOq/juj9CKzA==",
+    "System.IdentityModel.Tokens.Jwt/6.34.0": {
+      "sha512": "c0misfmFT3QxKY+a16PGlj+DtiUzoPaf26m2avyPZaLRc9vlIdLtmovfRY5MqN+y/SEoBSRXrgVaeZGPgFQQ6w==",
       "type": "package",
-      "path": "system.identitymodel.tokens.jwt/6.8.0",
+      "path": "system.identitymodel.tokens.jwt/6.34.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -11723,9 +11826,15 @@
         "lib/net45/System.IdentityModel.Tokens.Jwt.xml",
         "lib/net461/System.IdentityModel.Tokens.Jwt.dll",
         "lib/net461/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net462/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net462/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net472/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net472/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net6.0/System.IdentityModel.Tokens.Jwt.xml",
         "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll",
         "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.xml",
-        "system.identitymodel.tokens.jwt.6.8.0.nupkg.sha512",
+        "system.identitymodel.tokens.jwt.6.34.0.nupkg.sha512",
         "system.identitymodel.tokens.jwt.nuspec"
       ]
     },
@@ -14202,12 +14311,16 @@
       "FluentMigrator.Runner >= 3.3.2",
       "FluentMigrator.Runner.SQLite >= 3.3.2",
       "LiteDB >= 5.0.21",
+      "Microsoft.Data.SqlClient >= 2.1.7",
       "Microsoft.Data.Sqlite >= 8.0.11",
       "Microsoft.Extensions.Logging.Debug >= 8.0.1",
-      "Microsoft.Maui.Controls >= 10.0.1",
-      "Microsoft.Maui.Controls.Compatibility >= 10.0.1",
+      "Microsoft.IdentityModel.JsonWebTokens >= 6.34.0",
+      "Microsoft.Maui.Controls >= 10.0.10",
+      "Microsoft.Maui.Controls.Compatibility >= 10.0.10",
       "Microsoft.NET.ILLink.Tasks >= 10.0.1",
-      "SQLitePCLRaw.bundle_green >= 2.0.4",
+      "SQLitePCLRaw.bundle_e_sqlite3 >= 2.1.11",
+      "System.Drawing.Common >= 4.7.2",
+      "System.IdentityModel.Tokens.Jwt >= 6.34.0",
       "migrationslib >= 1.0.0",
       "sqlite-net-pcl >= 1.8.116"
     ]
@@ -14224,6 +14337,7 @@
       "packagesPath": "/Users/brbar/.nuget/packages/",
       "outputPath": "/Users/brbar/Source/labyItems/labyItems/obj/",
       "projectStyle": "PackageReference",
+      "centralPackageVersionsManagementEnabled": true,
       "configFilePaths": [
         "/Users/brbar/.nuget/NuGet/NuGet.Config"
       ],
@@ -14231,7 +14345,7 @@
         "net10.0-android"
       ],
       "sources": {
-        "/usr/local/share/dotnet/library-packs": {},
+        "/Users/brbar/.dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -14262,31 +14376,48 @@
         "dependencies": {
           "FluentMigrator.Runner": {
             "target": "Package",
-            "version": "[3.3.2, )"
+            "version": "[3.3.2, )",
+            "versionCentrallyManaged": true
           },
           "FluentMigrator.Runner.SQLite": {
             "target": "Package",
-            "version": "[3.3.2, )"
+            "version": "[3.3.2, )",
+            "versionCentrallyManaged": true
           },
           "LiteDB": {
             "target": "Package",
-            "version": "[5.0.21, )"
+            "version": "[5.0.21, )",
+            "versionCentrallyManaged": true
+          },
+          "Microsoft.Data.SqlClient": {
+            "target": "Package",
+            "version": "[2.1.7, )",
+            "versionCentrallyManaged": true
           },
           "Microsoft.Data.Sqlite": {
             "target": "Package",
-            "version": "[8.0.11, )"
+            "version": "[8.0.11, )",
+            "versionCentrallyManaged": true
           },
           "Microsoft.Extensions.Logging.Debug": {
             "target": "Package",
-            "version": "[8.0.1, )"
+            "version": "[8.0.1, )",
+            "versionCentrallyManaged": true
+          },
+          "Microsoft.IdentityModel.JsonWebTokens": {
+            "target": "Package",
+            "version": "[6.34.0, )",
+            "versionCentrallyManaged": true
           },
           "Microsoft.Maui.Controls": {
             "target": "Package",
-            "version": "[10.0.1, )"
+            "version": "[10.0.10, )",
+            "versionCentrallyManaged": true
           },
           "Microsoft.Maui.Controls.Compatibility": {
             "target": "Package",
-            "version": "[10.0.1, )"
+            "version": "[10.0.10, )",
+            "versionCentrallyManaged": true
           },
           "Microsoft.NET.ILLink.Tasks": {
             "suppressParent": "All",
@@ -14294,14 +14425,42 @@
             "version": "[10.0.1, )",
             "autoReferenced": true
           },
-          "SQLitePCLRaw.bundle_green": {
+          "SQLitePCLRaw.bundle_e_sqlite3": {
             "target": "Package",
-            "version": "[2.0.4, )"
+            "version": "[2.1.11, )",
+            "versionCentrallyManaged": true
+          },
+          "System.Drawing.Common": {
+            "target": "Package",
+            "version": "[4.7.2, )",
+            "versionCentrallyManaged": true
+          },
+          "System.IdentityModel.Tokens.Jwt": {
+            "target": "Package",
+            "version": "[6.34.0, )",
+            "versionCentrallyManaged": true
           },
           "sqlite-net-pcl": {
             "target": "Package",
-            "version": "[1.8.116, )"
+            "version": "[1.8.116, )",
+            "versionCentrallyManaged": true
           }
+        },
+        "centralPackageVersions": {
+          "FluentMigrator": "3.3.2",
+          "FluentMigrator.Runner": "3.3.2",
+          "FluentMigrator.Runner.SQLite": "3.3.2",
+          "LiteDB": "5.0.21",
+          "Microsoft.Data.SqlClient": "2.1.7",
+          "Microsoft.Data.Sqlite": "8.0.11",
+          "Microsoft.Extensions.Logging.Debug": "8.0.1",
+          "Microsoft.IdentityModel.JsonWebTokens": "6.34.0",
+          "Microsoft.Maui.Controls": "10.0.10",
+          "Microsoft.Maui.Controls.Compatibility": "10.0.10",
+          "sqlite-net-pcl": "1.8.116",
+          "SQLitePCLRaw.bundle_e_sqlite3": "2.1.11",
+          "System.Drawing.Common": "4.7.2",
+          "System.IdentityModel.Tokens.Jwt": "6.34.0"
         },
         "imports": [
           "net461",
@@ -14325,7 +14484,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/Users/brbar/.dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -14610,55 +14769,5 @@
         "#import": []
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.Data.SqlClient' 2.1.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-98g6-xh36-x2p7",
-      "libraryId": "Microsoft.Data.SqlClient",
-      "targetGraphs": [
-        "net10.0-android36.0",
-        "net10.0-android36.0/android-arm64",
-        "net10.0-android36.0/android-x64"
-      ]
-    },
-    {
-      "code": "NU1902",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.IdentityModel.JsonWebTokens' 6.8.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-59j7-ghrg-fj52",
-      "libraryId": "Microsoft.IdentityModel.JsonWebTokens",
-      "targetGraphs": [
-        "net10.0-android36.0",
-        "net10.0-android36.0/android-arm64",
-        "net10.0-android36.0/android-x64"
-      ]
-    },
-    {
-      "code": "NU1904",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'System.Drawing.Common' 4.7.0 has a known critical severity vulnerability, https://github.com/advisories/GHSA-rxg9-xrhp-64gj",
-      "libraryId": "System.Drawing.Common",
-      "targetGraphs": [
-        "net10.0-android36.0",
-        "net10.0-android36.0/android-arm64",
-        "net10.0-android36.0/android-x64"
-      ]
-    },
-    {
-      "code": "NU1902",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'System.IdentityModel.Tokens.Jwt' 6.8.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-59j7-ghrg-fj52",
-      "libraryId": "System.IdentityModel.Tokens.Jwt",
-      "targetGraphs": [
-        "net10.0-android36.0",
-        "net10.0-android36.0/android-arm64",
-        "net10.0-android36.0/android-x64"
-      ]
-    }
-  ]
+  }
 }
