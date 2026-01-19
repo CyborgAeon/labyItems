@@ -2,13 +2,13 @@ namespace labyItems.Models.Enums;
 
 public enum ElfColours
 {
-    Red,
-    Blue,
-    Brown,
-    Green,
-    White,
-    Black,
-    Grey,
+    Fire,
+    Air,
+    Earth,
+    Aquatic,
+    Light,
+    Dark,
+    Twilight,
     Bronze,
     Ebony,
     Gold,

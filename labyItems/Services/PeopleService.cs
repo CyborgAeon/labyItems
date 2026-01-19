@@ -9,6 +9,12 @@ namespace labyItems.Services;
 
 public static class PeopleService
 {
+
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     private static Dictionary<string, PeopleRecord>? _cache;
 
     public static async Task<Dictionary<string, PeopleRecord>> GetAllAsync()
@@ -25,7 +31,6 @@ public static class PeopleService
         return _cache;
     }
 }
-
 public sealed class PeopleRecord
 {
     public string PeopleType { get; set; } = "";
@@ -34,6 +39,27 @@ public sealed class PeopleRecord
     [JsonPropertyName("levelledAbilities")]
     public Dictionary<string, List<string>> LevelledAbilities { get; set; } = new();
 
+    public string? AdditionalInfo { get; set; }
+
+    public PeopleSubtypeRecord? Subtype { get; set; }
+
+    // legacy fields you may still have in older JSON
     [JsonPropertyName("Buy-as")]
     public string? BuyAs { get; set; }
+}
+
+public sealed class PeopleSubtypeRecord
+{
+    public string Key { get; set; } = "";
+    public string DisplayName { get; set; } = "";
+    public string Description { get; set; } = "";
+
+    // e.g. "SingleRequired"
+    public string SelectionMode { get; set; } = "SingleOptional";
+
+    // e.g. "Enum:ElfColours"
+    public string OptionsSource { get; set; } = "";
+
+    // e.g. "ElfColourAbilities"
+    public string AbilityMapKey { get; set; } = "";
 }

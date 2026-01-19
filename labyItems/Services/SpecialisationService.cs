@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Android.App;
 
 namespace labyItems.Services;
 
@@ -31,6 +32,14 @@ public sealed class SpecialisationRecord
 {
     public List<string>? Abilities { get; set; }
     public PowerListRecord? PowerList { get; set; }
+
+    // For tables like ElfColourAbilities
+    public Dictionary<string, ColourAbilityRecord>? ColourAbilities { get; set; }
+}
+
+public sealed class ColourAbilityRecord
+{
+    public Dictionary<string, List<string>>? Levels { get; set; }
 }
 
 public sealed class PowerListRecord

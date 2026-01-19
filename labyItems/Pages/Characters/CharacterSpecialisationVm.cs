@@ -2,9 +2,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using labyItems.Controls.Pickers;
+using System.Text.Json;
+using System.Windows.Input;
+using labyItems.Models.Characters;
 using labyItems.Services;
-using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
 
 namespace labyItems.Pages.Characters;
 
@@ -12,27 +14,30 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    private readonly CharacterBuilderVm _builder;
+    private CharacterDraft Draft => _builder.Draft;
+
     private void Raise([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
     {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        if (EqualityComparer<T>.Default.Equals(field, value))
+            return false;
+
         field = value;
         Raise(name);
         return true;
     }
 
-    private readonly CharacterBuilderVm _builderVm;
-
     public ObservableCollection<SpecialisationGroupVm> Groups { get; } = new();
 
-    private string _headerText = "";
-    public string HeaderText
-    {
-        get => _headerText;
-        private set => Set(ref _headerText, value);
-    }
+    public ObservableCollection<string> RaceSubtypeOptions { get; } = new();
+    public ObservableCollection<RaceSubtypePreviewLine> RaceSubtypeAbilitiesPreview { get; } = new();
+    public ObservableCollection<RaceSubtypeLevelRow> RaceSubtypeLevelRows { get; } = new();
+
+    private readonly Dictionary<string, SpecialisationDefinition> _specialisationIndex = new(StringComparer.OrdinalIgnoreCase);
+    private bool _isSyncingRaceSubtype;
 
     private bool _hasChoices;
     public bool HasChoices
@@ -44,538 +49,785 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             Raise(nameof(HasNoChoices));
         }
     }
-
-    public bool HasNoChoices => !HasChoices;
-
-    private bool _isCompleteForNavigation = true;
-    public bool IsCompleteForNavigation
+    private bool _hasRaceSubtypeChoice;
+    public bool HasRaceSubtypeChoice
     {
-        get => _isCompleteForNavigation;
-        private set => Set(ref _isCompleteForNavigation, value);
+        get => _hasRaceSubtypeChoice;
+        private set
+        {
+            if (!Set(ref _hasRaceSubtypeChoice, value)) return;
+            Raise(nameof(HasNoChoices));
+        }
     }
 
-    public CharacterSpecialisationVm(CharacterBuilderVm builderVm)
+    private string? _selectedRaceSubtype;
+    public string? SelectedRaceSubtype
     {
-        _builderVm = builderVm;
-        HeaderText = "Select any specialist skills granted by your race and/or class.";
-        HasChoices = false;
-        IsCompleteForNavigation = true;
+        get => _selectedRaceSubtype;
+        set
+        {
+            var normalized = (value ?? string.Empty).Trim();
+            if (!Set(ref _selectedRaceSubtype, normalized)) return;
+
+            Raise(nameof(HasRaceSubtypeSelection));
+
+            if (_raceSubtypeSlot != null && !_isSyncingRaceSubtype)
+            {
+                _isSyncingRaceSubtype = true;
+                _raceSubtypeSlot.SelectedOption = normalized.Length == 0 ? null : normalized;
+                _isSyncingRaceSubtype = false;
+            }
+
+            SyncRaceSubtypeDraftAndPreview();
+        }
+    }
+
+    public bool HasRaceSubtypeSelection => !string.IsNullOrWhiteSpace(_selectedRaceSubtype);
+
+    private string _raceSubtypeTitle = "Race subtype";
+    public string RaceSubtypeTitle
+    {
+        get => _raceSubtypeTitle;
+        private set => Set(ref _raceSubtypeTitle, value);
+    }
+
+    private string _raceSubtypeStatusText = string.Empty;
+    public string RaceSubtypeStatusText
+    {
+        get => _raceSubtypeStatusText;
+        private set => Set(ref _raceSubtypeStatusText, value);
+    }
+
+    private string _raceSubtypeSubtitle = string.Empty;
+    public string RaceSubtypeSubtitle
+    {
+        get => _raceSubtypeSubtitle;
+        private set => Set(ref _raceSubtypeSubtitle, value);
+    }
+
+    private string _raceSubtypeCardState = "Neutral";
+    public string RaceSubtypeCardState
+    {
+        get => _raceSubtypeCardState;
+        private set => Set(ref _raceSubtypeCardState, value);
+    }
+
+    private SpecialisationSlotVm? _raceSubtypeSlot;
+    private string _raceSubtypeKey = "";
+    private string _raceSubtypeAbilityMapKey = "";
+    private bool _raceSubtypeRequired;
+    private string _raceSubtypeTitleBase = "Race subtype";
+    private string _raceSubtypeDescription = string.Empty;
+    private string _raceSubtypeLifeScaleOverride = string.Empty;
+    private string _currentRaceForSubtype = string.Empty;
+    private bool _raceSubtypeLevelsExpanded;
+    private bool _showRaceSubtypeLifeScale;
+
+    public bool HasNoChoices => !HasChoices;
+    public bool RaceSubtypeLevelsExpanded
+    {
+        get => _raceSubtypeLevelsExpanded;
+        private set => Set(ref _raceSubtypeLevelsExpanded, value);
+    }
+
+    public ICommand ToggleRaceSubtypeLevelsCommand { get; }
+
+    public bool ShowRaceSubtypeLifeScale
+    {
+        get => _showRaceSubtypeLifeScale;
+        private set
+        {
+            if (!Set(ref _showRaceSubtypeLifeScale, value)) return;
+            Raise(nameof(HideRaceSubtypeLifeScale));
+        }
+    }
+
+    public bool HideRaceSubtypeLifeScale => !ShowRaceSubtypeLifeScale;
+
+    private string _headerText = "Make your selections below.";
+    public string HeaderText
+    {
+        get => _headerText;
+        private set => Set(ref _headerText, value);
+    }
+
+    private bool _isComplete;
+    public bool IsComplete
+    {
+        get => _isComplete;
+        private set => Set(ref _isComplete, value);
+    }
+
+    public CharacterSpecialisationVm(CharacterBuilderVm builder)
+    {
+        _builder = builder;
+        ToggleRaceSubtypeLevelsCommand = new Command(() => RaceSubtypeLevelsExpanded = !RaceSubtypeLevelsExpanded);
     }
 
     public async Task ReloadAsync()
     {
-        await MainThread.InvokeOnMainThreadAsync(() =>
+        Groups.Clear();
+        RaceSubtypeOptions.Clear();
+        RaceSubtypeAbilitiesPreview.Clear();
+        RaceSubtypeLevelRows.Clear();
+        HasRaceSubtypeChoice = false;
+        RaceSubtypeLevelsExpanded = false;
+
+        _raceSubtypeSlot = null;
+        _raceSubtypeKey = "";
+        _raceSubtypeAbilityMapKey = "";
+        _raceSubtypeRequired = false;
+        _raceSubtypeTitleBase = "Race subtype";
+        _raceSubtypeDescription = string.Empty;
+        _raceSubtypeLifeScaleOverride = string.Empty;
+        _currentRaceForSubtype = string.Empty;
+
+        _isSyncingRaceSubtype = true;
+        Set(ref _selectedRaceSubtype, string.Empty, nameof(SelectedRaceSubtype));
+        Raise(nameof(HasRaceSubtypeSelection));
+        _isSyncingRaceSubtype = false;
+
+        RaceSubtypeTitle = _raceSubtypeTitleBase;
+        RaceSubtypeStatusText = string.Empty;
+        RaceSubtypeSubtitle = string.Empty;
+        RaceSubtypeCardState = "Neutral";
+
+        var race = (Draft.Race ?? string.Empty).Trim();
+        var cls = (Draft.Class ?? string.Empty).Trim();
+
+        if (race.Length == 0 && cls.Length == 0)
         {
-            Groups.Clear();
             HasChoices = false;
-            IsCompleteForNavigation = true;
-        });
-
-        var draft = _builderVm.Draft;
-        var className = (draft.Class ?? "").Trim();
-        var raceName = (draft.Race ?? "").Trim();
-
-        if (string.IsNullOrWhiteSpace(className) && string.IsNullOrWhiteSpace(raceName))
-        {
             HeaderText = "Select a race and class first.";
-            PersistToDraft(new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase));
-            _builderVm.NotifyGatingChanged();
+            RecomputeCompletion();
             return;
         }
 
-        var specs = await SpecialisationService.GetAllAsync();
-        var specKeys = specs.Keys.ToList();
+        var specialisationIndex = await LoadSpecialisationIndexAsync();
+        _specialisationIndex.Clear();
+        foreach (var kvp in specialisationIndex)
+            _specialisationIndex[kvp.Key] = kvp.Value;
 
-        var requirementLevels = new Dictionary<string, List<int>>(StringComparer.OrdinalIgnoreCase);
+        var required = new List<RequiredChoice>();
 
-        if (!string.IsNullOrWhiteSpace(className))
-            await AddRequirementLevelsFromClassAsync(className, specKeys, requirementLevels);
-
-        if (!string.IsNullOrWhiteSpace(raceName))
-            await AddRequirementLevelsFromRaceAsync(raceName, specKeys, requirementLevels);
-
-        if (requirementLevels.Count == 0)
+        // --------------------------
+        // CLASS REQUIRED CHOICES
+        // --------------------------
+        if (cls.Length > 0)
         {
-            HeaderText = "No specialisation choices required for the selected race/class.";
-            HasChoices = false;
-            IsCompleteForNavigation = true;
-            PersistToDraft(new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase));
-            _builderVm.NotifyGatingChanged();
-            return;
+            var allClasses = await ClassService.GetAllAsync();
+            if (allClasses.TryGetValue(cls, out var classRec) && classRec != null)
+            {
+                foreach (var kvp in classRec.Levels ?? new Dictionary<string, List<string>>())
+                {
+                    if (!int.TryParse(kvp.Key, out var level))
+                        continue;
+
+                    foreach (var abilityToken in kvp.Value ?? new List<string>())
+                    {
+                        var key = FindSpecialisationKey(abilityToken, specialisationIndex.Keys);
+                        if (key == null)
+                            continue;
+
+                        required.Add(new RequiredChoice
+                        {
+                            Source = ChoiceSource.Class,
+                            SourceName = cls,
+                            SpecialisationKey = key,
+                            Level = level
+                        });
+                    }
+                }
+            }
         }
 
-        var groupedSelections = ReadFromDraft();
-
-        var selectionsByLevel = ReadFromDraftByLevel();
-
-        var groupVms = new List<SpecialisationGroupVm>();
-        foreach (var req in requirementLevels.OrderBy(x => x.Key, StringComparer.OrdinalIgnoreCase))
+        // --------------------------
+        // RACE: SUBTYPE + REQUIRED CHOICES
+        // --------------------------
+        if (race.Length > 0)
         {
-            if (!specs.TryGetValue(req.Key, out var spec)) continue;
+            var allPeople = await PeopleService.GetAllAsync(); // uses PeopleRecord.Subtype now :contentReference[oaicite:2]{index=2}
+            if (allPeople.TryGetValue(race, out var raceRec) && raceRec != null)
+            {
+                // Subtype group (data-driven)
+                var subtype = raceRec.Subtype;
+                if (subtype != null)
+                {
+                    var options = ResolveSubtypeOptions(subtype.OptionsSource);
+                    _raceSubtypeRequired = (subtype.SelectionMode ?? "")
+                        .Contains("Required", StringComparison.OrdinalIgnoreCase);
 
-            var options = (spec.Abilities ?? new List<string>())
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
-                .ToList();
+                    _raceSubtypeKey = (subtype.Key ?? string.Empty).Trim();
+                    _raceSubtypeAbilityMapKey = (subtype.AbilityMapKey ?? string.Empty).Trim();
+                    _raceSubtypeTitleBase = string.IsNullOrWhiteSpace(subtype.DisplayName)
+                        ? $"{race} subtype"
+                        : subtype.DisplayName.Trim();
+                    _raceSubtypeDescription = subtype.Description?.Trim() ?? string.Empty;
+                    _currentRaceForSubtype = race;
 
-            var initial = selectionsByLevel.TryGetValue(req.Key, out var byLvl)
-                ? byLvl
-                : new Dictionary<int, string>();
-            var isWardPact = string.Equals(req.Key, "Ward pact", StringComparison.OrdinalIgnoreCase);
+                    RaceSubtypeOptions.Clear();
+                    foreach (var o in options)
+                        RaceSubtypeOptions.Add(o);
+
+                    HasRaceSubtypeChoice = options.Count > 0;
+
+                    var initialSelection = BuildSubtypeInitialSelection();
+                    if (initialSelection.TryGetValue(0, out var pre) && !string.IsNullOrWhiteSpace(pre))
+                        SelectedRaceSubtype = pre;
+                    else
+                        SyncRaceSubtypeDraftAndPreview();
+                }
+
+                foreach (var kvp in raceRec.LevelledAbilities ?? new Dictionary<string, List<string>>())
+                {
+                    if (!int.TryParse(kvp.Key, out var level))
+                        continue;
+
+                    foreach (var abilityToken in kvp.Value ?? new List<string>())
+                    {
+                        var key = FindSpecialisationKey(abilityToken, specialisationIndex.Keys);
+                        if (key == null)
+                            continue;
+
+                        required.Add(new RequiredChoice
+                        {
+                            Source = ChoiceSource.Race,
+                            SourceName = race,
+                            SpecialisationKey = key,
+                            Level = level
+                        });
+                    }
+                }
+            }
+        }
+
+        var byKey = required
+            .GroupBy(r => r.SpecialisationKey, StringComparer.OrdinalIgnoreCase)
+            .OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var g in byKey)
+        {
+            if (!specialisationIndex.TryGetValue(g.Key, out var def) || def == null)
+                continue;
+
+            var title = g.Key;
+            var levels = g.Select(x => x.Level).Distinct().OrderBy(x => x).ToList();
+
             var groupVm = new SpecialisationGroupVm(
-                title: req.Key,
-                levels: req.Value,
-                optionNames: options,
-                initiallySelectedByLevel: initial,
+                title: title,
+                levels: levels,
+                optionNames: def.Abilities ?? new List<string>(),
+                initiallySelectedByLevel: new Dictionary<int, string>(),
                 onAnySelectionChanged: OnAnySelectionChanged,
-                useWardPactEnum: isWardPact);
+                useWardPactEnum: UsesInlineDictionarySearch(title));
 
+            groupVm.IsExpanded = true;
 
-            groupVms.Add(groupVm);
+            Groups.Add(groupVm);
         }
 
 
-        await MainThread.InvokeOnMainThreadAsync(() =>
+        HasChoices = HasRaceSubtypeChoice || Groups.Count > 0;
+        HeaderText = HasChoices ? "Make your selections below." : "No specialisation choices required.";
+
+        RecomputeCompletion();
+    }
+
+    private void OnAnySelectionChanged()
+    {
+        SyncRaceSubtypeDraftAndPreview();
+    }
+
+    private async void SyncRaceSubtypeDraftAndPreview()
+    {
+        if (_isSyncingRaceSubtype)
+            return;
+
+        _isSyncingRaceSubtype = true;
+
+        try
         {
-            foreach (var g in groupVms)
-                Groups.Add(g);
+            var picked = (_raceSubtypeSlot?.SelectedOption ?? _selectedRaceSubtype ?? string.Empty).Trim();
 
-            HasChoices = Groups.Count > 0;
-            HeaderText = "Select the specialist skills granted by your race and/or class.";
-            RecomputeCompletionAndPersist();
-        });
+            if (Set(ref _selectedRaceSubtype, picked, nameof(SelectedRaceSubtype)))
+                Raise(nameof(HasRaceSubtypeSelection));
 
-        _builderVm.NotifyGatingChanged();
-    }
+            var effectiveKey = HasRaceSubtypeChoice ? _raceSubtypeKey : string.Empty;
+            var effectivePicked = HasRaceSubtypeChoice ? picked : string.Empty;
 
-    private Dictionary<string, Dictionary<int, string>> ReadFromDraftByLevel()
-    {
-        var draft = _builderVm.Draft;
-        var t = draft.GetType();
+            Draft.RaceSubtypeKey = effectiveKey;
+            Draft.RaceSubtypeValue = effectivePicked;
+            Draft.RaceSubtype = effectivePicked;
 
-        var prop = t.GetProperty("SpecialisationsByLevel")
-                   ?? t.GetProperty("SpecializationsByLevel");
+            await UpdateRaceSubtypePreviewAsync(effectivePicked);
+            UpdateRaceSubtypeCardState(effectivePicked);
 
-        if (prop?.GetValue(draft) is Dictionary<string, Dictionary<int, string>> d)
-            return new Dictionary<string, Dictionary<int, string>>(d, StringComparer.OrdinalIgnoreCase);
-
-        return new Dictionary<string, Dictionary<int, string>>(StringComparer.OrdinalIgnoreCase);
-    }
-
-    private void PersistToDraftByLevel(Dictionary<string, Dictionary<int, string>> groupedByLevel)
-    {
-        var draft = _builderVm.Draft;
-        var t = draft.GetType();
-
-        var byLevelProp = t.GetProperty("SpecialisationsByLevel")
-                         ?? t.GetProperty("SpecializationsByLevel");
-
-        if (byLevelProp != null && byLevelProp.CanWrite &&
-            byLevelProp.PropertyType == typeof(Dictionary<string, Dictionary<int, string>>))
-            byLevelProp.SetValue(draft, groupedByLevel);
-
-        var simple = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
-        foreach (var kvp in groupedByLevel)
-            simple[kvp.Key] = kvp.Value.OrderBy(x => x.Key).Select(x => x.Value).Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-
-        var simpleProp = t.GetProperty("Specialisations")
-                       ?? t.GetProperty("Specializations");
-
-        if (simpleProp != null && simpleProp.CanWrite &&
-            simpleProp.PropertyType == typeof(Dictionary<string, List<string>>))
-            simpleProp.SetValue(draft, simple);
-
-        var flat = simple.Values.SelectMany(x => x).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
-
-        var flatProp = t.GetProperty("SelectedAbilities")
-                    ?? t.GetProperty("Abilities")
-                    ?? t.GetProperty("ChosenAbilities");
-
-        if (flatProp != null && flatProp.CanWrite && flatProp.PropertyType == typeof(List<string>))
-            flatProp.SetValue(draft, flat);
-    }
-
-    private async Task AddRequirementLevelsFromClassAsync(
-        string className,
-        List<string> specKeys,
-        Dictionary<string, List<int>> requirementLevels)
-    {
-        var all = await ClassService.GetAllAsync();
-        if (!all.TryGetValue(className, out var record) || record == null) return;
-
-        var bracket = record.Brackets?.FirstOrDefault() ?? "";
-
-        for (var lvl = 1; lvl <= 8; lvl++)
+            RecomputeCompletion();
+            _builder.NotifyGatingChanged();
+        }
+        finally
         {
-            if (record.Levels == null) continue;
-
-            var key = lvl.ToString();
-            if (!record.Levels.TryGetValue(key, out var abilities) || abilities == null) continue;
-
-            foreach (var a in abilities)
-            {
-                var specKey = ResolveSpecialisationKey(a, className, bracket, specKeys);
-                if (specKey == null) continue;
-
-                if (!requirementLevels.TryGetValue(specKey, out var list))
-                {
-                    list = new List<int>();
-                    requirementLevels[specKey] = list;
-                }
-
-                list.Add(lvl);
-            }
+            _isSyncingRaceSubtype = false;
         }
     }
 
-    private async Task AddRequirementLevelsFromRaceAsync(
-        string raceName,
-        List<string> specKeys,
-        Dictionary<string, List<int>> requirementLevels)
+    private void RecomputeCompletion()
     {
-        var all = await PeopleService.GetAllAsync();
-        if (!all.TryGetValue(raceName, out var record) || record == null) return;
+        var complete = true;
 
-        var levels = record.LevelledAbilities;
-        if (levels == null) return;
-
-        foreach (var kvp in levels)
+        foreach (var g in Groups)
         {
-            if (!int.TryParse(kvp.Key, out var lvl)) continue;
-            if (kvp.Value == null) continue;
-
-            foreach (var a in kvp.Value)
+            if (!g.IsComplete)
             {
-                var specKey = ResolveSpecialisationKey(a, raceName, "", specKeys);
-                if (specKey == null) continue;
-
-                if (!requirementLevels.TryGetValue(specKey, out var list))
-                {
-                    list = new List<int>();
-                    requirementLevels[specKey] = list;
-                }
-
-                list.Add(lvl);
+                complete = false;
+                break;
             }
         }
+
+        // If subtype is required, enforce it explicitly (since IsComplete already does for the 1-slot group,
+        // this is mostly belt-and-braces if subtype group isn't created for some reason)
+        if (_raceSubtypeRequired && string.IsNullOrWhiteSpace(_selectedRaceSubtype))
+            complete = false;
+
+        IsComplete = complete;
+        HasChoices = HasRaceSubtypeChoice || Groups.Count > 0;
+        Raise(nameof(HasNoChoices));
     }
 
-    private static string? ResolveSpecialisationKey(
-        string? token,
-        string ownerName,
-        string bracket,
-        List<string> specKeys)
+    private async Task UpdateRaceSubtypePreviewAsync(string picked)
     {
-        var t = (token ?? "").Trim();
-        if (t.Length == 0) return null;
+        RaceSubtypeAbilitiesPreview.Clear();
+        RaceSubtypeLevelRows.Clear();
+        _raceSubtypeLifeScaleOverride = string.Empty;
+        Draft.LifeScaleKeyOverride = string.Empty;
+        RaceSubtypeLevelsExpanded = false;
+        ShowRaceSubtypeLifeScale = false;
 
-        var direct = specKeys.FirstOrDefault(k => string.Equals(k, t, StringComparison.OrdinalIgnoreCase));
-        if (direct != null) return direct;
+        if (!HasRaceSubtypeChoice)
+            return;
 
-        if (string.Equals(t, "Scout Skill", StringComparison.OrdinalIgnoreCase))
-            return specKeys.FirstOrDefault(k => string.Equals(k, "Standard Scout skill", StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrWhiteSpace(_raceSubtypeAbilityMapKey) || string.IsNullOrWhiteSpace(picked))
+            return;
 
-        if (string.Equals(t, "Scout Specialist Skill", StringComparison.OrdinalIgnoreCase))
-            return specKeys.FirstOrDefault(k => string.Equals(k, "Specialist Scout skill", StringComparison.OrdinalIgnoreCase));
+        if (!_specialisationIndex.TryGetValue(_raceSubtypeAbilityMapKey, out var mapDef) || mapDef?.ColourAbilities == null)
+            return;
 
-        if (string.Equals(t, "Warrior specialist", StringComparison.OrdinalIgnoreCase))
-            return specKeys.FirstOrDefault(k => string.Equals(k, "Warrior-Priest specialist", StringComparison.OrdinalIgnoreCase))
-                   ?? specKeys.FirstOrDefault(k => string.Equals(k, "Warrior Specialist", StringComparison.OrdinalIgnoreCase));
+        if (!mapDef.ColourAbilities.TryGetValue(picked, out var entry) || entry == null)
+            return;
 
-        if (t.IndexOf("specialist", StringComparison.OrdinalIgnoreCase) >= 0)
+        if (!string.IsNullOrWhiteSpace(entry.LifeScaleOverride))
         {
-            var ownerCandidate = specKeys.FirstOrDefault(k =>
-                Canon(k) == Canon(ownerName + " Specialist") ||
-                Canon(k) == Canon(ownerName + " specialist"));
+            _raceSubtypeLifeScaleOverride = entry.LifeScaleOverride.Trim();
+            Draft.LifeScaleKeyOverride = _raceSubtypeLifeScaleOverride;
 
-            if (ownerCandidate != null) return ownerCandidate;
-
-            if (string.Equals(t, "Specialist Skill", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(t, "Specialist skill", StringComparison.OrdinalIgnoreCase))
+            RaceSubtypeAbilitiesPreview.Add(new RaceSubtypePreviewLine
             {
-                if (bracket.IndexOf("Warrior", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    return specKeys.FirstOrDefault(k => string.Equals(k, "Warrior Specialist", StringComparison.OrdinalIgnoreCase))
-                           ?? specKeys.FirstOrDefault(k => k.IndexOf("Warrior", StringComparison.OrdinalIgnoreCase) >= 0 &&
-                                                          k.IndexOf("Specialist", StringComparison.OrdinalIgnoreCase) >= 0);
-                }
+                Level = "Life",
+                Ability = $"Life scale override: {_raceSubtypeLifeScaleOverride}"
+            });
+        }
 
-                var any = specKeys.FirstOrDefault(k => k.IndexOf("Specialist", StringComparison.OrdinalIgnoreCase) >= 0);
-                return any;
+        var levels = entry.Levels ?? new Dictionary<string, List<string>>();
+        var abilityByLevel = new Dictionary<int, List<string>>();
+        var hasAbilities = false;
+
+        var ordered = levels
+            .Select(kvp => new
+            {
+                Key = kvp.Key ?? string.Empty,
+                Level = int.TryParse(kvp.Key, out var n) ? n : int.MaxValue,
+                Abilities = (kvp.Value ?? new List<string>()).Select(x => (x ?? string.Empty).Trim()).Where(x => x.Length > 0).ToList()
+            })
+            .Where(x => x.Abilities.Count > 0)
+            .OrderBy(x => x.Level)
+            .ThenBy(x => x.Key, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var lvl in ordered)
+        {
+            var label = lvl.Level == int.MaxValue ? lvl.Key : $"Lv {lvl.Level}";
+            foreach (var ability in lvl.Abilities)
+            {
+                RaceSubtypeAbilitiesPreview.Add(new RaceSubtypePreviewLine
+                {
+                    Level = label,
+                    Ability = ability
+                });
             }
 
-            var close = specKeys.FirstOrDefault(k => Canon(k) == Canon(t));
-            if (close != null) return close;
+            if (lvl.Level != int.MaxValue)
+            {
+                if (!abilityByLevel.TryGetValue(lvl.Level, out var list))
+                {
+                    list = new List<string>();
+                    abilityByLevel[lvl.Level] = list;
+                }
 
-            var contains = specKeys.FirstOrDefault(k =>
-                k.IndexOf(t, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                t.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0);
+                list.AddRange(lvl.Abilities);
+                hasAbilities = true;
+            }
+        }
 
-            return contains;
+        var className = (Draft.Class ?? string.Empty).Trim();
+        var hasOverride = !string.IsNullOrWhiteSpace(_raceSubtypeLifeScaleOverride);
+        var lifeScaleRace = hasOverride ? _raceSubtypeLifeScaleOverride : string.Empty;
+
+        IReadOnlyList<LifeScalePoint> life = Array.Empty<LifeScalePoint>();
+        if (hasOverride && className.Length > 0)
+        {
+            life = await LifeScalesService.GetLifeScaleAsync(lifeScaleRace, className);
+
+            if ((life == null || life.Count == 0) && !string.Equals(lifeScaleRace, _currentRaceForSubtype, StringComparison.OrdinalIgnoreCase))
+            {
+                // Fallback to base race if override is missing in lifescales
+                life = await LifeScalesService.GetLifeScaleAsync(_currentRaceForSubtype, className);
+            }
+        }
+
+        var hasLife = hasOverride && life != null && life.Count > 0;
+
+        for (var level = 1; level <= 8; level++)
+        {
+            var body = hasLife && life.Count >= level ? life[level - 1].Body.ToString() : "";
+            var loc = hasLife && life.Count >= level ? life[level - 1].Loc.ToString() : "";
+            var abilities = abilityByLevel.TryGetValue(level, out var list)
+                ? string.Join(", ", list.Distinct(StringComparer.OrdinalIgnoreCase))
+                : "";
+
+            RaceSubtypeLevelRows.Add(new RaceSubtypeLevelRow
+            {
+                Level = level,
+                Body = body,
+                Loc = loc,
+                Abilities = abilities
+            });
+        }
+
+        ShowRaceSubtypeLifeScale = hasLife;
+        RaceSubtypeLevelsExpanded = hasLife || hasAbilities;
+    }
+
+    private void UpdateRaceSubtypeCardState(string picked)
+    {
+        var hasSelection = !string.IsNullOrWhiteSpace(picked);
+
+        RaceSubtypeTitle = hasSelection
+            ? $"{picked} benefits"
+            : _raceSubtypeTitleBase;
+
+        RaceSubtypeStatusText = hasSelection
+            ? "Selected"
+            : (_raceSubtypeRequired ? "Required" : "Optional");
+
+        RaceSubtypeCardState = hasSelection
+            ? "Success"
+            : (_raceSubtypeRequired ? "Error" : "Neutral");
+
+        var subtitle = _raceSubtypeDescription;
+        if (!string.IsNullOrWhiteSpace(_raceSubtypeLifeScaleOverride))
+        {
+            subtitle = subtitle.Length > 0
+                ? $"{subtitle} Life scale override: {_raceSubtypeLifeScaleOverride}."
+                : $"Life scale override: {_raceSubtypeLifeScaleOverride}.";
+        }
+
+        if (string.IsNullOrWhiteSpace(subtitle))
+            subtitle = hasSelection
+                ? "Preview your racial abilities by level."
+                : "Choose a subtype to preview its abilities.";
+
+        RaceSubtypeSubtitle = subtitle;
+    }
+
+    private static bool UsesInlineDictionarySearch(string groupTitle)
+        => string.Equals(groupTitle.Trim(), "Ward pact", StringComparison.OrdinalIgnoreCase);
+
+    private static string? FindSpecialisationKey(string rawAbilityToken, IEnumerable<string> knownKeys)
+    {
+        var token = (rawAbilityToken ?? string.Empty).Trim();
+        if (token.Length == 0)
+            return null;
+
+        foreach (var k in knownKeys)
+        {
+            if (string.Equals(k, token, StringComparison.OrdinalIgnoreCase))
+                return k;
+        }
+
+        var lowered = token.ToLowerInvariant();
+        foreach (var k in knownKeys)
+        {
+            var kk = k.ToLowerInvariant();
+            if (kk == lowered)
+                return k;
         }
 
         return null;
     }
 
-    private static string Canon(string s)
+    private static string BuildSubtitle(IEnumerable<RequiredChoice> grouped)
     {
-        var chars = s
-            .Trim()
-            .ToLowerInvariant()
-            .Where(c => char.IsLetterOrDigit(c))
-            .ToArray();
-        return new string(chars);
+        var sources = grouped
+            .Select(x => x.SourceName)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var levels = grouped
+            .Select(x => x.Level)
+            .Distinct()
+            .OrderBy(x => x)
+            .ToList();
+
+        var srcText = sources.Count > 0 ? string.Join(", ", sources) : "Race/Class";
+        var lvlText = levels.Count > 0 ? string.Join(", ", levels.Select(l => $"Lv {l}")) : "Levels";
+
+        return $"{srcText} • {lvlText}";
     }
 
-    private void OnAnySelectionChanged()
+    // --------------------------
+    // SUBTYPE: OPTIONS RESOLUTION
+    // --------------------------
+    private static List<string> ResolveSubtypeOptions(string? optionsSource)
     {
-        RecomputeCompletionAndPersist();
-        _builderVm.NotifyGatingChanged();
-    }
-    private void RecomputeCompletionAndPersist()
-    {
-        var anyRequired = Groups.Count > 0;
-        var complete = Groups.All(g => g.IsComplete);
-        IsCompleteForNavigation = !anyRequired || complete;
+        var src = (optionsSource ?? string.Empty).Trim();
+        if (src.Length == 0)
+            return new List<string>();
 
-        var byLevel = new Dictionary<string, Dictionary<int, string>>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var g in Groups)
+        // Format: "Enum:ElfColours"
+        if (src.StartsWith("Enum:", StringComparison.OrdinalIgnoreCase))
         {
-            var d = new Dictionary<int, string>();
-            foreach (var s in g.Slots)
+            var enumName = src.Substring("Enum:".Length).Trim();
+            if (enumName.Length == 0)
+                return new List<string>();
+
+            var enumType = FindEnumTypeByName(enumName);
+            if (enumType == null)
+                return new List<string>();
+
+            return Enum.GetNames(enumType).ToList();
+        }
+
+        // Future-proofing: allow comma-separated list as fallback
+        if (src.Contains(',', StringComparison.Ordinal))
+        {
+            return src.Split(',')
+                .Select(x => x.Trim())
+                .Where(x => x.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        return new List<string>();
+    }
+
+    private static Type? FindEnumTypeByName(string enumName)
+    {
+        // Search loaded assemblies for a matching enum type name (namespace-agnostic)
+        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            Type[] types;
+            try { types = asm.GetTypes(); }
+            catch (ReflectionTypeLoadException ex) { types = ex.Types.Where(t => t != null).Cast<Type>().ToArray(); }
+
+            foreach (var t in types)
             {
-                var chosen = (s.SelectedOption ?? "").Trim();
-                if (chosen.Length > 0)
-                    d[s.Level] = chosen;
+                if (t.IsEnum && string.Equals(t.Name, enumName, StringComparison.OrdinalIgnoreCase))
+                    return t;
+            }
+        }
+
+        return null;
+    }
+
+
+    private SpecialisationGroupVm BuildRaceSubtypeGroup(
+        string raceName,
+        PeopleSubtypeRecord subtype,
+        List<string> options)
+    {
+        // If you want to respect SelectionMode:
+        _raceSubtypeRequired = (subtype.SelectionMode ?? "")
+            .Contains("Required", StringComparison.OrdinalIgnoreCase);
+
+        // If subtype is optional and you *do not* want it to block progression,
+        // you can set _raceSubtypeRequired = false, and handle that in RecomputeCompletion (see note below).
+
+        _raceSubtypeKey = subtype.Key ?? "";
+        _raceSubtypeAbilityMapKey = subtype.AbilityMapKey ?? "";
+
+        var title = string.IsNullOrWhiteSpace(subtype.DisplayName)
+            ? $"{raceName} subtype"
+            : subtype.DisplayName.Trim();
+
+        // Your Group VM computes Subtitle itself (“Pick 1 ability” etc.).
+        // If you need a richer subtitle text for subtype groups, you’d have to extend SpecialisationGroupVm.
+        // For now, use the title only.
+
+        var group = new SpecialisationGroupVm(
+            title: title,
+            levels: new[] { 0 },                       // single “slot”
+            optionNames: options,                      // chip list source
+            initiallySelectedByLevel: BuildSubtypeInitialSelection(),
+            onAnySelectionChanged: OnAnySelectionChanged,
+            useWardPactEnum: false);
+
+        group.IsExpanded = true;
+
+        // Capture a reference to the slot so we can sync draft + preview on changes
+        _raceSubtypeSlot = group.Slots.FirstOrDefault();
+
+        return group;
+    }
+
+    private Dictionary<int, string> BuildSubtypeInitialSelection()
+    {
+        // Canonical first; fallback to legacy if needed
+        var picked = (Draft.RaceSubtypeValue ?? "").Trim();
+        if (picked.Length == 0)
+            picked = (Draft.RaceSubtype ?? "").Trim();
+
+        return picked.Length == 0
+            ? new Dictionary<int, string>()
+            : new Dictionary<int, string> { [0] = picked };
+    }
+
+
+    // --------------------------
+    // SPECIALISATION INDEX (JSON-driven)
+    // --------------------------
+    private static async Task<Dictionary<string, SpecialisationDefinition>> LoadSpecialisationIndexAsync()
+    {
+        using var stream = await FileSystem.OpenAppPackageFileAsync("specialisation/specialisation.json");
+        using var doc = await JsonDocument.ParseAsync(stream);
+
+        var root = doc.RootElement;
+        var dict = new Dictionary<string, SpecialisationDefinition>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var prop in root.EnumerateObject())
+        {
+            if (prop.Value.ValueKind != JsonValueKind.Object)
+                continue;
+
+            var def = new SpecialisationDefinition();
+
+            // Standard specialisations: { "Abilities": [ ... ] }
+            if (prop.Value.TryGetProperty("Abilities", out var abilitiesEl) && abilitiesEl.ValueKind == JsonValueKind.Array)
+            {
+                def.Abilities = abilitiesEl.EnumerateArray()
+                    .Select(x => x.GetString() ?? string.Empty)
+                    .Where(x => x.Length > 0)
+                    .ToList();
             }
 
-            byLevel[g.Title] = d;
+            // If it looks like an ability table (colour -> { Levels: { "1": [..] } })
+            // or (colour -> { "1": [..] }) — support both shapes robustly.
+            if (def.Abilities == null)
+            {
+                var parsed = ParseColourAbilities(prop.Value);
+                if (parsed != null && parsed.Count > 0)
+                    def.ColourAbilities = parsed;
+            }
+
+            dict[prop.Name] = def;
         }
 
-        PersistToDraftByLevel(byLevel);
+        return dict;
     }
 
-    private Dictionary<string, List<string>> ReadFromDraft()
+    private static Dictionary<string, ColourAbilityDefinition>? ParseColourAbilities(JsonElement element)
     {
-        var draft = _builderVm.Draft;
-        var t = draft.GetType();
+        if (element.ValueKind != JsonValueKind.Object)
+            return null;
 
-        var prop = t.GetProperty("Specialisations", BindingFlags.Instance | BindingFlags.Public)
-                   ?? t.GetProperty("Specializations", BindingFlags.Instance | BindingFlags.Public);
+        var outer = new Dictionary<string, ColourAbilityDefinition>(StringComparer.OrdinalIgnoreCase);
 
-        if (prop == null) return new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
-
-        var val = prop.GetValue(draft);
-        if (val is Dictionary<string, List<string>> dict)
-            return new Dictionary<string, List<string>>(dict, StringComparer.OrdinalIgnoreCase);
-
-        return new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
-    }
-
-    private void PersistToDraft(Dictionary<string, List<string>> grouped)
-    {
-        var draft = _builderVm.Draft;
-        var t = draft.GetType();
-
-        var prop = t.GetProperty("Specialisations", BindingFlags.Instance | BindingFlags.Public)
-                   ?? t.GetProperty("Specializations", BindingFlags.Instance | BindingFlags.Public);
-
-        if (prop != null && prop.CanWrite && prop.PropertyType == typeof(Dictionary<string, List<string>>))
-            prop.SetValue(draft, grouped);
-
-        var flat = grouped.Values.SelectMany(x => x).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
-
-        var flatProp = t.GetProperty("SelectedAbilities", BindingFlags.Instance | BindingFlags.Public)
-                      ?? t.GetProperty("Abilities", BindingFlags.Instance | BindingFlags.Public)
-                      ?? t.GetProperty("ChosenAbilities", BindingFlags.Instance | BindingFlags.Public);
-
-        if (flatProp != null && flatProp.CanWrite && flatProp.PropertyType == typeof(List<string>))
-            flatProp.SetValue(draft, flat);
-    }
-}
-
-public sealed class SpecialisationGroupVm : INotifyPropertyChanged
-{
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void Raise([CallerMemberName] string? name = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-    private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        Raise(name);
-        return true;
-    }
-
-    private readonly Action _onAnySelectionChanged;
-
-    public string Title { get; }
-    public int RequiredCount => Slots.Count;
-
-    public ObservableCollection<SpecialisationSlotVm> Slots { get; } = new();
-
-    private List<string> _allOptionNames;
-    private List<string> _filteredOptionNames;
-
-    public IReadOnlyList<string> FilteredOptionNames => _filteredOptionNames;
-
-    private string _filterText = "";
-    public string FilterText
-    {
-        get => _filterText;
-        set
+        foreach (var colourProp in element.EnumerateObject())
         {
-            if (UseWardPactEnum) return;
-            if (!Set(ref _filterText, value)) return;
-            ApplyFilter();
+            if (colourProp.Value.ValueKind != JsonValueKind.Object)
+                continue;
+
+            var entry = new ColourAbilityDefinition();
+
+            if (colourProp.Value.TryGetProperty("LifeScaleOverride", out var lsEl) && lsEl.ValueKind == JsonValueKind.String)
+                entry.LifeScaleOverride = lsEl.GetString() ?? string.Empty;
+
+            // Preferred shape: colour -> { Levels: { "1": [..], ... } }
+            if (colourProp.Value.TryGetProperty("Levels", out var levelsEl) && levelsEl.ValueKind == JsonValueKind.Object)
+                entry.Levels = ParseLevelArrays(levelsEl);
+            else
+                entry.Levels = ParseLevelArrays(colourProp.Value);
+
+            if (entry.Levels.Count > 0 || entry.LifeScaleOverride.Length > 0)
+                outer[colourProp.Name] = entry;
         }
+
+        return outer.Count > 0 ? outer : null;
     }
 
-    private bool _isExpanded;
-    public bool IsExpanded
+    private static Dictionary<string, List<string>> ParseLevelArrays(JsonElement levelsObject)
     {
-        get => _isExpanded;
-        set => Set(ref _isExpanded, value);
-    }
+        var levels = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
-    public Command ToggleExpandedCommand { get; }
+        if (levelsObject.ValueKind != JsonValueKind.Object)
+            return levels;
 
-    public string Subtitle => RequiredCount == 1 ? "Pick 1 ability" : $"Pick {RequiredCount} abilities";
-
-    public int SelectedCount => Slots.Count(s => !string.IsNullOrWhiteSpace(s.SelectedOption));
-
-    public bool HasDuplicates
-    {
-        get
+        foreach (var lvlProp in levelsObject.EnumerateObject())
         {
-            var picked = Slots
-                .Select(s => (s.SelectedOption ?? "").Trim())
+            if (lvlProp.Value.ValueKind != JsonValueKind.Array)
+                continue;
+
+            var list = lvlProp.Value.EnumerateArray()
+                .Select(x => x.GetString() ?? string.Empty)
                 .Where(x => x.Length > 0)
                 .ToList();
 
-            return picked.Count != picked.Distinct(StringComparer.OrdinalIgnoreCase).Count();
-        }
-    }
-
-    public bool IsComplete => SelectedCount == RequiredCount && !HasDuplicates;
-
-    public string StatusText => $"{SelectedCount}/{RequiredCount}";
-
-    public string HelperText
-    {
-        get
-        {
-            if (SelectedCount == 0) return "Make your selections below.";
-            if (HasDuplicates) return "Duplicate selections detected. Choose different abilities for each level.";
-            if (IsComplete) return "Selection complete.";
-            return "Continue selecting until all levels are filled.";
-        }
-    }
-
-    public SpecialisationCardState CardState
-    {
-        get
-        {
-            if (IsComplete) return SpecialisationCardState.Success;
-            if (HasDuplicates) return SpecialisationCardState.Error;
-            return SpecialisationCardState.Neutral;
-        }
-    }
-    public enum SpecialisationCardState
-    {
-        Neutral,
-        Success,
-        Error
-    }
-    public bool UseWardPactEnum { get; }
-
-    public SpecialisationGroupVm(
-        string title,
-        IEnumerable<int> levels,
-        List<string> optionNames,
-        Dictionary<int, string> initiallySelectedByLevel,
-        Action onAnySelectionChanged,
-        bool useWardPactEnum)
-    {
-        Title = title;
-        UseWardPactEnum = useWardPactEnum;
-        _onAnySelectionChanged = onAnySelectionChanged;
-
-        _allOptionNames = optionNames
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        _filteredOptionNames = _allOptionNames.ToList();
-
-        ToggleExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
-
-        foreach (var lvl in levels.OrderBy(x => x))
-        {
-            initiallySelectedByLevel.TryGetValue(lvl, out var pre);
-
-            var slot = new SpecialisationSlotVm(
-                lvl,
-                useWardPactEnum,
-                () => OnSlotChanged());
-
-            slot.SetOptionsSource(() => FilteredOptionNames);
-
-            if (useWardPactEnum)
-            {
-                if (!string.IsNullOrWhiteSpace(pre))
-                {
-                    var match = WardPactOptions.Standard.FirstOrDefault(k => string.Equals(k.Key, pre, StringComparison.OrdinalIgnoreCase));
-                    if (!string.IsNullOrWhiteSpace(match.Key))
-                        slot.SelectedWardPact = match.Value;
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(pre))
-                    slot.SelectedOption = pre;
-            }
-
-            Slots.Add(slot);
+            if (list.Count > 0)
+                levels[lvlProp.Name] = list;
         }
 
-        RaiseComputed();
+        return levels;
     }
 
-    private void ApplyFilter()
+    private enum ChoiceSource
     {
-        var q = (_filterText ?? "").Trim();
-        if (q.Length == 0)
-            _filteredOptionNames = _allOptionNames.ToList();
-        else
-            _filteredOptionNames = _allOptionNames
-                .Where(x => x.Contains(q, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-        Raise(nameof(FilteredOptionNames));
-
-        foreach (var s in Slots)
-            s.RaiseFilteredOptionsChanged();
+        Class,
+        Race
     }
 
-    private void OnSlotChanged()
+    private sealed class RequiredChoice
     {
-        RaiseComputed();
-        _onAnySelectionChanged();
+        public ChoiceSource Source { get; set; }
+        public string SourceName { get; set; } = string.Empty;
+        public string SpecialisationKey { get; set; } = string.Empty;
+        public int Level { get; set; }
     }
 
-    private void RaiseComputed()
+    private sealed class SpecialisationDefinition
     {
-        Raise(nameof(SelectedCount));
-        Raise(nameof(HasDuplicates));
-        Raise(nameof(IsComplete));
-        Raise(nameof(StatusText));
-        Raise(nameof(HelperText));
-        Raise(nameof(CardState));
+        public List<string>? Abilities { get; set; }
+
+        // TableName (e.g. ElfColourAbilities) -> subtypeName (e.g. Winter) -> level ("1") -> abilities
+        public Dictionary<string, ColourAbilityDefinition>? ColourAbilities { get; set; }
+    }
+
+    private sealed class ColourAbilityDefinition
+    {
+        public Dictionary<string, List<string>> Levels { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+        public string LifeScaleOverride { get; set; } = string.Empty;
+    }
+
+    public sealed class RaceSubtypePreviewLine
+    {
+        public string Level { get; set; } = string.Empty;
+        public string Ability { get; set; } = string.Empty;
+    }
+
+    public sealed class RaceSubtypeLevelRow
+    {
+        public int Level { get; init; }
+        public string Body { get; init; } = string.Empty;
+        public string Loc { get; init; } = string.Empty;
+        public string Abilities { get; init; } = string.Empty;
     }
 }

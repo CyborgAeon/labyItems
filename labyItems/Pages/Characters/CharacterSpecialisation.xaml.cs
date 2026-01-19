@@ -1,5 +1,3 @@
-using labyItems.Pages.Characters.ViewModels;
-
 namespace labyItems.Pages.Characters;
 
 public partial class CharacterSpecialisation : ContentView

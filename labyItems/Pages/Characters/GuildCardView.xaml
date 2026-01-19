@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Pages.Characters.GuildCardView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Frame x:Name="CardFrame"
+           Padding="12"
+           Margin="0,0,0,12"
+           CornerRadius="14"
+           HasShadow="True">
+
+        <Grid RowDefinitions="Auto,Auto"
+              ColumnDefinitions="*,Auto"
+              RowSpacing="10">
+
+            <!-- Header -->
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="Auto,10,*,Auto,10,Auto"
+                  VerticalOptions="Center">
+
+                <Label Grid.Column="0"
+                       Text="{Binding Icon}"
+                       FontSize="18"
+                       VerticalOptions="Center"/>
+
+                <VerticalStackLayout Grid.Column="2"
+                                     Spacing="2">
+                    <Label Text="{Binding Name}"
+                           FontSize="16"
+                           FontAttributes="Bold"/>
+                    <Label Text="{Binding Type}"
+                           Opacity="0.7"
+                           FontSize="12"/>
+                </VerticalStackLayout>
+
+                <!-- Selected indicator -->
+                <Label Grid.Column="3"
+                       Text="Selected"
+                       IsVisible="{Binding IsSelected}"
+                       FontSize="12"
+                       Opacity="0.8"
+                       VerticalOptions="Center"/>
+
+                <Label Grid.Column="5"
+                       Text="⌄"
+                       FontSize="18"
+                       Rotation="{Binding ChevronRotation}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End">
+
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=ToggleExpandedCommand}"
+                            CommandParameter="{Binding .}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+            </Grid>
+
+            <!-- Expanded -->
+            <VerticalStackLayout Grid.Row="1"
+                                 IsVisible="{Binding IsExpanded}"
+                                 Spacing="10">
+
+                <!-- Restrictions -->
+                <VerticalStackLayout Spacing="4"
+                                     IsVisible="{Binding HasRestrictions}">
+                    <Label Text="Restrictions"
+                           FontAttributes="Bold"/>
+                    <Label Text="{Binding Restrictions}"
+                           FontSize="13"
+                           Opacity="0.85"/>
+                </VerticalStackLayout>
+
+                <!-- Benefits -->
+                <VerticalStackLayout Spacing="6"
+                                     IsVisible="{Binding HasAnyBenefits}">
+                    <Label Text="Benefits"
+                           FontAttributes="Bold"/>
+
+                    <VerticalStackLayout Spacing="4"
+                                         IsVisible="{Binding HasBasic}">
+                        <Label Text="Basic"
+                               Opacity="0.8"/>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding BasicBenefits}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Text="{Binding .}"
+                                           FontSize="13"
+                                           Opacity="0.9"/>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4"
+                                         IsVisible="{Binding HasIntermediate}">
+                        <Label Text="Intermediate"
+                               Opacity="0.8"/>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding IntermediateBenefits}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Text="{Binding .}"
+                                           FontSize="13"
+                                           Opacity="0.9"/>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4"
+                                         IsVisible="{Binding HasAdvanced}">
+                        <Label Text="Advanced"
+                               Opacity="0.8"/>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancedBenefits}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Text="{Binding .}"
+                                           FontSize="13"
+                                           Opacity="0.9"/>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+        </Grid>
+
+        <!-- Tap overlay: toggle expand on any tap -->
+        <Frame.GestureRecognizers>
+            <TapGestureRecognizer
+                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=SelectCommand}"
+                CommandParameter="{Binding .}"/>
+        </Frame.GestureRecognizers>
+
+    </Frame>
+</ContentView>

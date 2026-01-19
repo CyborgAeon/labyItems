@@ -229,29 +229,9 @@
   },
   "Elf": {
     "PeopleType": "Magic-Kin",
-    "Variants": [
-      "Red",
-      "Blue",
-      "Brown",
-      "Green",
-      "White",
-      "Black",
-      "Grey",
-      "Bronze",
-      "Ebony",
-      "Gold",
-      "Ivory",
-      "Silver",
-      "Jade",
-      "Onyx",
-      "Winter",
-      "Spring",
-      "Summer",
-      "Autumn"
-    ],
     "Description": "",
     "levelledAbilities": {
-      "1": ["Affirm"],
+      "1": [],
       "2": [],
       "3": [],
       "4": [],
@@ -260,7 +240,14 @@
       "7": [],
       "8": []
     },
-    "AdditionalInfo": ""
+    "Subtype": {
+      "Key": "ElfColour",
+      "DisplayName": "Elf type",
+      "Description": "Choose your element/season. This determines your racial abilities by level.",
+      "SelectionMode": "SingleRequired",
+      "OptionsSource": "Enum:ElfColours",
+      "AbilityMapKey": "ElfColourAbilities"
+    }
   },
   "Draves": {
     "PeopleType": "Magic-Kin",

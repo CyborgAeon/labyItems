@@ -252,5 +252,205 @@
       "Twilight-Elves",
       "Wood-Elves"
     ]
+  },
+  "ElfColourAbilities": {
+    "Light": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of light 1/level"],
+        "3": ["Light ranged 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["1 DAC"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Dark": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Darkness 1/level"],
+        "3": ["Darkness ranged 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Shadowshift 1/4 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Air": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Air 1/level"],
+        "3": ["Jump self 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Walk on air self 1/2 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Earth": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Stone 1/level"],
+        "3": ["Chameleon 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Talk to inanimate 1/2 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Fire": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Fire 1/level"],
+        "3": ["Shock 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Permanent Walk through fire"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Aquatic": {
+      "Levels": {
+        "1": [],
+        "2": [
+          "Detect fluid 1/level",
+          "Body of water 1/level",
+          "Unimpeded by water"
+        ],
+        "3": ["Rust ranged 1/2 levels"],
+        "4": [],
+        "5": ["Walk on or through water self 1/2 levels"],
+        "6": ["Vanish 1/day"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Twilight": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Twilight 1/level", "Detect Magic 1/level"],
+        "3": ["Twilight self 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Silence 1/day"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Gold": {
+      "Levels": {
+        "1": [],
+        "2": ["1 DAC"],
+        "3": ["Shield Self 1/level"],
+        "4": ["Spell shield 1/4 levels"],
+        "5": [],
+        "6": ["Strengthen Self 1/2 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Ivory": {
+      "Levels": {
+        "1": ["Gains Ivory Code Restriction"],
+        "2": ["Mark Ally at will", "Traitor’s Shield at will"],
+        "3": ["Ivory Warrior 1/4 levels"],
+        "4": ["Spell shield 1/4 levels"],
+        "5": [],
+        "6": ["Mobility 1/day"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Ebony": {
+      "Levels": {
+        "1": [],
+        "2": ["Confusion 1/day"],
+        "3": ["Pain (r) 1/2 levels"],
+        "4": ["Spell shield 1/4 levels"],
+        "5": [],
+        "6": ["Pass unknown 1/4 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Wood": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Wood 1/level"],
+        "3": ["Warp (r) 1/2 levels"],
+        "4": ["Entangle 1/2 levels"],
+        "5": [],
+        "6": ["Talk to Plant 1/level"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Drowe": {
+      "Levels": {
+        "1": [],
+        "2": ["Extinguish (r) 1/level"],
+        "3": ["Darkness 1/2 levels"],
+        "4": [],
+        "5": ["See Through Magical Darkness (self) 1/2 levels"],
+        "6": ["Blindness 1/day"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Winter": {
+      "LifeScaleOverride": "Winter Elf",
+      "Levels": {
+        "1": ["Skinning"],
+        "2": ["Body of Ice 1/level"],
+        "3": ["Immunity to cold (not subject to dispel)"],
+        "4": [],
+        "5": [],
+        "6": ["Javelin of Ice 1/4 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Autumn": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Autumn 1/level"],
+        "3": ["Warp ranged 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Wither touch 1/day"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Spring": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Spring 1/level"],
+        "3": ["Salmon leap 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Sun's healing"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Summer": {
+      "LifeScaleOverride": "Drowe",
+      "Levels": {
+        "1": [],
+        "2": ["Body of Summer 1/level"],
+        "3": ["Scorching heat 1/2 levels"],
+        "4": ["Light self 1/2 levels"],
+        "5": [],
+        "6": ["Summer Warmth 1/4 levels"],
+        "7": [],
+        "8": []
+      }
+    }
   }
 }

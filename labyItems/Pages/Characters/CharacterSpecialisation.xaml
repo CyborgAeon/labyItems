@@ -56,6 +56,191 @@
                     </VerticalStackLayout>
                 </Frame>
 
+                <Frame
+                    Padding="0"
+                    CornerRadius="12"
+                    HasShadow="False"
+                    IsVisible="{Binding HasRaceSubtypeChoice}">
+                    <Frame.Triggers>
+                        <DataTrigger TargetType="Frame"
+                                     Binding="{Binding RaceSubtypeCardState}"
+                                     Value="Neutral">
+                            <Setter Property="BorderColor"
+                                    Value="{AppThemeBinding Light={StaticResource CardBorderNeutralLight}, Dark={StaticResource CardBorderNeutralDark}}"/>
+                            <Setter Property="BackgroundColor"
+                                    Value="Transparent"/>
+                        </DataTrigger>
+
+                        <DataTrigger TargetType="Frame"
+                                     Binding="{Binding RaceSubtypeCardState}"
+                                     Value="Success">
+                            <Setter Property="BorderColor"
+                                    Value="{AppThemeBinding Light={StaticResource CardBorderSuccessLight}, Dark={StaticResource CardBorderSuccessDark}}"/>
+                            <Setter Property="BackgroundColor"
+                                    Value="{AppThemeBinding Light={StaticResource CardBgSuccessLight}, Dark={StaticResource CardBgSuccessDark}}"/>
+                        </DataTrigger>
+
+                        <DataTrigger TargetType="Frame"
+                                     Binding="{Binding RaceSubtypeCardState}"
+                                     Value="Error">
+                            <Setter Property="BorderColor"
+                                    Value="{AppThemeBinding Light={StaticResource CardBorderErrorLight}, Dark={StaticResource CardBorderErrorDark}}"/>
+                            <Setter Property="BackgroundColor"
+                                    Value="{AppThemeBinding Light={StaticResource CardBgErrorLight}, Dark={StaticResource CardBgErrorDark}}"/>
+                        </DataTrigger>
+                    </Frame.Triggers>
+
+                    <VerticalStackLayout Spacing="0">
+
+                        <Grid Padding="12"
+                              ColumnDefinitions="*,Auto"
+                              RowDefinitions="Auto,Auto">
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="{Binding RaceSubtypeTitle}"
+                                   FontAttributes="Bold"
+                                   LineBreakMode="TailTruncation"/>
+
+                            <Label Grid.Row="0"
+                                   Grid.Column="1"
+                                   Text="{Binding RaceSubtypeStatusText}"
+                                   Opacity="0.75"/>
+
+                            <Label Grid.Row="1"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Text="{Binding RaceSubtypeSubtitle}"
+                                   Opacity="0.75"
+                                   LineBreakMode="WordWrap"/>
+                        </Grid>
+
+                        <BoxView HeightRequest="1"
+                                 Opacity="0.25"/>
+
+                        <VerticalStackLayout Padding="12"
+                                             Spacing="10">
+
+                            <controls:ChipGroup
+                                Items="{Binding RaceSubtypeOptions}"
+                                SelectedItem="{Binding SelectedRaceSubtype, Mode=TwoWay}"/>
+
+                            <VerticalStackLayout Spacing="8"
+                                                 IsVisible="{Binding HasRaceSubtypeSelection}">
+
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <Label Text="Level progression"
+                                           FontAttributes="Bold"/>
+                                    <Button Text="{Binding RaceSubtypeLevelsExpanded, Converter={StaticResource ChevronConverter}}"
+                                            Command="{Binding ToggleRaceSubtypeLevelsCommand}"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                            Padding="0"
+                                            WidthRequest="32"
+                                            HeightRequest="32"
+                                            HorizontalOptions="End"/>
+                                </Grid>
+
+                                <Grid IsVisible="{Binding RaceSubtypeLevelsExpanded}"
+                                      RowSpacing="4">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Grid.Row="0"
+                                          ColumnDefinitions="50,60,*,*"
+                                          ColumnSpacing="8"
+                                          Opacity="0.7"
+                                          IsVisible="{Binding ShowRaceSubtypeLifeScale}">
+                                        <Label Text="Lvl"/>
+                                        <Label Grid.Column="1"
+                                               Text="Body"/>
+                                        <Label Grid.Column="2"
+                                               Text="Loc"/>
+                                        <Label Grid.Column="3"
+                                               Text="Abilities"/>
+                                    </Grid>
+
+                                    <Grid Grid.Row="0"
+                                          ColumnDefinitions="50,*"
+                                          ColumnSpacing="8"
+                                          Opacity="0.7"
+                                          IsVisible="{Binding HideRaceSubtypeLifeScale}">
+                                        <Label Text="Lvl"/>
+                                        <Label Grid.Column="1"
+                                               Text="Abilities"/>
+                                    </Grid>
+
+                                    <CollectionView Grid.Row="1"
+                                                    ItemsSource="{Binding RaceSubtypeLevelRows}"
+                                                    SelectionMode="None"
+                                                    IsVisible="{Binding ShowRaceSubtypeLifeScale}">
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="50,60,*,*"
+                                                      ColumnSpacing="8"
+                                                      Padding="0,2">
+                                                    <Label Text="{Binding Level}"/>
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding Body}"/>
+                                                    <Label Grid.Column="2"
+                                                           Text="{Binding Loc}"/>
+                                                    <Label Grid.Column="3"
+                                                           Text="{Binding Abilities}"
+                                                           LineBreakMode="WordWrap"
+                                                           Opacity="0.85"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+
+                                    <CollectionView Grid.Row="1"
+                                                    ItemsSource="{Binding RaceSubtypeLevelRows}"
+                                                    SelectionMode="None"
+                                                    IsVisible="{Binding HideRaceSubtypeLifeScale}">
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="50,*"
+                                                      ColumnSpacing="8"
+                                                      Padding="0,2">
+                                                    <Label Text="{Binding Level}"/>
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding Abilities}"
+                                                           LineBreakMode="WordWrap"
+                                                           Opacity="0.85"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </Grid>
+
+                                <Label Text="You will gain:"
+                                       FontAttributes="Bold"/>
+
+                                <CollectionView ItemsSource="{Binding RaceSubtypeAbilitiesPreview}"
+                                                SelectionMode="None">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="Auto,*"
+                                                  Padding="0,4">
+                                                <Label Text="{Binding Level}"
+                                                       Opacity="0.85"
+                                                       VerticalOptions="Start"/>
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding Ability}"
+                                                       LineBreakMode="WordWrap"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+
                 <VerticalStackLayout
                     BindableLayout.ItemsSource="{Binding Groups}"
                     Spacing="12"

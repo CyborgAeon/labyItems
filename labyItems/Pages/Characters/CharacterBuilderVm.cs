@@ -15,8 +15,13 @@ namespace labyItems.Pages.Characters;
 public sealed class CharacterBuilderVm : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
+
     private HashSet<string>? _allowedRaceKeysForSelectedClass;
     private string? _allowedRaceKeysForClass;
+
+    private HashSet<string>? _allowedClassKeysForSelectedRace;
+    private string? _allowedClassKeysForRace;
+
     private void Raise([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
@@ -62,6 +67,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         {
             SelectedRaceFilter = string.IsNullOrWhiteSpace(s) ? "All" : s;
         });
+
         ClassFilters = new ObservableCollection<string> { "All" };
         RaceFilters = new ObservableCollection<string> { "All" };
 
@@ -73,6 +79,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         RefilterClasses();
         RefilterRaces();
+
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             await LoadRacesAsync();
@@ -81,8 +88,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await RefreshAllowedRacesForSelectedClassAsync();
             RefilterRaces();
 
-            await ApplyRaceToClassesAsync(_draft.Race);
+            await RefreshAllowedClassesForSelectedRaceAsync();
             RefilterClasses();
+
+            await ApplyRaceToClassesAsync(_draft.Race);
 
             await SpecialisationVm.ReloadAsync();
         });
@@ -212,11 +221,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     public ObservableCollection<ClassCardVm> AllClasses { get; }
     public ObservableCollection<RaceCardVm> AllRaces { get; }
+
     public ObservableCollection<ClassCardVm> FilteredClasses { get; } = new();
     public ObservableCollection<RaceCardVm> FilteredRaces { get; } = new();
-
-    private ObservableCollection<ClassCardVm> _filteredClasses = new();
-    private ObservableCollection<RaceCardVm> _filteredRaces = new();
 
     public ICommand ToggleClassExpandedCommand { get; }
     public ICommand SelectClassCommand { get; }
@@ -255,7 +262,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         });
     }
 
-
     private void SelectRace(RaceCardVm? item)
     {
         if (item == null) return;
@@ -268,12 +274,15 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await ApplyRaceToClassesAsync(item.Name);
+            await RefreshAllowedClassesForSelectedRaceAsync();
             RefilterClasses();
+
+            await ApplyRaceToClassesAsync(item.Name);
+            RefilterRaces();
+
             await SpecialisationVm.ReloadAsync();
         });
     }
-
 
     private async Task LoadClassesAsync()
     {
@@ -298,7 +307,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             var maxAc = ParseInt(record.MaxAC);
             var powerBase = record.Powerbase?.FirstOrDefault() ?? "";
 
-            var points = await LifeScalesService.GetLifeScaleAsync("", classKey);
+            var raceKeyForLife = ResolveRaceKeyForLifeScale(_draft);
+
+            var points = await LifeScalesService.GetLifeScaleAsync(raceKeyForLife, classKey);
             var tblp = points.Count >= 8 ? points[7].Body : 0;
 
             list.Add(new ClassCardVm
@@ -326,13 +337,63 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             ClassFilters.Add("All");
             foreach (var c in categories.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
                 ClassFilters.Add(c);
+
+            RefilterClasses();
         });
     }
+
+    private static string ResolveRaceKeyForLifeScale(CharacterDraft draft)
+    {
+        var race = (draft.Race ?? "").Trim();
+        if (!string.Equals(race, "Elf", StringComparison.OrdinalIgnoreCase))
+            return race;
+
+        // If you have not added RaceSubtype yet, delete this block until you do.
+        var subtype = (draft.RaceSubtype ?? "").Trim();
+
+        if (string.Equals(subtype, "Winter", StringComparison.OrdinalIgnoreCase))
+            return "Winter Elf";
+
+        if (string.Equals(subtype, "Summer", StringComparison.OrdinalIgnoreCase))
+            return "Drowe";
+
+        return "Elf";
+    }
+
+    private async Task RefreshAllowedClassesForSelectedRaceAsync()
+    {
+        var selectedRace = (_draft.Race ?? "").Trim();
+
+        if (selectedRace.Length == 0)
+        {
+            _allowedClassKeysForSelectedRace = null;
+            _allowedClassKeysForRace = null;
+            return;
+        }
+
+        if (string.Equals(_allowedClassKeysForRace, selectedRace, StringComparison.OrdinalIgnoreCase)
+            && _allowedClassKeysForSelectedRace != null)
+        {
+            return;
+        }
+
+        // IMPORTANT: class availability is based on base race identity, not the life-scale override.
+        var raceForFiltering = selectedRace;
+
+        var classes = await LifeScalesService.GetClassesForRaceAsync(raceForFiltering);
+
+        _allowedClassKeysForSelectedRace = classes
+            .Select(LifeScalesService.NormalizeKey)
+            .Where(k => k.Length > 0)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        _allowedClassKeysForRace = selectedRace;
+    }
+
     private async Task RefreshAllowedRacesForSelectedClassAsync()
     {
         var selectedClass = (_draft.Class ?? "").Trim();
 
-        // No class selected => no restriction (show all races).
         if (selectedClass.Length == 0)
         {
             _allowedRaceKeysForSelectedClass = null;
@@ -340,7 +401,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             return;
         }
 
-        // Avoid repeated reads if the class hasn't changed.
         if (string.Equals(_allowedRaceKeysForClass, selectedClass, StringComparison.OrdinalIgnoreCase)
             && _allowedRaceKeysForSelectedClass != null)
         {
@@ -349,7 +409,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         var races = await LifeScalesService.GetRacesForClassAsync(selectedClass);
 
-        // Normalize for robust matching (spaces vs hyphens, case, punctuation).
         _allowedRaceKeysForSelectedClass = races
             .Select(LifeScalesService.NormalizeKey)
             .Where(k => k.Length > 0)
@@ -392,29 +451,33 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var parts = bracket.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
         return parts.Length == 2 ? parts[1] : bracket;
     }
+
     private void RefilterClasses()
     {
         var q = (ClassSearchText ?? "").Trim().ToLowerInvariant();
         var filter = SelectedClassFilter ?? "All";
 
+        var allowed = _allowedClassKeysForSelectedRace;
+
         var list = AllClasses
             .Where(c =>
                 (filter == "All" || string.Equals(c.Category, filter, StringComparison.OrdinalIgnoreCase)) &&
+                (allowed == null || allowed.Contains(LifeScalesService.NormalizeKey(c.Name ?? c.Key ?? ""))) &&
                 (q.Length == 0 ||
                  (c.Name ?? "").ToLowerInvariant().Contains(q) ||
                  (c.Summary ?? "").ToLowerInvariant().Contains(q)))
-            // Optional: keep selected at top if you still want that behaviour
             .OrderByDescending(c => c.IsSelected)
             .ToList();
 
         ReplaceItems(FilteredClasses, list);
     }
+
     private void RefilterRaces()
     {
         var q = (RaceSearchText ?? "").Trim().ToLowerInvariant();
         var filter = SelectedRaceFilter ?? "All";
 
-        var allowed = _allowedRaceKeysForSelectedClass; // null => allow all
+        var allowed = _allowedRaceKeysForSelectedClass;
 
         var list = AllRaces
             .Where(r =>

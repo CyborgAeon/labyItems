@@ -5,6 +5,7 @@ using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Models.Characters;
 using labyItems.Pages.Characters;
+using labyItems.Pages.Characters.ViewModels;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -25,7 +26,6 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     public CharacterDraft Draft { get; } = new();
 
-    // Steps displayed in StepIndicator
     public ObservableCollection<StepItem> StepSteps { get; } = new()
     {
         new StepItem { Id = 1, Label = "Race & Class" },
@@ -62,7 +62,7 @@ public sealed class WizardVm : INotifyPropertyChanged
     {
         get
         {
-            if (CurrentStep >= StepSteps.Count - 1) return true; // "Save & Continue" enabled when review is reachable
+            if (CurrentStep >= StepSteps.Count - 1) return true;
             return CanNavigateToStep(CurrentStep + 1);
         }
     }
@@ -76,9 +76,15 @@ public sealed class WizardVm : INotifyPropertyChanged
     // Step VMs (created once to preserve state)
     public CharacterBuilderVm CharacterBuilderVm { get; }
 
+    // NEW
+    public GuildsVm GuildsVm { get; }
+
     public WizardVm()
     {
         CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
+
+        // NEW: optional guild selection step
+        GuildsVm = new GuildsVm(Draft, NotifyGatingChanged);
 
         BackCommand = new Command(OnBack);
         NextCommand = new Command(OnNext);
@@ -90,7 +96,6 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     public void NotifyGatingChanged()
     {
-        // Called by step VMs whenever user selection changes
         Raise(nameof(CanGoNext));
         Raise(nameof(NextButtonText));
     }
@@ -103,12 +108,8 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     private async void OnNext()
     {
-        // Final step: save & continue
         if (CurrentStep == StepSteps.Count - 1)
         {
-            // TODO: Persist Draft to storage and navigate to your Characters screen.
-            // Example with Shell routes:
-            // await Shell.Current.GoToAsync("//Characters");
             await Task.CompletedTask;
             return;
         }
@@ -122,14 +123,12 @@ public sealed class WizardVm : INotifyPropertyChanged
     {
         if (targetIndex == CurrentStep) return;
 
-        // Always allow backward navigation
         if (targetIndex < CurrentStep)
         {
             CurrentStep = targetIndex;
             return;
         }
 
-        // Forward navigation is gated
         if (!CanNavigateToStep(targetIndex)) return;
         CurrentStep = targetIndex;
     }
@@ -138,25 +137,21 @@ public sealed class WizardVm : INotifyPropertyChanged
     {
         if (targetIndex < 0 || targetIndex >= StepSteps.Count) return false;
 
-        // Always allow step 0
         if (targetIndex == 0) return true;
 
-        // Gate forward steps
         return targetIndex switch
         {
             1 => Draft.IsRaceAndClassSelected,
-            2 => Draft.IsRaceAndClassSelected,                 // Guilds needs race/class for availability filtering
-            3 => Draft.IsRaceAndClassSelected && IsStep2Valid(),// Status needs info valid
-            4 => Draft.IsRaceAndClassSelected && IsStep2Valid(),// Review needs everything required
+            2 => Draft.IsRaceAndClassSelected && IsStep2Valid(),
+            3 => Draft.IsRaceAndClassSelected && IsStep2Valid(),
+            4 => Draft.IsRaceAndClassSelected && IsStep2Valid(),
             _ => false
         };
     }
 
     private bool IsStep2Valid()
     {
-        // Placeholder. Replace with your real step-2 validations.
-        // Example: name required
-        return !string.IsNullOrWhiteSpace(Draft.Name);
+        return CharacterBuilderVm.SpecialisationVm.IsComplete;
     }
 
     private void UpdateStepView()
@@ -165,13 +160,15 @@ public sealed class WizardVm : INotifyPropertyChanged
         {
             0 => new CharacterBuilder(CharacterBuilderVm),
             1 => new CharacterSpecialisation(CharacterBuilderVm),
-            2 => BuildPlaceholder("Step 3 - Guilds (not implemented here)"),
+
+            // NEW: real guilds step
+            2 => new Guilds(GuildsVm),
+
             3 => BuildPlaceholder("Step 4 - Status/Buffs (not implemented here)"),
             4 => BuildPlaceholder("Step 5 - Review (not implemented here)"),
             _ => BuildPlaceholder("Unknown step")
         };
     }
-
 
     private static View BuildPlaceholder(string text)
         => new ContentView
