@@ -54,34 +54,37 @@ public class DictionarySearchBar<TValue> : ContentView
         _searchBar.Completed += OnSearchCompleted;
 
         _resultsView = BuildResultsView();
+        this.HorizontalOptions = LayoutOptions.FillAndExpand;
 
         var container = new AbsoluteLayout
         {
             IsClippedToBounds = false,
-            HorizontalOptions = LayoutOptions.Fill
+            HorizontalOptions = LayoutOptions.FillAndExpand
         };
 
-        // Keep the control's measured height equal to the entry height so it can sit inline (e.g., beside a slider)
         _searchBar.SizeChanged += (s, e) =>
         {
             container.HeightRequest = _searchBar.Height;
             _resultsView.TranslationY = _searchBar.Height;
 
-            // Ensure the entry fills the available container width (AbsoluteLayout requires explicit layout bounds)
             AbsoluteLayout.SetLayoutBounds(_searchBar, new Rect(0, 0, 1, _searchBar.Height));
             AbsoluteLayout.SetLayoutFlags(_searchBar, AbsoluteLayoutFlags.WidthProportional);
 
-            // Position the internal (fallback) results view directly under the entry and make it width-proportional
             AbsoluteLayout.SetLayoutBounds(_resultsView, new Rect(0, _searchBar.Height, 1, 0));
             AbsoluteLayout.SetLayoutFlags(_resultsView, AbsoluteLayoutFlags.WidthProportional);
         };
 
+
         // Add the entry and results view to the overlay container. Results will be shown translated below the entry.
         container.Add(_searchBar);
         container.Add(_resultsView);
+        AbsoluteLayout.SetLayoutBounds(_searchBar, new Rect(0, 0, 1, AbsoluteLayout.AutoSize));
+        AbsoluteLayout.SetLayoutFlags(_searchBar, AbsoluteLayoutFlags.WidthProportional);
+
+        AbsoluteLayout.SetLayoutBounds(_resultsView, new Rect(0, 0, 1, AbsoluteLayout.AutoSize));
+        AbsoluteLayout.SetLayoutFlags(_resultsView, AbsoluteLayoutFlags.WidthProportional);
 
         Content = container;
-
         UpdatePlaceholder();
         SyncTextToSelection();
     }

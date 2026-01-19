@@ -3,10 +3,10 @@ using System.Windows.Input;
 
 namespace labyItems.Pages.Characters;
 
-public partial class ClassCardView : ContentView
+public partial class GuildCardView : ContentView
 {
     public static readonly BindableProperty ToggleExpandedCommandProperty =
-        BindableProperty.Create(nameof(ToggleExpandedCommand), typeof(ICommand), typeof(ClassCardView));
+        BindableProperty.Create(nameof(ToggleExpandedCommand), typeof(ICommand), typeof(GuildCardView));
 
     public ICommand ToggleExpandedCommand
     {
@@ -14,16 +14,16 @@ public partial class ClassCardView : ContentView
         set => SetValue(ToggleExpandedCommandProperty, value);
     }
 
-
     public static readonly BindableProperty SelectCommandProperty =
-        BindableProperty.Create(nameof(SelectCommand), typeof(ICommand), typeof(ClassCardView));
+        BindableProperty.Create(nameof(SelectCommand), typeof(ICommand), typeof(GuildCardView));
+
     public ICommand SelectCommand
     {
         get => (ICommand)GetValue(SelectCommandProperty);
         set => SetValue(SelectCommandProperty, value);
     }
 
-    public ClassCardView()
+    public GuildCardView()
     {
         InitializeComponent();
     }
@@ -38,17 +38,16 @@ public partial class ClassCardView : ContentView
 
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(ClassCardVm.IsSelected))
+        if (e.PropertyName == nameof(GuildCardVm.IsSelected))
             Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
 
-
-        if (e.PropertyName == nameof(ClassCardVm.IsExpanded))
+        if (e.PropertyName == nameof(GuildCardVm.IsExpanded))
             Dispatcher.Dispatch(async () => await ScrollIntoViewIfExpandedAsync());
     }
 
     private async Task AnimateSelectionAsync()
     {
-        if (BindingContext is not ClassCardVm vm) return;
+        if (BindingContext is not GuildCardVm vm) return;
 
         if (vm.IsSelected)
         {
@@ -56,19 +55,18 @@ public partial class ClassCardView : ContentView
             await CardFrame.ScaleTo(1.0, 110, Easing.CubicOut);
         }
     }
+
     private CancellationTokenSource? _scrollCts;
 
     private async Task ScrollIntoViewIfExpandedAsync()
     {
-        if (BindingContext is not ClassCardVm vm) return;
+        if (BindingContext is not GuildCardVm vm) return;
         if (!vm.IsExpanded) return;
 
-        // Cancel any previous scroll in progress
         _scrollCts?.Cancel();
         _scrollCts = new CancellationTokenSource();
         var token = _scrollCts.Token;
 
-        // Let the expansion layout complete
         await Task.Delay(80, token);
 
         var cv = FindParentCollectionView();
@@ -76,7 +74,6 @@ public partial class ClassCardView : ContentView
 
         cv.ScrollTo(vm, position: ScrollToPosition.Center, animate: false);
         await Task.Delay(150, token);
-
         cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
     }
 
@@ -87,6 +84,4 @@ public partial class ClassCardView : ContentView
             parent = parent.Parent;
         return parent as CollectionView;
     }
-
-
 }

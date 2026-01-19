@@ -1,0 +1,456 @@
+{
+  "Warrior Specialist": {
+    "Abilities": [
+      "1st Weapon Mastery",
+      "Unarmed Combat",
+      "Smithing",
+      "Enhanced Reflexes",
+      "+6/2 Stamina",
+      "Cold Rage",
+      "Cold Rage",
+      "War Cry",
+      "Athletic Training"
+    ]
+  },
+  "Ranger Specialist": {
+    "Abilities": [
+      "1st Weapon Mastery",
+      "Unarmed Combat",
+      "+6/2 Stamina",
+      "Enhanced Reflexes",
+      "Shadowing"
+    ]
+  },
+  "Archer Specialist": {
+    "Abilities": [
+      "3rd Weapon Mastery (Bows)",
+      "Accuracy",
+      "+6/2 Stamina",
+      "Enhanced Reflexes"
+    ]
+  },
+  "Monk Specialist": {
+    "Abilities": [
+      "Mind Block",
+      "Stop Bleeding",
+      "Monk Locational Curing",
+      "Enhanced Reflexes",
+      "Forearm Parry",
+      "Relaxed Fall",
+      "Athletic Training"
+    ]
+  },
+  "Duellist Specialist": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "Unarmed Combat",
+      "Enhanced Reflexes",
+      "Forearm Parry",
+      "Relaxed Fall",
+      "Athletic Training",
+      "+2 Weapon Mastery",
+      "War Cry"
+    ]
+  },
+  "Cavalier Specialist": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "Unarmed Combat",
+      "Enhanced Reflexes",
+      "War Cry",
+      "Cold Rage"
+    ]
+  },
+  "Paladin Specialist": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "Enhanced Reflexes",
+      "Make healing balm",
+      "Read Spirit Runes and Utilise Goodly Scrolls",
+      "Utilise Goodly Spirit Item"
+    ]
+  },
+  "Unholy Champion Specialist": {
+    "Abilities": [
+      "Utilise Evil Spirit Item",
+      "Weapon Mastery",
+      "Make Poison",
+      "Enhanced Reflexes",
+      "Read Spirit Runes and Utilise Evil Scrolls"
+    ],
+    "Power List": {
+      "Max": 40,
+      "Requirements": ["Stairway", "Evil", "Neutral"]
+    }
+  },
+  "Grey Knight": {
+    "Abilities": [
+      "Utilise Neutral Spirit Item",
+      "Weapon Mastery",
+      "Chosen of the Faithful",
+      "Enhanced Reflexes",
+      "Read Spirit Runes and Utilise Neutral Scrolls"
+    ],
+    "Power List": {
+      "Max": 40,
+      "Requirements": ["Stairway", "Neutral"]
+    }
+  },
+  "Budoka Specialist": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "+2 Weapon Mastery",
+      "Enhanced Reflexes",
+      "Forearm Parry",
+      "Relaxed Fall",
+      "War Cry"
+    ]
+  },
+  "Power-Master Specialist": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "+2 Weapon Mastery",
+      "Enhanced Reflexes",
+      "Unarmed Combat",
+      "Empower Chosen Weapon"
+    ]
+  },
+  "Power-Warrior Specialist": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "+2 Weapon Mastery",
+      "Enhanced Reflexes",
+      "Cold Rage",
+      "Empower Chosen Weapon",
+      "War Cry"
+    ]
+  },
+  "Valdstayn Specialist": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "Athletic Training",
+      "Enhanced Reflexes",
+      "Unarmed Combat",
+      "War Cry"
+    ]
+  },
+  "Rovfuger Specialist": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "Athletic Training",
+      "Enhanced Reflexes",
+      "Forearm Parry",
+      "War Cry",
+      "+2 Weapon Mastery"
+    ]
+  },
+  "Wind dancer Specialist": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "Athletic Training",
+      "Enhanced Reflexes",
+      "+2 Weapon Mastery",
+      "Unarmed Combat"
+    ]
+  },
+  "Scout skill": {
+    "Abilities": [
+      "Athlete",
+      "Bandaging",
+      "Climber",
+      "Combat-Wary",
+      "Discern General Potion",
+      "Discern Healing Potion",
+      "Discern Poison",
+      "Discern Smell (“Sniff”)",
+      "Disguise",
+      "Distillation",
+      "Draw Venom",
+      "Evaluate",
+      "Examine Construct",
+      "Hollow Tooth",
+      "Lock-Picking",
+      "Make Concealable Weapon",
+      "Make General Potion",
+      "Make Healing Potion",
+      "Make Poisons",
+      "Make and Arm Snap Trap",
+      "Potion Preserving",
+      "Read Glyphs",
+      "Read Languages",
+      "Sealing",
+      "Self-Awareness,Stealth",
+      "Tell Time and Direction",
+      "Tolerance",
+      "Trap-Wary",
+      "User of Avalorash",
+      "Well Equipped",
+      "Well-Made Daggers"
+    ]
+  },
+  "Scout Specialist": {
+    "Abilities": [
+      "Assassin’s Eye",
+      "Blade-Sharpening",
+      "Boleq Manufacture",
+      "Detect Possible Neuronic Activity",
+      "Enhanced Reflexes",
+      "Extra Level of Life",
+      "Flesh Mending",
+      "Healing Facility",
+      "Judge Profession",
+      "Judge Strength",
+      "Metal Resistance",
+      "Perception",
+      "Poison Facility",
+      "Potion Facility",
+      "Recognise Mana",
+      "Recognise Spirit",
+      "Recognise Earthpower",
+      "Recognise Neuronics",
+      "Shadowing",
+      "Tracking",
+      "Weapon Mastery"
+    ]
+  },
+  "Warrior-Priest specialist": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "Unarmed Combat",
+      "Smithing",
+      "Enhanced Reflexes"
+    ]
+  },
+  "Ward pact": {
+    "Abilities": [
+      "Undead",
+      "Salamanders",
+      "Shades",
+      "Sprites",
+      "Sylphs",
+      "Gnomes",
+      "Undines",
+      "Supernatural Power (add in your notes)",
+      "Fire-Elves",
+      "Air-Elves",
+      "Earth-Elves",
+      "Aquatic-Elves",
+      "Light-Elves",
+      "Dark-Elves",
+      "Drowe",
+      "Winter-Elves",
+      "Twilight-Elves",
+      "Wood-Elves"
+    ]
+  },
+  "ElfColourAbilities": {
+    "Light": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of light 1/level"],
+        "3": ["Light ranged 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["1 DAC"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Dark": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Darkness 1/level"],
+        "3": ["Darkness ranged 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Shadowshift 1/4 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Air": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Air 1/level"],
+        "3": ["Jump self 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Walk on air self 1/2 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Earth": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Stone 1/level"],
+        "3": ["Chameleon 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Talk to inanimate 1/2 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Fire": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Fire 1/level"],
+        "3": ["Shock 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Permanent Walk through fire"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Aquatic": {
+      "Levels": {
+        "1": [],
+        "2": [
+          "Detect fluid 1/level",
+          "Body of water 1/level",
+          "Unimpeded by water"
+        ],
+        "3": ["Rust ranged 1/2 levels"],
+        "4": [],
+        "5": ["Walk on or through water self 1/2 levels"],
+        "6": ["Vanish 1/day"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Twilight": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Twilight 1/level", "Detect Magic 1/level"],
+        "3": ["Twilight self 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Silence 1/day"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Gold": {
+      "Levels": {
+        "1": [],
+        "2": ["1 DAC"],
+        "3": ["Shield Self 1/level"],
+        "4": ["Spell shield 1/4 levels"],
+        "5": [],
+        "6": ["Strengthen Self 1/2 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Ivory": {
+      "Levels": {
+        "1": ["Gains Ivory Code Restriction"],
+        "2": ["Mark Ally at will", "Traitor’s Shield at will"],
+        "3": ["Ivory Warrior 1/4 levels"],
+        "4": ["Spell shield 1/4 levels"],
+        "5": [],
+        "6": ["Mobility 1/day"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Ebony": {
+      "Levels": {
+        "1": [],
+        "2": ["Confusion 1/day"],
+        "3": ["Pain (r) 1/2 levels"],
+        "4": ["Spell shield 1/4 levels"],
+        "5": [],
+        "6": ["Pass unknown 1/4 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Wood": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Wood 1/level"],
+        "3": ["Warp (r) 1/2 levels"],
+        "4": ["Entangle 1/2 levels"],
+        "5": [],
+        "6": ["Talk to Plant 1/level"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Drowe": {
+      "Levels": {
+        "1": [],
+        "2": ["Extinguish (r) 1/level"],
+        "3": ["Darkness 1/2 levels"],
+        "4": [],
+        "5": ["See Through Magical Darkness (self) 1/2 levels"],
+        "6": ["Blindness 1/day"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Winter": {
+      "LifeScaleOverride": "Winter Elf",
+      "Levels": {
+        "1": ["Skinning"],
+        "2": ["Body of Ice 1/level"],
+        "3": ["Immunity to cold (not subject to dispel)"],
+        "4": [],
+        "5": [],
+        "6": ["Javelin of Ice 1/4 levels"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Autumn": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Autumn 1/level"],
+        "3": ["Warp ranged 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Wither touch 1/day"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Spring": {
+      "Levels": {
+        "1": [],
+        "2": ["Body of Spring 1/level"],
+        "3": ["Salmon leap 1/2 levels"],
+        "4": [],
+        "5": [],
+        "6": ["Sun's healing"],
+        "7": [],
+        "8": []
+      }
+    },
+    "Summer": {
+      "LifeScaleOverride": "Drowe",
+      "Levels": {
+        "1": [],
+        "2": ["Body of Summer 1/level"],
+        "3": ["Scorching heat 1/2 levels"],
+        "4": ["Light self 1/2 levels"],
+        "5": [],
+        "6": ["Summer Warmth 1/4 levels"],
+        "7": [],
+        "8": []
+      }
+    }
+  }
+}

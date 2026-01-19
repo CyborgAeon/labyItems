@@ -116,7 +116,7 @@ public partial class ChipGroup : ContentView
     private void UpdateVisualState()
     {
         var primary = GetPrimaryColor();
-        var primaryText = Colors.Black;
+        var primaryText = Colors.White;
 
         foreach (var child in Container.Children.OfType<Button>())
         {

@@ -7,9 +7,9 @@
       "3": ["B"],
       "4": [],
       "5": [],
-      "6": ["Specialist Skill"],
-      "7": ["Specialist Skill"],
-      "8": ["Specialist Skill"]
+      "6": ["Warrior Specialist"],
+      "7": ["Warrior Specialist"],
+      "8": ["Warrior Specialist"]
     },
     "Max AC": 9,
     "Buy as": ["1st class Warrior"]
@@ -24,7 +24,7 @@
       "5": ["B"],
       "6": ["H"],
       "7": ["1st Weapon Mastery O"],
-      "8": ["Warrior specialist"]
+      "8": ["Warrior-Priest specialist"]
     },
     "Max AC": 7,
     "Powerbase": ["示 Spirit"],
@@ -39,8 +39,8 @@
       "4": ["Walk on Light (Self) 1/3 levels"],
       "5": [],
       "6": ["Immunity to Befriend, Beguile, Spiritual Mastery"],
-      "7": ["Specialist Skill", "Sabre of Light & Truth 1/4 levels"],
-      "8": ["Specialist Skill"]
+      "7": ["Power-Warrior Specialist", "Sabre of Light & Truth 1/4 levels"],
+      "8": ["Power-Warrior Specialist"]
     },
     "Max AC": 8
   },
@@ -53,8 +53,8 @@
       "4": [],
       "5": ["See through Magical Darkness (s) 1/2 levels"],
       "6": ["Immunity to Befriend, Beguile, Spiritual Mastery"],
-      "7": ["Black Blade 1/4 levels", "Specialist Skill"],
-      "8": ["Specialist Skill"]
+      "7": ["Black Blade 1/4 levels", "Power-Warrior Specialist"],
+      "8": ["Power-Warrior Specialist"]
     },
     "Max AC": 8
   },
@@ -67,8 +67,8 @@
       "4": ["2 DAC"],
       "5": ["Weapon Mastery (any)"],
       "6": ["Immunity to Befriend, Beguile, Spiritual Mastery", "3 DAC"],
-      "7": ["Resistance to own element", "Specialist skill"],
-      "8": ["4 DAC", "Specialist Skill"]
+      "7": ["Resistance to own element", "Power-Master Specialist"],
+      "8": ["4 DAC", "Power-Master Specialist"]
     },
     "Max AC": "8",
     "Powerbase": ["🪄 Magic"],
@@ -98,11 +98,11 @@
       "5": ["B", "I Shall Shield the Master @will"],
       "6": [],
       "7": [
-        "Specialist Skill",
+        "Valdstayn Specialist",
         "I Shall Stand by the Master 1/4 levels",
         "Innate MAC2"
       ],
-      "8": ["Specialist Skill"]
+      "8": ["Valdstayn Specialist"]
     },
     "Max AC": 8
   },
@@ -115,8 +115,8 @@
       "4": ["B", "War Cry 1/4 levels"],
       "5": ["2 DAC"],
       "6": [],
-      "7": ["Specialist Skill", "Burst of Strength 1/4 levels", "3 DAC"],
-      "8": ["Specialist Skill", "4 DAC"]
+      "7": ["Rovfuger Specialist", "Burst of Strength 1/4 levels", "3 DAC"],
+      "8": ["Rovfuger Specialist", "4 DAC"]
     },
     "Max AC": 9
   },
@@ -164,13 +164,13 @@
     "Brackets": ["⚔ Scout", "🛡️ Warrior"],
     "Levels": {
       "1": ["O & U"],
-      "2": ["Scout Skill"],
-      "3": ["1 DAC", "Scout Skill"],
-      "4": ["B", "Scout Skill"],
-      "5": ["2 DAC", "Scout Skill"],
+      "2": ["Standard Scout skill"],
+      "3": ["1 DAC", "Standard Scout skill"],
+      "4": ["B", "Standard Scout skill"],
+      "5": ["2 DAC", "Standard Scout skill"],
       "6": ["Backstab"],
-      "7": ["3 DAC", "Scout Specialist Skill"],
-      "8": ["Scout Specialist Skill", "Weapon Mastery (dagger)"]
+      "7": ["3 DAC", "Specialist Scout skill"],
+      "8": ["Specialist Scout skill", "Weapon Mastery (dagger)"]
     },
     "Max AC": 7,
     "Buy as": ["Kallah Beggar", "2nd class Assassin", "2nd class Warrior"]
@@ -179,13 +179,13 @@
     "Brackets": ["⚔ Scout", "🛡️ Warrior"],
     "Levels": {
       "1": ["O & U", "Light armour", "3 PAC", "Trusty & Old (armour)"],
-      "2": ["Scout Skill"],
-      "3": ["H", "Scout Skill", "4 PAC"],
+      "2": ["Standard Scout skill"],
+      "3": ["H", "Standard Scout skill", "4 PAC"],
       "4": [],
-      "5": ["E", "Scout Skill"],
+      "5": ["E", "Standard Scout skill"],
       "6": ["Warrior Specialist", "5 PAC"],
       "7": ["1st Weapon Mastery (O)", "Half effect Natural Cold"],
-      "8": ["Scout Specialist Skill"]
+      "8": ["Specialist Scout skill"]
     },
     "Max AC": 8,
     "Buy as": ["Hanot Beggar", "2nd class Pathfinder", "2nd class Warrior"]

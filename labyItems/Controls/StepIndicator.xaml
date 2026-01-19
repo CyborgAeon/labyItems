@@ -15,7 +15,6 @@
       <Grid x:Name="StepsGrid"
             HorizontalOptions="FillAndExpand"
             RowDefinitions="Auto,Auto"
-            ColumnDefinitions=""
             ColumnSpacing="0"
             VerticalOptions="Center">
         <BoxView x:Name="LineBg"

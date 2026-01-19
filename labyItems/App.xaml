@@ -12,11 +12,7 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml"/>
                 <ResourceDictionary>
                     <controls:BooleanToChevronConverter x:Key="ChevronConverter"/>
-                </ResourceDictionary>
-                <ResourceDictionary>
                     <conv:InverseBoolConverter x:Key="InverseBoolConverter"/>
-                </ResourceDictionary>
-                <ResourceDictionary>
                     <conv:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter"/>
                 </ResourceDictionary>
 
