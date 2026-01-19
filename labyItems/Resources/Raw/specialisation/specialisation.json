@@ -230,5 +230,27 @@
       "Smithing",
       "Enhanced Reflexes"
     ]
+  },
+  "Ward pact": {
+    "Abilities": [
+      "Undead",
+      "Salamanders",
+      "Shades",
+      "Sprites",
+      "Sylphs",
+      "Gnomes",
+      "Undines",
+      "Supernatural Power (add in your notes)",
+      "Fire-Elves",
+      "Air-Elves",
+      "Earth-Elves",
+      "Aquatic-Elves",
+      "Light-Elves",
+      "Dark-Elves",
+      "Drowe",
+      "Winter-Elves",
+      "Twilight-Elves",
+      "Wood-Elves"
+    ]
   }
 }

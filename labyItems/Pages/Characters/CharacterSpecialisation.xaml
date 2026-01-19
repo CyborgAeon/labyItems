@@ -2,7 +2,10 @@
 <ContentView
     x:Class="labyItems.Pages.Characters.CharacterSpecialisation"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:pickers="clr-namespace:labyItems.Controls.Pickers"
+    xmlns:enums="clr-namespace:labyItems.Models.Enums">
 
     <ContentView.Resources>
         <Color x:Key="CardBorderNeutralLight">#E0E0E0</Color>
@@ -138,35 +141,55 @@
                                             LineBreakMode="WordWrap"/>
 
                                         <SearchBar
-                                            Placeholder="Filter options (optional)"
-                                            Text="{Binding FilterText}"/>
-
-                                        <Grid ColumnDefinitions="Auto,*"
-                                              RowDefinitions="Auto">
-                                            <Label Text="Level"
-                                                   FontAttributes="Bold"/>
-                                            <Label Grid.Column="1"
-                                                   Text="Selection"
-                                                   FontAttributes="Bold"/>
-                                        </Grid>
+                                            Placeholder="Filter options"
+                                            Text="{Binding FilterText}">
+                                            <SearchBar.Triggers>
+                                                <DataTrigger TargetType="SearchBar"
+                                                             Binding="{Binding UseWardPactEnum}"
+                                                             Value="True">
+                                                    <Setter Property="IsVisible"
+                                                            Value="False"/>
+                                                </DataTrigger>
+                                            </SearchBar.Triggers>
+                                        </SearchBar>
 
                                         <CollectionView ItemsSource="{Binding Slots}"
-                                                        SelectionMode="None">
+                                                        SelectionMode="None"
+                                                        HorizontalOptions="FillAndExpand">
                                             <CollectionView.ItemTemplate>
                                                 <DataTemplate>
                                                     <Grid ColumnDefinitions="Auto,*"
                                                           Padding="0,6">
-                                                        <Label
-                                                            Text="{Binding LevelLabel}"
-                                                            VerticalOptions="Center"
-                                                            Opacity="0.85"/>
+                                                        <Label Text="{Binding LevelLabel}"
+                                                               VerticalOptions="Center"
+                                                               Opacity="0.85"/>
 
                                                         <Picker
                                                             Grid.Column="1"
+                                                            HorizontalOptions="FillAndExpand"
                                                             Title="Select an ability"
                                                             ItemsSource="{Binding FilteredOptionNames}"
-                                                            SelectedItem="{Binding SelectedOption, Mode=TwoWay}"/>
+                                                            SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
+                                                            <Picker.Triggers>
+                                                                <DataTrigger TargetType="Picker"
+                                                                             Binding="{Binding UseWardPactEnum}"
+                                                                             Value="True">
+                                                                    <Setter Property="IsVisible"
+                                                                            Value="False"/>
+                                                                </DataTrigger>
+                                                            </Picker.Triggers>
+                                                        </Picker>
+
+                                                        <controls:DictionarySearchBar x:TypeArguments="enums:StandardWardPacts"
+                                                                                      Grid.Column="1"
+                                                                                      ItemsSource="{x:Static pickers:WardPactOptions.Standard}"
+                                                                                      SelectedValue="{Binding SelectedWardPact, Mode=TwoWay}"
+                                                                                      PlaceholderText="Select a ward pact"
+                                                                                      AllowCustomOptions="False"
+                                                                                      HorizontalOptions="FillAndExpand"
+                                                                                      IsVisible="{Binding UseWardPactEnum}"/>
                                                     </Grid>
+
                                                 </DataTemplate>
                                             </CollectionView.ItemTemplate>
                                         </CollectionView>

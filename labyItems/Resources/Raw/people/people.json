@@ -3,14 +3,14 @@
     "PeopleType": "Standard",
     "Description": "The most common race on Primus, Humans are everywhere. Humans are a flexible race and can be almost any class.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": "",
     "Buy-as": "Humans are able to buy the ability 'Peon'"
@@ -19,19 +19,19 @@
     "PeopleType": "Standard",
     "Description": "Halflings are a small race, rarely seen outside of their own communities. They are a social people, and are fond of drink, food and comfort. Halflings are often underestimated in combat but are tougher than they look and are often surprisingly brave.",
     "levelledAbilities": {
-      "1st": [
+      "1": [
         "1/2 effect magic",
         "3/4 effect paralysis",
         "3/4 effect poison",
         "1 DAC"
       ],
-      "2nd": [],
-      "3rd": ["2 DAC"],
-      "4th": ["Weapon mastery with H or MP weapon"],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "2": [],
+      "3": ["2 DAC"],
+      "4": ["Weapon mastery with H or MP weapon"],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": "",
     "Buy-as": "Multiclass as Human, Halflings may buy the ability 'Max damage Quin with H class weapon' in the post-8th tables."
@@ -40,19 +40,19 @@
     "PeopleType": "Standard",
     "Description": "Dwarves are a hardy race, suited to underground life. They are stubborn and proud and have a strong sense of kin and tradition. Dwarves are renowned for their resilience and toughness.",
     "levelledAbilities": {
-      "1st": [
+      "1": [
         "1/2 effect magic",
         "See through supernatural darkness",
         "1/2 effect paralysis",
         "1/2 effect poison"
       ],
-      "2nd": [],
-      "3rd": ["Evaluate (metal, stone, jewels only)"],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "2": [],
+      "3": ["Evaluate (metal, stone, jewels only)"],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "Restrictions": [
       "Can only wear metal armour",
@@ -66,14 +66,14 @@
     "PeopleType": "Standard",
     "Description": "An ancient race that believes it once ruled Labyrinthia, the Ancient Folk are now bitter wanderers who resent the upstart Empire and treat most other races with contempt. Many believe they are the result of Convergences that forced them to drag lands from dying worlds to Primus.\nAncient Folk scholars claim their “Empire of Bright Lights” ended when servants taught sorcery rose up and turned it on their masters, unleashing a war of vast, reality-shaping magic. They argue that Primus was created from this chaos and that, as its former masters, they alone can ever truly control and govern it.\nPacts and treaties still bind Elves and Ancient Folk, suggesting ancient contact between the two peoples, though accounts differ. Their traditions remember an age of dragons, skyborne riders, and mastery of rituals and sorceries—yet today they are few, with only rumours of distant strongholds and rare sightings in ages past.\nThe Ancient Folk do not like to acknowledge their decline and may act as if they remain the world’s rightful lords, demanding obedience from those they claim were bred for service.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": ["Ward pact"],
+      "3": [],
+      "4": ["Ward pact"],
+      "5": [],
+      "6": ["Ward pact"],
+      "7": [],
+      "8": ["Ward pact"]
     },
     "AdditionalInfo": "Post 8thLevel Development\nThe Ancient Folk are the product of an old and tired gene pool, and thus do not have the ability to acquire neuronics. In addition, all costs for acquiring additional life points or strength are raised by 50%. It is not possible for them to acquire +2 strength.\nFurther pacts can be obtained at the cost of 50 points each, however not more than one pact can be bought for each 300 points post-8th. A pact lost through betrayal can never be re-established."
   },
@@ -81,14 +81,14 @@
     "PeopleType": "Standard",
     "Description": "A dying race from across the worlds, these beings once travelled the planes seeking glory and conquering all before them. However, times have changed.\n\nIn the early part of the Third Age a great plague was unleashed on Primus targeting them. The plague spread rapidly, aided by ritual, and caused all Silver Folk to become sterile. The plague endures, and those Silver Folk that travel to Primus are quickly infected with it. The result is that those who travel to Primus are never permitted to return to their home world, for fear of spreading the affliction further. However a few have left Primus and so the plague has spread across the Exostance, touching every part of existence.\n\nAll Silver Folk intensely hate non-Silver Folk neuronicists, and blame the Labyrinthian Empire for their downfall.\nThey must always do their utmost to destroy such individuals and gain no points for an adventure in which they leave alive someone whom they know to have such powers. In cases where characters can draw on neuronic powers through artefacts or guild abilities, the Silver Folk will often be more concerned with the source of the power than the user.\nSilver Folk gain the use of certain neuronic abilities. Use of these neuronic innates costs life points in the same way as it would a neuronic class.\nAll Silver Folk are extremely evil, and are immune to all forms of alignment change.\nSilver Folk are an outlawed race with all that that entails.",
     "levelledAbilities": {
-      "1st": ["Detect Possible Neuronic Activity at will"],
-      "2nd": [],
-      "3rd": ["Neuronic Penetration 1/level"],
-      "4th": ["Neuro-Synaptic Jump 1/4 levels"],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": ["Detect Possible Neuronic Activity at will"],
+      "2": [],
+      "3": ["Neuronic Penetration 1/level"],
+      "4": ["Neuro-Synaptic Jump 1/4 levels"],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": "Post 8th Level Development\nThe threshold for Silver Folk buying neuronic abilities from Table 6 is only 200 points. Neuronic Penetrations may not be bought from this table, instead extra uses of these and Neuro-Synaptic Jumps may be acquired on Table 1 at the costs detailed in the table below, to a maximum number of extra uses as listed on the table.\nSilver Folk may multi-class as normal to Wizard, Warrior or Spirit Warrior, and additionally may become Unholy Champions for the standard cost, gaining life points as Silver Folk Spirit Warrior."
   },
@@ -96,59 +96,59 @@
     "PeopleType": "Standard",
     "Description": "In the summer of IM 996 a band of courageous adventurers managed to rescue a few hundred people from a doomed world in another time and place, mere days before its destruction. These refugees are of the Elysian race - a race formed by the act of the goodly gods of their world sacrificing themselves and releasing their divine power into devout human worshippers, to create a truly good race to set against the evils of their world.\n\nThe Enoch-Khan caste, warriors of the Elysian race, were all destroyed when their world was annihilated, staying behind to hold open the inter-dimensional portals which allowed a scant few Elysians (and the adventuring group) to escape. The pacifist Elysians who remain are struggling to survive in an unfamiliar world.\n\nTheir task is made more difficult by the fact that the stress caused by the trans-dimensional passage and the final destruction of their godly forefathers has caused great mental trauma in the psychically sensitive race, resulting often in total amnesia. For this reason those few Elysians that have left their ghettos and mingled with Labyrinthian citizens often seem confused as to their past and history.\n\nDue to their contemplative and peaceful nature, Elysians have developed a natural affinity for neuronics and due to the suffusion of their essence with the power of their gods they are naturally resistant to a number of things; however their passive, non-physical lifestyle means that their physical frames are very weak. All Elysians were marked by the touch of their deities, and have white skin with gold or blue markings upon it.\n\nAll Elysians are immune to alignment change of all forms, and all must be Lawful Good or Neutral Good. They gain half-effect poison, and against evil spiritual effects may double their resistance levels and halve the duration of any effect. Due to their weak bodies, all Elysians find strong medications and herbs difficult to ingest – they gain only half benefit from beneficial ingestive potions of all kinds, including healing potions.\n\nNo Elysian may ever wield any form of weapon, even purely supernatural ones. They have a strong repugnance for violence, and will only cause direct harm to others in self-defence - if they willingly do so they gain no level or points for the adventure.\n\nAll Elysians gain the following neuronic powers:\nElysian Racial Neuronics",
     "levelledAbilities": {
-      "1st": ["Detect Possible Neuronic Activity"],
-      "2nd": [],
-      "3rd": ["Auric Colour"],
-      "4th": [],
-      "5th": [],
-      "6th": ["Telepathy x1/2 levels"],
-      "7th": [],
-      "8th": []
+      "1": ["Detect Possible Neuronic Activity"],
+      "2": [],
+      "3": ["Auric Colour"],
+      "4": [],
+      "5": [],
+      "6": ["Telepathy x1/2 levels"],
+      "7": [],
+      "8": []
     },
-    "AdditionalInfo": "Elysians may be Pure Priests, High Wizards, Vivomancers or Mind Weavers.\nPost-8th Development\nElysians are naturally psychic, and may buy neuronics as listed below. They may never make use of or acquire any ability that would grant them greater than +1 strength, and pay an additional +50% on all abilities that grant them additional life.\nElysians of any class may skip some abilities on the active and passive neuronics trees, and buy others at reduced cost due to already having limited innates of the ability. These tables replace the standard active and passive neuronics trees for Elysians."
+    "AdditionalInfo": "Elysians may be Pure Priests, High Wizards, Vivomancers or Mind Weavers.\npost-8th Development\nElysians are naturally psychic, and may buy neuronics as listed below. They may never make use of or acquire any ability that would grant them greater than +1 strength, and pay an additional +50% on all abilities that grant them additional life.\nElysians of any class may skip some abilities on the active and passive neuronics trees, and buy others at reduced cost due to already having limited innates of the ability. These tables replace the standard active and passive neuronics trees for Elysians."
   },
   "Alfar": {
     "PeopleType": "Standard",
     "Description": "While similar to the Elves of Primus in appearance, Alfar are, in truth, the true children of Primus, created by the world spirit at the beginning of the Second Age to protect and guard the land. However, since that, much of what the Alfar once knew has been forgotten, little more than memories in the blood and soul of these much diminished guardians and keepers of the wild, untamed Primus. In a sense the Alfari failed in the task that they were set and so never grew to become the power that they might have been and were discarded by the Spirit of Primus as an experiment that never quite succeeded.\nThere are many theories as to why the Alfar are so diminished though it is possible that, as with many races, the Alfar’s time has simply passed. Regardless, over the centuries that they have lived on Primus, the Alfar have spread far and wide, forming distinct ‘tribes’, each evolving to survive in different areas of Primus.\n\nAll Alfari are really tribes of the same race, their differences being a matter of temperament and upbringing, rather than blood. It is because of this that, rarely, an Alfar is born of the union of the branches of the race, pure blooded and made in the shape which Primus first intended; a potent guardian of nature, wielding great power.\n\nWhilst all Alfar have a tendency to be tall and slim, and most have pointed ears, there are 4 sub-races:\nLight Alfar live outdoors in the fields and meadows, they tend to have pale skin and often have fair hair.\nDark Alfar live beneath the earth, they are generally of dark completion and dark hair.\nSea Alfar tend to come from coastal regions and have a greenish tinge to their skin,\nMountain Alfar are swarthy, with an earthen colour to them, though less heavily than would be seen in an Earth Elf.\nThe Sea and Mountain Alfar do not often become adventurers and are even more rarely seen than the other types, but all four sub-races may be played as characters.\nThere are no alignment restrictions on Alfar, except for those characters that choose to be wizards.\nLight Alfar may only be white wizards as their starting colour, and thus must be goodly.\nDark Alfar must begin as black wizards, and so be evil.\nSea Alfar may only be green wizards as their starting colour and these must be goodly.\nMountain Alfar wizards must initially be brown and follow the appropriate alignment restrictions for that colour, being any form of neutral alignment.\nAlfar wizards may second colour to any colour allowed by their alignment. Alfar who are become wizards by multi-classing are not limited in their choice of colour, other than by their alignment.\nAlfar have only half a spirit, in the same manner as Half-Elves.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
-    "AdditionalInfo": "Alfar can be Archers, Druids, High Druids, Forest Guardians, Leywalkers, Pathfinders, Pure Priests, Rangers, Warriors or Wizards.\nAlfar gain the ability to Recognise Earthpower within 1” range, at will, from 1st level, and from 3rd level no longer leave tracks or make sounds when moving in their natural environment (immunity to tracking and acute hearing) - outdoors in the wilderness for Light Alfar, underground in natural tunnels for Dark Alfar, on mountains and hills for Mountain Alfar, and on or near the sea or other large bodies of water [within a mile or so] for Sea Alfar.\nAll Alfar gain +1 DAC at 6th level.\nAdditionally once per day, when in their own environment [as described above], they may perform a “Draw on Earthpower” - spending one minute in inactive concentration drawing upon the natural force around them for assistance - this allows the Alfar to mimic any one Earthpower Evocation which is on the standard list (As detailed in The Druids Way) of their own level or below, using the appropriate gestures but without verbals.\nAlfar must pay double cost for their equipment from the Desk, as a result of having it Alfar-made. This only applies to armour and weapons.\nPost-8th Level Development\nThey may acquire innate standard Earthpower Evocations in much the same way as a Druid, paying 12pts per earthpower point of the evocation. When purchasing spiritual abilities they suffer the same cost penalties and restrictions as a half elf.\nAdditional uses of the once per day ‘Draw on Earthpower’ may be purchased at 80 points each; only one per threshold the character has achieved post eighth."
+    "AdditionalInfo": "Alfar can be Archers, Druids, High Druids, Forest Guardians, Leywalkers, Pathfinders, Pure Priests, Rangers, Warriors or Wizards.\nAlfar gain the ability to Recognise Earthpower within 1” range, at will, from 1 level, and from 3 level no longer leave tracks or make sounds when moving in their natural environment (immunity to tracking and acute hearing) - outdoors in the wilderness for Light Alfar, underground in natural tunnels for Dark Alfar, on mountains and hills for Mountain Alfar, and on or near the sea or other large bodies of water [within a mile or so] for Sea Alfar.\nAll Alfar gain +1 DAC at 6 level.\nAdditionally once per day, when in their own environment [as described above], they may perform a “Draw on Earthpower” - spending one minute in inactive concentration drawing upon the natural force around them for assistance - this allows the Alfar to mimic any one Earthpower Evocation which is on the standard list (As detailed in The Druids Way) of their own level or below, using the appropriate gestures but without verbals.\nAlfar must pay double cost for their equipment from the Desk, as a result of having it Alfar-made. This only applies to armour and weapons.\npost-8th Level Development\nThey may acquire innate standard Earthpower Evocations in much the same way as a Druid, paying 12pts per earthpower point of the evocation. When purchasing spiritual abilities they suffer the same cost penalties and restrictions as a half elf.\nAdditional uses of the once per day ‘Draw on Earthpower’ may be purchased at 80 points each; only one per threshold the character has achieved post eighth."
   },
   "Ratfolk": {
     "PeopleType": "Standard",
-    "Description": "The Ratfolk scurried into the Empire in the last years before the Final Dawn of the Second Age, claiming they were owed a city of their own after destroying an enemy of the Empire, a task known only to the then Gaius, Kith Kahan (himself an avatar of the Ratgod Slavik and subsequently declared renegade by the Lord Inquisitor Watching Owl). After a failed attempt to seize Thimon some of the Ratfolk allied with the Empire and others returned to their dark warrens to plot and scheme.\nRumours today say that they were created by a great ritual performed by Kith Kahan himself.\nAll Ratfolk must choose a Breed, and they may choose a Clan from those listed below. Ratfolk require obvious rat like make up that means they can be distinguished from an Elf or similar.\nBreeds\nThe rats can be broken down into the following, some of which may be selected as player characters. Because of their wirey nature, all Ratfolk have the same life points as a Half-Orc of the equivalent class. Ratfolk are immune to the negative effects of disease, and will never die as a result of one; the Ratfolk can be diseased, they simply do not suffer disbenefits from being so. Ratfolk also gain a non-stacking grade of backstab at 6th level, or if that skill is already possessed, or subsequently gained, then they gain one use of the ability Force Majeure as per the post eighth development system.\nAll Ratfolk armour must be made specifically for the Ratfolk, which costs double to manufacture, and they may never wear heavy armour.\nThey are restricted on joining guilds, as detailed by their clan below.",
+    "Description": "The Ratfolk scurried into the Empire in the last years before the Final Dawn of the Second Age, claiming they were owed a city of their own after destroying an enemy of the Empire, a task known only to the then Gaius, Kith Kahan (himself an avatar of the Ratgod Slavik and subsequently declared renegade by the Lord Inquisitor Watching Owl). After a failed attempt to seize Thimon some of the Ratfolk allied with the Empire and others returned to their dark warrens to plot and scheme.\nRumours today say that they were created by a great ritual performed by Kith Kahan himself.\nAll Ratfolk must choose a Breed, and they may choose a Clan from those listed below. Ratfolk require obvious rat like make up that means they can be distinguished from an Elf or similar.\nBreeds\nThe rats can be broken down into the following, some of which may be selected as player characters. Because of their wirey nature, all Ratfolk have the same life points as a Half-Orc of the equivalent class. Ratfolk are immune to the negative effects of disease, and will never die as a result of one; the Ratfolk can be diseased, they simply do not suffer disbenefits from being so. Ratfolk also gain a non-stacking grade of backstab at 6 level, or if that skill is already possessed, or subsequently gained, then they gain one use of the ability Force Majeure as per the post eighth development system.\nAll Ratfolk armour must be made specifically for the Ratfolk, which costs double to manufacture, and they may never wear heavy armour.\nThey are restricted on joining guilds, as detailed by their clan below.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
-    "AdditionalInfo": "Karras\nKarras are larger, more intelligent versions of their smaller and normal cousins. In appearance, they resemble their verminous ancestors (although about twice the size). Karras understand speech but, due to their own physical constrictions, are only able to 'talk' in the language of vermin. Karras are able to spread disease without themselves suffering from the maladies they carry. The many and varied diseases can be conveyed through a bite, their bodily fluids, or more extremely and effectively via their own rotting corpses. Karras are not an option for player character Ratfolk.\nOurstlav\nOurstlav are the lowest form of the bipedal vermin and are the most common. They are of average intelligence and are used as workers and militia. Ourstlav are expert diggers and 'sniffers' and tend to hide by concealing themselves in covered holes in tunnels, leaping out to ambush their enemies with venom and disease. Ourstlav tend to follow whoever is powerful enough to hold their 'ownership' and are therefore often regarded as property by other breeds.\nOurstlav may be Pathfinders, Archers or Leywalkers.\nRachatat\nRachatat are bred especially for conflict and war. Often used as overseers for the Ourstlav and bodyguards for their masters, the Rachatat are as strong and resilient as Humans and have sharp minds sufficient to elevate many of them to high position whilst remaining loyal to their masters. Rachatat are dark furred and wear armour either of treated hides or whatever they have scavenged from society. Those of renown wear hide plates enchanted by Horstval or even Rat-Kings, blessed by Slavik to be especially resilient to a certain type of weapon. Rachatat are allowed to keep booty taken from a foe in combat and thus are often very well equipped. Commonly they carry spears made of a silver alloy to keep lycanthropes in line - these weapons are of the 'trusty and old' variety and are gained automatically once the Rachatat reaches 8th level.\nRachatat may be Warriors, Forest Guardians or Thugs."
+    "AdditionalInfo": "Karras\nKarras are larger, more intelligent versions of their smaller and normal cousins. In appearance, they resemble their verminous ancestors (although about twice the size). Karras understand speech but, due to their own physical constrictions, are only able to 'talk' in the language of vermin. Karras are able to spread disease without themselves suffering from the maladies they carry. The many and varied diseases can be conveyed through a bite, their bodily fluids, or more extremely and effectively via their own rotting corpses. Karras are not an option for player character Ratfolk.\nOurstlav\nOurstlav are the lowest form of the bipedal vermin and are the most common. They are of average intelligence and are used as workers and militia. Ourstlav are expert diggers and 'sniffers' and tend to hide by concealing themselves in covered holes in tunnels, leaping out to ambush their enemies with venom and disease. Ourstlav tend to follow whoever is powerful enough to hold their 'ownership' and are therefore often regarded as property by other breeds.\nOurstlav may be Pathfinders, Archers or Leywalkers.\nRachatat\nRachatat are bred especially for conflict and war. Often used as overseers for the Ourstlav and bodyguards for their masters, the Rachatat are as strong and resilient as Humans and have sharp minds sufficient to elevate many of them to high position whilst remaining loyal to their masters. Rachatat are dark furred and wear armour either of treated hides or whatever they have scavenged from society. Those of renown wear hide plates enchanted by Horstval or even Rat-Kings, blessed by Slavik to be especially resilient to a certain type of weapon. Rachatat are allowed to keep booty taken from a foe in combat and thus are often very well equipped. Commonly they carry spears made of a silver alloy to keep lycanthropes in line - these weapons are of the 'trusty and old' variety and are gained automatically once the Rachatat reaches 8 level.\nRachatat may be Warriors, Forest Guardians or Thugs."
   },
   "Barbarians": {
     "PeopleType": "Tribal",
     "Description": "Barbarians are humans from outside the Empire, living in tribal groupings. They are tough, superstitious and hardened by their lifestyle. Barbarians have access to tribal abilities and develop differently to Imperial humans.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": ""
   },
@@ -156,14 +156,14 @@
     "PeopleType": "Tribal",
     "Description": "Ogres are a large and brutal race, tribal in nature. They are physically powerful and resilient, but are often crude and have limited social integration with the Empire.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": ""
   },
@@ -171,29 +171,29 @@
     "PeopleType": "Tribal",
     "Description": "Trolls are an extremely hardy and regenerating race, tribal and dangerous. They are feared for their endurance and ability to recover from wounds that would kill most other creatures.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": ""
   },
   "Goblin": {
     "PeopleType": "Tribal",
-    "Description": "Goblins are Warriors or Pathfinders and are tribal. They may have a Shaman, Druid and a Witch-Doctor for each tribe, as normal. In appearance they are usually small, with dirty brown, yellow, green or blue skin and a dirty, raggish costume. Goblins have lower life points than Humans, but gain certain abilities due to their race. At first level they gain + 1 DAC in Darkness, at second they gain double DAC whilst in full retreat, performing no action other than fleeing. At 3rd, 5th, 7th and 8th they gain a point of DAC (for 4 in total) and at 6th they gain the first grade of backstab. The backstab skill is as per assassin.",
+    "Description": "Goblins are Warriors or Pathfinders and are tribal. They may have a Shaman, Druid and a Witch-Doctor for each tribe, as normal. In appearance they are usually small, with dirty brown, yellow, green or blue skin and a dirty, raggish costume. Goblins have lower life points than Humans, but gain certain abilities due to their race. At first level they gain + 1 DAC in Darkness, at second they gain double DAC whilst in full retreat, performing no action other than fleeing. At 3, 5, 7 and 8 they gain a point of DAC (for 4 in total) and at 6 they gain the first grade of backstab. The backstab skill is as per assassin.",
     "levelledAbilities": {
-      "1st": ["1 DAC in Darkness"],
-      "2nd": ["Double DAC while Fleeing"],
-      "3rd": ["1 DAC"],
-      "4th": [],
-      "5th": ["2 DAC"],
-      "6th": ["1st Grade of Backstab"],
-      "7th": ["3 DAC"],
-      "8th": ["4 DAC"]
+      "1": ["1 DAC in Darkness"],
+      "2": ["Double DAC while Fleeing"],
+      "3": ["1 DAC"],
+      "4": [],
+      "5": ["2 DAC"],
+      "6": ["1 Grade of Backstab"],
+      "7": ["3 DAC"],
+      "8": ["4 DAC"]
     },
     "AdditionalInfo": "No goblin may wear armour heavier than light armour. Goblins are also too small and physically weak to wield two-handed weapons, including bastard-length, or even a weapon in either hand - they do not gain B or E skill as they normally would from their class, and may not use bastard weapons in one hand. They can use shields as normal.\nGoblins may never benefit from greater than +1 strength.\nAdditionally a Goblins base life may never be above 48 TBLP for the purposes of life capping."
   },
@@ -201,14 +201,14 @@
     "PeopleType": "Tribal",
     "Description": "Orcs are a disparate race. Some are cowardly and evil, others cruel and brutal, a few brave and heroic. While not as varied as Humans in their nature they are rarely the same. Due in part to their brutal upbringing, Orcs are less intelligent than humans, though may be as cunning. Reading, writing and counting are difficult for them, and in depth study of topics beyond most.\n\nOrcs are sensitive to the light, perhaps from years of lurking in tunnels and other dark places. They suffer DAC penalties (or bonuses) as follows:\n - In normal real world strong sun light -2 A.C\n - In magical light, or a normal sunny day -1 A.C\n - In candle or lamplight, or a grey overcast day normal\n - In almost total darkness +1 A.C\nThey are not adversely affected by magical darkness, being able to see as though under the effects of a see through magical darkness spell.\n\nA Half Orc's armour always loses two uses per adventure because of their careless and revolting nature. Half Orcs are tribal creatures and as such may have a Shaman, Witch Doctor, and Druid.\nHalf Orcs are generally Pathfinders or Warriors, though some variation within those classes exist as per the relevant publications.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": ""
   },
@@ -216,14 +216,14 @@
     "PeopleType": "Tribal",
     "Description": "Tales whispered around the small campfires in a harsh land tell the Farfolk of the deeds of their parents, a generation lost all too soon after arriving in this inhospitable place. Not many of the parents are still alive, the Isles of Bourthek, far to the west of the Ishmaic Confederacy are not a good place to live, filled with tremendous beasts, frozen tundra and worse. Tales explain why the northernmost Magiocracy fled Labyrinthia during the early stages of the Chaos Wars, allowed to escape the mage-war if they accepted exile to the place from where the Gods have turned their faces and the Shadow of the Dragons does not fall.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": ""
   },
@@ -251,14 +251,14 @@
     ],
     "Description": "",
     "levelledAbilities": {
-      "1st": ["Affirm"],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": ["Affirm"],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": ""
   },
@@ -266,14 +266,14 @@
     "PeopleType": "Magic-Kin",
     "Description": "",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": ""
   },
@@ -281,59 +281,59 @@
     "PeopleType": "Magic-Kin",
     "Description": "",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": ""
   },
   "Ishmaic Humans": {
     "PeopleType": "Ishmaic",
-    "Description": "All Human Ishmaic characters are hardy by nature and gain the following benefits:\nFrom 1st level each character has both the Survival skill (as per a Ranger) and calculates their life as if they were one level higher, even when they have attained the 8th level of progression.\nIshmaic Human characters (bar Rainfinders) may carry a Glaive (a short sword like weapon) and if they are allowed sharp weapon use by their class restrictions then this may be used as a weapon. Even Wizards may carry such a weapon though this counts as their whole metal allowance.\nAll Ishmaic characters are well supported by their Clan. To this end they are supplied with normal weapons and armour as appropriate to their class. Ishmaic humans will normally be at least cordial to any Rainfinder.\nIshmaic humans may freely join professional and social guilds but they may not belong to political guilds unless they are specifically for Ishmaics.",
+    "Description": "All Human Ishmaic characters are hardy by nature and gain the following benefits:\nFrom 1 level each character has both the Survival skill (as per a Ranger) and calculates their life as if they were one level higher, even when they have attained the 8 level of progression.\nIshmaic Human characters (bar Rainfinders) may carry a Glaive (a short sword like weapon) and if they are allowed sharp weapon use by their class restrictions then this may be used as a weapon. Even Wizards may carry such a weapon though this counts as their whole metal allowance.\nAll Ishmaic characters are well supported by their Clan. To this end they are supplied with normal weapons and armour as appropriate to their class. Ishmaic humans will normally be at least cordial to any Rainfinder.\nIshmaic humans may freely join professional and social guilds but they may not belong to political guilds unless they are specifically for Ishmaics.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
-    "AdditionalInfo": "Clans\nEvery Human Ishmaic character has grown up within one of the Clans that form the Confederacy. This Clan must be chosen at 1st level and is written on the card alongside race (i.e. Ishmaic Human (Benhai)). Each Clan grants certain benefits to a character and restricts the range of starting classes available to such a character. It is allowable to multi-class outside of those typically found in the Clan as normal - costs based upon the original class. Note however the restriction earlier about spirit-using classes in this instance."
+    "AdditionalInfo": "Clans\nEvery Human Ishmaic character has grown up within one of the Clans that form the Confederacy. This Clan must be chosen at 1 level and is written on the card alongside race (i.e. Ishmaic Human (Benhai)). Each Clan grants certain benefits to a character and restricts the range of starting classes available to such a character. It is allowable to multi-class outside of those typically found in the Clan as normal - costs based upon the original class. Note however the restriction earlier about spirit-using classes in this instance."
   },
   "Athfanal": {
     "PeopleType": "Ishmaic",
     "Description": "It is possible for a player to play an Athfanal, however it should be clear that Ishmaic characters quite often choose to fight such a creature on sight and great care must be made when making such a choice of character. It is possible that the Athfanal might be played by a group who decide to all play the race in which case the danger is, to a small degree, reduced. Athfanal are primitive and barbaric, subsisting on the mana that flows about the Land of the Seven Winds.\nWhether they are in the sands and steppes held by the Ishmaics or the forests and hills about the Afthash Ban Mir, or the great caverns which spread beneath both, they are able to subsist without food and water on the mana that they tap from the world around them.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
-    "AdditionalInfo": "Magical Abilities\nAthfanal gain innates as per an Elf of the element they choose to be allied with (written on the character card at 1st level) - this may be any of the prime seven elements but they may not choose Drowe, Wood or Winter Elf abilities.\nAlignment\nAthfanal must be one of; Chaotic Evil, Lawful Evil, Neutral Evil, Neutral or Chaotic Neutral.\nFlesh and Blood\nAthfanal count in all ways as elves and use the same rules and restrictions on flesh and blood as do their Labyrinthian counterparts.\nMake Up\nIt is important to note that whilst in the Land of the Seven Winds, Athfanal do not have to wear all covering face-paint and hair colour. They are required to have visible markings in the colour of their chosen element on at least half their visible skin (though these are not all covering). Athfanal are expected to look the part, their costume being of a light coverage and primitive in look with feathers and other 'totemic' accessories in great abundance. Should they adventure away from the Land of the Seven Winds then they will be affected by the make-up restrictions of the colour they are allied to as if they were an Elf of that element.\nThe Spirit World\nAthfanal do not have a spirit in the same way as their Labyrinthian counterparts, the Elves, do not.\nElements\nEach Athfanal is dedicated to an element and gains the abilities as would an Elf of that element. They may only choose one of the seven primary elements. If the element chosen requires the user to be goodly then the Athfanal must be of pure neutral alignment, but any spells that requires them to be goodly (such as Sabre of Light and Truth) are not available.\nGuilds\nAthfanal may join professional guilds with the guild master’s permission, and they may only belong to Athfanal social or political guilds.\nLegal Status\nAthfanal are Ostracised by the Ishmaic Confederacy, as such, while within these lands, they are not protected by the law and may freely be killed. However killing them anywhere else is still an outlawing offence.\nCulture\nAthfanal are barbaric and can acquire abilities available to tribal creatures. This also means that abilities that are not available to tribal creatures are not available to them.\nArmour Restrictions\nThey may wear no armour other than skins / furs and they gain Skinning at 6th level.\nClasses\nAthfanal may be Wizards, Pathfinders, Assassins, Warriors and Archers. Athfanal may be wizards only of their own racial colour or grey but may second colour to any colour appropriate to their alignment\nHetyan\nAthfanal are tribal and must form a Hetyan as would barbarian players form a tribe. Each Hetyan may gain Guild Benefits and it may have a Vaidlemir (Witch Doctor) who is in all ways as a tribal Witch Doctor except they are able to choose any of the seven prime colours of magic as their colour although it must be their own racial colour.\nVaidlemir are able to absorb the mana from a fallen enemy/sacrifice such that they gain back 1 mana per level of the victim's base magical class (e.g. 8 from an 8th level wizard, 6 from an 8th level warrior who has multi-classed 6th level wizard) This takes thirty seconds of role played 'feeding' within a minute of the person being killed. This ability may be used once every three hours but has no gain from a victim/sacrifice that had no magic using ability.\n(The definition of a mana user is a class or race with innate magical power.)\nLife Scales\nAthfanal have life as a Winter Elf of their class with Vaidlemir gaining life as a Wizard.\nPost 8th Developrnent\nAthfanal buy as an Elf of their colour, they may also buy the Yashtar Domination glyph as listed under Crol later on.\nThey may also buy relevant tribal abilities."
+    "AdditionalInfo": "Magical Abilities\nAthfanal gain innates as per an Elf of the element they choose to be allied with (written on the character card at 1 level) - this may be any of the prime seven elements but they may not choose Drowe, Wood or Winter Elf abilities.\nAlignment\nAthfanal must be one of; Chaotic Evil, Lawful Evil, Neutral Evil, Neutral or Chaotic Neutral.\nFlesh and Blood\nAthfanal count in all ways as elves and use the same rules and restrictions on flesh and blood as do their Labyrinthian counterparts.\nMake Up\nIt is important to note that whilst in the Land of the Seven Winds, Athfanal do not have to wear all covering face-paint and hair colour. They are required to have visible markings in the colour of their chosen element on at least half their visible skin (though these are not all covering). Athfanal are expected to look the part, their costume being of a light coverage and primitive in look with feathers and other 'totemic' accessories in great abundance. Should they adventure away from the Land of the Seven Winds then they will be affected by the make-up restrictions of the colour they are allied to as if they were an Elf of that element.\nThe Spirit World\nAthfanal do not have a spirit in the same way as their Labyrinthian counterparts, the Elves, do not.\nElements\nEach Athfanal is dedicated to an element and gains the abilities as would an Elf of that element. They may only choose one of the seven primary elements. If the element chosen requires the user to be goodly then the Athfanal must be of pure neutral alignment, but any spells that requires them to be goodly (such as Sabre of Light and Truth) are not available.\nGuilds\nAthfanal may join professional guilds with the guild master’s permission, and they may only belong to Athfanal social or political guilds.\nLegal Status\nAthfanal are Ostracised by the Ishmaic Confederacy, as such, while within these lands, they are not protected by the law and may freely be killed. However killing them anywhere else is still an outlawing offence.\nCulture\nAthfanal are barbaric and can acquire abilities available to tribal creatures. This also means that abilities that are not available to tribal creatures are not available to them.\nArmour Restrictions\nThey may wear no armour other than skins / furs and they gain Skinning at 6 level.\nClasses\nAthfanal may be Wizards, Pathfinders, Assassins, Warriors and Archers. Athfanal may be wizards only of their own racial colour or grey but may second colour to any colour appropriate to their alignment\nHetyan\nAthfanal are tribal and must form a Hetyan as would barbarian players form a tribe. Each Hetyan may gain Guild Benefits and it may have a Vaidlemir (Witch Doctor) who is in all ways as a tribal Witch Doctor except they are able to choose any of the seven prime colours of magic as their colour although it must be their own racial colour.\nVaidlemir are able to absorb the mana from a fallen enemy/sacrifice such that they gain back 1 mana per level of the victim's base magical class (e.g. 8 from an 8 level wizard, 6 from an 8 level warrior who has multi-classed 6 level wizard) This takes thirty seconds of role played 'feeding' within a minute of the person being killed. This ability may be used once every three hours but has no gain from a victim/sacrifice that had no magic using ability.\n(The definition of a mana user is a class or race with innate magical power.)\nLife Scales\nAthfanal have life as a Winter Elf of their class with Vaidlemir gaining life as a Wizard.\nPost 8th Developrnent\nAthfanal buy as an Elf of their colour, they may also buy the Yashtar Domination glyph as listed under Crol later on.\nThey may also buy relevant tribal abilities."
   },
   "Half Athfanal": {
     "PeopleType": "Ishmaic",
     "Description": "There are many amongst the Athfanal who have human blood, being born from slaves taken from both the Ishmaics and the First Comers.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": "Make Up\nHalf-Athfanal share the same appearance as full Athfanal (elemental markings) but do not gain any magical innates from that element. A Half-Athfanal away from the Land of the Seven Winds retains his normal appearance. They have half a spirit as with all Half-Elves.\nClasses\nHalf-Athfanal may be any class allowed to full Athfanal plus they may also be Warlocks and Rogues. They may never acquire by points or otherwise the ability to use spirits in any form and they suffer the Ishmaic disability as regards buying spiritual immunities.\nGuilds\nHalf-Athfanal may join any type of guild, but require the guild masters permission to do so.\nLife Points\nHalf-Athfanal gain life as a Human of their class.\nLegal Status\nIf a Half-Athfanal has decided to join an Athfanal Hetyan (tribe) then they suffer the same ostracism as an Athfanal. If they have shunned their Athfanal parents then they are not ostracised.\nPost Eighth Development\nHalf Athfanal are tribal like their Athfanal cousins and this in turn means they can buy abilities available to tribal creatures of their class, and cannot acquire those abilities that are not available to tribal creatures.\nIn all other ways a Half Athfanal develops in the same fashion as an Ishmaic Human of their character class."
   },
@@ -341,59 +341,59 @@
     "PeopleType": "Ishmaic",
     "Description": "The cavern wights of the deep caverns are the abandoned children of the Athfanal who have shown an inability to consume the magic laden winds. Though the vast majority of these pitted-skinned individuals resemble the undead, they are not such, simply, on the whole, pitiful creatures to watch, and terrible to do battle with.\nMost of the Calabrim are of poor or even animalistic intelligence, but every so often one rises from the caves with a sharper mind and a need to escape the harsh life of their people. Those Calabrim who are Player Characters are just such people.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
-    "AdditionalInfo": "The Spirit World\nCalabrim have the equivalent of half a spirit, much as a Half Elf does. It may be this freak occurrence in their birthing amongst a race with no spirits which causes them their difficulty in feeding upon the wind. Calabrim suffer the same disadvantages in purchasing immunities to spiritual effects as described for Ishmaic Humans.\nNourishment\nThe Calabrim need to eat only once in any given seven days, but when they feed, they must eat the flesh of a magic using creature, even the essence of a dead elf would suffice, Since most adventures last less than seven days it is assumed that cunning Calabrim manage to feed outside of their adventuring times and those Calabrim of goodly moral fibre can often find ways of doing so which would not offend any other meat eating creature or person. It is rumoured that through such feeding however, more potent Calabrim can actually translate the food into innate magical abilities for their own later use. Calabrim are, however, flesh and blood and take full effect from potions / poisons\nAlignment\nCalabrim may be of any neutral alignment (NG, NE, LN, CN and NN).\nMake Up Requirements\nCalabrim need to wear make up in such a fashion as to appear sickly, diseased or of pitted complexion.\n'The Touch'\nCalabrim possess an ability they call 'The Touch' and it is this ability which paralyses a magic using creature. If the target possesses mana points, or magical innate powers it functions as a paralysis lasting 5 minutes. However the cost of using this ability is steep, the Calabrim is drained one level, which is recovered in the same fashion as a level lost to the touch of a wraith. However as it is a self-inflicted level loss immunity to level drain does not apply.\nIf the ability fails in any fashion (e.g. the target is immune to paralysis, has no magical ability or uses a war cry to keep moving) no level is lost. In any event the touch cannot be used more than once for every two levels possessed in any given day regardless of success or failure.\nClasses\nThe Calabrim have little opportunity for formal training, and as such may only begin as Pathfinders, Thugs, or Warriors, However once training has become available a much wider choice is available to them, the same options become available as if Half Elven.\nLife Points\nLife points are all as Human versions of those classes.\nGuilds\nDue to their isolated nature Calabrim are only able to join Ishmaic guilds until they reach table 3. At this point they may join guilds freely gaining basic benefits, intermediate benefits are gained on table 7, and advanced tier on table 9\nPost Eighth Level Development\nA Calabrim can multi-class with the same flexibility as a Half Elf, even to classes not listed above as available to the Calabrim race since their first choice of class is merely limited by circumstance, not by ability.\nCalabrim who multi-class to become members of the Priest class bracket suffer the same disbenefits as Half Elves.\nCalabrim who multi-class to become members of the Wizard class bracket cannot attain a class level of higher than 6th."
+    "AdditionalInfo": "The Spirit World\nCalabrim have the equivalent of half a spirit, much as a Half Elf does. It may be this freak occurrence in their birthing amongst a race with no spirits which causes them their difficulty in feeding upon the wind. Calabrim suffer the same disadvantages in purchasing immunities to spiritual effects as described for Ishmaic Humans.\nNourishment\nThe Calabrim need to eat only once in any given seven days, but when they feed, they must eat the flesh of a magic using creature, even the essence of a dead elf would suffice, Since most adventures last less than seven days it is assumed that cunning Calabrim manage to feed outside of their adventuring times and those Calabrim of goodly moral fibre can often find ways of doing so which would not offend any other meat eating creature or person. It is rumoured that through such feeding however, more potent Calabrim can actually translate the food into innate magical abilities for their own later use. Calabrim are, however, flesh and blood and take full effect from potions / poisons\nAlignment\nCalabrim may be of any neutral alignment (NG, NE, LN, CN and NN).\nMake Up Requirements\nCalabrim need to wear make up in such a fashion as to appear sickly, diseased or of pitted complexion.\n'The Touch'\nCalabrim possess an ability they call 'The Touch' and it is this ability which paralyses a magic using creature. If the target possesses mana points, or magical innate powers it functions as a paralysis lasting 5 minutes. However the cost of using this ability is steep, the Calabrim is drained one level, which is recovered in the same fashion as a level lost to the touch of a wraith. However as it is a self-inflicted level loss immunity to level drain does not apply.\nIf the ability fails in any fashion (e.g. the target is immune to paralysis, has no magical ability or uses a war cry to keep moving) no level is lost. In any event the touch cannot be used more than once for every two levels possessed in any given day regardless of success or failure.\nClasses\nThe Calabrim have little opportunity for formal training, and as such may only begin as Pathfinders, Thugs, or Warriors, However once training has become available a much wider choice is available to them, the same options become available as if Half Elven.\nLife Points\nLife points are all as Human versions of those classes.\nGuilds\nDue to their isolated nature Calabrim are only able to join Ishmaic guilds until they reach table 3. At this point they may join guilds freely gaining basic benefits, intermediate benefits are gained on table 7, and advanced tier on table 9\nPost Eighth Level Development\nA Calabrim can multi-class with the same flexibility as a Half Elf, even to classes not listed above as available to the Calabrim race since their first choice of class is merely limited by circumstance, not by ability.\nCalabrim who multi-class to become members of the Priest class bracket suffer the same disbenefits as Half Elves.\nCalabrim who multi-class to become members of the Wizard class bracket cannot attain a class level of higher than 6."
   },
   "Samila": {
     "PeopleType": "Ishmaic",
     "Description": "The power of the Seven Winds is not the only force at work within the Great Sink. Much as it does elsewhere, the Primal Spirit feels a need to assist its children. Samila are more closely related to the City Spirits of the Empire than its human population, born of the desire for Primus to express itself, the Samila are the spirits of the wide and empty places of the desert and the labyrinthine caverns beneath.\n\nThus events within their territory draw the attention of the governing Samila, producing the folk tales of robed strangers leading weary and parched strangers to hidden oasis, or in the case of the more malign Samila, offering promises of aid only to deposit the foolish wayfarer in the most inhospitable dustbowl which can be found.\n\nEach Samila, when forming its sentience, lays claim to vast areas of land drawing on and complementing the intuitive wishes of the few creatures that live within those places. It is this territorialism, developed in the pre-sentient stage (called by the Samila their \"Pulaim\"), which breeds the lack of co-operation between them in later years.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
-    "AdditionalInfo": "Innate Earthpower Talents\nSamila gain the following abilities and life points as they reach each level, some of these abilities mimic magical spell innates but are not, they are, in fact, Earthpower abilities. They have no verbal but require an OOC declaration.\nLevel TBLP LOC Abilities\n1 22 7\n2 23 7 Passwall 1/day\n3 24 7\n4 25 8\n5 26 8 Earth Shift 1/4 levels\n6 27 8 Passwall 2/day (from once)\n7 28 9\n8 29 9 Meld With Stone 1/day\n'Of Strange Form'\nThe Samila has a strange form, physically frail, but strong with power.\n They have no spirit.\n They suffer only half effect from magic as per a Dwarf.\n They have no mind as such to be targeted or caught by neuronic abilities.\n They are however fully flesh and blood and effected fully by physical and Earthpower effects.\n...But Frail Form\nThey may not acquire grades of Strength, nor may they wear armour.\nPost Eighth Level Development\nA Samila can acquire abilities as a normal 1st Class High Druid.\nA Samila always uses their base life points as detailed above for the purposes of life-capping even if they multi-class or raise their base life points in any fashion.\nThey may never acquire the ability to use weapons of any type.\nThey may not leave the Druid bracket."
+    "AdditionalInfo": "Innate Earthpower Talents\nSamila gain the following abilities and life points as they reach each level, some of these abilities mimic magical spell innates but are not, they are, in fact, Earthpower abilities. They have no verbal but require an OOC declaration.\nLevel TBLP LOC Abilities\n1 22 7\n2 23 7 Passwall 1/day\n3 24 7\n4 25 8\n5 26 8 Earth Shift 1/4 levels\n6 27 8 Passwall 2/day (from once)\n7 28 9\n8 29 9 Meld With Stone 1/day\n'Of Strange Form'\nThe Samila has a strange form, physically frail, but strong with power.\n They have no spirit.\n They suffer only half effect from magic as per a Dwarf.\n They have no mind as such to be targeted or caught by neuronic abilities.\n They are however fully flesh and blood and effected fully by physical and Earthpower effects.\n...But Frail Form\nThey may not acquire grades of Strength, nor may they wear armour.\nPost Eighth Level Development\nA Samila can acquire abilities as a normal 1 Class High Druid.\nA Samila always uses their base life points as detailed above for the purposes of life-capping even if they multi-class or raise their base life points in any fashion.\nThey may never acquire the ability to use weapons of any type.\nThey may not leave the Druid bracket."
   },
   "Crol": {
     "PeopleType": "Ishmaic",
     "Description": "The Crol are a race of lizard men native to the lands of the Ishmaic Confederacy. Until sometime in the last Age, these huge, war-like lizard men lived in large temples and caverns beneath the deserts, emerging only to hunt the creatures native to the surface world and to perform their strange religious ceremonies to the Sun. During one such ceremony, a great many were set upon by the Athfanal, defeated and enslaved. For many Crol, slavery is the only life they have known.\n\nThe Crol vary in size and shape a great deal, although they are generally either short and bulky or tall and wiry. From birth they have tails but those Crol who are not enslaved have taken to cutting their tails off at their ritual of Maturity. Slave Crol however are easily identifiable by their reptilian tails. They all have scales and are frequently tattooed with bright colours. Their scales change colour as they mature but they start as being a yellowy green and darken as they get older. Their hair colour varies but is usually slicked back with oils and lightens to white as they age.\n\nThe Crol favour tridents and spears as their weapons and will duel only with them, though for hunting however any weapon will suffice. The Crol enjoy fighting, often doing so for fun as much as for practice but they are almost always ready for a fight (they are taught the errors of their past well). The Crol are a fairly short-lived race (on average they mature at 4 years old and will die of natural causes at about 16 (should any of them survive)) when their scales have blackened to the colour of ash and their hair an ivory white.\n\nThe Crol worship the Sun and the Moon, the Wind and the Desert (which they refer to as the mother) and they perform regular ceremonies to these things.",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
-    "AdditionalInfo": "Yashtar\nThe third caste of Crol is the Slaves - the Yashtar - those that have been born and bred in slavery to the Athfanal. They are treated incredibly badly and have a spell cast on them to dominate them into subservience. They perform all sorts of manual tasks for the Athfanal as well as guard duty and forming raiding parties. There is little to no resistance known of amongst the Yashtar as the spells that are cast on them are so potent - most of them do not even realise that they are slaves or that they could live in another way.\nLive Role Playing Rules\nNo Crol can wear armour better than leather as it interferes with their scaly hides. Some of them do wear pieces of bronze metal but only for show not actually as armour.\nCrol are only trained in using the following weapons - clubs, spears, scimitars, tridents and glaives, they have a maximum damage of triple with any other weapon.\nCrol may only use Small Shields of at most 24\" in diameter.\nThey may not acquire any form of neuronics.\nCrol may join professional guild freely but may only join Crol related political and social guilds.\nCrol gain no benefit from any form of potion as their physiology is just too different to drink them.\nThey are also immune to poisons unless they are crafted specifically against the Crol race.\nCrol cannot acquire any form of immunity to cold and lose 4 DAC and 1 grade of strength (to a minimum of 0) in severe cold environments (ref's discretion)\nCrol are inedible as far as natural creatures are concerned due to their acidic blood, and their blood grants creatures drinking it no benefits if normally it would.\nYashtar\nMay only be Warriors, they gain 1 Innate PAC at 3rd, 2 (total) at 5th, 3 (total) at 7th and 4 (total) at 8th. They have the same life points as Half Ogres of their class.\nKaerssor\nCan only be Rangers, Monks or Warriors, they gain 1 PAC at 5th and 2 PAC (total) at 8th. They have Human life.\nJaerseen\nCan only be Wizards, Warlocks or Power Masters, they have to be of an elemental colour (Red, Green, Brown or Blue), they may not second colour and may not cast grey spells. They gain no Innate PAC. They have Elven Pathfinder life if a Wizard or Human Pathfinder life if a Warlock or Power-Master. They gain 1 casting level in their primary colour.\nTalents\nEach Caste has a range of options to choose from as they advance in levels - they gain a minor talent at 2nd, a medium talent at 5th and a major talent at 8th. These must be written on the cards when chosen. It is always possible to choose a lower level talent instead of a higher level one; it is only possible to choose a talent once however."
+    "AdditionalInfo": "Yashtar\nThe third caste of Crol is the Slaves - the Yashtar - those that have been born and bred in slavery to the Athfanal. They are treated incredibly badly and have a spell cast on them to dominate them into subservience. They perform all sorts of manual tasks for the Athfanal as well as guard duty and forming raiding parties. There is little to no resistance known of amongst the Yashtar as the spells that are cast on them are so potent - most of them do not even realise that they are slaves or that they could live in another way.\nLive Role Playing Rules\nNo Crol can wear armour better than leather as it interferes with their scaly hides. Some of them do wear pieces of bronze metal but only for show not actually as armour.\nCrol are only trained in using the following weapons - clubs, spears, scimitars, tridents and glaives, they have a maximum damage of triple with any other weapon.\nCrol may only use Small Shields of at most 24\" in diameter.\nThey may not acquire any form of neuronics.\nCrol may join professional guild freely but may only join Crol related political and social guilds.\nCrol gain no benefit from any form of potion as their physiology is just too different to drink them.\nThey are also immune to poisons unless they are crafted specifically against the Crol race.\nCrol cannot acquire any form of immunity to cold and lose 4 DAC and 1 grade of strength (to a minimum of 0) in severe cold environments (ref's discretion)\nCrol are inedible as far as natural creatures are concerned due to their acidic blood, and their blood grants creatures drinking it no benefits if normally it would.\nYashtar\nMay only be Warriors, they gain 1 Innate PAC at 3, 2 (total) at 5, 3 (total) at 7 and 4 (total) at 8. They have the same life points as Half Ogres of their class.\nKaerssor\nCan only be Rangers, Monks or Warriors, they gain 1 PAC at 5 and 2 PAC (total) at 8. They have Human life.\nJaerseen\nCan only be Wizards, Warlocks or Power Masters, they have to be of an elemental colour (Red, Green, Brown or Blue), they may not second colour and may not cast grey spells. They gain no Innate PAC. They have Elven Pathfinder life if a Wizard or Human Pathfinder life if a Warlock or Power-Master. They gain 1 casting level in their primary colour.\nTalents\nEach Caste has a range of options to choose from as they advance in levels - they gain a minor talent at 2, a medium talent at 5 and a major talent at 8. These must be written on the cards when chosen. It is always possible to choose a lower level talent instead of a higher level one; it is only possible to choose a talent once however."
   },
   "Baronial Human": {
     "PeopleType": "Baronial",
     "Description": "",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": ""
   },
@@ -401,14 +401,14 @@
     "PeopleType": "Baronial",
     "Description": "The Blauz are the slyest of the naturalised Dae...em.\n\nBlauz are clever, clever enough to know that mixing so",
     "levelledAbilities": {
-      "1st": [],
-      "2nd": [],
-      "3rd": [],
-      "4th": [],
-      "5th": [],
-      "6th": [],
-      "7th": [],
-      "8th": []
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
     },
     "AdditionalInfo": ""
   }

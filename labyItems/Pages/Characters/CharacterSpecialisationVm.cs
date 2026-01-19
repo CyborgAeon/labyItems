@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using labyItems.Controls.Pickers;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
 
@@ -121,13 +122,15 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             var initial = selectionsByLevel.TryGetValue(req.Key, out var byLvl)
                 ? byLvl
                 : new Dictionary<int, string>();
-
+            var isWardPact = string.Equals(req.Key, "Ward pact", StringComparison.OrdinalIgnoreCase);
             var groupVm = new SpecialisationGroupVm(
                 title: req.Key,
                 levels: req.Value,
                 optionNames: options,
                 initiallySelectedByLevel: initial,
-                onAnySelectionChanged: OnAnySelectionChanged);
+                onAnySelectionChanged: OnAnySelectionChanged,
+                useWardPactEnum: isWardPact);
+
 
             groupVms.Add(groupVm);
         }
@@ -392,6 +395,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             flatProp.SetValue(draft, flat);
     }
 }
+
 public sealed class SpecialisationGroupVm : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -425,6 +429,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         get => _filterText;
         set
         {
+            if (UseWardPactEnum) return;
             if (!Set(ref _filterText, value)) return;
             ApplyFilter();
         }
@@ -486,14 +491,18 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         Success,
         Error
     }
+    public bool UseWardPactEnum { get; }
+
     public SpecialisationGroupVm(
         string title,
         IEnumerable<int> levels,
         List<string> optionNames,
         Dictionary<int, string> initiallySelectedByLevel,
-        Action onAnySelectionChanged)
+        Action onAnySelectionChanged,
+        bool useWardPactEnum)
     {
         Title = title;
+        UseWardPactEnum = useWardPactEnum;
         _onAnySelectionChanged = onAnySelectionChanged;
 
         _allOptionNames = optionNames
@@ -512,12 +521,25 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
 
             var slot = new SpecialisationSlotVm(
                 lvl,
+                useWardPactEnum,
                 () => OnSlotChanged());
 
             slot.SetOptionsSource(() => FilteredOptionNames);
 
-            if (!string.IsNullOrWhiteSpace(pre))
-                slot.SelectedOption = pre;
+            if (useWardPactEnum)
+            {
+                if (!string.IsNullOrWhiteSpace(pre))
+                {
+                    var match = WardPactOptions.Standard.FirstOrDefault(k => string.Equals(k.Key, pre, StringComparison.OrdinalIgnoreCase));
+                    if (!string.IsNullOrWhiteSpace(match.Key))
+                        slot.SelectedWardPact = match.Value;
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(pre))
+                    slot.SelectedOption = pre;
+            }
 
             Slots.Add(slot);
         }
@@ -555,57 +577,5 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         Raise(nameof(StatusText));
         Raise(nameof(HelperText));
         Raise(nameof(CardState));
-    }
-}
-
-public sealed class SpecialisationSlotVm : INotifyPropertyChanged
-{
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void Raise([CallerMemberName] string? name = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-    private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        Raise(name);
-        return true;
-    }
-
-    private readonly Action _onChanged;
-
-    public int Level { get; }
-    public string LevelLabel => $"Lvl {Level}";
-
-    private string? _selectedOption;
-    public string? SelectedOption
-    {
-        get => _selectedOption;
-        set
-        {
-            if (!Set(ref _selectedOption, value)) return;
-            _onChanged();
-        }
-    }
-
-    private Func<IReadOnlyList<string>>? _getFilteredOptions;
-    public IReadOnlyList<string> FilteredOptionNames => _getFilteredOptions?.Invoke() ?? Array.Empty<string>();
-
-    public SpecialisationSlotVm(int level, Action onChanged)
-    {
-        Level = level;
-        _onChanged = onChanged;
-    }
-
-    public void SetOptionsSource(Func<IReadOnlyList<string>> getFilteredOptions)
-    {
-        _getFilteredOptions = getFilteredOptions;
-        Raise(nameof(FilteredOptionNames));
-    }
-
-    public void RaiseFilteredOptionsChanged()
-    {
-        Raise(nameof(FilteredOptionNames));
     }
 }
