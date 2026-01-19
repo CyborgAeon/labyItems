@@ -1,5 +1,5 @@
 {
-  "Humans": {
+  "Human": {
     "PeopleType": "Standard",
     "Description": "The most common race on Primus, Humans are everywhere. Humans are a flexible race and can be almost any class.",
     "levelledAbilities": {
@@ -279,7 +279,7 @@
     },
     "AdditionalInfo": ""
   },
-  "Ishmaic Humans": {
+  "Ishmaic Human": {
     "PeopleType": "Ishmaic",
     "Description": "All Human Ishmaic characters are hardy by nature and gain the following benefits:\nFrom 1 level each character has both the Survival skill (as per a Ranger) and calculates their life as if they were one level higher, even when they have attained the 8 level of progression.\nIshmaic Human characters (bar Rainfinders) may carry a Glaive (a short sword like weapon) and if they are allowed sharp weapon use by their class restrictions then this may be used as a weapon. Even Wizards may carry such a weapon though this counts as their whole metal allowance.\nAll Ishmaic characters are well supported by their Clan. To this end they are supplied with normal weapons and armour as appropriate to their class. Ishmaic humans will normally be at least cordial to any Rainfinder.\nIshmaic humans may freely join professional and social guilds but they may not belong to political guilds unless they are specifically for Ishmaics.",
     "levelledAbilities": {

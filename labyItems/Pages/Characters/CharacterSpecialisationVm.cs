@@ -31,6 +31,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     }
 
     public ObservableCollection<SpecialisationGroupVm> Groups { get; } = new();
+    public ObservableCollection<MappedSpecialisationVm> MappedSpecialisations { get; } = new();
 
     public ObservableCollection<string> RaceSubtypeOptions { get; } = new();
     public ObservableCollection<RaceSubtypePreviewLine> RaceSubtypeAbilitiesPreview { get; } = new();
@@ -49,6 +50,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             Raise(nameof(HasNoChoices));
         }
     }
+    public bool HasMappedSpecialisations => MappedSpecialisations.Count > 0;
     private bool _hasRaceSubtypeChoice;
     public bool HasRaceSubtypeChoice
     {
@@ -162,11 +164,14 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     {
         _builder = builder;
         ToggleRaceSubtypeLevelsCommand = new Command(() => RaceSubtypeLevelsExpanded = !RaceSubtypeLevelsExpanded);
+
+        MappedSpecialisations.CollectionChanged += (_, __) => Raise(nameof(HasMappedSpecialisations));
     }
 
     public async Task ReloadAsync()
     {
         Groups.Clear();
+        MappedSpecialisations.Clear();
         RaceSubtypeOptions.Clear();
         RaceSubtypeAbilitiesPreview.Clear();
         RaceSubtypeLevelRows.Clear();
@@ -314,6 +319,22 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             var title = g.Key;
             var levels = g.Select(x => x.Level).Distinct().OrderBy(x => x).ToList();
 
+            if (def.ColourAbilities != null && def.ColourAbilities.Count > 0)
+            {
+                var subtitle = BuildSubtitle(g);
+                var mapped = new MappedSpecialisationVm(
+                    key: title,
+                    subtitle: string.IsNullOrWhiteSpace(subtitle) ? "Select a subtype to unlock its benefits." : subtitle,
+                    levels: levels,
+                    optionMap: def.ColourAbilities,
+                    initialSelection: GetSavedSpecialisationSelection(title),
+                    required: true,
+                    onSelectionChanged: OnMappedSpecialisationChanged);
+
+                MappedSpecialisations.Add(mapped);
+                continue;
+            }
+
             var groupVm = new SpecialisationGroupVm(
                 title: title,
                 levels: levels,
@@ -328,7 +349,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         }
 
 
-        HasChoices = HasRaceSubtypeChoice || Groups.Count > 0;
+        SyncMappedSelectionsToDraft();
+
+        HasChoices = HasRaceSubtypeChoice || Groups.Count > 0 || HasMappedSpecialisations;
         HeaderText = HasChoices ? "Make your selections below." : "No specialisation choices required.";
 
         RecomputeCompletion();
@@ -337,6 +360,37 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     private void OnAnySelectionChanged()
     {
         SyncRaceSubtypeDraftAndPreview();
+    }
+
+    private void OnMappedSpecialisationChanged()
+    {
+        SyncMappedSelectionsToDraft();
+        RecomputeCompletion();
+        _builder.NotifyGatingChanged();
+    }
+
+    private void SyncMappedSelectionsToDraft()
+    {
+        var currentKeys = MappedSpecialisations
+            .Select(m => m.Key)
+            .Where(k => !string.IsNullOrWhiteSpace(k))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var toRemove = Draft.SpecialisationSelections.Keys
+            .Where(k => !currentKeys.Contains(k))
+            .ToList();
+
+        foreach (var key in toRemove)
+            Draft.SpecialisationSelections.Remove(key);
+
+        foreach (var m in MappedSpecialisations)
+        {
+            var picked = (m.SelectedOption ?? string.Empty).Trim();
+            if (picked.Length == 0)
+                Draft.SpecialisationSelections.Remove(m.Key);
+            else
+                Draft.SpecialisationSelections[m.Key] = picked;
+        }
     }
 
     private async void SyncRaceSubtypeDraftAndPreview()
@@ -385,13 +439,25 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             }
         }
 
+        if (complete)
+        {
+            foreach (var m in MappedSpecialisations)
+            {
+                if (!m.IsComplete)
+                {
+                    complete = false;
+                    break;
+                }
+            }
+        }
+
         // If subtype is required, enforce it explicitly (since IsComplete already does for the 1-slot group,
         // this is mostly belt-and-braces if subtype group isn't created for some reason)
         if (_raceSubtypeRequired && string.IsNullOrWhiteSpace(_selectedRaceSubtype))
             complete = false;
 
         IsComplete = complete;
-        HasChoices = HasRaceSubtypeChoice || Groups.Count > 0;
+        HasChoices = HasRaceSubtypeChoice || Groups.Count > 0 || HasMappedSpecialisations;
         Raise(nameof(HasNoChoices));
     }
 
@@ -692,6 +758,20 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             : new Dictionary<int, string> { [0] = picked };
     }
 
+    private string? GetSavedSpecialisationSelection(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return null;
+
+        if (Draft.SpecialisationSelections.TryGetValue(key, out var saved)
+            && !string.IsNullOrWhiteSpace(saved))
+        {
+            return saved.Trim();
+        }
+
+        return null;
+    }
+
 
     // --------------------------
     // SPECIALISATION INDEX (JSON-driven)
@@ -789,6 +869,177 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         return levels;
     }
 
+    public sealed class MappedSpecialisationVm : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void Raise([CallerMemberName] string? name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            Raise(name);
+            return true;
+        }
+
+        private readonly Action _onChanged;
+        private readonly Dictionary<string, ColourAbilityDefinition> _optionMap;
+        private readonly bool _required;
+        private bool _suppressNotify;
+
+        public string Key { get; }
+        public string Title { get; }
+        public string Subtitle { get; }
+
+        public ObservableCollection<string> Options { get; } = new();
+        public ObservableCollection<RaceSubtypePreviewLine> AbilitiesPreview { get; } = new();
+        public ObservableCollection<RaceSubtypeLevelRow> LevelRows { get; } = new();
+
+        private string? _selectedOption;
+        public string? SelectedOption
+        {
+            get => _selectedOption;
+            set
+            {
+                var normalized = (value ?? string.Empty).Trim();
+                if (!Set(ref _selectedOption, normalized)) return;
+
+                UpdatePreview();
+                RaiseComputed();
+
+                if (!_suppressNotify)
+                    _onChanged();
+            }
+        }
+
+        private bool _levelsExpanded;
+        public bool LevelsExpanded
+        {
+            get => _levelsExpanded;
+            set => Set(ref _levelsExpanded, value);
+        }
+
+        public ICommand ToggleLevelsCommand { get; }
+
+        public bool HasSelection => !string.IsNullOrWhiteSpace(_selectedOption);
+        public bool IsComplete => !_required || HasSelection;
+        public string StatusText => HasSelection ? "Selected" : (_required ? "Required" : "Optional");
+        public string CardState => HasSelection ? "Success" : (_required ? "Error" : "Neutral");
+
+        public MappedSpecialisationVm(
+            string key,
+            string subtitle,
+            IEnumerable<int> levels,
+            Dictionary<string, ColourAbilityDefinition> optionMap,
+            string? initialSelection,
+            bool required,
+            Action onSelectionChanged)
+        {
+            Key = key;
+            Title = key;
+            var levelList = levels?.Distinct().OrderBy(x => x).ToList() ?? new List<int>();
+            Subtitle = string.IsNullOrWhiteSpace(subtitle)
+                ? (levelList.Count > 0 ? $"Lv {string.Join(", ", levelList)}" : "Class specialisation")
+                : subtitle;
+            _onChanged = onSelectionChanged;
+            _required = required;
+            _optionMap = new Dictionary<string, ColourAbilityDefinition>(optionMap ?? new Dictionary<string, ColourAbilityDefinition>(), StringComparer.OrdinalIgnoreCase);
+
+            ToggleLevelsCommand = new Command(() => LevelsExpanded = !LevelsExpanded);
+
+            foreach (var name in _optionMap.Keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
+                Options.Add(name);
+
+            _suppressNotify = true;
+            var initial = (initialSelection ?? string.Empty).Trim();
+            if (initial.Length > 0)
+            {
+                var match = Options.FirstOrDefault(o => string.Equals(o, initial, StringComparison.OrdinalIgnoreCase));
+                SelectedOption = match ?? null;
+            }
+            else
+            {
+                SelectedOption = null;
+            }
+            _suppressNotify = false;
+
+            UpdatePreview();
+            RaiseComputed();
+        }
+
+        private void UpdatePreview()
+        {
+            AbilitiesPreview.Clear();
+            LevelRows.Clear();
+            LevelsExpanded = false;
+
+            if (string.IsNullOrWhiteSpace(_selectedOption) || !_optionMap.TryGetValue(_selectedOption, out var entry))
+                return;
+
+            var abilityByLevel = new Dictionary<int, List<string>>();
+
+            var ordered = (entry.Levels ?? new Dictionary<string, List<string>>())
+                .Select(kvp => new
+                {
+                    Key = kvp.Key ?? string.Empty,
+                    Level = int.TryParse(kvp.Key, out var n) ? n : int.MaxValue,
+                    Abilities = (kvp.Value ?? new List<string>())
+                        .Select(x => (x ?? string.Empty).Trim())
+                        .Where(x => x.Length > 0)
+                        .ToList()
+                })
+                .Where(x => x.Abilities.Count > 0)
+                .OrderBy(x => x.Level)
+                .ThenBy(x => x.Key, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var lvl in ordered)
+            {
+                var label = lvl.Level == int.MaxValue ? lvl.Key : $"Lv {lvl.Level}";
+                foreach (var ability in lvl.Abilities)
+                {
+                    AbilitiesPreview.Add(new RaceSubtypePreviewLine
+                    {
+                        Level = label,
+                        Ability = ability
+                    });
+                }
+
+                if (lvl.Level != int.MaxValue)
+                {
+                    if (!abilityByLevel.TryGetValue(lvl.Level, out var list))
+                    {
+                        list = new List<string>();
+                        abilityByLevel[lvl.Level] = list;
+                    }
+
+                    list.AddRange(lvl.Abilities);
+                }
+            }
+
+            foreach (var kvp in abilityByLevel.OrderBy(k => k.Key))
+            {
+                var abilities = string.Join(", ", kvp.Value.Distinct(StringComparer.OrdinalIgnoreCase));
+                LevelRows.Add(new RaceSubtypeLevelRow
+                {
+                    Level = kvp.Key,
+                    Abilities = abilities
+                });
+            }
+
+            LevelsExpanded = LevelRows.Count > 0;
+        }
+
+        private void RaiseComputed()
+        {
+            Raise(nameof(HasSelection));
+            Raise(nameof(IsComplete));
+            Raise(nameof(StatusText));
+            Raise(nameof(CardState));
+        }
+    }
+
     private enum ChoiceSource
     {
         Class,
@@ -811,7 +1062,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         public Dictionary<string, ColourAbilityDefinition>? ColourAbilities { get; set; }
     }
 
-    private sealed class ColourAbilityDefinition
+    public sealed class ColourAbilityDefinition
     {
         public Dictionary<string, List<string>> Levels { get; set; } = new(StringComparer.OrdinalIgnoreCase);
         public string LifeScaleOverride { get; set; } = string.Empty;

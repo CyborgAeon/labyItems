@@ -11,6 +11,7 @@ public static class SupernaturalTypes
     public const string PureMagic = "🪄 Pure Magic";
     public const string PureSpirit = "⽰ Pure Spirit";
 
+    public static readonly IReadOnlyList<string> IspOptions = new[] { Magic, Spirit, Mantic };
     public static readonly IReadOnlyList<string> All = new[] { Magic, Spirit, Mantic, Earthpower };
     public static readonly IReadOnlyList<string> PureWeaponOptions = new[] { PureMagic, PureSpirit, Mantic };
 }

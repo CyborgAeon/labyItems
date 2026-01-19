@@ -21,7 +21,7 @@ public class WeaponConfig : ConfigBase
         }
     }
     public bool CanSubmit => !string.IsNullOrWhiteSpace(WeaponTypeText);
-    public ObservableCollection<string> BaseTypes { get; } = new(SupernaturalTypes.All);
+    public ObservableCollection<string> BaseTypes { get; } = new(SupernaturalTypes.IspOptions);
     private string? _selectedBaseType;
     public string? SelectedBaseType
     {

@@ -9,6 +9,7 @@ using labyItems.Models.Enums;
 using labyItems.Models;
 using labyItems.Controls;
 namespace labyItems.Pages.Configs;
+
 public class ArmourConfig : ConfigBase
 {
     public ObservableCollection<int?> ArmourLayers { get; } = new() { 0 };
@@ -17,7 +18,7 @@ public class ArmourConfig : ConfigBase
     public int ACBase
     {
         get => _acBase;
-        set { if (SetProperty(ref _acBase, Math.Max(0, value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown));}
+        set { if (SetProperty(ref _acBase, Math.Max(0, value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown)); }
         // var v = ; if (_acBase != v) { _acBase = v; OnPropertyChanged(); Recalculate(); } }
     }
 
@@ -27,7 +28,7 @@ public class ArmourConfig : ConfigBase
         SelectedArmour == SupernaturalTypes.Spirit || SelectedArmour == SupernaturalTypes.Mantic;
 
     public ObservableCollection<string> ArmourTypes { get; } =
-        new(SupernaturalTypes.All);
+        new(SupernaturalTypes.IspOptions);
     private string _selectedArmour = string.Empty;
     public string SelectedArmour
     {
@@ -48,22 +49,22 @@ public class ArmourConfig : ConfigBase
     public int MagicalColoursCount
     {
         get => _magicalColoursCount;
-        set { if (SetProperty(ref _magicalColoursCount, Math.Max(0, value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown));}
+        set { if (SetProperty(ref _magicalColoursCount, Math.Max(0, value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown)); }
     }
 
     private bool _spiritualNonOpposite;
     public bool SpiritualNonOpposite
     {
         get => _spiritualNonOpposite;
-        set { if (SetProperty(ref _spiritualNonOpposite, value, affectsTotal: true)) OnPropertyChanged(nameof(Breakdown));}
+        set { if (SetProperty(ref _spiritualNonOpposite, value, affectsTotal: true)) OnPropertyChanged(nameof(Breakdown)); }
     }
 
     private int _pac, _dac, _mac, _sac;
-    public int PAC { get => _pac; set { if (SetProperty(ref _pac, Clamp0To6(value), affectsTotal: true))OnPropertyChanged(nameof(Breakdown));} }
-    public int DAC { get => _dac; set { if (SetProperty(ref _dac, Clamp0To6(value), affectsTotal: true))OnPropertyChanged(nameof(Breakdown));} }
-    public int MAC { get => _mac; set { if (SetProperty(ref _mac, Clamp0To6(value), affectsTotal: true))OnPropertyChanged(nameof(Breakdown));} }
-    public int SAC { get => _sac; set { if (SetProperty(ref _sac, Clamp0To6(value), affectsTotal: true))OnPropertyChanged(nameof(Breakdown));} }
-    
+    public int PAC { get => _pac; set { if (SetProperty(ref _pac, Clamp0To6(value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown)); } }
+    public int DAC { get => _dac; set { if (SetProperty(ref _dac, Clamp0To6(value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown)); } }
+    public int MAC { get => _mac; set { if (SetProperty(ref _mac, Clamp0To6(value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown)); } }
+    public int SAC { get => _sac; set { if (SetProperty(ref _sac, Clamp0To6(value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown)); } }
+
     // Outputs
     // private int _total;
     // public int Total { get => _total; private set { if (SetProperty(ref _total, value, affectsTotal: false))OnPropertyChanged(nameof(Breakdown)); } }
@@ -106,7 +107,7 @@ public class ArmourConfig : ConfigBase
         {
             int perAc = SelectedArmour switch
             {
-                SupernaturalTypes.Magic  => 2,
+                SupernaturalTypes.Magic => 2,
                 SupernaturalTypes.Spirit => 2,
                 SupernaturalTypes.Mantic => 4,
                 _ => 0
@@ -184,7 +185,7 @@ public class ArmourConfig : ConfigBase
         set => SetProperty(ref _armourAlignmentCount, Math.Max(0, value), affectsTotal: true);
     }
 
-    
+
     public static int GetTableCost(int ac, IReadOnlyList<int> table) =>
         table[Math.Min(table.Count - 1, Math.Max(0, ac))];
 

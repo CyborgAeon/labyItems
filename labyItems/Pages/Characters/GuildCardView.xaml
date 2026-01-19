@@ -2,13 +2,26 @@
 <ContentView
     x:Class="labyItems.Pages.Characters.GuildCardView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:labyItems.Pages.Characters">
 
     <Frame x:Name="CardFrame"
            Padding="12"
            Margin="0,0,0,12"
            CornerRadius="14"
            HasShadow="True">
+        <Frame.Triggers>
+            <DataTrigger TargetType="Frame"
+                         Binding="{Binding IsSelected}"
+                         Value="True">
+                <Setter Property="HasShadow"
+                        Value="True"/>
+                <Setter Property="BorderColor"
+                        Value="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}"/>
+                <Setter Property="BackgroundColor"
+                        Value="{AppThemeBinding Light=#FFF7ED, Dark=#241010}"/>
+            </DataTrigger>
+        </Frame.Triggers>
 
         <Grid RowDefinitions="Auto,Auto"
               ColumnDefinitions="*,Auto"
@@ -123,18 +136,13 @@
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
-
                 </VerticalStackLayout>
             </VerticalStackLayout>
-
         </Grid>
-
-        <!-- Tap overlay: toggle expand on any tap -->
         <Frame.GestureRecognizers>
             <TapGestureRecognizer
-                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=SelectCommand}"
+                Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=SelectCommand}"
                 CommandParameter="{Binding .}"/>
         </Frame.GestureRecognizers>
-
     </Frame>
 </ContentView>

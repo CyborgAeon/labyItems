@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace labyItems.Models.Characters;
 
 public sealed class CharacterDraft
@@ -12,6 +15,8 @@ public sealed class CharacterDraft
 
     // NEW: optional multi-select guilds for the builder wizard
     public List<string> Guilds { get; set; } = new();
+
+    public Dictionary<string, string> SpecialisationSelections { get; } = new(StringComparer.OrdinalIgnoreCase);
 
     public bool IsRaceAndClassSelected =>
         !string.IsNullOrWhiteSpace(Race) && !string.IsNullOrWhiteSpace(Class);

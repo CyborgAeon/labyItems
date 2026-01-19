@@ -30,30 +30,16 @@
     "Powerbase": ["示 Spirit"],
     "PowerPerLevel": 3
   },
-  "Power Warrior (Jewel)": {
+  "Power Warrior": {
     "Brackets": ["🛡️ Warrior"],
     "Levels": {
       "1": ["O & U"],
-      "2": ["E", "Flash 1/level"],
-      "3": ["B", "Light (Self) 1/2 levels"],
-      "4": ["Walk on Light (Self) 1/3 levels"],
+      "2": ["E", "Power Warrior"],
+      "3": ["B"],
+      "4": [],
       "5": [],
       "6": ["Immunity to Befriend, Beguile, Spiritual Mastery"],
-      "7": ["Power-Warrior Specialist", "Sabre of Light & Truth 1/4 levels"],
-      "8": ["Power-Warrior Specialist"]
-    },
-    "Max AC": 8
-  },
-  "Power Warrior (Gem)": {
-    "Brackets": ["🛡️ Warrior"],
-    "Levels": {
-      "1": ["O & U"],
-      "2": ["E", "Extinguish (Range) 1/level"],
-      "3": ["B", "Darkness (Self) 1/2 levels"],
-      "4": [],
-      "5": ["See through Magical Darkness (s) 1/2 levels"],
-      "6": ["Immunity to Befriend, Beguile, Spiritual Mastery"],
-      "7": ["Black Blade 1/4 levels", "Power-Warrior Specialist"],
+      "7": ["Power-Warrior Specialist"],
       "8": ["Power-Warrior Specialist"]
     },
     "Max AC": 8

@@ -25,7 +25,7 @@ public class ShieldConfig : ConfigBase
         ShieldColours = new ObservableCollection<MagicColours?> { null };
         ShieldAlignments = new ObservableCollection<Alignments?> { null };
         BreakdownItems = new ObservableCollection<ContributionRow>();
-        ShieldTypes = new ObservableCollection<string>(SupernaturalTypes.All);
+        ShieldTypes = new ObservableCollection<string>(SupernaturalTypes.IspOptions);
     }
 
     private ShieldType _selectedShield;
@@ -253,11 +253,11 @@ public class ShieldConfig : ConfigBase
         AddCost(
             CostStringHelper.FormatBreakdownLine(
                 $"{MAC} MAC{(MacColoursCount == 0 ? ":" : adjustedText)}",
-                baseCost, 
-                ref running, 
+                baseCost,
+                ref running,
                 sb),
-            baseCost, 
-            ref running, 
+            baseCost,
+            ref running,
             sb);
         return running;
     }
@@ -274,9 +274,9 @@ public class ShieldConfig : ConfigBase
         var adjustedText = CostStringHelper.FormatAdjustedText(sacAlignmentList, factor, adjusted);
         AddCost(
             CostStringHelper.FormatBreakdownLine(
-                    $"{SAC} SAC{(SacAlignmentCount == 0 ? ":" : adjustedText)}", 
-                    baseCost, 
-                    ref running, 
+                    $"{SAC} SAC{(SacAlignmentCount == 0 ? ":" : adjustedText)}",
+                    baseCost,
+                    ref running,
                     sb),
             adjusted,
             ref running,
