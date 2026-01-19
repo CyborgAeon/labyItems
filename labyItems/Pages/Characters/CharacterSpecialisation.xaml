@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Pages.Characters.CharacterSpecialisation"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <ContentView.Resources>
+        <Color x:Key="CardBorderNeutralLight">#E0E0E0</Color>
+        <Color x:Key="CardBorderNeutralDark">#2A2A2A</Color>
+
+        <Color x:Key="CardBorderSuccessLight">#2E7D32</Color>
+        <Color x:Key="CardBorderSuccessDark">#66BB6A</Color>
+
+        <Color x:Key="CardBorderErrorLight">#C62828</Color>
+        <Color x:Key="CardBorderErrorDark">#EF5350</Color>
+
+        <Color x:Key="CardBgSuccessLight">#E8F5E9</Color>
+        <Color x:Key="CardBgSuccessDark">#14361A</Color>
+
+        <Color x:Key="CardBgErrorLight">#FFEBEE</Color>
+        <Color x:Key="CardBgErrorDark">#3B1414</Color>
+    </ContentView.Resources>
+
+    <Grid RowDefinitions="Auto,*"
+          Padding="16"
+          RowSpacing="12">
+
+        <VerticalStackLayout Grid.Row="0"
+                             Spacing="6">
+            <Label Text="Specialisation"
+                   FontSize="20"
+                   FontAttributes="Bold"/>
+            <Label
+                Text="{Binding HeaderText}"
+                Opacity="0.75"
+                LineBreakMode="WordWrap"/>
+        </VerticalStackLayout>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="12">
+
+                <Frame
+                    Padding="12"
+                    CornerRadius="12"
+                    HasShadow="False"
+                    BorderColor="{AppThemeBinding Light={StaticResource CardBorderNeutralLight}, Dark={StaticResource CardBorderNeutralDark}}"
+                    IsVisible="{Binding HasNoChoices}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="No specialisation choices required."
+                               FontAttributes="Bold"/>
+                        <Label Text="If your race or class grants specialisations, they will appear here."
+                               Opacity="0.75"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <VerticalStackLayout
+                    BindableLayout.ItemsSource="{Binding Groups}"
+                    Spacing="12"
+                    IsVisible="{Binding HasChoices}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="0"
+                                   CornerRadius="12"
+                                   HasShadow="False">
+                                <Frame.Triggers>
+                                    <DataTrigger TargetType="Frame"
+                                                 Binding="{Binding CardState}"
+                                                 Value="Neutral">
+                                        <Setter Property="BorderColor"
+                                                Value="{AppThemeBinding Light={StaticResource CardBorderNeutralLight}, Dark={StaticResource CardBorderNeutralDark}}"/>
+                                        <Setter Property="BackgroundColor"
+                                                Value="Transparent"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger TargetType="Frame"
+                                                 Binding="{Binding CardState}"
+                                                 Value="Success">
+                                        <Setter Property="BorderColor"
+                                                Value="{AppThemeBinding Light={StaticResource CardBorderSuccessLight}, Dark={StaticResource CardBorderSuccessDark}}"/>
+                                        <Setter Property="BackgroundColor"
+                                                Value="{AppThemeBinding Light={StaticResource CardBgSuccessLight}, Dark={StaticResource CardBgSuccessDark}}"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger TargetType="Frame"
+                                                 Binding="{Binding CardState}"
+                                                 Value="Error">
+                                        <Setter Property="BorderColor"
+                                                Value="{AppThemeBinding Light={StaticResource CardBorderErrorLight}, Dark={StaticResource CardBorderErrorDark}}"/>
+                                        <Setter Property="BackgroundColor"
+                                                Value="{AppThemeBinding Light={StaticResource CardBgErrorLight}, Dark={StaticResource CardBgErrorDark}}"/>
+                                    </DataTrigger>
+                                </Frame.Triggers>
+
+                                <VerticalStackLayout Spacing="0">
+
+                                    <Grid
+                                        Padding="12"
+                                        ColumnDefinitions="*,Auto"
+                                        RowDefinitions="Auto,Auto">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}"/>
+                                        </Grid.GestureRecognizers>
+
+                                        <Label
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Text="{Binding Title}"
+                                            FontAttributes="Bold"
+                                            LineBreakMode="TailTruncation"/>
+
+                                        <Label
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Text="{Binding StatusText}"
+                                            Opacity="0.75"/>
+
+                                        <Label
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2"
+                                            Text="{Binding Subtitle}"
+                                            Opacity="0.75"
+                                            LineBreakMode="WordWrap"/>
+                                    </Grid>
+
+                                    <BoxView HeightRequest="1"
+                                             Opacity="0.25"
+                                             IsVisible="{Binding IsExpanded}"/>
+
+                                    <VerticalStackLayout
+                                        Padding="12"
+                                        Spacing="10"
+                                        IsVisible="{Binding IsExpanded}">
+
+                                        <Label
+                                            Text="{Binding HelperText}"
+                                            Opacity="0.75"
+                                            LineBreakMode="WordWrap"/>
+
+                                        <SearchBar
+                                            Placeholder="Filter options (optional)"
+                                            Text="{Binding FilterText}"/>
+
+                                        <Grid ColumnDefinitions="Auto,*"
+                                              RowDefinitions="Auto">
+                                            <Label Text="Level"
+                                                   FontAttributes="Bold"/>
+                                            <Label Grid.Column="1"
+                                                   Text="Selection"
+                                                   FontAttributes="Bold"/>
+                                        </Grid>
+
+                                        <CollectionView ItemsSource="{Binding Slots}"
+                                                        SelectionMode="None">
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid ColumnDefinitions="Auto,*"
+                                                          Padding="0,6">
+                                                        <Label
+                                                            Text="{Binding LevelLabel}"
+                                                            VerticalOptions="Center"
+                                                            Opacity="0.85"/>
+
+                                                        <Picker
+                                                            Grid.Column="1"
+                                                            Title="Select an ability"
+                                                            ItemsSource="{Binding FilteredOptionNames}"
+                                                            SelectedItem="{Binding SelectedOption, Mode=TwoWay}"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentView>

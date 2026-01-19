@@ -40,6 +40,10 @@ public partial class ClassCardView : ContentView
     {
         if (e.PropertyName == nameof(ClassCardVm.IsSelected))
             Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
+
+
+        if (e.PropertyName == nameof(ClassCardVm.IsExpanded))
+            Dispatcher.Dispatch(async () => await ScrollIntoViewIfExpandedAsync());
     }
 
     private async Task AnimateSelectionAsync()
@@ -52,4 +56,37 @@ public partial class ClassCardView : ContentView
             await CardFrame.ScaleTo(1.0, 110, Easing.CubicOut);
         }
     }
+    private CancellationTokenSource? _scrollCts;
+
+    private async Task ScrollIntoViewIfExpandedAsync()
+    {
+        if (BindingContext is not ClassCardVm vm) return;
+        if (!vm.IsExpanded) return;
+
+        // Cancel any previous scroll in progress
+        _scrollCts?.Cancel();
+        _scrollCts = new CancellationTokenSource();
+        var token = _scrollCts.Token;
+
+        // Let the expansion layout complete
+        await Task.Delay(80, token);
+
+        var cv = FindParentCollectionView();
+        if (cv == null) return;
+
+        cv.ScrollTo(vm, position: ScrollToPosition.Center, animate: false);
+        await Task.Delay(150, token);
+
+        cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
+    }
+
+    private CollectionView? FindParentCollectionView()
+    {
+        Element? parent = this;
+        while (parent != null && parent is not CollectionView)
+            parent = parent.Parent;
+        return parent as CollectionView;
+    }
+
+
 }

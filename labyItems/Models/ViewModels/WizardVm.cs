@@ -164,7 +164,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         CurrentStepView = CurrentStep switch
         {
             0 => new CharacterBuilder(CharacterBuilderVm),
-            1 => BuildPlaceholder("Step 2 - Character Info (not implemented here)"),
+            1 => new CharacterSpecialisation(CharacterBuilderVm),
             2 => BuildPlaceholder("Step 3 - Guilds (not implemented here)"),
             3 => BuildPlaceholder("Step 4 - Status/Buffs (not implemented here)"),
             4 => BuildPlaceholder("Step 5 - Review (not implemented here)"),

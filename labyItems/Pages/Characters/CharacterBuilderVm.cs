@@ -30,10 +30,19 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private readonly CharacterDraft _draft;
     private readonly Action _notifyWizardGatingChanged;
 
+    public CharacterDraft Draft => _draft;
+
+    public void NotifyGatingChanged()
+        => _notifyWizardGatingChanged();
+
+    public CharacterSpecialisationVm SpecialisationVm { get; }
+
     public CharacterBuilderVm(CharacterDraft draft, Action notifyWizardGatingChanged)
     {
         _draft = draft;
         _notifyWizardGatingChanged = notifyWizardGatingChanged;
+
+        SpecialisationVm = new CharacterSpecialisationVm(this);
 
         SelectTabCommand = new Command<object>(p =>
         {
@@ -59,7 +68,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         _selectedRaceFilter = "All";
 
         AllClasses = new ObservableCollection<ClassCardVm>();
-
         AllRaces = new ObservableCollection<RaceCardVm>();
 
         RefilterClasses();
@@ -72,9 +80,13 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await LoadClassesAsync();
             await ApplyRaceToClassesAsync(_draft.Race);
             RefilterClasses();
+
+            await SpecialisationVm.ReloadAsync();
         });
     }
+
     public ICommand ToggleRaceExpandedCommand { get; }
+
     private void ToggleRaceExpandedCommandImpl(RaceCardVm? item)
     {
         if (item == null) return;
@@ -88,6 +100,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         item.IsExpanded = !item.IsExpanded;
         RefilterRaces();
     }
+
     private async Task LoadRacesAsync()
     {
         var all = await PeopleService.GetAllAsync();
@@ -112,7 +125,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 PeopleType = peopleType,
                 Description = record.Description ?? "",
                 BuyAsRaw = record.BuyAs ?? "",
-                Icon = IconForPeopleType(peopleType)
+                Icon = IconForPeopleType(peopleType),
+                IsSelected = string.Equals(name, _draft.Race, StringComparison.OrdinalIgnoreCase)
             };
 
             vm.BuildRowsAndChips(record.LevelledAbilities ?? new Dictionary<string, List<string>>(), record.BuyAs);
@@ -161,6 +175,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     public ICommand SelectTabCommand { get; }
     public ICommand SelectRaceFilterCommand { get; }
+
     private string _classSearchText = "";
     public string ClassSearchText
     {
@@ -194,20 +209,22 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     public ObservableCollection<ClassCardVm> AllClasses { get; }
     public ObservableCollection<RaceCardVm> AllRaces { get; }
+    public ObservableCollection<ClassCardVm> FilteredClasses { get; } = new();
+    public ObservableCollection<RaceCardVm> FilteredRaces { get; } = new();
 
     private ObservableCollection<ClassCardVm> _filteredClasses = new();
-    public ObservableCollection<ClassCardVm> FilteredClasses
-    {
-        get => _filteredClasses;
-        private set => Set(ref _filteredClasses, value);
-    }
+    // public ObservableCollection<ClassCardVm> FilteredClasses
+    // {
+    //     get => _filteredClasses;
+    //     private set => Set(ref _filteredClasses, value);
+    // }
 
     private ObservableCollection<RaceCardVm> _filteredRaces = new();
-    public ObservableCollection<RaceCardVm> FilteredRaces
-    {
-        get => _filteredRaces;
-        private set => Set(ref _filteredRaces, value);
-    }
+    // public ObservableCollection<RaceCardVm> FilteredRaces
+    // {
+    //     get => _filteredRaces;
+    //     private set => Set(ref _filteredRaces, value);
+    // }
 
     public ICommand ToggleClassExpandedCommand { get; }
     public ICommand SelectClassCommand { get; }
@@ -226,17 +243,29 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         item.IsExpanded = !item.IsExpanded;
         RefilterClasses();
     }
-
     private void SelectClass(ClassCardVm? item)
     {
         if (item == null) return;
+        foreach (var c in AllClasses)
+            c.IsSelected = ReferenceEquals(c, item);
+
         _draft.Class = item.Name;
         _notifyWizardGatingChanged();
+        RefilterRaces();
+
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await SpecialisationVm.ReloadAsync();
+        });
     }
 
     private void SelectRace(RaceCardVm? item)
     {
         if (item == null) return;
+
+        foreach (var r in AllRaces)
+            r.IsSelected = ReferenceEquals(r, item);
+
         _draft.Race = item.Name;
         _notifyWizardGatingChanged();
 
@@ -244,8 +273,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         {
             await ApplyRaceToClassesAsync(item.Name);
             RefilterClasses();
+            await SpecialisationVm.ReloadAsync();
         });
     }
+
 
     private async Task LoadClassesAsync()
     {
@@ -283,7 +314,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 Summary = "",
                 MaxAc = maxAc,
                 TBLP = tblp,
-                PowerBase = powerBase
+                PowerBase = powerBase,
+                IsSelected = string.Equals(classKey, _draft.Class, StringComparison.OrdinalIgnoreCase)
             });
         }
 
@@ -334,13 +366,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var parts = bracket.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
         return parts.Length == 2 ? parts[1] : bracket;
     }
-
     private void RefilterClasses()
     {
         var q = (ClassSearchText ?? "").Trim().ToLowerInvariant();
         var filter = SelectedClassFilter ?? "All";
-
-        var expandedById = AllClasses.ToDictionary(x => x.Id, x => x.IsExpanded);
 
         var list = AllClasses
             .Where(c =>
@@ -348,35 +377,49 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 (q.Length == 0 ||
                  (c.Name ?? "").ToLowerInvariant().Contains(q) ||
                  (c.Summary ?? "").ToLowerInvariant().Contains(q)))
-            .Select(c =>
-            {
-                c.IsExpanded = expandedById.TryGetValue(c.Id, out var exp) && exp;
-                return c;
-            })
+            // Optional: keep selected at top if you still want that behaviour
+            .OrderByDescending(c => c.IsSelected)
             .ToList();
 
-        FilteredClasses = new ObservableCollection<ClassCardVm>(list);
+        ReplaceItems(FilteredClasses, list);
     }
+
     private void RefilterRaces()
     {
         var q = (RaceSearchText ?? "").Trim().ToLowerInvariant();
         var filter = SelectedRaceFilter ?? "All";
-
-        var expandedById = AllRaces.ToDictionary(x => x.Id, x => x.IsExpanded);
+        var selectedClass = _draft.Class;
 
         var list = AllRaces
             .Where(r =>
                 (filter == "All" || string.Equals(r.PeopleType, filter, StringComparison.OrdinalIgnoreCase)) &&
+                RaceAllowsClass(r, selectedClass) &&
                 (q.Length == 0 ||
                  r.Name.ToLowerInvariant().Contains(q) ||
                  (r.Description ?? "").ToLowerInvariant().Contains(q)))
-            .Select(r =>
-            {
-                r.IsExpanded = expandedById.TryGetValue(r.Id, out var exp) && exp;
-                return r;
-            })
+            .OrderByDescending(r => r.IsSelected)
             .ToList();
 
-        FilteredRaces = new ObservableCollection<RaceCardVm>(list);
+        ReplaceItems(FilteredRaces, list);
     }
+    private static void ReplaceItems<T>(ObservableCollection<T> target, IList<T> items)
+    {
+        target.Clear();
+        foreach (var i in items)
+            target.Add(i);
+    }
+    private static bool RaceAllowsClass(RaceCardVm r, string? className)
+    {
+        var c = (className ?? "").Trim();
+        if (c.Length == 0) return true; // no class selected => show all
+
+        // If the race has no buy-as restriction, treat as allowed
+        if (r.BuyAsChips == null || r.BuyAsChips.Count == 0)
+            return true;
+
+        return r.BuyAsChips.Any(chip =>
+            string.Equals(chip, c, StringComparison.OrdinalIgnoreCase) ||
+            chip.Contains(c, StringComparison.OrdinalIgnoreCase));
+    }
+
 }
