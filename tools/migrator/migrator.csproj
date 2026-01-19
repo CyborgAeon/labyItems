@@ -8,9 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
-        <PackageReference Include="FluentMigrator.Runner.SQLite" Version="3.3.2" />
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.0" />
+        <PackageReference Include="FluentMigrator.Runner" />
+        <PackageReference Include="FluentMigrator.Runner.SQLite" />
+        <PackageReference Include="Microsoft.Data.Sqlite" />
+
     </ItemGroup>
 
     <ItemGroup>
