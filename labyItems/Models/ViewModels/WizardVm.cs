@@ -84,8 +84,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
 
         // NEW: optional guild selection step
-        GuildsVm = new GuildsVm(Draft, NotifyGatingChanged);
-
+        GuildsVm = new GuildsVm(Draft, NotifyGatingChanged, null);
         BackCommand = new Command(OnBack);
         NextCommand = new Command(OnNext);
         StepClickCommand = new Command<int>(TryGoToStep);

@@ -5,6 +5,7 @@ using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Storage;
 using MigrationsLib.Migrations;
+using labyItems.Services;
 
 namespace labyItems;
 
@@ -51,6 +52,7 @@ public static class MauiProgram
 		// Register default-db installer which will copy a packaged default.db on first-run (if present)
 		builder.Services.AddSingleton<Services.IDefaultDatabaseInstaller, Services.DefaultDatabaseInstaller>();
 		builder.Services.AddSingleton<Services.IDatabaseInitializer, Services.DatabaseInitializer>();
+		builder.Services.AddSingleton<IBattleboardExportService, BattleboardExportService>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

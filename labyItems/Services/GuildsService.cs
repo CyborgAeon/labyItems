@@ -11,7 +11,8 @@ public static class GuildsService
 {
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
-        PropertyNameCaseInsensitive = true
+        PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter() }
     };
 
     private static Dictionary<string, GuildRecord>? _cache;
@@ -64,6 +65,9 @@ public sealed class GuildRecord
     public string Restrictions { get; set; } = "";
 
     public GuildBenefits Benefits { get; set; } = new();
+
+    [JsonPropertyName("alignmentRule")]
+    public AlignmentRule? AlignmentRule { get; set; }
 }
 
 public sealed class GuildBenefits

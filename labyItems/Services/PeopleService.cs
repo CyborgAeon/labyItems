@@ -46,6 +46,8 @@ public sealed class PeopleRecord
     // legacy fields you may still have in older JSON
     [JsonPropertyName("Buy-as")]
     public string? BuyAs { get; set; }
+    [JsonPropertyName("alignmentRule")]
+    public AlignmentRule? AlignmentRule { get; set; }
 }
 
 public sealed class PeopleSubtypeRecord

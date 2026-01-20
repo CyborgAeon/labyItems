@@ -42,4 +42,6 @@ public sealed class CharacterClassRecord
 
     [JsonPropertyName("Buy as")]
     public List<string>? BuyAs { get; set; }
+    [JsonPropertyName("alignmentRule")]
+    public AlignmentRule? AlignmentRule { get; set; }
 }

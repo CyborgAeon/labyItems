@@ -14,7 +14,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     private void Raise([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
+    private Dictionary<string, GuildRecord> _guildRecords =
+        new(StringComparer.OrdinalIgnoreCase);
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
@@ -27,11 +28,12 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private readonly Action _notifyWizardGatingChanged;
 
     public CharacterDraft Draft => _draft;
-
-    public GuildsVm(CharacterDraft draft, Action notifyWizardGatingChanged)
+    private readonly Func<IEnumerable<AlignmentRule?>> _getNonGuildRules;
+    public GuildsVm(CharacterDraft draft, Action notifyWizardGatingChanged, Func<IEnumerable<AlignmentRule?>>? getNonGuildRules = null)
     {
         _draft = draft;
         _notifyWizardGatingChanged = notifyWizardGatingChanged;
+        _getNonGuildRules = getNonGuildRules ?? (() => Enumerable.Empty<AlignmentRule?>());
 
         TypeFilters = new ObservableCollection<string> { "All" };
         _selectedTypeFilter = "All";
@@ -78,9 +80,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     private async Task LoadAsync()
     {
-        var all = await GuildsService.GetAllAsync();
+        _guildRecords = await GuildsService.GetAllAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
 
-        // Filters
         var types = await GuildsService.GetTypesAsync();
         TypeFilters.Clear();
         TypeFilters.Add("All");
@@ -91,13 +92,15 @@ public sealed class GuildsVm : INotifyPropertyChanged
             SelectedTypeFilter = "All";
 
         // Items
-        var ordered = all.OrderBy(k => k.Key, StringComparer.OrdinalIgnoreCase).ToList();
+        var ordered = _guildRecords.OrderBy(k => k.Key, StringComparer.OrdinalIgnoreCase).ToList();
 
         AllGuilds.Clear();
         for (var i = 0; i < ordered.Count; i++)
         {
             var name = ordered[i].Key;
             var rec = ordered[i].Value ?? new GuildRecord();
+
+            var selectable = WouldStillHaveAnyAlignmentIfSelected(name);
 
             var vm = new GuildCardVm
             {
@@ -109,7 +112,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 IntermediateBenefits = rec.Benefits?.Intermediate?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? new(),
                 AdvancedBenefits = rec.Benefits?.Advanced?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? new(),
                 IsSelected = _draft.Guilds.Contains(name, StringComparer.OrdinalIgnoreCase),
-                IsExpanded = false
+                IsExpanded = false,
+                IsSelectable = selectable,
+                NotSelectableReason = selectable ? "" : "Conflicts with current alignment restrictions.",
             };
 
             vm.Icon = IconForType(vm.Type);
@@ -117,6 +122,26 @@ public sealed class GuildsVm : INotifyPropertyChanged
         }
 
         Refilter();
+        RecomputeDraftAlignments();
+    }
+
+    private bool WouldStillHaveAnyAlignmentIfSelected(string guildName)
+    {
+        var rules = new List<AlignmentRule?>();
+
+        // non-guild rules (race/class/subtype/specs)
+        rules.AddRange(_getNonGuildRules());
+
+        // currently selected guild rules
+        foreach (var g in _draft.Guilds)
+            rules.Add(GetGuildRule(g));
+
+        // plus this guild if not already selected
+        if (!_draft.Guilds.Any(x => string.Equals(x, guildName, StringComparison.OrdinalIgnoreCase)))
+            rules.Add(GetGuildRule(guildName));
+
+        var available = CharacterDraft.ComputeAvailableAlignments(rules);
+        return available.Count > 0;
     }
 
     private static string IconForType(string type)
@@ -158,8 +183,41 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         Raise(nameof(SelectedCount));
     }
+    private AlignmentRule? GetGuildRule(string guildName)
+    {
+        if (string.IsNullOrWhiteSpace(guildName))
+            return null;
+
+        return _guildRecords.TryGetValue(guildName, out var rec)
+            ? rec.AlignmentRule
+            : null;
+    }
 
     public int SelectedCount => _draft.Guilds.Count;
+
+    private void RecomputeDraftAlignments()
+    {
+        var rules = new List<AlignmentRule?>();
+
+        // Non-guild rules
+        rules.AddRange(_getNonGuildRules());
+
+        // Selected guild rules
+        foreach (var g in _draft.Guilds)
+            rules.Add(GetGuildRule(g));
+
+        _draft.SetAvailableAlignmentsFromRules(rules);
+
+        // Refresh selectability now that the world changed
+        foreach (var card in AllGuilds)
+        {
+            var selectable = WouldStillHaveAnyAlignmentIfSelected(card.Name);
+
+            // Allow already-selected guilds to stay selectable so the user can deselect them
+            card.IsSelectable = selectable || card.IsSelected;
+            card.NotSelectableReason = card.IsSelectable ? "" : "Conflicts with current alignment restrictions.";
+        }
+    }
 
     private void ToggleExpanded(GuildCardVm? item)
     {
@@ -178,8 +236,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private void ToggleSelected(GuildCardVm? item)
     {
         if (item == null) return;
+        if (!item.IsSelectable && !item.IsSelected)
+            return;
 
-        // Toggle membership in Draft.Guilds (multi-select)
         var exists = _draft.Guilds.Any(x => string.Equals(x, item.Name, StringComparison.OrdinalIgnoreCase));
         if (exists)
         {
@@ -193,15 +252,36 @@ public sealed class GuildsVm : INotifyPropertyChanged
         }
 
         Raise(nameof(SelectedCount));
-
-        // Guilds step is optional, but notifying wizard keeps UI consistent.
+        RecomputeDraftAlignments();
         _notifyWizardGatingChanged();
     }
 }
 
 public sealed class GuildCardVm : INotifyPropertyChanged
 {
-    // (existing INotifyPropertyChanged boilerplate)
+    private bool _isSelectable = true;
+    public bool IsSelectable
+    {
+        get => _isSelectable;
+        set
+        {
+            if (_isSelectable == value) return;
+            _isSelectable = value;
+            Raise();
+        }
+    }
+
+    private string _notSelectableReason = "";
+    public string NotSelectableReason
+    {
+        get => _notSelectableReason;
+        set
+        {
+            if (_notSelectableReason == value) return;
+            _notSelectableReason = value;
+            Raise();
+        }
+    }
     private void Raise([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     public int Id { get; set; }
     public string Name { get; set; } = "";
@@ -209,7 +289,6 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public string Icon { get; set; } = "📜";
 
     public string Restrictions { get; set; } = "";
-
     public List<string> BasicBenefits { get; set; } = new();
     public List<string> IntermediateBenefits { get; set; } = new();
     public List<string> AdvancedBenefits { get; set; } = new();

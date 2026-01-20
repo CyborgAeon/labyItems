@@ -175,5 +175,92 @@
     },
     "Max AC": 8,
     "Buy as": ["Hanot Beggar", "2nd class Pathfinder", "2nd class Warrior"]
+  },
+  "Paladin": {
+    "Brackets": ["🛡️ Warrior"],
+    "Max AC": 9,
+    "Levels": {
+      "1": [
+        "O & U",
+        "Light armour",
+        "Medium armour",
+        "Heavy armour",
+        "Recognise Evil Spirit"
+      ],
+      "2": ["E", "Paladinic Bless"],
+      "3": ["B", "Lay on hands 3/level"],
+      "4": ["Bless Other 1/2 levels"],
+      "5": ["Detect Lie", "Cure disease 1/3 levels"],
+      "6": [
+        "Paladin Specialist skill",
+        "Discern Spiritual Aura",
+        "Repel Undead"
+      ],
+      "7": ["Paladin Specialist skill", "Recognise Spirit"],
+      "8": ["Paladin Specialist skill", "Repel Evil 1/4 levels"]
+    },
+    "alignmentRule": {
+      "mode": "set",
+      "allowed": {
+        "moral": ["Good"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Good"]
+    }
+  },
+  "Unholy Champion": {
+    "Brackets": ["🛡️ Warrior"],
+    "Max AC": 9,
+    "Levels": {
+      "1": [
+        "O & U",
+        "Recognise evil spirit",
+        "Immunity to disease",
+        "Undead returner",
+        "Evil stairway"
+      ],
+      "2": ["E"],
+      "3": ["H & MP", "Repel Goodly Spirit 1/2 levels"],
+      "4": ["B"],
+      "5": [],
+      "6": ["Unholy Champion Specialist skill"],
+      "7": ["Unholy Champion Specialist skill"],
+      "8": ["Unholy Champion Specialist skill"]
+    },
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Evil"],
+        "order": ["Lawful", "Neutral", "Chaotic"]
+      },
+      "allowedPairs": ["Lawful Evil", "Neutral Evil", "Chaotic Evil"]
+    }
+  },
+  "Grey Knight": {
+    "Brackets": ["🛡️ Warrior"],
+    "Max AC": 9,
+    "Levels": {
+      "1": [
+        "O & U",
+        "Detect Spirit's Nature",
+        "Immunity to Alignment change",
+        "Neutral stairway"
+      ],
+      "2": ["E"],
+      "3": ["B", "Immunity to Beguile & Befriend"],
+      "4": ["B"],
+      "5": [],
+      "6": ["Grey Knight Specialist skill"],
+      "7": ["Grey Knight Specialist skill", "Recognise Spirit"],
+      "8": ["Grey Knight Specialist skill", "Immunity to Spiritual Mastery"]
+    },
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Neutral"],
+        "order": ["Lawful", "Neutral", "Chaotic"]
+      },
+      "allowedPairs": ["Lawful Neutral", "True Neutral", "Chaotic Neutral"]
+    }
   }
 }

@@ -364,6 +364,10 @@
   },
   "Church of Certizal, Shadow of the First Evil": {
     "Type": "professional",
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": { "moral": ["Evil"] }
+    },
     "Restrictions": "The Guild is a full black guild (as per WFA rules). If a member ever ceases to be Evil they",
     "Benefits": {
       "Basic": ["Embraced By Evil", "Shroud Of Evil", "Words Of Certizal"],
@@ -1336,6 +1340,10 @@
   "Deci": {
     "Type": "city",
     "Restrictions": "",
+    "alignmentRule": {
+      "mode": "set",
+      "allowed": { "moral": ["Good"] }
+    },
     "Benefits": {
       "Basic": [
         "“Enlightened I” Alignment becomes Goodly [unless immune to alignment change].",
