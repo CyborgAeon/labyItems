@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Windows.Input;
+using System.Threading;
 using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Models.DTOs;
@@ -21,6 +22,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private HashSet<string>? _allowedClassKeysForSelectedRace;
     private string? _allowedClassKeysForRace;
+    private readonly SemaphoreSlim _abilityRefreshLock = new(1, 1);
 
     private void Raise([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -94,6 +96,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await ApplyRaceToClassesAsync(_draft.Race);
 
             await SpecialisationVm.ReloadAsync();
+
+            await RefreshDraftAbilitiesAsync();
         });
     }
 
@@ -259,6 +263,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             RefilterRaces();
 
             await SpecialisationVm.ReloadAsync();
+            await RefreshDraftAbilitiesAsync();
         });
     }
 
@@ -281,6 +286,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             RefilterRaces();
 
             await SpecialisationVm.ReloadAsync();
+            await RefreshDraftAbilitiesAsync();
         });
     }
 
@@ -429,6 +435,80 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
 
         await Task.WhenAll(tasks);
+    }
+
+    public async Task RefreshDraftAbilitiesAsync()
+    {
+        await _abilityRefreshLock.WaitAsync();
+        try
+        {
+            var abilities = new List<AbilityDraft>();
+
+            abilities.AddRange(await BuildRaceAbilitiesAsync());
+            abilities.AddRange(await BuildClassAbilitiesAsync());
+            abilities.AddRange(SpecialisationVm.BuildSelectedAbilityDrafts());
+
+            Draft.Abilities = abilities
+                .OrderBy(a => a.LevelGained ?? int.MaxValue)
+                .ThenBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to refresh abilities: {ex}");
+        }
+        finally
+        {
+            _abilityRefreshLock.Release();
+        }
+    }
+
+    private async Task<List<AbilityDraft>> BuildRaceAbilitiesAsync()
+    {
+        var list = new List<AbilityDraft>();
+
+        var raceName = (Draft.Race ?? string.Empty).Trim();
+        if (raceName.Length == 0)
+            return list;
+
+        var all = await PeopleService.GetAllAsync();
+        if (TryGetRecord(all, raceName, out var rec) && rec?.LevelledAbilities != null)
+            list.AddRange(AbilityDraftBuilder.BuildFromLevels(rec.LevelledAbilities));
+
+        return list;
+    }
+
+    private async Task<List<AbilityDraft>> BuildClassAbilitiesAsync()
+    {
+        var list = new List<AbilityDraft>();
+
+        var className = (Draft.Class ?? string.Empty).Trim();
+        if (className.Length == 0)
+            return list;
+
+        var all = await ClassService.GetAllAsync();
+        if (TryGetRecord(all, className, out var rec) && rec?.Levels != null)
+            list.AddRange(AbilityDraftBuilder.BuildFromLevels(rec.Levels));
+
+        return list;
+    }
+
+    private static bool TryGetRecord<T>(Dictionary<string, T> map, string key, out T? value)
+    {
+        if (map.TryGetValue(key, out value))
+            return true;
+
+        foreach (var kvp in map)
+        {
+            if (string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase))
+            {
+                value = kvp.Value;
+                return true;
+            }
+        }
+
+        value = default;
+        return false;
     }
 
     private static int ParseInt(JsonElement e)

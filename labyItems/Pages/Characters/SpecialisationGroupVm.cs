@@ -1,8 +1,13 @@
 
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using labyItems.Controls;
 using labyItems.Controls.Pickers;
+using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Characters;
 
@@ -22,6 +27,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     }
 
     private readonly Action _onAnySelectionChanged;
+    private readonly bool _useMagicColourEnum;
+    private readonly bool _useVivomancerColourEnum;
+    private readonly Func<IReadOnlyList<string>, string?>? _selectionValidator;
 
     public string Title { get; }
     public int RequiredCount => Slots.Count;
@@ -29,21 +37,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     public ObservableCollection<SpecialisationSlotVm> Slots { get; } = new();
 
     private List<string> _allOptionNames;
-    private List<string> _filteredOptionNames;
-
-    public IReadOnlyList<string> FilteredOptionNames => _filteredOptionNames;
-
-    private string _filterText = "";
-    public string FilterText
-    {
-        get => _filterText;
-        set
-        {
-            if (UseWardPactEnum) return;
-            if (!Set(ref _filterText, value)) return;
-            ApplyFilter();
-        }
-    }
+    public IReadOnlyList<string> OptionNames => _allOptionNames;
 
     private bool _isExpanded;
     public bool IsExpanded
@@ -71,7 +65,16 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         }
     }
 
-    public bool IsComplete => SelectedCount == RequiredCount && !HasDuplicates;
+    private string _validationMessage = string.Empty;
+    public string ValidationMessage
+    {
+        get => _validationMessage;
+        private set => Set(ref _validationMessage, value);
+    }
+
+    public bool HasValidationError => !string.IsNullOrWhiteSpace(ValidationMessage);
+
+    public bool IsComplete => SelectedCount == RequiredCount && !HasDuplicates && !HasValidationError;
 
     public string StatusText => $"{SelectedCount}/{RequiredCount}";
 
@@ -79,6 +82,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     {
         get
         {
+            if (HasValidationError) return ValidationMessage;
             if (SelectedCount == 0) return "Make your selections below.";
             if (HasDuplicates) return "Duplicate selections detected. Choose different abilities for each level.";
             if (IsComplete) return "Selection complete.";
@@ -91,7 +95,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         get
         {
             if (IsComplete) return SpecialisationCardState.Success;
-            if (HasDuplicates) return SpecialisationCardState.Error;
+            if (HasDuplicates || HasValidationError) return SpecialisationCardState.Error;
             return SpecialisationCardState.Neutral;
         }
     }
@@ -109,19 +113,46 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         List<string> optionNames,
         Dictionary<int, string> initiallySelectedByLevel,
         Action onAnySelectionChanged,
-        bool useWardPactEnum)
+        bool useWardPactEnum,
+        bool useMagicColourEnum = false,
+        bool useVivomancerColourEnum = false,
+        IEnumerable<MagicColours>? magicColourOptions = null,
+        IEnumerable<VivomancerColours>? vivomancerColourOptions = null,
+        Func<IReadOnlyList<string>, string?>? selectionValidator = null)
     {
         Title = title;
         UseWardPactEnum = useWardPactEnum;
+        _useMagicColourEnum = useMagicColourEnum;
+        _useVivomancerColourEnum = useVivomancerColourEnum;
+        _selectionValidator = selectionValidator;
         _onAnySelectionChanged = onAnySelectionChanged;
 
-        _allOptionNames = optionNames
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        _filteredOptionNames = _allOptionNames.ToList();
+        if (_useMagicColourEnum)
+        {
+            var opts = magicColourOptions?.ToList() ?? Enum.GetValues<MagicColours>().ToList();
+            _allOptionNames = opts
+                .Select(EnumDisplayFormatter.Format)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+        else if (_useVivomancerColourEnum)
+        {
+            var opts = vivomancerColourOptions?.ToList() ?? Enum.GetValues<VivomancerColours>().ToList();
+            _allOptionNames = opts
+                .Select(EnumDisplayFormatter.Format)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+        else
+        {
+            _allOptionNames = optionNames
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
 
         ToggleExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
 
@@ -132,49 +163,115 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
             var slot = new SpecialisationSlotVm(
                 lvl,
                 useWardPactEnum,
+                _useMagicColourEnum,
+                _useVivomancerColourEnum,
                 () => OnSlotChanged());
 
-            slot.SetOptionsSource(() => FilteredOptionNames);
-
-            if (useWardPactEnum)
+            if (_useMagicColourEnum)
             {
+                var allowed = magicColourOptions?.ToList() ?? Enum.GetValues<MagicColours>().ToList();
+                slot.ConfigureMagicColours(allowed);
+                slot.SetOptionsSource(() => slot.MagicColourOptionNames);
                 if (!string.IsNullOrWhiteSpace(pre))
                 {
-                    var match = WardPactOptions.Standard.FirstOrDefault(k => string.Equals(k.Key, pre, StringComparison.OrdinalIgnoreCase));
-                    if (!string.IsNullOrWhiteSpace(match.Key))
-                        slot.SelectedWardPact = match.Value;
+                    var match = allowed.FirstOrDefault(m => string.Equals(EnumDisplayFormatter.Format(m), pre, StringComparison.OrdinalIgnoreCase));
+                    slot.SelectedMagicColour = match;
+                }
+            }
+            else if (_useVivomancerColourEnum)
+            {
+                var allowed = vivomancerColourOptions?.ToList() ?? Enum.GetValues<VivomancerColours>().ToList();
+                slot.ConfigureVivomancerColours(allowed);
+                slot.SetOptionsSource(() => slot.VivomancerColourOptionNames);
+                if (!string.IsNullOrWhiteSpace(pre))
+                {
+                    var match = allowed.FirstOrDefault(m => string.Equals(EnumDisplayFormatter.Format(m), pre, StringComparison.OrdinalIgnoreCase));
+                    slot.SelectedVivomancerColour = match;
                 }
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(pre))
-                    slot.SelectedOption = pre;
+                slot.SetOptionsSource(() => OptionNames);
+
+                if (useWardPactEnum)
+                {
+                    if (!string.IsNullOrWhiteSpace(pre))
+                    {
+                        var match = WardPactOptions.Standard.FirstOrDefault(k => string.Equals(k.Key, pre, StringComparison.OrdinalIgnoreCase));
+                        if (!string.IsNullOrWhiteSpace(match.Key))
+                            slot.SelectedWardPact = match.Value;
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(pre))
+                        slot.SelectedOption = pre;
+                }
             }
 
             Slots.Add(slot);
         }
 
+        UpdateValidation();
         RaiseComputed();
     }
 
-    private void ApplyFilter()
+    public void UpdateOptionNames(IEnumerable<string> optionNames)
     {
-        var q = (_filterText ?? "").Trim();
-        if (q.Length == 0)
-            _filteredOptionNames = _allOptionNames.ToList();
-        else
-            _filteredOptionNames = _allOptionNames
-                .Where(x => x.Contains(q, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+        _allOptionNames = optionNames?
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+            .ToList() ?? new List<string>();
 
-        Raise(nameof(FilteredOptionNames));
-
+        Raise(nameof(OptionNames));
         foreach (var s in Slots)
             s.RaiseFilteredOptionsChanged();
     }
 
+    public void UpdateMagicColourOptions(IEnumerable<MagicColours> allowed)
+    {
+        if (!_useMagicColourEnum) return;
+
+        var list = allowed?.ToList() ?? new List<MagicColours>();
+        _allOptionNames = list
+            .Select(EnumDisplayFormatter.Format)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        Raise(nameof(OptionNames));
+
+        foreach (var slot in Slots)
+            slot.ConfigureMagicColours(list);
+
+        UpdateValidation();
+        RaiseComputed();
+    }
+
+    public void UpdateVivomancerColourOptions(IEnumerable<VivomancerColours> allowed)
+    {
+        if (!_useVivomancerColourEnum) return;
+
+        var list = allowed?.ToList() ?? new List<VivomancerColours>();
+        _allOptionNames = list
+            .Select(EnumDisplayFormatter.Format)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        Raise(nameof(OptionNames));
+
+        foreach (var slot in Slots)
+            slot.ConfigureVivomancerColours(list);
+
+        UpdateValidation();
+        RaiseComputed();
+    }
+
     private void OnSlotChanged()
     {
+        UpdateValidation();
         RaiseComputed();
         _onAnySelectionChanged();
     }
@@ -183,9 +280,27 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     {
         Raise(nameof(SelectedCount));
         Raise(nameof(HasDuplicates));
+        Raise(nameof(HasValidationError));
+        Raise(nameof(ValidationMessage));
         Raise(nameof(IsComplete));
         Raise(nameof(StatusText));
         Raise(nameof(HelperText));
         Raise(nameof(CardState));
+    }
+
+    private void UpdateValidation()
+    {
+        if (_selectionValidator == null)
+        {
+            ValidationMessage = string.Empty;
+            return;
+        }
+
+        var picked = Slots
+            .Select(s => (s.SelectedOption ?? string.Empty).Trim())
+            .Where(x => x.Length > 0)
+            .ToList();
+
+        ValidationMessage = _selectionValidator.Invoke(picked) ?? string.Empty;
     }
 }

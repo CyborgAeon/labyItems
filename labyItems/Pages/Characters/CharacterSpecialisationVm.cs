@@ -1,10 +1,15 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Windows.Input;
+using labyItems.Controls;
 using labyItems.Models.Characters;
+using labyItems.Models.Enums;
 using labyItems.Services;
 using Microsoft.Maui.Controls;
 
@@ -39,6 +44,35 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
     private readonly Dictionary<string, SpecialisationDefinition> _specialisationIndex = new(StringComparer.OrdinalIgnoreCase);
     private bool _isSyncingRaceSubtype;
+    private readonly List<SpecialisationGroupVm> _wizardColourGroups = new();
+    private readonly List<SpecialisationGroupVm> _vivomancerColourGroups = new();
+
+    private static readonly Dictionary<string, MagicColours> _alfarWizardColourMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Löss light (white)"] = MagicColours.White,
+        ["Loss light (white)"] = MagicColours.White,
+        ["Svart dark (black)"] = MagicColours.Black,
+        ["Alfamir seas (green)"] = MagicColours.Green,
+        ["Fjell mountain (brown)"] = MagicColours.Brown
+    };
+
+    private static readonly Dictionary<MagicColours, MagicColours?> _faerieOpposites = new()
+    {
+        [MagicColours.Red] = MagicColours.Green,
+        [MagicColours.Green] = MagicColours.Red,
+        [MagicColours.Brown] = MagicColours.Blue,
+        [MagicColours.Blue] = MagicColours.Brown,
+        [MagicColours.White] = MagicColours.Black,
+        [MagicColours.Black] = MagicColours.White,
+        [MagicColours.Gold] = MagicColours.Bronze,
+        [MagicColours.Bronze] = MagicColours.Gold,
+        [MagicColours.Ivory] = MagicColours.Ebony,
+        [MagicColours.Ebony] = MagicColours.Ivory,
+        [MagicColours.Jade] = MagicColours.Onyx,
+        [MagicColours.Onyx] = MagicColours.Jade,
+        [MagicColours.Grey] = null,
+        [MagicColours.Silver] = null
+    };
 
     private bool _hasChoices;
     public bool HasChoices
@@ -172,6 +206,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     {
         Groups.Clear();
         MappedSpecialisations.Clear();
+        _wizardColourGroups.Clear();
+        _vivomancerColourGroups.Clear();
         RaceSubtypeOptions.Clear();
         RaceSubtypeAbilitiesPreview.Clear();
         RaceSubtypeLevelRows.Clear();
@@ -317,7 +353,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
                 continue;
 
             var title = g.Key;
-            var levels = g.Select(x => x.Level).Distinct().OrderBy(x => x).ToList();
+            var levels = BuildLevelsForGroup(title, g);
 
             if (def.ColourAbilities != null && def.ColourAbilities.Count > 0)
             {
@@ -335,13 +371,26 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
                 continue;
             }
 
+            var useMagicColourEnum = IsWizardColour(title);
+            var useVivomancerColourEnum = IsVivomancerColour(title);
+
             var groupVm = new SpecialisationGroupVm(
                 title: title,
                 levels: levels,
                 optionNames: def.Abilities ?? new List<string>(),
                 initiallySelectedByLevel: new Dictionary<int, string>(),
                 onAnySelectionChanged: OnAnySelectionChanged,
-                useWardPactEnum: UsesInlineDictionarySearch(title));
+                useWardPactEnum: UsesInlineDictionarySearch(title),
+                useMagicColourEnum: useMagicColourEnum,
+                useVivomancerColourEnum: useVivomancerColourEnum,
+                magicColourOptions: useMagicColourEnum ? GetWizardColourOptions() : null,
+                vivomancerColourOptions: useVivomancerColourEnum ? GetVivomancerColourOptions(def) : null,
+                selectionValidator: GetSelectionValidator(title));
+
+            if (useMagicColourEnum)
+                _wizardColourGroups.Add(groupVm);
+            if (useVivomancerColourEnum)
+                _vivomancerColourGroups.Add(groupVm);
 
             groupVm.IsExpanded = true;
 
@@ -349,6 +398,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         }
 
 
+        UpdateDynamicSpecialisations();
         SyncMappedSelectionsToDraft();
 
         HasChoices = HasRaceSubtypeChoice || Groups.Count > 0 || HasMappedSpecialisations;
@@ -360,6 +410,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     private void OnAnySelectionChanged()
     {
         SyncRaceSubtypeDraftAndPreview();
+        _ = _builder.RefreshDraftAbilitiesAsync();
     }
 
     private void OnMappedSpecialisationChanged()
@@ -367,6 +418,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         SyncMappedSelectionsToDraft();
         RecomputeCompletion();
         _builder.NotifyGatingChanged();
+        _ = _builder.RefreshDraftAbilitiesAsync();
     }
 
     private void SyncMappedSelectionsToDraft()
@@ -416,9 +468,13 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
             await UpdateRaceSubtypePreviewAsync(effectivePicked);
             UpdateRaceSubtypeCardState(effectivePicked);
+            UpdateWizardColourGroups();
+            UpdateDynamicSpecialisations();
+            SyncMappedSelectionsToDraft();
 
             RecomputeCompletion();
             _builder.NotifyGatingChanged();
+            _ = _builder.RefreshDraftAbilitiesAsync();
         }
         finally
         {
@@ -459,6 +515,68 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         IsComplete = complete;
         HasChoices = HasRaceSubtypeChoice || Groups.Count > 0 || HasMappedSpecialisations;
         Raise(nameof(HasNoChoices));
+    }
+
+    public List<AbilityDraft> BuildSelectedAbilityDrafts()
+    {
+        var list = new List<AbilityDraft>();
+
+        list.AddRange(BuildRaceSubtypeAbilities());
+
+        foreach (var g in Groups)
+        {
+            foreach (var slot in g.Slots)
+            {
+                var ability = (slot.SelectedOption ?? string.Empty).Trim();
+                if (ability.Length == 0) continue;
+
+                list.AddRange(AbilityDraftBuilder.ParseAbility(ability, slot.Level));
+            }
+        }
+
+        foreach (var mapped in MappedSpecialisations)
+        {
+            foreach (var entry in mapped.GetSelectedAbilities())
+            {
+                var ability = (entry.Ability ?? string.Empty).Trim();
+                if (ability.Length == 0) continue;
+
+                list.AddRange(AbilityDraftBuilder.ParseAbility(ability, entry.Level));
+            }
+        }
+
+        return list;
+    }
+
+    private List<AbilityDraft> BuildRaceSubtypeAbilities()
+    {
+        var list = new List<AbilityDraft>();
+
+        if (!HasRaceSubtypeChoice)
+            return list;
+
+        var picked = (SelectedRaceSubtype ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(picked))
+            return list;
+
+        if (string.IsNullOrWhiteSpace(_raceSubtypeAbilityMapKey))
+            return list;
+
+        if (!_specialisationIndex.TryGetValue(_raceSubtypeAbilityMapKey, out var mapDef) || mapDef?.ColourAbilities == null)
+            return list;
+
+        if (!mapDef.ColourAbilities.TryGetValue(picked, out var entry) || entry == null)
+            return list;
+
+        foreach (var kvp in entry.Levels ?? new Dictionary<string, List<string>>())
+        {
+            var key = (kvp.Key ?? string.Empty).Trim();
+            int? level = int.TryParse(key, out var parsed) ? parsed : null;
+            foreach (var ability in kvp.Value ?? new List<string>())
+                list.AddRange(AbilityDraftBuilder.ParseAbility(ability, level));
+        }
+
+        return list;
     }
 
     private async Task UpdateRaceSubtypePreviewAsync(string picked)
@@ -511,7 +629,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
         foreach (var lvl in ordered)
         {
-            var label = lvl.Level == int.MaxValue ? lvl.Key : $"Lv {lvl.Level}";
+            var label = lvl.Level == int.MaxValue ? lvl.Key : $"Lvl {lvl.Level}: ";
             foreach (var ability in lvl.Abilities)
             {
                 RaceSubtypeAbilitiesPreview.Add(new RaceSubtypePreviewLine
@@ -559,6 +677,10 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             var abilities = abilityByLevel.TryGetValue(level, out var list)
                 ? string.Join(", ", list.Distinct(StringComparer.OrdinalIgnoreCase))
                 : "";
+
+            var includeRow = hasLife || !string.IsNullOrWhiteSpace(abilities);
+            if (!includeRow)
+                continue;
 
             RaceSubtypeLevelRows.Add(new RaceSubtypeLevelRow
             {
@@ -608,6 +730,159 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     private static bool UsesInlineDictionarySearch(string groupTitle)
         => string.Equals(groupTitle.Trim(), "Ward pact", StringComparison.OrdinalIgnoreCase);
 
+    private static bool IsWizardColour(string groupTitle)
+    {
+        var title = groupTitle.Trim();
+        return string.Equals(title, "Wizard Colour", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(title, "Faerie Wizard Colour", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsVivomancerColour(string groupTitle)
+        => string.Equals(groupTitle.Trim(), "Vivomancer Colour", StringComparison.OrdinalIgnoreCase);
+
+    private List<MagicColours> GetWizardColourOptions()
+    {
+        if (string.Equals(Draft.Race?.Trim(), "Alfar", StringComparison.OrdinalIgnoreCase)
+            && !string.IsNullOrWhiteSpace(SelectedRaceSubtype)
+            && _alfarWizardColourMap.TryGetValue(SelectedRaceSubtype ?? string.Empty, out var alfarColour))
+        {
+            return new List<MagicColours> { alfarColour };
+        }
+
+        return Enum.GetValues<MagicColours>().ToList();
+    }
+
+    private List<VivomancerColours> GetVivomancerColourOptions(SpecialisationDefinition def)
+    {
+        var list = new List<VivomancerColours>();
+        foreach (var opt in def?.Abilities ?? new List<string>())
+        {
+            var normalized = (opt ?? string.Empty).Trim();
+            if (normalized.Length == 0) continue;
+
+            if (Enum.TryParse<VivomancerColours>(normalized.Replace(" ", ""), ignoreCase: true, out var parsed))
+                list.Add(parsed);
+        }
+
+        if (list.Count == 0)
+            list.AddRange(Enum.GetValues<VivomancerColours>());
+
+        return list
+            .Distinct()
+            .OrderBy(x => EnumDisplayFormatter.Format(x), StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private Func<IReadOnlyList<string>, string?>? GetSelectionValidator(string title)
+    {
+        if (string.Equals(title.Trim(), "Faerie Wizard Colour", StringComparison.OrdinalIgnoreCase))
+        {
+            return picked =>
+            {
+                if (picked.Count < 2) return null;
+                var a = ToMagicColour(picked.ElementAtOrDefault(0));
+                var b = ToMagicColour(picked.ElementAtOrDefault(1));
+                if (a == null || b == null) return null;
+
+                if (_faerieOpposites.TryGetValue(a.Value, out var opp) && opp is MagicColours opposite && opposite == b)
+                    return "Faerie colours cannot be opposite pairs.";
+
+                if (_faerieOpposites.TryGetValue(b.Value, out var oppB) && oppB is MagicColours oppositeB && oppositeB == a)
+                    return "Faerie colours cannot be opposite pairs.";
+
+                return null;
+            };
+        }
+
+        return null;
+    }
+
+    private static MagicColours? ToMagicColour(string? value)
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0) return null;
+
+        if (Enum.TryParse<MagicColours>(text.Replace(" ", ""), ignoreCase: true, out var parsed))
+            return parsed;
+
+        foreach (var colour in Enum.GetValues<MagicColours>())
+        {
+            var label = EnumDisplayFormatter.Format(colour);
+            if (label.Equals(text, StringComparison.OrdinalIgnoreCase))
+                return colour;
+        }
+
+        return null;
+    }
+
+    private void UpdateWizardColourGroups()
+    {
+        var options = GetWizardColourOptions();
+        foreach (var g in _wizardColourGroups)
+            g.UpdateMagicColourOptions(options);
+    }
+
+    private void UpdateDynamicSpecialisations()
+    {
+        RemoveDynamicSpecialisations("Ishmaic Clan", "Ratfolk Clan");
+
+        if (IsIshmaicHumanSelected()
+            && _specialisationIndex.TryGetValue("IshmaicClanAbilities", out var ishmaicDef)
+            && ishmaicDef?.ColourAbilities != null)
+        {
+            AddDynamicMappedSpecialisation(
+                key: "Ishmaic Clan",
+                subtitle: "Human • clan choice",
+                optionMap: ishmaicDef.ColourAbilities,
+                required: true);
+        }
+
+        if (string.Equals(Draft.Race?.Trim(), "Ratfolk", StringComparison.OrdinalIgnoreCase)
+            && _specialisationIndex.TryGetValue("RatfolkClanAbilities", out var ratClanDef)
+            && ratClanDef?.ColourAbilities != null)
+        {
+            AddDynamicMappedSpecialisation(
+                key: "Ratfolk Clan",
+                subtitle: "Ratfolk clan (optional)",
+                optionMap: ratClanDef.ColourAbilities,
+                required: false);
+        }
+    }
+
+    private bool IsIshmaicHumanSelected()
+        => string.Equals(Draft.Race?.Trim(), "Human", StringComparison.OrdinalIgnoreCase)
+           && string.Equals(SelectedRaceSubtype?.Trim(), "Ishmaic", StringComparison.OrdinalIgnoreCase);
+
+    private void RemoveDynamicSpecialisations(params string[] keys)
+    {
+        var set = new HashSet<string>(keys ?? Array.Empty<string>(), StringComparer.OrdinalIgnoreCase);
+
+        for (var i = MappedSpecialisations.Count - 1; i >= 0; i--)
+        {
+            if (set.Contains(MappedSpecialisations[i].Key))
+                MappedSpecialisations.RemoveAt(i);
+        }
+    }
+
+    private void AddDynamicMappedSpecialisation(
+        string key,
+        string subtitle,
+        Dictionary<string, ColourAbilityDefinition> optionMap,
+        bool required)
+    {
+        var mapped = new MappedSpecialisationVm(
+            key: key,
+            subtitle: subtitle,
+            levels: new[] { 1 },
+            optionMap: optionMap,
+            initialSelection: GetSavedSpecialisationSelection(key),
+            required: required,
+            onSelectionChanged: OnMappedSpecialisationChanged);
+
+        mapped.LevelsExpanded = true;
+        MappedSpecialisations.Add(mapped);
+    }
+
     private static string? FindSpecialisationKey(string rawAbilityToken, IEnumerable<string> knownKeys)
     {
         var token = (rawAbilityToken ?? string.Empty).Trim();
@@ -650,6 +925,18 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
         return $"{srcText} • {lvlText}";
     }
+
+    private static List<int> BuildLevelsForGroup(string key, IEnumerable<RequiredChoice> grouped)
+    {
+        var levels = grouped.Select(x => x.Level).ToList();
+        if (AllowsDuplicateSlots(key))
+            return levels.OrderBy(x => x).ToList();
+
+        return levels.Distinct().OrderBy(x => x).ToList();
+    }
+
+    private static bool AllowsDuplicateSlots(string key)
+        => string.Equals(key.Trim(), "Faerie Wizard Colour", StringComparison.OrdinalIgnoreCase);
 
     // --------------------------
     // SUBTYPE: OPTIONS RESOLUTION
@@ -795,6 +1082,13 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             if (prop.Value.TryGetProperty("Abilities", out var abilitiesEl) && abilitiesEl.ValueKind == JsonValueKind.Array)
             {
                 def.Abilities = abilitiesEl.EnumerateArray()
+                    .Select(x => x.GetString() ?? string.Empty)
+                    .Where(x => x.Length > 0)
+                    .ToList();
+            }
+            else if (prop.Value.TryGetProperty("Options", out var optionsEl) && optionsEl.ValueKind == JsonValueKind.Array)
+            {
+                def.Abilities = optionsEl.EnumerateArray()
                     .Select(x => x.GetString() ?? string.Empty)
                     .Where(x => x.Length > 0)
                     .ToList();
@@ -967,6 +1261,23 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
             UpdatePreview();
             RaiseComputed();
+        }
+
+        public IEnumerable<(int? Level, string Ability)> GetSelectedAbilities()
+        {
+            if (string.IsNullOrWhiteSpace(_selectedOption))
+                yield break;
+
+            if (!_optionMap.TryGetValue(_selectedOption, out var entry) || entry == null)
+                yield break;
+
+            foreach (var kvp in entry.Levels ?? new Dictionary<string, List<string>>())
+            {
+                var key = (kvp.Key ?? string.Empty).Trim();
+                int? level = int.TryParse(key, out var parsed) ? parsed : null;
+                foreach (var ability in kvp.Value ?? new List<string>())
+                    yield return (level, ability);
+            }
         }
 
         private void UpdatePreview()

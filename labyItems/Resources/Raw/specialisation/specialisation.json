@@ -470,5 +470,221 @@
         "8": []
       }
     }
+  },
+  "Warlock Specialist Skills": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "Unarmed Combat",
+      "Proficiency",
+      "Metal Resistance",
+      "Chosen of the Dragon"
+    ],
+    "Notes": [
+      "Warlocks choose a specialist skill at 6th, 7th and 8th level from this list."
+    ]
+  },
+  "Vochstelen Specialist Skills": {
+    "Abilities": [
+      "+6/2 Stamina",
+      "Weapon Mastery",
+      "Unarmed Combat",
+      "Enhanced Reflexes",
+      "War Cry",
+      "Chosen of the Dragon"
+    ],
+    "Notes": [
+      "Vochstelen choose a specialist skill at 7th and 8th level from this list."
+    ]
+  },
+  "Wizard Colour": {
+    "Options": [
+      "Red",
+      "Blue",
+      "Brown",
+      "Green",
+      "White",
+      "Black",
+      "Grey",
+      "Bronze",
+      "Ebony",
+      "Gold",
+      "Ivory",
+      "Jade",
+      "Onyx",
+      "Silver"
+    ]
+  },
+  "Vivomancer Colour": {
+    "Options": ["Gold", "Jade", "White"]
+  },
+  "HumanSubtypeAbilities": {
+    "Baronial": {
+      "Levels": {
+        "1": ["Baronial heritage"]
+      }
+    },
+    "Ishmaic": {
+      "Levels": {
+        "1": [
+          "May not join non-Ishmaic political guilds.",
+          "Unlocks Ishmaic clan specialisations."
+        ]
+      }
+    },
+    "Barbarian": {
+      "Levels": {
+        "1": [
+          "Class choice limited to Warriors, Archers, Rangers, Witchdoctor, Shaman, Druid, Pathfinder."
+        ]
+      }
+    }
+  },
+  "IshmaicClanAbilities": {
+    "Galahbad": {
+      "Levels": {
+        "1": [
+          "Class choice limited to Warrior, Wizard, Pathfinder, Thug, Hannot/Kallah Beggar, Archer, Pure Priest, Warrior Priest, Spirit Warrior."
+        ]
+      }
+    },
+    "Buladajn": {
+      "Levels": {
+        "1": ["Class choice limited to Pathfinder, Assassin, Spy, Rogue, Thug."]
+      }
+    },
+    "Benhai": {
+      "Levels": {
+        "1": ["Class choice limited to Ranger, Pathfinder, Rogue, Wizard, Archer, Wayfinder."]
+      }
+    },
+    "Salahmen": {
+      "Levels": {
+        "1": ["Class choice limited to Warrior, Pathfinder, Thug, Wizard, Warlock, Archer."]
+      }
+    },
+    "Harazaen": {
+      "Levels": {
+        "1": [
+          "Class choice limited to Witch, Pure Priest, Spirit Warrior, Pure Priest, Wayfinder, Leywalker, Druid, High Druid, Ranger, Pathfinder."
+        ]
+      }
+    },
+    "Rain": {
+      "Levels": {
+        "1": ["Class choice limited to High Wizard, Wizard, Warlock, Rogue, Power Master."]
+      }
+    },
+    "Rainfinder": {
+      "Levels": {
+        "1": ["Class choice limited to Wizards, High Wizards, Druids, High Druids."]
+      }
+    }
+  },
+  "AncientFolkSubtypeAbilities": {
+    "The cloud way": {
+      "Levels": {
+        "1": ["Follows the Cloud Way tradition."]
+      }
+    },
+    "House D'trael": {
+      "Levels": {
+        "1": ["Sworn to House D'trael."]
+      }
+    }
+  },
+  "AlfarSubtypeAbilities": {
+    "Löss light (white)": {
+      "Levels": {
+        "1": ["If wizard, wizard colour is restricted to White."]
+      }
+    },
+    "Svart dark (black)": {
+      "Levels": {
+        "1": ["If wizard, wizard colour is restricted to Black."]
+      }
+    },
+    "Alfamir seas (green)": {
+      "Levels": {
+        "1": ["If wizard, wizard colour is restricted to Green."]
+      }
+    },
+    "Fjell mountain (brown)": {
+      "Levels": {
+        "1": ["If wizard, wizard colour is restricted to Brown."]
+      }
+    }
+  },
+  "RatfolkBreedAbilities": {
+    "Ourstlav": {
+      "Levels": {
+        "1": ["Class choice limited to Pathfinders, Archers or Leywalkers."]
+      }
+    },
+    "Rachatat": {
+      "Levels": {
+        "1": ["Class choice limited to Warriors, Forest Guardians or Thugs."]
+      }
+    },
+    "Horstval": {
+      "Levels": {
+        "1": ["Class choice limited to Druids, Wizards or Warrior Priests."]
+      }
+    },
+    "Slav": {
+      "Levels": {
+        "1": ["Class choice limited to Psi Master, Spy or Assassin."]
+      }
+    }
+  },
+  "RatfolkClanAbilities": {
+    "Caslevasp (long hairs)": {
+      "Levels": {
+        "1": ["Lose political guild for Thimon benefits."]
+      }
+    },
+    "Hislehasp (tatterpelts)": {
+      "Levels": {
+        "1": [
+          "May only join ratfolk social guilds.",
+          "Gain make & arm snaptrap at 5th level and acute hearing."
+        ]
+      }
+    },
+    "Crepultaval (needlefangs)": {
+      "Levels": {
+        "1": [
+          "Lose political guild, gain +1 level of casting for dominion, -2 DAC in sunlight."
+        ]
+      }
+    },
+    "Altunhast (stubbytails)": {
+      "Levels": {
+        "1": ["Gain perfect disguise and acute hearing."]
+      }
+    },
+    "Gwavysvayne (Winterscorns)": {
+      "Levels": {
+        "1": ["Immunity to cold, 3 pac (3/5/7), cannot wear armour."]
+      }
+    }
+  },
+  "Faerie Wizard Colour": {
+    "Options": [
+      "Red",
+      "Blue",
+      "Brown",
+      "Green",
+      "White",
+      "Black",
+      "Grey",
+      "Bronze",
+      "Ebony",
+      "Gold",
+      "Ivory",
+      "Silver",
+      "Jade",
+      "Onyx"
+    ]
   }
 }

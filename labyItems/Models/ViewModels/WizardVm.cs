@@ -6,6 +6,7 @@ using labyItems.Controls;
 using labyItems.Models.Characters;
 using labyItems.Pages.Characters;
 using labyItems.Pages.Characters.ViewModels;
+using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -155,6 +156,11 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     private void UpdateStepView()
     {
+        if (CurrentStep == 2)
+        {
+            MainThread.BeginInvokeOnMainThread(async () => { await GuildsVm.ReloadAsync(); });
+        }
+
         CurrentStepView = CurrentStep switch
         {
             0 => new CharacterBuilder(CharacterBuilderVm),

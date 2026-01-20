@@ -12,6 +12,14 @@
       "7": [],
       "8": []
     },
+    "Subtype": {
+      "Key": "HumanSubtype",
+      "DisplayName": "Human origin",
+      "Description": "Select a lineage for your character.",
+      "SelectionMode": "SingleRequired",
+      "OptionsSource": "Standard,Baronial,Ishmaic,Barbarian",
+      "AbilityMapKey": "HumanSubtypeAbilities"
+    },
     "AdditionalInfo": "",
     "Buy-as": "Humans are able to buy the ability 'Peon'"
   },
@@ -75,6 +83,14 @@
       "7": [],
       "8": ["Ward pact"]
     },
+    "Subtype": {
+      "Key": "AncientFolkSubtype",
+      "DisplayName": "Ancient path",
+      "Description": "Choose the tradition your character follows.",
+      "SelectionMode": "SingleOptional",
+      "OptionsSource": "The cloud way,House D'trael",
+      "AbilityMapKey": "AncientFolkSubtypeAbilities"
+    },
     "AdditionalInfo": "Post 8thLevel Development\nThe Ancient Folk are the product of an old and tired gene pool, and thus do not have the ability to acquire neuronics. In addition, all costs for acquiring additional life points or strength are raised by 50%. It is not possible for them to acquire +2 strength.\nFurther pacts can be obtained at the cost of 50 points each, however not more than one pact can be bought for each 300 points post-8th. A pact lost through betrayal can never be re-established."
   },
   "Silver Folk": {
@@ -120,6 +136,14 @@
       "7": [],
       "8": []
     },
+    "Subtype": {
+      "Key": "AlfarSubtype",
+      "DisplayName": "Alfar tribe",
+      "Description": "Choose the tribe your Alfar hails from.",
+      "SelectionMode": "SingleRequired",
+      "OptionsSource": "Löss light (white),Svart dark (black),Alfamir seas (green),Fjell mountain (brown)",
+      "AbilityMapKey": "AlfarSubtypeAbilities"
+    },
     "AdditionalInfo": "Alfar can be Archers, Druids, High Druids, Forest Guardians, Leywalkers, Pathfinders, Pure Priests, Rangers, Warriors or Wizards.\nAlfar gain the ability to Recognise Earthpower within 1” range, at will, from 1 level, and from 3 level no longer leave tracks or make sounds when moving in their natural environment (immunity to tracking and acute hearing) - outdoors in the wilderness for Light Alfar, underground in natural tunnels for Dark Alfar, on mountains and hills for Mountain Alfar, and on or near the sea or other large bodies of water [within a mile or so] for Sea Alfar.\nAll Alfar gain +1 DAC at 6 level.\nAdditionally once per day, when in their own environment [as described above], they may perform a “Draw on Earthpower” - spending one minute in inactive concentration drawing upon the natural force around them for assistance - this allows the Alfar to mimic any one Earthpower Evocation which is on the standard list (As detailed in The Druids Way) of their own level or below, using the appropriate gestures but without verbals.\nAlfar must pay double cost for their equipment from the Desk, as a result of having it Alfar-made. This only applies to armour and weapons.\npost-8th Level Development\nThey may acquire innate standard Earthpower Evocations in much the same way as a Druid, paying 12pts per earthpower point of the evocation. When purchasing spiritual abilities they suffer the same cost penalties and restrictions as a half elf.\nAdditional uses of the once per day ‘Draw on Earthpower’ may be purchased at 80 points each; only one per threshold the character has achieved post eighth."
   },
   "Ratfolk": {
@@ -135,7 +159,30 @@
       "7": [],
       "8": []
     },
+    "Subtype": {
+      "Key": "RatfolkBreed",
+      "DisplayName": "Ratfolk breed",
+      "Description": "Select your breed; clan choice is optional and appears separately.",
+      "SelectionMode": "SingleRequired",
+      "OptionsSource": "Ourstlav,Rachatat,Horstval,Slav",
+      "AbilityMapKey": "RatfolkBreedAbilities"
+    },
     "AdditionalInfo": "Karras\nKarras are larger, more intelligent versions of their smaller and normal cousins. In appearance, they resemble their verminous ancestors (although about twice the size). Karras understand speech but, due to their own physical constrictions, are only able to 'talk' in the language of vermin. Karras are able to spread disease without themselves suffering from the maladies they carry. The many and varied diseases can be conveyed through a bite, their bodily fluids, or more extremely and effectively via their own rotting corpses. Karras are not an option for player character Ratfolk.\nOurstlav\nOurstlav are the lowest form of the bipedal vermin and are the most common. They are of average intelligence and are used as workers and militia. Ourstlav are expert diggers and 'sniffers' and tend to hide by concealing themselves in covered holes in tunnels, leaping out to ambush their enemies with venom and disease. Ourstlav tend to follow whoever is powerful enough to hold their 'ownership' and are therefore often regarded as property by other breeds.\nOurstlav may be Pathfinders, Archers or Leywalkers.\nRachatat\nRachatat are bred especially for conflict and war. Often used as overseers for the Ourstlav and bodyguards for their masters, the Rachatat are as strong and resilient as Humans and have sharp minds sufficient to elevate many of them to high position whilst remaining loyal to their masters. Rachatat are dark furred and wear armour either of treated hides or whatever they have scavenged from society. Those of renown wear hide plates enchanted by Horstval or even Rat-Kings, blessed by Slavik to be especially resilient to a certain type of weapon. Rachatat are allowed to keep booty taken from a foe in combat and thus are often very well equipped. Commonly they carry spears made of a silver alloy to keep lycanthropes in line - these weapons are of the 'trusty and old' variety and are gained automatically once the Rachatat reaches 8 level.\nRachatat may be Warriors, Forest Guardians or Thugs."
+  },
+  "Faerie": {
+    "PeopleType": "Magic-Kin",
+    "Description": "Faeries align to two wizard colours that are not opposites.",
+    "levelledAbilities": {
+      "1": ["Faerie Wizard Colour", "Faerie Wizard Colour"],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
+    },
+    "AdditionalInfo": ""
   },
   "Barbarians": {
     "PeopleType": "Tribal",

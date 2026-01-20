@@ -20,9 +20,6 @@ public static class GuildsService
     public static async Task<Dictionary<string, GuildRecord>> GetAllAsync()
     {
         if (_cache != null) return _cache;
-
-        // Keep consistent with PeopleService/LifeScalesService convention
-        // Ensure guilds.json is included as a MauiAsset with logical path: "people/guilds.json"
         using var s = await FileSystem.OpenAppPackageFileAsync("people/guilds.json");
         using var r = new StreamReader(s);
         var json = await r.ReadToEndAsync();

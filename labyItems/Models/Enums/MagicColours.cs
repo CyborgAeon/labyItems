@@ -43,3 +43,10 @@ public enum MagicColours
     Jade,
     Onyx,
 }
+
+public enum VivomancerColours
+{
+    Gold,
+    Jade,
+    White
+}

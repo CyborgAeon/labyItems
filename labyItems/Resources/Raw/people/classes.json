@@ -149,7 +149,7 @@
   "Kallah Beggar": {
     "Brackets": ["⚔ Scout", "🛡️ Warrior"],
     "Levels": {
-      "1": ["O & U"],
+      "1": ["O & U", "City bound"],
       "2": ["Standard Scout skill"],
       "3": ["1 DAC", "Standard Scout skill"],
       "4": ["B", "Standard Scout skill"],
@@ -164,7 +164,13 @@
   "Hanot Beggar": {
     "Brackets": ["⚔ Scout", "🛡️ Warrior"],
     "Levels": {
-      "1": ["O & U", "Light armour", "3 PAC", "Trusty & Old (armour)"],
+      "1": [
+        "O & U",
+        "Light armour",
+        "3 PAC",
+        "Trusty & Old (armour)",
+        "City bound"
+      ],
       "2": ["Standard Scout skill"],
       "3": ["H", "Standard Scout skill", "4 PAC"],
       "4": [],
@@ -261,6 +267,287 @@
         "order": ["Lawful", "Neutral", "Chaotic"]
       },
       "allowedPairs": ["Lawful Neutral", "True Neutral", "Chaotic Neutral"]
+    }
+  },
+  "Sorcerer": {
+    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Buy as": ["1st class Sorcerer"],
+    "Levels": {
+      "1": ["Recognise mana", "O"],
+      "2": ["Read glyphs", "E"],
+      "3": ["B"],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": ["Warlock Specialist Skill"],
+      "8": ["Warlock Specialist Skill"]
+    },
+    "Max AC": 8,
+    "Powerbase": ["🪄 Magic"],
+    "TotalPower": 49
+  },
+  "Vivomancer": {
+    "Brackets": ["🧙 Wizard", "🙏 Priest"],
+    "Buy as": ["1st class Vivomancer"],
+    "Levels": {
+      "1": [
+        "Recognise mana",
+        "Vivomancer list",
+        "Recognise Spirit",
+        "Discern type of disease",
+        "Discern Spiritual Mastery",
+        "Discern Nature of Undead",
+        "Discern Nature of Wounds",
+        "Release own miracle",
+        "Discern Bless/Curse",
+        "Hermit",
+        "Vivomancer Colour"
+      ],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
+    },
+    "Max AC": 6,
+    "Powerbase": ["🪄 Magic", "示 Spirit"],
+    "SpiritsPerLevel": 3,
+    "TotalPower": 36
+  },
+  "Vochstelen": {
+    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Buy as": ["1st class Vochstelen"],
+    "Levels": {
+      "1": ["Recognise mana", "O and U Skill"],
+      "2": ["E"],
+      "3": ["Read glyphs", "H"],
+      "4": ["B"],
+      "5": ["MP"],
+      "6": ["Discern mana user"],
+      "7": ["Specialist skill"],
+      "8": ["Specialist skill"]
+    },
+    "Max AC": 9
+  },
+  "Warlock": {
+    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Buy as": ["1st class Warlock"],
+    "Levels": {
+      "1": ["Recognise mana", "O", "U", "Wizard Colour"],
+      "2": ["Read glyphs", "E"],
+      "3": ["B"],
+      "4": [],
+      "5": [],
+      "6": ["Specialist skill"],
+      "7": ["Specialist skill"],
+      "8": ["Specialist skill"]
+    },
+    "Max AC": 8,
+    "Powerbase": ["🪄 Magic"],
+    "TotalPower": 36
+  },
+  "Wizard": {
+    "Brackets": ["🧙 Wizard"],
+    "Buy as": ["1st class Wizard"],
+    "Levels": {
+      "1": [
+        "Recognise mana",
+        "May learn 1 of dagger, spear or staff",
+        "O",
+        "Wizard Colour"
+      ],
+      "2": ["Read glyphs"],
+      "3": [],
+      "4": ["May learn 1 of dagger, spear or staff"],
+      "5": [],
+      "6": ["Make scrolls", "May learn 1 of dagger, spear or staff"],
+      "7": ["Specialist skill"],
+      "8": ["Specialist skill"]
+    },
+    "Max AC": 6,
+    "Powerbase": ["🪄 Magic"],
+    "TotalPower": 72
+  },
+  "High-Wizard": {
+    "Brackets": ["🧙 Wizard"],
+    "Buy as": ["1st class Wizard"],
+    "Levels": {
+      "1": [
+        "Recognise mana",
+        "May learn 1 of dagger, spear or staff",
+        "O",
+        "Wizard Colour"
+      ],
+      "2": ["Read glyphs"],
+      "3": [],
+      "4": ["May learn 1 of dagger, spear or staff"],
+      "5": [],
+      "6": ["Make scrolls", "May learn 1 of dagger, spear or staff"],
+      "7": ["Specialist skill"],
+      "8": ["Specialist skill"]
+    },
+    "Max AC": 6,
+    "Powerbase": ["🪄 Magic"],
+    "TotalPower": 90
+  },
+  "Pathfinder": {
+    "Bracket": ["Scout"],
+    "MaxArmourClass": 7,
+    "Post8th": "Buys as 1st Class Pathfinder.",
+    "Levels": {
+      "1": ["Light", "Medium", "O"],
+      "2": ["H", "Standard Scout skill", "Standard Scout skill"],
+      "3": ["E", "Standard Scout skill"],
+      "4": ["MP", "Standard Scout skill"],
+      "5": ["B", "Standard Scout skill"],
+      "6": ["Standard Scout skill"],
+      "7": ["Specialist Scout skill"],
+      "8": ["Specialist Scout skill"]
+    }
+  },
+
+  "Thug": {
+    "Bracket": ["Scout"],
+    "MaxArmourClass": 8,
+    "Levels": {
+      "1": ["O", "U"],
+      "2": ["MP", "Standard Scout skill"],
+      "3": ["E"],
+      "4": ["H"],
+      "5": ["B", "Unarmed combat"],
+      "6": ["Warrior Specialist"],
+      "7": ["Standard Scout skill"],
+      "8": ["1st mastery O-class weapon", "Specialist Scout skill"]
+    }
+  },
+
+  "Assassin": {
+    "Bracket": ["Scout"],
+    "MaxArmourClass": 7,
+    "Armour": {
+      "Allowed": ["Any"],
+      "Heavy": { "CanAcquire": true }
+    },
+    "Shield": { "HasSkill": true },
+    "Alignment": ["Evil (any)"],
+    "Post8th": "Buys as per 1st Class Assassin.",
+    "Levels": {
+      "1": ["O", "U"],
+      "2": ["MP", "Discern and Make Poisons"],
+      "3": ["E", "Conditioned Heart-Stop", "Standard Scout skill"],
+      "4": ["H", "Standard Scout skill"],
+      "5": ["B", "1st Backstab"],
+      "6": ["Disguise skill"]
+    },
+    "7": ["Specialist Scout skill"],
+    "8": ["1st mastery dagger", "Specialist Scout skill"]
+  },
+
+  "Rogue": {
+    "Bracket": ["Scout", "Wizard"],
+    "MaxArmourClass": 7,
+    "Levels": {
+      "1": ["O", "Recognise Mana", "Light armour", "Medium armour"],
+      "2": ["Read Glyphs and Languages"],
+      "3": ["H", "Standard Scout skill"],
+      "4": [],
+      "5": ["E", "Standard Scout skill"],
+      "6": [],
+      "7": ["Standard Scout skill"],
+      "8": ["1st mastery in an O-class weapon", "Specialist Scout skill"]
+    },
+    "TotalPower": 36,
+    "Powerbase": ["🪄 Magic"]
+  },
+
+  "Wayfinder": {
+    "Bracket": ["Scout", "Priest"],
+    "MaxArmourClass": 7,
+    "Levels": {
+      "1": [
+        "O",
+        "Light armour",
+        "Medium armour",
+        "Recognise Spirit",
+        "Discern Nature of Wounds",
+        "Discern Nature of Undead"
+      ],
+      "2": ["H", "Read Runes", "Standard Scout skill"]
+    },
+    "3": ["E", "Discern Curse/Bless", "Use Spirit Items"],
+    "4": ["Discern Disease"],
+    "5": ["Standard Scout skill"],
+    "6": ["Discern Spiritual Mastery"],
+    "7": ["Standard Scout skill"],
+    "8": ["1st weapon mastery O-class weapon", "Specialist Scout skill"]
+  },
+
+  "Leywalker": {
+    "Bracket": ["Scout", "Druid"],
+    "MaxArmourClass": 7,
+    "Levels": {
+      "1": [
+        "O",
+        "U",
+        "Recognise Earthpower",
+        "Tell Animal Type",
+        "Light armour"
+      ],
+      "2": ["Tell Wounds"],
+      "3": ["H", "Standard Scout skill"],
+      "4": [],
+      "5": ["E", "Standard Scout skill", "Tell Disease"],
+      "6": ["Tell Poison"],
+      "7": ["Standard Scout skill"],
+      "8": ["Specialist Scout skill"]
+    },
+    "Powerbase": ["🌍 Earthpower"],
+    "PowerPerLevel": 2
+  },
+
+  "Spy": {
+    "Bracket": ["Scout"],
+    "MaxArmourClass": 7,
+    "Levels": {
+      "1": [
+        "O",
+        "U",
+        "Disguise",
+        "Light armour",
+        "Medium armour",
+        "Heavy armour"
+      ],
+      "2": ["Standard Scout skill"],
+      "3": ["E", "Psi-Scan 1/level", "Standard Scout skill"],
+      "4": ["Standard Scout skill"],
+      "5": ["H", "Clairvoyance 1/2 levels"],
+      "6": ["MP", "Standard Scout skill"],
+      "7": ["B", "Forget x1/4 levels", "Specialist Scout skill"],
+      "8": ["Specialist Scout skill"]
+    }
+  },
+
+  "Artificer": {
+    "Bracket": ["Scout"],
+    "MaxArmourClass": 7,
+    "Levels": {
+      "1": [
+        "O",
+        "U",
+        "Bandaging skill",
+        "Light armour",
+        "Medium armour",
+        "Heavy armour"
+      ],
+      "2": ["MP", "Standard Scout skill"],
+      "3": ["E", "Standard Scout skill", "1 PAC"],
+      "4": ["H"],
+      "5": ["B", "Standard Scout skill", "2 PAC"],
+      "6": ["Standard Scout skill"],
+      "7": ["Specialist Scout skill", "3 PAC"],
+      "8": ["Specialist Scout skill"]
     }
   }
 }

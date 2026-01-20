@@ -478,59 +478,85 @@
                                             Opacity="0.75"
                                             LineBreakMode="WordWrap"/>
 
-                                        <SearchBar
-                                            Placeholder="Filter options"
-                                            Text="{Binding FilterText}">
-                                            <SearchBar.Triggers>
-                                                <DataTrigger TargetType="SearchBar"
-                                                             Binding="{Binding UseWardPactEnum}"
-                                                             Value="True">
-                                                    <Setter Property="IsVisible"
-                                                            Value="False"/>
-                                                </DataTrigger>
-                                            </SearchBar.Triggers>
-                                        </SearchBar>
-
                                         <CollectionView ItemsSource="{Binding Slots}"
                                                         SelectionMode="None"
                                                         HorizontalOptions="FillAndExpand">
                                             <CollectionView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid ColumnDefinitions="Auto,*"
+                                                    <DataTemplate>
+                                                        <Grid ColumnDefinitions="Auto,*"
                                                           Padding="0,6">
-                                                        <Label Text="{Binding LevelLabel}"
-                                                               VerticalOptions="Center"
-                                                               Opacity="0.85"/>
+                                                            <Label Text="{Binding LevelLabel}"
+                                                                   VerticalOptions="Center"
+                                                                   Opacity="0.85"/>
 
-                                                        <Picker
-                                                            Grid.Column="1"
-                                                            HorizontalOptions="FillAndExpand"
-                                                            Title="Select an ability"
-                                                            ItemsSource="{Binding FilteredOptionNames}"
-                                                            SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
-                                                            <Picker.Triggers>
-                                                                <DataTrigger TargetType="Picker"
-                                                                             Binding="{Binding UseWardPactEnum}"
-                                                                             Value="True">
-                                                                    <Setter Property="IsVisible"
-                                                                            Value="False"/>
-                                                                </DataTrigger>
-                                                            </Picker.Triggers>
-                                                        </Picker>
+                                                            <VerticalStackLayout Grid.Column="1"
+                                                                                 Spacing="6">
+                                                                <Picker
+                                                                    HorizontalOptions="FillAndExpand"
+                                                                    Title="Select an ability"
+                                                                    ItemsSource="{Binding FilteredOptionNames}"
+                                                                    SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
+                                                                    <Picker.Triggers>
+                                                                        <DataTrigger TargetType="Picker"
+                                                                                     Binding="{Binding UseWardPactEnum}"
+                                                                                     Value="True">
+                                                                            <Setter Property="IsVisible"
+                                                                                    Value="False"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger TargetType="Picker"
+                                                                                     Binding="{Binding UseMagicColourEnum}"
+                                                                                     Value="True">
+                                                                            <Setter Property="IsVisible"
+                                                                                    Value="False"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger TargetType="Picker"
+                                                                                     Binding="{Binding UseVivomancerColourEnum}"
+                                                                                     Value="True">
+                                                                            <Setter Property="IsVisible"
+                                                                                    Value="False"/>
+                                                                        </DataTrigger>
+                                                                    </Picker.Triggers>
+                                                                </Picker>
 
-                                                        <controls:DictionarySearchBar x:TypeArguments="enums:StandardWardPacts"
-                                                                                      Grid.Column="1"
-                                                                                      ItemsSource="{x:Static pickers:WardPactOptions.Standard}"
-                                                                                      SelectedValue="{Binding SelectedWardPact, Mode=TwoWay}"
-                                                                                      PlaceholderText="Select a ward pact"
-                                                                                      AllowCustomOptions="False"
-                                                                                      HorizontalOptions="FillAndExpand"
-                                                                                      IsVisible="{Binding UseWardPactEnum}"/>
-                                                    </Grid>
+                                                                <controls:ChipGroup Items="{Binding FilteredOptionNames}"
+                                                                                    SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
+                                                                                    IsVisible="{Binding UseMagicColourEnum}"
+                                                                                    HorizontalOptions="FillAndExpand"/>
 
-                                                </DataTemplate>
-                                            </CollectionView.ItemTemplate>
-                                        </CollectionView>
+                                                                <controls:ChipGroup Items="{Binding FilteredOptionNames}"
+                                                                                    SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
+                                                                                    IsVisible="{Binding UseVivomancerColourEnum}"
+                                                                                    HorizontalOptions="FillAndExpand"/>
+
+                                                                <controls:DictionarySearchBar x:TypeArguments="enums:MagicColours"
+                                                                                              ItemsSource="{Binding MagicColourOptions}"
+                                                                                              SelectedValue="{Binding SelectedMagicColour, Mode=TwoWay}"
+                                                                                              PlaceholderText="Select a wizard colour"
+                                                                                              AllowCustomOptions="False"
+                                                                                              HorizontalOptions="FillAndExpand"
+                                                                                              IsVisible="{Binding UseMagicColourEnum}"/>
+
+                                                                <controls:DictionarySearchBar x:TypeArguments="enums:VivomancerColours"
+                                                                                              ItemsSource="{Binding VivomancerColourOptions}"
+                                                                                              SelectedValue="{Binding SelectedVivomancerColour, Mode=TwoWay}"
+                                                                                              PlaceholderText="Select a vivomancer colour"
+                                                                                              AllowCustomOptions="False"
+                                                                                              HorizontalOptions="FillAndExpand"
+                                                                                              IsVisible="{Binding UseVivomancerColourEnum}"/>
+
+                                                                <controls:DictionarySearchBar x:TypeArguments="enums:StandardWardPacts"
+                                                                                              ItemsSource="{x:Static pickers:WardPactOptions.Standard}"
+                                                                                              SelectedValue="{Binding SelectedWardPact, Mode=TwoWay}"
+                                                                                              PlaceholderText="Select a ward pact"
+                                                                                              AllowCustomOptions="False"
+                                                                                              HorizontalOptions="FillAndExpand"
+                                                                                              IsVisible="{Binding UseWardPactEnum}"/>
+                                                            </VerticalStackLayout>
+                                                        </Grid>
+
+                                                    </DataTemplate>
+                                                </CollectionView.ItemTemplate>
+                                            </CollectionView>
 
                                     </VerticalStackLayout>
                                 </VerticalStackLayout>
