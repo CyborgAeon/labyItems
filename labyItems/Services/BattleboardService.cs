@@ -12,7 +12,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
 {
     public async Task<string> ExportAsync(CharacterDraft draft, CancellationToken ct = default)
     {
-        await using var templateStream = await FileSystem.OpenAppPackageFileAsync("Template.xlsx");
+        await using var templateStream = await FileSystem.OpenAppPackageFileAsync("people/Template.xlsx");
         using var ms = new MemoryStream();
         await templateStream.CopyToAsync(ms, ct);
         ms.Position = 0;
