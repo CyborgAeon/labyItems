@@ -520,11 +520,6 @@
 
                                                                 <controls:ChipGroup Items="{Binding FilteredOptionNames}"
                                                                                     SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
-                                                                                    IsVisible="{Binding UseMagicColourEnum}"
-                                                                                    HorizontalOptions="FillAndExpand"/>
-
-                                                                <controls:ChipGroup Items="{Binding FilteredOptionNames}"
-                                                                                    SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
                                                                                     IsVisible="{Binding UseVivomancerColourEnum}"
                                                                                     HorizontalOptions="FillAndExpand"/>
 

@@ -35,6 +35,7 @@ public sealed class RaceCardVm : INotifyPropertyChanged
     public string PeopleType { get; init; } = "";
     public string Description { get; init; } = "";
     public string BuyAsRaw { get; init; } = "";
+    public string SearchText { get; set; } = "";
 
     public string Icon { get; init; } = "👤";
 
@@ -59,20 +60,16 @@ public sealed class RaceCardVm : INotifyPropertyChanged
     {
         LevelRows.Clear();
 
-        var any = false;
         for (var level = 1; level <= 8; level++)
         {
             var abilities = FindAbilitiesForLevel(levelledAbilities, level);
-            if (!string.IsNullOrWhiteSpace(abilities)) any = true;
+            if (string.IsNullOrWhiteSpace(abilities))
+                continue;
 
-            LevelRows.Add(new RaceLevelRowVm
-            {
-                Level = level,
-                Abilities = abilities
-            });
+            LevelRows.Add(new RaceLevelRowVm { Level = level, Abilities = abilities });
         }
 
-        HasAnyAbilities = any;
+        HasAnyAbilities = LevelRows.Count > 0;
         Raise(nameof(HasAnyAbilities));
 
         BuyAsChips.Clear();

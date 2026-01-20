@@ -145,6 +145,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 IsSelected = string.Equals(name, _draft.Race, StringComparison.OrdinalIgnoreCase)
             };
 
+            vm.SearchText = BuildRaceSearchText(name, record);
             vm.BuildRowsAndChips(record.LevelledAbilities ?? new Dictionary<string, List<string>>(), record.BuyAs);
             list.Add(vm);
         }
@@ -251,10 +252,24 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         if (item == null) return;
 
+        var wasSelected = item.IsSelected;
+
         foreach (var c in AllClasses)
             c.IsSelected = ReferenceEquals(c, item);
 
-        _draft.Class = item.Name;
+        if (wasSelected)
+        {
+            foreach (var c in AllClasses)
+                c.IsSelected = false;
+
+            _draft.Class = string.Empty;
+            _allowedRaceKeysForSelectedClass = null;
+            _allowedRaceKeysForClass = null;
+        }
+        else
+        {
+            _draft.Class = item.Name;
+        }
         _notifyWizardGatingChanged();
 
         MainThread.BeginInvokeOnMainThread(async () =>
@@ -271,10 +286,29 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         if (item == null) return;
 
+        var wasSelected = item.IsSelected;
+
         foreach (var r in AllRaces)
             r.IsSelected = ReferenceEquals(r, item);
 
-        _draft.Race = item.Name;
+        if (wasSelected)
+        {
+            foreach (var r in AllRaces)
+                r.IsSelected = false;
+
+            _draft.Race = string.Empty;
+            _draft.RaceSubtype = null;
+            _draft.RaceSubtypeKey = string.Empty;
+            _draft.RaceSubtypeValue = string.Empty;
+            _draft.LifeScaleKeyOverride = string.Empty;
+            _draft.SpecialisationSelections.Clear();
+            _allowedClassKeysForSelectedRace = null;
+            _allowedClassKeysForRace = null;
+        }
+        else
+        {
+            _draft.Race = item.Name;
+        }
         _notifyWizardGatingChanged();
 
         MainThread.BeginInvokeOnMainThread(async () =>
@@ -282,7 +316,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await RefreshAllowedClassesForSelectedRaceAsync();
             RefilterClasses();
 
-            await ApplyRaceToClassesAsync(item.Name);
+            await ApplyRaceToClassesAsync(_draft.Race);
             RefilterRaces();
 
             await SpecialisationVm.ReloadAsync();
@@ -532,6 +566,26 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return parts.Length == 2 ? parts[1] : bracket;
     }
 
+    private static string BuildRaceSearchText(string name, PeopleRecord record)
+    {
+        var parts = new List<string>
+        {
+            name,
+            record.PeopleType ?? "",
+            record.Description ?? "",
+            record.AdditionalInfo ?? "",
+            record.BuyAs ?? "",
+            record.Subtype?.OptionsSource ?? "",
+            record.Subtype?.DisplayName ?? ""
+        };
+
+        if (string.Equals(name, "Human", StringComparison.OrdinalIgnoreCase))
+            parts.Add("baronial ishmaic standard tribal barbarian human");
+
+        return string.Join(" ", parts.Where(p => !string.IsNullOrWhiteSpace(p)))
+            .ToLowerInvariant();
+    }
+
     private void RefilterClasses()
     {
         var q = (ClassSearchText ?? "").Trim().ToLowerInvariant();
@@ -565,7 +619,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 (allowed == null || allowed.Contains(LifeScalesService.NormalizeKey(r.Name))) &&
                 (q.Length == 0 ||
                  r.Name.ToLowerInvariant().Contains(q) ||
-                 (r.Description ?? "").ToLowerInvariant().Contains(q)))
+                 (r.Description ?? "").ToLowerInvariant().Contains(q) ||
+                 (r.SearchText ?? string.Empty).Contains(q)))
             .OrderByDescending(r => r.IsSelected)
             .ToList();
 

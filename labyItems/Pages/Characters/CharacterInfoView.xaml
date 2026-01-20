@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Pages.Characters.CharacterInfoView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16"
+                             Spacing="12">
+            <Label Text="Player name"
+                   FontAttributes="Bold"/>
+            <Entry Placeholder="e.g. Alex"
+                   Text="{Binding PlayerName, Mode=TwoWay}"/>
+
+            <Label Text="Character name"
+                   FontAttributes="Bold"/>
+            <Entry Placeholder="e.g. Stormcaller"
+                   Text="{Binding CharacterName, Mode=TwoWay}"/>
+
+            <Label Text="Notes"
+                   FontAttributes="Bold"/>
+            <Editor Placeholder="Anything you want to remember for this character"
+                    HeightRequest="140"
+                    AutoSize="TextChanges"
+                    Text="{Binding NotesText, Mode=TwoWay}"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>

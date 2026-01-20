@@ -1,5 +1,7 @@
 // Services/LiteDbService.cs
+using System.Text.Json;
 using labyItems.Models;
+using labyItems.Models.Characters;
 using LiteDB;
 
 namespace labyItems.Services;
@@ -49,6 +51,46 @@ public static class LiteDbService
     public static void UpsertCharacter(Character c)
     {
         var col = GetDb().GetCollection<Character>("characters");
+        c.Id = EnsureId(c.Id);
+        c.UpdatedUtc = DateTime.UtcNow;
         col.Upsert(c);
     }
+
+    public static Character UpsertDraft(CharacterDraft draft)
+    {
+        var col = GetDb().GetCollection<Character>("characters");
+        var normalizedName = NormalizeKey(draft.Name);
+        var normalizedPlayer = NormalizeKey(draft.PlayerName);
+
+        var existing = col.FindOne(c =>
+            NormalizeKey(c.Name) == normalizedName &&
+            NormalizeKey(c.PlayerName) == normalizedPlayer);
+
+        var entity = MapFromDraft(draft, existing?.Id);
+        col.Upsert(entity);
+        return entity;
+    }
+
+    private static Character MapFromDraft(CharacterDraft draft, ObjectId? idOverride)
+    {
+        return new Character
+        {
+            Id = EnsureId(idOverride ?? ObjectId.Empty),
+            Name = draft.Name ?? string.Empty,
+            PlayerName = draft.PlayerName ?? string.Empty,
+            Class = draft.Class ?? string.Empty,
+            Race = draft.Race ?? string.Empty,
+            RaceSubtype = draft.RaceSubtype ?? string.Empty,
+            RaceSubtypeKey = draft.RaceSubtypeKey ?? string.Empty,
+            Notes = draft.Notes ?? string.Empty,
+            Guilds = new List<string>(draft.Guilds ?? new List<string>()),
+            Specialisations = new Dictionary<string, string>(draft.SpecialisationSelections, StringComparer.OrdinalIgnoreCase),
+            Points = draft.Points,
+            DraftSnapshot = System.Text.Json.JsonSerializer.Serialize(draft),
+            UpdatedUtc = DateTime.UtcNow
+        };
+    }
+
+    private static ObjectId EnsureId(ObjectId id)
+        => id == ObjectId.Empty ? ObjectId.NewObjectId() : id;
 }

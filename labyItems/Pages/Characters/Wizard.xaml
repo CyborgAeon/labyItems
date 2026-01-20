@@ -6,13 +6,11 @@
     xmlns:controls="clr-namespace:labyItems.Controls"
     x:Name="Root"
     Shell.NavBarIsVisible="False">
-
-    <Grid RowDefinitions="Auto,*,Auto"
-          RowSpacing="5">
-        <Grid Padding="16,10"
-              ColumnDefinitions="Auto,*,Auto"
-              RowDefinitions="Auto,Auto"
-              RowSpacing="6">
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Grid
+            ColumnDefinitions="Auto,*,Auto"
+            RowDefinitions="Auto,Auto"
+            RowSpacing="6">
             <Label Grid.Column="1"
                    Text="{Binding CurrentStepTitle}"
                    HorizontalOptions="Center"

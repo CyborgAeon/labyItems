@@ -10,6 +10,7 @@ public sealed class CharacterDraft
     public string? Class { get; set; }
     public string Name { get; set; } = "";
     public string PlayerName { get; set; } = "";
+    public string Notes { get; set; } = "";
     public string RaceSubtypeKey { get; set; } = "";
     public string RaceSubtypeValue { get; set; } = "";
     public string LifeScaleKeyOverride { get; set; } = "";

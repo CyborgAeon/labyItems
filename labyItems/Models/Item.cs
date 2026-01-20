@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 namespace labyItems.Models;
 using LiteDB;
 
@@ -6,8 +7,16 @@ public class Character {
     public ObjectId Id { get; set; }
 
     public string Name { get; set; } = string.Empty;
+    public string Race { get; set; } = string.Empty;
+    public string RaceSubtype { get; set; } = string.Empty;
+    public string RaceSubtypeKey { get; set; } = string.Empty;
     public string Class { get; set; } = string.Empty;
     public string PlayerName { get; set; } = string.Empty;
+    public string Notes { get; set; } = string.Empty;
+    public string DraftSnapshot { get; set; } = string.Empty;
+    public DateTime UpdatedUtc { get; set; } = DateTime.UtcNow;
+    public List<string> Guilds { get; set; } = new();
+    public Dictionary<string, string> Specialisations { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public long Points { get; set; } = 0;
     public List<string> PointsApps { get; set; } = new List<string>();
     public MakeSheet? MakeSheet { get; set; }

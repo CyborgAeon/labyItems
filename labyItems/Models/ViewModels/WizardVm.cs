@@ -1,12 +1,16 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Models.Characters;
 using labyItems.Pages.Characters;
-using labyItems.Pages.Characters.ViewModels;
+using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.ApplicationModel.DataTransfer;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -26,13 +30,14 @@ public sealed class WizardVm : INotifyPropertyChanged
     }
 
     public CharacterDraft Draft { get; } = new();
+    private readonly IBattleboardExportService _exportService;
 
     public ObservableCollection<StepItem> StepSteps { get; } = new()
     {
         new StepItem { Id = 1, Label = "Race & Class" },
-        new StepItem { Id = 2, Label = "Info" },
+        new StepItem { Id = 2, Label = "Specialisations" },
         new StepItem { Id = 3, Label = "Guilds" },
-        new StepItem { Id = 4, Label = "Status" },
+        new StepItem { Id = 4, Label = "Details" },
         new StepItem { Id = 5, Label = "Review" },
     };
 
@@ -73,6 +78,8 @@ public sealed class WizardVm : INotifyPropertyChanged
     public ICommand BackCommand { get; }
     public ICommand NextCommand { get; }
     public Command<int> StepClickCommand { get; }
+    public Command ExportToBattleboardCommand { get; }
+    public Command SaveToWalletCommand { get; }
 
     // Step VMs (created once to preserve state)
     public CharacterBuilderVm CharacterBuilderVm { get; }
@@ -82,6 +89,7 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     public WizardVm()
     {
+        _exportService = new BattleboardExportService();
         CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
 
         // NEW: optional guild selection step
@@ -89,15 +97,94 @@ public sealed class WizardVm : INotifyPropertyChanged
         BackCommand = new Command(OnBack);
         NextCommand = new Command(OnNext);
         StepClickCommand = new Command<int>(TryGoToStep);
+        ExportToBattleboardCommand = new Command(async () => await ExportBattleboardAsync(), () => Draft.IsRaceAndClassSelected);
+        SaveToWalletCommand = new Command(SaveToWallet, () => Draft.IsRaceAndClassSelected);
 
         CurrentStep = 0;
         UpdateStepView();
     }
 
+    public string PlayerName
+    {
+        get => Draft.PlayerName;
+        set
+        {
+            if (Draft.PlayerName == value) return;
+            Draft.PlayerName = value;
+            Raise(nameof(PlayerName));
+            RaiseReviewProperties();
+        }
+    }
+
+    public string CharacterName
+    {
+        get => Draft.Name;
+        set
+        {
+            if (Draft.Name == value) return;
+            Draft.Name = value;
+            Raise(nameof(CharacterName));
+            RaiseReviewProperties();
+        }
+    }
+
+    public string NotesText
+    {
+        get => Draft.Notes;
+        set
+        {
+            if (Draft.Notes == value) return;
+            Draft.Notes = value;
+            Raise(nameof(NotesText));
+            RaiseReviewProperties();
+        }
+    }
+
+    public string PlayerNameSummary => string.IsNullOrWhiteSpace(Draft.PlayerName)
+        ? "Player: not set"
+        : $"Player: {Draft.PlayerName}";
+    public string CharacterNameSummary => string.IsNullOrWhiteSpace(Draft.Name)
+        ? "Character: not set"
+        : $"Character: {Draft.Name}";
+    public string RaceSummary => string.IsNullOrWhiteSpace(Draft.Race)
+        ? "Race: not selected"
+        : $"Race: {Draft.Race}";
+    public string RaceSubtypeSummary
+    {
+        get
+        {
+            var subtype = Draft.RaceSubtypeValue ?? Draft.RaceSubtype;
+            return string.IsNullOrWhiteSpace(subtype)
+                ? "Subtype: none selected"
+                : $"Subtype: {subtype}";
+        }
+    }
+
+    public string ClassSummary => string.IsNullOrWhiteSpace(Draft.Class)
+        ? "Class: not selected"
+        : $"Class: {Draft.Class}";
+
+    public string GuildSummary => Draft.Guilds.Count == 0
+        ? "Guilds: none selected"
+        : $"Guilds: {string.Join(", ", Draft.Guilds)}";
+
+    public IEnumerable<string> SpecialisationSummaryLines => BuildSpecialisationSummary();
+
+    public string SpecialisationSummaryHeader => SpecialisationSummaryLines.Any()
+        ? "Chosen options:"
+        : "No specialisations selected.";
+
+    public string NotesSummary => string.IsNullOrWhiteSpace(Draft.Notes)
+        ? "No notes provided."
+        : Draft.Notes;
+
     public void NotifyGatingChanged()
     {
         Raise(nameof(CanGoNext));
         Raise(nameof(NextButtonText));
+        RaiseReviewProperties();
+        ExportToBattleboardCommand.ChangeCanExecute();
+        SaveToWalletCommand.ChangeCanExecute();
     }
 
     private void OnBack()
@@ -166,11 +253,9 @@ public sealed class WizardVm : INotifyPropertyChanged
             0 => new CharacterBuilder(CharacterBuilderVm),
             1 => new CharacterSpecialisation(CharacterBuilderVm),
 
-            // NEW: real guilds step
             2 => new Guilds(GuildsVm),
-
-            3 => BuildPlaceholder("Step 4 - Status/Buffs (not implemented here)"),
-            4 => BuildPlaceholder("Step 5 - Review (not implemented here)"),
+            3 => new CharacterInfoView(this),
+            4 => new CharacterReviewView(this),
             _ => BuildPlaceholder("Unknown step")
         };
     }
@@ -188,4 +273,51 @@ public sealed class WizardVm : INotifyPropertyChanged
                 }
             }
         };
+
+    private IEnumerable<string> BuildSpecialisationSummary()
+    {
+        var lines = new List<string>();
+
+        var subtype = Draft.RaceSubtypeValue ?? Draft.RaceSubtype;
+        if (!string.IsNullOrWhiteSpace(subtype))
+            lines.Add($"Subtype: {subtype}");
+
+        foreach (var kvp in Draft.SpecialisationSelections.OrderBy(k => k.Key, StringComparer.OrdinalIgnoreCase))
+        {
+            lines.Add($"{kvp.Key}: {kvp.Value}");
+        }
+
+        return lines;
+    }
+
+    private void RaiseReviewProperties()
+    {
+        Raise(nameof(PlayerNameSummary));
+        Raise(nameof(CharacterNameSummary));
+        Raise(nameof(RaceSummary));
+        Raise(nameof(RaceSubtypeSummary));
+        Raise(nameof(ClassSummary));
+        Raise(nameof(GuildSummary));
+        Raise(nameof(SpecialisationSummaryLines));
+        Raise(nameof(SpecialisationSummaryHeader));
+        Raise(nameof(NotesSummary));
+    }
+
+    private async Task ExportBattleboardAsync()
+    {
+        await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
+        var path = await _exportService.ExportAsync(Draft);
+
+        await Share.Default.RequestAsync(new ShareFileRequest
+        {
+            Title = $"{Draft.Name}'s battleboard",
+            File = new ShareFile(path)
+        });
+    }
+
+    private void SaveToWallet()
+    {
+        LiteDbService.UpsertDraft(Draft);
+        RaiseReviewProperties();
+    }
 }

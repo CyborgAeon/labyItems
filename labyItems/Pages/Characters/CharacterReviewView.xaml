@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+       x:Class="labyItems.Pages.Characters.CharacterReviewView"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+       <ScrollView>
+              <VerticalStackLayout Padding="16"
+                                   Spacing="14">
+
+                     <Label Text="Review"
+                            FontSize="20"
+                            FontAttributes="Bold"/>
+
+                     <Frame HasShadow="False"
+                            CornerRadius="12"
+                            Padding="12"
+                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                            <VerticalStackLayout Spacing="4">
+                                   <Label Text="Identity"
+                                          FontAttributes="Bold"/>
+                                   <Label Text="{Binding PlayerNameSummary}"/>
+                                   <Label Text="{Binding CharacterNameSummary}"/>
+                            </VerticalStackLayout>
+                     </Frame>
+
+                     <Frame HasShadow="False"
+                            CornerRadius="12"
+                            Padding="12"
+                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                            <VerticalStackLayout Spacing="4">
+                                   <Label Text="Race and class"
+                                          FontAttributes="Bold"/>
+                                   <Label Text="{Binding RaceSummary}"/>
+                                   <Label Text="{Binding RaceSubtypeSummary}"/>
+                                   <Label Text="{Binding ClassSummary}"/>
+                            </VerticalStackLayout>
+                     </Frame>
+
+                     <Frame HasShadow="False"
+                            CornerRadius="12"
+                            Padding="12"
+                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                            <VerticalStackLayout Spacing="4">
+                                   <Label Text="Guilds"
+                                          FontAttributes="Bold"/>
+                                   <Label Text="{Binding GuildSummary}"
+                                          LineBreakMode="WordWrap"/>
+                            </VerticalStackLayout>
+                     </Frame>
+
+                     <Frame HasShadow="False"
+                            CornerRadius="12"
+                            Padding="12"
+                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                            <VerticalStackLayout Spacing="8">
+                                   <Label Text="Specialisations"
+                                          FontAttributes="Bold"/>
+                                   <Label Text="{Binding SpecialisationSummaryHeader}"
+                                          Opacity="0.7"/>
+
+                                   <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpecialisationSummaryLines}"
+                                                        Spacing="6">
+                                          <BindableLayout.ItemTemplate>
+                                                 <DataTemplate>
+                                                        <Label Text="{Binding .}"
+                                                               LineBreakMode="WordWrap"/>
+                                                 </DataTemplate>
+                                          </BindableLayout.ItemTemplate>
+                                   </VerticalStackLayout>
+                            </VerticalStackLayout>
+                     </Frame>
+
+                     <Frame HasShadow="False"
+                            CornerRadius="12"
+                            Padding="12"
+                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                            <VerticalStackLayout Spacing="4">
+                                   <Label Text="Notes"
+                                          FontAttributes="Bold"/>
+                                   <Label Text="{Binding NotesSummary}"
+                                          LineBreakMode="WordWrap"/>
+                            </VerticalStackLayout>
+                     </Frame>
+
+                     <Button Text="Export to battleboard"
+                             Command="{Binding ExportToBattleboardCommand}"/>
+
+                     <Button Text="Save to My Character wallet"
+                             Command="{Binding SaveToWalletCommand}"
+                             BackgroundColor="#14532d"
+                             TextColor="White"/>
+              </VerticalStackLayout>
+       </ScrollView>
+</ContentView>
