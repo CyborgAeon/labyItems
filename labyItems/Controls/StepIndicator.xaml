@@ -3,10 +3,10 @@
              x:Name="Root"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-
-  <Grid Padding="0,0,0,0"
+  <Grid Padding="5,2,5,0"
         HorizontalOptions="FillAndExpand"
         RowDefinitions="Auto"
+        RowSpacing="0"
         ColumnDefinitions="*">
     <Grid x:Name="StepsHost"
           HorizontalOptions="FillAndExpand"

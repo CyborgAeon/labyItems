@@ -23,6 +23,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private HashSet<string>? _allowedClassKeysForSelectedRace;
     private string? _allowedClassKeysForRace;
     private readonly SemaphoreSlim _abilityRefreshLock = new(1, 1);
+    private LifeScalePoint? _humanLifeForSelectedClass;
 
     private void Raise([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -94,6 +95,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             RefilterClasses();
 
             await ApplyRaceToClassesAsync(_draft.Race);
+
+            await CaptureHumanLifeForSelectedClassAsync();
+            await UpdateDraftLifeAsync(expandIfChanged: false);
 
             await SpecialisationVm.ReloadAsync();
 
@@ -263,19 +267,26 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 c.IsSelected = false;
 
             _draft.Class = string.Empty;
+            _draft.TBLP = 0;
+            _draft.Loc = 0;
+            _humanLifeForSelectedClass = null;
             _allowedRaceKeysForSelectedClass = null;
             _allowedRaceKeysForClass = null;
         }
         else
         {
+            _humanLifeForSelectedClass = null;
             _draft.Class = item.Name;
         }
         _notifyWizardGatingChanged();
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
+            await CaptureHumanLifeForSelectedClassAsync();
             await RefreshAllowedRacesForSelectedClassAsync();
             RefilterRaces();
+
+            await UpdateDraftLifeAsync(expandIfChanged: true);
 
             await SpecialisationVm.ReloadAsync();
             await RefreshDraftAbilitiesAsync();
@@ -317,6 +328,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             RefilterClasses();
 
             await ApplyRaceToClassesAsync(_draft.Race);
+            await UpdateDraftLifeAsync(expandIfChanged: true);
             RefilterRaces();
 
             await SpecialisationVm.ReloadAsync();
@@ -471,6 +483,117 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         await Task.WhenAll(tasks);
     }
 
+    private async Task CaptureHumanLifeForSelectedClassAsync()
+    {
+        var className = (_draft.Class ?? string.Empty).Trim();
+        if (className.Length == 0)
+        {
+            _humanLifeForSelectedClass = null;
+            return;
+        }
+
+        _humanLifeForSelectedClass = await GetLifePointAsync("Human", className);
+        if (_humanLifeForSelectedClass is LifeScalePoint humanLife)
+        {
+            _draft.TBLP = humanLife.Body;
+            _draft.Loc = humanLife.Loc;
+        }
+        else
+        {
+            _draft.TBLP = 0;
+            _draft.Loc = 0;
+        }
+    }
+
+    private async Task EnsureHumanLifeCachedAsync()
+    {
+        if (_humanLifeForSelectedClass.HasValue)
+            return;
+
+        var className = (_draft.Class ?? string.Empty).Trim();
+        if (className.Length == 0) return;
+
+        _humanLifeForSelectedClass = await GetLifePointAsync("Human", className);
+    }
+
+    private string GetEffectiveLifeScaleRaceKey()
+    {
+        if (!string.IsNullOrWhiteSpace(_draft.LifeScaleKeyOverride))
+            return _draft.LifeScaleKeyOverride;
+
+        return ResolveRaceKeyForLifeScale(_draft);
+    }
+
+    private async Task UpdateDraftLifeAsync(bool expandIfChanged)
+    {
+        var className = (_draft.Class ?? string.Empty).Trim();
+        if (className.Length == 0)
+        {
+            _draft.TBLP = 0;
+            _draft.Loc = 0;
+            return;
+        }
+
+        await EnsureHumanLifeCachedAsync();
+
+        var raceKey = GetEffectiveLifeScaleRaceKey();
+        var lifePoint = await GetLifePointAsync(raceKey, className);
+
+        if (lifePoint is null)
+        {
+            _draft.TBLP = 0;
+            _draft.Loc = 0;
+            return;
+        }
+
+        var newLife = lifePoint.Value;
+        var differsFromHuman = _humanLifeForSelectedClass.HasValue &&
+                               (_humanLifeForSelectedClass.Value.Body != newLife.Body ||
+                                _humanLifeForSelectedClass.Value.Loc != newLife.Loc);
+
+        _draft.TBLP = newLife.Body;
+        _draft.Loc = newLife.Loc;
+
+        if (expandIfChanged && differsFromHuman)
+            ExpandSelectedClassCard();
+    }
+
+    private void ExpandSelectedClassCard()
+    {
+        var selected = AllClasses.FirstOrDefault(c => c.IsSelected);
+        if (selected == null) return;
+
+        foreach (var c in AllClasses)
+        {
+            if (!ReferenceEquals(c, selected) && c.IsExpanded)
+                c.IsExpanded = false;
+        }
+
+        if (!selected.IsExpanded)
+            selected.IsExpanded = true;
+
+        RefilterClasses();
+    }
+
+    private static async Task<LifeScalePoint?> GetLifePointAsync(string raceName, string className)
+    {
+        var points = await LifeScalesService.GetLifeScaleAsync(raceName, className);
+        var idx = PickLifeIndex(points);
+        return idx >= 0 ? points[idx] : null;
+    }
+
+    private static int PickLifeIndex(IReadOnlyList<LifeScalePoint> life)
+    {
+        if (life == null || life.Count == 0)
+            return -1;
+
+        var idx = life.Count >= 8 ? 7 : life.Count - 1;
+        return Math.Clamp(idx, 0, life.Count - 1);
+    }
+
+    public Task SyncDraftLifeAsync(bool expandIfChanged = false)
+        => UpdateDraftLifeAsync(expandIfChanged);
+
     public async Task RefreshDraftAbilitiesAsync()
     {
         await _abilityRefreshLock.WaitAsync();
@@ -481,6 +604,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             abilities.AddRange(await BuildRaceAbilitiesAsync());
             abilities.AddRange(await BuildClassAbilitiesAsync());
             abilities.AddRange(SpecialisationVm.BuildSelectedAbilityDrafts());
+            abilities.AddRange(await BuildGuildAbilitiesAsync());
 
             Draft.Abilities = abilities
                 .OrderBy(a => a.LevelGained ?? int.MaxValue)
@@ -523,6 +647,26 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var all = await ClassService.GetAllAsync();
         if (TryGetRecord(all, className, out var rec) && rec?.Levels != null)
             list.AddRange(AbilityDraftBuilder.BuildFromLevels(rec.Levels));
+
+        return list;
+    }
+
+    private async Task<List<AbilityDraft>> BuildGuildAbilitiesAsync()
+    {
+        var list = new List<AbilityDraft>();
+
+        if (Draft.Guilds.Count == 0)
+            return list;
+
+        var all = await GuildsService.GetAllAsync();
+        foreach (var guild in Draft.Guilds.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (!TryGetRecord(all, guild, out var rec) || rec?.Benefits?.Basic == null)
+                continue;
+
+            foreach (var benefit in rec.Benefits.Basic.Where(b => !string.IsNullOrWhiteSpace(b)))
+                list.AddRange(AbilityDraftBuilder.ParseAbility(benefit, null));
+        }
 
         return list;
     }

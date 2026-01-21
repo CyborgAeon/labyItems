@@ -20,6 +20,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         new(StringComparer.OrdinalIgnoreCase);
     private GuildSlotRules _slotRules = GuildSlotRules.Default();
     private bool _classAllowsChurch;
+    private readonly Func<Task>? _refreshDraftAbilitiesAsync;
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
@@ -33,11 +34,12 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     public CharacterDraft Draft => _draft;
     private readonly Func<IEnumerable<AlignmentRule?>> _getNonGuildRules;
-    public GuildsVm(CharacterDraft draft, Action notifyWizardGatingChanged, Func<IEnumerable<AlignmentRule?>>? getNonGuildRules = null)
+    public GuildsVm(CharacterDraft draft, Action notifyWizardGatingChanged, Func<IEnumerable<AlignmentRule?>>? getNonGuildRules = null, Func<Task>? refreshDraftAbilitiesAsync = null)
     {
         _draft = draft;
         _notifyWizardGatingChanged = notifyWizardGatingChanged;
         _getNonGuildRules = getNonGuildRules ?? (() => Enumerable.Empty<AlignmentRule?>());
+        _refreshDraftAbilitiesAsync = refreshDraftAbilitiesAsync;
 
         TypeFilters = new ObservableCollection<string> { "All" };
         _selectedTypeFilter = "All";
@@ -164,6 +166,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         Refilter();
         RecomputeDraftAlignments();
+        _notifyWizardGatingChanged();
     }
 
     private (bool HasCityBound, string? CityName) GetCityBoundInfo()
@@ -377,6 +380,11 @@ public sealed class GuildsVm : INotifyPropertyChanged
         Raise(nameof(SelectedCount));
         RecomputeDraftAlignments();
         _notifyWizardGatingChanged();
+
+        if (_refreshDraftAbilitiesAsync != null)
+        {
+            MainThread.BeginInvokeOnMainThread(async () => await _refreshDraftAbilitiesAsync());
+        }
     }
 }
 

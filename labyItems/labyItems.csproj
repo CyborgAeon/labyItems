@@ -51,11 +51,6 @@
 		<MauiAsset Include="Resources\Raw\**\*" />
 	</ItemGroup>
 
-	<!-- In Release builds, exclude JSON raw assets (we ship a pre-built default.db instead) -->
-	<ItemGroup Condition="'$(Configuration)' == 'Release'">
-		<MauiAsset Remove="Resources\Raw\**\*.json" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="LiteDB" />
 		<PackageReference Include="Microsoft.Maui.Controls" />

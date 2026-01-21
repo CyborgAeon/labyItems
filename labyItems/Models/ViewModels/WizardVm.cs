@@ -34,8 +34,8 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     public ObservableCollection<StepItem> StepSteps { get; } = new()
     {
-        new StepItem { Id = 1, Label = "Race & Class" },
-        new StepItem { Id = 2, Label = "Specialisations" },
+        new StepItem { Id = 1, Label = "Race/Class" },
+        new StepItem { Id = 2, Label = "Specialise" },
         new StepItem { Id = 3, Label = "Guilds" },
         new StepItem { Id = 4, Label = "Details" },
         new StepItem { Id = 5, Label = "Review" },
@@ -80,11 +80,7 @@ public sealed class WizardVm : INotifyPropertyChanged
     public Command<int> StepClickCommand { get; }
     public Command ExportToBattleboardCommand { get; }
     public Command SaveToWalletCommand { get; }
-
-    // Step VMs (created once to preserve state)
     public CharacterBuilderVm CharacterBuilderVm { get; }
-
-    // NEW
     public GuildsVm GuildsVm { get; }
 
     public WizardVm()
@@ -93,10 +89,10 @@ public sealed class WizardVm : INotifyPropertyChanged
         CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
 
         // NEW: optional guild selection step
-        GuildsVm = new GuildsVm(Draft, NotifyGatingChanged, null);
+        GuildsVm = new GuildsVm(Draft, NotifyGatingChanged, null, CharacterBuilderVm.RefreshDraftAbilitiesAsync);
         BackCommand = new Command(OnBack);
-        NextCommand = new Command(OnNext);
-        StepClickCommand = new Command<int>(TryGoToStep);
+        NextCommand = new Command(async () => await OnNextAsync());
+        StepClickCommand = new Command<int>(async i => await TryGoToStepAsync(i));
         ExportToBattleboardCommand = new Command(async () => await ExportBattleboardAsync(), () => Draft.IsRaceAndClassSelected);
         SaveToWalletCommand = new Command(SaveToWallet, () => Draft.IsRaceAndClassSelected);
 
@@ -140,6 +136,20 @@ public sealed class WizardVm : INotifyPropertyChanged
         }
     }
 
+    public IEnumerable<Alignment> AlignmentOptions => Draft.AvailableAlignments;
+
+    public Alignment? SelectedAlignment
+    {
+        get => Draft.Alignment;
+        set
+        {
+            if (Draft.Alignment == value) return;
+            Draft.Alignment = value;
+            Raise(nameof(SelectedAlignment));
+            RaiseReviewProperties();
+        }
+    }
+
     public string PlayerNameSummary => string.IsNullOrWhiteSpace(Draft.PlayerName)
         ? "Player: not set"
         : $"Player: {Draft.PlayerName}";
@@ -178,10 +188,16 @@ public sealed class WizardVm : INotifyPropertyChanged
         ? "No notes provided."
         : Draft.Notes;
 
+    public string AlignmentSummary => Draft.Alignment.HasValue
+        ? $"Alignment: {Draft.Alignment}"
+        : "Alignment: not selected";
+
     public void NotifyGatingChanged()
     {
         Raise(nameof(CanGoNext));
         Raise(nameof(NextButtonText));
+        Raise(nameof(AlignmentOptions));
+        Raise(nameof(SelectedAlignment));
         RaiseReviewProperties();
         ExportToBattleboardCommand.ChangeCanExecute();
         SaveToWalletCommand.ChangeCanExecute();
@@ -193,20 +209,27 @@ public sealed class WizardVm : INotifyPropertyChanged
         CurrentStep--;
     }
 
-    private async void OnNext()
+    private async Task OnNextAsync()
     {
         if (CurrentStep == StepSteps.Count - 1)
         {
-            await Task.CompletedTask;
+            await SyncDraftStateAsync();
             return;
         }
 
         var target = CurrentStep + 1;
         if (!CanNavigateToStep(target)) return;
+        await SyncDraftStateAsync();
         CurrentStep = target;
     }
 
-    private void TryGoToStep(int targetIndex)
+    private async Task SyncDraftStateAsync()
+    {
+        await CharacterBuilderVm.SyncDraftLifeAsync();
+        await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
+    }
+
+    private async Task TryGoToStepAsync(int targetIndex)
     {
         if (targetIndex == CurrentStep) return;
 
@@ -217,6 +240,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         }
 
         if (!CanNavigateToStep(targetIndex)) return;
+        await SyncDraftStateAsync();
         CurrentStep = targetIndex;
     }
 
@@ -301,11 +325,12 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(SpecialisationSummaryLines));
         Raise(nameof(SpecialisationSummaryHeader));
         Raise(nameof(NotesSummary));
+        Raise(nameof(AlignmentSummary));
     }
 
     private async Task ExportBattleboardAsync()
     {
-        await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
+        await SyncDraftStateAsync();
         var path = await _exportService.ExportAsync(Draft);
 
         await Share.Default.RequestAsync(new ShareFileRequest

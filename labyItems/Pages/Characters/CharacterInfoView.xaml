@@ -2,7 +2,8 @@
 <ContentView
     x:Class="labyItems.Pages.Characters.CharacterInfoView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls.Pickers">
 
     <ScrollView>
         <VerticalStackLayout Padding="16"
@@ -16,6 +17,11 @@
                    FontAttributes="Bold"/>
             <Entry Placeholder="e.g. Stormcaller"
                    Text="{Binding CharacterName, Mode=TwoWay}"/>
+
+            <Label Text="Alignment"
+                   FontAttributes="Bold"/>
+            <controls:AlignmentGridPicker SelectedAlignment="{Binding SelectedAlignment, Mode=TwoWay}"
+                                          AvailableAlignments="{Binding AlignmentOptions}"/>
 
             <Label Text="Notes"
                    FontAttributes="Bold"/>

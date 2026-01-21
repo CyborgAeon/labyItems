@@ -6,6 +6,11 @@ namespace labyItems.Models.Characters;
 
 public sealed class CharacterDraft
 {
+    public CharacterDraft()
+    {
+        AvailableAlignments = AllAlignments().OrderBy(a => a.Order).ThenBy(a => a.Moral).ToList();
+    }
+
     public string? Race { get; set; }
     public string? Class { get; set; }
     public string Name { get; set; } = "";
@@ -33,7 +38,7 @@ public sealed class CharacterDraft
     public int WornArmour { get; set; } = 0;
     public int? SAC { get; set; }
     public int? MAC { get; set; }
-    public string Loc { get; set; } = "";
+    public int Loc { get; set; }
 
     public Dictionary<string, string> ResistancesByType { get; set; } =
         new(StringComparer.OrdinalIgnoreCase);

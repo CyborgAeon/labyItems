@@ -16,20 +16,12 @@ public partial class StepIndicator : ContentView
     public StepIndicator()
     {
         InitializeComponent();
-
         ApplyThemeDefaults();
-
-        // Recompute line when layout changes
         SizeChanged += (_, __) => UpdateProgressLine();
         StepsGrid.SizeChanged += (_, __) => UpdateProgressLine();
-
         BindingContextChanged += (_, __) =>
             MainThread.BeginInvokeOnMainThread(Rebuild);
     }
-
-    // -----------------------------
-    // Bindable Properties
-    // -----------------------------
 
     public static readonly BindableProperty StepsProperty =
         BindableProperty.Create(
@@ -100,9 +92,6 @@ public partial class StepIndicator : ContentView
             propertyChanged: (b, o, n) =>
                 ((StepIndicator)b).Rebuild());
 
-    /// <summary>
-    /// Fixed spacing between bubbles. Keeps bubbles stable as the page width changes.
-    /// </summary>
     public double StepSpacing
     {
         get => (double)GetValue(StepSpacingProperty);
@@ -110,10 +99,6 @@ public partial class StepIndicator : ContentView
     }
 
     public event EventHandler<int>? StepClicked;
-
-    // -----------------------------
-    // Internals
-    // -----------------------------
 
     private sealed class StepVisual
     {
@@ -182,19 +167,14 @@ public partial class StepIndicator : ContentView
             return;
         }
 
-        // Ensure row structure exists (row 0: line + bubbles, row 1: captions)
         StepsGrid.RowDefinitions.Clear();
         StepsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
         StepsGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
-
-        // Fixed spacing + fixed bubble widths = stable layout
         StepsGrid.ColumnSpacing = StepSpacing;
 
-        // IMPORTANT: use Auto columns so bubble positions do NOT redistribute with width
         for (int i = 0; i < steps.Count; i++)
-            StepsGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
+            StepsGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
 
-        // Make the line span all columns (otherwise it is only in column 0)
         Grid.SetColumn(LineBg, 0);
         Grid.SetColumnSpan(LineBg, steps.Count);
         Grid.SetColumn(LineFg, 0);
@@ -266,7 +246,7 @@ public partial class StepIndicator : ContentView
                 LineBreakMode = LineBreakMode.NoWrap,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Start,
-                Margin = new Thickness(0, 8, 0, 0)
+                Margin = new Thickness(0, 5, 0, 0)
             };
 
             var stepIndex = i;
@@ -382,11 +362,8 @@ public partial class StepIndicator : ContentView
             b.Stroke = new SolidColorBrush(primary);
 
         var animation = new Animation();
-
-        // A subtle “glow”: fade in/out + slight scale
         animation.Add(0.00, 0.50, new Animation(v => halo.Opacity = v, 0.00, 0.35, Easing.CubicInOut));
         animation.Add(0.50, 1.00, new Animation(v => halo.Opacity = v, 0.35, 0.00, Easing.CubicInOut));
-
         animation.Add(0.00, 0.50, new Animation(v => halo.Scale = v, 1.00, 1.08, Easing.CubicInOut));
         animation.Add(0.50, 1.00, new Animation(v => halo.Scale = v, 1.08, 1.00, Easing.CubicInOut));
 
@@ -402,33 +379,23 @@ public partial class StepIndicator : ContentView
             return;
         }
 
-        // We want: background line from first bubble center to last bubble center
-        // and foreground line from first bubble center to current bubble center.
-
         if (StepsGrid.Width <= 0) return;
 
         var first = _items[0].Overlay;
         var last = _items[count - 1].Overlay;
-
-        // If layout hasn't produced positions yet, bail and let SizeChanged retry
         if (first.Width <= 0 || last.Width <= 0) return;
 
         var firstCenter = first.X + (first.Width / 2);
         var lastCenter = last.X + (last.Width / 2);
-
         var currentIndex = Math.Max(0, Math.Min(CurrentStep, count - 1));
         var current = _items[currentIndex].Overlay;
-
         if (current.Width <= 0) return;
         var currentCenter = current.X + (current.Width / 2);
 
-        // Margins are relative to StepsGrid's full width
         var leftMargin = Math.Max(0, firstCenter);
         var rightMargin = Math.Max(0, StepsGrid.Width - lastCenter);
-
         LineBg.Margin = new Thickness(leftMargin, 0, rightMargin, 0);
         LineFg.Margin = new Thickness(leftMargin, 0, 0, 0);
-
         var fgWidth = Math.Max(0, Math.Min(lastCenter - firstCenter, currentCenter - firstCenter));
         LineFg.WidthRequest = fgWidth;
     }

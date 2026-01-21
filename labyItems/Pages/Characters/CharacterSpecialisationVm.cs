@@ -467,6 +467,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             Draft.RaceSubtype = effectivePicked;
 
             await UpdateRaceSubtypePreviewAsync(effectivePicked);
+            await _builder.SyncDraftLifeAsync(expandIfChanged: true);
             UpdateRaceSubtypeCardState(effectivePicked);
             UpdateWizardColourGroups();
             UpdateDynamicSpecialisations();

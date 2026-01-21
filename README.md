@@ -61,6 +61,14 @@ Notes:
 
 ---
 
+## Data generation & migrations
+
+- To generate or migrate any SQLite DB against the latest migrations, run: `./tools/migrate-any-data.sh output/default.db` (optional second arg: custom seed JSON; defaults to `labyItems/Resources/Raw/druids_way/evocs.json`). The script will create the DB from the seed if it does not exist, then apply FluentMigrator migrations.
+- The script uses `$HOME/.dotnet/dotnet` by default; override with `DOTNET=/path/to/dotnet ./tools/migrate-any-data.sh ...` if needed.
+- APK builds now keep all `Resources/Raw` JSON assets and the `Template.xlsx` so the app and migrations can load packaged data directly.
+
+---
+
 ## view debug logs
 
 `PKG=bard.uk.labyitems`
