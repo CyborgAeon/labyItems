@@ -12,8 +12,8 @@
             CornerRadius="12"
             Padding="0"
             HasShadow="False"
-            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
-            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1B1B1B}">
+            BorderColor="#E5E7EB"
+            BackgroundColor="#FFFFFF">
             <Frame.Triggers>
                 <DataTrigger TargetType="Frame"
                              Binding="{Binding IsSelected}"
@@ -21,9 +21,9 @@
                     <Setter Property="HasShadow"
                             Value="True"/>
                     <Setter Property="BorderColor"
-                            Value="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}"/>
+                            Value="#7F1D1D"/>
                     <Setter Property="BackgroundColor"
-                            Value="{AppThemeBinding Light=#FFF7ED, Dark=#241010}"/>
+                            Value="#FFF7ED"/>
                 </DataTrigger>
             </Frame.Triggers>
             <Grid RowDefinitions="Auto,Auto">
@@ -46,8 +46,8 @@
                             CornerRadius="20"
                             Padding="0"
                             HasShadow="False"
-                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
-                            BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#2A2A2A}">
+                            BorderColor="#E5E7EB"
+                            BackgroundColor="#F3F4F6">
                             <Label
                                 Text="{Binding Icon}"
                                 HorizontalOptions="Center"
@@ -70,7 +70,7 @@
                             Grid.Column="2"
                             Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
                             BackgroundColor="Transparent"
-                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                            TextColor="#6B7280"
                             FontSize="18"
                             Padding="0"
                             WidthRequest="40"
@@ -98,7 +98,7 @@
                                CornerRadius="999"
                                Margin="0,0,8,8"
                                HasShadow="False"
-                               BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
+                               BorderColor="#E5E7EB"
                                BackgroundColor="Transparent">
                             <Label Text="{Binding Tag1}"
                                    FontSize="12"/>
@@ -108,7 +108,7 @@
                                CornerRadius="999"
                                Margin="0,0,8,8"
                                HasShadow="False"
-                               BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
+                               BorderColor="#E5E7EB"
                                BackgroundColor="Transparent">
                             <Label Text="{Binding Tag2}"
                                    FontSize="12"/>
@@ -118,7 +118,7 @@
                                CornerRadius="999"
                                Margin="0,0,8,8"
                                HasShadow="False"
-                               BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
+                               BorderColor="#E5E7EB"
                                BackgroundColor="Transparent">
                             <Label Text="{Binding Tag3}"
                                    FontSize="12"/>

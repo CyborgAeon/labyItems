@@ -21,3 +21,8 @@ public enum ElfColours
     Summer,
     Autumn,
 }
+
+public enum AthfanalColours
+{
+    Fire, Aquatic, Earth, Air, Twilight, Light, Dark,
+}

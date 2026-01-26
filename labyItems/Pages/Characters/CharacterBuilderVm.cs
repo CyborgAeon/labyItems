@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -144,17 +145,22 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             var record = ordered[idx].Value;
             if (record == null) continue;
 
-            var peopleType = record.PeopleType ?? "";
-            if (!string.IsNullOrWhiteSpace(peopleType)) types.Add(peopleType);
+            var peopleTypes = NormalizePeopleTypes(record.PeopleType);
+            foreach (var t in peopleTypes)
+                types.Add(t);
+
+            var displayPeopleType = FormatPeopleTypes(peopleTypes);
+            var primaryPeopleType = SelectPrimaryPeopleType(peopleTypes);
 
             var vm = new RaceCardVm
             {
                 Id = idx + 1,
                 Name = name,
-                PeopleType = peopleType,
+                PeopleTypes = peopleTypes,
+                PeopleType = displayPeopleType,
                 Description = record.Description ?? "",
                 BuyAsRaw = record.BuyAs ?? "",
-                Icon = IconForPeopleType(peopleType),
+                Icon = IconForPeopleType(primaryPeopleType),
                 IsSelected = string.Equals(name, _draft.Race, StringComparison.OrdinalIgnoreCase)
             };
 
@@ -186,6 +192,30 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         if (t == "ishmaic") return "🏜️";
         if (t == "baronial") return "🏰";
         return "👤";
+    }
+
+    private static List<string> NormalizePeopleTypes(IEnumerable<string>? raw)
+    {
+        return (raw ?? Array.Empty<string>())
+            .Select(x => (x ?? string.Empty).Trim())
+            .Where(x => x.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static string FormatPeopleTypes(IEnumerable<string> peopleTypes)
+    {
+        var list = NormalizePeopleTypes(peopleTypes);
+        return list.Count == 0 ? "" : string.Join(", ", list);
+    }
+
+    private static string SelectPrimaryPeopleType(IReadOnlyList<string> peopleTypes)
+    {
+        if (peopleTypes == null || peopleTypes.Count == 0)
+            return "";
+
+        var nonDemon = peopleTypes.FirstOrDefault(t => !string.Equals(t, "Demon", StringComparison.OrdinalIgnoreCase));
+        return nonDemon ?? peopleTypes[0];
     }
 
     private int _selectedTabIndex;
@@ -1334,7 +1364,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var parts = new List<string>
         {
             name,
-            record.PeopleType ?? "",
+            FormatPeopleTypes(NormalizePeopleTypes(record.PeopleType)),
             record.Description ?? "",
             record.AdditionalInfo ?? "",
             record.BuyAs ?? "",
@@ -1378,7 +1408,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         var list = AllRaces
             .Where(r =>
-                (filter == "All" || string.Equals(r.PeopleType, filter, StringComparison.OrdinalIgnoreCase)) &&
+                (filter == "All" || r.PeopleTypes.Any(t => string.Equals(t, filter, StringComparison.OrdinalIgnoreCase))) &&
                 (allowed == null || allowed.Contains(LifeScalesService.NormalizeKey(r.Name))) &&
                 (q.Length == 0 ||
                  r.Name.ToLowerInvariant().Contains(q) ||

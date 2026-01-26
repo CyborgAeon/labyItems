@@ -281,15 +281,6 @@ public static class InlineSuggestionsOverlay
     {
         if (Application.Current?.Resources is ResourceDictionary resources)
         {
-            if (
-                Application.Current.RequestedTheme == AppTheme.Dark
-                && resources.TryGetValue("OffBlack", out var offBlack)
-                && offBlack is Color offBlackColor
-            )
-            {
-                return new SolidColorBrush(offBlackColor);
-            }
-
             if (resources.TryGetValue("White", out var white) && white is Color whiteColor)
             {
                 return new SolidColorBrush(whiteColor);

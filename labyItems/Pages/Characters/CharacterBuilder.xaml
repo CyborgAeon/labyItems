@@ -92,7 +92,7 @@
                         Padding="12,6"
                         BackgroundColor="#6D000000"
                         TextColor="White"
-                        BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}"
+                        BorderColor="#E5E7EB"
                         BorderWidth="1"
                         CornerRadius="999"
                         Command="{Binding BindingContext.SelectRaceFilterCommand, Source={x:Reference Root}}"
@@ -104,9 +104,9 @@
                       <Setter Property="FontAttributes"
                               Value="Bold"/>
                       <Setter Property="TextColor"
-                              Value="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}"/>
+                              Value="#7F1D1D"/>
                       <Setter Property="BorderColor"
-                              Value="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}"/>
+                              Value="#7F1D1D"/>
                     </DataTrigger>
                   </Button.Triggers>
                 </Button>

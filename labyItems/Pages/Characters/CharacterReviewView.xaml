@@ -17,7 +17,7 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                            BorderColor="#E5E7EB">
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Identity"
                                           FontAttributes="Bold"/>
@@ -29,7 +29,7 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                            BorderColor="#E5E7EB">
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Race and class"
                                           FontAttributes="Bold"/>
@@ -43,7 +43,7 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                            BorderColor="#E5E7EB">
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Guilds"
                                           FontAttributes="Bold"/>
@@ -55,7 +55,7 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                            BorderColor="#E5E7EB">
                             <VerticalStackLayout Spacing="8">
                                    <Label Text="Specialisations"
                                           FontAttributes="Bold"/>
@@ -77,7 +77,7 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                            BorderColor="#E5E7EB">
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Notes"
                                           FontAttributes="Bold"/>

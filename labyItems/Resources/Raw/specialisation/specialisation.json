@@ -867,10 +867,21 @@
         ],
         "3": [{ "Name": "Ivory Warrior", "Type": "Innate", "Count": 2 }],
         "4": [{ "Name": "Spell Shield", "Type": "Innate", "Count": 2 }],
-        "5": [],
-        "6": [{ "Name": "Mobility", "Type": "Innate", "Count": 1 }],
-        "7": [],
-        "8": []
+        "6": [{ "Name": "Mobility", "Type": "Innate", "Count": 1 }]
+      }
+    },
+    "Silver": {
+      "Levels": {
+        "2": [{ "Name": "Tell Wounds", "Type": "AtWill" }],
+        "3": [{ "Name": "Tell Strength", "Type": "Innate", "Count": 8 }],
+        "6": [{ "Name": "Inquiry", "Type": "Innate", "Count": 4 }]
+      }
+    },
+    "Bronze": {
+      "Levels": {
+        "2": [{ "Name": "Tell Strength", "Type": "Innate", "Count": 8 }],
+        "4": [{ "Name": "Limb Thrall (8)", "Type": "Innate", "Count": 2 }],
+        "6": [{ "Name": "Shudder", "Type": "Innate", "Count": 4 }]
       }
     },
     "Ebony": {
@@ -1162,6 +1173,38 @@
       "Levels": {
         "1": [{ "Name": "Skinning", "Type": "Craft" }]
       }
+    },
+    "Amlesian": {
+      "Description": "Select an Amlesian caste to define your standing."
+    }
+  },
+  "AmlesianCasteAbilities": {
+    "Eta": {
+      "Description": "The lowest of the low. They have no position, no honour, and no regard. It is impossible for one of this caste to rise beyond their starting position. They perform the most menial of tasks."
+    },
+    "Peasant": {
+      "Description": "The class of the masses. Many fall within the caste, even those with great talents. It is common, and although all but the Eta are above their station they are important within the social system."
+    },
+    "Artisan": {
+      "Description": "From a family of trade or talent the family will have money and some respect. They are rarely skilled in arms or the mystical arts, but they serve a valued role."
+    },
+    "Mystical One": {
+      "Description": "A Priest, Wizard or similar. They are respected for their wisdom and power, though seen as less important than warriors in a land dominated by martial talent."
+    },
+    "Protector": {
+      "Description": "The warriors of the land. They serve and protect the people and clans. Their duty is to ensure the Empire remains intact and its power strong."
+    },
+    "Samurai": {
+      "Description": "The highest standing an individual can start with. They sit beneath the clan heads, and are considered the most honourable within the lands. An individual of Samurai standing is bound by the Code of Jade and if they fail to fulfil it are expected to commit Seppuku. Those seeking to start at the Samurai caste must buy the Honoured One Status unless they are a warrior and have purchased the Samurai tradition. Should an individual rise in social rank they must buy their new caste ability, but any points spent on previous castes reduce the cost of this."
+    },
+    "Dishonoured One": {
+      "Description": "These are people who have failed to adhere to the strict caste system of Amles and refused to submit to justice. They may be dishonoured warriors, rebel heroes, or bandits. Those choosing this route must purchase the Dishonoured One Status rather than a caste ability. Dishonoured Ones are all Ostracised within Amles."
+    },
+    "Fortune": {
+      "Description": "A servant of the Celestial Realms. An individual choosing this path must purchase the Fortune Status rather than a caste. Fortunes often move through Amles keeping their identities a secret to avoid the Oni that hunt them."
+    },
+    "Oni": {
+      "Description": "A creature born from the Shadowlands. They purchase the Oni Status rather than a caste. It is important to note that Oni are hunted within Amles and may be killed on sight."
     }
   },
 

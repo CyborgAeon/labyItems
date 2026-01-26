@@ -22,15 +22,15 @@
         <Label
             FontAttributes="Bold"
             Text="{Binding LabelText, Source={x:Reference Root}}"
-            TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+            TextColor="{StaticResource Gray900}" />
 
         <Grid RowDefinitions="Auto,Auto" ColumnSpacing="0">
             <Border
                 x:Name="InputBorder"
                 Padding="12,10"
-                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                Stroke="{StaticResource Gray200}"
                 StrokeThickness="1"
-                Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+                Background="{StaticResource White}">
                 <Border.Triggers>
                     <DataTrigger
                         TargetType="Border"
@@ -56,15 +56,15 @@
                         VerticalOptions="Center"
                         HorizontalOptions="Start"
                         FontAttributes="Bold"
-                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
+                        TextColor="{StaticResource Primary}" />
 
                     <Entry
                         Grid.Column="1"
                         x:Name="SearchEntry"
                         BackgroundColor="Transparent"
                         Placeholder="{Binding PlaceholderText, Source={x:Reference Root}}"
-                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
-                        PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                        TextColor="{StaticResource Gray900}"
+                        PlaceholderColor="{StaticResource Gray400}"
                         Margin="0" />
 
                     <Label
@@ -73,7 +73,7 @@
                         VerticalOptions="Center"
                         Text="v"
                         FontSize="18"
-                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
+                        TextColor="{StaticResource Primary}" />
                 </Grid>
             </Border>
 
@@ -82,8 +82,8 @@
                 Margin="0,8,0,0"
                 Padding="4"
                 StrokeThickness="1"
-                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"
+                Stroke="{StaticResource Gray200}"
+                Background="{StaticResource White}"
                 IsVisible="{Binding AreSuggestionsVisible, Source={x:Reference Root}}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12" />
@@ -102,9 +102,9 @@
                         <DataTemplate>
                             <Border
                                 Padding="12,10"
-                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                Stroke="{StaticResource Gray200}"
                                 StrokeThickness="1"
-                                Background="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+                                Background="{StaticResource White}">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="10" />
                                 </Border.StrokeShape>
@@ -114,10 +114,10 @@
                                         HeightRequest="10"
                                         VerticalOptions="Center"
                                         CornerRadius="3"
-                                        Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
+                                        Color="{StaticResource Primary}" />
                                     <Label
                                         VerticalOptions="Center"
-                                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                        TextColor="{StaticResource Gray900}"
                                         Text="{Binding ., Converter={StaticResource DisplayConverter}}" />
                                 </Grid>
                             </Border>

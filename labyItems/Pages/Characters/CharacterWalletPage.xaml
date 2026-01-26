@@ -26,7 +26,7 @@
                                Padding="12"
                                CornerRadius="12"
                                HasShadow="False"
-                               BorderColor="{AppThemeBinding Light=#E5E7EB, Dark=#2A2A2A}">
+                               BorderColor="#E5E7EB">
                             <Grid RowDefinitions="Auto,Auto"
                                   ColumnDefinitions="*,Auto,Auto,Auto"
                                   ColumnSpacing="8"
@@ -63,7 +63,7 @@
                                              Clicked="OnEditClicked"
                                              CommandParameter="{Binding .}">
                                     <ImageButton.Source>
-                                        <FontImageSource Glyph="🖍️" Size="18" Color="{AppThemeBinding Light=Black, Dark=White}"/>
+                                        <FontImageSource Glyph="🖍️" Size="18" Color="Black"/>
                                     </ImageButton.Source>
                                 </ImageButton>
 

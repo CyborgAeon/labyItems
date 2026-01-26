@@ -17,9 +17,9 @@
                 <Setter Property="HasShadow"
                         Value="True"/>
                 <Setter Property="BorderColor"
-                        Value="{AppThemeBinding Light=#7F1D1D, Dark=#FCA5A5}"/>
+                        Value="#7F1D1D"/>
                 <Setter Property="BackgroundColor"
-                        Value="{AppThemeBinding Light=#FFF7ED, Dark=#241010}"/>
+                        Value="#FFF7ED"/>
             </DataTrigger>
         </Frame.Triggers>
 

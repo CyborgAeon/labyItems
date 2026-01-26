@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -35,7 +36,8 @@ public static class PeopleService
 }
 public sealed class PeopleRecord
 {
-    public string PeopleType { get; set; } = "";
+    [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+    public List<string> PeopleType { get; set; } = new();
     public string Description { get; set; } = "";
 
     [JsonPropertyName("levelledAbilities")]
@@ -68,4 +70,49 @@ public sealed class PeopleSubtypeRecord
 
     // e.g. "ElfColourAbilities"
     public string AbilityMapKey { get; set; } = "";
+}
+
+public sealed class SingleOrArrayStringListConverter : JsonConverter<List<string>>
+{
+    public override List<string> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.StartArray)
+        {
+            var list = new List<string>();
+            while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+            {
+                if (reader.TokenType == JsonTokenType.String)
+                {
+                    var value = reader.GetString();
+                    if (!string.IsNullOrWhiteSpace(value))
+                        list.Add(value);
+                }
+            }
+            return list;
+        }
+
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            var value = reader.GetString();
+            return string.IsNullOrWhiteSpace(value)
+                ? new List<string>()
+                : new List<string> { value };
+        }
+
+        if (reader.TokenType == JsonTokenType.Null)
+            return new List<string>();
+
+        throw new JsonException($"Unexpected token {reader.TokenType} when parsing PeopleType.");
+    }
+
+    public override void Write(Utf8JsonWriter writer, List<string> value, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        foreach (var entry in value ?? new List<string>())
+        {
+            if (!string.IsNullOrWhiteSpace(entry))
+                writer.WriteStringValue(entry);
+        }
+        writer.WriteEndArray();
+    }
 }

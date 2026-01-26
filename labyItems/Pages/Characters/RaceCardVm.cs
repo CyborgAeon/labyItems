@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -34,6 +35,7 @@ public sealed class RaceCardVm : INotifyPropertyChanged
 
     public int Id { get; init; }
     public string Name { get; init; } = "";
+    public IReadOnlyList<string> PeopleTypes { get; init; } = Array.Empty<string>();
     public string PeopleType { get; init; } = "";
     public string Description { get; init; } = "";
     public string BuyAsRaw { get; init; } = "";

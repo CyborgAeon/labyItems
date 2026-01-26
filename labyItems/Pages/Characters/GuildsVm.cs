@@ -22,7 +22,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private string _currentClassName = "";
     private HashSet<string> _currentClassBrackets = new(StringComparer.OrdinalIgnoreCase);
     private string _currentRaceName = "";
-    private string _currentPeopleType = "";
+    private HashSet<string> _currentPeopleTypes = new(StringComparer.OrdinalIgnoreCase);
     private HashSet<string> _currentRaceSelections = new(StringComparer.OrdinalIgnoreCase);
     private readonly Func<Task>? _refreshDraftAbilitiesAsync;
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
@@ -99,6 +99,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         _slotRules = GuildSlotRules.FromDraft(_draft);
 
         _guildRecords = await GuildsService.GetAllAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
+        _slotRules.ResolvePeopleTypeOverrides(_guildRecords);
 
         await RefreshContextAsync();
 
@@ -250,7 +251,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         _currentRaceName = (_draft.Race ?? string.Empty).Trim();
         _currentClassBrackets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         _currentRaceSelections = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        _currentPeopleType = "";
+        _currentPeopleTypes.Clear();
 
         if (_currentClassName.Length > 0)
         {
@@ -266,7 +267,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
         {
             var peopleMap = await PeopleService.GetAllAsync();
             if (TryGetRace(peopleMap, _currentRaceName, out var rec) && rec != null)
-                _currentPeopleType = rec.PeopleType ?? "";
+            {
+                foreach (var t in rec.PeopleType ?? new List<string>())
+                {
+                    if (!string.IsNullOrWhiteSpace(t))
+                        _currentPeopleTypes.Add(t.Trim());
+                }
+            }
         }
 
         var subtype = (_draft.RaceSubtypeValue ?? _draft.RaceSubtype ?? string.Empty).Trim();
@@ -366,7 +373,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             return true;
         }
 
-        if (rules.PeopleType?.Contains(_currentPeopleType, StringComparer.OrdinalIgnoreCase) == true)
+        if (rules.PeopleType?.Any(t => _currentPeopleTypes.Contains(t ?? string.Empty)) == true)
         {
             reason = "People type not permitted.";
             return true;
@@ -401,7 +408,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         if (rules.PeopleType is { Count: > 0 })
         {
-            if (!rules.PeopleType.Contains(_currentPeopleType, StringComparer.OrdinalIgnoreCase))
+            if (!rules.PeopleType.Any(t => _currentPeopleTypes.Contains(t ?? string.Empty)))
             {
                 reason = $"Limited to: {string.Join(", ", rules.PeopleType)}";
                 return false;
@@ -764,6 +771,7 @@ public sealed class GuildSlotRules
 
     private readonly Dictionary<string, HashSet<string>> _allowedByType = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, HashSet<string>> _forcedByType = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _peopleTypeByType = new(StringComparer.OrdinalIgnoreCase);
 
     private static readonly Regex TradeCityRegex = new(@"trade\s+(political|social|professional)\s+for\s+city\s+(.+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     public HashSet<string> ForcedCityNames { get; } = new(StringComparer.OrdinalIgnoreCase);
@@ -1043,8 +1051,15 @@ public sealed class GuildSlotRules
         {
             var token = lower.Substring(5).Trim();
             var allowed = ResolveTokenGuilds(token);
-            _allowedByType[typeNorm] = allowed;
-            EnsureSlotsForType(typeNorm, Math.Max(1, allowed.Count));
+            if (allowed.Count > 0)
+            {
+                _allowedByType[typeNorm] = allowed;
+                EnsureSlotsForType(typeNorm, Math.Max(1, allowed.Count));
+            }
+            else if (!string.IsNullOrWhiteSpace(token))
+            {
+                _peopleTypeByType[typeNorm] = token;
+            }
             return;
         }
 
@@ -1090,7 +1105,73 @@ public sealed class GuildSlotRules
             _forcedByType[typeNorm] = set;
             _allowedByType[typeNorm] = set;
             EnsureSlotsForType(typeNorm, Math.Max(1, set.Count));
+            return;
         }
+
+        if (!string.IsNullOrWhiteSpace(channel.GuildPeople))
+        {
+            _peopleTypeByType[typeNorm] = channel.GuildPeople.Trim();
+            return;
+        }
+    }
+
+    public void ResolvePeopleTypeOverrides(Dictionary<string, GuildRecord> records)
+    {
+        if (records == null || records.Count == 0 || _peopleTypeByType.Count == 0)
+            return;
+
+        foreach (var kvp in _peopleTypeByType)
+        {
+            var typeNorm = NormalizeType(kvp.Key);
+            var peopleType = kvp.Value ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(peopleType))
+                continue;
+
+            var normalizedToken = NormalizePeopleTypeToken(peopleType);
+            var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var rec in records)
+            {
+                var guild = rec.Value;
+                if (guild == null)
+                    continue;
+
+                var guildType = NormalizeType(guild.Type ?? string.Empty);
+                if (!string.Equals(guildType, typeNorm, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var whitelist = guild.Availability?.Whitelist?.PeopleType ?? new List<string>();
+                foreach (var entry in whitelist)
+                {
+                    if (NormalizePeopleTypeToken(entry) == normalizedToken)
+                    {
+                        allowed.Add(rec.Key);
+                        break;
+                    }
+                }
+            }
+
+            if (allowed.Count == 0)
+            {
+                SetLimitForType(typeNorm, 0);
+                _allowedByType[typeNorm] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                _forcedByType.Remove(typeNorm);
+                continue;
+            }
+
+            _allowedByType[typeNorm] = allowed;
+            _forcedByType.Remove(typeNorm);
+            EnsureSlotsForType(typeNorm, Math.Max(1, allowed.Count));
+        }
+    }
+
+    private static string NormalizePeopleTypeToken(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        var chars = value.Where(char.IsLetterOrDigit).ToArray();
+        return new string(chars).ToLowerInvariant();
     }
 
     private static string NormalizeTypePrefix(string prefix)
