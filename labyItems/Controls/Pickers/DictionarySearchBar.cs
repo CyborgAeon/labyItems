@@ -18,7 +18,6 @@ namespace labyItems.Controls;
 /// SelectedValue="{Binding MagicColour}"/>
 /// </summary>
 public class DictionarySearchBar<TValue> : ContentView
-    where TValue : struct
 {
     private readonly Action _selfDismisser;
     private const double DefaultDropdownMaxHeight = 320;
@@ -393,7 +392,7 @@ public class DictionarySearchBar<TValue> : ContentView
         if (string.IsNullOrWhiteSpace(text))
         {
             SetSelectedTextInternal(string.Empty);
-            SelectedValue = null;
+            SelectedValue = default;
             _searchBar.Text = string.Empty;
             _suppressTextChanged = false;
             return;
@@ -409,7 +408,7 @@ public class DictionarySearchBar<TValue> : ContentView
         else
         {
             SetSelectedTextInternal(text);
-            SelectedValue = null;
+            SelectedValue = default;
             _searchBar.Text = text;
         }
 
@@ -530,7 +529,7 @@ public class DictionarySearchBar<TValue> : ContentView
         if (result.IsCustom)
         {
             SetSelectedTextInternal(result.DisplayText);
-            SelectedValue = null;
+            SelectedValue = default;
             _searchBar.Text = result.DisplayText;
         }
         else
@@ -562,7 +561,7 @@ public class DictionarySearchBar<TValue> : ContentView
 
         public static SearchResult FromDictionary(string displayText, TValue value) => new(displayText, value, false);
 
-        public static SearchResult Custom(string displayText) => new(displayText, null, true);
+        public static SearchResult Custom(string displayText) => new(displayText, default, true);
     }
 
     // Local overlay state

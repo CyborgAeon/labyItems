@@ -1,4 +1,5 @@
 // Services/LiteDbService.cs
+using System.Linq;
 using System.Text.Json;
 using labyItems.Models;
 using labyItems.Models.Characters;
@@ -62,9 +63,12 @@ public static class LiteDbService
         var normalizedName = NormalizeKey(draft.Name);
         var normalizedPlayer = NormalizeKey(draft.PlayerName);
 
-        var existing = col.FindOne(c =>
-            NormalizeKey(c.Name) == normalizedName &&
-            NormalizeKey(c.PlayerName) == normalizedPlayer);
+        // LiteDB cannot translate custom helper calls inside LINQ to BsonExpression; fall back to
+        // client-side match on normalized name/player to avoid runtime NotSupportedException.
+        var existing = col.FindAll()
+            .FirstOrDefault(c =>
+                NormalizeKey(c.Name) == normalizedName &&
+                NormalizeKey(c.PlayerName) == normalizedPlayer);
 
         var entity = MapFromDraft(draft, existing?.Id);
         col.Upsert(entity);
@@ -93,4 +97,40 @@ public static class LiteDbService
 
     private static ObjectId EnsureId(ObjectId id)
         => id == ObjectId.Empty ? ObjectId.NewObjectId() : id;
+
+    public static CharacterDraft? ToDraft(Character character)
+    {
+        if (character == null)
+            return null;
+
+        if (!string.IsNullOrWhiteSpace(character.DraftSnapshot))
+        {
+            try
+            {
+                return System.Text.Json.JsonSerializer.Deserialize<CharacterDraft>(character.DraftSnapshot);
+            }
+            catch
+            {
+                // fall back to manual mapping below
+            }
+        }
+
+        var draft = new CharacterDraft
+        {
+            Name = character.Name ?? string.Empty,
+            PlayerName = character.PlayerName ?? string.Empty,
+            Class = character.Class ?? string.Empty,
+            Race = character.Race ?? string.Empty,
+            RaceSubtype = character.RaceSubtype ?? string.Empty,
+            RaceSubtypeKey = character.RaceSubtypeKey ?? string.Empty,
+            Notes = character.Notes ?? string.Empty,
+            Points = (int)character.Points
+        };
+
+        draft.Guilds = character.Guilds?.ToList() ?? new List<string>();
+        foreach (var kvp in character.Specialisations ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase))
+            draft.SpecialisationSelections[kvp.Key] = kvp.Value;
+
+        return draft;
+    }
 }

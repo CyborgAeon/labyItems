@@ -1,85 +1,310 @@
 {
   "Warrior Specialist": {
     "Abilities": [
-      "1st Weapon Mastery",
-      "Unarmed Combat",
-      "Smithing",
-      "Enhanced Reflexes",
-      "+6/2 Stamina",
-      "Cold Rage",
-      "Cold Rage",
-      "War Cry",
-      "Athletic Training"
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
+      {
+        "Name": "Smithing",
+        "Type": "Static"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "Cold Rage",
+        "Type": "Innate",
+        "Count": 1
+      },
+      {
+        "Name": "War Cry",
+        "Type": "Innate",
+        "Count": 1
+      },
+      {
+        "Name": "Athletic Training",
+        "Type": "Innate",
+        "Count": 2
+      }
+    ]
+  },
+
+  "Battle-Priest Specialist": {
+    "Abilities": [
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
+      {
+        "Name": "Smithing",
+        "Type": "Static"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      }
+    ]
+  },
+
+  "Crusading-Priest Specialist": {
+    "Abilities": [
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
+      {
+        "Name": "Smithing",
+        "Type": "Static"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      }
     ]
   },
   "Ranger Specialist": {
     "Abilities": [
-      "1st Weapon Mastery",
-      "Unarmed Combat",
-      "+6/2 Stamina",
-      "Enhanced Reflexes",
-      "Shadowing"
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "Shadowing",
+        "Type": "AtWill"
+      }
     ]
   },
   "Archer Specialist": {
     "Abilities": [
-      "3rd Weapon Mastery (Bows)",
-      "Accuracy",
-      "+6/2 Stamina",
-      "Enhanced Reflexes"
+      {
+        "Name": "3rd Weapon Mastery (Bows)",
+        "Type": "Static"
+      },
+      {
+        "Name": "Accuracy",
+        "Type": "Static"
+      },
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      }
     ]
   },
   "Monk Specialist": {
     "Abilities": [
-      "Mind Block",
-      "Stop Bleeding",
-      "Monk Locational Curing",
-      "Enhanced Reflexes",
-      "Forearm Parry",
-      "Relaxed Fall",
-      "Athletic Training"
+      {
+        "Name": "Mind Block",
+        "Type": "Static"
+      },
+      {
+        "Name": "Stop Bleeding",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Monk Locational Curing",
+        "Type": "Power"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "ForeArm Parry",
+        "Type": "Static"
+      },
+      {
+        "Name": "Relaxed Fall",
+        "Type": "Static"
+      },
+      {
+        "Name": "Athletic Training",
+        "Type": "Innate",
+        "Count": 2
+      }
     ]
   },
   "Duellist Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "Unarmed Combat",
-      "Enhanced Reflexes",
-      "Forearm Parry",
-      "Relaxed Fall",
-      "Athletic Training",
-      "+2 Weapon Mastery",
-      "War Cry"
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "ForeArm Parry",
+        "Type": "Static"
+      },
+      {
+        "Name": "Relaxed Fall",
+        "Type": "Static"
+      },
+      {
+        "Name": "Athletic Training",
+        "Type": "Innate",
+        "Count": 2
+      },
+      {
+        "Name": "2nd Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "War Cry",
+        "Type": "Innate",
+        "Count": 1
+      }
     ]
   },
   "Cavalier Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "Unarmed Combat",
-      "Enhanced Reflexes",
-      "War Cry",
-      "Cold Rage"
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "War Cry",
+        "Type": "Innate",
+        "Count": 1
+      },
+      {
+        "Name": "Cold Rage",
+        "Type": "Innate",
+        "Count": 1
+      }
     ]
   },
   "Paladin Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "Enhanced Reflexes",
-      "Make healing balm",
-      "Read Spirit Runes and Utilise Goodly Scrolls",
-      "Utilise Goodly Spirit Item"
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "Make healing balm",
+        "Type": "Craft"
+      },
+      {
+        "Name": "Read Spirit Runes and Utilise Goodly Scrolls",
+        "Type": "Static"
+      },
+      {
+        "Name": "Read Spirit Runes and Utilise Goodly Item",
+        "Type": "Static"
+      }
     ]
   },
   "Unholy Champion Specialist": {
     "Abilities": [
-      "Utilise Evil Spirit Item",
-      "Weapon Mastery",
-      "Make Poison",
-      "Enhanced Reflexes",
-      "Read Spirit Runes and Utilise Evil Scrolls"
+      {
+        "Name": "Utilise Evil Spirit Item",
+        "Type": "Static"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "Make Poison",
+        "Type": "Static"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "Read Spirit Runes and Utilise Evil Scrolls",
+        "Type": "Static"
+      }
     ],
     "Power List": {
       "Max": 40,
@@ -88,11 +313,29 @@
   },
   "Grey Knight": {
     "Abilities": [
-      "Utilise Neutral Spirit Item",
-      "Weapon Mastery",
-      "Chosen of the Faithful",
-      "Enhanced Reflexes",
-      "Read Spirit Runes and Utilise Neutral Scrolls"
+      {
+        "Name": "Utilise Neutral Spirit Item",
+        "Type": "Static"
+      },
+
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "Chosen of the Faithful",
+        "Type": "Static",
+        "Effect": "+2 DAC"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "Read Spirit Runes and Utilise Neutral Scrolls",
+        "Type": "Static"
+      }
     ],
     "Power List": {
       "Max": 40,
@@ -101,152 +344,390 @@
   },
   "Budoka Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "+2 Weapon Mastery",
-      "Enhanced Reflexes",
-      "Forearm Parry",
-      "Relaxed Fall",
-      "War Cry"
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "2nd Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "ForeArm Parry",
+        "Type": "Static"
+      },
+      {
+        "Name": "Relaxed Fall",
+        "Type": "Static"
+      },
+      {
+        "Name": "War Cry",
+        "Type": "Innate",
+        "Count": 1
+      }
     ]
   },
   "Power-Master Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "+2 Weapon Mastery",
-      "Enhanced Reflexes",
-      "Unarmed Combat",
-      "Empower Chosen Weapon"
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "2nd Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
+      {
+        "Name": "Empower Chosen Weapon",
+        "Type": "Static"
+      }
     ]
   },
   "Power-Warrior Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "+2 Weapon Mastery",
-      "Enhanced Reflexes",
-      "Cold Rage",
-      "Empower Chosen Weapon",
-      "War Cry"
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "2nd Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "Cold Rage",
+        "Type": "Innate",
+        "Count": 1
+      },
+      {
+        "Name": "Empower Chosen Weapon",
+        "Type": "Static"
+      },
+      {
+        "Name": "War Cry",
+        "Type": "Innate",
+        "Count": 1
+      }
     ]
   },
   "Power Warrior": {
     "Gem": {
       "Levels": {
-        "2": ["Extinguish (Range) 1/level"],
-        "3": ["Darkness (Self) 1/2 levels"],
-        "5": ["See through Magical Darkness (s) 1/2 levels"],
-        "7": ["Black Blade 1/4 levels"]
+        "2": [{ "Name": "Extinguish (Range)", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Darkness (Self)", "Type": "Innate", "Count": 4 }],
+        "5": [
+          {
+            "Name": "See through Magical Darkness Self",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
+        "7": [{ "Name": "Black Blade", "Type": "Innate", "Count": 2 }]
       }
     },
     "Jewel": {
       "Levels": {
-        "2": ["Flash 1/level"],
-        "3": ["Light (Self) 1/2 levels"],
-        "4": ["Walk on Light (Self) 1/3 levels"],
-        "7": ["Sabre of Light & Truth 1/4 levels"]
+        "2": [{ "Name": "Flash", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Light Self", "Type": "Innate", "Count": 4 }],
+        "4": [{ "Name": "Walk on Light Self", "Type": "Innate", "Count": 2 }],
+        "7": [
+          { "Name": "Sabre of Light & Truth", "Type": "Innate", "Count": 2 }
+        ]
       }
     }
   },
   "Valdstayn Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "Athletic Training",
-      "Enhanced Reflexes",
-      "Unarmed Combat",
-      "War Cry"
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "Athletic Training",
+        "Type": "Innate",
+        "Count": 2
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
+      {
+        "Name": "War Cry",
+        "Type": "Innate",
+        "Count": 1
+      }
     ]
   },
   "Rovfuger Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "Athletic Training",
-      "Enhanced Reflexes",
-      "Forearm Parry",
-      "War Cry",
-      "+2 Weapon Mastery"
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "Athletic Training",
+        "Type": "Innate",
+        "Count": 2
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "ForeArm Parry",
+        "Type": "Static"
+      },
+      {
+        "Name": "War Cry",
+        "Type": "Innate",
+        "Count": 1
+      },
+      {
+        "Name": "2nd Weapon Mastery",
+        "Type": "Static"
+      }
     ]
   },
   "Wind dancer Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "Athletic Training",
-      "Enhanced Reflexes",
-      "+2 Weapon Mastery",
-      "Unarmed Combat"
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "Athletic Training",
+        "Type": "Innate",
+        "Count": 2
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "2nd Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      }
     ]
   },
-  "Scout skill": {
+  "Standard Scout skill": {
     "Abilities": [
-      "Athlete",
-      "Bandaging",
-      "Climber",
-      "Combat-Wary",
-      "Discern General Potion",
-      "Discern Healing Potion",
-      "Discern Poison",
-      "Discern Smell (“Sniff”)",
-      "Disguise",
-      "Distillation",
-      "Draw Venom",
-      "Evaluate",
-      "Examine Construct",
-      "Hollow Tooth",
-      "Lock-Picking",
-      "Make Concealable Weapon",
-      "Make General Potion",
-      "Make Healing Potion",
-      "Make Poisons",
-      "Make and Arm Snap Trap",
-      "Potion Preserving",
-      "Read Glyphs",
-      "Read Languages",
-      "Sealing",
-      "Self-Awareness,Stealth",
-      "Tell Time and Direction",
-      "Tolerance",
-      "Trap-Wary",
-      "User of Avalorash",
-      "Well Equipped",
-      "Well-Made Daggers"
+      { "Name": "Athlete", "Type": "Innate", "Frequency": "1/2" },
+      { "Name": "Bandaging", "Type": "Power" },
+      { "Name": "Climber", "Type": "Innate", "Frequency": "1/3" },
+      { "Name": "Combat-Wary", "Type": "Static", "Frequency": "1" },
+      { "Name": "Discern General Potion", "Type": "AtWill" },
+      { "Name": "Discern Healing Potion", "Type": "AtWill" },
+      { "Name": "Discern Poison", "Type": "AtWill" },
+      { "Name": "Sniff", "Type": "AtWill" },
+      { "Name": "Disguise", "Type": "AtWill" },
+      { "Name": "Distillation", "Type": "Static" },
+      { "Name": "Draw Venom", "Type": "Innate", "Frequency": "1" },
+      { "Name": "Evaluate", "Type": "AtWill" },
+      { "Name": "Examine Construct", "Type": "AtWill" },
+      { "Name": "Hollow Tooth", "Type": "Static" },
+      { "Name": "Lock-Picking", "Type": "Innate", "Frequency": "1" },
+      { "Name": "Make Concealable Weapon", "Type": "AtWill" },
+      { "Name": "Make General Potion", "Type": "Craft", "Frequency": "1" },
+      { "Name": "Make Healing Potion", "Type": "Craft", "Frequency": "1" },
+      { "Name": "Make Poisons Potion", "Type": "Craft", "Frequency": "1" },
+      { "Name": "Make and Arm Snap Trap", "Type": "Craft", "Frequency": "1" },
+      { "Name": "Potion Preserving", "Type": "Static" },
+      { "Name": "Read Glyphs", "Type": "Static" },
+      { "Name": "Read Languages", "Type": "Static" },
+      { "Name": "Sealing", "Type": "Static" },
+      { "Name": "Self-Awareness", "Type": "AtWill" },
+      { "Name": "Stealth", "Type": "Innate", "Frequency": "1/4" },
+      { "Name": "Tell Time and Direction", "Type": "AtWill" },
+      { "Name": "Tolerance", "Type": "Static" },
+      { "Name": "Trap-Wary", "Type": "Static", "Frequency": "1" },
+      {
+        "Name": "User of Avalorash",
+        "Type": "Static",
+        "Requirements": "r:Type-Ishmaic"
+      },
+      { "Name": "Well Equipped", "Type": "Static" },
+      {
+        "Name": "Well-Made Daggers",
+        "Type": "Static",
+        "PreReqs": ["a:Make Concealable Weapon"]
+      }
     ]
   },
-  "Scout Specialist": {
+  "Specialist Scout skill": {
     "Abilities": [
-      "Assassin’s Eye",
-      "Blade-Sharpening",
-      "Boleq Manufacture",
-      "Detect Possible Neuronic Activity",
-      "Enhanced Reflexes",
-      "Extra Level of Life",
-      "Flesh Mending",
-      "Healing Facility",
-      "Judge Profession",
-      "Judge Strength",
-      "Metal Resistance",
-      "Perception",
-      "Poison Facility",
-      "Potion Facility",
-      "Recognise Mana",
-      "Recognise Spirit",
-      "Recognise Earthpower",
-      "Recognise Neuronics",
-      "Shadowing",
-      "Tracking",
-      "Weapon Mastery"
+      {
+        "Name": "Assassin's Eye",
+        "Type": "AtWill",
+        "PreReqs": ["a:Tell Wounds"]
+      },
+      {
+        "Name": "Blade Sharpening",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Boleq Manufacture",
+        "Type": "Static",
+        "PreReqs": ["a:Make Concealable Weapon"]
+      },
+      {
+        "Name": "Detect Possible Neuronic Activity",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "Extra Level of Life",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "Flesh Mending",
+        "Type": "AtWill",
+        "PreReqs": ["c:Artificer"]
+      },
+      {
+        "Name": "Healing Facility",
+        "Type": "AtWill",
+        "PreReqs": ["a:Make Healing Potion"]
+      },
+      {
+        "Name": "Judge Profession",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Judge Strength",
+        "Type": "AtWill",
+        "PreReqs": ["a:Tell Wounds"]
+      },
+      {
+        "Name": "Metal Resistance",
+        "Type": "Static"
+      },
+      {
+        "Name": "Perception",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Poison Facility",
+        "Type": "AtWill",
+        "PreReqs": ["a:Make Poison"]
+      },
+      {
+        "Name": "Potion Facility",
+        "Type": "AtWill",
+        "PreReqs": ["a:Make General Potion"]
+      },
+      {
+        "Name": "Recognise Mana",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Recognise Spirit",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Recognise Earthpower",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Recognise Neuronics",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Shadowing",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Tracking",
+        "Type": "AtWill"
+      },
+      { "Name": "1st Weapon Mastery", "Type": "Static" },
+      { "Name": "Tell Wounds", "Type": "AtWill", "PreReqs": ["Self-Awareness"] }
     ]
   },
   "Warrior-Priest specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "Unarmed Combat",
-      "Smithing",
-      "Enhanced Reflexes"
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      { "Name": "1st Weapon Mastery", "Type": "Static" },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
+      {
+        "Name": "Smithing",
+        "Type": "Static"
+      },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      }
     ]
   },
   "Ward pact": {
@@ -299,11 +780,11 @@
     "Air": {
       "Levels": {
         "1": [],
-        "2": ["Body of Air 1/level"],
-        "3": ["Jump self 1/2 levels"],
+        "2": [{ "Name": "Body of Air", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Jump self", "Type": "Innate", "Count": 4 }],
         "4": [],
         "5": [],
-        "6": ["Walk on air self 1/2 levels"],
+        "6": [{ "Name": "Walk on air self", "Type": "Innate", "Count": 2 }],
         "7": [],
         "8": []
       }
@@ -311,11 +792,11 @@
     "Earth": {
       "Levels": {
         "1": [],
-        "2": ["Body of Stone 1/level"],
-        "3": ["Chameleon 1/2 levels"],
+        "2": [{ "Name": "Body of Stone", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Chameleon", "Type": "Innate", "Count": 4 }],
         "4": [],
         "5": [],
-        "6": ["Talk to inanimate 1/2 levels"],
+        "6": [{ "Name": "Talk to inanimate", "Type": "Innate", "Count": 2 }],
         "7": [],
         "8": []
       }
@@ -336,14 +817,16 @@
       "Levels": {
         "1": [],
         "2": [
-          "Detect fluid 1/level",
-          "Body of water 1/level",
-          "Unimpeded by water"
+          { "Name": "Detect fluid", "Type": "Innate", "Count": 8 },
+          { "Name": "Body of Water", "Type": "Innate", "Count": 8 },
+          { "Name": "Unimpeded by water", "Type": "Immunity" }
         ],
-        "3": ["Rust ranged 1/2 levels"],
+        "3": [{ "Name": "Rust Ranged", "Type": "Innate", "Count": 4 }],
         "4": [],
-        "5": ["Walk on or through water self 1/2 levels"],
-        "6": ["Vanish 1/day"],
+        "5": [
+          { "Name": "Walk on/through water self", "Type": "Innate", "Count": 2 }
+        ],
+        "6": [{ "Name": "Vanish", "Type": "Innate", "Count": 1 }],
         "7": [],
         "8": []
       }
@@ -351,11 +834,14 @@
     "Twilight": {
       "Levels": {
         "1": [],
-        "2": ["Body of Twilight 1/level", "Detect Magic 1/level"],
-        "3": ["Twilight self 1/2 levels"],
+        "2": [
+          { "Name": "Body of Twilight", "Type": "Innate", "Count": 8 },
+          { "Name": "Detect Magic", "Type": "Innate", "Count": 8 }
+        ],
+        "3": [{ "Name": "Twilight Self", "Type": "Innate", "Count": 4 }],
         "4": [],
         "5": [],
-        "6": ["Silence 1/day"],
+        "6": [{ "Name": "Silence", "Type": "Innate", "Count": 1 }],
         "7": [],
         "8": []
       }
@@ -363,23 +849,26 @@
     "Gold": {
       "Levels": {
         "1": [],
-        "2": ["1 DAC"],
-        "3": ["Shield Self 1/level"],
-        "4": ["Spell shield 1/4 levels"],
+        "2": [{ "Name": "1 DAC", "Type": "Static" }],
+        "3": [{ "Name": "Shield Self", "Type": "Innate", "Count": 8 }],
+        "4": [{ "Name": "Spell Shield", "Type": "Innate", "Count": 2 }],
         "5": [],
-        "6": ["Strengthen Self 1/2 levels"],
+        "6": [{ "Name": "Strengthen Self", "Type": "Innate", "Count": 4 }],
         "7": [],
         "8": []
       }
     },
     "Ivory": {
       "Levels": {
-        "1": ["Gains Ivory Code Restriction"],
-        "2": ["Mark Ally at will", "Traitor’s Shield at will"],
-        "3": ["Ivory Warrior 1/4 levels"],
-        "4": ["Spell shield 1/4 levels"],
+        "1": [{ "Name": "Gains Ivory Code Restriction", "Type": "Static" }],
+        "2": [
+          { "Name": "Mark Ally", "Type": "AtWill" },
+          { "Name": "Traitor's Shield", "Type": "AtWill" }
+        ],
+        "3": [{ "Name": "Ivory Warrior", "Type": "Innate", "Count": 2 }],
+        "4": [{ "Name": "Spell Shield", "Type": "Innate", "Count": 2 }],
         "5": [],
-        "6": ["Mobility 1/day"],
+        "6": [{ "Name": "Mobility", "Type": "Innate", "Count": 1 }],
         "7": [],
         "8": []
       }
@@ -387,11 +876,11 @@
     "Ebony": {
       "Levels": {
         "1": [],
-        "2": ["Confusion 1/day"],
-        "3": ["Pain (r) 1/2 levels"],
-        "4": ["Spell shield 1/4 levels"],
+        "2": [{ "Name": "Confusion", "Type": "Innate", "Count": 1 }],
+        "3": [{ "Name": "Pain Ranged", "Type": "Innate", "Count": 4 }],
+        "4": [{ "Name": "Spell Shield", "Type": "Innate", "Count": 2 }],
         "5": [],
-        "6": ["Pass unknown 1/4 levels"],
+        "6": [{ "Name": "Pass Unknown", "Type": "Innate", "Count": 2 }],
         "7": [],
         "8": []
       }
@@ -399,11 +888,11 @@
     "Wood": {
       "Levels": {
         "1": [],
-        "2": ["Body of Wood 1/level"],
-        "3": ["Warp (r) 1/2 levels"],
-        "4": ["Entangle 1/2 levels"],
+        "2": [{ "Name": "Body of Wood", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Warp Ranged", "Type": "Innate", "Count": 4 }],
+        "4": [{ "Name": "Entangle", "Type": "Innate", "Count": 2 }],
         "5": [],
-        "6": ["Talk to Plant 1/level"],
+        "6": [{ "Name": "Talk to Plant", "Type": "Innate", "Count": 1 }],
         "7": [],
         "8": []
       }
@@ -411,11 +900,17 @@
     "Drowe": {
       "Levels": {
         "1": [],
-        "2": ["Extinguish (r) 1/level"],
-        "3": ["Darkness 1/2 levels"],
+        "2": [{ "Name": "Extinguish Ranged", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Darkness Ranged", "Type": "Innate", "Count": 4 }],
         "4": [],
-        "5": ["See Through Magical Darkness (self) 1/2 levels"],
-        "6": ["Blindness 1/day"],
+        "5": [
+          {
+            "Name": "See Through Magical Darkness Self",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
+        "6": [{ "Name": "Blindness", "Type": "Innate", "Count": 1 }],
         "7": [],
         "8": []
       }
@@ -423,12 +918,12 @@
     "Winter": {
       "LifeScaleOverride": "Winter Elf",
       "Levels": {
-        "1": ["Skinning"],
-        "2": ["Body of Ice 1/level"],
-        "3": ["Immunity to cold (not subject to dispel)"],
+        "1": [{ "Name": "Skinning", "Type": "AtWill" }],
+        "2": [{ "Name": "Body of Ice", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Immunity to cold", "Type": "Immunity" }],
         "4": [],
         "5": [],
-        "6": ["Javelin of Ice 1/4 levels"],
+        "6": [{ "Name": "Javelin of Ice", "Type": "Innate", "Count": 2 }],
         "7": [],
         "8": []
       }
@@ -436,11 +931,11 @@
     "Autumn": {
       "Levels": {
         "1": [],
-        "2": ["Body of Autumn 1/level"],
-        "3": ["Warp ranged 1/2 levels"],
+        "2": [{ "Name": "Body of Autumn", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Warp Ranged", "Type": "Innate", "Count": 4 }],
         "4": [],
         "5": [],
-        "6": ["Wither touch 1/day"],
+        "6": [{ "Name": "Wither touch", "Type": "Innate", "Count": 1 }],
         "7": [],
         "8": []
       }
@@ -448,11 +943,17 @@
     "Spring": {
       "Levels": {
         "1": [],
-        "2": ["Body of Spring 1/level"],
-        "3": ["Salmon leap 1/2 levels"],
+        "2": [{ "Name": "Body of Spring", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Salmon Leap", "Type": "Innate", "Count": 4 }],
         "4": [],
         "5": [],
-        "6": ["Sun's healing"],
+        "6": [
+          {
+            "Name": "Sun's healing",
+            "Type": "Static",
+            "Effect": "3/1 regen every five minutes resting in sunlight"
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -461,40 +962,155 @@
       "LifeScaleOverride": "Drowe",
       "Levels": {
         "1": [],
-        "2": ["Body of Summer 1/level"],
-        "3": ["Scorching heat 1/2 levels"],
-        "4": ["Light self 1/2 levels"],
+        "2": [{ "Name": "Body of Summer", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Scorching Heat", "Type": "Innate", "Count": 4 }],
+        "4": [{ "Name": "Light Self", "Type": "Innate", "Count": 4 }],
         "5": [],
-        "6": ["Summer Warmth 1/4 levels"],
+        "6": [{ "Name": "Summer's Warmth", "Type": "Innate", "Count": 4 }],
         "7": [],
         "8": []
       }
     }
   },
-  "Warlock Specialist Skills": {
+  "CrolSubtypeAbilities": {
+    "Yashtar": {
+      "ClassRestriction": ["Warrior"],
+      "ArmourAvailabilityOverride": "Light",
+      "Abilities": ["4 PAC"],
+      "Talents": {
+        "Minor": ["Toughened Feet", "Large lung capacity"],
+        "Medium": ["Insensitive Skin", "Leg Sweep 2/day"],
+        "Major": [
+          "Stability",
+          "Immunity to Poison",
+          "Immunity to Disease",
+          "Immunity to Acid"
+        ],
+        "LifeScaleOverride": { "Warrior": "Ogre" }
+      }
+    },
+    "Kaerssor": {
+      "ClassRestriction": ["Ranger", "Monk", "Warrior"],
+      "ArmourAvailabilityOverride": "Light",
+      "Abilities": ["2 PAC"],
+      "LifeScaleOverride": {
+        "Ranger": "Human",
+        "Monk": "Human",
+        "Warrior": "Human"
+      },
+      "Talents": {
+        "Minor": ["Discern Smell", "Large lung capacity"],
+        "Medium": ["Shed Skin 2/day", "Acid Potions 2/day"],
+        "Major": ["Regen as troll in sunlight", "Potent Blood 2/day"]
+      }
+    },
+    "Jaerseen": {
+      "ClassRestriction": ["Wizard", "Warlock", "Power Master"],
+      "ColourChoiceOverride": ["Red", "Green", "Brown", "Blue"],
+      "ArmourAvailabilityOverride": "Light",
+      "LifeScaleOverride": {
+        "Wizard": "Elven Pathfinder",
+        "Warlock": "Human Pathfinder",
+        "Power Master": "Human Pathfinder"
+      },
+      "Abilities": ["+1 Casting level chosen colour"],
+      "Talents": {
+        "Minor": ["Bronze Jewellery", "Large lung capacity"],
+        "Medium": ["Self Heal 1/day", "2 MAC vs Elemental"],
+        "Major": ["Regen as troll in sunlight", "Elementalist"]
+      }
+    }
+  },
+  "Warlock Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "Unarmed Combat",
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
       "Proficiency",
-      "Metal Resistance",
-      "Chosen of the Dragon"
+      {
+        "Name": "Metal Resistance",
+        "Type": "Static"
+      },
+      {
+        "Name": "Chosen of the Dragon",
+        "Type": "Static",
+        "Effect": "+2 DAC"
+      }
     ],
     "Notes": [
       "Warlocks choose a specialist skill at 6th, 7th and 8th level from this list."
     ]
   },
-  "Vochstelen Specialist Skills": {
+
+  "Wizard Specialist": {
     "Abilities": [
-      "+6/2 Stamina",
-      "Weapon Mastery",
-      "Unarmed Combat",
-      "Enhanced Reflexes",
-      "War Cry",
-      "Chosen of the Dragon"
+      "Make Teaching Scrolls",
+      "Make Magical Armour",
+      "Make Magical Weapons",
+      "Make Artefacts"
+    ]
+  },
+  "Vochstelen Specialist": {
+    "Abilities": [
+      {
+        "Name": "+6/2 Stamina",
+        "Type": "Static",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static"
+      },
+      { "Name": "UAC", "Type": "WeaponSkill" },
+      {
+        "Name": "Enhanced Reflexes",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      },
+      {
+        "Name": "War Cry",
+        "Type": "Innate",
+        "Count": 1
+      },
+      {
+        "Name": "Chosen of the Dragon",
+        "Type": "Static",
+        "Effect": "+2 DAC"
+      }
     ],
     "Notes": [
       "Vochstelen choose a specialist skill at 7th and 8th level from this list."
+    ]
+  },
+  "Awakener Specialist": {
+    "Abilities": [
+      {
+        "Name": "Auric Colour",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "1st Weapon Mastery (O)",
+        "Type": "Static"
+      },
+      {
+        "Name": "1st Weapon Mastery (H)",
+        "Type": "Static"
+      },
+      {
+        "Name": "1 DAC",
+        "Type": "Static",
+        "Effect": "+1 DAC"
+      }
     ]
   },
   "Wizard Colour": {
@@ -519,157 +1135,246 @@
     "Options": ["Gold", "Jade", "White"]
   },
   "HumanSubtypeAbilities": {
+    "Standard": {},
     "Baronial": {
-      "Levels": {
-        "1": ["Baronial heritage"]
-      }
+      "GuildOverrides": ["po:Type-Baronial"],
+      "HedgeOrCircle": ["🌳 Hedge", "Ⓞ Circle"]
     },
     "Ishmaic": {
+      "GuildOverrides": ["po:Wahadamune"],
       "Levels": {
         "1": [
-          "May not join non-Ishmaic political guilds.",
-          "Unlocks Ishmaic clan specialisations."
+          { "Name": "Survival", "Type": "AtWill" },
+          { "Name": "Extra Level of Life", "Type": "Static" }
         ]
       }
     },
     "Barbarian": {
+      "ClassRestriction": [
+        "Warriors",
+        "Archers",
+        "Rangers",
+        "Witchdoctor",
+        "Shaman",
+        "Druid",
+        "Pathfinder"
+      ],
       "Levels": {
-        "1": [
-          "Class choice limited to Warriors, Archers, Rangers, Witchdoctor, Shaman, Druid, Pathfinder."
-        ]
+        "1": [{ "Name": "Skinning", "Type": "Craft" }]
       }
     }
   },
+
+  "BaronialAncestry": {
+    "Rhagrimm": [
+      { "Name": "Invoke Ancestor (Rhagrimm)", "Type": "Innate", "Count": 1 }
+    ],
+    "Issalania": [
+      { "Name": "Invoke Ancestor (Issalania)", "Type": "Innate", "Count": 1 }
+    ],
+    "Ulio": [
+      { "Name": "Invoke Ancestor (Issalania)", "Type": "Innate", "Count": 1 }
+    ],
+    "Eva": [{ "Name": "Invoke Ancestor (Eva)", "Type": "Innate", "Count": 1 }]
+  },
   "IshmaicClanAbilities": {
     "Galahbad": {
+      "GuildOverrides": [],
+      "ClassRestriction": [
+        "Warrior",
+        "Wizard",
+        "Pathfinder",
+        "Thug",
+        "Hannot Beggar",
+        "Kallah Beggar",
+        "Archer",
+        "Pure Priest",
+        "Warrior Priest",
+        "Spiritual Warrior"
+      ],
       "Levels": {
         "1": [
-          "Class choice limited to Warrior, Wizard, Pathfinder, Thug, Hannot/Kallah Beggar, Archer, Pure Priest, Warrior Priest, Spirit Warrior."
+          { "Name": "Laminar Armour", "Type": "Static", "Effect": "+1 PAC" }
         ]
       }
     },
     "Buladajn": {
+      "ClassRestriction": ["Pathfinder", "Assassin", "Spy", "Rogue", "Thug"],
       "Levels": {
-        "1": ["Class choice limited to Pathfinder, Assassin, Spy, Rogue, Thug."]
+        "1": [{ "Name": "Disguise", "Type": "AtWill" }],
+        "5": [{ "Name": "Conditioned Heartstop", "Type": "Static" }],
+        "8": [{ "Name": "Psi-Scan", "Type": "Innate", "Count": 4 }]
       }
     },
     "Benhai": {
+      "ClassRestriction": [
+        "Ranger",
+        "Pathfinder",
+        "Rogue",
+        "Wizard",
+        "Archer",
+        "Wayfinder"
+      ],
       "Levels": {
-        "1": ["Class choice limited to Ranger, Pathfinder, Rogue, Wizard, Archer, Wayfinder."]
+        "1": [
+          { "Name": "Disarm Traps", "Type": "AtWill" },
+          {
+            "Name": "Trap Wary (8)",
+            "Type": "Static",
+            "Condition": "bracket:Scout"
+          }
+        ],
+        "3": [{ "Name": "Read Languages", "Type": "Static" }]
       }
     },
     "Salahmen": {
-      "Levels": {
-        "1": ["Class choice limited to Warrior, Pathfinder, Thug, Wizard, Warlock, Archer."]
-      }
-    },
-    "Harazaen": {
+      "ClassRestriction": [
+        "Warrior",
+        "Pathfinder",
+        "Thug",
+        "Wizard",
+        "Warlock",
+        "Archer"
+      ],
       "Levels": {
         "1": [
-          "Class choice limited to Witch, Pure Priest, Spirit Warrior, Pure Priest, Wayfinder, Leywalker, Druid, High Druid, Ranger, Pathfinder."
+          { "Name": "Immunity to Blindness", "Type": "Immunity" },
+          { "Name": "See through Darkness", "Type": "Immunity" }
         ]
       }
     },
-    "Rain": {
+    "Harazaen": {
+      "ClassRestriction": [
+        "Witch",
+        "Pure Priest",
+        "Spiritual Warrior",
+        "Wayfinder",
+        "Leywalker",
+        "Druid",
+        "High Druid",
+        "Ranger",
+        "Pathfinder"
+      ],
       "Levels": {
-        "1": ["Class choice limited to High Wizard, Wizard, Warlock, Rogue, Power Master."]
+        "6": [{ "Name": "Spiritual Discern Insanity", "Type": "AtWill" }]
+      }
+    },
+    "Rain": {
+      "ClassRestriction": [
+        "High Wizard",
+        "Wizard",
+        "Warlock",
+        "Rogue",
+        "Power Master"
+      ],
+      "Levels": {
+        "Levels": {
+          "1": [{ "Name": "+2 Caster levels", "Type": "Static" }]
+        }
       }
     },
     "Rainfinder": {
+      "ClassRestriction": ["Wizards", "High Wizards", "Druids", "High Druids"],
       "Levels": {
-        "1": ["Class choice limited to Wizards, High Wizards, Druids, High Druids."]
+        "1": [{ "Name": "Detect Lie", "Type": "Innate", "Count": 2 }]
       }
     }
   },
   "AncientFolkSubtypeAbilities": {
     "The cloud way": {
       "Levels": {
-        "1": ["Follows the Cloud Way tradition."]
+        "1": [],
+        "2": [{ "Name": "Ward Pact (Undead)", "Type": "Replace" }],
+        "3": [],
+        "4": [{ "Name": "Ward Pact (Wyvern)", "Type": "Replace" }],
+        "5": [],
+        "6": [{ "Name": "Ward Pact (Dwarf)", "Type": "Replace" }],
+        "7": [],
+        "8": []
       }
     },
     "House D'trael": {
       "Levels": {
-        "1": ["Sworn to House D'trael."]
+        "1": [],
+        "2": [{ "Name": "Ward Pact (Glass)", "Type": "Replace" }],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": [],
+        "7": [],
+        "8": []
       }
     }
   },
   "AlfarSubtypeAbilities": {
-    "Löss light (white)": {
-      "Levels": {
-        "1": ["If wizard, wizard colour is restricted to White."]
-      }
+    "Löss (white)": {
+      "Wizard Colour": ["White"]
     },
-    "Svart dark (black)": {
-      "Levels": {
-        "1": ["If wizard, wizard colour is restricted to Black."]
-      }
+    "Svart (black)": {
+      "Wizard Colour": ["Black"]
     },
-    "Alfamir seas (green)": {
-      "Levels": {
-        "1": ["If wizard, wizard colour is restricted to Green."]
-      }
+    "Alfamir (green)": {
+      "Wizard Colour": ["Green"]
     },
-    "Fjell mountain (brown)": {
-      "Levels": {
-        "1": ["If wizard, wizard colour is restricted to Brown."]
-      }
+    "Fjell (brown)": {
+      "Wizard Colour": ["Brown"]
     }
   },
   "RatfolkBreedAbilities": {
     "Ourstlav": {
-      "Levels": {
-        "1": ["Class choice limited to Pathfinders, Archers or Leywalkers."]
-      }
+      "ClassRestriction": ["Pathfinder", "Archer", "Leywalker"]
     },
     "Rachatat": {
-      "Levels": {
-        "1": ["Class choice limited to Warriors, Forest Guardians or Thugs."]
-      }
+      "ClassRestriction": ["Warrior", "Forest Guardian", "Thug"]
     },
     "Horstval": {
-      "Levels": {
-        "1": ["Class choice limited to Druids, Wizards or Warrior Priests."]
-      }
+      "ClassRestriction": ["Druid", "Wizard", "Warrior Priest"]
     },
     "Slav": {
-      "Levels": {
-        "1": ["Class choice limited to Psi Master, Spy or Assassin."]
-      }
+      "ClassRestriction": ["Psi Master", "Spy", "Assassin"]
     }
   },
   "RatfolkClanAbilities": {
     "Caslevasp (long hairs)": {
-      "Levels": {
-        "1": ["Lose political guild for Thimon benefits."]
-      }
+      "GuildOverrides": ["po:Thimon"]
     },
     "Hislehasp (tatterpelts)": {
+      "GuildOverrides": ["so:The Swarm"],
       "Levels": {
-        "1": [
-          "May only join ratfolk social guilds.",
-          "Gain make & arm snaptrap at 5th level and acute hearing."
+        "5": [
+          { "Name": "Gain make & arm snaptrap", "Type": "AtWill" },
+          { "Name": "Acute Hearing", "Type": "AtWill" }
         ]
       }
     },
     "Crepultaval (needlefangs)": {
+      "GuildOverrides": ["po:"],
       "Levels": {
         "1": [
-          "Lose political guild, gain +1 level of casting for dominion, -2 DAC in sunlight."
+          { "Name": "+1 caster level (dominion)", "Type": "Static" },
+          { "Name": "-2 DAC in sunlight", "Type": "Static" }
         ]
       }
     },
     "Altunhast (stubbytails)": {
       "Levels": {
-        "1": ["Gain perfect disguise and acute hearing."]
+        "1": [
+          { "Name": "Gain perfect Human disguise", "Type": "Static" },
+          { "Name": "Acute Hearing", "Type": "AtWill" }
+        ]
       }
     },
     "Gwavysvayne (Winterscorns)": {
+      "ArmourAvailabilityOverride": [],
       "Levels": {
-        "1": ["Immunity to cold, 3 pac (3/5/7), cannot wear armour."]
+        "1": [{ "Name": "Immunity to cold", "Type": "Immunity" }],
+        "3": [{ "Name": "1 PAC", "Type": "Static" }],
+        "5": [{ "Name": "2 PAC", "Type": "Static" }],
+        "7": [{ "Name": "3 PAC", "Type": "Static" }]
       }
     }
   },
-  "Faerie Wizard Colour": {
+  "Faerie Colour": {
     "Options": [
       "Red",
       "Blue",

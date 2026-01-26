@@ -9,14 +9,31 @@
           Padding="16"
           RowSpacing="12">
 
-        <VerticalStackLayout Grid.Row="0"
-                             Spacing="4">
-            <Label Text="Guilds"
-                   FontSize="20"
-                   FontAttributes="Bold"/>
-            <Label Text="Optional: tap a guild to expand. Use the Select button to add/remove from the draft."
-                   Opacity="0.7"/>
-        </VerticalStackLayout>
+        <FlexLayout Grid.Row="0"
+                    Direction="Row"
+                    Wrap="Wrap"
+                    AlignItems="Center"
+                    JustifyContent="Start"
+                    BindableLayout.ItemsSource="{Binding SelectedGuilds}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Button Text="{Binding Name}"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:Guilds}}, Path=BindingContext.ToggleSelectedCommand}"
+                            CommandParameter="{Binding .}"
+                            Padding="12,6"
+                            FontSize="13"
+                            Margin="0,0,8,8"
+                            BackgroundColor="{AppThemeBinding Light=#FFF7ED, Dark=#241010}"
+                            TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"
+                            BorderColor="{StaticResource Primary}"
+                            BorderWidth="1"
+                            CornerRadius="18"
+                            MinimumHeightRequest="0"
+                            MinimumWidthRequest="0"
+                            IsEnabled="{Binding IsLocked, Converter={StaticResource InverseBoolConverter}}"/>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
 
         <Grid Grid.Row="1"
               ColumnDefinitions="*,12,160">

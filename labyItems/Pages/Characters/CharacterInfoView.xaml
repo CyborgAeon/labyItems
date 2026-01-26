@@ -3,7 +3,8 @@
     x:Class="labyItems.Pages.Characters.CharacterInfoView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:labyItems.Controls.Pickers">
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:pickers="clr-namespace:labyItems.Controls.Pickers">
 
     <ScrollView>
         <VerticalStackLayout Padding="16"
@@ -20,8 +21,22 @@
 
             <Label Text="Alignment"
                    FontAttributes="Bold"/>
-            <controls:AlignmentGridPicker SelectedAlignment="{Binding SelectedAlignment, Mode=TwoWay}"
+            <pickers:AlignmentGridPicker SelectedAlignment="{Binding SelectedAlignment, Mode=TwoWay}"
                                           AvailableAlignments="{Binding AlignmentOptions}"/>
+
+            <Label Text="Armour"
+                   FontAttributes="Bold"/>
+            <Label Text="{Binding ArmourAvailabilityText}"
+                   FontSize="12"
+                   Opacity="0.7"/>
+            <controls:ArmourLayerControl Layers="{Binding ArmourLayers}"
+                                         MaxBasePac="{Binding ArmourMaxBasePac}"
+                                         MaxTotalPac="{Binding ArmourMaxTotalPac}"
+                                         IsEnabled="{Binding IsArmourSelectionEnabled}"
+                                         TotalPac="{Binding WornArmourPac, Mode=OneWayToSource}"/>
+            <Label Text="{Binding ArmourBaseSummary}"
+                   FontSize="12"
+                   Opacity="0.8"/>
 
             <Label Text="Notes"
                    FontAttributes="Bold"/>

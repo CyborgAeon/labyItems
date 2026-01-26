@@ -44,7 +44,7 @@
     "AdditionalInfo": "",
     "Buy-as": "Multiclass as Human, Halflings may buy the ability 'Max damage Quin with H class weapon' in the post-8th tables."
   },
-  "Dwarves": {
+  "Dwarf": {
     "PeopleType": "Standard",
     "Description": "Dwarves are a hardy race, suited to underground life. They are stubborn and proud and have a strong sense of kin and tradition. Dwarves are renowned for their resilience and toughness.",
     "levelledAbilities": {
@@ -173,22 +173,7 @@
     "PeopleType": "Magic-Kin",
     "Description": "Faeries align to two wizard colours that are not opposites.",
     "levelledAbilities": {
-      "1": ["Faerie Wizard Colour", "Faerie Wizard Colour"],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": []
-    },
-    "AdditionalInfo": ""
-  },
-  "Barbarians": {
-    "PeopleType": "Tribal",
-    "Description": "Barbarians are humans from outside the Empire, living in tribal groupings. They are tough, superstitious and hardened by their lifestyle. Barbarians have access to tribal abilities and develop differently to Imperial humans.",
-    "levelledAbilities": {
-      "1": [],
+      "1": ["Faerie Colour", "Faerie Colour"],
       "2": [],
       "3": [],
       "4": [],
@@ -296,7 +281,7 @@
       "AbilityMapKey": "ElfColourAbilities"
     }
   },
-  "Draves": {
+  "Half Elves": {
     "PeopleType": "Magic-Kin",
     "Description": "",
     "levelledAbilities": {
@@ -310,36 +295,6 @@
       "8": []
     },
     "AdditionalInfo": ""
-  },
-  "Half Elves and Draves": {
-    "PeopleType": "Magic-Kin",
-    "Description": "",
-    "levelledAbilities": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": []
-    },
-    "AdditionalInfo": ""
-  },
-  "Ishmaic Human": {
-    "PeopleType": "Ishmaic",
-    "Description": "All Human Ishmaic characters are hardy by nature and gain the following benefits:\nFrom 1 level each character has both the Survival skill (as per a Ranger) and calculates their life as if they were one level higher, even when they have attained the 8 level of progression.\nIshmaic Human characters (bar Rainfinders) may carry a Glaive (a short sword like weapon) and if they are allowed sharp weapon use by their class restrictions then this may be used as a weapon. Even Wizards may carry such a weapon though this counts as their whole metal allowance.\nAll Ishmaic characters are well supported by their Clan. To this end they are supplied with normal weapons and armour as appropriate to their class. Ishmaic humans will normally be at least cordial to any Rainfinder.\nIshmaic humans may freely join professional and social guilds but they may not belong to political guilds unless they are specifically for Ishmaics.",
-    "levelledAbilities": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": []
-    },
-    "AdditionalInfo": "Clans\nEvery Human Ishmaic character has grown up within one of the Clans that form the Confederacy. This Clan must be chosen at 1 level and is written on the card alongside race (i.e. Ishmaic Human (Benhai)). Each Clan grants certain benefits to a character and restricts the range of starting classes available to such a character. It is allowable to multi-class outside of those typically found in the Clan as normal - costs based upon the original class. Note however the restriction earlier about spirit-using classes in this instance."
   },
   "Athfanal": {
     "PeopleType": "Ishmaic",
@@ -387,49 +342,77 @@
     "AdditionalInfo": "The Spirit World\nCalabrim have the equivalent of half a spirit, much as a Half Elf does. It may be this freak occurrence in their birthing amongst a race with no spirits which causes them their difficulty in feeding upon the wind. Calabrim suffer the same disadvantages in purchasing immunities to spiritual effects as described for Ishmaic Humans.\nNourishment\nThe Calabrim need to eat only once in any given seven days, but when they feed, they must eat the flesh of a magic using creature, even the essence of a dead elf would suffice, Since most adventures last less than seven days it is assumed that cunning Calabrim manage to feed outside of their adventuring times and those Calabrim of goodly moral fibre can often find ways of doing so which would not offend any other meat eating creature or person. It is rumoured that through such feeding however, more potent Calabrim can actually translate the food into innate magical abilities for their own later use. Calabrim are, however, flesh and blood and take full effect from potions / poisons\nAlignment\nCalabrim may be of any neutral alignment (NG, NE, LN, CN and NN).\nMake Up Requirements\nCalabrim need to wear make up in such a fashion as to appear sickly, diseased or of pitted complexion.\n'The Touch'\nCalabrim possess an ability they call 'The Touch' and it is this ability which paralyses a magic using creature. If the target possesses mana points, or magical innate powers it functions as a paralysis lasting 5 minutes. However the cost of using this ability is steep, the Calabrim is drained one level, which is recovered in the same fashion as a level lost to the touch of a wraith. However as it is a self-inflicted level loss immunity to level drain does not apply.\nIf the ability fails in any fashion (e.g. the target is immune to paralysis, has no magical ability or uses a war cry to keep moving) no level is lost. In any event the touch cannot be used more than once for every two levels possessed in any given day regardless of success or failure.\nClasses\nThe Calabrim have little opportunity for formal training, and as such may only begin as Pathfinders, Thugs, or Warriors, However once training has become available a much wider choice is available to them, the same options become available as if Half Elven.\nLife Points\nLife points are all as Human versions of those classes.\nGuilds\nDue to their isolated nature Calabrim are only able to join Ishmaic guilds until they reach table 3. At this point they may join guilds freely gaining basic benefits, intermediate benefits are gained on table 7, and advanced tier on table 9\nPost Eighth Level Development\nA Calabrim can multi-class with the same flexibility as a Half Elf, even to classes not listed above as available to the Calabrim race since their first choice of class is merely limited by circumstance, not by ability.\nCalabrim who multi-class to become members of the Priest class bracket suffer the same disbenefits as Half Elves.\nCalabrim who multi-class to become members of the Wizard class bracket cannot attain a class level of higher than 6."
   },
   "Samila": {
+    "Armour": {
+      "Wearable": [],
+      "Restrictions": ["No armour"]
+    },
+
     "PeopleType": "Ishmaic",
-    "Description": "The power of the Seven Winds is not the only force at work within the Great Sink. Much as it does elsewhere, the Primal Spirit feels a need to assist its children. Samila are more closely related to the City Spirits of the Empire than its human population, born of the desire for Primus to express itself, the Samila are the spirits of the wide and empty places of the desert and the labyrinthine caverns beneath.\n\nThus events within their territory draw the attention of the governing Samila, producing the folk tales of robed strangers leading weary and parched strangers to hidden oasis, or in the case of the more malign Samila, offering promises of aid only to deposit the foolish wayfarer in the most inhospitable dustbowl which can be found.\n\nEach Samila, when forming its sentience, lays claim to vast areas of land drawing on and complementing the intuitive wishes of the few creatures that live within those places. It is this territorialism, developed in the pre-sentient stage (called by the Samila their \"Pulaim\"), which breeds the lack of co-operation between them in later years.",
+    "Description": "territorial desert and cavern spirits, born of primal Earthpower to guide or mislead travelers in the Great Sink. Solitary and robed, they wander the wastes, alternately rescuing the lost or driving them to ruin. Child Samila wield vast uncontrolled power, while adult Samila are weaker mystically but cunning, independent, and fiercely protective of their domains.",
     "levelledAbilities": {
       "1": [],
-      "2": [],
+      "2": [{ "Name": "Passwall", "Type": "Innate", "Count": 1 }],
       "3": [],
       "4": [],
-      "5": [],
-      "6": [],
+      "5": [{ "Name": "Earthshift", "Type": "Innate", "Count": 2 }],
+      "6": [{ "Name": "Passwall", "Type": "Innate", "Count": 1 }],
       "7": [],
-      "8": []
-    },
-    "AdditionalInfo": "Innate Earthpower Talents\nSamila gain the following abilities and life points as they reach each level, some of these abilities mimic magical spell innates but are not, they are, in fact, Earthpower abilities. They have no verbal but require an OOC declaration.\nLevel TBLP LOC Abilities\n1 22 7\n2 23 7 Passwall 1/day\n3 24 7\n4 25 8\n5 26 8 Earth Shift 1/4 levels\n6 27 8 Passwall 2/day (from once)\n7 28 9\n8 29 9 Meld With Stone 1/day\n'Of Strange Form'\nThe Samila has a strange form, physically frail, but strong with power.\n They have no spirit.\n They suffer only half effect from magic as per a Dwarf.\n They have no mind as such to be targeted or caught by neuronic abilities.\n They are however fully flesh and blood and effected fully by physical and Earthpower effects.\n...But Frail Form\nThey may not acquire grades of Strength, nor may they wear armour.\nPost Eighth Level Development\nA Samila can acquire abilities as a normal 1 Class High Druid.\nA Samila always uses their base life points as detailed above for the purposes of life-capping even if they multi-class or raise their base life points in any fashion.\nThey may never acquire the ability to use weapons of any type.\nThey may not leave the Druid bracket."
+      "8": [{ "Name": "Meld with Stone", "Type": "Innate", "Count": 1 }]
+    }
   },
   "Crol": {
     "PeopleType": "Ishmaic",
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": []
+    },
     "Description": "The Crol are a race of lizard men native to the lands of the Ishmaic Confederacy. Until sometime in the last Age, these huge, war-like lizard men lived in large temples and caverns beneath the deserts, emerging only to hunt the creatures native to the surface world and to perform their strange religious ceremonies to the Sun. During one such ceremony, a great many were set upon by the Athfanal, defeated and enslaved. For many Crol, slavery is the only life they have known.\n\nThe Crol vary in size and shape a great deal, although they are generally either short and bulky or tall and wiry. From birth they have tails but those Crol who are not enslaved have taken to cutting their tails off at their ritual of Maturity. Slave Crol however are easily identifiable by their reptilian tails. They all have scales and are frequently tattooed with bright colours. Their scales change colour as they mature but they start as being a yellowy green and darken as they get older. Their hair colour varies but is usually slicked back with oils and lightens to white as they age.\n\nThe Crol favour tridents and spears as their weapons and will duel only with them, though for hunting however any weapon will suffice. The Crol enjoy fighting, often doing so for fun as much as for practice but they are almost always ready for a fight (they are taught the errors of their past well). The Crol are a fairly short-lived race (on average they mature at 4 years old and will die of natural causes at about 16 (should any of them survive)) when their scales have blackened to the colour of ash and their hair an ivory white.\n\nThe Crol worship the Sun and the Moon, the Wind and the Desert (which they refer to as the mother) and they perform regular ceremonies to these things.",
+    "Subtype": {
+      "Key": "CrolSubtype",
+      "DisplayName": "Crol caste",
+      "Description": "Select your caste to unlock caste abilities.",
+      "SelectionMode": "SingleRequired",
+      "OptionsSource": "Yashtar,Kaerssor,Jaerseen",
+      "AbilityMapKey": "CrolSubtypeAbilities"
+    },
     "levelledAbilities": {
-      "1": [],
-      "2": [],
+      "1": [
+        { "Name": "Immunity to Potions", "Type": "Immunity" },
+        { "Name": "Immunity to Poisons", "Type": "Immunity" },
+        { "Name": "Vulnerability to cold", "Type": "Static" },
+        {
+          "Name": "Crol Caste",
+          "Type": "Overwrite",
+          "OverwriteKey": "CrolCaste"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Crol Minor Talent",
+          "Type": "Overwrite",
+          "OverwriteKey": "CrolMinorTalent"
+        }
+      ],
       "3": [],
       "4": [],
-      "5": [],
+      "5": [
+        {
+          "Name": "Crol Medium Talent",
+          "Type": "Overwrite",
+          "OverwriteKey": "CrolMediumTalent"
+        }
+      ],
       "6": [],
       "7": [],
-      "8": []
+      "8": [
+        {
+          "Name": "Crol Major Talent",
+          "Type": "Overwrite",
+          "OverwriteKey": "CrolMajorTalent"
+        }
+      ]
     },
-    "AdditionalInfo": "Yashtar\nThe third caste of Crol is the Slaves - the Yashtar - those that have been born and bred in slavery to the Athfanal. They are treated incredibly badly and have a spell cast on them to dominate them into subservience. They perform all sorts of manual tasks for the Athfanal as well as guard duty and forming raiding parties. There is little to no resistance known of amongst the Yashtar as the spells that are cast on them are so potent - most of them do not even realise that they are slaves or that they could live in another way.\nLive Role Playing Rules\nNo Crol can wear armour better than leather as it interferes with their scaly hides. Some of them do wear pieces of bronze metal but only for show not actually as armour.\nCrol are only trained in using the following weapons - clubs, spears, scimitars, tridents and glaives, they have a maximum damage of triple with any other weapon.\nCrol may only use Small Shields of at most 24\" in diameter.\nThey may not acquire any form of neuronics.\nCrol may join professional guild freely but may only join Crol related political and social guilds.\nCrol gain no benefit from any form of potion as their physiology is just too different to drink them.\nThey are also immune to poisons unless they are crafted specifically against the Crol race.\nCrol cannot acquire any form of immunity to cold and lose 4 DAC and 1 grade of strength (to a minimum of 0) in severe cold environments (ref's discretion)\nCrol are inedible as far as natural creatures are concerned due to their acidic blood, and their blood grants creatures drinking it no benefits if normally it would.\nYashtar\nMay only be Warriors, they gain 1 Innate PAC at 3, 2 (total) at 5, 3 (total) at 7 and 4 (total) at 8. They have the same life points as Half Ogres of their class.\nKaerssor\nCan only be Rangers, Monks or Warriors, they gain 1 PAC at 5 and 2 PAC (total) at 8. They have Human life.\nJaerseen\nCan only be Wizards, Warlocks or Power Masters, they have to be of an elemental colour (Red, Green, Brown or Blue), they may not second colour and may not cast grey spells. They gain no Innate PAC. They have Elven Pathfinder life if a Wizard or Human Pathfinder life if a Warlock or Power-Master. They gain 1 casting level in their primary colour.\nTalents\nEach Caste has a range of options to choose from as they advance in levels - they gain a minor talent at 2, a medium talent at 5 and a major talent at 8. These must be written on the cards when chosen. It is always possible to choose a lower level talent instead of a higher level one; it is only possible to choose a talent once however."
-  },
-  "Baronial Human": {
-    "PeopleType": "Baronial",
-    "Description": "",
-    "levelledAbilities": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": []
-    },
-    "AdditionalInfo": ""
+    "AdditionalInfo": "Crol may join professional guild freely but may only join Crol related political and social guilds. Crol are inedible as far as natural creatures are concerned due to their acidic blood, and their blood grants creatures drinking it no benefits if normally it would."
   },
   "Blauz": {
     "PeopleType": "Baronial",
@@ -445,5 +428,14 @@
       "8": []
     },
     "AdditionalInfo": ""
+  },
+  "Elysian": {
+    "PeopleType": "Magic-Kin",
+    "Description": "Elysians are god-touched refugees from a destroyed world, created from divine sacrifice to embody goodness. Pacifistic, psychically sensitive, and often amnesiac from trauma, they struggle to survive in exile. Physically frail but spiritually resilient, they resist evil, cannot turn from good, and bear white skin marked in gold or blue.",
+    "levelledAbilities": {
+      "1": [{ "Name": "Detect Possible Neuronic Activity", "Type": "AtWill" }],
+      "3": [{ "Name": "Auric Colour" }],
+      "6": [{ "Name": "Telepathy", "Type": "Innate", "Count": 4 }]
+    }
   }
 }

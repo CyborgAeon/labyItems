@@ -10,7 +10,6 @@ public sealed class CharacterDraft
     {
         AvailableAlignments = AllAlignments().OrderBy(a => a.Order).ThenBy(a => a.Moral).ToList();
     }
-
     public string? Race { get; set; }
     public string? Class { get; set; }
     public string Name { get; set; } = "";
@@ -24,22 +23,30 @@ public sealed class CharacterDraft
     public List<string> Guilds { get; set; } = new();
     public Dictionary<string, string> SpecialisationSelections { get; } =
         new(StringComparer.OrdinalIgnoreCase);
-    public string PowerType { get; set; } = "";
-    public string PowerAmount { get; set; } = "";
+    public Dictionary<string, int> PowerPools { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public GuildOverrideRules? GuildOverrideRules { get; set; } = new();
     public Alignment? Alignment { get; set; }
     public List<Alignment> AvailableAlignments { get; private set; } = new();
 
     public int Points { get; set; }
 
     public int TBLP { get; set; }
+    public int Loc { get; set; }
     public int MaxAC { get; set; }
     public int DAC { get; set; }
     public int ClassRaceArmour { get; set; }
     public int WornArmour { get; set; } = 0;
     public int? SAC { get; set; }
     public int? MAC { get; set; }
-    public int Loc { get; set; }
-
+    public string ArmourAvailability { get; set; } = "";
+    public string ArmourAvailabilityOverride { get; set; } = "";
+    public List<string> ColourChoiceOverride { get; } = new();
+    public Dictionary<string, int> ResistanceLevels { get; set; } = new Dictionary<string, int> {
+        { "Spirit", 8 },
+        { "Magic", 8 },
+        { "Physical", 8 },
+        { "Neuro", 8 }
+    };
     public Dictionary<string, string> ResistancesByType { get; set; } =
         new(StringComparer.OrdinalIgnoreCase);
 

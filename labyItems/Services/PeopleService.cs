@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using labyItems.Models.Characters;
 using Microsoft.Maui.Storage;
 
 namespace labyItems.Services;
@@ -12,7 +13,8 @@ public static class PeopleService
 
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
-        PropertyNameCaseInsensitive = true
+        PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter(), new GuildOverrideRulesConverter() }
     };
 
     private static Dictionary<string, PeopleRecord>? _cache;
@@ -25,7 +27,7 @@ public static class PeopleService
         using var r = new StreamReader(s);
         var json = await r.ReadToEndAsync();
 
-        _cache = JsonSerializer.Deserialize<Dictionary<string, PeopleRecord>>(json)
+        _cache = JsonSerializer.Deserialize<Dictionary<string, PeopleRecord>>(json, _jsonOptions)
                  ?? new Dictionary<string, PeopleRecord>();
 
         return _cache;
@@ -37,11 +39,13 @@ public sealed class PeopleRecord
     public string Description { get; set; } = "";
 
     [JsonPropertyName("levelledAbilities")]
-    public Dictionary<string, List<string>> LevelledAbilities { get; set; } = new();
+    public Dictionary<string, List<AbilityDefinition>> LevelledAbilities { get; set; } = new();
 
     public string? AdditionalInfo { get; set; }
 
     public PeopleSubtypeRecord? Subtype { get; set; }
+
+    public GuildOverrideRules? GuildOverrides { get; set; }
 
     // legacy fields you may still have in older JSON
     [JsonPropertyName("Buy-as")]

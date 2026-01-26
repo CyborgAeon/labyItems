@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Android.App;
+using labyItems.Models.Characters;
 
 namespace labyItems.Services;
 
@@ -7,7 +8,8 @@ public static class SpecialisationService
 {
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
-        PropertyNameCaseInsensitive = true
+        PropertyNameCaseInsensitive = true,
+        Converters = { new GuildOverrideRulesConverter() }
     };
 
     private static Dictionary<string, SpecialisationRecord>? _cache;
@@ -30,7 +32,7 @@ public static class SpecialisationService
 
 public sealed class SpecialisationRecord
 {
-    public List<string>? Abilities { get; set; }
+    public List<AbilityDefinition>? Abilities { get; set; }
     public PowerListRecord? PowerList { get; set; }
 
     // For tables like ElfColourAbilities
@@ -39,7 +41,13 @@ public sealed class SpecialisationRecord
 
 public sealed class ColourAbilityRecord
 {
-    public Dictionary<string, List<string>>? Levels { get; set; }
+    public Dictionary<string, List<AbilityDefinition>>? Levels { get; set; }
+    public string LifeScaleOverride { get; set; } = string.Empty;
+    public string ArmourAvailabilityOverride { get; set; } = string.Empty;
+    public List<string>? ColourChoiceOverride { get; set; }
+    public GuildOverrideRules? GuildOverrides { get; set; }
+    public List<string>? HedgeOrCircle { get; set; }
+    public List<string>? ClassRestriction { get; set; }
 }
 
 public sealed class PowerListRecord

@@ -9,6 +9,11 @@
       Clicked="OnMakeCharacterClicked"
       Text="Make a character" />
     <Button
+      x:Name="CharacterWalletButton"
+      Clicked="OnCharacterWalletClicked"
+      Text="Character Wallet"
+      IsEnabled="False" />
+    <Button
       Clicked="OnCreateIspClicked"
       Text="Create ISP Item" />
     <Button

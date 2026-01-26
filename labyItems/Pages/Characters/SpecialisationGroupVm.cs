@@ -30,6 +30,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     private readonly bool _useMagicColourEnum;
     private readonly bool _useVivomancerColourEnum;
     private readonly Func<IReadOnlyList<string>, string?>? _selectionValidator;
+    private bool _isOptional;
 
     public string Title { get; }
     public int RequiredCount => Slots.Count;
@@ -38,6 +39,20 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
 
     private List<string> _allOptionNames;
     public IReadOnlyList<string> OptionNames => _allOptionNames;
+
+    public bool IsOptional
+    {
+        get => _isOptional;
+        set
+        {
+            if (_isOptional == value) return;
+            _isOptional = value;
+            RaiseComputed();
+            Raise(nameof(Subtitle));
+            Raise(nameof(StatusText));
+            Raise(nameof(HelperText));
+        }
+    }
 
     private bool _isExpanded;
     public bool IsExpanded
@@ -48,7 +63,16 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
 
     public Command ToggleExpandedCommand { get; }
 
-    public string Subtitle => RequiredCount == 1 ? "Pick 1 ability" : $"Pick {RequiredCount} abilities";
+    public string Subtitle
+    {
+        get
+        {
+            if (_isOptional)
+                return RequiredCount == 1 ? "Optional choice" : $"Pick up to {RequiredCount} abilities";
+
+            return RequiredCount == 1 ? "Pick 1 ability" : $"Pick {RequiredCount} abilities";
+        }
+    }
 
     public int SelectedCount => Slots.Count(s => !string.IsNullOrWhiteSpace(s.SelectedOption));
 
@@ -74,15 +98,32 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
 
     public bool HasValidationError => !string.IsNullOrWhiteSpace(ValidationMessage);
 
-    public bool IsComplete => SelectedCount == RequiredCount && !HasDuplicates && !HasValidationError;
+    public bool IsComplete
+    {
+        get
+        {
+            if (_isOptional)
+                return !HasDuplicates && !HasValidationError;
 
-    public string StatusText => $"{SelectedCount}/{RequiredCount}";
+            return SelectedCount == RequiredCount && !HasDuplicates && !HasValidationError;
+        }
+    }
+
+    public string StatusText
+    {
+        get
+        {
+            if (_isOptional && SelectedCount == 0) return "Optional";
+            return $"{SelectedCount}/{RequiredCount}";
+        }
+    }
 
     public string HelperText
     {
         get
         {
             if (HasValidationError) return ValidationMessage;
+            if (_isOptional && SelectedCount == 0) return "Optional selection.";
             if (SelectedCount == 0) return "Make your selections below.";
             if (HasDuplicates) return "Duplicate selections detected. Choose different abilities for each level.";
             if (IsComplete) return "Selection complete.";
@@ -116,9 +157,11 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         bool useWardPactEnum,
         bool useMagicColourEnum = false,
         bool useVivomancerColourEnum = false,
+        bool useDictionarySearch = false,
         IEnumerable<MagicColours>? magicColourOptions = null,
         IEnumerable<VivomancerColours>? vivomancerColourOptions = null,
-        Func<IReadOnlyList<string>, string?>? selectionValidator = null)
+        Func<IReadOnlyList<string>, string?>? selectionValidator = null,
+        bool isOptional = false)
     {
         Title = title;
         UseWardPactEnum = useWardPactEnum;
@@ -126,6 +169,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         _useVivomancerColourEnum = useVivomancerColourEnum;
         _selectionValidator = selectionValidator;
         _onAnySelectionChanged = onAnySelectionChanged;
+        _isOptional = isOptional;
 
         if (_useMagicColourEnum)
         {
@@ -165,6 +209,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
                 useWardPactEnum,
                 _useMagicColourEnum,
                 _useVivomancerColourEnum,
+                useDictionarySearch,
                 () => OnSlotChanged());
 
             if (_useMagicColourEnum)
@@ -286,6 +331,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         Raise(nameof(StatusText));
         Raise(nameof(HelperText));
         Raise(nameof(CardState));
+        Raise(nameof(Subtitle));
     }
 
     private void UpdateValidation()

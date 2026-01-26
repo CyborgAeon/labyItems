@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows.Input;
 using System.Text.RegularExpressions;
+using labyItems.Models.Characters;
 using labyItems.Services;
 
 namespace labyItems.Pages.Characters;
@@ -14,13 +15,16 @@ namespace labyItems.Pages.Characters;
 public sealed class CharacterClassRecord
 {
     public List<string> Brackets { get; set; } = new();
-    public Dictionary<string, List<string>> Levels { get; set; } = new();
+    public Dictionary<string, List<AbilityDefinition>> Levels { get; set; } = new();
     [JsonPropertyName("Max AC")]
     public JsonElement MaxAC { get; set; }
     public List<string>? Powerbase { get; set; }
     public JsonElement PowerPerLevel { get; set; }
+    public int? CasterLevel { get; set; }
+    public List<PowerCalculation>? PowerCalculations { get; set; }
     [JsonPropertyName("Buy as")]
     public List<string>? BuyAs { get; set; }
+    public GuildOverrideRules? GuildOverrides { get; set; }
 }
 
 public sealed class LevelRowVm
@@ -113,7 +117,9 @@ public sealed class ClassCardVm : INotifyPropertyChanged
             var level = ExtractLevel(kvp.Key);
             if (level is < 1 or > 8) continue;
 
-            var text = kvp.Value == null ? "" : string.Join(", ", kvp.Value.Where(x => !string.IsNullOrWhiteSpace(x)));
+            var text = kvp.Value == null
+                ? ""
+                : string.Join(", ", kvp.Value.Select(ToDisplayName).Where(x => !string.IsNullOrWhiteSpace(x)));
             if (text.Length > 0)
                 result[level.Value] = text;
         }
@@ -137,6 +143,17 @@ public sealed class ClassCardVm : INotifyPropertyChanged
         if (int.TryParse(key, out var n)) return n;
         var m = Regex.Match(key ?? "", "\\d+");
         return m.Success && int.TryParse(m.Value, out n) ? n : null;
+    }
+
+    private static string ToDisplayName(AbilityDefinition def)
+    {
+        if (def == null) return string.Empty;
+
+        var name = def.Name ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(def.Effect))
+            return $"{name} ({def.Effect})";
+
+        return name;
     }
 
     private bool _isExpanded;

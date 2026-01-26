@@ -1,7 +1,9 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Threading;
 using labyItems.Models;
@@ -10,6 +12,7 @@ using labyItems.Models.DTOs;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
+using ServiceCharacterClassRecord = labyItems.Services.CharacterClassRecord;
 
 namespace labyItems.Pages.Characters;
 
@@ -24,6 +27,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private string? _allowedClassKeysForRace;
     private readonly SemaphoreSlim _abilityRefreshLock = new(1, 1);
     private LifeScalePoint? _humanLifeForSelectedClass;
+    private ArmourTier _armourTier = ArmourTier.None;
+    private const string BaronialTraditionKey = "BaronialTradition";
+    private AlignmentRule? _raceAlignmentRule;
+    private AlignmentRule? _classAlignmentRule;
+
+    private static readonly Regex _armourValueRegex = new(@"(\d+)\s*(PAC|DAC|MAC|SAC)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     private void Raise([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -150,7 +159,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             };
 
             vm.SearchText = BuildRaceSearchText(name, record);
-            vm.BuildRowsAndChips(record.LevelledAbilities ?? new Dictionary<string, List<string>>(), record.BuyAs);
+            vm.BuildRowsAndChips(record.LevelledAbilities ?? new Dictionary<string, List<AbilityDefinition>>(), record.BuyAs);
             list.Add(vm);
         }
 
@@ -312,12 +321,16 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             _draft.RaceSubtypeKey = string.Empty;
             _draft.RaceSubtypeValue = string.Empty;
             _draft.LifeScaleKeyOverride = string.Empty;
+            _draft.ArmourAvailabilityOverride = string.Empty;
+            _draft.ColourChoiceOverride.Clear();
             _draft.SpecialisationSelections.Clear();
             _allowedClassKeysForSelectedRace = null;
             _allowedClassKeysForRace = null;
         }
         else
         {
+            _draft.ArmourAvailabilityOverride = string.Empty;
+            _draft.ColourChoiceOverride.Clear();
             _draft.Race = item.Name;
         }
         _notifyWizardGatingChanged();
@@ -357,7 +370,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 categories.Add(category);
 
             var maxAc = ParseInt(record.MaxAC);
-            var powerBase = record.Powerbase?.FirstOrDefault() ?? "";
+            var powerBase = ExtractPowerBase(record);
 
             var raceKeyForLife = ResolveRaceKeyForLifeScale(_draft);
 
@@ -601,15 +614,46 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         {
             var abilities = new List<AbilityDraft>();
 
-            abilities.AddRange(await BuildRaceAbilitiesAsync());
-            abilities.AddRange(await BuildClassAbilitiesAsync());
-            abilities.AddRange(SpecialisationVm.BuildSelectedAbilityDrafts());
-            abilities.AddRange(await BuildGuildAbilitiesAsync());
+            var (raceAbilities, raceGuildRules) = await BuildRaceAbilitiesAsync();
+            var (classAbilities, classRecord, classGuildRules) = await BuildClassAbilitiesAsync();
+            var (specAbilities, specGuildRules) = SpecialisationVm.BuildSelectedAbilityDraftsWithRules();
+            var guildAbilities = await BuildGuildAbilitiesAsync();
+            var baronialAbilities = BuildBaronialTraditionAbilities(classRecord);
+
+            abilities.AddRange(raceAbilities);
+            abilities.AddRange(classAbilities);
+            abilities.AddRange(specAbilities);
+            abilities.AddRange(guildAbilities);
+            abilities.AddRange(baronialAbilities);
+
+            abilities = ConsolidateAbilities(abilities);
+
+            UpdateArmourStats(classRecord, classAbilities, raceAbilities, specAbilities);
+            UpdatePowerPools(classRecord, abilities);
+            UpdateResistanceLevels(abilities, classRecord);
+            _draft.GuildOverrideRules = GuildOverrideRules.Merge(
+                raceGuildRules,
+                classGuildRules,
+                specGuildRules,
+                GuildOverrideRules.FromLegacyStrings(abilities.SelectMany(a => a?.GuildOverrides ?? Enumerable.Empty<string>())));
+
+            Draft.Innates = abilities
+                .Where(a => a.AbilityType == AbilityType.Innate)
+                .Select(a => new InnateAbilityDraft
+                {
+                    Name = a.Name,
+                    Rank = Math.Clamp(a.Count ?? 0, 0, 8)
+                })
+                .ToList();
 
             Draft.Abilities = abilities
                 .OrderBy(a => a.LevelGained ?? int.MaxValue)
                 .ThenBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
                 .ToList();
+
+            await UpdateAvailableAlignmentsAsync();
+
+            MainThread.BeginInvokeOnMainThread(_notifyWizardGatingChanged);
         }
         catch (Exception ex)
         {
@@ -621,34 +665,109 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
     }
 
-    private async Task<List<AbilityDraft>> BuildRaceAbilitiesAsync()
+    private static List<AbilityDraft> ConsolidateAbilities(IEnumerable<AbilityDraft> abilities)
+    {
+        var ordered = new List<AbilityDraft>();
+        var innateLookup = new Dictionary<string, AbilityDraft>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var ability in abilities ?? Enumerable.Empty<AbilityDraft>())
+        {
+            if (ability == null) continue;
+
+            var name = (ability.Name ?? string.Empty).Trim();
+            if (name.Length == 0) continue;
+
+            if (ability.AbilityType == AbilityType.Innate)
+            {
+                if (innateLookup.TryGetValue(name, out var existing))
+                {
+                    existing.Count = (existing.Count ?? 0) + (ability.Count ?? 0);
+                    if (ability.LevelGained.HasValue && (!existing.LevelGained.HasValue || ability.LevelGained.Value < existing.LevelGained.Value))
+                        existing.LevelGained = ability.LevelGained;
+
+                    if (string.IsNullOrWhiteSpace(existing.Effect) && !string.IsNullOrWhiteSpace(ability.Effect))
+                        existing.Effect = ability.Effect;
+
+                    foreach (var prereq in ability.PreReqs)
+                        if (!existing.PreReqs.Contains(prereq))
+                            existing.PreReqs.Add(prereq);
+
+                    foreach (var g in ability.GuildOverrides)
+                        if (!existing.GuildOverrides.Contains(g))
+                            existing.GuildOverrides.Add(g);
+
+                    continue;
+                }
+
+                innateLookup[name] = ability;
+                ordered.Add(ability);
+                continue;
+            }
+
+            if (ordered.Any(a => string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            ordered.Add(ability);
+        }
+
+        return ordered;
+    }
+
+    private async Task<(List<AbilityDraft> Abilities, GuildOverrideRules? GuildRules)> BuildRaceAbilitiesAsync()
     {
         var list = new List<AbilityDraft>();
+        GuildOverrideRules? guildRules = null;
 
         var raceName = (Draft.Race ?? string.Empty).Trim();
         if (raceName.Length == 0)
-            return list;
+        {
+            _raceAlignmentRule = null;
+            return (list, guildRules);
+        }
 
         var all = await PeopleService.GetAllAsync();
-        if (TryGetRecord(all, raceName, out var rec) && rec?.LevelledAbilities != null)
-            list.AddRange(AbilityDraftBuilder.BuildFromLevels(rec.LevelledAbilities));
+        if (TryGetRecord(all, raceName, out var rec) && rec != null)
+        {
+            _raceAlignmentRule = rec.AlignmentRule;
+            if (rec.LevelledAbilities != null)
+                list.AddRange(AbilityDraftBuilder.BuildFromLevels(rec.LevelledAbilities));
+            guildRules = rec.GuildOverrides;
+        }
+        else
+        {
+            _raceAlignmentRule = null;
+        }
 
-        return list;
+        return (list, guildRules);
     }
 
-    private async Task<List<AbilityDraft>> BuildClassAbilitiesAsync()
+    private async Task<(List<AbilityDraft> Abilities, ServiceCharacterClassRecord? Record, GuildOverrideRules? GuildRules)> BuildClassAbilitiesAsync()
     {
         var list = new List<AbilityDraft>();
+        ServiceCharacterClassRecord? record = null;
+        GuildOverrideRules? guildRules = null;
 
         var className = (Draft.Class ?? string.Empty).Trim();
         if (className.Length == 0)
-            return list;
+        {
+            _classAlignmentRule = null;
+            return (list, record, guildRules);
+        }
 
         var all = await ClassService.GetAllAsync();
         if (TryGetRecord(all, className, out var rec) && rec?.Levels != null)
+        {
+            record = rec;
+            _classAlignmentRule = rec.AlignmentRule ?? BuildPaladinFallbackRule(className);
             list.AddRange(AbilityDraftBuilder.BuildFromLevels(rec.Levels));
+            guildRules = rec.GuildOverrides;
+        }
+        else
+        {
+            _classAlignmentRule = BuildPaladinFallbackRule(className);
+        }
 
-        return list;
+        return (list, record, guildRules);
     }
 
     private async Task<List<AbilityDraft>> BuildGuildAbilitiesAsync()
@@ -669,6 +788,497 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
 
         return list;
+    }
+
+    private static AlignmentRule? BuildPaladinFallbackRule(string className)
+    {
+        if (!className.Equals("Paladin", StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        return new AlignmentRule
+        {
+            Mode = "restrict",
+            Allowed = new AllowedAxes
+            {
+                Moral = new List<MoralAxis> { MoralAxis.Good },
+                Order = new List<OrderAxis> { OrderAxis.Lawful }
+            },
+            AllowedPairs = new List<string> { "Lawful Good" }
+        };
+    }
+
+    private async Task UpdateAvailableAlignmentsAsync()
+    {
+        var rules = GetNonGuildAlignmentRules()
+            .Where(r => r != null)
+            .ToList();
+
+        try
+        {
+            var guildMap = await GuildsService.GetAllAsync();
+            foreach (var guild in Draft.Guilds.Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                if (guildMap.TryGetValue(guild, out var rec))
+                {
+                    var rule = GuildsService.GetAlignmentRule(rec);
+                    if (rule != null)
+                        rules.Add(rule);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ALIGNMENTS] Failed to load guild alignment rules: {ex}");
+        }
+
+        Draft.SetAvailableAlignmentsFromRules(rules!);
+    }
+
+    public IEnumerable<AlignmentRule?> GetNonGuildAlignmentRules()
+    {
+        yield return _raceAlignmentRule;
+        yield return _classAlignmentRule;
+    }
+
+    private List<AbilityDraft> BuildBaronialTraditionAbilities(ServiceCharacterClassRecord? classRecord)
+    {
+        var list = new List<AbilityDraft>();
+
+        var race = (Draft.Race ?? string.Empty).Trim();
+        if (!string.Equals(race, "Human", StringComparison.OrdinalIgnoreCase))
+            return list;
+
+        if (!string.Equals(Draft.RaceSubtype?.Trim(), "Baronial", StringComparison.OrdinalIgnoreCase))
+            return list;
+
+        if (!Draft.SpecialisationSelections.TryGetValue(BaronialTraditionKey, out var selection) || string.IsNullOrWhiteSpace(selection))
+            return list;
+
+        var choice = NormalizeBaronialChoice(selection);
+        var powerBase = (classRecord?.Powerbase?.FirstOrDefault() ?? string.Empty).Trim();
+        var powerBaseLower = powerBase.ToLowerInvariant();
+        var isWizard = classRecord?.Brackets?.Any(b => b.Contains("wizard", StringComparison.OrdinalIgnoreCase)) == true;
+
+        if (choice.Equals("circle", StringComparison.OrdinalIgnoreCase))
+        {
+            if (powerBaseLower.Contains("magic"))
+            {
+                list.Add(new AbilityDraft
+                {
+                    Name = "Reduce casting damage by 1",
+                    AbilityType = AbilityType.Static,
+                    ShortStringValue = "-1 casting damage"
+                });
+            }
+
+            if (powerBaseLower.Contains("spirit"))
+            {
+                list.Add(new AbilityDraft
+                {
+                    Name = "May increase a miracle's level of effect by 1",
+                    AbilityType = AbilityType.Static,
+                    ShortStringValue = "+1 miracle effect level"
+                });
+            }
+        }
+        else if (choice.Equals("hedge", StringComparison.OrdinalIgnoreCase))
+        {
+            if (isWizard)
+            {
+                list.Add(new AbilityDraft { Name = "Disguise skill", AbilityType = AbilityType.Static });
+                list.Add(new AbilityDraft
+                {
+                    Name = $"Immunity to informational effects ({powerBase})",
+                    AbilityType = AbilityType.Immunity,
+                    ShortStringValue = $"Immunity to informational effects ({powerBase})"
+                });
+                list.Add(new AbilityDraft
+                {
+                    Name = $"+1 resistance ({powerBase})",
+                    AbilityType = AbilityType.Resistance,
+                    ShortStringValue = $"+1 {powerBase} resistance"
+                });
+                list.Add(new AbilityDraft
+                {
+                    Name = "+1 level of life (race)",
+                    AbilityType = AbilityType.Static,
+                    ShortStringValue = "+1 life (race)"
+                });
+            }
+
+            var ov = new AbilityDraft
+            {
+                Name = "Guild override: Hedge",
+                AbilityType = AbilityType.GuildOverride,
+                ShortStringValue = "pr:"
+            };
+            ov.GuildOverrides.Add("pr:");
+            list.Add(ov);
+        }
+
+        return list;
+    }
+
+    private static string NormalizeBaronialChoice(string raw)
+        => (raw ?? string.Empty).Replace("Ⓞ", string.Empty).Trim();
+
+    private void UpdateArmourStats(
+        ServiceCharacterClassRecord? classRecord,
+        List<AbilityDraft> classAbilities,
+        List<AbilityDraft> raceAbilities,
+        List<AbilityDraft> specAbilities)
+    {
+        var classValues = ExtractArmourValues(classAbilities);
+        var raceValues = ExtractArmourValues(raceAbilities);
+        var specValues = ExtractArmourValues(specAbilities);
+
+        var hasClassArmour = classRecord?.Armour?.Wearable is { Count: > 0 };
+        var hasNoArmour = !hasClassArmour || classValues.DisallowArmour || raceValues.DisallowArmour || specValues.DisallowArmour;
+
+        var classTier = hasClassArmour
+            ? DetermineArmourTierFromClassArmour(classRecord)
+            : ArmourTier.None;
+        var raceTier = DetermineArmourTierFromAbilities(raceAbilities);
+        var specTier = DetermineArmourTierFromAbilities(specAbilities);
+        var overrideTier = hasClassArmour ? ParseArmourTier(_draft.ArmourAvailabilityOverride) : null;
+        var combinedTier = classTier;
+        if (raceTier != ArmourTier.None)
+            combinedTier = combinedTier == ArmourTier.None ? raceTier : (ArmourTier)Math.Min((int)combinedTier, (int)raceTier);
+        if (specTier != ArmourTier.None)
+            combinedTier = combinedTier == ArmourTier.None ? specTier : (ArmourTier)Math.Min((int)combinedTier, (int)specTier);
+
+        var finalTier = hasClassArmour
+            ? ResolveArmourTier(combinedTier, overrideTier, hasNoArmour)
+            : ArmourTier.None;
+
+        _armourTier = finalTier;
+        _draft.ArmourAvailability = finalTier.ToString();
+
+        var maxPac = GetMaxTotalPacForTier(finalTier);
+        if (_draft.WornArmour > maxPac)
+            _draft.WornArmour = maxPac;
+
+        _draft.ClassRaceArmour = classValues.Pac + raceValues.Pac + specValues.Pac;
+        _draft.DAC = classValues.Dac + raceValues.Dac + specValues.Dac;
+
+        var macTotal = classValues.Mac + raceValues.Mac + specValues.Mac;
+        var sacTotal = classValues.Sac + raceValues.Sac + specValues.Sac;
+        _draft.MAC = macTotal > 0 ? macTotal : null;
+        _draft.SAC = sacTotal > 0 ? sacTotal : null;
+
+        _draft.MaxAC = classRecord != null ? ParseInt(classRecord.MaxAC) : 0;
+    }
+
+    private static ArmourTier? ParseArmourTier(string? value)
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return null;
+
+        if (Enum.TryParse<ArmourTier>(text, ignoreCase: true, out var parsed))
+            return parsed;
+
+        return text.ToLowerInvariant() switch
+        {
+            "light armour" or "light armor" => ArmourTier.Light,
+            "medium armour" or "medium armor" => ArmourTier.Medium,
+            "heavy armour" or "heavy armor" => ArmourTier.Heavy,
+            _ => null
+        };
+    }
+
+    private ArmourTier ResolveArmourTier(ArmourTier classTier, ArmourTier? overrideTier, bool noArmour)
+    {
+        if (noArmour)
+            return ArmourTier.None;
+
+        if (overrideTier.HasValue)
+            return overrideTier.Value;
+
+        return classTier;
+    }
+
+    private static ArmourTier DetermineArmourTierFromClassArmour(ServiceCharacterClassRecord? classRecord)
+    {
+        var wearable = classRecord?.Armour?.Wearable;
+        if (wearable == null || wearable.Count == 0)
+            return ArmourTier.None;
+
+        var normalized = wearable
+            .Select(w => (w ?? string.Empty).Trim().ToLowerInvariant())
+            .Where(s => s.Length > 0)
+            .ToList();
+
+        bool hasHeavy = normalized.Any(s => s.Contains("heavy"));
+        bool hasMedium = normalized.Any(s => s.Contains("medium"));
+        bool hasLight = normalized.Any(s => s.Contains("light"));
+
+        if (hasHeavy)
+            return ArmourTier.Heavy;
+        if (hasMedium)
+            return ArmourTier.Medium;
+        if (hasLight)
+            return ArmourTier.Light;
+
+        return ArmourTier.None;
+    }
+
+    private static ArmourTier DetermineArmourTierFromAbilities(IEnumerable<AbilityDraft> abilities)
+    {
+        var tier = ArmourTier.None;
+
+        foreach (var ability in abilities ?? Array.Empty<AbilityDraft>())
+        {
+            var name = ability?.Name ?? string.Empty;
+            if (name.Length == 0) continue;
+
+            var lower = name.ToLowerInvariant();
+
+            if (lower.Contains("heavy armour") || lower.Contains("heavy armor"))
+            {
+                tier = ArmourTier.Heavy;
+                break;
+            }
+
+            if (tier < ArmourTier.Medium && (lower.Contains("medium armour") || lower.Contains("medium armor")))
+            {
+                tier = ArmourTier.Medium;
+                continue;
+            }
+
+            if (tier < ArmourTier.Light && (lower.Contains("light armour") || lower.Contains("light armor")))
+                tier = ArmourTier.Light;
+        }
+
+        return tier;
+    }
+
+    private static ArmourValues ExtractArmourValues(IEnumerable<AbilityDraft> abilities)
+    {
+        int pac = 0, dac = 0, mac = 0, sac = 0;
+        bool disallow = false;
+
+        foreach (var ability in abilities ?? Array.Empty<AbilityDraft>())
+        {
+            var name = ability?.Name ?? string.Empty;
+            if (name.Length == 0) continue;
+
+            var lower = name.ToLowerInvariant();
+            if (lower.Contains("cannot wear armour") || lower.Contains("cannot wear armor") || lower.Contains("may not wear armour") || lower.Contains("no armour"))
+                disallow = true;
+
+            foreach (Match m in _armourValueRegex.Matches(name))
+            {
+                if (!int.TryParse(m.Groups[1].Value, out var value))
+                    continue;
+
+                var key = m.Groups[2].Value.ToUpperInvariant();
+                switch (key)
+                {
+                    case "PAC":
+                        pac = Math.Max(pac, value);
+                        break;
+                    case "DAC":
+                        dac = Math.Max(dac, value);
+                        break;
+                    case "MAC":
+                        mac = Math.Max(mac, value);
+                        break;
+                    case "SAC":
+                        sac = Math.Max(sac, value);
+                        break;
+                }
+            }
+        }
+
+        return new ArmourValues(pac, dac, mac, sac, disallow);
+    }
+
+    private static int GetMaxPacForTier(ArmourTier tier)
+        => tier switch
+        {
+            ArmourTier.Light => 4,
+            ArmourTier.Medium => 6,
+            ArmourTier.Heavy => 8,
+            _ => 0
+        };
+
+    private static int GetMaxTotalPacForTier(ArmourTier tier)
+        => tier switch
+        {
+            ArmourTier.Light => GetMaxPacForTier(tier),
+            ArmourTier.Medium => GetMaxPacForTier(tier) + 1,
+            ArmourTier.Heavy => GetMaxPacForTier(tier) + 3,
+            _ => 0
+        };
+
+    private void UpdateResistanceLevels(IEnumerable<AbilityDraft> abilities, ServiceCharacterClassRecord? classRecord)
+    {
+        var levels = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "Physical", 0 },
+            { "Magic", 0 },
+            { "Neuro", 0 },
+            { "Spirit", 0 }
+        };
+
+        var powerBase = ExtractPowerBase(classRecord);
+        if (string.IsNullOrWhiteSpace(powerBase) && Draft.PowerPools != null && Draft.PowerPools.Count > 0)
+            powerBase = Draft.PowerPools.Keys.FirstOrDefault();
+
+        foreach (var ability in abilities ?? Array.Empty<AbilityDraft>())
+        {
+            if (ability == null)
+                continue;
+
+            var text = $"{ability.Name} {ability.ShortStringValue} {ability.Effect}".ToLowerInvariant();
+            if (ability.AbilityType != AbilityType.Resistance && !text.Contains("resistance"))
+                continue;
+
+            var type = DetectResistanceType(ability, powerBase);
+            if (type == null && ability.AbilityType == AbilityType.Resistance)
+                type = MapPowerBaseToResistanceType(powerBase);
+            if (type == null)
+                continue;
+
+            var delta = ability.Count ?? ParseFirstInt(ability.ShortStringValue, ability.Name);
+            if (delta == 0)
+                delta = 1; // default increment when a resistance is granted but no explicit count
+
+            levels[type] = levels.TryGetValue(type, out var current)
+                ? current + delta
+                : delta;
+        }
+
+        _draft.ResistanceLevels = levels;
+    }
+
+    private void UpdatePowerPools(ServiceCharacterClassRecord? classRecord, IEnumerable<AbilityDraft> abilities)
+    {
+        var pools = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        if (classRecord != null)
+        {
+            var casterLevel = classRecord.CasterLevel ?? 8;
+            if (classRecord.PowerCalculations is { Count: > 0 })
+            {
+                foreach (var calc in classRecord.PowerCalculations)
+                {
+                    var key = (calc.PowerBase ?? string.Empty).Trim();
+                    if (key.Length == 0) continue;
+                    pools[key] = EvaluatePowerCalculation(calc.Calculation, casterLevel);
+                }
+            }
+            else if (classRecord.Powerbase is { Count: > 0 })
+            {
+                foreach (var pb in classRecord.Powerbase)
+                {
+                    var key = (pb ?? string.Empty).Trim();
+                    if (key.Length == 0) continue;
+                    pools[key] = Math.Max(pools.TryGetValue(key, out var existing) ? existing : 0, 0);
+                }
+            }
+        }
+
+        var monkLocCount = abilities?.Count(a => a?.Name?.IndexOf("monk locational curing", StringComparison.OrdinalIgnoreCase) >= 0) ?? 0;
+        if (monkLocCount > 0 && _draft.TBLP > 0)
+        {
+            var bonus = (int)Math.Floor(_draft.TBLP / 3.0);
+            if (bonus > 0)
+            {
+                if (pools.TryGetValue("MonkLoc", out var existing))
+                    pools["MonkLoc"] = existing + bonus * monkLocCount;
+                else
+                    pools["MonkLoc"] = bonus * monkLocCount;
+            }
+        }
+
+        _draft.PowerPools = pools;
+    }
+
+    private static int ParseFirstInt(params string?[] candidates)
+    {
+        foreach (var c in candidates ?? Array.Empty<string>())
+        {
+            var text = (c ?? string.Empty).Trim();
+            if (text.Length == 0) continue;
+
+            var m = Regex.Match(text, @"-?\d+");
+            if (m.Success && int.TryParse(m.Value, out var n))
+                return n;
+        }
+
+        return 0;
+    }
+
+    private static string? DetectResistanceType(AbilityDraft ability, string? powerBase)
+    {
+        var text = $"{ability.Name} {ability.ShortStringValue} {ability.Effect}".ToLowerInvariant();
+
+        if (text.Contains("physical"))
+            return "Physical";
+        if (text.Contains("magic") || text.Contains("magical"))
+            return "Magic";
+        if (text.Contains("neuro") || text.Contains("neuronic"))
+            return "Neuro";
+        if (text.Contains("spirit"))
+            return "Spirit";
+
+        if (text.Contains("powerbase") || text.Contains("power base"))
+        {
+            var mapped = MapPowerBaseToResistanceType(powerBase);
+            if (mapped != null)
+                return mapped;
+        }
+
+        return null;
+    }
+
+    private static string? MapPowerBaseToResistanceType(string? powerBase)
+    {
+        var pb = (powerBase ?? string.Empty).Trim().ToLowerInvariant();
+        if (pb.Length == 0)
+            return null;
+
+        if (pb.Contains("magic"))
+            return "Magic";
+        if (pb.Contains("spirit"))
+            return "Spirit";
+        if (pb.Contains("neuro") || pb.Contains("neuronic"))
+            return "Neuro";
+
+        return null;
+    }
+
+    private static int EvaluatePowerCalculation(string? calculation, int casterLevel)
+    {
+        var expr = (calculation ?? string.Empty).Trim().ToUpperInvariant();
+        expr = expr.Replace("TM", "1");
+
+        if (expr == "CL^2+CL")
+            return casterLevel * casterLevel + casterLevel;
+        if (expr == "(CL^2+CL)/2")
+            return (int)Math.Round((casterLevel * casterLevel + casterLevel) / 2.0);
+        if (expr.StartsWith("CL*"))
+        {
+            var rest = expr.Substring("CL*".Length);
+            if (int.TryParse(rest, out var factor))
+                return casterLevel * factor;
+
+            if (rest.Contains("*"))
+            {
+                var parts = rest.Split('*', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                double product = casterLevel;
+                foreach (var p in parts)
+                {
+                    if (int.TryParse(p, out var n))
+                        product *= n;
+                }
+                return (int)Math.Round(product);
+            }
+        }
+
+        return 0;
     }
 
     private static bool TryGetRecord<T>(Dictionary<string, T> map, string key, out T? value)
@@ -694,6 +1304,15 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         if (e.ValueKind == JsonValueKind.Number && e.TryGetInt32(out var n)) return n;
         if (e.ValueKind == JsonValueKind.String && int.TryParse(e.GetString(), out n)) return n;
         return 0;
+    }
+
+    private static string ExtractPowerBase(labyItems.Services.CharacterClassRecord record)
+    {
+        var powerBase = record.Powerbase?.FirstOrDefault();
+        if (!string.IsNullOrWhiteSpace(powerBase))
+            return powerBase;
+
+        return record.PowerCalculations?.FirstOrDefault()?.PowerBase ?? "";
     }
 
     private static string ExtractIcon(string bracket)
@@ -777,4 +1396,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         foreach (var i in items)
             target.Add(i);
     }
+
+    private enum ArmourTier
+    {
+        None = 0,
+        Light = 1,
+        Medium = 2,
+        Heavy = 3
+    }
+
+    private sealed record ArmourValues(int Pac, int Dac, int Mac, int Sac, bool DisallowArmour);
 }

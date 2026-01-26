@@ -1,183 +1,879 @@
 {
   "Warrior": {
     "Brackets": ["🛡️ Warrior"],
+    "Armour": {
+      "Wearable": ["heavy", "light", "medium"],
+      "Restrictions": []
+    },
     "Levels": {
-      "1": ["O & U", "Light, Medium & Heavy armour"],
-      "2": ["E, H & MP"],
-      "3": ["B"],
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
       "4": [],
       "5": [],
-      "6": ["Warrior Specialist"],
-      "7": ["Warrior Specialist"],
-      "8": ["Warrior Specialist"]
+      "6": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        }
+      ]
     },
     "Max AC": 9,
     "Buy as": ["1st class Warrior"]
   },
   "Warrior-Priest": {
     "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
+    },
     "Levels": {
-      "1": ["O & U", "Medium armour", "Light armour"],
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
       "2": [],
-      "3": ["E"],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        }
+      ],
       "4": [],
-      "5": ["B"],
-      "6": ["H"],
-      "7": ["1st Weapon Mastery O"],
-      "8": ["Warrior-Priest specialist"]
+      "5": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "1st Weapon Mastery O",
+          "Type": "Static"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Warrior-Priest Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior-Priest Specialist"
+        }
+      ]
     },
     "Max AC": 7,
     "Powerbase": ["示 Spirit"],
-    "PowerPerLevel": 3
+    "PowerPerLevel": 3,
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*3"
+      }
+    ]
   },
   "Power Warrior": {
     "Brackets": ["🛡️ Warrior"],
+    "Armour": {
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
+    },
     "Levels": {
-      "1": ["O & U"],
-      "2": ["E", "Power Warrior"],
-      "3": ["B"],
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
       "4": [],
       "5": [],
-      "6": ["Immunity to Befriend, Beguile, Spiritual Mastery"],
-      "7": ["Power-Warrior Specialist"],
-      "8": ["Power-Warrior Specialist"]
+      "6": [
+        {
+          "Name": "Immunity to Befriend",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Beguile",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Spiritual Mastery",
+          "Type": "Immunity"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Power-Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Power-Warrior Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Power-Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Power-Warrior Specialist"
+        }
+      ]
     },
-    "Max AC": 8
+    "Max AC": 8,
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Good", "Neutral", "Evil"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Good", "Lawful Evil"]
+    }
   },
   "Power Master": {
     "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
     "Levels": {
-      "1": ["O&E", "Recognise Mana"],
-      "2": ["1 DAC"],
-      "3": ["Immunity to Bless/Curse"],
-      "4": ["2 DAC"],
-      "5": ["Weapon Mastery (any)"],
-      "6": ["Immunity to Befriend, Beguile, Spiritual Mastery", "3 DAC"],
-      "7": ["Resistance to own element", "Power-Master Specialist"],
-      "8": ["4 DAC", "Power-Master Specialist"]
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Recognise Mana",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "1 DAC",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Immunity to Bless",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Curse",
+          "Type": "Immunity"
+        }
+      ],
+      "4": [
+        {
+          "Name": "2 DAC",
+          "Type": "Static"
+        }
+      ],
+      "5": [
+        {
+          "Name": "Weapon Mastery",
+          "Type": "Static"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Immunity to Befriend",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Beguile",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Spiritual Mastery",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "3 DAC",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Resistance to own element",
+          "Type": "Static"
+        },
+        {
+          "Name": "Power-Master Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Power-Master Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "4 DAC",
+          "Type": "Static"
+        },
+        {
+          "Name": "Power-Master Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Power-Master Specialist"
+        }
+      ]
     },
     "Max AC": "8",
     "Powerbase": ["🪄 Magic"],
-    "PowerPerLevel": "3"
+    "PowerPerLevel": "3",
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Magic",
+        "Calculation": "CL*3"
+      }
+    ],
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Good", "Neutral", "Evil"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Good", "Lawful Neutral", "Lawful Evil"]
+    }
   },
   "Wind Dancer": {
     "Brackets": ["🛡️ Warrior"],
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": []
+    },
     "Levels": {
-      "1": ["O"],
-      "2": ["E & H"],
-      "3": ["1 DAC"],
-      "4": ["B", "Salmon Leap 1/2 levels"],
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "1 DAC",
+          "Type": "Static"
+        }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Salmon Leap",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
       "5": [],
-      "6": ["Contra Mastery 1/4 levels", "2 DAC"],
-      "7": ["3 DAC"],
+      "6": [
+        {
+          "Name": "Contra Mastery",
+          "Type": "Innate",
+          "Count": "2"
+        },
+        {
+          "Name": "2 DAC",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "3 DAC",
+          "Type": "Static"
+        }
+      ],
       "8": []
     },
-    "Max AC": 9
+    "Max AC": 9,
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Good", "Neutral", "Evil"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Good", "Lawful Neutral", "Lawful Evil"]
+    }
   },
   "Valdstayn": {
     "Brackets": ["🛡️ Warrior"],
+    "Armour": {
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
+    },
     "Levels": {
-      "1": ["O & U"],
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
       "2": [],
-      "3": ["E & H", "I Shall Defend the Master 1/2 levels"],
-      "4": ["Innate MAC1"],
-      "5": ["B", "I Shall Shield the Master @will"],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Defend the Master",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "4": [
+        {
+          "Name": "1 MAC",
+          "Type": "Static"
+        }
+      ],
+      "5": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Shield the Master",
+          "Type": "AtWill"
+        }
+      ],
       "6": [],
       "7": [
-        "Valdstayn Specialist",
-        "I Shall Stand by the Master 1/4 levels",
-        "Innate MAC2"
+        {
+          "Name": "Valdstayn Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Valdstayn Specialist"
+        },
+        {
+          "Name": "Stand by the Master ",
+          "Type": "Innate",
+          "Count": 2
+        },
+        {
+          "Name": "2 MAC",
+          "Type": "Static"
+        }
       ],
-      "8": ["Valdstayn Specialist"]
+      "8": [
+        {
+          "Name": "Valdstayn Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Valdstayn Specialist"
+        }
+      ]
     },
     "Max AC": 8
   },
   "Rovfuger": {
     "Brackets": ["🛡️ Warrior"],
     "Levels": {
-      "1": ["O"],
-      "2": ["E & H", "1 DAC"],
-      "3": ["Weapon Mastery O class weapon"],
-      "4": ["B", "War Cry 1/4 levels"],
-      "5": ["2 DAC"],
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "1 DAC",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Weapon Mastery O",
+          "Type": "Static"
+        }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "War Cry",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ],
+      "5": [
+        {
+          "Name": "2 DAC",
+          "Type": "Static"
+        }
+      ],
       "6": [],
-      "7": ["Rovfuger Specialist", "Burst of Strength 1/4 levels", "3 DAC"],
-      "8": ["Rovfuger Specialist", "4 DAC"]
+      "7": [
+        {
+          "Name": "Rovfuger Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Rovfuger Specialist"
+        },
+        {
+          "Name": "Burst of Strength",
+          "Type": "Innate",
+          "Count": 2
+        },
+        {
+          "Name": "3 DAC",
+          "Type": "Static"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Rovfuger Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Rovfuger Specialist"
+        },
+        {
+          "Name": "4 DAC",
+          "Type": "Static"
+        }
+      ]
     },
     "Max AC": 9
   },
   "Kensai / Blade Master": {
     "Brackets": ["🛡️ Warrior"],
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": []
+    },
     "Levels": {
-      "1": ["O & B"],
-      "2": ["E", "1 DAC"],
-      "3": ["Weapon Mastery (any)", "2 DAC"],
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "1 DAC",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Weapon Mastery",
+          "Type": "Static"
+        },
+        {
+          "Name": "2 DAC",
+          "Type": "Static"
+        }
+      ],
       "4": [],
       "5": [],
-      "6": ["3 DAC"],
-      "7": ["Ki Strike"],
-      "8": ["Weapon Mastery (any)", "4 DAC"]
+      "6": [
+        {
+          "Name": "3 DAC",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Ki Strike",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ],
+      "8": [
+        {
+          "Name": "Weapon Mastery",
+          "Type": "Static"
+        },
+        {
+          "Name": "4 DAC",
+          "Type": "Static"
+        }
+      ]
     },
     "Max AC": 9,
     "Buy as": ["Kensai", "2nd class Warrior"]
   },
   "Forest Guardian": {
-    "Brackets": ["🛡️ Warrior", "🌿 Druid"],
+    "Brackets": ["🌿 Druid"],
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": ["No metal"]
+    },
     "Levels": {
       "1": [
-        "O & U",
-        "Medium armour",
-        "Light armour",
-        "Rec EP",
-        "Tell Direction",
-        "Tell Time",
-        "Tell Plant Type",
-        "Immunity to Bless/Curse"
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Recognise Earthpower",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tell Direction",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tell Time",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tell Plant Type",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Immunity to Bless/Curse",
+          "Type": "Immunity"
+        }
       ],
-      "2": ["H & E", "Tell Wounds"],
-      "3": ["Tell Animal Type", "Read Tracks"],
-      "4": ["B"],
-      "5": ["Tell Disease", "Stop Bleeding"],
+      "2": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Tell Wounds",
+          "Type": "AtWill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Tell Animal Type",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tracking",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "Tell Disease",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Stop Bleeding",
+          "Type": "AtWill"
+        }
+      ],
       "6": [],
-      "7": ["Warrior Specialist", "Tell poison"],
-      "8": ["Warrior Specialist"]
+      "7": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        },
+        {
+          "Name": "Tell Poison",
+          "Type": "AtWill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        }
+      ]
     },
     "Max AC": 8,
     "Powerbase": ["🌍 Earthpower"],
-    "PowerPerLevel": 2
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Earthpower",
+        "Calculation": "CL*2"
+      }
+    ]
   },
   "Kallah Beggar": {
     "Brackets": ["⚔ Scout", "🛡️ Warrior"],
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": []
+    },
+    "GuildOverrides": ["City bound"],
     "Levels": {
-      "1": ["O & U", "City bound"],
-      "2": ["Standard Scout skill"],
-      "3": ["1 DAC", "Standard Scout skill"],
-      "4": ["B", "Standard Scout skill"],
-      "5": ["2 DAC", "Standard Scout skill"],
-      "6": ["Backstab"],
-      "7": ["3 DAC", "Specialist Scout skill"],
-      "8": ["Specialist Scout skill", "Weapon Mastery (dagger)"]
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "1 DAC",
+          "Type": "Static"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "2 DAC",
+          "Type": "Static"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Backstab",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "3 DAC",
+          "Type": "Static"
+        },
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        },
+        {
+          "Name": "Weapon Mastery (dagger)",
+          "Type": "Static"
+        }
+      ]
     },
     "Max AC": 7,
     "Buy as": ["Kallah Beggar", "2nd class Assassin", "2nd class Warrior"]
   },
   "Hanot Beggar": {
     "Brackets": ["⚔ Scout", "🛡️ Warrior"],
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": []
+    },
+    "GuildOverrides": ["City bound"],
     "Levels": {
       "1": [
-        "O & U",
-        "Light armour",
-        "3 PAC",
-        "Trusty & Old (armour)",
-        "City bound"
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "3 PAC",
+          "Type": "Static"
+        },
+        {
+          "Name": "Trusty & Old (armour)",
+          "Type": "Static"
+        }
       ],
-      "2": ["Standard Scout skill"],
-      "3": ["H", "Standard Scout skill", "4 PAC"],
+      "2": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        },
+        {
+          "Name": "4 PAC",
+          "Type": "Static"
+        }
+      ],
       "4": [],
-      "5": ["E", "Standard Scout skill"],
-      "6": ["Warrior Specialist", "5 PAC"],
-      "7": ["1st Weapon Mastery (O)", "Half effect Natural Cold"],
-      "8": ["Specialist Scout skill"]
+      "5": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        },
+        {
+          "Name": "5 PAC",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Weapon Mastery O",
+          "Type": "Static"
+        },
+        {
+          "Name": "Half effect Natural Cold",
+          "Type": "Immunity"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ]
     },
     "Max AC": 8,
     "Buy as": ["Hanot Beggar", "2nd class Pathfinder", "2nd class Warrior"]
@@ -185,25 +881,103 @@
   "Paladin": {
     "Brackets": ["🛡️ Warrior"],
     "Max AC": 9,
+    "Armour": {
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
+    },
     "Levels": {
       "1": [
-        "O & U",
-        "Light armour",
-        "Medium armour",
-        "Heavy armour",
-        "Recognise Evil Spirit"
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Recognise evil spirit",
+          "Type": "AtWill"
+        }
       ],
-      "2": ["E", "Paladinic Bless"],
-      "3": ["B", "Lay on hands 3/level"],
-      "4": ["Bless Other 1/2 levels"],
-      "5": ["Detect Lie", "Cure disease 1/3 levels"],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Irremovable Paladinic Bless",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Lay on hands",
+          "Type": "Innate",
+          "Count": 24
+        }
+      ],
+      "4": [
+        {
+          "Name": "Bless Other",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "5": [
+        {
+          "Name": "Detect Lie",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Cure disease",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ],
       "6": [
-        "Paladin Specialist skill",
-        "Discern Spiritual Aura",
-        "Repel Undead"
+        {
+          "Name": "Paladin Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Paladin Specialist skill"
+        },
+        {
+          "Name": "Discern Spiritual Aura",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Repel Undead",
+          "Type": "Innate",
+          "Count": 4
+        }
       ],
-      "7": ["Paladin Specialist skill", "Recognise Spirit"],
-      "8": ["Paladin Specialist skill", "Repel Evil 1/4 levels"]
+      "7": [
+        {
+          "Name": "Paladin Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Paladin Specialist skill"
+        },
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Paladin Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Paladin Specialist skill"
+        },
+        {
+          "Name": "Repel Evil",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ]
     },
     "alignmentRule": {
       "mode": "set",
@@ -217,21 +991,86 @@
   "Unholy Champion": {
     "Brackets": ["🛡️ Warrior"],
     "Max AC": 9,
+    "Armour": {
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
+    },
     "Levels": {
       "1": [
-        "O & U",
-        "Recognise evil spirit",
-        "Immunity to disease",
-        "Undead returner",
-        "Evil stairway"
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Recognise Goodly Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Immunity to Disease",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Undead Returner",
+          "Type": "Static"
+        },
+        {
+          "Name": "Evil stairway list",
+          "Type": "CastingList"
+        }
       ],
-      "2": ["E"],
-      "3": ["H & MP", "Repel Goodly Spirit 1/2 levels"],
-      "4": ["B"],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Repel Good",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
       "5": [],
-      "6": ["Unholy Champion Specialist skill"],
-      "7": ["Unholy Champion Specialist skill"],
-      "8": ["Unholy Champion Specialist skill"]
+      "6": [
+        {
+          "Name": "Unholy Champion Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Unholy Champion Specialist skill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Unholy Champion Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Unholy Champion Specialist skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Unholy Champion Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Unholy Champion Specialist skill"
+        }
+      ]
     },
     "alignmentRule": {
       "mode": "restrict",
@@ -245,20 +1084,89 @@
   "Grey Knight": {
     "Brackets": ["🛡️ Warrior"],
     "Max AC": 9,
+    "Armour": {
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
+    },
     "Levels": {
       "1": [
-        "O & U",
-        "Detect Spirit's Nature",
-        "Immunity to Alignment change",
-        "Neutral stairway"
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Detect Spirit's Nature",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Immunity to Alignment Change",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Neutral stairway list",
+          "Type": "CastingList"
+        }
       ],
-      "2": ["E"],
-      "3": ["B", "Immunity to Beguile & Befriend"],
-      "4": ["B"],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Immunity to Befriend",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Beguile",
+          "Type": "Immunity"
+        }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
       "5": [],
-      "6": ["Grey Knight Specialist skill"],
-      "7": ["Grey Knight Specialist skill", "Recognise Spirit"],
-      "8": ["Grey Knight Specialist skill", "Immunity to Spiritual Mastery"]
+      "6": [
+        {
+          "Name": "Grey Knight Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Grey Knight Specialist skill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Grey Knight Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Grey Knight Specialist skill"
+        },
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Grey Knight Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Grey Knight Specialist skill"
+        },
+        {
+          "Name": "Immunity to Spiritual Mastery",
+          "Type": "Immunity"
+        }
+      ]
     },
     "alignmentRule": {
       "mode": "restrict",
@@ -269,39 +1177,185 @@
       "allowedPairs": ["Lawful Neutral", "True Neutral", "Chaotic Neutral"]
     }
   },
+  "Budoka": {
+    "Brackets": ["🛡️ Warrior"],
+    "Max AC": 9,
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "1 DAC",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "UAC",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "2 DAC",
+          "Type": "Static"
+        }
+      ],
+      "5": [
+        {
+          "Name": "Weapon Mastery",
+          "Type": "Static"
+        }
+      ],
+      "6": [
+        {
+          "Name": "3 DAC",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Budoka Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Budoka Specialist skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Budoka Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Budoka Specialist skill"
+        },
+        {
+          "Name": "4 DAC",
+          "Type": "Static"
+        }
+      ]
+    }
+  },
   "Sorcerer": {
     "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
     "Buy as": ["1st class Sorcerer"],
     "Levels": {
-      "1": ["Recognise mana", "O"],
-      "2": ["Read glyphs", "E"],
-      "3": ["B"],
+      "1": [
+        {
+          "Name": "Recognise Mana",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Glyphs",
+          "Type": "Static"
+        },
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
       "4": [],
       "5": [],
       "6": [],
-      "7": ["Warlock Specialist Skill"],
-      "8": ["Warlock Specialist Skill"]
+      "7": [
+        {
+          "Name": "Warlock Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warlock Specialist skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Warlock Specialist skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warlock Specialist skill"
+        }
+      ]
     },
     "Max AC": 8,
     "Powerbase": ["🪄 Magic"],
-    "TotalPower": 49
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Magic",
+        "Calculation": "(CL^2+CL)/2"
+      }
+    ]
   },
   "Vivomancer": {
     "Brackets": ["🧙 Wizard", "🙏 Priest"],
     "Buy as": ["1st class Vivomancer"],
     "Levels": {
       "1": [
-        "Recognise mana",
-        "Vivomancer list",
-        "Recognise Spirit",
-        "Discern type of disease",
-        "Discern Spiritual Mastery",
-        "Discern Nature of Undead",
-        "Discern Nature of Wounds",
-        "Release own miracle",
-        "Discern Bless/Curse",
-        "Hermit",
-        "Vivomancer Colour"
+        {
+          "Name": "Recognise Mana",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Vivomancer list",
+          "Type": "CastingList"
+        },
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern type of disease",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Release own miracle",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Hermit list",
+          "Type": "CastingList"
+        },
+        {
+          "Name": "Vivomancer Colour",
+          "Type": "Overwrite"
+        }
       ],
       "2": [],
       "3": [],
@@ -312,22 +1366,93 @@
       "8": []
     },
     "Max AC": 6,
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Good"],
+        "order": ["Lawful", "Neutral"]
+      },
+      "allowedPairs": ["Lawful Good", "Neutral Good"]
+    },
     "Powerbase": ["🪄 Magic", "示 Spirit"],
-    "SpiritsPerLevel": 3,
-    "TotalPower": 36
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Magic",
+        "Calculation": "(CL^2+CL)/2"
+      },
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*3"
+      }
+    ]
   },
   "Vochstelen": {
     "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
     "Buy as": ["1st class Vochstelen"],
     "Levels": {
-      "1": ["Recognise mana", "O and U Skill"],
-      "2": ["E"],
-      "3": ["Read glyphs", "H"],
-      "4": ["B"],
-      "5": ["MP"],
-      "6": ["Discern mana user"],
-      "7": ["Specialist skill"],
-      "8": ["Specialist skill"]
+      "1": [
+        {
+          "Name": "Recognise Mana",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Read Glyphs",
+          "Type": "Static"
+        },
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Discern mana user",
+          "Type": "AtWill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Vochstelen Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Vochstelen Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Vochstelen Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Vochstelen Specialist"
+        }
+      ]
     },
     "Max AC": 9
   },
@@ -335,219 +1460,2296 @@
     "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
     "Buy as": ["1st class Warlock"],
     "Levels": {
-      "1": ["Recognise mana", "O", "U", "Wizard Colour"],
-      "2": ["Read glyphs", "E"],
-      "3": ["B"],
+      "1": [
+        {
+          "Name": "Recognise Mana",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Wizard Colour",
+          "Type": "Overwrite",
+          "OverwriteKey": "Wizard Colour"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Glyphs",
+          "Type": "Static"
+        },
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
       "4": [],
       "5": [],
-      "6": ["Specialist skill"],
-      "7": ["Specialist skill"],
-      "8": ["Specialist skill"]
+      "6": [
+        {
+          "Name": "Warlock Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warlock Specialist"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Warlock Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warlock Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Warlock Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warlock Specialist"
+        }
+      ]
     },
     "Max AC": 8,
     "Powerbase": ["🪄 Magic"],
-    "TotalPower": 36
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Magic",
+        "Calculation": "(CL^2+CL)/2"
+      }
+    ]
   },
   "Wizard": {
     "Brackets": ["🧙 Wizard"],
     "Buy as": ["1st class Wizard"],
     "Levels": {
       "1": [
-        "Recognise mana",
-        "May learn 1 of dagger, spear or staff",
-        "O",
-        "Wizard Colour"
+        {
+          "Name": "Recognise Mana",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "O (Staff)",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Wizard Colour",
+          "Type": "Overwrite",
+          "OverwriteKey": "Wizard Colour"
+        }
       ],
-      "2": ["Read glyphs"],
+      "2": [
+        {
+          "Name": "Read Glyphs",
+          "Type": "Static"
+        }
+      ],
       "3": [],
-      "4": ["May learn 1 of dagger, spear or staff"],
+      "4": [
+        {
+          "Name": "O (Dagger)",
+          "Type": "WeaponSkill"
+        }
+      ],
       "5": [],
-      "6": ["Make scrolls", "May learn 1 of dagger, spear or staff"],
-      "7": ["Specialist skill"],
-      "8": ["Specialist skill"]
+      "6": [
+        {
+          "Name": "O (Spear)",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Make scrolls",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Wizard Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Wizard Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Wizard Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Wizard Specialist"
+        }
+      ]
     },
     "Max AC": 6,
     "Powerbase": ["🪄 Magic"],
-    "TotalPower": 72
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Magic",
+        "Calculation": "CL^2+CL"
+      }
+    ]
   },
   "High-Wizard": {
     "Brackets": ["🧙 Wizard"],
     "Buy as": ["1st class Wizard"],
     "Levels": {
       "1": [
-        "Recognise mana",
-        "May learn 1 of dagger, spear or staff",
-        "O",
-        "Wizard Colour"
+        {
+          "Name": "Recognise Mana",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Wizard Colour",
+          "Type": "Overwrite",
+          "OverwriteKey": "Wizard Colour"
+        }
       ],
-      "2": ["Read glyphs"],
+      "2": [
+        {
+          "Name": "Read Glyphs",
+          "Type": "Static"
+        }
+      ],
       "3": [],
-      "4": ["May learn 1 of dagger, spear or staff"],
+      "4": [],
       "5": [],
-      "6": ["Make scrolls", "May learn 1 of dagger, spear or staff"],
-      "7": ["Specialist skill"],
-      "8": ["Specialist skill"]
+      "6": [
+        {
+          "Name": "Make scrolls",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Wizard Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Wizard Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Wizard Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Wizard Specialist"
+        }
+      ]
     },
     "Max AC": 6,
     "Powerbase": ["🪄 Magic"],
-    "TotalPower": 90
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Magic",
+        "Calculation": "CL^2+CL"
+      }
+    ]
   },
   "Pathfinder": {
-    "Bracket": ["Scout"],
-    "MaxArmourClass": 7,
+    "Bracket": ["⚔ Scout"],
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
+    },
+    "Max AC": 7,
     "Post8th": "Buys as 1st Class Pathfinder.",
     "Levels": {
-      "1": ["Light", "Medium", "O"],
-      "2": ["H", "Standard Scout skill", "Standard Scout skill"],
-      "3": ["E", "Standard Scout skill"],
-      "4": ["MP", "Standard Scout skill"],
-      "5": ["B", "Standard Scout skill"],
-      "6": ["Standard Scout skill"],
-      "7": ["Specialist Scout skill"],
-      "8": ["Specialist Scout skill"]
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ]
     }
   },
-
   "Thug": {
-    "Bracket": ["Scout"],
-    "MaxArmourClass": 8,
+    "Bracket": ["⚔ Scout"],
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
+    },
+    "Max AC": 8,
     "Levels": {
-      "1": ["O", "U"],
-      "2": ["MP", "Standard Scout skill"],
-      "3": ["E"],
-      "4": ["H"],
-      "5": ["B", "Unarmed combat"],
-      "6": ["Warrior Specialist"],
-      "7": ["Standard Scout skill"],
-      "8": ["1st mastery O-class weapon", "Specialist Scout skill"]
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "UAC",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "1st mastery O",
+          "Type": "Static"
+        },
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ]
     }
   },
-
   "Assassin": {
-    "Bracket": ["Scout"],
-    "MaxArmourClass": 7,
+    "Bracket": ["⚔ Scout"],
+    "Max AC": 7,
     "Armour": {
-      "Allowed": ["Any"],
-      "Heavy": { "CanAcquire": true }
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
     },
-    "Shield": { "HasSkill": true },
-    "Alignment": ["Evil (any)"],
-    "Post8th": "Buys as per 1st Class Assassin.",
     "Levels": {
-      "1": ["O", "U"],
-      "2": ["MP", "Discern and Make Poisons"],
-      "3": ["E", "Conditioned Heart-Stop", "Standard Scout skill"],
-      "4": ["H", "Standard Scout skill"],
-      "5": ["B", "1st Backstab"],
-      "6": ["Disguise skill"]
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Discern and Make Poisons",
+          "Type": "AtWill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Conditioned Heart-Stop",
+          "Type": "Static"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Backstab",
+          "Type": "Static"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Disguise skill",
+          "Type": "AtWill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "1st Weapon Mastery dagger",
+          "Type": "Static"
+        },
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ]
     },
-    "7": ["Specialist Scout skill"],
-    "8": ["1st mastery dagger", "Specialist Scout skill"]
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Evil"],
+        "order": ["Lawful", "Neutral", "Chaotic"]
+      },
+      "allowedPairs": ["Lawful Evil", "Neutral Evil", "Chaotic Evil"]
+    }
   },
-
   "Rogue": {
-    "Bracket": ["Scout", "Wizard"],
-    "MaxArmourClass": 7,
+    "Bracket": ["⚔ Scout", "🪄 Wizard"],
+    "Max AC": 7,
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
+    },
     "Levels": {
-      "1": ["O", "Recognise Mana", "Light armour", "Medium armour"],
-      "2": ["Read Glyphs and Languages"],
-      "3": ["H", "Standard Scout skill"],
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Recognise Mana",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Glyphs",
+          "Type": "Static"
+        },
+        {
+          "Name": "Read Languages",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
       "4": [],
-      "5": ["E", "Standard Scout skill"],
+      "5": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
       "6": [],
-      "7": ["Standard Scout skill"],
-      "8": ["1st mastery in an O-class weapon", "Specialist Scout skill"]
+      "7": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "1st Weapon Mastery O",
+          "Type": "Static"
+        },
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ]
     },
-    "TotalPower": 36,
-    "Powerbase": ["🪄 Magic"]
+    "Powerbase": ["🪄 Magic"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Magic",
+        "Calculation": "(CL^2+CL)/2"
+      }
+    ]
   },
-
   "Wayfinder": {
-    "Bracket": ["Scout", "Priest"],
-    "MaxArmourClass": 7,
-    "Levels": {
-      "1": [
-        "O",
-        "Light armour",
-        "Medium armour",
-        "Recognise Spirit",
-        "Discern Nature of Wounds",
-        "Discern Nature of Undead"
-      ],
-      "2": ["H", "Read Runes", "Standard Scout skill"]
+    "Bracket": ["⚔ Scout", "🙏 Priest"],
+    "Max AC": 7,
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
     },
-    "3": ["E", "Discern Curse/Bless", "Use Spirit Items"],
-    "4": ["Discern Disease"],
-    "5": ["Standard Scout skill"],
-    "6": ["Discern Spiritual Mastery"],
-    "7": ["Standard Scout skill"],
-    "8": ["1st weapon mastery O-class weapon", "Specialist Scout skill"]
-  },
-
-  "Leywalker": {
-    "Bracket": ["Scout", "Druid"],
-    "MaxArmourClass": 7,
     "Levels": {
       "1": [
-        "O",
-        "U",
-        "Recognise Earthpower",
-        "Tell Animal Type",
-        "Light armour"
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
       ],
-      "2": ["Tell Wounds"],
-      "3": ["H", "Standard Scout skill"],
+      "2": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ]
+    },
+    "3": [
+      {
+        "Name": "E",
+        "Type": "WeaponSkill"
+      },
+      {
+        "Name": "Discern Bless/Curse",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Use Spirit Items",
+        "Type": "AtWill"
+      }
+    ],
+    "4": [
+      {
+        "Name": "Discern Disease",
+        "Type": "AtWill"
+      }
+    ],
+    "5": [
+      {
+        "Name": "Standard Scout skill",
+        "Type": "Overwrite",
+        "OverwriteKey": "Standard Scout skill"
+      }
+    ],
+    "6": [
+      {
+        "Name": "Discern Spiritual Mastery",
+        "Type": "AtWill"
+      }
+    ],
+    "7": [
+      {
+        "Name": "Standard Scout skill",
+        "Type": "Overwrite",
+        "OverwriteKey": "Standard Scout skill"
+      }
+    ],
+    "8": [
+      {
+        "Name": "1st weapon mastery O",
+        "Type": "Static"
+      },
+      {
+        "Name": "Specialist Scout skill",
+        "Type": "Overwrite",
+        "OverwriteKey": "Specialist Scout skill"
+      }
+    ]
+  },
+  "Leywalker": {
+    "Bracket": ["⚔ Scout", "🌿 Druid"],
+    "Max AC": 7,
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": []
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Recognise Earthpower",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tell Animal Type",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Tell Wounds",
+          "Type": "AtWill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
       "4": [],
-      "5": ["E", "Standard Scout skill", "Tell Disease"],
-      "6": ["Tell Poison"],
-      "7": ["Standard Scout skill"],
-      "8": ["Specialist Scout skill"]
+      "5": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        },
+        {
+          "Name": "Tell Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Tell Poison",
+          "Type": "AtWill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ]
     },
     "Powerbase": ["🌍 Earthpower"],
-    "PowerPerLevel": 2
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Earthpower",
+        "Calculation": "CL*2"
+      }
+    ]
   },
-
   "Spy": {
-    "Bracket": ["Scout"],
-    "MaxArmourClass": 7,
+    "Bracket": ["⚔ Scout"],
+    "Max AC": 7,
+    "Armour": {
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
+    },
     "Levels": {
       "1": [
-        "O",
-        "U",
-        "Disguise",
-        "Light armour",
-        "Medium armour",
-        "Heavy armour"
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Disguise",
+          "Type": "AtWill"
+        }
       ],
-      "2": ["Standard Scout skill"],
-      "3": ["E", "Psi-Scan 1/level", "Standard Scout skill"],
-      "4": ["Standard Scout skill"],
-      "5": ["H", "Clairvoyance 1/2 levels"],
-      "6": ["MP", "Standard Scout skill"],
-      "7": ["B", "Forget x1/4 levels", "Specialist Scout skill"],
-      "8": ["Specialist Scout skill"]
+      "2": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Psi-Scan",
+          "Type": "Innate",
+          "Count": 8
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Clairvoyance",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "6": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Forget",
+          "Type": "Innate",
+          "Count": 2
+        },
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ]
     }
   },
-
   "Artificer": {
-    "Bracket": ["Scout"],
-    "MaxArmourClass": 7,
+    "Bracket": ["⚔ Scout"],
+    "Max AC": 7,
+    "Armour": {
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
+    },
     "Levels": {
       "1": [
-        "O",
-        "U",
-        "Bandaging skill",
-        "Light armour",
-        "Medium armour",
-        "Heavy armour"
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Bandaging",
+          "Type": "AtWill"
+        }
       ],
-      "2": ["MP", "Standard Scout skill"],
-      "3": ["E", "Standard Scout skill", "1 PAC"],
-      "4": ["H"],
-      "5": ["B", "Standard Scout skill", "2 PAC"],
-      "6": ["Standard Scout skill"],
-      "7": ["Specialist Scout skill", "3 PAC"],
-      "8": ["Specialist Scout skill"]
+      "2": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        },
+        {
+          "Name": "1 PAC",
+          "Type": "Static"
+        }
+      ],
+      "4": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        },
+        {
+          "Name": "2 PAC",
+          "Type": "Static"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Standard Scout skill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        },
+        {
+          "Name": "3 PAC",
+          "Type": "Static"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite",
+          "OverwriteKey": "Specialist Scout skill"
+        }
+      ]
     }
+  },
+  "Pure-Priest": {
+    "Brackets": ["🙏 Priest"],
+    "Armour": {
+      "Wearable": [],
+      "Restrictions": ["No physical"]
+    },
+    "Levels": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
+    },
+    "Max AC": 7,
+    "Powerbase": ["示 Spirit"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*5"
+      }
+    ]
+  },
+  "Armoured-Priest": {
+    "Brackets": ["🙏 Priest"],
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
+    },
+    "Levels": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
+    },
+    "Max AC": 7,
+    "Powerbase": ["示 Spirit"],
+    "PowerPerLevel": 4,
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*4"
+      }
+    ]
+  },
+  "Battle-Priest": {
+    "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "4": [],
+      "5": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Battle-Priest Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Battle-Priest Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Battle-Priest Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Battle-Priest Specialist"
+        }
+      ]
+    },
+    "Max AC": 8,
+    "Powerbase": ["示 Spirit"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*2"
+      }
+    ]
+  },
+  "Crusading-Priest": {
+    "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Armour": {
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "5": [],
+      "6": [],
+      "7": [
+        {
+          "Name": "Crusading-Priest Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Crusading-Priest Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Crusading-Priest Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Crusading-Priest Specialist"
+        }
+      ]
+    },
+    "Max AC": 9,
+    "Powerbase": ["示 Spirit"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*1"
+      }
+    ]
+  },
+  "Spiritual-Warrior": {
+    "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Armour": {
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "5": [],
+      "6": [],
+      "7": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        }
+      ]
+    },
+    "Max AC": 9
+  },
+  "Hospitaller": {
+    "Brackets": ["🙏 Priest"],
+    "Armour": {
+      "Wearable": [],
+      "Restrictions": ["No physical"]
+    },
+    "Levels": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
+    },
+    "Max AC": 7,
+    "Powerbase": ["示 Spirit"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*6"
+      }
+    ],
+    "alignmentRule": {
+      "mode": "set",
+      "allowed": {
+        "moral": ["Good"],
+        "order": ["Lawful", "Neutral", "Chaotic"]
+      },
+      "allowedPairs": ["Lawful Good", "Neutral Good", "Chaotic Good"]
+    }
+  },
+  "Witch": {
+    "Brackets": ["🙏 Priest"],
+    "Armour": {
+      "Wearable": [],
+      "Restrictions": []
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O (Cudgel)",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Potion-related skill/recipe",
+          "Type": "Overwrite",
+          "OverwriteKey": "PotionSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Potion-related skill/recipe",
+          "Type": "Overwrite",
+          "OverwriteKey": "PotionSkill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Potion-related skill/recipe",
+          "Type": "Overwrite",
+          "OverwriteKey": "PotionSkill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Potion-related skill/recipe",
+          "Type": "Overwrite",
+          "OverwriteKey": "PotionSkill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "Potion-related skill/recipe",
+          "Type": "Overwrite",
+          "OverwriteKey": "PotionSkill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Potion-related skill/recipe",
+          "Type": "Overwrite",
+          "OverwriteKey": "PotionSkill"
+        },
+        {
+          "Name": "Enhanced dying curse",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Potion-related skill/recipe",
+          "Type": "Overwrite",
+          "OverwriteKey": "PotionSkill"
+        }
+      ],
+      "8": []
+    },
+    "Max AC": 6,
+    "Powerbase": ["示 Spirit"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*3"
+      }
+    ]
+  },
+  "Friar": {
+    "Brackets": ["🙏 Priest"],
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": ["May never wear heavier"]
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [],
+      "3": [],
+      "4": [
+        {
+          "Name": "Read scrolls",
+          "Type": "Static"
+        }
+      ],
+      "5": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "UAC",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "7": [],
+      "8": [
+        {
+          "Name": "1st Weapon Mastery (staff)",
+          "Type": "Static"
+        }
+      ]
+    },
+    "Max AC": 6,
+    "Powerbase": ["示 Spirit"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*3"
+      }
+    ]
+  },
+  "Shaman": {
+    "Brackets": ["🙏 Priest"],
+    "Armour": {
+      "Wearable": [],
+      "Restrictions": []
+    },
+    "Levels": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
+    },
+    "Max AC": 7,
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*3*TM"
+      }
+    ]
+  },
+  "Druid": {
+    "Brackets": ["🌿 Druid"],
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": ["No metal"]
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Recognise Earthpower",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tell Direction",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tell Time",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tell Plant Type",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Immunity to Bless/Curse",
+          "Type": "Immunity"
+        }
+      ],
+      "2": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Tell Wounds",
+          "Type": "AtWill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Tell Animal Type",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tracking",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [],
+      "5": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Tell Disease",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Stop Bleeding",
+          "Type": "AtWill"
+        }
+      ],
+      "6": [],
+      "7": [
+        {
+          "Name": "Tell Poison",
+          "Type": "AtWill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "1st Weapon Mastery (O)",
+          "Type": "Static"
+        }
+      ]
+    },
+    "Max AC": 7,
+    "Powerbase": ["🌍 Earthpower"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Earthpower",
+        "Calculation": "CL*4"
+      }
+    ]
+  },
+  "High Druid": {
+    "Brackets": ["🌿 Druid"],
+    "Armour": {
+      "Wearable": [],
+      "Restrictions": ["No armour", "No shields"]
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "Recognise Earthpower",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tell Direction",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tell Time",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tell Plant Type",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Immunity to Bless",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Curse",
+          "Type": "Immunity"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Tell Wounds",
+          "Type": "AtWill"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Tell Animal Type",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Tracking",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [],
+      "5": [
+        {
+          "Name": "Tell Disease",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Stop Bleeding",
+          "Type": "AtWill"
+        }
+      ],
+      "6": [],
+      "7": [
+        {
+          "Name": "Tell Poison",
+          "Type": "AtWill"
+        }
+      ],
+      "8": []
+    },
+    "Max AC": 7,
+    "Powerbase": ["🌍 Earthpower"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Earthpower",
+        "Calculation": "CL*6"
+      }
+    ]
+  },
+  "Psi-Master": {
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": []
+    },
+    "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Detect Possible Neuronic Activity",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Auric Colour",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Reactions",
+          "Type": "Innate",
+          "Count": 4
+        },
+        {
+          "Name": "Immunity to Bless/Curse",
+          "Type": "Immunity"
+        },
+        { "Name": "1 DAC", "Type": "Static" }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Neuro Balance",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "Telekinesis",
+          "Type": "Innate",
+          "Count": 4
+        },
+        { "Name": "2 DAC", "Type": "Static" }
+      ],
+      "6": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Mastery",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "7": [
+        {
+          "Name": "Neuronic Penetration",
+          "Type": "Innate",
+          "Count": 8
+        },
+        {
+          "Name": "Half damage incoming neuronics",
+          "Type": "Static"
+        },
+        { "Name": "3 DAC", "Type": "Static" }
+      ],
+      "8": [
+        {
+          "Name": "Neuro-Mastery",
+          "Type": "Innate",
+          "Count": 2
+        },
+        { "Name": "4 DAC", "Type": "Static" }
+      ]
+    },
+    "Max AC": 8,
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
+    }
+  },
+  "Seer": {
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": ["No shields"]
+    },
+    "Brackets": ["🧠 Neuro"],
+    "Levels": {
+      "1": [
+        {
+          "Name": "O (Dagger)",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Detect Possible Neuronic Activity",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Auric Colour",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Clairvoyance",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "3": [
+        {
+          "Name": "Artefact Study",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Message",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Immunity to Bless/Curse",
+          "Type": "Immunity"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Precognition",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "5": [
+        {
+          "Name": "Detect Lie",
+          "Type": "AtWill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "Neuronic Penetration",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "7": [
+        {
+          "Name": "Improved Message",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Psi-Scan",
+          "Type": "Innate",
+          "Count": 8
+        },
+        {
+          "Name": "Half damage incoming neuronics",
+          "Type": "Static"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Probe",
+          "Type": "Innate",
+          "Count": 2
+        },
+        {
+          "Name": "Major Precognition",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ]
+    },
+    "Max AC": 7,
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
+    }
+  },
+  "Mystic": {
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": ["No shields"]
+    },
+    "Brackets": ["🧠 Neuro"],
+    "Levels": {
+      "1": [
+        {
+          "Name": "O (Dagger)",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Neuronic Penetration",
+          "Type": "Innate",
+          "Count": 16
+        }
+      ],
+      "2": [
+        {
+          "Name": "Auric Colour",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "3": [
+        {
+          "Name": "Detect Possible Neuronic Activity",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Immunity to Bless/Curse",
+          "Type": "Immunity"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Neuronic Flash",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "5": [
+        {
+          "Name": "Neuronic Whip",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ],
+      "6": [
+        {
+          "Name": "Neuronic Flare",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "7": [
+        {
+          "Name": "Neuronic Blast",
+          "Type": "Innate",
+          "Count": 4
+        },
+        {
+          "Name": "Half damage incoming neuronics",
+          "Type": "Static"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Domination",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ]
+    },
+    "Max AC": 7,
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
+    }
+  },
+  "Silver Warden": {
+    "Armour": {
+      "Wearable": ["light", "medium", "heavy"],
+      "Restrictions": []
+    },
+    "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Detect Possible Neuronic Activity",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Local Detect Possible Neuronic Activity",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "3": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Auric Colour",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Neuronic Penetration",
+          "Type": "Innate",
+          "Count": 4
+        },
+        {
+          "Name": "Immunity to Bless/Curse",
+          "Type": "Immunity"
+        }
+      ],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Psi-Scan",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "5": [
+        {
+          "Name": "Mind Bar",
+          "Type": "AtWill"
+        }
+      ],
+      "6": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Detect Lie",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "7": [
+        {
+          "Name": "6th Sense",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Half damage incoming neuronics",
+          "Type": "Static"
+        },
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        },
+        {
+          "Name": "Psychic Cage",
+          "Type": "Innate",
+          "Count": 1
+        }
+      ]
+    },
+    "Max AC": 8,
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
+    }
+  },
+  "Psionic Drowe": {
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": ["No shields"]
+    },
+    "Brackets": ["🧠 Neuro"],
+    "Levels": {
+      "1": [
+        {
+          "Name": "O (Dagger)",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Auric Colour",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Neuronic Penetration",
+          "Type": "Innate",
+          "Count": 16
+        }
+      ],
+      "3": [
+        {
+          "Name": "NeuroBalance",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Mind Bar",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [
+        {
+          "Name": "Neuronic Flash",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "6": [
+        {
+          "Name": "Artefact Study",
+          "Type": "AtWill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Neuro-Mastery",
+          "Type": "AtWill"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Neuro-Synaptic Jump",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ]
+    },
+    "Max AC": 6,
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
+    }
+  },
+  "Mind Weaver": {
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": ["No shields"]
+    },
+    "Brackets": ["🧠 Neuro"],
+    "Levels": {
+      "1": [
+        {
+          "Name": "Psi-Scan",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Clairvoyance",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "3": [
+        {
+          "Name": "Detect Lie",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Artefact Study",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Neuronic Flash",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "5": [
+        {
+          "Name": "Precognition",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "6": [
+        {
+          "Name": "Neuro-Mastery",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "7": [
+        {
+          "Name": "Forget",
+          "Type": "Innate",
+          "Count": 2
+        },
+        {
+          "Name": "Telepathy",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Half damage incoming neuronics",
+          "Type": "Static"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Neuro-Synaptic Jump",
+          "Type": "Innate",
+          "Count": 2
+        },
+        {
+          "Name": "Improved Telepathy",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ]
+    },
+    "Max AC": 6,
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
+    }
+  },
+  "Awakener": {
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": []
+    },
+    "Brackets": ["🧠 Neuro", "⚔ Scout"],
+    "Levels": {
+      "1": [
+        { "Name": "O", "Type": "WeaponSkill" },
+        {
+          "Name": "Detect Possible Neuronic Activity",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Neuronic Penetration",
+          "Type": "Innate",
+          "Count": 8
+        },
+        { "Name": "Recognise Neuronics", "Type": "AtWill" }
+      ],
+      "3": [
+        { "Name": "E", "Type": "WeaponSkill" },
+        {
+          "Name": "Psychic Guide",
+          "Type": "AtWill"
+        },
+        { "Name": "Standard Scout skill", "Type": "Overwrite" }
+      ],
+      "4": [
+        { "Name": "H", "Type": "WeaponSkill" },
+        {
+          "Name": "Artefact Study",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [
+        { "Name": "Standard Scout skill", "Type": "Overwrite" },
+        {
+          "Name": "Precognition",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ],
+      "6": [
+        {
+          "Name": "Detect Lie",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "7": [
+        {
+          "Name": "Detect Mind",
+          "Type": "AtWill"
+        },
+        { "Name": "Standard Scout skill", "Type": "Overwrite" }
+      ],
+      "8": [
+        { "Name": "Specialist Scout skill", "Type": "Overwrite" },
+        {
+          "Name": "Neuronic Invisibility",
+          "Type": "Innate",
+          "Count": 2
+        },
+        {
+          "Name": "Awakener Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Awakener Specialist"
+        }
+      ]
+    },
+    "Max AC": 7
+  },
+  "Psycher": {
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": ["No shields"]
+    },
+    "Brackets": ["🧠 Neuro"],
+    "Levels": {
+      "1": [
+        { "Name": "O (Dagger)", "Type": "WeaponSkill" },
+        {
+          "Name": "Neuronic Penetration",
+          "Type": "Innate",
+          "Count": 16
+        }
+      ],
+      "2": [{ "Name": "Auric Colour", "Type": "AtWill" }],
+      "3": [
+        {
+          "Name": "Detect Possible Neuronic Activity",
+          "Type": "AtWill"
+        },
+        { "Name": "Local Detect Possible Neuronic Activity", "Type": "AtWill" }
+      ],
+      "4": [
+        {
+          "Name": "Neuronic Whip",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "5": [
+        {
+          "Name": "Neuronic Flare",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "6": [
+        {
+          "Name": "Mind Bar",
+          "Type": "Innate",
+          "Count": 4
+        },
+        {
+          "Name": "Message",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "7": [
+        {
+          "Name": "Neuronic Blast",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "8": [
+        {
+          "Name": "Domination",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ]
+    },
+    "Max AC": 6
+  },
+  "Slayer": {
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": []
+    },
+    "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
+    "Levels": {
+      "1": [
+        { "Name": "O", "Type": "WeaponSkill" },
+        { "Name": "U", "Type": "WeaponSkill" },
+
+        {
+          "Name": "Auric Colour",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "2": [
+        { "Name": "H", "Type": "WeaponSkill" },
+        { "Name": "Neuronic Penetration", "Type": "Innate", "Count": 8 }
+      ],
+      "3": [
+        { "Name": "E", "Type": "WeaponSkill" },
+
+        {
+          "Name": "Reactions",
+          "Type": "Innate",
+          "Count": 4
+        },
+        { "Name": "1 DAC" }
+      ],
+      "4": [{ "Name": "B", "Type": "WeaponSkill" }],
+      "5": [
+        {
+          "Name": "Mastery",
+          "Type": "Innate",
+          "Count": 4
+        },
+        { "Name": "2 DAC" }
+      ],
+      "6": [
+        { "Name": "MP", "Type": "WeaponSkill" },
+        {
+          "Name": "Disorientation",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
+      "7": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        },
+        { "Name": "3 DAC" }
+      ],
+      "8": [
+        {
+          "Name": "Warrior Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Warrior Specialist"
+        },
+        {
+          "Name": "Neuro Mastery",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ]
+    },
+    "Max AC": 8
   }
 }

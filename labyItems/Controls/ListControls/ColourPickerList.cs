@@ -11,11 +11,11 @@ namespace labyItems.Controls;
 public class ListColourPickerControl : ContentView
 {
     private readonly VerticalStackLayout _rowsHost;
-    private static readonly Dictionary<string, MagicColours> ColourOptions =
+    private static readonly Dictionary<string, MagicColours?> ColourOptions =
         Enum.GetValues(typeof(MagicColours))
             .Cast<MagicColours>()
             .Where(c => c != MagicColours.Grey)
-            .ToDictionary(EnumDisplayFormatter.Format, c => c);
+            .ToDictionary(EnumDisplayFormatter.Format, c => (MagicColours?)c);
 
     public ListColourPickerControl()
     {
@@ -213,7 +213,7 @@ public class ListColourPickerControl : ContentView
         };
 
         // Enum search picker for colour selection (no custom entries)
-        var picker = new DictionarySearchBar<MagicColours>
+        var picker = new DictionarySearchBar<MagicColours?>
         {
             HorizontalOptions = LayoutOptions.FillAndExpand,
             AllowCustomOptions = false,
@@ -224,7 +224,7 @@ public class ListColourPickerControl : ContentView
         picker.SelectedValue = initialValue == MagicColours.Grey ? null : initialValue;
         picker.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName == nameof(DictionarySearchBar<MagicColours>.SelectedValue))
+            if (e.PropertyName == nameof(DictionarySearchBar<MagicColours?>.SelectedValue))
             {
                 if (Items == null || index < 0 || index >= Items.Count)
                     return;

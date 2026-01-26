@@ -1,6 +1,7 @@
 // using ClosedXML.Excel;
 using ClosedXML.Excel;
 using labyItems.Models.Characters;
+using System.Linq;
 namespace labyItems.Services;
 
 public interface IBattleboardExportService
@@ -12,7 +13,17 @@ public sealed class BattleboardExportService : IBattleboardExportService
 {
     public async Task<string> ExportAsync(CharacterDraft draft, CancellationToken ct = default)
     {
-        await using var templateStream = await FileSystem.OpenAppPackageFileAsync("people/Template.xlsx");
+        var pools = (draft.PowerPools ?? new Dictionary<string, int>())
+            .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key))
+            .ToList();
+        var powerCount = pools.Count;
+        var templateName = powerCount == 0
+            ? "people/NonPowerUser.xlsx"
+            : powerCount >= 2
+                ? "people/Vivomancer.xlsx"
+                : "people/PowerUser.xlsx";
+
+        await using var templateStream = await FileSystem.OpenAppPackageFileAsync(templateName);
         using var ms = new MemoryStream();
         await templateStream.CopyToAsync(ms, ct);
         ms.Position = 0;
@@ -22,7 +33,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
         int pac = Math.Min(draft.MaxAC, draft.WornArmour + draft.ClassRaceArmour);
         int acShown = Math.Min(draft.DAC + pac, draft.MaxAC);
-
+        ws.Cell("B2").Value = draft.Name;
         ws.Cell("C3").Value = draft.TBLP;
         ws.Cell("U3").Value = pac;
         ws.Cell("AD3").Value = draft.MaxAC;
@@ -35,8 +46,28 @@ public sealed class BattleboardExportService : IBattleboardExportService
         foreach (var addr in new[] { "Z3", "T8", "U8", "AA8", "AC8", "AD8", "AA17", "AA25", "Z25", "X25", "W25" })
             ws.Cell(addr).Value = acShown;
 
-        ws.Cell("B17").Value = draft.PowerType;
-        ws.Cell("C17").Value = draft.PowerAmount;
+        var orderedPools = pools.OrderBy(k => k.Key, StringComparer.OrdinalIgnoreCase).ToList();
+        var isVivomancer = templateName.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase);
+
+        if (isVivomancer)
+        {
+            if (orderedPools.Count > 0)
+            {
+                ws.Cell("B17").Value = orderedPools[0].Key;
+                ws.Cell("C17").Value = orderedPools[0].Value;
+            }
+            if (orderedPools.Count > 1)
+            {
+                ws.Cell("B22").Value = orderedPools[1].Key;
+                ws.Cell("C22").Value = orderedPools[1].Value;
+            }
+        }
+        else
+        {
+            var first = orderedPools.FirstOrDefault();
+            ws.Cell("B17").Value = first.Key;
+            ws.Cell("C17").Value = first.Value;
+        }
         ws.Cell("T35").Value = draft.PlayerName;
         ws.Cell("T36").Value = draft.Name;
         ws.Cell("T37").Value = draft.Class ?? "";
@@ -44,11 +75,21 @@ public sealed class BattleboardExportService : IBattleboardExportService
         ws.Cell("AA36").Value = draft.Alignment.ToString();
         ws.Cell("AA37").Value = draft.Points;
 
-        var guildString = string.Join(", ", draft.Guilds.Select(g => "{" + g + "}"));
+        var guildString = string.Join(", ", draft.Guilds);
         ws.Cell("T38").Value = guildString;
+        var atWillAbilities = draft.Abilities
+            .Where(a => a.AbilityType == AbilityType.AtWill)
+            .Select(FormatAbilityText)
+            .Where(v => !string.IsNullOrWhiteSpace(v))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        ws.Cell("R42").Value = string.Join(", ", atWillAbilities);
+
         var resistanceAbilities = draft.Abilities
-            .Where(a => a.Name.Contains("resistance", StringComparison.OrdinalIgnoreCase))
-            .Select(a => a.ShortStringValue)
+            .Where(a => a.AbilityType == AbilityType.Resistance
+                        || a.Name.Contains("resistance", StringComparison.OrdinalIgnoreCase))
+            .Select(FormatAbilityText)
             .Where(v => !string.IsNullOrWhiteSpace(v))
             .ToList();
 
@@ -62,11 +103,55 @@ public sealed class BattleboardExportService : IBattleboardExportService
         {
             ws.Cell("AD33").Value = sp;
         }
-        WriteInnates(ws, draft.Innates);
+
+        // Resistance levels block (physical/magic/neuro/spirit)
+        if (draft.ResistanceLevels != null)
+        {
+            if (draft.ResistanceLevels.TryGetValue("Physical", out var phys))
+                ws.Cell("AD20").Value = phys;
+            if (draft.ResistanceLevels.TryGetValue("Magic", out var magic))
+                ws.Cell("AD21").Value = magic;
+            if (draft.ResistanceLevels.TryGetValue("Neuro", out var neuro))
+                ws.Cell("AD22").Value = neuro;
+            if (draft.ResistanceLevels.TryGetValue("Spirit", out var spirit))
+                ws.Cell("AD23").Value = spirit;
+        }
+
+        var immunityAbilities = draft.Abilities
+            .Where(a => a.AbilityType == AbilityType.Immunity)
+            .Select(FormatAbilityText)
+            .Where(v => !string.IsNullOrWhiteSpace(v))
+            .ToList();
+        WriteImmunities(ws, immunityAbilities, startRow: 26, endRow: 33);
+
+        var staticAbilities = draft.Abilities
+            .Where(a => a.AbilityType == AbilityType.Static)
+            .Select(FormatAbilityText)
+            .Where(v => !string.IsNullOrWhiteSpace(v))
+            .ToList();
+        WriteStaticAbilities(ws, staticAbilities, startRow: 4, endRow: 54);
+
+        var innateConfig = GetInnatePlacement(templateName, isVivomancer);
+        WriteInnates(ws, draft.Innates, nameColumn: innateConfig.NameColumn, startRow: innateConfig.StartRow, endRow: innateConfig.EndRow);
+
+        WriteNotes(ws, draft.Notes, startColumn: "R", endColumn: "AD", startRow: 43, endRow: 53);
 
         var outPath = Path.Combine(FileSystem.CacheDirectory, $"Battleboard_{Sanitize(draft.Name)}.xlsx");
         wb.SaveAs(outPath);
         return outPath;
+    }
+
+    private static string FormatAbilityText(AbilityDraft ability)
+    {
+        if (ability == null) return string.Empty;
+
+        var effect = ability.ShortStringValue ?? string.Empty;
+        var name = ability.Name ?? string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(effect) && !string.Equals(effect, name, StringComparison.OrdinalIgnoreCase))
+            return effect;
+
+        return name;
     }
 
     private static void WriteResistancesBlock(IXLWorksheet ws, List<string> values)
@@ -82,11 +167,49 @@ public sealed class BattleboardExportService : IBattleboardExportService
         }
     }
 
-    private static void WriteInnates(IXLWorksheet ws, List<InnateAbilityDraft> innates)
+    private static void WriteImmunities(IXLWorksheet ws, List<string> values, int startRow, int endRow)
     {
-        int startRow = 21;
-        int endRow = 54;
+        int row = startRow;
+        int i = 0;
 
+        while (row <= endRow)
+        {
+            ws.Cell($"AC{row}").Value = i < values.Count ? values[i] : "";
+            i++;
+            row++;
+        }
+    }
+
+    private static void WriteStaticAbilities(IXLWorksheet ws, List<string> values, int startRow, int endRow)
+    {
+        int row = startRow;
+        int i = 0;
+
+        while (row <= endRow)
+        {
+            ws.Cell($"N{row}").Value = i < values.Count ? values[i] : "";
+            i++;
+            row++;
+        }
+    }
+
+    private static (string NameColumn, int StartRow, int EndRow) GetInnatePlacement(string templateName, bool isVivomancer)
+    {
+        // All templates end innates at row 53
+        const int endRow = 53;
+
+        if (isVivomancer || templateName.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase))
+            return ("B", 27, endRow);
+
+        if (templateName.Contains("PowerUser", StringComparison.OrdinalIgnoreCase))
+            return ("B", 22, endRow);
+
+        // Non-power user template
+        return ("B", 17, endRow);
+    }
+
+    private static void WriteInnates(IXLWorksheet ws, List<InnateAbilityDraft> innates, string nameColumn, int startRow, int endRow)
+    {
         var columns = new[] { "E", "F", "G", "H", "I", "J", "K", "L" };
         var rightToLeft = columns.Reverse().ToArray();
 
@@ -95,7 +218,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
             int idx = row - startRow;
 
             var innate = idx < innates.Count ? innates[idx] : null;
-            ws.Cell($"A{row}").Value = innate?.Name ?? "";
+            ws.Cell($"{nameColumn}{row}").Value = innate?.Name ?? "";
 
             foreach (var col in columns)
             {
@@ -110,6 +233,36 @@ public sealed class BattleboardExportService : IBattleboardExportService
             {
                 var col = rightToLeft[j];
                 ws.Cell($"{col}{row}").Style.Fill.BackgroundColor = XLColor.Black;
+            }
+        }
+    }
+
+    private static void WriteNotes(IXLWorksheet ws, string notes, string startColumn, string endColumn, int startRow, int endRow)
+    {
+        var lines = (notes ?? string.Empty)
+            .Replace("\r\n", "\n")
+            .Split('\n', StringSplitOptions.None)
+            .Select(l => l.TrimEnd())
+            .ToList();
+
+        var startColNum = XLHelper.GetColumnNumberFromLetter(startColumn);
+        var endColNum = XLHelper.GetColumnNumberFromLetter(endColumn);
+        var columns = Enumerable.Range(startColNum, endColNum - startColNum + 1)
+            .Select(col => XLHelper.GetColumnLetterFromNumber(col))
+            .ToList();
+
+        int row = startRow;
+        int colIdx = 0;
+
+        foreach (var line in lines)
+        {
+            if (row > endRow) break;
+            ws.Cell($"{columns[colIdx]}{row}").Value = line;
+            colIdx++;
+            if (colIdx >= columns.Count)
+            {
+                colIdx = 0;
+                row++;
             }
         }
     }

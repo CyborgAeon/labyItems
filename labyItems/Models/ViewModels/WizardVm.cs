@@ -29,8 +29,9 @@ public sealed class WizardVm : INotifyPropertyChanged
         return true;
     }
 
-    public CharacterDraft Draft { get; } = new();
+    public CharacterDraft Draft { get; }
     private readonly IBattleboardExportService _exportService;
+    private readonly Func<Task>? _onFinished;
 
     public ObservableCollection<StepItem> StepSteps { get; } = new()
     {
@@ -40,6 +41,8 @@ public sealed class WizardVm : INotifyPropertyChanged
         new StepItem { Id = 4, Label = "Details" },
         new StepItem { Id = 5, Label = "Review" },
     };
+
+    public ObservableCollection<int?> ArmourLayers { get; } = new() { 0 };
 
     private int _currentStep;
     public int CurrentStep
@@ -82,22 +85,32 @@ public sealed class WizardVm : INotifyPropertyChanged
     public Command SaveToWalletCommand { get; }
     public CharacterBuilderVm CharacterBuilderVm { get; }
     public GuildsVm GuildsVm { get; }
+    private int _armourMaxBasePac;
+    private int _armourMaxTotalPac;
+    private int _wornArmourPac;
+    private bool _isArmourSelectionEnabled = true;
 
-    public WizardVm()
+    public WizardVm(CharacterDraft? draft = null, Func<Task>? onFinished = null)
     {
+        Draft = draft ?? new CharacterDraft();
+        _onFinished = onFinished;
         _exportService = new BattleboardExportService();
         CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
 
         // NEW: optional guild selection step
-        GuildsVm = new GuildsVm(Draft, NotifyGatingChanged, null, CharacterBuilderVm.RefreshDraftAbilitiesAsync);
+        GuildsVm = new GuildsVm(Draft, NotifyGatingChanged, CharacterBuilderVm.GetNonGuildAlignmentRules, CharacterBuilderVm.RefreshDraftAbilitiesAsync);
         BackCommand = new Command(OnBack);
         NextCommand = new Command(async () => await OnNextAsync());
         StepClickCommand = new Command<int>(async i => await TryGoToStepAsync(i));
         ExportToBattleboardCommand = new Command(async () => await ExportBattleboardAsync(), () => Draft.IsRaceAndClassSelected);
         SaveToWalletCommand = new Command(SaveToWallet, () => Draft.IsRaceAndClassSelected);
 
+        UpdateArmourUiFromDraft();
+
         CurrentStep = 0;
         UpdateStepView();
+
+        MainThread.BeginInvokeOnMainThread(async () => await SyncDraftStateAsync());
     }
 
     public string PlayerName
@@ -191,13 +204,49 @@ public sealed class WizardVm : INotifyPropertyChanged
     public string AlignmentSummary => Draft.Alignment.HasValue
         ? $"Alignment: {Draft.Alignment}"
         : "Alignment: not selected";
+    public int ArmourMaxBasePac
+    {
+        get => _armourMaxBasePac;
+        private set => Set(ref _armourMaxBasePac, value);
+    }
+
+    public int ArmourMaxTotalPac
+    {
+        get => _armourMaxTotalPac;
+        private set => Set(ref _armourMaxTotalPac, value);
+    }
+
+    public int WornArmourPac
+    {
+        get => _wornArmourPac;
+        set
+        {
+            var clamped = ClampWornArmour(value);
+            if (!Set(ref _wornArmourPac, clamped)) return;
+            Raise(nameof(ArmourSelectionSummary));
+        }
+    }
+
+    public bool IsArmourSelectionEnabled
+    {
+        get => _isArmourSelectionEnabled;
+        private set => Set(ref _isArmourSelectionEnabled, value);
+    }
+
+    public string ArmourAvailabilityText => BuildArmourAvailabilityText();
+    public string ArmourBaseSummary => BuildArmourBaseSummary();
+    public string ArmourSelectionSummary => $"Worn armour PAC: {WornArmourPac}";
 
     public void NotifyGatingChanged()
     {
+        UpdateArmourUiFromDraft();
         Raise(nameof(CanGoNext));
         Raise(nameof(NextButtonText));
         Raise(nameof(AlignmentOptions));
         Raise(nameof(SelectedAlignment));
+        Raise(nameof(ArmourAvailabilityText));
+        Raise(nameof(ArmourBaseSummary));
+        Raise(nameof(ArmourSelectionSummary));
         RaiseReviewProperties();
         ExportToBattleboardCommand.ChangeCanExecute();
         SaveToWalletCommand.ChangeCanExecute();
@@ -214,6 +263,9 @@ public sealed class WizardVm : INotifyPropertyChanged
         if (CurrentStep == StepSteps.Count - 1)
         {
             await SyncDraftStateAsync();
+            SaveToWallet();
+            if (_onFinished != null)
+                await _onFinished();
             return;
         }
 
@@ -225,6 +277,8 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     private async Task SyncDraftStateAsync()
     {
+        ClampWornArmourPac();
+        Draft.WornArmour = ClampWornArmour(WornArmourPac);
         await CharacterBuilderVm.SyncDraftLifeAsync();
         await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
     }
@@ -271,6 +325,10 @@ public sealed class WizardVm : INotifyPropertyChanged
         {
             MainThread.BeginInvokeOnMainThread(async () => { await GuildsVm.ReloadAsync(); });
         }
+        else if (CurrentStep == 3)
+        {
+            UpdateArmourUiFromDraft();
+        }
 
         CurrentStepView = CurrentStep switch
         {
@@ -314,6 +372,87 @@ public sealed class WizardVm : INotifyPropertyChanged
         return lines;
     }
 
+    private void UpdateArmourUiFromDraft()
+    {
+        var tier = GetArmourTierFromDraft();
+        var basePac = GetMaxPacForTier(tier);
+        ArmourMaxBasePac = basePac;
+        ArmourMaxTotalPac = basePac > 0 ? GetMaxTotalPacForTier(tier) : 0;
+        IsArmourSelectionEnabled = basePac > 0 && tier != ArmourTier.None;
+
+        EnsureArmourLayersInitialized();
+        ClampArmourLayers(tier);
+        ClampWornArmourPac();
+        if (!IsArmourSelectionEnabled)
+        {
+            if (ArmourLayers.Count > 0)
+                ArmourLayers[0] = 0;
+            WornArmourPac = 0;
+        }
+        Raise(nameof(ArmourSelectionSummary));
+    }
+
+    private void EnsureArmourLayersInitialized()
+    {
+        if (ArmourLayers.Count == 0)
+            ArmourLayers.Add(0);
+    }
+
+    private void ClampArmourLayers(ArmourTier tier)
+    {
+        var allowedLayers = GetMaxLayersForTier(tier);
+
+        while (ArmourLayers.Count > allowedLayers)
+            ArmourLayers.RemoveAt(ArmourLayers.Count - 1);
+
+        var maxPac = ArmourMaxBasePac;
+        for (int i = 0; i < ArmourLayers.Count; i++)
+        {
+            if (ArmourLayers[i].HasValue && ArmourLayers[i]!.Value > maxPac)
+                ArmourLayers[i] = maxPac;
+        }
+    }
+
+    private int ClampWornArmour(int value)
+    {
+        var max = Math.Max(0, ArmourMaxTotalPac);
+        return Math.Max(0, Math.Min(value, max));
+    }
+
+    private void ClampWornArmourPac()
+    {
+        var clamped = ClampWornArmour(_wornArmourPac);
+        if (_wornArmourPac != clamped)
+        {
+            _wornArmourPac = clamped;
+            Raise(nameof(WornArmourPac));
+            Raise(nameof(ArmourSelectionSummary));
+        }
+    }
+
+    private string BuildArmourAvailabilityText()
+    {
+        var tier = GetArmourTierFromDraft();
+        if (tier == ArmourTier.None)
+            return "Armour: none allowed.";
+
+        var layers = GetMaxLayersForTier(tier);
+        return $"Armour: {tier} (max base PAC {ArmourMaxBasePac}, max worn PAC {ArmourMaxTotalPac}, layers {layers})";
+    }
+
+    private string BuildArmourBaseSummary()
+    {
+        var pac = Draft.ClassRaceArmour;
+        var dac = Draft.DAC;
+        var mac = Draft.MAC ?? 0;
+        var sac = Draft.SAC ?? 0;
+
+        if (pac == 0 && dac == 0 && mac == 0 && sac == 0)
+            return "Base armour from class/race/spec: none.";
+
+        return $"Base armour from class/race/spec: PAC {pac}, DAC {dac}, MAC {mac}, SAC {sac}";
+    }
+
     private void RaiseReviewProperties()
     {
         Raise(nameof(PlayerNameSummary));
@@ -327,6 +466,42 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(NotesSummary));
         Raise(nameof(AlignmentSummary));
     }
+
+    private ArmourTier GetArmourTierFromDraft()
+    {
+        var text = (Draft.ArmourAvailability ?? string.Empty).Trim();
+        if (text.Length > 0 && Enum.TryParse<ArmourTier>(text, ignoreCase: true, out var parsed))
+            return parsed;
+
+        return ArmourTier.None;
+    }
+
+    private static int GetMaxPacForTier(ArmourTier tier)
+        => tier switch
+        {
+            ArmourTier.Light => 4,
+            ArmourTier.Medium => 6,
+            ArmourTier.Heavy => 8,
+            _ => 0
+        };
+
+    private static int GetMaxTotalPacForTier(ArmourTier tier)
+        => tier switch
+        {
+            ArmourTier.Light => GetMaxPacForTier(tier),
+            ArmourTier.Medium => GetMaxPacForTier(tier) + 1,
+            ArmourTier.Heavy => GetMaxPacForTier(tier) + 3,
+            _ => 0
+        };
+
+    private static int GetMaxLayersForTier(ArmourTier tier)
+        => tier switch
+        {
+            ArmourTier.Light => 1,
+            ArmourTier.Medium => 2,
+            ArmourTier.Heavy => 3,
+            _ => 1
+        };
 
     private async Task ExportBattleboardAsync()
     {
@@ -344,5 +519,13 @@ public sealed class WizardVm : INotifyPropertyChanged
     {
         LiteDbService.UpsertDraft(Draft);
         RaiseReviewProperties();
+    }
+
+    private enum ArmourTier
+    {
+        None = 0,
+        Light = 1,
+        Medium = 2,
+        Heavy = 3
     }
 }

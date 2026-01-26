@@ -65,10 +65,6 @@ public class ArmourConfig : ConfigBase
     public int MAC { get => _mac; set { if (SetProperty(ref _mac, Clamp0To6(value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown)); } }
     public int SAC { get => _sac; set { if (SetProperty(ref _sac, Clamp0To6(value), affectsTotal: true)) OnPropertyChanged(nameof(Breakdown)); } }
 
-    // Outputs
-    // private int _total;
-    // public int Total { get => _total; private set { if (SetProperty(ref _total, value, affectsTotal: false))OnPropertyChanged(nameof(Breakdown)); } }
-
     private string _layeredSummary = string.Empty;
     public string LayeredSummary
     {

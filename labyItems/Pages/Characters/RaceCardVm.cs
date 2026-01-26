@@ -1,7 +1,9 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Text.RegularExpressions;
+using labyItems.Models.Characters;
 
 namespace labyItems.Pages.Characters;
 
@@ -56,7 +58,7 @@ public sealed class RaceCardVm : INotifyPropertyChanged
         }
     }
 
-    public void BuildRowsAndChips(Dictionary<string, List<string>> levelledAbilities, string? buyAs)
+    public void BuildRowsAndChips(Dictionary<string, List<AbilityDefinition>> levelledAbilities, string? buyAs)
     {
         LevelRows.Clear();
 
@@ -80,15 +82,15 @@ public sealed class RaceCardVm : INotifyPropertyChanged
         Raise(nameof(BuyAsChips));
     }
 
-    private static string FindAbilitiesForLevel(Dictionary<string, List<string>> dict, int level)
+    private static string FindAbilitiesForLevel(Dictionary<string, List<AbilityDefinition>> dict, int level)
     {
         foreach (var kvp in dict)
         {
             var lvl = ExtractLevel(kvp.Key);
             if (lvl != level) continue;
 
-            var list = kvp.Value ?? new List<string>();
-            var text = string.Join(", ", list.Where(x => !string.IsNullOrWhiteSpace(x)));
+            var list = kvp.Value ?? new List<AbilityDefinition>();
+            var text = string.Join(", ", list.Select(ToDisplayName).Where(x => !string.IsNullOrWhiteSpace(x)));
             return text;
         }
 
@@ -120,5 +122,16 @@ public sealed class RaceCardVm : INotifyPropertyChanged
 
         foreach (var p in parts)
             yield return p;
+    }
+
+    private static string ToDisplayName(AbilityDefinition def)
+    {
+        if (def == null) return string.Empty;
+
+        var name = def.Name ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(def.Effect))
+            return $"{name} ({def.Effect})";
+
+        return name;
     }
 }

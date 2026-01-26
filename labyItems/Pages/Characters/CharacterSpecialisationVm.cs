@@ -21,6 +21,11 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
     private readonly CharacterBuilderVm _builder;
     private CharacterDraft Draft => _builder.Draft;
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        Converters = { new GuildOverrideRulesConverter() }
+    };
 
     private void Raise([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -44,6 +49,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
     private readonly Dictionary<string, SpecialisationDefinition> _specialisationIndex = new(StringComparer.OrdinalIgnoreCase);
     private bool _isSyncingRaceSubtype;
+    private SpecialisationGroupVm? _baronialTraditionGroup;
+    private const string BaronialTraditionKey = "BaronialTradition";
+    private const string BaronialAncestryKey = "Baronial Ancestry";
     private readonly List<SpecialisationGroupVm> _wizardColourGroups = new();
     private readonly List<SpecialisationGroupVm> _vivomancerColourGroups = new();
 
@@ -155,6 +163,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     private string _raceSubtypeTitleBase = "Race subtype";
     private string _raceSubtypeDescription = string.Empty;
     private string _raceSubtypeLifeScaleOverride = string.Empty;
+    private string _raceSubtypeArmourOverride = string.Empty;
+    private List<string> _raceSubtypeColourOverride = new();
     private string _currentRaceForSubtype = string.Empty;
     private bool _raceSubtypeLevelsExpanded;
     private bool _showRaceSubtypeLifeScale;
@@ -221,6 +231,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         _raceSubtypeTitleBase = "Race subtype";
         _raceSubtypeDescription = string.Empty;
         _raceSubtypeLifeScaleOverride = string.Empty;
+        _raceSubtypeArmourOverride = string.Empty;
+        _raceSubtypeColourOverride = new List<string>();
         _currentRaceForSubtype = string.Empty;
 
         _isSyncingRaceSubtype = true;
@@ -259,14 +271,14 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             var allClasses = await ClassService.GetAllAsync();
             if (allClasses.TryGetValue(cls, out var classRec) && classRec != null)
             {
-                foreach (var kvp in classRec.Levels ?? new Dictionary<string, List<string>>())
+                foreach (var kvp in classRec.Levels ?? new Dictionary<string, List<AbilityDefinition>>())
                 {
                     if (!int.TryParse(kvp.Key, out var level))
                         continue;
 
-                    foreach (var abilityToken in kvp.Value ?? new List<string>())
+                    foreach (var abilityToken in kvp.Value ?? new List<AbilityDefinition>())
                     {
-                        var key = FindSpecialisationKey(abilityToken, specialisationIndex.Keys);
+                        var key = FindSpecialisationKey(abilityToken.Name, specialisationIndex.Keys);
                         if (key == null)
                             continue;
 
@@ -310,6 +322,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
                     foreach (var o in options)
                         RaceSubtypeOptions.Add(o);
 
+                    FilterRaceSubtypeOptionsByClass();
+                    EnsureDefaultHumanStandardSelection();
+
                     HasRaceSubtypeChoice = options.Count > 0;
 
                     var initialSelection = BuildSubtypeInitialSelection();
@@ -319,14 +334,14 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
                         SyncRaceSubtypeDraftAndPreview();
                 }
 
-                foreach (var kvp in raceRec.LevelledAbilities ?? new Dictionary<string, List<string>>())
+                foreach (var kvp in raceRec.LevelledAbilities ?? new Dictionary<string, List<AbilityDefinition>>())
                 {
                     if (!int.TryParse(kvp.Key, out var level))
                         continue;
 
-                    foreach (var abilityToken in kvp.Value ?? new List<string>())
+                    foreach (var abilityToken in kvp.Value ?? new List<AbilityDefinition>())
                     {
-                        var key = FindSpecialisationKey(abilityToken, specialisationIndex.Keys);
+                        var key = FindSpecialisationKey(abilityToken.Name, specialisationIndex.Keys);
                         if (key == null)
                             continue;
 
@@ -357,12 +372,16 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
             if (def.ColourAbilities != null && def.ColourAbilities.Count > 0)
             {
+                var filtered = FilterOptionMapForClass(def.ColourAbilities);
+                if (filtered.Count == 0)
+                    continue;
+
                 var subtitle = BuildSubtitle(g);
                 var mapped = new MappedSpecialisationVm(
                     key: title,
                     subtitle: string.IsNullOrWhiteSpace(subtitle) ? "Select a subtype to unlock its benefits." : subtitle,
                     levels: levels,
-                    optionMap: def.ColourAbilities,
+                    optionMap: filtered,
                     initialSelection: GetSavedSpecialisationSelection(title),
                     required: true,
                     onSelectionChanged: OnMappedSpecialisationChanged);
@@ -373,16 +392,22 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
             var useMagicColourEnum = IsWizardColour(title);
             var useVivomancerColourEnum = IsVivomancerColour(title);
+            var useDictionarySearch = UsesDictionarySearch(title);
+            var optionNames = def.Abilities?
+                .Select(a => a?.Name ?? string.Empty)
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .ToList() ?? new List<string>();
 
             var groupVm = new SpecialisationGroupVm(
                 title: title,
                 levels: levels,
-                optionNames: def.Abilities ?? new List<string>(),
+                optionNames: optionNames,
                 initiallySelectedByLevel: new Dictionary<int, string>(),
                 onAnySelectionChanged: OnAnySelectionChanged,
                 useWardPactEnum: UsesInlineDictionarySearch(title),
                 useMagicColourEnum: useMagicColourEnum,
                 useVivomancerColourEnum: useVivomancerColourEnum,
+                useDictionarySearch: useDictionarySearch,
                 magicColourOptions: useMagicColourEnum ? GetWizardColourOptions() : null,
                 vivomancerColourOptions: useVivomancerColourEnum ? GetVivomancerColourOptions(def) : null,
                 selectionValidator: GetSelectionValidator(title));
@@ -410,12 +435,16 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     private void OnAnySelectionChanged()
     {
         SyncRaceSubtypeDraftAndPreview();
+        SyncBaronialSelectionToDraft();
+        RecomputeCompletion();
+        _builder.NotifyGatingChanged();
         _ = _builder.RefreshDraftAbilitiesAsync();
     }
 
     private void OnMappedSpecialisationChanged()
     {
         SyncMappedSelectionsToDraft();
+        UpdateBaronialAncestryNote();
         RecomputeCompletion();
         _builder.NotifyGatingChanged();
         _ = _builder.RefreshDraftAbilitiesAsync();
@@ -445,6 +474,23 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         }
     }
 
+    private void SyncBaronialSelectionToDraft()
+    {
+        if (_baronialTraditionGroup == null)
+        {
+            Draft.SpecialisationSelections.Remove(BaronialTraditionKey);
+            return;
+        }
+
+        var choice = _baronialTraditionGroup.Slots.FirstOrDefault()?.SelectedOption ?? string.Empty;
+        choice = choice.Trim();
+
+        if (string.IsNullOrWhiteSpace(choice))
+            Draft.SpecialisationSelections.Remove(BaronialTraditionKey);
+        else
+            Draft.SpecialisationSelections[BaronialTraditionKey] = choice;
+    }
+
     private async void SyncRaceSubtypeDraftAndPreview()
     {
         if (_isSyncingRaceSubtype)
@@ -472,6 +518,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             UpdateWizardColourGroups();
             UpdateDynamicSpecialisations();
             SyncMappedSelectionsToDraft();
+            UpdateBaronialTraditionGroup();
+            UpdateBaronialAncestryNote();
+            SyncBaronialSelectionToDraft();
 
             RecomputeCompletion();
             _builder.NotifyGatingChanged();
@@ -518,9 +567,12 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         Raise(nameof(HasNoChoices));
     }
 
-    public List<AbilityDraft> BuildSelectedAbilityDrafts()
+    private GuildOverrideRules? _selectedGuildOverrides;
+
+    public (List<AbilityDraft> Abilities, GuildOverrideRules? GuildOverrides) BuildSelectedAbilityDraftsWithRules()
     {
         var list = new List<AbilityDraft>();
+        _selectedGuildOverrides = null;
 
         list.AddRange(BuildRaceSubtypeAbilities());
 
@@ -531,7 +583,17 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
                 var ability = (slot.SelectedOption ?? string.Empty).Trim();
                 if (ability.Length == 0) continue;
 
-                list.AddRange(AbilityDraftBuilder.ParseAbility(ability, slot.Level));
+                var fromIndex = ResolveSpecialisationAbilityDefinition(g.Title, ability);
+                if (fromIndex != null)
+                {
+                    if (fromIndex.GuildOverrides != null)
+                        _selectedGuildOverrides = GuildOverrideRules.Merge(_selectedGuildOverrides, GuildOverrideRules.FromLegacyStrings(fromIndex.GuildOverrides));
+                    list.AddRange(AbilityDraftBuilder.ParseAbility(fromIndex, slot.Level));
+                }
+                else
+                {
+                    list.AddRange(AbilityDraftBuilder.ParseAbility(ability, slot.Level));
+                }
             }
         }
 
@@ -539,14 +601,31 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         {
             foreach (var entry in mapped.GetSelectedAbilities())
             {
-                var ability = (entry.Ability ?? string.Empty).Trim();
-                if (ability.Length == 0) continue;
-
-                list.AddRange(AbilityDraftBuilder.ParseAbility(ability, entry.Level));
+                if (entry.AbilityDef != null)
+                {
+                    if (entry.AbilityDef.GuildOverrides != null)
+                        _selectedGuildOverrides = GuildOverrideRules.Merge(_selectedGuildOverrides, GuildOverrideRules.FromLegacyStrings(entry.AbilityDef.GuildOverrides));
+                    list.AddRange(AbilityDraftBuilder.ParseAbility(entry.AbilityDef, entry.Level));
+                }
+                else if (!string.IsNullOrWhiteSpace(entry.Ability))
+                {
+                    list.AddRange(AbilityDraftBuilder.ParseAbility(entry.Ability!, entry.Level));
+                }
             }
         }
 
-        return list;
+        return (list, _selectedGuildOverrides);
+    }
+
+    private AbilityDefinition? ResolveSpecialisationAbilityDefinition(string key, string selectedName)
+    {
+        if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(selectedName))
+            return null;
+
+        if (!_specialisationIndex.TryGetValue(key, out var def) || def?.Abilities == null)
+            return null;
+
+        return def.Abilities.FirstOrDefault(a => string.Equals(a?.Name, selectedName, StringComparison.OrdinalIgnoreCase));
     }
 
     private List<AbilityDraft> BuildRaceSubtypeAbilities()
@@ -569,11 +648,17 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         if (!mapDef.ColourAbilities.TryGetValue(picked, out var entry) || entry == null)
             return list;
 
-        foreach (var kvp in entry.Levels ?? new Dictionary<string, List<string>>())
+        if (!IsClassAllowed(entry.ClassRestriction))
+            return list;
+
+        if (entry.GuildOverrides != null)
+            _selectedGuildOverrides = GuildOverrideRules.Merge(_selectedGuildOverrides, entry.GuildOverrides);
+
+        foreach (var kvp in entry.Levels ?? new Dictionary<string, List<AbilityDefinition>>())
         {
             var key = (kvp.Key ?? string.Empty).Trim();
             int? level = int.TryParse(key, out var parsed) ? parsed : null;
-            foreach (var ability in kvp.Value ?? new List<string>())
+            foreach (var ability in kvp.Value ?? new List<AbilityDefinition>())
                 list.AddRange(AbilityDraftBuilder.ParseAbility(ability, level));
         }
 
@@ -585,7 +670,11 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         RaceSubtypeAbilitiesPreview.Clear();
         RaceSubtypeLevelRows.Clear();
         _raceSubtypeLifeScaleOverride = string.Empty;
+        _raceSubtypeArmourOverride = string.Empty;
+        _raceSubtypeColourOverride.Clear();
         Draft.LifeScaleKeyOverride = string.Empty;
+        Draft.ArmourAvailabilityOverride = string.Empty;
+        Draft.ColourChoiceOverride.Clear();
         RaceSubtypeLevelsExpanded = false;
         ShowRaceSubtypeLifeScale = false;
 
@@ -599,7 +688,41 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             return;
 
         if (!mapDef.ColourAbilities.TryGetValue(picked, out var entry) || entry == null)
+        {
+            if (IsBaselineHumanStandard(picked))
+                return;
+
+            SelectedRaceSubtype = null;
             return;
+        }
+
+        if (!IsClassAllowed(entry.ClassRestriction))
+        {
+            if (IsBaselineHumanStandard(picked))
+                return;
+
+            SelectedRaceSubtype = null;
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(entry.ArmourAvailabilityOverride))
+        {
+            _raceSubtypeArmourOverride = entry.ArmourAvailabilityOverride.Trim();
+            Draft.ArmourAvailabilityOverride = _raceSubtypeArmourOverride;
+
+            RaceSubtypeAbilitiesPreview.Add(new RaceSubtypePreviewLine
+            {
+                Level = "Armour",
+                Ability = $"Armour availability override: {_raceSubtypeArmourOverride}"
+            });
+        }
+
+        _raceSubtypeColourOverride = (entry.ColourChoiceOverride ?? new List<string>())
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .ToList();
+        Draft.ColourChoiceOverride.Clear();
+        foreach (var colour in _raceSubtypeColourOverride)
+            Draft.ColourChoiceOverride.Add(colour);
 
         if (!string.IsNullOrWhiteSpace(entry.LifeScaleOverride))
         {
@@ -613,7 +736,20 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             });
         }
 
-        var levels = entry.Levels ?? new Dictionary<string, List<string>>();
+        if (entry.GuildOverrides != null)
+        {
+            var guildSummary = SummarizeGuildOverrides(entry.GuildOverrides);
+            if (!string.IsNullOrWhiteSpace(guildSummary))
+            {
+                RaceSubtypeAbilitiesPreview.Add(new RaceSubtypePreviewLine
+                {
+                    Level = "Guild",
+                    Ability = guildSummary
+                });
+            }
+        }
+
+        var levels = entry.Levels ?? new Dictionary<string, List<AbilityDefinition>>();
         var abilityByLevel = new Dictionary<int, List<string>>();
         var hasAbilities = false;
 
@@ -622,7 +758,10 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             {
                 Key = kvp.Key ?? string.Empty,
                 Level = int.TryParse(kvp.Key, out var n) ? n : int.MaxValue,
-                Abilities = (kvp.Value ?? new List<string>()).Select(x => (x ?? string.Empty).Trim()).Where(x => x.Length > 0).ToList()
+                Abilities = (kvp.Value ?? new List<AbilityDefinition>())
+                    .Select(ToDisplayName)
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .ToList()
             })
             .Where(x => x.Abilities.Count > 0)
             .OrderBy(x => x.Level)
@@ -731,11 +870,18 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     private static bool UsesInlineDictionarySearch(string groupTitle)
         => string.Equals(groupTitle.Trim(), "Ward pact", StringComparison.OrdinalIgnoreCase);
 
+    private static bool UsesDictionarySearch(string groupTitle)
+    {
+        var title = groupTitle.Trim();
+        return string.Equals(title, "Standard Scout skill", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(title, "Specialist Scout skill", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static bool IsWizardColour(string groupTitle)
     {
         var title = groupTitle.Trim();
         return string.Equals(title, "Wizard Colour", StringComparison.OrdinalIgnoreCase)
-               || string.Equals(title, "Faerie Wizard Colour", StringComparison.OrdinalIgnoreCase);
+               || string.Equals(title, "Faerie Colour", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsVivomancerColour(string groupTitle)
@@ -743,6 +889,16 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
     private List<MagicColours> GetWizardColourOptions()
     {
+        var overrideColours = Draft.ColourChoiceOverride
+            .Select(ToMagicColour)
+            .Where(c => c.HasValue)
+            .Select(c => c!.Value)
+            .Distinct()
+            .ToList();
+
+        if (overrideColours.Count > 0)
+            return overrideColours;
+
         if (string.Equals(Draft.Race?.Trim(), "Alfar", StringComparison.OrdinalIgnoreCase)
             && !string.IsNullOrWhiteSpace(SelectedRaceSubtype)
             && _alfarWizardColourMap.TryGetValue(SelectedRaceSubtype ?? string.Empty, out var alfarColour))
@@ -756,9 +912,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     private List<VivomancerColours> GetVivomancerColourOptions(SpecialisationDefinition def)
     {
         var list = new List<VivomancerColours>();
-        foreach (var opt in def?.Abilities ?? new List<string>())
+        foreach (var opt in def?.Abilities ?? new List<AbilityDefinition>())
         {
-            var normalized = (opt ?? string.Empty).Trim();
+            var normalized = (opt?.Name ?? string.Empty).Trim();
             if (normalized.Length == 0) continue;
 
             if (Enum.TryParse<VivomancerColours>(normalized.Replace(" ", ""), ignoreCase: true, out var parsed))
@@ -776,7 +932,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
     private Func<IReadOnlyList<string>, string?>? GetSelectionValidator(string title)
     {
-        if (string.Equals(title.Trim(), "Faerie Wizard Colour", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(title.Trim(), "Faerie Colour", StringComparison.OrdinalIgnoreCase))
         {
             return picked =>
             {
@@ -825,7 +981,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
     private void UpdateDynamicSpecialisations()
     {
-        RemoveDynamicSpecialisations("Ishmaic Clan", "Ratfolk Clan");
+        RemoveDynamicSpecialisations("Ishmaic Clan", "Ratfolk Clan", BaronialAncestryKey);
 
         if (IsIshmaicHumanSelected()
             && _specialisationIndex.TryGetValue("IshmaicClanAbilities", out var ishmaicDef)
@@ -834,7 +990,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             AddDynamicMappedSpecialisation(
                 key: "Ishmaic Clan",
                 subtitle: "Human • clan choice",
-                optionMap: ishmaicDef.ColourAbilities,
+                optionMap: FilterOptionMapForClass(ishmaicDef.ColourAbilities),
                 required: true);
         }
 
@@ -845,14 +1001,33 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             AddDynamicMappedSpecialisation(
                 key: "Ratfolk Clan",
                 subtitle: "Ratfolk clan (optional)",
-                optionMap: ratClanDef.ColourAbilities,
+                optionMap: FilterOptionMapForClass(ratClanDef.ColourAbilities),
                 required: false);
+        }
+
+        if (IsBaronialHumanSelected()
+            && _specialisationIndex.TryGetValue("BaronialAncestry", out var ancestryDef)
+            && ancestryDef?.ColourAbilities != null)
+        {
+            var filtered = FilterOptionMapForClass(ancestryDef.ColourAbilities);
+            if (filtered.Count > 0)
+            {
+                AddDynamicMappedSpecialisation(
+                    key: BaronialAncestryKey,
+                    subtitle: "Baronial ancestry (required)",
+                    optionMap: filtered,
+                    required: true);
+            }
         }
     }
 
     private bool IsIshmaicHumanSelected()
         => string.Equals(Draft.Race?.Trim(), "Human", StringComparison.OrdinalIgnoreCase)
            && string.Equals(SelectedRaceSubtype?.Trim(), "Ishmaic", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsBaronialHumanSelected()
+        => string.Equals(Draft.Race?.Trim(), "Human", StringComparison.OrdinalIgnoreCase)
+           && string.Equals(SelectedRaceSubtype?.Trim(), "Baronial", StringComparison.OrdinalIgnoreCase);
 
     private void RemoveDynamicSpecialisations(params string[] keys)
     {
@@ -865,12 +1040,74 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         }
     }
 
+    private void UpdateBaronialTraditionGroup()
+    {
+        var isHuman = string.Equals(Draft.Race?.Trim(), "Human", StringComparison.OrdinalIgnoreCase);
+        var isBaronial = string.Equals(SelectedRaceSubtype?.Trim(), "Baronial", StringComparison.OrdinalIgnoreCase);
+        _specialisationIndex.TryGetValue(_raceSubtypeAbilityMapKey, out var mapDef);
+        mapDef ??= null;
+
+        var hasEntry = isHuman
+                       && isBaronial
+                       && mapDef?.ColourAbilities != null
+                       && mapDef.ColourAbilities.TryGetValue("Baronial", out var entry)
+                       && entry != null
+                       && entry.HedgeOrCircle.Count > 0;
+
+        if (!hasEntry)
+        {
+            if (_baronialTraditionGroup != null)
+                Groups.Remove(_baronialTraditionGroup);
+
+            _baronialTraditionGroup = null;
+            Draft.SpecialisationSelections.Remove(BaronialTraditionKey);
+            return;
+        }
+
+        var options = mapDef!.ColourAbilities!["Baronial"].HedgeOrCircle
+            .Where(o => !string.IsNullOrWhiteSpace(o))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(o => o, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var initSelections = new Dictionary<int, string>();
+        if (Draft.SpecialisationSelections.TryGetValue(BaronialTraditionKey, out var saved) && !string.IsNullOrWhiteSpace(saved))
+            initSelections[1] = saved;
+
+        var classHasPowerBase = ClassHasPowerBase();
+        var optional = !classHasPowerBase;
+
+        if (_baronialTraditionGroup == null)
+        {
+            _baronialTraditionGroup = new SpecialisationGroupVm(
+                title: "Baronial tradition",
+                levels: new[] { 1 },
+                optionNames: options,
+                initiallySelectedByLevel: initSelections,
+                onAnySelectionChanged: OnAnySelectionChanged,
+                useWardPactEnum: false,
+                isOptional: optional);
+            _baronialTraditionGroup.IsExpanded = true;
+            Groups.Insert(0, _baronialTraditionGroup);
+        }
+        else
+        {
+            _baronialTraditionGroup.UpdateOptionNames(options);
+            if (initSelections.TryGetValue(1, out var pre))
+                _baronialTraditionGroup.Slots[0].SelectedOption = pre;
+            _baronialTraditionGroup.IsOptional = optional;
+        }
+    }
+
     private void AddDynamicMappedSpecialisation(
         string key,
         string subtitle,
         Dictionary<string, ColourAbilityDefinition> optionMap,
         bool required)
     {
+        if (optionMap == null || optionMap.Count == 0)
+            return;
+
         var mapped = new MappedSpecialisationVm(
             key: key,
             subtitle: subtitle,
@@ -882,6 +1119,166 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
         mapped.LevelsExpanded = true;
         MappedSpecialisations.Add(mapped);
+    }
+
+    private static string ToDisplayName(AbilityDefinition def)
+    {
+        if (def == null) return string.Empty;
+
+        var name = def.Name ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(def.Effect))
+            return $"{name} ({def.Effect})";
+
+        return name;
+    }
+
+    private bool IsClassAllowed(IEnumerable<string>? restrictions)
+    {
+        var className = (Draft.Class ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(className)) return true;
+
+        var list = restrictions?
+            .Select(r => (r ?? string.Empty).Trim())
+            .Where(r => r.Length > 0)
+            .ToList() ?? new List<string>();
+
+        if (list.Count == 0)
+            return true;
+
+        var clsNorm = className.ToLowerInvariant();
+        foreach (var r in list)
+        {
+            var norm = r.ToLowerInvariant();
+            if (clsNorm.Equals(norm))
+                return true;
+
+            var singular = norm.EndsWith("s") ? norm.TrimEnd('s') : norm;
+            if (clsNorm.Equals(singular))
+                return true;
+
+            if (clsNorm.Contains(norm) || norm.Contains(clsNorm))
+                return true;
+        }
+
+        return false;
+    }
+
+    private Dictionary<string, ColourAbilityDefinition> FilterOptionMapForClass(Dictionary<string, ColourAbilityDefinition>? optionMap)
+    {
+        var result = new Dictionary<string, ColourAbilityDefinition>(StringComparer.OrdinalIgnoreCase);
+        if (optionMap == null)
+            return result;
+
+        foreach (var kvp in optionMap)
+        {
+            if (kvp.Value != null && IsClassAllowed(kvp.Value.ClassRestriction))
+                result[kvp.Key] = kvp.Value;
+        }
+
+        return result;
+    }
+
+    private void FilterRaceSubtypeOptionsByClass()
+    {
+        if (RaceSubtypeOptions.Count == 0)
+            return;
+
+        if (string.IsNullOrWhiteSpace(_raceSubtypeAbilityMapKey))
+            return;
+
+        if (!_specialisationIndex.TryGetValue(_raceSubtypeAbilityMapKey, out var mapDef) || mapDef?.ColourAbilities == null)
+            return;
+
+        var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var option in RaceSubtypeOptions.ToList())
+        {
+            if (mapDef.ColourAbilities.TryGetValue(option, out var entry))
+            {
+                if (IsClassAllowed(entry.ClassRestriction))
+                    allowed.Add(option);
+            }
+            else
+            {
+                allowed.Add(option);
+            }
+        }
+
+        // Always allow the baseline human subtype "Standard" so it cannot be filtered out
+        // by mis-parsed restrictions or missing map entries.
+        if (string.Equals(_currentRaceForSubtype, "Human", StringComparison.OrdinalIgnoreCase))
+            allowed.Add("Standard");
+
+        if (allowed.Count == 0)
+        {
+            RaceSubtypeOptions.Clear();
+            SelectedRaceSubtype = null;
+            HasRaceSubtypeChoice = false;
+            return;
+        }
+
+        for (var i = RaceSubtypeOptions.Count - 1; i >= 0; i--)
+        {
+            if (!allowed.Contains(RaceSubtypeOptions[i]))
+                RaceSubtypeOptions.RemoveAt(i);
+        }
+
+        if (!string.IsNullOrWhiteSpace(SelectedRaceSubtype) && !allowed.Contains(SelectedRaceSubtype!))
+            SelectedRaceSubtype = null;
+
+        HasRaceSubtypeChoice = RaceSubtypeOptions.Count > 0;
+        EnsureDefaultHumanStandardSelection();
+    }
+
+    private void EnsureDefaultHumanStandardSelection()
+    {
+        if (!string.Equals(_currentRaceForSubtype, "Human", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        // Make sure Standard remains in the options list
+        if (!RaceSubtypeOptions.Contains("Standard", StringComparer.OrdinalIgnoreCase))
+            RaceSubtypeOptions.Add("Standard");
+
+        if (!string.IsNullOrWhiteSpace(SelectedRaceSubtype))
+            return;
+
+        var standard = RaceSubtypeOptions.FirstOrDefault(o => string.Equals(o, "Standard", StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(standard))
+            SelectedRaceSubtype = standard;
+    }
+
+    private bool IsBaselineHumanStandard(string picked)
+    {
+        return string.Equals(_currentRaceForSubtype, "Human", StringComparison.OrdinalIgnoreCase)
+               && string.Equals(picked, "Standard", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool ClassHasPowerBase()
+    {
+        var cls = (Draft.Class ?? string.Empty).Trim();
+        if (cls.Length == 0) return false;
+
+        var match = _builder.AllClasses.FirstOrDefault(c => string.Equals(c.Name, cls, StringComparison.OrdinalIgnoreCase))
+                    ?? _builder.AllClasses.FirstOrDefault(c => string.Equals(c.Key, cls, StringComparison.OrdinalIgnoreCase));
+
+        var powerBase = (match?.PowerBase ?? string.Empty).Trim();
+        return powerBase.Length > 0;
+    }
+
+    private void UpdateBaronialAncestryNote()
+    {
+        var notes = Draft.Notes ?? string.Empty;
+        var prefix = "Baronial Ancestry:";
+        var lines = notes.Split('\n').Select(l => l.TrimEnd()).ToList();
+        lines.RemoveAll(l => l.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+
+        if (IsBaronialHumanSelected()
+            && Draft.SpecialisationSelections.TryGetValue(BaronialAncestryKey, out var ancestry)
+            && !string.IsNullOrWhiteSpace(ancestry))
+        {
+            lines.Add($"{prefix} {ancestry.Trim()}");
+        }
+
+        Draft.Notes = string.Join("\n", lines.Where(l => !string.IsNullOrWhiteSpace(l)));
     }
 
     private static string? FindSpecialisationKey(string rawAbilityToken, IEnumerable<string> knownKeys)
@@ -937,7 +1334,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     }
 
     private static bool AllowsDuplicateSlots(string key)
-        => string.Equals(key.Trim(), "Faerie Wizard Colour", StringComparison.OrdinalIgnoreCase);
+        => string.Equals(key.Trim(), "Faerie Colour", StringComparison.OrdinalIgnoreCase);
 
     // --------------------------
     // SUBTYPE: OPTIONS RESOLUTION
@@ -1060,6 +1457,35 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         return null;
     }
 
+    private static string SummarizeGuildOverrides(GuildOverrideRules rules)
+    {
+        var parts = new List<string>();
+        if (rules.IsCityBound) parts.Add("City bound");
+
+        AddChannelSummary(parts, "Political", rules.Political);
+        AddChannelSummary(parts, "Professional", rules.Professional);
+        AddChannelSummary(parts, "Social", rules.Social);
+
+        return string.Join("; ", parts.Where(p => !string.IsNullOrWhiteSpace(p)));
+    }
+
+    private static void AddChannelSummary(List<string> parts, string label, GuildOverrideChannel? channel)
+    {
+        if (channel == null) return;
+
+        if (channel.CanJoin == false)
+        {
+            parts.Add($"No {label.ToLowerInvariant()} guilds");
+            return;
+        }
+
+        if (channel.ReplacedBy is { Count: > 0 })
+            parts.Add($"{label} replaced by {string.Join(", ", channel.ReplacedBy)}");
+
+        if (!string.IsNullOrWhiteSpace(channel.GuildPeople))
+            parts.Add($"{label} limited to {channel.GuildPeople}");
+    }
+
 
     // --------------------------
     // SPECIALISATION INDEX (JSON-driven)
@@ -1082,17 +1508,11 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             // Standard specialisations: { "Abilities": [ ... ] }
             if (prop.Value.TryGetProperty("Abilities", out var abilitiesEl) && abilitiesEl.ValueKind == JsonValueKind.Array)
             {
-                def.Abilities = abilitiesEl.EnumerateArray()
-                    .Select(x => x.GetString() ?? string.Empty)
-                    .Where(x => x.Length > 0)
-                    .ToList();
+                def.Abilities = ParseAbilityArray(abilitiesEl);
             }
             else if (prop.Value.TryGetProperty("Options", out var optionsEl) && optionsEl.ValueKind == JsonValueKind.Array)
             {
-                def.Abilities = optionsEl.EnumerateArray()
-                    .Select(x => x.GetString() ?? string.Empty)
-                    .Where(x => x.Length > 0)
-                    .ToList();
+                def.Abilities = ParseAbilityArray(optionsEl);
             }
 
             // If it looks like an ability table (colour -> { Levels: { "1": [..] } })
@@ -1119,13 +1539,54 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
         foreach (var colourProp in element.EnumerateObject())
         {
-            if (colourProp.Value.ValueKind != JsonValueKind.Object)
+            if (colourProp.Value.ValueKind != JsonValueKind.Object && colourProp.Value.ValueKind != JsonValueKind.Array)
                 continue;
 
             var entry = new ColourAbilityDefinition();
 
+            if (colourProp.Value.ValueKind == JsonValueKind.Array)
+            {
+                entry.Levels["1"] = ParseAbilityArray(colourProp.Value);
+                if (entry.Levels.Count > 0)
+                    outer[colourProp.Name] = entry;
+                continue;
+            }
+
             if (colourProp.Value.TryGetProperty("LifeScaleOverride", out var lsEl) && lsEl.ValueKind == JsonValueKind.String)
                 entry.LifeScaleOverride = lsEl.GetString() ?? string.Empty;
+            if (colourProp.Value.TryGetProperty("ArmourAvailabilityOverride", out var armourEl) && armourEl.ValueKind == JsonValueKind.String)
+                entry.ArmourAvailabilityOverride = armourEl.GetString() ?? string.Empty;
+            if (colourProp.Value.TryGetProperty("ColourChoiceOverride", out var colourOverrideEl) && colourOverrideEl.ValueKind == JsonValueKind.Array)
+            {
+                entry.ColourChoiceOverride = colourOverrideEl
+                    .EnumerateArray()
+                    .Select(x => x.GetString() ?? string.Empty)
+                    .Where(x => x.Length > 0)
+                    .ToList();
+            }
+
+            if (colourProp.Value.TryGetProperty("GuildOverrides", out var guildOverrideEl))
+            {
+                entry.GuildOverrides = GuildOverrideRulesConverter.FromElement(guildOverrideEl, _jsonOptions);
+            }
+
+            if (colourProp.Value.TryGetProperty("HedgeOrCircle", out var hedgeEl) && hedgeEl.ValueKind == JsonValueKind.Array)
+            {
+                entry.HedgeOrCircle = hedgeEl
+                    .EnumerateArray()
+                    .Select(x => x.GetString() ?? string.Empty)
+                    .Where(x => x.Length > 0)
+                    .ToList();
+            }
+
+            if (colourProp.Value.TryGetProperty("ClassRestriction", out var classRestrictEl) && classRestrictEl.ValueKind == JsonValueKind.Array)
+            {
+                entry.ClassRestriction = classRestrictEl
+                    .EnumerateArray()
+                    .Select(x => x.GetString() ?? string.Empty)
+                    .Where(x => x.Length > 0)
+                    .ToList();
+            }
 
             // Preferred shape: colour -> { Levels: { "1": [..], ... } }
             if (colourProp.Value.TryGetProperty("Levels", out var levelsEl) && levelsEl.ValueKind == JsonValueKind.Object)
@@ -1133,16 +1594,58 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             else
                 entry.Levels = ParseLevelArrays(colourProp.Value);
 
-            if (entry.Levels.Count > 0 || entry.LifeScaleOverride.Length > 0)
+            if (entry.Levels.Count > 0
+                || entry.LifeScaleOverride.Length > 0
+                || entry.ArmourAvailabilityOverride.Length > 0
+                || entry.ColourChoiceOverride.Count > 0
+                || entry.GuildOverrides != null
+                || entry.HedgeOrCircle.Count > 0
+                || entry.ClassRestriction.Count > 0)
                 outer[colourProp.Name] = entry;
         }
 
         return outer.Count > 0 ? outer : null;
     }
 
-    private static Dictionary<string, List<string>> ParseLevelArrays(JsonElement levelsObject)
+    private static List<AbilityDefinition> ParseAbilityArray(JsonElement array)
     {
-        var levels = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        var list = new List<AbilityDefinition>();
+        if (array.ValueKind != JsonValueKind.Array)
+            return list;
+
+        foreach (var item in array.EnumerateArray())
+        {
+            var def = ParseAbilityDefinition(item);
+            if (!string.IsNullOrWhiteSpace(def.Name))
+                list.Add(def);
+        }
+
+        return list;
+    }
+
+    private static AbilityDefinition ParseAbilityDefinition(JsonElement el)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<AbilityDefinition>(el.GetRawText(), new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new AbilityDefinition();
+        }
+        catch
+        {
+            var fallback = el.ValueKind switch
+            {
+                JsonValueKind.String => new AbilityDefinition { Name = el.GetString() ?? string.Empty },
+                _ => new AbilityDefinition { Name = el.GetRawText() }
+            };
+            return fallback;
+        }
+    }
+
+    private static Dictionary<string, List<AbilityDefinition>> ParseLevelArrays(JsonElement levelsObject)
+    {
+        var levels = new Dictionary<string, List<AbilityDefinition>>(StringComparer.OrdinalIgnoreCase);
 
         if (levelsObject.ValueKind != JsonValueKind.Object)
             return levels;
@@ -1152,10 +1655,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             if (lvlProp.Value.ValueKind != JsonValueKind.Array)
                 continue;
 
-            var list = lvlProp.Value.EnumerateArray()
-                .Select(x => x.GetString() ?? string.Empty)
-                .Where(x => x.Length > 0)
-                .ToList();
+            var list = ParseAbilityArray(lvlProp.Value);
 
             if (list.Count > 0)
                 levels[lvlProp.Name] = list;
@@ -1264,7 +1764,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             RaiseComputed();
         }
 
-        public IEnumerable<(int? Level, string Ability)> GetSelectedAbilities()
+        public IEnumerable<(int? Level, string Ability, AbilityDefinition? AbilityDef)> GetSelectedAbilities()
         {
             if (string.IsNullOrWhiteSpace(_selectedOption))
                 yield break;
@@ -1272,12 +1772,12 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             if (!_optionMap.TryGetValue(_selectedOption, out var entry) || entry == null)
                 yield break;
 
-            foreach (var kvp in entry.Levels ?? new Dictionary<string, List<string>>())
+            foreach (var kvp in entry.Levels ?? new Dictionary<string, List<AbilityDefinition>>())
             {
                 var key = (kvp.Key ?? string.Empty).Trim();
                 int? level = int.TryParse(key, out var parsed) ? parsed : null;
-                foreach (var ability in kvp.Value ?? new List<string>())
-                    yield return (level, ability);
+                foreach (var ability in kvp.Value ?? new List<AbilityDefinition>())
+                    yield return (level, ability.Name, ability);
             }
         }
 
@@ -1292,14 +1792,14 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
             var abilityByLevel = new Dictionary<int, List<string>>();
 
-            var ordered = (entry.Levels ?? new Dictionary<string, List<string>>())
+            var ordered = (entry.Levels ?? new Dictionary<string, List<AbilityDefinition>>())
                 .Select(kvp => new
                 {
                     Key = kvp.Key ?? string.Empty,
                     Level = int.TryParse(kvp.Key, out var n) ? n : int.MaxValue,
-                    Abilities = (kvp.Value ?? new List<string>())
-                        .Select(x => (x ?? string.Empty).Trim())
-                        .Where(x => x.Length > 0)
+                    Abilities = (kvp.Value ?? new List<AbilityDefinition>())
+                        .Select(ToDisplayName)
+                        .Where(x => !string.IsNullOrWhiteSpace(x))
                         .ToList()
                 })
                 .Where(x => x.Abilities.Count > 0)
@@ -1368,7 +1868,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
     private sealed class SpecialisationDefinition
     {
-        public List<string>? Abilities { get; set; }
+        public List<AbilityDefinition>? Abilities { get; set; }
 
         // TableName (e.g. ElfColourAbilities) -> subtypeName (e.g. Winter) -> level ("1") -> abilities
         public Dictionary<string, ColourAbilityDefinition>? ColourAbilities { get; set; }
@@ -1376,8 +1876,13 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
     public sealed class ColourAbilityDefinition
     {
-        public Dictionary<string, List<string>> Levels { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+        public Dictionary<string, List<AbilityDefinition>> Levels { get; set; } = new(StringComparer.OrdinalIgnoreCase);
         public string LifeScaleOverride { get; set; } = string.Empty;
+        public string ArmourAvailabilityOverride { get; set; } = string.Empty;
+        public List<string> ColourChoiceOverride { get; set; } = new();
+        public GuildOverrideRules? GuildOverrides { get; set; }
+        public List<string> HedgeOrCircle { get; set; } = new();
+        public List<string> ClassRestriction { get; set; } = new();
     }
 
     public sealed class RaceSubtypePreviewLine

@@ -215,25 +215,6 @@
                                     </CollectionView>
                                 </Grid>
 
-                                <Label Text="You will gain:"
-                                       FontAttributes="Bold"/>
-
-                                <CollectionView ItemsSource="{Binding RaceSubtypeAbilitiesPreview}"
-                                                SelectionMode="None">
-                                    <CollectionView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid ColumnDefinitions="Auto,*"
-                                                  Padding="0,4">
-                                                <Label Text="{Binding Level}"
-                                                       Opacity="0.85"
-                                                       VerticalOptions="Start"/>
-                                                <Label Grid.Column="1"
-                                                       Text="{Binding Ability}"
-                                                       LineBreakMode="WordWrap"/>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </CollectionView.ItemTemplate>
-                                </CollectionView>
                             </VerticalStackLayout>
 
                         </VerticalStackLayout>
@@ -363,26 +344,6 @@
                                                     </CollectionView.ItemTemplate>
                                                 </CollectionView>
                                             </Grid>
-
-                                            <Label Text="You will gain:"
-                                                   FontAttributes="Bold"/>
-
-                                            <CollectionView ItemsSource="{Binding AbilitiesPreview}"
-                                                            SelectionMode="None">
-                                                <CollectionView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Grid ColumnDefinitions="Auto,*"
-                                                              Padding="0,4">
-                                                            <Label Text="{Binding Level}"
-                                                                   Opacity="0.85"
-                                                                   VerticalOptions="Start"/>
-                                                            <Label Grid.Column="1"
-                                                                   Text="{Binding Ability}"
-                                                                   LineBreakMode="WordWrap"/>
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </CollectionView.ItemTemplate>
-                                            </CollectionView>
 
                                         </VerticalStackLayout>
 
@@ -515,6 +476,12 @@
                                                                             <Setter Property="IsVisible"
                                                                                     Value="False"/>
                                                                         </DataTrigger>
+                                                                        <DataTrigger TargetType="Picker"
+                                                                                     Binding="{Binding UseDictionarySearch}"
+                                                                                     Value="True">
+                                                                            <Setter Property="IsVisible"
+                                                                                    Value="False"/>
+                                                                        </DataTrigger>
                                                                     </Picker.Triggers>
                                                                 </Picker>
 
@@ -522,6 +489,14 @@
                                                                                     SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
                                                                                     IsVisible="{Binding UseVivomancerColourEnum}"
                                                                                     HorizontalOptions="FillAndExpand"/>
+
+                                                                <controls:DictionarySearchBar x:TypeArguments="x:String"
+                                                                                              ItemsSource="{Binding SearchOptions}"
+                                                                                              SelectedText="{Binding SelectedOption, Mode=TwoWay}"
+                                                                                              PlaceholderText="Search abilities"
+                                                                                              AllowCustomOptions="False"
+                                                                                              HorizontalOptions="FillAndExpand"
+                                                                                              IsVisible="{Binding UseDictionarySearch}"/>
 
                                                                 <controls:DictionarySearchBar x:TypeArguments="enums:MagicColours"
                                                                                               ItemsSource="{Binding MagicColourOptions}"

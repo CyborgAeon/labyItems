@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Windows.Input;
+using labyItems.Models.Characters;
 using labyItems.Services;
 
 namespace labyItems.Pages.Characters;
@@ -80,11 +81,13 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
                 Enumerable.Range(1, 8).Select(lvl =>
                 {
                     rec.Levels.TryGetValue(lvl.ToString(), out var arr);
-                    arr ??= new List<string>();
+                    arr ??= new List<AbilityDefinition>();
 
-                    var body = arr.Count >= 1 ? ExtractNumberToken(arr[0]) : "";
-                    var loc = arr.Count >= 2 ? ExtractNumberToken(arr[1]) : "";
-                    var skills = arr.Count <= 2 ? "" : string.Join(", ", arr.Skip(2));
+                    var names = arr.Select(ToDisplayName).ToList();
+
+                    var body = names.Count >= 1 ? ExtractNumberToken(names[0]) : "";
+                    var loc = names.Count >= 2 ? ExtractNumberToken(names[1]) : "";
+                    var skills = names.Count <= 2 ? "" : string.Join(", ", names.Skip(2));
 
                     return new LevelRowVm
                     {
@@ -106,7 +109,7 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
                 Summary = BuildSummaryFromLevels(rec.Levels),
                 MaxAc = maxAc,
                 TBLP = tblp,
-                PowerBase = rec.Powerbase?.FirstOrDefault() ?? "",
+                PowerBase = ExtractPowerBase(rec),
                 LevelRows = levelRows
             });
         }
@@ -162,11 +165,12 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
             FilteredClasses.Add(m);
     }
 
-    private static string BuildSummaryFromLevels(Dictionary<string, List<string>> levels)
+    private static string BuildSummaryFromLevels(Dictionary<string, List<AbilityDefinition>> levels)
     {
         var firstNonEmpty = levels
             .OrderBy(k => int.TryParse(k.Key, out var n) ? n : 999)
-            .SelectMany(k => k.Value)
+            .SelectMany(k => k.Value ?? new List<AbilityDefinition>())
+            .Select(ToDisplayName)
             .FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
 
         return firstNonEmpty ?? "";
@@ -181,6 +185,26 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
         var category = parts.Length == 2 ? parts[1] : "warrior";
 
         return (icon, category.ToLowerInvariant());
+    }
+
+    private static string ExtractPowerBase(labyItems.Services.CharacterClassRecord rec)
+    {
+        var baseName = rec.Powerbase?.FirstOrDefault();
+        if (!string.IsNullOrWhiteSpace(baseName))
+            return baseName;
+
+        return rec.PowerCalculations?.FirstOrDefault()?.PowerBase ?? "";
+    }
+
+    private static string ToDisplayName(AbilityDefinition def)
+    {
+        if (def == null) return string.Empty;
+
+        var name = def.Name ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(def.Effect))
+            return $"{name} ({def.Effect})";
+
+        return name;
     }
 
     private static string ExtractNumberToken(string s)

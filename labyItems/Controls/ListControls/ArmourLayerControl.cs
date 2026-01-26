@@ -10,6 +10,7 @@ public class ArmourLayerControl : ContentView
 {
     private readonly VerticalStackLayout _rowsHost;
     private bool _suppressUpdates;
+    private const int DefaultMaxPac = 8;
 
     private record ArmourOption(int Pac, string ShortLabel);
 
@@ -86,6 +87,34 @@ public class ArmourLayerControl : ContentView
         set => SetValue(TotalPacProperty, value);
     }
 
+    public static readonly BindableProperty MaxBasePacProperty = BindableProperty.Create(
+        nameof(MaxBasePac),
+        typeof(int),
+        typeof(ArmourLayerControl),
+        defaultValue: DefaultMaxPac,
+        defaultBindingMode: BindingMode.TwoWay,
+        propertyChanged: OnConstraintsChanged);
+
+    public int MaxBasePac
+    {
+        get => (int)GetValue(MaxBasePacProperty);
+        set => SetValue(MaxBasePacProperty, value);
+    }
+
+    public static readonly BindableProperty MaxTotalPacProperty = BindableProperty.Create(
+        nameof(MaxTotalPac),
+        typeof(int),
+        typeof(ArmourLayerControl),
+        defaultValue: int.MaxValue,
+        defaultBindingMode: BindingMode.TwoWay,
+        propertyChanged: OnConstraintsChanged);
+
+    public int MaxTotalPac
+    {
+        get => (int)GetValue(MaxTotalPacProperty);
+        set => SetValue(MaxTotalPacProperty, value);
+    }
+
     public static readonly BindableProperty SummaryTextProperty = BindableProperty.Create(
         nameof(SummaryText),
         typeof(string),
@@ -112,6 +141,34 @@ public class ArmourLayerControl : ContentView
     {
         get => (string)GetValue(BreakdownTextProperty);
         set => SetValue(BreakdownTextProperty, value);
+    }
+
+    private static void OnConstraintsChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (ArmourLayerControl)bindable;
+        control.ApplyConstraints();
+        control.RebuildRows();
+        control.Recalculate();
+    }
+
+    private void ApplyConstraints()
+    {
+        if (Layers == null)
+            return;
+
+        var maxPac = Math.Max(0, MaxBasePac);
+
+        _suppressUpdates = true;
+        for (int i = 0; i < Layers.Count; i++)
+        {
+            if (Layers[i].HasValue && Layers[i]!.Value > maxPac)
+                Layers[i] = maxPac;
+        }
+
+        while (Layers.Count > AllowedLayerCount())
+            Layers.RemoveAt(Layers.Count - 1);
+
+        _suppressUpdates = false;
     }
 
     #endregion
@@ -321,13 +378,20 @@ public class ArmourLayerControl : ContentView
 
     private IEnumerable<ArmourOption> GetAllowedOptions(int forIndex)
     {
+        var constrained = Options
+            .Where(o => o.Pac <= Math.Max(0, MaxBasePac))
+            .ToList();
+
+        if (constrained.Count == 0)
+            constrained.Add(Options.First());
+
         if (Layers == null || forIndex == 0)
         {
             // Base layer: allow any option except values already taken by other rows
             var takenBase = Layers?.Where((v, idx) => idx != forIndex && v.HasValue).Select(v => v!.Value).ToHashSet() ?? new HashSet<int>();
-            var baseAllowed = Options.Where(o => !takenBase.Contains(o.Pac)).OrderBy(o => o.Pac).ToList();
+            var baseAllowed = constrained.Where(o => !takenBase.Contains(o.Pac)).OrderBy(o => o.Pac).ToList();
             if (!baseAllowed.Any(o => o.Pac == 0))
-                baseAllowed.Insert(0, Options.First(o => o.Pac == 0));
+                baseAllowed.Insert(0, constrained.First(o => o.Pac == 0));
             return baseAllowed;
         }
 
@@ -345,7 +409,7 @@ public class ArmourLayerControl : ContentView
         }
 
         // Allow only options that are strictly lighter category than the previous layer, and not already taken.
-        var allowed = Options
+        var allowed = constrained
             .Where(o => !taken.Contains(o.Pac))
             .Where(o => CategoryForPac(o.Pac) < prevCategory)
             .OrderBy(o => o.Pac)
@@ -353,11 +417,11 @@ public class ArmourLayerControl : ContentView
 
         // Ensure None (0) is always available as a choice
         if (!allowed.Any(o => o.Pac == 0))
-            allowed.Insert(0, Options.First(o => o.Pac == 0));
+            allowed.Insert(0, constrained.First(o => o.Pac == 0));
 
         // If nothing else, at least offer None
         if (!allowed.Any())
-            allowed.Add(Options.First(o => o.Pac == 0));
+            allowed.Add(constrained.First(o => o.Pac == 0));
 
         return allowed;
     }
@@ -426,13 +490,14 @@ public class ArmourLayerControl : ContentView
         {
             int layer = selected[i];
             int added = (layer == 5 || layer == 6) ? 2
-                      : (layer == 3 || layer == 4) ? 1
-                      : 0;
+                    : (layer == 3 || layer == 4) ? 1
+                    : 0;
             bonus += added;
             contributions.Add(added);
         }
 
-        TotalPac = basePac + bonus;
+        var maxTotal = Math.Max(0, MaxTotalPac);
+        TotalPac = Math.Min(basePac + bonus, maxTotal);
 
         var names = selected
             .Select(GetShortName)

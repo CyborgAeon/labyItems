@@ -19,7 +19,11 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private Dictionary<string, GuildRecord> _guildRecords =
         new(StringComparer.OrdinalIgnoreCase);
     private GuildSlotRules _slotRules = GuildSlotRules.Default();
-    private bool _classAllowsChurch;
+    private string _currentClassName = "";
+    private HashSet<string> _currentClassBrackets = new(StringComparer.OrdinalIgnoreCase);
+    private string _currentRaceName = "";
+    private string _currentPeopleType = "";
+    private HashSet<string> _currentRaceSelections = new(StringComparer.OrdinalIgnoreCase);
     private readonly Func<Task>? _refreshDraftAbilitiesAsync;
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
     {
@@ -28,6 +32,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         Raise(name);
         return true;
     }
+    private void RaiseSelectedGuildsChanged() => Raise(nameof(SelectedGuilds));
 
     private readonly CharacterDraft _draft;
     private readonly Action _notifyWizardGatingChanged;
@@ -79,6 +84,11 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     public ObservableCollection<GuildCardVm> AllGuilds { get; }
     public ObservableCollection<GuildCardVm> FilteredGuilds { get; }
+    public IEnumerable<GuildCardVm> SelectedGuilds =>
+        AllGuilds
+            .Where(g => g.IsSelected)
+            .OrderBy(g => g.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
     public ICommand ToggleExpandedCommand { get; }
     public ICommand ToggleSelectedCommand { get; }
@@ -86,19 +96,14 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     public async Task ReloadAsync()
     {
-        _classAllowsChurch = await ClassAllowsChurchAsync();
-        _slotRules = GuildSlotRules.FromAbilities(_draft.Abilities);
+        _slotRules = GuildSlotRules.FromDraft(_draft);
 
         _guildRecords = await GuildsService.GetAllAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
 
-        _slotRules.ApplyToCurrentSelection(_draft, _guildRecords);
+        await RefreshContextAsync();
 
-        if (!_classAllowsChurch)
-        {
-            var toRemove = _draft.Guilds.Where(IsChurchGuild).ToList();
-            foreach (var g in toRemove)
-                _draft.Guilds.Remove(g);
-        }
+        _slotRules.ApplyToCurrentSelection(_draft, _guildRecords);
+        ApplyAvailabilityToCurrentSelection();
 
         var (hasCityBound, cityName) = GetCityBoundInfo();
         if (hasCityBound && !string.IsNullOrWhiteSpace(cityName))
@@ -112,6 +117,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
                     _draft.Guilds.Add(matchedGuildName);
             }
         }
+        ApplyAvailabilityToCurrentSelection();
         var types = await GuildsService.GetTypesAsync();
         TypeFilters.Clear();
         TypeFilters.Add("All");
@@ -125,13 +131,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
         .Where(kv =>
         {
             var type = (kv.Value?.Type ?? "").Trim();
-            var isCity = type.Equals("City", StringComparison.OrdinalIgnoreCase);
 
             if (!_slotRules.ShouldShowGuild(type, kv.Key, _draft.Guilds))
                 return false;
 
-            if (!_classAllowsChurch && IsChurchGuild(kv.Key))
-                return _draft.Guilds.Contains(kv.Key, StringComparer.OrdinalIgnoreCase);
+            var availability = EvaluateAvailability(kv.Value, kv.Key);
+            if (!availability.Allowed && !_draft.Guilds.Contains(kv.Key, StringComparer.OrdinalIgnoreCase))
+                return false;
 
             return true;
         })
@@ -143,7 +149,16 @@ public sealed class GuildsVm : INotifyPropertyChanged
             var name = ordered[i].Key;
             var rec = ordered[i].Value ?? new GuildRecord();
 
-            var selectable = WouldStillHaveAnyAlignmentIfSelected(name);
+            var isSelected = _draft.Guilds.Contains(name, StringComparer.OrdinalIgnoreCase);
+            var alignmentOk = WouldStillHaveAnyAlignmentIfSelected(name);
+            var slotCheck = _slotRules.CanSelect(rec.Type ?? string.Empty, name, _draft.Guilds, _guildRecords);
+            var availability = EvaluateAvailability(rec, name);
+            var selectable = alignmentOk && slotCheck.Allowed && availability.Allowed;
+            var reason = "";
+            if (!alignmentOk) reason = "Conflicts with current alignment restrictions.";
+            else if (!slotCheck.Allowed) reason = slotCheck.Reason;
+            else if (!availability.Allowed) reason = availability.Reason;
+
             var vm = new GuildCardVm
             {
                 Id = i + 1,
@@ -153,10 +168,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 BasicBenefits = rec.Benefits?.Basic?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? new(),
                 IntermediateBenefits = rec.Benefits?.Intermediate?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? new(),
                 AdvancedBenefits = rec.Benefits?.Advanced?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? new(),
-                IsSelected = _draft.Guilds.Contains(name, StringComparer.OrdinalIgnoreCase),
+                IsSelected = isSelected,
                 IsExpanded = false,
-                IsSelectable = selectable,
-                NotSelectableReason = selectable ? "" : "Conflicts with current alignment restrictions.",
+                IsSelectable = selectable || isSelected,
+                NotSelectableReason = selectable ? "" : reason,
                 IsLocked = _slotRules.IsGuildLocked(type: rec.Type ?? string.Empty, guildName: name),
             };
 
@@ -193,20 +208,6 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return (true, null);
     }
 
-    private async Task<bool> ClassAllowsChurchAsync()
-    {
-        var cls = (_draft.Class ?? string.Empty).Trim();
-        if (cls.Length == 0) return false;
-
-        var all = await ClassService.GetAllAsync();
-        if (!TryGetClass(all, cls, out var record) || record == null)
-            return false;
-
-        // is a priest, is not a hermit.
-        return (record.Brackets?.Any(b => b == "🙏 Priest") == true &&
-        !record.Levels.Any(e => e.Value.Any(v => v == "Hermit")));
-    }
-
     private static bool TryGetClass(Dictionary<string, ServiceCharacterClassRecord> map, string key, out ServiceCharacterClassRecord? record)
     {
         if (map.TryGetValue(key, out record) && record != null)
@@ -223,6 +224,76 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         record = null;
         return false;
+    }
+
+    private static bool TryGetRace(Dictionary<string, PeopleRecord> map, string key, out PeopleRecord? record)
+    {
+        if (map.TryGetValue(key, out record) && record != null)
+            return true;
+
+        foreach (var kvp in map)
+        {
+            if (string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase))
+            {
+                record = kvp.Value;
+                return true;
+            }
+        }
+
+        record = null;
+        return false;
+    }
+
+    private async Task RefreshContextAsync()
+    {
+        _currentClassName = (_draft.Class ?? string.Empty).Trim();
+        _currentRaceName = (_draft.Race ?? string.Empty).Trim();
+        _currentClassBrackets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        _currentRaceSelections = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        _currentPeopleType = "";
+
+        if (_currentClassName.Length > 0)
+        {
+            var classMap = await ClassService.GetAllAsync();
+            if (TryGetClass(classMap, _currentClassName, out var rec) && rec != null)
+            {
+                foreach (var b in rec.Brackets ?? Enumerable.Empty<string>())
+                    _currentClassBrackets.Add((b ?? string.Empty).Trim());
+            }
+        }
+
+        if (_currentRaceName.Length > 0)
+        {
+            var peopleMap = await PeopleService.GetAllAsync();
+            if (TryGetRace(peopleMap, _currentRaceName, out var rec) && rec != null)
+                _currentPeopleType = rec.PeopleType ?? "";
+        }
+
+        var subtype = (_draft.RaceSubtypeValue ?? _draft.RaceSubtype ?? string.Empty).Trim();
+        if (subtype.Length > 0)
+            _currentRaceSelections.Add(subtype);
+
+        foreach (var selection in _draft.SpecialisationSelections.Values)
+        {
+            var s = (selection ?? string.Empty).Trim();
+            if (s.Length > 0)
+                _currentRaceSelections.Add(s);
+        }
+    }
+
+    private void ApplyAvailabilityToCurrentSelection()
+    {
+        var kept = new List<string>();
+        foreach (var g in _draft.Guilds)
+        {
+            var result = EvaluateAvailability(g);
+            if (result.Allowed)
+                kept.Add(g);
+        }
+
+        _draft.Guilds.Clear();
+        foreach (var g in kept.Distinct(StringComparer.OrdinalIgnoreCase))
+            _draft.Guilds.Add(g);
     }
 
 
@@ -245,6 +316,200 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return available.Count > 0;
     }
 
+    private AvailabilityResult EvaluateAvailability(string guildName)
+    {
+        if (string.IsNullOrWhiteSpace(guildName))
+            return AvailabilityResult.Ok();
+
+        if (_guildRecords.TryGetValue(guildName, out var rec) && rec != null)
+            return EvaluateAvailability(rec, guildName);
+
+        return AvailabilityResult.Ok();
+    }
+
+    private AvailabilityResult EvaluateAvailability(GuildRecord rec, string guildName)
+    {
+        var availability = rec.Availability ?? new GuildAvailability();
+        var whitelist = availability.Whitelist ?? new GuildAvailabilityRules();
+        var blacklist = availability.Blacklist ?? new GuildAvailabilityRules();
+
+        if (!string.IsNullOrWhiteSpace(availability.RequiredGuild)
+            && !_draft.Guilds.Contains(availability.RequiredGuild, StringComparer.OrdinalIgnoreCase))
+        {
+            return new AvailabilityResult(false, $"Requires {availability.RequiredGuild}.");
+        }
+
+        if (MatchesBlacklist(blacklist, out var blackReason))
+            return new AvailabilityResult(false, blackReason);
+
+        if (!MeetsWhitelist(whitelist, out var whiteReason))
+            return new AvailabilityResult(false, whiteReason);
+
+        return AvailabilityResult.Ok();
+    }
+
+    private bool MatchesBlacklist(GuildAvailabilityRules? rules, out string reason)
+    {
+        reason = "";
+        if (rules == null)
+            return false;
+
+        if (rules.Classes?.Contains(_currentClassName, StringComparer.OrdinalIgnoreCase) == true)
+        {
+            reason = "Class not permitted.";
+            return true;
+        }
+
+        if (rules.Brackets?.Any(b => _currentClassBrackets.Contains(b ?? string.Empty)) == true)
+        {
+            reason = "Bracket not permitted.";
+            return true;
+        }
+
+        if (rules.PeopleType?.Contains(_currentPeopleType, StringComparer.OrdinalIgnoreCase) == true)
+        {
+            reason = "People type not permitted.";
+            return true;
+        }
+
+        if (rules.Races?.Any(RaceMatches) == true)
+        {
+            reason = "Race not permitted.";
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool MeetsWhitelist(GuildAvailabilityRules? rules, out string reason)
+    {
+        reason = "";
+        if (rules == null)
+            return true;
+
+        if (rules.Classes is { Count: > 0 } && !rules.Classes.Contains(_currentClassName, StringComparer.OrdinalIgnoreCase))
+        {
+            reason = $"Only: {string.Join(", ", rules.Classes)}";
+            return false;
+        }
+
+        if (rules.Brackets is { Count: > 0 } && !_currentClassBrackets.Any(b => rules.Brackets.Contains(b, StringComparer.OrdinalIgnoreCase)))
+        {
+            reason = $"Requires bracket(s): {string.Join(", ", rules.Brackets)}";
+            return false;
+        }
+
+        if (rules.PeopleType is { Count: > 0 })
+        {
+            if (!rules.PeopleType.Contains(_currentPeopleType, StringComparer.OrdinalIgnoreCase))
+            {
+                reason = $"Limited to: {string.Join(", ", rules.PeopleType)}";
+                return false;
+            }
+        }
+
+        if (rules.Races is { Count: > 0 })
+        {
+            if (!rules.Races.Any(RaceMatches))
+            {
+                var names = rules.Races.Select(r => r?.Name).Where(n => !string.IsNullOrWhiteSpace(n));
+                reason = $"Limited to races: {string.Join(", ", names)}";
+                return false;
+            }
+        }
+
+        if (!AlignmentsSatisfied(rules.Alignments))
+        {
+            reason = "No compatible alignment available.";
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool AlignmentsSatisfied(GuildAvailabilityAlignments? alignments)
+    {
+        if (alignments == null)
+            return true;
+
+        var allowedOrders = ParseOrders(alignments.Order);
+        var allowedMorals = ParseMorals(alignments.Moral);
+        if (allowedOrders.Count == 0 && allowedMorals.Count == 0)
+            return true;
+
+        foreach (var a in _draft.AvailableAlignments ?? Enumerable.Empty<Alignment>())
+        {
+            var orderOk = allowedOrders.Count == 0 || allowedOrders.Contains(a.Order);
+            var moralOk = allowedMorals.Count == 0 || allowedMorals.Contains(a.Moral);
+            if (orderOk && moralOk)
+                return true;
+        }
+
+        return false;
+    }
+
+    private static HashSet<OrderAxis> ParseOrders(IEnumerable<string>? values)
+    {
+        var set = new HashSet<OrderAxis>();
+        foreach (var v in values ?? Array.Empty<string>())
+        {
+            if (Enum.TryParse<OrderAxis>(v, true, out var parsed))
+                set.Add(parsed);
+        }
+        return set;
+    }
+
+    private static HashSet<MoralAxis> ParseMorals(IEnumerable<string>? values)
+    {
+        var set = new HashSet<MoralAxis>();
+        foreach (var v in values ?? Array.Empty<string>())
+        {
+            if (Enum.TryParse<MoralAxis>(v, true, out var parsed))
+                set.Add(parsed);
+        }
+        return set;
+    }
+
+    private bool RaceMatches(GuildAvailabilityRace? rule)
+    {
+        if (rule == null)
+            return false;
+
+        var name = (rule.Name ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return false;
+
+        if (!string.Equals(name, _currentRaceName, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        var subtype = (rule.Subtype ?? string.Empty).Trim();
+        if (subtype.Length == 0)
+            return true;
+
+        return _currentRaceSelections.Contains(subtype);
+    }
+
+    private static AlignmentRule? BuildAlignmentRuleFromAvailability(GuildAvailabilityAlignments? align)
+    {
+        if (align == null)
+            return null;
+
+        var orders = ParseOrders(align.Order);
+        var morals = ParseMorals(align.Moral);
+        if (orders.Count == 0 && morals.Count == 0)
+            return null;
+
+        return new AlignmentRule
+        {
+            Mode = "restrict",
+            Allowed = new AllowedAxes
+            {
+                Order = orders.ToList(),
+                Moral = morals.ToList()
+            }
+        };
+    }
+
     private static string IconForType(string type)
     {
         var t = (type ?? "").Trim().ToLowerInvariant();
@@ -252,13 +517,6 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (t == "professional") return "🛠️";
         if (t.Contains("relig")) return "⛪";
         return "📜";
-    }
-
-    private static bool IsChurchGuild(string name)
-    {
-        var lower = (name ?? string.Empty).ToLowerInvariant();
-        return lower.Contains("church")
-               || lower.Contains("rings of talthar");
     }
 
     private void Refilter()
@@ -296,9 +554,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (string.IsNullOrWhiteSpace(guildName))
             return null;
 
-        return _guildRecords.TryGetValue(guildName, out var rec)
-            ? rec.AlignmentRule
-            : null;
+        if (!_guildRecords.TryGetValue(guildName, out var rec) || rec == null)
+            return null;
+
+        return GuildsService.GetAlignmentRule(rec);
     }
 
     public int SelectedCount => _draft.Guilds.Count;
@@ -319,24 +578,26 @@ public sealed class GuildsVm : INotifyPropertyChanged
         // Refresh selectability now that the world changed
         foreach (var card in AllGuilds)
         {
+            card.IsSelected = _draft.Guilds.Contains(card.Name, StringComparer.OrdinalIgnoreCase);
             var alignmentOk = WouldStillHaveAnyAlignmentIfSelected(card.Name);
             var slotsResult = _slotRules.CanSelect(card.Type, card.Name, _draft.Guilds, _guildRecords);
-
-            var churchOk = _classAllowsChurch || !IsChurchGuild(card.Name);
-            var selectable = alignmentOk && slotsResult.Allowed && churchOk;
+            var availability = EvaluateAvailability(card.Name);
+            var selectable = alignmentOk && slotsResult.Allowed && availability.Allowed;
 
             // Allow already-selected guilds to stay selectable so the user can deselect them
             card.IsSelectable = selectable || card.IsSelected;
 
             if (!alignmentOk)
                 card.NotSelectableReason = "Conflicts with current alignment restrictions.";
-            else if (!churchOk)
-                card.NotSelectableReason = "Only priest-bracket classes may join a church.";
             else if (!slotsResult.Allowed)
                 card.NotSelectableReason = slotsResult.Reason;
+            else if (!availability.Allowed)
+                card.NotSelectableReason = availability.Reason;
             else
                 card.NotSelectableReason = "";
         }
+
+        RaiseSelectedGuildsChanged();
     }
 
     private void ToggleExpanded(GuildCardVm? item)
@@ -356,16 +617,24 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (item is null || item.IsLocked || (!item.IsSelectable && !item.IsSelected))
             return;
 
-        if (!_classAllowsChurch && IsChurchGuild(item.Name) && !item.IsSelected)
-        {
-            item.NotSelectableReason = "Only priest-bracket classes may join a church.";
-            return;
-        }
-
         var slotCheck = _slotRules.CanSelect(item.Type, item.Name, _draft.Guilds, _guildRecords);
         if (!item.IsSelected && !slotCheck.Allowed)
         {
             item.NotSelectableReason = slotCheck.Reason;
+            return;
+        }
+
+        var availability = EvaluateAvailability(item.Name);
+        if (!item.IsSelected && !availability.Allowed)
+        {
+            item.NotSelectableReason = availability.Reason;
+            return;
+        }
+
+        var alignmentOk = WouldStillHaveAnyAlignmentIfSelected(item.Name);
+        if (!item.IsSelected && !alignmentOk)
+        {
+            item.NotSelectableReason = "Conflicts with current alignment restrictions.";
             return;
         }
 
@@ -376,6 +645,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
         else _draft.Guilds.RemoveAt(idx);
 
         item.IsSelected = nowSelected;
+
+        ApplyAvailabilityToCurrentSelection();
 
         Raise(nameof(SelectedCount));
         RecomputeDraftAlignments();
@@ -476,6 +747,10 @@ public sealed class GuildCardVm : INotifyPropertyChanged
 }
 
 public sealed record GuildSelectability(bool Allowed, string Reason);
+public sealed record AvailabilityResult(bool Allowed, string Reason)
+{
+    public static AvailabilityResult Ok() => new(true, "");
+}
 
 public sealed class GuildSlotRules
 {
@@ -487,8 +762,15 @@ public sealed class GuildSlotRules
     public bool CityOnly { get; private set; }
     public bool AllGuildsBlocked { get; private set; }
 
+    private readonly Dictionary<string, HashSet<string>> _allowedByType = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, HashSet<string>> _forcedByType = new(StringComparer.OrdinalIgnoreCase);
+
     private static readonly Regex TradeCityRegex = new(@"trade\s+(political|social|professional)\s+for\s+city\s+(.+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     public HashSet<string> ForcedCityNames { get; } = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly Dictionary<string, string[]> TypeTokenMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["baronial"] = new[] { "Claws of the Circle" }
+    };
 
     public static GuildSlotRules Default() => new();
 
@@ -502,6 +784,16 @@ public sealed class GuildSlotRules
             if (name.Length == 0) continue;
 
             var lower = name.ToLowerInvariant();
+
+            if (ability?.GuildOverrides is { Count: > 0 })
+            {
+                foreach (var ov in ability.GuildOverrides)
+                    rules.ApplyGuildOverride(ov);
+            }
+            else if (ability?.AbilityType == AbilityType.GuildOverride)
+            {
+                rules.ApplyGuildOverride(name);
+            }
 
             var tradeMatch = TradeCityRegex.Match(name);
             if (tradeMatch.Success)
@@ -539,6 +831,13 @@ public sealed class GuildSlotRules
         return rules;
     }
 
+    public static GuildSlotRules FromDraft(CharacterDraft draft)
+    {
+        var rules = FromAbilities(draft.Abilities);
+        rules.ApplyOverrides(draft.GuildOverrideRules);
+        return rules;
+    }
+
     public void ApplyToCurrentSelection(CharacterDraft draft, Dictionary<string, GuildRecord> records)
     {
         if (AllGuildsBlocked)
@@ -566,6 +865,20 @@ public sealed class GuildSlotRules
                 kept.Add(forcedCity);
         }
 
+        foreach (var kvp in _forcedByType)
+        {
+            var type = kvp.Key;
+            var limit = GetLimit(type);
+            foreach (var forced in kvp.Value)
+            {
+                if (CountOfType(type, kept, records) >= limit)
+                    break;
+
+                if (records.ContainsKey(forced) && !kept.Contains(forced, StringComparer.OrdinalIgnoreCase))
+                    kept.Add(forced);
+            }
+        }
+
         draft.Guilds.Clear();
         foreach (var g in kept.Distinct(StringComparer.OrdinalIgnoreCase))
             draft.Guilds.Add(g);
@@ -589,6 +902,12 @@ public sealed class GuildSlotRules
         if (IsCity(typeNorm) && ForcedCityNames.Count > 0 && !ForcedCityNames.Contains(guildName, StringComparer.OrdinalIgnoreCase))
             return isSelected;
 
+        if (_allowedByType.TryGetValue(typeNorm, out var allowed) && allowed.Count > 0)
+        {
+            if (!allowed.Contains(guildName, StringComparer.OrdinalIgnoreCase))
+                return isSelected;
+        }
+
         return true;
     }
 
@@ -599,6 +918,9 @@ public sealed class GuildSlotRules
             return false;
 
         if (IsCity(typeNorm) && ForcedCityNames.Contains(guildName, StringComparer.OrdinalIgnoreCase))
+            return true;
+
+        if (_forcedByType.TryGetValue(typeNorm, out var forced) && forced.Contains(guildName, StringComparer.OrdinalIgnoreCase))
             return true;
 
         return false;
@@ -612,6 +934,10 @@ public sealed class GuildSlotRules
 
         if (CityOnly && !IsCity(typeNorm))
             return new GuildSelectability(false, "City-bound: only city guilds are allowed.");
+
+        if (_allowedByType.TryGetValue(typeNorm, out var allowed) && allowed.Count > 0
+            && !allowed.Contains(guildName, StringComparer.OrdinalIgnoreCase))
+            return new GuildSelectability(false, $"Only {string.Join(", ", allowed)} allowed.");
 
         var limit = GetLimit(typeNorm);
         if (limit <= 0)
@@ -627,6 +953,9 @@ public sealed class GuildSlotRules
 
         if (!alreadySelected && currentCount >= limit)
             return new GuildSelectability(false, $"All {DisplayType(typeNorm)} guild slots are filled.");
+
+        if (_forcedByType.TryGetValue(typeNorm, out var forced) && forced.Contains(guildName, StringComparer.OrdinalIgnoreCase))
+            return new GuildSelectability(true, "");
 
         return new GuildSelectability(true, "");
     }
@@ -673,6 +1002,129 @@ public sealed class GuildSlotRules
         SocialSlots = Math.Max(0, SocialSlots);
         ProfessionalSlots = Math.Max(0, ProfessionalSlots);
         CitySlots = Math.Max(0, CitySlots);
+    }
+
+    private void ApplyGuildOverride(string raw)
+    {
+        var text = (raw ?? string.Empty).Trim();
+        if (text.Length == 0) return;
+
+        if (text.Equals("city bound", StringComparison.OrdinalIgnoreCase))
+        {
+            CityOnly = true;
+            AllGuildsBlocked = false;
+            return;
+        }
+
+        var parts = text.Split(':', 2);
+        if (parts.Length == 0) return;
+
+        var type = NormalizeTypePrefix(parts[0]);
+        if (string.IsNullOrWhiteSpace(type))
+            return;
+
+        var value = parts.Length > 1 ? (parts[1] ?? string.Empty).Trim() : string.Empty;
+        ApplyTypeOverride(type, value);
+    }
+
+    private void ApplyTypeOverride(string type, string value)
+    {
+        var typeNorm = NormalizeType(type);
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            SetLimitForType(typeNorm, 0);
+            _allowedByType[typeNorm] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            return;
+        }
+
+        var lower = value.Trim();
+        if (lower.StartsWith("type-", StringComparison.OrdinalIgnoreCase))
+        {
+            var token = lower.Substring(5).Trim();
+            var allowed = ResolveTokenGuilds(token);
+            _allowedByType[typeNorm] = allowed;
+            EnsureSlotsForType(typeNorm, Math.Max(1, allowed.Count));
+            return;
+        }
+
+        var forced = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { value };
+        _forcedByType[typeNorm] = forced;
+        _allowedByType[typeNorm] = forced;
+        EnsureSlotsForType(typeNorm, forced.Count);
+    }
+
+    private void ApplyOverrides(GuildOverrideRules? overrides)
+    {
+        if (overrides == null)
+            return;
+
+        if (overrides.IsCityBound)
+        {
+            CityOnly = true;
+            AllGuildsBlocked = false;
+        }
+
+        ApplyChannelOverride("political", overrides.Political);
+        ApplyChannelOverride("professional", overrides.Professional);
+        ApplyChannelOverride("social", overrides.Social);
+
+        Normalize();
+    }
+
+    private void ApplyChannelOverride(string type, GuildOverrideChannel? channel)
+    {
+        if (channel == null) return;
+
+        var typeNorm = NormalizeType(type);
+
+        if (channel.CanJoin == false)
+        {
+            SetLimitForType(typeNorm, 0);
+            return;
+        }
+
+        if (channel.ReplacedBy is { Count: > 0 })
+        {
+            var set = new HashSet<string>(channel.ReplacedBy.Where(x => !string.IsNullOrWhiteSpace(x)), StringComparer.OrdinalIgnoreCase);
+            _forcedByType[typeNorm] = set;
+            _allowedByType[typeNorm] = set;
+            EnsureSlotsForType(typeNorm, Math.Max(1, set.Count));
+        }
+    }
+
+    private static string NormalizeTypePrefix(string prefix)
+    {
+        var p = NormalizeType(prefix);
+        return p switch
+        {
+            "po" or "political" => "political",
+            "pr" or "professional" => "professional",
+            "so" or "social" => "social",
+            _ => string.Empty
+        };
+    }
+
+    private HashSet<string> ResolveTokenGuilds(string token)
+    {
+        if (TypeTokenMap.TryGetValue(token.Trim(), out var names))
+            return new HashSet<string>(names ?? Array.Empty<string>(), StringComparer.OrdinalIgnoreCase);
+
+        return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    }
+
+    private void SetLimitForType(string type, int value)
+    {
+        if (IsPolitical(type)) PoliticalSlots = value;
+        else if (IsSocial(type)) SocialSlots = value;
+        else if (IsProfessional(type)) ProfessionalSlots = value;
+    }
+
+    private void EnsureSlotsForType(string type, int minimum)
+    {
+        if (IsPolitical(type)) PoliticalSlots = Math.Max(PoliticalSlots, minimum);
+        else if (IsSocial(type)) SocialSlots = Math.Max(SocialSlots, minimum);
+        else if (IsProfessional(type)) ProfessionalSlots = Math.Max(ProfessionalSlots, minimum);
     }
 
     private static bool ContainsAllGuildBan(string lower)

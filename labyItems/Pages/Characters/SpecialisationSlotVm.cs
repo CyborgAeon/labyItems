@@ -32,6 +32,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public bool UseWardPactEnum { get; }
     public bool UseMagicColourEnum { get; }
     public bool UseVivomancerColourEnum { get; }
+    public bool UseDictionarySearch { get; }
 
     private StandardWardPacts? _selectedWardPact;
     public StandardWardPacts? SelectedWardPact
@@ -119,6 +120,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
 
     private Func<IReadOnlyList<string>>? _getFilteredOptions;
     public IReadOnlyList<string> FilteredOptionNames => _getFilteredOptions?.Invoke() ?? Array.Empty<string>();
+    public Dictionary<string, string> SearchOptions
+        => FilteredOptionNames.ToDictionary(o => o, o => o, StringComparer.OrdinalIgnoreCase);
 
     private bool _suppressSelectionSync;
 
@@ -127,12 +130,14 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         bool useWardPactEnum,
         bool useMagicColourEnum,
         bool useVivomancerColourEnum,
+        bool useDictionarySearch,
         Action onChanged)
     {
         Level = level;
         UseWardPactEnum = useWardPactEnum;
         UseMagicColourEnum = useMagicColourEnum;
         UseVivomancerColourEnum = useVivomancerColourEnum;
+        UseDictionarySearch = useDictionarySearch;
         _onChanged = onChanged;
     }
 
@@ -140,6 +145,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     {
         _getFilteredOptions = getFilteredOptions;
         Raise(nameof(FilteredOptionNames));
+        Raise(nameof(SearchOptions));
     }
 
     public void ConfigureMagicColours(IEnumerable<MagicColours> allowed)
@@ -183,6 +189,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public void RaiseFilteredOptionsChanged()
     {
         Raise(nameof(FilteredOptionNames));
+        Raise(nameof(SearchOptions));
     }
 
     private MagicColours? FindMagicColour(string label)
