@@ -118,7 +118,26 @@ public sealed class GuildOverrideRulesConverter : JsonConverter<GuildOverrideRul
     {
         if (reader.TokenType == JsonTokenType.StartObject)
         {
-            return JsonSerializer.Deserialize<GuildOverrideRules>(ref reader, options);
+            using var doc = JsonDocument.ParseValue(ref reader);
+            var root = doc.RootElement;
+            var rules = new GuildOverrideRules();
+
+            if (root.TryGetProperty(nameof(GuildOverrideRules.IsCityBound), out var isCityBound)
+                && (isCityBound.ValueKind == JsonValueKind.True || isCityBound.ValueKind == JsonValueKind.False))
+            {
+                rules.IsCityBound = isCityBound.GetBoolean();
+            }
+
+            if (root.TryGetProperty(nameof(GuildOverrideRules.Social), out var social))
+                rules.Social = social.Deserialize<GuildOverrideChannel>(options) ?? new GuildOverrideChannel();
+
+            if (root.TryGetProperty(nameof(GuildOverrideRules.Professional), out var professional))
+                rules.Professional = professional.Deserialize<GuildOverrideChannel>(options) ?? new GuildOverrideChannel();
+
+            if (root.TryGetProperty(nameof(GuildOverrideRules.Political), out var political))
+                rules.Political = political.Deserialize<GuildOverrideChannel>(options) ?? new GuildOverrideChannel();
+
+            return rules;
         }
 
         if (reader.TokenType == JsonTokenType.StartArray)
@@ -157,7 +176,26 @@ public sealed class GuildOverrideRulesConverter : JsonConverter<GuildOverrideRul
     public static GuildOverrideRules? FromElement(JsonElement el, JsonSerializerOptions options)
     {
         if (el.ValueKind == JsonValueKind.Object)
-            return el.Deserialize<GuildOverrideRules>(options);
+        {
+            var rules = new GuildOverrideRules();
+
+            if (el.TryGetProperty(nameof(GuildOverrideRules.IsCityBound), out var isCityBound)
+                && (isCityBound.ValueKind == JsonValueKind.True || isCityBound.ValueKind == JsonValueKind.False))
+            {
+                rules.IsCityBound = isCityBound.GetBoolean();
+            }
+
+            if (el.TryGetProperty(nameof(GuildOverrideRules.Social), out var social))
+                rules.Social = social.Deserialize<GuildOverrideChannel>(options) ?? new GuildOverrideChannel();
+
+            if (el.TryGetProperty(nameof(GuildOverrideRules.Professional), out var professional))
+                rules.Professional = professional.Deserialize<GuildOverrideChannel>(options) ?? new GuildOverrideChannel();
+
+            if (el.TryGetProperty(nameof(GuildOverrideRules.Political), out var political))
+                rules.Political = political.Deserialize<GuildOverrideChannel>(options) ?? new GuildOverrideChannel();
+
+            return rules;
+        }
 
         if (el.ValueKind == JsonValueKind.Array)
         {

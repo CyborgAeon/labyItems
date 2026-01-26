@@ -95,15 +95,15 @@ public sealed class WizardVm : INotifyPropertyChanged
         Draft = draft ?? new CharacterDraft();
         _onFinished = onFinished;
         _exportService = new BattleboardExportService();
-        CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
-
-        // NEW: optional guild selection step
-        GuildsVm = new GuildsVm(Draft, NotifyGatingChanged, CharacterBuilderVm.GetNonGuildAlignmentRules, CharacterBuilderVm.RefreshDraftAbilitiesAsync);
         BackCommand = new Command(OnBack);
         NextCommand = new Command(async () => await OnNextAsync());
         StepClickCommand = new Command<int>(async i => await TryGoToStepAsync(i));
         ExportToBattleboardCommand = new Command(async () => await ExportBattleboardAsync(), () => Draft.IsRaceAndClassSelected);
         SaveToWalletCommand = new Command(SaveToWallet, () => Draft.IsRaceAndClassSelected);
+        CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
+
+        // NEW: optional guild selection step
+        GuildsVm = new GuildsVm(Draft, NotifyGatingChanged, CharacterBuilderVm.GetNonGuildAlignmentRules, CharacterBuilderVm.RefreshDraftAbilitiesAsync);
 
         UpdateArmourUiFromDraft();
 
@@ -248,8 +248,8 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(ArmourBaseSummary));
         Raise(nameof(ArmourSelectionSummary));
         RaiseReviewProperties();
-        ExportToBattleboardCommand.ChangeCanExecute();
-        SaveToWalletCommand.ChangeCanExecute();
+        ExportToBattleboardCommand?.ChangeCanExecute();
+        SaveToWalletCommand?.ChangeCanExecute();
     }
 
     private void OnBack()

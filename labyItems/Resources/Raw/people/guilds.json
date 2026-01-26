@@ -1120,7 +1120,7 @@
     "Availability": {
       "Whitelist": {
         "Classes": [],
-        "Brackets": [],
+        "Brackets": ["🙏 Priest"],
         "Alignments": {
           "Order": ["Chaotic", "Neutral", "Lawful"],
           "Moral": ["Evil"]
@@ -1183,7 +1183,7 @@
     "Availability": {
       "Whitelist": {
         "Classes": [],
-        "Brackets": [],
+        "Brackets": ["🙏 Priest"],
         "Alignments": {
           "Order": ["Lawful", "Neutral", "Chaotic"],
           "Moral": ["Evil"]
@@ -1266,7 +1266,7 @@
   "Frontline": {
     "Type": "professional",
     "Benefits": {
-      "Basic": ["Nimble", "Combat Hardened", "Additional Training"],
+      "Basic": [],
       "Intermediate": [],
       "Advanced": []
     },
@@ -1748,7 +1748,7 @@
           "Moral": ["Evil", "Neutral"]
         },
         "Races": [],
-        "PeopleType": []
+        "PeopleType": ["Ishmaic"]
       },
       "Blacklist": {
         "Classes": [],
@@ -2101,7 +2101,7 @@
     "Availability": {
       "Whitelist": {
         "Classes": [],
-        "Brackets": [],
+        "Brackets": ["🙏 Priest"],
         "Alignments": {
           "Order": [],
           "Moral": []
