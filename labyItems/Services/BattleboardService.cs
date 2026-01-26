@@ -195,8 +195,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
     private static (string NameColumn, int StartRow, int EndRow) GetInnatePlacement(string templateName, bool isVivomancer)
     {
-        // All templates end innates at row 53
-        const int endRow = 53;
+        const int endRow = 54;
 
         if (isVivomancer || templateName.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase))
             return ("B", 27, endRow);

@@ -123,7 +123,52 @@
         "PowerBase": "Spirit",
         "Calculation": "CL*3"
       }
-    ]
+    ],
+    "levels": {
+      "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ]
+    }
   },
   "Power Warrior": {
     "Brackets": ["🛡️ Warrior"],
@@ -1385,7 +1430,52 @@
         "PowerBase": "Spirit",
         "Calculation": "CL*3"
       }
-    ]
+    ],
+    "levels": {
+      "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ]
+    }
   },
   "Vochstelen": {
     "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
@@ -2380,12 +2470,49 @@
       "Restrictions": ["No physical"]
     },
     "Levels": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
+      "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
       "5": [],
-      "6": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ],
       "7": [],
       "8": []
     },
@@ -2424,7 +2551,52 @@
         "PowerBase": "Spirit",
         "Calculation": "CL*4"
       }
-    ]
+    ],
+    "levels": {
+      "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ]
+    }
   },
   "Battle-Priest": {
     "Brackets": ["🛡️ Warrior", "🙏 Priest"],
@@ -2486,7 +2658,52 @@
         "PowerBase": "Spirit",
         "Calculation": "CL*2"
       }
-    ]
+    ],
+    "levels": {
+      "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ]
+    }
   },
   "Crusading-Priest": {
     "Brackets": ["🛡️ Warrior", "🙏 Priest"],
@@ -2548,7 +2765,52 @@
         "PowerBase": "Spirit",
         "Calculation": "CL*1"
       }
-    ]
+    ],
+    "levels": {
+      "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ]
+    }
   },
   "Spiritual-Warrior": {
     "Brackets": ["🛡️ Warrior", "🙏 Priest"],
@@ -2605,7 +2867,52 @@
         }
       ]
     },
-    "Max AC": 9
+    "Max AC": 9,
+    "levels": {
+      "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ]
+    }
   },
   "Hospitaller": {
     "Brackets": ["🙏 Priest"],
@@ -2639,6 +2946,51 @@
         "order": ["Lawful", "Neutral", "Chaotic"]
       },
       "allowedPairs": ["Lawful Good", "Neutral Good", "Chaotic Good"]
+    },
+    "levels": {
+      "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ]
     }
   },
   "Witch": {
@@ -2657,6 +3009,10 @@
           "Name": "Potion-related skill/recipe",
           "Type": "Overwrite",
           "OverwriteKey": "PotionSkill"
+        },
+        {
+          "Name": "Priestly Discerns",
+          "Type": "Replace"
         }
       ],
       "2": [
@@ -2715,7 +3071,52 @@
         "PowerBase": "Spirit",
         "Calculation": "CL*3"
       }
-    ]
+    ],
+    "levels": {
+      "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ]
+    }
   },
   "Friar": {
     "Brackets": ["🙏 Priest"],
@@ -2731,10 +3132,23 @@
         }
       ],
       "2": [],
-      "3": [],
+      "3": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
       "4": [
         {
-          "Name": "Read scrolls",
+          "Name": "Read Runes",
           "Type": "Static"
         }
       ],
@@ -2742,12 +3156,24 @@
         {
           "Name": "B",
           "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
         }
       ],
       "6": [
         {
           "Name": "UAC",
           "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
         }
       ],
       "7": [],
@@ -2755,6 +3181,10 @@
         {
           "Name": "1st Weapon Mastery (staff)",
           "Type": "Static"
+        },
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
         }
       ]
     },
@@ -2775,7 +3205,12 @@
       "Restrictions": []
     },
     "Levels": {
-      "1": [],
+      "1": [
+        {
+          "Name": "Priestly Discerns",
+          "Type": "Replace"
+        }
+      ],
       "2": [],
       "3": [],
       "4": [],
@@ -2791,7 +3226,52 @@
         "PowerBase": "Spirit",
         "Calculation": "CL*3*TM"
       }
-    ]
+    ],
+    "levels": {
+      "1": [
+        {
+          "Name": "Recognise Spirit",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Wounds",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Discern Nature of Undead",
+          "Type": "AtWill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Runes",
+          "Type": "Static"
+        }
+      ],
+      "3": [
+        {
+          "Name": "Discern Bless/Curse",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Use Spirit Items",
+          "Type": "AtWill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "Discern Disease",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Discern Spiritual Mastery",
+          "Type": "AtWill"
+        }
+      ]
+    }
   },
   "Druid": {
     "Brackets": ["🌿 Druid"],
@@ -3014,7 +3494,10 @@
           "Name": "Immunity to Bless/Curse",
           "Type": "Immunity"
         },
-        { "Name": "1 DAC", "Type": "Static" }
+        {
+          "Name": "1 DAC",
+          "Type": "Static"
+        }
       ],
       "4": [
         {
@@ -3032,7 +3515,10 @@
           "Type": "Innate",
           "Count": 4
         },
-        { "Name": "2 DAC", "Type": "Static" }
+        {
+          "Name": "2 DAC",
+          "Type": "Static"
+        }
       ],
       "6": [
         {
@@ -3055,7 +3541,10 @@
           "Name": "Half damage incoming neuronics",
           "Type": "Static"
         },
-        { "Name": "3 DAC", "Type": "Static" }
+        {
+          "Name": "3 DAC",
+          "Type": "Static"
+        }
       ],
       "8": [
         {
@@ -3063,7 +3552,10 @@
           "Type": "Innate",
           "Count": 2
         },
-        { "Name": "4 DAC", "Type": "Static" }
+        {
+          "Name": "4 DAC",
+          "Type": "Static"
+        }
       ]
     },
     "Max AC": 8,
@@ -3548,7 +4040,10 @@
     "Brackets": ["🧠 Neuro", "⚔ Scout"],
     "Levels": {
       "1": [
-        { "Name": "O", "Type": "WeaponSkill" },
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
         {
           "Name": "Detect Possible Neuronic Activity",
           "Type": "AtWill"
@@ -3560,25 +4055,40 @@
           "Type": "Innate",
           "Count": 8
         },
-        { "Name": "Recognise Neuronics", "Type": "AtWill" }
+        {
+          "Name": "Recognise Neuronics",
+          "Type": "AtWill"
+        }
       ],
       "3": [
-        { "Name": "E", "Type": "WeaponSkill" },
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
         {
           "Name": "Psychic Guide",
           "Type": "AtWill"
         },
-        { "Name": "Standard Scout skill", "Type": "Overwrite" }
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite"
+        }
       ],
       "4": [
-        { "Name": "H", "Type": "WeaponSkill" },
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
         {
           "Name": "Artefact Study",
           "Type": "AtWill"
         }
       ],
       "5": [
-        { "Name": "Standard Scout skill", "Type": "Overwrite" },
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite"
+        },
         {
           "Name": "Precognition",
           "Type": "Innate",
@@ -3597,10 +4107,16 @@
           "Name": "Detect Mind",
           "Type": "AtWill"
         },
-        { "Name": "Standard Scout skill", "Type": "Overwrite" }
+        {
+          "Name": "Standard Scout skill",
+          "Type": "Overwrite"
+        }
       ],
       "8": [
-        { "Name": "Specialist Scout skill", "Type": "Overwrite" },
+        {
+          "Name": "Specialist Scout skill",
+          "Type": "Overwrite"
+        },
         {
           "Name": "Neuronic Invisibility",
           "Type": "Innate",
@@ -3623,20 +4139,31 @@
     "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
-        { "Name": "O (Dagger)", "Type": "WeaponSkill" },
+        {
+          "Name": "O (Dagger)",
+          "Type": "WeaponSkill"
+        },
         {
           "Name": "Neuronic Penetration",
           "Type": "Innate",
           "Count": 16
         }
       ],
-      "2": [{ "Name": "Auric Colour", "Type": "AtWill" }],
+      "2": [
+        {
+          "Name": "Auric Colour",
+          "Type": "AtWill"
+        }
+      ],
       "3": [
         {
           "Name": "Detect Possible Neuronic Activity",
           "Type": "AtWill"
         },
-        { "Name": "Local Detect Possible Neuronic Activity", "Type": "AtWill" }
+        {
+          "Name": "Local Detect Possible Neuronic Activity",
+          "Type": "AtWill"
+        }
       ],
       "4": [
         {
@@ -3689,9 +4216,14 @@
     "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
     "Levels": {
       "1": [
-        { "Name": "O", "Type": "WeaponSkill" },
-        { "Name": "U", "Type": "WeaponSkill" },
-
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        },
         {
           "Name": "Auric Colour",
           "Type": "Innate",
@@ -3699,30 +4231,51 @@
         }
       ],
       "2": [
-        { "Name": "H", "Type": "WeaponSkill" },
-        { "Name": "Neuronic Penetration", "Type": "Innate", "Count": 8 }
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Neuronic Penetration",
+          "Type": "Innate",
+          "Count": 8
+        }
       ],
       "3": [
-        { "Name": "E", "Type": "WeaponSkill" },
-
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
         {
           "Name": "Reactions",
           "Type": "Innate",
           "Count": 4
         },
-        { "Name": "1 DAC" }
+        {
+          "Name": "1 DAC"
+        }
       ],
-      "4": [{ "Name": "B", "Type": "WeaponSkill" }],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        }
+      ],
       "5": [
         {
           "Name": "Mastery",
           "Type": "Innate",
           "Count": 4
         },
-        { "Name": "2 DAC" }
+        {
+          "Name": "2 DAC"
+        }
       ],
       "6": [
-        { "Name": "MP", "Type": "WeaponSkill" },
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
         {
           "Name": "Disorientation",
           "Type": "Innate",
@@ -3735,7 +4288,9 @@
           "Type": "Overwrite",
           "OverwriteKey": "Warrior Specialist"
         },
-        { "Name": "3 DAC" }
+        {
+          "Name": "3 DAC"
+        }
       ],
       "8": [
         {
