@@ -17,7 +17,7 @@
                     BindableLayout.ItemsSource="{Binding SelectedGuilds}">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
-                    <Button Text="{Binding Name}"
+                    <Button Text="{Binding DisplayName}"
                             Command="{Binding Source={RelativeSource AncestorType={x:Type local:Guilds}}, Path=BindingContext.ToggleSelectedCommand}"
                             CommandParameter="{Binding .}"
                             Padding="12,6"

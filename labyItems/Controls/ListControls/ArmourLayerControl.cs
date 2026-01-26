@@ -10,7 +10,10 @@ public class ArmourLayerControl : ContentView
 {
     private readonly VerticalStackLayout _rowsHost;
     private bool _suppressUpdates;
+    private bool _isDragging;
+    private CancellationTokenSource? _rebuildDebounceCts;
     private const int DefaultMaxPac = 8;
+    private const int InteractionDebounceMs = 350;
 
     private record ArmourOption(int Pac, string ShortLabel);
 
@@ -290,7 +293,20 @@ public class ArmourLayerControl : ContentView
             _suppressUpdates = false;
 
             Recalculate();
-            RebuildRows();
+            if (!_isDragging)
+                ScheduleRebuild(InteractionDebounceMs);
+        };
+
+        slider.DragStarted += (_, __) =>
+        {
+            _isDragging = true;
+            _rebuildDebounceCts?.Cancel();
+        };
+
+        slider.DragCompleted += (_, __) =>
+        {
+            _isDragging = false;
+            ScheduleRebuild(0);
         };
 
         var deleteButton = new Button
@@ -458,6 +474,21 @@ public class ArmourLayerControl : ContentView
     }
 
     private bool CanAddLayer() => Layers != null && Layers.Count < AllowedLayerCount();
+
+    private void ScheduleRebuild(int delayMs)
+    {
+        _rebuildDebounceCts?.Cancel();
+        var cts = new CancellationTokenSource();
+        _rebuildDebounceCts = cts;
+
+        Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(Math.Max(0, delayMs)), () =>
+        {
+            if (cts.IsCancellationRequested)
+                return;
+
+            RebuildRows();
+        });
+    }
 
     #endregion
 

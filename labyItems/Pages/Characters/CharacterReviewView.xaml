@@ -3,8 +3,7 @@
        x:Class="labyItems.Pages.Characters.CharacterReviewView"
        x:Name="Root"
        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-       xmlns:local="clr-namespace:labyItems.Pages.Characters">
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
        <ScrollView>
               <VerticalStackLayout Padding="16"
@@ -86,14 +85,11 @@
                             </VerticalStackLayout>
                      </Frame>
 
-                     <Button Text="Export to battleboard"
+                     <Button Text="Email battleboard"
                              Command="{Binding ExportToBattleboardCommand}"/>
 
-                     <Button Text="Save to My Character wallet"
-                             Command="{Binding SaveToWalletCommand}"
-                             BackgroundColor="#14532d"
-                             TextColor="White"
-                             IsVisible="{Binding Source={RelativeSource AncestorType={x:Type local:CharacterReviewView}}, Path=ShowSaveButton}"/>
+                     <Button Text="Export to Excel"
+                             Command="{Binding ExportToExcelCommand}"/>
               </VerticalStackLayout>
        </ScrollView>
 </ContentView>

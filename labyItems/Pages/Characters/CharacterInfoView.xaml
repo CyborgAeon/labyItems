@@ -29,11 +29,19 @@
             <Label Text="{Binding ArmourAvailabilityText}"
                    FontSize="12"
                    Opacity="0.7"/>
-            <controls:ArmourLayerControl Layers="{Binding ArmourLayers}"
-                                         MaxBasePac="{Binding ArmourMaxBasePac}"
-                                         MaxTotalPac="{Binding ArmourMaxTotalPac}"
-                                         IsEnabled="{Binding IsArmourSelectionEnabled}"
-                                         TotalPac="{Binding WornArmourPac, Mode=OneWayToSource}"/>
+            <controls:DictionarySliderHeader
+                KeyText="{Binding KeyText, Source={x:Reference ArmourSlider}}"
+                ValueText="{Binding ValueText, Source={x:Reference ArmourSlider}}"/>
+            <controls:DictionarySlider x:Name="ArmourSlider"
+                                       KeyFormat="Worn PAC: {0}"
+                                       ValueFormat=""
+                                       MinCount="0"
+                                       MaxCount="{Binding ArmourMaxTotalPac}"
+                                       Multiplier="1"
+                                       SnapToStep="True"
+                                       StepSize="1"
+                                       SelectedCount="{Binding WornArmourPac, Mode=TwoWay}"
+                                       IsEnabled="{Binding IsArmourSelectionEnabled}"/>
             <Label Text="{Binding ArmourBaseSummary}"
                    FontSize="12"
                    Opacity="0.8"/>

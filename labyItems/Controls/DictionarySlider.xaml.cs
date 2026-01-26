@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.Maui.Controls;
 
 namespace labyItems.Controls
@@ -247,11 +248,18 @@ namespace labyItems.Controls
         // -------- Events --------
 
         public event EventHandler<DictionarySelectionChangedEventArgs>? SelectionChanged;
+        public event EventHandler? DragStarted;
+        public event EventHandler? DragCompleted;
 
         // -------- Internals --------
 
         private List<KeyValuePair<string, int>> _entries = new();
         private bool _usingGenerated => ItemsSource is null;
+        private ScrollView? _scrollHost;
+        private bool _scrollHostWasInputTransparent;
+        private bool _scrollHostWasCascadeInputTransparent;
+        private bool _scrollHostSuppressed;
+        private CancellationTokenSource? _scrollHostRestoreCts;
 
         public DictionarySlider()
         {
@@ -370,6 +378,7 @@ namespace labyItems.Controls
 
         private void OnSliderValueChanged(object sender, ValueChangedEventArgs e)
         {
+            SuspendScrollHostInteraction();
             double value = e.NewValue;
 
             if (SnapToStep && StepSize > 0)
@@ -400,6 +409,72 @@ namespace labyItems.Controls
             }
 
             UpdateFromGeneratedOrIndex(raiseEvent: true);
+        }
+
+        private void OnSliderDragStarted(object sender, EventArgs e)
+        {
+            SuspendScrollHostInteraction();
+            DragStarted?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnSliderDragCompleted(object sender, EventArgs e)
+        {
+            RestoreScrollHostInteraction();
+            DragCompleted?.Invoke(this, EventArgs.Empty);
+        }
+
+        private ScrollView? FindScrollHost()
+        {
+            Element? parent = this;
+            while (parent != null)
+            {
+                parent = parent.Parent;
+                if (parent is ScrollView scroll)
+                    return scroll;
+            }
+
+            return null;
+        }
+
+        private void SuspendScrollHostInteraction()
+        {
+            _scrollHost ??= FindScrollHost();
+            if (_scrollHost == null)
+                return;
+
+            if (!_scrollHostSuppressed)
+            {
+                _scrollHostWasInputTransparent = _scrollHost.InputTransparent;
+                _scrollHostWasCascadeInputTransparent = _scrollHost.CascadeInputTransparent;
+                _scrollHost.CascadeInputTransparent = false;
+                _scrollHost.InputTransparent = true;
+                _scrollHostSuppressed = true;
+            }
+
+            _scrollHostRestoreCts?.Cancel();
+            var cts = new CancellationTokenSource();
+            _scrollHostRestoreCts = cts;
+
+            Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(200), () =>
+            {
+                if (cts.IsCancellationRequested)
+                    return;
+
+                RestoreScrollHostInteraction();
+            });
+        }
+
+        private void RestoreScrollHostInteraction()
+        {
+            _scrollHostRestoreCts?.Cancel();
+            _scrollHostRestoreCts = null;
+
+            if (_scrollHost == null || !_scrollHostSuppressed)
+                return;
+
+            _scrollHost.InputTransparent = _scrollHostWasInputTransparent;
+            _scrollHost.CascadeInputTransparent = _scrollHostWasCascadeInputTransparent;
+            _scrollHostSuppressed = false;
         }
 
         // -------- Core update logic --------

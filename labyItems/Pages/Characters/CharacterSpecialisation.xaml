@@ -447,75 +447,120 @@
 
                                                             <VerticalStackLayout Grid.Column="1"
                                                                                  Spacing="6">
-                                                                <Picker
-                                                                    HorizontalOptions="FillAndExpand"
-                                                                    Title="Select an ability"
-                                                                    ItemsSource="{Binding FilteredOptionNames}"
-                                                                    SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
-                                                                    <Picker.Triggers>
-                                                                        <DataTrigger TargetType="Picker"
-                                                                                     Binding="{Binding UseWardPactEnum}"
-                                                                                     Value="True">
-                                                                            <Setter Property="IsVisible"
-                                                                                    Value="False"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger TargetType="Picker"
-                                                                                     Binding="{Binding UseMagicColourEnum}"
-                                                                                     Value="True">
-                                                                            <Setter Property="IsVisible"
-                                                                                    Value="False"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger TargetType="Picker"
-                                                                                     Binding="{Binding UseVivomancerColourEnum}"
-                                                                                     Value="True">
-                                                                            <Setter Property="IsVisible"
-                                                                                    Value="False"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger TargetType="Picker"
-                                                                                     Binding="{Binding UseDictionarySearch}"
-                                                                                     Value="True">
-                                                                            <Setter Property="IsVisible"
-                                                                                    Value="False"/>
-                                                                        </DataTrigger>
-                                                                    </Picker.Triggers>
-                                                                </Picker>
+                                                                <Label Text="{Binding LockedDisplayText}"
+                                                                       Opacity="0.8"
+                                                                       IsVisible="{Binding IsLocked}"/>
 
-                                                                <controls:ChipGroup Items="{Binding FilteredOptionNames}"
-                                                                                    SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
-                                                                                    IsVisible="{Binding UseVivomancerColourEnum}"
-                                                                                    HorizontalOptions="FillAndExpand"/>
+                                                                <VerticalStackLayout Spacing="6"
+                                                                                     IsVisible="{Binding IsSelectable}">
+                                                                    <Picker
+                                                                        HorizontalOptions="FillAndExpand"
+                                                                        Title="Select an ability"
+                                                                        ItemsSource="{Binding FilteredOptionNames}"
+                                                                        SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
+                                                                        <Picker.Triggers>
+                                                                            <DataTrigger TargetType="Picker"
+                                                                                         Binding="{Binding UseWardPactEnum}"
+                                                                                         Value="True">
+                                                                                <Setter Property="IsVisible"
+                                                                                        Value="False"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger TargetType="Picker"
+                                                                                         Binding="{Binding UseMagicColourEnum}"
+                                                                                         Value="True">
+                                                                                <Setter Property="IsVisible"
+                                                                                        Value="False"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger TargetType="Picker"
+                                                                                         Binding="{Binding UseVivomancerColourEnum}"
+                                                                                         Value="True">
+                                                                                <Setter Property="IsVisible"
+                                                                                        Value="False"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger TargetType="Picker"
+                                                                                         Binding="{Binding UseDictionarySearch}"
+                                                                                         Value="True">
+                                                                                <Setter Property="IsVisible"
+                                                                                        Value="False"/>
+                                                                            </DataTrigger>
+                                                                        </Picker.Triggers>
+                                                                    </Picker>
 
-                                                                <controls:DictionarySearchBar x:TypeArguments="x:String"
-                                                                                              ItemsSource="{Binding SearchOptions}"
-                                                                                              SelectedText="{Binding SelectedOption, Mode=TwoWay}"
-                                                                                              PlaceholderText="Search abilities"
-                                                                                              AllowCustomOptions="False"
-                                                                                              HorizontalOptions="FillAndExpand"
-                                                                                              IsVisible="{Binding UseDictionarySearch}"/>
+                                                                    <controls:ChipGroup Items="{Binding FilteredOptionNames}"
+                                                                                        SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
+                                                                                        IsVisible="{Binding UseVivomancerColourEnum}"
+                                                                                        HorizontalOptions="FillAndExpand"/>
 
-                                                                <controls:DictionarySearchBar x:TypeArguments="enums:MagicColours"
-                                                                                              ItemsSource="{Binding MagicColourOptions}"
-                                                                                              SelectedValue="{Binding SelectedMagicColour, Mode=TwoWay}"
-                                                                                              PlaceholderText="Select a wizard colour"
-                                                                                              AllowCustomOptions="False"
-                                                                                              HorizontalOptions="FillAndExpand"
-                                                                                              IsVisible="{Binding UseMagicColourEnum}"/>
+                                                                    <Grid ColumnDefinitions="*,*"
+                                                                          ColumnSpacing="8"
+                                                                          IsVisible="{Binding UseDictionarySearch}">
+                                                                        <controls:DictionarySearchBar x:TypeArguments="x:String"
+                                                                                                      ItemsSource="{Binding SearchOptions}"
+                                                                                                      SelectedText="{Binding SelectedOption, Mode=TwoWay}"
+                                                                                                      PlaceholderText="Search abilities"
+                                                                                                      AllowCustomOptions="False"
+                                                                                                      HorizontalOptions="FillAndExpand">
+                                                                            <controls:DictionarySearchBar.Triggers>
+                                                                                <DataTrigger TargetType="ContentView"
+                                                                                             Binding="{Binding HasCustomisation}"
+                                                                                             Value="False">
+                                                                                    <Setter Property="Grid.ColumnSpan"
+                                                                                            Value="2"/>
+                                                                                </DataTrigger>
+                                                                            </controls:DictionarySearchBar.Triggers>
+                                                                        </controls:DictionarySearchBar>
 
-                                                                <controls:DictionarySearchBar x:TypeArguments="enums:VivomancerColours"
-                                                                                              ItemsSource="{Binding VivomancerColourOptions}"
-                                                                                              SelectedValue="{Binding SelectedVivomancerColour, Mode=TwoWay}"
-                                                                                              PlaceholderText="Select a vivomancer colour"
-                                                                                              AllowCustomOptions="False"
-                                                                                              HorizontalOptions="FillAndExpand"
-                                                                                              IsVisible="{Binding UseVivomancerColourEnum}"/>
+                                                                        <controls:DictionarySearchBar Grid.Column="1"
+                                                                                                      x:TypeArguments="x:String"
+                                                                                                      ItemsSource="{Binding CustomisationOptions}"
+                                                                                                      SelectedText="{Binding CustomisationValue, Mode=TwoWay}"
+                                                                                                      PlaceholderText="{Binding CustomisationPlaceholder}"
+                                                                                                      AllowCustomOptions="{Binding CustomisationAllowsCustom}"
+                                                                                                      HorizontalOptions="FillAndExpand"
+                                                                                                      IsVisible="{Binding HasCustomisation}"/>
+                                                                    </Grid>
 
-                                                                <controls:DictionarySearchBar x:TypeArguments="enums:StandardWardPacts"
-                                                                                              ItemsSource="{x:Static pickers:WardPactOptions.Standard}"
-                                                                                              SelectedValue="{Binding SelectedWardPact, Mode=TwoWay}"
-                                                                                              PlaceholderText="Select a ward pact"
-                                                                                              AllowCustomOptions="False"
-                                                                                              HorizontalOptions="FillAndExpand"
-                                                                                              IsVisible="{Binding UseWardPactEnum}"/>
+                                                                    <controls:DictionarySearchBar x:TypeArguments="enums:MagicColours"
+                                                                                                  ItemsSource="{Binding MagicColourOptions}"
+                                                                                                  SelectedValue="{Binding SelectedMagicColour, Mode=TwoWay}"
+                                                                                                  PlaceholderText="Select a wizard colour"
+                                                                                                  AllowCustomOptions="False"
+                                                                                                  HorizontalOptions="FillAndExpand"
+                                                                                                  IsVisible="{Binding UseMagicColourEnum}"/>
+
+                                                                    <controls:DictionarySearchBar x:TypeArguments="enums:VivomancerColours"
+                                                                                                  ItemsSource="{Binding VivomancerColourOptions}"
+                                                                                                  SelectedValue="{Binding SelectedVivomancerColour, Mode=TwoWay}"
+                                                                                                  PlaceholderText="Select a vivomancer colour"
+                                                                                                  AllowCustomOptions="False"
+                                                                                                  HorizontalOptions="FillAndExpand"
+                                                                                                  IsVisible="{Binding UseVivomancerColourEnum}"/>
+
+                                                                    <controls:DictionarySearchBar x:TypeArguments="x:String"
+                                                                                                  ItemsSource="{Binding CustomisationOptions}"
+                                                                                                  SelectedText="{Binding CustomisationValue, Mode=TwoWay}"
+                                                                                                  PlaceholderText="{Binding CustomisationPlaceholder}"
+                                                                                                  AllowCustomOptions="{Binding CustomisationAllowsCustom}"
+                                                                                                  HorizontalOptions="FillAndExpand"
+                                                                                                  IsVisible="{Binding HasCustomisation}">
+                                                                        <controls:DictionarySearchBar.Triggers>
+                                                                            <DataTrigger TargetType="ContentView"
+                                                                                         Binding="{Binding UseDictionarySearch}"
+                                                                                         Value="True">
+                                                                                <Setter Property="IsVisible"
+                                                                                        Value="False"/>
+                                                                            </DataTrigger>
+                                                                        </controls:DictionarySearchBar.Triggers>
+                                                                    </controls:DictionarySearchBar>
+
+                                                                    <controls:DictionarySearchBar x:TypeArguments="enums:StandardWardPacts"
+                                                                                                  ItemsSource="{x:Static pickers:WardPactOptions.Standard}"
+                                                                                                  SelectedValue="{Binding SelectedWardPact, Mode=TwoWay}"
+                                                                                                  PlaceholderText="Select a ward pact"
+                                                                                                  AllowCustomOptions="False"
+                                                                                                  HorizontalOptions="FillAndExpand"
+                                                                                                  IsVisible="{Binding UseWardPactEnum}"/>
+                                                                </VerticalStackLayout>
                                                             </VerticalStackLayout>
                                                         </Grid>
 

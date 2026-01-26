@@ -61,7 +61,7 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
             var key = kvp.Key;
             var rec = kvp.Value;
 
-            var (icon, category) = ParseBracket(rec.Brackets.FirstOrDefault());
+            var (icon, category) = ParseBracket(rec.Brackets);
 
             var maxAc = rec.MaxAC.ValueKind switch
             {
@@ -144,7 +144,7 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
     {
         if (item == null) return;
 
-        foreach (var c in FilteredClasses)
+        foreach (var c in _all)
             if (!ReferenceEquals(c, item) && c.IsExpanded)
                 c.IsExpanded = false;
 
@@ -176,8 +176,21 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
         return firstNonEmpty ?? "";
     }
 
-    private static (string Icon, string Category) ParseBracket(string? bracket)
+    private static (string Icon, string Category) ParseBracket(IReadOnlyList<string>? brackets)
     {
+        if (brackets == null || brackets.Count == 0)
+            return ("🛡️", "warrior");
+
+        if (brackets.Count >= 2)
+        {
+            var iconToken = brackets[0];
+            var categoryToken = brackets[1];
+            var setIcon = string.IsNullOrWhiteSpace(iconToken) ? "🛡️" : iconToken;
+            var setCategory = string.IsNullOrWhiteSpace(categoryToken) ? "warrior" : categoryToken;
+            return (setIcon, setCategory.ToLowerInvariant());
+        }
+
+        var bracket = brackets[0];
         if (string.IsNullOrWhiteSpace(bracket)) return ("🛡️", "warrior");
 
         var parts = bracket.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);

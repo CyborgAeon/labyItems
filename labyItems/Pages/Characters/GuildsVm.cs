@@ -99,6 +99,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
         _slotRules = GuildSlotRules.FromDraft(_draft);
 
         _guildRecords = await GuildsService.GetAllAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
+        if (ShouldForceKhaniabadCity())
+            _slotRules.ForceCity("Khaniabad");
         _slotRules.ResolvePeopleTypeOverrides(_guildRecords);
 
         await RefreshContextAsync();
@@ -137,7 +139,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 return false;
 
             var availability = EvaluateAvailability(kv.Value, kv.Key);
-            if (!availability.Allowed && !_draft.Guilds.Contains(kv.Key, StringComparer.OrdinalIgnoreCase))
+            if (!availability.Allowed)
                 return false;
 
             return true;
@@ -183,6 +185,31 @@ public sealed class GuildsVm : INotifyPropertyChanged
         Refilter();
         RecomputeDraftAlignments();
         _notifyWizardGatingChanged();
+    }
+
+    private bool ShouldForceKhaniabadCity()
+    {
+        var race = (_draft.Race ?? string.Empty).Trim();
+        if (!string.Equals(race, "Human", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        var subtype = (_draft.RaceSubtypeValue ?? _draft.RaceSubtype ?? string.Empty).Trim();
+        if (!string.Equals(subtype, "Ishmaic", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        var cls = (_draft.Class ?? string.Empty).Trim();
+        var isKallah = string.Equals(cls, "Kallah Beggar", StringComparison.OrdinalIgnoreCase)
+                       || string.Equals(cls, "Kallah", StringComparison.OrdinalIgnoreCase);
+        var isHanot = string.Equals(cls, "Hanot Beggar", StringComparison.OrdinalIgnoreCase)
+                      || string.Equals(cls, "Hannot Beggar", StringComparison.OrdinalIgnoreCase);
+        if (!isKallah && !isHanot)
+            return false;
+
+        if (_draft.SpecialisationSelections.TryGetValue("Ishmaic Clan", out var clan)
+            && !string.IsNullOrWhiteSpace(clan))
+            return false;
+
+        return true;
     }
 
     private (bool HasCityBound, string? CityName) GetCityBoundInfo()
@@ -705,7 +732,21 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     }
     private void Raise([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     public int Id { get; set; }
-    public string Name { get; set; } = "";
+
+    private string _name = "";
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (_name == value) return;
+            _name = value ?? string.Empty;
+            Raise();
+            Raise(nameof(DisplayName));
+        }
+    }
+
+    public string DisplayName => _name.Length > 15 ? $"{_name[..12]}..." : _name;
     public string Type { get; set; } = "";
     public string Icon { get; set; } = "📜";
 
@@ -976,6 +1017,16 @@ public sealed class GuildSlotRules
 
         if (!string.IsNullOrWhiteSpace(cityName))
             ForcedCityNames.Add(cityName.Trim());
+    }
+
+    public void ForceCity(string cityName)
+    {
+        if (string.IsNullOrWhiteSpace(cityName))
+            return;
+
+        ForcedCityNames.Add(cityName.Trim());
+        CitySlots = Math.Max(1, CitySlots);
+        Normalize();
     }
 
     private void DecrementType(string type)

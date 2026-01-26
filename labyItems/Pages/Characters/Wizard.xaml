@@ -4,6 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
     x:Name="Root">
     <Grid RowDefinitions="Auto,*,Auto">
         <controls:StepIndicator
@@ -11,15 +13,15 @@
             Steps="{Binding StepSteps}"
             CurrentStep="{Binding CurrentStep}"
             StepClickCommand="{Binding StepClickCommand}"
-            BubbleSize="40"/>
+            BubbleSize="40"
+            Padding="0,6"/>
         <ContentView
             Grid.Row="1"
             Content="{Binding CurrentStepView}"/>
 
         <Border Grid.Row="2"
                 BackgroundColor="#FFFFFF"
-                Stroke="#22000000"
-                StrokeThickness="1">
+                Stroke="#22000000">
 
 
             <Grid

@@ -33,7 +33,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private AlignmentRule? _raceAlignmentRule;
     private AlignmentRule? _classAlignmentRule;
 
-    private static readonly Regex _armourValueRegex = new(@"(\d+)\s*(PAC|DAC|MAC|SAC)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex _armourValueRegex = new(@"([+-]?\d+)\s*(PAC|DAC|MAC|SAC)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     private void Raise([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -121,7 +121,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         if (item == null) return;
 
-        foreach (var r in FilteredRaces)
+        foreach (var r in AllRaces)
         {
             if (!ReferenceEquals(r, item) && r.IsExpanded)
                 r.IsExpanded = false;
@@ -281,7 +281,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         if (item == null) return;
 
-        foreach (var c in FilteredClasses)
+        foreach (var c in AllClasses)
         {
             if (!ReferenceEquals(c, item) && c.IsExpanded)
                 c.IsExpanded = false;
@@ -672,7 +672,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 .Select(a => new InnateAbilityDraft
                 {
                     Name = a.Name,
-                    Rank = Math.Clamp(a.Count ?? 0, 0, 8)
+                    Rank = ComputeInnateRank(a)
                 })
                 .ToList();
 
@@ -682,6 +682,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 .ToList();
 
             await UpdateAvailableAlignmentsAsync();
+            await SpecialisationVm.RefreshPrereqOptionsAsync();
 
             MainThread.BeginInvokeOnMainThread(_notifyWizardGatingChanged);
         }
@@ -699,6 +700,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         var ordered = new List<AbilityDraft>();
         var innateLookup = new Dictionary<string, AbilityDraft>(StringComparer.OrdinalIgnoreCase);
+        var armourMaxBySource = BuildArmourMaxBySource(abilities);
 
         foreach (var ability in abilities ?? Enumerable.Empty<AbilityDraft>())
         {
@@ -706,6 +708,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
             var name = (ability.Name ?? string.Empty).Trim();
             if (name.Length == 0) continue;
+
+            if (IsArmourAbility(ability, out var armourValues)
+                && !IsMaxArmourForSource(ability, armourValues, armourMaxBySource))
+                continue;
 
             if (ability.AbilityType == AbilityType.Innate)
             {
@@ -743,6 +749,139 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return ordered;
     }
 
+    private static Dictionary<(string Source, string Stat), int> BuildArmourMaxBySource(IEnumerable<AbilityDraft> abilities)
+    {
+        var map = new Dictionary<(string, string), int>();
+
+        foreach (var ability in abilities ?? Enumerable.Empty<AbilityDraft>())
+        {
+            if (ability == null)
+                continue;
+
+            var source = (ability.Source ?? string.Empty).Trim();
+            if (source.Length == 0)
+                continue;
+
+            if (!IsArmourAbility(ability, out var values))
+                continue;
+
+            foreach (var kvp in values)
+            {
+                if (kvp.Value <= 0)
+                    continue;
+
+                var key = (source, kvp.Key);
+                if (!map.TryGetValue(key, out var current) || kvp.Value > current)
+                    map[key] = kvp.Value;
+            }
+        }
+
+        return map;
+    }
+
+    private static bool IsMaxArmourForSource(
+        AbilityDraft ability,
+        Dictionary<string, int> armourValues,
+        Dictionary<(string Source, string Stat), int> maxBySource)
+    {
+        var source = (ability.Source ?? string.Empty).Trim();
+        if (source.Length == 0 || armourValues.Count == 0)
+            return true;
+
+        foreach (var kvp in armourValues)
+        {
+            if (!maxBySource.TryGetValue((source, kvp.Key), out var max))
+                continue;
+
+            if (kvp.Value == max)
+                return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsArmourAbility(AbilityDraft ability, out Dictionary<string, int> armourValues)
+    {
+        armourValues = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        if (ability == null)
+            return false;
+
+        var effect = ability.Effect ?? string.Empty;
+        var name = ability.Name ?? string.Empty;
+
+        var parsed = ParseArmourTokens(effect);
+        if (parsed.Count == 0)
+            parsed = ParseArmourTokens(name);
+
+        foreach (var kvp in parsed)
+            armourValues[kvp.Key] = kvp.Value;
+
+        return armourValues.Count > 0;
+    }
+
+    private static Dictionary<string, int> ParseArmourTokens(string text)
+    {
+        var result = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        if (string.IsNullOrWhiteSpace(text))
+            return result;
+
+        foreach (Match m in _armourValueRegex.Matches(text))
+        {
+            if (!int.TryParse(m.Groups[1].Value, out var value))
+                continue;
+
+            var key = m.Groups[2].Value.ToUpperInvariant();
+            if (value <= 0)
+                continue;
+
+            result[key] = result.TryGetValue(key, out var current) ? current + value : value;
+        }
+
+        return result;
+    }
+
+    private static int ComputeInnateRank(AbilityDraft ability)
+    {
+        if (ability == null)
+            return 0;
+
+        var baseCount = Math.Max(ability.Count ?? 1, 0);
+        var total = baseCount;
+
+        if (TryParseFrequency(ability.Frequency, out var freq) && freq > 0 && ability.LevelGained.HasValue)
+        {
+            var remaining = Math.Max(0, 8 - ability.LevelGained.Value);
+            var additional = remaining / freq;
+            total = baseCount + additional;
+        }
+
+        return Math.Clamp(total, 0, 8);
+    }
+
+    private static bool TryParseFrequency(string? raw, out int value)
+    {
+        value = 0;
+        if (string.IsNullOrWhiteSpace(raw))
+            return false;
+
+        var text = raw.Trim();
+        return int.TryParse(text, out value);
+    }
+
+    private static void ApplyAbilitySource(IEnumerable<AbilityDraft> abilities, string source)
+    {
+        if (string.IsNullOrWhiteSpace(source))
+            return;
+
+        foreach (var ability in abilities ?? Enumerable.Empty<AbilityDraft>())
+        {
+            if (ability == null)
+                continue;
+
+            ability.Source = source;
+        }
+    }
+
     private async Task<(List<AbilityDraft> Abilities, GuildOverrideRules? GuildRules)> BuildRaceAbilitiesAsync()
     {
         var list = new List<AbilityDraft>();
@@ -768,6 +907,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             _raceAlignmentRule = null;
         }
 
+        ApplyAbilitySource(list, "Race");
         return (list, guildRules);
     }
 
@@ -797,6 +937,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             _classAlignmentRule = BuildPaladinFallbackRule(className);
         }
 
+        ApplyAbilitySource(list, "Class");
         return (list, record, guildRules);
     }
 
@@ -814,7 +955,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 continue;
 
             foreach (var benefit in rec.Benefits.Basic.Where(b => !string.IsNullOrWhiteSpace(b)))
-                list.AddRange(AbilityDraftBuilder.ParseAbility(benefit, null));
+            {
+                var parsed = AbilityDraftBuilder.ParseAbility(benefit, null);
+                ApplyAbilitySource(parsed, $"Guild:{guild}");
+                list.AddRange(parsed);
+            }
         }
 
         return list;
@@ -946,6 +1091,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             list.Add(ov);
         }
 
+        ApplyAbilitySource(list, "Baronial");
         return list;
     }
 
@@ -1090,32 +1236,36 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         foreach (var ability in abilities ?? Array.Empty<AbilityDraft>())
         {
-            var name = ability?.Name ?? string.Empty;
-            if (name.Length == 0) continue;
+            if (ability == null)
+                continue;
+
+            var name = ability.Name ?? string.Empty;
+            var effect = ability.Effect ?? string.Empty;
+            if (name.Length == 0 && effect.Length == 0) continue;
 
             var lower = name.ToLowerInvariant();
             if (lower.Contains("cannot wear armour") || lower.Contains("cannot wear armor") || lower.Contains("may not wear armour") || lower.Contains("no armour"))
                 disallow = true;
 
-            foreach (Match m in _armourValueRegex.Matches(name))
-            {
-                if (!int.TryParse(m.Groups[1].Value, out var value))
-                    continue;
+            var parsed = ParseArmourTokens(effect);
+            if (parsed.Count == 0)
+                parsed = ParseArmourTokens(name);
 
-                var key = m.Groups[2].Value.ToUpperInvariant();
-                switch (key)
+            foreach (var kvp in parsed)
+            {
+                switch (kvp.Key.ToUpperInvariant())
                 {
                     case "PAC":
-                        pac = Math.Max(pac, value);
+                        pac = Math.Max(pac, kvp.Value);
                         break;
                     case "DAC":
-                        dac = Math.Max(dac, value);
+                        dac = Math.Max(dac, kvp.Value);
                         break;
                     case "MAC":
-                        mac = Math.Max(mac, value);
+                        mac = Math.Max(mac, kvp.Value);
                         break;
                     case "SAC":
-                        sac = Math.Max(sac, value);
+                        sac = Math.Max(sac, kvp.Value);
                         break;
                 }
             }

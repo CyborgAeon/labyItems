@@ -2,6 +2,7 @@
 using ClosedXML.Excel;
 using labyItems.Models.Characters;
 using System.Linq;
+using System.Text.RegularExpressions;
 namespace labyItems.Services;
 
 public interface IBattleboardExportService
@@ -31,15 +32,20 @@ public sealed class BattleboardExportService : IBattleboardExportService
         using var wb = new XLWorkbook(ms);
         var ws = wb.Worksheet("BBoard");
 
-        int pac = Math.Min(draft.MaxAC, draft.WornArmour + draft.ClassRaceArmour);
-        int acShown = Math.Min(draft.DAC + pac, draft.MaxAC);
+        var armourBonus = ExtractArmourBonuses(draft.Abilities);
+        int pac = Math.Min(draft.MaxAC, draft.WornArmour + armourBonus.Pac);
+        int dac = armourBonus.Dac;
+        int mac = armourBonus.Mac;
+        int sac = armourBonus.Sac;
+        int acShown = Math.Min(dac + pac, draft.MaxAC);
         ws.Cell("B2").Value = draft.Name;
         ws.Cell("C3").Value = draft.TBLP;
         ws.Cell("U3").Value = pac;
+        ws.Cell("U4").Value = dac;
         ws.Cell("AD3").Value = draft.MaxAC;
 
-        if (draft.SAC is not null) ws.Cell("U5").Value = draft.SAC.Value;
-        if (draft.MAC is not null) ws.Cell("U6").Value = draft.MAC.Value;
+        if (mac > 0) ws.Cell("U5").Value = mac;
+        if (sac > 0) ws.Cell("U6").Value = sac;
 
         foreach (var addr in new[] { "W3", "S8", "AB8", "V8", "V17", "V25", "Y25" })
             ws.Cell(addr).Value = draft.Loc;
@@ -77,6 +83,13 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
         var guildString = string.Join(", ", draft.Guilds);
         ws.Cell("T38").Value = guildString;
+
+        var combatWary = draft.Abilities.FirstOrDefault(IsCombatWary);
+        if (combatWary != null && TryComputeFrequencyRank(combatWary, out var rank) && rank > 0)
+        {
+            ws.Cell("AA4").Value = "Combat Wary";
+            ws.Cell("AD4").Value = rank;
+        }
         var atWillAbilities = draft.Abilities
             .Where(a => a.AbilityType == AbilityType.AtWill)
             .Select(FormatAbilityText)
@@ -141,6 +154,92 @@ public sealed class BattleboardExportService : IBattleboardExportService
         return outPath;
     }
 
+    private static readonly Regex ArmourTokenRegex = new(@"([+-]?\d+)\s*(PAC|DAC|MAC|SAC)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    private static (int Pac, int Dac, int Mac, int Sac) ExtractArmourBonuses(IEnumerable<AbilityDraft> abilities)
+    {
+        int pac = 0, dac = 0, mac = 0, sac = 0;
+
+        foreach (var ability in abilities ?? Enumerable.Empty<AbilityDraft>())
+        {
+            if (ability == null)
+                continue;
+
+            var effect = ability.Effect ?? string.Empty;
+            if (TryApplyArmourTokens(effect, ref pac, ref dac, ref mac, ref sac))
+                continue;
+
+            var name = ability.Name ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(name))
+                TryApplyArmourTokens(name, ref pac, ref dac, ref mac, ref sac);
+        }
+
+        return (pac, dac, mac, sac);
+    }
+
+    private static bool TryApplyArmourTokens(string text, ref int pac, ref int dac, ref int mac, ref int sac)
+    {
+        var matched = false;
+        foreach (Match m in ArmourTokenRegex.Matches(text))
+        {
+            if (!int.TryParse(m.Groups[1].Value, out var value))
+                continue;
+
+            var key = m.Groups[2].Value.ToUpperInvariant();
+            matched = true;
+            switch (key)
+            {
+                case "PAC":
+                    pac += value;
+                    break;
+                case "DAC":
+                    dac += value;
+                    break;
+                case "MAC":
+                    mac += value;
+                    break;
+                case "SAC":
+                    sac += value;
+                    break;
+            }
+        }
+
+        return matched;
+    }
+
+    private static bool IsCombatWary(AbilityDraft ability)
+    {
+        var name = (ability?.Name ?? string.Empty).Trim();
+        if (name.Length == 0) return false;
+
+        var normalized = name.Replace("-", " ").Replace("  ", " ").Trim();
+        return string.Equals(normalized, "Combat Wary", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(normalized, "Combat-Wary", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool TryComputeFrequencyRank(AbilityDraft ability, out int rank)
+    {
+        rank = 0;
+        if (ability == null || !ability.LevelGained.HasValue)
+            return false;
+
+        if (!TryParseFrequency(ability.Frequency, out var freq) || freq <= 0)
+            return false;
+
+        var remaining = Math.Max(0, 8 - ability.LevelGained.Value);
+        rank = remaining / freq;
+        return rank > 0;
+    }
+
+    private static bool TryParseFrequency(string? raw, out int value)
+    {
+        value = 0;
+        if (string.IsNullOrWhiteSpace(raw))
+            return false;
+
+        return int.TryParse(raw.Trim(), out value);
+    }
+
     private static string FormatAbilityText(AbilityDraft ability)
     {
         if (ability == null) return string.Empty;
@@ -197,13 +296,12 @@ public sealed class BattleboardExportService : IBattleboardExportService
     {
         const int endRow = 54;
 
-        if (isVivomancer || templateName.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase))
+        if (isVivomancer || templateName.Equals("Vivomancer", StringComparison.OrdinalIgnoreCase))
             return ("B", 27, endRow);
 
-        if (templateName.Contains("PowerUser", StringComparison.OrdinalIgnoreCase))
+        if (templateName.Equals("PowerUser", StringComparison.OrdinalIgnoreCase))
             return ("B", 22, endRow);
 
-        // Non-power user template
         return ("B", 17, endRow);
     }
 

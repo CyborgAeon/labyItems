@@ -1,98 +1,183 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <local:MpCalculatorPageBase x:Class="labyItems.Pages.Calculator.MpBasicPage"
-  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-  xmlns:controls="clr-namespace:labyItems.Controls"
-  xmlns:enums="clr-namespace:labyItems.Models.Enums"
-  xmlns:local="clr-namespace:labyItems.Pages.Calculator" x:Name="RootPage" Title="Basic">
+                            xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                            xmlns:controls="clr-namespace:labyItems.Controls"
+                            xmlns:enums="clr-namespace:labyItems.Models.Enums"
+                            xmlns:local="clr-namespace:labyItems.Pages.Calculator"
+    x:Name="RootPage"
+    Title="Basic">
 
   <Grid RowDefinitions="*,Auto">
     <ScrollView>
-      <VerticalStackLayout Padding="20" Spacing="12">
-        <!-- Spells -->
-        <Label Text="Add 1st-6th standard spell" FontAttributes="Bold" />
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-          <controls:DictionarySearchBar Grid.Column="0" x:Name="SpellSearch" x:TypeArguments="local:SpellOption" PlaceholderText="Type spell name)" SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}" />
-          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding SpellCount, Mode=TwoWay}" Min="0" />
+      <VerticalStackLayout Padding="20"
+          Spacing="12">
+        <Label Text="Add 1st-6th standard spell"
+            FontAttributes="Bold"/>
+        <Grid ColumnDefinitions="*,Auto"
+            ColumnSpacing="12">
+          <controls:DictionarySearchBar Grid.Column="0"
+              x:Name="SpellSearch"
+              x:TypeArguments="local:SpellOption"
+              PlaceholderText="Type spell name)"
+              SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}"/>
+          <controls:PlusMinusControl Grid.Column="1"
+              AllowMultiple="True"
+              Count="{Binding SpellCount, Mode=TwoWay}"
+              Min="0"/>
         </Grid>
 
         <!-- Miracles -->
-        <Label Text="Add 1st-5th standard miracle" FontAttributes="Bold" />
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-          <controls:DictionarySearchBar Grid.Column="0" x:Name="MiracleSearch" x:TypeArguments="local:MiracleOption" PlaceholderText="Type miracle name" SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}" />
-          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding MiracleCount, Mode=TwoWay}" Min="0" />
+        <Label Text="Add 1st-5th standard miracle"
+            FontAttributes="Bold"/>
+        <Grid ColumnDefinitions="*,Auto"
+            ColumnSpacing="12">
+          <controls:DictionarySearchBar Grid.Column="0"
+              x:Name="MiracleSearch"
+              x:TypeArguments="local:MiracleOption"
+              PlaceholderText="Type miracle name"
+              SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"/>
+          <controls:PlusMinusControl Grid.Column="1"
+              AllowMultiple="True"
+              Count="{Binding MiracleCount, Mode=TwoWay}"
+              Min="0"/>
         </Grid>
 
         <!-- Evocations -->
-        <Label Text="Add 0-4th standard evocation" FontAttributes="Bold" />
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-          <controls:DictionarySearchBar IsEnabled="{Binding DbEnabled}" Grid.Column="0" x:Name="EvocationSearch" x:TypeArguments="local:EvocationOption" PlaceholderText="Type evocation name" SelectedValue="{Binding SelectedEvocationOption, Mode=TwoWay}" />
-          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding EvocationCount, Mode=TwoWay}" Min="0" />
+        <Label Text="Add 0-4th standard evocation"
+            FontAttributes="Bold"/>
+        <Grid ColumnDefinitions="*,Auto"
+            ColumnSpacing="12">
+          <controls:DictionarySearchBar IsEnabled="{Binding DbEnabled}"
+              Grid.Column="0"
+              x:Name="EvocationSearch"
+              x:TypeArguments="local:EvocationOption"
+              PlaceholderText="Type evocation name"
+              SelectedValue="{Binding SelectedEvocationOption, Mode=TwoWay}"/>
+          <controls:PlusMinusControl Grid.Column="1"
+              AllowMultiple="True"
+              Count="{Binding EvocationCount, Mode=TwoWay}"
+              Min="0"/>
         </Grid>
 
         <VerticalStackLayout Spacing="8">
-          <controls:PlusMinusControl LabelText="Active neuro" AllowMultiple="True" Count="{Binding ActiveNeuroCount, Mode=TwoWay}" IsEnabled="False" />
-          <controls:PlusMinusControl LabelText="Passive neuro" AllowMultiple="True" Count="{Binding PassiveNeuroCount, Mode=TwoWay}" IsEnabled="False" />
+          <controls:PlusMinusControl LabelText="Active neuro"
+              AllowMultiple="True"
+              Count="{Binding ActiveNeuroCount, Mode=TwoWay}"
+              IsEnabled="False"/>
+          <controls:PlusMinusControl LabelText="Passive neuro"
+              AllowMultiple="True"
+              Count="{Binding PassiveNeuroCount, Mode=TwoWay}"
+              IsEnabled="False"/>
         </VerticalStackLayout>
 
         <!-- Life slider -->
         <VerticalStackLayout Spacing="4">
-          <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference LifeSlider}}" ValueText="{Binding ValueText, Source={x:Reference LifeSlider}}" />
-          <controls:DictionarySlider x:Name="LifeSlider" KeyFormat="Life: {0}" ValueFormat="" SelectionChanged="OnLifeSelectionChanged" />
+          <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference LifeSlider}}"
+              ValueText="{Binding ValueText, Source={x:Reference LifeSlider}}"/>
+          <controls:DictionarySlider x:Name="LifeSlider"
+              KeyFormat="Life: {0}"
+              ValueFormat=""
+              SelectionChanged="OnLifeSelectionChanged"/>
         </VerticalStackLayout>
 
         <!-- AC bumps -->
         <VerticalStackLayout Spacing="8">
-          <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="8">
-            <HorizontalStackLayout Grid.Column="0" Grid.Row="0" Spacing="6">
-              <CheckBox IsChecked="{Binding PacChecked, Mode=TwoWay}" />
-              <Label Text="+1 PAC" VerticalTextAlignment="Center" />
+          <Grid ColumnDefinitions="*,*"
+              RowDefinitions="Auto,Auto"
+              ColumnSpacing="12"
+              RowSpacing="8">
+            <HorizontalStackLayout Grid.Column="0"
+                Grid.Row="0"
+                Spacing="6">
+              <CheckBox IsChecked="{Binding PacChecked, Mode=TwoWay}"/>
+              <Label Text="+1 PAC"
+                  VerticalTextAlignment="Center"/>
             </HorizontalStackLayout>
-            <HorizontalStackLayout Grid.Column="1" Grid.Row="0" Spacing="6">
-              <CheckBox IsChecked="{Binding DacChecked, Mode=TwoWay}" />
-              <Label Text="+1 DAC" VerticalTextAlignment="Center" />
+            <HorizontalStackLayout Grid.Column="1"
+                Grid.Row="0"
+                Spacing="6">
+              <CheckBox IsChecked="{Binding DacChecked, Mode=TwoWay}"/>
+              <Label Text="+1 DAC"
+                  VerticalTextAlignment="Center"/>
             </HorizontalStackLayout>
-            <HorizontalStackLayout Grid.Column="0" Grid.Row="1" Spacing="6">
-              <CheckBox IsChecked="{Binding MacChecked, Mode=TwoWay}" />
-              <Label Text="+1 MAC" VerticalTextAlignment="Center" />
+            <HorizontalStackLayout Grid.Column="0"
+                Grid.Row="1"
+                Spacing="6">
+              <CheckBox IsChecked="{Binding MacChecked, Mode=TwoWay}"/>
+              <Label Text="+1 MAC"
+                  VerticalTextAlignment="Center"/>
             </HorizontalStackLayout>
-            <HorizontalStackLayout Grid.Column="1" Grid.Row="1" Spacing="6">
-              <CheckBox IsChecked="{Binding SacChecked, Mode=TwoWay}" />
-              <Label Text="+1 SAC" VerticalTextAlignment="Center" />
+            <HorizontalStackLayout Grid.Column="1"
+                Grid.Row="1"
+                Spacing="6">
+              <CheckBox IsChecked="{Binding SacChecked, Mode=TwoWay}"/>
+              <Label Text="+1 SAC"
+                  VerticalTextAlignment="Center"/>
             </HorizontalStackLayout>
           </Grid>
         </VerticalStackLayout>
 
         <!-- Repel -->
         <VerticalStackLayout Spacing="8">
-          <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-            <Label Grid.Column="0" Text="Repel" FontAttributes="Bold" VerticalTextAlignment="Center" />
-            <controls:ChipGroup Grid.Column="1" Items="{Binding RepelGoodEvilOptions}" SelectedItem="{Binding RepelGoodEvilTarget, Mode=TwoWay}" VerticalOptions="Center" />
-            <controls:PlusMinusControl Grid.Column="2" AllowMultiple="True" Count="{Binding RepelGoodEvilCount, Mode=TwoWay}" Min="0" />
+          <Grid ColumnDefinitions="Auto,*,Auto"
+              ColumnSpacing="12">
+            <Label Grid.Column="0"
+                Text="Repel"
+                FontAttributes="Bold"
+                VerticalTextAlignment="Center"/>
+            <controls:ChipGroup Grid.Column="1"
+                Items="{Binding RepelGoodEvilOptions}"
+                SelectedItem="{Binding RepelGoodEvilTarget, Mode=TwoWay}"
+                VerticalOptions="Center"/>
+            <controls:PlusMinusControl Grid.Column="2"
+                AllowMultiple="True"
+                Count="{Binding RepelGoodEvilCount, Mode=TwoWay}"
+                Min="0"/>
           </Grid>
 
-          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-            <Label Grid.Column="0" FontAttributes="Bold" Text="Repel Life" VerticalTextAlignment="Center" />
-            <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding RepelLifeCount, Mode=TwoWay}" Min="0" />
+          <Grid ColumnDefinitions="Auto,*"
+              ColumnSpacing="12">
+            <Label Grid.Column="0"
+                FontAttributes="Bold"
+                Text="Repel Life"
+                VerticalTextAlignment="Center"/>
+            <controls:PlusMinusControl Grid.Column="1"
+                AllowMultiple="True"
+                Count="{Binding RepelLifeCount, Mode=TwoWay}"
+                Min="0"/>
           </Grid>
         </VerticalStackLayout>
 
         <!-- Apprentice crafted -->
-        <Label Text="Apprentice crafted" FontAttributes="Bold"/>
+        <Label Text="Apprentice crafted"
+            FontAttributes="Bold"/>
         <VerticalStackLayout Spacing="6">
           <HorizontalStackLayout Spacing="6">
-            <CheckBox IsChecked="{Binding ApprenticeShieldChecked, Mode=TwoWay}" />
-            <Label Text="Apprentice crafted shield" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            <CheckBox IsChecked="{Binding ApprenticeShieldChecked, Mode=TwoWay}"/>
+            <Label Text="Apprentice crafted shield"
+                FontAttributes="Bold"
+                VerticalTextAlignment="Center"/>
           </HorizontalStackLayout>
           <HorizontalStackLayout Spacing="6">
-            <CheckBox IsChecked="{Binding ApprenticeWeaponChecked, Mode=TwoWay}" />
-            <Label Text="Apprentice crafted weapon" FontAttributes="Bold" VerticalTextAlignment="Center" />
+            <CheckBox IsChecked="{Binding ApprenticeWeaponChecked, Mode=TwoWay}"/>
+            <Label Text="Apprentice crafted weapon"
+                FontAttributes="Bold"
+                VerticalTextAlignment="Center"/>
           </HorizontalStackLayout>
         </VerticalStackLayout>
-        <controls:DictionarySearchBar x:Name="WeaponSearch" IsVisible="False" HeightRequest="0" x:TypeArguments="enums:WeaponType" />
+        <controls:DictionarySearchBar x:Name="WeaponSearch"
+            IsVisible="False"
+            HeightRequest="0"
+            x:TypeArguments="enums:WeaponType"/>
       </VerticalStackLayout>
     </ScrollView>
 
-    <controls:StickyFooterControl Grid.Row="1" ButtonText="Continue" ReturnCommand="{Binding ContinueCommand}" Total="{Binding TotalMp}" TotalFormat="MP cost: {0}/500" BreakdownItems="{Binding Breakdown}" />
+    <controls:StickyFooterControl Grid.Row="1"
+        ButtonText="Continue"
+        ReturnCommand="{Binding ContinueCommand}"
+        Total="{Binding TotalMp}"
+        TotalFormat="MP cost: {0}/500"
+        BreakdownItems="{Binding Breakdown}"/>
   </Grid>
 </local:MpCalculatorPageBase>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using labyItems.Controls;
 using labyItems.Controls.Pickers;
+using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Characters;
@@ -30,6 +31,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     private readonly bool _useMagicColourEnum;
     private readonly bool _useVivomancerColourEnum;
     private readonly Func<IReadOnlyList<string>, string?>? _selectionValidator;
+    private readonly Dictionary<string, AbilityCustomisation> _optionCustomisations;
     private bool _isOptional;
 
     public string Title { get; }
@@ -74,14 +76,14 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         }
     }
 
-    public int SelectedCount => Slots.Count(s => !string.IsNullOrWhiteSpace(s.SelectedOption));
+    public int SelectedCount => Slots.Count(s => s.HasSelection);
 
     public bool HasDuplicates
     {
         get
         {
             var picked = Slots
-                .Select(s => (s.SelectedOption ?? "").Trim())
+                .Select(s => s.SelectionKey)
                 .Where(x => x.Length > 0)
                 .ToList();
 
@@ -161,7 +163,8 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         IEnumerable<MagicColours>? magicColourOptions = null,
         IEnumerable<VivomancerColours>? vivomancerColourOptions = null,
         Func<IReadOnlyList<string>, string?>? selectionValidator = null,
-        bool isOptional = false)
+        bool isOptional = false,
+        Dictionary<string, AbilityCustomisation>? optionCustomisations = null)
     {
         Title = title;
         UseWardPactEnum = useWardPactEnum;
@@ -170,6 +173,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         _selectionValidator = selectionValidator;
         _onAnySelectionChanged = onAnySelectionChanged;
         _isOptional = isOptional;
+        _optionCustomisations = optionCustomisations != null
+            ? new Dictionary<string, AbilityCustomisation>(optionCustomisations, StringComparer.OrdinalIgnoreCase)
+            : new Dictionary<string, AbilityCustomisation>(StringComparer.OrdinalIgnoreCase);
 
         if (_useMagicColourEnum)
         {
@@ -210,7 +216,8 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
                 _useMagicColourEnum,
                 _useVivomancerColourEnum,
                 useDictionarySearch,
-                () => OnSlotChanged());
+                () => OnSlotChanged(),
+                ResolveCustomisation);
 
             if (_useMagicColourEnum)
             {
@@ -259,6 +266,14 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
 
         UpdateValidation();
         RaiseComputed();
+    }
+
+    private AbilityCustomisation? ResolveCustomisation(string? option)
+    {
+        if (string.IsNullOrWhiteSpace(option))
+            return null;
+
+        return _optionCustomisations.TryGetValue(option.Trim(), out var custom) ? custom : null;
     }
 
     public void UpdateOptionNames(IEnumerable<string> optionNames)
@@ -314,6 +329,27 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         RaiseComputed();
     }
 
+    public void ApplyForcedSelections(Dictionary<int, AbilityDefinition> forcedByLevel, Func<AbilityDefinition, string>? displayFormatter = null)
+    {
+        bool changed = false;
+        var map = forcedByLevel ?? new Dictionary<int, AbilityDefinition>();
+
+        foreach (var slot in Slots)
+        {
+            if (map.TryGetValue(slot.Level, out var def) && def != null)
+                changed |= slot.ApplyForcedAbility(def, displayFormatter?.Invoke(def), suppressNotify: true);
+            else
+                changed |= slot.ClearForcedAbility(suppressNotify: true);
+        }
+
+        if (!changed)
+            return;
+
+        UpdateValidation();
+        RaiseComputed();
+        _onAnySelectionChanged();
+    }
+
     private void OnSlotChanged()
     {
         UpdateValidation();
@@ -336,6 +372,12 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
 
     private void UpdateValidation()
     {
+        if (Slots.Any(s => s.HasBaseSelection && !s.IsCustomisationComplete))
+        {
+            ValidationMessage = "Select a custom value for each chosen ability.";
+            return;
+        }
+
         if (_selectionValidator == null)
         {
             ValidationMessage = string.Empty;
@@ -343,7 +385,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         }
 
         var picked = Slots
-            .Select(s => (s.SelectedOption ?? string.Empty).Trim())
+            .Select(s => s.SelectionKey)
             .Where(x => x.Length > 0)
             .ToList();
 

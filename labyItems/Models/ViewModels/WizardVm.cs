@@ -82,6 +82,7 @@ public sealed class WizardVm : INotifyPropertyChanged
     public ICommand NextCommand { get; }
     public Command<int> StepClickCommand { get; }
     public Command ExportToBattleboardCommand { get; }
+    public Command ExportToExcelCommand { get; }
     public Command SaveToWalletCommand { get; }
     public CharacterBuilderVm CharacterBuilderVm { get; }
     public GuildsVm GuildsVm { get; }
@@ -99,6 +100,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         NextCommand = new Command(async () => await OnNextAsync());
         StepClickCommand = new Command<int>(async i => await TryGoToStepAsync(i));
         ExportToBattleboardCommand = new Command(async () => await ExportBattleboardAsync(), () => Draft.IsRaceAndClassSelected);
+        ExportToExcelCommand = new Command(async () => await ExportBattleboardToExcelAsync(), () => Draft.IsRaceAndClassSelected);
         SaveToWalletCommand = new Command(SaveToWallet, () => Draft.IsRaceAndClassSelected);
         CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
 
@@ -249,6 +251,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(ArmourSelectionSummary));
         RaiseReviewProperties();
         ExportToBattleboardCommand?.ChangeCanExecute();
+        ExportToExcelCommand?.ChangeCanExecute();
         SaveToWalletCommand?.ChangeCanExecute();
     }
 
@@ -512,6 +515,17 @@ public sealed class WizardVm : INotifyPropertyChanged
         {
             Title = $"{Draft.Name}'s battleboard",
             File = new ShareFile(path)
+        });
+    }
+
+    private async Task ExportBattleboardToExcelAsync()
+    {
+        await SyncDraftStateAsync();
+        var path = await _exportService.ExportAsync(Draft);
+
+        await Launcher.OpenAsync(new OpenFileRequest
+        {
+            File = new ReadOnlyFile(path)
         });
     }
 

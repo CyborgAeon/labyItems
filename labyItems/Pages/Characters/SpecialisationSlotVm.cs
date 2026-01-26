@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using System.Reflection;
 using labyItems.Controls;
 using labyItems.Controls.Pickers;
+using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Characters;
@@ -25,6 +27,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     }
 
     private readonly Action _onChanged;
+    private readonly Func<string?, AbilityCustomisation?>? _customisationResolver;
 
     public int Level { get; }
     public string LevelLabel => $"Lvl {Level}";
@@ -33,6 +36,14 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public bool UseMagicColourEnum { get; }
     public bool UseVivomancerColourEnum { get; }
     public bool UseDictionarySearch { get; }
+
+    private AbilityDefinition? _forcedAbilityDefinition;
+    private string _lockedDisplayText = string.Empty;
+
+    public AbilityDefinition? ForcedAbilityDefinition => _forcedAbilityDefinition;
+    public bool IsLocked => _forcedAbilityDefinition != null;
+    public bool IsSelectable => !IsLocked;
+    public string LockedDisplayText => _lockedDisplayText;
 
     private StandardWardPacts? _selectedWardPact;
     public StandardWardPacts? SelectedWardPact
@@ -91,6 +102,61 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public IReadOnlyList<string> MagicColourOptionNames => _magicColourOptions.Keys.ToList();
     public IReadOnlyList<string> VivomancerColourOptionNames => _vivomancerColourOptions.Keys.ToList();
 
+    private AbilityCustomisation? _customisation;
+    private string? _customisationValue;
+    private Dictionary<string, string> _customisationOptions = new(StringComparer.OrdinalIgnoreCase);
+    private bool _customisationAllowsCustom;
+    private string _customisationPlaceholder = "Enter value";
+    private string _customisationEnumName = string.Empty;
+
+    public bool HasCustomisation => _customisation != null;
+    public bool CustomisationAllowsCustom => _customisationAllowsCustom;
+    public string CustomisationPlaceholder => _customisationPlaceholder;
+    public Dictionary<string, string> CustomisationOptions => _customisationOptions;
+
+    public string? CustomisationValue
+    {
+        get => _customisationValue;
+        set
+        {
+            var normalized = (value ?? string.Empty).Trim();
+            normalized = normalized.Length == 0 ? null : normalized;
+            if (!Set(ref _customisationValue, normalized)) return;
+            Raise(nameof(IsCustomisationComplete));
+            Raise(nameof(HasSelection));
+            Raise(nameof(SelectionKey));
+            _onChanged();
+        }
+    }
+
+    public bool IsCustomisationComplete
+        => _customisation == null || !string.IsNullOrWhiteSpace(_customisationValue);
+
+    public bool HasBaseSelection
+        => IsLocked || !string.IsNullOrWhiteSpace(_selectedOption);
+
+    public bool HasSelection
+        => HasBaseSelection && IsCustomisationComplete;
+
+    public string SelectionKey
+    {
+        get
+        {
+            if (!HasSelection)
+                return string.Empty;
+
+            if (IsLocked && _forcedAbilityDefinition != null)
+                return _forcedAbilityDefinition.Name ?? _lockedDisplayText;
+
+            var baseName = _selectedOption ?? string.Empty;
+            var custom = _customisationValue?.Trim();
+            if (!string.IsNullOrWhiteSpace(custom))
+                return $"{baseName}::{custom}";
+
+            return baseName;
+        }
+    }
+
     private string? _selectedOption;
     public string? SelectedOption
     {
@@ -114,6 +180,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
                 _suppressSelectionSync = false;
             }
 
+            ApplyCustomisation(_customisationResolver?.Invoke(normalized));
             _onChanged();
         }
     }
@@ -131,7 +198,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         bool useMagicColourEnum,
         bool useVivomancerColourEnum,
         bool useDictionarySearch,
-        Action onChanged)
+        Action onChanged,
+        Func<string?, AbilityCustomisation?>? customisationResolver = null)
     {
         Level = level;
         UseWardPactEnum = useWardPactEnum;
@@ -139,6 +207,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         UseVivomancerColourEnum = useVivomancerColourEnum;
         UseDictionarySearch = useDictionarySearch;
         _onChanged = onChanged;
+        _customisationResolver = customisationResolver;
     }
 
     public void SetOptionsSource(Func<IReadOnlyList<string>> getFilteredOptions)
@@ -192,6 +261,81 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(SearchOptions));
     }
 
+    public bool ApplyForcedAbility(AbilityDefinition def, string? displayText = null, bool suppressNotify = false)
+    {
+        if (def == null)
+            return ClearForcedAbility(suppressNotify);
+
+        var display = (displayText ?? def.Name ?? string.Empty).Trim();
+        var changed = _forcedAbilityDefinition == null
+                      || !string.Equals(_forcedAbilityDefinition.Name ?? string.Empty, def.Name ?? string.Empty, StringComparison.OrdinalIgnoreCase)
+                      || !string.Equals(_lockedDisplayText, display, StringComparison.Ordinal);
+
+        _forcedAbilityDefinition = def;
+        _lockedDisplayText = display;
+
+        if (!string.IsNullOrWhiteSpace(_selectedOption))
+            _selectedOption = null;
+
+        if (_selectedWardPact.HasValue)
+            _selectedWardPact = null;
+        if (_selectedMagicColour.HasValue)
+            _selectedMagicColour = null;
+        if (_selectedVivomancerColour.HasValue)
+            _selectedVivomancerColour = null;
+
+        if (_customisation != null || !string.IsNullOrWhiteSpace(_customisationValue))
+        {
+            _customisation = null;
+            _customisationValue = null;
+            _customisationOptions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            _customisationAllowsCustom = false;
+            _customisationEnumName = string.Empty;
+            _customisationPlaceholder = "Enter value";
+        }
+
+        Raise(nameof(SelectedOption));
+        Raise(nameof(SelectedWardPact));
+        Raise(nameof(SelectedMagicColour));
+        Raise(nameof(SelectedVivomancerColour));
+        Raise(nameof(HasSelection));
+        Raise(nameof(SelectionKey));
+        Raise(nameof(IsLocked));
+        Raise(nameof(IsSelectable));
+        Raise(nameof(LockedDisplayText));
+        Raise(nameof(HasCustomisation));
+        Raise(nameof(CustomisationOptions));
+        Raise(nameof(CustomisationAllowsCustom));
+        Raise(nameof(CustomisationPlaceholder));
+        Raise(nameof(CustomisationValue));
+        Raise(nameof(IsCustomisationComplete));
+
+        if (changed && !suppressNotify)
+            _onChanged();
+
+        return changed;
+    }
+
+    public bool ClearForcedAbility(bool suppressNotify = false)
+    {
+        if (_forcedAbilityDefinition == null)
+            return false;
+
+        _forcedAbilityDefinition = null;
+        _lockedDisplayText = string.Empty;
+
+        Raise(nameof(IsLocked));
+        Raise(nameof(IsSelectable));
+        Raise(nameof(LockedDisplayText));
+        Raise(nameof(HasSelection));
+        Raise(nameof(SelectionKey));
+
+        if (!suppressNotify)
+            _onChanged();
+
+        return true;
+    }
+
     private MagicColours? FindMagicColour(string label)
     {
         if (string.IsNullOrWhiteSpace(label))
@@ -229,4 +373,94 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
 
     private static string LabelForVivomancerColour(VivomancerColours c)
         => EnumDisplayFormatter.FormatName(c.ToString());
+
+    private void ApplyCustomisation(AbilityCustomisation? customisation)
+    {
+        if (_customisation == customisation)
+            return;
+
+        _customisation = customisation;
+        _customisationEnumName = (customisation?.OptionEnum ?? string.Empty).Trim();
+
+        if (_customisation == null)
+        {
+            _customisationOptions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            _customisationAllowsCustom = false;
+            _customisationPlaceholder = "Enter value";
+            _customisationValue = null;
+        }
+        else
+        {
+            _customisationOptions = BuildCustomisationOptions(_customisationEnumName);
+            _customisationAllowsCustom = _customisation.CustomValuesPermitted
+                                         || string.IsNullOrWhiteSpace(_customisationEnumName)
+                                         || _customisationOptions.Count == 0;
+            _customisationPlaceholder = string.IsNullOrWhiteSpace(_customisationEnumName) || _customisationOptions.Count == 0
+                ? "Enter value"
+                : $"Select {EnumDisplayFormatter.FormatName(_customisationEnumName)}";
+
+            if (!_customisationAllowsCustom
+                && !string.IsNullOrWhiteSpace(_customisationValue)
+                && !_customisationOptions.ContainsKey(_customisationValue))
+            {
+                _customisationValue = null;
+            }
+
+            if (string.IsNullOrWhiteSpace(_customisationValue))
+                _customisationValue = null;
+        }
+
+        Raise(nameof(HasCustomisation));
+        Raise(nameof(CustomisationOptions));
+        Raise(nameof(CustomisationAllowsCustom));
+        Raise(nameof(CustomisationPlaceholder));
+        Raise(nameof(CustomisationValue));
+        Raise(nameof(IsCustomisationComplete));
+        Raise(nameof(HasSelection));
+        Raise(nameof(SelectionKey));
+    }
+
+    private static Dictionary<string, string> BuildCustomisationOptions(string enumName)
+    {
+        var options = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (string.IsNullOrWhiteSpace(enumName))
+            return options;
+
+        var type = FindEnumTypeByName(enumName);
+        if (type == null)
+            return options;
+
+        foreach (var value in Enum.GetValues(type))
+        {
+            var raw = value?.ToString() ?? string.Empty;
+            if (raw.Length == 0)
+                continue;
+
+            var label = EnumDisplayFormatter.FormatName(raw);
+            options[label] = label;
+        }
+
+        return options;
+    }
+
+    private static Type? FindEnumTypeByName(string enumName)
+    {
+        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            Type[] types;
+            try { types = asm.GetTypes(); }
+            catch (ReflectionTypeLoadException ex)
+            {
+                types = ex.Types.Where(t => t != null).Cast<Type>().ToArray();
+            }
+
+            foreach (var t in types)
+            {
+                if (t.IsEnum && string.Equals(t.Name, enumName, StringComparison.OrdinalIgnoreCase))
+                    return t;
+            }
+        }
+
+        return null;
+    }
 }

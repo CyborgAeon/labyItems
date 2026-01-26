@@ -9,6 +9,8 @@
         <Slider x:Name="Slider"
                 Minimum="0"
                 Maximum="0"
-                ValueChanged="OnSliderValueChanged" />
+                ValueChanged="OnSliderValueChanged"
+                DragStarted="OnSliderDragStarted"
+                DragCompleted="OnSliderDragCompleted" />
     </VerticalStackLayout>
 </ContentView>
