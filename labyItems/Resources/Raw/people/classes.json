@@ -1,6 +1,7 @@
 {
   "Warrior": {
     "Brackets": ["🛡️ Warrior"],
+    "Tags": ["MaxAC 9", "Versatile", "Simple"],
     "Armour": {
       "Wearable": ["heavy", "light", "medium"],
       "Restrictions": []
@@ -65,6 +66,7 @@
   },
   "Warrior-Priest": {
     "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Tags": ["Spiritual caster", "𐂫 Armoured", "Combatant"],
     "Armour": {
       "Wearable": ["light", "medium"],
       "Restrictions": []
@@ -172,6 +174,7 @@
   },
   "Power Warrior": {
     "Brackets": ["🛡️ Warrior"],
+    "Tags": ["Magical protection", "Combatant", "Simple"],
     "Armour": {
       "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
@@ -242,6 +245,7 @@
   },
   "Power Master": {
     "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Tags": ["Magical Caster", "4 DAC", "Combatant"],
     "Levels": {
       "1": [
         {
@@ -347,6 +351,7 @@
   },
   "Wind Dancer": {
     "Brackets": ["🛡️ Warrior"],
+    "Tags": ["3 DAC", "Combatant", "Ishmaic"],
     "Armour": {
       "Wearable": ["light"],
       "Restrictions": []
@@ -417,6 +422,7 @@
   },
   "Valdstayn": {
     "Brackets": ["🛡️ Warrior"],
+    "Tags": ["High Roleplay", "Defender", "Combatant"],
     "Armour": {
       "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
@@ -493,6 +499,7 @@
   },
   "Rovfuger": {
     "Brackets": ["🛡️ Warrior"],
+    "Tags": ["Suicidal", "Combatant", "MaxAC 9"],
     "Levels": {
       "1": [
         {
@@ -570,6 +577,7 @@
   },
   "Kensai / Blade Master": {
     "Brackets": ["🛡️ Warrior"],
+    "Tags": ["High Damage", "Combatant", "4 DAC"],
     "Armour": {
       "Wearable": ["light"],
       "Restrictions": []
@@ -636,6 +644,7 @@
   },
   "Forest Guardian": {
     "Brackets": ["🌿 Druid"],
+    "Tags": ["EP Caster", "Combatant", "Heal & Harm"],
     "Armour": {
       "Wearable": ["light"],
       "Restrictions": ["No metal"]
@@ -743,6 +752,7 @@
   },
   "Kallah Beggar": {
     "Brackets": ["⚔ Scout", "🛡️ Warrior"],
+    "Tags": ["City Bound", "Combatant", "3 DAC"],
     "Armour": {
       "Wearable": ["light"],
       "Restrictions": []
@@ -833,6 +843,7 @@
   },
   "Hanot Beggar": {
     "Brackets": ["⚔ Scout", "🛡️ Warrior"],
+    "Tags": ["City Bound", "Combatant", "5 PAC"],
     "Armour": {
       "Wearable": ["light"],
       "Restrictions": []
@@ -925,6 +936,7 @@
   },
   "Paladin": {
     "Brackets": ["🛡️ Warrior"],
+    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Max AC": 9,
     "Armour": {
       "Wearable": ["light", "medium", "heavy"],
@@ -1035,6 +1047,7 @@
   },
   "Unholy Champion": {
     "Brackets": ["🛡️ Warrior"],
+    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Max AC": 9,
     "Armour": {
       "Wearable": ["light", "medium", "heavy"],
@@ -1128,6 +1141,7 @@
   },
   "Grey Knight": {
     "Brackets": ["🛡️ Warrior"],
+    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Max AC": 9,
     "Armour": {
       "Wearable": ["light", "medium", "heavy"],
@@ -1224,6 +1238,7 @@
   },
   "Budoka": {
     "Brackets": ["🛡️ Warrior"],
+    "Tags": ["4 DAC", "Combatant", "MaxAC 9"],
     "Max AC": 9,
     "Levels": {
       "1": [
@@ -1296,6 +1311,7 @@
   },
   "Sorcerer": {
     "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Tags": ["Magical Caster", "Combatant", "Sorcorial Arts"],
     "Buy as": ["1st class Sorcerer"],
     "Levels": {
       "1": [
@@ -1355,6 +1371,7 @@
   "Vivomancer": {
     "Brackets": ["🧙 Wizard", "🙏 Priest"],
     "Buy as": ["1st class Vivomancer"],
+    "Tags": ["Spiritual Caster", "Magical Caster", "Mantics"],
     "Levels": {
       "1": [
         {
@@ -1479,6 +1496,7 @@
   },
   "Vochstelen": {
     "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Tags": ["Magical Caster", "Combatant", "MaxAC 9"],
     "Buy as": ["1st class Vochstelen"],
     "Levels": {
       "1": [
@@ -1548,6 +1566,7 @@
   },
   "Warlock": {
     "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Tags": ["Magical Caster", "Combatant"],
     "Buy as": ["1st class Warlock"],
     "Levels": {
       "1": [
@@ -1621,6 +1640,7 @@
   },
   "Wizard": {
     "Brackets": ["🧙 Wizard"],
+    "Tags": ["Magical Caster", "72 Mana", "High Versatility"],
     "Buy as": ["1st class Wizard"],
     "Levels": {
       "1": [
@@ -1689,6 +1709,7 @@
   },
   "High-Wizard": {
     "Brackets": ["🧙 Wizard"],
+    "Tags": ["Magical Caster", "Non-Combat", "90 Mana"],
     "Buy as": ["1st class Wizard"],
     "Levels": {
       "1": [
@@ -1744,6 +1765,7 @@
   },
   "Pathfinder": {
     "Bracket": ["⚔ Scout"],
+    "Tags": ["Jack of all Trades", "Soft-Combatant", "High Versatility"],
     "Armour": {
       "Wearable": ["light", "medium"],
       "Restrictions": []
@@ -1831,6 +1853,7 @@
   },
   "Thug": {
     "Bracket": ["⚔ Scout"],
+    "Tags": ["Combatant"],
     "Armour": {
       "Wearable": ["light", "medium"],
       "Restrictions": []
@@ -1909,6 +1932,7 @@
   },
   "Assassin": {
     "Bracket": ["⚔ Scout"],
+    "Tags": ["High Damage", "Combatant"],
     "Max AC": 7,
     "Armour": {
       "Wearable": ["light", "medium", "heavy"],
@@ -2007,6 +2031,7 @@
   },
   "Rogue": {
     "Bracket": ["⚔ Scout", "🪄 Wizard"],
+    "Tags": ["Magical Caster", "Soft-Combatant", "Versatile"],
     "Max AC": 7,
     "Armour": {
       "Wearable": ["light", "medium"],
@@ -2087,6 +2112,7 @@
   },
   "Wayfinder": {
     "Bracket": ["⚔ Scout", "🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant"],
     "Max AC": 7,
     "Armour": {
       "Wearable": ["light", "medium"],
@@ -2181,6 +2207,7 @@
   },
   "Leywalker": {
     "Bracket": ["⚔ Scout", "🌿 Druid"],
+    "Tags": ["EP Caster", "Combatant", "Versatile"],
     "Max AC": 7,
     "Armour": {
       "Wearable": ["light"],
@@ -2270,6 +2297,7 @@
   },
   "Spy": {
     "Bracket": ["⚔ Scout"],
+    "Tags": ["Neuronic Caster", "Combatant"],
     "Max AC": 7,
     "Armour": {
       "Wearable": ["light", "medium", "heavy"],
@@ -2369,6 +2397,7 @@
   },
   "Artificer": {
     "Bracket": ["⚔ Scout"],
+    "Tags": ["Neuronic Caster", "Combatant", "3 PAC"],
     "Max AC": 7,
     "Armour": {
       "Wearable": ["light", "medium", "heavy"],
@@ -2465,6 +2494,7 @@
   },
   "Pure-Priest": {
     "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Heal Or Harm", "40 Spirits"],
     "Armour": {
       "Wearable": [],
       "Restrictions": ["No physical"]
@@ -2528,6 +2558,7 @@
   },
   "Armoured-Priest": {
     "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "32 Spirits"],
     "Armour": {
       "Wearable": ["light", "medium"],
       "Restrictions": []
@@ -2600,6 +2631,7 @@
   },
   "Battle-Priest": {
     "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant", "16 Spirits"],
     "Armour": {
       "Wearable": ["light", "medium"],
       "Restrictions": []
@@ -2707,6 +2739,7 @@
   },
   "Crusading-Priest": {
     "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Armour": {
       "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
@@ -2814,6 +2847,7 @@
   },
   "Spiritual-Warrior": {
     "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Armour": {
       "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
@@ -2916,6 +2950,7 @@
   },
   "Hospitaller": {
     "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Pacifist", "48"],
     "Armour": {
       "Wearable": [],
       "Restrictions": ["No physical"]
@@ -2995,6 +3030,7 @@
   },
   "Witch": {
     "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant", "Potion Brewing"],
     "Armour": {
       "Wearable": [],
       "Restrictions": []
@@ -3120,6 +3156,7 @@
   },
   "Friar": {
     "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant", "24 Spirits"],
     "Armour": {
       "Wearable": ["light"],
       "Restrictions": ["May never wear heavier"]
@@ -3200,6 +3237,7 @@
   },
   "Shaman": {
     "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Variant Spirits"],
     "Armour": {
       "Wearable": [],
       "Restrictions": []
@@ -3275,6 +3313,7 @@
   },
   "Druid": {
     "Brackets": ["🌿 Druid"],
+    "Tags": ["EP Caster", "Combatant", "Heal & Harm"],
     "Armour": {
       "Wearable": ["light"],
       "Restrictions": ["No metal"]
@@ -3371,6 +3410,7 @@
   },
   "High Druid": {
     "Brackets": ["🌿 Druid"],
+    "Tags": ["EP Caster", "Heal & Harm", "72 Earthpower"],
     "Armour": {
       "Wearable": [],
       "Restrictions": ["No armour", "No shields"]
@@ -3454,6 +3494,7 @@
       "Restrictions": []
     },
     "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
+    "Tags": ["Neuronic Caster", "Combatant"],
     "Levels": {
       "1": [
         {
@@ -3573,6 +3614,7 @@
       "Wearable": ["light"],
       "Restrictions": ["No shields"]
     },
+    "Tags": ["Neuronic Caster"],
     "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
@@ -3673,6 +3715,7 @@
       "Wearable": ["light"],
       "Restrictions": ["No shields"]
     },
+    "Tags": ["Neuronic Caster"],
     "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
@@ -3758,6 +3801,7 @@
       "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
+    "Tags": ["Neuronic Caster"],
     "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
     "Levels": {
       "1": [
@@ -3875,6 +3919,7 @@
       "Wearable": ["light"],
       "Restrictions": ["No shields"]
     },
+    "Tags": ["Neuronic Caster"],
     "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
@@ -3948,6 +3993,7 @@
       "Wearable": ["light"],
       "Restrictions": ["No shields"]
     },
+    "Tags": ["Neuronic Caster"],
     "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
@@ -4037,6 +4083,7 @@
       "Wearable": ["light"],
       "Restrictions": []
     },
+    "Tags": ["Neuronic Caster"],
     "Brackets": ["🧠 Neuro", "⚔ Scout"],
     "Levels": {
       "1": [
@@ -4136,6 +4183,7 @@
       "Wearable": ["light"],
       "Restrictions": ["No shields"]
     },
+    "Tags": ["Neuronic Caster"],
     "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
@@ -4213,6 +4261,7 @@
       "Wearable": ["light"],
       "Restrictions": []
     },
+    "Tags": ["Neuronic Caster"],
     "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
     "Levels": {
       "1": [
