@@ -43,6 +43,14 @@ public partial class CharacterWalletPage : ContentPage
         }
     }
 
+    private async void OnCardTapped(object sender, TappedEventArgs e)
+    {
+        if (sender is BindableObject bo && bo.BindingContext is Character c)
+        {
+            await Navigation.PushAsync(new CharacterReviewPage(c));
+        }
+    }
+
     private async void OnEditClicked(object sender, EventArgs e)
     {
         if (sender is BindableObject bo && bo.BindingContext is Character c)

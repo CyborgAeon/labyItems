@@ -1,4 +1,3 @@
-#if ANDROID
 using Android.Text;
 using Android.Util;
 using Android.Views;
@@ -65,4 +64,3 @@ public partial class IspCalculator
         return null;
     }
 }
-#endif

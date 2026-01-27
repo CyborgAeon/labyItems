@@ -25,6 +25,10 @@ public sealed class CharacterDraft
         new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, int> GuildBenefitSelections { get; set; } =
         new(StringComparer.OrdinalIgnoreCase);
+    public List<string> AdvancementItems { get; set; } = new();
+    public List<MiracleListDraft> MiracleLists { get; set; } = new();
+    public List<SpellListDraft> SpellLists { get; set; } = new();
+    public List<EvocationListDraft> EvocationLists { get; set; } = new();
     public Dictionary<string, int> PowerPools { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public GuildOverrideRules? GuildOverrideRules { get; set; } = new();
     public Alignment? Alignment { get; set; }

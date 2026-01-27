@@ -27,6 +27,9 @@
                                CornerRadius="12"
                                HasShadow="False"
                                BorderColor="#E5E7EB">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCardTapped"/>
+                            </Frame.GestureRecognizers>
                             <Grid RowDefinitions="Auto,Auto"
                                   ColumnDefinitions="*,Auto,Auto,Auto"
                                   ColumnSpacing="8"

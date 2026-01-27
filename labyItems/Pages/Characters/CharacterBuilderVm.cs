@@ -1318,8 +1318,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 continue;
 
             AppendGuildBenefits(list, rec.Benefits.Basic, guild, "Basic");
-            AppendGuildBenefits(list, rec.Benefits.Intermediate, guild, "Intermediate");
-            AppendGuildBenefits(list, rec.Benefits.Advanced, guild, "Advanced");
         }
 
         return list;

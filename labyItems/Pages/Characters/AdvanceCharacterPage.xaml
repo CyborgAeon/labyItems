@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage
+    x:Class="labyItems.Pages.Characters.AdvanceCharacterPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:viewModels="clr-namespace:labyItems.Pages.Characters.ViewModels"
+    Title="Advance Character">
+
+    <ContentPage Title="Points">
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="12">
+                <Label Text="Points"
+                       FontAttributes="Bold"
+                       FontSize="18"/>
+                <Entry Text="{Binding Points, Mode=TwoWay}"
+                       Keyboard="Numeric"
+                       Placeholder="Total points"/>
+                <Label Text="Update the character's points total."
+                       Opacity="0.7"
+                       FontSize="12"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage>
+
+    <ContentPage Title="Notes">
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="12">
+                <Label Text="Notes"
+                       FontAttributes="Bold"
+                       FontSize="18"/>
+                <Editor Text="{Binding Notes, Mode=TwoWay}"
+                        AutoSize="TextChanges"
+                        Placeholder="Add notes about advancement, downtime, or approvals."/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage>
+
+    <ContentPage Title="Items">
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="12">
+                <Label Text="Items"
+                       FontAttributes="Bold"
+                       FontSize="18"/>
+                <Button Text="+ Add item"
+                        Command="{Binding AddItemCommand}"/>
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}"
+                                     Spacing="8">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="8">
+                                <Entry Text="{Binding Text, Mode=TwoWay}"
+                                       Placeholder="Item name"/>
+                                <ImageButton Grid.Column="1"
+                                             HeightRequest="36"
+                                             WidthRequest="36"
+                                             Padding="6"
+                                             BackgroundColor="Transparent"
+                                             Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveItemCommand}"
+                                             CommandParameter="{Binding .}">
+                                    <ImageButton.Source>
+                                        <FontImageSource Glyph="🗑️" Size="16" Color="Black"/>
+                                    </ImageButton.Source>
+                                </ImageButton>
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage>
+
+    <ContentPage Title="Spells">
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="12">
+                <Label Text="{Binding SpellListsDisabledReason}"
+                       FontSize="12"
+                       Opacity="0.7"
+                       IsVisible="{Binding SpellListsEnabled, Converter={StaticResource InverseBoolConverter}}"/>
+
+                <VerticalStackLayout IsVisible="{Binding SpellListsEnabled}"
+                                     Spacing="12">
+                    <Label Text="Spell Lists"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+                    <Button Text="+ Add spell list"
+                            Command="{Binding AddSpellListCommand}"/>
+
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpellLists}"
+                                         Spacing="12">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="12"
+                                       CornerRadius="12"
+                                       BorderColor="#E5E7EB"
+                                       HasShadow="False">
+                                    <VerticalStackLayout Spacing="10">
+                                        <Grid ColumnDefinitions="*,Auto"
+                                              ColumnSpacing="8">
+                                            <Entry Text="{Binding Name, Mode=TwoWay}"
+                                                   Placeholder="Spell list name"/>
+                                            <Button Grid.Column="1"
+                                                    Text="Remove list"
+                                                    Padding="10,4"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveSpellListCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+
+                                        <Button Text="+ Add spell"
+                                                Padding="10,4"
+                                                Command="{Binding AddEntryCommand}"/>
+
+                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                                             Spacing="8">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid ColumnDefinitions="*,Auto"
+                                                          ColumnSpacing="8">
+                                                        <controls:DictionarySearchBar x:TypeArguments="viewModels:SpellOption"
+                                                                                      ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.FilteredOptions}"
+                                                                                      SelectedValue="{Binding SelectedSpell, Mode=TwoWay}"
+                                                                                      PlaceholderText="Type spell name"/>
+                                                        <ImageButton Grid.Column="1"
+                                                                     HeightRequest="36"
+                                                                     WidthRequest="36"
+                                                                     Padding="6"
+                                                                     BackgroundColor="Transparent"
+                                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
+                                                                     CommandParameter="{Binding .}">
+                                                            <ImageButton.Source>
+                                                                <FontImageSource Glyph="🗑️" Size="16" Color="Black"/>
+                                                            </ImageButton.Source>
+                                                        </ImageButton>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </VerticalStackLayout>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage>
+
+    <ContentPage Title="Miracles">
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="12">
+                <Label Text="Miracle Lists"
+                       FontAttributes="Bold"
+                       FontSize="18"/>
+                <Button Text="+ Add miracle list"
+                        Command="{Binding AddMiracleListCommand}"/>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding MiracleLists}"
+                                     Spacing="14">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   BorderColor="#E5E7EB"
+                                   HasShadow="False">
+                                <VerticalStackLayout Spacing="10">
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="8">
+                                        <Entry Text="{Binding Name, Mode=TwoWay}"
+                                               Placeholder="Miracle list name"/>
+                                        <Button Grid.Column="1"
+                                                Text="Remove list"
+                                                Padding="10,4"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveMiracleListCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid>
+
+                                    <Label Text="Alignment filters"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.7"/>
+                                    <controls:MultiChipGroup Items="{Binding AlignmentFilterOptions}"
+                                                             SelectedItems="{Binding SelectedAlignmentFilters}"/>
+
+                                    <Label Text="Sphere filters"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.7"/>
+                                    <controls:MultiChipGroup Items="{Binding SphereFilterOptions}"
+                                                             SelectedItems="{Binding SelectedSphereFilters}"/>
+
+                                    <Label Text="Source filters"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.7"/>
+                                    <controls:MultiChipGroup Items="{Binding AdvancedFilterOptions}"
+                                                             SelectedItems="{Binding SelectedAdvancedFilters}"/>
+
+                                    <VerticalStackLayout IsVisible="{Binding ShowNeutralAlignmentChoice}"
+                                                         Spacing="4">
+                                        <Label Text="Neutral list alignment"
+                                               FontAttributes="Bold"
+                                               FontSize="12"
+                                               Opacity="0.7"/>
+                                        <controls:ChipGroup Items="{Binding NeutralAlignmentOptions}"
+                                                            SelectedItem="{Binding NeutralAlignmentChoice, Mode=TwoWay}"/>
+                                    </VerticalStackLayout>
+
+                                    <Button Text="+ Add miracle"
+                                            Padding="10,4"
+                                            IsEnabled="{Binding CanEdit}"
+                                            Command="{Binding AddEntryCommand}"/>
+
+                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                                         Spacing="8">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="*,Auto"
+                                                      ColumnSpacing="8">
+                                                    <controls:DictionarySearchBar x:TypeArguments="viewModels:MiracleOption"
+                                                                                  ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.FilteredOptions}"
+                                                                                  SelectedValue="{Binding SelectedMiracle, Mode=TwoWay}"
+                                                                                  PlaceholderText="Type miracle name"/>
+                                                    <ImageButton Grid.Column="1"
+                                                                 HeightRequest="36"
+                                                                 WidthRequest="36"
+                                                                 Padding="6"
+                                                                 BackgroundColor="Transparent"
+                                                                 IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.CanEdit}"
+                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
+                                                                 CommandParameter="{Binding .}">
+                                                        <ImageButton.Source>
+                                                            <FontImageSource Glyph="🗑️" Size="16" Color="Black"/>
+                                                        </ImageButton.Source>
+                                                    </ImageButton>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
+
+                                    <VerticalStackLayout Spacing="6">
+                                        <Grid ColumnDefinitions="*,*,*"
+                                              ColumnSpacing="8">
+                                            <Label Text="{Binding GoodPoints, StringFormat='Good: {0}'}"
+                                                   TextColor="Green"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding NeutralPoints, StringFormat='Neutral: {0}'}"
+                                                   TextColor="#8B5E3C"/>
+                                            <Label Grid.Column="2"
+                                                   Text="{Binding EvilPoints, StringFormat='Evil: {0}'}"
+                                                   TextColor="Red"/>
+                                        </Grid>
+
+                                        <Grid HeightRequest="10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{Binding GoodWidth}"/>
+                                                <ColumnDefinition Width="{Binding NeutralWidth}"/>
+                                                <ColumnDefinition Width="{Binding EvilWidth}"/>
+                                                <ColumnDefinition Width="{Binding UnselectedWidth}"/>
+                                            </Grid.ColumnDefinitions>
+                                            <BoxView Color="Green"/>
+                                            <BoxView Grid.Column="1"
+                                                     Color="#8B5E3C"/>
+                                            <BoxView Grid.Column="2"
+                                                     Color="Red"/>
+                                            <BoxView Grid.Column="3"
+                                                     Color="#D1D5DB"/>
+                                        </Grid>
+
+                                        <Label Text="{Binding ValidationMessage}"
+                                               TextColor="#7F1D1D"
+                                               IsVisible="{Binding HasValidationError}"
+                                               FontSize="12"/>
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage>
+
+    <ContentPage Title="Evocations">
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="12">
+                <Label Text="Evocation Lists"
+                       FontAttributes="Bold"
+                       FontSize="18"/>
+                <Button Text="+ Add evocation list"
+                        Command="{Binding AddEvocationListCommand}"/>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding EvocationLists}"
+                                     Spacing="12">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   BorderColor="#E5E7EB"
+                                   HasShadow="False">
+                                <VerticalStackLayout Spacing="10">
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="8">
+                                        <Entry Text="{Binding Name, Mode=TwoWay}"
+                                               Placeholder="Evocation list name"/>
+                                        <Button Grid.Column="1"
+                                                Text="Remove list"
+                                                Padding="10,4"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveEvocationListCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid>
+
+                                    <Label Text="Field filters"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.7"/>
+                                    <controls:MultiChipGroup Items="{Binding FieldFilterOptions}"
+                                                             SelectedItems="{Binding SelectedFieldFilters}"/>
+
+                                    <Label Text="Tier filters"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.7"/>
+                                    <controls:MultiChipGroup Items="{Binding TierFilterOptions}"
+                                                             SelectedItems="{Binding SelectedTierFilters}"/>
+
+                                    <Grid ColumnDefinitions="*,*"
+                                          ColumnSpacing="8">
+                                        <Label Text="{Binding TotalPower, StringFormat='Total EP: {0}/60'}"
+                                               FontSize="12"
+                                               Opacity="0.8"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding AdvancedPower, StringFormat='Advanced EP: {0}/20'}"
+                                               FontSize="12"
+                                               Opacity="0.8"/>
+                                    </Grid>
+
+                                    <Label Text="{Binding ValidationMessage}"
+                                           TextColor="#7F1D1D"
+                                           IsVisible="{Binding HasValidationError}"
+                                           FontSize="12"/>
+
+                                    <Button Text="+ Add evocation"
+                                            Padding="10,4"
+                                            Command="{Binding AddEntryCommand}"/>
+
+                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                                         Spacing="8">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="*,Auto"
+                                                      ColumnSpacing="8">
+                                                    <controls:DictionarySearchBar x:TypeArguments="viewModels:EvocationOption"
+                                                                                  ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.FilteredOptions}"
+                                                                                  SelectedValue="{Binding SelectedEvocation, Mode=TwoWay}"
+                                                                                  PlaceholderText="Type evocation name"/>
+                                                    <ImageButton Grid.Column="1"
+                                                                 HeightRequest="36"
+                                                                 WidthRequest="36"
+                                                                 Padding="6"
+                                                                 BackgroundColor="Transparent"
+                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
+                                                                 CommandParameter="{Binding .}">
+                                                        <ImageButton.Source>
+                                                            <FontImageSource Glyph="🗑️" Size="16" Color="Black"/>
+                                                        </ImageButton.Source>
+                                                    </ImageButton>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage>
+</TabbedPage>
