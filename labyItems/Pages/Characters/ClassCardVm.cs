@@ -59,10 +59,11 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     public int MaxAc { get; init; }
     public int TBLP { get; init; }
     public string? PowerBase { get; init; } = "";
+    public IReadOnlyList<string> BracketTags { get; init; } = Array.Empty<string>();
 
     public string Tag1 => $"AC {MaxAc}";
-    public string Tag2 => PowerBase ?? "";
-    public string Tag3 => TBLP > 0 ? $"{TBLP} TBLP" : "";
+    public string Tag2 => ResolveTagSlots().Tag2;
+    public string Tag3 => ResolveTagSlots().Tag3;
 
     public ObservableCollection<LevelRowVm> LevelRows { get; init; } = new();
 
@@ -161,5 +162,35 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     {
         get => _isExpanded;
         set { if (_isExpanded == value) return; _isExpanded = value; Raise(); }
+    }
+
+    private (string Tag2, string Tag3) ResolveTagSlots()
+    {
+        var tag2 = PowerBase ?? "";
+        var tag3 = TBLP > 0 ? $"{TBLP} TBLP" : "";
+
+        if (!string.IsNullOrWhiteSpace(tag2) && !string.IsNullOrWhiteSpace(tag3))
+            return (tag2, tag3);
+
+        var tags = BracketTags?
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList() ?? new List<string>();
+
+        if (tags.Count > 1)
+        {
+            var primary = tags[0];
+            tags.RemoveAt(0);
+            tags.Add(primary);
+        }
+
+        var idx = 0;
+        if (string.IsNullOrWhiteSpace(tag2) && idx < tags.Count)
+            tag2 = tags[idx++];
+
+        if (string.IsNullOrWhiteSpace(tag3) && idx < tags.Count)
+            tag3 = tags[idx++];
+
+        return (tag2, tag3);
     }
 }

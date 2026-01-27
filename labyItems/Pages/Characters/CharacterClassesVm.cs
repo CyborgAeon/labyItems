@@ -61,7 +61,7 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
             var key = kvp.Key;
             var rec = kvp.Value;
 
-            var (icon, category) = ParseBracket(rec.Brackets);
+            var (icon, category, bracketTags) = ParseBrackets(rec.Brackets);
 
             var maxAc = rec.MaxAC.ValueKind switch
             {
@@ -110,7 +110,8 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
                 MaxAc = maxAc,
                 TBLP = tblp,
                 PowerBase = ExtractPowerBase(rec),
-                LevelRows = levelRows
+                LevelRows = levelRows,
+                BracketTags = bracketTags
             });
         }
 
@@ -176,28 +177,53 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
         return firstNonEmpty ?? "";
     }
 
-    private static (string Icon, string Category) ParseBracket(IReadOnlyList<string>? brackets)
+    private static (string Icon, string Category, IReadOnlyList<string> Tags) ParseBrackets(IReadOnlyList<string>? brackets)
     {
         if (brackets == null || brackets.Count == 0)
-            return ("🛡️", "warrior");
+            return ("🛡️", "warrior", Array.Empty<string>());
 
-        if (brackets.Count >= 2)
+        var parsed = new List<(string Icon, string Category, string Tag)>();
+        foreach (var raw in brackets)
         {
-            var iconToken = brackets[0];
-            var categoryToken = brackets[1];
-            var setIcon = string.IsNullOrWhiteSpace(iconToken) ? "🛡️" : iconToken;
-            var setCategory = string.IsNullOrWhiteSpace(categoryToken) ? "warrior" : categoryToken;
-            return (setIcon, setCategory.ToLowerInvariant());
+            var entry = ParseBracketToken(raw);
+            if (string.IsNullOrWhiteSpace(entry.Tag))
+                continue;
+            parsed.Add(entry);
         }
 
-        var bracket = brackets[0];
-        if (string.IsNullOrWhiteSpace(bracket)) return ("🛡️", "warrior");
+        if (parsed.Count == 0)
+            return ("🛡️", "warrior", Array.Empty<string>());
 
-        var parts = bracket.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-        var icon = parts.Length >= 1 ? parts[0] : "🛡️";
-        var category = parts.Length == 2 ? parts[1] : "warrior";
+        var primary = parsed[0];
+        var tags = parsed
+            .Select(p => p.Tag)
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
-        return (icon, category.ToLowerInvariant());
+        return (primary.Icon, primary.Category.ToLowerInvariant(), tags);
+    }
+
+    private static (string Icon, string Category, string Tag) ParseBracketToken(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return ("🛡️", "warrior", string.Empty);
+
+        var parts = raw.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0)
+            return ("🛡️", "warrior", string.Empty);
+
+        if (parts.Length == 1)
+        {
+            var token = parts[0].Trim();
+            return ("🛡️", token, token);
+        }
+
+        var icon = parts[0];
+        var category = string.Join(" ", parts.Skip(1));
+        var tag = $"{icon} {category}".Trim();
+
+        return (string.IsNullOrWhiteSpace(icon) ? "🛡️" : icon, category, tag);
     }
 
     private static string ExtractPowerBase(labyItems.Services.CharacterClassRecord rec)
