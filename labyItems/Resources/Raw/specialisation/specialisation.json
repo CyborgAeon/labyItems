@@ -2109,9 +2109,6 @@
     "Löss light (white)": {
       "ColourChoiceOverride": ["White"]
     },
-    "Loss light (white)": {
-      "ColourChoiceOverride": ["White"]
-    },
     "Svart dark (black)": {
       "ColourChoiceOverride": ["Black"]
     },

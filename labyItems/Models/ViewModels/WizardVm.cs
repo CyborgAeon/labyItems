@@ -384,17 +384,79 @@ public sealed class WizardVm : INotifyPropertyChanged
     private IEnumerable<string> BuildSpecialisationSummary()
     {
         var lines = new List<string>();
+        var includedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         var subtype = Draft.RaceSubtypeValue ?? Draft.RaceSubtype;
         if (!string.IsNullOrWhiteSpace(subtype))
             lines.Add($"Subtype: {subtype}");
 
+        var specVm = CharacterBuilderVm?.SpecialisationVm;
+        if (specVm != null)
+        {
+            foreach (var group in specVm.Groups)
+            {
+                if (group == null)
+                    continue;
+
+                var multipleSlots = group.Slots.Count > 1;
+                foreach (var slot in group.Slots)
+                {
+                    if (slot == null || !slot.HasSelection)
+                        continue;
+
+                    var selection = FormatSlotSelection(slot);
+                    if (string.IsNullOrWhiteSpace(selection))
+                        continue;
+
+                    lines.Add(multipleSlots
+                        ? $"{group.Title} ({slot.LevelLabel}): {selection}"
+                        : $"{group.Title}: {selection}");
+                    includedKeys.Add(group.Title);
+                }
+            }
+
+            foreach (var mapped in specVm.MappedSpecialisations)
+            {
+                if (mapped == null)
+                    continue;
+
+                var picked = (mapped.SelectedOption ?? string.Empty).Trim();
+                if (picked.Length == 0)
+                    continue;
+
+                lines.Add($"{mapped.Title}: {picked}");
+                includedKeys.Add(mapped.Key);
+            }
+        }
+
         foreach (var kvp in Draft.SpecialisationSelections.OrderBy(k => k.Key, StringComparer.OrdinalIgnoreCase))
         {
+            if (includedKeys.Contains(kvp.Key))
+                continue;
+
             lines.Add($"{kvp.Key}: {kvp.Value}");
         }
 
         return lines;
+    }
+
+    private static string FormatSlotSelection(SpecialisationSlotVm slot)
+    {
+        var baseName = slot.IsLocked
+            ? (slot.ForcedAbilityDefinition?.Name ?? slot.LockedDisplayText)
+            : (slot.SelectedOption ?? string.Empty).Trim();
+
+        var custom = (slot.CustomisationValue ?? string.Empty).Trim();
+        if (custom.Length == 0)
+            return baseName;
+
+        if (baseName.Length == 0)
+            return custom;
+
+        if (baseName.Contains(custom, StringComparison.OrdinalIgnoreCase))
+            return baseName;
+
+        return $"{baseName} ({custom})";
     }
 
     private void UpdateArmourUiFromDraft()
@@ -530,7 +592,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             return "Armour: none allowed.";
 
         var layers = GetMaxLayersForTier(tier);
-        return $"Armour: {tier} (max base PAC {ArmourMaxBasePac}, max worn PAC {ArmourMaxTotalPac}, layers {layers})";
+        return $"Armour: {tier}";
     }
 
     private string BuildArmourBaseSummary()

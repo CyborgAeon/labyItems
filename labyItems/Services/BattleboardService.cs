@@ -142,7 +142,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
             .Where(a => !IsPureArmourToken(a))
             .Where(a => !IsCombatWary(a))
             .Where(a => !IsFaerieColourSelection(a))
-            .Where(a => !IsElfSubtypeSelection(a, draft))
+            .Where(a => !IsRaceSubtypeSelection(a, draft))
             .Select(FormatAbilityText)
             .Where(v => !string.IsNullOrWhiteSpace(v))
             .ToList();
@@ -321,12 +321,9 @@ public sealed class BattleboardExportService : IBattleboardExportService
         return string.Equals(source, "Specialisation:Faerie Colour", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool IsElfSubtypeSelection(AbilityDraft ability, CharacterDraft draft)
+    private static bool IsRaceSubtypeSelection(AbilityDraft ability, CharacterDraft draft)
     {
         if (ability == null || draft == null)
-            return false;
-
-        if (!IsElfRace(draft.Race ?? string.Empty))
             return false;
 
         var subtype = (draft.RaceSubtypeValue ?? draft.RaceSubtype ?? string.Empty).Trim();
@@ -353,11 +350,12 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var race = (draft?.Race ?? string.Empty).Trim();
         var suffixes = new List<string>();
 
-        if (IsElfRace(race))
+        var subtype = (draft?.RaceSubtypeValue ?? draft?.RaceSubtype ?? string.Empty).Trim();
+        if (!string.IsNullOrWhiteSpace(subtype) && !string.Equals(subtype, "Standard", StringComparison.OrdinalIgnoreCase))
         {
-            var subtype = (draft?.RaceSubtypeValue ?? draft?.RaceSubtype ?? string.Empty).Trim();
-            if (!string.IsNullOrWhiteSpace(subtype))
-                suffixes.Add(subtype);
+            var trimmed = TrimSubtypeLabel(subtype);
+            if (!string.IsNullOrWhiteSpace(trimmed))
+                suffixes.Add(trimmed);
         }
 
         if (string.Equals(race, "Faerie", StringComparison.OrdinalIgnoreCase))
@@ -419,10 +417,67 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var effect = ability.ShortStringValue ?? string.Empty;
         var name = ability.Name ?? string.Empty;
 
-        if (!string.IsNullOrWhiteSpace(effect) && !string.Equals(effect, name, StringComparison.OrdinalIgnoreCase))
-            return effect;
+        var text = !string.IsNullOrWhiteSpace(effect) && !string.Equals(effect, name, StringComparison.OrdinalIgnoreCase)
+            ? effect
+            : name;
 
-        return name;
+        if (ability.AbilityType == AbilityType.Immunity)
+            text = StripImmunityPrefix(text);
+
+        return text;
+    }
+
+    private static string StripImmunityPrefix(string text)
+    {
+        var value = (text ?? string.Empty).Trim();
+        if (value.Length == 0)
+            return value;
+
+        const string prefix = "Immunity to ";
+        if (value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            return value.Substring(prefix.Length).Trim();
+
+        return value;
+    }
+
+    private static string TrimSubtypeLabel(string subtype)
+    {
+        var value = (subtype ?? string.Empty).Trim();
+        if (value.Length == 0)
+            return value;
+
+        var parenIndex = value.IndexOf('(');
+        if (parenIndex >= 0)
+            value = value[..parenIndex].Trim();
+
+        if (value.Length == 0)
+            return value;
+
+        var parts = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length <= 1)
+            return value;
+
+        var end = parts.Length;
+        while (end > 1 && IsAllLower(parts[end - 1]))
+            end--;
+
+        return string.Join(' ', parts.Take(end));
+    }
+
+    private static bool IsAllLower(string token)
+    {
+        var hasLetter = false;
+        foreach (var ch in token)
+        {
+            if (!char.IsLetter(ch))
+                continue;
+
+            hasLetter = true;
+            if (!char.IsLower(ch))
+                return false;
+        }
+
+        return hasLetter;
     }
 
     private static void WriteResistancesBlock(IXLWorksheet ws, List<string> values)
