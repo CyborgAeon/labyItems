@@ -11,6 +11,7 @@ public sealed class AbilityDefinition
     public string? Effect { get; set; }
     public string? Source { get; set; }
     public int? Count { get; set; }
+    public List<int>? Amount { get; set; }
     public string? Frequency { get; set; }
     public string? OverwriteKey { get; set; }
     public List<string>? PreReqs { get; set; }
@@ -46,7 +47,8 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
                 Source = el.TryGetProperty("Source", out var sourceEl) ? sourceEl.GetString() : null,
                 Frequency = ReadFrequency(el),
                 OverwriteKey = el.TryGetProperty("OverwriteKey", out var overwriteEl) ? overwriteEl.GetString() : null,
-                Customisation = ReadCustomisation(el)
+                Customisation = ReadCustomisation(el),
+                Amount = ReadAmount(el)
             };
 
             if (el.TryGetProperty("Count", out var countEl))
@@ -149,6 +151,11 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
         if (!string.IsNullOrWhiteSpace(value.Effect)) writer.WriteString("Effect", value.Effect);
         if (!string.IsNullOrWhiteSpace(value.Source)) writer.WriteString("Source", value.Source);
         if (value.Count.HasValue) writer.WriteNumber("Count", value.Count.Value);
+        if (value.Amount is { Count: > 0 })
+        {
+            writer.WritePropertyName("Amount");
+            JsonSerializer.Serialize(writer, value.Amount, options);
+        }
         if (!string.IsNullOrWhiteSpace(value.Frequency)) writer.WriteString("Frequency", value.Frequency);
         if (!string.IsNullOrWhiteSpace(value.OverwriteKey)) writer.WriteString("OverwriteKey", value.OverwriteKey);
         if (value.Customisation != null)
@@ -199,5 +206,22 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             return descEl.GetString();
 
         return effect;
+    }
+
+    private static List<int>? ReadAmount(JsonElement el)
+    {
+        if (!el.TryGetProperty("Amount", out var amtEl) || amtEl.ValueKind != JsonValueKind.Array)
+            return null;
+
+        var list = new List<int>();
+        foreach (var item in amtEl.EnumerateArray())
+        {
+            if (item.ValueKind == JsonValueKind.Number && item.TryGetInt32(out var n))
+                list.Add(n);
+            else if (item.ValueKind == JsonValueKind.String && int.TryParse(item.GetString(), out n))
+                list.Add(n);
+        }
+
+        return list.Count > 0 ? list : null;
     }
 }

@@ -19,24 +19,19 @@
             Grid.Row="1"
             Content="{Binding CurrentStepView}"/>
 
-        <Border Grid.Row="2"
-                BackgroundColor="#FFFFFF"
-                Stroke="#22000000">
+        <Grid
+            Grid.Row="2"
+            ColumnDefinitions="Auto,*,Auto"
+            Padding="16,0,16,0">
+            <Button Text="Back"
+                    Command="{Binding BackCommand}"
+                    IsEnabled="{Binding CanGoBack}"
+                    Grid.Column="0"/>
 
-
-            <Grid
-                ColumnDefinitions="Auto,*,Auto"
-                Padding="16,0,16,0">
-                <Button Text="Back"
-                        Command="{Binding BackCommand}"
-                        IsEnabled="{Binding CanGoBack}"
-                        Grid.Column="0"/>
-
-                <Button Grid.Column="2"
-                        Text="{Binding NextButtonText}"
-                        Command="{Binding NextCommand}"
-                        IsEnabled="{Binding CanGoNext}"/>
-            </Grid>
-        </Border>
+            <Button Grid.Column="2"
+                    Text="{Binding NextButtonText}"
+                    Command="{Binding NextCommand}"
+                    IsEnabled="{Binding CanGoNext}"/>
+        </Grid>
     </Grid>
 </ContentPage>

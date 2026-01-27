@@ -29,13 +29,20 @@ public partial class RaceCardView : ContentView
         InitializeComponent();
     }
 
+    private INotifyPropertyChanged? _boundVm;
+    private CancellationTokenSource? _scrollCts;
 
     protected override void OnBindingContextChanged()
     {
+        if (_boundVm != null)
+            _boundVm.PropertyChanged -= OnVmPropertyChanged;
+
         base.OnBindingContextChanged();
 
-        if (BindingContext is INotifyPropertyChanged npc)
-            npc.PropertyChanged += OnVmPropertyChanged;
+        _scrollCts?.Cancel();
+        _boundVm = BindingContext as INotifyPropertyChanged;
+        if (_boundVm != null)
+            _boundVm.PropertyChanged += OnVmPropertyChanged;
     }
 
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -44,29 +51,41 @@ public partial class RaceCardView : ContentView
             Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
 
 
-        if (e.PropertyName == nameof(ClassCardVm.IsExpanded))
+        if (e.PropertyName == nameof(RaceCardVm.IsExpanded))
             Dispatcher.Dispatch(async () => await ScrollIntoViewIfExpandedAsync());
     }
 
     private async Task ScrollIntoViewIfExpandedAsync()
     {
-        if (BindingContext is not ClassCardVm vm) return;
+        if (BindingContext is not RaceCardVm vm) return;
         if (!vm.IsExpanded) return;
-        await Task.Delay(50);
-        Element? parent = this;
-        while (parent != null && parent is not CollectionView)
-            parent = parent.Parent;
 
-        if (parent is not CollectionView cv) return;
+        _scrollCts?.Cancel();
+        _scrollCts = new CancellationTokenSource();
+        var token = _scrollCts.Token;
 
-        cv.ScrollTo(vm, position: ScrollToPosition.Center, animate: true);
-        await Task.Delay(140);
+        try
+        {
+            await Task.Delay(50, token);
+            if (token.IsCancellationRequested) return;
 
-        cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
-        await Task.Delay(140);
+            var cv = FindParentCollectionView();
+            if (cv == null) return;
 
-        // Optional Step 3: repeat once more for a slower “ease in”
-        // cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
+            cv.ScrollTo(vm, position: ScrollToPosition.Center, animate: true);
+            await Task.Delay(140, token);
+            if (token.IsCancellationRequested) return;
+
+            cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
+        }
+        catch (TaskCanceledException)
+        {
+            // Ignore rapid expand/collapse interactions.
+        }
+        catch (OperationCanceledException)
+        {
+            // Ignore rapid expand/collapse interactions.
+        }
     }
 
     private async Task AnimateSelectionAsync()
@@ -78,5 +97,13 @@ public partial class RaceCardView : ContentView
             await CardFrame.ScaleTo(1.02, 110, Easing.CubicOut);
             await CardFrame.ScaleTo(1.0, 110, Easing.CubicOut);
         }
+    }
+
+    private CollectionView? FindParentCollectionView()
+    {
+        Element? parent = this;
+        while (parent != null && parent is not CollectionView)
+            parent = parent.Parent;
+        return parent as CollectionView;
     }
 }

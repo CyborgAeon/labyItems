@@ -223,6 +223,7 @@
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <Frame Padding="0"
+                                   IsVisible="{Binding IsVisible}"
                                    CornerRadius="12"
                                    HasShadow="False">
                                 <Frame.Triggers>
@@ -483,6 +484,12 @@
                                                                                 <Setter Property="IsVisible"
                                                                                         Value="False"/>
                                                                             </DataTrigger>
+                                                                            <DataTrigger TargetType="Picker"
+                                                                                         Binding="{Binding HideAbilityPicker}"
+                                                                                         Value="True">
+                                                                                <Setter Property="IsVisible"
+                                                                                        Value="False"/>
+                                                                            </DataTrigger>
                                                                         </Picker.Triggers>
                                                                     </Picker>
 
@@ -502,7 +509,7 @@
                                                                                                       HorizontalOptions="FillAndExpand">
                                                                             <controls:DictionarySearchBar.Triggers>
                                                                                 <DataTrigger TargetType="ContentView"
-                                                                                             Binding="{Binding HasCustomisation}"
+                                                                                             Binding="{Binding ShowCustomisationPicker}"
                                                                                              Value="False">
                                                                                     <Setter Property="Grid.ColumnSpan"
                                                                                             Value="2"/>
@@ -517,7 +524,7 @@
                                                                                                       PlaceholderText="{Binding CustomisationPlaceholder}"
                                                                                                       AllowCustomOptions="{Binding CustomisationAllowsCustom}"
                                                                                                       HorizontalOptions="FillAndExpand"
-                                                                                                      IsVisible="{Binding HasCustomisation}"/>
+                                                                                                      IsVisible="{Binding ShowCustomisationPicker}"/>
                                                                     </Grid>
 
                                                                     <controls:DictionarySearchBar x:TypeArguments="enums:MagicColours"
@@ -542,7 +549,7 @@
                                                                                                   PlaceholderText="{Binding CustomisationPlaceholder}"
                                                                                                   AllowCustomOptions="{Binding CustomisationAllowsCustom}"
                                                                                                   HorizontalOptions="FillAndExpand"
-                                                                                                  IsVisible="{Binding HasCustomisation}">
+                                                                                                  IsVisible="{Binding ShowCustomisationPicker}">
                                                                         <controls:DictionarySearchBar.Triggers>
                                                                             <DataTrigger TargetType="ContentView"
                                                                                          Binding="{Binding UseDictionarySearch}"

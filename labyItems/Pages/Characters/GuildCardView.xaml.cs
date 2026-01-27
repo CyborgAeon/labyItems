@@ -28,12 +28,20 @@ public partial class GuildCardView : ContentView
         InitializeComponent();
     }
 
+    private INotifyPropertyChanged? _boundVm;
+    private CancellationTokenSource? _scrollCts;
+
     protected override void OnBindingContextChanged()
     {
+        if (_boundVm != null)
+            _boundVm.PropertyChanged -= OnVmPropertyChanged;
+
         base.OnBindingContextChanged();
 
-        if (BindingContext is INotifyPropertyChanged npc)
-            npc.PropertyChanged += OnVmPropertyChanged;
+        _scrollCts?.Cancel();
+        _boundVm = BindingContext as INotifyPropertyChanged;
+        if (_boundVm != null)
+            _boundVm.PropertyChanged += OnVmPropertyChanged;
     }
 
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -56,8 +64,6 @@ public partial class GuildCardView : ContentView
         }
     }
 
-    private CancellationTokenSource? _scrollCts;
-
     private async Task ScrollIntoViewIfExpandedAsync()
     {
         if (BindingContext is not GuildCardVm vm) return;
@@ -67,14 +73,27 @@ public partial class GuildCardView : ContentView
         _scrollCts = new CancellationTokenSource();
         var token = _scrollCts.Token;
 
-        await Task.Delay(80, token);
+        try
+        {
+            await Task.Delay(80, token);
+            if (token.IsCancellationRequested) return;
 
-        var cv = FindParentCollectionView();
-        if (cv == null) return;
+            var cv = FindParentCollectionView();
+            if (cv == null) return;
 
-        cv.ScrollTo(vm, position: ScrollToPosition.Center, animate: false);
-        await Task.Delay(150, token);
-        cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
+            cv.ScrollTo(vm, position: ScrollToPosition.Center, animate: false);
+            await Task.Delay(150, token);
+            if (token.IsCancellationRequested) return;
+            cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
+        }
+        catch (TaskCanceledException)
+        {
+            // Ignore rapid expand/collapse interactions.
+        }
+        catch (OperationCanceledException)
+        {
+            // Ignore rapid expand/collapse interactions.
+        }
     }
 
     private CollectionView? FindParentCollectionView()

@@ -658,6 +658,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
             abilities = ConsolidateAbilities(abilities);
 
+            await UpdateDraftLifeAsync(expandIfChanged: false);
+            ApplyLifeBonuses(abilities);
+
             UpdateArmourStats(classRecord, classAbilities, raceAbilities, specAbilities);
             UpdatePowerPools(classRecord, abilities);
             UpdateResistanceLevels(abilities, classRecord);
@@ -669,11 +672,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
             Draft.Innates = abilities
                 .Where(a => a.AbilityType == AbilityType.Innate)
-                .Select(a => new InnateAbilityDraft
-                {
-                    Name = a.Name,
-                    Rank = ComputeInnateRank(a)
-                })
+                .Select(BuildInnateDraft)
+                .Where(d => d != null)
+                .Cast<InnateAbilityDraft>()
                 .ToList();
 
             Draft.Abilities = abilities
@@ -717,6 +718,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var ordered = new List<AbilityDraft>();
         var innateLookup = new Dictionary<string, AbilityDraft>(StringComparer.OrdinalIgnoreCase);
         var armourMaxBySource = BuildArmourMaxBySource(baseAbilities);
+        var lifeAbilities = new List<AbilityDraft>();
 
         foreach (var ability in baseAbilities)
         {
@@ -726,6 +728,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             var isArmour = IsArmourAbility(ability, out var armourValues);
             if (isArmour && !IsMaxArmourForSource(ability, armourValues, armourMaxBySource))
                 continue;
+
+            if (ability.AbilityType == AbilityType.Life)
+            {
+                lifeAbilities.Add(ability);
+                continue;
+            }
 
             if (ability.AbilityType == AbilityType.Innate)
             {
@@ -760,7 +768,157 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             ordered.Add(ability);
         }
 
+        if (lifeAbilities.Count > 0)
+            ordered.AddRange(ConsolidateLifeAbilities(lifeAbilities));
+
         return ordered;
+    }
+
+    private static List<AbilityDraft> ConsolidateLifeAbilities(IEnumerable<AbilityDraft> abilities)
+    {
+        var bestBySource = new Dictionary<string, LifeAmount>(StringComparer.OrdinalIgnoreCase);
+        var bestDraftBySource = new Dictionary<string, AbilityDraft>(StringComparer.OrdinalIgnoreCase);
+        int tablesTblp = 0;
+        int tablesLoc = 0;
+
+        foreach (var ability in abilities ?? Enumerable.Empty<AbilityDraft>())
+        {
+            if (ability == null)
+                continue;
+
+            if (!TryGetLifeAmount(ability, out var tblp, out var loc))
+                continue;
+
+            var source = (ability.Source ?? string.Empty).Trim();
+            if (string.Equals(source, "Tables", StringComparison.OrdinalIgnoreCase))
+            {
+                tablesTblp += tblp;
+                tablesLoc += loc;
+                continue;
+            }
+
+            if (bestBySource.TryGetValue(source, out var existing))
+            {
+                var candidate = new LifeAmount(tblp, loc);
+                if (candidate.IsHigherThan(existing))
+                {
+                    bestBySource[source] = candidate;
+                    bestDraftBySource[source] = ability;
+                }
+                continue;
+            }
+
+            bestBySource[source] = new LifeAmount(tblp, loc);
+            bestDraftBySource[source] = ability;
+        }
+
+        var list = new List<AbilityDraft>();
+        foreach (var kvp in bestBySource)
+        {
+            var source = kvp.Key;
+            var amount = kvp.Value;
+            var baseDraft = bestDraftBySource.TryGetValue(source, out var draft) ? draft : null;
+            list.Add(BuildLifeDraft(amount, source, baseDraft?.LevelGained));
+        }
+
+        if (tablesTblp > 0 || tablesLoc > 0)
+            list.Add(BuildLifeDraft(new LifeAmount(tablesTblp, tablesLoc), "Tables", null));
+
+        return list;
+    }
+
+    private static AbilityDraft BuildLifeDraft(LifeAmount amount, string source, int? levelGained)
+    {
+        var name = $"+{amount.Tblp}/{amount.Loc} stamina";
+        return new AbilityDraft
+        {
+            Name = name,
+            AbilityType = AbilityType.Life,
+            Source = source,
+            Amount = new List<int> { amount.Tblp, amount.Loc },
+            LevelGained = levelGained,
+            ShortStringValue = name
+        };
+    }
+
+    private static bool TryGetLifeAmount(AbilityDraft ability, out int tblp, out int loc)
+    {
+        tblp = 0;
+        loc = 0;
+        if (ability == null)
+            return false;
+
+        if (ability.Amount is { Count: > 0 })
+        {
+            tblp = ability.Amount.Count > 0 ? ability.Amount[0] : 0;
+            loc = ability.Amount.Count > 1 ? ability.Amount[1] : 0;
+            return tblp != 0 || loc != 0;
+        }
+
+        var parsed = TryParseLifeAmount(ability.Effect);
+        if (parsed.HasValue)
+        {
+            (tblp, loc) = parsed.Value;
+            return tblp != 0 || loc != 0;
+        }
+
+        parsed = TryParseLifeAmount(ability.Name);
+        if (parsed.HasValue)
+        {
+            (tblp, loc) = parsed.Value;
+            return tblp != 0 || loc != 0;
+        }
+
+        return false;
+    }
+
+    private static (int Tblp, int Loc)? TryParseLifeAmount(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return null;
+
+        var match = Regex.Match(text, @"(\d+)\s*/\s*(\d+)");
+        if (!match.Success)
+            return null;
+
+        if (!int.TryParse(match.Groups[1].Value, out var tblp))
+            return null;
+        if (!int.TryParse(match.Groups[2].Value, out var loc))
+            return null;
+
+        return (tblp, loc);
+    }
+
+    private void ApplyLifeBonuses(IEnumerable<AbilityDraft> abilities)
+    {
+        if (abilities == null)
+            return;
+
+        var tblp = 0;
+        var loc = 0;
+
+        foreach (var ability in abilities)
+        {
+            if (ability?.AbilityType != AbilityType.Life)
+                continue;
+
+            if (!TryGetLifeAmount(ability, out var addTblp, out var addLoc))
+                continue;
+
+            tblp += addTblp;
+            loc += addLoc;
+        }
+
+        if (tblp != 0)
+            _draft.TBLP += tblp;
+        if (loc != 0)
+            _draft.Loc += loc;
+    }
+
+    private readonly record struct LifeAmount(int Tblp, int Loc)
+    {
+        public bool IsHigherThan(LifeAmount other)
+            => Tblp > other.Tblp || (Tblp == other.Tblp && Loc > other.Loc);
     }
 
     private static void ApplyAbilityUpdates(List<AbilityDraft> abilities, List<AbilityDraft> updates)
@@ -811,6 +969,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         if (update.Count.HasValue)
             target.Count = update.Count;
+
+        if (update.Amount is { Count: > 0 })
+            target.Amount = new List<int>(update.Amount);
 
         if (!string.IsNullOrWhiteSpace(update.Frequency))
             target.Frequency = update.Frequency;
@@ -982,6 +1143,82 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
 
         return Math.Clamp(total, 0, 8);
+    }
+
+    private static InnateAbilityDraft? BuildInnateDraft(AbilityDraft ability)
+    {
+        if (ability == null)
+            return null;
+
+        var displayName = GetInnateDisplayName(ability);
+        if (string.IsNullOrWhiteSpace(displayName))
+            return null;
+
+        return new InnateAbilityDraft
+        {
+            Name = displayName,
+            Rank = ComputeInnateRank(ability)
+        };
+    }
+
+    private static string? GetInnateDisplayName(AbilityDraft ability)
+    {
+        var rawName = (ability?.Name ?? string.Empty).Trim();
+        if (rawName.Length == 0)
+            return null;
+
+        if (TryExtractSpellInnateName(rawName, out var spellName, out var isPlaceholder))
+        {
+            if (isPlaceholder)
+                return null;
+            return spellName;
+        }
+
+        return rawName;
+    }
+
+    private static bool TryExtractSpellInnateName(string rawName, out string spellName, out bool isPlaceholder)
+    {
+        spellName = string.Empty;
+        isPlaceholder = false;
+
+        var text = (rawName ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return false;
+
+        var match = Regex.Match(text, @"^(?:Lvl|Level)\s*\d+\s*Spell\b(?<rest>.*)$", RegexOptions.IgnoreCase);
+        if (!match.Success)
+            return false;
+
+        var rest = (match.Groups["rest"].Value ?? string.Empty).Trim();
+        if (rest.Length == 0)
+        {
+            isPlaceholder = true;
+            return true;
+        }
+
+        var paren = Regex.Match(rest, @"\(([^)]+)\)");
+        if (paren.Success)
+        {
+            var inner = (paren.Groups[1].Value ?? string.Empty).Trim();
+            if (inner.Length > 0)
+            {
+                spellName = inner;
+                return true;
+            }
+        }
+
+        if (rest.StartsWith(":", StringComparison.Ordinal) || rest.StartsWith("-", StringComparison.Ordinal))
+            rest = rest.Substring(1).Trim();
+
+        if (rest.Length == 0)
+        {
+            isPlaceholder = true;
+            return true;
+        }
+
+        spellName = rest;
+        return true;
     }
 
     private static bool TryParseFrequency(string? raw, out int value)

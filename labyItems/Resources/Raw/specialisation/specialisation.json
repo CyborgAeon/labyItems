@@ -25,7 +25,7 @@
       },
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -49,7 +49,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -80,7 +80,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -123,7 +123,7 @@
       },
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -150,7 +150,7 @@
       },
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -200,7 +200,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -249,7 +249,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -286,7 +286,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -391,7 +391,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -431,7 +431,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -466,7 +466,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -573,7 +573,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -610,7 +610,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -651,7 +651,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -979,7 +979,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -1032,8 +1032,8 @@
     "Light": {
       "Levels": {
         "1": [],
-        "2": ["Body of light 1/level"],
-        "3": ["Light ranged 1/2 levels"],
+        "2": [{ "Name": "Body of light", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Light Ranged", "Type": "Innate", "Count": 4 }],
         "4": [],
         "5": [],
         "6": [
@@ -1050,11 +1050,11 @@
     "Dark": {
       "Levels": {
         "1": [],
-        "2": ["Body of Darkness 1/level"],
-        "3": ["Darkness ranged 1/2 levels"],
+        "2": [{ "Name": "Body of Darkness", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Darkness Ranged", "Type": "Innate", "Count": 4 }],
         "4": [],
         "5": [],
-        "6": ["Shadowshift 1/4 levels"],
+        "6": [{ "Name": "Shadow Shift", "Type": "Innate", "Count": 2 }],
         "7": [],
         "8": []
       }
@@ -1122,11 +1122,11 @@
     "Fire": {
       "Levels": {
         "1": [],
-        "2": ["Body of Fire 1/level"],
-        "3": ["Shock 1/2 levels"],
+        "2": [{ "Name": "Body of Fire", "Type": "Innate", "Count": 8 }],
+        "3": [{ "Name": "Shock", "Type": "Innate", "Count": 4 }],
         "4": [],
         "5": [],
-        "6": ["Permanent Walk through fire"],
+        "6": [{ "Name": "Immunity to Natural Fire", "Type": "Immunity" }],
         "7": [],
         "8": []
       }
@@ -1590,13 +1590,20 @@
         }
       ],
       "Talents": {
-        "Minor": ["Toughened Feet", "Large lung capacity"],
-        "Medium": ["Insensitive Skin", "Leg Sweep 2/day"],
+        "Minor": [
+          { "Name": "Toughened Feet", "Type": "Static" },
+          { "Name": "Large lung capacity", "Type": "Static" }
+        ],
+        "Medium": [
+          { "Name": "Insensitive Skin", "Type": "Static" },
+
+          { "Name": "Leg Sweep", "Type": "Innate", "Count": 2 }
+        ],
         "Major": [
-          "Stability",
-          "Immunity to Poison",
-          "Immunity to Disease",
-          "Immunity to Acid"
+          { "Name": "Stability", "Type": "Immunity" },
+          { "Name": "Immunity to Poison", "Type": "Immunity" },
+          { "Name": "Immunity to Disease", "Type": "Immunity" },
+          { "Name": "Immunity to Acid", "Type": "Immunity" }
         ],
         "LifeScaleOverride": {
           "Warrior": "Ogre"
@@ -1619,9 +1626,18 @@
         "Warrior": "Human"
       },
       "Talents": {
-        "Minor": ["Discern Smell", "Large lung capacity"],
-        "Medium": ["Shed Skin 2/day", "Acid Potions 2/day"],
-        "Major": ["Regen as troll in sunlight", "Potent Blood 2/day"]
+        "Minor": [
+          { "Name": "Discern Smell", "Type": "AtWill" },
+          { "Name": "Large lung capacity", "Type": "Static" }
+        ],
+        "Medium": [
+          { "Name": "Shed Skin", "Type": "Innate", "Count": 2 },
+          { "Name": "Acid Potions", "Type": "Innate", "Count": 2 }
+        ],
+        "Major": [
+          { "Name": "Sun's healing", "Type": "Static" },
+          { "Name": "Potent Blood", "Type": "Innate", "Count": 2 }
+        ]
       }
     },
     "Jaerseen": {
@@ -1635,9 +1651,18 @@
       },
       "Abilities": ["+1 Casting level chosen colour"],
       "Talents": {
-        "Minor": ["Bronze Jewellery", "Large lung capacity"],
-        "Medium": ["Self Heal 1/day", "2 MAC vs Elemental"],
-        "Major": ["Regen as troll in sunlight", "Elementalist"]
+        "Minor": [
+          { "Name": "Bronze Jewellery", "Type": "Static" },
+          { "Name": "Large lung capacity", "Type": "Static" }
+        ],
+        "Medium": [
+          { "Name": "Self Heal", "Type": "Innate", "Count": 1 },
+          { "Name": "2 MAC vs Elemental", "Type": "Static" }
+        ],
+        "Major": [
+          { "Name": "Sun's healing", "Type": "Static" },
+          { "Name": "Elementalist", "Type": "Static" }
+        ]
       }
     }
   },
@@ -1645,7 +1670,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -1660,7 +1685,12 @@
         "Name": "UAC",
         "Type": "WeaponSkill"
       },
-      "Proficiency",
+      {
+        "Name": "Proficiency",
+        "Type": "Static",
+        "Effect": "+1 Caster Level",
+        "Source": "Tables"
+      },
       {
         "Name": "Metal Resistance",
         "Type": "Static"
@@ -1688,7 +1718,7 @@
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
-        "Type": "Static",
+        "Type": "Life",
         "Source": "Tables"
       },
       {
@@ -2186,6 +2216,32 @@
         ]
       }
     }
+  },
+  "Lvl 2 Spell": {
+    "Options": [
+      {
+        "Name": "Lvl 2 Spell",
+        "Type": "Innate",
+        "Count": 4,
+        "Customisation": {
+          "OptionEnum": "SpellUpTo:2",
+          "CustomValuesPermitted": false
+        }
+      }
+    ]
+  },
+  "Lvl 3 Spell": {
+    "Options": [
+      {
+        "Name": "Lvl 3 Spell",
+        "Type": "Innate",
+        "Count": 4,
+        "Customisation": {
+          "OptionEnum": "SpellUpTo:3",
+          "CustomValuesPermitted": false
+        }
+      }
+    ]
   },
   "Faerie Colour": {
     "Options": [

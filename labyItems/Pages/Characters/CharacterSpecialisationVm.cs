@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Models.Characters;
@@ -54,8 +55,12 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     private const string BaronialAncestryKey = "Baronial Ancestry";
     private readonly List<SpecialisationGroupVm> _wizardColourGroups = new();
     private readonly List<SpecialisationGroupVm> _vivomancerColourGroups = new();
+    private readonly List<SpecialisationGroupVm> _spellCustomisationGroups = new();
     private readonly Dictionary<string, List<AbilityDefinition>> _groupOptionDefinitions = new(StringComparer.OrdinalIgnoreCase);
     private bool _isRefreshingPrereqs;
+    private bool _isRefreshingSpellOptions;
+    private bool _spellCacheLoaded;
+    private List<SpellService.SpellRaw> _spellCache = new();
 
     private static readonly Dictionary<string, MagicColours> _alfarWizardColourMap = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -220,6 +225,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         MappedSpecialisations.Clear();
         _wizardColourGroups.Clear();
         _vivomancerColourGroups.Clear();
+        _spellCustomisationGroups.Clear();
         _groupOptionDefinitions.Clear();
         RaceSubtypeOptions.Clear();
         RaceSubtypeAbilitiesPreview.Clear();
@@ -403,6 +409,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             if (def.Abilities != null)
                 _groupOptionDefinitions[title] = def.Abilities;
             var optionCustomisations = BuildOptionCustomisations(def.Abilities);
+            var hasSpellCustomisation = HasSpellCustomisation(def.Abilities);
 
             var groupVm = new SpecialisationGroupVm(
                 title: title,
@@ -417,19 +424,26 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
                 magicColourOptions: useMagicColourEnum ? GetWizardColourOptions() : null,
                 vivomancerColourOptions: useVivomancerColourEnum ? GetVivomancerColourOptions(def) : null,
                 selectionValidator: GetSelectionValidator(title),
-                optionCustomisations: optionCustomisations);
+                optionCustomisations: optionCustomisations,
+                customisationOptionsProvider: ResolveCustomisationOptions,
+                hideAbilityPickerWhenSingleOption: hasSpellCustomisation);
 
             if (useMagicColourEnum)
                 _wizardColourGroups.Add(groupVm);
             if (useVivomancerColourEnum)
                 _vivomancerColourGroups.Add(groupVm);
+            if (hasSpellCustomisation)
+                _spellCustomisationGroups.Add(groupVm);
 
             groupVm.IsExpanded = true;
 
             Groups.Add(groupVm);
+
+            if (hasSpellCustomisation)
+                ApplySingleOptionDefault(groupVm);
         }
 
-
+        UpdateSpellCustomisationVisibility();
         UpdateDynamicSpecialisations();
         ApplyWardPactOverrides();
         SyncMappedSelectionsToDraft();
@@ -438,6 +452,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         HeaderText = HasChoices ? "Make your selections below." : "No specialisation choices required.";
 
         await RefreshPrereqOptionsAsync();
+        await RefreshSpellCustomisationOptionsAsync();
 
         RecomputeCompletion();
     }
@@ -446,6 +461,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
     {
         SyncRaceSubtypeDraftAndPreview();
         SyncBaronialSelectionToDraft();
+        UpdateSpellCustomisationVisibility();
+        _ = RefreshSpellCustomisationOptionsAsync();
         RecomputeCompletion();
         _builder.NotifyGatingChanged();
         _ = _builder.RefreshDraftAbilitiesAsync();
@@ -917,6 +934,60 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
                || string.Equals(title, "Specialist Scout skill", StringComparison.OrdinalIgnoreCase);
     }
 
+    private static bool HasSpellCustomisation(List<AbilityDefinition>? abilities)
+    {
+        foreach (var ability in abilities ?? new List<AbilityDefinition>())
+        {
+            var option = (ability?.Customisation?.OptionEnum ?? string.Empty).Trim();
+            if (TryParseSpellCustomisation(option, out _))
+                return true;
+        }
+
+        return false;
+    }
+
+    private Dictionary<string, string>? ResolveCustomisationOptions(AbilityCustomisation? customisation)
+    {
+        if (customisation == null)
+            return null;
+
+        if (!TryParseSpellCustomisation(customisation.OptionEnum, out var maxLevel))
+            return null;
+
+        return BuildSpellCustomisationOptions(maxLevel);
+    }
+
+    private static bool TryParseSpellCustomisation(string? optionEnum, out int maxLevel)
+    {
+        maxLevel = 0;
+        if (string.IsNullOrWhiteSpace(optionEnum))
+            return false;
+
+        var trimmed = optionEnum.Trim();
+        var parts = trimmed.Split(':', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length != 2)
+            return false;
+
+        if (!parts[0].Equals("SpellUpTo", StringComparison.OrdinalIgnoreCase)
+            && !parts[0].Equals("Spell", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        return int.TryParse(parts[1], out maxLevel) && maxLevel > 0;
+    }
+
+    private void ApplySingleOptionDefault(SpecialisationGroupVm group)
+    {
+        if (group.OptionNames.Count != 1)
+            return;
+
+        var option = group.OptionNames[0];
+        foreach (var slot in group.Slots)
+        {
+            if (string.IsNullOrWhiteSpace(slot.SelectedOption))
+                slot.SelectedOption = option;
+        }
+    }
+
     private static Dictionary<string, AbilityCustomisation> BuildOptionCustomisations(List<AbilityDefinition>? abilities)
     {
         var map = new Dictionary<string, AbilityCustomisation>(StringComparer.OrdinalIgnoreCase);
@@ -945,6 +1016,142 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
 
     private static bool IsVivomancerColour(string groupTitle)
         => string.Equals(groupTitle.Trim(), "Vivomancer Colour", StringComparison.OrdinalIgnoreCase);
+
+    private async Task RefreshSpellCustomisationOptionsAsync()
+    {
+        if (_spellCustomisationGroups.Count == 0 || _isRefreshingSpellOptions)
+            return;
+
+        _isRefreshingSpellOptions = true;
+        try
+        {
+            await EnsureSpellCacheAsync();
+            var groups = _spellCustomisationGroups.ToList();
+            foreach (var group in groups)
+                group.RefreshCustomisationOptions();
+        }
+        finally
+        {
+            _isRefreshingSpellOptions = false;
+        }
+    }
+
+    private async Task EnsureSpellCacheAsync()
+    {
+        if (_spellCacheLoaded)
+            return;
+
+        try
+        {
+            _spellCache = await SpellService.GetAllAsync();
+        }
+        catch
+        {
+            _spellCache = new List<SpellService.SpellRaw>();
+        }
+        finally
+        {
+            _spellCacheLoaded = true;
+        }
+    }
+
+    private Dictionary<string, string> BuildSpellCustomisationOptions(int maxLevel)
+    {
+        var options = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (_spellCache.Count == 0)
+            return options;
+
+        var colourFilter = GetSelectedFaerieSpellColours(out var hasFaerieGroup);
+        if (hasFaerieGroup && colourFilter.Count == 0)
+            return options;
+
+        var filterByColour = colourFilter.Count > 0;
+
+        var spells = _spellCache
+            .Where(s => s != null)
+            .Where(s => s.level >= 0 && s.level <= maxLevel && (s.isAdvanced ?? false) == false)
+            .Where(s => !filterByColour || SpellMatchesColours(s, colourFilter))
+            .OrderBy(s => s.level)
+            .ThenBy(s => s.name, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var spell in spells)
+        {
+            var label = FormatSpellLabel(spell);
+            if (!options.ContainsKey(label))
+                options[label] = label;
+        }
+
+        return options;
+    }
+
+    private static string FormatSpellLabel(SpellService.SpellRaw spell)
+    {
+        if (spell == null)
+            return string.Empty;
+
+        var name = (spell.name ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return string.Empty;
+
+        return $"{name} (lvl {spell.level})";
+    }
+
+    private HashSet<string> GetSelectedFaerieSpellColours(out bool hasFaerieGroup)
+    {
+        hasFaerieGroup = false;
+        var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var group = Groups.FirstOrDefault(g => string.Equals(g.Title, "Faerie Colour", StringComparison.OrdinalIgnoreCase));
+        if (group == null)
+            return set;
+
+        hasFaerieGroup = true;
+        foreach (var slot in group.Slots)
+        {
+            var normalized = NormalizeSpellColour(slot.SelectedOption);
+            if (!string.IsNullOrWhiteSpace(normalized))
+                set.Add(normalized);
+        }
+
+        return set;
+    }
+
+    private static bool SpellMatchesColours(SpellService.SpellRaw spell, HashSet<string> colours)
+    {
+        if (spell == null || colours == null || colours.Count == 0)
+            return true;
+
+        foreach (var colour in SplitSpellColours(spell.colour))
+        {
+            if (colours.Contains(colour))
+                return true;
+        }
+
+        return false;
+    }
+
+    private static IEnumerable<string> SplitSpellColours(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            yield break;
+
+        var normalized = raw.Replace("&", ",").Replace("/", ",").Replace("|", ",");
+        var parts = normalized.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        foreach (var part in parts)
+        {
+            var colour = NormalizeSpellColour(part);
+            if (!string.IsNullOrWhiteSpace(colour))
+                yield return colour;
+        }
+    }
+
+    private static string NormalizeSpellColour(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        var chars = value.Where(char.IsLetterOrDigit).ToArray();
+        return new string(chars).ToLowerInvariant();
+    }
 
     private List<MagicColours> GetWizardColourOptions()
     {
@@ -1050,6 +1257,18 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         var options = GetWizardColourOptions();
         foreach (var g in _wizardColourGroups)
             g.UpdateMagicColourOptions(options);
+    }
+
+    private void UpdateSpellCustomisationVisibility()
+    {
+        if (_spellCustomisationGroups.Count == 0)
+            return;
+
+        var colours = GetSelectedFaerieSpellColours(out var hasFaerieGroup);
+        var show = !hasFaerieGroup || colours.Count > 0;
+
+        foreach (var group in _spellCustomisationGroups)
+            group.IsVisible = show;
     }
 
     private void UpdateDynamicSpecialisations()
@@ -1453,7 +1672,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
         if (def == null)
             return new AbilityDefinition();
 
-        var updatedName = AppendCustomisation(def.Name ?? string.Empty, customValue);
+        var cleanedCustom = NormalizeSpellCustomisationValue(def, customValue);
+        var updatedName = AppendCustomisation(def.Name ?? string.Empty, cleanedCustom);
         if (string.Equals(updatedName, def.Name ?? string.Empty, StringComparison.Ordinal))
             return def;
 
@@ -1470,6 +1690,23 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged
             GuildOverrides = def.GuildOverrides?.ToList(),
             Customisation = def.Customisation
         };
+    }
+
+    private static string? NormalizeSpellCustomisationValue(AbilityDefinition? def, string? customValue)
+    {
+        if (def?.Customisation == null)
+            return customValue;
+
+        if (!TryParseSpellCustomisation(def.Customisation.OptionEnum, out _))
+            return customValue;
+
+        var text = (customValue ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return text;
+
+        text = Regex.Replace(text, @"\s*\(lvl\s*\d+\)\s*$", string.Empty, RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\s*lvl\s*\d+\s*$", string.Empty, RegexOptions.IgnoreCase);
+        return text.Trim();
     }
 
     private static string AppendCustomisation(string name, string? customValue)

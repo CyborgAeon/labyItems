@@ -17,13 +17,14 @@ public sealed class BattleboardExportService : IBattleboardExportService
     {
         var pools = (draft.PowerPools ?? new Dictionary<string, int>())
             .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key))
+            .Where(kvp => kvp.Value > 0)
             .ToList();
         var powerCount = pools.Count;
         var templateName = powerCount == 0
             ? "people/NonPowerUser.xlsx"
-            : powerCount >= 2
-                ? "people/Vivomancer.xlsx"
-                : "people/PowerUser.xlsx";
+            : powerCount == 1
+                ? "people/PowerUser.xlsx"
+                : "people/Vivomancer.xlsx";
 
         await using var templateStream = await FileSystem.OpenAppPackageFileAsync(templateName);
         using var ms = new MemoryStream();
@@ -78,7 +79,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
         ws.Cell("T35").Value = draft.PlayerName;
         ws.Cell("T36").Value = draft.Name;
         ws.Cell("T37").Value = draft.Class ?? "";
-        ws.Cell("AA35").Value = draft.Race ?? "";
+        ws.Cell("AA35").Value = BuildRaceDisplayName(draft, draft.Abilities);
         ws.Cell("AA36").Value = draft.Alignment.ToString();
         ws.Cell("AA37").Value = draft.Points;
 
@@ -109,23 +110,21 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
         WriteResistancesBlock(ws, resistanceAbilities);
 
-        if (draft.ResistancesByType.TryGetValue("Earthpower", out var ep)) ws.Cell("AD20").Value = ep;
-        if (draft.ResistancesByType.TryGetValue("Magic", out var маг)) ws.Cell("AD21").Value = маг;
-        if (draft.ResistancesByType.TryGetValue("Neuronic", out var neu)) ws.Cell("AD22").Value = neu;
-
         if (draft.ResistancesByType.TryGetValue("Spirit", out var sp) && !string.IsNullOrWhiteSpace(sp))
         {
             ws.Cell("AD33").Value = sp;
         }
 
-        // Resistance levels block (physical/magic/neuro/spirit)
+        // Resistance levels block (physical/magic/neuronic/spirit)
         if (draft.ResistanceLevels != null)
         {
             if (draft.ResistanceLevels.TryGetValue("Physical", out var phys))
                 ws.Cell("AD20").Value = phys;
             if (draft.ResistanceLevels.TryGetValue("Magic", out var magic))
                 ws.Cell("AD21").Value = magic;
-            if (draft.ResistanceLevels.TryGetValue("Neuro", out var neuro))
+            if (draft.ResistanceLevels.TryGetValue("Neuronic", out var neuronic))
+                ws.Cell("AD22").Value = neuronic;
+            else if (draft.ResistanceLevels.TryGetValue("Neuro", out var neuro))
                 ws.Cell("AD22").Value = neuro;
             if (draft.ResistanceLevels.TryGetValue("Spirit", out var spirit))
                 ws.Cell("AD23").Value = spirit;
@@ -141,12 +140,16 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var staticAbilities = draft.Abilities
             .Where(a => a.AbilityType == AbilityType.Static)
             .Where(a => !IsPureArmourToken(a))
+            .Where(a => !IsCombatWary(a))
+            .Where(a => !IsFaerieColourSelection(a))
+            .Where(a => !IsElfSubtypeSelection(a, draft))
             .Select(FormatAbilityText)
             .Where(v => !string.IsNullOrWhiteSpace(v))
             .ToList();
 
-        foreach (var entry in BuildInnateArmourEntries(armourBonus))
-            staticAbilities.Add(entry);
+        var pacEntry = BuildInnatePacEntry(armourBonus.Pac);
+        if (!string.IsNullOrWhiteSpace(pacEntry))
+            staticAbilities.Add(pacEntry);
         WriteStaticAbilities(ws, staticAbilities, startRow: 4, endRow: 54);
 
         var innateConfig = GetInnatePlacement(templateName, isVivomancer);
@@ -299,15 +302,8 @@ public sealed class BattleboardExportService : IBattleboardExportService
         return ArmourTokenRegex.IsMatch(text.Trim()) && ArmourTokenRegex.Matches(text.Trim()).Count == 1 && ArmourTokenRegex.Replace(text.Trim(), "").Length == 0;
     }
 
-    private static IEnumerable<string> BuildInnateArmourEntries((int Pac, int Dac, int Mac, int Sac) totals)
-    {
-        var list = new List<string>();
-        if (totals.Pac > 0) list.Add($"Innate PAC {totals.Pac}");
-        if (totals.Dac > 0) list.Add($"Innate DAC {totals.Dac}");
-        if (totals.Mac > 0) list.Add($"Innate MAC {totals.Mac}");
-        if (totals.Sac > 0) list.Add($"Innate SAC {totals.Sac}");
-        return list;
-    }
+    private static string BuildInnatePacEntry(int pac)
+        => pac > 0 ? $"Innate PAC {pac}" : string.Empty;
 
     private static bool IsCombatWary(AbilityDraft ability)
     {
@@ -317,6 +313,80 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var normalized = name.Replace("-", " ").Replace("  ", " ").Trim();
         return string.Equals(normalized, "Combat Wary", StringComparison.OrdinalIgnoreCase)
                || string.Equals(normalized, "Combat-Wary", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsFaerieColourSelection(AbilityDraft ability)
+    {
+        var source = (ability?.Source ?? string.Empty).Trim();
+        return string.Equals(source, "Specialisation:Faerie Colour", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsElfSubtypeSelection(AbilityDraft ability, CharacterDraft draft)
+    {
+        if (ability == null || draft == null)
+            return false;
+
+        if (!IsElfRace(draft.Race ?? string.Empty))
+            return false;
+
+        var subtype = (draft.RaceSubtypeValue ?? draft.RaceSubtype ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(subtype))
+            return false;
+
+        var name = (ability.Name ?? string.Empty).Trim();
+        return string.Equals(name, subtype, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static List<string> GetFaerieColourSelections(IEnumerable<AbilityDraft> abilities)
+    {
+        return (abilities ?? Enumerable.Empty<AbilityDraft>())
+            .Where(IsFaerieColourSelection)
+            .Select(a => (a?.Name ?? string.Empty).Trim())
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(n => n, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static string BuildRaceDisplayName(CharacterDraft draft, IEnumerable<AbilityDraft> abilities)
+    {
+        var race = (draft?.Race ?? string.Empty).Trim();
+        var suffixes = new List<string>();
+
+        if (IsElfRace(race))
+        {
+            var subtype = (draft?.RaceSubtypeValue ?? draft?.RaceSubtype ?? string.Empty).Trim();
+            if (!string.IsNullOrWhiteSpace(subtype))
+                suffixes.Add(subtype);
+        }
+
+        if (string.Equals(race, "Faerie", StringComparison.OrdinalIgnoreCase))
+        {
+            var faerieColours = GetFaerieColourSelections(abilities);
+            foreach (var colour in faerieColours)
+            {
+                if (!suffixes.Any(s => string.Equals(s, colour, StringComparison.OrdinalIgnoreCase)))
+                    suffixes.Add(colour);
+            }
+        }
+
+        if (suffixes.Count == 0)
+            return race;
+
+        if (string.IsNullOrWhiteSpace(race))
+            return string.Join(", ", suffixes);
+
+        return $"{race} ({string.Join(", ", suffixes)})";
+    }
+
+    private static bool IsElfRace(string race)
+    {
+        if (string.IsNullOrWhiteSpace(race))
+            return false;
+
+        return string.Equals(race, "Elf", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(race, "Half Elf", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(race, "Half-Elf", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool TryComputeFrequencyRank(AbilityDraft ability, out int rank)

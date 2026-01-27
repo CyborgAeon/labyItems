@@ -28,6 +28,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
 
     private readonly Action _onChanged;
     private readonly Func<string?, AbilityCustomisation?>? _customisationResolver;
+    private readonly Func<AbilityCustomisation?, Dictionary<string, string>?>? _customisationOptionsProvider;
+    private readonly bool _hideAbilityPickerWhenSingleOption;
 
     public int Level { get; }
     public string LevelLabel => $"Lvl {Level}";
@@ -36,6 +38,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public bool UseMagicColourEnum { get; }
     public bool UseVivomancerColourEnum { get; }
     public bool UseDictionarySearch { get; }
+    public bool HideAbilityPicker => _hideAbilityPickerWhenSingleOption && FilteredOptionNames.Count <= 1;
 
     private AbilityDefinition? _forcedAbilityDefinition;
     private string _lockedDisplayText = string.Empty;
@@ -113,6 +116,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public bool CustomisationAllowsCustom => _customisationAllowsCustom;
     public string CustomisationPlaceholder => _customisationPlaceholder;
     public Dictionary<string, string> CustomisationOptions => _customisationOptions;
+    public bool ShowCustomisationPicker => HasCustomisation && (CustomisationAllowsCustom || _customisationOptions.Count > 0);
 
     public string? CustomisationValue
     {
@@ -199,7 +203,9 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         bool useVivomancerColourEnum,
         bool useDictionarySearch,
         Action onChanged,
-        Func<string?, AbilityCustomisation?>? customisationResolver = null)
+        Func<string?, AbilityCustomisation?>? customisationResolver = null,
+        Func<AbilityCustomisation?, Dictionary<string, string>?>? customisationOptionsProvider = null,
+        bool hideAbilityPickerWhenSingleOption = false)
     {
         Level = level;
         UseWardPactEnum = useWardPactEnum;
@@ -208,6 +214,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         UseDictionarySearch = useDictionarySearch;
         _onChanged = onChanged;
         _customisationResolver = customisationResolver;
+        _customisationOptionsProvider = customisationOptionsProvider;
+        _hideAbilityPickerWhenSingleOption = hideAbilityPickerWhenSingleOption;
     }
 
     public void SetOptionsSource(Func<IReadOnlyList<string>> getFilteredOptions)
@@ -215,6 +223,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         _getFilteredOptions = getFilteredOptions;
         Raise(nameof(FilteredOptionNames));
         Raise(nameof(SearchOptions));
+        Raise(nameof(HideAbilityPicker));
     }
 
     public void ConfigureMagicColours(IEnumerable<MagicColours> allowed)
@@ -259,6 +268,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     {
         Raise(nameof(FilteredOptionNames));
         Raise(nameof(SearchOptions));
+        Raise(nameof(HideAbilityPicker));
     }
 
     public bool ApplyForcedAbility(AbilityDefinition def, string? displayText = null, bool suppressNotify = false)
@@ -308,6 +318,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(CustomisationAllowsCustom));
         Raise(nameof(CustomisationPlaceholder));
         Raise(nameof(CustomisationValue));
+        Raise(nameof(ShowCustomisationPicker));
         Raise(nameof(IsCustomisationComplete));
 
         if (changed && !suppressNotify)
@@ -391,23 +402,11 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         }
         else
         {
-            _customisationOptions = BuildCustomisationOptions(_customisationEnumName);
-            _customisationAllowsCustom = _customisation.CustomValuesPermitted
-                                         || string.IsNullOrWhiteSpace(_customisationEnumName)
-                                         || _customisationOptions.Count == 0;
-            _customisationPlaceholder = string.IsNullOrWhiteSpace(_customisationEnumName) || _customisationOptions.Count == 0
-                ? "Enter value"
-                : $"Select {EnumDisplayFormatter.FormatName(_customisationEnumName)}";
+            var overrideOptions = _customisationOptionsProvider?.Invoke(_customisation);
+            if (overrideOptions == null)
+                overrideOptions = BuildCustomisationOptions(_customisationEnumName);
 
-            if (!_customisationAllowsCustom
-                && !string.IsNullOrWhiteSpace(_customisationValue)
-                && !_customisationOptions.ContainsKey(_customisationValue))
-            {
-                _customisationValue = null;
-            }
-
-            if (string.IsNullOrWhiteSpace(_customisationValue))
-                _customisationValue = null;
+            UpdateCustomisationOptions(overrideOptions);
         }
 
         Raise(nameof(HasCustomisation));
@@ -418,6 +417,93 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(IsCustomisationComplete));
         Raise(nameof(HasSelection));
         Raise(nameof(SelectionKey));
+        Raise(nameof(ShowCustomisationPicker));
+    }
+
+    public void RefreshCustomisationOptions()
+    {
+        if (_customisation == null || _customisationOptionsProvider == null)
+            return;
+
+        var overrideOptions = _customisationOptionsProvider.Invoke(_customisation);
+        if (overrideOptions == null)
+            return;
+
+        UpdateCustomisationOptions(overrideOptions);
+    }
+
+    private void UpdateCustomisationOptions(Dictionary<string, string> options)
+    {
+        var normalized = options ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        _customisationOptions = new Dictionary<string, string>(normalized, StringComparer.OrdinalIgnoreCase);
+
+        var isSpellCustomisation = IsSpellCustomisation(_customisationEnumName);
+        _customisationAllowsCustom = _customisation?.CustomValuesPermitted == true
+                                     || (!isSpellCustomisation
+                                         && (string.IsNullOrWhiteSpace(_customisationEnumName) || _customisationOptions.Count == 0));
+        _customisationPlaceholder = BuildCustomisationPlaceholder(_customisationEnumName, _customisationOptions, isSpellCustomisation);
+
+        var previousValue = _customisationValue;
+        if (!_customisationAllowsCustom
+            && !string.IsNullOrWhiteSpace(_customisationValue)
+            && !_customisationOptions.ContainsKey(_customisationValue))
+        {
+            _customisationValue = null;
+        }
+
+        if (string.IsNullOrWhiteSpace(_customisationValue))
+            _customisationValue = null;
+
+        Raise(nameof(CustomisationOptions));
+        Raise(nameof(CustomisationAllowsCustom));
+        Raise(nameof(CustomisationPlaceholder));
+        Raise(nameof(CustomisationValue));
+        Raise(nameof(IsCustomisationComplete));
+        Raise(nameof(HasSelection));
+        Raise(nameof(SelectionKey));
+        Raise(nameof(ShowCustomisationPicker));
+
+        if (!string.Equals(previousValue, _customisationValue, StringComparison.Ordinal))
+            _onChanged();
+    }
+
+    private static bool IsSpellCustomisation(string enumName)
+    {
+        if (string.IsNullOrWhiteSpace(enumName))
+            return false;
+
+        var trimmed = enumName.Trim();
+        return trimmed.StartsWith("SpellUpTo:", StringComparison.OrdinalIgnoreCase)
+               || trimmed.StartsWith("Spell:", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool TryParseSpellMaxLevel(string enumName, out int maxLevel)
+    {
+        maxLevel = 0;
+        if (string.IsNullOrWhiteSpace(enumName))
+            return false;
+
+        var trimmed = enumName.Trim();
+        var parts = trimmed.Split(':', 2, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length != 2)
+            return false;
+
+        return int.TryParse(parts[1], out maxLevel) && maxLevel > 0;
+    }
+
+    private static string BuildCustomisationPlaceholder(string enumName, Dictionary<string, string> options, bool isSpellCustomisation)
+    {
+        if (isSpellCustomisation)
+        {
+            if (TryParseSpellMaxLevel(enumName, out var max))
+                return $"Select spell (max lvl {max})";
+
+            return "Select spell";
+        }
+
+        return string.IsNullOrWhiteSpace(enumName) || options.Count == 0
+            ? "Enter value"
+            : $"Select {EnumDisplayFormatter.FormatName(enumName)}";
     }
 
     private static Dictionary<string, string> BuildCustomisationOptions(string enumName)

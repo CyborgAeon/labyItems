@@ -32,7 +32,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     private readonly bool _useVivomancerColourEnum;
     private readonly Func<IReadOnlyList<string>, string?>? _selectionValidator;
     private readonly Dictionary<string, AbilityCustomisation> _optionCustomisations;
+    private readonly Func<AbilityCustomisation?, Dictionary<string, string>?>? _customisationOptionsProvider;
     private bool _isOptional;
+    private bool _isVisible = true;
 
     public string Title { get; }
     public int RequiredCount => Slots.Count;
@@ -54,6 +56,12 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
             Raise(nameof(StatusText));
             Raise(nameof(HelperText));
         }
+    }
+
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set => Set(ref _isVisible, value);
     }
 
     private bool _isExpanded;
@@ -164,7 +172,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         IEnumerable<VivomancerColours>? vivomancerColourOptions = null,
         Func<IReadOnlyList<string>, string?>? selectionValidator = null,
         bool isOptional = false,
-        Dictionary<string, AbilityCustomisation>? optionCustomisations = null)
+        Dictionary<string, AbilityCustomisation>? optionCustomisations = null,
+        Func<AbilityCustomisation?, Dictionary<string, string>?>? customisationOptionsProvider = null,
+        bool hideAbilityPickerWhenSingleOption = false)
     {
         Title = title;
         UseWardPactEnum = useWardPactEnum;
@@ -173,6 +183,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         _selectionValidator = selectionValidator;
         _onAnySelectionChanged = onAnySelectionChanged;
         _isOptional = isOptional;
+        _customisationOptionsProvider = customisationOptionsProvider;
         _optionCustomisations = optionCustomisations != null
             ? new Dictionary<string, AbilityCustomisation>(optionCustomisations, StringComparer.OrdinalIgnoreCase)
             : new Dictionary<string, AbilityCustomisation>(StringComparer.OrdinalIgnoreCase);
@@ -217,7 +228,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
                 _useVivomancerColourEnum,
                 useDictionarySearch,
                 () => OnSlotChanged(),
-                ResolveCustomisation);
+                ResolveCustomisation,
+                _customisationOptionsProvider,
+                hideAbilityPickerWhenSingleOption);
 
             if (_useMagicColourEnum)
             {
@@ -266,6 +279,12 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
 
         UpdateValidation();
         RaiseComputed();
+    }
+
+    public void RefreshCustomisationOptions()
+    {
+        foreach (var slot in Slots)
+            slot.RefreshCustomisationOptions();
     }
 
     private AbilityCustomisation? ResolveCustomisation(string? option)

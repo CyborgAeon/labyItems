@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using labyItems.Models.Characters;
 
 namespace labyItems.Services;
@@ -68,6 +69,7 @@ public static class AbilityDraftBuilder
             Effect = def.Effect,
             Source = def.Source,
             Count = def.Count,
+            Amount = def.Amount?.ToList(),
             Frequency = def.Frequency,
             OverwriteKey = def.OverwriteKey,
             ShortStringValue = def.Effect ?? def.Name ?? string.Empty

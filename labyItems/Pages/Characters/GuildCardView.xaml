@@ -100,7 +100,7 @@
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding BasicBenefits}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Text="• {Binding .}"
+                                    <Label Text="{Binding ., StringFormat='• {0}'}"
                                            FontSize="13"
                                            Opacity="0.9"/>
                                 </DataTemplate>
@@ -116,7 +116,7 @@
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding IntermediateBenefits}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Text="• {Binding .}"
+                                    <Label Text="{Binding ., StringFormat='• {0}'}"
                                            FontSize="13"
                                            Opacity="0.9"/>
                                 </DataTemplate>
@@ -132,7 +132,7 @@
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancedBenefits}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Text="• {Binding .}"
+                                    <Label Text="{Binding ., StringFormat='• {0}'}"
                                            FontSize="13"
                                            Opacity="0.9"/>
                                 </DataTemplate>
