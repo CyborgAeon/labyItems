@@ -1317,17 +1317,58 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             if (!TryGetRecord(all, guild, out var rec) || rec?.Benefits?.Basic == null)
                 continue;
 
-            foreach (var benefit in rec.Benefits.Basic)
-            {
-                if (benefit == null || string.IsNullOrWhiteSpace(benefit.Name))
-                    continue;
-                var parsed = AbilityDraftBuilder.ParseAbility(benefit, null);
-                ApplyAbilitySource(parsed, $"Guild:{guild}");
-                list.AddRange(parsed);
-            }
+            AppendGuildBenefits(list, rec.Benefits.Basic, guild, "Basic");
+            AppendGuildBenefits(list, rec.Benefits.Intermediate, guild, "Intermediate");
+            AppendGuildBenefits(list, rec.Benefits.Advanced, guild, "Advanced");
         }
 
         return list;
+    }
+
+    private void AppendGuildBenefits(
+        List<AbilityDraft> list,
+        IEnumerable<GuildBenefitEntry>? benefits,
+        string guildName,
+        string tier)
+    {
+        var optionIndex = 0;
+        foreach (var entry in benefits ?? Enumerable.Empty<GuildBenefitEntry>())
+        {
+            if (entry?.Ability != null)
+            {
+                var benefit = entry.Ability;
+                if (!string.IsNullOrWhiteSpace(benefit.Name))
+                {
+                    var parsed = AbilityDraftBuilder.ParseAbility(benefit, null);
+                    ApplyAbilitySource(parsed, $"Guild:{guildName}");
+                    list.AddRange(parsed);
+                }
+                continue;
+            }
+
+            if (entry?.Options == null || entry.Options.Count == 0)
+                continue;
+
+            optionIndex++;
+            var key = GuildBenefitKeys.BuildSelectionKey(guildName, tier, optionIndex);
+            if (!Draft.GuildBenefitSelections.TryGetValue(key, out var selectionIndex))
+                continue;
+
+            var idx = selectionIndex - 1;
+            if (idx < 0 || idx >= entry.Options.Count)
+                continue;
+
+            var option = entry.Options[idx];
+            foreach (var ability in option.Abilities ?? new List<AbilityDefinition>())
+            {
+                if (ability == null || string.IsNullOrWhiteSpace(ability.Name))
+                    continue;
+
+                var parsed = AbilityDraftBuilder.ParseAbility(ability, null);
+                ApplyAbilitySource(parsed, $"Guild:{guildName}");
+                list.AddRange(parsed);
+            }
+        }
     }
 
     private static AlignmentRule? BuildPaladinFallbackRule(string className)

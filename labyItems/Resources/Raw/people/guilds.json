@@ -9,8 +9,49 @@
       }
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
+      "Basic": [
+        {
+          "Name": "The Light Within",
+          "Type": "Immunity",
+          "Description": "Gains immunity to alignment change. If already owned can spend 1 minute in prayer with another goodly individual and grant them immunity to alignment change."
+        },
+        {
+          "Name": "Gaze upon the light 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Mantic light range centred on the user."
+        },
+        {
+          "Name": "I drive the Evil back 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as per the Gold Spell Warding, but only functions on Evil."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Call to the light",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "When used choose one of: \ni: Empower a protection from Evil spirits when cast to act as a Stronghold of Goodness. \nii: Empower a bless when cast to act as a shield blessing. \niii: Empower a weapon so it inflicts +0 magic (light based) damage for 5 minutes."
+        },
+        {
+          "Name": "Immunity to Unholy Words",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Gains Immunity to Unholy Words for 5 minutes, can be used retroactively."
+        },
+        {
+          "Name": "Gaze upon the light",
+          "Type": "Update",
+          "Description": "Choose one on use: \ni: Mantic light range centred on the user. \nii: Mantic flash and Blinding flash vs evil."
+        },
+        {
+          "Name": "+1 level of resistance",
+          "Type": "Static",
+          "Description": "to any attack that targets the member because they are goodly (EG Prot vs Good, Voice of Retribution vs good)."
+        }
+      ],
       "Advanced": []
     },
     "Availability": {
@@ -45,9 +86,103 @@
       }
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Shield Self",
+          "Type": "Innate",
+          "Count": 4
+        },
+        [
+          {
+            "Name": "True Believer (Gold)",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "This can be used to cast a standard Gold spell."
+          },
+          {
+            "Name": "Strength of the Ivory Dragon",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "Acts as a single rune of Ivory warrior, but lasts for 1 hour. Additional extra runes of Ivory warrior can be cast on top of this lasting their normal duration with this counting as the 1st."
+          }
+        ]
+      ],
+      "Intermediate": [
+        {
+          "Name": "Diverse Family",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Major prayer about any subject. However the answer must be spun into some odd story involving a tale someone told you about Sirac. Others can never hear this comm or otherwise get the answer until you tell the tale."
+        },
+        [
+          [
+            {
+              "Name": "Shield Self",
+              "Type": "Update",
+              "Count": 8
+            },
+            {
+              "Name": "Strengthen Self",
+              "Type": "Innate",
+              "Count": 4
+            },
+            {
+              "Name": "Mark ally at will",
+              "Type": "AtWill",
+              "Description": "for 1 TBLP. If owned already then now costs 0 TBLP."
+            },
+            {
+              "Name": "Gold Drave innates gained from The Brood can now be cast on Others",
+              "Type": "Static",
+              "Description": "Gold Drave innates gained from The Brood can now be cast on Others."
+            }
+          ],
+          [
+            {
+              "Name": "Ivory Warrior",
+              "Type": "Innate",
+              "Count": 2
+            },
+            {
+              "Name": "Mobility",
+              "Type": "Innate",
+              "Count": 1
+            },
+            {
+              "Name": "Ivory warrior's from The Brood last for 1 hour",
+              "Type": "Static",
+              "Description": "Ivory warrior's from The Brood last for 1 hour"
+            }
+          ]
+        ]
+      ],
+      "Advanced": [
+        {
+          "Name": "Strength of family",
+          "Type": "LTM",
+          "Description": "Gains 1 point of live to minus per guild member on dungeon, this will not stack with any form of temp life.",
+          "Count": 1,
+          "Source": "Guild"
+        },
+        {
+          "Name": "Embrace the Magic",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "can double the duration of a published Ivory or Gold spell that would normally last 5 minutes."
+        },
+        [
+          {
+            "Name": "True Believer (Gold)",
+            "Type": "Update",
+            "Description": "Cast a standard or any published Gold spell up to 12 mana"
+          },
+          {
+            "Name": "Mobility",
+            "Type": "Update",
+            "Description": "Mobility from The Brood is now retroactive."
+          }
+        ]
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -75,96 +210,363 @@
   "Claws of the Circle": {
     "Type": "political",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Discern Supernatural Power User",
+          "Type": "AtWill",
+          "Description": "This is the character's primary powerbase or physical if they have none."
+        },
+        {
+          "Name": "Counter Rite",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Mantic Deny Power in all ways except with the verbal: “The Circle denies thy power!” but only applies against effects targeting self or another Circle member."
+        },
+        {
+          "Name": "Elemental Rite of Defence",
+          "Type": "Static",
+          "Description": "+1 MAC applicable versus attacks from Hedge Wizards, Demonkind or Fey. Rises to +2 MAC if 2 additional guild members are on adventure."
+        },
+        {
+          "Name": "Spiritual Rite of Defence",
+          "Type": "Static",
+          "Description": "+1 SAC applicable versus attacks from Hedge Wizards, Demonkind or Fey. Rises to +2 SAC if 2 additional guild members are on adventure."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Discern Supernatural Power User",
+          "Type": "Update",
+          "Description": "Reveals the type of power owned for 3 TBLP per use."
+        },
+        {
+          "Name": "Counter Rite",
+          "Type": "Update",
+          "Description": "Mantic Pure force."
+        },
+        { "Name": "Elemental rite", "Type": "MAC", "Count": 1 }
+      ],
+      "Advanced": [
+        { "Name": "Spiritual rite", "Type": "SAC", "Count": 1 },
+        {
+          "Name": "Counter Rite",
+          "Type": "Update",
+          "Description": "may be used to counter multiple simultaneous attacks from the same source (e.g. 5 Shadow Strikes at the same time)."
+        },
+        {
+          "Name": "Discern Supernatural Power User",
+          "Type": "Static",
+          "Description": "will now reveal if an individual is a member of the Circle, a Hedge, or other power user."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
         "Classes": [],
         "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
+        "Alignments": { "Order": [], "Moral": [] },
         "Races": [],
         "PeopleType": ["Baronial"]
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
       }
     }
   },
   "The Deci Gentlemen’s Club": {
     "Type": "political",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
+      "Basic": [
+        {
+          "Name": "Hard Upbringing",
+          "Type": "Life",
+          "Source": "Guild",
+          "Amount": [3, 1]
+        },
+        {
+          "Name": "Agile: gains +1 DAC",
+          "Type": "Dac",
+          "Source": "Guild",
+          "Count": 1
+        },
+        {
+          "Name": "Shrouded",
+          "Type": "AtWill",
+          "Description": "May call upon the ritual shroud that protects the privacy of the club. This grants complete immunity to all forms of information effects for 5 minutes. Requires 30 seconds of quiet preparation in order to be able to call upon the ritual shroud."
+        }
+      ],
+      "Intermediate": [
+        { "Name": "Hard Upbringing", "Type": "Update", "Amount": [6, 2] },
+        {
+          "Name": "Shrouded",
+          "Type": "Update",
+          "Description": "When using Shrouded can choose to also gain the benefits of a Mantic Pass Unknown."
+        },
+        {
+          "Name": "The Darkness of Deci",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Grants See through Supernatural Darkness for 5 minutes. If already owned instead gains Senseless Vision."
+        }
+      ],
       "Advanced": []
     },
-    "Availability": {
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
-    }
+    "Availability": {}
   },
   "Department of Recoveries and Collections": {
     "Type": "political",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "An Eye for the Unusual",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as a one use enhanced evaluate vs an object/relic (e.g. a treasure Indiana jones might want to grab)."
+        },
+        {
+          "Name": "You might need this",
+          "Type": "Static",
+          "Description": "Gains a dungeon temp item of a single use standard spell to 6th level or handbook miracle to 4th."
+        },
+        {
+          "Name": "Tagged and bagged",
+          "Type": "Static",
+          "Description": "If returning a \"dangerous artefact\" to the inquisition that had an ISP value gains 500 grulls per ISP as payment. This must be done at the debrief and the ISP are used in doing this. The guild must have been battle boarded that day to use this."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Eye for the Unusual.",
+          "Type": "Update",
+          "Description": "An Eye for the Unusual may now also be used on active rituals, altars or similar.",
+          "Count": 2
+        },
+        {
+          "Name": "You might need this",
+          "Type": "Update",
+          "Description": "Also Gains 10 power (mana or spirits) of useful scrolls chosen by the ref at the start of the day."
+        },
+        {
+          "Name": "Watch Out",
+          "Type": "Static",
+          "Description": "Danger sense with regards to approaching/touching/using relics/artefacts based on the object (e.g. anyone touching this suffers a touch of death would trigger danger sense, the unconnected trap that happens to be under it would not)."
+        },
+        {
+          "Name": "Tagged and bagged",
+          "Type": "Update",
+          "Description": "now provides 750 grulls per ISP."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Eye for the Unusual.",
+          "Type": "Update",
+          "Description": "Now counts as having the relevant “Rec” for an Eye for the Unusual if effected by the relevant powerbase (e.g. Elves cannot count as having rec spirit, but can have rec mana)."
+        },
+        {
+          "Name": "Eye for the Unusual",
+          "Type": "Update",
+          "Count": 3,
+          "Description": "Can use all three innate an Eye for the Unusual’s on an object and it will act as an Investigation (as the Silver spell) of the relevant power bases."
+        },
+        {
+          "Name": "You might need this",
+          "Type": "Update",
+          "Description": "item from basic tier can now be any standard spell or miracle."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
         "Classes": [],
         "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
+        "Alignments": { "Order": [], "Moral": [] },
         "Races": [],
         "PeopleType": []
       },
       "Blacklist": {
         "Classes": [],
         "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
+        "Alignments": { "Order": [], "Moral": [] },
         "Races": [],
         "PeopleType": []
       }
     }
   },
+  "The Duke’s Head Society": {
+    "Type": "political",
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "The People off Sweethaven have spoken",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "At the start of the day (in the brief) guild members can vote which threat (from the below) will be the most dangerous that day. Depending on which wins all members gain the following benefit:\ni:The Ghoul is the most dangerous – Gains a War Cry 1/day\nii: The Demons Fire will consume us - Gains + 2 Mac vs Red\niii: The Silver Folk will be our bane - Gains + 3 NAC."
+        },
+        {
+          "Name": "+1 Level of Resistance vs Domination effects",
+          "Type": "Static",
+          "Description": "When on dungeon with another member of the guild gains + 1 level of resistance to domination effects unless all other guild members on dungeon are dominated already"
+        },
+        {
+          "Name": "Cannot be forced on how to vote",
+          "Type": "Static"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "The People off Sweethaven have spoken",
+          "Type": "Update",
+          "Count": 2,
+          "Description": "At the start of each section guild members may vote which threat (from the below) will be the most dangerous that day. Depending on which wins all members gain the following benefit:\ni:The Ghoul is the most dangerous – Gains a War Cry 1/day\nii: The Demons Fire will consume us - Gains + 2 Mac vs Red\niii: The Silver Folk will be our bane - Gains + 3 NAC."
+        },
+        {
+          "Name": "Understanding of freewill",
+          "Type": "AtWill",
+          "Description": "After spending 30 seconds talking to someone is aware if they are under a domination effect. With a further 30 seconds they gain a major prayers worth of information on what the broad orders are."
+        },
+        {
+          "Name": "Discipline Other",
+          "Type": "Innate",
+          "Description": "Guild members only"
+        }
+      ]
+    }
+  },
+  "Enclave": {
+    "Type": "political",
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "Library Access",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "after 10 seconds meditative thought a guild member may confirm or deny a question regarding magical issues, as magical Minor Prayer"
+        },
+        {
+          "Name": "Library Study",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "after 30 seconds meditative thought a guild member may remember an important piece of information, relevant to magical matters only, as magical Major Prayer."
+        },
+        {
+          "Name": "Scholarly Leanings",
+          "Type": "Static",
+          "Description": "Gains the ability to Recognise Mana and Read Mana Glyphs (not use scrolls), If these skills are already both owned then may choose to be well equipped with any one standard scroll"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Library Access",
+          "Type": "Update",
+          "Count": 2,
+          "Description": "after 10 seconds meditative thought a guild member may confirm or deny a question regarding magical issues, as magical Minor Prayer"
+        },
+        {
+          "Name": "Elemental Bonding",
+          "Type": "Innate",
+          "Description": "Magical Befriend, only usable on a mana-user of own colour"
+        },
+        {
+          "Name": "Vague Reality",
+          "Type": "Innate",
+          "Description": "acts in all ways as a Passive Illusion, except - no verbal required, instead takes 10 seconds preparation. It is not magical, but (effectively) physical in nature."
+        },
+        {
+          "Name": "Practised Scribing",
+          "Type": "Innate",
+          "Description": "the character may write out a scroll of any handbook spell they can cast"
+        },
+        {
+          "Name": "Discern Own Mana-User",
+          "Type": "AtWill",
+          "Description": "Identifies someone who shares a colour of mana with the user"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Elemental Bonding",
+          "Type": "Update",
+          "Count": 2,
+          "Description": "Mass Magical Befriend, only usable on mana-users of own colour"
+        },
+        {
+          "Name": "Library Access",
+          "Type": "Update",
+          "Count": 3,
+          "Description": "after 10 seconds meditative thought a guild member may confirm or deny a question regarding magical issues, as magical Minor Prayer"
+        },
+        {
+          "Name": "Library Study",
+          "Type": "Innate",
+          "Count": 2,
+          "Description": "after 30 seconds meditative thought a guild member may remember an important piece of information, relevant to magical matters only, as magical Major Prayer."
+        }
+      ]
+    },
+    "Availability": {
+      "Whitelist": {
+        "Races": ["Faerie", "Elf", "Athfanal"],
+        "Classes": ["Warlock", "Wizard", "High Wizard", "Power Master"]
+      }
+    }
+  },
   "Hell Company": {
     "Type": "political",
-    "alignmentRule": {
-      "allowed": {
-        "moral": ["Good"],
-        "order": ["Chaotic", "Neutral", "Lawful"]
-      },
-      "allowedPairs": ["Chaotic Good", "Neutral Good", "Lawful Good"]
-    },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Demon shield",
+          "Type": "Static",
+          "Description": "This grants +1 MAC and +1 SAC versus attacks from Demons."
+        },
+        {
+          "Name": "Demon bane",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "may call forth ‘holy fire’ to cover any one normal weapon, whatever it may be. Whilst wielded by a goodly target it inflict s +0 light-based white mana damage for the next 5 minutes versus Demons only with the verbal “Powers of light imbue this weapon of vengeance with thy strength, to spell the downfall of Demonkind”."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Sight Through Shadow",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "User can see through magical and spiritual darkness for 5 minutes, with the verbal “I call upon the powers of light and truth, let me walk unhindered through midnight’s shadow”."
+        },
+        {
+          "Name": "Empowered defence",
+          "Type": "Update",
+          "Description": "This grants +1 MAC and +1 SAC versus red / black mana, and against evil spirits, as well as against attacks from Demonkind."
+        },
+        {
+          "Name": "Discern Demonkind",
+          "Type": "AtWill",
+          "Description": "20’ Y/N mantic info effect."
+        },
+        {
+          "Name": "Enhanced Discern Demonkind",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day 20’ Y/N mantic info effect that reveals the demonic racial name [or approx imately if a unique creature] and up to 3 useful words describing the creatures power s of an identified Demonkind . E.g. Shadow Demon – assassin fears light."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Heavens Shield",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "36 point mantic `Shield against the Dark` vs attacks from Demons."
+        },
+        {
+          "Name": "Enhanced Discern Demonkind",
+          "Type": "Update",
+          "Count": 2
+        },
+        {
+          "Name": "Hand of Truth",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Hand of purity vs Demonkind. Death from casting is not permanent."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -189,9 +591,74 @@
     "Type": "political",
     "Restrictions": "",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Know your Foe",
+          "Type": "Innate",
+          "Description": "Discern nature of Undead (as priestly discern). If this is already owned they gain a single use of a “know your foe” (as privileged ability) but only vs Undead.",
+          "CheckKey": "Discern nature of Undead"
+        },
+        {
+          "Name": "Blessing of purity 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Takes a 30 second prayer and works on either a living goodly individual (including self) or a dead body (of any alignment) and grants a fortified spirit as tables except the individual cannot choose to be raised as Undead even if they wish. If used on the living this lasts until the end of the dungeon. If used on a dead body it lasts until they are restored to life. Immunity to slayer may be applied by an unwilling dead body."
+        },
+        {
+          "Name": "“Purity”",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Holy Word 60ft radius halt Undead (as the miracle)."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Lifes cry",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "War Cry but works against all undead touch effects, gaining immunity to all of them for 5 minutes"
+        },
+        {
+          "Name": "Infused with light",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Covers one weapon in a dose of holy water vs Undead for the next blow, does not need to be the users weapon."
+        },
+        {
+          "Name": "Repel Undead",
+          "Type": "Innate",
+          "Count": 1
+        },
+        {
+          "Name": "Know your Foe",
+          "Type": "Update",
+          "Description": "If the basic tier “Know your foe” has been used vs a single Undead then gains contra mastery vs that Undead for the first 5 minutes of combat."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Infused with Light",
+          "Type": "Update",
+          "Count": 2,
+          "Description": "i: Covers one weapon in a dose of holy water vs Undead for the next blow, does not need to be the users weapon. \nii: May use both innates at the same time to turn a weapon +0 spirit (goodly) vs Undead for 5 minutes."
+        },
+        {
+          "Name": "Attract Undead",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day"
+        },
+        {
+          "Name": "“Purity”",
+          "Type": "Update",
+          "Count": 2
+        },
+        {
+          "Name": "Know your Foe",
+          "Type": "Update",
+          "Description": "If the basic tier “Know your foe” has been used vs a single specific Undead gains the benefits of a know foe vs them, this also grants immunity to any Undead touch effects they may have."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -218,11 +685,53 @@
   },
   "Knights of Legend": {
     "Type": "political",
-    "Restrictions": "",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Inspiration",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Seek Inspiration as per a Lucky Idea. This takes 10 seconds to activate."
+        },
+        {
+          "Name": "‘For the Land’",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Determination (taking 6 TBLP from any stopping effect suffered but not the stopping effect)"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Chosen of Imrazil",
+          "Type": "DAC",
+          "Description": "Chosen of the Faithful [+2 DAC], but will affect any guild member, including elves etc. The DAC from this watching will not stack with any other chosen/watching/blessing. If this ability or similar blessing is already possessed then this ability instead grants +1 DAC, stacking with other KOTL guilds but no other.",
+          "Source": "Chosen"
+        },
+        {
+          "Name": "‘For the Land’",
+          "Type": "Update",
+          "Description": "Choose one on use: \ni: Determination (taking 6 TBLP from any stopping effect suffered but not the stopping effect)\nii: Mobility, if used in this way costs 12tblp per use."
+        },
+        {
+          "Name": "Resistance to Avenging Spirit",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "As per the tables resistance – should this already be possessed it can used to grant Immunity to Dying Effects 1/day as per the tables resistance."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "‘For the Land’",
+          "Type": "Update",
+          "Count": 2,
+          "Description": "Choose one on use: \ni: Determination (taking 6 TBLP from any stopping effect suffered but not the stopping effect)\nii: Mobility, if used in this way costs 12tblp per use.\n iii: Resist listed Domination effects, however user suffers 18tblp per use"
+        },
+        {
+          "Name": "Resolute",
+          "Type": "Static",
+          "Description": "Grants +1 level of resistance to all effects"
+        }
+      ]
     },
     "Availability": {
       "RequiredGuild": "Knights of the Land",
@@ -257,9 +766,67 @@
       }
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Life of the phoenix",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "With 30 seconds meditation benefits as per a regeneration Elixir on self, but is not a flesh and blood effect, rather mantic (Gold/Red/Good spirit)."
+        },
+        {
+          "Name": "Fires of the Phoenix",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Mantic (Red/Goodly) fire blade, guild members that are not evil gain utilise good spirit item for this."
+        },
+        {
+          "Name": "Heart of the Fire",
+          "Type": "LTM",
+          "Description": "1st time a day needed gains live to minus 6 TBLP that cannot be inflicted by fire and while in this live to minus regens 1/1 to the most injured location per 30 seconds, or until out of the live to.",
+          "Count": 6,
+          "Source": "Guild"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Life of the Phoenix",
+          "Type": "Update",
+          "Description": "Choose one: \ni: With 30 seconds meditation benefits as per a regeneration Elixir on self or other, but is mantic (Gold/Red/Good spirit), not flesh and blood. \nii: Alternatively if 2 minutes of calm meditation is used it instead cures 36/36."
+        },
+        {
+          "Name": "Fires of the Phoenix",
+          "Type": "Update",
+          "Description": "Choose one:\ni: Mantic Summon Salamander Child \nii: Mantic Talk to Salamander\niii: Mantic sword of power (gaining utilise goodly spirit item for this ability)."
+        },
+        {
+          "Name": "Shield of fire",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Gains mantic walk through fire (self)."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Life of the phoenix",
+          "Type": "Update",
+          "Description": "Choose one:\ni: Mantic Summon Salamander Child \nii: Mantic Talk to Salamander\niii: Mantic sword of power (gaining utilise goodly spirit item for this ability)\niii: Mantic Life Overwhelms (as Jade spell) but is red/gold/good spirit in nature. Verbal: `The Phoenix overwhelms!`"
+        },
+        {
+          "Name": "Fire of the phoenix",
+          "Type": "Update",
+          "Description": "Choose one:\ni: Mantic Summon Salamander Child \nii: Mantic Talk to Salamander\niii: Mantic sword of power (gaining utilise goodly spirit item for this ability). \nIf unused then upon death can be triggered acting as a Mantic (flaming) Avenging spirit on the guild members slayer."
+        },
+        {
+          "Name": "Heart of the Fire",
+          "Type": "Update",
+          "Description": "When triggered the live to minus is empowered so that for the first minute of it it can only be inflicted by evil spirits, cold, or water based attacks."
+        },
+        {
+          "Name": "Shield of fire",
+          "Type": "Update",
+          "Description": "1st time a day needed gains live to minus 6 TBLP that cannot be inflicted by fire and while in this live to minus regens 1/1 to the most injured location per 30 seconds, or until out of the live to. \nIf the user already has table 3 Immunity to Fire then when used it grants either: \ni: Complete immunity to fire for 5 minutes\nii: Resilience (as per Pasha status) equal to the users table vs fire."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -294,9 +861,51 @@
       "allowedPairs": ["Chaotic Evil", "Neutral Evil", "Lawful Evil"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Kin with other guild members on dungeon",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "Heart of Evil",
+          "Type": "Static",
+          "Description": "Members cannot be forced to attack other guild members, e.g. spiritually mastered with orders to kill someone. Additionally when raging they are able to identify fellow guild members and do not have to attack them. None of this means they can’t attack fellow guild members, just they don’t have to.\n If guild members have a restriction that would require them to attack other guild members it does not apply ( e.g. a Silverfolk and a non -silverfolk neuronicist)."
+        },
+        {
+          "Name": "Monk Locational Curing",
+          "Type": "Power"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Kin with other guild members on dungeon",
+          "Type": "Update",
+          "Description": "True Kin with other guild members on dungeon"
+        },
+        {
+          "Name": "Draw on the Inner Evil",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as a True Believer for any Evil religion, but can only be used for evil miracles.\nAlternatively it may be used to cast a standard Black or Onyx spell with 30 seconds prep."
+        },
+        {
+          "Name": "Strength of Evil",
+          "Type": "Static",
+          "Description": "Gains +3/1 life if on dungeon with another guild member."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Strength of Evil",
+          "Type": "Update",
+          "Description": "Gains +3/1 per other guild member on dungeon, to a max of +9/3."
+        },
+        {
+          "Name": "Mantic Avenging spirit",
+          "Type": "Innate",
+          "Count": 1
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -324,9 +933,60 @@
   "Of the North": {
     "Type": "political",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Hardened upbringing",
+          "Type": "LTM",
+          "Description": "Gains live to minus 6 first time each day it is needed."
+        },
+        {
+          "Name": "Touched by the Cor Sam",
+          "Type": "Resistance",
+          "Description": "½ effect natural cold."
+        },
+        {
+          "Name": "The Tales of the North",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as a seven word lucky idea about beasts/mystical foes, be they giants, dragons, giant snakes etc."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Touched by the Cor Sam",
+          "Type": "Immunity",
+          "Description": "Immunity to Cold"
+        },
+        {
+          "Name": "Hardened upbringing",
+          "Type": "Update",
+          "Description": "live to minus 6 at all times, and the first time it is needed each day all live to minus owned is doubled."
+        },
+        {
+          "Name": "The Wild lands",
+          "Type": "Immunity",
+          "Description": "Can see through Blizzards and similar snow based visual impairments."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Cor Sam in the heart",
+          "Type": "Immunity",
+          "Description": "Immunity to all cold"
+        },
+        {
+          "Name": "Brutal Childhood",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1st time a day it is needed all live to minus also applies to locations, increasing the amount of damage they need to suffer to be severed."
+        },
+        {
+          "Name": "The Brutal North",
+          "Type": "Life",
+          "Amount": [6, 2],
+          "Source": "Guild"
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -354,9 +1014,62 @@
   "Sakura": {
     "Type": "political",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Loyalty to the Jade Emperor",
+          "Type": "Static",
+          "Description": "If the individual does not have a status within the Jade Empire (EG is a Thun) then membership of the guild means most people Loyal to the Empire will treat them with civility and courtesy."
+        },
+        {
+          "Name": "Honour the Dragon",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "At the start of the day can chose to gain + 2 MAC vs one Elemental colour of magic, but – 1 vs the opposite colour. If Grey is chosen only 1 MAC is gained, but no mac is lost vs other colours.\nThanks to the Dragons (7th-13th December) this doubles."
+        },
+        {
+          "Name": "I will honour the Code",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Discipline"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Blessing of the Fates",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "At the start of the day can choose to be blessed by Amlalt and gain + 2 SAC vs Evil, or Avral and gain + 2 SAC vs Good, or they may choose the Twins as a whole and gain + 1 SAC vs all alignments.\nThanks to the Fates (24th-30th September) this doubles."
+        },
+        {
+          "Name": "Call to the Dragons",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "30 seconds prep can cast a handbook spell of the same colour as the Dragon chosen for Honour the dragons."
+        },
+        {
+          "Name": "I will honour the code",
+          "Type": "Update",
+          "Description": "Discipline and a War Cry (used at the same time)"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "I will honour the code",
+          "Type": "Update",
+          "Description": "Discipline, War cry and Mobility, but applies vs all powerbases."
+        },
+        {
+          "Name": "Honour of the dead",
+          "Type": "Static",
+          "Description": "Gains fated hero as tables, if owned then gains undecided destiny. Three days either side of the Birth of the Celestial Emperor (7th October) a member may instead choose to gain the Celestial Emperors blessing which means their first dea th of the day will cost 5% less res chance (if ressed on dungeon) providing the resurrection is begun within 15 minutes of death."
+        },
+        {
+          "Name": "Blessing be upon the Jade Emperor",
+          "Type": "LTM",
+          "Count": 6,
+          "Description": "live to minus 6 that also applies to crits. This live to minus is magical or spirit chosen at the battleboard. Thanks to the Emperors (1st-7th January) the live minus is Mantic."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -384,9 +1097,102 @@
   "The White Lotus Society": {
     "Type": "political",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Unity of the Empire",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "with the guild masters permission gains “Hanger On” to any one Amlesian Clan for the duration of a dungeon, allowing them to count as a member of the guild for calculating guild numbers."
+        },
+        {
+          "Name": "Song for the dead",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "If spends the ritual time for a resurrection in silent prayer then the person being restored to life returns fully healed, rather than having to wait for 5 minutes. Does not need to be the one casting the resurrection, just “participating”."
+        },
+        [
+          {
+            "Name": "Petals of Life",
+            "Type": "LTM",
+            "Description": "Gains live to minus 1 per member of the guild on dungeon",
+            "Count": 1
+          },
+          {
+            "Name": "Heart of the Lotus",
+            "Type": "Life",
+            "Description": "+3/1 guild life",
+            "Amount": [3, 1],
+            "Source": "Guild"
+          }
+        ],
+        {
+          "Name": "Will of the Empire",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Retroactive, grants +1 level of resistance; does not stack with levels of resistance gained from other guild benefits."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Song for the dead",
+          "Type": "Update",
+          "Description": "Choose one:\ni: If spends the ritual time for a resurrection in silent prayer then the person being restored to life returns fully healed, rather than having to wait for 5 minutes. Does not need to be the one casting the resurrection, just “participating”\nii: Remove a slayer effect and/or the taint of undeath from the person being returned to life."
+        },
+        {
+          "Name": "Petals of Life",
+          "Type": "Update",
+          "Count": 6,
+          "Description": "will always grant a minimum of 6 points of live to minus, and now grants 2 points of live to minus per guild member."
+        },
+        {
+          "Name": "Heart of the Lotus",
+          "Type": "Update",
+          "Amount": [6, 2]
+        },
+        {
+          "Name": "To defend with honour",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "If a fellow Amlesian or guild member has been incapacitated/rendered helpless this innate may be used granting +12/4 temp life and one of (chosen when the innate is used): A War Cry, a discipline or a cold rage. The benefits last for 5 minutes and if the innate is not used it is lost."
+        },
+        {
+          "Name": "Educated individual",
+          "Type": "Static",
+          "Description": "Gains Read Languages for Arcadd, if already owned gains a major prayer about Arcadd, poetry, or relevant Amlesian writings."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Song for the dead",
+          "Type": "Update",
+          "Description": "Choose one:\ni: If spends the ritual time for a resurrection in silent prayer then the person being restored to life returns fully healed, rather than having to wait for 5 minutes. Does not need to be the one casting the resurrection, just “participating”\nii: Remove a slayer effect and/or the taint of undeath from the person being returned to life\niii:  can instead be used to reduce the ritual prep of the restore life to 1 minute, but the individual being restored to life will not gain the benefits a total heal until after resting for 5 minutes."
+        },
+        {
+          "Name": "Petals of Life",
+          "Type": "Update",
+          "Description": "will always grant a minimum of 6 points of live to minus, and now grants 2 points of live to minus per guild member and live to minus applies to locations"
+        },
+        {
+          "Name": "Heart of the lotus",
+          "Type": "Update",
+          "Amount": [9, 3]
+        },
+        {
+          "Name": "The Fates decide",
+          "Type": "Static",
+          "Description": "is immune to any random acts of misfortune or similar. This could include “one person in the party is randomly ritual struck ” - it would never be a guild member unless there are only guild members present. This is refs discretion and the spirit should be followed. This also grants fated hero, and if already owned undecided destiny."
+        },
+        {
+          "Name": "Will of the Empire",
+          "Type": "Update",
+          "Description": "Applies all day: Retroactive, grants +1 level of resistance; does not stack with levels of resistance gained from other guild benefits."
+        },
+        {
+          "Name": "To Defend with honour",
+          "Type": "Update",
+          "Description": "+12/4 temp life and one of (chosen when the innate is used): A War Cry, a discipline or a cold rage. The benefits last for 5 minutes and if the innate is not used it is lost."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -414,9 +1220,109 @@
   "Totemic Guardians": {
     "Type": "political",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "A Tribe's a Tribe",
+          "Type": "Static",
+          "Description": "If a guild members own Shaman is not on dungeon may choose to give another Shaman that is present spirits as if a member of their tribe.\n If a guild members own Witchdoctor is not on dungeon may choose to give another Witchdoctor that is present mana as if a member of their tribe."
+        },
+        {
+          "Name": "Tribal Influence",
+          "Type": "Static",
+          "Description": "When a Shaman or Witch Doctor casts a published Miracle or Spell that normally effects their own tribe it may instead be cast to benefit their own tribe and all members of the Totemic Guardians, with all members of the Totemic Guardians counting towards it s effect."
+        },
+        [
+          {
+            "Name": "Totems Watching - Acute Hearing",
+            "Type": "AtWill"
+          },
+          {
+            "Name": "Totems Watching - Sniff and Locational Sniff",
+            "Type": "AtWill"
+          },
+          {
+            "Name": "Totems Watching - Tracking",
+            "Type": "AtWill"
+          },
+          {
+            "Name": "Totems Watching - Flight",
+            "Type": "Innate",
+            "Count": 2
+          },
+          {
+            "Name": "Totems Watching - UAC",
+            "Type": "WeaponSkill"
+          },
+          {
+            "Name": "Totems Watching - Jump",
+            "Type": "Innate",
+            "Count": 4
+          },
+          { "Name": "Totems Watching - 1 DAC", "Type": "Dac", "Count": 1 }
+        ],
+        {
+          "Name": "+1 Strength",
+          "Type": "Static",
+          "Description": "not for combat purposes"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "+1 Strength",
+          "Type": "Update",
+          "Description": "Stacking to +2 max"
+        },
+        [
+          {
+            "Name": "Totems Watching - 6th Sense",
+            "Type": "AtWill"
+          },
+          {
+            "Name": "Totems Watching - Perception and Supernatural Perception",
+            "Type": "AtWill"
+          },
+          {
+            "Name": "Totems Watching - Regeneration",
+            "Type": "Static",
+            "Description": "Character heals at 1tblp and 1pt to the worst location per 5minutes whilst on Primus"
+          },
+          {
+            "Name": "Totems Watching - +1 Max Damage on first blow",
+            "Type": "Static",
+            "Description": "+1 max damage first blow of combat, no preparation required, stacking with other first-blow abilities such as tables 30 second concentration ability"
+          },
+          {
+            "Name": "Totems Watching - Physical Chameleon",
+            "Type": "Innate",
+            "Count": 4
+          },
+          {
+            "Name": "Totems Watching - Snarl",
+            "Type": "Innate",
+            "Count": 2,
+            "Description": "Physical Cause Fear to one target, and additionally causes fear in all normal animals within ear-shot."
+          },
+          {
+            "Name": "Totems Watching - Lightning Reactions",
+            "Type": "Immunity"
+          },
+          { "Name": "Totems Watching - 2 DAC", "Type": "Dac", "Count": 2 }
+        ]
+      ],
+      "Advanced": [
+        {
+          "Name": "Strength of the Totems",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Physical mark of the totems, but with all members of the guild counting as members of the tribe for the benefits. Requires 30 seconds “Bigging Up” the person getting it."
+        },
+        {
+          "Name": "Not going down",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "If a member of the Totemic Guardians is killed can choose to gain the benefits of a stand and die vs the person that killed them."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -444,7 +1350,26 @@
   "Wahadamune": {
     "Type": "political",
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Invoke the Winds Protection",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Grants the user the next level of the “Winds”. If the 1st Wind is owned then this grants immunity to magic for 5 minutes."
+        },
+        {
+          "Name": "Stand with the Confederacy",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Usable if a fellow member of the Ishmaic confederacy is incapacitated or killed by a foe. Grants +6/2 life and an innate War Cry. The benefits last 5 minutes even if the individual recovers."
+        },
+        {
+          "Name": "Aid of the Clan ~ At the start of the day can choose to gain the aid of one of the Ishmaic Clans as follows: o Galahbhad – Armour is tinkered by the clans armourers, granting immunity to accuracy. o Buladajn – Venoms Whisper",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Gains Immunity to poison for 5 minutes. o Benhai – Gains an innate Jump that also grants the benefits of Trap wary o Salahmen – 1/day gains double level of resistance vs magic for 5 minutes o Harazaen – Consume the Curse 1/day – Grants immunity to one Curse, must be used within 2 seconds of the curse being suffered o Rain – Draw on the winds 1/day Takes 30 seconds prep and can act as a standard Elemental spell up to 4th level."
+        }
+      ],
       "Intermediate": [],
       "Advanced": []
     },
@@ -474,7 +1399,25 @@
   "Yeomen of the Empire": {
     "Type": "political",
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Kin",
+          "Type": "Static",
+          "Description": "to all other Yeoman on dungeon."
+        },
+        {
+          "Name": "Strength of the yeoman",
+          "Type": "Life",
+          "Amount": [3, 1],
+          "Description": "Gain +3/1 life per yeoman on dungeon, to a max of +6/2."
+        },
+        {
+          "Name": "Memories of the Yeoman",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "With 30 seconds concentration acts as a major prayer about matters previous Yeoman may have known. This includes rituals, ancient foes, lost treasures etc. It should be a broad interpretation of what can be covered, but it could be slightly cryptic or incomplete."
+        }
+      ],
       "Intermediate": [],
       "Advanced": []
     },
@@ -581,7 +1524,11 @@
           "Type": "Update",
           "Description": "Grants immunity to all evil spiritual effects for five minutes; can be retroactive"
         },
-        { "Name": "Strength of Evil", "Type": "Innate", "Count": 1 }
+        {
+          "Name": "Strength of Evil",
+          "Type": "Innate",
+          "Count": 1
+        }
       ]
     },
     "Availability": {
@@ -611,9 +1558,101 @@
     "Type": "professional",
     "Restrictions": "",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Personal Faith",
+          "Type": "Static",
+          "Description": "Each Priest of the Dead Heroes has a Personal Faith, and may design their own miracle list following the rules for a Hermit Priest. The Priest uses the miracle list even if not battle-boarding the Church’s basic benefits."
+        },
+        {
+          "Name": "Call on Heroes Past [Beginning]",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "After 30 seconds appropriate prayer may cast any one handbook miracle of own alignment (Good / Neutral / Evil) of up to 4th level."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Enlightened",
+          "Type": "Static",
+          "Description": "Gains free 8th level miracle on Miracle list as per Hermit Priest."
+        },
+        {
+          "Name": "Call on Heroes Past [Middle]",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "After 60 seconds of appropriate prayer may cast any one handbook miracle of own alignment (Good / Neutral / Evil) of up to 6th level."
+        },
+        [
+          {
+            "Name": "Allied Hero",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": " One Undead summoned by the Priest will be helpful and act in a friendly or respectful manner towards the Priest and their allies."
+          },
+          {
+            "Name": "Knowledgeable Guidance",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "One Comm I will yield 1 word answers, not just Yes / No answers."
+          },
+          {
+            "Name": "Reviving Strength",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "One Handbook healing tree miracle cast upon a Member of the Church grants +25% effect"
+          },
+          {
+            "Name": "Stalwart Warding",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "May cast a Handbook Warding Miracle as to allow any member of the church to be able to cross freely."
+          },
+          {
+            "Name": "Aggressive Champion",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "If casting a Handbook Force Tree miracle within 30 seconds of a previous casting the spirit cost of the miracle is reduced by 1 (non -cumulative with itself or other spirit cost reductions). Minimum 1 spirit."
+          },
+          {
+            "Name": "Willing spirits of Carnage",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "If a handbook Causing tree miracle is not discharged after being cast the priest regains ½ the spirits round ed down minimum of 1. This has no effect on miracles cast using innates, scrolls or items."
+          },
+          {
+            "Name": "Ancestral Aid",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "A Bless or Beneficial Curse may be cast on any Church Member and will benefit them regardless of their alignment so long as they adhere to the tenets of the faith."
+          },
+          {
+            "Name": "Peaceful Departure",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "One Undead dismissed leaves no taint on the body (as it had been purified)."
+          }
+        ]
+      ],
+      "Advanced": [
+        {
+          "Name": "Aid of Heroes Past",
+          "Type": "Update",
+          "Description": "The Intermediate Tier innate chosen above is now upgraded to ‘at will’, provided that the Priest has purchased the relevant Major Sphere"
+        },
+        {
+          "Name": "Embody Milo",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Grants full Undead immunities for 5 minutes. However for the duration the Priest’s left arm ceases to exist for any purpose as if it had been cut off (no damage is taken for this and no other disadvantages associated with losing a limb, such as a dwarf dying, are suffered). This means that whilst embodied miracles / abilities that require both hands to be able to cast / activate cannot be used."
+        },
+        {
+          "Name": "Call on Heroes Past [End]",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "After 2 minutes appropriate prayer may cast any one handbook miracle of own alignment (Good / Neutral / Evil) of up to 8th level, if not on own miracle list then this costs tblp/spirits as normal."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -664,9 +1703,66 @@
       "7": ["Pure Force"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Fires of the Empress",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "May turn a standard offensive miracle mantic (red mana/flaming)."
+        },
+        {
+          "Name": "Empresses Force",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "May choose to benefit from one of the following:\ni: Pure Force is now considered a Universal Sphere miracles, but costs a level to cast.\nii: Pure Force remains a Major force sphere miracle, but now only costs 6 spirits to cast.\niii: Gains an innate pure force."
+        },
+        {
+          "Name": "Mistress of the Throne",
+          "Type": "Static",
+          "Description": "At the start of each day may add up to 10 spirits of standard miracles to the priest’s miracle list. These may be changed dungeon to dungeon (or day to day on extended lengths). They CANNOT be used for making items/writing scrolls or similar."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Mistress of the Throne",
+          "Type": "Update",
+          "Description": "At the start of each day may add up to 10 spirits of published miracles to the priest’s miracle list. These may be changed dungeon to dungeon (or day to day on extended lengths). They CANNOT be used for making items/writing scrolls or similar.\n"
+        },
+        {
+          "Name": "Will of the Empress",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "One word minor prayer but the answer is from the broad opinion of the Empress (religiously)."
+        },
+        {
+          "Name": "Force of Glass",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "One use of a pure force grants immunity to the effect for 10 seconds."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Will of the Empress",
+          "Type": "Update",
+          "Description": "Major prayer but the answer is from the broad opinion of the Empress (religiously)"
+        },
+        {
+          "Name": "Force of Glass",
+          "Type": "Update",
+          "Description": "One use of a pure force grants immunity to the effect for 30 seconds."
+        },
+        {
+          "Name": "Fire of the Empress",
+          "Type": "Static",
+          "Description": "May turn a standard miracle mantic (red mana/flaming)."
+        },
+        {
+          "Name": "Strength of the Realm",
+          "Type": "Static",
+          "Description": "Members gain +1 Spirit per member of the Church or Noble of the Blood on dungeon (a person can only count once), to a maximum of their table. Non-spirit using classes (EG spirit warriors) may battle board these spirits as innates of miracles on their list."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -718,9 +1814,70 @@
       "7": ["Suspend Life"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Gains Spiritual Discern Outlaw",
+          "Type": "AtWill",
+          "Description": "Reveals individuals Ostracised by the Empire."
+        },
+        {
+          "Name": "Power of the Zombie",
+          "Type": "Static",
+          "Description": "Counts as one level higher (stacks with published increases) for the purposes of Raising/Controlling Undead ."
+        },
+        {
+          "Name": "Soul of Death",
+          "Type": "Static",
+          "Description": "Gains a Fortified Spirit, and if raised as Undead by a member of the Iron and Empire the members body is not tainted, so can still be returned to life (or animated again)."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Strength of the Isle",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "When raising a published Undead they gain Depraved Cunning, Darkened Potence, Utilise strength with pure and Undead Alacrity. If the priest already has Depraved Cunning or Darkened Potence then the Undead instead gains an extra 5 Hits. The Undead summoned in this way is also controlled by the caster until they (the Undead) are slain (this included Vampires) ."
+        },
+        {
+          "Name": "Loyalist’s Feast",
+          "Type": "Static",
+          "Description": "If using a Souls Hunger on an Outlaw, Wolfshead or individual ostracised by the Empire then the healing gained is doubled."
+        },
+        {
+          "Name": "Mastery of the Dead",
+          "Type": "Static",
+          "Description": "When using Talk to Spirit on intelligent Undead the Undead cannot lie to it."
+        },
+        {
+          "Name": "Dark Feast Claimed",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Can cast a Souls Hunger onto a causing miracle that is cast with Lesser Wings of darkness."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Strength of the Isle",
+          "Type": "Update",
+          "Count": 2
+        },
+        {
+          "Name": "Dark Feast Claimed",
+          "Type": "Update",
+          "Count": 2
+        },
+        {
+          "Name": "Purity in Death",
+          "Type": "Static",
+          "Description": "If raised as Undead then gains Depraved Cunning and retains own personality."
+        },
+        {
+          "Name": "Threat to the Empire",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "For 5 minutes vs one Target that is an Outlaw/Ostracised by the Empire all causing used by the priest inflict s permanent damage. Alternatively , the priest gains + 1 max damage (max quin) vs them. Chosen when used. Forged in Iron - Stage Two: Cost: +75 Table: 5"
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -778,19 +1935,33 @@
     },
     "Benefits": {
       "Basic": [
-        "Innate Cure Serious Miracle",
-        "Fortified Spirit",
-        "Immunity Beguile Spirit"
+        { "Name": "Cure Serious", "Type": "Innate", "Count": 1 },
+
+        { "Name": "Fortified Spirit", "Type": "Immunity" },
+        { "Name": "Immunity to Beguile Spirit", "Type": "Immunity" }
       ],
       "Intermediate": [
-        "Sight of the Stars: 1/Day, grants See Through Supernatural Darkness and Fully Active Spirit sight for 5 minutes. Verbal: “By her grace is darkness banished!”",
-        "Innate Cure Serious miracle: Gains an innate ‘cure serious’ miracle 5/day in total (from Tier 1).",
-        "Looks Familiar: 1/day, after 10 seconds of inspecting an Undead creature that responds as “unknown” can recall the name and level (as per Reveal Undead Name)"
+        {
+          "Name": "Sight of the Stars",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "See Through Supernatural Darkness and Fully Active Spirit sight for 5 minutes. Verbal: “By her grace is darkness banished!”"
+        },
+        { "Name": "Cure Serious", "Type": "Update", "Count": 5 },
+        {
+          "Name": "Looks Familiar",
+          "Type": "Update",
+          "Count": 1,
+          "Description": "after 10 seconds of inspecting an Undead creature that responds as “unknown” can recall the name and level (as per Reveal Undead Name)"
+        }
       ],
       "Advanced": [
-        "Immunity to Befriend Spirit and Spiritual Mastery, as published immunity.",
-        "Looks Familiar: 3/day [total] from Intermediate Tier",
-        "Wise to the Ways of Undeath: Gains Remember Undead Name."
+        {
+          "Name": "Immunity to Befriend Spirit and Spiritual Mastery",
+          "Type": "Immunity"
+        },
+        { "Name": "Looks Familiar", "Type": "Update", "Count": 3 },
+        { "Name": "Remember Undead Name", "Type": "Static" }
       ]
     },
     "Availability": {
@@ -843,9 +2014,62 @@
       "8": ["Dismiss Level 7 Undead"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Guild Miracle",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Reveal Undead Name added to own miracle list. If desired may instead battle -board this miracle as a 1/day innate."
+        },
+        {
+          "Name": "Sanctified Ground",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "may cast a Protection from Spirits [Evil] solely against Undead, in which case it does not require a line/circle to be drawn but is created around the caster in a radius of up to 6’ or in a line up to 15’ across up to 3’ distance from the caster."
+        },
+        {
+          "Name": "The Enemy Predictable",
+          "Type": "Static",
+          "Description": "Gains Combat Wary against Undead. The skill level is equal to the highest dismiss miracle known. [Max 10pts]."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Righteous Aura",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "The priest's spirit is concentrated more fully in opposition of Undead spirits. For the duration, the priest may not cast any miracle unless directly against Undead . However, any Undead creature of level 5 or below which touches or is touched by the priest is destroyed instantly, costing the priest 3 TBLP per level of the Undead . Undead of level 6 take 12 TBLP (4 hits) of goodly spiritual damage for each touch. This is a releasable miracle, and does affect the Undead."
+        },
+        {
+          "Name": "Sanctified Ground",
+          "Type": "Update",
+          "Count": 2,
+          "Description": "may cast a Protection from Spirits [Evil] solely against Undead, in which case it does not require a line/circle to be drawn but is created around the caster in a radius of up to 6’ or in a line up to 15’ across up to 3’ distance from the caster.\nMay use a second innate of the Basic Tier ability or use it to act as per a n innate of ‘The Light of Faith’, but with only a 15 minute duration."
+        },
+        {
+          "Name": "Fortified Spirit",
+          "Type": "Immunity",
+          "Description": "as per the tables ability, If already possessed then gains Immunity to Slayer and similar effects."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "The Shield of Mortai",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Spirit Shield but only against Undead Touch Effects, the user may choose whether to apply it or not against the attacks suffered. This innate only works on members of the Church of Mortai."
+        },
+        {
+          "Name": "Stalwart Against Undeath",
+          "Type": "Static",
+          "Description": "Gains +18tblp casting stamina for the purposes of Dismissal Tree and Sphere miracles, Righteous Aura, and Hand of Purity."
+        },
+        {
+          "Name": "Undead Sense",
+          "Type": "Static",
+          "Description": "As per the tables ability Spirit Sense but only applies against Undead. If Spirit Sense is already owned, then this ability is enhanced to grant Spiritual Vigilance against Undead."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -910,9 +2134,59 @@
       "8": ["Restore Life"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Discern Associated Spirits",
+          "Type": "Static",
+          "Description": "If already possessed then gains Discern Nature of wounds to 20’ ."
+        },
+        {
+          "Name": "Extra Miracle",
+          "Type": "Static",
+          "Description": "If battle boarding the Church as a Professional Guild gains the miracle Spirit Shift: As Words From Above but is a 4sp goodly miracle. Verbal: “Shaehan, Take me hence!”"
+        },
+        {
+          "Name": "Haven",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "The Shaehan priest must audibly and clearly speak the Prayer of Haven immediately before meditating, the priest then speaks no further words before going into the meditative trance (Max. 3 seconds later). As the meditation starts the priest disappears from the point of meditation and appears at Shaehan's side where he/she is totally safe and gains +x1 meditation rate [max 5]. However the meditation ends after the pre -set time or when on full spirits which ever happens first, and cannot end before. The priest re -appears at the point where he/she started, unless the party have moved on in which case the priest will reappear at the safest place within 20' of the party."
+        },
+        {
+          "Name": "No place like Primus",
+          "Type": "Static",
+          "Description": "Should any person within the party which the priest left call the name of the priest three times while they are in Haven, the priest becomes aware that they are being called and may elect to end the meditation early and return at that time. The meditation is not broken if they do not choose to do so. Oh Mistress Shaehan, Lady of Light Listen I plea to the prayer of Haven Oh Lady of Mercy Grant me sanctuary In which to meditate Protect and watch over me As I pray for the power To continue your work Shelter me under the wings Of the sacred dove Bathe me in your Holy Light Oh Lady Shaehan Goddess of Forgiveness and Mercy Let thy love shine over the lands Let me spread the word of your love As I preach your message of peace Grant me the power with which to heal And cure the wounds This mortal life doth caus e Show kindness to me thy priest And mercy to the persecuted Grant me thy servant The shelter of thy sacred abode I beseech thee Show your humble servant The tender mercies that this Mortal world doth lack Defend me from those who Would strike the defencel ess Protect me from those Who would show no mercy. NOTE: As Haven exists within the very essence of the goddess, entrance to it is barred to all except Priests of Shaehan. It is not possible to use means of interplanar transport to enter Haven."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Haven",
+          "Type": "Update",
+          "Count": 2
+        },
+        {
+          "Name": "Strengthened",
+          "Type": "Life",
+          "Amount": [4, 2],
+          "Source": "Guild"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Haven",
+          "Type": "Update",
+          "Count": 3
+        },
+        {
+          "Name": "Temple Altars",
+          "Type": "Static",
+          "Description": "The altars of the three main temples of Shaehan, in Scarlene, Sellville and the Halgar, are empowered to allow transport between them. A guild member may spend 30 seconds in prayer before one, name one of the other two and touch the altar to be transported to it instantly. This may be done once per day from each altar for each guild member, and may be repeated at will with the addition of casting the Spirit shift miracle after the prayer. This only transports guild members to one of the other two altars."
+        },
+        {
+          "Name": "Passive Heal",
+          "Type": "Static",
+          "Description": "Member is aided by the Lady Shaehan such that they are considered to have a ‘Passive Heal’ miracle active on them at all times. This means that should a Heal miracle be cast specifically into this ‘receptacle’ it will be held in abeyance, and only activate on the priest should they be down more than 36 life, or have a location fall to zero or below. In all respects this functions like the Words from Above miracle, except that it has no duration, and may be replenished if desired whenever it is used. Defender of the Innocent - Stage Two: Cost: +90 Table: 7"
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -971,9 +2245,54 @@
       "8": ["Restore Life"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Stamina Blessing of St Michael",
+          "Type": "Life",
+          "Amount": [3, 1],
+          "Source": "Guild"
+        },
+        {
+          "Name": "Swift Blessing of St Michael",
+          "Type": "Dac",
+          "Count": 1,
+          "Source": "Guild"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Warding of St Michael",
+          "Type": "MAC",
+          "Count": 1,
+          "Source": "Guild"
+        },
+        {
+          "Name": "Protection of St Michael",
+          "Type": "SAC",
+          "Count": 1,
+          "Source": "Guild"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Stamina Blessing of St Michael",
+          "Type": "Update",
+          "Amount": [6, 2],
+          "Source": "Guild"
+        },
+        {
+          "Name": "Warding of St Michael",
+          "Type": "Update",
+          "Count": 2,
+          "Source": "Guild"
+        },
+        {
+          "Name": "Protection of St Michael",
+          "Type": "Update",
+          "Count": 2,
+          "Source": "Guild"
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1026,7 +2345,24 @@
       "8": ["Restore Life"]
     },
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Bonds of the Soul",
+          "Type": "Static",
+          "Description": "Gains +1 spirit (max 4) for every member of the Soul Forger church on dungeon (includes ley believers)."
+        },
+        {
+          "Name": "The Master Forge provides",
+          "Type": "Static",
+          "Description": "Members are well equipped with a suit of apprentice crafted armour, an apprentice crafted weapon, and an apprentice crafted shield – these are for themselves only."
+        },
+        {
+          "Name": "Blessings of the Forge",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day, enhances a normal bless in one of the following ways chosen when used: 1. To act as a Shield Blessing 2. To turn a normal suit of armour, shield or weapon apprentice crafted for the day. 3. To turn a normal weapon +0 goodly spirit for 5 mins 4. To enhance an object from “The Master Forge provides” to become journeyman status for the day."
+        }
+      ],
       "Intermediate": [],
       "Advanced": []
     },
@@ -1090,9 +2426,7 @@
       "8": ["Restore Life"]
     },
     "Benefits": {
-      "Basic": [
-        "TODO: At character creation must pick one of the aspects of talthar..."
-      ],
+      "Basic": [],
       "Intermediate": [],
       "Advanced": []
     },
@@ -1161,9 +2495,35 @@
       "7": ["Suspend Life"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Shadow of the Imbaiu",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "allows the priest to invoke the shadow of an Imbaiu to share their form. This takes 30 seconds and grants them 1/2 effect all bar spirit for 5 minutes. While active discerns as a demon kind and if banished the power ends."
+        },
+        {
+          "Name": "The ways of Mephastofolies",
+          "Type": "Static",
+          "Description": "gains bar spirit on base list while battle boarding the church."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "The dark bargains",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "takes 1 minute to open a link to the Imbaiu costing 24 TBLP of the casters blood/essence in sacrifice. Acts as a mantic comm 2 but each question asked costs the user a level (c .f. casting a TOD , but reductions in level loss from casting miracles do not apply)."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Invoke the abysmal power",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "can turn a published evil miracle demonic (black/red/evil spirit) taking 10 seconds ritual/calling on the Imb aiu per spirit of the miracle. If used for a TOD /animate life/similar miracle that requires a prot this also allows the prot to be cast mantically (taking an extra 30 seconds prep)."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1224,8 +2584,34 @@
       "8": ["Touch of Death"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
+      "Basic": [
+        {
+          "Name": "Obliterate the spirit",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Vs a non -animate spirit (so not an Undead , but could be an active miracle, line etc.) with 30 seconds clear prayer to the destroyer can destroy the spirit (in a similar manner to a dispel). This is a non-published dispelling effect for immunity purposes and costs the user 3 TBLP per spirit of the miracle destroye d (or 60 TBLP if it does not have a level). Range 10ft, and can only target one spirit (if a line has more than one spirit in it this destroys one of them)."
+        },
+        {
+          "Name": "Word of Destruction",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "As per the published Unholy Word for causing, except does not affect Destroyer worshippers."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Prayer of Destruction",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Takes 30 seconds prayer over a dead body that had a spirit. Acts as per a slayer, but if successful also heals the user 3/3 per level of resistance the victim had. 1/2 a spirit and similar does not increase the healing gained, instead it actually halves it. A dead person can only be affected by this once."
+        },
+        {
+          "Name": "Feed on Suffering",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "With 30 seconds prep can cast a causing miracle on self and instead be healed half the amount it would normally inflict (before resistances). Only works with damaging miracles."
+        }
+      ],
       "Advanced": []
     },
     "Availability": {
@@ -1254,9 +2640,58 @@
   "Arcanum": {
     "Type": "professional",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Meta",
+          "Type": "Static",
+          "Description": "Magic: Any member who would not normally be able to do so (e.g. if pathed or cannot cast grey) is now capable of casting the Dispel 1, 2, and 3 glyphs. Members who can cast these glyphs may spend 30 seconds in calm, quiet observation before casting a Detect Magic, at which point it functions as per the advanced grey g lyph Improved Detect Magic instead."
+        },
+        {
+          "Name": "Scholarly Interest",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/Day a member may examine a source of magic identified by Rec Mana, at 1” range. For every 30 seconds they examine the source of mana they gain a Magical Major Prayer about this source i.e. may use a Major Prayer about the source, examine it for another 30 seconds and then use another and so on. During the 30 seconds concentration conversation may be held as long as it is about the source in question."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Scholarly Interest",
+          "Type": "Update",
+          "Description": "Additional use of the innate as above."
+        },
+        {
+          "Name": "Learned Knowledge",
+          "Type": "Static",
+          "Description": "Gains 3 extra Specialist Slots. These may be filled with any glyph that could normally be learnt as a handbook specialist by that character, chosen at the start of the day."
+        },
+        {
+          "Name": "Understanding of Magic",
+          "Type": "Static",
+          "Description": "May cast touch -range Dispels of up to 5th level for one mana less than their standard cost, to a minimum of 1 mana -point. Non -cumulative with any other cost reduction."
+        },
+        {
+          "Name": "Elemental Awareness",
+          "Type": "Static",
+          "Description": "Whilst using Recognise Mana at 1” range it may after 10 secs concentration reveal the colour of magic. ADVANCE TIER"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Greater Awareness",
+          "Type": "Static",
+          "Description": "Elemental Awareness now reveals the broad type of magic present (Warding, Offensive, Defensive etc.). It will also reveal if another powerbase is combined with the magic but not what it is ( e.g. a mantic effect would reveal as magical and something else)."
+        },
+        {
+          "Name": "Greater Understanding of Magic",
+          "Type": "Static",
+          "Description": "Understanding of Magic now applies to dispels up to 10th level."
+        },
+        {
+          "Name": "The Towers Training",
+          "Type": "Static",
+          "Description": "Members gain + 1 level of casting and + 3 mana of their own colour. If they hold multiple colours they must choose which colour this applies too. Student of the Towers - Guild status Initiate of the Towers - Stage One: Cost: 50 Table: 1"
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1284,9 +2719,75 @@
   "Earthen Conclave": {
     "Type": "professional",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Armour of Earth",
+          "Type": "Static",
+          "Description": "Plate (O) cast on self grants MAC 6 / PAC 6."
+        },
+        {
+          "Name": "Grounding 1/ day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Whilst in contact with Earth or stone grants complete immunity to one blue mana or electric attack."
+        },
+        {
+          "Name": "Alliance of Earth",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/ day: Remove a Brown spell currently on them for 1 TBLP per MP (Max 12 TBLP) or negate it as it happens, for 2 TBLP per MP (to a max cost of 18 TBLP). Verbal: “The Earth is my ally!”"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Passage",
+          "Type": "Static",
+          "Description": "As a cantrip may release a Wall of Stone that the guild member has previously cast. Range 20’. Verbal: “Gnomes of Earth I release thee”."
+        },
+        {
+          "Name": "Earthen Armour",
+          "Type": "Immunity",
+          "Description": "Tables Immunity to Electricity."
+        },
+        {
+          "Name": "Grounding",
+          "Type": "Static",
+          "Description": "2nd daily innate as above."
+        },
+        {
+          "Name": "Earthen Window",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/ day for 5 minutes member can see through a Wall of Stone they cast if they remain in contact with the wall."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Grounding",
+          "Type": "Update",
+          "Description": "3rd daily innate as above."
+        },
+        {
+          "Name": "Earthen Window",
+          "Type": "Update",
+          "Description": "2nd daily innate as above."
+        },
+        {
+          "Name": "Conducting",
+          "Type": "Static",
+          "Description": "Grounding can be used on electric or blue mana attacks within 20’ of guild member."
+        },
+        {
+          "Name": "Might of Rock",
+          "Type": "Static",
+          "Description": "The Wizard’s Grimoire Rock Skin spell also grants a resistance to Sever/loc to zero."
+        },
+        {
+          "Name": "Sure Footed",
+          "Type": "Static",
+          "Description": "grants Stability whilst in contact with Earth or Stone."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1314,9 +2815,64 @@
   "Frontline": {
     "Type": "professional",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Nimble",
+          "Type": "Dac",
+          "Count": 1,
+          "Source": "Guild"
+        },
+        {
+          "Name": "Combat Hardened",
+          "Type": "Life",
+          "Amount": [3, 1],
+          "Source": "Guild"
+        },
+        {
+          "Name": "Additional Training",
+          "Type": "Static",
+          "Description": "+1 warrior specialist at 8th level."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Combat Hardened",
+          "Type": "Update",
+          "Amount": [9, 3],
+          "Source": "Guild"
+        },
+        {
+          "Name": "Roll With It",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/ day may roll with a weapon blow such that only takes rockskin style damage of 1pt per damage grade , must be fully aware of and able to see blow coming."
+        },
+        {
+          "Name": "Bulking Up",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "+12/4 temp life for the next 5 minutes, does not stack with supernaturally generated temp life."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Combat Hardened",
+          "Type": "Update",
+          "Amount": [12, 4],
+          "Source": "Guild"
+        },
+        {
+          "Name": "The Battle Line",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day ~ Gains Immunity to Repels, Involuntary Mystical Transportation, Disarm and Supernatural Fumble effects. Lasts 5 minutes and may be used in response to an effect (CF War Cry within 2 seconds of the effect)."
+        },
+        {
+          "Name": "Strength in Numbers",
+          "Type": "Static",
+          "Description": "Gains +3/1 status life per member of the Front line on dungeon (including self) to a max of 12/4."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1344,9 +2900,48 @@
   "The Hovel": {
     "Type": "professional",
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Hovels Strength",
+          "Type": "Static",
+          "Description": "Gains + 1 Spirit per member of the hovel on dungeon."
+        },
+        {
+          "Name": "Coven of the Hovel",
+          "Type": "Static",
+          "Description": "The Hovel counts as a “Church” for the sharing of Scriptures of the Faith of Basic miracles. Must be battle boarding the guild to use them."
+        },
+        {
+          "Name": "Familiar",
+          "Type": "Static",
+          "Description": "May select a suitable witches familiar and gains neutrality to natural animals of that type. Once chosen cannot be changed, so should be noted on the card ."
+        }
+      ],
       "Intermediate": [],
-      "Advanced": []
+      "Advanced": [
+        {
+          "Name": "Witches Broom",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day if has a suitable Witches Broom phys rep gains a spiritual Walk on Air, and can carry up to one person. Cannot engage in melee combat while using this or it ends (probably with the witch falling off, falling only to be saved by the broom just before hitting the ground). Lasts 5 minutes or this can also be cast for 3 spirits."
+        },
+        {
+          "Name": "Dreams of tomorrow",
+          "Type": "Static",
+          "Description": "Gains a pre -dungeon lucky idea about the day ahead in a visionary style. If multiple members of the guild are on dungeon they all gain the same dream but more information is gained."
+        },
+        {
+          "Name": "Familiars knowledge 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as a spiritual major prayer about witchcraft or something relevant to your familiar ( so a familiar of a Cobra could be about poison)."
+        },
+        {
+          "Name": "Wonderous Talent",
+          "Type": "Static",
+          "Description": "Either gains well equipped with a single dungeon temp dose of a published Wonderous Elixir , or if able to make Wonderous Elixirs can choose to be able to use on dungeon makes to make them. They do not require set up components, and take 2 of the relevant make slot per dose made."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1374,8 +2969,44 @@
   "The Inward Eye": {
     "Type": "professional",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
+      "Basic": [
+        {
+          "Name": "Internal fortitude",
+          "Type": "Static",
+          "Description": "Gain +6 casting stamina"
+        },
+        {
+          "Name": "Insight of the Mind",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Gains Rec Neuronics. If owned then 1/day gains a Neuronic Major prayer about a thing identified with Rec Neuronics (and w hilst still using it)."
+        },
+        {
+          "Name": "Resolute mind",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "A member may choose to gain one of the following benefits for the next neuronic used within 10 seconds o 2 additional foci o Reduce the casting damage by 1 (this can reduce below 1/3rd and even to 0) o If touching another guild member split the casting damage evenly (round up in both cases if an odd number) between both members. This is after foci/reductions"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "a second use of resolute mind",
+          "Type": "Static",
+          "Description": "These may be used at the same time for two benefits if desired."
+        },
+        {
+          "Name": "Mental Transfer",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "With 30 seconds contact with a fellow guild member can grant them the use of one published neuronic the user of this can use. This requires casting the innate being granted (using an innate if an innate and taking casting damage). F or at will neuronics a single innate is gained."
+        },
+        {
+          "Name": "Inner reserves",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day can use a published neuronic that is owned as an innate even when all innates have been used for the day. Casting damage cannot be reduced and the user becomes unable to use that neuronic for the remainder of the day (even if it could be regained)."
+        }
+      ],
       "Advanced": []
     },
     "Availability": {
@@ -1404,9 +3035,41 @@
   "Natural Trust": {
     "Type": "professional",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Circle of Druids",
+          "Type": "Static",
+          "Description": "For each guild member on the adventure, gains +1EP"
+        },
+        {
+          "Name": "Life’s Memories",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Life’s Memories 1/day"
+        },
+        {
+          "Name": "Chosen Familiar",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Attune to an animal, requires a symbol of the creature, a piece of the creature, or incorporate that type of creatures appearance into a worn makeup design. Gain one of Jump 1/day, Assisted Climb 1/day, Sniff skill, +1 DAC or +1 innate PAC relevant to the creature chosen."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Draw on EP",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "as Alfar ability, but functions in any natural environment)."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Hand of Banishment",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "as post 8th druid tables). When using this innate can reduce the life suffered by sacrificing levels of resistance for 1 hour. Each level reduces the life by 5."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1434,9 +3097,66 @@
   "Shadow Legion": {
     "Type": "professional",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Shadow Legion! As war cry",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day"
+        },
+        {
+          "Name": "First Aid",
+          "Type": "Static",
+          "Description": "Character gains 15pts of Bandage Curing. As monk loc but requires bandaging not massage."
+        },
+        {
+          "Name": "Improvised Weaponry",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day, the character gains the first weapon mastery in a weapon after 30 secs examination of it, lasting for the rest of the day."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Battle Training",
+          "Type": "Static",
+          "Description": "either +6/2 life or +2 PAC while wearing armour or +1 DAC."
+        },
+        {
+          "Name": "Battle Fury",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Coldrage 1/Day"
+        },
+        {
+          "Name": "Battle Cry",
+          "Type": "Static",
+          "Description": "Whilst using the Shadow Legion War Cry above may also ignore other listed stopping effects for the duration for 6tblp/fx as per Determination."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Advanced Battle Training",
+          "Type": "Static",
+          "Description": "2nd choice from ‘battle training’ above."
+        },
+        {
+          "Name": "Legion’s Blow",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/Day As per the Sell Sword ability ‘Primal Strike’."
+        },
+        {
+          "Name": "Mercenary Soldier",
+          "Type": "Static",
+          "Description": "Gains ONE of the following – chosen at the start of the day: o Additional “Shadow Legion” War Cry as basic tier – and enhanceable as per Intermediate Tier. o Additional ‘Battle Fury’ as above o Medic: Bandaging from Basic Tier is now increased to 36pts of curing which may also cure TBLP."
+        },
+        {
+          "Name": "Bandaging skill,",
+          "Type": "Static",
+          "Description": "as per scout skill."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1464,8 +3184,32 @@
   "Sons and Daughters of Sirac": {
     "Type": "political",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
+      "Basic": [
+        {
+          "Name": "+ 3 Gold mana and + 1 Level of Casting",
+          "Type": "Static",
+          "Description": "for Gold spells."
+        },
+        {
+          "Name": "Purpose",
+          "Type": "Static",
+          "Description": "Gains + 3 Ivory mana and + 1 Level of Casting for Ivory spells."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Family Strength",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day can enhance a published Ivory or Gold spell (without any non -standard enhancements) to have + 50% effect if numerical ( e.g. Ivory Warriors) or + 50% duration if not ( e.g. Ivory armour) when cast on self or a fellow guild member."
+        },
+        {
+          "Name": "Those aligned to Harmony can cast a published self only Gold spell on a fellow guild member",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day."
+        }
+      ],
       "Advanced": []
     },
     "Availability": {
@@ -1494,8 +3238,38 @@
   "Top Secret": {
     "Type": "professional",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
+      "Basic": [
+        {
+          "Name": "Last nights lessons",
+          "Type": "Static",
+          "Description": "Gains a standard scout skill not owned already, or + 1 level in a skill owned (on dungeon only) to a max of 12."
+        },
+        {
+          "Name": "Ear to the ground",
+          "Type": "Static",
+          "Description": "Acts a pre -dungeon major prayer about useful things to know, this could be equipment to have, skills to know, or anything else relevant."
+        },
+        {
+          "Name": "Evade 2/day",
+          "Type": "Innate",
+          "Count": 2,
+          "Description": "Grants combat wary (which must be owned) vs one blow (even if used in the last 5 minutes), must be declared within 2 seconds of the blow."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Retreat",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day acts as a Jump away from a foe. Combat wary applies to all blows taken during the jump."
+        },
+        {
+          "Name": "Concealed 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Enhance a stealth so that it grants immunity to all forms of sights. Does not work with Greater stealth."
+        }
+      ],
       "Advanced": []
     },
     "Availability": {
@@ -1524,7 +3298,14 @@
   "18th Imperial Legion": {
     "Type": "social",
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Together 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Can only be used while on dungeon with another legion member, and is declared as a war cry. For 5 minutes gains immunity to one of the following: Fear, Emotion attacks, or Insanity."
+        }
+      ],
       "Intermediate": [],
       "Advanced": []
     },
@@ -1554,9 +3335,55 @@
   "Buggledexters": {
     "Type": "social",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Shield of the Meek",
+          "Type": "Static",
+          "Description": "No normal non -evil peon will attack the guild member, as they are supernaturally guided away from doing so by the forces of Light. Guild members are aware of these peons, and should they strike or injure one they are immediately cast ou t from the guild."
+        },
+        {
+          "Name": "Inspiration",
+          "Type": "Static",
+          "Description": "Guild member may grant one non -evil person an additional live to minus 6, which will stack with their own live to minus (but not guild abilities). This may be the guild member themselves if desired. If it not self, requires 30 seconds of friendly or inspiring conversation with the benefi ciary."
+        },
+        {
+          "Name": "Turn Away the Evil",
+          "Type": "Static",
+          "Description": "1st Innate of a mantic Repel Supernatural Evil – as per the paladinic ability to repel evil – but will only work on evil supernatural creatures such as demons and Undead"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Words of Comfort 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "May touch a single target and act as a Mantic Hearten and Pacification on the target for as long as the guild member remains touching them and focussing on them. This ends if the recipient or the guild member take any damage or use any powers."
+        },
+        {
+          "Name": "Words of Harmony 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as per the Hospitaller ability Voice of Reason."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Wisdom in the Words of Light",
+          "Type": "Static",
+          "Description": "Until the next dawn any person that has been affected by at least 60 seconds of “Words of Harmony” gains benefits as per Inspiriation (basic tier) unless evil. If that person is a non -evil peon, then the live to minus is doubled. The user of this innate also gains death link to all those affected – revealing the location, time and nature of their death (is a mantic information effect)."
+        },
+        {
+          "Name": "Words of Harmony 1/day",
+          "Type": "Update",
+          "Count": 1,
+          "Description": "Acts as per the Hospitaller ability Voice of Reason."
+        },
+        {
+          "Name": "a third Turn Away the Evil",
+          "Type": "Static",
+          "Description": "May use all three innates at the same time to act as a Hand of Banishment style effect which specifically only works on supernatural evil creatures which could in general terms affect the user – so an Elf could not banish a Wight – but a human could. If this ability is successful then they suffer 10TBLP per resistance level that the creature had."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1584,9 +3411,35 @@
   "Children of the Dusk": {
     "Type": "social",
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Draw on Magic",
+          "Type": "Innate",
+          "Count": 2,
+          "Description": "2/day ~ May expend “X” mana of racial innates ( max 12) to cure a guild member (not self) X TBLP/Loc damage."
+        },
+        {
+          "Name": "Evade Death",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day ~ First time the guild member would die on TBLP they may instead fall unconscious and gain a stacking live to minus 12 TBLP. To use this costs them 6 mana of racial innates."
+        },
+        {
+          "Name": "Magic is magic init?",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "may expend up to 6 mana of racial innates to regain a racial innate of up to 6 mana."
+        }
+      ],
       "Intermediate": [],
-      "Advanced": []
+      "Advanced": [
+        {
+          "Name": "Explosive Death 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Upon death can expend X mana of racial innates (these are used) and cause their slayer to suffer TBLP damage equal to three times the mana expended (1 hit to monsters per 3 TBLP). MAC applies at 1 for 1 and the damage is of the colour of innates used. This is a dying effect."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1659,9 +3512,50 @@
       ]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Strength of the Hearth",
+          "Type": "Static",
+          "Description": "Members gain + 3/1 life."
+        },
+        {
+          "Name": "A Strange Sense",
+          "Type": "Static",
+          "Description": "When using the racial evaluate members gain an instinct if there are supernatural qualities to an object, or something more than its grull value. They do not gain exact details just a sense that there is something there."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Strength of the Heart",
+          "Type": "Static",
+          "Description": "Now gains +6/2 life."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Well Armoured",
+          "Type": "Static",
+          "Description": "When wearing Master crafter metal armour gains + 1 Max A/C and the armour grants an additional point of PAC."
+        },
+        {
+          "Name": "The Clan Defenders 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "If a member of the guild is unconscious or incapacitated the guild member gains +6/2 life and an innate war cry. This lasts 5 minutes or until the threat is resolved, even if the guild members becomes active again. Hearth Protector - Stage Two : Cost: + 90 Table 7"
+        },
+        {
+          "Name": "Eyes of the Deep",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day for 5 minutes upgrades the Dwarves natural ability to see in the dark to act as per Senseless Vision."
+        },
+        {
+          "Name": "Denounce the Magic",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day for 5 minutes enhance the dwarves racial ½ effect magic to grant complete immunity to magic. This cannot be ended early."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1708,8 +3602,34 @@
       ]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
+      "Basic": [
+        {
+          "Name": "Heroic Stand",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day ~ Grants one member of the guild (does not have to be the person using the benefits) the benefits as per Illusions of Grandeur but it is physical in nature and not an insanity. Lasts 5 minutes as normal."
+        },
+        {
+          "Name": "The Greater Good",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day ~ Acts as a lucky idea about a “plan” and if it is broadly beneficial or dis - beneficial to the greater good."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Take Killing blow/effect for a peasant/innocent type at own resistances",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day"
+        },
+        {
+          "Name": "Discipline",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day"
+        }
+      ],
       "Advanced": []
     },
     "Availability": {
@@ -1738,7 +3658,24 @@
   "House D’treal": {
     "Type": "social",
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Ancient Family Pacts",
+          "Type": "Static",
+          "Description": "Once per day member of House D'treal can call on the House’s extensive catalogue of pacts to announce a published ancient folk pact. They gain this pact for 5 minutes and if they do not have a level for pacts it is gained at 8 levels."
+        },
+        {
+          "Name": "Pact with the Dragons",
+          "Type": "Static",
+          "Description": "The House has Pacts with all the Dragons and Drakes ; this grants the house member one rune of a pact with a Dragon or Drake (4 Levels) of their choice (chosen at the start of the day) as per the published spell. To cast the rune requires 30 seconds invoking the dragons power."
+        },
+        {
+          "Name": "Power behind the Throne",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "The D'treals have a great deal of clout in the Empire due to their elevated status and large numbers of Nobles, 1/ day acts as a Befriend versus any NPC Imperial Official as they realise that getting in with House D'treal may help their career."
+        }
+      ],
       "Intermediate": [],
       "Advanced": []
     },
@@ -1783,9 +3720,46 @@
       ]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Are you sure this is a good idea? 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Gains a ref triggered lucky idea if a fellow guild member is about to do something that could have bad consequences."
+        },
+        {
+          "Name": "We’re in this together 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as per war cry but can be used on other guild members at 20ft range."
+        },
+        {
+          "Name": "What did we all bring to the party",
+          "Type": "Static",
+          "Description": "At the start of the day gains an item of a 1st to 3rd level handbook miracle, or 1st to 4th level standard spell. These are chosen by the ref and should be useful on the dungeon. The items can only be used a member of t he guild, who requires the relevant utilise skill. Additionally the item cannot be used by the person that arrives on dungeon with it ."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "There’s a short cut in this ward 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as a mantic evasion vs one warding. If already has similar (EG Ghost and the relevant immunities) then can use this innate on a fellow guild member at touch range."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Knowledge of the Cults",
+          "Type": "Static",
+          "Description": "If in Khannibad gains a major prayers worth of broad info if meets a new Cult, Sect, or group. This is public knowledge about their aims, and it might be nothing, and it is likely all guild members will gain the same information."
+        },
+        {
+          "Name": "Look Reast Trusts Me 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "For 5 minutes counts as being Neutral rather than evil for effects that target the guild member based on alignment (EG immune to repel evil, answers neutral to auric colour, is effected by soul lance)."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1828,9 +3802,41 @@
       ]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Ward against the darks",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day ~ Grants the user ½ effect one of: fire, Electricity, green mana, or brown mana for 5 minutes ."
+        },
+        {
+          "Name": "Never act without reason",
+          "Type": "Static",
+          "Description": "Acts as per a discipline innate, but only lasts for 30 seconds."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Empowered by the Forgotten knights ~ Allows the user to empower one weapon so it inflicts either magic (Red, Green, Blue, and brown at the same time) or spirit (Goodly) damage for 5 minutes. While active the weapon also inflicts Flaming, Electrical, Water, and Earth based damage (of the chosen power base). ~",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Shield against the Enemy",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day ~ Acts as a mantic Shield against the dark but only applies vs damage from Red, Blue, Green, Brown or evil spirit damage. ~"
+        },
+
+        {
+          "Name": "Gains a second ward against the darks Luminescent",
+          "Type": "Static",
+          "Description": "Stage 2: + 50 Table 8"
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1859,9 +3865,56 @@
     "Type": "social",
     "Restrictions": "• You must not harm knights directly or indirectly and are required to help each other to the extent of",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Fearless",
+          "Type": "Immunity",
+          "Description": "Grants Immunity to fear as per tables."
+        },
+        {
+          "Name": "Skilled",
+          "Type": "Static",
+          "Description": "Gains 1st Weapon Mastery Broadsword (ability gained at 7th level). This does not stack with mastery broadsword from other sources."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Weapon Mastery Shield",
+          "Type": "Static",
+          "Description": "As tables"
+        },
+        {
+          "Name": "Blooded Knight",
+          "Type": "Static",
+          "Description": "Gains +1 Max AC and +6/2 life."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "For Imrazil 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as a War cry but is only usable on another KotL. It can be used at any time they are under the stopping effect, not just in the first 2 seconds. (75, 1) Templar – Stage three: Cos t +120 T able 7"
+        },
+        {
+          "Name": "Knights Oath",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day may use the KotL Oath to replace the verbal of a published miracle (not restore life/similar)."
+        },
+        {
+          "Name": "Quest 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Vs one opponent the Templar or one chosen KotL gains +12/4 life and immunity to listed stopping effects from them for 5 minutes. (90, 1) SEEKERS , OPEN TO : ANY WITHIN THE SCOUT BRACKET Stalker – Stage one: Cost 50 Table 1"
+        },
+        {
+          "Name": "Tracking as ranger, if already owned gains",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Seekers Instinct: 1/Day Grants a Lucky Idea about a creature has tracked or stalked. (40,2)"
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1904,7 +3957,24 @@
       ]
     },
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Bear’s Skill",
+          "Type": "Static",
+          "Description": "Gains either Tracking, Perception or Survival as per Ranger"
+        },
+        {
+          "Name": "Owl’s Wisdom",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Minor Prayer 1/ day."
+        },
+        {
+          "Name": "Totemic Boon",
+          "Type": "Static",
+          "Description": "Grants a Primal Soul Minor or Medium talent from the Prey or Predator options. Chosen at the start of the dungeon."
+        }
+      ],
       "Intermediate": [],
       "Advanced": []
     },
@@ -1939,7 +4009,23 @@
   "The Marauders": {
     "Type": "social",
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Knowledge of the Tribes",
+          "Type": "Static",
+          "Description": "After 30 seconds talking to a tribal creature can identify if they are not really a tribal creature (EG are in disguise). This is a physical informational effect and if a person is immune they appear as a genuine tribal creature."
+        },
+        {
+          "Name": "Free Will of the Tribes",
+          "Type": "Static",
+          "Description": "Gains + 1 level of resistance to domination effects not from tribal creatures."
+        },
+        {
+          "Name": "Hardened by the world",
+          "Type": "Static",
+          "Description": "Gains + 1 innate PAC, this is doubled against non -weapon blow attacks ( e.g. Call Lightning)."
+        }
+      ],
       "Intermediate": [],
       "Advanced": []
     },
@@ -1969,9 +4055,56 @@
   "The Order of Mercenaries": {
     "Type": "social",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Mercenary Problems 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "If has been stuck a t a line/ward/puzzle or something similar for at least 5 minutes gains a major prayer about how to solve the situation."
+        },
+        {
+          "Name": "Mercenaries Defence 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as per War Cry, but only applies to the effect it was used against not for 5 minutes."
+        },
+        {
+          "Name": "Strength in numbers",
+          "Type": "Static",
+          "Description": "Gains + 1 DAC if on dungeon with another guild member who is claiming guild benefits."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Mercenary Solutions",
+          "Type": "Static",
+          "Description": "If has used mercenary problems then for every minute still trying to solve the problem gains an extra major prayer until the problem is solved, or it ’s tavern time."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Mercenaries Return",
+          "Type": "Immunity",
+          "Description": "Gains Fated Hero (as table 1). If already owned gains immunity to slayer and fortified spirit."
+        },
+        {
+          "Name": "Mercenaries Unite!",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day can use a published self only ability on a guild member within 5ft. This could include a war cry, a cast spell, or similar. Must be to their benefit, to benefit from this must be claiming guild benefits."
+        },
+        {
+          "Name": "Strength in Numbers",
+          "Type": "Static",
+          "Description": "Gains One of the following per other guild member claiming guild benefits on dungeon. Can only take each option once: +1 DAC, + 1 PAC, + 1 MAC, + 1 SAC. The Mercenary Way – Guild Status Junior Mercenary - Stage one: Cost 50 Table 1"
+        },
+
+        {
+          "Name": "Gains a Second innate of Mercenaries Unite Jaded Mercenary",
+          "Type": "Static",
+          "Description": "Stage three: Cost +125 Table 8"
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -2007,9 +4140,90 @@
       "allowedPairs": ["Lawful Neutral", "Lawful Evil", "Lawful Good"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Talk To Ancestors",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/day . When at least one other member is present on adventure, gains an innate Speak with Ancestors, as per a Communication II of whatever power -base (including physical) the character has. If the character is not with another family -member, this is reduced to t wo Major Prayers of the same power -base as above. In either case the prayer requires 30 seconds calm contemplation. OR"
+        },
+        {
+          "Name": "Forearm Parry",
+          "Type": "Static",
+          "Description": "Attained at 8th level, and only if the character is a Warrior Subclass. May be learnt pre - 8th level if the teaching of Forearm Parry is done on adventure with Khyrhym personally (and signed onto the character by Khyrym and countersigned by t he desk)"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Spiritual Defence",
+          "Type": "Static",
+          "Description": "Gains + 1 SAC"
+        },
+        {
+          "Name": "Awareness",
+          "Type": "Static",
+          "Description": "6th Sense, as per tables BUT no DAC requirement."
+        },
+        {
+          "Name": "Mind Block",
+          "Type": "Static",
+          "Description": "As per Monk ability."
+        },
+        {
+          "Name": "Coldrage",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/ day as per published tables ability."
+        },
+        {
+          "Name": "Minor Prayer",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/ day asking the Panama Ancestors, same powerbase as ability above."
+        },
+        {
+          "Name": "Panama",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/ day as per Warcry"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Magical Defence",
+          "Type": "Static",
+          "Description": "Gains + 1MAC"
+        },
+        {
+          "Name": "Minor Prayer",
+          "Type": "Update",
+          "Count": 2,
+          "Description": "Extra innate as above (2/day in total)"
+        },
+        {
+          "Name": "Major Prayer",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/Day asking the Panama Ancestors, same powerbase as ability above."
+        },
+        {
+          "Name": "Potion Tolerance",
+          "Type": "Static",
+          "Description": "If has a potion restriction may now drink 10 extra potions per da y Clear Thoughts Bring a Focused Mind - Stage two: Cost + 150 Table 7"
+        },
+        {
+          "Name": "Enlightened by the Ancestors ; 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as per a Commune with the Gods, but the powerbase is as per the guild Talk to Ancestors. However cannot vocal ise the answer s to questions nor may they relay answers received until the comm is ended."
+        },
+        {
+          "Name": "Panthers Surge 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "When using the Panama War Cry benefit can choose to gain immunity to a second listed stopping effect at the time of use. Family gives Strength - Stage Three: Cost +1 50 Table 9"
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -2037,9 +4251,60 @@
   "Spider Tribe": {
     "Type": "social",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Stabby",
+          "Type": "Static",
+          "Description": "Gains E skill in daggers"
+        },
+        {
+          "Name": "Sneaky",
+          "Type": "Static",
+          "Description": "Gains +1 DAC"
+        },
+        {
+          "Name": "Camouflage",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/ day as druidic evocation but does not require a verbal or need woodland setting and may not be done in sight of foes."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Web",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "1/ day as bind but is physical and doesn’t require footwear. A webbed target may be cut free after 30 seconds of doing nothing else with a sharp weapon (but it is too sticky to break with bare hands or brute strength)"
+        },
+        {
+          "Name": "Camouflage",
+          "Type": "Update",
+          "Description": "2nd use of above innate"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Camouflage",
+          "Type": "Update",
+          "Description": "3rd use of above innate"
+        },
+        {
+          "Name": "Web",
+          "Type": "Update",
+          "Description": "2nd use of above innate"
+        },
+        {
+          "Name": "Vicious Goblin",
+          "Type": "Static",
+          "Description": "+1 cumulative Weapon Mastery with daggers. Sneaky Git - Stage two: Cost +80 Table 5"
+        },
+        {
+          "Name": "1/day Sneaky Goblin",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Can enhance a guild benefit camouflage to allow movement, as per an invisibility."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -2071,7 +4336,26 @@
   "The Swarm": {
     "Type": "social",
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Scurry 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts as per a physical lightstep ."
+        },
+        {
+          "Name": "Sneaky rat 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Acts in a similar manner to Evasion, but works regardless of the wards power base ."
+        },
+        {
+          "Name": "Feed on the Plague 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "If struck by a disease then can feed on it acting as a 12/12 cure of the same power base as the disease."
+        }
+      ],
       "Intermediate": [],
       "Advanced": []
     },
@@ -2113,7 +4397,20 @@
       "allowedPairs": ["Lawful Neutral", "Lawful Evil", "Lawful Good"]
     },
     "Benefits": {
-      "Basic": [],
+      "Basic": [
+        {
+          "Name": "Ward against Sin 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Declared as per a war cry and lasts for 5 minutes gains + 1 M AC, + 1 SAC, and + 1 Level of Resistance vs effects from someone evil, or that by their nature are evil ( i.e. evil miracles)."
+        },
+        {
+          "Name": "The White Ribbon",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Requires a white ribbon with the guild motto on it in red spirit runes to use. 1/day with 30 seconds prep acts as either a mantic slayer or a mantic fire blade ."
+        }
+      ],
       "Intermediate": [],
       "Advanced": []
     },

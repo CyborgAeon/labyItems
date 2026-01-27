@@ -36,7 +36,8 @@ public enum AbilityType
     Replace,
     CastingList,
     GuildOverride,
-    Update
+    Update,
+    LTM
 }
 
 public sealed class InnateAbilityDraft

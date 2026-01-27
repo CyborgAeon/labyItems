@@ -1,19 +1,9 @@
 {
   "Warrior": {
-    "Brackets": [
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "MaxAC 9",
-      "Versatile",
-      "Simple"
-    ],
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["MaxAC 9", "Versatile", "Simple"],
     "Armour": {
-      "Wearable": [
-        "heavy",
-        "light",
-        "medium"
-      ],
+      "Wearable": ["heavy", "light", "medium"],
       "Restrictions": []
     },
     "Levels": {
@@ -72,25 +62,13 @@
       ]
     },
     "Max AC": 9,
-    "Buy as": [
-      "1st class Warrior"
-    ]
+    "Buy as": ["1st class Warrior"]
   },
   "Warrior-Priest": {
-    "Brackets": [
-      "🛡️ Warrior",
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual caster",
-      "𐂫 Armoured",
-      "Combatant"
-    ],
+    "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Tags": ["Spiritual caster", "𐂫 Armoured", "Combatant"],
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium"
-      ],
+      "Wearable": ["light", "medium"],
       "Restrictions": []
     },
     "Levels": {
@@ -139,9 +117,7 @@
       ]
     },
     "Max AC": 7,
-    "Powerbase": [
-      "示 Spirit"
-    ],
+    "Powerbase": ["示 Spirit"],
     "PowerPerLevel": 3,
     "CasterLevel": 8,
     "PowerCalculations": [
@@ -197,20 +173,10 @@
     }
   },
   "Power Warrior": {
-    "Brackets": [
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "Magical protection",
-      "Combatant",
-      "Simple"
-    ],
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["Magical protection", "Combatant", "Simple"],
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
     "Levels": {
@@ -271,31 +237,15 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Good",
-          "Neutral",
-          "Evil"
-        ],
-        "order": [
-          "Lawful"
-        ]
+        "moral": ["Good", "Neutral", "Evil"],
+        "order": ["Lawful"]
       },
-      "allowedPairs": [
-        "Lawful Good",
-        "Lawful Evil"
-      ]
+      "allowedPairs": ["Lawful Good", "Lawful Evil"]
     }
   },
   "Power Master": {
-    "Brackets": [
-      "🛡️ Warrior",
-      "🧙 Wizard"
-    ],
-    "Tags": [
-      "Magical Caster",
-      "4 DAC",
-      "Combatant"
-    ],
+    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Tags": ["Magical Caster", "4 DAC", "Combatant"],
     "Levels": {
       "1": [
         {
@@ -385,9 +335,7 @@
       ]
     },
     "Max AC": "8",
-    "Powerbase": [
-      "🪄 Magic"
-    ],
+    "Powerbase": ["🪄 Magic"],
     "PowerPerLevel": "3",
     "CasterLevel": 8,
     "PowerCalculations": [
@@ -399,35 +347,17 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Good",
-          "Neutral",
-          "Evil"
-        ],
-        "order": [
-          "Lawful"
-        ]
+        "moral": ["Good", "Neutral", "Evil"],
+        "order": ["Lawful"]
       },
-      "allowedPairs": [
-        "Lawful Good",
-        "Lawful Neutral",
-        "Lawful Evil"
-      ]
+      "allowedPairs": ["Lawful Good", "Lawful Neutral", "Lawful Evil"]
     }
   },
   "Wind Dancer": {
-    "Brackets": [
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "3 DAC",
-      "Combatant",
-      "Ishmaic"
-    ],
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["3 DAC", "Combatant", "Ishmaic"],
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
+      "Wearable": ["light"],
       "Restrictions": []
     },
     "Levels": {
@@ -490,37 +420,17 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Good",
-          "Neutral",
-          "Evil"
-        ],
-        "order": [
-          "Lawful"
-        ]
+        "moral": ["Good", "Neutral", "Evil"],
+        "order": ["Lawful"]
       },
-      "allowedPairs": [
-        "Lawful Good",
-        "Lawful Neutral",
-        "Lawful Evil"
-      ]
+      "allowedPairs": ["Lawful Good", "Lawful Neutral", "Lawful Evil"]
     }
   },
   "Valdstayn": {
-    "Brackets": [
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "High Roleplay",
-      "Defender",
-      "Combatant"
-    ],
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["High Roleplay", "Defender", "Combatant"],
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
     "Levels": {
@@ -595,14 +505,8 @@
     "Max AC": 8
   },
   "Rovfuger": {
-    "Brackets": [
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "Suicidal",
-      "Combatant",
-      "MaxAC 9"
-    ],
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["Suicidal", "Combatant", "MaxAC 9"],
     "Levels": {
       "1": [
         {
@@ -682,18 +586,10 @@
     "Max AC": 9
   },
   "Kensai / Blade Master": {
-    "Brackets": [
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "High Damage",
-      "Combatant",
-      "4 DAC"
-    ],
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["High Damage", "Combatant", "4 DAC"],
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
+      "Wearable": ["light"],
       "Restrictions": []
     },
     "Levels": {
@@ -757,27 +653,14 @@
       ]
     },
     "Max AC": 9,
-    "Buy as": [
-      "Kensai",
-      "2nd class Warrior"
-    ]
+    "Buy as": ["Kensai", "2nd class Warrior"]
   },
   "Forest Guardian": {
-    "Brackets": [
-      "🌿 Druid"
-    ],
-    "Tags": [
-      "EP Caster",
-      "Combatant",
-      "Heal & Harm"
-    ],
+    "Brackets": ["🌿 Druid"],
+    "Tags": ["EP Caster", "Combatant", "Heal & Harm"],
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
-      "Restrictions": [
-        "No metal"
-      ]
+      "Wearable": ["light"],
+      "Restrictions": ["No metal"]
     },
     "Levels": {
       "1": [
@@ -871,9 +754,7 @@
       ]
     },
     "Max AC": 8,
-    "Powerbase": [
-      "🌍 Earthpower"
-    ],
+    "Powerbase": ["🌍 Earthpower"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -883,24 +764,13 @@
     ]
   },
   "Kallah Beggar": {
-    "Brackets": [
-      "⚔ Scout",
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "City Bound",
-      "Combatant",
-      "3 DAC"
-    ],
+    "Brackets": ["⚔ Scout", "🛡️ Warrior"],
+    "Tags": ["City Bound", "Combatant", "3 DAC"],
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
+      "Wearable": ["light"],
       "Restrictions": []
     },
-    "GuildOverrides": [
-      "City bound"
-    ],
+    "GuildOverrides": ["City bound"],
     "Levels": {
       "1": [
         {
@@ -985,31 +855,16 @@
       ]
     },
     "Max AC": 7,
-    "Buy as": [
-      "Kallah Beggar",
-      "2nd class Assassin",
-      "2nd class Warrior"
-    ]
+    "Buy as": ["Kallah Beggar", "2nd class Assassin", "2nd class Warrior"]
   },
   "Hanot Beggar": {
-    "Brackets": [
-      "⚔ Scout",
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "City Bound",
-      "Combatant",
-      "5 PAC"
-    ],
+    "Brackets": ["⚔ Scout", "🛡️ Warrior"],
+    "Tags": ["City Bound", "Combatant", "5 PAC"],
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
+      "Wearable": ["light"],
       "Restrictions": []
     },
-    "GuildOverrides": [
-      "City bound"
-    ],
+    "GuildOverrides": ["City bound"],
     "Levels": {
       "1": [
         {
@@ -1096,28 +951,14 @@
       ]
     },
     "Max AC": 8,
-    "Buy as": [
-      "Hanot Beggar",
-      "2nd class Pathfinder",
-      "2nd class Warrior"
-    ]
+    "Buy as": ["Hanot Beggar", "2nd class Pathfinder", "2nd class Warrior"]
   },
   "Paladin": {
-    "Brackets": [
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Combatant",
-      "MaxAC 9"
-    ],
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Max AC": 9,
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
     "Levels": {
@@ -1217,34 +1058,18 @@
     "alignmentRule": {
       "mode": "set",
       "allowed": {
-        "moral": [
-          "Good"
-        ],
-        "order": [
-          "Lawful"
-        ]
+        "moral": ["Good"],
+        "order": ["Lawful"]
       },
-      "allowedPairs": [
-        "Lawful Good"
-      ]
+      "allowedPairs": ["Lawful Good"]
     }
   },
   "Unholy Champion": {
-    "Brackets": [
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Combatant",
-      "MaxAC 9"
-    ],
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Max AC": 9,
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
     "Levels": {
@@ -1327,38 +1152,18 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Evil"
-        ],
-        "order": [
-          "Lawful",
-          "Neutral",
-          "Chaotic"
-        ]
+        "moral": ["Evil"],
+        "order": ["Lawful", "Neutral", "Chaotic"]
       },
-      "allowedPairs": [
-        "Lawful Evil",
-        "Neutral Evil",
-        "Chaotic Evil"
-      ]
+      "allowedPairs": ["Lawful Evil", "Neutral Evil", "Chaotic Evil"]
     }
   },
   "Grey Knight": {
-    "Brackets": [
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Combatant",
-      "MaxAC 9"
-    ],
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Max AC": 9,
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
     "Levels": {
@@ -1444,31 +1249,15 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Neutral"
-        ],
-        "order": [
-          "Lawful",
-          "Neutral",
-          "Chaotic"
-        ]
+        "moral": ["Neutral"],
+        "order": ["Lawful", "Neutral", "Chaotic"]
       },
-      "allowedPairs": [
-        "Lawful Neutral",
-        "True Neutral",
-        "Chaotic Neutral"
-      ]
+      "allowedPairs": ["Lawful Neutral", "True Neutral", "Chaotic Neutral"]
     }
   },
   "Budoka": {
-    "Brackets": [
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "4 DAC",
-      "Combatant",
-      "MaxAC 9"
-    ],
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["4 DAC", "Combatant", "MaxAC 9"],
     "Max AC": 9,
     "Levels": {
       "1": [
@@ -1544,18 +1333,9 @@
     }
   },
   "Sorcerer": {
-    "Brackets": [
-      "🛡️ Warrior",
-      "🧙 Wizard"
-    ],
-    "Tags": [
-      "Magical Caster",
-      "Combatant",
-      "Sorcorial Arts"
-    ],
-    "Buy as": [
-      "1st class Sorcerer"
-    ],
+    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Tags": ["Magical Caster", "Combatant", "Sorcorial Arts"],
+    "Buy as": ["1st class Sorcerer"],
     "Levels": {
       "1": [
         {
@@ -1602,9 +1382,7 @@
       ]
     },
     "Max AC": 8,
-    "Powerbase": [
-      "🪄 Magic"
-    ],
+    "Powerbase": ["🪄 Magic"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -1614,18 +1392,9 @@
     ]
   },
   "Vivomancer": {
-    "Brackets": [
-      "🧙 Wizard",
-      "🙏 Priest"
-    ],
-    "Buy as": [
-      "1st class Vivomancer"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Magical Caster",
-      "Mantics"
-    ],
+    "Brackets": ["🧙 Wizard", "🙏 Priest"],
+    "Buy as": ["1st class Vivomancer"],
+    "Tags": ["Spiritual Caster", "Magical Caster", "Mantics"],
     "Levels": {
       "1": [
         {
@@ -1685,23 +1454,12 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Good"
-        ],
-        "order": [
-          "Lawful",
-          "Neutral"
-        ]
+        "moral": ["Good"],
+        "order": ["Lawful", "Neutral"]
       },
-      "allowedPairs": [
-        "Lawful Good",
-        "Neutral Good"
-      ]
+      "allowedPairs": ["Lawful Good", "Neutral Good"]
     },
-    "Powerbase": [
-      "🪄 Magic",
-      "示 Spirit"
-    ],
+    "Powerbase": ["🪄 Magic", "示 Spirit"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -1760,18 +1518,9 @@
     }
   },
   "Vochstelen": {
-    "Brackets": [
-      "🛡️ Warrior",
-      "🧙 Wizard"
-    ],
-    "Tags": [
-      "Magical Caster",
-      "Combatant",
-      "MaxAC 9"
-    ],
-    "Buy as": [
-      "1st class Vochstelen"
-    ],
+    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Tags": ["Magical Caster", "Combatant", "MaxAC 9"],
+    "Buy as": ["1st class Vochstelen"],
     "Levels": {
       "1": [
         {
@@ -1839,17 +1588,9 @@
     "Max AC": 9
   },
   "Warlock": {
-    "Brackets": [
-      "🛡️ Warrior",
-      "🧙 Wizard"
-    ],
-    "Tags": [
-      "Magical Caster",
-      "Combatant"
-    ],
-    "Buy as": [
-      "1st class Warlock"
-    ],
+    "Brackets": ["🛡️ Warrior", "🧙 Wizard"],
+    "Tags": ["Magical Caster", "Combatant"],
+    "Buy as": ["1st class Warlock"],
     "Levels": {
       "1": [
         {
@@ -1911,9 +1652,7 @@
       ]
     },
     "Max AC": 8,
-    "Powerbase": [
-      "🪄 Magic"
-    ],
+    "Powerbase": ["🪄 Magic"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -1923,17 +1662,9 @@
     ]
   },
   "Wizard": {
-    "Brackets": [
-      "🧙 Wizard"
-    ],
-    "Tags": [
-      "Magical Caster",
-      "72 Mana",
-      "High Versatility"
-    ],
-    "Buy as": [
-      "1st class Wizard"
-    ],
+    "Brackets": ["🧙 Wizard"],
+    "Tags": ["Magical Caster", "72 Mana", "High Versatility"],
+    "Buy as": ["1st class Wizard"],
     "Levels": {
       "1": [
         {
@@ -1990,9 +1721,7 @@
       ]
     },
     "Max AC": 6,
-    "Powerbase": [
-      "🪄 Magic"
-    ],
+    "Powerbase": ["🪄 Magic"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -2002,17 +1731,9 @@
     ]
   },
   "High-Wizard": {
-    "Brackets": [
-      "🧙 Wizard"
-    ],
-    "Tags": [
-      "Magical Caster",
-      "Non-Combat",
-      "90 Mana"
-    ],
-    "Buy as": [
-      "1st class Wizard"
-    ],
+    "Brackets": ["🧙 Wizard"],
+    "Tags": ["Magical Caster", "Non-Combat", "90 Mana"],
+    "Buy as": ["1st class Wizard"],
     "Levels": {
       "1": [
         {
@@ -2056,10 +1777,8 @@
       ]
     },
     "Max AC": 6,
-    "Powerbase": [
-      "🪄 Magic"
-    ],
-    "CasterLevel": 8,
+    "Powerbase": ["🪄 Magic"],
+    "CasterLevel": 9,
     "PowerCalculations": [
       {
         "PowerBase": "Magic",
@@ -2068,19 +1787,10 @@
     ]
   },
   "Pathfinder": {
-    "Bracket": [
-      "⚔ Scout"
-    ],
-    "Tags": [
-      "Jack of all Trades",
-      "Soft-Combatant",
-      "High Versatility"
-    ],
+    "Bracket": ["⚔ Scout"],
+    "Tags": ["Jack of all Trades", "Soft-Combatant", "High Versatility"],
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium"
-      ],
+      "Wearable": ["light", "medium"],
       "Restrictions": []
     },
     "Max AC": 7,
@@ -2165,17 +1875,10 @@
     }
   },
   "Thug": {
-    "Bracket": [
-      "⚔ Scout"
-    ],
-    "Tags": [
-      "Combatant"
-    ],
+    "Bracket": ["⚔ Scout"],
+    "Tags": ["Combatant"],
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium"
-      ],
+      "Wearable": ["light", "medium"],
       "Restrictions": []
     },
     "Max AC": 8,
@@ -2251,20 +1954,11 @@
     }
   },
   "Assassin": {
-    "Bracket": [
-      "⚔ Scout"
-    ],
-    "Tags": [
-      "High Damage",
-      "Combatant"
-    ],
+    "Bracket": ["⚔ Scout"],
+    "Tags": ["High Damage", "Combatant"],
     "Max AC": 7,
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
     "Levels": {
@@ -2352,38 +2046,18 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Evil"
-        ],
-        "order": [
-          "Lawful",
-          "Neutral",
-          "Chaotic"
-        ]
+        "moral": ["Evil"],
+        "order": ["Lawful", "Neutral", "Chaotic"]
       },
-      "allowedPairs": [
-        "Lawful Evil",
-        "Neutral Evil",
-        "Chaotic Evil"
-      ]
+      "allowedPairs": ["Lawful Evil", "Neutral Evil", "Chaotic Evil"]
     }
   },
   "Rogue": {
-    "Bracket": [
-      "⚔ Scout",
-      "🪄 Wizard"
-    ],
-    "Tags": [
-      "Magical Caster",
-      "Soft-Combatant",
-      "Versatile"
-    ],
+    "Bracket": ["⚔ Scout", "🪄 Wizard"],
+    "Tags": ["Magical Caster", "Soft-Combatant", "Versatile"],
     "Max AC": 7,
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium"
-      ],
+      "Wearable": ["light", "medium"],
       "Restrictions": []
     },
     "Levels": {
@@ -2450,9 +2124,7 @@
         }
       ]
     },
-    "Powerbase": [
-      "🪄 Magic"
-    ],
+    "Powerbase": ["🪄 Magic"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -2462,20 +2134,11 @@
     ]
   },
   "Wayfinder": {
-    "Bracket": [
-      "⚔ Scout",
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Combatant"
-    ],
+    "Bracket": ["⚔ Scout", "🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant"],
     "Max AC": 7,
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium"
-      ],
+      "Wearable": ["light", "medium"],
       "Restrictions": []
     },
     "Levels": {
@@ -2566,20 +2229,11 @@
     ]
   },
   "Leywalker": {
-    "Bracket": [
-      "⚔ Scout",
-      "🌿 Druid"
-    ],
-    "Tags": [
-      "EP Caster",
-      "Combatant",
-      "Versatile"
-    ],
+    "Bracket": ["⚔ Scout", "🌿 Druid"],
+    "Tags": ["EP Caster", "Combatant", "Versatile"],
     "Max AC": 7,
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
+      "Wearable": ["light"],
       "Restrictions": []
     },
     "Levels": {
@@ -2655,9 +2309,7 @@
         }
       ]
     },
-    "Powerbase": [
-      "🌍 Earthpower"
-    ],
+    "Powerbase": ["🌍 Earthpower"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -2667,20 +2319,11 @@
     ]
   },
   "Spy": {
-    "Bracket": [
-      "⚔ Scout"
-    ],
-    "Tags": [
-      "Neuronic Caster",
-      "Combatant"
-    ],
+    "Bracket": ["⚔ Scout"],
+    "Tags": ["Neuronic Caster", "Combatant"],
     "Max AC": 7,
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
     "Levels": {
@@ -2776,21 +2419,11 @@
     }
   },
   "Artificer": {
-    "Bracket": [
-      "⚔ Scout"
-    ],
-    "Tags": [
-      "Neuronic Caster",
-      "Combatant",
-      "3 PAC"
-    ],
+    "Bracket": ["⚔ Scout"],
+    "Tags": ["Neuronic Caster", "Combatant", "3 PAC"],
     "Max AC": 7,
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
     "Levels": {
@@ -2886,19 +2519,11 @@
     }
   },
   "Pure-Priest": {
-    "Brackets": [
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Heal Or Harm",
-      "40 Spirits"
-    ],
+    "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Heal Or Harm", "40 Spirits"],
     "Armour": {
       "Wearable": [],
-      "Restrictions": [
-        "No physical"
-      ]
+      "Restrictions": ["No physical"]
     },
     "Levels": {
       "1": [
@@ -2948,9 +2573,7 @@
       "8": []
     },
     "Max AC": 7,
-    "Powerbase": [
-      "示 Spirit"
-    ],
+    "Powerbase": ["示 Spirit"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -2960,18 +2583,10 @@
     ]
   },
   "Armoured-Priest": {
-    "Brackets": [
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "32 Spirits"
-    ],
+    "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "32 Spirits"],
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium"
-      ],
+      "Wearable": ["light", "medium"],
       "Restrictions": []
     },
     "Levels": {
@@ -2985,9 +2600,7 @@
       "8": []
     },
     "Max AC": 7,
-    "Powerbase": [
-      "示 Spirit"
-    ],
+    "Powerbase": ["示 Spirit"],
     "PowerPerLevel": 4,
     "CasterLevel": 8,
     "PowerCalculations": [
@@ -3043,20 +2656,10 @@
     }
   },
   "Battle-Priest": {
-    "Brackets": [
-      "🛡️ Warrior",
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Combatant",
-      "16 Spirits"
-    ],
+    "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant", "16 Spirits"],
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium"
-      ],
+      "Wearable": ["light", "medium"],
       "Restrictions": []
     },
     "Levels": {
@@ -3106,9 +2709,7 @@
       ]
     },
     "Max AC": 8,
-    "Powerbase": [
-      "示 Spirit"
-    ],
+    "Powerbase": ["示 Spirit"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -3163,21 +2764,10 @@
     }
   },
   "Crusading-Priest": {
-    "Brackets": [
-      "🛡️ Warrior",
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Combatant",
-      "MaxAC 9"
-    ],
+    "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
     "Levels": {
@@ -3227,9 +2817,7 @@
       ]
     },
     "Max AC": 9,
-    "Powerbase": [
-      "示 Spirit"
-    ],
+    "Powerbase": ["示 Spirit"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -3284,21 +2872,10 @@
     }
   },
   "Spiritual-Warrior": {
-    "Brackets": [
-      "🛡️ Warrior",
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Combatant",
-      "MaxAC 9"
-    ],
+    "Brackets": ["🛡️ Warrior", "🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
     "Levels": {
@@ -3398,19 +2975,11 @@
     }
   },
   "Hospitaller": {
-    "Brackets": [
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Pacifist",
-      "48"
-    ],
+    "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Pacifist", "48"],
     "Armour": {
       "Wearable": [],
-      "Restrictions": [
-        "No physical"
-      ]
+      "Restrictions": ["No physical"]
     },
     "Levels": {
       "1": [],
@@ -3423,9 +2992,7 @@
       "8": []
     },
     "Max AC": 7,
-    "Powerbase": [
-      "示 Spirit"
-    ],
+    "Powerbase": ["示 Spirit"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -3436,20 +3003,10 @@
     "alignmentRule": {
       "mode": "set",
       "allowed": {
-        "moral": [
-          "Good"
-        ],
-        "order": [
-          "Lawful",
-          "Neutral",
-          "Chaotic"
-        ]
+        "moral": ["Good"],
+        "order": ["Lawful", "Neutral", "Chaotic"]
       },
-      "allowedPairs": [
-        "Lawful Good",
-        "Neutral Good",
-        "Chaotic Good"
-      ]
+      "allowedPairs": ["Lawful Good", "Neutral Good", "Chaotic Good"]
     },
     "levels": {
       "1": [
@@ -3498,14 +3055,8 @@
     }
   },
   "Witch": {
-    "Brackets": [
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Combatant",
-      "Potion Brewing"
-    ],
+    "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant", "Potion Brewing"],
     "Armour": {
       "Wearable": [],
       "Restrictions": []
@@ -3575,9 +3126,7 @@
       "8": []
     },
     "Max AC": 6,
-    "Powerbase": [
-      "示 Spirit"
-    ],
+    "Powerbase": ["示 Spirit"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -3632,21 +3181,11 @@
     }
   },
   "Friar": {
-    "Brackets": [
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Combatant",
-      "24 Spirits"
-    ],
+    "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Combatant", "24 Spirits"],
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
-      "Restrictions": [
-        "May never wear heavier"
-      ]
+      "Wearable": ["light"],
+      "Restrictions": ["May never wear heavier"]
     },
     "Levels": {
       "1": [
@@ -3713,9 +3252,7 @@
       ]
     },
     "Max AC": 6,
-    "Powerbase": [
-      "示 Spirit"
-    ],
+    "Powerbase": ["示 Spirit"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -3725,13 +3262,8 @@
     ]
   },
   "Shaman": {
-    "Brackets": [
-      "🙏 Priest"
-    ],
-    "Tags": [
-      "Spiritual Caster",
-      "Variant Spirits"
-    ],
+    "Brackets": ["🙏 Priest"],
+    "Tags": ["Spiritual Caster", "Variant Spirits"],
     "Armour": {
       "Wearable": [],
       "Restrictions": []
@@ -3806,21 +3338,11 @@
     }
   },
   "Druid": {
-    "Brackets": [
-      "🌿 Druid"
-    ],
-    "Tags": [
-      "EP Caster",
-      "Combatant",
-      "Heal & Harm"
-    ],
+    "Brackets": ["🌿 Druid"],
+    "Tags": ["EP Caster", "Combatant", "Heal & Harm"],
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
-      "Restrictions": [
-        "No metal"
-      ]
+      "Wearable": ["light"],
+      "Restrictions": ["No metal"]
     },
     "Levels": {
       "1": [
@@ -3903,9 +3425,7 @@
       ]
     },
     "Max AC": 7,
-    "Powerbase": [
-      "🌍 Earthpower"
-    ],
+    "Powerbase": ["🌍 Earthpower"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -3915,20 +3435,11 @@
     ]
   },
   "High Druid": {
-    "Brackets": [
-      "🌿 Druid"
-    ],
-    "Tags": [
-      "EP Caster",
-      "Heal & Harm",
-      "72 Earthpower"
-    ],
+    "Brackets": ["🌿 Druid"],
+    "Tags": ["EP Caster", "Heal & Harm", "72 Earthpower"],
     "Armour": {
       "Wearable": [],
-      "Restrictions": [
-        "No armour",
-        "No shields"
-      ]
+      "Restrictions": ["No armour", "No shields"]
     },
     "Levels": {
       "1": [
@@ -3994,9 +3505,7 @@
       "8": []
     },
     "Max AC": 7,
-    "Powerbase": [
-      "🌍 Earthpower"
-    ],
+    "Powerbase": ["🌍 Earthpower"],
     "CasterLevel": 8,
     "PowerCalculations": [
       {
@@ -4007,19 +3516,11 @@
   },
   "Psi-Master": {
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
+      "Wearable": ["light"],
       "Restrictions": []
     },
-    "Brackets": [
-      "🧠 Neuro",
-      "🛡️ Warrior"
-    ],
-    "Tags": [
-      "Neuronic Caster",
-      "Combatant"
-    ],
+    "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
+    "Tags": ["Neuronic Caster", "Combatant"],
     "Levels": {
       "1": [
         {
@@ -4129,37 +3630,19 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Evil",
-          "Neutral",
-          "Good"
-        ],
-        "order": [
-          "Lawful"
-        ]
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
       },
-      "allowedPairs": [
-        "Lawful Evil",
-        "Lawful Neutral",
-        "Lawful Good"
-      ]
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
     }
   },
   "Seer": {
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
-      "Restrictions": [
-        "No shields"
-      ]
+      "Wearable": ["light"],
+      "Restrictions": ["No shields"]
     },
-    "Tags": [
-      "Neuronic Caster"
-    ],
-    "Brackets": [
-      "🧠 Neuro"
-    ],
+    "Tags": ["Neuronic Caster"],
+    "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
         {
@@ -4247,37 +3730,19 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Evil",
-          "Neutral",
-          "Good"
-        ],
-        "order": [
-          "Lawful"
-        ]
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
       },
-      "allowedPairs": [
-        "Lawful Evil",
-        "Lawful Neutral",
-        "Lawful Good"
-      ]
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
     }
   },
   "Mystic": {
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
-      "Restrictions": [
-        "No shields"
-      ]
+      "Wearable": ["light"],
+      "Restrictions": ["No shields"]
     },
-    "Tags": [
-      "Neuronic Caster"
-    ],
-    "Brackets": [
-      "🧠 Neuro"
-    ],
+    "Tags": ["Neuronic Caster"],
+    "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
         {
@@ -4351,38 +3816,19 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Evil",
-          "Neutral",
-          "Good"
-        ],
-        "order": [
-          "Lawful"
-        ]
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
       },
-      "allowedPairs": [
-        "Lawful Evil",
-        "Lawful Neutral",
-        "Lawful Good"
-      ]
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
     }
   },
   "Silver Warden": {
     "Armour": {
-      "Wearable": [
-        "light",
-        "medium",
-        "heavy"
-      ],
+      "Wearable": ["light", "medium", "heavy"],
       "Restrictions": []
     },
-    "Tags": [
-      "Neuronic Caster"
-    ],
-    "Brackets": [
-      "🧠 Neuro",
-      "🛡️ Warrior"
-    ],
+    "Tags": ["Neuronic Caster"],
+    "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
     "Levels": {
       "1": [
         {
@@ -4488,37 +3934,19 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Evil",
-          "Neutral",
-          "Good"
-        ],
-        "order": [
-          "Lawful"
-        ]
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
       },
-      "allowedPairs": [
-        "Lawful Evil",
-        "Lawful Neutral",
-        "Lawful Good"
-      ]
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
     }
   },
   "Psionic Drowe": {
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
-      "Restrictions": [
-        "No shields"
-      ]
+      "Wearable": ["light"],
+      "Restrictions": ["No shields"]
     },
-    "Tags": [
-      "Neuronic Caster"
-    ],
-    "Brackets": [
-      "🧠 Neuro"
-    ],
+    "Tags": ["Neuronic Caster"],
+    "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
         {
@@ -4580,37 +4008,19 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Evil",
-          "Neutral",
-          "Good"
-        ],
-        "order": [
-          "Lawful"
-        ]
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
       },
-      "allowedPairs": [
-        "Lawful Evil",
-        "Lawful Neutral",
-        "Lawful Good"
-      ]
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
     }
   },
   "Mind Weaver": {
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
-      "Restrictions": [
-        "No shields"
-      ]
+      "Wearable": ["light"],
+      "Restrictions": ["No shields"]
     },
-    "Tags": [
-      "Neuronic Caster"
-    ],
-    "Brackets": [
-      "🧠 Neuro"
-    ],
+    "Tags": ["Neuronic Caster"],
+    "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
         {
@@ -4688,36 +4098,19 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": [
-          "Evil",
-          "Neutral",
-          "Good"
-        ],
-        "order": [
-          "Lawful"
-        ]
+        "moral": ["Evil", "Neutral", "Good"],
+        "order": ["Lawful"]
       },
-      "allowedPairs": [
-        "Lawful Evil",
-        "Lawful Neutral",
-        "Lawful Good"
-      ]
+      "allowedPairs": ["Lawful Evil", "Lawful Neutral", "Lawful Good"]
     }
   },
   "Awakener": {
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
+      "Wearable": ["light"],
       "Restrictions": []
     },
-    "Tags": [
-      "Neuronic Caster"
-    ],
-    "Brackets": [
-      "🧠 Neuro",
-      "⚔ Scout"
-    ],
+    "Tags": ["Neuronic Caster"],
+    "Brackets": ["🧠 Neuro", "⚔ Scout"],
     "Levels": {
       "1": [
         {
@@ -4813,19 +4206,11 @@
   },
   "Psycher": {
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
-      "Restrictions": [
-        "No shields"
-      ]
+      "Wearable": ["light"],
+      "Restrictions": ["No shields"]
     },
-    "Tags": [
-      "Neuronic Caster"
-    ],
-    "Brackets": [
-      "🧠 Neuro"
-    ],
+    "Tags": ["Neuronic Caster"],
+    "Brackets": ["🧠 Neuro"],
     "Levels": {
       "1": [
         {
@@ -4899,18 +4284,11 @@
   },
   "Slayer": {
     "Armour": {
-      "Wearable": [
-        "light"
-      ],
+      "Wearable": ["light"],
       "Restrictions": []
     },
-    "Tags": [
-      "Neuronic Caster"
-    ],
-    "Brackets": [
-      "🧠 Neuro",
-      "🛡️ Warrior"
-    ],
+    "Tags": ["Neuronic Caster"],
+    "Brackets": ["🧠 Neuro", "🛡️ Warrior"],
     "Levels": {
       "1": [
         {

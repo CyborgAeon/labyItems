@@ -119,7 +119,7 @@
     },
     "AdditionalInfo": "Post 8th Level Development\nThe threshold for Silver Folk buying neuronic abilities from Table 6 is only 200 points. Neuronic Penetrations may not be bought from this table, instead extra uses of these and Neuro-Synaptic Jumps may be acquired on Table 1 at the costs detailed in the table below, to a maximum number of extra uses as listed on the table.\nSilver Folk may multi-class as normal to Wizard, Warrior or Spirit Warrior, and additionally may become Unholy Champions for the standard cost, gaining life points as Silver Folk Spirit Warrior."
   },
-  "Elysians": {
+  "Elysian": {
     "PeopleType": ["Standard"],
     "Description": "In the summer of IM 996 a band of courageous adventurers managed to rescue a few hundred people from a doomed world in another time and place, mere days before its destruction. These refugees are of the Elysian race - a race formed by the act of the goodly gods of their world sacrificing themselves and releasing their divine power into devout human worshippers, to create a truly good race to set against the evils of their world.\n\nThe Enoch-Khan caste, warriors of the Elysian race, were all destroyed when their world was annihilated, staying behind to hold open the inter-dimensional portals which allowed a scant few Elysians (and the adventuring group) to escape. The pacifist Elysians who remain are struggling to survive in an unfamiliar world.\n\nTheir task is made more difficult by the fact that the stress caused by the trans-dimensional passage and the final destruction of their godly forefathers has caused great mental trauma in the psychically sensitive race, resulting often in total amnesia. For this reason those few Elysians that have left their ghettos and mingled with Labyrinthian citizens often seem confused as to their past and history.\n\nDue to their contemplative and peaceful nature, Elysians have developed a natural affinity for neuronics and due to the suffusion of their essence with the power of their gods they are naturally resistant to a number of things; however their passive, non-physical lifestyle means that their physical frames are very weak. All Elysians were marked by the touch of their deities, and have white skin with gold or blue markings upon it.\n\nAll Elysians are immune to alignment change of all forms, and all must be Lawful Good or Neutral Good. They gain half-effect poison, and against evil spiritual effects may double their resistance levels and halve the duration of any effect. Due to their weak bodies, all Elysians find strong medications and herbs difficult to ingest – they gain only half benefit from beneficial ingestive potions of all kinds, including healing potions.\n\nNo Elysian may ever wield any form of weapon, even purely supernatural ones. They have a strong repugnance for violence, and will only cause direct harm to others in self-defence - if they willingly do so they gain no level or points for the adventure.\n\nAll Elysians gain the following neuronic powers:\nElysian Racial Neuronics",
     "levelledAbilities": {
@@ -131,8 +131,7 @@
       "6": [{ "Name": "Telepathy", "Type": "Innate", "Count": 4 }],
       "7": [],
       "8": []
-    },
-    "AdditionalInfo": "Elysians may be Pure Priests, High Wizards, Vivomancers or Mind Weavers.\npost-8th Development\nElysians are naturally psychic, and may buy neuronics as listed below. They may never make use of or acquire any ability that would grant them greater than +1 strength, and pay an additional +50% on all abilities that grant them additional life.\nElysians of any class may skip some abilities on the active and passive neuronics trees, and buy others at reduced cost due to already having limited innates of the ability. These tables replace the standard active and passive neuronics trees for Elysians."
+    }
   },
   "Alfar": {
     "PeopleType": ["Standard"],
@@ -710,30 +709,6 @@
       "1": [
         {
           "Name": "Consume Primal Vitae",
-          "Type": "Innate",
-          "Count": 4
-        }
-      ]
-    }
-  },
-  "Elysian": {
-    "PeopleType": ["Magic Kin"],
-    "Description": "Elysians are god-touched refugees from a destroyed world, created from divine sacrifice to embody goodness. Pacifistic, psychically sensitive, and often amnesiac from trauma, they struggle to survive in exile. Physically frail but spiritually resilient, they resist evil, cannot turn from good, and bear white skin marked in gold or blue.",
-    "levelledAbilities": {
-      "1": [
-        {
-          "Name": "Detect Possible Neuronic Activity",
-          "Type": "AtWill"
-        }
-      ],
-      "3": [
-        {
-          "Name": "Auric Colour"
-        }
-      ],
-      "6": [
-        {
-          "Name": "Telepathy",
           "Type": "Innate",
           "Count": 4
         }

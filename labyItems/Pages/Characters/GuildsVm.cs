@@ -32,7 +32,11 @@ public sealed class GuildsVm : INotifyPropertyChanged
         Raise(name);
         return true;
     }
-    private void RaiseSelectedGuildsChanged() => Raise(nameof(SelectedGuilds));
+    private void RaiseSelectedGuildsChanged()
+    {
+        Raise(nameof(SelectedGuilds));
+        Raise(nameof(IsComplete));
+    }
 
     private readonly CharacterDraft _draft;
     private readonly Action _notifyWizardGatingChanged;
@@ -89,6 +93,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
             .Where(g => g.IsSelected)
             .OrderBy(g => g.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
+    public bool IsComplete =>
+        SelectedGuilds.All(g => g.AreBenefitOptionsComplete);
 
     public ICommand ToggleExpandedCommand { get; }
     public ICommand ToggleSelectedCommand { get; }
@@ -171,6 +177,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 BasicBenefits = FormatBenefitList(rec.Benefits?.Basic),
                 IntermediateBenefits = FormatBenefitList(rec.Benefits?.Intermediate),
                 AdvancedBenefits = FormatBenefitList(rec.Benefits?.Advanced),
+                BasicOptionGroups = BuildBenefitOptionGroups(name, "Basic", rec.Benefits?.Basic),
+                IntermediateOptionGroups = BuildBenefitOptionGroups(name, "Intermediate", rec.Benefits?.Intermediate),
+                AdvancedOptionGroups = BuildBenefitOptionGroups(name, "Advanced", rec.Benefits?.Advanced),
                 MiracleRows = BuildMiracleRows(rec.MiracleList),
                 IsSelected = isSelected,
                 IsExpanded = false,
@@ -592,12 +601,15 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return rows;
     }
 
-    private static List<string> FormatBenefitList(IEnumerable<AbilityDefinition>? benefits)
+    private static List<string> FormatBenefitList(IEnumerable<GuildBenefitEntry>? benefits)
     {
         var list = new List<string>();
-        foreach (var benefit in benefits ?? Enumerable.Empty<AbilityDefinition>())
+        foreach (var benefit in benefits ?? Enumerable.Empty<GuildBenefitEntry>())
         {
-            var display = FormatBenefit(benefit);
+            if (benefit?.Ability == null)
+                continue;
+
+            var display = FormatBenefit(benefit.Ability);
             if (!string.IsNullOrWhiteSpace(display))
                 list.Add(display);
         }
@@ -643,7 +655,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
                    || (g.Restrictions?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
                    || g.BasicBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
                    || g.IntermediateBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
-                   || g.AdvancedBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase));
+                   || g.AdvancedBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
+                   || MatchesOptionGroups(g.BasicOptionGroups, text)
+                   || MatchesOptionGroups(g.IntermediateOptionGroups, text)
+                   || MatchesOptionGroups(g.AdvancedOptionGroups, text);
         }
 
         var list = AllGuilds.Where(Matches)
@@ -717,6 +732,109 @@ public sealed class GuildsVm : INotifyPropertyChanged
         }
 
         item.IsExpanded = !item.IsExpanded;
+    }
+
+    private static bool MatchesOptionGroups(IEnumerable<GuildBenefitOptionGroupVm> groups, string text)
+    {
+        foreach (var group in groups ?? Enumerable.Empty<GuildBenefitOptionGroupVm>())
+        {
+            if (group.OptionLabels.Any(o => o.Contains(text, StringComparison.OrdinalIgnoreCase)))
+                return true;
+
+            if (group.SelectedLines.Any(l => l.Contains(text, StringComparison.OrdinalIgnoreCase)))
+                return true;
+        }
+
+        return false;
+    }
+
+    private List<GuildBenefitOptionGroupVm> BuildBenefitOptionGroups(
+        string guildName,
+        string tier,
+        IEnumerable<GuildBenefitEntry>? benefits)
+    {
+        var list = new List<GuildBenefitOptionGroupVm>();
+        if (string.IsNullOrWhiteSpace(guildName))
+            return list;
+
+        var optionIndex = 0;
+        foreach (var entry in benefits ?? Enumerable.Empty<GuildBenefitEntry>())
+        {
+            if (entry?.Options == null || entry.Options.Count == 0)
+                continue;
+
+            optionIndex++;
+            var key = GuildBenefitKeys.BuildSelectionKey(guildName, tier, optionIndex);
+            var options = entry.Options
+                .Select(o => BuildOptionVm(o))
+                .Where(o => o != null)
+                .Cast<GuildBenefitOptionVm>()
+                .ToList();
+
+            if (options.Count == 0)
+                continue;
+
+            var selected = _draft.GuildBenefitSelections.TryGetValue(key, out var saved)
+                ? saved
+                : (int?)null;
+
+            var vm = new GuildBenefitOptionGroupVm(key, options, selected, OnBenefitOptionSelectionChanged);
+            list.Add(vm);
+        }
+
+        return list;
+    }
+
+    private GuildBenefitOptionVm? BuildOptionVm(GuildBenefitOption option)
+    {
+        if (option?.Abilities == null || option.Abilities.Count == 0)
+            return null;
+
+        var label = BuildOptionLabel(option.Abilities);
+        var lines = option.Abilities
+            .Select(FormatBenefit)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .ToList();
+
+        return new GuildBenefitOptionVm
+        {
+            Label = label,
+            Abilities = option.Abilities,
+            Lines = lines
+        };
+    }
+
+    private static string BuildOptionLabel(IEnumerable<AbilityDefinition> abilities)
+    {
+        var names = abilities
+            .Select(a => (a?.Name ?? string.Empty).Trim())
+            .Where(n => n.Length > 0)
+            .ToList();
+
+        if (names.Count == 0)
+            return "Option";
+
+        if (names.Count == 1)
+            return names[0];
+
+        return $"{names[0]} +{names.Count - 1}";
+    }
+
+    private void OnBenefitOptionSelectionChanged(GuildBenefitOptionGroupVm group)
+    {
+        if (group == null)
+            return;
+
+        if (group.SelectedIndex.HasValue)
+            _draft.GuildBenefitSelections[group.SelectionKey] = group.SelectedIndex.Value;
+        else
+            _draft.GuildBenefitSelections.Remove(group.SelectionKey);
+
+        Raise(nameof(IsComplete));
+        _notifyWizardGatingChanged();
+
+        if (_refreshDraftAbilitiesAsync != null)
+            MainThread.BeginInvokeOnMainThread(async () => await _refreshDraftAbilitiesAsync());
     }
 
     private void ToggleSelected(GuildCardVm? item)
@@ -827,16 +945,26 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public List<string> BasicBenefits { get; set; } = new();
     public List<string> IntermediateBenefits { get; set; } = new();
     public List<string> AdvancedBenefits { get; set; } = new();
+    public List<GuildBenefitOptionGroupVm> BasicOptionGroups { get; set; } = new();
+    public List<GuildBenefitOptionGroupVm> IntermediateOptionGroups { get; set; } = new();
+    public List<GuildBenefitOptionGroupVm> AdvancedOptionGroups { get; set; } = new();
     public List<GuildMiracleRowVm> MiracleRows { get; set; } = new();
 
     public bool HasRestrictions => !string.IsNullOrWhiteSpace(Restrictions);
 
-    public bool HasBasic => BasicBenefits.Count > 0;
-    public bool HasIntermediate => IntermediateBenefits.Count > 0;
-    public bool HasAdvanced => AdvancedBenefits.Count > 0;
+    public bool HasBasic => BasicBenefits.Count > 0 || BasicOptionGroups.Count > 0;
+    public bool HasIntermediate => IntermediateBenefits.Count > 0 || IntermediateOptionGroups.Count > 0;
+    public bool HasAdvanced => AdvancedBenefits.Count > 0 || AdvancedOptionGroups.Count > 0;
     public bool HasMiracles => MiracleRows.Count > 0;
 
     public bool HasAnyBenefits => HasBasic || HasIntermediate || HasAdvanced;
+    public bool HasBasicOptions => BasicOptionGroups.Count > 0;
+    public bool HasIntermediateOptions => IntermediateOptionGroups.Count > 0;
+    public bool HasAdvancedOptions => AdvancedOptionGroups.Count > 0;
+    public bool AreBenefitOptionsComplete =>
+        BasicOptionGroups.All(g => g.HasSelection)
+        && IntermediateOptionGroups.All(g => g.HasSelection)
+        && AdvancedOptionGroups.All(g => g.HasSelection);
 
     public double ChevronRotation => IsExpanded ? 180 : 0;
 
@@ -867,6 +995,116 @@ public sealed class GuildCardVm : INotifyPropertyChanged
             Raise();
         }
     }
+}
+
+public sealed class GuildBenefitOptionGroupVm : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void Raise([CallerMemberName] string? name = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+    private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        Raise(name);
+        return true;
+    }
+
+    private readonly Action<GuildBenefitOptionGroupVm> _onSelectionChanged;
+    private bool _suppressNotify;
+    private string? _selectedOption;
+    private int? _selectedIndex;
+
+    public string SelectionKey { get; }
+    public ObservableCollection<string> OptionLabels { get; }
+    public IReadOnlyList<GuildBenefitOptionVm> Options { get; }
+
+    public string? SelectedOption
+    {
+        get => _selectedOption;
+        set
+        {
+            var normalized = (value ?? string.Empty).Trim();
+            if (normalized.Length == 0)
+                normalized = null;
+
+            if (!Set(ref _selectedOption, normalized))
+                return;
+
+            _selectedIndex = ResolveIndex(normalized);
+            Raise(nameof(SelectedIndex));
+            Raise(nameof(HasSelection));
+            Raise(nameof(SelectedLines));
+
+            if (!_suppressNotify)
+                _onSelectionChanged(this);
+        }
+    }
+
+    public int? SelectedIndex => _selectedIndex;
+
+    public bool HasSelection => _selectedIndex.HasValue;
+
+    public IEnumerable<string> SelectedLines
+    {
+        get
+        {
+            if (!_selectedIndex.HasValue)
+                return Enumerable.Empty<string>();
+
+            var idx = _selectedIndex.Value - 1;
+            if (idx < 0 || idx >= Options.Count)
+                return Enumerable.Empty<string>();
+
+            return Options[idx].Lines;
+        }
+    }
+
+    public GuildBenefitOptionGroupVm(
+        string selectionKey,
+        IReadOnlyList<GuildBenefitOptionVm> options,
+        int? initialSelectionIndex,
+        Action<GuildBenefitOptionGroupVm> onSelectionChanged)
+    {
+        SelectionKey = selectionKey ?? string.Empty;
+        Options = options ?? new List<GuildBenefitOptionVm>();
+        OptionLabels = new ObservableCollection<string>(Options.Select(o => o.Label));
+        _onSelectionChanged = onSelectionChanged;
+
+        if (initialSelectionIndex.HasValue)
+        {
+            var idx = initialSelectionIndex.Value - 1;
+            if (idx >= 0 && idx < OptionLabels.Count)
+            {
+                _suppressNotify = true;
+                SelectedOption = OptionLabels[idx];
+                _suppressNotify = false;
+            }
+        }
+    }
+
+    private int? ResolveIndex(string? label)
+    {
+        if (string.IsNullOrWhiteSpace(label))
+            return null;
+
+        for (var i = 0; i < OptionLabels.Count; i++)
+        {
+            if (string.Equals(OptionLabels[i], label, StringComparison.OrdinalIgnoreCase))
+                return i + 1;
+        }
+
+        return null;
+    }
+}
+
+public sealed class GuildBenefitOptionVm
+{
+    public string Label { get; init; } = string.Empty;
+    public List<AbilityDefinition> Abilities { get; init; } = new();
+    public List<string> Lines { get; init; } = new();
 }
 
 public sealed class GuildMiracleRowVm

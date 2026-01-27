@@ -333,8 +333,8 @@ public sealed class WizardVm : INotifyPropertyChanged
         {
             1 => Draft.IsRaceAndClassSelected,
             2 => Draft.IsRaceAndClassSelected && IsStep2Valid(),
-            3 => Draft.IsRaceAndClassSelected && IsStep2Valid(),
-            4 => Draft.IsRaceAndClassSelected && IsStep2Valid(),
+            3 => Draft.IsRaceAndClassSelected && IsStep2Valid() && GuildsVm.IsComplete,
+            4 => Draft.IsRaceAndClassSelected && IsStep2Valid() && GuildsVm.IsComplete,
             _ => false
         };
     }
