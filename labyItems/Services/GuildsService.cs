@@ -122,14 +122,16 @@ public sealed class GuildRecord
     [JsonPropertyName("alignmentRule")]
     public AlignmentRule? AlignmentRule { get; set; }
 
+    public Dictionary<string, List<string>> MiracleList { get; set; } = new();
+
     public GuildAvailability Availability { get; set; } = new();
 }
 
 public sealed class GuildBenefits
 {
-    public List<string> Basic { get; set; } = new();
-    public List<string> Intermediate { get; set; } = new();
-    public List<string> Advanced { get; set; } = new();
+    public List<AbilityDefinition> Basic { get; set; } = new();
+    public List<AbilityDefinition> Intermediate { get; set; } = new();
+    public List<AbilityDefinition> Advanced { get; set; } = new();
 }
 
 public sealed class GuildAvailability

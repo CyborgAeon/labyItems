@@ -33,14 +33,13 @@
                 KeyText="{Binding KeyText, Source={x:Reference ArmourSlider}}"
                 ValueText="{Binding ValueText, Source={x:Reference ArmourSlider}}"/>
             <controls:DictionarySlider x:Name="ArmourSlider"
-                                       KeyFormat="Worn PAC: {0}"
+                                       KeyFormat=""
                                        ValueFormat=""
-                                       MinCount="0"
-                                       MaxCount="{Binding ArmourMaxTotalPac}"
-                                       Multiplier="1"
+                                       ItemsSource="{Binding ArmourPacItems}"
+                                       Labels="{Binding ArmourPacLabels}"
                                        SnapToStep="True"
                                        StepSize="1"
-                                       SelectedCount="{Binding WornArmourPac, Mode=TwoWay}"
+                                       SelectedIndex="{Binding ArmourSliderIndex, Mode=TwoWay}"
                                        IsEnabled="{Binding IsArmourSelectionEnabled}"/>
             <Label Text="{Binding ArmourBaseSummary}"
                    FontSize="12"

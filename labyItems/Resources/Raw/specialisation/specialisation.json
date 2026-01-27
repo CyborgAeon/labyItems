@@ -19,8 +19,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "+6/2 Stamina",
@@ -44,7 +45,6 @@
       }
     ]
   },
-
   "Battle-Priest Specialist": {
     "Abilities": [
       {
@@ -70,12 +70,12 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       }
     ]
   },
-
   "Crusading-Priest Specialist": {
     "Abilities": [
       {
@@ -101,8 +101,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       }
     ]
   },
@@ -127,8 +128,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "Shadowing",
@@ -153,8 +155,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       }
     ]
   },
@@ -174,8 +177,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "ForeArm Parry",
@@ -213,8 +217,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "ForeArm Parry",
@@ -261,8 +266,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "War Cry",
@@ -293,8 +299,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "Make healing balm",
@@ -330,8 +337,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "Read Spirit Runes and Utilise Evil Scrolls",
@@ -349,7 +357,6 @@
         "Name": "Utilise Neutral Spirit Item",
         "Type": "Static"
       },
-
       {
         "Name": "1st Weapon Mastery",
         "Type": "Static",
@@ -360,13 +367,15 @@
       },
       {
         "Name": "Chosen of the Faithful",
-        "Type": "Static",
-        "Effect": "+2 DAC"
+        "Type": "DAC",
+        "Effect": "+2 DAC",
+        "Count": 2
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "Read Spirit Runes and Utilise Neutral Scrolls",
@@ -399,8 +408,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "ForeArm Parry",
@@ -438,8 +448,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "UAC",
@@ -472,8 +483,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "Cold Rage",
@@ -494,8 +506,20 @@
   "Power Warrior": {
     "Gem": {
       "Levels": {
-        "2": [{ "Name": "Extinguish (Range)", "Type": "Innate", "Count": 8 }],
-        "3": [{ "Name": "Darkness (Self)", "Type": "Innate", "Count": 4 }],
+        "2": [
+          {
+            "Name": "Extinguish (Range)",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "3": [
+          {
+            "Name": "Darkness (Self)",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "5": [
           {
             "Name": "See through Magical Darkness Self",
@@ -503,16 +527,44 @@
             "Count": 2
           }
         ],
-        "7": [{ "Name": "Black Blade", "Type": "Innate", "Count": 2 }]
+        "7": [
+          {
+            "Name": "Black Blade",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ]
       }
     },
     "Jewel": {
       "Levels": {
-        "2": [{ "Name": "Flash", "Type": "Innate", "Count": 8 }],
-        "3": [{ "Name": "Light Self", "Type": "Innate", "Count": 4 }],
-        "4": [{ "Name": "Walk on Light Self", "Type": "Innate", "Count": 2 }],
+        "2": [
+          {
+            "Name": "Flash",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "3": [
+          {
+            "Name": "Light Self",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
+        "4": [
+          {
+            "Name": "Walk on Light Self",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
         "7": [
-          { "Name": "Sabre of Light & Truth", "Type": "Innate", "Count": 2 }
+          {
+            "Name": "Sabre of Light & Truth",
+            "Type": "Innate",
+            "Count": 2
+          }
         ]
       }
     }
@@ -539,8 +591,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "UAC",
@@ -575,8 +628,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "ForeArm Parry",
@@ -615,8 +669,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "1 DAC"
+        "Type": "DAC",
+        "Effect": "1 DAC",
+        "Count": 1
       },
       {
         "Name": "2nd Weapon Mastery",
@@ -630,45 +685,154 @@
   },
   "Standard Scout skill": {
     "Abilities": [
-      { "Name": "Athlete", "Type": "Innate", "Frequency": 2 },
-      { "Name": "Bandaging", "Type": "Power" },
-      { "Name": "Climber", "Type": "Innate", "Frequency": 3 },
-      { "Name": "Combat-Wary", "Type": "Static", "Frequency": 1 },
-      { "Name": "Discern General Potion", "Type": "AtWill" },
-      { "Name": "Discern Healing Potion", "Type": "AtWill" },
-      { "Name": "Discern Poison", "Type": "AtWill" },
-      { "Name": "Sniff", "Type": "AtWill" },
-      { "Name": "Disguise", "Type": "AtWill" },
-      { "Name": "Distillation", "Type": "Static" },
-      { "Name": "Draw Venom", "Type": "Innate", "Frequency": 1 },
-      { "Name": "Evaluate", "Type": "AtWill" },
-      { "Name": "Examine Construct", "Type": "AtWill" },
-      { "Name": "Hollow Tooth", "Type": "Static" },
-      { "Name": "Lock-Picking", "Type": "Innate", "Frequency": 1 },
-      { "Name": "Make Concealable Weapon", "Type": "AtWill" },
-      { "Name": "Make General Potion", "Type": "Craft", "Frequency": 1 },
-      { "Name": "Make Healing Potion", "Type": "Craft", "Frequency": 1 },
-      { "Name": "Make Poisons Potion", "Type": "Craft", "Frequency": 1 },
-      { "Name": "Make and Arm Snap Trap", "Type": "Craft", "Frequency": 1 },
-      { "Name": "Potion Preserving", "Type": "Static" },
-      { "Name": "Read Glyphs", "Type": "Static" },
-      { "Name": "Read Languages", "Type": "Static" },
-      { "Name": "Sealing", "Type": "Static" },
-      { "Name": "Self-Awareness", "Type": "AtWill" },
-      { "Name": "Stealth", "Type": "Innate", "Frequency": 4 },
-      { "Name": "Tell Time and Direction", "Type": "AtWill" },
-      { "Name": "Tolerance", "Type": "Static" },
-      { "Name": "Trap-Wary", "Type": "Static", "Frequency": 1 },
+      {
+        "Name": "Athlete",
+        "Type": "Innate",
+        "Frequency": 2
+      },
+      {
+        "Name": "Bandaging",
+        "Type": "Power"
+      },
+      {
+        "Name": "Climber",
+        "Type": "Innate",
+        "Frequency": 3
+      },
+      {
+        "Name": "Combat-Wary",
+        "Type": "Static",
+        "Frequency": 1
+      },
+      {
+        "Name": "Discern General Potion",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Discern Healing Potion",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Discern Poison",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Sniff",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Disguise",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Distillation",
+        "Type": "Static"
+      },
+      {
+        "Name": "Draw Venom",
+        "Type": "Innate",
+        "Frequency": 1
+      },
+      {
+        "Name": "Evaluate",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Examine Construct",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Hollow Tooth",
+        "Type": "Static"
+      },
+      {
+        "Name": "Lock-Picking",
+        "Type": "Innate",
+        "Frequency": 1
+      },
+      {
+        "Name": "Make Concealable Weapon",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Make General Potion",
+        "Type": "Craft",
+        "Frequency": 1
+      },
+      {
+        "Name": "Make Healing Potion",
+        "Type": "Craft",
+        "Frequency": 1
+      },
+      {
+        "Name": "Make Poisons Potion",
+        "Type": "Craft",
+        "Frequency": 1
+      },
+      {
+        "Name": "Make and Arm Snap Trap",
+        "Type": "Craft",
+        "Frequency": 1
+      },
+      {
+        "Name": "Potion Preserving",
+        "Type": "Static"
+      },
+      {
+        "Name": "Read Glyphs",
+        "Type": "Static"
+      },
+      {
+        "Name": "Read Languages",
+        "Type": "Static"
+      },
+      {
+        "Name": "Sealing",
+        "Type": "Static"
+      },
+      {
+        "Name": "Self-Awareness",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Stealth",
+        "Type": "Innate",
+        "Frequency": 4
+      },
+      {
+        "Name": "Tell Time and Direction",
+        "Type": "AtWill"
+      },
+      {
+        "Name": "Tolerance",
+        "Type": "Static"
+      },
+      {
+        "Name": "Trap-Wary",
+        "Type": "Static",
+        "Frequency": 1
+      },
       {
         "Name": "User of Avalorash",
         "Type": "Static",
-        "PreReqs": [{ "PeopleType": "Ishmaic" }]
+        "PreReqs": [
+          {
+            "PeopleType": "Ishmaic"
+          }
+        ]
       },
-      { "Name": "Well Equipped", "Type": "Static" },
+      {
+        "Name": "Well Equipped",
+        "Type": "Static"
+      },
       {
         "Name": "Well-Made Daggers",
         "Type": "Static",
-        "PreReqs": [{ "Ability": "Make Concealable Weapon" }]
+        "PreReqs": [
+          {
+            "Ability": "Make Concealable Weapon"
+          }
+        ]
       }
     ]
   },
@@ -677,7 +841,11 @@
       {
         "Name": "Assassin's Eye",
         "Type": "AtWill",
-        "PreReqs": [{ "Ability": "Tell Wounds" }]
+        "PreReqs": [
+          {
+            "Ability": "Tell Wounds"
+          }
+        ]
       },
       {
         "Name": "Blade Sharpening",
@@ -686,7 +854,11 @@
       {
         "Name": "Boleq Manufacture",
         "Type": "Static",
-        "PreReqs": [{ "Ability": "Make Concealable Weapon" }]
+        "PreReqs": [
+          {
+            "Ability": "Make Concealable Weapon"
+          }
+        ]
       },
       {
         "Name": "Detect Possible Neuronic Activity",
@@ -694,8 +866,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "Extra Level of Life",
@@ -705,12 +878,20 @@
       {
         "Name": "Flesh Mending",
         "Type": "AtWill",
-        "PreReqs": [{ "Class": "Artificer" }]
+        "PreReqs": [
+          {
+            "Class": "Artificer"
+          }
+        ]
       },
       {
         "Name": "Healing Facility",
         "Type": "AtWill",
-        "PreReqs": [{ "Ability": "Make Healing Potion" }]
+        "PreReqs": [
+          {
+            "Ability": "Make Healing Potion"
+          }
+        ]
       },
       {
         "Name": "Judge Profession",
@@ -719,7 +900,11 @@
       {
         "Name": "Judge Strength",
         "Type": "AtWill",
-        "PreReqs": [{ "Ability": "Tell Wounds" }]
+        "PreReqs": [
+          {
+            "Ability": "Tell Wounds"
+          }
+        ]
       },
       {
         "Name": "Metal Resistance",
@@ -732,12 +917,20 @@
       {
         "Name": "Poison Facility",
         "Type": "AtWill",
-        "PreReqs": [{ "Ability": "Make Poison" }]
+        "PreReqs": [
+          {
+            "Ability": "Make Poison"
+          }
+        ]
       },
       {
         "Name": "Potion Facility",
         "Type": "AtWill",
-        "PreReqs": [{ "Ability": "Make General Potion" }]
+        "PreReqs": [
+          {
+            "Ability": "Make General Potion"
+          }
+        ]
       },
       {
         "Name": "Recognise Mana",
@@ -774,7 +967,11 @@
       {
         "Name": "Tell Wounds",
         "Type": "AtWill",
-        "PreReqs": [{ "Ability": "Self-Awareness" }]
+        "PreReqs": [
+          {
+            "Ability": "Self-Awareness"
+          }
+        ]
       }
     ]
   },
@@ -803,8 +1000,9 @@
       },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       }
     ]
   },
@@ -838,7 +1036,13 @@
         "3": ["Light ranged 1/2 levels"],
         "4": [],
         "5": [],
-        "6": ["1 DAC"],
+        "6": [
+          {
+            "Name": "1 DAC",
+            "Type": "DAC",
+            "Count": 1
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -858,11 +1062,29 @@
     "Air": {
       "Levels": {
         "1": [],
-        "2": [{ "Name": "Body of Air", "Type": "Innate", "Count": 8 }],
-        "3": [{ "Name": "Jump self", "Type": "Innate", "Count": 4 }],
+        "2": [
+          {
+            "Name": "Body of Air",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "3": [
+          {
+            "Name": "Jump self",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "4": [],
         "5": [],
-        "6": [{ "Name": "Walk on air self", "Type": "Innate", "Count": 2 }],
+        "6": [
+          {
+            "Name": "Walk on air self",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -870,11 +1092,29 @@
     "Earth": {
       "Levels": {
         "1": [],
-        "2": [{ "Name": "Body of Stone", "Type": "Innate", "Count": 8 }],
-        "3": [{ "Name": "Chameleon", "Type": "Innate", "Count": 4 }],
+        "2": [
+          {
+            "Name": "Body of Stone",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "3": [
+          {
+            "Name": "Chameleon",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "4": [],
         "5": [],
-        "6": [{ "Name": "Talk to inanimate", "Type": "Innate", "Count": 2 }],
+        "6": [
+          {
+            "Name": "Talk to inanimate",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -895,16 +1135,43 @@
       "Levels": {
         "1": [],
         "2": [
-          { "Name": "Detect fluid", "Type": "Innate", "Count": 8 },
-          { "Name": "Body of Water", "Type": "Innate", "Count": 8 },
-          { "Name": "Unimpeded by water", "Type": "Immunity" }
+          {
+            "Name": "Detect fluid",
+            "Type": "Innate",
+            "Count": 8
+          },
+          {
+            "Name": "Body of Water",
+            "Type": "Innate",
+            "Count": 8
+          },
+          {
+            "Name": "Unimpeded by water",
+            "Type": "Immunity"
+          }
         ],
-        "3": [{ "Name": "Rust Ranged", "Type": "Innate", "Count": 4 }],
+        "3": [
+          {
+            "Name": "Rust Ranged",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "4": [],
         "5": [
-          { "Name": "Walk on/through water self", "Type": "Innate", "Count": 2 }
+          {
+            "Name": "Walk on/through water self",
+            "Type": "Innate",
+            "Count": 2
+          }
         ],
-        "6": [{ "Name": "Vanish", "Type": "Innate", "Count": 1 }],
+        "6": [
+          {
+            "Name": "Vanish",
+            "Type": "Innate",
+            "Count": 1
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -913,13 +1180,33 @@
       "Levels": {
         "1": [],
         "2": [
-          { "Name": "Body of Twilight", "Type": "Innate", "Count": 8 },
-          { "Name": "Detect Magic", "Type": "Innate", "Count": 8 }
+          {
+            "Name": "Body of Twilight",
+            "Type": "Innate",
+            "Count": 8
+          },
+          {
+            "Name": "Detect Magic",
+            "Type": "Innate",
+            "Count": 8
+          }
         ],
-        "3": [{ "Name": "Twilight Self", "Type": "Innate", "Count": 4 }],
+        "3": [
+          {
+            "Name": "Twilight Self",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "4": [],
         "5": [],
-        "6": [{ "Name": "Silence", "Type": "Innate", "Count": 1 }],
+        "6": [
+          {
+            "Name": "Silence",
+            "Type": "Innate",
+            "Count": 1
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -927,49 +1214,161 @@
     "Gold": {
       "Levels": {
         "1": [],
-        "2": [{ "Name": "1 DAC", "Type": "Static" }],
-        "3": [{ "Name": "Shield Self", "Type": "Innate", "Count": 8 }],
-        "4": [{ "Name": "Spell Shield", "Type": "Innate", "Count": 2 }],
+        "2": [
+          {
+            "Name": "1 DAC",
+            "Type": "DAC",
+            "Count": 1
+          }
+        ],
+        "3": [
+          {
+            "Name": "Shield Self",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "4": [
+          {
+            "Name": "Spell Shield",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
         "5": [],
-        "6": [{ "Name": "Strengthen Self", "Type": "Innate", "Count": 4 }],
+        "6": [
+          {
+            "Name": "Strengthen Self",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "7": [],
         "8": []
       }
     },
     "Ivory": {
       "Levels": {
-        "1": [{ "Name": "Gains Ivory Code Restriction", "Type": "Static" }],
-        "2": [
-          { "Name": "Mark Ally", "Type": "AtWill" },
-          { "Name": "Traitor's Shield", "Type": "AtWill" }
+        "1": [
+          {
+            "Name": "Gains Ivory Code Restriction",
+            "Type": "Static"
+          }
         ],
-        "3": [{ "Name": "Ivory Warrior", "Type": "Innate", "Count": 2 }],
-        "4": [{ "Name": "Spell Shield", "Type": "Innate", "Count": 2 }],
-        "6": [{ "Name": "Mobility", "Type": "Innate", "Count": 1 }]
+        "2": [
+          {
+            "Name": "Mark Ally",
+            "Type": "AtWill"
+          },
+          {
+            "Name": "Traitor's Shield",
+            "Type": "AtWill"
+          }
+        ],
+        "3": [
+          {
+            "Name": "Ivory Warrior",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
+        "4": [
+          {
+            "Name": "Spell Shield",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
+        "6": [
+          {
+            "Name": "Mobility",
+            "Type": "Innate",
+            "Count": 1
+          }
+        ]
       }
     },
     "Silver": {
       "Levels": {
-        "2": [{ "Name": "Tell Wounds", "Type": "AtWill" }],
-        "3": [{ "Name": "Tell Strength", "Type": "Innate", "Count": 8 }],
-        "6": [{ "Name": "Inquiry", "Type": "Innate", "Count": 4 }]
+        "2": [
+          {
+            "Name": "Tell Wounds",
+            "Type": "AtWill"
+          }
+        ],
+        "3": [
+          {
+            "Name": "Tell Strength",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "6": [
+          {
+            "Name": "Inquiry",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ]
       }
     },
     "Bronze": {
       "Levels": {
-        "2": [{ "Name": "Tell Strength", "Type": "Innate", "Count": 8 }],
-        "4": [{ "Name": "Limb Thrall (8)", "Type": "Innate", "Count": 2 }],
-        "6": [{ "Name": "Shudder", "Type": "Innate", "Count": 4 }]
+        "2": [
+          {
+            "Name": "Tell Strength",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "4": [
+          {
+            "Name": "Limb Thrall (8)",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
+        "6": [
+          {
+            "Name": "Shudder",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ]
       }
     },
     "Ebony": {
       "Levels": {
         "1": [],
-        "2": [{ "Name": "Confusion", "Type": "Innate", "Count": 1 }],
-        "3": [{ "Name": "Pain Ranged", "Type": "Innate", "Count": 4 }],
-        "4": [{ "Name": "Spell Shield", "Type": "Innate", "Count": 2 }],
+        "2": [
+          {
+            "Name": "Confusion",
+            "Type": "Innate",
+            "Count": 1
+          }
+        ],
+        "3": [
+          {
+            "Name": "Pain Ranged",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
+        "4": [
+          {
+            "Name": "Spell Shield",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
         "5": [],
-        "6": [{ "Name": "Pass Unknown", "Type": "Innate", "Count": 2 }],
+        "6": [
+          {
+            "Name": "Pass Unknown",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -977,11 +1376,35 @@
     "Wood": {
       "Levels": {
         "1": [],
-        "2": [{ "Name": "Body of Wood", "Type": "Innate", "Count": 8 }],
-        "3": [{ "Name": "Warp Ranged", "Type": "Innate", "Count": 4 }],
-        "4": [{ "Name": "Entangle", "Type": "Innate", "Count": 2 }],
+        "2": [
+          {
+            "Name": "Body of Wood",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "3": [
+          {
+            "Name": "Warp Ranged",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
+        "4": [
+          {
+            "Name": "Entangle",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
         "5": [],
-        "6": [{ "Name": "Talk to Plant", "Type": "Innate", "Count": 1 }],
+        "6": [
+          {
+            "Name": "Talk to Plant",
+            "Type": "Innate",
+            "Count": 1
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -989,8 +1412,20 @@
     "Drowe": {
       "Levels": {
         "1": [],
-        "2": [{ "Name": "Extinguish Ranged", "Type": "Innate", "Count": 8 }],
-        "3": [{ "Name": "Darkness Ranged", "Type": "Innate", "Count": 4 }],
+        "2": [
+          {
+            "Name": "Extinguish Ranged",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "3": [
+          {
+            "Name": "Darkness Ranged",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "4": [],
         "5": [
           {
@@ -999,7 +1434,13 @@
             "Count": 2
           }
         ],
-        "6": [{ "Name": "Blindness", "Type": "Innate", "Count": 1 }],
+        "6": [
+          {
+            "Name": "Blindness",
+            "Type": "Innate",
+            "Count": 1
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -1007,12 +1448,34 @@
     "Winter": {
       "LifeScaleOverride": "Winter Elf",
       "Levels": {
-        "1": [{ "Name": "Skinning", "Type": "AtWill" }],
-        "2": [{ "Name": "Body of Ice", "Type": "Innate", "Count": 8 }],
-        "3": [{ "Name": "Immunity to cold", "Type": "Immunity" }],
+        "1": [
+          {
+            "Name": "Skinning",
+            "Type": "AtWill"
+          }
+        ],
+        "2": [
+          {
+            "Name": "Body of Ice",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "3": [
+          {
+            "Name": "Immunity to cold",
+            "Type": "Immunity"
+          }
+        ],
         "4": [],
         "5": [],
-        "6": [{ "Name": "Javelin of Ice", "Type": "Innate", "Count": 2 }],
+        "6": [
+          {
+            "Name": "Javelin of Ice",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -1020,11 +1483,29 @@
     "Autumn": {
       "Levels": {
         "1": [],
-        "2": [{ "Name": "Body of Autumn", "Type": "Innate", "Count": 8 }],
-        "3": [{ "Name": "Warp Ranged", "Type": "Innate", "Count": 4 }],
+        "2": [
+          {
+            "Name": "Body of Autumn",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "3": [
+          {
+            "Name": "Warp Ranged",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "4": [],
         "5": [],
-        "6": [{ "Name": "Wither touch", "Type": "Innate", "Count": 1 }],
+        "6": [
+          {
+            "Name": "Wither touch",
+            "Type": "Innate",
+            "Count": 1
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -1032,8 +1513,20 @@
     "Spring": {
       "Levels": {
         "1": [],
-        "2": [{ "Name": "Body of Spring", "Type": "Innate", "Count": 8 }],
-        "3": [{ "Name": "Salmon Leap", "Type": "Innate", "Count": 4 }],
+        "2": [
+          {
+            "Name": "Body of Spring",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "3": [
+          {
+            "Name": "Salmon Leap",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "4": [],
         "5": [],
         "6": [
@@ -1051,11 +1544,35 @@
       "LifeScaleOverride": "Drowe",
       "Levels": {
         "1": [],
-        "2": [{ "Name": "Body of Summer", "Type": "Innate", "Count": 8 }],
-        "3": [{ "Name": "Scorching Heat", "Type": "Innate", "Count": 4 }],
-        "4": [{ "Name": "Light Self", "Type": "Innate", "Count": 4 }],
+        "2": [
+          {
+            "Name": "Body of Summer",
+            "Type": "Innate",
+            "Count": 8
+          }
+        ],
+        "3": [
+          {
+            "Name": "Scorching Heat",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
+        "4": [
+          {
+            "Name": "Light Self",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "5": [],
-        "6": [{ "Name": "Summer's Warmth", "Type": "Innate", "Count": 4 }],
+        "6": [
+          {
+            "Name": "Summer's Warmth",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -1065,7 +1582,13 @@
     "Yashtar": {
       "ClassRestriction": ["Warrior"],
       "ArmourAvailabilityOverride": "Light",
-      "Abilities": ["4 PAC"],
+      "Abilities": [
+        {
+          "Name": "4 PAC",
+          "Type": "PAC",
+          "Count": 4
+        }
+      ],
       "Talents": {
         "Minor": ["Toughened Feet", "Large lung capacity"],
         "Medium": ["Insensitive Skin", "Leg Sweep 2/day"],
@@ -1075,13 +1598,21 @@
           "Immunity to Disease",
           "Immunity to Acid"
         ],
-        "LifeScaleOverride": { "Warrior": "Ogre" }
+        "LifeScaleOverride": {
+          "Warrior": "Ogre"
+        }
       }
     },
     "Kaerssor": {
       "ClassRestriction": ["Ranger", "Monk", "Warrior"],
       "ArmourAvailabilityOverride": "Light",
-      "Abilities": ["2 PAC"],
+      "Abilities": [
+        {
+          "Name": "2 PAC",
+          "Type": "PAC",
+          "Count": 2
+        }
+      ],
       "LifeScaleOverride": {
         "Ranger": "Human",
         "Monk": "Human",
@@ -1136,15 +1667,15 @@
       },
       {
         "Name": "Chosen of the Dragon",
-        "Type": "Static",
-        "Effect": "+2 DAC"
+        "Type": "DAC",
+        "Effect": "+2 DAC",
+        "Count": 2
       }
     ],
     "Notes": [
       "Warlocks choose a specialist skill at 6th, 7th and 8th level from this list."
     ]
   },
-
   "Wizard Specialist": {
     "Abilities": [
       "Make Teaching Scrolls",
@@ -1168,11 +1699,15 @@
           "CustomValuesPermitted": true
         }
       },
-      { "Name": "UAC", "Type": "WeaponSkill" },
+      {
+        "Name": "UAC",
+        "Type": "WeaponSkill"
+      },
       {
         "Name": "Enhanced Reflexes",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       },
       {
         "Name": "War Cry",
@@ -1181,8 +1716,9 @@
       },
       {
         "Name": "Chosen of the Dragon",
-        "Type": "Static",
-        "Effect": "+2 DAC"
+        "Type": "DAC",
+        "Effect": "+2 DAC",
+        "Count": 2
       }
     ],
     "Notes": [
@@ -1205,8 +1741,9 @@
       },
       {
         "Name": "1 DAC",
-        "Type": "Static",
-        "Effect": "+1 DAC"
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
       }
     ]
   },
@@ -1234,19 +1771,28 @@
   "HumanSubtypeAbilities": {
     "Standard": {},
     "Baronial": {
+      "PeopleType": ["Baronial"],
       "GuildOverrides": ["po:Type-Baronial"],
       "HedgeOrCircle": ["🌳 Hedge", "Ⓞ Circle"]
     },
     "Ishmaic": {
+      "PeopleType": ["Ishmaic"],
       "GuildOverrides": ["po:Wahadamune"],
       "Levels": {
         "1": [
-          { "Name": "Survival", "Type": "AtWill" },
-          { "Name": "Extra Level of Life", "Type": "Static" }
+          {
+            "Name": "Survival",
+            "Type": "AtWill"
+          },
+          {
+            "Name": "Extra Level of Life",
+            "Type": "Static"
+          }
         ]
       }
     },
     "Barbarian": {
+      "PeopleType": ["Tribal"],
       "ClassRestriction": [
         "Warriors",
         "Archers",
@@ -1257,10 +1803,16 @@
         "Pathfinder"
       ],
       "Levels": {
-        "1": [{ "Name": "Skinning", "Type": "Craft" }]
+        "1": [
+          {
+            "Name": "Skinning",
+            "Type": "Craft"
+          }
+        ]
       }
     },
     "Amlesian": {
+      "PeopleType": ["Amlesian"],
       "Description": "Select an Amlesian caste to define your standing."
     }
   },
@@ -1293,18 +1845,35 @@
       "Description": "A creature born from the Shadowlands. They purchase the Oni Status rather than a caste. It is important to note that Oni are hunted within Amles and may be killed on sight."
     }
   },
-
   "BaronialAncestry": {
     "Rhagrimm": [
-      { "Name": "Invoke Ancestor (Rhagrimm)", "Type": "Innate", "Count": 1 }
+      {
+        "Name": "Invoke Ancestor (Rhagrimm)",
+        "Type": "Innate",
+        "Count": 1
+      }
     ],
     "Issalania": [
-      { "Name": "Invoke Ancestor (Issalania)", "Type": "Innate", "Count": 1 }
+      {
+        "Name": "Invoke Ancestor (Issalania)",
+        "Type": "Innate",
+        "Count": 1
+      }
     ],
     "Ulio": [
-      { "Name": "Invoke Ancestor (Issalania)", "Type": "Innate", "Count": 1 }
+      {
+        "Name": "Invoke Ancestor (Issalania)",
+        "Type": "Innate",
+        "Count": 1
+      }
     ],
-    "Eva": [{ "Name": "Invoke Ancestor (Eva)", "Type": "Innate", "Count": 1 }]
+    "Eva": [
+      {
+        "Name": "Invoke Ancestor (Eva)",
+        "Type": "Innate",
+        "Count": 1
+      }
+    ]
   },
   "IshmaicClanAbilities": {
     "Galahbad": {
@@ -1323,16 +1892,37 @@
       ],
       "Levels": {
         "1": [
-          { "Name": "Laminar Armour", "Type": "Static", "Effect": "+1 PAC" }
+          {
+            "Name": "Laminar Armour",
+            "Type": "PAC",
+            "Effect": "+1 PAC",
+            "Count": 1
+          }
         ]
       }
     },
     "Buladajn": {
       "ClassRestriction": ["Pathfinder", "Assassin", "Spy", "Rogue", "Thug"],
       "Levels": {
-        "1": [{ "Name": "Disguise", "Type": "AtWill" }],
-        "5": [{ "Name": "Conditioned Heartstop", "Type": "Static" }],
-        "8": [{ "Name": "Psi-Scan", "Type": "Innate", "Count": 4 }]
+        "1": [
+          {
+            "Name": "Disguise",
+            "Type": "AtWill"
+          }
+        ],
+        "5": [
+          {
+            "Name": "Conditioned Heartstop",
+            "Type": "Static"
+          }
+        ],
+        "8": [
+          {
+            "Name": "Psi-Scan",
+            "Type": "Innate",
+            "Count": 4
+          }
+        ]
       }
     },
     "Benhai": {
@@ -1346,14 +1936,22 @@
       ],
       "Levels": {
         "1": [
-          { "Name": "Disarm Traps", "Type": "AtWill" },
+          {
+            "Name": "Disarm Traps",
+            "Type": "AtWill"
+          },
           {
             "Name": "Trap Wary (8)",
             "Type": "Static",
             "Condition": "bracket:Scout"
           }
         ],
-        "3": [{ "Name": "Read Languages", "Type": "Static" }]
+        "3": [
+          {
+            "Name": "Read Languages",
+            "Type": "Static"
+          }
+        ]
       }
     },
     "Salahmen": {
@@ -1367,8 +1965,14 @@
       ],
       "Levels": {
         "1": [
-          { "Name": "Immunity to Blindness", "Type": "Immunity" },
-          { "Name": "See through Darkness", "Type": "Immunity" }
+          {
+            "Name": "Immunity to Blindness",
+            "Type": "Immunity"
+          },
+          {
+            "Name": "See through Darkness",
+            "Type": "Immunity"
+          }
         ]
       }
     },
@@ -1385,7 +1989,12 @@
         "Pathfinder"
       ],
       "Levels": {
-        "6": [{ "Name": "Spiritual Discern Insanity", "Type": "AtWill" }]
+        "6": [
+          {
+            "Name": "Spiritual Discern Insanity",
+            "Type": "AtWill"
+          }
+        ]
       }
     },
     "Rain": {
@@ -1398,14 +2007,25 @@
       ],
       "Levels": {
         "Levels": {
-          "1": [{ "Name": "+2 Caster levels", "Type": "Static" }]
+          "1": [
+            {
+              "Name": "+2 Caster levels",
+              "Type": "Static"
+            }
+          ]
         }
       }
     },
     "Rainfinder": {
       "ClassRestriction": ["Wizards", "High Wizards", "Druids", "High Druids"],
       "Levels": {
-        "1": [{ "Name": "Detect Lie", "Type": "Innate", "Count": 2 }]
+        "1": [
+          {
+            "Name": "Detect Lie",
+            "Type": "Innate",
+            "Count": 2
+          }
+        ]
       }
     }
   },
@@ -1413,11 +2033,26 @@
     "The cloud way": {
       "Levels": {
         "1": [],
-        "2": [{ "Name": "Ward Pact (Undead)", "Type": "Replace" }],
+        "2": [
+          {
+            "Name": "Ward Pact (Undead)",
+            "Type": "Replace"
+          }
+        ],
         "3": [],
-        "4": [{ "Name": "Ward Pact (Wyvern)", "Type": "Replace" }],
+        "4": [
+          {
+            "Name": "Ward Pact (Wyvern)",
+            "Type": "Replace"
+          }
+        ],
         "5": [],
-        "6": [{ "Name": "Ward Pact (Dwarf)", "Type": "Replace" }],
+        "6": [
+          {
+            "Name": "Ward Pact (Dwarf)",
+            "Type": "Replace"
+          }
+        ],
         "7": [],
         "8": []
       }
@@ -1425,7 +2060,12 @@
     "House D'trael": {
       "Levels": {
         "1": [],
-        "2": [{ "Name": "Ward Pact (Glass)", "Type": "Replace" }],
+        "2": [
+          {
+            "Name": "Ward Pact (Glass)",
+            "Type": "Replace"
+          }
+        ],
         "3": [],
         "4": [],
         "5": [],
@@ -1474,8 +2114,14 @@
       "GuildOverrides": ["so:The Swarm"],
       "Levels": {
         "5": [
-          { "Name": "Gain make & arm snaptrap", "Type": "AtWill" },
-          { "Name": "Acute Hearing", "Type": "AtWill" }
+          {
+            "Name": "Gain make & arm snaptrap",
+            "Type": "AtWill"
+          },
+          {
+            "Name": "Acute Hearing",
+            "Type": "AtWill"
+          }
         ]
       }
     },
@@ -1483,26 +2129,61 @@
       "GuildOverrides": ["po:"],
       "Levels": {
         "1": [
-          { "Name": "+1 caster level (dominion)", "Type": "Static" },
-          { "Name": "-2 DAC in sunlight", "Type": "Static" }
+          {
+            "Name": "+1 caster level (dominion)",
+            "Type": "Static"
+          },
+          {
+            "Name": "-2 DAC in sunlight",
+            "Type": "Static"
+          }
         ]
       }
     },
     "Altunhast (stubbytails)": {
       "Levels": {
         "1": [
-          { "Name": "Gain perfect Human disguise", "Type": "Static" },
-          { "Name": "Acute Hearing", "Type": "AtWill" }
+          {
+            "Name": "Gain perfect Human disguise",
+            "Type": "Static"
+          },
+          {
+            "Name": "Acute Hearing",
+            "Type": "AtWill"
+          }
         ]
       }
     },
     "Gwavysvayne (Winterscorns)": {
       "ArmourAvailabilityOverride": [],
       "Levels": {
-        "1": [{ "Name": "Immunity to cold", "Type": "Immunity" }],
-        "3": [{ "Name": "1 PAC", "Type": "Static" }],
-        "5": [{ "Name": "2 PAC", "Type": "Static" }],
-        "7": [{ "Name": "3 PAC", "Type": "Static" }]
+        "1": [
+          {
+            "Name": "Immunity to cold",
+            "Type": "Immunity"
+          }
+        ],
+        "3": [
+          {
+            "Name": "1 PAC",
+            "Type": "PAC",
+            "Count": 1
+          }
+        ],
+        "5": [
+          {
+            "Name": "2 PAC",
+            "Type": "PAC",
+            "Count": 2
+          }
+        ],
+        "7": [
+          {
+            "Name": "3 PAC",
+            "Type": "PAC",
+            "Count": 3
+          }
+        ]
       }
     }
   },

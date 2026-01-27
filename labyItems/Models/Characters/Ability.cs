@@ -22,6 +22,10 @@ public enum AbilityType
     Resistance,
     AtWill,
     Static,
+    Pac,
+    Dac,
+    Mac,
+    Sac,
     WeaponSkill,
     Innate,
     Craft,
@@ -29,7 +33,8 @@ public enum AbilityType
     Overwrite,
     Replace,
     CastingList,
-    GuildOverride
+    GuildOverride,
+    Update
 }
 
 public sealed class InnateAbilityDraft

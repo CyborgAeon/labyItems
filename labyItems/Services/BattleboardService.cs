@@ -1,6 +1,7 @@
 // using ClosedXML.Excel;
 using ClosedXML.Excel;
 using labyItems.Models.Characters;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 namespace labyItems.Services;
@@ -139,9 +140,13 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
         var staticAbilities = draft.Abilities
             .Where(a => a.AbilityType == AbilityType.Static)
+            .Where(a => !IsPureArmourToken(a))
             .Select(FormatAbilityText)
             .Where(v => !string.IsNullOrWhiteSpace(v))
             .ToList();
+
+        foreach (var entry in BuildInnateArmourEntries(armourBonus))
+            staticAbilities.Add(entry);
         WriteStaticAbilities(ws, staticAbilities, startRow: 4, endRow: 54);
 
         var innateConfig = GetInnatePlacement(templateName, isVivomancer);
@@ -165,6 +170,9 @@ public sealed class BattleboardExportService : IBattleboardExportService
             if (ability == null)
                 continue;
 
+            if (TryApplyArmourType(ability, ref pac, ref dac, ref mac, ref sac))
+                continue;
+
             var effect = ability.Effect ?? string.Empty;
             if (TryApplyArmourTokens(effect, ref pac, ref dac, ref mac, ref sac))
                 continue;
@@ -175,6 +183,74 @@ public sealed class BattleboardExportService : IBattleboardExportService
         }
 
         return (pac, dac, mac, sac);
+    }
+
+    private static bool TryApplyArmourType(AbilityDraft ability, ref int pac, ref int dac, ref int mac, ref int sac)
+    {
+        if (ability == null)
+            return false;
+
+        string? stat = ability.AbilityType switch
+        {
+            AbilityType.Pac => "PAC",
+            AbilityType.Dac => "DAC",
+            AbilityType.Mac => "MAC",
+            AbilityType.Sac => "SAC",
+            _ => null
+        };
+
+        if (stat == null)
+            return false;
+
+        var value = ability.Count ?? 0;
+        if (value == 0)
+        {
+            var parsed = ParseArmourTokenValue(ability.Effect, stat);
+            if (parsed == 0)
+                parsed = ParseArmourTokenValue(ability.Name, stat);
+            value = parsed;
+        }
+
+        if (value == 0)
+            return false;
+
+        switch (stat)
+        {
+            case "PAC":
+                pac += value;
+                break;
+            case "DAC":
+                dac += value;
+                break;
+            case "MAC":
+                mac += value;
+                break;
+            case "SAC":
+                sac += value;
+                break;
+        }
+
+        return true;
+    }
+
+    private static int ParseArmourTokenValue(string? text, string stat)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return 0;
+
+        foreach (Match m in ArmourTokenRegex.Matches(text))
+        {
+            if (!int.TryParse(m.Groups[1].Value, out var value))
+                continue;
+
+            var key = m.Groups[2].Value.ToUpperInvariant();
+            if (!string.Equals(key, stat, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            return value;
+        }
+
+        return 0;
     }
 
     private static bool TryApplyArmourTokens(string text, ref int pac, ref int dac, ref int mac, ref int sac)
@@ -205,6 +281,32 @@ public sealed class BattleboardExportService : IBattleboardExportService
         }
 
         return matched;
+    }
+
+    private static bool IsPureArmourToken(AbilityDraft ability)
+    {
+        if (ability == null)
+            return false;
+
+        return IsPureArmourToken(ability.Name) || IsPureArmourToken(ability.Effect);
+    }
+
+    private static bool IsPureArmourToken(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+
+        return ArmourTokenRegex.IsMatch(text.Trim()) && ArmourTokenRegex.Matches(text.Trim()).Count == 1 && ArmourTokenRegex.Replace(text.Trim(), "").Length == 0;
+    }
+
+    private static IEnumerable<string> BuildInnateArmourEntries((int Pac, int Dac, int Mac, int Sac) totals)
+    {
+        var list = new List<string>();
+        if (totals.Pac > 0) list.Add($"Innate PAC {totals.Pac}");
+        if (totals.Dac > 0) list.Add($"Innate DAC {totals.Dac}");
+        if (totals.Mac > 0) list.Add($"Innate MAC {totals.Mac}");
+        if (totals.Sac > 0) list.Add($"Innate SAC {totals.Sac}");
+        return list;
     }
 
     private static bool IsCombatWary(AbilityDraft ability)
@@ -295,11 +397,12 @@ public sealed class BattleboardExportService : IBattleboardExportService
     private static (string NameColumn, int StartRow, int EndRow) GetInnatePlacement(string templateName, bool isVivomancer)
     {
         const int endRow = 54;
+        var isPowerUser = templateName.Contains("PowerUser", StringComparison.OrdinalIgnoreCase);
 
-        if (isVivomancer || templateName.Equals("Vivomancer", StringComparison.OrdinalIgnoreCase))
+        if (isVivomancer || templateName.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase))
             return ("B", 27, endRow);
 
-        if (templateName.Equals("PowerUser", StringComparison.OrdinalIgnoreCase))
+        if (isPowerUser)
             return ("B", 22, endRow);
 
         return ("B", 17, endRow);

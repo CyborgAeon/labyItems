@@ -10,21 +10,17 @@ public class ArmourLayerControl : ContentView
 {
     private readonly VerticalStackLayout _rowsHost;
     private bool _suppressUpdates;
-    private bool _isDragging;
-    private CancellationTokenSource? _rebuildDebounceCts;
-    private const int DefaultMaxPac = 8;
-    private const int InteractionDebounceMs = 350;
 
     private record ArmourOption(int Pac, string ShortLabel);
 
     private static readonly ArmourOption[] Options =
     {
         new(0, string.Empty),
-        new(3, "Robes/Padding"),
-        new(4, "Rigid leather"),
+        new(3, "Leather"),
+        new(4, "Stiff leather"),
         new(5, "Studded leather"),
-        new(6, "Chainmail"),
-        new(7, "Heavy Chainmail"),
+        new(6, "Loose Chain"),
+        new(7, "Tight Chain"),
         new(8, "Plate mail"),
     };
 
@@ -40,8 +36,6 @@ public class ArmourLayerControl : ContentView
         RebuildRows();
         Recalculate();
     }
-
-    #region Bindable properties
 
     public static readonly BindableProperty LayersProperty = BindableProperty.Create(
         nameof(Layers),
@@ -90,34 +84,6 @@ public class ArmourLayerControl : ContentView
         set => SetValue(TotalPacProperty, value);
     }
 
-    public static readonly BindableProperty MaxBasePacProperty = BindableProperty.Create(
-        nameof(MaxBasePac),
-        typeof(int),
-        typeof(ArmourLayerControl),
-        defaultValue: DefaultMaxPac,
-        defaultBindingMode: BindingMode.TwoWay,
-        propertyChanged: OnConstraintsChanged);
-
-    public int MaxBasePac
-    {
-        get => (int)GetValue(MaxBasePacProperty);
-        set => SetValue(MaxBasePacProperty, value);
-    }
-
-    public static readonly BindableProperty MaxTotalPacProperty = BindableProperty.Create(
-        nameof(MaxTotalPac),
-        typeof(int),
-        typeof(ArmourLayerControl),
-        defaultValue: int.MaxValue,
-        defaultBindingMode: BindingMode.TwoWay,
-        propertyChanged: OnConstraintsChanged);
-
-    public int MaxTotalPac
-    {
-        get => (int)GetValue(MaxTotalPacProperty);
-        set => SetValue(MaxTotalPacProperty, value);
-    }
-
     public static readonly BindableProperty SummaryTextProperty = BindableProperty.Create(
         nameof(SummaryText),
         typeof(string),
@@ -146,38 +112,6 @@ public class ArmourLayerControl : ContentView
         set => SetValue(BreakdownTextProperty, value);
     }
 
-    private static void OnConstraintsChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var control = (ArmourLayerControl)bindable;
-        control.ApplyConstraints();
-        control.RebuildRows();
-        control.Recalculate();
-    }
-
-    private void ApplyConstraints()
-    {
-        if (Layers == null)
-            return;
-
-        var maxPac = Math.Max(0, MaxBasePac);
-
-        _suppressUpdates = true;
-        for (int i = 0; i < Layers.Count; i++)
-        {
-            if (Layers[i].HasValue && Layers[i]!.Value > maxPac)
-                Layers[i] = maxPac;
-        }
-
-        while (Layers.Count > AllowedLayerCount())
-            Layers.RemoveAt(Layers.Count - 1);
-
-        _suppressUpdates = false;
-    }
-
-    #endregion
-
-    #region Collection handling
-
     private void HookCollection(ObservableCollection<int?> collection)
     {
         collection.CollectionChanged += OnCollectionChanged;
@@ -197,10 +131,6 @@ public class ArmourLayerControl : ContentView
         RebuildRows();
         Recalculate();
     }
-
-    #endregion
-
-    #region UI building
 
     private void RebuildRows()
     {
@@ -293,20 +223,6 @@ public class ArmourLayerControl : ContentView
             _suppressUpdates = false;
 
             Recalculate();
-            if (!_isDragging)
-                ScheduleRebuild(InteractionDebounceMs);
-        };
-
-        slider.DragStarted += (_, __) =>
-        {
-            _isDragging = true;
-            _rebuildDebounceCts?.Cancel();
-        };
-
-        slider.DragCompleted += (_, __) =>
-        {
-            _isDragging = false;
-            ScheduleRebuild(0);
         };
 
         var deleteButton = new Button
@@ -394,12 +310,7 @@ public class ArmourLayerControl : ContentView
 
     private IEnumerable<ArmourOption> GetAllowedOptions(int forIndex)
     {
-        var constrained = Options
-            .Where(o => o.Pac <= Math.Max(0, MaxBasePac))
-            .ToList();
-
-        if (constrained.Count == 0)
-            constrained.Add(Options.First());
+        var constrained = Options.ToList();
 
         if (Layers == null || forIndex == 0)
         {
@@ -475,25 +386,6 @@ public class ArmourLayerControl : ContentView
 
     private bool CanAddLayer() => Layers != null && Layers.Count < AllowedLayerCount();
 
-    private void ScheduleRebuild(int delayMs)
-    {
-        _rebuildDebounceCts?.Cancel();
-        var cts = new CancellationTokenSource();
-        _rebuildDebounceCts = cts;
-
-        Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(Math.Max(0, delayMs)), () =>
-        {
-            if (cts.IsCancellationRequested)
-                return;
-
-            RebuildRows();
-        });
-    }
-
-    #endregion
-
-    #region Totals / summary
-
     private void Recalculate()
     {
         if (Layers == null || Layers.Count == 0)
@@ -520,15 +412,12 @@ public class ArmourLayerControl : ContentView
         for (int i = 1; i < selected.Count; i++)
         {
             int layer = selected[i];
-            int added = (layer == 5 || layer == 6) ? 2
-                    : (layer == 3 || layer == 4) ? 1
-                    : 0;
+            int added = (layer == 5 || layer == 6) ? 2 : 0;
             bonus += added;
             contributions.Add(added);
         }
 
-        var maxTotal = Math.Max(0, MaxTotalPac);
-        TotalPac = Math.Min(basePac + bonus, maxTotal);
+        TotalPac = basePac + bonus;
 
         var names = selected
             .Select(GetShortName)
@@ -575,5 +464,5 @@ public class ArmourLayerControl : ContentView
     private static string GetShortName(int pac) =>
         Options.FirstOrDefault(o => o.Pac == pac)?.ShortLabel ?? $"PAC {pac}";
 
-    #endregion
+
 }

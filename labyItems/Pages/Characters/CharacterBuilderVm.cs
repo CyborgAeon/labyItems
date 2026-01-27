@@ -698,19 +698,33 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private static List<AbilityDraft> ConsolidateAbilities(IEnumerable<AbilityDraft> abilities)
     {
-        var ordered = new List<AbilityDraft>();
-        var innateLookup = new Dictionary<string, AbilityDraft>(StringComparer.OrdinalIgnoreCase);
-        var armourMaxBySource = BuildArmourMaxBySource(abilities);
+        var baseAbilities = new List<AbilityDraft>();
+        var updates = new List<AbilityDraft>();
 
         foreach (var ability in abilities ?? Enumerable.Empty<AbilityDraft>())
         {
-            if (ability == null) continue;
+            if (ability == null)
+                continue;
 
+            if (ability.AbilityType == AbilityType.Update)
+                updates.Add(ability);
+            else
+                baseAbilities.Add(ability);
+        }
+
+        ApplyAbilityUpdates(baseAbilities, updates);
+
+        var ordered = new List<AbilityDraft>();
+        var innateLookup = new Dictionary<string, AbilityDraft>(StringComparer.OrdinalIgnoreCase);
+        var armourMaxBySource = BuildArmourMaxBySource(baseAbilities);
+
+        foreach (var ability in baseAbilities)
+        {
             var name = (ability.Name ?? string.Empty).Trim();
             if (name.Length == 0) continue;
 
-            if (IsArmourAbility(ability, out var armourValues)
-                && !IsMaxArmourForSource(ability, armourValues, armourMaxBySource))
+            var isArmour = IsArmourAbility(ability, out var armourValues);
+            if (isArmour && !IsMaxArmourForSource(ability, armourValues, armourMaxBySource))
                 continue;
 
             if (ability.AbilityType == AbilityType.Innate)
@@ -740,13 +754,84 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 continue;
             }
 
-            if (ordered.Any(a => string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase)))
+            if (!isArmour && ordered.Any(a => string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase)))
                 continue;
 
             ordered.Add(ability);
         }
 
         return ordered;
+    }
+
+    private static void ApplyAbilityUpdates(List<AbilityDraft> abilities, List<AbilityDraft> updates)
+    {
+        if (abilities.Count == 0 || updates.Count == 0)
+            return;
+
+        var lookup = new Dictionary<string, List<AbilityDraft>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var ability in abilities)
+        {
+            var key = (ability.Name ?? string.Empty).Trim();
+            if (key.Length == 0)
+                continue;
+
+            if (!lookup.TryGetValue(key, out var list))
+            {
+                list = new List<AbilityDraft>();
+                lookup[key] = list;
+            }
+
+            list.Add(ability);
+        }
+
+        foreach (var update in updates)
+        {
+            var key = (update.Name ?? string.Empty).Trim();
+            if (key.Length == 0)
+                continue;
+
+            if (!lookup.TryGetValue(key, out var list))
+                continue;
+
+            foreach (var target in list)
+                ApplyAbilityUpdate(target, update);
+        }
+    }
+
+    private static void ApplyAbilityUpdate(AbilityDraft target, AbilityDraft update)
+    {
+        if (!string.IsNullOrWhiteSpace(update.Effect))
+        {
+            target.Effect = update.Effect;
+            target.ShortStringValue = update.Effect;
+        }
+
+        if (!string.IsNullOrWhiteSpace(update.Source))
+            target.Source = update.Source;
+
+        if (update.Count.HasValue)
+            target.Count = update.Count;
+
+        if (!string.IsNullOrWhiteSpace(update.Frequency))
+            target.Frequency = update.Frequency;
+
+        if (!string.IsNullOrWhiteSpace(update.OverwriteKey))
+            target.OverwriteKey = update.OverwriteKey;
+
+        if (update.LevelGained.HasValue)
+            target.LevelGained = update.LevelGained;
+
+        if (update.PreReqs.Count > 0)
+        {
+            target.PreReqs.Clear();
+            target.PreReqs.AddRange(update.PreReqs);
+        }
+
+        if (update.GuildOverrides.Count > 0)
+        {
+            target.GuildOverrides.Clear();
+            target.GuildOverrides.AddRange(update.GuildOverrides);
+        }
     }
 
     private static Dictionary<(string Source, string Stat), int> BuildArmourMaxBySource(IEnumerable<AbilityDraft> abilities)
@@ -806,6 +891,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         if (ability == null)
             return false;
 
+        if (TryAddArmourValueFromType(ability, armourValues))
+            return true;
+
         var effect = ability.Effect ?? string.Empty;
         var name = ability.Name ?? string.Empty;
 
@@ -817,6 +905,44 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             armourValues[kvp.Key] = kvp.Value;
 
         return armourValues.Count > 0;
+    }
+
+    private static bool TryAddArmourValueFromType(AbilityDraft ability, Dictionary<string, int> armourValues)
+    {
+        string? stat = ability.AbilityType switch
+        {
+            AbilityType.Pac => "PAC",
+            AbilityType.Dac => "DAC",
+            AbilityType.Mac => "MAC",
+            AbilityType.Sac => "SAC",
+            _ => null
+        };
+
+        if (stat == null)
+            return false;
+
+        var value = ResolveArmourCount(ability, stat);
+        if (value == 0)
+            return false;
+
+        armourValues[stat] = value;
+        return true;
+    }
+
+    private static int ResolveArmourCount(AbilityDraft ability, string stat)
+    {
+        if (ability.Count.HasValue)
+            return ability.Count.Value;
+
+        var parsed = ParseArmourTokens(ability.Effect ?? string.Empty);
+        if (parsed.TryGetValue(stat, out var value))
+            return value;
+
+        parsed = ParseArmourTokens(ability.Name ?? string.Empty);
+        if (parsed.TryGetValue(stat, out value))
+            return value;
+
+        return 0;
     }
 
     private static Dictionary<string, int> ParseArmourTokens(string text)
@@ -954,8 +1080,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             if (!TryGetRecord(all, guild, out var rec) || rec?.Benefits?.Basic == null)
                 continue;
 
-            foreach (var benefit in rec.Benefits.Basic.Where(b => !string.IsNullOrWhiteSpace(b)))
+            foreach (var benefit in rec.Benefits.Basic)
             {
+                if (benefit == null || string.IsNullOrWhiteSpace(benefit.Name))
+                    continue;
                 var parsed = AbilityDraftBuilder.ParseAbility(benefit, null);
                 ApplyAbilitySource(parsed, $"Guild:{guild}");
                 list.AddRange(parsed);
@@ -1247,9 +1375,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             if (lower.Contains("cannot wear armour") || lower.Contains("cannot wear armor") || lower.Contains("may not wear armour") || lower.Contains("no armour"))
                 disallow = true;
 
-            var parsed = ParseArmourTokens(effect);
-            if (parsed.Count == 0)
-                parsed = ParseArmourTokens(name);
+            if (!IsArmourAbility(ability, out var parsed))
+            {
+                parsed = ParseArmourTokens(effect);
+                if (parsed.Count == 0)
+                    parsed = ParseArmourTokens(name);
+            }
 
             foreach (var kvp in parsed)
             {

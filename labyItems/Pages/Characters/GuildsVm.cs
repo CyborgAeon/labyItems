@@ -168,9 +168,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 Name = name,
                 Type = rec.Type ?? "",
                 Restrictions = rec.Restrictions ?? "",
-                BasicBenefits = rec.Benefits?.Basic?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? new(),
-                IntermediateBenefits = rec.Benefits?.Intermediate?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? new(),
-                AdvancedBenefits = rec.Benefits?.Advanced?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? new(),
+                BasicBenefits = FormatBenefitList(rec.Benefits?.Basic),
+                IntermediateBenefits = FormatBenefitList(rec.Benefits?.Intermediate),
+                AdvancedBenefits = FormatBenefitList(rec.Benefits?.Advanced),
+                MiracleRows = BuildMiracleRows(rec.MiracleList),
                 IsSelected = isSelected,
                 IsExpanded = false,
                 IsSelectable = selectable || isSelected,
@@ -553,6 +554,78 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return "📜";
     }
 
+    private static List<GuildMiracleRowVm> BuildMiracleRows(Dictionary<string, List<string>>? miracleList)
+    {
+        if (miracleList == null || miracleList.Count == 0)
+            return new List<GuildMiracleRowVm>();
+
+        var ordered = miracleList
+            .Select(kvp =>
+            {
+                var key = (kvp.Key ?? string.Empty).Trim();
+                int? level = int.TryParse(key, out var parsed) ? parsed : null;
+                var miracles = kvp.Value ?? new List<string>();
+                return (Key: key, Level: level, Miracles: miracles);
+            })
+            .Where(x => x.Key.Length > 0)
+            .OrderBy(x => x.Level ?? int.MaxValue)
+            .ThenBy(x => x.Key, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var rows = new List<GuildMiracleRowVm>();
+        foreach (var entry in ordered)
+        {
+            var names = entry.Miracles
+                .Where(m => !string.IsNullOrWhiteSpace(m))
+                .ToList();
+
+            if (names.Count == 0)
+                continue;
+
+            rows.Add(new GuildMiracleRowVm
+            {
+                Level = entry.Level?.ToString() ?? entry.Key,
+                Miracles = string.Join(", ", names)
+            });
+        }
+
+        return rows;
+    }
+
+    private static List<string> FormatBenefitList(IEnumerable<AbilityDefinition>? benefits)
+    {
+        var list = new List<string>();
+        foreach (var benefit in benefits ?? Enumerable.Empty<AbilityDefinition>())
+        {
+            var display = FormatBenefit(benefit);
+            if (!string.IsNullOrWhiteSpace(display))
+                list.Add(display);
+        }
+        return list;
+    }
+
+    private static string FormatBenefit(AbilityDefinition? benefit)
+    {
+        if (benefit == null)
+            return string.Empty;
+
+        var name = (benefit.Name ?? string.Empty).Trim();
+        var effect = (benefit.Effect ?? string.Empty).Trim();
+        var frequency = (benefit.Frequency ?? string.Empty).Trim();
+        var display = name;
+
+        if (!string.IsNullOrWhiteSpace(effect))
+            display = display.Length > 0 ? $"{display}: {effect}" : effect;
+
+        if (benefit.Count.HasValue && benefit.Count.Value > 1)
+            display = display.Length > 0 ? $"{display} (x{benefit.Count.Value})" : $"x{benefit.Count.Value}";
+
+        if (!string.IsNullOrWhiteSpace(frequency))
+            display = display.Length > 0 ? $"{display} [{frequency}]" : frequency;
+
+        return display;
+    }
+
     private void Refilter()
     {
         var text = (SearchText ?? "").Trim();
@@ -754,12 +827,14 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public List<string> BasicBenefits { get; set; } = new();
     public List<string> IntermediateBenefits { get; set; } = new();
     public List<string> AdvancedBenefits { get; set; } = new();
+    public List<GuildMiracleRowVm> MiracleRows { get; set; } = new();
 
     public bool HasRestrictions => !string.IsNullOrWhiteSpace(Restrictions);
 
     public bool HasBasic => BasicBenefits.Count > 0;
     public bool HasIntermediate => IntermediateBenefits.Count > 0;
     public bool HasAdvanced => AdvancedBenefits.Count > 0;
+    public bool HasMiracles => MiracleRows.Count > 0;
 
     public bool HasAnyBenefits => HasBasic || HasIntermediate || HasAdvanced;
 
@@ -792,6 +867,12 @@ public sealed class GuildCardVm : INotifyPropertyChanged
             Raise();
         }
     }
+}
+
+public sealed class GuildMiracleRowVm
+{
+    public string Level { get; init; } = string.Empty;
+    public string Miracles { get; init; } = string.Empty;
 }
 
 public sealed record GuildSelectability(bool Allowed, string Reason);

@@ -532,9 +532,57 @@
       "7": ["Suspend Life"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Embraced by Evil",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Grants immunity to one evil spiritual effect; used as warcry, can't benefit from Goodly spirits for duration"
+        },
+        {
+          "Name": "Shroud of Evil",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Grants immunity to goodly spirits for 30 seconds"
+        },
+        {
+          "Name": "Words of Certizal",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Upgrades a `conceal lie` miracle so it grants spiritual Deception at will for 5 minutes"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Embraced by Evil",
+          "Type": "Update",
+          "Description": "Grants immunity to all evil spiritual effects; used as warcry, can't benefit from Goodly spirits for 30 seconds."
+        },
+        {
+          "Name": "Shroud of Evil",
+          "Type": "Update",
+          "Description": "Grants immunity to goodly spirits for 30 seconds, can be used as retroactive against 1 effect"
+        },
+        {
+          "Name": "Feed on Evil",
+          "Type": "Static",
+          "Description": "+1 Spirit per evil member of the party"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Embraced by Evil",
+          "Type": "Update",
+          "Description": "Grants immunity to goodly spirits for 5 minutes or against 1 effect if used retroactively",
+          "Count": 2
+        },
+        {
+          "Name": "Shroud of Evil",
+          "Type": "Update",
+          "Description": "Grants immunity to all evil spiritual effects for five minutes; can be retroactive"
+        },
+        { "Name": "Strength of Evil", "Type": "Innate", "Count": 1 }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -1870,7 +1918,8 @@
         },
         "Races": [
           {
-            "Name": "Human-Barbarian"
+            "Name": "Human",
+            "Subtype": "Barbarian"
           }
         ],
         "PeopleType": []

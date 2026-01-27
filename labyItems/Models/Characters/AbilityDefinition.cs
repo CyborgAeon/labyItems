@@ -42,7 +42,7 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             {
                 Name = el.TryGetProperty("Name", out var nameEl) ? nameEl.GetString() ?? string.Empty : string.Empty,
                 Type = el.TryGetProperty("Type", out var typeEl) ? typeEl.GetString() ?? string.Empty : string.Empty,
-                Effect = el.TryGetProperty("Effect", out var effectEl) ? effectEl.GetString() : null,
+                Effect = ReadEffectOrDescription(el),
                 Source = el.TryGetProperty("Source", out var sourceEl) ? sourceEl.GetString() : null,
                 Frequency = ReadFrequency(el),
                 OverwriteKey = el.TryGetProperty("OverwriteKey", out var overwriteEl) ? overwriteEl.GetString() : null,
@@ -184,5 +184,20 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             JsonValueKind.Number => freqEl.GetRawText(),
             _ => null
         };
+    }
+
+    private static string? ReadEffectOrDescription(JsonElement el)
+    {
+        string? effect = null;
+        if (el.TryGetProperty("Effect", out var effectEl) && effectEl.ValueKind == JsonValueKind.String)
+            effect = effectEl.GetString();
+
+        if (!string.IsNullOrWhiteSpace(effect))
+            return effect;
+
+        if (el.TryGetProperty("Description", out var descEl) && descEl.ValueKind == JsonValueKind.String)
+            return descEl.GetString();
+
+        return effect;
     }
 }

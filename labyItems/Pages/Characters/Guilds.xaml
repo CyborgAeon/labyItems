@@ -53,8 +53,8 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <local:GuildCardView
-                        ToggleExpandedCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=BindingContext.ToggleExpandedCommand}"
-                        SelectCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=BindingContext.ToggleSelectedCommand}"/>
+                        ToggleExpandedCommand="{Binding Source={RelativeSource AncestorType={x:Type local:Guilds}}, Path=BindingContext.ToggleExpandedCommand}"
+                        SelectCommand="{Binding Source={RelativeSource AncestorType={x:Type local:Guilds}}, Path=BindingContext.ToggleSelectedCommand}"/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

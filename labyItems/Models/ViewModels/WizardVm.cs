@@ -90,6 +90,9 @@ public sealed class WizardVm : INotifyPropertyChanged
     private int _armourMaxTotalPac;
     private int _wornArmourPac;
     private bool _isArmourSelectionEnabled = true;
+    private List<int> _armourPacSteps = new();
+    private IDictionary<string, int> _armourPacItems = new Dictionary<string, int>();
+    private IList<string> _armourPacLabels = new List<string>();
 
     public WizardVm(CharacterDraft? draft = null, Func<Task>? onFinished = null)
     {
@@ -226,6 +229,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             var clamped = ClampWornArmour(value);
             if (!Set(ref _wornArmourPac, clamped)) return;
             Raise(nameof(ArmourSelectionSummary));
+            Raise(nameof(ArmourSliderIndex));
         }
     }
 
@@ -238,6 +242,24 @@ public sealed class WizardVm : INotifyPropertyChanged
     public string ArmourAvailabilityText => BuildArmourAvailabilityText();
     public string ArmourBaseSummary => BuildArmourBaseSummary();
     public string ArmourSelectionSummary => $"Worn armour PAC: {WornArmourPac}";
+
+    public IDictionary<string, int> ArmourPacItems
+    {
+        get => _armourPacItems;
+        private set => Set(ref _armourPacItems, value);
+    }
+
+    public IList<string> ArmourPacLabels
+    {
+        get => _armourPacLabels;
+        private set => Set(ref _armourPacLabels, value);
+    }
+
+    public int ArmourSliderIndex
+    {
+        get => ResolveArmourSliderIndex();
+        set => ApplyArmourSliderIndex(value);
+    }
 
     public void NotifyGatingChanged()
     {
@@ -392,6 +414,7 @@ public sealed class WizardVm : INotifyPropertyChanged
                 ArmourLayers[0] = 0;
             WornArmourPac = 0;
         }
+        UpdateArmourSliderOptions(tier);
         Raise(nameof(ArmourSelectionSummary));
     }
 
@@ -418,6 +441,16 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     private int ClampWornArmour(int value)
     {
+        if (_armourPacSteps.Count > 0)
+        {
+            var sorted = _armourPacSteps;
+            if (sorted.Contains(value))
+                return value;
+
+            var lower = sorted.Where(v => v <= value).DefaultIfEmpty(sorted[0]).Max();
+            return lower;
+        }
+
         var max = Math.Max(0, ArmourMaxTotalPac);
         return Math.Max(0, Math.Min(value, max));
     }
@@ -430,8 +463,65 @@ public sealed class WizardVm : INotifyPropertyChanged
             _wornArmourPac = clamped;
             Raise(nameof(WornArmourPac));
             Raise(nameof(ArmourSelectionSummary));
+            Raise(nameof(ArmourSliderIndex));
         }
     }
+
+    private int ResolveArmourSliderIndex()
+    {
+        if (_armourPacSteps.Count == 0)
+            return 0;
+
+        var idx = _armourPacSteps.IndexOf(WornArmourPac);
+        return idx >= 0 ? idx : 0;
+    }
+
+    private void ApplyArmourSliderIndex(int index)
+    {
+        if (_armourPacSteps.Count == 0)
+            return;
+
+        var clamped = Math.Clamp(index, 0, _armourPacSteps.Count - 1);
+        var pac = _armourPacSteps[clamped];
+        if (WornArmourPac != pac)
+            WornArmourPac = pac;
+
+        Raise(nameof(ArmourSliderIndex));
+    }
+
+    private void UpdateArmourSliderOptions(ArmourTier tier)
+    {
+        var maxPac = GetMaxPacForTier(tier);
+        var steps = new List<int> { 0 };
+
+        if (maxPac >= 3)
+        {
+            for (int pac = 3; pac <= maxPac; pac++)
+                steps.Add(pac);
+        }
+
+        _armourPacSteps = steps;
+        ArmourPacItems = steps.ToDictionary(p => p.ToString(), p => p);
+        ArmourPacLabels = steps.Select(BuildArmourLabel).ToList();
+
+        if (!_armourPacSteps.Contains(WornArmourPac))
+            WornArmourPac = _armourPacSteps.LastOrDefault();
+
+        Raise(nameof(ArmourSliderIndex));
+    }
+
+    private static string BuildArmourLabel(int pac)
+        => pac switch
+        {
+            0 => "None",
+            3 => "3 PAC, Leather",
+            4 => "4 PAC, stiff leather",
+            5 => "5 PAC, studded leather",
+            6 => "6 PAC, Loose Chain",
+            7 => "7 PAC, Tight Chain",
+            8 => "8 PAC, Plate mail",
+            _ => $"{pac} PAC"
+        };
 
     private string BuildArmourAvailabilityText()
     {

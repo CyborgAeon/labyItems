@@ -55,19 +55,19 @@
                        Opacity="0.8"
                        VerticalOptions="Center"/>
 
-                <Label Grid.Column="5"
-                       Text="⌄"
-                       FontSize="18"
-                       Rotation="{Binding ChevronRotation}"
-                       VerticalOptions="Center"
-                       HorizontalOptions="End">
-
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=ToggleExpandedCommand}"
-                            CommandParameter="{Binding .}"/>
-                    </Label.GestureRecognizers>
-                </Label>
+                <Button Grid.Column="5"
+                        Text="⌄"
+                        FontSize="18"
+                        Rotation="{Binding ChevronRotation}"
+                        BackgroundColor="Transparent"
+                        TextColor="#6B7280"
+                        Padding="0"
+                        WidthRequest="32"
+                        HeightRequest="32"
+                        VerticalOptions="Center"
+                        HorizontalOptions="End"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=ToggleExpandedCommand}"
+                        CommandParameter="{Binding .}"/>
 
             </Grid>
 
@@ -95,11 +95,12 @@
                     <VerticalStackLayout Spacing="4"
                                          IsVisible="{Binding HasBasic}">
                         <Label Text="Basic"
-                               Opacity="0.8"/>
+                               FontAttributes="Bold"
+                               Opacity="0.85"/>
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding BasicBenefits}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Text="{Binding .}"
+                                    <Label Text="• {Binding .}"
                                            FontSize="13"
                                            Opacity="0.9"/>
                                 </DataTemplate>
@@ -110,11 +111,12 @@
                     <VerticalStackLayout Spacing="4"
                                          IsVisible="{Binding HasIntermediate}">
                         <Label Text="Intermediate"
-                               Opacity="0.8"/>
+                               FontAttributes="Bold"
+                               Opacity="0.85"/>
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding IntermediateBenefits}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Text="{Binding .}"
+                                    <Label Text="• {Binding .}"
                                            FontSize="13"
                                            Opacity="0.9"/>
                                 </DataTemplate>
@@ -125,11 +127,12 @@
                     <VerticalStackLayout Spacing="4"
                                          IsVisible="{Binding HasAdvanced}">
                         <Label Text="Advanced"
-                               Opacity="0.8"/>
+                               FontAttributes="Bold"
+                               Opacity="0.85"/>
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancedBenefits}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Text="{Binding .}"
+                                    <Label Text="• {Binding .}"
                                            FontSize="13"
                                            Opacity="0.9"/>
                                 </DataTemplate>
@@ -137,6 +140,40 @@
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
+
+                <!-- Miracle list -->
+                <CollectionView
+                    IsVisible="{Binding HasMiracles}"
+                    ItemsSource="{Binding MiracleRows}"
+                    SelectionMode="None">
+                    <CollectionView.Header>
+                        <Grid RowDefinitions="Auto,Auto"
+                              RowSpacing="6">
+                            <Label Text="Miracle List"
+                                   FontAttributes="Bold"/>
+                            <Grid Grid.Row="1"
+                                  ColumnDefinitions="50,*"
+                                  ColumnSpacing="8"
+                                  Opacity="0.7">
+                                <Label Text="Lvl"/>
+                                <Label Grid.Column="1"
+                                       Text="Miracles"/>
+                            </Grid>
+                        </Grid>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="50,*"
+                                  ColumnSpacing="8"
+                                  Padding="0,2">
+                                <Label Text="{Binding Level}"/>
+                                <Label Grid.Column="1"
+                                       Text="{Binding Miracles}"
+                                       Opacity="0.8"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
             </VerticalStackLayout>
         </Grid>
         <Frame.GestureRecognizers>
