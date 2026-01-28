@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Data.Sqlite;
 
 internal class EvocRaw
@@ -21,6 +22,16 @@ internal sealed class TableRaw
     public string Index { get; set; } = string.Empty;
     public string? Desc { get; set; }
     public string? Cost { get; set; }
+}
+
+internal sealed class AbilityRaw
+{
+    public string? Available { get; set; }
+    public string Index { get; set; } = string.Empty;
+    public string? Desc { get; set; }
+    public string? Cost { get; set; }
+    public int Table { get; set; }
+    public List<string>? PreReqs { get; set; }
 }
 
 class Program
@@ -89,6 +100,8 @@ CREATE TABLE evolution (
   cost INTEGER,
   available TEXT,
   table_id INTEGER,
+  can_buy_multiple INTEGER,
+  prereqs_json TEXT,
   data_json TEXT,
   is_default INTEGER,
   created_at TEXT,
@@ -98,6 +111,27 @@ CREATE INDEX idx_evolution_idx_lower ON evolution(idx_lower);
 CREATE TABLE evolution_ngrams(token TEXT, evolution_id TEXT);
 CREATE INDEX idx_evolution_ngrams_token ON evolution_ngrams(token);
 CREATE INDEX idx_evolution_ngrams_evolution_id ON evolution_ngrams(evolution_id);
+
+-- Make abilities table
+CREATE TABLE abilities (
+  id TEXT PRIMARY KEY,
+  idx TEXT NOT NULL,
+  idx_lower TEXT,
+  description TEXT,
+  cost INTEGER,
+  available TEXT,
+  table_id INTEGER,
+  can_buy_multiple INTEGER,
+  prereqs_json TEXT,
+  data_json TEXT,
+  is_default INTEGER,
+  created_at TEXT,
+  updated_at TEXT
+);
+CREATE INDEX idx_abilities_idx_lower ON abilities(idx_lower);
+CREATE TABLE abilities_ngrams(token TEXT, ability_id TEXT);
+CREATE INDEX idx_abilities_ngrams_token ON abilities_ngrams(token);
+CREATE INDEX idx_abilities_ngrams_ability_id ON abilities_ngrams(ability_id);
 
 -- Seed metadata for CI and runtime to validate seed provenance
 CREATE TABLE seed_metadata (
@@ -188,6 +222,9 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
         var inputDir = Path.GetDirectoryName(input) ?? ".";
         var resourcesRoot = Path.GetFullPath(Path.Combine(inputDir, "..")); // Resources/Raw
 
+        var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var normalizedJsonOptions = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+
         for (int tableNum = 1; tableNum <= 12; tableNum++)
         {
             var path = Path.GetFullPath(Path.Combine(resourcesRoot, "evolution_classes", $"table_{tableNum}.json"));
@@ -197,11 +234,10 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
             }
 
             var jsonTable = File.ReadAllText(path);
-            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var rawTable = JsonSerializer.Deserialize<List<TableRaw>>(jsonTable, jsonOptions) ?? new List<TableRaw>();
 
             var insertEvoCmd = conn.CreateCommand();
-            insertEvoCmd.CommandText = @"INSERT INTO evolution (id, idx, idx_lower, description, cost, available, table_id, data_json, is_default, created_at, updated_at) VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @data_json, @is_default, @created_at, @updated_at);";
+            insertEvoCmd.CommandText = @"INSERT INTO evolution (id, idx, idx_lower, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json, is_default, created_at, updated_at) VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_buy_multiple, @prereqs_json, @data_json, @is_default, @created_at, @updated_at);";
             var insertEvoNgramCmd = conn.CreateCommand();
             insertEvoNgramCmd.CommandText = @"INSERT INTO evolution_ngrams (token, evolution_id) VALUES (@token, @evolution_id);";
 
@@ -212,7 +248,11 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                 if (string.IsNullOrWhiteSpace(idx)) continue;
                 var desc = (r.Desc ?? "").Trim();
                 var available = (r.Available ?? "").Trim();
-                var cost = TryParseCostForTool(r.Cost);
+                var costRaw = (r.Cost ?? "").Trim();
+                var canBuyMultiple = costRaw.Contains('*');
+                var hasPlus = costRaw.Contains('+');
+                var cost = TryParseCostForTool(costRaw);
+                List<string>? preReqs = hasPlus ? new List<string>() : null;
                 var id = DeterministicGuid($"evo|{tableNum}|{idx}").ToString();
 
                 insertEvoCmd.Parameters.Clear();
@@ -223,7 +263,19 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                 insertEvoCmd.Parameters.AddWithValue("@cost", cost);
                 insertEvoCmd.Parameters.AddWithValue("@available", available);
                 insertEvoCmd.Parameters.AddWithValue("@table_id", tableNum);
-                insertEvoCmd.Parameters.AddWithValue("@data_json", JsonSerializer.Serialize(r));
+                insertEvoCmd.Parameters.AddWithValue("@can_buy_multiple", canBuyMultiple ? 1 : 0);
+                insertEvoCmd.Parameters.AddWithValue("@prereqs_json", preReqs is null ? DBNull.Value : JsonSerializer.Serialize(preReqs));
+                var evoJson = new
+                {
+                    available,
+                    index = idx,
+                    desc,
+                    cost,
+                    table = tableNum,
+                    canBuyMultiple,
+                    preReqs
+                };
+                insertEvoCmd.Parameters.AddWithValue("@data_json", JsonSerializer.Serialize(evoJson, normalizedJsonOptions));
                 insertEvoCmd.Parameters.AddWithValue("@is_default", 1);
                 var now2 = DateTime.UtcNow.ToString("o");
                 insertEvoCmd.Parameters.AddWithValue("@created_at", now2);
@@ -243,6 +295,84 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                         insertEvoNgramCmd.Parameters.AddWithValue("@token", tkn);
                         insertEvoNgramCmd.Parameters.AddWithValue("@evolution_id", id);
                         insertEvoNgramCmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        // Import make abilities into abilities table (if present)
+        var abilitiesPath = Path.GetFullPath(Path.Combine(resourcesRoot, "makes_abilities.json"));
+        if (File.Exists(abilitiesPath))
+        {
+            var rawAbilities = JsonSerializer.Deserialize<List<AbilityRaw>>(File.ReadAllText(abilitiesPath), jsonOptions)
+                               ?? new List<AbilityRaw>();
+
+            var insertAbilityCmd = conn.CreateCommand();
+            insertAbilityCmd.CommandText = @"INSERT INTO abilities (id, idx, idx_lower, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json, is_default, created_at, updated_at) VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_buy_multiple, @prereqs_json, @data_json, @is_default, @created_at, @updated_at);";
+
+            var insertAbilityNgramCmd = conn.CreateCommand();
+            insertAbilityNgramCmd.CommandText = @"INSERT INTO abilities_ngrams (token, ability_id) VALUES (@token, @ability_id);";
+
+            foreach (var r in rawAbilities)
+            {
+                var idx = (r.Index ?? "").Trim();
+                if (string.IsNullOrWhiteSpace(idx)) continue;
+
+                var desc = (r.Desc ?? "").Trim();
+                var available = (r.Available ?? "").Trim();
+                var costRaw = (r.Cost ?? "").Trim();
+                var canBuyMultiple = costRaw.Contains('*');
+                var hasPlus = costRaw.Contains('+');
+                var cost = TryParseCostForTool(costRaw);
+                var table = r.Table;
+
+                List<string>? preReqs = null;
+                if (hasPlus)
+                    preReqs = (r.PreReqs is { Count: > 0 } ? r.PreReqs : new List<string>());
+                else if (r.PreReqs is { Count: > 0 })
+                    preReqs = r.PreReqs;
+
+                var id = DeterministicGuid($"ability|{table}|{idx}").ToString();
+
+                insertAbilityCmd.Parameters.Clear();
+                insertAbilityCmd.Parameters.AddWithValue("@id", id);
+                insertAbilityCmd.Parameters.AddWithValue("@idx", idx);
+                insertAbilityCmd.Parameters.AddWithValue("@idx_lower", idx.ToLowerInvariant());
+                insertAbilityCmd.Parameters.AddWithValue("@description", desc);
+                insertAbilityCmd.Parameters.AddWithValue("@cost", cost);
+                insertAbilityCmd.Parameters.AddWithValue("@available", available);
+                insertAbilityCmd.Parameters.AddWithValue("@table_id", table);
+                insertAbilityCmd.Parameters.AddWithValue("@can_buy_multiple", canBuyMultiple ? 1 : 0);
+                insertAbilityCmd.Parameters.AddWithValue("@prereqs_json", preReqs is null ? DBNull.Value : JsonSerializer.Serialize(preReqs));
+                var abilityJson = new
+                {
+                    available,
+                    index = idx,
+                    desc,
+                    cost,
+                    table,
+                    canBuyMultiple,
+                    preReqs
+                };
+                insertAbilityCmd.Parameters.AddWithValue("@data_json", JsonSerializer.Serialize(abilityJson, normalizedJsonOptions));
+                insertAbilityCmd.Parameters.AddWithValue("@is_default", 1);
+                var now3 = DateTime.UtcNow.ToString("o");
+                insertAbilityCmd.Parameters.AddWithValue("@created_at", now3);
+                insertAbilityCmd.Parameters.AddWithValue("@updated_at", now3);
+                insertAbilityCmd.ExecuteNonQuery();
+
+                var combined = (idx + " " + desc).ToLowerInvariant();
+                var normalized = NormalizeForNgrams(combined);
+                var tokens = GenerateNGrams(normalized, 3);
+                var inserted = new HashSet<string>();
+                foreach (var tkn in tokens)
+                {
+                    if (inserted.Add(tkn))
+                    {
+                        insertAbilityNgramCmd.Parameters.Clear();
+                        insertAbilityNgramCmd.Parameters.AddWithValue("@token", tkn);
+                        insertAbilityNgramCmd.Parameters.AddWithValue("@ability_id", id);
+                        insertAbilityNgramCmd.ExecuteNonQuery();
                     }
                 }
             }

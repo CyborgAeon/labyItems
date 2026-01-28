@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Windows.Input;
 using System.Text.RegularExpressions;
 using labyItems.Models.Characters;
@@ -12,21 +10,6 @@ using labyItems.Services;
 using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Characters;
-
-public sealed class CharacterClassRecord
-{
-    public List<string> Brackets { get; set; } = new();
-    public Dictionary<string, List<AbilityDefinition>> Levels { get; set; } = new();
-    [JsonPropertyName("Max AC")]
-    public JsonElement MaxAC { get; set; }
-    public List<string>? Powerbase { get; set; }
-    public JsonElement PowerPerLevel { get; set; }
-    public int? CasterLevel { get; set; }
-    public List<PowerCalculation>? PowerCalculations { get; set; }
-    [JsonPropertyName("Buy as")]
-    public List<string>? BuyAs { get; set; }
-    public GuildOverrideRules? GuildOverrides { get; set; }
-}
 
 public sealed class LevelRowVm
 {
@@ -60,7 +43,6 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     public int MaxAc { get; init; }
     public int TBLP { get; init; }
     public string? PowerBase { get; init; } = "";
-    public IReadOnlyList<string> BracketTags { get; init; } = Array.Empty<string>();
 
     public Dictionary<int, string> CardTags { get; set; }
     public string Tag1 => $"AC {MaxAc}";
@@ -72,7 +54,172 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     public string RaceName { get; set; } = "";
 
     private bool _progressionLoaded;
+    public IReadOnlyList<string> BracketTags { get; init; } = Array.Empty<string>();
 
+    public IReadOnlyList<string> Brackets => BracketTags
+        .Where(t => !string.IsNullOrWhiteSpace(t))
+        .Select(t => t.Trim())
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .ToList();
+
+    public IReadOnlyList<string> BracketLabels => Brackets
+        .Select(GetBracketLabel)
+        .Where(t => !string.IsNullOrWhiteSpace(t))
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .ToList();
+
+    public string BracketSubheading => BracketLabels.Count == 0
+        ? Category
+        : string.Join(" / ", BracketLabels);
+
+    public bool HasSplitIcon => Brackets.Count >= 2;
+
+    public string SingleEmoji => Brackets.Count == 0 ? Icon : GetBracketEmoji(Brackets[0]);
+    public string SingleBg => GetBracketColor(Brackets.Count == 0 ? Category : Brackets[0]);
+
+    public string SplitLeftEmoji => GetBracketEmoji(GetBracketAt(0, Category));
+    public string SplitRightEmoji => GetBracketEmoji(GetBracketAt(1, GetBracketAt(0, Category)));
+
+    public string SplitLeftBg => GetBracketColor(GetBracketAt(0, Category));
+    public string SplitRightBg => GetBracketColor(GetBracketAt(1, GetBracketAt(0, Category)));
+
+    private string GetBracketAt(int index, string fallback)
+    {
+        if (index >= 0 && index < Brackets.Count)
+            return Brackets[index];
+        return fallback;
+    }
+
+    private static string GetBracketColor(string? bracket)
+    {
+        var b = GetBracketLabel(bracket);
+
+        if (b.Equals("Neuro", StringComparison.OrdinalIgnoreCase)) return "#E9D5FF";
+        if (b.Equals("Wizard", StringComparison.OrdinalIgnoreCase)) return "#D8E2DC";
+        if (b.Equals("Warrior", StringComparison.OrdinalIgnoreCase)) return "#FEC5BB";
+        if (b.Equals("Priest", StringComparison.OrdinalIgnoreCase)) return "#FAE1DD";
+        if (b.Equals("Druid", StringComparison.OrdinalIgnoreCase)) return "#DED6CE";
+        if (b.Equals("Scout", StringComparison.OrdinalIgnoreCase)) return "#F5EBE0";
+
+        return "#F3F4F6";
+    }
+
+    private static string GetBracketEmoji(string? bracket)
+    {
+        var (emoji, label) = ParseBracketParts(bracket);
+        if (!string.IsNullOrWhiteSpace(emoji))
+            return emoji;
+
+        var b = label;
+
+        if (b.Equals("Neuro", StringComparison.OrdinalIgnoreCase)) return "🧠";
+        if (b.Equals("Wizard", StringComparison.OrdinalIgnoreCase)) return "🪄";
+        if (b.Equals("Warrior", StringComparison.OrdinalIgnoreCase)) return "⚔️";
+        if (b.Equals("Priest", StringComparison.OrdinalIgnoreCase)) return "✨";
+        if (b.Equals("Druid", StringComparison.OrdinalIgnoreCase)) return "🌿";
+        if (b.Equals("Scout", StringComparison.OrdinalIgnoreCase)) return "🛡️";
+
+        return "❔";
+    }
+
+    private static string GetBracketLabel(string? bracket)
+    {
+        var (_, label) = ParseBracketParts(bracket);
+        return string.IsNullOrWhiteSpace(label) ? string.Empty : label;
+    }
+
+    private static (string Emoji, string Label) ParseBracketParts(string? bracket)
+    {
+        var text = (bracket ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return (string.Empty, string.Empty);
+
+        var parts = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length > 1 && LooksLikeEmoji(parts[0]))
+            return (parts[0], string.Join(" ", parts.Skip(1)));
+
+        return (string.Empty, text);
+    }
+
+    private static bool LooksLikeEmoji(string token)
+    {
+        foreach (var ch in token)
+        {
+            if (!char.IsLetterOrDigit(ch))
+                return true;
+        }
+
+        return false;
+    }
+
+    public static (string Icon, string Category, IReadOnlyList<string> Tags) ParseBrackets(IReadOnlyList<string>? brackets)
+    {
+        if (brackets == null || brackets.Count == 0)
+            return ("🛡️", "warrior", Array.Empty<string>());
+
+        var parsed = new List<(string Icon, string Category, string Tag)>();
+        foreach (var raw in brackets)
+        {
+            var entry = ParseBracketToken(raw);
+            if (string.IsNullOrWhiteSpace(entry.Tag))
+                continue;
+            parsed.Add(entry);
+        }
+
+        if (parsed.Count == 0)
+            return ("🛡️", "warrior", Array.Empty<string>());
+
+        var primary = parsed[0];
+        var tags = parsed
+            .Select(p => p.Tag)
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return (primary.Icon, primary.Category, tags);
+    }
+
+    private static (string Icon, string Category, string Tag) ParseBracketToken(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return ("🛡️", "warrior", string.Empty);
+
+        var parts = raw.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0)
+            return ("🛡️", "warrior", string.Empty);
+
+        if (parts.Length == 1)
+        {
+            var token = parts[0].Trim();
+            return ("🛡️", token, token);
+        }
+
+        var icon = parts[0];
+        var category = string.Join(" ", parts.Skip(1));
+        var tag = $"{icon} {category}".Trim();
+
+        return (string.IsNullOrWhiteSpace(icon) ? "🛡️" : icon, category, tag);
+    }
+
+    public static string BuildSummaryFromLevels(Dictionary<string, List<AbilityDefinition>> levels)
+    {
+        var firstNonEmpty = levels
+            .OrderBy(k => int.TryParse(k.Key, out var n) ? n : 999)
+            .SelectMany(k => k.Value ?? new List<AbilityDefinition>())
+            .Select(ToDisplayName)
+            .FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
+
+        return firstNonEmpty ?? "";
+    }
+
+    public static string ExtractPowerBase(labyItems.Services.CharacterClassRecord rec)
+    {
+        var baseName = rec.Powerbase?.FirstOrDefault();
+        if (!string.IsNullOrWhiteSpace(baseName))
+            return baseName;
+
+        return rec.PowerCalculations?.FirstOrDefault()?.PowerBase ?? "";
+    }
     public async Task EnsureProgressionLoadedAsync()
     {
         if (_progressionLoaded) return;
@@ -148,7 +295,7 @@ public sealed class ClassCardVm : INotifyPropertyChanged
         return m.Success && int.TryParse(m.Value, out n) ? n : null;
     }
 
-    private static string ToDisplayName(AbilityDefinition def)
+    public static string ToDisplayName(AbilityDefinition def)
     {
         if (def == null) return string.Empty;
 
@@ -166,23 +313,18 @@ public sealed class ClassCardVm : INotifyPropertyChanged
         set { if (_isExpanded == value) return; _isExpanded = value; Raise(); }
     }
 
-    // private Dictionary<int, string> ResolveTags()
     private (string Tag2, string Tag3) ResolveTags()
     {
-        // var response = new Dictionary<int, string>();
-        // response.Add(0, Tags[0].ToString() ?? $"{TBLP} Tblp");
-        // response.Add(1, Tags[1].ToString() ?? $"{MaxAc} max AC");
-        // response.Add(2, Tags[2].ToString() ?? PowerBase.ToString());
         var tag2 = PowerBase ?? "";
         var tag3 = TBLP > 0 ? $"{TBLP} TBLP" : "";
 
         if (!string.IsNullOrWhiteSpace(tag2) && !string.IsNullOrWhiteSpace(tag3))
             return (tag2, tag3);
 
-        var tags = BracketTags?
+        var tags = BracketLabels
             .Where(t => !string.IsNullOrWhiteSpace(t))
             .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList() ?? new List<string>();
+            .ToList();
 
         if (tags.Count > 1)
         {

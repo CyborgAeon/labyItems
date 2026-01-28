@@ -38,6 +38,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private Dictionary<string, GuildRecord> _guilds = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, ServiceCharacterClassRecord> _classes = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, ManuAbilityOption> _abilityOptions = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, ManuAbilityOption> _abilityOptionsByName = new(StringComparer.OrdinalIgnoreCase);
 
     private bool _showSpellsTab;
     public bool ShowSpellsTab { get => _showSpellsTab; private set => Set(ref _showSpellsTab, value); }
@@ -53,7 +54,18 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         _draft = draft;
 
         Items.CollectionChanged += (_, __) => SyncItemsToDraft();
-        Abilities.CollectionChanged += (_, __) => SyncAbilitiesToDraft();
+        Abilities.CollectionChanged += (_, __) =>
+        {
+            SyncAbilitiesToDraft();
+            UpdateAbilityPoints();
+        };
+
+        if (!_draft.HasSetCurrentVitae)
+        {
+            _draft.CurrentVitae = 100;
+            _draft.HasSetCurrentVitae = true;
+            Raise(nameof(CurrentVitae));
+        }
 
         AddAbilityCommand = new Command(AddAbility);
         RemoveAbilityCommand = new Command<AbilityEntryVm>(RemoveAbility);
@@ -83,6 +95,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             if (_draft.Points == value) return;
             _draft.Points = value;
             Raise();
+            Raise(nameof(AbilityPointsSummary));
             foreach (var list in MiracleLists)
                 list.RefreshExternalLimits();
         }
@@ -95,6 +108,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         {
             if (_draft.CurrentVitae == value) return;
             _draft.CurrentVitae = value;
+            _draft.HasSetCurrentVitae = true;
             Raise();
         }
     }
@@ -132,6 +146,9 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public ObservableCollection<AbilityEntryVm> Abilities { get; } = new();
     public ICommand AddAbilityCommand { get; }
     public ICommand RemoveAbilityCommand { get; }
+
+    public int AbilityPointsSpent => Abilities.Sum(a => a.Cost);
+    public string AbilityPointsSummary => $"Points spent: {AbilityPointsSpent} / {Points}";
 
     public ObservableCollection<ItemLineVm> Items { get; } = new();
     public ICommand AddItemCommand { get; }
@@ -215,7 +232,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         try
         {
             var allAbilities = await ManuAbilityService.GetAllAsync();
-            AbilityOptions = allAbilities
+            _abilityOptionsByName = allAbilities
                 .GroupBy(a => a.name ?? string.Empty, StringComparer.OrdinalIgnoreCase)
                 .Where(g => !string.IsNullOrWhiteSpace(g.Key))
                 .ToDictionary(
@@ -231,10 +248,17 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
                             entry.description ?? string.Empty);
                     },
                     StringComparer.OrdinalIgnoreCase);
+
+            AbilityOptions = _abilityOptionsByName
+                .ToDictionary(
+                    kvp => BuildAbilityOptionLabel(kvp.Value),
+                    kvp => kvp.Value,
+                    StringComparer.OrdinalIgnoreCase);
         }
         catch
         {
             AbilityOptions = new Dictionary<string, ManuAbilityOption>(StringComparer.OrdinalIgnoreCase);
+            _abilityOptionsByName = new Dictionary<string, ManuAbilityOption>(StringComparer.OrdinalIgnoreCase);
         }
 
         LoadAbilitiesFromDraft();
@@ -248,6 +272,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         Raise(nameof(CanSave));
         (SaveCommand as Command)?.ChangeCanExecute();
+        UpdateAbilityPoints();
     }
 
     private void UpdateTabVisibility()
@@ -296,7 +321,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         Abilities.Clear();
         foreach (var ability in _draft.AdvancementAbilities ?? new List<string>())
         {
-            var line = new AbilityEntryVm(ability, SyncAbilitiesToDraft);
+            var line = BuildAbilityEntry(ability);
             Abilities.Add(line);
         }
     }
@@ -310,7 +335,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (string.IsNullOrWhiteSpace(name))
             return;
 
-        var line = new AbilityEntryVm(name, SyncAbilitiesToDraft);
+        var line = new AbilityEntryVm(name, SelectedAbilityOption.Value.Cost, SyncAbilitiesToDraft);
         Abilities.Add(line);
         SelectedAbilityOption = null;
         SyncAbilitiesToDraft();
@@ -329,6 +354,27 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             .Select(a => (a.Name ?? string.Empty).Trim())
             .Where(t => t.Length > 0)
             .ToList();
+    }
+
+    private AbilityEntryVm BuildAbilityEntry(string name)
+    {
+        var trimmed = (name ?? string.Empty).Trim();
+        if (_abilityOptionsByName.TryGetValue(trimmed, out var option))
+            return new AbilityEntryVm(trimmed, option.Cost, SyncAbilitiesToDraft);
+
+        return new AbilityEntryVm(trimmed, 0, SyncAbilitiesToDraft);
+    }
+
+    private void UpdateAbilityPoints()
+    {
+        Raise(nameof(AbilityPointsSpent));
+        Raise(nameof(AbilityPointsSummary));
+    }
+
+    private static string BuildAbilityOptionLabel(ManuAbilityOption option)
+    {
+        var name = option.Name ?? string.Empty;
+        return $"{name} ({option.Cost})";
     }
 
     private void LoadItemsFromDraft()
@@ -745,6 +791,7 @@ public sealed class AbilityEntryVm : INotifyPropertyChanged
 
     private readonly Action _onChanged;
     private string _name;
+    private int _cost;
 
     public string Name
     {
@@ -759,9 +806,22 @@ public sealed class AbilityEntryVm : INotifyPropertyChanged
         }
     }
 
-    public AbilityEntryVm(string name, Action onChanged)
+    public int Cost
+    {
+        get => _cost;
+        private set
+        {
+            if (_cost == value) return;
+            _cost = value;
+            Raise();
+            _onChanged();
+        }
+    }
+
+    public AbilityEntryVm(string name, int cost, Action onChanged)
     {
         _name = name ?? string.Empty;
+        _cost = cost;
         _onChanged = onChanged;
     }
 }
@@ -1392,7 +1452,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
 
     public bool IsReadOnly => Draft.IsImported || Draft.IsSaved;
     public bool CanEdit => !IsReadOnly;
-    public bool CanRemoveList => CanEdit;
+    public bool CanRemoveList => CanEdit && !IsScriptures;
     public bool CanReopenScriptures => IsScriptures && IsSaved && !Draft.IsImported;
 
     public ObservableCollection<MiracleEntryVm> Entries { get; } = new();

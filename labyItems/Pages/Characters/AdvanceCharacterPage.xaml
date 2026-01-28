@@ -47,6 +47,9 @@
                                 Command="{Binding AddAbilityCommand}"
                                 IsEnabled="{Binding CanAddAbility}"/>
                     </Grid>
+                    <Label Text="{Binding AbilityPointsSummary}"
+                           FontSize="12"
+                           Opacity="0.7"/>
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Abilities}"
                                          Spacing="8">
                         <BindableLayout.ItemTemplate>
@@ -260,6 +263,7 @@
                                                 Command="{Binding SaveListCommand}"
                                                 IsEnabled="{Binding CanSaveList}"/>
                                         <Button Text="Delete list"
+                                                IsVisible="{Binding CanRemoveList}"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveMiracleListCommand}"
                                                 CommandParameter="{Binding .}"/>
                                     </HorizontalStackLayout>

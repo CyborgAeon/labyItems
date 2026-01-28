@@ -49,6 +49,7 @@ public sealed class CharacterDraft
     public string ArmourAvailability { get; set; } = "";
     public string ArmourAvailabilityOverride { get; set; } = "";
     public List<string> ColourChoiceOverride { get; } = new();
+    public bool HasSetCurrentVitae { get; set; }
     public Dictionary<string, int> ResistanceLevels { get; set; } = new Dictionary<string, int> {
         { "Spirit", 8 },
         { "Magic", 8 },

@@ -392,9 +392,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             var classKey = ordered[idx].Key;
             var record = ordered[idx].Value;
 
-            var bracket = record.Brackets?.FirstOrDefault() ?? "";
-            var icon = ExtractIcon(bracket);
-            var category = ExtractCategory(bracket);
+            var (icon, category, bracketTags) = ClassCardVm.ParseBrackets(record.Brackets);
 
             if (!string.IsNullOrWhiteSpace(category))
                 categories.Add(category);
@@ -418,6 +416,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 MaxAc = maxAc,
                 TBLP = tblp,
                 PowerBase = powerBase,
+                BracketTags = bracketTags,
                 IsSelected = string.Equals(classKey, _draft.Class, StringComparison.OrdinalIgnoreCase)
             });
         }
@@ -1900,20 +1899,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             return powerBase;
 
         return record.PowerCalculations?.FirstOrDefault()?.PowerBase ?? "";
-    }
-
-    private static string ExtractIcon(string bracket)
-    {
-        if (string.IsNullOrWhiteSpace(bracket)) return "🛡️";
-        var parts = bracket.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-        return parts.Length > 0 ? parts[0] : "🛡️";
-    }
-
-    private static string ExtractCategory(string bracket)
-    {
-        if (string.IsNullOrWhiteSpace(bracket)) return "";
-        var parts = bracket.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-        return parts.Length == 2 ? parts[1] : bracket;
     }
 
     private static string BuildRaceSearchText(string name, PeopleRecord record)

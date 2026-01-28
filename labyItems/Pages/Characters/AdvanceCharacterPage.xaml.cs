@@ -3,10 +3,12 @@ using labyItems.Models.Characters;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
-
+using Microsoft.Maui.Controls.PlatformConfiguration;
+using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
+using AndroidConfig = Microsoft.Maui.Controls.PlatformConfiguration.Android;
 namespace labyItems.Pages.Characters;
 
-public partial class AdvanceCharacterPage : TabbedPage
+public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 {
     private readonly AdvanceCharacterVm _vm;
 
@@ -19,7 +21,7 @@ public partial class AdvanceCharacterPage : TabbedPage
     public AdvanceCharacterPage(CharacterDraft draft)
     {
         InitializeComponent();
-
+        this.On<AndroidConfig>().SetIsSwipePagingEnabled(false);
         _vm = new AdvanceCharacterVm(draft);
         BindingContext = _vm;
         foreach (var child in Children)

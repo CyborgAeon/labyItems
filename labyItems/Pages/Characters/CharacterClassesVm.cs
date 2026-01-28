@@ -61,7 +61,7 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
             var key = kvp.Key;
             var rec = kvp.Value;
 
-            var (icon, category, bracketTags) = ParseBrackets(rec.Brackets);
+            var (icon, category, bracketTags) = ClassCardVm.ParseBrackets(rec.Brackets);
 
             var maxAc = rec.MaxAC.ValueKind switch
             {
@@ -83,7 +83,7 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
                     rec.Levels.TryGetValue(lvl.ToString(), out var arr);
                     arr ??= new List<AbilityDefinition>();
 
-                    var names = arr.Select(ToDisplayName).ToList();
+                    var names = arr.Select(ClassCardVm.ToDisplayName).ToList();
 
                     var body = names.Count >= 1 ? ExtractNumberToken(names[0]) : "";
                     var loc = names.Count >= 2 ? ExtractNumberToken(names[1]) : "";
@@ -106,12 +106,12 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
                 Name = key,
                 Category = category,
                 Icon = icon,
-                Summary = BuildSummaryFromLevels(rec.Levels),
+                Summary = ClassCardVm.BuildSummaryFromLevels(rec.Levels),
                 MaxAc = maxAc,
                 TBLP = tblp,
-                PowerBase = ExtractPowerBase(rec),
+                PowerBase = ClassCardVm.ExtractPowerBase(rec),
                 LevelRows = levelRows,
-                BracketTags = bracketTags
+                BracketTags = rec.Brackets ?? bracketTags
             });
         }
 
@@ -164,86 +164,6 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
         FilteredClasses.Clear();
         foreach (var m in matches)
             FilteredClasses.Add(m);
-    }
-
-    private static string BuildSummaryFromLevels(Dictionary<string, List<AbilityDefinition>> levels)
-    {
-        var firstNonEmpty = levels
-            .OrderBy(k => int.TryParse(k.Key, out var n) ? n : 999)
-            .SelectMany(k => k.Value ?? new List<AbilityDefinition>())
-            .Select(ToDisplayName)
-            .FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
-
-        return firstNonEmpty ?? "";
-    }
-
-    private static (string Icon, string Category, IReadOnlyList<string> Tags) ParseBrackets(IReadOnlyList<string>? brackets)
-    {
-        if (brackets == null || brackets.Count == 0)
-            return ("🛡️", "warrior", Array.Empty<string>());
-
-        var parsed = new List<(string Icon, string Category, string Tag)>();
-        foreach (var raw in brackets)
-        {
-            var entry = ParseBracketToken(raw);
-            if (string.IsNullOrWhiteSpace(entry.Tag))
-                continue;
-            parsed.Add(entry);
-        }
-
-        if (parsed.Count == 0)
-            return ("🛡️", "warrior", Array.Empty<string>());
-
-        var primary = parsed[0];
-        var tags = parsed
-            .Select(p => p.Tag)
-            .Where(t => !string.IsNullOrWhiteSpace(t))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        return (primary.Icon, primary.Category.ToLowerInvariant(), tags);
-    }
-
-    private static (string Icon, string Category, string Tag) ParseBracketToken(string? raw)
-    {
-        if (string.IsNullOrWhiteSpace(raw))
-            return ("🛡️", "warrior", string.Empty);
-
-        var parts = raw.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length == 0)
-            return ("🛡️", "warrior", string.Empty);
-
-        if (parts.Length == 1)
-        {
-            var token = parts[0].Trim();
-            return ("🛡️", token, token);
-        }
-
-        var icon = parts[0];
-        var category = string.Join(" ", parts.Skip(1));
-        var tag = $"{icon} {category}".Trim();
-
-        return (string.IsNullOrWhiteSpace(icon) ? "🛡️" : icon, category, tag);
-    }
-
-    private static string ExtractPowerBase(labyItems.Services.CharacterClassRecord rec)
-    {
-        var baseName = rec.Powerbase?.FirstOrDefault();
-        if (!string.IsNullOrWhiteSpace(baseName))
-            return baseName;
-
-        return rec.PowerCalculations?.FirstOrDefault()?.PowerBase ?? "";
-    }
-
-    private static string ToDisplayName(AbilityDefinition def)
-    {
-        if (def == null) return string.Empty;
-
-        var name = def.Name ?? string.Empty;
-        if (!string.IsNullOrWhiteSpace(def.Effect))
-            return $"{name} ({def.Effect})";
-
-        return name;
     }
 
     private static string ExtractNumberToken(string s)

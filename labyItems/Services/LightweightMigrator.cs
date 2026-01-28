@@ -100,12 +100,31 @@ CREATE TABLE IF NOT EXISTS evolution (
   cost INTEGER,
   available TEXT,
   table_id INTEGER,
+  can_buy_multiple INTEGER,
+  prereqs_json TEXT,
   data_json TEXT,
   is_default INTEGER,
   created_at TEXT,
   updated_at TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_evolution_idx_lower ON evolution(idx_lower);
+
+CREATE TABLE IF NOT EXISTS abilities (
+  id TEXT PRIMARY KEY,
+  idx TEXT NOT NULL,
+  idx_lower TEXT,
+  description TEXT,
+  cost INTEGER,
+  available TEXT,
+  table_id INTEGER,
+  can_buy_multiple INTEGER,
+  prereqs_json TEXT,
+  data_json TEXT,
+  is_default INTEGER,
+  created_at TEXT,
+  updated_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_abilities_idx_lower ON abilities(idx_lower);
 ";
 				cmd.ExecuteNonQuery();
 
@@ -113,6 +132,10 @@ CREATE INDEX IF NOT EXISTS idx_evolution_idx_lower ON evolution(idx_lower);
 CREATE TABLE IF NOT EXISTS evolution_ngrams(token TEXT, evolution_id TEXT);
 CREATE INDEX IF NOT EXISTS idx_evolution_ngrams_token ON evolution_ngrams(token);
 CREATE INDEX IF NOT EXISTS idx_evolution_ngrams_evolution_id ON evolution_ngrams(evolution_id);
+
+CREATE TABLE IF NOT EXISTS abilities_ngrams(token TEXT, ability_id TEXT);
+CREATE INDEX IF NOT EXISTS idx_abilities_ngrams_token ON abilities_ngrams(token);
+CREATE INDEX IF NOT EXISTS idx_abilities_ngrams_ability_id ON abilities_ngrams(ability_id);
 ";
 				cmd.ExecuteNonQuery();
 

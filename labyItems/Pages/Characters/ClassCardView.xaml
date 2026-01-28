@@ -3,7 +3,8 @@
     x:Class="labyItems.Pages.Characters.ClassCardView"
     x:Name="Self"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls">
 
     <Grid
         Margin="0,0,0,5">
@@ -39,21 +40,52 @@
                                 Command="{Binding SelectCommand, Source={x:Reference Self}}"
                                 CommandParameter="{Binding .}"/>
                         </Grid.GestureRecognizers>
-                        <Frame
-                            Grid.Column="0"
-                            WidthRequest="40"
-                            HeightRequest="40"
-                            CornerRadius="20"
-                            Padding="0"
-                            HasShadow="False"
-                            BorderColor="#E5E7EB"
-                            BackgroundColor="#F3F4F6">
-                            <Label
-                                Text="{Binding Icon}"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center"
-                                FontSize="18"/>
-                        </Frame>
+
+                        <Grid Grid.Column="0"
+                              WidthRequest="40"
+                              HeightRequest="40">
+                            <Frame x:Name="SingleIcon"
+                                   WidthRequest="40"
+                                   HeightRequest="40"
+                                   CornerRadius="20"
+                                   Padding="0"
+                                   HasShadow="False"
+                                   BorderColor="#E5E7EB"
+                                   BackgroundColor="{Binding SingleBg}">
+                                <Frame.Triggers>
+                                    <DataTrigger TargetType="Frame"
+                                                 Binding="{Binding HasSplitIcon}"
+                                                 Value="True">
+                                        <Setter Property="IsVisible"
+                                                Value="False"/>
+                                    </DataTrigger>
+                                </Frame.Triggers>
+                                <Label Text="{Binding SingleEmoji}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontSize="18"/>
+                            </Frame>
+
+                            <controls:SplitEmojiIcon x:Name="SplitIcon"
+                                                     IsVisible="False"
+                                                     WidthRequest="40"
+                                                     HeightRequest="40"
+                                                     LeftEmoji="{Binding SplitLeftEmoji}"
+                                                     RightEmoji="{Binding SplitRightEmoji}"
+                                                     LeftColor="{Binding SplitLeftBg}"
+                                                     RightColor="{Binding SplitRightBg}"
+                                                     BorderColor="#E5E7EB"
+                                                     DiagonalColor="#374151">
+                                <controls:SplitEmojiIcon.Triggers>
+                                    <DataTrigger TargetType="controls:SplitEmojiIcon"
+                                                 Binding="{Binding HasSplitIcon}"
+                                                 Value="True">
+                                        <Setter Property="IsVisible"
+                                                Value="True"/>
+                                    </DataTrigger>
+                                </controls:SplitEmojiIcon.Triggers>
+                            </controls:SplitEmojiIcon>
+                        </Grid>
 
                         <VerticalStackLayout Grid.Column="1"
                                              Spacing="2"
@@ -61,7 +93,7 @@
                             <Label Text="{Binding Name}"
                                    FontSize="18"
                                    FontAttributes="Bold"/>
-                            <Label Text="{Binding Category}"
+                            <Label Text="{Binding BracketSubheading}"
                                    FontSize="12"
                                    Opacity="0.7"/>
                         </VerticalStackLayout>

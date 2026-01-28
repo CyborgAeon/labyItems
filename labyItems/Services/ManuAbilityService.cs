@@ -1,50 +1,69 @@
-using System.Text.Json;
-
 namespace labyItems.Services;
 
 public static class ManuAbilityService
 {
-    private class ManuAbilityRaw
-    {
-        public string name { get; set; }
-        public string availability { get; set; }
-        public int table { get; set; }
-        public int cost { get; set; }
-        public bool canBuyMultiple { get; set; }
-        public string description { get; set; }
-    }
-
-    public record ManuAbilityEntry(string name, string availability, int cost, int table, string description);
+    public record ManuAbilityEntry(
+        string name,
+        string availability,
+        int cost,
+        int table,
+        string description,
+        bool canBuyMultiple,
+        IReadOnlyList<string> preReqs);
 
     private static List<ManuAbilityEntry>? _cache;
 
     public static async Task<IReadOnlyList<ManuAbilityEntry>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
-        var opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var dict = JsonSerializer.Deserialize<Dictionary<string, ManuAbilityRaw>>(MakesAbilitiesJson.Json, opts)
-                   ?? new Dictionary<string, ManuAbilityRaw>();
-
-        _cache = dict
-            .Select(kvp =>
-            {
-                return new ManuAbilityEntry(kvp.Key, kvp.Value.availability, kvp.Value.cost, kvp.Value.table, kvp.Value.description);
-            })
-            .OrderBy(e => e.name)
-            .ToList();
+        if (_cache is { Count: > 0 }) return _cache;
+        try
+        {
+            var list = await GeneralService.GetAllAbilitiesAsync();
+            _cache = list
+                .Select(e => new ManuAbilityEntry(
+                    e.Index,
+                    e.Available,
+                    e.Cost,
+                    e.Table,
+                    e.Description,
+                    e.CanBuyMultiple,
+                    e.PreReqs))
+                .OrderBy(e => e.name)
+                .ToList();
+        }
+        catch
+        {
+            return _cache ?? new List<ManuAbilityEntry>();
+        }
 
         return _cache;
     }
 
     public static async Task<IReadOnlyList<ManuAbilityEntry>> SearchAsync(string query)
     {
-        var all = await GetAllAsync();
-        if (string.IsNullOrWhiteSpace(query)) return all;
-        query = query.Trim().ToLowerInvariant();
+        List<ManuAbilityEntry> mapped;
+        try
+        {
+            var results = await GeneralService.SearchAbilitiesAsync(query);
+            mapped = results
+                .Select(e => new ManuAbilityEntry(
+                    e.Index,
+                    e.Available,
+                    e.Cost,
+                    e.Table,
+                    e.Description,
+                    e.CanBuyMultiple,
+                    e.PreReqs))
+                .ToList();
+        }
+        catch
+        {
+            mapped = new List<ManuAbilityEntry>();
+        }
 
-        return all.Where(e =>
-                e.name.ToLowerInvariant().Contains(query))
-                .Take(6)
-            .ToList();
+        if (string.IsNullOrWhiteSpace(query))
+            return mapped;
+
+        return mapped.Take(6).ToList();
     }
 }

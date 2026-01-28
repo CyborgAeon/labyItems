@@ -67,6 +67,12 @@ Notes:
 - The script uses `$HOME/.dotnet/dotnet` by default; override with `DOTNET=/path/to/dotnet ./tools/migrate-any-data.sh ...` if needed.
 - APK builds now keep all `Resources/Raw` JSON assets and the `Template.xlsx` so the app and migrations can load packaged data directly.
 
+Run migrations only (when the DB already exists):
+
+```bash
+$HOME/.dotnet/dotnet run --project tools/migrator -c Release -- output/default.db
+```
+
 ---
 
 ## view debug logs

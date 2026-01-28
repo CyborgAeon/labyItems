@@ -15,7 +15,6 @@ public static class MauiProgram
 	{
 		var builder = MauiApp.CreateBuilder();
 
-
 		// Path for the app's DB used by migrations and runtime. For local testing this will be in AppData.
 		var dbPath = Path.Combine(FileSystem.AppDataDirectory, "default.db");
 		Directory.CreateDirectory(Path.GetDirectoryName(dbPath) ?? FileSystem.AppDataDirectory);
