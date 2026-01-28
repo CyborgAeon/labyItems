@@ -55,6 +55,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             Raise(nameof(CanGoBack));
             Raise(nameof(CanGoNext));
             Raise(nameof(NextButtonText));
+            Raise(nameof(ShowContinueToAdvancement));
         }
     }
 
@@ -76,14 +77,16 @@ public sealed class WizardVm : INotifyPropertyChanged
         }
     }
 
-    public string NextButtonText => CurrentStep == StepSteps.Count - 1 ? "Save & Continue" : "Next";
-
+    public string NextButtonText => CurrentStep == StepSteps.Count - 1 ? "Save" : "Next";
+    public bool ShowContinueToAdvancement => CurrentStep == StepSteps.Count - 1;
     public ICommand BackCommand { get; }
     public ICommand NextCommand { get; }
     public Command<int> StepClickCommand { get; }
     public Command ExportToBattleboardCommand { get; }
     public Command ExportToExcelCommand { get; }
     public Command SaveToWalletCommand { get; }
+    public ICommand ContinueToAdvancementCommand { get; }
+    public ICommand ToggleAdvancementExpandedCommand { get; }
     public CharacterBuilderVm CharacterBuilderVm { get; }
     public GuildsVm GuildsVm { get; }
     private int _armourMaxBasePac;
@@ -93,6 +96,23 @@ public sealed class WizardVm : INotifyPropertyChanged
     private List<int> _armourPacSteps = new();
     private IDictionary<string, int> _armourPacItems = new Dictionary<string, int>();
     private IList<string> _armourPacLabels = new List<string>();
+    private bool _isAdvancementExpanded;
+    private int _advancementPointsSpent;
+    private readonly Dictionary<string, int> _abilityCostIndex = new(StringComparer.OrdinalIgnoreCase);
+
+    public ObservableCollection<AbilitySpendLine> AdvancementAbilityLines { get; } = new();
+
+    public bool IsAdvancementExpanded
+    {
+        get => _isAdvancementExpanded;
+        set => Set(ref _isAdvancementExpanded, value);
+    }
+
+    public int AdvancementPointsSpent
+    {
+        get => _advancementPointsSpent;
+        private set => Set(ref _advancementPointsSpent, value);
+    }
 
     public WizardVm(CharacterDraft? draft = null, Func<Task>? onFinished = null)
     {
@@ -105,6 +125,8 @@ public sealed class WizardVm : INotifyPropertyChanged
         ExportToBattleboardCommand = new Command(async () => await ExportBattleboardAsync(), () => Draft.IsRaceAndClassSelected);
         ExportToExcelCommand = new Command(async () => await ExportBattleboardToExcelAsync(), () => Draft.IsRaceAndClassSelected);
         SaveToWalletCommand = new Command(SaveToWallet, () => Draft.IsRaceAndClassSelected);
+        ContinueToAdvancementCommand = new Command(async () => await ContinueToAdvancementAsync());
+        ToggleAdvancementExpandedCommand = new Command(() => IsAdvancementExpanded = !IsAdvancementExpanded);
         CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
 
         // NEW: optional guild selection step
@@ -116,6 +138,12 @@ public sealed class WizardVm : INotifyPropertyChanged
         UpdateStepView();
 
         MainThread.BeginInvokeOnMainThread(async () => await SyncDraftStateAsync());
+    }
+
+    public async Task RefreshReviewAsync()
+    {
+        await SyncDraftStateAsync();
+        RaiseReviewProperties();
     }
 
     public string PlayerName
@@ -205,6 +233,21 @@ public sealed class WizardVm : INotifyPropertyChanged
     public string NotesSummary => string.IsNullOrWhiteSpace(Draft.Notes)
         ? "No notes provided."
         : Draft.Notes;
+
+    public string AdvancementPointsSummary => $"Points spent: {AdvancementPointsSpent} / {Draft.Points}";
+    public string AdvancementPointsAccruedSummary => $"Points accrued: {Draft.Points}";
+    public string AdvancementVitaeSummary => Draft.HasSetCurrentVitae
+        ? $"Current vitae: {Draft.CurrentVitae}%"
+        : "Current vitae: not set";
+    public string AdvancementItemsSummary => Draft.AdvancementItems.Count == 0
+        ? "Items: none."
+        : $"Items: {string.Join(", ", Draft.AdvancementItems)}";
+    public string AdvancementNotesSummary => string.IsNullOrWhiteSpace(Draft.Notes)
+        ? "Notes: none."
+        : $"Notes: {Draft.Notes}";
+    public string AdvancementAbilitiesHeader => AdvancementAbilityLines.Count == 0
+        ? "Abilities: none."
+        : "Abilities";
 
     public string AlignmentSummary => Draft.Alignment.HasValue
         ? $"Alignment: {Draft.Alignment}"
@@ -300,12 +343,28 @@ public sealed class WizardVm : INotifyPropertyChanged
         CurrentStep = target;
     }
 
+    private async Task ContinueToAdvancementAsync()
+    {
+        if (CurrentStep != StepSteps.Count - 1)
+            return;
+
+        await SyncDraftStateAsync();
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            var nav = Application.Current?.MainPage?.Navigation;
+            if (nav == null)
+                return;
+            await nav.PushAsync(new AdvanceCharacterPage(Draft));
+        });
+    }
+
     private async Task SyncDraftStateAsync()
     {
         ClampWornArmourPac();
         Draft.WornArmour = ClampWornArmour(WornArmourPac);
         await CharacterBuilderVm.SyncDraftLifeAsync();
         await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
+        await RefreshAdvancementSummaryAsync();
     }
 
     private async Task TryGoToStepAsync(int targetIndex)
@@ -620,6 +679,12 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(SpecialisationSummaryHeader));
         Raise(nameof(NotesSummary));
         Raise(nameof(AlignmentSummary));
+        Raise(nameof(AdvancementPointsSummary));
+        Raise(nameof(AdvancementPointsAccruedSummary));
+        Raise(nameof(AdvancementVitaeSummary));
+        Raise(nameof(AdvancementItemsSummary));
+        Raise(nameof(AdvancementNotesSummary));
+        Raise(nameof(AdvancementAbilitiesHeader));
     }
 
     private ArmourTier GetArmourTierFromDraft()
@@ -685,6 +750,59 @@ public sealed class WizardVm : INotifyPropertyChanged
     {
         LiteDbService.UpsertDraft(Draft);
         RaiseReviewProperties();
+    }
+
+    private async Task EnsureAbilityCostIndexAsync()
+    {
+        if (_abilityCostIndex.Count > 0)
+            return;
+
+        var abilities = await ManuAbilityService.GetAllAsync();
+        foreach (var entry in abilities)
+        {
+            var name = (entry.name ?? string.Empty).Trim();
+            if (name.Length == 0)
+                continue;
+            if (!_abilityCostIndex.ContainsKey(name))
+                _abilityCostIndex[name] = entry.cost;
+        }
+    }
+
+    private async Task RefreshAdvancementSummaryAsync()
+    {
+        await EnsureAbilityCostIndexAsync();
+
+        AdvancementAbilityLines.Clear();
+        var running = 0;
+        foreach (var name in Draft.AdvancementAbilities ?? new List<string>())
+        {
+            var trimmed = (name ?? string.Empty).Trim();
+            if (trimmed.Length == 0)
+                continue;
+
+            var cost = _abilityCostIndex.TryGetValue(trimmed, out var c) ? c : 0;
+            running += cost;
+            AdvancementAbilityLines.Add(new AbilitySpendLine(trimmed, cost, running));
+        }
+
+        AdvancementPointsSpent = running;
+        RaiseReviewProperties();
+    }
+
+    public sealed class AbilitySpendLine
+    {
+        public string Name { get; }
+        public int Cost { get; }
+        public int RunningTotal { get; }
+        public string NameWithCost => $"{Name} ({Cost})";
+        public string RunningTotalText => $"Total: {RunningTotal}";
+
+        public AbilitySpendLine(string name, int cost, int runningTotal)
+        {
+            Name = name;
+            Cost = cost;
+            RunningTotal = runningTotal;
+        }
     }
 
     private enum ArmourTier

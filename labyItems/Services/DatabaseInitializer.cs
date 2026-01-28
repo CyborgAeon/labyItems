@@ -47,7 +47,7 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 	{
 		using var scope = _services.CreateScope();
 
-		var dbPath = Path.Combine(FileSystem.AppDataDirectory, "default.db");
+		var dbPath = Path.Combine(FileSystem.AppDataDirectory, "laby.db");
 		Directory.CreateDirectory(Path.GetDirectoryName(dbPath) ?? FileSystem.AppDataDirectory);
 
 		var installer = scope.ServiceProvider.GetRequiredService<IDefaultDatabaseInstaller>();

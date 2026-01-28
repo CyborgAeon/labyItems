@@ -16,7 +16,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 
 		// Path for the app's DB used by migrations and runtime. For local testing this will be in AppData.
-		var dbPath = Path.Combine(FileSystem.AppDataDirectory, "default.db");
+		var dbPath = Path.Combine(FileSystem.AppDataDirectory, "laby.db");
 		Directory.CreateDirectory(Path.GetDirectoryName(dbPath) ?? FileSystem.AppDataDirectory);
 
 		// Initialize SQLite raw provider on platforms (ensures native libs are available)
@@ -48,7 +48,7 @@ public static class MauiProgram
 				lb.AddDebug();
 			});
 
-		// Register default-db installer which will copy a packaged default.db on first-run (if present)
+		// Register default-db installer which will copy a packaged laby.db on first-run (if present)
 		builder.Services.AddSingleton<Services.IDefaultDatabaseInstaller, Services.DefaultDatabaseInstaller>();
 		builder.Services.AddSingleton<Services.IDatabaseInitializer, Services.DatabaseInitializer>();
 		builder.Services.AddSingleton<IBattleboardExportService, BattleboardExportService>();

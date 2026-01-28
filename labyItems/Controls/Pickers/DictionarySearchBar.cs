@@ -352,6 +352,14 @@ public class DictionarySearchBar<TValue> : ContentView
         if (!IsEnabled)
             return;
 
+        if (_filteredResults == null || _filteredResults.Count == 0)
+        {
+            DismissLocalOverlay();
+            _resultsView.IsVisible = false;
+            _searchBar.Unfocus();
+            return;
+        }
+
         CommitTextSelection(_searchBar.Text);
     }
 

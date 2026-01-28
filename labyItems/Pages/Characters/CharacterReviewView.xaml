@@ -77,6 +77,64 @@
                             CornerRadius="12"
                             Padding="12"
                             BorderColor="#E5E7EB">
+                            <VerticalStackLayout Spacing="6">
+                                   <Grid ColumnDefinitions="*,Auto">
+                                          <Label Text="Advancement"
+                                                 FontAttributes="Bold"/>
+                                          <Button Grid.Column="1"
+                                                  Text="{Binding IsAdvancementExpanded, Converter={StaticResource ChevronConverter}}"
+                                                  BackgroundColor="Transparent"
+                                                  TextColor="#6B7280"
+                                                  FontSize="18"
+                                                  Padding="0"
+                                                  WidthRequest="40"
+                                                  HeightRequest="40"
+                                                  HorizontalOptions="End"
+                                                  VerticalOptions="Center"
+                                                  Command="{Binding ToggleAdvancementExpandedCommand}"/>
+                                   </Grid>
+
+                                   <Label Text="{Binding AdvancementPointsSummary}"/>
+                                   <Label Text="{Binding AdvancementPointsAccruedSummary}"
+                                          FontSize="12"
+                                          Opacity="0.7"/>
+                                   <Label Text="{Binding AdvancementVitaeSummary}"
+                                          FontSize="12"
+                                          Opacity="0.7"/>
+                                   <Label Text="{Binding AdvancementItemsSummary}"
+                                          LineBreakMode="WordWrap"/>
+                                   <Label Text="{Binding AdvancementNotesSummary}"
+                                          LineBreakMode="WordWrap"/>
+
+                                   <VerticalStackLayout IsVisible="{Binding IsAdvancementExpanded}"
+                                                        Spacing="6">
+                                          <Label Text="{Binding AdvancementAbilitiesHeader}"
+                                                 FontAttributes="Bold"/>
+                                          <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancementAbilityLines}"
+                                                               Spacing="4">
+                                                 <BindableLayout.ItemTemplate>
+                                                        <DataTemplate>
+                                                               <Grid ColumnDefinitions="*,Auto"
+                                                                     ColumnSpacing="8">
+                                                                      <Label Text="{Binding NameWithCost}"
+                                                                             LineBreakMode="WordWrap"/>
+                                                                      <Label Grid.Column="1"
+                                                                             Text="{Binding RunningTotalText}"
+                                                                             FontSize="12"
+                                                                             Opacity="0.7"
+                                                                             VerticalTextAlignment="Center"/>
+                                                               </Grid>
+                                                        </DataTemplate>
+                                                 </BindableLayout.ItemTemplate>
+                                          </VerticalStackLayout>
+                                   </VerticalStackLayout>
+                            </VerticalStackLayout>
+                     </Frame>
+
+                     <Frame HasShadow="False"
+                            CornerRadius="12"
+                            Padding="12"
+                            BorderColor="#E5E7EB">
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Notes"
                                           FontAttributes="Bold"/>

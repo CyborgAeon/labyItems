@@ -21,5 +21,7 @@
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\words_from_above\base-miracles1.json" Link="Resources/Raw/words_from_above/base-miracles1.json" />
         <!-- Embed spell seed data -->
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\grimoire\new_standard.json" Link="Resources/Raw/grimoire/new_standard.json" />
+        <!-- Embed abilities seed data -->
+        <EmbeddedResource Include="..\..\labyItems\Resources\Raw\makes_abilities.json" Link="Resources/Raw/makes_abilities.json" />
     </ItemGroup>
 </Project>

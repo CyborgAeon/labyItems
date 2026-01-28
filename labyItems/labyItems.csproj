@@ -21,7 +21,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>labyItems</ApplicationTitle>
+		<ApplicationTitle>laby tools</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>bard.uk.labyitems</ApplicationId>

@@ -26,12 +26,20 @@
             <Button Text="Back"
                     Command="{Binding BackCommand}"
                     IsEnabled="{Binding CanGoBack}"
-                    Grid.Column="0"/>
+                    Grid.Column="0"
+                    HorizontalOptions="Start"/>
+
+            <Button Grid.Column="1"
+                    Text="Continue to advancement"
+                    Command="{Binding ContinueToAdvancementCommand}"
+                    IsVisible="{Binding ShowContinueToAdvancement}"
+                    HorizontalOptions="Center"/>
 
             <Button Grid.Column="2"
                     Text="{Binding NextButtonText}"
                     Command="{Binding NextCommand}"
-                    IsEnabled="{Binding CanGoNext}"/>
+                    IsEnabled="{Binding CanGoNext}"
+                    HorizontalOptions="End"/>
         </Grid>
     </Grid>
 </ContentPage>

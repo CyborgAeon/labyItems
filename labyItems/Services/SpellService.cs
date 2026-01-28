@@ -30,7 +30,7 @@ public static class SpellService
             return _cache;
         }
 
-        throw new InvalidOperationException("Spells DB not found or empty; ensure default.db is installed.");
+        throw new InvalidOperationException("Spells DB not found or empty; ensure laby.db is installed.");
     }
 
     public static async Task<List<SpellRaw>> SearchAsync(string query)
@@ -74,7 +74,7 @@ public static class SpellService
 
     private static string? ResolveDbPath()
     {
-        var appDb = Path.Combine(FileSystem.AppDataDirectory, "default.db");
+        var appDb = Path.Combine(FileSystem.AppDataDirectory, "laby.db");
         if (File.Exists(appDb))
         {
             return appDb;
@@ -82,7 +82,7 @@ public static class SpellService
 
         var devCandidates = new[]
         {
-            Path.Combine(Directory.GetCurrentDirectory(), "output", "default.db"),
+            Path.Combine(Directory.GetCurrentDirectory(), "output", "laby.db"),
         };
 
         foreach (var candidate in devCandidates)

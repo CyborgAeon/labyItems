@@ -232,28 +232,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         try
         {
             var allAbilities = await ManuAbilityService.GetAllAsync();
-            _abilityOptionsByName = allAbilities
-                .GroupBy(a => a.name ?? string.Empty, StringComparer.OrdinalIgnoreCase)
-                .Where(g => !string.IsNullOrWhiteSpace(g.Key))
-                .ToDictionary(
-                    g => g.Key,
-                    g =>
-                    {
-                        var entry = g.First();
-                        return new ManuAbilityOption(
-                            entry.name ?? string.Empty,
-                            entry.cost,
-                            entry.table,
-                            entry.availability ?? string.Empty,
-                            entry.description ?? string.Empty);
-                    },
-                    StringComparer.OrdinalIgnoreCase);
-
-            AbilityOptions = _abilityOptionsByName
-                .ToDictionary(
-                    kvp => BuildAbilityOptionLabel(kvp.Value),
-                    kvp => kvp.Value,
-                    StringComparer.OrdinalIgnoreCase);
+            _abilityOptionsByName = BuildAbilityOptionsByName(allAbilities);
+            AbilityOptions = BuildAbilityOptionsWithLabels(_abilityOptionsByName.Values);
         }
         catch
         {
@@ -324,6 +304,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             var line = BuildAbilityEntry(ability);
             Abilities.Add(line);
         }
+        UpdateAbilityPoints();
     }
 
     private void AddAbility()
@@ -367,6 +348,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     private void UpdateAbilityPoints()
     {
+        var running = 0;
+        foreach (var entry in Abilities)
+        {
+            running += entry.Cost;
+            entry.SetRunningTotal(running);
+        }
         Raise(nameof(AbilityPointsSpent));
         Raise(nameof(AbilityPointsSummary));
     }
@@ -375,6 +362,52 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     {
         var name = option.Name ?? string.Empty;
         return $"{name} ({option.Cost})";
+    }
+
+    private static Dictionary<string, ManuAbilityOption> BuildAbilityOptionsByName(IEnumerable<ManuAbilityService.ManuAbilityEntry> entries)
+    {
+        return entries
+            .GroupBy(a => a.name ?? string.Empty, StringComparer.OrdinalIgnoreCase)
+            .Where(g => !string.IsNullOrWhiteSpace(g.Key))
+            .ToDictionary(
+                g => g.Key,
+                g =>
+                {
+                    var entry = g.First();
+                    return new ManuAbilityOption(
+                        entry.name ?? string.Empty,
+                        entry.cost,
+                        entry.table,
+                        entry.availability ?? string.Empty,
+                        entry.description ?? string.Empty);
+                },
+                StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static Dictionary<string, ManuAbilityOption> BuildAbilityOptionsWithLabels(IEnumerable<ManuAbilityOption> entries)
+    {
+        return entries
+            .Where(e => !string.IsNullOrWhiteSpace(e.Name))
+            .ToDictionary(
+                e => BuildAbilityOptionLabel(e),
+                e => e,
+                StringComparer.OrdinalIgnoreCase);
+    }
+
+    public async Task<Dictionary<string, ManuAbilityOption>> SearchAbilityOptionsAsync(string query)
+    {
+        var results = await ManuAbilityService.SearchAsync(query ?? string.Empty);
+        var byName = BuildAbilityOptionsByName(results);
+
+        foreach (var kvp in byName)
+            _abilityOptionsByName[kvp.Key] = kvp.Value;
+
+        return BuildAbilityOptionsWithLabels(byName.Values);
+    }
+
+    public void PersistDraft()
+    {
+        LiteDbService.UpsertDraft(_draft);
     }
 
     private void LoadItemsFromDraft()
@@ -792,6 +825,7 @@ public sealed class AbilityEntryVm : INotifyPropertyChanged
     private readonly Action _onChanged;
     private string _name;
     private int _cost;
+    private int _runningTotal;
 
     public string Name
     {
@@ -802,6 +836,7 @@ public sealed class AbilityEntryVm : INotifyPropertyChanged
             if (_name == next) return;
             _name = next;
             Raise();
+            Raise(nameof(NameWithCost));
             _onChanged();
         }
     }
@@ -814,15 +849,36 @@ public sealed class AbilityEntryVm : INotifyPropertyChanged
             if (_cost == value) return;
             _cost = value;
             Raise();
+            Raise(nameof(NameWithCost));
             _onChanged();
         }
     }
+
+    public int RunningTotal
+    {
+        get => _runningTotal;
+        private set
+        {
+            if (_runningTotal == value) return;
+            _runningTotal = value;
+            Raise();
+            Raise(nameof(RunningTotalText));
+        }
+    }
+
+    public string NameWithCost => $"{Name} ({Cost})";
+    public string RunningTotalText => $"Total: {RunningTotal}";
 
     public AbilityEntryVm(string name, int cost, Action onChanged)
     {
         _name = name ?? string.Empty;
         _cost = cost;
         _onChanged = onChanged;
+    }
+
+    public void SetRunningTotal(int total)
+    {
+        RunningTotal = total;
     }
 }
 
@@ -1468,6 +1524,13 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         }
     }
 
+    private string _searchText = string.Empty;
+    public string SearchText
+    {
+        get => _searchText;
+        set => Set(ref _searchText, value ?? string.Empty);
+    }
+
     public ObservableCollection<string> SphereFilterOptions { get; } = new();
     public ObservableCollection<string> SelectedSphereFilters { get; } = new();
     public ObservableCollection<string> AdvancedFilterOptions { get; } = new() { "Advanced", "Handbook" };
@@ -1591,7 +1654,12 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         _sphereLookup = BuildSphereLookup();
 
         foreach (var sphere in Enum.GetValues<SpiritualSpheres>())
-            SphereFilterOptions.Add(EnumDisplayFormatter.Format(sphere));
+        {
+            var label = StripMajorMinorPrefix(EnumDisplayFormatter.Format(sphere));
+            if (IsUniversalSphere(label))
+                continue;
+            SphereFilterOptions.Add(label);
+        }
 
         AddSelectedCommand = new Command(AddSelectedMiracle);
         RemoveEntryCommand = new Command<MiracleEntryVm>(RemoveEntry);
@@ -1638,6 +1706,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         vm.SelectedMiracle = SelectedMiracleOption.Value;
         Entries.Add(vm);
         SelectedMiracleOption = null;
+        SearchText = string.Empty;
         UpdateFilteredOptions();
         UpdateValidation();
     }
@@ -1689,7 +1758,13 @@ public sealed class MiracleListVm : INotifyPropertyChanged
             var sphereSet = SelectedSphereFilters
                 .Select(NormalizeToken)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
-            filtered = filtered.Where(m => sphereSet.Contains(NormalizeToken(MapSphereLabel(m.sphere)))).ToList();
+            filtered = filtered.Where(m =>
+            {
+                var label = MapSphereLabel(m.sphere);
+                if (IsUniversalSphere(label))
+                    return true;
+                return sphereSet.Contains(NormalizeToken(label));
+            }).ToList();
         }
 
         var advanced = SelectedAdvancedFilters.Any(x => x.Equals("Advanced", StringComparison.OrdinalIgnoreCase));
@@ -1720,11 +1795,34 @@ public sealed class MiracleListVm : INotifyPropertyChanged
 
     private string MapSphereLabel(string raw)
     {
-        var key = NormalizeToken(raw);
+        var cleaned = StripMajorMinorPrefix(raw);
+        var key = NormalizeToken(cleaned);
         if (_sphereLookup.TryGetValue(key, out var label))
             return label;
 
-        return raw?.Trim() ?? string.Empty;
+        return cleaned?.Trim() ?? string.Empty;
+    }
+
+    private static bool IsUniversalSphere(string? label)
+        => NormalizeToken(label) == "universal";
+
+    private static string StripMajorMinorPrefix(string? raw)
+    {
+        var text = raw?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(text))
+            return string.Empty;
+
+        if (text.StartsWith("Major", StringComparison.OrdinalIgnoreCase)
+            || text.StartsWith("Minor", StringComparison.OrdinalIgnoreCase))
+        {
+            if (text.Length <= 5)
+                return string.Empty;
+
+            var trimmed = text.Substring(5).TrimStart(' ', ':', '-');
+            return trimmed.Trim();
+        }
+
+        return text;
     }
 
     private static string NormalizeToken(string? value)
@@ -1819,7 +1917,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         var lookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         foreach (var sphere in Enum.GetValues<SpiritualSpheres>())
         {
-            var label = EnumDisplayFormatter.Format(sphere);
+            var label = StripMajorMinorPrefix(EnumDisplayFormatter.Format(sphere));
             var key = NormalizeToken(label);
             if (!lookup.ContainsKey(key))
                 lookup[key] = label;

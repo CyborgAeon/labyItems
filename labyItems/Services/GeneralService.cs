@@ -26,16 +26,6 @@ public static class GeneralService
         [JsonPropertyName("cost")] public string? Cost { get; set; }
     }
 
-    private sealed class AbilityRaw
-    {
-        [JsonPropertyName("available")] public string? Available { get; set; }
-        [JsonPropertyName("index")] public string? Index { get; set; }
-        [JsonPropertyName("desc")] public string? Desc { get; set; }
-        [JsonPropertyName("cost")] public string? Cost { get; set; }
-        [JsonPropertyName("table")] public int Table { get; set; }
-        [JsonPropertyName("preReqs")] public List<string>? PreReqs { get; set; }
-    }
-
     private static IReadOnlyList<General.Result>? _cache;
     private static IReadOnlyList<AbilityResult>? _abilityCache;
 
@@ -47,18 +37,17 @@ public static class GeneralService
         if (!string.IsNullOrWhiteSpace(_dbPath) && File.Exists(_dbPath))
             return _dbPath;
 
-        var appDb = Path.Combine(FileSystem.AppDataDirectory, "default.db");
+        var appDb = Path.Combine(FileSystem.AppDataDirectory, "laby.db");
         if (File.Exists(appDb))
         {
             _dbPath = appDb;
             return _dbPath;
         }
 
-        // Development fallback paths (support both 'evocs.db' and CI artifact 'default.db')
+        // Development fallback path (CI artifact)
         var devCandidates = new[]
         {
-            Path.Combine(Directory.GetCurrentDirectory(), "output", "evocs.db"),
-            Path.Combine(Directory.GetCurrentDirectory(), "output", "default.db")
+            Path.Combine(Directory.GetCurrentDirectory(), "output", "laby.db")
         };
 
         foreach (var candidate in devCandidates)
@@ -80,19 +69,31 @@ public static class GeneralService
 
         var dbPath = EnsureDbPath();
         if (string.IsNullOrEmpty(dbPath))
-            throw new InvalidOperationException("Evolution DB not found; ensure default.db is present in app data or available during development.");
-
-        using var conn = new SQLite.SQLiteConnection(dbPath, SQLite.SQLiteOpenFlags.ReadOnly);
-
-        var rows = conn.Query<EvoRow>("SELECT idx, description, cost, table_id FROM evolution ORDER BY table_id, idx;");
-        var list = new List<General.Result>();
-        foreach (var r in rows)
         {
-            list.Add(new General.Result { Index = r.idx, Description = r.description ?? string.Empty, Cost = r.cost, Table = r.table_id, IsImmunity = r.idx.IsImmunity() });
+            var ex = new InvalidOperationException("Evolution DB not found; ensure laby.db is present in app data or available during development.");
+            LogDbError("GetAll evolution", ex);
+            throw ex;
         }
 
-        _cache = list;
-        return _cache;
+        try
+        {
+            using var conn = new SQLite.SQLiteConnection(dbPath, SQLite.SQLiteOpenFlags.ReadOnly);
+
+            var rows = conn.Query<EvoRow>("SELECT idx, description, cost, table_id FROM evolution ORDER BY table_id, idx;");
+            var list = new List<General.Result>();
+            foreach (var r in rows)
+            {
+                list.Add(new General.Result { Index = r.idx, Description = r.description ?? string.Empty, Cost = r.cost, Table = r.table_id, IsImmunity = r.idx.IsImmunity() });
+            }
+
+            _cache = list;
+            return _cache;
+        }
+        catch (Exception ex)
+        {
+            LogDbError("GetAll evolution", ex);
+            throw;
+        }
     }
 
     public sealed record AbilityResult
@@ -111,36 +112,49 @@ public static class GeneralService
         if (_abilityCache is not null) return _abilityCache;
 
         var dbPath = EnsureDbPath();
-        if (!string.IsNullOrEmpty(dbPath))
+        if (string.IsNullOrEmpty(dbPath))
+        {
+            var ex = new InvalidOperationException("Abilities DB not found; ensure laby.db is present in app data or available during development.");
+            LogDbError("GetAll abilities", ex);
+            throw ex;
+        }
+
+        try
         {
             using var conn = new SQLite.SQLiteConnection(dbPath, SQLite.SQLiteOpenFlags.ReadOnly);
 
-            var rows = conn.Query<AbilityRow>("SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json FROM abilities ORDER BY table_id, idx;");
-            if (rows.Count > 0)
+            var rows = conn.Query<AbilityRow>("SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json FROM evolution ORDER BY table_id, idx;");
+            if (rows.Count == 0)
             {
-                var list = new List<AbilityResult>();
-                foreach (var r in rows)
-                {
-                    var preReqs = ParsePreReqs(r.prereqs_json);
-                    list.Add(new AbilityResult
-                    {
-                        Index = r.idx,
-                        Description = r.description ?? string.Empty,
-                        Cost = r.cost,
-                        Table = r.table_id,
-                        Available = r.available ?? string.Empty,
-                        CanBuyMultiple = r.can_buy_multiple != 0,
-                        PreReqs = preReqs
-                    });
-                }
-
-                _abilityCache = list;
-                return _abilityCache;
+                var emptyEx = new InvalidOperationException("Evolution table returned zero rows. Ensure the abilities data has been migrated into laby.db.");
+                LogDbError("GetAll abilities", emptyEx);
+                return new List<AbilityResult>();
             }
-        }
 
-        _abilityCache = await LoadAbilitiesFromPackageAsync();
-        return _abilityCache;
+            var list = new List<AbilityResult>();
+            foreach (var r in rows)
+            {
+                var preReqs = ParsePreReqs(r.prereqs_json);
+                list.Add(new AbilityResult
+                {
+                    Index = r.idx,
+                    Description = r.description ?? string.Empty,
+                    Cost = r.cost,
+                    Table = r.table_id,
+                    Available = r.available ?? string.Empty,
+                    CanBuyMultiple = r.can_buy_multiple != 0,
+                    PreReqs = preReqs
+                });
+            }
+
+            _abilityCache = list;
+            return _abilityCache;
+        }
+        catch (Exception ex)
+        {
+            LogDbError("GetAll abilities", ex);
+            throw;
+        }
     }
 
     public static async Task<IReadOnlyList<General.Result>> SearchByIndexAsync(string? query, int? table = null)
@@ -150,14 +164,20 @@ public static class GeneralService
 
         var dbPath = EnsureDbPath();
         if (string.IsNullOrEmpty(dbPath))
-            throw new InvalidOperationException("Evolution DB not found; ensure default.db is present in app data or available during development.");
+        {
+            var ex = new InvalidOperationException("Evolution DB not found; ensure laby.db is present in app data or available during development.");
+            LogDbError("Search evolution", ex);
+            throw ex;
+        }
 
         var q = query.Trim();
         var normalized = NormalizeForNgrams(q.ToLowerInvariant());
         var tokens = GenerateNGrams(normalized, NGRAM_N).Distinct().ToList();
         if (tokens.Count == 0) return new List<General.Result>();
 
-        using var conn = new SQLite.SQLiteConnection(dbPath, SQLite.SQLiteOpenFlags.ReadOnly);
+        try
+        {
+            using var conn = new SQLite.SQLiteConnection(dbPath, SQLite.SQLiteOpenFlags.ReadOnly);
 
         var paramNames = new List<string>();
         var args = new List<object>();
@@ -171,13 +191,19 @@ public static class GeneralService
         var inClause = string.Join(",", paramNames);
         var sql = $"SELECT e.idx, e.description, e.cost, e.table_id FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
 
-        var rows = conn.Query<EvoRow>(sql, args.ToArray());
-        var list = rows.Select(r => new General.Result { Index = r.idx, Description = r.description ?? string.Empty, Cost = r.cost, Table = r.table_id, IsImmunity = r.idx.IsImmunity() }).Take(20).ToList();
+            var rows = conn.Query<EvoRow>(sql, args.ToArray());
+            var list = rows.Select(r => new General.Result { Index = r.idx, Description = r.description ?? string.Empty, Cost = r.cost, Table = r.table_id, IsImmunity = r.idx.IsImmunity() }).Take(20).ToList();
 
-        if (table is { } t && t >= 1)
-            list = list.Where(l => l.Table == t).ToList();
+            if (table is { } t && t >= 1)
+                list = list.Where(l => l.Table == t).ToList();
 
-        return list;
+            return list;
+        }
+        catch (Exception ex)
+        {
+            LogDbError("Search evolution", ex);
+            throw;
+        }
     }
 
     public static async Task<IReadOnlyList<AbilityResult>> SearchAbilitiesAsync(string? query, int? table = null)
@@ -188,8 +214,9 @@ public static class GeneralService
         var dbPath = EnsureDbPath();
         if (string.IsNullOrEmpty(dbPath))
         {
-            var fallback = await GetAllAbilitiesAsync();
-            return FilterAbilities(fallback, query, table);
+            var ex = new InvalidOperationException("Evolution DB not found; ensure laby.db is present in app data or available during development.");
+            LogDbError("Search abilities", ex);
+            throw ex;
         }
 
         var q = query.Trim();
@@ -197,44 +224,54 @@ public static class GeneralService
         var tokens = GenerateNGrams(normalized, NGRAM_N).Distinct().ToList();
         if (tokens.Count == 0) return new List<AbilityResult>();
 
-        using var conn = new SQLite.SQLiteConnection(dbPath, SQLite.SQLiteOpenFlags.ReadOnly);
-
-        var paramNames = new List<string>();
-        var args = new List<object>();
-        for (int i = 0; i < tokens.Count; i++)
+        try
         {
-            var p = "@p" + i;
-            paramNames.Add(p);
-            args.Add(tokens[i]);
+            using var conn = new SQLite.SQLiteConnection(dbPath, SQLite.SQLiteOpenFlags.ReadOnly);
+
+            if (q.Length < NGRAM_N)
+            {
+                return SearchAbilitiesByLike(conn, q, table);
+            }
+
+            var paramNames = new List<string>();
+            var args = new List<object>();
+            for (int i = 0; i < tokens.Count; i++)
+            {
+                var p = "@p" + i;
+                paramNames.Add(p);
+                args.Add(tokens[i]);
+            }
+
+            var inClause = string.Join(",", paramNames);
+            var sql = $"SELECT e.idx, e.description, e.cost, e.available, e.table_id, e.can_buy_multiple, e.prereqs_json FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
+
+            var rows = conn.Query<AbilityRow>(sql, args.ToArray());
+            var list = rows.Select(r => new AbilityResult
+            {
+                Index = r.idx,
+                Description = r.description ?? string.Empty,
+                Cost = r.cost,
+                Table = r.table_id,
+                Available = r.available ?? string.Empty,
+                CanBuyMultiple = r.can_buy_multiple != 0,
+                PreReqs = ParsePreReqs(r.prereqs_json)
+            })
+                .Take(20)
+                .ToList();
+
+            if (table is { } t && t >= 1)
+                list = list.Where(l => l.Table == t).ToList();
+
+            if (list.Count == 0)
+                return SearchAbilitiesByLike(conn, q, table);
+
+            return list;
         }
-
-        var inClause = string.Join(",", paramNames);
-        var sql = $"SELECT a.idx, a.description, a.cost, a.available, a.table_id, a.can_buy_multiple, a.prereqs_json FROM abilities a JOIN (SELECT ability_id, COUNT(*) as ct FROM abilities_ngrams WHERE token IN ({inClause}) GROUP BY ability_id ORDER BY ct DESC LIMIT 50) g ON a.id = g.ability_id;";
-
-        var rows = conn.Query<AbilityRow>(sql, args.ToArray());
-        var list = rows.Select(r => new AbilityResult
+        catch (Exception ex)
         {
-            Index = r.idx,
-            Description = r.description ?? string.Empty,
-            Cost = r.cost,
-            Table = r.table_id,
-            Available = r.available ?? string.Empty,
-            CanBuyMultiple = r.can_buy_multiple != 0,
-            PreReqs = ParsePreReqs(r.prereqs_json)
-        })
-            .Take(20)
-            .ToList();
-
-        if (table is { } t && t >= 1)
-            list = list.Where(l => l.Table == t).ToList();
-
-        if (list.Count == 0)
-        {
-            var fallback = await GetAllAbilitiesAsync();
-            return FilterAbilities(fallback, query, table);
+            LogDbError("Search abilities", ex);
+            throw;
         }
-
-        return list;
     }
 
     public static void InvalidateCache()
@@ -293,65 +330,38 @@ public static class GeneralService
         }
     }
 
-    private static async Task<IReadOnlyList<AbilityResult>> LoadAbilitiesFromPackageAsync()
+    private static IReadOnlyList<AbilityResult> SearchAbilitiesByLike(SQLite.SQLiteConnection conn, string query, int? table)
+    {
+        var sql = "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json FROM evolution WHERE idx LIKE ? ORDER BY table_id, idx LIMIT 50;";
+        var rows = conn.Query<AbilityRow>(sql, $"%{query}%");
+        var list = rows.Select(r => new AbilityResult
+        {
+            Index = r.idx,
+            Description = r.description ?? string.Empty,
+            Cost = r.cost,
+            Table = r.table_id,
+            Available = r.available ?? string.Empty,
+            CanBuyMultiple = r.can_buy_multiple != 0,
+            PreReqs = ParsePreReqs(r.prereqs_json)
+        }).ToList();
+
+        if (table is { } t && t >= 1)
+            list = list.Where(l => l.Table == t).ToList();
+
+        return list.Take(20).ToList();
+    }
+
+    private static void LogDbError(string context, Exception ex)
     {
         try
         {
-            using var stream = await FileSystem.OpenAppPackageFileAsync("makes_abilities.json");
-            using var reader = new StreamReader(stream);
-            var json = await reader.ReadToEndAsync();
-            var raws = JsonSerializer.Deserialize<List<AbilityRaw>>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            }) ?? new List<AbilityRaw>();
-
-            var list = new List<AbilityResult>();
-            foreach (var raw in raws)
-            {
-                var idx = (raw.Index ?? string.Empty).Trim();
-                if (string.IsNullOrWhiteSpace(idx))
-                    continue;
-
-                var costRaw = (raw.Cost ?? string.Empty).Trim();
-                var canBuyMultiple = costRaw.Contains('*');
-                var cost = TryParseCost(costRaw);
-
-                list.Add(new AbilityResult
-                {
-                    Index = idx,
-                    Description = (raw.Desc ?? string.Empty).Trim(),
-                    Cost = cost,
-                    Table = raw.Table,
-                    Available = (raw.Available ?? string.Empty).Trim(),
-                    CanBuyMultiple = canBuyMultiple,
-                    PreReqs = raw.PreReqs ?? new List<string>()
-                });
-            }
-
-            return list
-                .OrderBy(r => r.Table)
-                .ThenBy(r => r.Index, StringComparer.OrdinalIgnoreCase)
-                .ToList();
+            System.Diagnostics.Debug.WriteLine($"[DB] {context}: {ex}");
+            Console.WriteLine($"[DB] {context}: {ex}");
         }
         catch
         {
-            return new List<AbilityResult>();
+            // ignore logging failures
         }
-    }
-
-    private static IReadOnlyList<AbilityResult> FilterAbilities(IEnumerable<AbilityResult> source, string query, int? table)
-    {
-        var q = (query ?? string.Empty).Trim();
-        if (q.Length == 0)
-            return table is { } t && t >= 1
-                ? source.Where(r => r.Table == t).ToList()
-                : source.ToList();
-
-        var filtered = source.Where(r => r.Index.Contains(q, StringComparison.OrdinalIgnoreCase));
-        if (table is { } tableId && tableId >= 1)
-            filtered = filtered.Where(r => r.Table == tableId);
-
-        return filtered.ToList();
     }
 
     private class EvoRow

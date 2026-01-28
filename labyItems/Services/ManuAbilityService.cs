@@ -31,8 +31,9 @@ public static class ManuAbilityService
                 .OrderBy(e => e.name)
                 .ToList();
         }
-        catch
+        catch (Exception ex)
         {
+            LogError("GetAll abilities", ex);
             return _cache ?? new List<ManuAbilityEntry>();
         }
 
@@ -56,14 +57,25 @@ public static class ManuAbilityService
                     e.PreReqs))
                 .ToList();
         }
-        catch
+        catch (Exception ex)
         {
+            LogError("Search abilities", ex);
             mapped = new List<ManuAbilityEntry>();
         }
 
-        if (string.IsNullOrWhiteSpace(query))
-            return mapped;
+        return mapped;
+    }
 
-        return mapped.Take(6).ToList();
+    private static void LogError(string context, Exception ex)
+    {
+        try
+        {
+            System.Diagnostics.Debug.WriteLine($"[Abilities] {context}: {ex}");
+            Console.WriteLine($"[Abilities] {context}: {ex}");
+        }
+        catch
+        {
+            // ignore logging failures
+        }
     }
 }

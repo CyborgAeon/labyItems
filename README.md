@@ -1,4 +1,5 @@
 ## task board
+
 https://trello.com/b/UmbW9Vwl/laby-automation
 
 ## setup local: you'll need dotnet 10
@@ -23,7 +24,20 @@ If you want the PATH change to persist, add `export PATH="$HOME/.dotnet:$PATH"` 
 Make sure an emulator or device is running, then:
 
 ```bash
+PKG=bard.uk.labyitems DB=output/laby.db && \
+rm -f "$DB" && \
+$HOME/.dotnet/dotnet run --project tools/evocdbgen -c Release -- labyItems/Resources/Raw/druids_way/evocs.json "$DB" && \
+$HOME/.dotnet/dotnet run --project tools/migrator -c Release -- "$DB" && \
+adb push "$DB" /data/local/tmp/laby.db && \
+adb shell run-as "$PKG" sh -c "mkdir -p files && cp /data/local/tmp/laby.db files/laby.db && ls -l files/laby.db"
+```
+
+then run
+
+```
+
 DOTNET_USE_POLLING_FILE_WATCHER=1 $HOME/.dotnet/dotnet watch --project labyItems/labyItems.csproj --framework net10.0-android run
+
 ```
 
 If you hit `NETSDK1147` (missing `maui-android`) or similar, you’re probably running the system `dotnet` instead of the one installed by `dotnet-install.sh` — the command above pins to `$HOME/.dotnet/dotnet`.
@@ -45,11 +59,11 @@ PKG=bard.uk.labyitems; $HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c D
 With an emulator running, this one liner will generate the DB, apply migrations, push it into the app sandbox, and launch the app:
 
 ```bash
-PKG=bard.uk.labyitems DB=output/default.db && \
+PKG=bard.uk.labyitems DB=output/laby.db && \
 $HOME/.dotnet/dotnet run --project tools/evocdbgen -c Release -- labyItems/Resources/Raw/druids_way/evocs.json "$DB" && \
 $HOME/.dotnet/dotnet run --project tools/migrator -c Release -- "$DB" && \
-adb push "$DB" /data/local/tmp/default.db && \
-adb shell run-as "$PKG" sh -c 'mkdir -p files && cp /data/local/tmp/default.db files/default.db && ls -l files/default.db' && \
+adb push "$DB" /data/local/tmp/laby.db && \
+adb shell run-as "$PKG" sh -c 'mkdir -p files && cp /data/local/tmp/laby.db files/laby.db && ls -l files/laby.db' && \
 $HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c Debug -clp:ErrorsOnly && \
 adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
 ```
@@ -63,14 +77,24 @@ Notes:
 
 ## Data generation & migrations
 
-- To generate or migrate any SQLite DB against the latest migrations, run: `./tools/migrate-any-data.sh output/default.db` (optional second arg: custom seed JSON; defaults to `labyItems/Resources/Raw/druids_way/evocs.json`). The script will create the DB from the seed if it does not exist, then apply FluentMigrator migrations.
+- To generate or migrate any SQLite DB against the latest migrations, run: `./tools/migrate-any-data.sh output/laby.db` (optional second arg: custom seed JSON; defaults to `labyItems/Resources/Raw/druids_way/evocs.json`). The script will create the DB from the seed if it does not exist, then apply FluentMigrator migrations.
+- We now use a single database file (`laby.db`). Delete old `output/default.db` or `output/evocs.db` files if you still have them.
+- If you already created a DB only via migrations and it’s missing evolution data, delete `output/laby.db` first so `evocdbgen` can rebuild it from the raw tables.
 - The script uses `$HOME/.dotnet/dotnet` by default; override with `DOTNET=/path/to/dotnet ./tools/migrate-any-data.sh ...` if needed.
 - APK builds now keep all `Resources/Raw` JSON assets and the `Template.xlsx` so the app and migrations can load packaged data directly.
+
+Install the generated DB into an emulator/device (so the app uses the full evolution tables, not just migrations):
+
+```bash
+PKG=bard.uk.labyitems DB=output/laby.db && \
+adb push "$DB" /data/local/tmp/laby.db && \
+adb shell run-as "$PKG" sh -c 'mkdir -p files && cp /data/local/tmp/laby.db files/laby.db && ls -l files/laby.db'
+```
 
 Run migrations only (when the DB already exists):
 
 ```bash
-$HOME/.dotnet/dotnet run --project tools/migrator -c Release -- output/default.db
+$HOME/.dotnet/dotnet run --project tools/migrator -c Release -- output/laby.db
 ```
 
 ---

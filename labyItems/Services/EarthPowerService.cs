@@ -25,7 +25,7 @@ public static class EarthPowerService
 
     static EarthPowerService()
     {
-        var appDb = Path.Combine(FileSystem.AppDataDirectory, "default.db");
+        var appDb = Path.Combine(FileSystem.AppDataDirectory, "laby.db");
         if (File.Exists(appDb))
         {
             _dbPath = appDb;
@@ -34,8 +34,7 @@ public static class EarthPowerService
 
         var devCandidates = new[]
         {
-            Path.Combine(Directory.GetCurrentDirectory(), "output", "evocs.db"),
-            Path.Combine(Directory.GetCurrentDirectory(), "output", "default.db")
+            Path.Combine(Directory.GetCurrentDirectory(), "output", "laby.db")
         };
         foreach (var candidate in devCandidates)
         {
@@ -66,13 +65,13 @@ public static class EarthPowerService
             return Task.FromResult<IReadOnlyList<EvocRaw>>(list);
         }
 
-        throw new InvalidOperationException("Evocations DB not found; please install default.db in app data or provide the DB during development.");
+        throw new InvalidOperationException("Evocations DB not found; please install laby.db in app data or provide the DB during development.");
     }
 
     public static Task<IReadOnlyList<EvocRaw>> SearchAsync(string query, bool includeAdvanced = true, int? maxPower = null)
     {
         if (string.IsNullOrEmpty(_dbPath) || !File.Exists(_dbPath))
-            throw new InvalidOperationException("Evocations DB not found; ensure default.db is installed and accessible.");
+            throw new InvalidOperationException("Evocations DB not found; ensure laby.db is installed and accessible.");
 
         var trimmed = query?.Trim() ?? string.Empty;
         using var conn = new SQLiteConnection(_dbPath, SQLiteOpenFlags.ReadOnly);

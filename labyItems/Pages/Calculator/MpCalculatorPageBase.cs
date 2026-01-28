@@ -234,7 +234,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
         if (ShouldWarnWhenDbMissing && !EarthPowerService.HasDatabase)
         {
-            await DisplayAlert("Data missing", "Evocation database not found. Please ensure default.db is copied to the app data directory.", "OK");
+            await DisplayAlert("Data missing", "Evocation database not found. Please ensure laby.db is copied to the app data directory.", "OK");
         }
 
         await LoadLookupDataAsync();

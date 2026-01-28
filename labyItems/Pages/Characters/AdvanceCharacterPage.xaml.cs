@@ -27,6 +27,8 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         foreach (var child in Children)
             child.BindingContext = _vm;
 
+        AbilitySearch.RemoteSearchProvider = _vm.SearchAbilityOptionsAsync;
+
         ToolbarItems.Add(new ToolbarItem
         {
             Text = "Save",
@@ -53,5 +55,11 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
         if (Children.Contains(DetailsTab))
             CurrentPage = DetailsTab;
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        _vm.PersistDraft();
     }
 }

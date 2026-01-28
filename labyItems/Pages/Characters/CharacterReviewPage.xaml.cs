@@ -23,8 +23,14 @@ public partial class CharacterReviewPage : ContentPage
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await _vm.CharacterBuilderVm.RefreshDraftAbilitiesAsync();
+            await _vm.RefreshReviewAsync();
         });
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _vm.RefreshReviewAsync();
     }
 
     private async void OnAdvanceClicked(object sender, EventArgs e)

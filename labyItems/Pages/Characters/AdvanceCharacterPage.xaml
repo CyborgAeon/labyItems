@@ -37,8 +37,8 @@
                            FontAttributes="Bold"/>
                     <Grid ColumnDefinitions="*,Auto"
                           ColumnSpacing="8">
-                        <controls:DictionarySearchBar x:TypeArguments="viewModels:ManuAbilityOption"
-                                                      ItemsSource="{Binding AbilityOptions}"
+                        <controls:DictionarySearchBar x:Name="AbilitySearch"
+                                                      x:TypeArguments="viewModels:ManuAbilityOption"
                                                       SelectedValue="{Binding SelectedAbilityOption, Mode=TwoWay}"
                                                       PlaceholderText="Type ability name"
                                                       SelectionDisplayMemberPath="Name"/>
@@ -54,11 +54,16 @@
                                          Spacing="8">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Grid ColumnDefinitions="*,Auto"
+                                <Grid ColumnDefinitions="*,Auto,Auto"
                                       ColumnSpacing="8">
-                                    <Label Text="{Binding Name}"
+                                    <Label Text="{Binding NameWithCost}"
                                            VerticalTextAlignment="Center"/>
-                                    <ImageButton Grid.Column="1"
+                                    <Label Grid.Column="1"
+                                           Text="{Binding RunningTotalText}"
+                                           FontSize="12"
+                                           Opacity="0.7"
+                                           VerticalTextAlignment="Center"/>
+                                    <ImageButton Grid.Column="2"
                                                  HeightRequest="36"
                                                  WidthRequest="36"
                                                  Padding="6"
@@ -277,6 +282,7 @@
                                                 <controls:DictionarySearchBar x:TypeArguments="viewModels:MiracleOption"
                                                                               ItemsSource="{Binding FilteredOptions}"
                                                                               SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"
+                                                                              SelectedText="{Binding SearchText, Mode=TwoWay}"
                                                                               PlaceholderText="Type miracle name"
                                                                               SelectionDisplayMemberPath="Name"
                                                                               IsEnabled="{Binding CanEdit}"/>

@@ -39,7 +39,7 @@ class Program
     static int Main(string[] args)
     {
         var input = args.Length > 0 ? args[0] : "../labyItems/Resources/Raw/druids_way/evocs.json";
-        var output = args.Length > 1 ? args[1] : "output/default.db";
+        var output = args.Length > 1 ? args[1] : "output/laby.db";
 
         if (!File.Exists(input))
         {
@@ -111,27 +111,6 @@ CREATE INDEX idx_evolution_idx_lower ON evolution(idx_lower);
 CREATE TABLE evolution_ngrams(token TEXT, evolution_id TEXT);
 CREATE INDEX idx_evolution_ngrams_token ON evolution_ngrams(token);
 CREATE INDEX idx_evolution_ngrams_evolution_id ON evolution_ngrams(evolution_id);
-
--- Make abilities table
-CREATE TABLE abilities (
-  id TEXT PRIMARY KEY,
-  idx TEXT NOT NULL,
-  idx_lower TEXT,
-  description TEXT,
-  cost INTEGER,
-  available TEXT,
-  table_id INTEGER,
-  can_buy_multiple INTEGER,
-  prereqs_json TEXT,
-  data_json TEXT,
-  is_default INTEGER,
-  created_at TEXT,
-  updated_at TEXT
-);
-CREATE INDEX idx_abilities_idx_lower ON abilities(idx_lower);
-CREATE TABLE abilities_ngrams(token TEXT, ability_id TEXT);
-CREATE INDEX idx_abilities_ngrams_token ON abilities_ngrams(token);
-CREATE INDEX idx_abilities_ngrams_ability_id ON abilities_ngrams(ability_id);
 
 -- Seed metadata for CI and runtime to validate seed provenance
 CREATE TABLE seed_metadata (
@@ -300,7 +279,7 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
             }
         }
 
-        // Import make abilities into abilities table (if present)
+        // Import make abilities into evolution table (if present)
         var abilitiesPath = Path.GetFullPath(Path.Combine(resourcesRoot, "makes_abilities.json"));
         if (File.Exists(abilitiesPath))
         {
@@ -308,10 +287,10 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                                ?? new List<AbilityRaw>();
 
             var insertAbilityCmd = conn.CreateCommand();
-            insertAbilityCmd.CommandText = @"INSERT INTO abilities (id, idx, idx_lower, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json, is_default, created_at, updated_at) VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_buy_multiple, @prereqs_json, @data_json, @is_default, @created_at, @updated_at);";
+            insertAbilityCmd.CommandText = @"INSERT INTO evolution (id, idx, idx_lower, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json, is_default, created_at, updated_at) VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_buy_multiple, @prereqs_json, @data_json, @is_default, @created_at, @updated_at);";
 
             var insertAbilityNgramCmd = conn.CreateCommand();
-            insertAbilityNgramCmd.CommandText = @"INSERT INTO abilities_ngrams (token, ability_id) VALUES (@token, @ability_id);";
+            insertAbilityNgramCmd.CommandText = @"INSERT INTO evolution_ngrams (token, evolution_id) VALUES (@token, @evolution_id);";
 
             foreach (var r in rawAbilities)
             {
@@ -332,7 +311,7 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                 else if (r.PreReqs is { Count: > 0 })
                     preReqs = r.PreReqs;
 
-                var id = DeterministicGuid($"ability|{table}|{idx}").ToString();
+                var id = DeterministicGuid($"evo|ability|{table}|{idx}").ToString();
 
                 insertAbilityCmd.Parameters.Clear();
                 insertAbilityCmd.Parameters.AddWithValue("@id", id);
@@ -371,7 +350,7 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                     {
                         insertAbilityNgramCmd.Parameters.Clear();
                         insertAbilityNgramCmd.Parameters.AddWithValue("@token", tkn);
-                        insertAbilityNgramCmd.Parameters.AddWithValue("@ability_id", id);
+                        insertAbilityNgramCmd.Parameters.AddWithValue("@evolution_id", id);
                         insertAbilityNgramCmd.ExecuteNonQuery();
                     }
                 }
