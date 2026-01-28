@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Text.RegularExpressions;
 using labyItems.Models.Characters;
 using labyItems.Services;
+using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Characters;
 
@@ -61,9 +62,10 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     public string? PowerBase { get; init; } = "";
     public IReadOnlyList<string> BracketTags { get; init; } = Array.Empty<string>();
 
+    public Dictionary<int, string> CardTags { get; set; }
     public string Tag1 => $"AC {MaxAc}";
-    public string Tag2 => ResolveTagSlots().Tag2;
-    public string Tag3 => ResolveTagSlots().Tag3;
+    public string Tag2 => ResolveTags().Tag2;
+    public string Tag3 => ResolveTags().Tag3;
 
     public ObservableCollection<LevelRowVm> LevelRows { get; init; } = new();
 
@@ -164,8 +166,13 @@ public sealed class ClassCardVm : INotifyPropertyChanged
         set { if (_isExpanded == value) return; _isExpanded = value; Raise(); }
     }
 
-    private (string Tag2, string Tag3) ResolveTagSlots()
+    // private Dictionary<int, string> ResolveTags()
+    private (string Tag2, string Tag3) ResolveTags()
     {
+        // var response = new Dictionary<int, string>();
+        // response.Add(0, Tags[0].ToString() ?? $"{TBLP} Tblp");
+        // response.Add(1, Tags[1].ToString() ?? $"{MaxAc} max AC");
+        // response.Add(2, Tags[2].ToString() ?? PowerBase.ToString());
         var tag2 = PowerBase ?? "";
         var tag3 = TBLP > 0 ? $"{TBLP} TBLP" : "";
 

@@ -1787,7 +1787,7 @@
     ]
   },
   "Pathfinder": {
-    "Bracket": ["⚔ Scout"],
+    "Brackets": ["⚔ Scout"],
     "Tags": ["Jack of all Trades", "Soft-Combatant", "High Versatility"],
     "Armour": {
       "Wearable": ["light", "medium"],
@@ -1875,7 +1875,7 @@
     }
   },
   "Thug": {
-    "Bracket": ["⚔ Scout"],
+    "Brackets": ["⚔ Scout"],
     "Tags": ["Combatant"],
     "Armour": {
       "Wearable": ["light", "medium"],
@@ -1954,7 +1954,7 @@
     }
   },
   "Assassin": {
-    "Bracket": ["⚔ Scout"],
+    "Brackets": ["⚔ Scout"],
     "Tags": ["High Damage", "Combatant"],
     "Max AC": 7,
     "Armour": {
@@ -2053,7 +2053,7 @@
     }
   },
   "Rogue": {
-    "Bracket": ["⚔ Scout", "🪄 Wizard"],
+    "Brackets": ["⚔ Scout", "🪄 Wizard"],
     "Tags": ["Magical Caster", "Soft-Combatant", "Versatile"],
     "Max AC": 7,
     "Armour": {
@@ -2134,7 +2134,7 @@
     ]
   },
   "Wayfinder": {
-    "Bracket": ["⚔ Scout", "🙏 Priest"],
+    "Brackets": ["⚔ Scout", "🙏 Priest"],
     "Tags": ["Spiritual Caster", "Combatant"],
     "Max AC": 7,
     "Armour": {
@@ -2229,7 +2229,7 @@
     ]
   },
   "Leywalker": {
-    "Bracket": ["⚔ Scout", "🌿 Druid"],
+    "Brackets": ["⚔ Scout", "🌿 Druid"],
     "Tags": ["EP Caster", "Combatant", "Versatile"],
     "Max AC": 7,
     "Armour": {
@@ -2319,7 +2319,7 @@
     ]
   },
   "Spy": {
-    "Bracket": ["⚔ Scout"],
+    "Brackets": ["⚔ Scout"],
     "Tags": ["Neuronic Caster", "Combatant"],
     "Max AC": 7,
     "Armour": {
@@ -2419,7 +2419,7 @@
     }
   },
   "Artificer": {
-    "Bracket": ["⚔ Scout"],
+    "Brackets": ["⚔ Scout"],
     "Tags": ["Neuronic Caster", "Combatant", "3 PAC"],
     "Max AC": 7,
     "Armour": {

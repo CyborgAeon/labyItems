@@ -25,6 +25,7 @@ public sealed class CharacterDraft
         new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, int> GuildBenefitSelections { get; set; } =
         new(StringComparer.OrdinalIgnoreCase);
+    public List<string> AdvancementAbilities { get; set; } = new();
     public List<string> AdvancementItems { get; set; } = new();
     public List<MiracleListDraft> MiracleLists { get; set; } = new();
     public List<SpellListDraft> SpellLists { get; set; } = new();
@@ -35,6 +36,7 @@ public sealed class CharacterDraft
     public List<Alignment> AvailableAlignments { get; private set; } = new();
 
     public int Points { get; set; }
+    public int CurrentVitae { get; set; }
 
     public int TBLP { get; set; }
     public int Loc { get; set; }

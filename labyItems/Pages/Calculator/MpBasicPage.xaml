@@ -20,6 +20,7 @@
               x:Name="SpellSearch"
               x:TypeArguments="local:SpellOption"
               PlaceholderText="Type spell name)"
+              SelectionDisplayMemberPath="Name"
               SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}"/>
           <controls:PlusMinusControl Grid.Column="1"
               AllowMultiple="True"
@@ -36,6 +37,7 @@
               x:Name="MiracleSearch"
               x:TypeArguments="local:MiracleOption"
               PlaceholderText="Type miracle name"
+              SelectionDisplayMemberPath="Name"
               SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"/>
           <controls:PlusMinusControl Grid.Column="1"
               AllowMultiple="True"
@@ -53,6 +55,7 @@
               x:Name="EvocationSearch"
               x:TypeArguments="local:EvocationOption"
               PlaceholderText="Type evocation name"
+              SelectionDisplayMemberPath="Name"
               SelectedValue="{Binding SelectedEvocationOption, Mode=TwoWay}"/>
           <controls:PlusMinusControl Grid.Column="1"
               AllowMultiple="True"

@@ -12,6 +12,7 @@ using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
 using Microsoft.Maui.Controls;
+using ServiceCharacterClassRecord = labyItems.Services.CharacterClassRecord;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -35,12 +36,27 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private IReadOnlyList<SpellService.SpellRaw> _allSpells = Array.Empty<SpellService.SpellRaw>();
     private IReadOnlyList<DruidEvocationService.EvocRaw> _allEvocations = Array.Empty<DruidEvocationService.EvocRaw>();
     private Dictionary<string, GuildRecord> _guilds = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, ServiceCharacterClassRecord> _classes = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, ManuAbilityOption> _abilityOptions = new(StringComparer.OrdinalIgnoreCase);
+
+    private bool _showSpellsTab;
+    public bool ShowSpellsTab { get => _showSpellsTab; private set => Set(ref _showSpellsTab, value); }
+
+    private bool _showMiraclesTab;
+    public bool ShowMiraclesTab { get => _showMiraclesTab; private set => Set(ref _showMiraclesTab, value); }
+
+    private bool _showEvocationsTab;
+    public bool ShowEvocationsTab { get => _showEvocationsTab; private set => Set(ref _showEvocationsTab, value); }
 
     public AdvanceCharacterVm(CharacterDraft draft)
     {
         _draft = draft;
 
         Items.CollectionChanged += (_, __) => SyncItemsToDraft();
+        Abilities.CollectionChanged += (_, __) => SyncAbilitiesToDraft();
+
+        AddAbilityCommand = new Command(AddAbility);
+        RemoveAbilityCommand = new Command<AbilityEntryVm>(RemoveAbility);
 
         AddItemCommand = new Command(AddItem);
         RemoveItemCommand = new Command<ItemLineVm>(RemoveItem);
@@ -67,6 +83,19 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             if (_draft.Points == value) return;
             _draft.Points = value;
             Raise();
+            foreach (var list in MiracleLists)
+                list.RefreshExternalLimits();
+        }
+    }
+
+    public int CurrentVitae
+    {
+        get => _draft.CurrentVitae;
+        set
+        {
+            if (_draft.CurrentVitae == value) return;
+            _draft.CurrentVitae = value;
+            Raise();
         }
     }
 
@@ -80,6 +109,29 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             Raise();
         }
     }
+
+    public Dictionary<string, ManuAbilityOption> AbilityOptions
+    {
+        get => _abilityOptions;
+        private set => Set(ref _abilityOptions, value);
+    }
+
+    private ManuAbilityOption? _selectedAbilityOption;
+    public ManuAbilityOption? SelectedAbilityOption
+    {
+        get => _selectedAbilityOption;
+        set
+        {
+            if (!Set(ref _selectedAbilityOption, value)) return;
+            Raise(nameof(CanAddAbility));
+        }
+    }
+
+    public bool CanAddAbility => !string.IsNullOrWhiteSpace(SelectedAbilityOption?.Name);
+
+    public ObservableCollection<AbilityEntryVm> Abilities { get; } = new();
+    public ICommand AddAbilityCommand { get; }
+    public ICommand RemoveAbilityCommand { get; }
 
     public ObservableCollection<ItemLineVm> Items { get; } = new();
     public ICommand AddItemCommand { get; }
@@ -102,11 +154,29 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public bool SpellListsEnabled => false;
     public string SpellListsDisabledReason => "Spell list builder is disabled for now.";
 
+    public bool CanAddMiracleList
+        => GetBaseMiracleList() == null
+           || (GetBaseMiracleList()?.IsSaved == true && GetScripturesMiracleList() == null);
+
+    public string AddMiracleListLabel
+        => GetBaseMiracleList() == null ? "+ Add miracle list" : "Add Scriptures of Faith";
+
+    public bool CanAddEvocationList => EvocationLists.Count == 0;
+
     public bool CanSave => MiracleLists.All(m => m.IsAlignmentCompatible(_draft.Alignment));
 
     public async Task InitializeAsync()
     {
         _guilds = await GuildsService.GetAllAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
+
+        try
+        {
+            _classes = await ClassService.GetAllAsync() ?? new Dictionary<string, ServiceCharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            _classes = new Dictionary<string, ServiceCharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+        }
 
         try
         {
@@ -142,14 +212,123 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             _allEvocations = Array.Empty<DruidEvocationService.EvocRaw>();
         }
 
+        try
+        {
+            var allAbilities = await ManuAbilityService.GetAllAsync();
+            AbilityOptions = allAbilities
+                .GroupBy(a => a.name ?? string.Empty, StringComparer.OrdinalIgnoreCase)
+                .Where(g => !string.IsNullOrWhiteSpace(g.Key))
+                .ToDictionary(
+                    g => g.Key,
+                    g =>
+                    {
+                        var entry = g.First();
+                        return new ManuAbilityOption(
+                            entry.name ?? string.Empty,
+                            entry.cost,
+                            entry.table,
+                            entry.availability ?? string.Empty,
+                            entry.description ?? string.Empty);
+                    },
+                    StringComparer.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            AbilityOptions = new Dictionary<string, ManuAbilityOption>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        LoadAbilitiesFromDraft();
         LoadItemsFromDraft();
         if (SpellListsEnabled)
             LoadSpellListsFromDraft();
         LoadMiracleListsFromDraft();
         LoadEvocationListsFromDraft();
 
+        UpdateTabVisibility();
+
         Raise(nameof(CanSave));
         (SaveCommand as Command)?.ChangeCanExecute();
+    }
+
+    private void UpdateTabVisibility()
+    {
+        ServiceCharacterClassRecord? classRecord = null;
+        if (!string.IsNullOrWhiteSpace(_draft.Class))
+            _classes.TryGetValue(_draft.Class.Trim(), out classRecord);
+
+        var isWizard = HasBracket(classRecord?.Brackets, "Wizard");
+        var isPriest = HasBracket(classRecord?.Brackets, "Priest");
+        var isDruid = HasBracket(classRecord?.Brackets, "Druid");
+
+        ShowSpellsTab = isWizard && HasWizardColourSelection();
+        ShowMiraclesTab = isPriest;
+        ShowEvocationsTab = isDruid;
+    }
+
+    private bool HasWizardColourSelection()
+    {
+        if (_draft.SpecialisationSelections != null)
+        {
+            var hasSelection = _draft.SpecialisationSelections.Any(kvp =>
+                kvp.Key.Contains("Wizard Colour", StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(kvp.Value));
+            if (hasSelection)
+                return true;
+        }
+
+        if (_draft.Abilities != null)
+        {
+            var hasAbility = _draft.Abilities.Any(a =>
+                !string.IsNullOrWhiteSpace(a?.Source)
+                && a.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase));
+            if (hasAbility)
+                return true;
+        }
+
+        return false;
+    }
+
+    private static bool HasBracket(IEnumerable<string>? brackets, string token)
+        => brackets != null && brackets.Any(b => b.Contains(token, StringComparison.OrdinalIgnoreCase));
+
+    private void LoadAbilitiesFromDraft()
+    {
+        Abilities.Clear();
+        foreach (var ability in _draft.AdvancementAbilities ?? new List<string>())
+        {
+            var line = new AbilityEntryVm(ability, SyncAbilitiesToDraft);
+            Abilities.Add(line);
+        }
+    }
+
+    private void AddAbility()
+    {
+        if (SelectedAbilityOption == null)
+            return;
+
+        var name = SelectedAbilityOption.Value.Name ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(name))
+            return;
+
+        var line = new AbilityEntryVm(name, SyncAbilitiesToDraft);
+        Abilities.Add(line);
+        SelectedAbilityOption = null;
+        SyncAbilitiesToDraft();
+    }
+
+    private void RemoveAbility(AbilityEntryVm? ability)
+    {
+        if (ability == null) return;
+        Abilities.Remove(ability);
+        SyncAbilitiesToDraft();
+    }
+
+    private void SyncAbilitiesToDraft()
+    {
+        _draft.AdvancementAbilities = Abilities
+            .Select(a => (a.Name ?? string.Empty).Trim())
+            .Where(t => t.Length > 0)
+            .ToList();
     }
 
     private void LoadItemsFromDraft()
@@ -230,6 +409,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         _draft.SpellLists.Remove(list.Draft);
     }
 
+    private MiracleListVm? GetBaseMiracleList()
+        => MiracleLists.FirstOrDefault(m => !m.IsScriptures);
+
+    private MiracleListVm? GetScripturesMiracleList()
+        => MiracleLists.FirstOrDefault(m => m.IsScriptures);
+
     private void LoadMiracleListsFromDraft()
     {
         MiracleLists.Clear();
@@ -241,17 +426,45 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         {
             var churchList = TryBuildChurchMiracleList();
             if (churchList != null)
+            {
+                churchList.IsSaved = true;
+                churchList.IsScriptures = false;
                 _draft.MiracleLists.Add(churchList);
+            }
         }
+
+        var baseList = _draft.MiracleLists.FirstOrDefault(l => !l.IsScriptures);
+        var scripturesList = _draft.MiracleLists.FirstOrDefault(l => l.IsScriptures);
+
+        _draft.MiracleLists = new List<MiracleListDraft>();
+        if (baseList != null)
+            _draft.MiracleLists.Add(baseList);
+        if (scripturesList != null)
+            _draft.MiracleLists.Add(scripturesList);
 
         foreach (var list in _draft.MiracleLists)
         {
-            var vm = new MiracleListVm(list, _allMiracles, OnMiracleListValidationChanged);
+            if (list.IsImported)
+            {
+                list.IsSaved = true;
+                if (string.IsNullOrWhiteSpace(list.SourceName))
+                    list.SourceName = ExtractImportedSourceName(list.Name);
+            }
+
+            var vm = new MiracleListVm(
+                list,
+                _allMiracles,
+                OnMiracleListValidationChanged,
+                () => _draft.Alignment,
+                () => _draft.Points,
+                OnMiracleListExpandRequested);
+            HookMiracleList(vm);
             MiracleLists.Add(vm);
         }
 
-        if (MiracleLists.Count == 0)
-            AddMiracleList();
+        NormalizeMiracleListExpansion();
+        Raise(nameof(CanAddMiracleList));
+        Raise(nameof(AddMiracleListLabel));
     }
 
     private MiracleListDraft? TryBuildChurchMiracleList()
@@ -272,11 +485,15 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (!_guilds.TryGetValue(church, out var record) || record?.MiracleList == null)
             return null;
 
-        var name = $"Miracle List ({church})";
+        var sourceName = CleanChurchName(church);
+        var name = $"Miracle List ({sourceName})";
         var list = new MiracleListDraft
         {
             Name = name,
-            IsImported = true
+            SourceName = sourceName,
+            IsImported = true,
+            IsSaved = true,
+            IsScriptures = false
         };
 
         var allNames = record.MiracleList.Values
@@ -315,43 +532,125 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         return list.Entries.Count == 0 ? null : list;
     }
 
+    private static string ExtractImportedSourceName(string? name)
+    {
+        var trimmed = (name ?? string.Empty).Trim();
+        if (trimmed.Length == 0)
+            return string.Empty;
+
+        var start = trimmed.IndexOf('(');
+        var end = trimmed.LastIndexOf(')');
+        if (start >= 0 && end > start)
+        {
+            var inner = trimmed.Substring(start + 1, end - start - 1);
+            return CleanChurchName(inner);
+        }
+
+        var cleaned = trimmed.Replace("Miracle List", string.Empty, StringComparison.OrdinalIgnoreCase).Trim();
+        return CleanChurchName(cleaned);
+    }
+
+    private static string CleanChurchName(string? name)
+    {
+        var trimmed = (name ?? string.Empty).Trim();
+        const string prefix = "Church of ";
+        if (trimmed.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            return trimmed.Substring(prefix.Length).Trim();
+        return trimmed;
+    }
+
     private void AddMiracleList()
     {
-        var draft = new MiracleListDraft
+        var baseList = GetBaseMiracleList();
+        if (baseList == null)
         {
-            Name = $"Miracle List {MiracleLists.Count + 1}"
+            var draft = new MiracleListDraft
+            {
+                Name = "Base List",
+                IsScriptures = false
+            };
+            _draft.MiracleLists.Add(draft);
+            var vm = new MiracleListVm(
+                draft,
+                _allMiracles,
+                OnMiracleListValidationChanged,
+                () => _draft.Alignment,
+                () => _draft.Points,
+                OnMiracleListExpandRequested);
+            HookMiracleList(vm);
+            MiracleLists.Add(vm);
+            SetActiveMiracleList(vm);
+            RaiseMiracleListStateChanged();
+            return;
+        }
+
+        if (!baseList.IsSaved || GetScripturesMiracleList() != null)
+            return;
+
+        var scripturesDraft = new MiracleListDraft
+        {
+            Name = "Scriptures of Faith",
+            IsScriptures = true
         };
-        _draft.MiracleLists.Add(draft);
-        var vm = new MiracleListVm(draft, _allMiracles, OnMiracleListValidationChanged);
-        MiracleLists.Add(vm);
-        Raise(nameof(CanSave));
-        (SaveCommand as Command)?.ChangeCanExecute();
+        _draft.MiracleLists.Add(scripturesDraft);
+        var scripturesVm = new MiracleListVm(
+            scripturesDraft,
+            _allMiracles,
+            OnMiracleListValidationChanged,
+            () => _draft.Alignment,
+            () => _draft.Points,
+            OnMiracleListExpandRequested);
+        HookMiracleList(scripturesVm);
+        MiracleLists.Add(scripturesVm);
+        SetActiveMiracleList(scripturesVm);
+        RaiseMiracleListStateChanged();
     }
 
     private void RemoveMiracleList(MiracleListVm? list)
     {
         if (list == null) return;
+        UnhookMiracleList(list);
         MiracleLists.Remove(list);
         _draft.MiracleLists.Remove(list.Draft);
-        Raise(nameof(CanSave));
-        (SaveCommand as Command)?.ChangeCanExecute();
+
+        if (!list.IsScriptures)
+        {
+            var scriptures = GetScripturesMiracleList();
+            if (scriptures != null)
+            {
+                UnhookMiracleList(scriptures);
+                MiracleLists.Remove(scriptures);
+                _draft.MiracleLists.Remove(scriptures.Draft);
+            }
+        }
+
+        NormalizeMiracleListExpansion();
+        RaiseMiracleListStateChanged();
     }
 
     private void LoadEvocationListsFromDraft()
     {
         EvocationLists.Clear();
-        foreach (var list in _draft.EvocationLists ?? new List<EvocationListDraft>())
+        if (_draft.EvocationLists == null)
+            _draft.EvocationLists = new List<EvocationListDraft>();
+
+        var first = _draft.EvocationLists.FirstOrDefault();
+        _draft.EvocationLists = first != null ? new List<EvocationListDraft> { first } : new List<EvocationListDraft>();
+
+        if (first != null)
         {
-            var vm = new EvocationListVm(list, _allEvocations);
+            var vm = new EvocationListVm(first, _allEvocations);
             EvocationLists.Add(vm);
         }
 
-        if (EvocationLists.Count == 0)
-            AddEvocationList();
+        Raise(nameof(CanAddEvocationList));
     }
 
     private void AddEvocationList()
     {
+        if (!CanAddEvocationList)
+            return;
+
         var draft = new EvocationListDraft
         {
             Name = $"Evocation List {EvocationLists.Count + 1}"
@@ -359,6 +658,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         _draft.EvocationLists.Add(draft);
         var vm = new EvocationListVm(draft, _allEvocations);
         EvocationLists.Add(vm);
+        Raise(nameof(CanAddEvocationList));
     }
 
     private void RemoveEvocationList(EvocationListVm? list)
@@ -366,12 +666,65 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (list == null) return;
         EvocationLists.Remove(list);
         _draft.EvocationLists.Remove(list.Draft);
+        Raise(nameof(CanAddEvocationList));
     }
 
     private void OnMiracleListValidationChanged()
     {
         Raise(nameof(CanSave));
         (SaveCommand as Command)?.ChangeCanExecute();
+        RaiseMiracleListStateChanged();
+    }
+
+    private void HookMiracleList(MiracleListVm vm)
+    {
+        vm.PropertyChanged += OnMiracleListPropertyChanged;
+    }
+
+    private void UnhookMiracleList(MiracleListVm vm)
+    {
+        vm.PropertyChanged -= OnMiracleListPropertyChanged;
+    }
+
+    private void OnMiracleListPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(MiracleListVm.IsSaved))
+            RaiseMiracleListStateChanged();
+    }
+
+    private void RaiseMiracleListStateChanged()
+    {
+        Raise(nameof(CanAddMiracleList));
+        Raise(nameof(AddMiracleListLabel));
+    }
+
+    private void NormalizeMiracleListExpansion()
+    {
+        var expanded = MiracleLists.Where(m => m.IsExpanded).ToList();
+        if (expanded.Count <= 1)
+            return;
+
+        var keep = expanded.First();
+        foreach (var list in MiracleLists)
+            list.IsMinimized = !ReferenceEquals(list, keep);
+    }
+
+    private void SetActiveMiracleList(MiracleListVm list)
+    {
+        foreach (var vm in MiracleLists)
+            vm.IsMinimized = !ReferenceEquals(vm, list);
+    }
+
+    private void OnMiracleListExpandRequested(MiracleListVm list)
+    {
+        if (list.IsMinimized)
+        {
+            foreach (var vm in MiracleLists)
+                vm.IsMinimized = !ReferenceEquals(vm, list);
+            return;
+        }
+
+        list.IsMinimized = true;
     }
 
     private void SaveDraft()
@@ -380,6 +733,36 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return;
 
         LiteDbService.UpsertDraft(_draft);
+    }
+}
+
+public sealed class AbilityEntryVm : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void Raise([CallerMemberName] string? name = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+    private readonly Action _onChanged;
+    private string _name;
+
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            var next = value ?? string.Empty;
+            if (_name == next) return;
+            _name = next;
+            Raise();
+            _onChanged();
+        }
+    }
+
+    public AbilityEntryVm(string name, Action onChanged)
+    {
+        _name = name ?? string.Empty;
+        _onChanged = onChanged;
     }
 }
 
@@ -606,6 +989,19 @@ public sealed class EvocationListVm : INotifyPropertyChanged
 
     public ObservableCollection<EvocationEntryVm> Entries { get; } = new();
 
+    private EvocationOption? _selectedEvocationOption;
+    public EvocationOption? SelectedEvocationOption
+    {
+        get => _selectedEvocationOption;
+        set
+        {
+            if (!Set(ref _selectedEvocationOption, value)) return;
+            Raise(nameof(CanAddSelected));
+        }
+    }
+
+    public bool CanAddSelected => SelectedEvocationOption != null;
+
     public ObservableCollection<string> FieldFilterOptions { get; } = new();
     public ObservableCollection<string> SelectedFieldFilters { get; } = new();
     public ObservableCollection<string> TierFilterOptions { get; } = new() { "Advanced", "Standard" };
@@ -645,7 +1041,7 @@ public sealed class EvocationListVm : INotifyPropertyChanged
 
     public bool HasValidationError => !string.IsNullOrWhiteSpace(ValidationMessage);
 
-    public ICommand AddEntryCommand { get; }
+    public ICommand AddSelectedCommand { get; }
     public ICommand RemoveEntryCommand { get; }
 
     public EvocationListVm(EvocationListDraft draft, IReadOnlyList<DruidEvocationService.EvocRaw> allEvocations)
@@ -657,7 +1053,7 @@ public sealed class EvocationListVm : INotifyPropertyChanged
             .GroupBy(e => e.name, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
 
-        AddEntryCommand = new Command(AddEntry);
+        AddSelectedCommand = new Command(AddSelectedEvocation);
         RemoveEntryCommand = new Command<EvocationEntryVm>(RemoveEntry);
 
         SelectedFieldFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
@@ -703,17 +1099,19 @@ public sealed class EvocationListVm : INotifyPropertyChanged
             }
             Entries.Add(vm);
         }
-
-        if (Entries.Count == 0)
-            AddEntry();
     }
 
-    private void AddEntry()
+    private void AddSelectedEvocation()
     {
+        if (SelectedEvocationOption == null)
+            return;
+
         var draft = new EvocationListEntryDraft();
         Draft.Entries.Add(draft);
         var vm = new EvocationEntryVm(draft, OnEntryChanged);
+        vm.SelectedEvocation = SelectedEvocationOption.Value;
         Entries.Add(vm);
+        SelectedEvocationOption = null;
         UpdateStats();
     }
 
@@ -845,6 +1243,9 @@ public sealed class EvocationEntryVm : INotifyPropertyChanged
 
     public EvocationListEntryDraft Draft { get; }
 
+    public string DisplayText
+        => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} ({Draft.Power})";
+
     private EvocationOption? _selectedEvocation;
     public EvocationOption? SelectedEvocation
     {
@@ -866,6 +1267,7 @@ public sealed class EvocationEntryVm : INotifyPropertyChanged
                 Draft.IsAdvanced = option.IsAdvanced;
             }
 
+            Raise(nameof(DisplayText));
             _onChanged();
         }
     }
@@ -888,6 +1290,17 @@ public readonly record struct EvocationOption(string Name, int Power, bool IsAdv
         => HashCode.Combine(StringComparer.OrdinalIgnoreCase.GetHashCode(Name ?? string.Empty), Power, IsAdvanced);
 }
 
+public readonly record struct ManuAbilityOption(string Name, int Cost, int Table, string Availability, string Description)
+{
+    public bool Equals(ManuAbilityOption other)
+        => string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase)
+           && Cost == other.Cost
+           && Table == other.Table;
+
+    public override int GetHashCode()
+        => HashCode.Combine(StringComparer.OrdinalIgnoreCase.GetHashCode(Name ?? string.Empty), Cost, Table);
+}
+
 public sealed class MiracleListVm : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -906,6 +1319,9 @@ public sealed class MiracleListVm : INotifyPropertyChanged
     private readonly IReadOnlyList<MiracleService.MiracRaw> _allMiracles;
     private readonly Action _onValidationChanged;
     private readonly Dictionary<string, string> _sphereLookup;
+    private readonly Func<Alignment?> _getAlignment;
+    private readonly Func<int> _getPoints;
+    private readonly Action<MiracleListVm>? _onExpandRequested;
 
     private const int MaxListPower = 60;
     private const int MaxAdvancedPower = 10;
@@ -923,13 +1339,75 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         }
     }
 
-    public bool IsReadOnly => Draft.IsImported;
+    public bool IsScriptures => Draft.IsScriptures;
+
+    public string SourceName => Draft.SourceName ?? string.Empty;
+
+    public string HeaderTitle
+    {
+        get
+        {
+            if (IsScriptures)
+                return "Scriptures of Faith";
+
+            return string.IsNullOrWhiteSpace(SourceName)
+                ? "Base List"
+                : $"Base List - {SourceName}";
+        }
+    }
+
+    public bool IsSaved
+    {
+        get => Draft.IsImported || Draft.IsSaved;
+        set
+        {
+            if (Draft.IsImported) return;
+            if (Draft.IsSaved == value) return;
+            Draft.IsSaved = value;
+            Raise();
+            Raise(nameof(IsReadOnly));
+            Raise(nameof(CanEdit));
+            Raise(nameof(CanRemoveList));
+            Raise(nameof(CanAddSelected));
+            Raise(nameof(CanSaveList));
+            Raise(nameof(StateLabel));
+            Raise(nameof(CanReopenScriptures));
+        }
+    }
+
+    public bool IsMinimized
+    {
+        get => Draft.IsMinimized;
+        set
+        {
+            if (Draft.IsMinimized == value) return;
+            Draft.IsMinimized = value;
+            Raise();
+            Raise(nameof(IsExpanded));
+            Raise(nameof(CanAddSelected));
+        }
+    }
+
+    public bool IsExpanded => !IsMinimized;
+
+    public bool IsReadOnly => Draft.IsImported || Draft.IsSaved;
     public bool CanEdit => !IsReadOnly;
+    public bool CanRemoveList => CanEdit;
+    public bool CanReopenScriptures => IsScriptures && IsSaved && !Draft.IsImported;
 
     public ObservableCollection<MiracleEntryVm> Entries { get; } = new();
 
-    public ObservableCollection<string> AlignmentFilterOptions { get; } = new() { "Good", "Neutral", "Evil" };
-    public ObservableCollection<string> SelectedAlignmentFilters { get; } = new();
+    private MiracleOption? _selectedMiracleOption;
+    public MiracleOption? SelectedMiracleOption
+    {
+        get => _selectedMiracleOption;
+        set
+        {
+            if (!Set(ref _selectedMiracleOption, value)) return;
+            Raise(nameof(CanAddSelected));
+        }
+    }
+
     public ObservableCollection<string> SphereFilterOptions { get; } = new();
     public ObservableCollection<string> SelectedSphereFilters { get; } = new();
     public ObservableCollection<string> AdvancedFilterOptions { get; } = new() { "Advanced", "Handbook" };
@@ -943,8 +1421,11 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         private set => Set(ref _filteredOptions, value);
     }
 
-    public ICommand AddEntryCommand { get; }
+    public ICommand AddSelectedCommand { get; }
     public ICommand RemoveEntryCommand { get; }
+    public ICommand SaveListCommand { get; }
+    public ICommand ToggleExpandedCommand { get; }
+    public ICommand ReopenScripturesCommand { get; }
 
     private int _goodPoints;
     public int GoodPoints { get => _goodPoints; private set => Set(ref _goodPoints, value); }
@@ -967,6 +1448,36 @@ public sealed class MiracleListVm : INotifyPropertyChanged
     public GridLength NeutralWidth => new GridLength(NeutralPoints, GridUnitType.Star);
     public GridLength EvilWidth => new GridLength(EvilPoints, GridUnitType.Star);
     public GridLength UnselectedWidth => new GridLength(UnselectedPoints, GridUnitType.Star);
+
+    private int _scripturesAllowed;
+    public int ScripturesAllowed
+    {
+        get => _scripturesAllowed;
+        private set
+        {
+            if (!Set(ref _scripturesAllowed, value)) return;
+            Raise(nameof(ScripturesRemaining));
+            Raise(nameof(ScripturesUsed));
+            Raise(nameof(ScripturesProgressText));
+            Raise(nameof(CanAddSelected));
+        }
+    }
+
+    public int ScripturesUsed => Entries.Count(e => !string.IsNullOrWhiteSpace(e.Draft.Name));
+
+    public int ScripturesRemaining => Math.Max(0, ScripturesAllowed - ScripturesUsed);
+
+    public string ScripturesProgressText => $"Scriptures remaining: {ScripturesRemaining}/{ScripturesAllowed}";
+
+    public string StateLabel => IsSaved ? "Saved" : "Editing";
+
+    public bool CanAddSelected =>
+        CanEdit
+        && IsExpanded
+        && !string.IsNullOrWhiteSpace(SelectedMiracleOption?.Name)
+        && (!IsScriptures || ScripturesRemaining > 0);
+
+    public bool CanSaveList => CanEdit && !HasValidationError && Entries.Any(e => !string.IsNullOrWhiteSpace(e.Draft.Name));
 
     public string EffectiveAlignment
     {
@@ -1003,20 +1514,31 @@ public sealed class MiracleListVm : INotifyPropertyChanged
 
     public bool HasSelection => Entries.Any(e => e.SelectedMiracle != null);
 
-    public MiracleListVm(MiracleListDraft draft, IReadOnlyList<MiracleService.MiracRaw> allMiracles, Action onValidationChanged)
+    public MiracleListVm(
+        MiracleListDraft draft,
+        IReadOnlyList<MiracleService.MiracRaw> allMiracles,
+        Action onValidationChanged,
+        Func<Alignment?> getAlignment,
+        Func<int> getPoints,
+        Action<MiracleListVm>? onExpandRequested)
     {
         Draft = draft;
         _allMiracles = allMiracles ?? Array.Empty<MiracleService.MiracRaw>();
         _onValidationChanged = onValidationChanged;
+        _getAlignment = getAlignment;
+        _getPoints = getPoints;
+        _onExpandRequested = onExpandRequested;
         _sphereLookup = BuildSphereLookup();
 
         foreach (var sphere in Enum.GetValues<SpiritualSpheres>())
             SphereFilterOptions.Add(EnumDisplayFormatter.Format(sphere));
 
-        AddEntryCommand = new Command(AddEntry, () => !IsReadOnly);
-        RemoveEntryCommand = new Command<MiracleEntryVm>(RemoveEntry, _ => !IsReadOnly);
+        AddSelectedCommand = new Command(AddSelectedMiracle);
+        RemoveEntryCommand = new Command<MiracleEntryVm>(RemoveEntry);
+        SaveListCommand = new Command(SaveList);
+        ToggleExpandedCommand = new Command(() => _onExpandRequested?.Invoke(this));
+        ReopenScripturesCommand = new Command(ReopenScriptures);
 
-        SelectedAlignmentFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
         SelectedSphereFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
         SelectedAdvancedFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
 
@@ -1043,47 +1565,64 @@ public sealed class MiracleListVm : INotifyPropertyChanged
             }
             Entries.Add(vm);
         }
-
-        if (Entries.Count == 0 && !IsReadOnly)
-            AddEntry();
     }
 
-    private void AddEntry()
+    private void AddSelectedMiracle()
     {
-        if (IsReadOnly)
+        if (!CanAddSelected || SelectedMiracleOption == null)
             return;
 
         var draft = new MiracleListEntryDraft();
         Draft.Entries.Add(draft);
         var vm = new MiracleEntryVm(draft, OnEntryChanged);
+        vm.SelectedMiracle = SelectedMiracleOption.Value;
         Entries.Add(vm);
+        SelectedMiracleOption = null;
+        UpdateFilteredOptions();
         UpdateValidation();
     }
 
     private void RemoveEntry(MiracleEntryVm? entry)
     {
-        if (entry == null || IsReadOnly) return;
+        if (entry == null || !CanEdit) return;
         Entries.Remove(entry);
         Draft.Entries.Remove(entry.Draft);
+        UpdateFilteredOptions();
         UpdateValidation();
     }
 
     private void OnEntryChanged()
     {
+        UpdateFilteredOptions();
         UpdateValidation();
+    }
+
+    private void SaveList()
+    {
+        if (!CanSaveList)
+            return;
+
+        IsSaved = true;
+    }
+
+    private void ReopenScriptures()
+    {
+        if (!CanReopenScriptures)
+            return;
+
+        IsSaved = false;
+        if (IsMinimized)
+            _onExpandRequested?.Invoke(this);
     }
 
     private void UpdateFilteredOptions()
     {
         var filtered = _allMiracles;
 
-        if (SelectedAlignmentFilters.Count > 0)
-        {
-            var alignSet = SelectedAlignmentFilters
-                .Select(NormalizeAlignment)
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
-            filtered = filtered.Where(m => alignSet.Contains(NormalizeAlignment(m.alignment))).ToList();
-        }
+        var allowedAlignments = GetAllowedAlignmentTokens(_getAlignment(), lockTrueNeutral: true);
+        filtered = filtered
+            .Where(m => allowedAlignments.Contains(NormalizeAlignment(m.alignment)))
+            .ToList();
 
         if (SelectedSphereFilters.Count > 0)
         {
@@ -1145,6 +1684,76 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         return "neutral";
     }
 
+    private HashSet<string> GetAllowedAlignmentTokens(Alignment? alignment, bool lockTrueNeutral)
+    {
+        var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        if (!alignment.HasValue)
+        {
+            allowed.Add("good");
+            allowed.Add("neutral");
+            allowed.Add("evil");
+            return allowed;
+        }
+
+        var moral = alignment.Value.Moral;
+        var order = alignment.Value.Order;
+
+        if (moral == MoralAxis.Good)
+        {
+            allowed.Add("good");
+            allowed.Add("neutral");
+            return allowed;
+        }
+
+        if (moral == MoralAxis.Evil)
+        {
+            allowed.Add("evil");
+            allowed.Add("neutral");
+            return allowed;
+        }
+
+        if (order == OrderAxis.Lawful)
+        {
+            allowed.Add("good");
+            allowed.Add("neutral");
+            return allowed;
+        }
+
+        if (order == OrderAxis.Chaotic)
+        {
+            allowed.Add("evil");
+            allowed.Add("neutral");
+            return allowed;
+        }
+
+        // True Neutral: allow all, but optionally lock to the first non-neutral alignment chosen.
+        if (lockTrueNeutral)
+        {
+            var hasGood = Entries.Any(e => NormalizeAlignment(e.Draft.Alignment) == "good");
+            var hasEvil = Entries.Any(e => NormalizeAlignment(e.Draft.Alignment) == "evil");
+
+            if (hasGood && !hasEvil)
+            {
+                allowed.Add("good");
+                allowed.Add("neutral");
+                return allowed;
+            }
+
+            if (hasEvil && !hasGood)
+            {
+                allowed.Add("evil");
+                allowed.Add("neutral");
+                return allowed;
+            }
+        }
+
+        allowed.Add("good");
+        allowed.Add("neutral");
+        allowed.Add("evil");
+        return allowed;
+    }
+
     private Dictionary<string, string> BuildSphereLookup()
     {
         var lookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -1168,12 +1777,11 @@ public sealed class MiracleListVm : INotifyPropertyChanged
 
         foreach (var entry in Entries)
         {
-            var selected = entry.SelectedMiracle;
-            if (selected == null)
+            if (string.IsNullOrWhiteSpace(entry.Draft.Name))
                 continue;
 
-            var power = Math.Max(0, selected.Value.Power);
-            var alignment = NormalizeAlignment(selected.Value.Alignment);
+            var power = Math.Max(0, entry.Draft.Power);
+            var alignment = NormalizeAlignment(entry.Draft.Alignment);
 
             if (alignment == "good")
                 good += power;
@@ -1182,11 +1790,12 @@ public sealed class MiracleListVm : INotifyPropertyChanged
             else
                 neutral += power;
 
-            if (selected.Value.IsAdvanced)
+            if (entry.Draft.IsAdvanced)
             {
                 advanced += power;
-                if (!string.IsNullOrWhiteSpace(selected.Value.Sphere))
-                    advancedSpheres.Add(selected.Value.Sphere);
+                var sphere = MapSphereLabel(entry.Draft.Sphere);
+                if (!string.IsNullOrWhiteSpace(sphere))
+                    advancedSpheres.Add(sphere);
             }
         }
 
@@ -1203,38 +1812,74 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         Raise(nameof(UnselectedWidth));
 
         var hasMixed = good > 0 && evil > 0;
-        var overTotal = TotalPoints > MaxListPower;
-        var overAdvanced = AdvancedPoints > MaxAdvancedPower;
-        var tooManyAdvancedSpheres = advancedSpheres.Count > 1;
-        var needsNeutralChoice = good <= 10 && evil <= 10 && (good > 0 || evil > 0);
-        var hasNeutralMismatch = needsNeutralChoice && string.IsNullOrWhiteSpace(Draft.NeutralAlignmentChoice);
-        var neutralChoiceMismatch = false;
-        if (needsNeutralChoice && !string.IsNullOrWhiteSpace(Draft.NeutralAlignmentChoice))
-        {
-            var choice = NormalizeAlignment(Draft.NeutralAlignmentChoice);
-            neutralChoiceMismatch = (good > 0 && choice != "good") || (evil > 0 && choice != "evil");
-        }
 
         var messages = new List<string>();
         if (hasMixed)
             messages.Add("Cannot mix Good and Evil miracles in the same list.");
-        if (overTotal)
-            messages.Add($"Exceeds {MaxListPower} spirit limit.");
-        if (overAdvanced)
-            messages.Add($"Advanced miracles exceed {MaxAdvancedPower} spirit limit.");
-        if (tooManyAdvancedSpheres)
-            messages.Add("Advanced miracles must be from a single Sphere.");
-        if (hasNeutralMismatch)
-            messages.Add("Pick Light or Darkness alignment for this neutral list.");
-        if (neutralChoiceMismatch)
-            messages.Add("Neutral alignment choice must match selected aligned miracles.");
+        if (IsScriptures)
+        {
+            ScripturesAllowed = GetScriptureTablesReached(_getPoints());
+            if (ScripturesUsed > ScripturesAllowed)
+                messages.Add($"Exceeds scriptures allowed ({ScripturesAllowed}).");
+
+            ShowNeutralAlignmentChoice = false;
+        }
+        else
+        {
+            ScripturesAllowed = 0;
+
+            var overTotal = TotalPoints > MaxListPower;
+            var overAdvanced = AdvancedPoints > MaxAdvancedPower;
+            var tooManyAdvancedSpheres = advancedSpheres.Count > 1;
+            var needsNeutralChoice = good <= 10 && evil <= 10 && (good > 0 || evil > 0);
+            var hasNeutralMismatch = needsNeutralChoice && string.IsNullOrWhiteSpace(Draft.NeutralAlignmentChoice);
+            var neutralChoiceMismatch = false;
+            if (needsNeutralChoice && !string.IsNullOrWhiteSpace(Draft.NeutralAlignmentChoice))
+            {
+                var choice = NormalizeAlignment(Draft.NeutralAlignmentChoice);
+                neutralChoiceMismatch = (good > 0 && choice != "good") || (evil > 0 && choice != "evil");
+            }
+
+            if (overTotal)
+                messages.Add($"Exceeds {MaxListPower} spirit limit.");
+            if (overAdvanced)
+                messages.Add($"Advanced miracles exceed {MaxAdvancedPower} spirit limit.");
+            if (tooManyAdvancedSpheres)
+                messages.Add("Advanced miracles must be from a single Sphere.");
+            if (hasNeutralMismatch)
+                messages.Add("Pick Light or Darkness alignment for this neutral list.");
+            if (neutralChoiceMismatch)
+                messages.Add("Neutral alignment choice must match selected aligned miracles.");
+
+            ShowNeutralAlignmentChoice = needsNeutralChoice;
+        }
 
         ValidationMessage = string.Join(" ", messages);
         HasValidationError = messages.Count > 0;
-        ShowNeutralAlignmentChoice = needsNeutralChoice;
 
         Raise(nameof(EffectiveAlignment));
+        Raise(nameof(CanSaveList));
+        Raise(nameof(CanAddSelected));
+        Raise(nameof(ScripturesUsed));
+        Raise(nameof(ScripturesRemaining));
+        Raise(nameof(ScripturesProgressText));
         _onValidationChanged();
+    }
+
+    public static int GetScriptureTablesReached(int points)
+    {
+        var thresholds = new[]
+        {
+            0, 200, 250, 275, 450, 600, 650, 1000, 1500, 3000, 5250, 7500, 10000
+        };
+
+        return thresholds.Count(t => points >= t);
+    }
+
+    public void RefreshExternalLimits()
+    {
+        UpdateFilteredOptions();
+        UpdateValidation();
     }
 
     public bool IsAlignmentCompatible(Alignment? alignment)
@@ -1245,17 +1890,16 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         if (!alignment.HasValue)
             return true;
 
-        var moral = alignment.Value.Moral;
-        var effective = NormalizeAlignment(EffectiveAlignment);
+        var allowed = GetAllowedAlignmentTokens(alignment, lockTrueNeutral: true);
+        foreach (var entry in Entries)
+        {
+            if (string.IsNullOrWhiteSpace(entry.Draft.Name))
+                continue;
 
-        if (effective == "neutral")
-            return true;
-
-        if (effective == "good")
-            return moral == MoralAxis.Good || moral == MoralAxis.Neutral;
-
-        if (effective == "evil")
-            return moral == MoralAxis.Evil || moral == MoralAxis.Neutral;
+            var token = NormalizeAlignment(entry.Draft.Alignment);
+            if (!allowed.Contains(token))
+                return false;
+        }
 
         return true;
     }
@@ -1279,6 +1923,9 @@ public sealed class MiracleEntryVm : INotifyPropertyChanged
     private readonly Action _onChanged;
 
     public MiracleListEntryDraft Draft { get; }
+
+    public string DisplayText
+        => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} ({Draft.Power})";
 
     private MiracleOption? _selectedMiracle;
     public MiracleOption? SelectedMiracle
@@ -1305,6 +1952,7 @@ public sealed class MiracleEntryVm : INotifyPropertyChanged
                 Draft.IsAdvanced = value.Value.IsAdvanced;
             }
 
+            Raise(nameof(DisplayText));
             _onChanged();
         }
     }

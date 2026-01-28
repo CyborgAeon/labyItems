@@ -327,7 +327,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
             .Select(ev =>
             {
                 var option = new EvocationOption(ev.name, ev.power, ev.isAdvanced);
-                return new KeyValuePair<string, EvocationOption>($"{ev.name} ({ev.power}{(ev.isAdvanced ? " adv" : string.Empty)})", option);
+                return new KeyValuePair<string, EvocationOption>($"{ev.name} ({ev.power})", option);
             })
             .GroupBy(k => k.Key, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
@@ -338,14 +338,12 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     protected virtual string FormatSpellLabel(SpellOption option)
     {
-        var advSuffix = option.IsAdvanced ? " adv" : string.Empty;
-        return $"{option.Name} (lvl {option.Level}{advSuffix})";
+        return $"{option.Name} (lvl {option.Level})";
     }
 
     protected virtual string FormatMiracleLabel(MiracleOption option)
     {
-        var advSuffix = option.IsAdvanced ? " adv" : string.Empty;
-        return $"{option.Name} ({option.Power}{advSuffix})";
+        return $"{option.Name} ({option.Power})";
     }
 
     protected void OnLifeSelectionChanged(object sender, DictionarySelectionChangedEventArgs e)

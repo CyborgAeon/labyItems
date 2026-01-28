@@ -5,7 +5,11 @@ namespace labyItems.Models.Characters;
 public sealed class MiracleListDraft
 {
     public string Name { get; set; } = "Miracle List";
+    public string? SourceName { get; set; }
     public bool IsImported { get; set; }
+    public bool IsSaved { get; set; }
+    public bool IsMinimized { get; set; }
+    public bool IsScriptures { get; set; }
     public string? NeutralAlignmentChoice { get; set; }
     public List<MiracleListEntryDraft> Entries { get; set; } = new();
 }

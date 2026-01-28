@@ -14,7 +14,28 @@ public partial class MultiChipGroup : ContentView
     public MultiChipGroup()
     {
         InitializeComponent();
+        Container.Wrap = WrapMode;
         Rebuild();
+    }
+
+    public static readonly BindableProperty WrapModeProperty = BindableProperty.Create(
+        nameof(WrapMode),
+        typeof(FlexWrap),
+        typeof(MultiChipGroup),
+        FlexWrap.Wrap,
+        propertyChanged: OnWrapModeChanged
+    );
+
+    public FlexWrap WrapMode
+    {
+        get => (FlexWrap)GetValue(WrapModeProperty);
+        set => SetValue(WrapModeProperty, value);
+    }
+
+    private static void OnWrapModeChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (MultiChipGroup)bindable;
+        control.Container.Wrap = (FlexWrap)newValue;
     }
 
     public static readonly BindableProperty ItemsProperty = BindableProperty.Create(

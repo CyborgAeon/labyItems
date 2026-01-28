@@ -44,7 +44,9 @@ public class DictionarySearchBar<TValue> : ContentView
         {
             HorizontalOptions = LayoutOptions.FillAndExpand,
             Margin = new Thickness(0),
-            ClearButtonVisibility = ClearButtonVisibility.Never
+            ClearButtonVisibility = ClearButtonVisibility.Never,
+            IsEnabled = IsEnabled,
+            InputTransparent = !IsEnabled
         };
 
         _searchBar.Focused += OnSearchFocused;
@@ -100,6 +102,16 @@ public class DictionarySearchBar<TValue> : ContentView
         base.OnHandlerChanging(args);
         if (args.NewHandler == null)
             DictionaryOverlayRegistry.Unregister(_selfDismisser);
+    }
+
+    protected override void OnPropertyChanged(string? propertyName = null)
+    {
+        base.OnPropertyChanged(propertyName);
+        if (propertyName == nameof(IsEnabled))
+        {
+            _searchBar.IsEnabled = IsEnabled;
+            _searchBar.InputTransparent = !IsEnabled;
+        }
     }
 
     /// <summary>
@@ -189,6 +201,23 @@ public class DictionarySearchBar<TValue> : ContentView
         set => SetValue(PlaceholderTextProperty, value);
     }
 
+    public static readonly BindableProperty SelectionDisplayMemberPathProperty = BindableProperty.Create(
+        nameof(SelectionDisplayMemberPath),
+        typeof(string),
+        typeof(DictionarySearchBar<TValue>),
+        defaultValue: default(string)
+    );
+
+    /// <summary>
+    /// Optional property name on TValue used for the text shown in the entry after selection.
+    /// Useful when the dictionary display label includes metadata you don't want in the textbox.
+    /// </summary>
+    public string? SelectionDisplayMemberPath
+    {
+        get => (string?)GetValue(SelectionDisplayMemberPathProperty);
+        set => SetValue(SelectionDisplayMemberPathProperty, value);
+    }
+
     public static readonly BindableProperty SelectedValueProperty = BindableProperty.Create(
         nameof(SelectedValue),
         typeof(TValue?),
@@ -251,6 +280,9 @@ public class DictionarySearchBar<TValue> : ContentView
 
     private async void OnSearchFocused(object? sender, FocusEventArgs e)
     {
+        if (!IsEnabled)
+            return;
+
         if (RemoteSearchProvider != null)
             await RefreshFromRemoteAsync(string.Empty);
         else
@@ -262,6 +294,9 @@ public class DictionarySearchBar<TValue> : ContentView
 
     private void OnSearchUnfocused(object? sender, FocusEventArgs e)
     {
+        if (!IsEnabled)
+            return;
+
         // Always clear any dropdown overlay so it doesn't block other taps
         DismissLocalOverlay();
         _resultsView.IsVisible = false;
@@ -278,6 +313,9 @@ public class DictionarySearchBar<TValue> : ContentView
 
     private async void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
     {
+        if (!IsEnabled)
+            return;
+
         if (_suppressTextChanged)
             return;
 
@@ -311,6 +349,9 @@ public class DictionarySearchBar<TValue> : ContentView
 
     private void OnSearchCompleted(object? sender, EventArgs e)
     {
+        if (!IsEnabled)
+            return;
+
         CommitTextSelection(_searchBar.Text);
     }
 
@@ -351,9 +392,24 @@ public class DictionarySearchBar<TValue> : ContentView
 
         if (SelectedValue is TValue v)
         {
-            var label = FindLabelForValue(v);
-            SetSelectedTextInternal(label);
-            _searchBar.Text = label;
+            if (TryFindLabelForValue(v, out var label))
+            {
+                var displayText = GetSelectionDisplayText(v, label);
+                SetSelectedTextInternal(displayText);
+                _searchBar.Text = displayText;
+            }
+            else if (EqualityComparer<TValue>.Default.Equals(v, default))
+            {
+                SetSelectedTextInternal(string.Empty);
+                _searchBar.Text = string.Empty;
+            }
+            else
+            {
+                var fallback = FormatValue(v);
+                var displayText = GetSelectionDisplayText(v, fallback);
+                SetSelectedTextInternal(displayText);
+                _searchBar.Text = displayText;
+            }
         }
         else if (AllowCustomOptions && !string.IsNullOrWhiteSpace(SelectedText))
         {
@@ -402,8 +458,9 @@ public class DictionarySearchBar<TValue> : ContentView
         if (match != null)
         {
             SelectedValue = match.Value;
-            SetSelectedTextInternal(match.DisplayText);
-            _searchBar.Text = match.DisplayText;
+            var displayText = GetSelectionDisplayText(match.Value, match.DisplayText);
+            SetSelectedTextInternal(displayText);
+            _searchBar.Text = displayText;
         }
         else
         {
@@ -443,17 +500,21 @@ public class DictionarySearchBar<TValue> : ContentView
         }
     }
 
-    private string FindLabelForValue(TValue value)
+    private bool TryFindLabelForValue(TValue value, out string label)
     {
         var source = ItemsSource ?? _defaultOptions;
 
         foreach (var kvp in source)
         {
             if (EqualityComparer<TValue>.Default.Equals(kvp.Value, value))
-                return kvp.Key;
+            {
+                label = kvp.Key;
+                return true;
+            }
         }
 
-        return FormatValue(value);
+        label = string.Empty;
+        return false;
     }
 
     private Dictionary<string, TValue> BuildDefaultOptions()
@@ -535,13 +596,42 @@ public class DictionarySearchBar<TValue> : ContentView
         else
         {
             SelectedValue = result.Value;
-            SetSelectedTextInternal(result.DisplayText);
-            _searchBar.Text = result.DisplayText;
+            var displayText = GetSelectionDisplayText(result.Value, result.DisplayText);
+            SetSelectedTextInternal(displayText);
+            _searchBar.Text = displayText;
         }
 
         _suppressTextChanged = false;
         _searchBar.Unfocus();
         DismissLocalOverlay();
+    }
+
+    private string GetSelectionDisplayText(TValue value, string fallback)
+    {
+        if (!string.IsNullOrWhiteSpace(SelectionDisplayMemberPath))
+        {
+            var type = value?.GetType();
+            if (type != null)
+            {
+                var prop = type.GetProperty(SelectionDisplayMemberPath);
+                if (prop != null)
+                {
+                    var propValue = prop.GetValue(value);
+                    if (propValue != null)
+                        return propValue.ToString() ?? fallback;
+                }
+
+                var field = type.GetField(SelectionDisplayMemberPath);
+                if (field != null)
+                {
+                    var fieldValue = field.GetValue(value);
+                    if (fieldValue != null)
+                        return fieldValue.ToString() ?? fallback;
+                }
+            }
+        }
+
+        return fallback;
     }
 
     private class SearchResult

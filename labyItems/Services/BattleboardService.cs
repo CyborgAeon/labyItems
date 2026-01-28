@@ -1,4 +1,3 @@
-// using ClosedXML.Excel;
 using ClosedXML.Excel;
 using labyItems.Models.Characters;
 using System.Collections.Generic;
@@ -9,10 +8,39 @@ namespace labyItems.Services;
 public interface IBattleboardExportService
 {
     Task<string> ExportAsync(CharacterDraft draft, CancellationToken ct = default);
+    // Task<string> ExportPdfAsync(CharacterDraft draft, CancellationToken ct = default);
 }
 
 public sealed class BattleboardExportService : IBattleboardExportService
 {
+    // public async Task<string> ExportPdfAsync(CharacterDraft draft, CancellationToken ct = default)
+    // {
+    //     // 1) Generate the XLSX using your current template logic
+    //     var xlsxPath = await ExportAsync(draft, ct);
+
+    //     // 2) Convert XLSX -> PDF using Syncfusion renderer
+    //     await using var excelFileStream = File.OpenRead(xlsxPath);
+
+    //     using var excelEngine = new ExcelEngine();
+    //     var app = excelEngine.Excel;
+    //     app.DefaultVersion = ExcelVersion.Xlsx;
+
+    //     using var workbook = app.Workbooks.Open(excelFileStream);
+
+    //     using var renderer = new XlsIORenderer();
+    //     using PdfDocument pdfDocument = renderer.ConvertToPDF(workbook);
+
+    //     var pdfPath = Path.Combine(
+    //         FileSystem.CacheDirectory,
+    //         $"Battleboard_{Sanitize(draft.Name)}.pdf"
+    //     );
+
+    //     await using var pdfFileStream = File.Create(pdfPath);
+    //     pdfDocument.Save(pdfFileStream);
+
+    //     return pdfPath;
+    // }
+
     public async Task<string> ExportAsync(CharacterDraft draft, CancellationToken ct = default)
     {
         var pools = (draft.PowerPools ?? new Dictionary<string, int>())
