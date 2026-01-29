@@ -18,12 +18,19 @@ public static class ClassService
 
     private static Dictionary<string, CharacterClassRecord>? _cache;
 
-    public static Task<Dictionary<string, CharacterClassRecord>> GetAllAsync()
+    public static async Task<Dictionary<string, CharacterClassRecord>> GetAllAsync()
     {
-        if (_cache != null) return Task.FromResult(_cache);
+        if (_cache != null) return _cache;
 
         try
         {
+#if DEBUG
+            using var s = await FileSystem.OpenAppPackageFileAsync("people/classes.json");
+            using var r = new StreamReader(s);
+            var json = await r.ReadToEndAsync();
+            _cache = JsonSerializer.Deserialize<Dictionary<string, CharacterClassRecord>>(json, _jsonOptions)
+                     ?? new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+#else
             using var conn = ServiceHelper.OpenReadOnlyConnection();
             var rows = conn.Query<ClassRow>("SELECT name, data_json FROM classes ORDER BY name;");
             var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
@@ -40,6 +47,7 @@ public static class ClassService
             }
 
             _cache = dict;
+#endif
         }
         catch (Exception ex)
         {
@@ -47,7 +55,7 @@ public static class ClassService
             throw;
         }
 
-        return Task.FromResult(_cache);
+        return _cache;
     }
 
     private sealed class ClassRow

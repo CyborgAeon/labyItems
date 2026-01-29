@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Controls;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Pages.Characters;
 using labyItems.Services;
@@ -32,23 +33,17 @@ public sealed class WizardVm : INotifyPropertyChanged
     public CharacterDraft Draft { get; }
     private readonly IBattleboardExportService _exportService;
     private readonly Func<Task>? _onFinished;
+    private readonly WizardFlowStateMachine _flow;
 
-    public ObservableCollection<StepItem> StepSteps { get; } = new()
-    {
-        new StepItem { Id = 1, Label = "Race/Class" },
-        new StepItem { Id = 2, Label = "Specialise" },
-        new StepItem { Id = 3, Label = "Guilds" },
-        new StepItem { Id = 4, Label = "Details" },
-        new StepItem { Id = 5, Label = "Review" },
-    };
+    public ObservableCollection<StepItem> StepSteps { get; } = new();
 
     public ObservableCollection<int?> ArmourLayers { get; } = new() { 0 };
 
-    private int _currentStep;
+    private int _currentStep = -1;
     public int CurrentStep
     {
         get => _currentStep;
-        set
+        private set
         {
             if (!Set(ref _currentStep, value)) return;
             UpdateStepView();
@@ -73,7 +68,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         get
         {
             if (CurrentStep >= StepSteps.Count - 1) return true;
-            return CanNavigateToStep(CurrentStep + 1);
+            return _flow.CanEnter(CurrentStep + 1);
         }
     }
 
@@ -119,7 +114,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         Draft = draft ?? new CharacterDraft();
         _onFinished = onFinished;
         _exportService = new BattleboardExportService();
-        BackCommand = new Command(OnBack);
+        BackCommand = new Command(async () => await OnBackAsync());
         NextCommand = new Command(async () => await OnNextAsync());
         StepClickCommand = new Command<int>(async i => await TryGoToStepAsync(i));
         ExportToBattleboardCommand = new Command(async () => await ExportBattleboardAsync(), () => Draft.IsRaceAndClassSelected);
@@ -132,13 +127,52 @@ public sealed class WizardVm : INotifyPropertyChanged
         // NEW: optional guild selection step
         GuildsVm = new GuildsVm(Draft, NotifyGatingChanged, CharacterBuilderVm.GetNonGuildAlignmentRules, CharacterBuilderVm.RefreshDraftAbilitiesAsync);
 
+        _flow = new WizardFlowStateMachine(BuildSteps());
+        foreach (var step in _flow.Steps)
+            StepSteps.Add(step.StepItem);
+
         UpdateArmourUiFromDraft();
 
-        CurrentStep = 0;
-        UpdateStepView();
+        CurrentStep = _flow.CurrentStep;
 
         MainThread.BeginInvokeOnMainThread(async () => await SyncDraftStateAsync());
     }
+
+    private IReadOnlyList<WizardStepDefinition> BuildSteps()
+        => new List<WizardStepDefinition>
+        {
+            new(
+                index: 0,
+                label: "Race/Class",
+                canEnter: () => true,
+                createView: () => new CharacterBuilder(CharacterBuilderVm)),
+            new(
+                index: 1,
+                label: "Specialise",
+                canEnter: () => WizardStepRules.CanEnterSpecialisation(Draft),
+                createView: () => new CharacterSpecialisation(CharacterBuilderVm)),
+            new(
+                index: 2,
+                label: "Guilds",
+                canEnter: () => WizardStepRules.CanEnterGuilds(Draft, CharacterBuilderVm.SpecialisationVm),
+                createView: () => new Guilds(GuildsVm),
+                onEnterAsync: async () => await GuildsVm.ReloadAsync()),
+            new(
+                index: 3,
+                label: "Details",
+                canEnter: () => WizardStepRules.CanEnterDetails(Draft, CharacterBuilderVm.SpecialisationVm, GuildsVm),
+                createView: () => new CharacterInfoView(this),
+                onEnterAsync: () =>
+                {
+                    UpdateArmourUiFromDraft();
+                    return Task.CompletedTask;
+                }),
+            new(
+                index: 4,
+                label: "Review",
+                canEnter: () => WizardStepRules.CanEnterReview(Draft, CharacterBuilderVm.SpecialisationVm, GuildsVm),
+                createView: () => new CharacterReviewView(this))
+        };
 
     public async Task RefreshReviewAsync()
     {
@@ -320,10 +354,10 @@ public sealed class WizardVm : INotifyPropertyChanged
         SaveToWalletCommand?.ChangeCanExecute();
     }
 
-    private void OnBack()
+    private async Task OnBackAsync()
     {
         if (!CanGoBack) return;
-        CurrentStep--;
+        await TryGoToStepAsync(CurrentStep - 1);
     }
 
     private async Task OnNextAsync()
@@ -337,10 +371,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             return;
         }
 
-        var target = CurrentStep + 1;
-        if (!CanNavigateToStep(target)) return;
-        await SyncDraftStateAsync();
-        CurrentStep = target;
+        await TryGoToStepAsync(CurrentStep + 1);
     }
 
     private async Task ContinueToAdvancementAsync()
@@ -371,59 +402,24 @@ public sealed class WizardVm : INotifyPropertyChanged
     {
         if (targetIndex == CurrentStep) return;
 
-        if (targetIndex < CurrentStep)
-        {
-            CurrentStep = targetIndex;
-            return;
-        }
+        if (targetIndex > CurrentStep)
+            await SyncDraftStateAsync();
 
-        if (!CanNavigateToStep(targetIndex)) return;
-        await SyncDraftStateAsync();
-        CurrentStep = targetIndex;
-    }
+        var moved = await _flow.TryTransitionAsync(targetIndex);
+        if (!moved) return;
 
-    private bool CanNavigateToStep(int targetIndex)
-    {
-        if (targetIndex < 0 || targetIndex >= StepSteps.Count) return false;
-
-        if (targetIndex == 0) return true;
-
-        return targetIndex switch
-        {
-            1 => Draft.IsRaceAndClassSelected,
-            2 => Draft.IsRaceAndClassSelected && IsStep2Valid(),
-            3 => Draft.IsRaceAndClassSelected && IsStep2Valid() && GuildsVm.IsComplete,
-            4 => Draft.IsRaceAndClassSelected && IsStep2Valid() && GuildsVm.IsComplete,
-            _ => false
-        };
-    }
-
-    private bool IsStep2Valid()
-    {
-        return CharacterBuilderVm.SpecialisationVm.IsComplete;
+        CurrentStep = _flow.CurrentStep;
     }
 
     private void UpdateStepView()
     {
-        if (CurrentStep == 2)
+        if (CurrentStep < 0 || CurrentStep >= _flow.Steps.Count)
         {
-            MainThread.BeginInvokeOnMainThread(async () => { await GuildsVm.ReloadAsync(); });
-        }
-        else if (CurrentStep == 3)
-        {
-            UpdateArmourUiFromDraft();
+            CurrentStepView = BuildPlaceholder("Unknown step");
+            return;
         }
 
-        CurrentStepView = CurrentStep switch
-        {
-            0 => new CharacterBuilder(CharacterBuilderVm),
-            1 => new CharacterSpecialisation(CharacterBuilderVm),
-
-            2 => new Guilds(GuildsVm),
-            3 => new CharacterInfoView(this),
-            4 => new CharacterReviewView(this),
-            _ => BuildPlaceholder("Unknown step")
-        };
+        CurrentStepView = _flow.Steps[CurrentStep].CreateView();
     }
 
     private static View BuildPlaceholder(string text)
@@ -452,26 +448,20 @@ public sealed class WizardVm : INotifyPropertyChanged
         var specVm = CharacterBuilderVm?.SpecialisationVm;
         if (specVm != null)
         {
-            foreach (var group in specVm.Groups)
+            foreach (var (group, slot) in LoopHelper.Flatten(specVm.Groups, g => g.Slots))
             {
-                if (group == null)
+                if (group == null || slot == null || !slot.HasSelection)
+                    continue;
+
+                var selection = FormatSlotSelection(slot);
+                if (string.IsNullOrWhiteSpace(selection))
                     continue;
 
                 var multipleSlots = group.Slots.Count > 1;
-                foreach (var slot in group.Slots)
-                {
-                    if (slot == null || !slot.HasSelection)
-                        continue;
-
-                    var selection = FormatSlotSelection(slot);
-                    if (string.IsNullOrWhiteSpace(selection))
-                        continue;
-
-                    lines.Add(multipleSlots
-                        ? $"{group.Title} ({slot.LevelLabel}): {selection}"
-                        : $"{group.Title}: {selection}");
-                    includedKeys.Add(group.Title);
-                }
+                lines.Add(multipleSlots
+                    ? $"{group.Title} ({slot.LevelLabel}): {selection}"
+                    : $"{group.Title}: {selection}");
+                includedKeys.Add(group.Title);
             }
 
             foreach (var mapped in specVm.MappedSpecialisations)

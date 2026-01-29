@@ -12,6 +12,17 @@ using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Characters;
 
+public sealed record SpecialisationGroupConfig(
+    string Title,
+    IEnumerable<int> Levels,
+    IOptionSource OptionSource,
+    Action OnAnySelectionChanged,
+    Func<IReadOnlyList<string>, string?>? SelectionValidator = null,
+    bool IsOptional = false,
+    Dictionary<string, AbilityCustomisation>? OptionCustomisations = null,
+    Func<AbilityCustomisation?, Dictionary<string, string>?>? CustomisationOptionsProvider = null,
+    bool HideAbilityPickerWhenSingleOption = true);
+
 public sealed class SpecialisationGroupVm : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -33,6 +44,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     private readonly Func<IReadOnlyList<string>, string?>? _selectionValidator;
     private readonly Dictionary<string, AbilityCustomisation> _optionCustomisations;
     private readonly Func<AbilityCustomisation?, Dictionary<string, string>?>? _customisationOptionsProvider;
+    private readonly IOptionSource _optionSource;
     private bool _isOptional;
     private bool _isVisible = true;
 
@@ -159,128 +171,46 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     public bool UseWardPactEnum { get; }
 
     public SpecialisationGroupVm(
-        string title,
-        IEnumerable<int> levels,
-        List<string> optionNames,
-        Dictionary<int, string> initiallySelectedByLevel,
-        Action onAnySelectionChanged,
-        bool useWardPactEnum,
-        bool useMagicColourEnum = false,
-        bool useVivomancerColourEnum = false,
-        bool useDictionarySearch = false,
-        IEnumerable<MagicColours>? magicColourOptions = null,
-        IEnumerable<VivomancerColours>? vivomancerColourOptions = null,
-        Func<IReadOnlyList<string>, string?>? selectionValidator = null,
-        bool isOptional = false,
-        Dictionary<string, AbilityCustomisation>? optionCustomisations = null,
-        Func<AbilityCustomisation?, Dictionary<string, string>?>? customisationOptionsProvider = null,
-        bool hideAbilityPickerWhenSingleOption = false)
+        SpecialisationGroupConfig cfg,
+        Dictionary<int, string>? initiallySelectedByLevel = null)
     {
-        Title = title;
-        UseWardPactEnum = useWardPactEnum;
-        _useMagicColourEnum = useMagicColourEnum;
-        _useVivomancerColourEnum = useVivomancerColourEnum;
-        _selectionValidator = selectionValidator;
-        _onAnySelectionChanged = onAnySelectionChanged;
-        _isOptional = isOptional;
-        _customisationOptionsProvider = customisationOptionsProvider;
-        _optionCustomisations = optionCustomisations != null
-            ? new Dictionary<string, AbilityCustomisation>(optionCustomisations, StringComparer.OrdinalIgnoreCase)
+        Title = cfg.Title;
+        _onAnySelectionChanged = cfg.OnAnySelectionChanged;
+        _selectionValidator = cfg.SelectionValidator;
+        _isOptional = cfg.IsOptional;
+        _customisationOptionsProvider = cfg.CustomisationOptionsProvider;
+        _optionCustomisations = cfg.OptionCustomisations != null
+            ? new Dictionary<string, AbilityCustomisation>(cfg.OptionCustomisations, StringComparer.OrdinalIgnoreCase)
             : new Dictionary<string, AbilityCustomisation>(StringComparer.OrdinalIgnoreCase);
 
-        if (_useMagicColourEnum)
-        {
-            var opts = magicColourOptions?.ToList() ?? Enum.GetValues<MagicColours>().ToList();
-            _allOptionNames = opts
-                .Select(EnumDisplayFormatter.Format)
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
-                .ToList();
-        }
-        else if (_useVivomancerColourEnum)
-        {
-            var opts = vivomancerColourOptions?.ToList() ?? Enum.GetValues<VivomancerColours>().ToList();
-            _allOptionNames = opts
-                .Select(EnumDisplayFormatter.Format)
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
-                .ToList();
-        }
-        else
-        {
-            _allOptionNames = optionNames
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
-                .ToList();
-        }
+        _optionSource = cfg.OptionSource;
+        _useMagicColourEnum = _optionSource.EnumType == typeof(MagicColours);
+        _useVivomancerColourEnum = _optionSource.EnumType == typeof(VivomancerColours);
+        UseWardPactEnum = _optionSource.Mode == SlotOptionMode.WardPactEnum;
+        _allOptionNames = _optionSource.GetOptionNames().ToList();
 
-        ToggleExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
-
-        foreach (var lvl in levels.OrderBy(x => x))
+        // Build slots
+        foreach (var lvl in cfg.Levels.OrderBy(x => x))
         {
+            initiallySelectedByLevel ??= new Dictionary<int, string>();
             initiallySelectedByLevel.TryGetValue(lvl, out var pre);
 
             var slot = new SpecialisationSlotVm(
-                lvl,
-                useWardPactEnum,
-                _useMagicColourEnum,
-                _useVivomancerColourEnum,
-                useDictionarySearch,
-                () => OnSlotChanged(),
-                ResolveCustomisation,
-                _customisationOptionsProvider,
-                hideAbilityPickerWhenSingleOption);
+                level: lvl,
+                mode: _optionSource.Mode,
+                enumType: _optionSource.EnumType,
+                onChanged: OnSlotChanged,
+                customisationResolver: ResolveCustomisation,
+                customisationOptionsProvider: _customisationOptionsProvider,
+                hideAbilityPickerWhenSingleOption: cfg.HideAbilityPickerWhenSingleOption);
 
-            if (_useMagicColourEnum)
-            {
-                var allowed = magicColourOptions?.ToList() ?? Enum.GetValues<MagicColours>().ToList();
-                slot.ConfigureMagicColours(allowed);
-                slot.SetOptionsSource(() => slot.MagicColourOptionNames);
-                if (!string.IsNullOrWhiteSpace(pre))
-                {
-                    var match = allowed.FirstOrDefault(m => string.Equals(EnumDisplayFormatter.Format(m), pre, StringComparison.OrdinalIgnoreCase));
-                    slot.SelectedMagicColour = match;
-                }
-            }
-            else if (_useVivomancerColourEnum)
-            {
-                var allowed = vivomancerColourOptions?.ToList() ?? Enum.GetValues<VivomancerColours>().ToList();
-                slot.ConfigureVivomancerColours(allowed);
-                slot.SetOptionsSource(() => slot.VivomancerColourOptionNames);
-                if (!string.IsNullOrWhiteSpace(pre))
-                {
-                    var match = allowed.FirstOrDefault(m => string.Equals(EnumDisplayFormatter.Format(m), pre, StringComparison.OrdinalIgnoreCase));
-                    slot.SelectedVivomancerColour = match;
-                }
-            }
-            else
-            {
-                slot.SetOptionsSource(() => OptionNames);
-
-                if (useWardPactEnum)
-                {
-                    if (!string.IsNullOrWhiteSpace(pre))
-                    {
-                        var match = WardPactOptions.Standard.FirstOrDefault(k => string.Equals(k.Key, pre, StringComparison.OrdinalIgnoreCase));
-                        if (!string.IsNullOrWhiteSpace(match.Key))
-                            slot.SelectedWardPact = match.Value;
-                    }
-                }
-                else
-                {
-                    if (!string.IsNullOrWhiteSpace(pre))
-                        slot.SelectedOption = pre;
-                }
-            }
-
+            _optionSource.ApplyToSlot(slot, pre);
             Slots.Add(slot);
         }
 
         UpdateValidation();
         RaiseComputed();
     }
-
     public void RefreshCustomisationOptions()
     {
         foreach (var slot in Slots)

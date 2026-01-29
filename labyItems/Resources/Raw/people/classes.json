@@ -104,8 +104,12 @@
       ],
       "7": [
         {
-          "Name": "1st Weapon Mastery O",
-          "Type": "Static"
+          "Name": "1st Weapon Mastery (O)",
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         }
       ],
       "8": [
@@ -288,7 +292,11 @@
       "5": [
         {
           "Name": "Weapon Mastery",
-          "Type": "Static"
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         }
       ],
       "6": [
@@ -531,8 +539,12 @@
       ],
       "3": [
         {
-          "Name": "Weapon Mastery O",
-          "Type": "Static"
+          "Name": "Weapon Mastery (O)",
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         }
       ],
       "4": [
@@ -616,8 +628,12 @@
       ],
       "3": [
         {
-          "Name": "Weapon Mastery",
-          "Type": "Static"
+          "Name": "1st Weapon Mastery",
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         },
         {
           "Name": "2 DAC",
@@ -642,8 +658,12 @@
       ],
       "8": [
         {
-          "Name": "Weapon Mastery",
-          "Type": "Static"
+          "Name": "2nd Weapon Mastery",
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         },
         {
           "Name": "4 DAC",
@@ -934,8 +954,12 @@
       ],
       "7": [
         {
-          "Name": "Weapon Mastery O",
-          "Type": "Static"
+          "Name": "Weapon Mastery (O)",
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         },
         {
           "Name": "Half effect Natural Cold",
@@ -1301,7 +1325,11 @@
       "5": [
         {
           "Name": "Weapon Mastery",
-          "Type": "Static"
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         }
       ],
       "6": [
@@ -2114,8 +2142,12 @@
       ],
       "8": [
         {
-          "Name": "1st Weapon Mastery O",
-          "Type": "Static"
+          "Name": "1st Weapon Mastery (O)",
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         },
         {
           "Name": "Specialist Scout skill",
@@ -2218,8 +2250,12 @@
     ],
     "8": [
       {
-        "Name": "1st weapon mastery O",
-        "Type": "Static"
+        "Name": "1st weapon mastery (O)",
+        "Type": "Static",
+        "Customisation": {
+          "OptionEnum": "WeaponType",
+          "CustomValuesPermitted": true
+        }
       },
       {
         "Name": "Specialist Scout skill",
@@ -3420,7 +3456,11 @@
       "8": [
         {
           "Name": "1st Weapon Mastery (O)",
-          "Type": "Static"
+          "Type": "Static",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
         }
       ]
     },

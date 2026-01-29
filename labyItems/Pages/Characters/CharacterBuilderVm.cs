@@ -12,6 +12,7 @@ using labyItems.Models.Characters;
 using labyItems.Models.DTOs;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
+using labyItems.Helpers;
 using Microsoft.Maui.ApplicationModel;
 using ServiceCharacterClassRecord = labyItems.Services.CharacterClassRecord;
 
@@ -146,8 +147,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             if (record == null) continue;
 
             var peopleTypes = NormalizePeopleTypes(record.PeopleType);
-            foreach (var t in peopleTypes)
-                types.Add(t);
+            types.UnionWith(peopleTypes);
 
             var displayPeopleType = FormatPeopleTypes(peopleTypes);
             var primaryPeopleType = SelectPrimaryPeopleType(peopleTypes);
@@ -475,6 +475,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var raceForFiltering = selectedRace;
 
         var classes = await LifeScalesService.GetClassesForRaceAsync(raceForFiltering);
+        if (classes.Count == 0)
+        {
+            _allowedClassKeysForSelectedRace = null;
+            _allowedClassKeysForRace = null;
+            return;
+        }
 
         _allowedClassKeysForSelectedRace = classes
             .Select(LifeScalesService.NormalizeKey)
@@ -745,13 +751,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                     if (string.IsNullOrWhiteSpace(existing.Effect) && !string.IsNullOrWhiteSpace(ability.Effect))
                         existing.Effect = ability.Effect;
 
-                    foreach (var prereq in ability.PreReqs)
-                        if (!existing.PreReqs.Contains(prereq))
-                            existing.PreReqs.Add(prereq);
-
-                    foreach (var g in ability.GuildOverrides)
-                        if (!existing.GuildOverrides.Contains(g))
-                            existing.GuildOverrides.Add(g);
+                    CollectionHelper.AddDistinct(existing.PreReqs, ability.PreReqs);
+                    CollectionHelper.AddDistinct(existing.GuildOverrides, ability.GuildOverrides);
 
                     continue;
                 }
@@ -950,9 +951,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             if (!lookup.TryGetValue(key, out var list))
                 continue;
 
-            foreach (var target in list)
-                ApplyAbilityUpdate(target, update);
+            ApplyAbilityUpdates(list, update);
         }
+    }
+
+    private static void ApplyAbilityUpdates(IEnumerable<AbilityDraft> targets, AbilityDraft update)
+    {
+        foreach (var target in targets)
+            ApplyAbilityUpdate(target, update);
     }
 
     private static void ApplyAbilityUpdate(AbilityDraft target, AbilityDraft update)
@@ -1010,18 +1016,26 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             if (!IsArmourAbility(ability, out var values))
                 continue;
 
-            foreach (var kvp in values)
-            {
-                if (kvp.Value <= 0)
-                    continue;
-
-                var key = (source, kvp.Key);
-                if (!map.TryGetValue(key, out var current) || kvp.Value > current)
-                    map[key] = kvp.Value;
-            }
+            UpdateArmourMaxForAbility(map, source, values);
         }
 
         return map;
+    }
+
+    private static void UpdateArmourMaxForAbility(
+        Dictionary<(string Source, string Stat), int> map,
+        string source,
+        Dictionary<string, int> values)
+    {
+        foreach (var kvp in values)
+        {
+            if (kvp.Value <= 0)
+                continue;
+
+            var key = (source, kvp.Key);
+            if (!map.TryGetValue(key, out var current) || kvp.Value > current)
+                map[key] = kvp.Value;
+        }
     }
 
     private static bool IsMaxArmourForSource(
@@ -1356,15 +1370,23 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 continue;
 
             var option = entry.Options[idx];
-            foreach (var ability in option.Abilities ?? new List<AbilityDefinition>())
-            {
-                if (ability == null || string.IsNullOrWhiteSpace(ability.Name))
-                    continue;
+            AppendGuildBenefitOptionAbilities(list, option, guildName);
+        }
+    }
 
-                var parsed = AbilityDraftBuilder.ParseAbility(ability, null);
-                ApplyAbilitySource(parsed, $"Guild:{guildName}");
-                list.AddRange(parsed);
-            }
+    private static void AppendGuildBenefitOptionAbilities(
+        List<AbilityDraft> list,
+        GuildBenefitOption option,
+        string guildName)
+    {
+        foreach (var ability in option.Abilities ?? new List<AbilityDefinition>())
+        {
+            if (ability == null || string.IsNullOrWhiteSpace(ability.Name))
+                continue;
+
+            var parsed = AbilityDraftBuilder.ParseAbility(ability, null);
+            ApplyAbilitySource(parsed, $"Guild:{guildName}");
+            list.AddRange(parsed);
         }
     }
 
@@ -1657,27 +1679,37 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                     parsed = ParseArmourTokens(name);
             }
 
-            foreach (var kvp in parsed)
-            {
-                switch (kvp.Key.ToUpperInvariant())
-                {
-                    case "PAC":
-                        pac = Math.Max(pac, kvp.Value);
-                        break;
-                    case "DAC":
-                        dac = Math.Max(dac, kvp.Value);
-                        break;
-                    case "MAC":
-                        mac = Math.Max(mac, kvp.Value);
-                        break;
-                    case "SAC":
-                        sac = Math.Max(sac, kvp.Value);
-                        break;
-                }
-            }
+            ApplyParsedArmourValues(parsed, ref pac, ref dac, ref mac, ref sac);
         }
 
         return new ArmourValues(pac, dac, mac, sac, disallow);
+    }
+
+    private static void ApplyParsedArmourValues(
+        Dictionary<string, int> parsed,
+        ref int pac,
+        ref int dac,
+        ref int mac,
+        ref int sac)
+    {
+        foreach (var kvp in parsed)
+        {
+            switch (kvp.Key.ToUpperInvariant())
+            {
+                case "PAC":
+                    pac = Math.Max(pac, kvp.Value);
+                    break;
+                case "DAC":
+                    dac = Math.Max(dac, kvp.Value);
+                    break;
+                case "MAC":
+                    mac = Math.Max(mac, kvp.Value);
+                    break;
+                case "SAC":
+                    sac = Math.Max(sac, kvp.Value);
+                    break;
+            }
+        }
     }
 
     private static int GetMaxPacForTier(ArmourTier tier)
@@ -1892,8 +1924,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return 0;
     }
 
-    private static string ExtractPowerBase(labyItems.Services.CharacterClassRecord record)
+    private static string ExtractPowerBase(labyItems.Services.CharacterClassRecord? record)
     {
+        if (record == null)
+            return "";
+
         var powerBase = record.Powerbase?.FirstOrDefault();
         if (!string.IsNullOrWhiteSpace(powerBase))
             return powerBase;

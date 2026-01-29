@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq;
-using System.Reflection;
 using labyItems.Controls;
 using labyItems.Controls.Pickers;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
+using labyItems.Helpers;
 
 namespace labyItems.Pages.Characters;
 
@@ -34,10 +34,11 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public int Level { get; }
     public string LevelLabel => $"Lvl {Level}";
 
-    public bool UseWardPactEnum { get; }
-    public bool UseMagicColourEnum { get; }
-    public bool UseVivomancerColourEnum { get; }
-    public bool UseDictionarySearch { get; }
+    public bool UseWardPactEnum => Mode == SlotOptionMode.WardPactEnum;
+    public bool UseDictionarySearch => Mode == SlotOptionMode.DictionarySearch;
+    public bool UseMagicColourEnum => Mode == SlotOptionMode.EnumPicker && EnumType == typeof(MagicColours);
+    public bool UseVivomancerColourEnum => Mode == SlotOptionMode.EnumPicker && EnumType == typeof(VivomancerColours);
+
     public bool HideAbilityPicker => _hideAbilityPickerWhenSingleOption && FilteredOptionNames.Count <= 1;
 
     private AbilityDefinition? _forcedAbilityDefinition;
@@ -197,26 +198,25 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     private bool _suppressSelectionSync;
 
     public SpecialisationSlotVm(
-        int level,
-        bool useWardPactEnum,
-        bool useMagicColourEnum,
-        bool useVivomancerColourEnum,
-        bool useDictionarySearch,
-        Action onChanged,
-        Func<string?, AbilityCustomisation?>? customisationResolver = null,
-        Func<AbilityCustomisation?, Dictionary<string, string>?>? customisationOptionsProvider = null,
-        bool hideAbilityPickerWhenSingleOption = false)
+     int level,
+     SlotOptionMode mode,
+     Type? enumType,
+     Action onChanged,
+     Func<string?, AbilityCustomisation?>? customisationResolver = null,
+     Func<AbilityCustomisation?, Dictionary<string, string>?>? customisationOptionsProvider = null,
+     bool hideAbilityPickerWhenSingleOption = true)
     {
         Level = level;
-        UseWardPactEnum = useWardPactEnum;
-        UseMagicColourEnum = useMagicColourEnum;
-        UseVivomancerColourEnum = useVivomancerColourEnum;
-        UseDictionarySearch = useDictionarySearch;
+        Mode = mode;
+        EnumType = enumType;
         _onChanged = onChanged;
         _customisationResolver = customisationResolver;
         _customisationOptionsProvider = customisationOptionsProvider;
         _hideAbilityPickerWhenSingleOption = hideAbilityPickerWhenSingleOption;
     }
+
+    public SlotOptionMode Mode { get; }
+    public Type? EnumType { get; }
 
     public void SetOptionsSource(Func<IReadOnlyList<string>> getFilteredOptions)
     {
@@ -530,23 +530,5 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     }
 
     private static Type? FindEnumTypeByName(string enumName)
-    {
-        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
-        {
-            Type[] types;
-            try { types = asm.GetTypes(); }
-            catch (ReflectionTypeLoadException ex)
-            {
-                types = ex.Types.Where(t => t != null).Cast<Type>().ToArray();
-            }
-
-            foreach (var t in types)
-            {
-                if (t.IsEnum && string.Equals(t.Name, enumName, StringComparison.OrdinalIgnoreCase))
-                    return t;
-            }
-        }
-
-        return null;
-    }
+        => ReflectionHelper.FindEnumTypeByName(enumName);
 }

@@ -4,6 +4,21 @@ using SQLite;
 
 namespace labyItems.Services;
 
+public sealed class EarthPowerLookupService : ILookupService
+{
+    public Task<IReadOnlyList<LookupItem>> GetAllAsync()
+        => SearchAsync(query: "");
+
+    public async Task<IReadOnlyList<LookupItem>> SearchAsync(string query)
+    {
+        var hits = await EarthPowerService.SearchAsync(query, includeAdvanced: true, maxPower: null);
+        return hits
+            .Select(e => new LookupItem(Key: e.name, Display: $"{e.name} (P{e.power})"))
+            .ToList();
+    }
+}
+
+
 public static class EarthPowerService
 {
     public class EvocRaw

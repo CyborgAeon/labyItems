@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -19,11 +20,18 @@ public static class PeopleService
 
     private static Dictionary<string, PeopleRecord>? _cache;
 
-    public static Task<Dictionary<string, PeopleRecord>> GetAllAsync()
+    public static async Task<Dictionary<string, PeopleRecord>> GetAllAsync()
     {
-        if (_cache != null) return Task.FromResult(_cache);
+        if (_cache != null) return _cache;
         try
         {
+#if DEBUG
+            using var s = await FileSystem.OpenAppPackageFileAsync("people/people.json");
+            using var r = new StreamReader(s);
+            var json = await r.ReadToEndAsync();
+            _cache = JsonSerializer.Deserialize<Dictionary<string, PeopleRecord>>(json, _jsonOptions)
+                     ?? new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase);
+#else
             using var conn = ServiceHelper.OpenReadOnlyConnection();
             var rows = conn.Query<PeopleRow>("SELECT name, data_json FROM races ORDER BY name;");
             var dict = new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase);
@@ -40,6 +48,7 @@ public static class PeopleService
             }
 
             _cache = dict;
+#endif
         }
         catch (Exception ex)
         {
@@ -47,7 +56,7 @@ public static class PeopleService
             throw;
         }
 
-        return Task.FromResult(_cache);
+        return _cache;
     }
 }
 

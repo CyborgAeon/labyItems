@@ -252,9 +252,6 @@ public partial class StepIndicator : ContentView
             var stepIndex = i;
             bubble.Clicked += async (_, __) =>
             {
-                // Keep your existing rule: can only click current or previous
-                if (stepIndex > CurrentStep) return;
-
                 await overlay.ScaleTo(0.97, 70, Easing.CubicInOut);
                 await overlay.ScaleTo(1.00, 70, Easing.CubicInOut);
 
@@ -305,6 +302,7 @@ public partial class StepIndicator : ContentView
 
         var secondary = TryGetColor("SecondaryColor", Colors.Gainsboro);
         var mutedText = TryGetColor("MutedForegroundColor", Colors.Gray);
+        var isClickable = StepClickCommand != null || StepClicked != null;
 
         for (int i = 0; i < _items.Count; i++)
         {
@@ -317,7 +315,6 @@ public partial class StepIndicator : ContentView
 
             var isCompleted = v.Index < CurrentStep;
             var isCurrent = v.Index == CurrentStep;
-            var isClickable = v.Index <= CurrentStep;
 
             if (isCompleted || isCurrent)
             {

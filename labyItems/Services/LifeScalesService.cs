@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Maui.Storage;
 using SQLite;
 
 namespace labyItems.Services;
@@ -10,33 +13,54 @@ public static class LifeScalesService
 {
     private static Dictionary<string, Dictionary<string, List<int[]>>>? _cache;
 
-    public static Task<Dictionary<string, Dictionary<string, List<int[]>>>> GetAllAsync()
+    public static async Task<Dictionary<string, Dictionary<string, List<int[]>>>> GetAllAsync()
     {
-        if (_cache != null) return Task.FromResult(_cache);
+        if (_cache != null) return _cache;
         try
         {
-            using var conn = ServiceHelper.OpenReadOnlyConnection();
-            var rows = conn.Query<LifeScaleRow>("SELECT race, class, idx, body, loc FROM lifescales ORDER BY race, class, idx;");
-            var dict = new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var row in rows)
+            static Dictionary<string, Dictionary<string, List<int[]>>> LoadFromDb()
             {
-                if (!dict.TryGetValue(row.race, out var classMap))
+                using var conn = ServiceHelper.OpenReadOnlyConnection();
+                var rows = conn.Query<LifeScaleRow>("SELECT race, class, idx, body, loc FROM lifescales ORDER BY race, class, idx;");
+                var dict = new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var row in rows)
                 {
-                    classMap = new Dictionary<string, List<int[]>>(StringComparer.OrdinalIgnoreCase);
-                    dict[row.race] = classMap;
+                    if (!dict.TryGetValue(row.race, out var classMap))
+                    {
+                        classMap = new Dictionary<string, List<int[]>>(StringComparer.OrdinalIgnoreCase);
+                        dict[row.race] = classMap;
+                    }
+
+                    if (!classMap.TryGetValue(row.@class, out var list))
+                    {
+                        list = new List<int[]>();
+                        classMap[row.@class] = list;
+                    }
+
+                    list.Add(new[] { row.body, row.loc });
                 }
 
-                if (!classMap.TryGetValue(row.@class, out var list))
-                {
-                    list = new List<int[]>();
-                    classMap[row.@class] = list;
-                }
-
-                list.Add(new[] { row.body, row.loc });
+                return dict;
             }
 
-            _cache = dict;
+#if DEBUG
+            try
+            {
+                using var s = await FileSystem.OpenAppPackageFileAsync("people/lifescales.json");
+                using var r = new StreamReader(s);
+                var json = await r.ReadToEndAsync();
+                _cache = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<int[]>>>>(json)
+                         ?? new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
+            }
+            catch (Exception ex)
+            {
+                ServiceHelper.LogDbError("Get lifescales (debug json)", ex);
+                _cache = LoadFromDb();
+            }
+#else
+            _cache = LoadFromDb();
+#endif
         }
         catch (Exception ex)
         {
@@ -44,7 +68,7 @@ public static class LifeScalesService
             throw;
         }
 
-        return Task.FromResult(_cache);
+        return _cache;
     }
 
     public static async Task<IReadOnlyList<string>> GetRaceNamesAsync()

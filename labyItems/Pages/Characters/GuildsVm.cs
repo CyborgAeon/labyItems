@@ -1155,8 +1155,7 @@ public sealed class GuildSlotRules
 
             if (ability?.GuildOverrides is { Count: > 0 })
             {
-                foreach (var ov in ability.GuildOverrides)
-                    rules.ApplyGuildOverride(ov);
+                rules.ApplyGuildOverrides(ability.GuildOverrides);
             }
             else if (ability?.AbilityType == AbilityType.GuildOverride)
             {
@@ -1236,15 +1235,7 @@ public sealed class GuildSlotRules
         foreach (var kvp in _forcedByType)
         {
             var type = kvp.Key;
-            var limit = GetLimit(type);
-            foreach (var forced in kvp.Value)
-            {
-                if (CountOfType(type, kept, records) >= limit)
-                    break;
-
-                if (records.ContainsKey(forced) && !kept.Contains(forced, StringComparer.OrdinalIgnoreCase))
-                    kept.Add(forced);
-            }
+            ApplyForcedByType(type, kvp.Value, kept, records);
         }
 
         draft.Guilds.Clear();
@@ -1498,28 +1489,7 @@ public sealed class GuildSlotRules
                 continue;
 
             var normalizedToken = NormalizePeopleTypeToken(peopleType);
-            var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var rec in records)
-            {
-                var guild = rec.Value;
-                if (guild == null)
-                    continue;
-
-                var guildType = NormalizeType(guild.Type ?? string.Empty);
-                if (!string.Equals(guildType, typeNorm, StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                var whitelist = guild.Availability?.Whitelist?.PeopleType ?? new List<string>();
-                foreach (var entry in whitelist)
-                {
-                    if (NormalizePeopleTypeToken(entry) == normalizedToken)
-                    {
-                        allowed.Add(rec.Key);
-                        break;
-                    }
-                }
-            }
+            var allowed = CollectAllowedGuildsByPeopleType(records, typeNorm, normalizedToken);
 
             if (allowed.Count == 0)
             {
@@ -1533,6 +1503,60 @@ public sealed class GuildSlotRules
             _forcedByType.Remove(typeNorm);
             EnsureSlotsForType(typeNorm, Math.Max(1, allowed.Count));
         }
+    }
+
+    private void ApplyGuildOverrides(IEnumerable<string> overrides)
+    {
+        foreach (var entry in overrides ?? Array.Empty<string>())
+            ApplyGuildOverride(entry);
+    }
+
+    private void ApplyForcedByType(
+        string type,
+        IEnumerable<string> forcedByType,
+        IList<string> kept,
+        Dictionary<string, GuildRecord> records)
+    {
+        var limit = GetLimit(type);
+        foreach (var forced in forcedByType ?? Array.Empty<string>())
+        {
+            if (CountOfType(type, kept, records) >= limit)
+                break;
+
+            if (records.ContainsKey(forced) && !kept.Contains(forced, StringComparer.OrdinalIgnoreCase))
+                kept.Add(forced);
+        }
+    }
+
+    private static HashSet<string> CollectAllowedGuildsByPeopleType(
+        Dictionary<string, GuildRecord> records,
+        string typeNorm,
+        string normalizedToken)
+    {
+        var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var rec in records)
+        {
+            var guild = rec.Value;
+            if (guild == null)
+                continue;
+
+            var guildType = NormalizeType(guild.Type ?? string.Empty);
+            if (!string.Equals(guildType, typeNorm, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            var whitelist = guild.Availability?.Whitelist?.PeopleType ?? new List<string>();
+            foreach (var entry in whitelist)
+            {
+                if (NormalizePeopleTypeToken(entry) == normalizedToken)
+                {
+                    allowed.Add(rec.Key);
+                    break;
+                }
+            }
+        }
+
+        return allowed;
     }
 
     private static string NormalizePeopleTypeToken(string? value)
@@ -1612,7 +1636,7 @@ public sealed class GuildSlotRules
         return string.Empty;
     }
 
-    private static int CountOfType(string type, IReadOnlyList<string> selected, Dictionary<string, GuildRecord> records)
+    private static int CountOfType(string type, IEnumerable<string> selected, Dictionary<string, GuildRecord> records)
     {
         var typeNorm = NormalizeType(type);
 

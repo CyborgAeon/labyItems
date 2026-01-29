@@ -26,8 +26,23 @@ public enum WeaponType
     Dagger,
     Cudgel,
     Bow,
-    Arrow,
     Blowpipe,
     Crossbow,
     PistolCrossbow,
+}
+
+public enum WeaponTypeO
+{
+    Staff,
+    Spear,
+    ShortSword,
+    BroadSword,
+    HandAxe,
+    WarAxe,
+    HandMace,
+    WarMace,
+    HandHammer,
+    WarHammer,
+    Dagger,
+    Cudgel
 }

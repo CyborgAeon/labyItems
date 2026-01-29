@@ -3,6 +3,26 @@ using SQLite;
 
 namespace labyItems.Services;
 
+
+public sealed class MiracleLookupService : ILookupService
+{
+    public async Task<IReadOnlyList<LookupItem>> GetAllAsync()
+    {
+        var all = await MiracleService.GetAllAsync();
+        return all
+            .Select(m => new LookupItem(Key: m.name, Display: $"{m.name} (P{m.power})"))
+            .ToList();
+    }
+
+    public async Task<IReadOnlyList<LookupItem>> SearchAsync(string query)
+    {
+        var hits = await MiracleService.SearchAsync(query);
+        return hits
+            .Select(m => new LookupItem(Key: m.name, Display: $"{m.name} (P{m.power})"))
+            .ToList();
+    }
+}
+
 public static class MiracleService
 {
     public sealed record MiracRaw

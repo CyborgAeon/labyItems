@@ -1,4 +1,28 @@
 {
+  "1st Weapon Mastery": {
+    "Abilities": [
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static",
+        "Customisation": {
+          "OptionEnum": "WeaponType",
+          "CustomValuesPermitted": true
+        }
+      }
+    ]
+  },
+  "1st Weapon Mastery (O)": {
+    "Abilities": [
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static",
+        "Customisation": {
+          "OptionEnum": "WeaponTypeO",
+          "CustomValuesPermitted": true
+        }
+      }
+    ]
+  },
   "Warrior Specialist": {
     "Abilities": [
       {
