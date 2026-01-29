@@ -270,7 +270,7 @@
       }
     }
   },
-  "The Deci Gentlemen’s Club": {
+  "The Deci Gentlemen's Club": {
     "Type": "political",
     "Benefits": {
       "Basic": [
@@ -364,7 +364,7 @@
           "Name": "Eye for the Unusual",
           "Type": "Update",
           "Count": 3,
-          "Description": "Can use all three innate an Eye for the Unusual’s on an object and it will act as an Investigation (as the Silver spell) of the relevant power bases."
+          "Description": "Can use all three innate an Eye for the Unusual's on an object and it will act as an Investigation (as the Silver spell) of the relevant power bases."
         },
         {
           "Name": "You might need this",
@@ -390,7 +390,7 @@
       }
     }
   },
-  "The Duke’s Head Society": {
+  "The Duke's Head Society": {
     "Type": "political",
     "Benefits": {
       "Basic": [
@@ -504,7 +504,7 @@
     "Availability": {
       "Whitelist": {
         "Races": ["Faerie", "Elf", "Athfanal"],
-        "Classes": ["Warlock", "Wizard", "High Wizard", "Power Master"]
+        "Classes": ["Warlock", "Wizard", "High-Wizard", "Power Master"]
       }
     }
   },
@@ -521,7 +521,7 @@
           "Name": "Demon bane",
           "Type": "Innate",
           "Count": 1,
-          "Description": "may call forth ‘holy fire’ to cover any one normal weapon, whatever it may be. Whilst wielded by a goodly target it inflict s +0 light-based white mana damage for the next 5 minutes versus Demons only with the verbal “Powers of light imbue this weapon of vengeance with thy strength, to spell the downfall of Demonkind”."
+          "Description": "may call forth ‘holy fire' to cover any one normal weapon, whatever it may be. Whilst wielded by a goodly target it inflict s +0 light-based white mana damage for the next 5 minutes versus Demons only with the verbal “Powers of light imbue this weapon of vengeance with thy strength, to spell the downfall of Demonkind”."
         }
       ],
       "Intermediate": [
@@ -529,7 +529,7 @@
           "Name": "Sight Through Shadow",
           "Type": "Innate",
           "Count": 1,
-          "Description": "User can see through magical and spiritual darkness for 5 minutes, with the verbal “I call upon the powers of light and truth, let me walk unhindered through midnight’s shadow”."
+          "Description": "User can see through magical and spiritual darkness for 5 minutes, with the verbal “I call upon the powers of light and truth, let me walk unhindered through midnight's shadow”."
         },
         {
           "Name": "Empowered defence",
@@ -539,13 +539,13 @@
         {
           "Name": "Discern Demonkind",
           "Type": "AtWill",
-          "Description": "20’ Y/N mantic info effect."
+          "Description": "20' Y/N mantic info effect."
         },
         {
           "Name": "Enhanced Discern Demonkind",
           "Type": "Innate",
           "Count": 1,
-          "Description": "1/day 20’ Y/N mantic info effect that reveals the demonic racial name [or approx imately if a unique creature] and up to 3 useful words describing the creatures power s of an identified Demonkind . E.g. Shadow Demon – assassin fears light."
+          "Description": "1/day 20' Y/N mantic info effect that reveals the demonic racial name [or approx imately if a unique creature] and up to 3 useful words describing the creatures power s of an identified Demonkind . E.g. Shadow Demon – assassin fears light."
         }
       ],
       "Advanced": [
@@ -694,7 +694,7 @@
           "Description": "Seek Inspiration as per a Lucky Idea. This takes 10 seconds to activate."
         },
         {
-          "Name": "‘For the Land’",
+          "Name": "‘For the Land'",
           "Type": "Innate",
           "Count": 1,
           "Description": "Determination (taking 6 TBLP from any stopping effect suffered but not the stopping effect)"
@@ -708,7 +708,7 @@
           "Source": "Chosen"
         },
         {
-          "Name": "‘For the Land’",
+          "Name": "‘For the Land'",
           "Type": "Update",
           "Description": "Choose one on use: \ni: Determination (taking 6 TBLP from any stopping effect suffered but not the stopping effect)\nii: Mobility, if used in this way costs 12tblp per use."
         },
@@ -721,7 +721,7 @@
       ],
       "Advanced": [
         {
-          "Name": "‘For the Land’",
+          "Name": "‘For the Land'",
           "Type": "Update",
           "Count": 2,
           "Description": "Choose one on use: \ni: Determination (taking 6 TBLP from any stopping effect suffered but not the stopping effect)\nii: Mobility, if used in this way costs 12tblp per use.\n iii: Resist listed Domination effects, however user suffers 18tblp per use"
@@ -869,7 +869,7 @@
         {
           "Name": "Heart of Evil",
           "Type": "Static",
-          "Description": "Members cannot be forced to attack other guild members, e.g. spiritually mastered with orders to kill someone. Additionally when raging they are able to identify fellow guild members and do not have to attack them. None of this means they can’t attack fellow guild members, just they don’t have to.\n If guild members have a restriction that would require them to attack other guild members it does not apply ( e.g. a Silverfolk and a non -silverfolk neuronicist)."
+          "Description": "Members cannot be forced to attack other guild members, e.g. spiritually mastered with orders to kill someone. Additionally when raging they are able to identify fellow guild members and do not have to attack them. None of this means they can't attack fellow guild members, just they don't have to.\n If guild members have a restriction that would require them to attack other guild members it does not apply ( e.g. a Silverfolk and a non -silverfolk neuronicist)."
         },
         {
           "Name": "Monk Locational Curing",
@@ -1562,7 +1562,7 @@
         {
           "Name": "Personal Faith",
           "Type": "Static",
-          "Description": "Each Priest of the Dead Heroes has a Personal Faith, and may design their own miracle list following the rules for a Hermit Priest. The Priest uses the miracle list even if not battle-boarding the Church’s basic benefits."
+          "Description": "Each Priest of the Dead Heroes has a Personal Faith, and may design their own miracle list following the rules for a Hermit Priest. The Priest uses the miracle list even if not battle-boarding the Church's basic benefits."
         },
         {
           "Name": "Call on Heroes Past [Beginning]",
@@ -1638,13 +1638,13 @@
         {
           "Name": "Aid of Heroes Past",
           "Type": "Update",
-          "Description": "The Intermediate Tier innate chosen above is now upgraded to ‘at will’, provided that the Priest has purchased the relevant Major Sphere"
+          "Description": "The Intermediate Tier innate chosen above is now upgraded to ‘at will', provided that the Priest has purchased the relevant Major Sphere"
         },
         {
           "Name": "Embody Milo",
           "Type": "Innate",
           "Count": 1,
-          "Description": "Grants full Undead immunities for 5 minutes. However for the duration the Priest’s left arm ceases to exist for any purpose as if it had been cut off (no damage is taken for this and no other disadvantages associated with losing a limb, such as a dwarf dying, are suffered). This means that whilst embodied miracles / abilities that require both hands to be able to cast / activate cannot be used."
+          "Description": "Grants full Undead immunities for 5 minutes. However for the duration the Priest's left arm ceases to exist for any purpose as if it had been cut off (no damage is taken for this and no other disadvantages associated with losing a limb, such as a dwarf dying, are suffered). This means that whilst embodied miracles / abilities that require both hands to be able to cast / activate cannot be used."
         },
         {
           "Name": "Call on Heroes Past [End]",
@@ -1719,14 +1719,14 @@
         {
           "Name": "Mistress of the Throne",
           "Type": "Static",
-          "Description": "At the start of each day may add up to 10 spirits of standard miracles to the priest’s miracle list. These may be changed dungeon to dungeon (or day to day on extended lengths). They CANNOT be used for making items/writing scrolls or similar."
+          "Description": "At the start of each day may add up to 10 spirits of standard miracles to the priest's miracle list. These may be changed dungeon to dungeon (or day to day on extended lengths). They CANNOT be used for making items/writing scrolls or similar."
         }
       ],
       "Intermediate": [
         {
           "Name": "Mistress of the Throne",
           "Type": "Update",
-          "Description": "At the start of each day may add up to 10 spirits of published miracles to the priest’s miracle list. These may be changed dungeon to dungeon (or day to day on extended lengths). They CANNOT be used for making items/writing scrolls or similar.\n"
+          "Description": "At the start of each day may add up to 10 spirits of published miracles to the priest's miracle list. These may be changed dungeon to dungeon (or day to day on extended lengths). They CANNOT be used for making items/writing scrolls or similar.\n"
         },
         {
           "Name": "Will of the Empress",
@@ -1839,7 +1839,7 @@
           "Description": "When raising a published Undead they gain Depraved Cunning, Darkened Potence, Utilise strength with pure and Undead Alacrity. If the priest already has Depraved Cunning or Darkened Potence then the Undead instead gains an extra 5 Hits. The Undead summoned in this way is also controlled by the caster until they (the Undead) are slain (this included Vampires) ."
         },
         {
-          "Name": "Loyalist’s Feast",
+          "Name": "Loyalist's Feast",
           "Type": "Static",
           "Description": "If using a Souls Hunger on an Outlaw, Wolfshead or individual ostracised by the Empire then the healing gained is doubled."
         },
@@ -1915,14 +1915,14 @@
     "MiracleList": {
       "1": [
         "Halt, Cure Wound",
-        "Detect Spirit’s Nature",
+        "Detect Spirit's Nature",
         "Power Meld",
         "Spirit of Seeing"
       ],
       "2": ["Cure Serious"],
       "3": [
         "Cure Disease",
-        "Talk to Spirits",
+        "Talk to Spirit",
         "Spirit Shield",
         "Protection from Spirits",
         "Bless",
@@ -2002,7 +2002,7 @@
       "2": ["Dismiss Skeleton", "Halt Undead", "Cure Serious Wounds"],
       "3": [
         "Cure Disease",
-        "Talk to Spirits",
+        "Talk to Spirit",
         "Spirit Shield",
         "Protection from Spirits",
         "Bless",
@@ -2025,7 +2025,7 @@
           "Name": "Sanctified Ground",
           "Type": "Innate",
           "Count": 1,
-          "Description": "may cast a Protection from Spirits [Evil] solely against Undead, in which case it does not require a line/circle to be drawn but is created around the caster in a radius of up to 6’ or in a line up to 15’ across up to 3’ distance from the caster."
+          "Description": "may cast a Protection from Spirits [Evil] solely against Undead, in which case it does not require a line/circle to be drawn but is created around the caster in a radius of up to 6' or in a line up to 15' across up to 3' distance from the caster."
         },
         {
           "Name": "The Enemy Predictable",
@@ -2044,7 +2044,7 @@
           "Name": "Sanctified Ground",
           "Type": "Update",
           "Count": 2,
-          "Description": "may cast a Protection from Spirits [Evil] solely against Undead, in which case it does not require a line/circle to be drawn but is created around the caster in a radius of up to 6’ or in a line up to 15’ across up to 3’ distance from the caster.\nMay use a second innate of the Basic Tier ability or use it to act as per a n innate of ‘The Light of Faith’, but with only a 15 minute duration."
+          "Description": "may cast a Protection from Spirits [Evil] solely against Undead, in which case it does not require a line/circle to be drawn but is created around the caster in a radius of up to 6' or in a line up to 15' across up to 3' distance from the caster.\nMay use a second innate of the Basic Tier ability or use it to act as per a n innate of ‘The Light of Faith', but with only a 15 minute duration."
         },
         {
           "Name": "Fortified Spirit",
@@ -2114,11 +2114,11 @@
       "allowedPairs": ["Chaotic Good", "Neutral Good", "Lawful Good"]
     },
     "MiracleList": {
-      "1": ["Cure Wound", "Detect Spirit’s Nature", "Halt"],
+      "1": ["Cure Wound", "Detect Spirit's Nature", "Halt"],
       "2": ["Cure Serious Wounds"],
       "3": [
         "Cure Disease",
-        "Talk to Spirits",
+        "Talk to Spirit",
         "Spirit Shield",
         "Protection from Spirits",
         "Bless",
@@ -2138,7 +2138,7 @@
         {
           "Name": "Discern Associated Spirits",
           "Type": "Static",
-          "Description": "If already possessed then gains Discern Nature of wounds to 20’ ."
+          "Description": "If already possessed then gains Discern Nature of wounds to 20' ."
         },
         {
           "Name": "Extra Miracle",
@@ -2184,7 +2184,7 @@
         {
           "Name": "Passive Heal",
           "Type": "Static",
-          "Description": "Member is aided by the Lady Shaehan such that they are considered to have a ‘Passive Heal’ miracle active on them at all times. This means that should a Heal miracle be cast specifically into this ‘receptacle’ it will be held in abeyance, and only activate on the priest should they be down more than 36 life, or have a location fall to zero or below. In all respects this functions like the Words from Above miracle, except that it has no duration, and may be replenished if desired whenever it is used. Defender of the Innocent - Stage Two: Cost: +90 Table: 7"
+          "Description": "Member is aided by the Lady Shaehan such that they are considered to have a ‘Passive Heal' miracle active on them at all times. This means that should a Heal miracle be cast specifically into this ‘receptacle' it will be held in abeyance, and only activate on the priest should they be down more than 36 life, or have a location fall to zero or below. In all respects this functions like the Words from Above miracle, except that it has no duration, and may be replenished if desired whenever it is used. Defender of the Innocent - Stage Two: Cost: +90 Table: 7"
         }
       ]
     },
@@ -2225,7 +2225,7 @@
     "MiracleList": {
       "1": [
         "Cure Wound",
-        "Detect Spirit’s Nature",
+        "Detect Spirit's Nature",
         "Halt",
         "Power Meld",
         "Spirit of Seeing"
@@ -2233,7 +2233,7 @@
       "2": ["Cure Serious Wounds"],
       "3": [
         "Cure Disease",
-        "Talk to Spirits",
+        "Talk to Spirit",
         "Spirit Shield",
         "Protection from Spirits",
         "Bless",
@@ -2328,7 +2328,7 @@
       "allowedPairs": ["Chaotic Good", "Neutral Good", "Lawful Good"]
     },
     "MiracleList": {
-      "1": ["Cure Wound", "Detect Spirits Nature"],
+      "1": ["Cure Wound", "Detect Spirit's Nature"],
       "2": ["Cure Serious Wounds", "Spirit of Seeing and Hearing"],
       "3": [
         "Cure Disease",
@@ -2426,9 +2426,162 @@
       "8": ["Restore Life"]
     },
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Blessed of Talthar",
+          "Type": "DAC",
+          "Source": "Bless",
+          "Description": "If a Paladin able to enter the Priest Bracket then their Paladinic Bless increases by 1."
+        },
+        {
+          "Name": "Extra Miracle",
+          "Type": "MiracleListAdd",
+          "MiracleKey": "Dismiss Ghoul"
+        },
+        {
+          "Name": "Hope Eternal",
+          "Type": "Immunity",
+          "Description": "Grants complete immunity to any emotional effect or attack that would cause the guild member to despair or lose hope in any fashion."
+        },
+        [
+          {
+            "Name": "Subtlety",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "White Spell Invisibility but only hides the user from Spirit Sight (Active & Passive) and goes down under the same conditions"
+          },
+          {
+            "Name": "Renewal",
+            "Type": "Static",
+            "Description": "Regenerates 3/1 per five minutes resting"
+          },
+          {
+            "Name": "Unity",
+            "Type": "Static",
+            "Description": "Those touching this character gain `Hope Eternal`"
+          },
+          {
+            "Name": "Serenity",
+            "Type": "Static",
+            "Description": "+1 Meditation Rate, abilities post triple rate can use this as a pre-requisite"
+          },
+          {
+            "Name": "Diplomacy",
+            "Type": "Innate",
+            "BattleboardNameOverride": "Calming Voice",
+            "Count": 1,
+            "Description": "Requires the user to speak in a peaceful and calming manner for 30 seconds. Acts in a manner similar to the miracle Befriend Spirit, except that all those present when used, who hear the casting, are affected. Targets remain befriended for 5 minutes or until any violence occurs, whichever comes first. This will only affect targets with 8th level resistance to spirits or lower, and even then Immunity to Befriend applies."
+          },
+          {
+            "Name": "Justice",
+            "Type": "Innate",
+            "BattleboardNameOverride": "Holy Word `Castigatio`",
+            "Count": 1,
+            "Description": "20ft range. May be used upon anyone who has just cast an evil miracle {within the last 30 seconds}. Target suffers 3 TBLP (1 HTK) for each spirit point of the evil miracle (e.g. someone who has just cast a Touch of Death would suffer 30 TBLP). Imm. to Holy Words applies. SAC applies to this damage at 1 for 1."
+          },
+          {
+            "Name": "Adversity",
+            "Type": "Static",
+            "Description": "Gains +3/1 temp life every time an ally flees (i.e. leaves the dungeon) or is incapacitated in combat. Once an ally has fled from combat the character cannot then gain any additional life from them through use of this ability, for the remainder of the day. This life lasts until end of combat."
+          }
+        ]
+      ],
+      "Intermediate": [
+        [
+          {
+            "Name": "Subtlety",
+            "UpdateKey": "Immunity to Information Miracles",
+            "Type": "Update",
+            "Description": "now grants Immunity to Info Spirits / spiritual discerns that do not originate from a Worshipper of Talthar (Priest / Paladin / Devout Believer)."
+          },
+          {
+            "Name": "Renewal",
+            "BattleboardNameOverride": "Life's Renewal",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "Choose one:\ni: if Restored to life instead of coming back on last 7/1 will come back totally healed of all wounds.\nii: if casting a Restore to life using their own power, not from scrolls or items (unless made by self) target will come back Totally Healed"
+          },
+          {
+            "Name": "Unity",
+            "BattleboardNameOverride": "United Stand",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "Requires 30 seconds audible and appropriate prayer (must be heard by all allies who are to be affected). For every 3 allies within 20’, all allies within 20’ gain +3/1 (max +9/3) life for the duration of the next combat that occurs. This ability counts & benefits only those allies who spend the entire 30 seconds of casting time within the 20’ radius."
+          },
+          {
+            "Name": "Serenity",
+            "Type": "AtWill",
+            "Description": "For 1 TBLP, touch acts to calm a ravaged spirit for as long as the priest remains in contact with the target: Reduces the severity of a Spasm (or similar effect) to the stage where a victim may lay still or prevents the effects of an insanity which would cause disruptive behaviour, e.g. not a cataleptic state"
+          },
+          {
+            "Name": "Diplomacy",
+            "BattleboardNameOverride": "Holy Word `Pax`",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "Mass Pacification (as Pacification), but is Spiritual in nature and effects all within 20’ of the caster."
+          },
+          {
+            "Name": "Justice",
+            "BattleboardNameOverride": "Holy Word `Justice`",
+            "Type": "Innate",
+            "Count": 1,
+            "Description": "Touch range. May be used upon a goodly target, who is suffering from a published evil spiritual effect, provided the caster of that effect is within 20’ of their victim. The effect is removed from the target and instead affects the person who cast it. If the caster of the evil effect is immune to it, or immune to Holy words, this ability has no effect and the original victim still suffers from the effect."
+          },
+          {
+            "Name": "Adversity",
+            "BattleboardNameOverride": "Elbrime's Rage",
+            "Type": "Innate",
+            "Count": 2,
+            "Description": "33% Rage vs Evil"
+          }
+        ]
+      ],
+      "Advanced": [
+        {
+          "Name": "Subtlety",
+          "UpdateKey": "Immunity to Information Spells",
+          "Type": "Update",
+          "Description": "Immunity to Informational Spells now grants Immunity to info Magic that does not originate from a Worshipper of Talthar (Priest / Paladin / Devout Believer). Gains an additional Hidden From Sight innate."
+        },
+        {
+          "Name": "Renewal",
+          "BattleboardNameOverride": "Renewed Form",
+          "Type": "Static",
+          "Description": "1 in every 6pts of spiritual healing received from a Talthar Priest / Paladin will heal damage that is otherwise incurable or permanent. (But only damage suffered on that event)."
+        },
+        {
+          "Name": "Unity",
+          "BattleboardNameOverride": "Harmony",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Anyone meditating within 20’ of the point of casting does so at +1 additional meditation rate. This ability lasts as long as the caster meditates and remains within the area of effect."
+        },
+        {
+          "Name": "Serenity",
+          "Type": "Static",
+          "Description": "Regains 1 spirit every 15 minutes the character remains “serene” regardless of meditation rate. This is broken if the character suffers harm, casts, attacks, moves faster than a slow walk, or uses any other ability that requires concentration."
+        },
+        {
+          "Name": "Diplomacy",
+          "UpdateKey": "Calming Voice",
+          "Type": "Update",
+          "Count": 2,
+          "Description": "Requires the user to speak in a peaceful and calming manner for 30 seconds (additional 1 level, cumulative for every 10 seconds spent speaking). Acts in a manner similar to the miracle Befriend Spirit, except that all those present when used, who hear the casting, are affected. Targets remain befriended for 5 minutes or until any violence occurs, whichever comes first. This will only affect targets with 8th level resistance to spirits or lower, and even then Immunity to Befriend applies."
+        },
+        {
+          "Name": "Justice",
+          "UpdateKey": "Holy Word `Justice`",
+          "Type": "Update",
+          "Description": "When using a Justice holy word, the victim is now freed of the evil spiritual effect even if the caster is immune to it but not if the caster is immune to Holy Words. Gains an additional Holy Word “Justice!” innate."
+        },
+        {
+          "Name": "Adversity",
+          "BattleboardNameOverride": "Desperate Fury",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "When fighting an opponent who is inflicting a greater damage grade than the Talthar worshiper, they gain +1 Damage Grade and +1 Max Damage versus that opponent."
+        }
+      ]
     },
     "Availability": {
       "Whitelist": {
@@ -2489,7 +2642,7 @@
       "5": ["Spiritual Invisibility", "Cause Grievous Wounds"],
       "6": [
         "Control Wraith",
-        "Serin’s Bound Spirit of Undeath",
+        "Serin's Bound Spirit of Undeath",
         "Walk Through Walls"
       ],
       "7": ["Suspend Life"]
@@ -2562,8 +2715,8 @@
       "1": [
         "Halt",
         "Lesser Wings of Darkness",
-        "Soul’s Hunger",
-        "Millie’s Detect Spirits"
+        "Soul's Hunger",
+        "Millie's Detect Spirits"
       ],
       "2": ["Cause Wound", "Spirit of Seeing and Hearing"],
       "3": [
@@ -2695,7 +2848,7 @@
     },
     "Availability": {
       "Whitelist": {
-        "Classes": ["Wizard", "High Wizard"],
+        "Classes": ["Wizard", "High-Wizard"],
         "Brackets": [],
         "Alignments": {
           "Order": [],
@@ -2742,7 +2895,7 @@
         {
           "Name": "Passage",
           "Type": "Static",
-          "Description": "As a cantrip may release a Wall of Stone that the guild member has previously cast. Range 20’. Verbal: “Gnomes of Earth I release thee”."
+          "Description": "As a cantrip may release a Wall of Stone that the guild member has previously cast. Range 20'. Verbal: “Gnomes of Earth I release thee”."
         },
         {
           "Name": "Earthen Armour",
@@ -2775,12 +2928,12 @@
         {
           "Name": "Conducting",
           "Type": "Static",
-          "Description": "Grounding can be used on electric or blue mana attacks within 20’ of guild member."
+          "Description": "Grounding can be used on electric or blue mana attacks within 20' of guild member."
         },
         {
           "Name": "Might of Rock",
           "Type": "Static",
-          "Description": "The Wizard’s Grimoire Rock Skin spell also grants a resistance to Sever/loc to zero."
+          "Description": "The Wizard's Grimoire Rock Skin spell also grants a resistance to Sever/loc to zero."
         },
         {
           "Name": "Sure Footed",
@@ -3042,10 +3195,10 @@
           "Description": "For each guild member on the adventure, gains +1EP"
         },
         {
-          "Name": "Life’s Memories",
+          "Name": "Life's Memories",
           "Type": "Innate",
           "Count": 1,
-          "Description": "Life’s Memories 1/day"
+          "Description": "Life's Memories 1/day"
         },
         {
           "Name": "Chosen Familiar",
@@ -3138,18 +3291,18 @@
         {
           "Name": "Advanced Battle Training",
           "Type": "Static",
-          "Description": "2nd choice from ‘battle training’ above."
+          "Description": "2nd choice from ‘battle training' above."
         },
         {
-          "Name": "Legion’s Blow",
+          "Name": "Legion's Blow",
           "Type": "Innate",
           "Count": 1,
-          "Description": "1/Day As per the Sell Sword ability ‘Primal Strike’."
+          "Description": "1/Day As per the Sell Sword ability ‘Primal Strike'."
         },
         {
           "Name": "Mercenary Soldier",
           "Type": "Static",
-          "Description": "Gains ONE of the following – chosen at the start of the day: o Additional “Shadow Legion” War Cry as basic tier – and enhanceable as per Intermediate Tier. o Additional ‘Battle Fury’ as above o Medic: Bandaging from Basic Tier is now increased to 36pts of curing which may also cure TBLP."
+          "Description": "Gains ONE of the following – chosen at the start of the day: o Additional “Shadow Legion” War Cry as basic tier – and enhanceable as per Intermediate Tier. o Additional ‘Battle Fury' as above o Medic: Bandaging from Basic Tier is now increased to 36pts of curing which may also cure TBLP."
         },
         {
           "Name": "Bandaging skill,",
@@ -3241,7 +3394,7 @@
       "Basic": [
         {
           "Name": "Last nights lessons",
-          "Type": "Static",
+          "Type": "Overwrite",
           "Description": "Gains a standard scout skill not owned already, or + 1 level in a skill owned (on dungeon only) to a max of 12."
         },
         {
@@ -3254,7 +3407,8 @@
           "Type": "Innate",
           "Count": 2,
           "Description": "Grants combat wary (which must be owned) vs one blow (even if used in the last 5 minutes), must be declared within 2 seconds of the blow."
-        }
+        },
+        { "Name": "6pt Potions", "Type": "Innate", "Count": 5 }
       ],
       "Intermediate": [
         {
@@ -3655,14 +3809,14 @@
       }
     }
   },
-  "House D’treal": {
+  "House D'treal": {
     "Type": "social",
     "Benefits": {
       "Basic": [
         {
           "Name": "Ancient Family Pacts",
           "Type": "Static",
-          "Description": "Once per day member of House D'treal can call on the House’s extensive catalogue of pacts to announce a published ancient folk pact. They gain this pact for 5 minutes and if they do not have a level for pacts it is gained at 8 levels."
+          "Description": "Once per day member of House D'treal can call on the House's extensive catalogue of pacts to announce a published ancient folk pact. They gain this pact for 5 minutes and if they do not have a level for pacts it is gained at 8 levels."
         },
         {
           "Name": "Pact with the Dragons",
@@ -3728,7 +3882,7 @@
           "Description": "Gains a ref triggered lucky idea if a fellow guild member is about to do something that could have bad consequences."
         },
         {
-          "Name": "We’re in this together 1/day",
+          "Name": "We're in this together 1/day",
           "Type": "Innate",
           "Count": 1,
           "Description": "Acts as per war cry but can be used on other guild members at 20ft range."
@@ -3741,7 +3895,7 @@
       ],
       "Intermediate": [
         {
-          "Name": "There’s a short cut in this ward 1/day",
+          "Name": "There's a short cut in this ward 1/day",
           "Type": "Innate",
           "Count": 1,
           "Description": "Acts as a mantic evasion vs one warding. If already has similar (EG Ghost and the relevant immunities) then can use this innate on a fellow guild member at touch range."
@@ -3959,12 +4113,12 @@
     "Benefits": {
       "Basic": [
         {
-          "Name": "Bear’s Skill",
+          "Name": "Bear's Skill",
           "Type": "Static",
           "Description": "Gains either Tracking, Perception or Survival as per Ranger"
         },
         {
-          "Name": "Owl’s Wisdom",
+          "Name": "Owl's Wisdom",
           "Type": "Innate",
           "Count": 1,
           "Description": "Minor Prayer 1/ day."
@@ -4078,7 +4232,7 @@
         {
           "Name": "Mercenary Solutions",
           "Type": "Static",
-          "Description": "If has used mercenary problems then for every minute still trying to solve the problem gains an extra major prayer until the problem is solved, or it ’s tavern time."
+          "Description": "If has used mercenary problems then for every minute still trying to solve the problem gains an extra major prayer until the problem is solved, or it 's tavern time."
         }
       ],
       "Advanced": [
@@ -4274,7 +4428,7 @@
           "Name": "Web",
           "Type": "Innate",
           "Count": 1,
-          "Description": "1/ day as bind but is physical and doesn’t require footwear. A webbed target may be cut free after 30 seconds of doing nothing else with a sharp weapon (but it is too sticky to break with bare hands or brute strength)"
+          "Description": "1/ day as bind but is physical and doesn't require footwear. A webbed target may be cut free after 30 seconds of doing nothing else with a sharp weapon (but it is too sticky to break with bare hands or brute strength)"
         },
         {
           "Name": "Camouflage",

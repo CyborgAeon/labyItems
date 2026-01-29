@@ -12,6 +12,7 @@ using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 using ServiceCharacterClassRecord = labyItems.Services.CharacterClassRecord;
 
 namespace labyItems.Pages.Characters.ViewModels;
@@ -49,6 +50,43 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private bool _showEvocationsTab;
     public bool ShowEvocationsTab { get => _showEvocationsTab; private set => Set(ref _showEvocationsTab, value); }
 
+    private IReadOnlyList<SpecialistSlotSegmentVm> _specialistSlotSegments = Array.Empty<SpecialistSlotSegmentVm>();
+    public IReadOnlyList<SpecialistSlotSegmentVm> SpecialistSlotSegments
+    {
+        get => _specialistSlotSegments;
+        private set => Set(ref _specialistSlotSegments, value);
+    }
+
+    private int _specialistSlotsUsed;
+    public int SpecialistSlotsUsed
+    {
+        get => _specialistSlotsUsed;
+        private set => Set(ref _specialistSlotsUsed, value);
+    }
+
+    private int _specialistSlotsTotal;
+    public int SpecialistSlotsTotal
+    {
+        get => _specialistSlotsTotal;
+        private set => Set(ref _specialistSlotsTotal, value);
+    }
+
+    private Color _specialistSlotsSummaryColor = Colors.Black;
+    public Color SpecialistSlotsSummaryColor
+    {
+        get => _specialistSlotsSummaryColor;
+        private set => Set(ref _specialistSlotsSummaryColor, value);
+    }
+
+    public string SpecialistSlotsSummary =>
+        SpecialistSlotsTotal > 0
+            ? $"Specialist slots: {SpecialistSlotsUsed}/{SpecialistSlotsTotal}"
+            : string.Empty;
+
+    public bool ShowSpecialistSlotsBar => SpecialistSlotsTotal > 0;
+
+    public bool CanAddSpecialistList => SpecialistSpellLists.Count == 0;
+
     public AdvanceCharacterVm(CharacterDraft draft)
     {
         _draft = draft;
@@ -73,7 +111,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         AddItemCommand = new Command(AddItem);
         RemoveItemCommand = new Command<ItemLineVm>(RemoveItem);
 
-        AddSpellListCommand = new Command(AddSpellList);
+        AddSpecialistListCommand = new Command(AddSpecialistList);
         RemoveSpellListCommand = new Command<SpellListVm>(RemoveSpellList);
 
         AddMiracleListCommand = new Command(AddMiracleList);
@@ -155,7 +193,19 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public ICommand RemoveItemCommand { get; }
 
     public ObservableCollection<SpellListVm> SpellLists { get; } = new();
-    public ICommand AddSpellListCommand { get; }
+    public ObservableCollection<SpellListVm> SpecialistSpellLists { get; } = new();
+    private SpellListVm? _baseSpellList;
+    public SpellListVm? BaseSpellList
+    {
+        get => _baseSpellList;
+        private set
+        {
+            if (!Set(ref _baseSpellList, value)) return;
+            Raise(nameof(HasBaseSpellList));
+        }
+    }
+    public bool HasBaseSpellList => BaseSpellList != null;
+    public ICommand AddSpecialistListCommand { get; }
     public ICommand RemoveSpellListCommand { get; }
 
     public ObservableCollection<MiracleListVm> MiracleLists { get; } = new();
@@ -167,9 +217,6 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public ICommand RemoveEvocationListCommand { get; }
 
     public ICommand SaveCommand { get; }
-
-    public bool SpellListsEnabled => false;
-    public string SpellListsDisabledReason => "Spell list builder is disabled for now.";
 
     public bool CanAddMiracleList
         => GetBaseMiracleList() == null
@@ -185,7 +232,6 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public async Task InitializeAsync()
     {
         _guilds = await GuildsService.GetAllAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
-
         try
         {
             _classes = await ClassService.GetAllAsync() ?? new Dictionary<string, ServiceCharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
@@ -194,7 +240,6 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         {
             _classes = new Dictionary<string, ServiceCharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
         }
-
         try
         {
             _allMiracles = await MiracleService.GetAllAsync();
@@ -203,23 +248,14 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         {
             _allMiracles = Array.Empty<MiracleService.MiracRaw>();
         }
-
-        if (SpellListsEnabled)
+        try
         {
-            try
-            {
-                _allSpells = await SpellService.GetAllAsync();
-            }
-            catch
-            {
-                _allSpells = Array.Empty<SpellService.SpellRaw>();
-            }
+            _allSpells = await SpellService.GetAllAsync();
         }
-        else
+        catch
         {
             _allSpells = Array.Empty<SpellService.SpellRaw>();
         }
-
         try
         {
             _allEvocations = await DruidEvocationService.GetAllAsync();
@@ -228,7 +264,6 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         {
             _allEvocations = Array.Empty<DruidEvocationService.EvocRaw>();
         }
-
         try
         {
             var allAbilities = await ManuAbilityService.GetAllAsync();
@@ -243,16 +278,53 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         LoadAbilitiesFromDraft();
         LoadItemsFromDraft();
-        if (SpellListsEnabled)
-            LoadSpellListsFromDraft();
+        UpdateTabVisibility();
+        if (ShowSpellsTab)
+            EnsureWizardSpellListImported();
+        LoadSpellListsFromDraft();
         LoadMiracleListsFromDraft();
         LoadEvocationListsFromDraft();
-
-        UpdateTabVisibility();
 
         Raise(nameof(CanSave));
         (SaveCommand as Command)?.ChangeCanExecute();
         UpdateAbilityPoints();
+    }
+    private static readonly MagicColours[] GreyWizardColours =
+    {
+        MagicColours.Blue, MagicColours.Black, MagicColours.White,
+        MagicColours.Green, MagicColours.Red, MagicColours.Brown
+    };
+    public Dictionary<MagicColours, int> GetFreeSpecialistSlotsByColour()
+    {
+        ServiceCharacterClassRecord? classRecord = null;
+        if (!string.IsNullOrWhiteSpace(_draft.Class))
+            _classes.TryGetValue(_draft.Class.Trim(), out classRecord);
+
+        var isEligible =
+            HasBracket(classRecord?.Brackets, "Wizard")
+            || HasBracket(classRecord?.Brackets, "High-Wizard")
+            || HasBracket(classRecord?.Brackets, "Rogue")
+            || HasBracket(classRecord?.Brackets, "Warlock");
+
+        var result = new Dictionary<MagicColours, int>();
+        if (!isEligible)
+            return result;
+
+        var wizColour = TryGetWizardColour();
+        if (wizColour.HasValue && wizColour.Value == MagicColours.Grey
+            && (HasBracket(classRecord?.Brackets, "Wizard") || HasBracket(classRecord?.Brackets, "High-Wizard")))
+        {
+            foreach (var c in GreyWizardColours)
+                result[c] = 3;
+            return result;
+        }
+
+        if (wizColour.HasValue)
+            result[wizColour.Value] = 5;
+        else
+            result[MagicColours.Grey] = 5;
+
+        return result;
     }
 
     private void UpdateTabVisibility()
@@ -278,7 +350,9 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
                 kvp.Key.Contains("Wizard Colour", StringComparison.OrdinalIgnoreCase)
                 && !string.IsNullOrWhiteSpace(kvp.Value));
             if (hasSelection)
+            {
                 return true;
+            }
         }
 
         if (_draft.Abilities != null)
@@ -287,7 +361,10 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
                 !string.IsNullOrWhiteSpace(a?.Source)
                 && a.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase));
             if (hasAbility)
+            {
                 return true;
+            }
+
         }
 
         return false;
@@ -451,41 +528,108 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             .ToList();
     }
 
+    private int GetDraftCasterLevel()
+    {
+        var prop = _draft.GetType().GetProperty("CasterLevel");
+        if (prop?.PropertyType == typeof(int))
+            return (int)(prop.GetValue(_draft) ?? 0);
+
+        return 0;
+    }
     private void LoadSpellListsFromDraft()
     {
         SpellLists.Clear();
-        if (!SpellListsEnabled)
-            return;
+        SpecialistSpellLists.Clear();
+        BaseSpellList = null;
 
-        foreach (var list in _draft.SpellLists ?? new List<SpellListDraft>())
+        if (_draft.SpellLists == null)
+            _draft.SpellLists = new List<SpellListDraft>();
+
+        if (ShowSpellsTab)
+            NormalizeWizardSpellLists();
+
+        var specialistFilter = BuildSpecialistSpellFilter();
+        foreach (var list in _draft.SpellLists)
         {
-            var vm = new SpellListVm(list, _allSpells);
+            var filter = list.IsBaseList ? null : specialistFilter;
+            var vm = new SpellListVm(list, _allSpells, GetDraftCasterLevel, OnSpellListChanged, filter);
             SpellLists.Add(vm);
+            if (list.IsBaseList && BaseSpellList == null)
+                BaseSpellList = vm;
+            else
+                SpecialistSpellLists.Add(vm);
         }
 
-        if (SpellLists.Count == 0)
-            AddSpellList();
+        RefreshSpecialistSlots();
+        Raise(nameof(CanAddSpecialistList));
     }
 
-    private void AddSpellList()
+    private void NormalizeWizardSpellLists()
     {
-        if (!SpellListsEnabled)
+        if (_draft.SpellLists == null || _draft.SpellLists.Count == 0)
             return;
+
+        var baseList = _draft.SpellLists.FirstOrDefault(l => l.IsBaseList);
+        if (baseList == null)
+            return;
+
+        var specialistLists = _draft.SpellLists.Where(l => !ReferenceEquals(l, baseList)).ToList();
+        if (specialistLists.Count <= 1)
+            return;
+
+        var primary = specialistLists[0];
+        if (string.IsNullOrWhiteSpace(primary.Name))
+            primary.Name = "Specialists";
+        var existing = new HashSet<string>(
+            primary.Entries.Select(e => (e.Name ?? string.Empty).Trim()).Where(n => n.Length > 0),
+            StringComparer.OrdinalIgnoreCase);
+
+        foreach (var extra in specialistLists.Skip(1))
+        {
+            foreach (var entry in extra.Entries ?? new List<SpellListEntryDraft>())
+            {
+                var name = (entry.Name ?? string.Empty).Trim();
+                if (name.Length == 0 || existing.Contains(name))
+                    continue;
+
+                primary.Entries.Add(entry);
+                existing.Add(name);
+            }
+        }
+
+        _draft.SpellLists = _draft.SpellLists
+            .Where(l => ReferenceEquals(l, baseList) || ReferenceEquals(l, primary))
+            .ToList();
+    }
+
+    private void AddSpecialistList()
+    {
+        if (!CanAddSpecialistList)
+            return;
+
+        if (_draft.SpellLists == null)
+            _draft.SpellLists = new List<SpellListDraft>();
 
         var draft = new SpellListDraft
         {
-            Name = $"Spell List {SpellLists.Count + 1}"
+            Name = "Specialists"
         };
         _draft.SpellLists.Add(draft);
-        var vm = new SpellListVm(draft, _allSpells);
+        var vm = new SpellListVm(draft, _allSpells, GetDraftCasterLevel, OnSpellListChanged, BuildSpecialistSpellFilter());
         SpellLists.Add(vm);
+        SpecialistSpellLists.Add(vm);
+        RefreshSpecialistSlots();
+        Raise(nameof(CanAddSpecialistList));
     }
 
     private void RemoveSpellList(SpellListVm? list)
     {
-        if (list == null) return;
+        if (list == null || list.IsBaseList) return;
         SpellLists.Remove(list);
+        SpecialistSpellLists.Remove(list);
         _draft.SpellLists.Remove(list.Draft);
+        RefreshSpecialistSlots();
+        Raise(nameof(CanAddSpecialistList));
     }
 
     private MiracleListVm? GetBaseMiracleList()
@@ -610,6 +754,280 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         return list.Entries.Count == 0 ? null : list;
     }
+
+    private MagicColours? TryGetWizardColour()
+    {
+        // Prefer SpecialisationSelections
+        if (_draft.SpecialisationSelections != null)
+        {
+            var kvp = _draft.SpecialisationSelections.FirstOrDefault(x =>
+                x.Key.Contains("Wizard Colour", StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(x.Value));
+
+            if (!string.IsNullOrWhiteSpace(kvp.Value)
+                && Enum.TryParse<MagicColours>(kvp.Value.Trim(), true, out var colour))
+                return colour;
+        }
+
+        if (_draft.Abilities != null)
+        {
+            var ability = _draft.Abilities.FirstOrDefault(a =>
+                !string.IsNullOrWhiteSpace(a?.Source)
+                && a.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase));
+
+            // If your ability name contains the colour text, try parse it:
+            var name = ability?.Name ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(name)
+                && Enum.TryParse<MagicColours>(name.Trim(), true, out var fromAbility))
+                return fromAbility;
+        }
+
+        return null;
+    }
+
+    private Func<SpellService.SpellRaw, bool>? BuildSpecialistSpellFilter()
+    {
+        var colour = TryGetWizardColour();
+        if (!colour.HasValue)
+            return null;
+
+        var opposite = GetOppositeColour(colour.Value);
+        if (!opposite.HasValue)
+            return null;
+
+        var oppositeValue = opposite.Value;
+        return spell => !SpellMatchesColour(spell?.colour, oppositeValue);
+    }
+
+    private static bool SpellMatchesColour(string? raw, MagicColours colour)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return false;
+
+        var parts = raw.Split(new[] { '/', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        foreach (var part in parts)
+        {
+            if (TryParseMagicColour(part, out var parsed) && parsed == colour)
+                return true;
+        }
+
+        return TryParseMagicColour(raw, out var single) && single == colour;
+    }
+
+    private static bool TryParseMagicColour(string? value, out MagicColours colour)
+    {
+        colour = default;
+        if (string.IsNullOrWhiteSpace(value))
+            return false;
+
+        var normalized = value.Trim().Replace(" ", string.Empty);
+        return Enum.TryParse(normalized, ignoreCase: true, out colour);
+    }
+
+    private static MagicColours? GetOppositeColour(MagicColours colour)
+        => colour switch
+        {
+            MagicColours.Red => MagicColours.Green,
+            MagicColours.Green => MagicColours.Red,
+            MagicColours.Brown => MagicColours.Blue,
+            MagicColours.Blue => MagicColours.Brown,
+            MagicColours.White => MagicColours.Black,
+            MagicColours.Black => MagicColours.White,
+            MagicColours.Gold => MagicColours.Bronze,
+            MagicColours.Bronze => MagicColours.Gold,
+            MagicColours.Ivory => MagicColours.Ebony,
+            MagicColours.Ebony => MagicColours.Ivory,
+            MagicColours.Jade => MagicColours.Onyx,
+            MagicColours.Onyx => MagicColours.Jade,
+            _ => null
+        };
+
+    private void EnsureWizardSpellListImported()
+    {
+        if (!ShowSpellsTab)
+            return;
+
+        var colour = TryGetWizardColour();
+        if (!colour.HasValue)
+            return;
+
+        if (_draft.SpellLists == null)
+            _draft.SpellLists = new List<SpellListDraft>();
+
+        var baseList = FindBaseSpellList(colour.Value);
+        if (baseList == null)
+        {
+            baseList = new SpellListDraft
+            {
+                Name = $"{colour.Value} Spells",
+                IsBaseList = true
+            };
+            _draft.SpellLists.Insert(0, baseList);
+        }
+        else
+        {
+            baseList.IsBaseList = true;
+            if (string.IsNullOrWhiteSpace(baseList.Name))
+                baseList.Name = $"{colour.Value} Spells";
+
+            var idx = _draft.SpellLists.IndexOf(baseList);
+            if (idx > 0)
+            {
+                _draft.SpellLists.RemoveAt(idx);
+                _draft.SpellLists.Insert(0, baseList);
+            }
+        }
+
+        ImportSpellsOfColour(colour.Value, baseList);
+    }
+
+    private SpellListDraft? FindBaseSpellList(MagicColours colour)
+    {
+        if (_draft.SpellLists == null || _draft.SpellLists.Count == 0)
+            return null;
+
+        var baseList = _draft.SpellLists.FirstOrDefault(l => l.IsBaseList);
+        if (baseList != null)
+            return baseList;
+
+        return _draft.SpellLists.FirstOrDefault(l => IsLikelyBaseSpellList(l, colour));
+    }
+
+    private static bool IsLikelyBaseSpellList(SpellListDraft list, MagicColours colour)
+    {
+        if (list == null)
+            return false;
+
+        var name = (list.Name ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return false;
+
+        var colourToken = colour.ToString();
+        return name.Contains("Spells", StringComparison.OrdinalIgnoreCase)
+               && name.Contains(colourToken, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void ImportSpellsOfColour(MagicColours colour, SpellListDraft target)
+    {
+        if (target == null) return;
+
+        var colourToken = colour.ToString();
+
+        var matches = _allSpells
+            .Where(s => !string.IsNullOrWhiteSpace(s?.name))
+            .Where(s => string.Equals(s.colour ?? string.Empty, colourToken, StringComparison.OrdinalIgnoreCase))
+            .Where(s => (s.isAdvanced ?? false) == false)
+            .OrderBy(s => s.level)
+            .ThenBy(s => s.name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        // Make sure target entries list exists
+        if (target.Entries == null)
+            target.Entries = new List<SpellListEntryDraft>();
+
+        var existing = new HashSet<string>(
+            target.Entries.Select(e => (e.Name ?? string.Empty).Trim()).Where(n => n.Length > 0),
+            StringComparer.OrdinalIgnoreCase);
+
+        foreach (var s in matches)
+        {
+            if (existing.Contains(s.name!.Trim()))
+                continue;
+
+            target.Entries.Add(new SpellListEntryDraft
+            {
+                Name = s.name ?? string.Empty,
+                Level = s.level,
+                Colour = s.colour ?? string.Empty,
+                IsAdvanced = s.isAdvanced ?? false
+            });
+        }
+    }
+
+    private void OnSpellListChanged()
+    {
+        RefreshSpecialistSlots();
+    }
+
+    private void RefreshSpecialistSlots()
+    {
+        var available = GetFreeSpecialistSlotsByColour();
+        var totalAvailable = available.Values.Sum();
+        var selected = GetSelectedSpecialistCountsByColour();
+        var segments = new List<SpecialistSlotSegmentVm>();
+        var selectedTotal = selected.Values.Sum();
+
+        foreach (var colour in Enum.GetValues<MagicColours>())
+        {
+            var used = selected.TryGetValue(colour, out var count) ? count : 0;
+            if (used <= 0)
+                continue;
+
+            segments.Add(new SpecialistSlotSegmentVm(used, GetMagicColourColor(colour)));
+        }
+
+        var totalUsed = segments.Sum(s => s.Weight);
+        var unselected = Math.Max(0, totalAvailable - totalUsed);
+        if (unselected > 0)
+            segments.Add(new SpecialistSlotSegmentVm(unselected, Color.FromArgb("#D1D5DB")));
+
+        SpecialistSlotSegments = segments;
+        SpecialistSlotsUsed = selectedTotal;
+        SpecialistSlotsTotal = totalAvailable;
+        SpecialistSlotsSummaryColor = totalAvailable > 0 && selectedTotal > totalAvailable
+            ? Color.FromArgb("#B91C1C")
+            : Colors.Black;
+        Raise(nameof(SpecialistSlotsSummary));
+        Raise(nameof(ShowSpecialistSlotsBar));
+    }
+
+    private Dictionary<MagicColours, int> GetSelectedSpecialistCountsByColour()
+    {
+        var counts = new Dictionary<MagicColours, int>();
+        foreach (var list in _draft.SpellLists ?? new List<SpellListDraft>())
+        {
+            if (list.IsBaseList)
+                continue;
+
+            foreach (var entry in list.Entries ?? new List<SpellListEntryDraft>())
+            {
+                if (string.IsNullOrWhiteSpace(entry?.Name))
+                    continue;
+
+                var colourText = (entry.Colour ?? string.Empty).Trim();
+                if (colourText.Length == 0)
+                    continue;
+
+                if (!TryParseMagicColour(colourText, out var colour))
+                    continue;
+
+                counts[colour] = counts.TryGetValue(colour, out var current) ? current + 1 : 1;
+            }
+        }
+
+        return counts;
+    }
+
+    private static Color GetMagicColourColor(MagicColours colour)
+        => colour switch
+        {
+            MagicColours.Red => Color.FromArgb("#EF4444"),
+            MagicColours.Blue => Color.FromArgb("#3B82F6"),
+            MagicColours.Green => Color.FromArgb("#10B981"),
+            MagicColours.Brown => Color.FromArgb("#8B5E3C"),
+            MagicColours.White => Color.FromArgb("#F3F4F6"),
+            MagicColours.Black => Color.FromArgb("#111827"),
+            MagicColours.Grey => Color.FromArgb("#9CA3AF"),
+            MagicColours.Gold => Color.FromArgb("#D4AF37"),
+            MagicColours.Bronze => Color.FromArgb("#CD7F32"),
+            MagicColours.Silver => Color.FromArgb("#C0C0C0"),
+            MagicColours.Ivory => Color.FromArgb("#F5F5DC"),
+            MagicColours.Ebony => Color.FromArgb("#2F1B0C"),
+            MagicColours.Jade => Color.FromArgb("#00A86B"),
+            MagicColours.Onyx => Color.FromArgb("#353839"),
+            _ => Color.FromArgb("#6B7280")
+        };
+
 
     private static string ExtractImportedSourceName(string? name)
     {
@@ -923,6 +1341,8 @@ public sealed class SpellListVm : INotifyPropertyChanged
     }
 
     private readonly IReadOnlyList<SpellService.SpellRaw> _allSpells;
+    private readonly Func<SpellService.SpellRaw, bool>? _spellFilter;
+    private readonly Action? _onListChanged;
 
     public SpellListDraft Draft { get; }
 
@@ -934,8 +1354,37 @@ public sealed class SpellListVm : INotifyPropertyChanged
             if (Draft.Name == value) return;
             Draft.Name = value ?? string.Empty;
             Raise();
+            Raise(nameof(HeaderTitle));
         }
     }
+
+    public bool IsBaseList => Draft.IsBaseList;
+
+    public bool IsReadOnly => IsBaseList;
+
+    public bool CanEdit => !IsReadOnly;
+
+    public bool ShowNameEditor => !IsBaseList;
+
+    public bool ShowHeaderLabel => IsBaseList;
+
+    public string HeaderTitle => string.IsNullOrWhiteSpace(Name) ? "Spell List" : Name;
+
+    public bool CanRemoveList => !IsBaseList;
+
+    public bool IsMinimized
+    {
+        get => Draft.IsMinimized;
+        set
+        {
+            if (Draft.IsMinimized == value) return;
+            Draft.IsMinimized = value;
+            Raise();
+            Raise(nameof(IsExpanded));
+        }
+    }
+
+    public bool IsExpanded => !IsMinimized;
 
     public ObservableCollection<SpellEntryVm> Entries { get; } = new();
 
@@ -948,52 +1397,81 @@ public sealed class SpellListVm : INotifyPropertyChanged
 
     public ICommand AddEntryCommand { get; }
     public ICommand RemoveEntryCommand { get; }
+    public ICommand ToggleExpandedCommand { get; }
 
-    public SpellListVm(SpellListDraft draft, IReadOnlyList<SpellService.SpellRaw> allSpells)
+    private readonly Func<int> _getCasterLevel;
+
+    public SpellListVm(
+        SpellListDraft draft,
+        IReadOnlyList<SpellService.SpellRaw> allSpells,
+        Func<int> getCasterLevel,
+        Action? onListChanged = null,
+        Func<SpellService.SpellRaw, bool>? spellFilter = null)
     {
         Draft = draft;
         _allSpells = allSpells ?? Array.Empty<SpellService.SpellRaw>();
+        _getCasterLevel = getCasterLevel ?? (() => 0);
+        _onListChanged = onListChanged;
+        _spellFilter = spellFilter;
 
         AddEntryCommand = new Command(AddEntry);
         RemoveEntryCommand = new Command<SpellEntryVm>(RemoveEntry);
+        ToggleExpandedCommand = new Command(() => IsMinimized = !IsMinimized);
 
         LoadEntriesFromDraft();
         UpdateFilteredOptions();
     }
 
+
     private void LoadEntriesFromDraft()
     {
         Entries.Clear();
-        foreach (var entry in Draft.Entries ?? new List<SpellListEntryDraft>())
+        var entries = Draft.Entries ?? new List<SpellListEntryDraft>();
+        if (IsReadOnly)
+            entries = entries
+                .OrderBy(e => e.Level)
+                .ThenBy(e => e.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+        foreach (var entry in entries)
         {
-            var vm = new SpellEntryVm(entry, OnEntryChanged);
-            if (!string.IsNullOrWhiteSpace(entry.Name))
+            var vm = new SpellEntryVm(entry, OnEntryChanged, _getCasterLevel);
+            if (!IsReadOnly && !string.IsNullOrWhiteSpace(entry.Name))
                 vm.SelectedSpell = new SpellOption(entry.Name, entry.Level, entry.Colour ?? string.Empty, entry.IsAdvanced);
             Entries.Add(vm);
         }
 
-        if (Entries.Count == 0)
+        if (Entries.Count == 0 && !IsReadOnly)
             AddEntry();
     }
 
     private void AddEntry()
     {
+        if (IsReadOnly)
+            return;
+
         var draft = new SpellListEntryDraft();
         Draft.Entries.Add(draft);
-        var vm = new SpellEntryVm(draft, OnEntryChanged);
+        var vm = new SpellEntryVm(draft, OnEntryChanged, _getCasterLevel);
         Entries.Add(vm);
+        _onListChanged?.Invoke();
     }
 
     private void RemoveEntry(SpellEntryVm? entry)
     {
+        if (IsReadOnly)
+            return;
+
         if (entry == null) return;
         Entries.Remove(entry);
         Draft.Entries.Remove(entry.Draft);
+        _onListChanged?.Invoke();
     }
 
     private void OnEntryChanged()
     {
         UpdateFilteredOptions();
+        _onListChanged?.Invoke();
     }
 
     private void UpdateFilteredOptions()
@@ -1002,6 +1480,8 @@ public sealed class SpellListVm : INotifyPropertyChanged
         foreach (var spell in _allSpells)
         {
             if (string.IsNullOrWhiteSpace(spell?.name))
+                continue;
+            if (_spellFilter != null && !_spellFilter(spell))
                 continue;
 
             var option = new SpellOption(spell.name, spell.level, spell.colour ?? string.Empty, spell.isAdvanced ?? false);
@@ -1056,18 +1536,88 @@ public sealed class SpellEntryVm : INotifyPropertyChanged
                 Draft.IsAdvanced = option.IsAdvanced;
             }
 
+            RefreshLearningWarning();
+            Raise(nameof(DisplayText));
             _onChanged();
         }
     }
 
-    public SpellEntryVm(SpellListEntryDraft draft, Action onChanged)
+    public string DisplayText
+        => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} (Lvl {Draft.Level})";
+
+    private void RefreshLearningWarning()
+    {
+        if (_selectedSpell == null)
+        {
+            ShowLearningWarning = false;
+            LearningWarningText = string.Empty;
+            return;
+        }
+
+        var casterLevel = Math.Max(0, _getCasterLevel());
+        var spellLevel = Math.Max(0, _selectedSpell.Value.Level);
+
+        if (spellLevel <= casterLevel)
+        {
+            // Still does damage per your table, but your UX ask is
+            // specifically: highlight if power higher than caster level.
+            ShowLearningWarning = false;
+            LearningWarningText = string.Empty;
+            return;
+        }
+
+        var dmg = GetSpellLearningDamage(casterLevel, spellLevel);
+        ShowLearningWarning = true;
+        LearningWarningText = $"Learning this will deal {dmg} damage to you.";
+    }
+
+    private static int GetSpellLearningDamage(int casterLevel, int spellLevel)
+    {
+        var delta = spellLevel - casterLevel;
+
+        return delta switch
+        {
+            <= -2 => 2,
+            -1 => 8,
+            0 => 18,
+            1 => 32,
+            2 => 50,
+            3 => 72,
+            4 => 98,
+            >= 5 => 128
+        };
+    }
+
+    private readonly Func<int> _getCasterLevel;
+
+    private bool _showLearningWarning;
+    public bool ShowLearningWarning { get => _showLearningWarning; private set => Set(ref _showLearningWarning, value); }
+
+    private string _learningWarningText = string.Empty;
+    public string LearningWarningText { get => _learningWarningText; private set => Set(ref _learningWarningText, value); }
+
+    public SpellEntryVm(SpellListEntryDraft draft, Action onChanged, Func<int> getCasterLevel)
     {
         Draft = draft;
         _onChanged = onChanged;
+        _getCasterLevel = getCasterLevel ?? (() => 0);
+        RefreshLearningWarning();
     }
 }
 
 public readonly record struct SpellOption(string Name, int Level, string Colour, bool IsAdvanced);
+
+public sealed class SpecialistSlotSegmentVm
+{
+    public int Weight { get; }
+    public Color Colour { get; }
+
+    public SpecialistSlotSegmentVm(int weight, Color colour)
+    {
+        Weight = weight;
+        Colour = colour;
+    }
+}
 
 public sealed class EvocationListVm : INotifyPropertyChanged
 {
@@ -1998,16 +2548,19 @@ public sealed class MiracleListVm : INotifyPropertyChanged
                 neutralChoiceMismatch = (good > 0 && choice != "good") || (evil > 0 && choice != "evil");
             }
 
-            if (overTotal)
-                messages.Add($"Exceeds {MaxListPower} spirit limit.");
-            if (overAdvanced)
-                messages.Add($"Advanced miracles exceed {MaxAdvancedPower} spirit limit.");
-            if (tooManyAdvancedSpheres)
-                messages.Add("Advanced miracles must be from a single Sphere.");
-            if (hasNeutralMismatch)
-                messages.Add("Pick Light or Darkness alignment for this neutral list.");
-            if (neutralChoiceMismatch)
-                messages.Add("Neutral alignment choice must match selected aligned miracles.");
+            if (SourceName == string.Empty)
+            {
+                if (overTotal)
+                    messages.Add($"Exceeds {MaxListPower} spirit limit.");
+                if (overAdvanced)
+                    messages.Add($"Advanced miracles exceed {MaxAdvancedPower} spirit limit.");
+                if (tooManyAdvancedSpheres)
+                    messages.Add("Advanced miracles must be from a single Sphere.");
+                if (hasNeutralMismatch)
+                    messages.Add("Pick Light or Darkness alignment for this neutral list.");
+                if (neutralChoiceMismatch)
+                    messages.Add("Neutral alignment choice must match selected aligned miracles.");
+            }
 
             ShowNeutralAlignmentChoice = needsNeutralChoice;
         }

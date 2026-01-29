@@ -929,22 +929,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var lookup = new Dictionary<string, List<AbilityDraft>>(StringComparer.OrdinalIgnoreCase);
         foreach (var ability in abilities)
         {
-            var key = (ability.Name ?? string.Empty).Trim();
-            if (key.Length == 0)
-                continue;
-
-            if (!lookup.TryGetValue(key, out var list))
-            {
-                list = new List<AbilityDraft>();
-                lookup[key] = list;
-            }
-
-            list.Add(ability);
+            AddUpdateLookupKey(lookup, ability, ability.Name);
+            AddUpdateLookupKey(lookup, ability, ability.UpdateKey);
+            AddUpdateLookupKey(lookup, ability, ability.BattleboardNameOverride);
         }
 
         foreach (var update in updates)
         {
-            var key = (update.Name ?? string.Empty).Trim();
+            var key = GetUpdateKey(update);
             if (key.Length == 0)
                 continue;
 
@@ -953,6 +945,34 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
             ApplyAbilityUpdates(list, update);
         }
+    }
+
+    private static void AddUpdateLookupKey(
+        Dictionary<string, List<AbilityDraft>> lookup,
+        AbilityDraft ability,
+        string? rawKey)
+    {
+        var key = (rawKey ?? string.Empty).Trim();
+        if (key.Length == 0)
+            return;
+
+        if (!lookup.TryGetValue(key, out var list))
+        {
+            list = new List<AbilityDraft>();
+            lookup[key] = list;
+        }
+
+        if (!list.Contains(ability))
+            list.Add(ability);
+    }
+
+    private static string GetUpdateKey(AbilityDraft update)
+    {
+        var key = (update.UpdateKey ?? string.Empty).Trim();
+        if (key.Length > 0)
+            return key;
+
+        return (update.Name ?? string.Empty).Trim();
     }
 
     private static void ApplyAbilityUpdates(IEnumerable<AbilityDraft> targets, AbilityDraft update)
@@ -983,6 +1003,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         if (!string.IsNullOrWhiteSpace(update.OverwriteKey))
             target.OverwriteKey = update.OverwriteKey;
+
+        if (!string.IsNullOrWhiteSpace(update.BattleboardNameOverride))
+            target.BattleboardNameOverride = update.BattleboardNameOverride;
 
         if (update.LevelGained.HasValue)
             target.LevelGained = update.LevelGained;
@@ -1777,14 +1800,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         if (classRecord != null)
         {
-            var casterLevel = classRecord.CasterLevel ?? 8;
+            _draft.CasterLevel = classRecord.CasterLevel ?? 8;
             if (classRecord.PowerCalculations is { Count: > 0 })
             {
                 foreach (var calc in classRecord.PowerCalculations)
                 {
                     var key = (calc.PowerBase ?? string.Empty).Trim();
                     if (key.Length == 0) continue;
-                    pools[key] = EvaluatePowerCalculation(calc.Calculation, casterLevel);
+                    pools[key] = EvaluatePowerCalculation(calc.Calculation, _draft.CasterLevel);
                 }
             }
             else if (classRecord.Powerbase is { Count: > 0 })

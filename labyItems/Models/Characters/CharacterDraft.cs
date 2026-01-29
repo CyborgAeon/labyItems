@@ -34,7 +34,7 @@ public sealed class CharacterDraft
     public GuildOverrideRules? GuildOverrideRules { get; set; } = new();
     public Alignment? Alignment { get; set; }
     public List<Alignment> AvailableAlignments { get; private set; } = new();
-
+    public int CasterLevel { get; set; } = 0;
     public int Points { get; set; }
     public int CurrentVitae { get; set; }
 

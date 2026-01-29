@@ -2097,6 +2097,11 @@
         {
           "Name": "Recognise Mana",
           "Type": "AtWill"
+        },
+        {
+          "Name": "Wizard Colour",
+          "Type": "Overwrite",
+          "OverwriteKey": "Wizard Colour"
         }
       ],
       "2": [
@@ -2907,7 +2912,7 @@
       ]
     }
   },
-  "Spiritual-Warrior": {
+  "Spiritual Warrior": {
     "Brackets": ["🛡️ Warrior", "🙏 Priest"],
     "Tags": ["Spiritual Caster", "Combatant", "MaxAC 9"],
     "Armour": {

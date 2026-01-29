@@ -26,6 +26,8 @@ public sealed class MiracleListEntryDraft
 public sealed class SpellListDraft
 {
     public string Name { get; set; } = "Spell List";
+    public bool IsBaseList { get; set; }
+    public bool IsMinimized { get; set; }
     public List<SpellListEntryDraft> Entries { get; set; } = new();
 }
 

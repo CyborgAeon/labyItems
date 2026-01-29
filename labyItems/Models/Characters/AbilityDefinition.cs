@@ -7,6 +7,8 @@ namespace labyItems.Models.Characters;
 public sealed class AbilityDefinition
 {
     public string Name { get; set; } = string.Empty;
+    public string? BattleboardNameOverride { get; set; }
+    public string? UpdateKey { get; set; }
     public string Type { get; set; } = string.Empty;
     public string? Effect { get; set; }
     public string? Source { get; set; }
@@ -42,6 +44,12 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             var def = new AbilityDefinition
             {
                 Name = el.TryGetProperty("Name", out var nameEl) ? nameEl.GetString() ?? string.Empty : string.Empty,
+                BattleboardNameOverride = el.TryGetProperty("BattleboardNameOverride", out var battleNameEl)
+                    ? battleNameEl.GetString()
+                    : null,
+                UpdateKey = el.TryGetProperty("UpdateKey", out var updateKeyEl)
+                    ? updateKeyEl.GetString()
+                    : null,
                 Type = el.TryGetProperty("Type", out var typeEl) ? typeEl.GetString() ?? string.Empty : string.Empty,
                 Effect = ReadEffectOrDescription(el),
                 Source = el.TryGetProperty("Source", out var sourceEl) ? sourceEl.GetString() : null,
@@ -147,6 +155,10 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
     {
         writer.WriteStartObject();
         writer.WriteString("Name", value.Name);
+        if (!string.IsNullOrWhiteSpace(value.BattleboardNameOverride))
+            writer.WriteString("BattleboardNameOverride", value.BattleboardNameOverride);
+        if (!string.IsNullOrWhiteSpace(value.UpdateKey))
+            writer.WriteString("UpdateKey", value.UpdateKey);
         if (!string.IsNullOrWhiteSpace(value.Type)) writer.WriteString("Type", value.Type);
         if (!string.IsNullOrWhiteSpace(value.Effect)) writer.WriteString("Effect", value.Effect);
         if (!string.IsNullOrWhiteSpace(value.Source)) writer.WriteString("Source", value.Source);

@@ -2009,7 +2009,7 @@
   {
     "name": "Sithantis' Ebon Tendrils",
     "level": 10,
-    "colour": "Black\nBlack",
+    "colour": "Black",
     "verbal": "By all the powers of darkness I ask the Dragon to breath upon that ……!",
     "description": "This spell acts as per the disintegrate range spell but functions vs any object that does not contain a spiritual component.",
     "IsAdvanced": true,
@@ -2171,7 +2171,7 @@
   {
     "name": "Thunderbolt",
     "level": 8,
-    "colour": "Blue\nBlue",
+    "colour": "blue",
     "verbal": "By all the powers of air and thunder, let power be sundered – I shatter this ....",
     "description": "As per Shatter but will affect objects with a magical component. Will not function on other supernatural objects such as spiritual weapons. Can be\nmended as normal by use of a Mend spell as the magic remains in the object. However if an 'item' or similar, its powers cannot be commanded while it is not whole.\nCannot be used on Wall spells or similar!",
     "IsAdvanced": true,

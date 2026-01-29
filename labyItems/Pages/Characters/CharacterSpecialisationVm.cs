@@ -55,6 +55,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     private bool _isSyncingRaceSubtype;
     private SpecialisationGroupVm? _baronialTraditionGroup;
     private const string BaronialTraditionKey = "BaronialTradition";
+    private const string WizardColourKey = "Wizard Colour";
     private const string BaronialAncestryKey = "Baronial Ancestry";
     private readonly List<SpecialisationGroupVm> _wizardColourGroups = new();
     private readonly List<SpecialisationGroupVm> _vivomancerColourGroups = new();
@@ -291,32 +292,32 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             var required = new List<RequiredChoice>();
             if (cls.Length > 0)
             {
-            var allClasses = await ClassService.GetAllAsync();
-            EnsureActive();
-            if (allClasses.TryGetValue(cls, out var classRec) && classRec != null)
-            {
-                foreach (var (kvp, abilityToken) in LoopHelper.Flatten(
-                             classRec.Levels ?? new Dictionary<string, List<AbilityDefinition>>(),
-                             entry => entry.Value ?? new List<AbilityDefinition>()))
+                var allClasses = await ClassService.GetAllAsync();
+                EnsureActive();
+                if (allClasses.TryGetValue(cls, out var classRec) && classRec != null)
                 {
-                    if (!int.TryParse(kvp.Key, out var level))
-                        continue;
-
-                    // gathers by key, saves to 'required'
-                    var key = FindSpecialisationKey(abilityToken.Name, specialisationIndex.Keys);
-                    if (key == null)
-                        continue;
-
-                    required.Add(new RequiredChoice
+                    foreach (var (kvp, abilityToken) in LoopHelper.Flatten(
+                                 classRec.Levels ?? new Dictionary<string, List<AbilityDefinition>>(),
+                                 entry => entry.Value ?? new List<AbilityDefinition>()))
                     {
-                        Source = ChoiceSource.Class,
-                        SourceName = cls,
-                        SpecialisationKey = key,
-                        Level = level
-                    });
+                        if (!int.TryParse(kvp.Key, out var level))
+                            continue;
+
+                        // gathers by key, saves to 'required'
+                        var key = FindSpecialisationKey(abilityToken.Name, specialisationIndex.Keys);
+                        if (key == null)
+                            continue;
+
+                        required.Add(new RequiredChoice
+                        {
+                            Source = ChoiceSource.Class,
+                            SourceName = cls,
+                            SpecialisationKey = key,
+                            Level = level
+                        });
+                    }
                 }
             }
-        }
 
             if (race.Length > 0)
             {
@@ -356,27 +357,27 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                             SyncRaceSubtypeDraftAndPreview();
                     }
 
-                foreach (var (kvp, abilityToken) in LoopHelper.Flatten(
-                             raceRec.LevelledAbilities ?? new Dictionary<string, List<AbilityDefinition>>(),
-                             entry => entry.Value ?? new List<AbilityDefinition>()))
-                {
-                    if (!int.TryParse(kvp.Key, out var level))
-                        continue;
-
-                    var key = FindSpecialisationKey(abilityToken.Name, specialisationIndex.Keys);
-                    if (key == null)
-                        continue;
-
-                    required.Add(new RequiredChoice
+                    foreach (var (kvp, abilityToken) in LoopHelper.Flatten(
+                                 raceRec.LevelledAbilities ?? new Dictionary<string, List<AbilityDefinition>>(),
+                                 entry => entry.Value ?? new List<AbilityDefinition>()))
                     {
-                        Source = ChoiceSource.Race,
-                        SourceName = race,
-                        SpecialisationKey = key,
-                        Level = level
-                    });
+                        if (!int.TryParse(kvp.Key, out var level))
+                            continue;
+
+                        var key = FindSpecialisationKey(abilityToken.Name, specialisationIndex.Keys);
+                        if (key == null)
+                            continue;
+
+                        required.Add(new RequiredChoice
+                        {
+                            Source = ChoiceSource.Race,
+                            SourceName = race,
+                            SpecialisationKey = key,
+                            Level = level
+                        });
+                    }
                 }
             }
-        }
 
             var byKey = required
                 .GroupBy(r => r.SpecialisationKey, StringComparer.OrdinalIgnoreCase)
@@ -494,6 +495,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     private void OnAnySelectionChanged()
     {
+        SyncWizardColourSelectionToDraft();
         SyncRaceSubtypeDraftAndPreview();
         SyncBaronialSelectionToDraft();
         UpdateSpellCustomisationVisibility();
@@ -506,6 +508,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     private void OnMappedSpecialisationChanged()
     {
         SyncMappedSelectionsToDraft();
+        SyncWizardColourSelectionToDraft();
         UpdateBaronialAncestryNote();
         RecomputeCompletion();
         _builder.NotifyGatingChanged();
@@ -520,7 +523,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         var toRemove = Draft.SpecialisationSelections.Keys
-            .Where(k => !currentKeys.Contains(k))
+            .Where(k => !currentKeys.Contains(k) && !IsPersistedNonMappedKey(k))
             .ToList();
 
         foreach (var key in toRemove)
@@ -534,6 +537,29 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             else
                 Draft.SpecialisationSelections[m.Key] = picked;
         }
+    }
+
+    private static bool IsPersistedNonMappedKey(string? key)
+        => string.Equals(key?.Trim(), WizardColourKey, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(key?.Trim(), BaronialTraditionKey, StringComparison.OrdinalIgnoreCase);
+
+    private void SyncWizardColourSelectionToDraft()
+    {
+        var group = Groups.FirstOrDefault(g => string.Equals(g.Title?.Trim(), WizardColourKey, StringComparison.OrdinalIgnoreCase));
+        if (group == null)
+        {
+            Draft.SpecialisationSelections.Remove(WizardColourKey);
+            return;
+        }
+
+        var picked = group.Slots
+            .Select(s => (s.SelectedOption ?? string.Empty).Trim())
+            .FirstOrDefault(s => !string.IsNullOrWhiteSpace(s)) ?? string.Empty;
+
+        if (string.IsNullOrWhiteSpace(picked))
+            Draft.SpecialisationSelections.Remove(WizardColourKey);
+        else
+            Draft.SpecialisationSelections[WizardColourKey] = picked;
     }
 
     private void SyncBaronialSelectionToDraft()
@@ -581,6 +607,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             UpdateDynamicSpecialisations();
             ApplyWardPactOverrides();
             SyncMappedSelectionsToDraft();
+            SyncWizardColourSelectionToDraft();
             UpdateBaronialTraditionGroup();
             UpdateBaronialAncestryNote();
             SyncBaronialSelectionToDraft();
@@ -642,6 +669,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         foreach (var (g, slot) in LoopHelper.Flatten(Groups, group => group.Slots))
         {
             if (!slot.HasSelection)
+                continue;
+
+            if (string.Equals(g.Title?.Trim(), "Wizard Colour", StringComparison.OrdinalIgnoreCase))
                 continue;
 
             var forcedDef = slot.ForcedAbilityDefinition;
@@ -1722,12 +1752,10 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         var optionCustomisations = BuildOptionCustomisations(abilities);
         var hasSpellCustomisation = HasSpellCustomisation(abilities);
 
-        // STRICT single-option customisation rule you asked for earlier
         var hasSingleOptionWithCustomisation =
             optionNames.Count == 1 &&
             optionCustomisations.ContainsKey(optionNames[0].Trim());
 
-        // Centralise mode decisions here, not at call site
         var useMagicColourEnum = IsWizardColour(title);
         var useVivomancerColourEnum = IsVivomancerColour(title);
         var useDictionarySearch = UsesDictionarySearch(title);
@@ -1752,7 +1780,20 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             CustomisationOptionsProvider: ResolveCustomisationOptions,
             HideAbilityPickerWhenSingleOption: hasSpellCustomisation || hasSingleOptionWithCustomisation);
 
-        var group = new SpecialisationGroupVm(config, initialByLevel ?? new Dictionary<int, string>());
+        var seeded = initialByLevel;
+        if (seeded == null && string.Equals(title.Trim(), WizardColourKey, StringComparison.OrdinalIgnoreCase))
+        {
+            var saved = GetSavedSpecialisationSelection(WizardColourKey);
+            if (!string.IsNullOrWhiteSpace(saved))
+            {
+                var level = levels.FirstOrDefault();
+                seeded = new Dictionary<int, string>();
+                if (level > 0)
+                    seeded[level] = saved.Trim();
+            }
+        }
+
+        var group = new SpecialisationGroupVm(config, seeded ?? new Dictionary<int, string>());
 
         group.IsExpanded = true;
 
@@ -1815,6 +1856,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         {
             Name = updatedName,
             Type = def.Type ?? string.Empty,
+            BattleboardNameOverride = def.BattleboardNameOverride,
+            UpdateKey = def.UpdateKey,
             Effect = def.Effect,
             Source = def.Source,
             Count = def.Count,

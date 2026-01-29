@@ -115,7 +115,7 @@ VALUES (@id, @name, @name_lower, @level, @colour, @range, @duration, @verbal, @d
         var assembly = Assembly.GetExecutingAssembly();
         var resourceName = assembly.GetManifestResourceNames()
             .FirstOrDefault(n =>
-                n.EndsWith("new_standard.json", StringComparison.OrdinalIgnoreCase));
+                n.EndsWith("allSpells.json", StringComparison.OrdinalIgnoreCase));
         if (resourceName is null)
             return new List<SpellRaw>();
 

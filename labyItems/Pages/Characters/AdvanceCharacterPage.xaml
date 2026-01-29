@@ -134,41 +134,70 @@
         <ScrollView>
             <VerticalStackLayout Padding="16"
                                  Spacing="12">
-                <Label Text="{Binding SpellListsDisabledReason}"
-                       FontSize="12"
-                       Opacity="0.7"
-                       IsVisible="{Binding SpellListsEnabled, Converter={StaticResource InverseBoolConverter}}"/>
+                <Label Text="Spells"
+                       FontAttributes="Bold"
+                       FontSize="18"/>
+                <Button Text="+ Add specialists"
+                        Command="{Binding AddSpecialistListCommand}"
+                        IsEnabled="{Binding CanAddSpecialistList}"/>
 
-                <VerticalStackLayout IsVisible="{Binding SpellListsEnabled}"
-                                     Spacing="12">
-                    <Label Text="Spell Lists"
-                           FontAttributes="Bold"
-                           FontSize="18"/>
-                    <Button Text="+ Add spell list"
-                            Command="{Binding AddSpellListCommand}"/>
-
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpellLists}"
-                                         Spacing="12">
+                <VerticalStackLayout IsVisible="{Binding ShowSpecialistSlotsBar}"
+                                     Spacing="6">
+                    <Label Text="{Binding SpecialistSlotsSummary}"
+                           TextColor="{Binding SpecialistSlotsSummaryColor}"
+                           FontSize="12"
+                           Opacity="0.7"/>
+                    <FlexLayout Direction="Row"
+                                HeightRequest="10"
+                                BindableLayout.ItemsSource="{Binding SpecialistSlotSegments}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Frame Padding="12"
-                                       CornerRadius="12"
-                                       BorderColor="#E5E7EB"
-                                       HasShadow="False">
-                                    <VerticalStackLayout Spacing="10">
-                                        <Grid ColumnDefinitions="*,Auto"
-                                              ColumnSpacing="8">
-                                            <Entry Text="{Binding Name, Mode=TwoWay}"
-                                                   Placeholder="Spell list name"/>
-                                            <Button Grid.Column="1"
-                                                    Text="Remove list"
-                                                    Padding="10,4"
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveSpellListCommand}"
-                                                    CommandParameter="{Binding .}"/>
-                                        </Grid>
+                                <BoxView Color="{Binding Colour}"
+                                         FlexLayout.Grow="{Binding Weight}"/>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </VerticalStackLayout>
 
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpellLists}"
+                                     Spacing="12">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   BorderColor="#E5E7EB"
+                                   HasShadow="False">
+                                <VerticalStackLayout Spacing="10">
+                                    <Grid ColumnDefinitions="*,Auto,Auto"
+                                          ColumnSpacing="8">
+                                        <Label Text="{Binding HeaderTitle}"
+                                               FontAttributes="Bold"
+                                               VerticalTextAlignment="Center"
+                                               IsVisible="{Binding ShowHeaderLabel}"/>
+                                        <Entry Text="{Binding Name, Mode=TwoWay}"
+                                               Placeholder="Spell list name"
+                                               IsVisible="{Binding ShowNameEditor}"/>
+                                        <Button Grid.Column="1"
+                                                Text="Remove list"
+                                                Padding="10,4"
+                                                IsVisible="{Binding CanRemoveList}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveSpellListCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        <Button Grid.Column="2"
+                                                Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
+                                                BackgroundColor="Transparent"
+                                                TextColor="#6B7280"
+                                                Padding="0"
+                                                WidthRequest="32"
+                                                HeightRequest="32"
+                                                Command="{Binding ToggleExpandedCommand}"/>
+                                    </Grid>
+
+                                    <VerticalStackLayout IsVisible="{Binding IsExpanded}"
+                                                         Spacing="8">
                                         <Button Text="+ Add spell"
                                                 Padding="10,4"
+                                                IsVisible="{Binding CanEdit}"
                                                 Command="{Binding AddEntryCommand}"/>
 
                                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
@@ -177,15 +206,20 @@
                                                 <DataTemplate>
                                                     <Grid ColumnDefinitions="*,Auto"
                                                           ColumnSpacing="8">
+                                                        <Label Text="{Binding DisplayText}"
+                                                               VerticalTextAlignment="Center"
+                                                               IsVisible="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.IsReadOnly}"/>
                                                         <controls:DictionarySearchBar x:TypeArguments="viewModels:SpellOption"
                                                                                       ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.FilteredOptions}"
                                                                                       SelectedValue="{Binding SelectedSpell, Mode=TwoWay}"
-                                                                                      PlaceholderText="Type spell name"/>
+                                                                                      PlaceholderText="Type spell name"
+                                                                                      IsVisible="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.CanEdit}"/>
                                                         <ImageButton Grid.Column="1"
                                                                      HeightRequest="36"
                                                                      WidthRequest="36"
                                                                      Padding="6"
                                                                      BackgroundColor="Transparent"
+                                                                     IsVisible="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.CanEdit}"
                                                                      Command="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
                                                                      CommandParameter="{Binding .}">
                                                             <ImageButton.Source>
@@ -199,10 +233,10 @@
                                             </BindableLayout.ItemTemplate>
                                         </VerticalStackLayout>
                                     </VerticalStackLayout>
-                                </Frame>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>

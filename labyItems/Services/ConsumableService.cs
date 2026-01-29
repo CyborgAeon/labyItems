@@ -24,7 +24,7 @@ public static class ConsumableService
     {
         if (_cache != null) return _cache;
 
-        using var s = await FileSystem.OpenAppPackageFileAsync("grimoire/new_standard.json");
+        using var s = await FileSystem.OpenAppPackageFileAsync("grimoire/allSpells.json");
         using var r = new StreamReader(s);
         var json = await r.ReadToEndAsync();
 
@@ -42,6 +42,6 @@ public static class ConsumableService
             // ConsumableType.SpiritualScroll   => SpiritualScrollPickerPage.PickAsync(nav),
             // ConsumableType.DruidicTalisman   => DruidicTalismanPickerPage.PickAsync(nav),
             // ConsumableType.NeuronicShard     => NeuronicShardPickerPage.PickAsync(nav),
-            _                                => Task.FromResult<ConsumableEntry?>(null)
+            _ => Task.FromResult<ConsumableEntry?>(null)
         };
 }

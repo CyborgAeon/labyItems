@@ -64,6 +64,8 @@ public static class AbilityDraftBuilder
         var draft = new AbilityDraft
         {
             Name = def.Name ?? string.Empty,
+            BattleboardNameOverride = def.BattleboardNameOverride,
+            UpdateKey = def.UpdateKey,
             AbilityType = type,
             LevelGained = levelGained,
             Effect = def.Effect,

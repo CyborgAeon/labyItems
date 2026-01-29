@@ -3,6 +3,8 @@ namespace labyItems.Models.Characters;
 public sealed class AbilityDraft
 {
     public string Name { get; set; } = "";
+    public string? BattleboardNameOverride { get; set; }
+    public string? UpdateKey { get; set; }
     public string ShortStringValue { get; set; } = "";
     public string? Effect { get; set; }
     public string? Source { get; set; }

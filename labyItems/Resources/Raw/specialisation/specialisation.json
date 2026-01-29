@@ -2053,7 +2053,7 @@
     },
     "Rain": {
       "ClassRestriction": [
-        "High Wizard",
+        "High-Wizard",
         "Wizard",
         "Warlock",
         "Rogue",
@@ -2071,7 +2071,7 @@
       }
     },
     "Rainfinder": {
-      "ClassRestriction": ["Wizards", "High Wizards", "Druids", "High Druids"],
+      "ClassRestriction": ["Wizards", "High-Wizards", "Druids", "High Druids"],
       "Levels": {
         "1": [
           {

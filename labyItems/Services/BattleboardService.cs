@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using labyItems.Models.Characters;
+using labyItems.Models.Enums;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -106,7 +107,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
         }
         ws.Cell("T35").Value = draft.PlayerName;
         ws.Cell("T36").Value = draft.Name;
-        ws.Cell("T37").Value = draft.Class ?? "";
+        ws.Cell("T37").Value = BuildClassDisplayName(draft);
         ws.Cell("AA35").Value = BuildRaceDisplayName(draft, draft.Abilities);
         ws.Cell("AA36").Value = draft.Alignment.ToString();
         ws.Cell("AA37").Value = draft.Points;
@@ -442,17 +443,76 @@ public sealed class BattleboardExportService : IBattleboardExportService
     {
         if (ability == null) return string.Empty;
 
-        var effect = ability.ShortStringValue ?? string.Empty;
         var name = ability.Name ?? string.Empty;
-
-        var text = !string.IsNullOrWhiteSpace(effect) && !string.Equals(effect, name, StringComparison.OrdinalIgnoreCase)
-            ? effect
-            : name;
+        var overrideName = ability.BattleboardNameOverride ?? string.Empty;
+        var text = !string.IsNullOrWhiteSpace(overrideName) ? overrideName : name;
+        if (string.IsNullOrWhiteSpace(text))
+            text = ability.ShortStringValue ?? string.Empty;
 
         if (ability.AbilityType == AbilityType.Immunity)
             text = StripImmunityPrefix(text);
 
         return text;
+    }
+
+    private static string BuildClassDisplayName(CharacterDraft draft)
+    {
+        var cls = (draft.Class ?? string.Empty).Trim();
+        if (cls.Length == 0)
+            return cls;
+
+        if (!IsWizardClassName(cls))
+            return cls;
+
+        var colour = TryGetWizardColour(draft);
+        if (!colour.HasValue)
+            return cls;
+
+        var colourName = colour.Value.ToString();
+        if (cls.StartsWith(colourName, StringComparison.OrdinalIgnoreCase))
+            return cls;
+
+        return $"{colourName} {cls}";
+    }
+
+    private static bool IsWizardClassName(string className)
+    {
+        if (string.IsNullOrWhiteSpace(className))
+            return false;
+
+        return className.Equals("Wizard", StringComparison.OrdinalIgnoreCase)
+               || className.Equals("High-Wizard", StringComparison.OrdinalIgnoreCase)
+               || className.Equals("High Wizard", StringComparison.OrdinalIgnoreCase)
+               || className.Equals("Warlock", StringComparison.OrdinalIgnoreCase)
+               || className.Equals("Rogue", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static MagicColours? TryGetWizardColour(CharacterDraft draft)
+    {
+        if (draft?.SpecialisationSelections != null)
+        {
+            var kvp = draft.SpecialisationSelections.FirstOrDefault(x =>
+                x.Key.Contains("Wizard Colour", StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(x.Value));
+
+            if (!string.IsNullOrWhiteSpace(kvp.Value)
+                && Enum.TryParse<MagicColours>(kvp.Value.Trim().Replace(" ", string.Empty), true, out var colour))
+                return colour;
+        }
+
+        if (draft?.Abilities != null)
+        {
+            var ability = draft.Abilities.FirstOrDefault(a =>
+                !string.IsNullOrWhiteSpace(a?.Source)
+                && a.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase));
+
+            var name = ability?.Name ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(name)
+                && Enum.TryParse<MagicColours>(name.Trim().Replace(" ", string.Empty), true, out var fromAbility))
+                return fromAbility;
+        }
+
+        return null;
     }
 
     private static string StripImmunityPrefix(string text)
