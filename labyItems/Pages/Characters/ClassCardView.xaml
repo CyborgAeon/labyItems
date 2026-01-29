@@ -74,8 +74,7 @@
                                                      RightEmoji="{Binding SplitRightEmoji}"
                                                      LeftColor="{Binding SplitLeftBg}"
                                                      RightColor="{Binding SplitRightBg}"
-                                                     BorderColor="#E5E7EB"
-                                                     DiagonalColor="#374151">
+                                                     BorderColor="#E5E7EB">
                                 <controls:SplitEmojiIcon.Triggers>
                                     <DataTrigger TargetType="controls:SplitEmojiIcon"
                                                  Binding="{Binding HasSplitIcon}"

@@ -44,15 +44,6 @@ public sealed class SplitEmojiIcon : GraphicsView, IDrawable
             typeof(SplitEmojiIcon),
             Color.FromArgb("#E5E7EB"),
             propertyChanged: OnVisualPropertyChanged);
-
-    public static readonly BindableProperty DiagonalColorProperty =
-        BindableProperty.Create(
-            nameof(DiagonalColor),
-            typeof(Color),
-            typeof(SplitEmojiIcon),
-            Color.FromArgb("#374151"),
-            propertyChanged: OnVisualPropertyChanged);
-
     public string LeftEmoji
     {
         get => (string)GetValue(LeftEmojiProperty);
@@ -83,11 +74,6 @@ public sealed class SplitEmojiIcon : GraphicsView, IDrawable
         set => SetValue(BorderColorProperty, value);
     }
 
-    public Color DiagonalColor
-    {
-        get => (Color)GetValue(DiagonalColorProperty);
-        set => SetValue(DiagonalColorProperty, value);
-    }
 
     public SplitEmojiIcon()
     {
@@ -98,7 +84,7 @@ public sealed class SplitEmojiIcon : GraphicsView, IDrawable
 
     void IDrawable.Draw(ICanvas canvas, RectF dirtyRect)
     {
-        var size = Math.Min(dirtyRect.Width, dirtyRect.Height);
+        var size = Math.Min(dirtyRect.Width - 5, dirtyRect.Height - 5);
         if (size <= 0)
             return;
 
@@ -136,10 +122,6 @@ public sealed class SplitEmojiIcon : GraphicsView, IDrawable
         canvas.FillPath(rightTriangle);
 
         canvas.RestoreState();
-
-        canvas.StrokeColor = DiagonalColor;
-        canvas.StrokeSize = 1;
-        canvas.DrawLine(rect.Left, rect.Bottom, rect.Right, rect.Top);
 
         canvas.StrokeColor = BorderColor;
         canvas.StrokeSize = 1;

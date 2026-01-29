@@ -1,10 +1,10 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using labyItems.Models.Characters;
-using Microsoft.Maui.Storage;
+using SQLite;
 
 namespace labyItems.Services;
 
@@ -18,18 +18,42 @@ public static class ClassService
 
     private static Dictionary<string, CharacterClassRecord>? _cache;
 
-    public static async Task<Dictionary<string, CharacterClassRecord>> GetAllAsync()
+    public static Task<Dictionary<string, CharacterClassRecord>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        if (_cache != null) return Task.FromResult(_cache);
 
-        using var s = await FileSystem.OpenAppPackageFileAsync("people/classes.json");
-        using var r = new StreamReader(s);
-        var json = await r.ReadToEndAsync();
+        try
+        {
+            using var conn = ServiceHelper.OpenReadOnlyConnection();
+            var rows = conn.Query<ClassRow>("SELECT name, data_json FROM classes ORDER BY name;");
+            var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+            foreach (var row in rows)
+            {
+                if (string.IsNullOrWhiteSpace(row.name))
+                    continue;
 
-        _cache = JsonSerializer.Deserialize<Dictionary<string, CharacterClassRecord>>(json, _jsonOptions)
-                 ?? new Dictionary<string, CharacterClassRecord>();
+                var record = string.IsNullOrWhiteSpace(row.data_json)
+                    ? new CharacterClassRecord()
+                    : (JsonSerializer.Deserialize<CharacterClassRecord>(row.data_json, _jsonOptions) ?? new CharacterClassRecord());
 
-        return _cache;
+                dict[row.name] = record;
+            }
+
+            _cache = dict;
+        }
+        catch (Exception ex)
+        {
+            ServiceHelper.LogDbError("Get classes", ex);
+            throw;
+        }
+
+        return Task.FromResult(_cache);
+    }
+
+    private sealed class ClassRow
+    {
+        public string name { get; set; } = string.Empty;
+        public string? data_json { get; set; }
     }
 }
 

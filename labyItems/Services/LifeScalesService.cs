@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Maui.Storage;
+using SQLite;
 
 namespace labyItems.Services;
 
@@ -12,18 +10,41 @@ public static class LifeScalesService
 {
     private static Dictionary<string, Dictionary<string, List<int[]>>>? _cache;
 
-    public static async Task<Dictionary<string, Dictionary<string, List<int[]>>>> GetAllAsync()
+    public static Task<Dictionary<string, Dictionary<string, List<int[]>>>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        if (_cache != null) return Task.FromResult(_cache);
+        try
+        {
+            using var conn = ServiceHelper.OpenReadOnlyConnection();
+            var rows = conn.Query<LifeScaleRow>("SELECT race, class, idx, body, loc FROM lifescales ORDER BY race, class, idx;");
+            var dict = new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
 
-        using var s = await FileSystem.OpenAppPackageFileAsync("people/lifescales.json");
-        using var r = new StreamReader(s);
-        var json = await r.ReadToEndAsync();
+            foreach (var row in rows)
+            {
+                if (!dict.TryGetValue(row.race, out var classMap))
+                {
+                    classMap = new Dictionary<string, List<int[]>>(StringComparer.OrdinalIgnoreCase);
+                    dict[row.race] = classMap;
+                }
 
-        _cache = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<int[]>>>>(json)
-                 ?? new Dictionary<string, Dictionary<string, List<int[]>>>();
+                if (!classMap.TryGetValue(row.@class, out var list))
+                {
+                    list = new List<int[]>();
+                    classMap[row.@class] = list;
+                }
 
-        return _cache;
+                list.Add(new[] { row.body, row.loc });
+            }
+
+            _cache = dict;
+        }
+        catch (Exception ex)
+        {
+            ServiceHelper.LogDbError("Get lifescales", ex);
+            throw;
+        }
+
+        return Task.FromResult(_cache);
     }
 
     public static async Task<IReadOnlyList<string>> GetRaceNamesAsync()
@@ -131,3 +152,12 @@ public static class LifeScalesService
 }
 
 public readonly record struct LifeScalePoint(int Body, int Loc);
+
+internal sealed class LifeScaleRow
+{
+    public string race { get; set; } = string.Empty;
+    public string @class { get; set; } = string.Empty;
+    public int idx { get; set; }
+    public int body { get; set; }
+    public int loc { get; set; }
+}

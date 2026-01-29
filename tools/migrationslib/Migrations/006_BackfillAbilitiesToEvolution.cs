@@ -33,7 +33,7 @@ public sealed class BackfillAbilitiesToEvolution : Migration
         Execute.Sql("CREATE INDEX IF NOT EXISTS idx_evolution_ngrams_token ON evolution_ngrams(token);");
         Execute.Sql("CREATE INDEX IF NOT EXISTS idx_evolution_ngrams_evolution_id ON evolution_ngrams(evolution_id);");
 
-        var abilities = LoadAbilitiesFromResource();
+        var abilities = LoadAllAbilitiesFromResources();
         if (abilities.Count == 0)
             return;
 
@@ -61,7 +61,7 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
                     continue;
 
                 var desc = (a.desc ?? string.Empty).Trim();
-                var available = (a.available ?? string.Empty).Trim();
+                var available = a.available;
                 var costRaw = (a.cost ?? string.Empty).Trim();
                 var canBuyMultiple = costRaw.Contains('*');
                 var hasPlus = costRaw.Contains('+');
@@ -96,7 +96,7 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
                     index = name,
                     desc,
                     cost,
-                    table = a.table,
+                    a.table,
                     canBuyMultiple,
                     preReqs
                 });
@@ -130,7 +130,7 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
         if (!Schema.Table("evolution").Exists())
             return;
 
-        var abilities = LoadAbilitiesFromResource();
+        var abilities = LoadAllAbilitiesFromResources();
         if (abilities.Count == 0)
             return;
 
@@ -225,7 +225,15 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
             yield return s.Substring(i, n);
     }
 
-    private static List<AbilityRaw> LoadAbilitiesFromResource()
+    private static List<AbilityRaw> LoadAllAbilitiesFromResources()
+    {
+        var combined = new List<AbilityRaw>();
+        combined.AddRange(LoadMakesAbilities());
+        combined.AddRange(LoadEvolutionTables());
+        return combined;
+    }
+
+    private static List<AbilityRaw> LoadMakesAbilities()
     {
         var assembly = Assembly.GetExecutingAssembly();
         var resourceName = assembly.GetManifestResourceNames()
@@ -243,13 +251,79 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
         return JsonSerializer.Deserialize<List<AbilityRaw>>(json, opts) ?? new List<AbilityRaw>();
     }
 
+    private static List<AbilityRaw> LoadEvolutionTables()
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        var resourceNames = assembly.GetManifestResourceNames()
+            .Where(n => n.Contains("evolution_classes", StringComparison.OrdinalIgnoreCase) && n.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (resourceNames.Count == 0)
+            return new List<AbilityRaw>();
+
+        var list = new List<AbilityRaw>();
+        foreach (var resourceName in resourceNames)
+        {
+            var table = TryParseTableNumber(resourceName);
+            if (table <= 0)
+                continue;
+
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream is null)
+                continue;
+
+            using var reader = new StreamReader(stream);
+            var json = reader.ReadToEnd();
+            var opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var rows = JsonSerializer.Deserialize<List<EvolutionRaw>>(json, opts) ?? new List<EvolutionRaw>();
+            foreach (var row in rows)
+            {
+                list.Add(new AbilityRaw
+                {
+                    available = row.available,
+                    index = row.index,
+                    desc = row.desc,
+                    cost = row.cost,
+                    table = table
+                });
+            }
+        }
+
+        return list;
+    }
+
+    private static int TryParseTableNumber(string resourceName)
+    {
+        var marker = "table_";
+        var idx = resourceName.LastIndexOf(marker, StringComparison.OrdinalIgnoreCase);
+        if (idx < 0)
+            return 0;
+
+        var start = idx + marker.Length;
+        var end = resourceName.IndexOf(".json", start, StringComparison.OrdinalIgnoreCase);
+        if (end < 0)
+            end = resourceName.Length;
+
+        var slice = resourceName.Substring(start, end - start);
+        return int.TryParse(slice, out var value) ? value : 0;
+    }
+
     private sealed class AbilityRaw
     {
-        public string? available { get; set; }
-        public string? index { get; set; }
+        public List<string> available { get; set; } = new();
+        public string index { get; set; } = string.Empty;
         public string? desc { get; set; }
         public string? cost { get; set; }
         public int table { get; set; }
         public List<string>? preReqs { get; set; }
+    }
+
+    private sealed class EvolutionRaw
+    {
+        public List<string> available { get; set; } = new();
+        public string index { get; set; } = string.Empty;
+        public string? desc { get; set; }
+        public string? cost { get; set; }
+
     }
 }

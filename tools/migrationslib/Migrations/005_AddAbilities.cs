@@ -64,7 +64,7 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
                     continue;
 
                 var desc = (a.desc ?? string.Empty).Trim();
-                var available = (a.available ?? string.Empty).Trim();
+                var available = JsonSerializer.Serialize(a.available);
                 var costRaw = (a.cost ?? string.Empty).Trim();
                 var canBuyMultiple = costRaw.Contains('*');
                 var hasPlus = costRaw.Contains('+');
@@ -248,7 +248,7 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
 
     private sealed class AbilityRaw
     {
-        public string? available { get; set; }
+        public List<string> available { get; set; } = new();
         public string? index { get; set; }
         public string? desc { get; set; }
         public string? cost { get; set; }

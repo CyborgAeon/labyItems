@@ -18,7 +18,7 @@ public static class ManuAbilityService
         if (_cache is { Count: > 0 }) return _cache;
         try
         {
-            var list = await GeneralService.GetAllAbilitiesAsync();
+            var list = await EvolutionService.GetAllAbilitiesAsync();
             _cache = list
                 .Select(e => new ManuAbilityEntry(
                     e.Index,
@@ -45,7 +45,7 @@ public static class ManuAbilityService
         List<ManuAbilityEntry> mapped;
         try
         {
-            var results = await GeneralService.SearchAbilitiesAsync(query);
+            var results = await EvolutionService.SearchAbilitiesAsync(query);
             mapped = results
                 .Select(e => new ManuAbilityEntry(
                     e.Index,

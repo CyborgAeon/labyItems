@@ -1,20 +1,12 @@
 using System.ComponentModel;
 using labyItems.Services;
-using static labyItems.Services.GeneralService;
 
 namespace labyItems.Pages.Calculator;
 
 public partial class General : ContentPage
 {
-    public sealed record Result {
-        public string Index { get; init; }
-        public  string Description {get;init;}
-        public int Cost { get; init; }
-        public int Table { get; init; }
-        public bool? IsImmunity { get; init; }
-    }
-    private readonly List<Result> _rows = new();
-    private TaskCompletionSource<Result?>? _tcs;
+    private readonly List<EvolutionService.EvolutionResult> _rows = new();
+    private TaskCompletionSource<EvolutionService.EvolutionResult?>? _tcs;
 
     public General()
     {
@@ -29,7 +21,7 @@ public partial class General : ContentPage
 
     private async Task Load(string q)
     {
-        var list = await GeneralService.SearchByIndexAsync(q);
+        var list = await EvolutionService.SearchByIndexAsync(q);
         _rows.Clear();
         
         _rows.AddRange(list);
@@ -44,7 +36,7 @@ public partial class General : ContentPage
 
     private async void OnPick(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.CurrentSelection.FirstOrDefault() is Result row)
+        if (e.CurrentSelection.FirstOrDefault() is EvolutionService.EvolutionResult row)
         {
             _tcs?.TrySetResult(row);
             ((CollectionView)sender!).SelectedItem = null;
@@ -52,9 +44,9 @@ public partial class General : ContentPage
         }
     }
 
-    public async Task<Result?> PickAsync(INavigation nav)
+    public async Task<EvolutionService.EvolutionResult?> PickAsync(INavigation nav)
     {
-        _tcs = new TaskCompletionSource<Result?>();
+        _tcs = new TaskCompletionSource<EvolutionService.EvolutionResult?>();
         await nav.PushAsync(this);
         return await _tcs.Task;
     }

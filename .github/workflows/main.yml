@@ -110,22 +110,22 @@ jobs:
 
           echo "Found run id: $run_id. Downloading artifact..."
           artifacts=$(curl -s -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/runs/${run_id}/artifacts")
-          artifact_id=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name=="default.db") | .id // empty')
+          artifact_id=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name=="laby.db") | .id // empty')
           if [ -z "$artifact_id" ]; then
-            echo "No default.db artifact found in run $run_id; aborting release." >&2
+            echo "No laby.db artifact found in run $run_id; aborting release." >&2
             exit 1
           fi
 
           curl -s -L -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${artifact_id}/zip" --output artifact.zip
           mkdir -p artifact && unzip -q artifact.zip -d artifact
-          dbfile=$(find artifact -type f -name 'default.db' | head -n1 || true)
+          dbfile=$(find artifact -type f -name 'laby.db' | head -n1 || true)
           if [ -z "$dbfile" ]; then
-            echo "default.db not found in artifact zip" >&2
+            echo "laby.db not found in artifact zip" >&2
             exit 1
           fi
           mkdir -p labyItems/Resources/Raw
-          cp "$dbfile" labyItems/Resources/Raw/default.db
-          echo "Copied default.db into labyItems/Resources/Raw/default.db"
+          cp "$dbfile" labyItems/Resources/Raw/laby.db
+          echo "Copied laby.db into labyItems/Resources/Raw/laby.db"
           rm -rf artifact artifact.zip
 
       - name: Restore

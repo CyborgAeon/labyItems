@@ -18,7 +18,7 @@ internal class EvocRaw
 
 internal sealed class TableRaw
 {
-    public string? Available { get; set; }
+    public List<string> Available { get; set; } = new();
     public string Index { get; set; } = string.Empty;
     public string? Desc { get; set; }
     public string? Cost { get; set; }
@@ -26,7 +26,7 @@ internal sealed class TableRaw
 
 internal sealed class AbilityRaw
 {
-    public string? Available { get; set; }
+    public List<string> Available { get; set; } = new();
     public string Index { get; set; } = string.Empty;
     public string? Desc { get; set; }
     public string? Cost { get; set; }
@@ -226,11 +226,11 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                 var idx = (r.Index ?? "").Trim();
                 if (string.IsNullOrWhiteSpace(idx)) continue;
                 var desc = (r.Desc ?? "").Trim();
-                var available = (r.Available ?? "").Trim();
                 var costRaw = (r.Cost ?? "").Trim();
                 var canBuyMultiple = costRaw.Contains('*');
                 var hasPlus = costRaw.Contains('+');
                 var cost = TryParseCostForTool(costRaw);
+                var available = JsonSerializer.Serialize(r.Available);
                 List<string>? preReqs = hasPlus ? new List<string>() : null;
                 var id = DeterministicGuid($"evo|{tableNum}|{idx}").ToString();
 
@@ -298,13 +298,12 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                 if (string.IsNullOrWhiteSpace(idx)) continue;
 
                 var desc = (r.Desc ?? "").Trim();
-                var available = (r.Available ?? "").Trim();
                 var costRaw = (r.Cost ?? "").Trim();
                 var canBuyMultiple = costRaw.Contains('*');
                 var hasPlus = costRaw.Contains('+');
                 var cost = TryParseCostForTool(costRaw);
                 var table = r.Table;
-
+                var available = JsonSerializer.Serialize(r.Available);
                 List<string>? preReqs = null;
                 if (hasPlus)
                     preReqs = (r.PreReqs is { Count: > 0 } ? r.PreReqs : new List<string>());

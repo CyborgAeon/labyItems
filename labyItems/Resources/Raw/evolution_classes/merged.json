@@ -1,0 +1,1680 @@
+[
+  {
+    "available": ["ALL"],
+    "index": "Rebirth",
+    "desc": "player character can restart character at 1st level with same memories but with no abilities",
+    "table": 1,
+    "cost": "10"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Buy Specialist Skill",
+    "desc": "Buy specialist skill of own character class not already acquired. May be bought only once per skill.",
+    "table": 1,
+    "cost": "40",
+    "CanAddMultiple": true
+  },
+  {
+    "available": ["ALL"],
+    "index": "Max AC In Armour",
+    "desc": "+1 Max AC (Max 12) when wearing Master Crafted Armour. This is cumulative with other max AC increases up to max AC 12.",
+    "table": 1,
+    "cost": "15"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Immunity to Alignment Change",
+    "desc": "Immunity to Alignment Change except through Spiritual Mastery - half cost (20pts) for Paladins and Unholy Champions",
+    "table": 1,
+    "cost": "40"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Large Lung Capacity",
+    "desc": "Character can hold their breath for up to 5 minutes.",
+    "table": 1,
+    "cost": "20"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Psionic Sensitive",
+    "desc": "Character gains Psionic Sensitivity, as the Monk skill, but takes double effect from the first incoming neuronic attack of each five minutes, and may not apply defences against it.",
+    "table": 1,
+    "cost": "20"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Disease Resistance",
+    "desc": "Character cannot die from any disease, and suffers ½ effect or progression rate from all diseases. This resistance is gained from a chronic childhood illness that leaves the character permanently and incurably down 4 life to the chest and 2 to all other body locations.",
+    "table": 1,
+    "cost": "20"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Sensitive Smell",
+    "desc": "Character gains the Discern Smell ability but takes double effect from olfactory attacks. This ability is lost if the character ever acquires Immunity to Olfactory Attacks.",
+    "table": 1,
+    "cost": "20"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Emotional Sensitive",
+    "desc": "Character may utilise a physical Psi-Scan 1/day (no casting damage applies). Ability is lost if the character becomes immune to emotional attacks, and the points spent on it are wasted.",
+    "table": 1,
+    "cost": "25"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Trusty Old Weapon",
+    "desc": "The first non-\"item\" weapon (of type specified when ability bought) that the character begins the adventure with is immune to Shatter, Rust, Melt, Disintegrate, Warp, and similar as if supernatural until the end of the adventure. If this weapon is somehow destroyed or lost before the end of the adventure, the character gains zero achievement points for the mission (but gains a new weapon for the next adventure).",
+    "table": 1,
+    "cost": "25"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Good Memory for Names",
+    "desc": "Character can remember any name they have been told perfectly, and may ask the referee to repeat any name from the adventure brief at any reasonable and relevant time! Does not apply to remembering anything but names.",
+    "table": 1,
+    "cost": "30"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Natural Athlete",
+    "desc": "As Salmon Leap 1/day.",
+    "table": 1,
+    "cost": "30"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Vigilante",
+    "desc": "Character gains Discern Outlaw at will and a 25% rage 1/day vs. outlaws only. Discern Outlaw will reveal the degree of outlawing (e.g. outlaw, ostracised, wolfshead.) If the character finds an outlaw, they must attempt to bring them in alive (or dead; but only if the outlaw attacks the character or his party) to the local legal authority to meet justice for their crimes. If they do not, they suffer a permanent irremovable curse of conscience (as curse in the handbook, but physical in origin which fades only when the character successfully brings in his next outlaw) and gain zero points for the mission.",
+    "table": 1,
+    "cost": "30"
+  },
+  {
+    "available": ["ALL"],
+    "index": "1st Enhanced Reflexes",
+    "desc": "Grants +1 (total) DAC.",
+    "table": 1,
+    "cost": "35"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Burst of Strength",
+    "desc": "1/day for 5 minutes character gains +1 stackable Strength (max. +3!), but for 15 minutes afterwards is reduced to a maximum of +0 Strength.",
+    "table": 1,
+    "cost": "35"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Sensitive Hearing",
+    "desc": "Character gains the Acute Hearing ability but takes double effect from sonic attacks, and may never talk louder than a whisper (this will prevent the character from casting certain spells or miracles, such as Restore Life or Touch of Death, or use abilities such as Ki Shouts, War-Cries, etc). This ability is lost if the character ever acquires Immunity to Sonic Attacks.",
+    "table": 1,
+    "cost": "30"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Stubbornness",
+    "desc": "Character gains immunity to Listed Stopping Effects 1/day for 5 minutes but will never willingly retreat from a foe at any time, regardless of danger.",
+    "table": 1,
+    "cost": "40"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Natural Climbing Skills",
+    "desc": "Assisted Climb 1/day.",
+    "table": 1,
+    "cost": "40"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Superstitious Nature",
+    "desc": "Character may not use any form of magic spell, innate ability or item, but may sense magic 20' radius at will (Yes/No answer, not locational) and gains +1 MAC. Character is feared for 5 minutes if directly attacked by visible magic, to which Immunity to Fear does not apply.",
+    "table": 1,
+    "cost": "40"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Lucky Idea",
+    "desc": "1/day gains a minor informational insight into a single issue, physical in origin, with the exact information revealed completely at the discretion of the referee.",
+    "table": 1,
+    "cost": "50"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Psionic Retardation",
+    "desc": "Character gains Mind Block (as Monk), but may not buy any neuronic power, or even utilise neuronics from items.",
+    "table": 1,
+    "cost": "50"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Toxin Resistance",
+    "desc": "Character's advanced immune system duplicates the effects of Ant Venom 6 in his system once each hour and character falls unconscious for 5 minutes rather than dying from death poison. Character takes ½ effect from all beneficial ingestive potions.",
+    "table": 1,
+    "cost": "50"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Ancient Blessing",
+    "desc": "Gains a Fortified Spirit and Immunity to Slayer and like abilities, but dies permanently if they do anything or convinces another to do anything that would permanently slay anyone, including raising as undead.",
+    "table": 1,
+    "cost": "50"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Fated Hero",
+    "desc": "will succeed any TOD survival roll, if there is any chance at all of success (still costs res chance as normal). Restore Life type effects performed off dungeon cost 10% less (to a minimum of 10%)",
+    "table": 1,
+    "cost": "50"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Stockiness",
+    "desc": "Character gains Resistance to Sever/Location to Zero as per Table 3, but dies if any location is severed due to damage. Dwarves with this quirk are knocked unconscious by any location being reduced to 0 LOC or below.",
+    "table": 1,
+    "cost": "60"
+  },
+  {
+    "available": ["ALL"],
+    "index": "Bound to the City",
+    "desc": "The character is bound to the chosen city as one of their Kallah. They gain Kallah benefits as per Kallah beggar. However they may not belong to Social or Political guilds as their only loyalties are to the city",
+    "table": 1,
+    "cost": "100"
+  },
+  {
+    "available": ["ALL bar Ogre and Troll"],
+    "index": "Brute",
+    "desc": "Character is very stupid (akin to ½ Ogre intelligence) and may not cast any form of supernatural effect, including spells, miracles, neuronics, earthpower or ki powers even from items. Character gains +1 stackable Strength (max. +2),+6/2 life and +1 innate PAC.",
+    "table": 1,
+    "cost": "50"
+  },
+  {
+    "available": ["ALL bar Silverfolk"],
+    "index": "Animal Friend",
+    "desc": "Character will not attack normal (not giant) animals save in purest self-defence, and will encourage others not to do so. No normal animal will attack the character save in self-defence.",
+    "table": 1,
+    "cost": "90"
+  },
+  {
+    "available": ["ALL bar Imperial Yeomanry"],
+    "index": "Paranoia",
+    "desc": "Character is incurably insane, and gains Sixth Sense, Traitor's Shield and Discern Poison skill. Character may not join any guilds, and automatically leaves those he is currently in. Character will not willingly accept aid from anyone, trusting only themselves and their divine patron, if they have one.",
+    "table": 1,
+    "cost": "20"
+  },
+  {
+    "available": ["ALL bar Imperial Yeomanry"],
+    "index": "Megalomania",
+    "desc": "Character gains +2 resistance levels to Domination effects, but is incurably insane. Due to lack of grip upon reality, character may not join any political guild, and automatically leaves any he is currently in",
+    "table": 1,
+    "cost": "30"
+  },
+  {
+    "available": ["ALL bar Imperial Yeomanry"],
+    "index": "Naturally Suspicious",
+    "desc": "Character gains the Streetwise skill and Sixth Sense, but is a bit of a social outcast and thus cannot join any social guild, and automatically leaves any he is currently in.",
+    "table": 1,
+    "cost": "50"
+  },
+  {
+    "available": ["ALL bar Warrior Subclass"],
+    "index": "1st Extra Level of Life",
+    "desc": "max +5/2",
+    "table": 1,
+    "cost": "40"
+  },
+  {
+    "available": ["ALL bar Wiz"],
+    "index": "1st Weapon Mastery",
+    "desc": "Weapon Mastery of one weapon - class is proficient with. May be bought only once per weapon.",
+    "table": 1,
+    "cost": "40",
+    "CanAddMultiple": true
+  },
+  {
+    "available": ["ALL bar Wiz"],
+    "index": "2nd Enhanced Reflexes",
+    "preReqs": ["1st Enhanced Reflexes"],
+    "desc": "Enhanced reflexes +2 (total)",
+    "table": 1,
+    "cost": "40"
+  },
+  {
+    "available": ["ALL bar Noble"],
+    "index": "Noble Family's Retainer",
+    "desc": "The noble family in question must be written on the card when the ability is acquired, and the family's head must countersign the ability. Such a retainer gains +1 level of resistance to domination effects not cast by a member of the family, but looses 1 level of resistance to ALL effects cast by a member of the family. Benign supernatural effects cast by a family member, if the family is ' Of the Blood' either have their duration increased by 50% or if the effect is numeric, grant a 50% increase in effect. In addition, if on adventure with a member of the family who possesses an immunity to a particular type of informational spell/miracle/neuronics or evocation, or other informational effects, then the Retainer is also so protected. Should the Retainer leave a family member behind on an adventure, and was not instructed to leave the adventure by a family member, the retainer suffers a permanent loss of 2pts of Dexterity Armour Class until forgiven by the abandoned Noble. Should a Family member leave a retainer behind on an adventure, and were not instructed to leave by another (senior) family member, then the family member suffers the loss of DAC as detailed above until forgiven by the retainer.",
+    "table": 1,
+    "cost": "90"
+  },
+  {
+    "available": ["ALL"],
+    "table": 2,
+    "cost": "35",
+    "index": "Casting Stamina 1",
+    "desc": "+6 tblp for damage due to casting only. This can be applied to any self-inflicted \"casting\" damage (e.g. Determination etc.)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 2,
+    "cost": "100",
+    "index": "9th Level Resistance to Spirits and Magic",
+    "desc": "9th Level Resistance to Spirits and Magic"
+  },
+  {
+    "available": ["ALL"],
+    "table": 2,
+    "cost": "120",
+    "index": "See Through Supernatural Darkness",
+    "desc": "See through all forms of supernatural darkness"
+  },
+  {
+    "available": ["ALL bar War. Subclass"],
+    "table": 2,
+    "cost": "45",
+    "preReqs": ["1st Extra Level of Life"],
+    "index": "2nd Extra Level of Life",
+    "desc": "max +5/2"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "35",
+    "CanAddMultiple": true,
+    "index": "Resistance to Death Rune",
+    "desc": "Resistance to Death Rune (blade rune spell) suffer ½ damage inflicted by the rune upon discharge, and fall unconscious for only 30 seconds per 6 points of damage taken, from 1 minute. Further purchases of the resistance do not lessen the time per 6 pts of damage, but if the damage taken becomes less than 6 points the character does not fall unconscious."
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "20",
+    "CanAddMultiple": true,
+    "index": "Resistance to Thrall Spells",
+    "desc": "+1 additional Resistance Level to Thrall spells"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "30",
+    "CanAddMultiple": true,
+    "index": "Discern Guild Membership",
+    "desc": "Discern if target is member of a specific guild, bought per guild"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "30",
+    "CanAddMultiple": true,
+    "index": "Body Purge",
+    "desc": "As Budoka/Monk ability"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "40",
+    "CanAddMultiple": true,
+    "index": "Resistance to Power-words",
+    "desc": "+1 Level of Resistance to Power-words"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "50",
+    "CanAddMultiple": true,
+    "index": "Resistance to Pain",
+    "desc": "½ (previous) effect from Pain (the 2 MP Ebony spell only)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "60",
+    "CanAddMultiple": true,
+    "index": "Resistance to Soul Lance",
+    "desc": "Resistance to Soul Lance (½ previous effect)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "* 60",
+    "index": "Resistance to Halt and Stasis",
+    "desc": "½ (previous) effect from Halt and Stasis"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "CanAddMultiple": true,
+    "index": "Resistance to Victims Revenge",
+    "desc": "Resistance (½ damage) Victims Revenge"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "30",
+    "index": "1st Resistance to Spirit Bolt",
+    "desc": "1st Resistance to Spirit Bolt (½ (previous) effect))"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "40",
+    "index": "Immunity to Supernatural Deafness",
+    "desc": "Immunity to Supernatural Deafness"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "40",
+    "index": "Use Strength with Non-Physical Melee",
+    "desc": "May utilise strength with a non physical melee weapon"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "40",
+    "index": "Immunity to Call Location Shot",
+    "desc": "Immunity to Call Location Shot, and related abilities"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "40",
+    "index": "Personal Wards",
+    "desc": "May use informational powers on self regardless of informational immunities possessed."
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "40",
+    "preReqs": ["9th level resistance to magic and spirits"],
+    "index": "9th Level Resistance to All but Neuronics",
+    "desc": "9th Level Resistance to all bar Neuronics"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "",
+    "index": "Lay Believer",
+    "desc": "Counts as a member of a priest professional guild, for the sole purpose of counting as a guild member for that Church's guild special adventures, does not gain any of the guild benefits, but must obey the ethos and restrictions of the guild and be of the same alignment \\[G/N/E\\] of the Church. This may not be bought if the character is already a member of a priest professional guild. This does not allow the character to use guild items for the Church. N.B. This ability may never be set with ISP either permanent or temporary."
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "40",
+    "CanAddMultiple": true,
+    "index": "Hanger On",
+    "desc": "Counts as a member of an open guild (chosen when purchased) that is not a Church for the purposes of guild specials. This does not allow the character to use guild items or claim guild benefits. Must have the guild master's permission to buy this ability. N.B. This ability may never be set with ISP either permanent or temporary."
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "50",
+    "index": "1st Resistance to Touch of Death",
+    "desc": "1st Resistance to Touch of Death and Suspend Life - T.O.D. goes to a Suspend Life and a Suspend Life goes to a Cause Grievous, etc. SAC/Resistances to Causing may not be applied to the final effect."
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "50",
+    "index": "Resistance to Causing",
+    "desc": "1st Resistance to Causing miracles (½ (previous) effect)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "50",
+    "index": "Resistance to Empathic Harm",
+    "desc": "Resistance (½ effect) to Empathic Harm"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "50",
+    "index": "Immunity to Foul Touch",
+    "desc": "Immunity to Foul Touch"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "60",
+    "index": "Immunity to Supernatural Fumble/Disarm",
+    "desc": "Immunity to Supernatural Fumble/Disarm effects"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "60",
+    "index": "Immunity to Information Spells",
+    "desc": "Immunity to Information spells (All forms except Detect Magic)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "60",
+    "index": "Immunity to Spiritual Freedom",
+    "desc": "Immunity to Spiritual Freedom (!)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "60",
+    "index": "Immunity to Protection from Spirits",
+    "desc": "Immunity to Protection from Spirits"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "+30",
+    "index": "Immunity to Stronghold/Hatred",
+    "desc": "Immunity to Stronghold of Good/Hatred from Immunity to Protection  from Spirits"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "+100",
+    "index": "Immunity to Bar Spirit",
+    "desc": "From Immunity to Strongholds gains immunity to Bar Spirit"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "60",
+    "index": "Resistance to Neuronics!9th Level",
+    "desc": "9th level resistance to Neuronics"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "60",
+    "index": "Immunity to Subdue Damage",
+    "desc": "Immunity to Subdue Damage due to toughened skull"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "60",
+    "index": "Immunity to Emotion Attacks",
+    "desc": "Immunity to Emotion attacks (not Fear or Insanity)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "60",
+    "index": "Lightning Reactions",
+    "desc": "Lightning Reactions - Grants Immunity to all Attacks that occur in a Time-Freeze situation"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "70",
+    "index": "Immunity to Blindness",
+    "desc": "Immunity to Blindness (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "70",
+    "index": "Stability",
+    "desc": "Stability - don't fall over due to Earth Tremor type effects"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "75",
+    "index": "Immunity to Backstab",
+    "desc": "Immunity to Backstab"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Forget",
+    "desc": "Immunity to Forget (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Natural Cold",
+    "desc": "Immunity to Natural Cold (½ effect supernatural cold effects, not  resistance levels )"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Natural Lightning",
+    "desc": "Immunity to Natural Lightning (½ effect supernatural lightning and blue   mana, not resistance levels)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Mana Effect!Brown!½",
+    "desc": "½ Effect from Brown Mana (not resistance levels)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Mana Effect!Bronze!½",
+    "desc": "½ Effect from Bronze Mana (not resistance levels)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Mana Effect!Green!½",
+    "desc": "½ Effect from Green Mana (not resistance levels or fluids)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Mana Effect!Ebony to ½",
+    "desc": "½ Effect from Ebony Mana (not resistance levels)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Fear",
+    "desc": "Immunity to Fear (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Petrifaction",
+    "desc": "Immunity to Petrifaction (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Freeze",
+    "desc": "Immunity to Freeze (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Strength Drain",
+    "desc": "Immunity to Strength Drain (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Dexterity Drain",
+    "desc": "Immunity to Dexterity Drain (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Wither",
+    "desc": "Immunity to Wither"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Bless and Curse",
+    "desc": "Immunity to Bless and Curse"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Shadow Plate",
+    "desc": "Immunity to Shadow Plate (6mp black)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Linear Accelerator",
+    "desc": "Immunity to Linear Accelerator"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Rune of Power",
+    "desc": "Immunity to Rune of Power"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Insanity",
+    "desc": "Immunity to Insanity (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Trip and Slip",
+    "desc": "Immunity to Trip and Slip"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Immunity to Induce Spasm",
+    "desc": "Immunity to Induce Spasm"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Mana Effect!Silver!½",
+    "desc": "½ Effect Silver Mana"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Mana Effect!Jade!½",
+    "desc": "½ Effect Jade Mana"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "80",
+    "index": "Mana Effect!Gold!½",
+    "desc": "½ Effect Gold Mana"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "90",
+    "index": "Immunity to Voice of Power",
+    "desc": "Immunity to Voice of Power"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Natural Fire",
+    "desc": "Immunity to Natural Fire (½ effect supernatural fire, not resistance levels)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Involuntary Shape Shifting",
+    "desc": "Immunity to Involuntary Shape Shifting"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Natural Light",
+    "desc": "Immunity to Natural Light (½ effect supernatural light, not resistance levels)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Level Drain",
+    "desc": "Immunity to Level Drain (except from own casting)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Disease",
+    "desc": "Immunity to Disease (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Informational Neuronics",
+    "desc": "Immunity to Informational Neuronics (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Beguile/Befriend/Spiritual Mastery",
+    "desc": "Immunity to Beguile, Befriend and Spiritual Mastery"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Baneful Holy/Unholy Word",
+    "desc": "Immunity to Baneful Holy and Unholy Word (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Natural Acid",
+    "desc": "Immunity to Natural Acid (½ effect supernatural acid)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Opponent's Aura of Defence",
+    "desc": "Immunity to Opponents \"Aura of Defence\" Spell"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Diminish Spirit",
+    "desc": "Immunity to Diminish Spirit miracle"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Slayer Ability",
+    "desc": "Immunity to Slayer Ability"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Earthpower Informational",
+    "desc": "Immunity to Earthpower informational effects"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Physical Informational",
+    "desc": "Immunity to Physical informational effects"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Immunity to Degeneration Miracle",
+    "desc": "Immunity Degeneration Miracle"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Resistance to Destruction Miracle",
+    "desc": "Resistance (½ effect) to \"Destruction\" Miracle"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Recover Permanent Damage",
+    "desc": "Recover permanent damage after a good night's sleep"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "100",
+    "index": "Mana Effect!Onyx!½",
+    "desc": "½ Effect Onyx Mana"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "120",
+    "index": "Immunity to Sleep and Catalepsy",
+    "desc": "Immunity to Sleep and Catalepsy (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "120",
+    "index": "Immunity to Information Miracles",
+    "desc": "Immunity to Information miracles (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "120",
+    "index": "Immunity to Paralysis",
+    "desc": "Immunity to Paralysis (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "120",
+    "index": "Mana Effect!Ivory to ½",
+    "desc": "½ Effect Ivory Mana"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "125",
+    "index": "Mana Effect!Black!½",
+    "desc": "½ Effect from Black Mana (not resistance levels)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "125",
+    "index": "Immunity to Loss of Weapon Masteries",
+    "desc": "Immunity to Loss of Weapon Masteries due to visual environment"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "125",
+    "index": "Immunity to Involuntary Mystical Transportation",
+    "desc": "Immunity to Involuntary Mystical Transportation, e.g. blink other, banishment, void etc."
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "125",
+    "index": "Immunity to Hurricane",
+    "desc": "Immunity to the 10mp blue spell Hurricane"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "125",
+    "index": "Immunity to Incarna Mortis",
+    "desc": "Immunity to \"Incarna Mortis\" Miracle"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "130",
+    "index": "Immunity to Silence/Dumbness/Slow",
+    "desc": "Immunity to Silence/Dumbness and Slow (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "140",
+    "index": "Immunity to Poison",
+    "desc": "Immunity to Poison (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "150",
+    "index": "1st Resistance to Sever/Loc to Zero",
+    "desc": "Sever now inflicts Location to Zero, 1 and Loc to Zero now inflicts half of a location's current life. Note the damage suffered is based on the remaining life of a location not the starting value."
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "150",
+    "index": "½ Effect Grey Mana",
+    "desc": "½ Effect Grey Mana"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "150",
+    "index": "Immunity to Repels",
+    "desc": "Immunity to Repels (all forms)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 3,
+    "cost": "225",
+    "index": "Immunity to Non-Published Dispelling",
+    "desc": "Immunity to Non Published Dispelling Effects targeted on Self or targeted on spells cast on self, or summoned things to be used by self, but not embodiments"
+  },
+  {
+    "available": ["ALL bar Ancient Folk"],
+    "table": 3,
+    "cost": "100",
+    "index": "Resistance to Ward Pacts",
+    "desc": "if broken the character is merely unconscious for one hour (if the effect was meant to be death) or they just take half the normal effect"
+  },
+  {
+    "available": ["ALL bar Priest"],
+    "table": 3,
+    "cost": "50",
+    "index": "Arcane Celerity",
+    "desc": "MAC always applies vs. purely magical weapon blows"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 3,
+    "cost": "50",
+    "index": "Dextrous Celerity",
+    "desc": "DAC always applies vs. weapons blows if the character is able to move his body by his own free will."
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 3,
+    "cost": "60",
+    "index": "Distancing Combat",
+    "desc": "whilst using a weapon of at least 30\" in length the character can reduce damage from an opponent's unarmed combat (or monster's hand attack) by 6 points."
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 3,
+    "cost": "80",
+    "index": "Spiritual Celerity",
+    "desc": "SAC always applies vs. purely spiritual weapon blows"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 3,
+    "cost": "125",
+    "index": "Fortitude",
+    "desc": "PAC always applies vs. weapons blows with a physical component"
+  },
+  {
+    "available": ["ALL Good/Evil"],
+    "table": 3,
+    "cost": "50",
+    "index": "Immunity to Sabre Blast",
+    "desc": "Immunity to the blast effect of Sabre of Darkness & Deceit or Sabre of Light & Truth"
+  },
+  {
+    "available": ["ALL"],
+    "table": 4,
+    "cost": "20",
+    "CanAddMultiple": true,
+    "index": "Well Equipped Armour",
+    "desc": "Character is well equipped with a single suit of standard armour."
+  },
+  {
+    "available": ["ALL"],
+    "table": 4,
+    "cost": "20",
+    "index": "Well Equipped Potions",
+    "desc": "Character is well equipped (no cards issued) with the basic (not enhanced for being spiritless etc.) potion allowance."
+  },
+  {
+    "available": ["ALL"],
+    "table": 4,
+    "cost": "40",
+    "preReqs": ["Casting Stamina 1"],
+    "index": "Casting Stamina 2",
+    "desc": "Casting Stamina 2 +12 tblp. (total)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 4,
+    "cost": "45",
+    "preReqs": ["Casting Stamina 2", "Casting Stamina 1"],
+    "index": "Casting Stamina 3",
+    "desc": "Casting Stamina 3 +18 tblp. (total)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 4,
+    "cost": "50",
+    "CanAddMultiple": true,
+    "index": "Repel Life",
+    "desc": "Repel Life 1/day"
+  },
+  {
+    "available": ["ALL"],
+    "table": 4,
+    "cost": "80",
+    "index": "NAC 1",
+    "desc": "+1 NAC"
+  },
+  {
+    "available": ["ALL"],
+    "table": 4,
+    "cost": "80",
+    "preReqs": ["NAC 1"],
+    "index": "NAC 2",
+    "desc": "+2 NAC (total)"
+  },
+  {
+    "available": ["ALL bar Wizard, Warlock"],
+    "table": 4,
+    "cost": "120",
+    "index": "SAC 1",
+    "desc": "+1 SAC (innate)"
+  },
+  {
+    "available": ["ALL bar Wizard, Warlock"],
+    "table": 4,
+    "cost": "120",
+    "preReqs": ["SAC 1"],
+    "index": "SAC 2",
+    "desc": "+2 SAC (total)"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 4,
+    "cost": "30",
+    "index": "Bastard Mastery",
+    "desc": "Takes bastard weapon to full damage"
+  },
+  {
+    "available": ["ALL Good"],
+    "table": 4,
+    "cost": "50",
+    "CanAddMultiple": true,
+    "index": "Repel Evil",
+    "desc": "Repel Evil 1/day"
+  },
+  {
+    "available": ["ALL Evil"],
+    "table": 4,
+    "cost": "40",
+    "CanAddMultiple": true,
+    "index": "Repel Good",
+    "desc": "Repel Good 1/day"
+  },
+  {
+    "available": ["ALL bar Warrior Subclass"],
+    "table": 4,
+    "cost": "50",
+    "preReqs": ["2nd Extra Level of Life", "1st Extra Level of Life"],
+    "index": "3rd Extra Level of Life",
+    "desc": "max +5/2"
+  },
+  {
+    "available": ["ALL bar Priest"],
+    "table": 4,
+    "cost": "150",
+    "index": "MAC 1",
+    "desc": "+1 Magical AC (innate)"
+  },
+  {
+    "available": ["ALL bar Priest"],
+    "table": 4,
+    "cost": "150",
+    "preReqs": ["MAC 1"],
+    "index": "MAC 2",
+    "desc": "+2 Magical AC (total)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 5,
+    "cost": "30",
+    "index": "Distinctive Odour",
+    "desc": "when sensed by use of another character or monster's discern smell ability, comes up as character name, as opposed to species."
+  },
+  {
+    "available": ["ALL"],
+    "table": 5,
+    "cost": "100",
+    "index": "Resistance to Words of Pain",
+    "desc": "½ Damage from Words of Pain spell"
+  },
+  {
+    "available": ["ALL Evil"],
+    "table": 5,
+    "cost": "100",
+    "index": "Immunity to Repel Evil",
+    "desc": "Immunity to Repel Evil"
+  },
+  {
+    "available": ["ALL Good"],
+    "table": 5,
+    "cost": "100",
+    "index": "Immunity to Repel Good",
+    "desc": "Immunity to Repel Good"
+  },
+  {
+    "available": ["ALL"],
+    "table": 6,
+    "cost": "225",
+    "preReqs": ["Psionic Retardation"],
+    "index": "Total Immunity to Neuronics",
+    "desc": "Character may not use and may not benefit in any manner from any use of neuronics - although it is of course possible to indirectly affect them, such as by using Neuro Mastery Air and carrying them, or using Displacement on their weapons"
+  },
+  {
+    "available": ["ALL"],
+    "table": 7,
+    "cost": "40",
+    "index": "Discern Innate Abilities",
+    "desc": "Discern remaining daily innate abilities"
+  },
+  {
+    "available": ["ALL"],
+    "table": 7,
+    "cost": "50",
+    "index": "Kin",
+    "desc": "\"Kin\", Two characters must purchase this ability simultaneously. It enables each character to use touch range discerns on each other up to line of sight, both characters know of each other's approximate location, and if they are alive or dead."
+  },
+  {
+    "available": ["ALL"],
+    "table": 7,
+    "cost": "25",
+    "index": "True Kin",
+    "preReqs": ["Kin"],
+    "desc": "the two characters may send messages (as per improved message the neuronic skill, but it is not neuronic in nature between each other at the cost of 3 tblp per use."
+  },
+  {
+    "available": ["ALL"],
+    "table": 7,
+    "cost": "50",
+    "index": "Casting Stamina 4",
+    "desc": "Casting Stamina 4 +24 tblp (from +18) for casting damage only"
+  },
+  {
+    "available": ["ALL"],
+    "table": 7,
+    "cost": "50",
+    "index": "Live to Minus!1: 6 TBLP",
+    "desc": "Live to -6 tblp"
+  },
+  {
+    "available": ["ALL"],
+    "table": 7,
+    "cost": "60",
+    "index": "Resistance to Ward of Power",
+    "desc": "½ Damage from Minor and Major Ward of Power"
+  },
+  {
+    "available": ["ALL"],
+    "table": 7,
+    "cost": "100",
+    "index": "Sixth Sense",
+    "desc": "Prohibits the need for the character to role-play something that appears in the characters rear arc. This allows the player to O.O.C. keep an eye on people moving around behind them with their hands in the air. It does not let them tell others, it is an odd feeling moments before danger happens."
+  },
+  {
+    "available": ["ALL"],
+    "table": 7,
+    "cost": "120",
+    "preReqs": ["9th Level Resistance to Magic and Spirits"],
+    "index": "10th Level Resistance to Magic and Spirits",
+    "desc": "10th Level Resistance to Magic and Spirits"
+  },
+  {
+    "available": ["ALL"],
+    "table": 7,
+    "cost": "100",
+    "preReqs": [
+      "9th Level Resistance to Magic and Spirits",
+      "10th Level Resistance to Magic and Spirits"
+    ],
+    "index": "11th Level Resistance to Magic and Spirits",
+    "desc": "11th level Resistance to Magic and Spirits"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 7,
+    "cost": "50",
+    "index": "War Cry",
+    "desc": "\"War Cry\" negates one listed stopping effect and grants immunity to that effect for the following five minutes x1/day"
+  },
+  {
+    "available": ["ALL bar Warrior Sub class"],
+    "table": 7,
+    "cost": "50",
+    "preReqs": [
+      "3rd Extra Level of Life",
+      "2nd Extra Level of Life",
+      "1st Extra Level of Life"
+    ],
+    "index": "4th Extra Level of Life",
+    "desc": "max +5/2"
+  },
+  {
+    "available": ["ALL bar Warrior Sub class"],
+    "table": 7,
+    "cost": "60",
+    "preReqs": [
+      "4th Extra Level of Life",
+      "3rd Extra Level of Life",
+      "2nd Extra Level of Life",
+      "1st Extra Level of Life"
+    ],
+    "index": "5th Extra Level of Life",
+    "desc": "max +5/2"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 7,
+    "cost": "50",
+    "preReqs": ["Live to Minus 1"],
+    "index": "Live to Minus 2",
+    "desc": "Live to -12 tblp (total)"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 7,
+    "cost": "45",
+    "preReqs": ["2nd Enhanced Reflexes", "1st Enhanced Reflexes"],
+    "index": "3rd Enhanced Reflexes",
+    "desc": "Enhanced Reflexes +3 (total)"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 7,
+    "cost": "50",
+    "preReqs": [
+      "3rd Enhanced Reflexes",
+      "2nd Enhanced Reflexes",
+      "1st Enhanced Reflexes"
+    ],
+    "index": "4th Enhanced Reflexes",
+    "desc": "Enhanced Reflexes +4 (total)"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 7,
+    "cost": "70",
+    "preReqs": ["Max AC +1"],
+    "index": "Max AC +2",
+    "desc": "Max. AC. increased to +2 (total)"
+  },
+  {
+    "available": ["ALL bar ½-Orc Scout, Wizard, Halfling,"],
+    "table": 7,
+    "cost": "100",
+    "index": "1st Grade of Strength",
+    "desc": "+1 (total) Strength"
+  },
+  {
+    "available": ["Scholar"],
+    "table": 7,
+    "cost": "60",
+    "index": "Magical Scholar",
+    "desc": "May now read and utilise magical scrolls with skill level based on the Scholar multiclass. Not available those in the Priest bracket. User must be able to utilise magic etc."
+  },
+  {
+    "available": ["Scholar"],
+    "table": 7,
+    "cost": "100",
+    "index": "Spiritual Scholar",
+    "desc": "May now read and utilise spiritual scrolls up to 4th level of own alignment. Not available those in the Wizard bracket. User must possess a spirit etc."
+  },
+  {
+    "available": ["ALL"],
+    "table": 8,
+    "cost": "20",
+    "preReqs": ["Rebirth"],
+    "index": "Enhanced Rebirth",
+    "desc": "Enhance Rebirth to rebirth at 8th level."
+  },
+  {
+    "available": ["ALL"],
+    "table": 8,
+    "cost": "45",
+    "index": "Immunity to Hand of Purity/Putrefaction",
+    "desc": "Immunity to destruction by Hand of Purity/Putrefaction"
+  },
+  {
+    "available": ["ALL"],
+    "table": 8,
+    "cost": "50",
+    "index": "Resistance to Avenging Spirit",
+    "desc": "instead of being slain you are only knocked unconscious for 5 minutes"
+  },
+  {
+    "available": ["ALL"],
+    "table": 8,
+    "cost": "100",
+    "index": "Resistance to Wrath of the Lord",
+    "desc": "(½ effect) \"Wrath of the Lord\" miracle"
+  },
+  {
+    "available": ["ALL"],
+    "table": 8,
+    "cost": "160",
+    "preReqs": ["½ effect Elemental"],
+    "index": " ¼ Elemental Effect",
+    "desc": "¼ Effect from one element, from"
+  },
+  {
+    "available": ["ALL"],
+    "table": 8,
+    "cost": "120",
+    "preReqs": ["NAC 2", "NAC 1"],
+    "index": "NAC 3",
+    "desc": "+3 NAC (from +2)"
+  },
+  {
+    "available": ["ALL"],
+    "table": 8,
+    "cost": "120",
+    "preReqs": ["NAC 3", "NAC 2", "NAC 1"],
+    "index": "NAC 4",
+    "desc": "+4 NAC (from +3)"
+  },
+  {
+    "available": ["ALL bar priest"],
+    "table": 8,
+    "cost": "50",
+    "index": "Immunity to Bruising (MAC & DAC)",
+    "desc": "Immunity to Bruising using MAC and DAC vs. Pure Magic blows"
+  },
+  {
+    "available": ["ALL bar priest"],
+    "table": 8,
+    "cost": "175",
+    "index": "MAC 3",
+    "preReqs": ["MAC 2", "MAC 1"],
+    "desc": "+3 MAC from +2 MAC"
+  },
+  {
+    "available": ["ALL bar priest"],
+    "table": 8,
+    "cost": "175",
+    "preReqs": ["MAC 3", "MAC 2", "MAC 1"],
+    "index": "MAC 4",
+    "desc": "+4 MAC from +3 MAC"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 8,
+    "cost": "50",
+    "index": "Immunity to Bruising (SAC & DAC)",
+    "desc": "Immunity to Bruising using SAC and DAC vs. Pure Spirit blows"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 8,
+    "cost": "120",
+    "preReqs": ["SAC 2", "SAC 1"],
+    "index": "SAC 3",
+    "desc": "+3 SAC from +2 SAC"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 8,
+    "cost": "120",
+    "preReqs": ["SAC 3", "SAC 2", "SAC 1"],
+    "index": "SAC 4",
+    "desc": "+4 SAC from +3 SAC"
+  },
+  {
+    "available": ["All bar Wizard"],
+    "table": 8,
+    "cost": "40",
+    "CanAddMultiple": true,
+    "index": "Strike to Stun",
+    "desc": "Strike to Stun, as Halt miracle, but it is physical in origin, it will \"Halt\" a target of 9 levels or lower for ten seconds or until struck.\nRequires a non damaging blow to inflict, immunity to halt applies."
+  },
+  {
+    "available": ["All bar Wizard"],
+    "table": 8,
+    "cost": "100",
+    "preReqs": ["Strike to Stun"],
+    "index": "Enhanced Strike to Stun",
+    "desc": "Enhance all of characters Strike to Stun abilities, if bought from above to no level/hit limit"
+  },
+  {
+    "available": ["ALL bar Wizard"],
+    "table": 8,
+    "cost": "125",
+    "preReqs": ["Distancing Combat"],
+    "index": "Enhanced Distancing Combat",
+    "desc": "Unarmed attacks reduced from -6 pts  damage to -9pts damage. O-class weapon attack reduced by -3 pts damage.\nMust use a B-class weapon"
+  },
+  {
+    "available": ["Bounty-Hunter"],
+    "table": 8,
+    "cost": "50",
+    "preReqs": ["Discern Outlaw"],
+    "index": "Enhanced Discern Outlaw",
+    "desc": "as Assassin"
+  },
+  {
+    "available": ["Devout Believer"],
+    "table": 8,
+    "cost": "80",
+    "index": "Read Spiritual Scrolls",
+    "desc": "May now read spiritual scrolls of own alignment of up to 4th level."
+  },
+  {
+    "available": ["ALL"],
+    "table": 9,
+    "cost": "50",
+    "index": "Answer 'Clear' to Auric Colour",
+    "preReqs": ["Auric Colour"],
+    "desc": "Answer 'Clear' to Auric Colour - must be able to 'cast' Auric Colour"
+  },
+  {
+    "available": ["ALL"],
+    "table": 9,
+    "cost": "125",
+    "index": "Monk Locational Curing (TBLP)",
+    "desc": "Monk Locational Curing, if already possessed, now also heals a like amount of tblp damage"
+  },
+  {
+    "available": ["ALL"],
+    "table": 9,
+    "cost": "100",
+    "index": "Immunity to Blast Effects",
+    "desc": "Immunity to Blast Effects which ignore MAC, such as Super Missile or similar spell, not Sabre Blasts."
+  },
+  {
+    "available": ["ALL Good/Evil"],
+    "table": 9,
+    "cost": "50",
+    "preReqs": ["Immunity to Blast Effects"],
+    "index": "Immunity to Sabre Blast Effects",
+    "desc": "from Immunity to Blast Effects."
+  },
+  {
+    "available": ["Devout Believer", "Mancer"],
+    "table": 9,
+    "cost": "50",
+    "index": "Priestly Discerns",
+    "desc": "Now gains standard priestly discerns as a priest"
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "30",
+    "index": "2nd Resistance to Spirit Bolt",
+    "preReqs": ["1st Resistance to Spirit Bolt"]
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "40",
+    "index": "Vitae Perception",
+    "desc": "Vitae Perception - 10 second Y/N discern used on the corpse or, in the case of magical creatures which leave no bodies the place where they died. costs 1 tblp casting damage. This damage can be taken against casting stamina. If the target has vitae remaining the answer is Yes. If the target has no vitae remaining or never had any the answer is No."
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "50",
+    "index": "2nd Resistance to Causing",
+    "preReqs": ["1st Resistance to Causing"],
+    "desc": ""
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "50",
+    "preReqs": ["1st Resistance to Touch of Death"],
+    "index": "2nd Resistance to Touch of Death",
+    "desc": "Touch of Death now goes to Cause Grievous, and Suspend Life to Cause Serious."
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "50",
+    "index": "Survival of a Mercenary",
+    "preReqs": ["Enhanced Rebirth", "Rebirth"],
+    "desc": "Upon rebirthing may now choose to retain 10% of their points."
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "50",
+    "index": "Utilise Neuronic Items",
+    "preReqs": ["Active Neuronic Tree", "Passive Neuronic Tree"],
+    "desc": "Gains Utilise Neuronic Items."
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "90",
+    "index": "Immunity to Dying Effects",
+    "preReqs": ["Immunity to Bless/Curse", "Resistance to Avenging Spirit"],
+    "desc": "Immunity to all Dying Effects. Must have Immunity to Bless/Curse and Resistance to Avenging Spirit. This means that upon taking a dying effect and becoming aware of what it is they may, instead of taking the dying effect, choose to be unconscious for 5 minutes. It should be noted the choice must be made at the point of taking the dying effect, not after working out how much damage it might do."
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "100",
+    "index": "1st Grade of Strength",
+    "desc": "+1 (total) Strength"
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "150",
+    "index": "Traitor's Shield",
+    "desc": "Traitors Shield, 6pt non cumulative damage reduction to first three blows to the back in each combat, only works if the character was genuinely unaware of the existence of the assailant."
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "300",
+    "index": "Determination",
+    "desc": "Determination, instead of suffering a listed stopping effect, character takes 6 tblp, even if immune to the stopping effect"
+  },
+  {
+    "available": ["ALL"],
+    "table": 10,
+    "cost": "40",
+    "preReqs": ["Determination"],
+    "index": "Enhanced Determination",
+    "desc": "When using Determination, should a character receive the same listed stopping affect simultaneously then only one use of determination is required."
+  },
+  {
+    "available": ["Mancer"],
+    "table": 10,
+    "cost": "50",
+    "index": "Utilise Mantic Items (Spiritual)",
+    "desc": "Fully utilise spiritual side of mantic items of own alignment/colour"
+  },
+  {
+    "available": ["Mancer"],
+    "table": 10,
+    "cost": "50",
+    "preReqs": ["Utilise Mantic Items (Spiritual)"],
+    "index": "Utilise Spiritual Items",
+    "desc": "Utilise solely spiritual items of own alignment."
+  },
+  {
+    "available": ["ALL"],
+    "table": 11,
+    "cost": "50",
+    "index": "Survival!2: Hero",
+    "preReqs": ["Survival of a Mercenary", "Enhanced Rebirth", "Rebirth"],
+    "desc": "Survival of a Hero: from Survival of a Mercenary, may now choose to rebirth at 20% of points as current class and race (inc. non-standard rebirths). Must be used within 4 weeks of death. If the person already has a non-standard rebirth then they may choose to keep it upon re birthing though this will be counted against the ISP limit of the new rebirth."
+  },
+  {
+    "available": ["ALL"],
+    "table": 11,
+    "cost": "50",
+    "preReqs": ["Determination", "Enhanced Determination"],
+    "index": "Focussed Determination",
+    "desc": "Determination no longer triggers if immune to a stopping effect due to its level of effect. e.g. if 9th level resistance is possessed a 'Sleep 8 levels' causes no damage."
+  },
+  {
+    "available": ["ALL"],
+    "table": 11,
+    "cost": "+100",
+    "index": "Traitor's Shield!Enhanced",
+    "desc": "Enhanced Traitors Shield - From Traitors Shield now gains 12 points off the first two blows from behind and 6 points off all blows from behind. The conditions for this to apply are as Traitor's Shield."
+  },
+  {
+    "available": ["ALL"],
+    "table": 11,
+    "cost": "+80",
+    "index": "Spiritually Cloaked",
+    "desc": "Spiritually Cloaked - From Immunity to informational Miracles gains immunity to Spiritual informational effects except rec. spirit."
+  },
+  {
+    "available": ["ALL"],
+    "table": 11,
+    "cost": "+80",
+    "index": "Magically Cloaked",
+    "desc": "Magically Cloaked - From Immunity to information spells gains immunity to Magical informational effects except rec. mana, which only reveals Yes/No."
+  },
+  {
+    "available": ["ALL"],
+    "table": 11,
+    "cost": "+100",
+    "index": "Undecided Destiny",
+    "desc": "Undecided Destiny - From Fated Hero. Gains Immunity to Destiny Maker and similar abilities."
+  },
+  {
+    "available": ["ALL"],
+    "table": 11,
+    "cost": "175",
+    "index": "Max Damage Quin in B",
+    "desc": "Max Damage Quin in B."
+  },
+  {
+    "available": ["ALL"],
+    "table": 12,
+    "cost": "20",
+    "CanAddMultiple": true,
+    "index": "Supreme Sacrifice",
+    "desc": "Supreme Sacrifice, by meditating quietly for five minutes the character may lose ten per cent restore life chance, and regain all life points, power points and own daily innates. Each purchase is for a once ever use."
+  },
+  {
+    "available": ["ALL"],
+    "table": 12,
+    "cost": "30",
+    "preReqs": [
+      "2nd Resistance to Spirit Bolt",
+      "1st Resistance to Spirit Bolt"
+    ],
+    "index": "3rd Resistance to Spirit Bolt",
+    "desc": ""
+  },
+  {
+    "available": ["ALL"],
+    "table": 12,
+    "cost": "50",
+    "preReqs": [
+      "2nd Resistance to Touch of Death",
+      "1st Resistance to Touch of Death"
+    ],
+    "index": "3rd Resistance to Touch of Death",
+    "desc": "3rd Resistance to Touch of Death"
+  },
+  {
+    "available": ["ALL"],
+    "table": 12,
+    "cost": "50",
+    "index": "3rd Resistance to Causing",
+    "preReqs": ["2nc Resistance to Causing", "1st Resistance to Causing"],
+    "desc": ""
+  },
+  {
+    "available": ["ALL"],
+    "table": 12,
+    "cost": "100",
+    "preReqs": [
+      "Survival of a Hero",
+      "Survival of a Mercenary",
+      "Enhanced Rebirth",
+      "Rebirth"
+    ],
+    "index": "Survival of a Legend",
+    "desc": "Now return at 30% from 20% of points"
+  },
+  {
+    "available": ["ALL"],
+    "table": 12,
+    "cost": "200",
+    "index": "Secondary Resistance",
+    "desc": "If after applying a published immunity to a non published effect the character would still be rendered unconscious or dead, then by expending 18 tblp (not reduced by any means) the character may ignore the effect. This does not apply to any ability the character may use against themselves, nor against damage. e.g. this ability would not work on an effect which turned you into a toad, but would if you were turned into a dead or toad. It does not apply to Resistance to Avenging Spirit, Immunity to Dying effects, or similar \"self-induced\" unconsciousness."
+  },
+  {
+    "available": ["ALL"],
+    "table": 12,
+    "cost": "200",
+    "index": "Justice of the Kings",
+    "desc": "no single weapon blow, after all armour class, damage reductions or other defences may deliver more than 30 points of damage. Note that this does not apply to spells/miracles or \"effects\""
+  },
+  {
+    "available": ["ALL"],
+    "table": 12,
+    "cost": "300",
+    "index": "Act of Faith",
+    "desc": "This ability grants immunity to an \"offensive effect\" if that \"effect\" has no published immunity or resistance available which is not a spell/miracle/Racial Ability etc. e.g. \"Turn to Toad spell, regardless of resistance\" would be blocked but \"Turn to Toad, UNLESS immune to involuntary shape shifting owned\" would not be, since a resistance is available. May be used 3 times per day only, each use granting immunity to the specific effect for 5 minutes and must be declared within 2 seconds of suffering the effect."
+  }
+]

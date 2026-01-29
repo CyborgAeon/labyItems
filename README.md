@@ -24,20 +24,22 @@ If you want the PATH change to persist, add `export PATH="$HOME/.dotnet:$PATH"` 
 Make sure an emulator or device is running, then:
 
 ```bash
-PKG=bard.uk.labyitems DB=output/laby.db && \
+PKG=bard.uk.labyitems
+DB=output/laby.db
 rm -f "$DB" && \
-$HOME/.dotnet/dotnet run --project tools/evocdbgen -c Release -- labyItems/Resources/Raw/druids_way/evocs.json "$DB" && \
+$HOME/.dotnet/dotnet run --project tools/evocdbgen -c Release -- \
+  labyItems/Resources/Raw/druids_way/evocs.json "$DB" && \
 $HOME/.dotnet/dotnet run --project tools/migrator -c Release -- "$DB" && \
 adb push "$DB" /data/local/tmp/laby.db && \
-adb shell run-as "$PKG" sh -c "mkdir -p files && cp /data/local/tmp/laby.db files/laby.db && ls -l files/laby.db"
+adb shell run-as "$PKG" mkdir -p files && \
+adb shell run-as "$PKG" cp /data/local/tmp/laby.db files/laby.db && \
+adb shell run-as "$PKG" ls -l files/laby.db
 ```
 
 then run
 
-```
-
+```bash
 DOTNET_USE_POLLING_FILE_WATCHER=1 $HOME/.dotnet/dotnet watch --project labyItems/labyItems.csproj --framework net10.0-android run
-
 ```
 
 If you hit `NETSDK1147` (missing `maui-android`) or similar, you’re probably running the system `dotnet` instead of the one installed by `dotnet-install.sh` — the command above pins to `$HOME/.dotnet/dotnet`.
@@ -87,8 +89,9 @@ Install the generated DB into an emulator/device (so the app uses the full evolu
 
 ```bash
 PKG=bard.uk.labyitems DB=output/laby.db && \
-adb push "$DB" /data/local/tmp/laby.db && \
-adb shell run-as "$PKG" sh -c 'mkdir -p files && cp /data/local/tmp/laby.db files/laby.db && ls -l files/laby.db'
+adb shell run-as "$PKG" mkdir -p files
+adb shell run-as "$PKG" cp /data/local/tmp/laby.db files/laby.db
+adb shell run-as "$PKG" ls -l files/laby.db
 ```
 
 Run migrations only (when the DB already exists):

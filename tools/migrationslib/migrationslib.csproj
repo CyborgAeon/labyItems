@@ -17,11 +17,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- Embed miracles seed data so migrations can populate the table even when raw assets are stripped -->
+        <EmbeddedResource Include="..\..\labyItems\Resources\Raw\druids_way\evocs.json" Link="Resources/Raw/druids_way/evocs.json" />
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\words_from_above\base-miracles1.json" Link="Resources/Raw/words_from_above/base-miracles1.json" />
-        <!-- Embed spell seed data -->
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\grimoire\new_standard.json" Link="Resources/Raw/grimoire/new_standard.json" />
-        <!-- Embed abilities seed data -->
         <EmbeddedResource Include="..\..\labyItems\Resources\Raw\makes_abilities.json" Link="Resources/Raw/makes_abilities.json" />
+        <EmbeddedResource Include="..\..\labyItems\Resources\Raw\evolution_classes\merged.json" Link="Resources/Raw/evolution_classes/merged.json" />
+        <EmbeddedResource Include="..\..\labyItems\Resources\Raw\people\classes.json" Link="Resources/Raw/people/classes.json" />
+        <EmbeddedResource Include="..\..\labyItems\Resources\Raw\people\people.json" Link="Resources/Raw/people/people.json" />
+        <EmbeddedResource Include="..\..\labyItems\Resources\Raw\people\lifescales.json" Link="Resources/Raw/people/lifescales.json" />
     </ItemGroup>
 </Project>

@@ -1,426 +1,426 @@
 [
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Brew the Wondrous",
     "desc": "Allows brewing Wondrous Elixirs.",
     "cost": "40",
     "table": 1
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Crafter of Charms",
     "desc": "Grants ability to craft Charms.",
     "cost": "30",
     "table": 1
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Gem Cutter",
     "desc": "Grants ability to craft Neuronic Prisms.",
     "cost": "30",
     "table": 1
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Smith (Type)",
     "desc": "Allows crafting of the chosen arms/armour type; requires Smithing skill.",
     "cost": "30*",
     "table": 1
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Torque Crafter",
     "desc": "Grants ability to craft Torques.",
     "cost": "30",
     "table": 1
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Write Recipe Books",
     "desc": "Allows writing recipe books.",
     "cost": "40",
     "table": 1
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Magical Manufacturer",
     "desc": "+2% when creating magic (incl. Teaching Scrolls & Scriptures; excl. normal scrolls).",
     "cost": "50",
     "table": 2
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Master Smith",
     "desc": "+2% when making smithed items.",
     "cost": "50",
     "table": 2
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Mental Manufacturer",
     "desc": "+2% when making Neuronic Prisms.",
     "cost": "50",
     "table": 2
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Natural Manufacturer",
     "desc": "+2% when making Earthpower Charms.",
     "cost": "50",
     "table": 2
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Spiritual Manufacturer",
     "desc": "+2% when making spiritual items (incl. Scriptures; not normal scrolls).",
     "cost": "50",
     "table": 2
   },
   {
-    "available": "FirstClassAny",
+    "available": ["FirstClassAny"],
     "index": "Scriptorium",
     "desc": "Normal spiritual scrolls base chance 80%; +2% to Scriptures; costs 12,000 grulls to set up.",
     "cost": "75",
     "table": 5
   },
   {
-    "available": "FirstClassWizard",
+    "available": ["FirstClassWizard"],
     "index": "Wizard's Study",
     "desc": "No setup cost for teaching scrolls; normal magical scrolls base chance 80%; +2% to Teaching Scrolls; costs 10,000 grulls to set up.",
     "cost": "60",
     "table": 5
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Craft Speciality (Earthpower)",
     "desc": "+2% when crafting Charms.",
     "cost": "40",
     "table": 7
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Craft Speciality (Neuronic)",
     "desc": "+2% when crafting Prisms or Torques (choose on purchase).",
     "cost": "40",
     "table": 7
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Craft Speciality (Spiritual)",
     "desc": "From Make Major Item type. +2% in chosen item type. Once only.",
     "cost": "40",
     "table": 7
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Craft Speciality (Warrior)",
     "desc": "+2% when making chosen type of items.",
     "cost": "40",
     "table": 7
   },
   {
-    "available": "FirstClassWizard",
+    "available": ["FirstClassWizard"],
     "index": "Craft Speciality (Wizard)",
     "desc": "+2% when manufacturing items in chosen area (e.g., Weapons or Armour). Once only.",
     "cost": "40",
     "table": 7
   },
   {
-    "available": "FirstClassWizard",
+    "available": ["FirstClassWizard"],
     "index": "Diverse Magic",
     "desc": "If grey is a colour: may make items & scrolls of any known standard 1st\u20135th spell.",
     "cost": "40",
     "table": 7
   },
   {
-    "available": "FirstClassWarrior",
+    "available": ["FirstClassWarrior"],
     "index": "Grand Smithy",
     "desc": "No setup cost for smithed items; costs 20,000 grulls to set up.",
     "cost": "50",
     "table": 7
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Leave to Simmer",
     "desc": "May use a basic potion make in addition to an advanced make; no cost-reduction enhancers.",
     "cost": "40",
     "table": 7
   },
   {
-    "available": "FirstClassAny",
+    "available": ["FirstClassAny"],
     "index": "Private Shrine",
     "desc": "No setup cost for spiritual items; costs 30,000 grulls to set up.",
     "cost": "75",
     "table": 7
   },
   {
-    "available": "FirstClassNeuronic",
+    "available": ["FirstClassNeuronic"],
     "index": "Silent Chamber",
     "desc": "No setup cost for prisms; costs 10,000 grulls to set up.",
     "cost": "50",
     "table": 7
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Taught by a Master",
     "desc": "If recipe known with points: only \u00bd level loss when writing recipe book.",
     "cost": "50",
     "table": 7
   },
   {
-    "available": "FirstClassDruid",
+    "available": ["FirstClassDruid"],
     "index": "Tranquil Grove",
     "desc": "No setup cost for charms; costs 10,000 grulls to set up.",
     "cost": "50",
     "table": 7
   },
   {
-    "available": "FirstClassWizard",
+    "available": ["FirstClassWizard"],
     "index": "Wizard's Laboratory",
     "desc": "No setup cost for magical items (not teaching scrolls). Costs 20,000 grulls to set up.",
     "cost": "60",
     "table": 7
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Arcane Shield Manufacture",
     "desc": "From Make Major Armour: may manufacture magical shields (treated as Medium Armour); may be aligned.",
     "cost": "50",
     "table": 8
   },
   {
-    "available": "FirstClassDruid",
+    "available": ["FirstClassDruid"],
     "index": "Dangerous Escape (Druid)",
     "desc": "Once ever: end manufacture instead of rolling on Failure Table.",
     "cost": "20*",
     "table": 8
   },
   {
-    "available": "FirstClassNeuronic",
+    "available": ["FirstClassNeuronic"],
     "index": "Dangerous Escape (Neuronic)",
     "desc": "Once ever: end manufacture instead of rolling on Failure Table.",
     "cost": "20*",
     "table": 8
   },
   {
-    "available": "FirstClassScout",
+    "available": ["FirstClassScout"],
     "index": "Dangerous Escape (Scout)",
     "desc": "Once ever: end manufacture instead of rolling on Failure Table.",
     "cost": "20*",
     "table": 8
   },
   {
-    "available": "FirstClassAny",
+    "available": ["FirstClassAny"],
     "index": "Dangerous Escape (Spiritual)",
     "desc": "Once ever: end manufacture instead of rolling on Failure Table.",
     "cost": "20*",
     "table": 8
   },
   {
-    "available": "FirstClassWarrior",
+    "available": ["FirstClassWarrior"],
     "index": "Dangerous Escape (Warrior)",
     "desc": "Once ever: end manufacture instead of rolling on Failure Table.",
     "cost": "20*",
     "table": 8
   },
   {
-    "available": "FirstClassWizard",
+    "available": ["FirstClassWizard"],
     "index": "Dangerous Escape (Wizard)",
     "desc": "Once ever: if required to roll on Failure Table, may end manufacture immediately instead.",
     "cost": "20*",
     "table": 8
   },
   {
-    "available": "FirstClassWizard",
+    "available": ["FirstClassWizard"],
     "index": "Diverse Magic II",
     "desc": "From Diverse Magic; 1st colour grey. May now make items & scrolls of any specialist owned.",
     "cost": "40",
     "table": 8
   },
   {
-    "available": "FirstClassDruid",
+    "available": ["FirstClassDruid"],
     "index": "Rites of Protection (Druid)",
     "desc": "May take item perm as perm damage on casting stamina at 2:1.",
     "cost": "40",
     "table": 8
   },
   {
-    "available": "FirstClassNeuronic",
+    "available": ["FirstClassNeuronic"],
     "index": "Rites of Protection (Neuronic)",
     "desc": "May take item perm as perm damage on casting stamina at 2:1.",
     "cost": "40",
     "table": 8
   },
   {
-    "available": "FirstClassScout",
+    "available": ["FirstClassScout"],
     "index": "Rites of Protection (Scout)",
     "desc": "May take item perm from Wondrous Elixirs as perm damage on casting stamina at 2:1 (incl. kickout).",
     "cost": "40",
     "table": 8
   },
   {
-    "available": "FirstClassAny",
+    "available": ["FirstClassAny"],
     "index": "Rites of Protection (Spiritual)",
     "desc": "May take any item perm as perm damage on casting stamina at 2:1.",
     "cost": "40",
     "table": 8
   },
   {
-    "available": "FirstClassWarrior",
+    "available": ["FirstClassWarrior"],
     "index": "Rites of Protection (Warrior)",
     "desc": "May take item perm as perm damage on casting stamina at 2:1.",
     "cost": "40",
     "table": 8
   },
   {
-    "available": "FirstClassWizard",
+    "available": ["FirstClassWizard"],
     "index": "Rites of Protection (Wizard)",
     "desc": "May take any item perm as perm damage on casting stamina at 2:1.",
     "cost": "40",
     "table": 8
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Shield Manufacture",
     "desc": "From Make Major Armour: may manufacture spiritual shields (Medium Armour); may be aligned.",
     "cost": "50",
     "table": 8
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Trinkets (Druid)",
     "desc": "Once-ever Earthpower items; +5% chance; 500 grulls per roll & setup; no blow ups.",
     "cost": "50",
     "table": 8
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Trinkets (Neuronic)",
     "desc": "Prisms only; once-ever; +5% chance; 500 grulls per roll & setup; no blow ups.",
     "cost": "50",
     "table": 8
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Trinkets (Spiritual)",
     "desc": "Create once-ever miracle innate items; +5% chance; 1000 grulls per roll & setup; no blow ups.",
     "cost": "50",
     "table": 8
   },
   {
-    "available": "Post6thNaturalArtisan",
+    "available": ["Post6thNaturalArtisan"],
     "index": "A Master of the Trade (Druid)",
     "desc": "When playing: +1 make slot for Charms (not cumulative except Simple Craft).",
     "cost": "100",
     "table": 9
   },
   {
-    "available": "Post6thMagicalArtisan",
+    "available": ["Post6thMagicalArtisan"],
     "index": "A Master of the Trade (Magical)",
     "desc": "When playing: gain an additional make slot for items or teaching scrolls (not cumulative except with Simple Craft).",
     "cost": "100",
     "table": 9
   },
   {
-    "available": "Post6thArtisanOfTheMind",
+    "available": ["Post6thArtisanOfTheMind"],
     "index": "A Master of the Trade (Neuronic)",
     "desc": "When playing: +1 make slot for Prisms or Torques (not cumulative except Simple Craft).",
     "cost": "100",
     "table": 9
   },
   {
-    "available": "FirstClassScout",
+    "available": ["FirstClassScout"],
     "index": "A Master of the Trade (Scout)",
     "desc": "When playing: +1 make slot for Wondrous Potions or Recipe Books.",
     "cost": "100",
     "table": 9
   },
   {
-    "available": "Post6thSmith",
+    "available": ["Post6thSmith"],
     "index": "A Master of the Trade (Smith)",
     "desc": "When playing: +1 make slot for smithed items.",
     "cost": "100",
     "table": 9
   },
   {
-    "available": "Post6thSpiritualArtisan",
+    "available": ["Post6thSpiritualArtisan"],
     "index": "A Master of the Trade (Spiritual)",
     "desc": "When playing: +1 make slot for spiritual items or scriptures (not cumulative except Simple Craft).",
     "cost": "100",
     "table": 9
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Reciprocates Binding (Druid)",
     "desc": "If user named: does not blow up on death; -5% to all rolls.",
     "cost": "50",
     "table": 9
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Reciprocates Binding (Neuronic)",
     "desc": "If user named: does not blow up on death; -5% to all rolls.",
     "cost": "50",
     "table": 9
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Reciprocates Binding (Spiritual)",
     "desc": "If user named: does not blow up on death; -5% to all rolls.",
     "cost": "50",
     "table": 9
   },
   {
-    "available": "Wizard",
+    "available": ["Wizard"],
     "index": "Reciprocates Binding (Wizard)",
     "desc": "If user named on card: does not blow up on death; all rolls -5%.",
     "cost": "50",
     "table": 9
   },
   {
-    "available": "Post6thNaturalArtisan",
+    "available": ["Post6thNaturalArtisan"],
     "index": "The Simple Craft (Druid)",
     "desc": "May manufacture Basic Talismans while crafting Charms; cannot enhance chance.",
     "cost": "50",
     "table": 9
   },
   {
-    "available": "Post6thMagicalCalligrapher",
+    "available": ["Post6thMagicalCalligrapher"],
     "index": "The Simple Craft (Magical)",
     "desc": "May write normal magical scrolls while crafting an item; cannot enhance basic 70% chance.",
     "cost": "50",
     "table": 9
   },
   {
-    "available": "Post6thArtisanOfTheMind",
+    "available": ["Post6thArtisanOfTheMind"],
     "index": "The Simple Craft (Neuronic)",
     "desc": "May manufacture Crystals at same time as Prisms/Torques; cannot enhance crystal chance.",
     "cost": "50",
     "table": 9
   },
   {
-    "available": "Post6thSmith",
+    "available": ["Post6thSmith"],
     "index": "The Simple Craft (Smith)",
     "desc": "May manufacture basic armour at same time as advanced armour.",
     "cost": "50",
     "table": 9
   },
   {
-    "available": "Post6thSpiritualCalligrapher",
+    "available": ["Post6thSpiritualCalligrapher"],
     "index": "The Simple Craft (Spiritual)",
     "desc": "May write normal spiritual scrolls while crafting an item; cannot enhance base 70%.",
     "cost": "50",
     "table": 9
   },
   {
-    "available": "Any",
+    "available": ["Any"],
     "index": "Trinkets (Wizard)",
     "desc": "Req. Make Major Talismans. Make once-ever innate items; +5% chance; 750 grulls per roll & setup; no blow up on date/death.",
     "cost": "50",
     "table": 9
   },
   {
-    "available": "FirstClassWizard",
+    "available": ["FirstClassWizard"],
     "index": "Research Reduction",
     "desc": "+2% when attempting to make magical teaching scrolls.",
     "cost": "100",

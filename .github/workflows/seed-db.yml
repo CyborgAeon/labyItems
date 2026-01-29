@@ -39,7 +39,7 @@ jobs:
         run: dotnet build tools/evocdbgen/evocdbgen.csproj -c Release --no-restore
 
       - name: Run evocdbgen to generate DB
-        run: dotnet run --project tools/evocdbgen/evocdbgen.csproj -c Release --no-build --no-restore -- "labyItems/Resources/Raw/druids_way/evocs.json" "output/evocs.db"
+        run: dotnet run --project tools/evocdbgen/evocdbgen.csproj -c Release --no-build --no-restore -- "labyItems/Resources/Raw/druids_way/evocs.json" "output/laby.db"
 
       - name: Ensure output exists
         run: ls -la output || true
@@ -49,40 +49,40 @@ jobs:
 
       - name: Verify DB contents (counts + seed metadata)
         run: |
-          if [ -f output/evocs.db ]; then
+          if [ -f output/laby.db ]; then
             echo "DB exists, checking counts..."
-            sqlite3 output/evocs.db "SELECT 'evocs:' || count(*) FROM evocs; SELECT 'evolution:' || count(*) FROM evolution; SELECT 'ngrams_evoc:' || count(*) FROM evoc_ngrams; SELECT 'seed_rows:' || count(*) FROM seed_metadata;"
+            sqlite3 output/laby.db "SELECT 'laby:' || count(*) FROM laby; SELECT 'evolution:' || count(*) FROM evolution; SELECT 'ngrams_evoc:' || count(*) FROM evoc_ngrams; SELECT 'seed_rows:' || count(*) FROM seed_metadata;"
             # Validate basic sanity
-            evoc_count=$(sqlite3 output/evocs.db "SELECT count(*) FROM evocs;")
+            evoc_count=$(sqlite3 output/laby.db "SELECT count(*) FROM evocs;")
             if [ "$evoc_count" -le 0 ]; then
               echo "evocs table is empty; aborting." >&2
               exit 1
             fi
           else
-            echo "output/evocs.db not found" >&2
+            echo "output/laby.db not found" >&2
             exit 1
           fi
 
-      - name: Prepare artifact (copy to default.db)
-        run: mkdir -p output && cp output/evocs.db output/default.db
+      - name: Prepare artifact (copy to laby.db)
+        run: mkdir -p output && cp output/laby.db
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: default.db
-          path: output/default.db
+          name: laby.db
+          path: output/laby.db
 
       - name: Run migrations against seed DB
         run: |
           set -euo pipefail
-          echo "Running migrator against output/default.db"
+          echo "Running migrator against output/laby.db"
           dotnet build tools/migrator/migrator.csproj -c Release --no-restore
-          dotnet run --project tools/migrator/migrator.csproj -c Release --no-build --no-restore -- output/default.db
+          dotnet run --project tools/migrator/migrator.csproj -c Release --no-build --no-restore -- output/laby.db
 
       - name: Verify updated seed_metadata.schema_version
         run: |
           set -euo pipefail
-          sqlite3 output/default.db "SELECT 'schema_version:' || schema_version FROM seed_metadata ORDER BY rowid DESC LIMIT 1;"
+          sqlite3 output/laby.db "SELECT 'schema_version:' || schema_version FROM seed_metadata ORDER BY rowid DESC LIMIT 1;"
 
       - name: Output artifact size
-        run: du -h output/default.db || true
+        run: du -h output/laby.db || true

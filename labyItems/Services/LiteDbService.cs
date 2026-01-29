@@ -23,9 +23,7 @@ public static class LiteDbService
         return _db;
     }
 
-    // Items
     public static void InsertItem(Item item) => GetDb().GetCollection<Item>("items").Insert(item);
-
     public static void DeleteChar(ObjectId id) =>
         GetDb().GetCollection<Character>("characters").Delete(id);
 
@@ -45,7 +43,6 @@ public static class LiteDbService
             .ThenBy(x => NormalizeKey(x.Description));
     }
 
-    // Characters
     public static IEnumerable<Character> GetCharacters() =>
         GetDb().GetCollection<Character>("characters").FindAll().OrderBy(c => c.Name);
 
@@ -62,9 +59,6 @@ public static class LiteDbService
         var col = GetDb().GetCollection<Character>("characters");
         var normalizedName = NormalizeKey(draft.Name);
         var normalizedPlayer = NormalizeKey(draft.PlayerName);
-
-        // LiteDB cannot translate custom helper calls inside LINQ to BsonExpression; fall back to
-        // client-side match on normalized name/player to avoid runtime NotSupportedException.
         var existing = col.FindAll()
             .FirstOrDefault(c =>
                 NormalizeKey(c.Name) == normalizedName &&
@@ -109,10 +103,7 @@ public static class LiteDbService
             {
                 return System.Text.Json.JsonSerializer.Deserialize<CharacterDraft>(character.DraftSnapshot);
             }
-            catch
-            {
-                // fall back to manual mapping below
-            }
+            catch { }
         }
 
         var draft = new CharacterDraft

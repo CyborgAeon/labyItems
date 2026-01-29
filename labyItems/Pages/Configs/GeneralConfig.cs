@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 // using System.Collections.Specialized; // Seems unused in this file
 using labyItems.Helpers;
 using labyItems.Models.Enums;
+using labyItems.Services;
 using labyItems.Pages.Calculator;
 using labyItems.Models;
 // using labyItems.Pages.Configs; // Redundant: same namespace as this file
@@ -818,7 +819,7 @@ public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
             return t;
         }
 
-        public void ApplyGeneral(General.Result picked)
+        public void ApplyGeneral(EvolutionService.EvolutionResult picked)
         {
             Power = picked.Cost;
             IsImmune = picked.IsImmunity;
