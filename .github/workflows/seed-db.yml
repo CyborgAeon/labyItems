@@ -51,7 +51,7 @@ jobs:
         run: |
           if [ -f output/laby.db ]; then
             echo "DB exists, checking counts..."
-            sqlite3 output/laby.db "SELECT 'laby:' || count(*) FROM laby; SELECT 'evolution:' || count(*) FROM evolution; SELECT 'ngrams_evoc:' || count(*) FROM evoc_ngrams; SELECT 'seed_rows:' || count(*) FROM seed_metadata;"
+            sqlite3 output/laby.db "SELECT 'evocs:' || count(*) FROM evocs; SELECT 'evolution:' || count(*) FROM evolution; SELECT 'ngrams_evoc:' || count(*) FROM evoc_ngrams; SELECT 'seed_rows:' || count(*) FROM seed_metadata;"
             # Validate basic sanity
             evoc_count=$(sqlite3 output/laby.db "SELECT count(*) FROM evocs;")
             if [ "$evoc_count" -le 0 ]; then
