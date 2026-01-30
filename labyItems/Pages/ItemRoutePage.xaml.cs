@@ -52,7 +52,10 @@ public partial class ItemRoutePage : ContentPage
     private void RefreshWalletButton()
     {
         var any = LiteDbService.GetCharacters().Any();
-        CharacterWalletButton.IsEnabled = any;
-        BattleboardButton.IsEnabled = any;
+        if (CharacterWalletButton != null && BattleboardButton != null)
+        {
+            CharacterWalletButton.IsEnabled = any;
+            BattleboardButton.IsEnabled = any;
+        }
     }
 }

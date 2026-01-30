@@ -28,7 +28,7 @@ PKG=bard.uk.labyitems
 DB=output/laby.db
 rm -f "$DB" && \
 $HOME/.dotnet/dotnet run --project tools/evocdbgen -c Release -- \
-  labyItems/Resources/Raw/druids_way/evocs.json "$DB" && \
+labyItems/Resources/Raw/druids_way/evocs.json "$DB" && \
 $HOME/.dotnet/dotnet run --project tools/migrator -c Release -- "$DB" && \
 adb push "$DB" /data/local/tmp/laby.db && \
 adb shell run-as "$PKG" mkdir -p files && \
@@ -44,7 +44,6 @@ $HOME/.dotnet/dotnet watch \
   --project labyItems/labyItems.csproj \
   --framework net10.0-android \
   run --configuration Debug
-
 ```
 
 If you hit `NETSDK1147` (missing `maui-android`) or similar, you’re probably running the system `dotnet` instead of the one installed by `dotnet-install.sh` — the command above pins to `$HOME/.dotnet/dotnet`.
