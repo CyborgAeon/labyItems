@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Battleboard.BattleboardCharacterListPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Battleboard">
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,Auto,*" Padding="16" RowSpacing="12">
+            <Label Text="Select a character"
+                   FontSize="20"
+                   FontAttributes="Bold"/>
+            <Label Grid.Row="1"
+                   x:Name="EmptyStateLabel"
+                   Text="No characters saved yet."
+                   Opacity="0.7"
+                   IsVisible="False"/>
+
+            <CollectionView x:Name="CharacterView"
+                            Grid.Row="2"
+                            SelectionMode="None"
+                            ItemsSource="{Binding Characters}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,0,0,12"
+                               Padding="12"
+                               CornerRadius="12"
+                               HasShadow="False"
+                               BorderColor="#E5E7EB">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCardTapped"/>
+                            </Frame.GestureRecognizers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding Name}"
+                                       FontAttributes="Bold"
+                                       FontSize="17"/>
+                                <Label Text="{Binding Class}"
+                                       FontSize="13"
+                                       Opacity="0.8"/>
+                                <Label Text="{Binding PlayerName, StringFormat='Player: {0}'}"
+                                       FontSize="12"
+                                       Opacity="0.7"/>
+                                <Label Text="{Binding UpdatedUtc, StringFormat='Updated: {0:dd MMM yyyy HH:mm}'}"
+                                       FontSize="11"
+                                       Opacity="0.6"/>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

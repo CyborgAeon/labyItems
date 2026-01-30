@@ -678,7 +678,7 @@ public class DictionarySearchBar<TValue> : ContentView
         if (_filteredResults == null || !_filteredResults.Any())
             return;
 
-        var page = GetTopPage();
+        var page = GetOwningPage();
         if (page == null)
             return;
 
@@ -922,7 +922,7 @@ public class DictionarySearchBar<TValue> : ContentView
         if (_overlayHostInitialized)
             return;
 
-        var page = GetTopPage();
+        var page = GetOwningPage();
         if (page == null)
             return;
 
@@ -949,6 +949,11 @@ public class DictionarySearchBar<TValue> : ContentView
 
         return null;
     }
+
+    private ContentPage? GetOwningPage()
+        => FindAncestorOfType<ContentPage>(this)
+           ?? FindAncestorOfType<ContentPage>(_searchBar)
+           ?? GetTopPage();
 }
 
 internal static class DictionaryOverlayRegistry

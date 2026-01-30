@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="labyItems.Controls.CastingPoolPill"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    VerticalOptions="Center">
+    <Frame Padding="8"
+           CornerRadius="16"
+           HasShadow="False"
+           BorderColor="#E5E7EB"
+           BackgroundColor="#F3F4F6">
+        <Grid ColumnDefinitions="Auto,Auto,Auto,Auto"
+              ColumnSpacing="6">
+            <Label Text="{Binding DisplayName}"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="Center"/>
+            <Label x:Name="CurrentLabel"
+                   Grid.Column="1"
+                   Text="{Binding CurrentLabel}"
+                   VerticalTextAlignment="Center"/>
+            <Button Grid.Column="2"
+                    Text="-"
+                    Padding="6,2"
+                    Command="{Binding DecreaseCommand}"/>
+            <Button Grid.Column="3"
+                    Text="+"
+                    Padding="6,2"
+                    Command="{Binding IncreaseCommand}"/>
+        </Grid>
+    </Frame>
+</ContentView>

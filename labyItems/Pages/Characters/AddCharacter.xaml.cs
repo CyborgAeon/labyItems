@@ -7,12 +7,14 @@ namespace labyItems.Pages;
 public partial class AddCharacter : ContentPage
 {
     private ObjectId _charId;
+    private readonly Character? _existingCharacter;
     public bool CanBeDeleted { get; private set; } = false;
 
     public AddCharacter(Character? character = null)
     {
         InitializeComponent();
         CanBeDeleted = character != null;
+        _existingCharacter = character;
         if (character != null)
         {
             _charId = character.Id;
@@ -48,16 +50,14 @@ public partial class AddCharacter : ContentPage
             return;
         }
 
-        LiteDbService.UpsertCharacter(
-            new Character
-            {
-                Id = _charId,
-                Name = NameEntry.Text!.Trim(),
-                Class = ClassEntry.Text!.Trim(),
-                Points = long.Parse(PointsEntry.Text!.Trim()),
-                PlayerName = PlayerEntry.Text?.Trim() ?? string.Empty,
-            }
-        );
+        var updated = _existingCharacter ?? new Character { Id = _charId };
+        updated.Id = _charId;
+        updated.Name = NameEntry.Text!.Trim();
+        updated.Class = ClassEntry.Text!.Trim();
+        updated.Points = long.Parse(PointsEntry.Text!.Trim());
+        updated.PlayerName = PlayerEntry.Text?.Trim() ?? string.Empty;
+
+        LiteDbService.UpsertCharacter(updated);
 
         await Navigation.PopAsync(); // back to list
     }

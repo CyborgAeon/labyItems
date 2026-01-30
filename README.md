@@ -53,7 +53,7 @@ If watch ever complains about launch profiles, ensure `Properties/launchSettings
 
 ## debug steps:
 
-Single shot debug launch + logcat (add `-clp:ErrorsOnly` to keep noisy XamlC warnings out of the console):
+Single shot debug launch + logcat:
 
 ```bash
 PKG=bard.uk.labyitems; $HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c Debug -clp:ErrorsOnly && adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 && PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); echo "PID=$PID"; adb logcat --pid "$PID" -v time

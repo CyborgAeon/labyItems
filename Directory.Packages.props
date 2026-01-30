@@ -9,6 +9,7 @@
     <!-- MAUI (aligned with your workload: maui 10.0.10) -->
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Xaml" Version="10.0.10" />
     <!-- Logging -->
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
     <!-- SQLite / data access -->

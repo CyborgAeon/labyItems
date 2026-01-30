@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Windows.Input;
 using System.Threading.Tasks;
+using System.Text;
+using ClosedXML.Excel;
 using labyItems.Controls;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.ApplicationModel.DataTransfer;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Storage;
 using ServiceCharacterClassRecord = labyItems.Services.CharacterClassRecord;
 
 namespace labyItems.Pages.Characters.ViewModels;
@@ -121,6 +127,14 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         RemoveEvocationListCommand = new Command<EvocationListVm>(RemoveEvocationList);
 
         SaveCommand = new Command(SaveDraft, () => CanSave);
+
+        ExportSpellsToExcelCommand = new Command(async () => await ExportSpellsToExcelAsync());
+        CopySpellsCommand = new Command(async () => await CopySpellsToClipboardAsync());
+        SaveSpellsTextCommand = new Command(async () => await SaveSpellsToTextAsync());
+
+        ExportMiraclesToExcelCommand = new Command(async () => await ExportMiraclesToExcelAsync());
+        CopyMiraclesCommand = new Command(async () => await CopyMiraclesToClipboardAsync());
+        SaveMiraclesTextCommand = new Command(async () => await SaveMiraclesToTextAsync());
     }
 
     public CharacterDraft Draft => _draft;
@@ -217,6 +231,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public ICommand RemoveEvocationListCommand { get; }
 
     public ICommand SaveCommand { get; }
+    public ICommand ExportSpellsToExcelCommand { get; }
+    public ICommand CopySpellsCommand { get; }
+    public ICommand SaveSpellsTextCommand { get; }
+    public ICommand ExportMiraclesToExcelCommand { get; }
+    public ICommand CopyMiraclesCommand { get; }
+    public ICommand SaveMiraclesTextCommand { get; }
 
     public bool CanAddMiracleList
         => GetBaseMiracleList() == null
@@ -337,38 +357,13 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         var isPriest = HasBracket(classRecord?.Brackets, "Priest");
         var isDruid = HasBracket(classRecord?.Brackets, "Druid");
 
-        ShowSpellsTab = isWizard && HasWizardColourSelection();
+        ShowSpellsTab = isWizard;
         ShowMiraclesTab = isPriest;
         ShowEvocationsTab = isDruid;
     }
 
     private bool HasWizardColourSelection()
-    {
-        if (_draft.SpecialisationSelections != null)
-        {
-            var hasSelection = _draft.SpecialisationSelections.Any(kvp =>
-                kvp.Key.Contains("Wizard Colour", StringComparison.OrdinalIgnoreCase)
-                && !string.IsNullOrWhiteSpace(kvp.Value));
-            if (hasSelection)
-            {
-                return true;
-            }
-        }
-
-        if (_draft.Abilities != null)
-        {
-            var hasAbility = _draft.Abilities.Any(a =>
-                !string.IsNullOrWhiteSpace(a?.Source)
-                && a.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase));
-            if (hasAbility)
-            {
-                return true;
-            }
-
-        }
-
-        return false;
-    }
+        => !string.IsNullOrWhiteSpace(GetWizardColourSelectionRaw());
 
     private static bool HasBracket(IEnumerable<string>? brackets, string token)
         => brackets != null && brackets.Any(b => b.Contains(token, StringComparison.OrdinalIgnoreCase));
@@ -546,7 +541,25 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             _draft.SpellLists = new List<SpellListDraft>();
 
         if (ShowSpellsTab)
+        {
             NormalizeWizardSpellLists();
+            EnsureSpecialistSpellList();
+        }
+
+        var baseDraft = _draft.SpellLists.FirstOrDefault(l => l.IsBaseList);
+        var specialistDraft = _draft.SpellLists.FirstOrDefault(l => !l.IsBaseList);
+        var ordered = new List<SpellListDraft>();
+        if (baseDraft != null)
+            ordered.Add(baseDraft);
+        if (specialistDraft != null)
+            ordered.Add(specialistDraft);
+        if (ordered.Count > 0)
+            _draft.SpellLists = ordered;
+
+        if (baseDraft != null)
+            baseDraft.IsMinimized = true;
+        if (specialistDraft != null)
+            specialistDraft.IsMinimized = true;
 
         var specialistFilter = BuildSpecialistSpellFilter();
         foreach (var list in _draft.SpellLists)
@@ -578,8 +591,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return;
 
         var primary = specialistLists[0];
-        if (string.IsNullOrWhiteSpace(primary.Name))
-            primary.Name = "Specialists";
+        primary.Name = "Specialists";
         var existing = new HashSet<string>(
             primary.Entries.Select(e => (e.Name ?? string.Empty).Trim()).Where(n => n.Length > 0),
             StringComparer.OrdinalIgnoreCase);
@@ -602,6 +614,31 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             .ToList();
     }
 
+    private SpellListDraft EnsureSpecialistSpellList()
+    {
+        if (_draft.SpellLists == null)
+            _draft.SpellLists = new List<SpellListDraft>();
+
+        var specialist = _draft.SpellLists.FirstOrDefault(l => !l.IsBaseList);
+        if (specialist == null)
+        {
+            specialist = new SpellListDraft
+            {
+                Name = "Specialists",
+                IsBaseList = false,
+                IsMinimized = true
+            };
+            _draft.SpellLists.Add(specialist);
+        }
+        else
+        {
+            specialist.Name = "Specialists";
+            specialist.IsBaseList = false;
+        }
+
+        return specialist;
+    }
+
     private void AddSpecialistList()
     {
         if (!CanAddSpecialistList)
@@ -612,7 +649,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         var draft = new SpellListDraft
         {
-            Name = "Specialists"
+            Name = "Specialists",
+            IsMinimized = true
         };
         _draft.SpellLists.Add(draft);
         var vm = new SpellListVm(draft, _allSpells, GetDraftCasterLevel, OnSpellListChanged, BuildSpecialistSpellFilter());
@@ -645,25 +683,32 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (_draft.MiracleLists == null)
             _draft.MiracleLists = new List<MiracleListDraft>();
 
-        if (_draft.MiracleLists.Count == 0)
+        var baseList = _draft.MiracleLists.FirstOrDefault(l => !l.IsScriptures);
+        if (baseList == null)
         {
-            var churchList = TryBuildChurchMiracleList();
-            if (churchList != null)
+            baseList = TryBuildChurchMiracleList() ?? new MiracleListDraft
             {
-                churchList.IsSaved = true;
-                churchList.IsScriptures = false;
-                _draft.MiracleLists.Add(churchList);
-            }
+                Name = "Base List",
+                IsScriptures = false
+            };
         }
 
-        var baseList = _draft.MiracleLists.FirstOrDefault(l => !l.IsScriptures);
         var scripturesList = _draft.MiracleLists.FirstOrDefault(l => l.IsScriptures);
+        if (scripturesList == null)
+        {
+            scripturesList = new MiracleListDraft
+            {
+                Name = "Scriptures of Faith",
+                IsScriptures = true
+            };
+        }
 
-        _draft.MiracleLists = new List<MiracleListDraft>();
-        if (baseList != null)
-            _draft.MiracleLists.Add(baseList);
-        if (scripturesList != null)
-            _draft.MiracleLists.Add(scripturesList);
+        baseList.IsScriptures = false;
+        scripturesList.IsScriptures = true;
+        baseList.IsMinimized = true;
+        scripturesList.IsMinimized = true;
+
+        _draft.MiracleLists = new List<MiracleListDraft> { baseList, scripturesList };
 
         foreach (var list in _draft.MiracleLists)
         {
@@ -755,7 +800,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         return list.Entries.Count == 0 ? null : list;
     }
 
-    private MagicColours? TryGetWizardColour()
+    private string? GetWizardColourSelectionRaw()
     {
         // Prefer SpecialisationSelections
         if (_draft.SpecialisationSelections != null)
@@ -764,9 +809,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
                 x.Key.Contains("Wizard Colour", StringComparison.OrdinalIgnoreCase)
                 && !string.IsNullOrWhiteSpace(x.Value));
 
-            if (!string.IsNullOrWhiteSpace(kvp.Value)
-                && Enum.TryParse<MagicColours>(kvp.Value.Trim(), true, out var colour))
-                return colour;
+            if (!string.IsNullOrWhiteSpace(kvp.Value))
+                return kvp.Value.Trim();
         }
 
         if (_draft.Abilities != null)
@@ -775,14 +819,60 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
                 !string.IsNullOrWhiteSpace(a?.Source)
                 && a.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase));
 
-            // If your ability name contains the colour text, try parse it:
             var name = ability?.Name ?? string.Empty;
-            if (!string.IsNullOrWhiteSpace(name)
-                && Enum.TryParse<MagicColours>(name.Trim(), true, out var fromAbility))
-                return fromAbility;
+            if (!string.IsNullOrWhiteSpace(name))
+                return name.Trim();
         }
 
+        var inferred = TryInferWizardColourFromSpellLists();
+        if (!string.IsNullOrWhiteSpace(inferred))
+            return inferred;
+
+        if (IsSorcorialClass())
+            return "Sorcorial";
+
         return null;
+    }
+
+    private string? TryInferWizardColourFromSpellLists()
+    {
+        var baseList = _draft.SpellLists?.FirstOrDefault(l => l.IsBaseList);
+        var name = baseList?.Name ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(name))
+            return null;
+
+        foreach (var colour in Enum.GetValues<MagicColours>())
+        {
+            var token = colour.ToString();
+            if (name.Contains(token, StringComparison.OrdinalIgnoreCase))
+                return token;
+        }
+
+        if (name.Contains("Sorc", StringComparison.OrdinalIgnoreCase))
+            return "Sorcorial";
+
+        return null;
+    }
+
+    private MagicColours? TryGetWizardColour()
+    {
+        var selection = GetWizardColourSelectionRaw();
+        if (!string.IsNullOrWhiteSpace(selection)
+            && Enum.TryParse<MagicColours>(selection.Trim(), true, out var colour))
+            return colour;
+
+        return null;
+    }
+
+    private bool IsSorcorialClass()
+    {
+        var className = (_draft.Class ?? string.Empty).Trim();
+        if (className.Length == 0)
+            return false;
+
+        return className.Contains("Sorcerer", StringComparison.OrdinalIgnoreCase)
+               || className.Contains("Sorcorial", StringComparison.OrdinalIgnoreCase)
+               || className.Contains("Sorcery", StringComparison.OrdinalIgnoreCase);
     }
 
     private Func<SpellService.SpellRaw, bool>? BuildSpecialistSpellFilter()
@@ -847,20 +937,21 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (!ShowSpellsTab)
             return;
 
-        var colour = TryGetWizardColour();
-        if (!colour.HasValue)
+        var selection = GetWizardColourSelectionRaw();
+        if (string.IsNullOrWhiteSpace(selection))
             return;
 
         if (_draft.SpellLists == null)
             _draft.SpellLists = new List<SpellListDraft>();
 
-        var baseList = FindBaseSpellList(colour.Value);
+        var baseList = FindBaseSpellList(selection);
         if (baseList == null)
         {
             baseList = new SpellListDraft
             {
-                Name = $"{colour.Value} Spells",
-                IsBaseList = true
+                Name = $"{selection} Spells",
+                IsBaseList = true,
+                IsMinimized = true
             };
             _draft.SpellLists.Insert(0, baseList);
         }
@@ -868,7 +959,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         {
             baseList.IsBaseList = true;
             if (string.IsNullOrWhiteSpace(baseList.Name))
-                baseList.Name = $"{colour.Value} Spells";
+                baseList.Name = $"{selection} Spells";
 
             var idx = _draft.SpellLists.IndexOf(baseList);
             if (idx > 0)
@@ -878,10 +969,10 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             }
         }
 
-        ImportSpellsOfColour(colour.Value, baseList);
+        ImportSpellsForWizardSelection(selection, baseList);
     }
 
-    private SpellListDraft? FindBaseSpellList(MagicColours colour)
+    private SpellListDraft? FindBaseSpellList(string selection)
     {
         if (_draft.SpellLists == null || _draft.SpellLists.Count == 0)
             return null;
@@ -890,10 +981,10 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (baseList != null)
             return baseList;
 
-        return _draft.SpellLists.FirstOrDefault(l => IsLikelyBaseSpellList(l, colour));
+        return _draft.SpellLists.FirstOrDefault(l => IsLikelyBaseSpellList(l, selection));
     }
 
-    private static bool IsLikelyBaseSpellList(SpellListDraft list, MagicColours colour)
+    private static bool IsLikelyBaseSpellList(SpellListDraft list, string selection)
     {
         if (list == null)
             return false;
@@ -902,20 +993,18 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (name.Length == 0)
             return false;
 
-        var colourToken = colour.ToString();
+        var colourToken = selection.Trim();
         return name.Contains("Spells", StringComparison.OrdinalIgnoreCase)
                && name.Contains(colourToken, StringComparison.OrdinalIgnoreCase);
     }
 
-    private void ImportSpellsOfColour(MagicColours colour, SpellListDraft target)
+    private void ImportSpellsForWizardSelection(string selection, SpellListDraft target)
     {
         if (target == null) return;
 
-        var colourToken = colour.ToString();
-
         var matches = _allSpells
             .Where(s => !string.IsNullOrWhiteSpace(s?.name))
-            .Where(s => string.Equals(s.colour ?? string.Empty, colourToken, StringComparison.OrdinalIgnoreCase))
+            .Where(s => SpellMatchesWizardSelection(s.colour, selection))
             .Where(s => (s.isAdvanced ?? false) == false)
             .OrderBy(s => s.level)
             .ThenBy(s => s.name, StringComparer.OrdinalIgnoreCase)
@@ -944,9 +1033,98 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         }
     }
 
+    internal static bool SpellMatchesWizardSelection(string? rawColour, string selection)
+    {
+        if (string.IsNullOrWhiteSpace(rawColour) || string.IsNullOrWhiteSpace(selection))
+            return false;
+
+        var trimmedSelection = selection.Trim();
+        var selectionIsElemental = IsElementalSelection(trimmedSelection);
+        var selectionIsSorcorial = IsSorcorialSelection(trimmedSelection);
+        var selectionColour = TryParseMagicColour(trimmedSelection, out var parsed) ? parsed : (MagicColours?)null;
+
+        var parts = rawColour.Split(new[] { '/', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        foreach (var part in parts)
+        {
+            if (SpellColourPartMatches(part, selectionColour, selectionIsElemental, selectionIsSorcorial))
+                return true;
+        }
+
+        return SpellColourPartMatches(rawColour, selectionColour, selectionIsElemental, selectionIsSorcorial);
+    }
+
+    private static bool SpellColourPartMatches(string rawPart, MagicColours? selectionColour, bool selectionIsElemental, bool selectionIsSorcorial)
+    {
+        var tokens = TokenizeColour(rawPart);
+        if (tokens.Count == 0)
+            return false;
+
+        if (tokens.Any(t => t == "all"))
+            return selectionColour.HasValue || selectionIsElemental || selectionIsSorcorial;
+
+        var hasEle = tokens.Any(t => t == "ele" || t == "elemental");
+        var hasSoc = tokens.Any(t => t.StartsWith("sorc", StringComparison.OrdinalIgnoreCase) || t == "soc");
+        var hasBar = tokens.Any(t => t == "bar" || t == "not" || t == "except");
+        var hasGrey = tokens.Any(t => t == "grey" || t == "gray" || t == "gr");
+
+        if (hasEle && hasBar && hasGrey)
+            return selectionIsElemental && selectionColour.HasValue && selectionColour.Value != MagicColours.Grey;
+
+        if (hasEle && hasSoc)
+            return selectionIsElemental || selectionIsSorcorial;
+
+        if (hasEle)
+            return selectionIsElemental;
+
+        if (hasSoc)
+            return selectionIsSorcorial;
+
+        foreach (var token in tokens)
+        {
+            if (TryParseMagicColour(token, out var colour))
+                return selectionColour.HasValue && colour == selectionColour.Value;
+        }
+
+        return false;
+    }
+
+    private static List<string> TokenizeColour(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return new List<string>();
+
+        var chars = raw.ToLowerInvariant()
+            .Select(c => char.IsLetterOrDigit(c) ? c : ' ')
+            .ToArray();
+
+        return new string(chars)
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .ToList();
+    }
+
+    private static bool IsElementalSelection(string selection)
+        => Enum.TryParse<ElementalColours>(selection.Trim(), ignoreCase: true, out _);
+
+    private static bool IsSorcorialSelection(string selection)
+    {
+        var trimmed = selection.Trim();
+        if (trimmed.Length == 0)
+            return false;
+
+        if (trimmed.StartsWith("Sorc", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (Enum.TryParse<MagicColours>(trimmed, ignoreCase: true, out var colour))
+            return !Enum.TryParse<ElementalColours>(colour.ToString(), ignoreCase: true, out _);
+
+        return Enum.TryParse<ExtendedMagicColours>(trimmed, ignoreCase: true, out var ext)
+               && ext == ExtendedMagicColours.Sorcorial;
+    }
+
     private void OnSpellListChanged()
     {
         RefreshSpecialistSlots();
+        PersistDraft();
     }
 
     private void RefreshSpecialistSlots()
@@ -1171,6 +1349,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         Raise(nameof(CanSave));
         (SaveCommand as Command)?.ChangeCanExecute();
         RaiseMiracleListStateChanged();
+        PersistDraft();
     }
 
     private void HookMiracleList(MiracleListVm vm)
@@ -1230,6 +1409,246 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return;
 
         LiteDbService.UpsertDraft(_draft);
+    }
+
+    private async Task ExportSpellsToExcelAsync()
+    {
+        var path = BuildSpellsExcel();
+        await Share.Default.RequestAsync(new ShareFileRequest
+        {
+            Title = $"{_draft.Name}'s spells",
+            File = new ShareFile(path)
+        });
+    }
+
+    private async Task CopySpellsToClipboardAsync()
+    {
+        var text = BuildSpellsText();
+        await Clipboard.Default.SetTextAsync(text);
+    }
+
+    private async Task SaveSpellsToTextAsync()
+    {
+        var path = await BuildSpellsTextFileAsync();
+        await Launcher.OpenAsync(new OpenFileRequest
+        {
+            File = new ReadOnlyFile(path)
+        });
+    }
+
+    private async Task ExportMiraclesToExcelAsync()
+    {
+        var path = BuildMiraclesExcel();
+        await Share.Default.RequestAsync(new ShareFileRequest
+        {
+            Title = $"{_draft.Name}'s miracles",
+            File = new ShareFile(path)
+        });
+    }
+
+    private async Task CopyMiraclesToClipboardAsync()
+    {
+        var text = BuildMiraclesText();
+        await Clipboard.Default.SetTextAsync(text);
+    }
+
+    private async Task SaveMiraclesToTextAsync()
+    {
+        var path = await BuildMiraclesTextFileAsync();
+        await Launcher.OpenAsync(new OpenFileRequest
+        {
+            File = new ReadOnlyFile(path)
+        });
+    }
+
+    private string BuildSpellsExcel()
+    {
+        using var workbook = new XLWorkbook();
+        var sheet = workbook.Worksheets.Add("Spells");
+
+        sheet.Cell(1, 1).Value = "List";
+        sheet.Cell(1, 2).Value = "Name";
+        sheet.Cell(1, 3).Value = "Level";
+        sheet.Cell(1, 4).Value = "Colour";
+        sheet.Cell(1, 5).Value = "Advanced";
+
+        var row = 2;
+        foreach (var (listName, entry) in EnumerateSpellEntries())
+        {
+            sheet.Cell(row, 1).Value = listName;
+            sheet.Cell(row, 2).Value = entry.Name;
+            sheet.Cell(row, 3).Value = entry.Level;
+            sheet.Cell(row, 4).Value = entry.Colour;
+            sheet.Cell(row, 5).Value = entry.IsAdvanced ? "Yes" : "No";
+            row++;
+        }
+
+        sheet.Columns().AdjustToContents();
+
+        var fileName = $"Spells_{SanitizeFileName(_draft.Name)}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.xlsx";
+        var path = Path.Combine(FileSystem.CacheDirectory, fileName);
+        workbook.SaveAs(path);
+        return path;
+    }
+
+    private string BuildMiraclesExcel()
+    {
+        using var workbook = new XLWorkbook();
+        var sheet = workbook.Worksheets.Add("Miracles");
+
+        sheet.Cell(1, 1).Value = "List";
+        sheet.Cell(1, 2).Value = "Name";
+        sheet.Cell(1, 3).Value = "Power";
+        sheet.Cell(1, 4).Value = "Alignment";
+        sheet.Cell(1, 5).Value = "Sphere";
+        sheet.Cell(1, 6).Value = "Advanced";
+
+        var row = 2;
+        foreach (var (listName, entry) in EnumerateMiracleEntries())
+        {
+            sheet.Cell(row, 1).Value = listName;
+            sheet.Cell(row, 2).Value = entry.Name;
+            sheet.Cell(row, 3).Value = entry.Power;
+            sheet.Cell(row, 4).Value = entry.Alignment;
+            sheet.Cell(row, 5).Value = entry.Sphere;
+            sheet.Cell(row, 6).Value = entry.IsAdvanced ? "Yes" : "No";
+            row++;
+        }
+
+        sheet.Columns().AdjustToContents();
+
+        var fileName = $"Miracles_{SanitizeFileName(_draft.Name)}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.xlsx";
+        var path = Path.Combine(FileSystem.CacheDirectory, fileName);
+        workbook.SaveAs(path);
+        return path;
+    }
+
+    private string BuildSpellsText()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"{_draft.Name} - Spells");
+
+        var baseList = _draft.SpellLists?.FirstOrDefault(l => l.IsBaseList);
+        if (baseList != null)
+            AppendSpellListText(sb, string.IsNullOrWhiteSpace(baseList.Name) ? "Base List" : baseList.Name, baseList);
+
+        var specialistList = _draft.SpellLists?.FirstOrDefault(l => !l.IsBaseList);
+        if (specialistList != null)
+            AppendSpellListText(sb, "Specialists", specialistList);
+
+        return sb.ToString().TrimEnd();
+    }
+
+    private string BuildMiraclesText()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"{_draft.Name} - Miracles");
+
+        var baseList = _draft.MiracleLists?.FirstOrDefault(l => !l.IsScriptures);
+        if (baseList != null)
+            AppendMiracleListText(sb, FormatMiracleListHeader(baseList), baseList);
+
+        var scripturesList = _draft.MiracleLists?.FirstOrDefault(l => l.IsScriptures);
+        if (scripturesList != null)
+            AppendMiracleListText(sb, "Scriptures of Faith", scripturesList);
+
+        return sb.ToString().TrimEnd();
+    }
+
+    private async Task<string> BuildSpellsTextFileAsync()
+    {
+        var content = BuildSpellsText();
+        var fileName = $"Spells_{SanitizeFileName(_draft.Name)}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.txt";
+        var path = Path.Combine(FileSystem.CacheDirectory, fileName);
+        await File.WriteAllTextAsync(path, content);
+        return path;
+    }
+
+    private async Task<string> BuildMiraclesTextFileAsync()
+    {
+        var content = BuildMiraclesText();
+        var fileName = $"Miracles_{SanitizeFileName(_draft.Name)}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.txt";
+        var path = Path.Combine(FileSystem.CacheDirectory, fileName);
+        await File.WriteAllTextAsync(path, content);
+        return path;
+    }
+
+    private IEnumerable<(string ListName, SpellListEntryDraft Entry)> EnumerateSpellEntries()
+    {
+        if (_draft.SpellLists == null)
+            yield break;
+
+        foreach (var list in _draft.SpellLists)
+        {
+            var listName = list.IsBaseList ? (string.IsNullOrWhiteSpace(list.Name) ? "Base List" : list.Name) : "Specialists";
+            foreach (var entry in list.Entries ?? new List<SpellListEntryDraft>())
+            {
+                if (string.IsNullOrWhiteSpace(entry.Name))
+                    continue;
+                yield return (listName, entry);
+            }
+        }
+    }
+
+    private IEnumerable<(string ListName, MiracleListEntryDraft Entry)> EnumerateMiracleEntries()
+    {
+        if (_draft.MiracleLists == null)
+            yield break;
+
+        foreach (var list in _draft.MiracleLists)
+        {
+            var listName = list.IsScriptures ? "Scriptures of Faith" : FormatMiracleListHeader(list);
+            foreach (var entry in list.Entries ?? new List<MiracleListEntryDraft>())
+            {
+                if (string.IsNullOrWhiteSpace(entry.Name))
+                    continue;
+                yield return (listName, entry);
+            }
+        }
+    }
+
+    private static string FormatMiracleListHeader(MiracleListDraft list)
+    {
+        var source = list.SourceName ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(source))
+            return "Base List";
+
+        return $"Base List - {source}";
+    }
+
+    private static void AppendSpellListText(StringBuilder sb, string header, SpellListDraft list)
+    {
+        sb.AppendLine();
+        sb.AppendLine(header);
+        foreach (var entry in list.Entries ?? new List<SpellListEntryDraft>())
+        {
+            if (string.IsNullOrWhiteSpace(entry.Name))
+                continue;
+            var adv = entry.IsAdvanced ? "Advanced" : "Standard";
+            var colour = string.IsNullOrWhiteSpace(entry.Colour) ? string.Empty : $" [{entry.Colour}]";
+            sb.AppendLine($"- {entry.Name} (Lvl {entry.Level}){colour} [{adv}]");
+        }
+    }
+
+    private static void AppendMiracleListText(StringBuilder sb, string header, MiracleListDraft list)
+    {
+        sb.AppendLine();
+        sb.AppendLine(header);
+        foreach (var entry in list.Entries ?? new List<MiracleListEntryDraft>())
+        {
+            if (string.IsNullOrWhiteSpace(entry.Name))
+                continue;
+            var adv = entry.IsAdvanced ? "Advanced" : "Standard";
+            sb.AppendLine($"- {entry.Name} ({entry.Power}) [{entry.Alignment}] [{entry.Sphere}] [{adv}]");
+        }
+    }
+
+    private static string SanitizeFileName(string? name)
+    {
+        var safe = string.IsNullOrWhiteSpace(name) ? "Character" : name.Trim();
+        foreach (var ch in Path.GetInvalidFileNameChars())
+            safe = safe.Replace(ch, '_');
+        return safe;
     }
 }
 
@@ -1360,17 +1779,21 @@ public sealed class SpellListVm : INotifyPropertyChanged
 
     public bool IsBaseList => Draft.IsBaseList;
 
+    public bool IsSpecialistList => !IsBaseList;
+
     public bool IsReadOnly => IsBaseList;
 
     public bool CanEdit => !IsReadOnly;
 
-    public bool ShowNameEditor => !IsBaseList;
+    public bool ShowNameEditor => false;
 
-    public bool ShowHeaderLabel => IsBaseList;
+    public bool ShowHeaderLabel => true;
 
-    public string HeaderTitle => string.IsNullOrWhiteSpace(Name) ? "Spell List" : Name;
+    public string HeaderTitle => IsBaseList
+        ? (string.IsNullOrWhiteSpace(Name) ? "Spell List" : Name)
+        : "Specialists";
 
-    public bool CanRemoveList => !IsBaseList;
+    public bool CanRemoveList => false;
 
     public bool IsMinimized
     {
@@ -1381,12 +1804,36 @@ public sealed class SpellListVm : INotifyPropertyChanged
             Draft.IsMinimized = value;
             Raise();
             Raise(nameof(IsExpanded));
+            Raise(nameof(CanAddSelected));
         }
     }
 
     public bool IsExpanded => !IsMinimized;
 
     public ObservableCollection<SpellEntryVm> Entries { get; } = new();
+
+    private SpellOption? _selectedSpellOption;
+    public SpellOption? SelectedSpellOption
+    {
+        get => _selectedSpellOption;
+        set
+        {
+            if (!Set(ref _selectedSpellOption, value)) return;
+            Raise(nameof(CanAddSelected));
+        }
+    }
+
+    private string _searchText = string.Empty;
+    public string SearchText
+    {
+        get => _searchText;
+        set => Set(ref _searchText, value ?? string.Empty);
+    }
+
+    public ObservableCollection<string> ColourFilterOptions { get; } = new();
+    public ObservableCollection<string> SelectedColourFilters { get; } = new();
+    public ObservableCollection<string> TierFilterOptions { get; } = new() { "Advanced", "Standard" };
+    public ObservableCollection<string> SelectedTierFilters { get; } = new();
 
     private Dictionary<string, SpellOption> _filteredOptions = new();
     public Dictionary<string, SpellOption> FilteredOptions
@@ -1395,9 +1842,14 @@ public sealed class SpellListVm : INotifyPropertyChanged
         private set => Set(ref _filteredOptions, value);
     }
 
-    public ICommand AddEntryCommand { get; }
+    public ICommand AddSelectedCommand { get; }
     public ICommand RemoveEntryCommand { get; }
     public ICommand ToggleExpandedCommand { get; }
+
+    public bool CanAddSelected =>
+        CanEdit
+        && IsExpanded
+        && !string.IsNullOrWhiteSpace(SelectedSpellOption?.Name);
 
     private readonly Func<int> _getCasterLevel;
 
@@ -1414,10 +1866,17 @@ public sealed class SpellListVm : INotifyPropertyChanged
         _onListChanged = onListChanged;
         _spellFilter = spellFilter;
 
-        AddEntryCommand = new Command(AddEntry);
+        if (!IsBaseList)
+            Draft.Name = "Specialists";
+
+        AddSelectedCommand = new Command(AddSelectedSpell);
         RemoveEntryCommand = new Command<SpellEntryVm>(RemoveEntry);
         ToggleExpandedCommand = new Command(() => IsMinimized = !IsMinimized);
 
+        SelectedColourFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
+        SelectedTierFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
+
+        LoadColourFilterOptions();
         LoadEntriesFromDraft();
         UpdateFilteredOptions();
     }
@@ -1441,20 +1900,20 @@ public sealed class SpellListVm : INotifyPropertyChanged
             Entries.Add(vm);
         }
 
-        if (Entries.Count == 0 && !IsReadOnly)
-            AddEntry();
     }
 
-    private void AddEntry()
+    private void AddSelectedSpell()
     {
-        if (IsReadOnly)
+        if (!CanAddSelected || SelectedSpellOption == null)
             return;
 
         var draft = new SpellListEntryDraft();
         Draft.Entries.Add(draft);
         var vm = new SpellEntryVm(draft, OnEntryChanged, _getCasterLevel);
+        vm.SelectedSpell = SelectedSpellOption.Value;
         Entries.Add(vm);
-        _onListChanged?.Invoke();
+        SelectedSpellOption = null;
+        SearchText = string.Empty;
     }
 
     private void RemoveEntry(SpellEntryVm? entry)
@@ -1474,15 +1933,52 @@ public sealed class SpellListVm : INotifyPropertyChanged
         _onListChanged?.Invoke();
     }
 
+    private void LoadColourFilterOptions()
+    {
+        ColourFilterOptions.Clear();
+        foreach (var colour in Enum.GetValues<MagicColours>())
+            ColourFilterOptions.Add(colour.ToString());
+
+        if (!ColourFilterOptions.Any(c => c.Equals("Sorcorial", StringComparison.OrdinalIgnoreCase)))
+            ColourFilterOptions.Add("Sorcorial");
+    }
+
     private void UpdateFilteredOptions()
     {
         var dict = new Dictionary<string, SpellOption>(StringComparer.OrdinalIgnoreCase);
+        var selectedColours = SelectedColourFilters != null
+            ? new HashSet<string>(SelectedColourFilters, StringComparer.OrdinalIgnoreCase)
+            : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var selectedTiers = SelectedTierFilters != null
+            ? new HashSet<string>(SelectedTierFilters, StringComparer.OrdinalIgnoreCase)
+            : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var filterByColour = selectedColours.Count > 0;
+        var filterAdvanced = selectedTiers.Contains("Advanced");
+        var filterStandard = selectedTiers.Contains("Standard");
+        var filterByTier = selectedTiers.Count == 1;
+
         foreach (var spell in _allSpells)
         {
             if (string.IsNullOrWhiteSpace(spell?.name))
                 continue;
             if (_spellFilter != null && !_spellFilter(spell))
                 continue;
+
+            if (filterByColour)
+            {
+                var matchesColour = selectedColours.Any(c => AdvanceCharacterVm.SpellMatchesWizardSelection(spell.colour, c));
+                if (!matchesColour)
+                    continue;
+            }
+
+            if (filterByTier)
+            {
+                var isAdvanced = spell.isAdvanced ?? false;
+                if (filterAdvanced && !isAdvanced)
+                    continue;
+                if (filterStandard && isAdvanced)
+                    continue;
+            }
 
             var option = new SpellOption(spell.name, spell.level, spell.colour ?? string.Empty, spell.isAdvanced ?? false);
             var label = $"{spell.name} (Lvl {spell.level})";

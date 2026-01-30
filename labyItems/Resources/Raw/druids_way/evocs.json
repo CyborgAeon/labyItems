@@ -60,6 +60,26 @@
     "isAdvanced": false
   },
   {
+    "name": "Trip",
+    "power": 2,
+    "range": "20'",
+    "duration": "Instant",
+    "fields": ["Autumn", "Forest", "Father of the World"],
+    "verbal": "By the power of the earth, Trip",
+    "description": "The target must be moving over a stone or earthen surface and the evocation will cause them to trip over.",
+    "isAdvanced": false
+  },
+  {
+    "name": "Warping",
+    "power": 3,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Autumn", "Forest", "Shadow of the Dawn"],
+    "verbal": "I bid that [wooden object] be warped",
+    "description": "This will warp a wooden object of less than 27 cubic feet in volume. The object becomes useless although it can be restored by a re-shaping effect.",
+    "isAdvanced": false
+  },
+  {
     "name": "Camouflage",
     "power": 3,
     "range": "Touch",
@@ -270,6 +290,26 @@
     "isAdvanced": true
   },
   {
+    "name": "Control Plant",
+    "power": 1,
+    "range": "20'",
+    "duration": "5 minutes",
+    "fields": ["Forest", "Father of the World"],
+    "verbal": "[Plant type] of the [terrain type] heed my call",
+    "description": "This is a stacking evocation, costing 1EP per level of resistance of the target plant. EP reductions apply to total EP cost. It can only be cast on a “natural plants” (though it may be used on animate versions of them, such as Animated Trees) and then only effecting up to the caster’s level. This evocation is equivalent to 4EP for the purpose of learning this evocation. i.e. 30pts.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Corroding Touch",
+    "power": 1,
+    "range": "Touch",
+    "duration": "Permanent",
+    "fields": ["Winter", "Rivers", "Shadow of the Dawn"],
+    "verbal": "Rain fall and corrode this [metal object]",
+    "description": "This will destroy one normal ferrous object of a volume less than 27 cubic feet. It is rusted away to nothing and cannot be restored by a Mend, Restore or Reshape spell.",
+    "isAdvanced": true
+  },
+  {
     "name": "Handfire",
     "power": 1,
     "range": "10’",
@@ -290,6 +330,143 @@
     "isAdvanced": true
   },
   {
+    "name": "Lesser Druidic Harm",
+    "power": 1,
+    "range": "Touch",
+    "duration": "Instant",
+    "fields": ["Winter", "Deserts", "Shadow of the Dawn"],
+    "verbal": "May the world turn its hand against thee",
+    "description": "Inflicts 6 tblp and 1 point of damage to each location to 1 target. It will only harm fully Flesh and Blood (F&B) creatures thus elves and undead (for example) are immune to this evocation. Innate PAC applies to this damage (thus a target with innate PAC 1 is immune to this evocation). This evocation inflicts 2 HTK against monsters.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Lesser Water of Life",
+    "power": 1,
+    "range": "2 inches",
+    "duration": "30 seconds",
+    "fields": ["Spring", "Rivers", "Mother Nature"],
+    "verbal": "May this water be your undoing!",
+    "description": "Turns 50 ml of normal liquid into a ‘normal’ curing potion, which will heal 6 tblp. Note that these potions retain their potency only for a brief while.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Lesser Water of Spite",
+    "power": 1,
+    "range": "2 inches",
+    "duration": "30 seconds",
+    "fields": ["Rivers", "Horned Man"],
+    "verbal": "May this water bring you strength",
+    "description": "Turns 50 ml of normal liquid into a single dose of BV 1 or IV 2, which lasts for 1 minute. These poisons cannot ever heal damage or grant any other system benefit, unless their target has an ability that specifically mentions this evocation ~ this means that if a target would normally be healed by poison they are not healed by this evocation.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Ties That Bind",
+    "power": 1,
+    "range": "Touch",
+    "duration": "Adventure",
+    "fields": ["Forest", "Father of the World"],
+    "preReqs": ["Forest Shift"],
+    "verbal": "May the world’s strength bind us together that we may walk entwined",
+    "description": "Turns 50 ml of normal liquid into a single dose of BV 1 or IV 2, which lasts for 1 minute. These poisons cannot ever heal damage or grant any other system benefit, unless their target has an ability that specifically mentions this evocation ~ this means that if a target would normally be healed by poison they are not healed by this evocation.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Warping Touch",
+    "power": 1,
+    "range": "Touch",
+    "duration": "Permanent",
+    "fields": ["Autumn", "Forest", "Shadow of the Dawn"],
+    "verbal": "I bid this [wooden object] be warped",
+    "description": " This will warp a wooden object of less than 27 cubic feet in volume. The object becomes useless although it can be restored by a re-shaping effect.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Bramble's Touch",
+    "power": 2,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "preReqs": ["Animate Small Tree"],
+    "fields": ["Autumn", "Forest", "Horned Man"],
+    "verbal": "Thorns and Briars grow and take hold",
+    "description": "The damage inflicted by one Animated Tree now strikes through PAC.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Corrosion",
+    "power": 2,
+    "range": "20'",
+    "duration": "Permanent",
+    "preReqs": ["Corroding Touch"],
+    "fields": ["Winter", "Rivers", "Shadow of the Dawn"],
+    "verbal": "Rain fall and corrode that [metal object]",
+    "description": "This will destroy one normal ferrous object of a volume less than 27 cubic feet. It is rusted away to nothing and cannot be restored by a Mend, Restore or Reshape spell.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Eyes of the Eagle",
+    "power": 2,
+    "range": "Special",
+    "duration": "2 seconds",
+    "fields": ["Skies", "Horned Man", "Keeper of the Winds"],
+    "verbal": "May the world grant me the eyes of the eagle",
+    "description": "When cast this allows the Druid to take a 2 second glance at any point within the caster’s line of sight. i.e. it can be used for long distance vision, but not to look round corners/into boxes.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Life's Memories",
+    "power": 2,
+    "range": "Touch",
+    "duration": "24 hours or 5 minutes",
+    "fields": ["Spring", "Forest", "Father of the World"],
+    "preReqs": ["Cudgel"],
+    "verbal": "Harken to my words and remember that which you once were",
+    "description": "Reinforces 1 mundane object that is solely made from materials that were once living (such as a suit of leather armour or a wooden staff, but not a metal sword). The target object becomes immune to destruction spells as if apprentice crafted (such as Shatter and Warp, but not to effects that destroy supernatural objects such as Grand Weapon Break). This evocation will last for 24 hours if placed upon the Druid’s own equipment, or 5 minutes if cast upon another’s. This does mean that the duration drops to 5 minutes if someone other than the Druid uses a Druid’s weapon",
+    "isAdvanced": true
+  },
+  {
+    "name": "Natural Brew",
+    "power": 2,
+    "range": "Touch potion",
+    "duration": "10 seconds",
+    "fields": ["Rivers", "Mother Nature"],
+    "preReqs": ["Water of Life"],
+    "verbal": "Let Nature infuse this liquid with its power",
+    "description": "Empowers one 6 point healing potion (including one created by lesser water of life or similar) so that it now cures 9 tblp and 9 points of locational damage. This can be benefited from by Elves and similar, but is obviously a flesh and blood effect. For those individuals with potion restrictions the result is still considered to be a single 6 point. If the potion is not drunk within the duration it is wasted.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Spark",
+    "power": 2,
+    "range": "40'",
+    "duration": "Instant",
+    "fields": ["Spring", "Skies", "Keeper of the Winds"],
+    "preReqs": ["Call Lightning"],
+    "verbal": "By the powers of air and thunder I strike thee",
+    "description": "As per the 8EP evocation Call Lightning, but only inflicts 12/2 damage. (4HTK). Requires cloud cover as Call Lightning does",
+    "isAdvanced": true
+  },
+  {
+    "name": "Stoneskin (Self)",
+    "power": 2,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Mountains", "Father of the World"],
+    "preReqs": ["Barkskin"],
+    "verbal": "May the strength of the mountains be mine",
+    "description": "The caster gain PAC 6 for the duration. This PAC non-stacking with any other armour class, as per Plate(s). However the armour class counts as innate PAC.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Weasel's Agility",
+    "power": 2,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Horned Man"],
+    "verbal": "May the world grant [me/thee] the agility of a weasel",
+    "description": "Target gains +2 DAC, which doubles to 4 while they are in full retreat (running away from the threat and not taking any offensive actions). To cast on other targets they must be benefiting from a Joining evocation from the caster.",
+    "isAdvanced": true
+  },
+  {
     "name": "Breeze",
     "power": 3,
     "range": "—",
@@ -300,12 +477,23 @@
     "isAdvanced": true
   },
   {
+    "name": "Cat's Grace",
+    "power": 3,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Mountains", "Horned Man"],
+    "verbal": "May the world allow [me/thee] to move with the grace of a cat",
+    "description": "The beneficiary of this evocation gains +3 DAC and Relaxed Fall. This DAC does not stack with any other DAC generated by an Evocation, Spell or Miracle. May only be cast upon self, or upon a recipient of the 0 EP evocation “Joining”.",
+    "isAdvanced": true
+  },
+  {
     "name": "Druidic Harm",
     "power": 3,
     "range": "—",
     "duration": "—",
     "fields": ["Winter", "Deserts", "Shadow of the Dawn"],
     "verbal": "",
+    "preReqs": ["Lesser Druidic Harm"],
     "description": "As per advanced listing.",
     "isAdvanced": true
   },
@@ -315,7 +503,8 @@
     "range": "—",
     "duration": "—",
     "fields": ["Spring", "Rivers", "Mother Nature"],
-    "verbal": "",
+    "verbal": "May this water bring you health and strength",
+    "preReqs": ["Lesser Water of Life"],
     "description": "As per advanced listing.",
     "isAdvanced": true
   },
@@ -325,10 +514,171 @@
     "range": "—",
     "duration": "—",
     "fields": ["Rivers", "Horned Man"],
-    "verbal": "",
+    "verbal": "May this water twist and change and be your undoing",
+    "preReqs": ["Lesser Water of Spite"],
     "description": "As per advanced listing.",
     "isAdvanced": true
   },
+  {
+    "name": "Plant Seed",
+    "power": 3,
+    "range": "Touch",
+    "duration": "30 seconds or 5 minutes",
+    "fields": ["Spring", "Forest", "Father of the World"],
+    "verbal": "Grow now in the land’s embrace and be strong for me",
+    "preReqs": ["Animate Small Tree"],
+    "description": " After placing a small seed within earthen ground then casting this evocation a tree will grow at amazing speed, becoming fully grown in only 30 seconds. It will only remain in existence for 5 minutes after this evocation was cast however. The size of the tree this evocation produces is dependent upon the caster ~ it will usually produce a large tree, but if desired can be used to produce a medium tree (for only 2 EP) or a small tree (for only 1 EP).",
+    "isAdvanced": true
+  },
+  {
+    "name": "Salmon Leap",
+    "power": 3,
+    "range": "Self",
+    "duration": "Instant",
+    "fields": ["Rivers"],
+    "verbal": "With the powers of nature may I leap as a Salmon",
+    "description": "This allows the caster to jump 20’ forward, 10’ backwards or 15’ upwards in Time Stop. Generally passing within reach of another character allows them to take one simple action.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Searing Flame",
+    "power": 3,
+    "range": "10'",
+    "duration": "Instant",
+    "fields": ["Summer", "Deserts"],
+    "verbal": "Flames kindled by my call gather here and sear [this/these] fools!",
+    "description": "Target Suffers 6/6 (2 HTK) physical fire to two locations chosen by the caster, Innate PAC applies at 1:1 to each strike separately, the caster must target different locations on 1 target, or may choose to separate the damage between 2 different targets, though these must then be standing within 3’ of each other.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Shower of Flame",
+    "power": 3,
+    "range": "20'",
+    "duration": "Instant",
+    "fields": ["Summer", "Deserts"],
+    "preReqs": ["Searing Flame"],
+    "verbal": "Flames kindled by my call lash out now and strike this fool!",
+    "description": "This evocation inflicts 18/3 natural fire damage (6 HTK). Innate PAC applies at 6/1 per point although the damage is physical fire only.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Slumber of the Trees",
+    "power": 3,
+    "range": "10'",
+    "duration": "5 minutes",
+    "fields": ["Winter", "Forest", "Shadow of the Dawn"],
+    "preReqs": ["Animate Large Tree"],
+    "verbal": "Winter’s chill touches your roots, it is time to rest now.",
+    "description": "Target Animate Plant (e.g. an Animated Tree) reverts to an inactive, “slumbering” state immediately. This costs 3 EP, plus 1 for each additional power type present within the plant (magic/spirit/neuronic), if any. Immunity to Sleep applies. Hangs on hand 30 seconds. Bought as a 3 EP evocation.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Stoneskin (Other)",
+    "power": 3,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Mountains", "Father of the World"],
+    "preReqs": ["Stoneskin (Self)", "Barkskin"],
+    "verbal": "May the strength of the mountains be thine.",
+    "description": "As per Stoneskin [Self], but may be cast upon a recipient of the 0 EP evocation “Joining”.",
+    "isAdvanced": true
+  },
+  {
+    "name": "The City Speaks",
+    "power": 3,
+    "range": "The City",
+    "duration": "Instant",
+    "fields": ["Cities"],
+    "verbal": "City awaken and speak to me, within your walls lies [person/object], I seek to find them",
+    "description": "Can only be cast in a Large Town, City, or similar Urban Environment. The caster names a chosen object or person they believe is in the city. If it is then they gain a rough idea of where it is located (down to a house/building, but not specifically where in the building). This is an Earthpower Informational Effect.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Weathered Bark",
+    "power": 3,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Autumn", "Forest", "Horned Man"],
+    "verbal": "Oak and Elm tall and proud, hear these words I call aloud, guard my friend who bears my mark, protect this one with weathered bark",
+    "description": " The beneficiary gains +4 innate PAC. AC generated by this evocation does not stack with that of any other AC generated by evocations. May only be cast upon self or a recipient of the 0 EP evocation “Joining”.",
+    "preReqs": ["Barkskin"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Wind Walk (Self)",
+    "power": 3,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Spring", "Skies", "Keeper of the Winds"],
+    "verbal": "May the winds carry me aloft",
+    "description": " This allows the caster to fly but they may not carry anything that is too heavy to be carried normally in 1 hand (this would include another person). The rules on flying are found on the forums.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Calm Animals",
+    "power": 4,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Winter", "Forest", "Father of the World"],
+    "verbal": "[Animal type] of the [terrain type] know not fear nor anger and be calmed by my presence",
+    "description": "This evocation serves to calm a target such that a natural animal will consider the caster to be no threat. The target animal will normally allow the caster, and any travelling companions who are recipients of the 0 EP evocation “Joining”, to pass them by without harm. Can only be cast on a natural animal of up to the caster’s level. If the target animal is a part of a group of similar animals (a family of bears, a wolf pack, herd of cattle etc) then this evocation will affect all members of that group present when the evocation was cast. This evocation will go down should the caster or any of their companions actively behave in a threatening manner towards any target affected by this evocation.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Cause Disease",
+    "power": 4,
+    "range": "Touch",
+    "duration": "1 Hour",
+    "fields": ["Autumn", "Deserts", "Shadow of the Dawn"],
+    "preReqs": ["Druidic Harm", "Lesser Druidic Harm"],
+    "verbal": "May pestilence rise up and infect my foe!",
+    "description": " As the 4 spirit evil miracle Cause Disease, but is considered a physical disease. It may be cured by any Cure Disease effect, including by use of a Purgative potion. After casting this evocation the user has 30 seconds with which to touch a Flesh and Blood target (it does not affect elves).",
+    "isAdvanced": true
+  },
+  {
+    "name": "Ears of the Wolf",
+    "power": 4,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Forest", "Horned Man"],
+    "preReqs": ["Eyes of the Eagle"],
+    "verbal": "May the world grant [me/thee] the ears of a wolf",
+    "description": "Target gains Acute Hearing for duration, as per the post 8thtables ability. May only be cast upon self, or upon a recipient of the 0 EP evocation “Joining”",
+    "isAdvanced": true
+  },
+  {
+    "name": "Fire's Touch",
+    "power": 4,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Summer", "Deserts", "Father of the World"],
+    "preReqs": ["Cudgel", "Handfire"],
+    "verbal": "Let this weapon become a flaming brand to strike my enemies",
+    "description": "This evocation alters one normal wooden weapon such that it now inflicts +1 physical flaming damage when wielded by the caster",
+    "isAdvanced": true
+  },
+  {
+    "name": "Font of Knowledge",
+    "power": 4,
+    "range": "Self",
+    "duration": "2 minutes",
+    "fields": ["Rivers", "Father of the World"],
+    "preReqs": ["Create Water"],
+    "verbal": "As I drink from the Font of Knowledge I abjure thee, open my eyes and let me see!",
+    "description": "Gains three yes or no questions but they must be about something with a physical or natural aspect, which is “within the world”, i.e. on the same plane as the caster. Questions about subjects that are specifically magical and/or spiritual in nature will remain unanswered. Before asking each question must drink some water, representing taking knowledge from the font.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Lost in the Crowd",
+    "power": 4,
+    "range": "Touch",
+    "duration": "1 Hour",
+    "fields": ["Cities"],
+    "verbal": "Let [my/your] presence fade and become lost in the crowd",
+    "description": "Grants the recipient (who must be either under a joining evocation or be the caster) Immunity to all forms of informational effects unless the user is within Line of Sight. This may only be cast, and only functions, while in a city or other large urban environment (e.g. large town).",
+    "isAdvanced": true
+  },
+
   {
     "name": "Owl’s Vision",
     "power": 4,
@@ -340,43 +690,280 @@
     "isAdvanced": true
   },
   {
-    "name": "Hail Storm",
-    "power": 5,
-    "range": "—",
-    "duration": "—",
-    "fields": ["Winter", "Skies", "Keeper of the Winds"],
-    "verbal": "",
-    "description": "As per advanced listing.",
+    "name": "Quake",
+    "power": 4,
+    "range": "20'",
+    "duration": "Instant",
+    "fields": ["Summer", "Mountains", "Father of the World"],
+    "preReqs": ["Trip"],
+    "verbal": "May the ground tremble and quake!",
+    "description": "This evocation causes all creatures within 20’ who are stood on the floor to fall to the ground. The post 8th tables ability Stability grants immunity.",
     "isAdvanced": true
   },
   {
-    "name": "Greater Druidic Heal",
-    "power": 6,
-    "range": "—",
-    "duration": "—",
+    "name": "Quickening",
+    "power": 4,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Spring", "Forest", "Father of the World"],
+    "preReqs": ["Animate Large Tree"],
+    "verbal": "May the sap rise, the bark flow and your branches be stout!",
+    "description": "Target animated tree can now move at full speed and gains an additional 10 HTK.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Spider's Silk",
+    "power": 4,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Mountains", "Father of the World"],
+    "preReqs": ["Cat's Grace"],
+    "verbal": "May the world grant [me/thee] the nature of a spider",
+    "description": "Target gains the ability to traverse vertical surfaces in a manner similar to the Scout skill Climber. They also gain Sixth Sense, but do not require DAC 6 to utilise it. May only be cast upon self, or upon a recipient of the 0 EP evocation “Joining”.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Water from the Fountain of Youth",
+    "power": 4,
+    "range": "1 inch",
+    "duration": "30 seconds",
+    "fields": ["Rivers", "Mother Nature"],
+    "preReqs": [
+      "Greater water of Life",
+      "Lesser Water of Life",
+      "Water of Life"
+    ],
+    "verbal": "Let this water be as the water of eternal youth",
+    "description": "Turns 50ml of normal water into a mystical potion with properties of eternal youth. It lasts 30 seconds, but if drunk within that time removes all ongoing ageing effects from the target.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Wind Walk (Other)",
+    "power": 4,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Spring", "Skies", "Keeper of the Winds"],
+    "preReqs": ["Wind Walk (Self)"],
+    "verbal": "May the winds carry thee aloft!",
+    "description": "Effects as per Wind Walk (Self), including they may not carry anything that is too heavy to be carried normally in 1 hand (this would include another person). May only be cast upon a recipient of the 0 EP evocation “Joining”.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Wolf's Howl",
+    "power": 4,
+    "range": "20'",
+    "duration": "5 minutes",
+    "fields": ["Forest", "Horned Man"],
+    "preReqs": ["Bear's Rage"],
+    "verbal": "May the world grant me the voice of a wolf",
+    "description": " This evocation Causes Fear in 1 target that can hear.",
+    "isAdvanced": true
+  },
+
+  {
+    "name": "Aerie's Foul Feast",
+    "power": 5,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Deserts", "Shadow of the Dawn"],
+    "verbal": "Let the remnants of life be drawn to the fore and this putrid flesh be as a pauper’s feast",
+    "description": "When cast on a recently dead (last 5 minutes) flesh and blood body of at least human in size this transforms their flesh into a feast. This has one of two effects (chosen when cast): An individual can over 5 minutes eat from the flesh and they will benefit as if they had eaten a good day’s worth of food allowing them to stave off starvation and the like. Alternatively the person eating the flesh draws the life into them healing their wounds. This grants them 36/36 healing at the end of 5 minutes of eating. It should be noted while this is Flesh and Blood healing it does effect elves. Whichever version is used the recipient of the meal suffers as per the 5 minute stage of a disease upon completion for the next 5 minutes, unless immune to disease.",
+    "isAdvanced": true
+  },
+
+  {
+    "name": "Blessing of the City Spirit",
+    "power": 5,
+    "range": "Self",
+    "duration": "Until Sunrise",
+    "fields": ["Cities"],
+    "verbal": "I call to the city of (name) and the spirit that dwells within. Grant me the gifts that you bestow on the Kallah that serve you",
+    "description": "Grants the caster the Basic Kallah benefits of the chosen city until sunrise. This evocation may be cast a second time to gain Intermediate tier benefits, and a third time for Advanced tier benefits. Only one set of Kallah benefits may be active at a time. Used Kallah innates are NOT regained if the Evocation is released and recast. If cast within the relevant city then the base cost of the evocation is reduced to 4.",
+    "isAdvanced": true
+  },
+
+  {
+    "name": "Conjure Cloud",
+    "power": 5,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Spring", "Skies", "Keeper of the Winds "],
+    "preReqs": ["Predict Weather"],
+    "verbal": "From the skies above I call forth a cloud to dwell below with me for a time!",
+    "description": "This evocation causes a small cloud to form and hover just over the head of the caster. This cloud may be used by any Druid within 20’ as a source of lightning for the evocation Call Lightning (or similar). If cast under an already cloudy sky any use of Call Lightning (not Spark or other abilities) cast within 20’ of the cloud will also act as a Knockdown and leave the target stunned for 5 seconds (as per non-level based Halt). Immunity to physical electricity grants immunity to these FX’s, or immunities to Halt and Knockdown may be applied separately.",
+    "isAdvanced": true
+  },
+
+  {
+    "name": "Hail Storm",
+    "power": 5,
+    "range": "20'",
+    "duration": "Instant",
+    "preReqs": ["Predict Weather", "Resist Fire"],
+    "fields": ["Winter", "Skies", "Keeper of the Winds"],
+    "verbal": "Hail come and assail my foes",
+    "description": "Affects all targets within a 20’ 60 cone (cf. Neuronic Flare). All suffer 6/1 (2 HTK) natural cold damage (innate PAC 1 grants immunity) and are knocked back to the edge of the effect. Immunity to Natural Cold grants complete immunity to this evocation, Immunity to Repels to the knockback. A creature that suffers baneful effects for being in a cold environment will suffer from those effects for 5 minutes after being affected by this evocation.",
+    "isAdvanced": true
+  },
+
+  {
+    "name": "Puma's Speed",
+    "power": 5,
+    "range": "Touch",
+    "duration": "Instant",
+    "preReqs": ["Cat's Grace"],
+    "fields": ["Deserts", "Horned Man"],
+    "verbal": "May the world grant [me/thee] the speed of a puma",
+    "description": "This evocation allows the beneficiary to take 7 paces in Time Freeze as he moves too fast for any to act. Those with Lightning Reactions may keep their eyes open and follow his progress. The beneficiary may perform no other action bar stepping. May only be cast upon self, or upon a recipient of the 0 EP evocation “Joining” that has been cast by self.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Soothe Wounds",
+    "power": 5,
+    "range": "Touch",
+    "duration": "Special",
+    "preReqs": ["Greater Druidic Heal"],
     "fields": ["Spring", "Rivers", "Mother Nature"],
-    "verbal": "",
-    "description": "As per advanced listing.",
+    "verbal": "Let the wounds that burn be soothed by the touch of pure water",
+    "description": "Cast on a flesh and blood target causes 36 points (tblp and Locational) of permanent wounds to become healable. If the individual has sleep off perm then all such damage is alleviated. This can only be used on the dungeon that the injuries are suffered.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Stout Branches",
+    "power": 5,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "preReqs": ["Animate Medium Tree"],
+    "fields": ["Forest", "Father of the World"],
+    "verbal": "Treant grow ye tall and strong",
+    "description": "Target Animated Tree’s branches now strike as per O class weapons rather than U/C, with the damage inflicted increasing by 1 grade that is EP enhanced as per Cudgel.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Wall of Wind",
+    "power": 5,
+    "range": "20'",
+    "duration": "5 minutes",
+    "preReqs": ["Wind Walk (Self)"],
+    "fields": ["Spring", "Skies", "Keeper of the Winds"],
+    "verbal": "Air rise up and keep my foes at bay!",
+    "description": "Raises a translucent wall of buffeting air. The wall will be 20’ long, 20’ high but only 1” thick. It is impossible for anything with a physical component to pass through this wall unless it is a person who is immune to the blue spell Hurricane or they are benefiting from the Ivory glyph Mobility or from a similar effect.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Bear's Rage",
+    "power": 6,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Forest", "Horned Man"],
+    "verbal": "May the world fill me/thee with the rage of a bear!",
+    "description": "The beneficiary gains +12/4 temp life, 25% cold rage. This extra life is not cumulative with any other ability or casting that grants temporary life increases. May only be cast upon self, or upon a recipient of the 0 EP evocation “Joining”.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Bosley’s Creeping Vines",
+    "power": 6,
+    "range": "10'",
+    "duration": "5 minutes",
+    "preReqs": ["Wall of Thorns"],
+    "fields": ["Forest"],
+    "verbal": "Tangled vines encroach and grow, cover this thing of stone",
+    "description": "Covers a single vertical surface of up to 30ft by 30ft in size with thick vines that makes it easy to climb across. This grants anyone attempting to climb across them the Assisted Climb skill. The vines can be destroyed by 20 fire based hits.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Cleansing Fire",
+    "power": 6,
+    "range": "Touch",
+    "duration": "15 minutes",
+    "preReqs": ["Cure Disease"],
+    "fields": ["Summer", "Deserts", "Mother Nature"],
+    "verbal": "May cleansing fires burn within [me/thee] and burn away plague",
+    "description": "Target becomes immune to Disease for the duration. If cast upon someone who is already afflicted by a disease, this will allow the target to function as if not diseased for the duration, but once the evocation ends the disease will continue from its previous point. May only be cast upon self, or upon a recipient of the 0 EP evocation “Joining”.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Dawn's Light",
+    "power": 6,
+    "range": "20'",
+    "duration": "30 seconds",
+    "preReqs": ["Handfire"],
+    "fields": ["Summer", "Deserts", "Father of the World"],
+    "verbal": "May the light of dawn’s rays blind thee!",
+    "description": "Target is struck blind for the duration. May only be cast in bright daylight or within 5’ of a strong light source such as a bonfire or a Light Spell. A Handfire evocation is not sufficient.",
     "isAdvanced": true
   },
   {
     "name": "Greater Druidic Harm",
     "power": 6,
-    "range": "—",
-    "duration": "—",
+    "range": "Touch",
+    "duration": "Instant",
     "fields": ["Winter", "Deserts", "Shadow of the Dawn"],
-    "verbal": "",
-    "description": "As per advanced listing.",
+    "verbal": "May the world turn its hand against thee and may you suffer great harm",
+    "description": "The caster inflicts 36/6 points of damage (12 HTK) by touch (with both hands) in a manner similar to Druidic Harm. Innate PAC applies so 1 PAC negates 6/1 damage.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Greater Druidic Heal",
+    "power": 6,
+    "range": "Touch",
+    "duration": "Instant",
+    "fields": ["Spring", "Rivers", "Mother Nature"],
+    "verbal": "Water heal and fire seal these mortal wounds that you may breathe easy once more",
+    "description": "This evocation cures a Flesh and Blood creature 36 tblp and 36pts locational damage, this healing may be split between as many locations as desired by caster. Should the target have the post 8th tables ability Affinity with Nature then this spell instead cures 54/54 as long as the prerequisite time is spent in preparation.",
     "isAdvanced": true
   },
   {
     "name": "Greater Ensnare",
     "power": 6,
-    "range": "—",
-    "duration": "—",
+    "range": "20'",
+    "duration": "5 minutes",
     "fields": ["Autumn", "Forest", "Horned Man"],
-    "verbal": "",
-    "description": "As per advanced listing.",
+    "verbal": "May the powers of nature hold thee",
+    "description": "As per Ensnare (2EP), animating nearby vegetation to entrap those within the area of effect. It is not magical, and cannot of course be dispelled. It effects all within a 9’ radius from a point nominated by the caster.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Life Bloom",
+    "power": 6,
+    "range": "Touch",
+    "duration": "1 Hour",
+    "fields": ["Spring", "Mother Nature"],
+    "verbal": "Let the essence of life within you flourish and blossom",
+    "description": "Creates a spark of life within the recipient. This results in them receiving the benefits of a Druidic Heal should they reach 0 or less tblp or a location falls to 0 or less. This healing occurs after the damage so unless live to minus is owned the person may die on tblp before it triggers. May only be cast upon self or a recipient of the 0 EP evocation “Joining”.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Oaken Spear",
+    "power": 6,
+    "range": "20'",
+    "duration": "Instant",
+    "fields": ["Summer", "Forest", "Horned Man"],
+    "preReqs": ["Entangle"],
+    "verbal": "May the trees of the forest rise up against thee",
+    "description": "May only be cast on a target that is standing within 5’ of a tree. A large branch shoots off the tree, inflicting a 24 point quad to a location chosen by the caster (8 HTK vs. monsters). This inflicts damage in the same way as a thrown weapon, so any abilities that would apply to a mundane thrown weapon applies, as does any reductions that specifically apply vs. H class weapons (Arrow Cutting, for example). Immunity to Call Loc. Shot grants complete immunity to this evocation.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Oak Nature",
+    "power": 6,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Summer", "Forest", "Horned Man"],
+    "preReqs": ["Animate Large Tree"],
+    "verbal": "May the world grant [me/thee] the strength of the Oak",
+    "description": "Target gains +1 stacking grade of STR above normal max. May only be cast upon self, or upon a recipient of the 0 EP evocation “Joining”.",
+    "isAdvanced": true
+  },
+  {
+    "name": "Petrification",
+    "power": 6,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Summer", "Forest", "Horned Man"],
+    "preReqs": ["Animate Large Tree"],
+    "verbal": "May the world grant [me/thee] the strength of the Oak",
+    "description": "Target gains +1 stacking grade of STR above normal max. May only be cast upon self, or upon a recipient of the 0 EP evocation “Joining”.",
     "isAdvanced": true
   },
   {

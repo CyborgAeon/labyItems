@@ -101,7 +101,13 @@ public static class LiteDbService
         {
             try
             {
-                return System.Text.Json.JsonSerializer.Deserialize<CharacterDraft>(character.DraftSnapshot);
+                var _draft = System.Text.Json.JsonSerializer.Deserialize<CharacterDraft>(character.DraftSnapshot);
+                if (_draft != null)
+                {
+                    foreach (var kvp in character.Specialisations ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase))
+                        _draft.SpecialisationSelections[kvp.Key] = kvp.Value;
+                    return _draft;
+                }
             }
             catch { }
         }

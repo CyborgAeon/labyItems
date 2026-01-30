@@ -16,6 +16,7 @@
 		<OutputType>Exe</OutputType>
 		<RootNamespace>labyItems</RootNamespace>
 		<UseMaui>true</UseMaui>
+		<EnableDefaultMauiItems>true</EnableDefaultMauiItems>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
@@ -54,6 +55,7 @@
 	<ItemGroup>
 		<PackageReference Include="LiteDB" />
 		<PackageReference Include="Microsoft.Maui.Controls" />
+		<PackageReference Include="Microsoft.Maui.Controls.Xaml" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
 		<!-- SQLite access using sqlite-net-pcl -->

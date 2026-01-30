@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage
+       x:Class="labyItems.Pages.Battleboard.BattleboardPage"
+       x:Name="Root"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:controls="clr-namespace:labyItems.Controls"
+       xmlns:sliders="clr-namespace:labyItems.Controls.Sliders"
+       Title="Battleboard"
+       BackgroundColor="White">
+
+       <ContentPage x:Name="LifeTab"
+                    Title="Life"
+                    BackgroundColor="White">
+              <ScrollView>
+                     <VerticalStackLayout Padding="16"
+                                          Spacing="16">
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   HasShadow="False"
+                                   BorderColor="#E5E7EB">
+                                   <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                                         ColumnSpacing="8">
+                                          <Label Text="PAC"
+                                                 FontAttributes="Bold"/>
+                                          <Label Grid.Column="1"
+                                                 Text="{Binding Pac}"/>
+                                          <Label Grid.Column="2"
+                                                 Text="DAC"
+                                                 FontAttributes="Bold"/>
+                                          <Label Grid.Column="3"
+                                                 Text="{Binding Dac}"/>
+                                          <Label Grid.Column="4"
+                                                 Text="SAC"
+                                                 FontAttributes="Bold"/>
+                                          <Label Grid.Column="5"
+                                                 Text="{Binding Sac}"/>
+                                          <Label Grid.Column="6"
+                                                 Text="MAC"
+                                                 FontAttributes="Bold"/>
+                                          <Label Grid.Column="7"
+                                                 Text="{Binding Mac}"/>
+                                   </Grid>
+                            </Frame>
+
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   HasShadow="False"
+                                   BorderColor="#E5E7EB"
+                                   BackgroundColor="{Binding TotalLife.BackgroundColor}">
+                                   <Grid RowDefinitions="Auto,Auto"
+                                         ColumnDefinitions="*,Auto"
+                                         RowSpacing="6"
+                                         ColumnSpacing="8"
+                                         BindingContext="{Binding TotalLife}">
+                                          <Grid.GestureRecognizers>
+                                                 <TapGestureRecognizer Tapped="OnLifeTapped"
+                                                                       CommandParameter="{Binding .}"/>
+                                          </Grid.GestureRecognizers>
+                                          <HorizontalStackLayout Spacing="8">
+                                                 <Label Text="Total body"
+                                                        FontAttributes="Bold"
+                                                        TextColor="{Binding TextColor}"/>
+                                                 <Image Source="skull.svg"
+                                                        HeightRequest="32"
+                                                        WidthRequest="32"
+                                                        VerticalOptions="Center"
+                                                        HorizontalOptions="Center"
+                                                        IsVisible="{Binding SkullVisible}"/>
+                                          </HorizontalStackLayout>
+                                          <Label Grid.Column="1"
+                                                 Text="{Binding CurrentLabel}"
+                                                 TextColor="{Binding TextColor}"
+                                                 HorizontalTextAlignment="End"/>
+                                          <Label Grid.Row="1"
+                                                 Text="TBLP"
+                                                 TextColor="{Binding TextColor}"
+                                                 Opacity="0.7"/>
+                                   </Grid>
+                            </Frame>
+
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   HasShadow="False"
+                                   BorderColor="#E5E7EB">
+                                   <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                                         ColumnDefinitions="*,*,*,*"
+                                         RowSpacing="4">
+                                          <Frame Grid.Row="0"
+                                                 Grid.Column="1"
+                                                 Grid.ColumnSpan="2"
+                                                 Padding="8"
+                                                 CornerRadius="12"
+                                                 HasShadow="False"
+                                                 BorderColor="#E5E7EB"
+                                                 BackgroundColor="{Binding BackgroundColor}"
+                                                 BindingContext="{Binding Head}"
+                                                 HorizontalOptions="Center"
+                                                 HeightRequest="60"
+                                                 WidthRequest="80">
+                                                 <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnLifeTapped"
+                                                                              CommandParameter="{Binding .}"/>
+                                                 </Frame.GestureRecognizers>
+                                                 <Grid>
+                                                        <VerticalStackLayout Spacing="2"
+                                                                             HorizontalOptions="Center"
+                                                                             VerticalOptions="Center">
+                                                               <Label Text="{Binding CurrentLabel}"
+                                                                      FontSize="16"
+                                                                      FontAttributes="Bold"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                               <Label Text="{Binding Name}"
+                                                                      FontSize="12"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      Opacity="0.8"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                        </VerticalStackLayout>
+                                                        <Image Source="broken_bone.svg"
+                                                               HeightRequest="24"
+                                                               WidthRequest="24"
+                                                               IsVisible="{Binding BoneVisible}"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"/>
+                                                 </Grid>
+                                          </Frame>
+
+                                          <Frame Grid.Row="1"
+                                                 Grid.RowSpan="2"
+                                                 Grid.Column="0"
+                                                 CornerRadius="12"
+                                                 HasShadow="False"
+                                                 BorderColor="#E5E7EB"
+                                                 BackgroundColor="{Binding BackgroundColor}"
+                                                 BindingContext="{Binding LeftArm}"
+                                                 WidthRequest="75"
+                                                 Margin="35,0,0,0">
+                                                 <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnLifeTapped"
+                                                                              CommandParameter="{Binding .}"/>
+                                                 </Frame.GestureRecognizers>
+                                                 <Grid>
+                                                        <VerticalStackLayout Spacing="2"
+                                                                             HorizontalOptions="Center"
+                                                                             VerticalOptions="Center">
+                                                               <Label Text="{Binding CurrentLabel}"
+                                                                      FontSize="16"
+                                                                      FontAttributes="Bold"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                               <Label Text="{Binding Name}"
+                                                                      FontSize="12"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      Opacity="0.8"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                        </VerticalStackLayout>
+                                                        <Image Source="broken_bone.svg"
+                                                               HeightRequest="24"
+                                                               WidthRequest="24"
+                                                               IsVisible="{Binding BoneVisible}"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"/>
+                                                 </Grid>
+                                          </Frame>
+
+                                          <Frame Grid.Row="1"
+                                                 Grid.Column="1"
+                                                 Grid.ColumnSpan="2"
+                                                 CornerRadius="12"
+                                                 HasShadow="False"
+                                                 BorderColor="#E5E7EB"
+                                                 BackgroundColor="{Binding BackgroundColor}"
+                                                 BindingContext="{Binding Chest}"
+                                                 WidthRequest="140"
+                                                 HorizontalOptions="Center">
+                                                 <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnLifeTapped"
+                                                                              CommandParameter="{Binding .}"/>
+                                                 </Frame.GestureRecognizers>
+                                                 <Grid>
+                                                        <VerticalStackLayout Spacing="2"
+                                                                             HorizontalOptions="Center"
+                                                                             VerticalOptions="Center">
+                                                               <Label Text="{Binding CurrentLabel}"
+                                                                      FontSize="16"
+                                                                      FontAttributes="Bold"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                               <Label Text="{Binding Name}"
+                                                                      FontSize="12"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      Opacity="0.8"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                        </VerticalStackLayout>
+                                                        <Image Source="broken_bone.svg"
+                                                               HeightRequest="24"
+                                                               WidthRequest="24"
+                                                               IsVisible="{Binding BoneVisible}"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"/>
+                                                 </Grid>
+                                          </Frame>
+
+                                          <Frame Grid.Row="1"
+                                                 Grid.RowSpan="2"
+                                                 Grid.Column="3"
+                                                 CornerRadius="12"
+                                                 HasShadow="False"
+                                                 BorderColor="#E5E7EB"
+                                                 BackgroundColor="{Binding BackgroundColor}"
+                                                 BindingContext="{Binding RightArm}"
+                                                 WidthRequest="75"
+                                                 Margin="0,0,35,0">
+                                                 <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnLifeTapped"
+                                                                              CommandParameter="{Binding .}"/>
+                                                 </Frame.GestureRecognizers>
+                                                 <Grid>
+                                                        <VerticalStackLayout Spacing="2"
+                                                                             HorizontalOptions="Center"
+                                                                             VerticalOptions="Center">
+                                                               <Label Text="{Binding CurrentLabel}"
+                                                                      FontSize="16"
+                                                                      FontAttributes="Bold"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                               <Label Text="{Binding Name}"
+                                                                      FontSize="12"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      Opacity="0.8"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                        </VerticalStackLayout>
+                                                        <Image Source="broken_bone.svg"
+                                                               HeightRequest="24"
+                                                               WidthRequest="24"
+                                                               IsVisible="{Binding BoneVisible}"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"/>
+                                                 </Grid>
+                                          </Frame>
+
+                                          <Frame Grid.Row="2"
+                                                 Grid.Column="1"
+                                                 Grid.ColumnSpan="2"
+                                                 CornerRadius="12"
+                                                 HasShadow="False"
+                                                 BorderColor="#E5E7EB"
+                                                 BackgroundColor="{Binding BackgroundColor}"
+                                                 BindingContext="{Binding Abdomen}"
+                                                 WidthRequest="110"
+                                                 HorizontalOptions="Center">
+                                                 <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnLifeTapped"
+                                                                              CommandParameter="{Binding .}"/>
+                                                 </Frame.GestureRecognizers>
+                                                 <Grid>
+                                                        <VerticalStackLayout Spacing="2"
+                                                                             HorizontalOptions="Center"
+                                                                             VerticalOptions="Center">
+                                                               <Label Text="{Binding CurrentLabel}"
+                                                                      FontSize="16"
+                                                                      FontAttributes="Bold"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                               <Label Text="{Binding Name}"
+                                                                      FontSize="12"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      Opacity="0.8"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                        </VerticalStackLayout>
+                                                        <Image Source="broken_bone.svg"
+                                                               HeightRequest="24"
+                                                               WidthRequest="24"
+                                                               IsVisible="{Binding BoneVisible}"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"/>
+                                                 </Grid>
+                                          </Frame>
+
+                                          <Frame Grid.Row="3"
+                                                 Grid.RowSpan="2"
+                                                 Grid.Column="1"
+                                                 Padding="8"
+                                                 CornerRadius="12"
+                                                 HasShadow="False"
+                                                 BorderColor="#E5E7EB"
+                                                 BackgroundColor="{Binding BackgroundColor}"
+                                                 BindingContext="{Binding LeftLeg}"
+                                                 WidthRequest="80"
+                                                 HeightRequest="130"
+                                                 Margin="0,0,0,0">
+                                                 <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnLifeTapped"
+                                                                              CommandParameter="{Binding .}"/>
+                                                 </Frame.GestureRecognizers>
+                                                 <Grid>
+                                                        <VerticalStackLayout Spacing="2"
+                                                                             HorizontalOptions="Center"
+                                                                             VerticalOptions="Center">
+                                                               <Label Text="{Binding CurrentLabel}"
+                                                                      FontSize="16"
+                                                                      FontAttributes="Bold"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                               <Label Text="{Binding Name}"
+                                                                      FontSize="12"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      Opacity="0.8"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                        </VerticalStackLayout>
+                                                        <Image Source="broken_bone.svg"
+                                                               HeightRequest="24"
+                                                               WidthRequest="24"
+                                                               IsVisible="{Binding BoneVisible}"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"/>
+                                                 </Grid>
+                                          </Frame>
+
+                                          <Frame Grid.Row="3"
+                                                 Grid.Column="2"
+                                                 Grid.RowSpan="2"
+                                                 Padding="8"
+                                                 CornerRadius="12"
+                                                 HasShadow="False"
+                                                 BorderColor="#E5E7EB"
+                                                 BackgroundColor="{Binding BackgroundColor}"
+                                                 BindingContext="{Binding RightLeg}"
+                                                 WidthRequest="80"
+                                                 Margin="0,0,0,0">
+                                                 <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnLifeTapped"
+                                                                              CommandParameter="{Binding .}"/>
+                                                 </Frame.GestureRecognizers>
+                                                 <Grid>
+                                                        <VerticalStackLayout Spacing="2"
+                                                                             HorizontalOptions="Center"
+                                                                             VerticalOptions="Center">
+                                                               <Label Text="{Binding CurrentLabel}"
+                                                                      FontSize="16"
+                                                                      FontAttributes="Bold"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                               <Label Text="{Binding Name}"
+                                                                      FontSize="12"
+                                                                      TextColor="{Binding TextColor}"
+                                                                      Opacity="0.8"
+                                                                      HorizontalTextAlignment="Center"/>
+                                                        </VerticalStackLayout>
+                                                        <Image Source="broken_bone.svg"
+                                                               HeightRequest="24"
+                                                               WidthRequest="24"
+                                                               IsVisible="{Binding BoneVisible}"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center"/>
+                                                 </Grid>
+                                          </Frame>
+                                   </Grid>
+                            </Frame>
+
+                     </VerticalStackLayout>
+              </ScrollView>
+       </ContentPage>
+
+       <ContentPage x:Name="InnatesTab"
+                    Title="Innates"
+                    BackgroundColor="White">
+              <ScrollView>
+                     <VerticalStackLayout Padding="16"
+                                          Spacing="14">
+                            <Entry Text="{Binding InnateSearch}"
+                                   Placeholder="Search innates"/>
+
+                            <Label Text="No innates found."
+                                   Opacity="0.7"
+                                   IsVisible="{Binding HasFilteredInnates, Converter={StaticResource InverseBoolConverter}}"/>
+
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding FilteredInnates}"
+                                                 Spacing="8"
+                                                 IsVisible="{Binding HasInnates}">
+                                   <BindableLayout.ItemTemplate>
+                                          <DataTemplate>
+                                                 <controls:InnateUseRow/>
+                                          </DataTemplate>
+                                   </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="8"
+                                                 IsVisible="{Binding HasAtWillAbilities}">
+                                   <Label Text="At-will abilities"
+                                          FontAttributes="Bold"/>
+                                   <FlexLayout Wrap="Wrap"
+                                               BindableLayout.ItemsSource="{Binding AtWillAbilities}">
+                                          <BindableLayout.ItemTemplate>
+                                                 <DataTemplate>
+                                                        <Frame Padding="10,4"
+                                                               CornerRadius="14"
+                                                               HasShadow="False"
+                                                               Margin="4"
+                                                               BorderColor="#E5E7EB"
+                                                               BackgroundColor="#F3F4F6">
+                                                               <Label Text="{Binding .}"
+                                                                      FontSize="13"/>
+                                                        </Frame>
+                                                 </DataTemplate>
+                                          </BindableLayout.ItemTemplate>
+                                   </FlexLayout>
+                            </VerticalStackLayout>
+                     </VerticalStackLayout>
+              </ScrollView>
+       </ContentPage>
+
+       <ContentPage x:Name="ResistanceTab"
+                    Title="LoR"
+                    BackgroundColor="White">
+              <ScrollView>
+                     <VerticalStackLayout Padding="16"
+                                          Spacing="16">
+                            <Grid ColumnDefinitions="*,Auto,Auto"
+                                  ColumnSpacing="8">
+                                   <Label Text="Resistance Levels"
+                                          FontAttributes="Bold"
+                                          FontSize="18"
+                                          VerticalOptions="Center"/>
+                                   <Button Grid.Column="1"
+                                           Text="Level drain"
+                                           Command="{Binding DrainAllResistanceCommand}"/>
+                                   <Button Grid.Column="2"
+                                           Text="Regain level"
+                                           Command="{Binding RegainAllResistanceCommand}"/>
+                            </Grid>
+
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding ResistanceLevels}"
+                                                 Spacing="8">
+                                   <BindableLayout.ItemTemplate>
+                                          <DataTemplate>
+                                                 <Frame Padding="12"
+                                                        CornerRadius="12"
+                                                        HasShadow="False"
+                                                        BorderColor="#E5E7EB">
+                                                        <Grid ColumnDefinitions="*,Auto,Auto,Auto"
+                                                              ColumnSpacing="8">
+                                                               <Label Text="{Binding Name}"
+                                                                      FontAttributes="Bold"
+                                                                      VerticalTextAlignment="Center"/>
+                                                               <Label Grid.Column="1"
+                                                                      Text="{Binding Level}"
+                                                                      VerticalTextAlignment="Center"
+                                                                      HorizontalTextAlignment="End"/>
+                                                               <Button Grid.Column="2"
+                                                                       Text="-"
+                                                                       Padding="10,4"
+                                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DecreaseResistanceCommand}"
+                                                                       CommandParameter="{Binding .}"/>
+                                                               <Button Grid.Column="3"
+                                                                       Text="+"
+                                                                       Padding="10,4"
+                                                                       Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.IncreaseResistanceCommand}"
+                                                                       CommandParameter="{Binding .}"/>
+                                                        </Grid>
+                                                 </Frame>
+                                          </DataTemplate>
+                                   </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                     </VerticalStackLayout>
+              </ScrollView>
+       </ContentPage>
+
+       <ContentPage x:Name="CastingTab"
+                    Title="Cast"
+                    BackgroundColor="White">
+              <ScrollView>
+                     <VerticalStackLayout Padding="16"
+                                          Spacing="14">
+                            <Label Text="No casting lists available."
+                                   Opacity="0.7"
+                                   IsVisible="{Binding HasCastingTab, Converter={StaticResource InverseBoolConverter}}"/>
+
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding CastingSections}"
+                                                 Spacing="12">
+                                   <BindableLayout.ItemTemplate>
+                                          <DataTemplate>
+                                                 <Frame Padding="12"
+                                                        CornerRadius="12"
+                                                        HasShadow="False"
+                                                        BorderColor="#E5E7EB">
+                                                        <VerticalStackLayout Spacing="8">
+                                                               <Grid ColumnDefinitions="*,Auto,Auto,Auto"
+                                                                     ColumnSpacing="6">
+                                                                      <Label Text="{Binding Title}"
+                                                                             FontAttributes="Bold"/>
+                                                                      <Label Grid.Column="1"
+                                                                             Text="{Binding Pool.CurrentLabel}"
+                                                                             FontAttributes="Bold"/>
+                                                                      <Button Grid.Column="2"
+                                                                              Text="-"
+                                                                              Padding="6,2"
+                                                                              Command="{Binding Pool.DecreaseCommand}"/>
+                                                                      <Button Grid.Column="3"
+                                                                              Text="+"
+                                                                              Padding="6,2"
+                                                                              Command="{Binding Pool.IncreaseCommand}"/>
+                                                               </Grid>
+
+                                                               <Grid ColumnDefinitions="*,Auto"
+                                                                     ColumnSpacing="8">
+                                                                      <Label Text="Search"
+                                                                             Opacity="0.7"
+                                                                             VerticalTextAlignment="Center"/>
+                                                                      <Button Grid.Column="1"
+                                                                              Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
+                                                                              BackgroundColor="Transparent"
+                                                                              TextColor="#6B7280"
+                                                                              FontSize="18"
+                                                                              Padding="0"
+                                                                              WidthRequest="40"
+                                                                              HeightRequest="40"
+                                                                              HorizontalOptions="End"
+                                                                              VerticalOptions="Center"
+                                                                              Command="{Binding ToggleCommand}"/>
+                                                               </Grid>
+
+                                                               <VerticalStackLayout IsVisible="{Binding IsExpanded}"
+                                                                                    Spacing="8">
+                                                                      <Entry Text="{Binding Search}"
+                                                                             Placeholder="Filter list"/>
+                                                                      <CollectionView ItemsSource="{Binding Entries}"
+                                                                                      HeightRequest="220">
+                                                                             <CollectionView.ItemTemplate>
+                                                                                    <DataTemplate>
+                                                                                           <Frame Padding="10"
+                                                                                                  CornerRadius="12"
+                                                                                                  HasShadow="False"
+                                                                                                  BorderColor="#E5E7EB">
+                                                                                                  <Grid ColumnDefinitions="*,Auto"
+                                                                                                        ColumnSpacing="8">
+                                                                                                         <VerticalStackLayout Spacing="2">
+                                                                                                                <Label Text="{Binding Name}"
+                                                                                                                       FontAttributes="Bold"/>
+                                                                                                                <Label Text="{Binding Detail}"
+                                                                                                                       FontSize="12"
+                                                                                                                       Opacity="0.7"/>
+                                                                                                         </VerticalStackLayout>
+                                                                                                         <Button Grid.Column="1"
+                                                                                                                 Text="Cast"
+                                                                                                                 Padding="10,4"
+                                                                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.CastSpellCommand}"
+                                                                                                                 CommandParameter="{Binding .}"/>
+                                                                                                  </Grid>
+                                                                                           </Frame>
+                                                                                    </DataTemplate>
+                                                                             </CollectionView.ItemTemplate>
+                                                                      </CollectionView>
+                                                               </VerticalStackLayout>
+                                                        </VerticalStackLayout>
+                                                 </Frame>
+                                          </DataTemplate>
+                                   </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                     </VerticalStackLayout>
+              </ScrollView>
+       </ContentPage>
+
+       <ContentPage x:Name="DetailsTab"
+                    Title="Details"
+                    BackgroundColor="White">
+              <ScrollView>
+                     <VerticalStackLayout Padding="16"
+                                          Spacing="16">
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   HasShadow="False"
+                                   BorderColor="#E5E7EB">
+                                   <VerticalStackLayout Spacing="8">
+                                          <Label Text="Vitae"
+                                                 FontAttributes="Bold"/>
+                                          <sliders:VitaeSlider Value="{Binding CurrentVitae}"
+                                                               IsEnabled="False"/>
+                                   </VerticalStackLayout>
+                            </Frame>
+
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   HasShadow="False"
+                                   BorderColor="#E5E7EB">
+                                   <VerticalStackLayout Spacing="4">
+                                          <Label Text="Identity"
+                                                 FontAttributes="Bold"/>
+                                          <Label Text="{Binding CharacterName}"/>
+                                          <Label Text="{Binding PlayerName}"
+                                                 Opacity="0.7"/>
+                                   </VerticalStackLayout>
+                            </Frame>
+
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   HasShadow="False"
+                                   BorderColor="#E5E7EB">
+                                   <VerticalStackLayout Spacing="4">
+                                          <Label Text="Race &amp; class"
+                                                 FontAttributes="Bold"/>
+                                          <Label Text="{Binding RaceDisplay}"/>
+                                          <Label Text="{Binding ClassDisplay}"
+                                                 Opacity="0.7"/>
+                                   </VerticalStackLayout>
+                            </Frame>
+
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   HasShadow="False"
+                                   BorderColor="#E5E7EB">
+                                   <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto"
+                                         ColumnSpacing="8">
+                                          <Label Text="{Binding AlignmentDisplay}"
+                                                 FontAttributes="Bold"
+                                                 VerticalTextAlignment="Center"/>
+                                          <Label Grid.Column="1"
+                                                 Text="{Binding WhiteMarksLabel}"
+                                                 VerticalTextAlignment="Center"/>
+                                          <Button Grid.Column="2"
+                                                  Text="+"
+                                                  Padding="6,2"
+                                                  Command="{Binding AddWhiteMarkCommand}"/>
+                                          <Label Grid.Column="3"
+                                                 Text="{Binding BlackMarksLabel}"
+                                                 VerticalTextAlignment="Center"/>
+                                          <Button Grid.Column="4"
+                                                  Text="+"
+                                                  Padding="6,2"
+                                                  Command="{Binding AddBlackMarkCommand}"/>
+                                   </Grid>
+                            </Frame>
+
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   HasShadow="False"
+                                   BorderColor="#E5E7EB">
+                                   <Grid ColumnDefinitions="*,Auto"
+                                         RowDefinitions="Auto,Auto"
+                                         ColumnSpacing="8"
+                                         RowSpacing="6">
+                                          <Label Text="Level"
+                                                 FontAttributes="Bold"/>
+                                          <Label Grid.Column="1"
+                                                 Text="{Binding Level}"
+                                                 HorizontalTextAlignment="End"/>
+                                          <Label Grid.Row="1"
+                                                 Text="Points"
+                                                 FontAttributes="Bold"/>
+                                          <Label Grid.Row="1"
+                                                 Grid.Column="1"
+                                                 Text="{Binding Points}"
+                                                 HorizontalTextAlignment="End"/>
+                                   </Grid>
+                            </Frame>
+
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   HasShadow="False"
+                                   BorderColor="#E5E7EB">
+                                   <VerticalStackLayout Spacing="8">
+                                          <Label Text="Guilds"
+                                                 FontAttributes="Bold"/>
+                                          <FlexLayout Wrap="Wrap"
+                                                      BindableLayout.ItemsSource="{Binding Guilds}">
+                                                 <BindableLayout.ItemTemplate>
+                                                        <DataTemplate>
+                                                               <Frame Padding="10,4"
+                                                                      CornerRadius="14"
+                                                                      HasShadow="False"
+                                                                      Margin="4"
+                                                                      BorderColor="#E5E7EB"
+                                                                      BackgroundColor="#F3F4F6">
+                                                                      <Label Text="{Binding .}"
+                                                                             FontSize="13"/>
+                                                               </Frame>
+                                                        </DataTemplate>
+                                                 </BindableLayout.ItemTemplate>
+                                          </FlexLayout>
+                                   </VerticalStackLayout>
+                            </Frame>
+                     </VerticalStackLayout>
+              </ScrollView>
+       </ContentPage>
+</TabbedPage>

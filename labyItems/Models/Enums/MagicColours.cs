@@ -1,10 +1,9 @@
 namespace labyItems.Models.Enums;
 
-public enum ExtendedMagicColours{
-    // extended
+public enum ExtendedMagicColours
+{
     All,
     Sorcorial,
-    // Traditional Colours
     Red,
     Blue,
     Brown,
@@ -12,8 +11,6 @@ public enum ExtendedMagicColours{
     White,
     Black,
     Grey,
-
-    // New Colours
     Bronze,
     Ebony,
     Gold,
@@ -22,10 +19,8 @@ public enum ExtendedMagicColours{
     Jade,
     Onyx,
 }
-
-public enum MagicColours
+public enum ElementalColours
 {
-    // Traditional Colours
     Red,
     Blue,
     Brown,
@@ -33,8 +28,16 @@ public enum MagicColours
     White,
     Black,
     Grey,
-
-    // New Colours
+}
+public enum MagicColours
+{
+    Red,
+    Blue,
+    Brown,
+    Green,
+    White,
+    Black,
+    Grey,
     Bronze,
     Ebony,
     Gold,

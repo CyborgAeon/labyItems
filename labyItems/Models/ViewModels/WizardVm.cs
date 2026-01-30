@@ -380,6 +380,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             return;
 
         await SyncDraftStateAsync();
+        SaveToWallet();
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             var nav = Application.Current?.MainPage?.Navigation;
