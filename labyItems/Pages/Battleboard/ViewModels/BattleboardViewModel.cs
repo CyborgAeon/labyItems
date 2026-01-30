@@ -62,7 +62,7 @@ public sealed class BattleboardViewModel : ObservableObject
             (_draft.Innates ?? new List<InnateAbilityDraft>())
             .Where(i => !string.IsNullOrWhiteSpace(i?.Name))
             .GroupBy(i => i.Name.Trim(), StringComparer.OrdinalIgnoreCase)
-            .Select(g => new InnateRowVm(g.Key, g.Count()))
+            .Select(g => new InnateRowVm(g.Key, g.Sum(i => Math.Max(0, i.Rank))))
             .OrderBy(i => i.Name, StringComparer.OrdinalIgnoreCase)
         );
 
@@ -931,11 +931,11 @@ internal sealed class BattleboardSnapshot
 
 public sealed class InnateRowVm : ObservableObject
 {
-    public InnateRowVm(string name, int count)
+    public InnateRowVm(string name, int rank)
     {
         Name = name;
-        Rank = count;
-        MaxUses = Math.Max(1, count) * 8;
+        Rank = Math.Max(0, rank);
+        MaxUses = Rank;
         Used = 0;
         UseCommand = new Command(() => Use());
     }
