@@ -50,6 +50,7 @@
 		<MauiFont Include="Resources\Fonts\*" />
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 		<MauiAsset Include="Resources\Raw\**\*" />
+		<MauiAsset Include="..\output\laby.db" LogicalName="laby.db" />
 	</ItemGroup>
 
 	<ItemGroup>
