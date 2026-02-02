@@ -123,9 +123,9 @@ jobs:
             echo "laby.db not found in artifact zip" >&2
             exit 1
           fi
-          mkdir -p labyItems/Resources/Raw
-          cp "$dbfile" labyItems/Resources/Raw/laby.db
-          echo "Copied laby.db into labyItems/Resources/Raw/laby.db"
+          mkdir -p output/
+          cp "$dbfile" output/laby.db
+          echo "Copied laby.db into output/laby.db"
           rm -rf artifact artifact.zip
 
       - name: Restore

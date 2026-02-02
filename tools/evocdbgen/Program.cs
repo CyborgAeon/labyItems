@@ -39,7 +39,7 @@ class Program
     static int Main(string[] args)
     {
         var input = args.Length > 0 ? args[0] : "../labyItems/Resources/Raw/druids_way/evocs.json";
-        var output = args.Length > 1 ? args[1] : "output/laby.db";
+        var output = args.Length > 1 ? args[1] : "../../output/laby.db";
 
         if (!File.Exists(input))
         {
@@ -196,10 +196,8 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
             }
         }
 
-        // Now import evolution_classes tables into 'evolution' table
-        // derive resources root from the input path (input usually points at druids_way/evocs.json)
         var inputDir = Path.GetDirectoryName(input) ?? ".";
-        var resourcesRoot = Path.GetFullPath(Path.Combine(inputDir, "..")); // Resources/Raw
+        var resourcesRoot = Path.GetFullPath(Path.Combine(inputDir, ".."));
 
         var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var normalizedJsonOptions = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
