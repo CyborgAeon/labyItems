@@ -13,6 +13,8 @@
     "description": "Cures 6 tblp to total body and touched location (or 2 Hits to monsters). Does not affect the undead.",
     "alignment": "Good",
     "sphere": "Universal",
+    "healing": [[6, 6]],
+    "damType": ["Missile"],
     "isAdvanced": false
   },
   {
@@ -93,6 +95,9 @@
     "description": "Ranged spiritual attack: 18 tblp to characters (applies SAC of least-protected location) or 6 Hits to monsters.",
     "alignment": "Neutral",
     "sphere": "Universal",
+    "damage": [[18, 0]],
+    "damType": ["Body"],
+    "sacApplies": [1, 1],
     "isAdvanced": false
   },
   {
@@ -156,6 +161,9 @@
     "name": "Spirit Dart",
     "description": "As Spirit Bolt but 6 tblp (or 2 Hits to monsters).",
     "alignment": "Neutral",
+    "damage": [[6, 0]],
+    "damType": ["Body"],
+    "sacApplies": [1, 0],
     "sphere": "Minor Force",
     "isAdvanced": true
   },
@@ -428,6 +436,8 @@
     "name": "Cure Serious Wounds",
     "description": "Cure 12 tblp (or 4 Hits to a monster) distributed across locations as desired; not effective on undead.",
     "alignment": "Good",
+    "healing": [[12, 12]],
+    "healType": ["Missile"],
     "sphere": "Universal",
     "isAdvanced": false
   },
@@ -469,7 +479,9 @@
     "description": "Cure up to 36 tblp (or 12 Hits to a monster), distributed across locations; does not affect undead.",
     "alignment": "Good",
     "sphere": "Universal",
-    "isAdvanced": false
+    "isAdvanced": false,
+    "healing": [[36, 36]],
+    "healType": ["Missile"]
   },
   {
     "power": 5,
@@ -533,6 +545,8 @@
     "description": "As Minor Ward but stronger: bars all undead; bars creatures with resistance levels up to 7th; deals heavy spiritual damage on crossing; absorbs 20sp of directed miracles.",
     "alignment": "Neutral",
     "sphere": "Universal",
+    "damage": [60, 0],
+    "damType": ["Body"],
     "isAdvanced": false
   },
   {
@@ -540,14 +554,20 @@
     "name": "Cause Minor Wound",
     "description": "Touch to inflict minor spiritual injury to a living target.",
     "alignment": "Evil",
+    "damage": [[4, 4]],
+    "damType": ["Missile"],
+    "sacApplies": [1, 1],
     "sphere": "Universal",
     "isAdvanced": false
   },
   {
     "power": 2,
     "name": "Cause Wound",
-    "description": "Stronger touch-based spiritual injury to a living target.",
+    "description": "",
     "alignment": "Evil",
+    "damage": [[6, 6]],
+    "damType": ["Missile"],
+    "sacApplies": [1, 1],
     "sphere": "Universal",
     "isAdvanced": false
   },
@@ -557,6 +577,9 @@
     "description": "Touch to inflict serious spiritual injury to a living target.",
     "alignment": "Evil",
     "sphere": "Universal",
+    "damage": [[12, 12]],
+    "damType": ["Missile"],
+    "sacApplies": [1, 1],
     "isAdvanced": false
   },
   {
@@ -618,8 +641,11 @@
   {
     "power": 5,
     "name": "Cause Grievous Wounds",
-    "description": "Impose grievous, location-spreading spiritual damage on a living target as described in the entry.",
+    "description": "",
     "alignment": "Evil",
+    "damage": [[36, 6]],
+    "damType": ["Missile"],
+    "sacApplies": [6, 1],
     "sphere": "Universal",
     "isAdvanced": false
   },
@@ -660,6 +686,8 @@
     "name": "Total Heal",
     "description": "This miracle enables a priest to totally heal a character or monster of all damage, if both priest and recipient spend 30 seconds in calm preparation before the invocation, the priest praying to their patron and neither party in combat. If the miracle is cast without this preparation it cures only 72 tblp and 72 points of locational damage. This is an absolute system limit, and no ability under any circumstances circumvents this. Note that on creatures with half a spirit, like half-Elves, Total Heal only cures 72 points as above if prepared and only 36 points if unprepared. This miracle does not affect the undead.",
     "alignment": "Good",
+    "healing": [[72, 72]],
+    "healType": ["Worst"],
     "sphere": "Universal",
     "isAdvanced": false
   },
@@ -818,7 +846,7 @@
   {
     "power": 5,
     "name": "Agony of Pleasure",
-    "description": "For the duration, the caster is not injured by any form of Pain effect, instead being cured half the life\nthat the Pain would have caused. Must still roleplay other effects (for example writhing to Words of Pain).\nEmpress-Goddess",
+    "description": "For the duration, the caster is not injured by any form of Pain effect, instead being cured half the life that the Pain would have caused. Must still roleplay other effects (for example writhing to Words of Pain).",
     "alignment": "Evil",
     "sphere": "Rites",
     "isAdvanced": false
@@ -1026,16 +1054,34 @@
   {
     "power": 6,
     "name": "Cause Critical Wounds",
-    "description": "As per the standard miracle Cause Grievous but inflicts 60 tblp and 10 to each location (20 Hits to\nmonsters).\n~ 65 ~\n\fDark Sundering\nLevel: 6sp\nSphere: Minor Causing or\nMajor Force\nAlignment: Evil\nDuration: Instant\nRange: 20’\nGesture: Point at target\nVerbal: “By all my dark power let thy spirit be smitten and torn asunder... Dark Sundering!”\nDescription: Target suffers 36 tblp evil spirit damage (12 Hits to monsters). Resistances to Spiritbolt apply to this\ndamage and SAC as normal. Despite falling in the sphere of Causing Resistances to Causes do not apply to this\nmiracle.",
+    "description": "As per the standard miracle Cause Grievous but inflicts 60 tblp and 10 to each location (20 Hits to\nmonsters).",
     "alignment": "Evil",
     "sphere": "Major Causing",
+    "damage": [[60, 10]],
+    "damType": ["Blast"],
+    "sacApplies": [6, 1],
+    "isAdvanced": true
+  },
+  {
+    "name": "Dark Sundering",
+    "power": 6,
+    "Sphere": "Minor Causing",
+    "alignment": "Evil",
+    "description": "Target suffers 36 tblp evil spirit damage (12 Hits to monsters). Resistances to Spiritbolt apply to this damage and SAC as normal. Despite falling in the sphere of Causing Resistances to Causes do not apply to this\nmiracle.",
+    "damage": [[36, 0]],
+    "damType": ["Body"],
+    "sacApplies": [1, 1],
     "isAdvanced": true
   },
   {
     "power": 10,
     "name": "Cause Mortal Wounds",
-    "description": "Must be able to cast Cause Critical Miracle and be table 11 to learn. Acts as per the Cause Critical\nmiracle but inflicts 120/20 life (40 hits).",
+    "description": "Must be table 11 to learn. inflicts 120/20 life (40 hits).",
     "alignment": "Evil",
+    "damage": [[120, 20]],
+    "damType": ["Missile"],
+    "preReqs": ["Cause Critical Wounds"],
+    "sacApplies": [6, 1],
     "sphere": "Major Causing",
     "isAdvanced": true
   },
@@ -1082,8 +1128,9 @@
   {
     "power": 16,
     "name": "Communication with the Gods",
-    "description": "todo",
+    "description": "As per Greater Communication but no limit to the number of questions asked and the spirits may respond to an individual question with more than just seven words. Questions must be asked in a measured and respectful manner, or no response will be gained. The caster may choose to have all questions be only regarding one specific area, in which case the divination lasts 5 minutes, or simply answering any questions they desire, in which case the duration is only two minutes but the miracle becomes far more versatile.",
     "alignment": "Neutral",
+    "preReqs": ["Communication", "Greater Communication"],
     "sphere": "Major Communication",
     "isAdvanced": true
   },
@@ -1098,9 +1145,10 @@
   {
     "power": 5,
     "name": "Cure Critical",
-    "description": "todo",
+    "description": "heals 60 tblp damage and 60 pts of locational damage, in a similar manner to Heal. Under no circumstances can this miracle heal more than 72 points of damage, ever. This miracle does not affect the undead.",
     "alignment": "Good",
     "sphere": "Minor Healing",
+    "healing": [[60, 60]],
     "isAdvanced": true
   },
   {
@@ -1282,9 +1330,11 @@
   {
     "power": 5,
     "name": "Focussed Spirit Bolt",
-    "description": "Acts as per a spirit bolt but also inflicts damage to one chosen location.\n6th Level Neutral Advanced Miracles",
+    "description": "Acts as per a spirit bolt but also inflicts damage to one chosen location.",
     "alignment": "Neutral",
     "sphere": "Major Forces",
+    "damage": [[18, 18]],
+    "damType": ["Missile"],
     "isAdvanced": true
   },
   {
@@ -1348,7 +1398,7 @@
     "name": "Holy Ground",
     "description": "For the duration of this miracle any undead within its range count as one level lower for the purpose of\ndismissal, destruction and warding effects.",
     "alignment": "Good",
-    "sphere": "Major Dismissal /",
+    "sphere": "Major Dismissal",
     "isAdvanced": true
   },
   {
@@ -1481,7 +1531,7 @@
   },
   {
     "power": 8,
-    "name": "Miracle: Spirit Travel",
+    "name": "Spirit Travel",
     "description": "As per the 6mp standard Blue Glyph Blink except is spiritual. I.e. allows the caster to travel up to 20’\nin distance or within line of sight. On arriving at destination it takes the caster 2 seconds to re-materialise, during\nwhich time he is not vulnerable to damage.",
     "alignment": "Other",
     "sphere": "Universal / Any",
@@ -1489,7 +1539,7 @@
   },
   {
     "power": 8,
-    "name": "Miracle: Spirit Walk",
+    "name": "Spirit Walk",
     "description": "Grants the ability to walk through walls as a Minor Angel. Note: This is a Goodly miracle innate.\nOr Grants the ability to walk through walls as per an Abishai. Note: This is an Evil miracle innate.\nOr Grants Walk through Walls as Abishai, as a neutral miracle innate.\n~ 38 ~\n\fTotal Heal Capping\nInnates of the Total Heal miracle, or any other effect which duplicates or is similar to it, are limited to a maximum\nnumber per character as described below:\nFor 1st-class Priest subclasses, Paladins and Power-Masters the maximum allowed is:\n1 + BASE SPIRITS PER LEVEL (E.G. 3 FOR A WARRIOR-PRIEST) + HIGHEST POINTS THRESHOLD REACHED /2 (ROUND\nDOWN)\nSo for example a Pure Priest on Table 9 may have 1 + 5 (base spirits) + 4 (9/2rounded down) =10 Total Heal effects as\na maximum number of innates\nFor all other classes the maximum allowed is:\n1 (IF IN PRIEST SUBCLASS) + BASE SPIRITS PER LEVEL + HIGHEST POINTS THRESHOLD REACHED /3 (ROUND DOWN),\nTO A MINIMUM OF 1.\nSo for example a Warrior on Table 12 could have 4 maximum, while if he had multiclassed to Crusading Priest he\ncould have 6.\nThis maximum number applies over all similar innates possessed by any character, so that they may not have more than\nthis value between all their totally healing innates combined. If in doubt as to whether this maximum applies to a\nparticular non-standard ability, such as a 120 tblp and loc cure, or an ‘other-only Total Heal, assume that it does unless\nspecifically clarified in writing by the system manager.\nThis maximum number may be exceeded by one only, if the character gains such abilities from items or guild benefits,\nor similar exterior sources.\nWound Staunch, Healing Hand and Cure Critical Wounds -type abilities are considered to be equal to half a total heal\nfor this purpose. Innates that can be used to cast Total Heal (EG True Believer) count towards this cap if the innate is\nused in that way.\n~ 39 ~\n\fRaces\nAncientfolk\nDetails on Ancient Folk can be found in Evolution: Races, Ancient Folk may be Spirit Warriors, Warrior Priests, or\nPure Priests. They have all the abilities of the class chosen as listed above, as well as their own racial abilities, but\ntheir life points are lower. They may choose to be members of a church or act as Hermits. Choice is made at 1st\nlevel.\nSilverfolk\nAs described in Evolution: Races, Silverfolk may be Spirit Warriors, Warrior Priests, Hermit or Pure Priests. They\nhave all the abilities of the class chosen as listed above, as well their own racial abilities, but their life points are\nlower. They may join churches or choose to act as per Hermits. Choice is made at 1st level.\nElysians\nAs described in the Evolution: Races, Elysians may be Pure Priests or Hospitallers. They have all the abilities of the\nclass as listed above, as well their own racial abilities, but their life points are lower. Elysian Vivomancers are\ndetailed within the Wizards Grimoire book.\nDwarves\nDwarves may be Warrior-Priests (only). However they gain all dwarven racial benefits, and their life points are\ncalculated as warrior-priest for tblp, but at half their tblp (rounded up) per location - so that at 8th level, with 39 tblp,\nthey have 20 per location. They may join churches as normal.\nHalf-Elves\nHalf-Elves may be any of the basic priest classes, but they are greatly disadvantaged by their heritage; due to their\nmixed parentage, they have only half a spirit, so taking only half-effect from all spiritual powers, whether beneficial\nor detrimental. They gain only half the number of spirits that their Human counterparts would have (round up by\nlevel, so that a half-elven warrior-priest gains 2 spirits per level), may not cast 8th level miracles, and pay double for\nall priestly abilities post-8th! Half-Elves do not make talented priests. They may join churches.\nAlfar\nAlfar may be Pure Priests, Spiritual Warriors, as described in Evolution: Races. In this case their class stats are\nidentical to those of a half-elven pure priest. May join churches or act as hermits – choice is made at 1st level.\n~ 40 ~\n\fSpheres of Spirituality\nSome of the miracles listed are divided into Spheres. A Sphere will be described as being either Major or Minor and\nrelated to a specific tree. A priest may acquire any miracle of any Minor Sphere provided that he is of the relevant\nalignment.\nAlternatively he may choose to specialise, selecting Primary and Secondary Spheres. In this case, the priest may learn\nMajor miracles of his Primary Sphere, Minor miracles in his Secondary Sphere but no other Sphere-based miracles.\nStandard miracles are universally accessible to Priests of the correct alignment and are hence non Sphere based.\nIt costs 40pts on Table 1 to specialise as described above.\nNote: It is not possible to possess the Post 8th ability Devotion to a tree other than that in which the Priest has bought\nPrimary Sphere or vice versa, if the Priest has bought Devotion he may only buy Primary Sphere in the tree to which he\nis devoted.\nOn Table 10, a priest may choose either to upgrade his Secondary Sphere so that he may cast Major miracles of that\nSphere, for +60 pts, or acquire a Tertiary Sphere from which he may learn Minor miracles, for +40 pts (not both).\nNon-weapon using priests that have not left the priest bracket may learn an additional minor Sphere on table 7 for 40\npoints, and may upgrade this to a major Sphere on table 11 for a further 40 points.\nHere follows a list of the different Spheres of miracles currently available and what they relate to:\nSphere\nType\nUniversal\nCastable by any\nHealing\nCurative miracles\nCausing\nCausing miracles\nDismissal\nAnti-Undead\nNecromancy\nPro-Undead\nCommunication\nInformational\nDominion\nCommanding\nBenediction\nAid\nForce\nDirect power\nWarding\nProtections\nShamanic *\nShamans only\nWitchcraft *\nWitches only\nBalance *\n“Grey Wardens”\nUniversal: Miracles in this Sphere are universally castable and do not fall into any specific Sphere and as such are\ncastable by any priest, of the correct alignment, who wishes to acquire them regardless of their own speciality.\n*These are not actual Spheres in themselves but represent miracles only available to a certain class of Priest. They are\nconsidered to be exactly as Universal miracles but only castable by that class and do not affect the Sphere that that\nPriest may specialise in an.\nSome miracles may be appropriate to more than one Sphere and will be marked as such.\nThe ‘standard’ 1st-8th miracles listed earlier in this book are considered Universal because although many of them are\nclearly fitting to one Sphere it is possible for anyone of the appropriate alignment to acquire the ability to cast them.\n~ 41 ~\n\fAdvanced Miracles\nWhat follows is a list of priestly miracles which are more specialised and less easily acquired than the standard\nmiracles listed above.\nThese miracles may be purchased either with points post 8th, placed upon any new miracle list (following the\nrestrictions set out in list construction above), or learnt from Scriptures of the Faith.\nNone of these miracles appear on any of the trees for the purpose of free 7th or 8th level miracles during the\nconstruction of a miracle list.\nAny of these miracles which do not affect the undead are specifically marked as such.\nGoodly Miracles\n2nd Level Goodly Advanced Miracles",
     "alignment": "Other",
     "sphere": "Universal / Any",
@@ -1525,6 +1575,8 @@
     "description": "This miracle acts as a receptacle for a Heal miracle and is useless until one is cast into it. At this point\nit becomes active and stores the Heal miracle until one of the following conditions are met:\n\nOne of the targets’ locations falls below 1 life point.\n\nThe target is injured 36 tblp or more.\nThis miracle does not affect the undead.",
     "alignment": "Good",
     "sphere": "Minor Healing",
+    "healType": ["Worst"],
+    "healing": [[36, 36]],
     "isAdvanced": true
   },
   {
@@ -1570,7 +1622,7 @@
   {
     "power": 8,
     "name": "Pure Force",
-    "description": "Negates any one purely spiritual effect (not blow) directed at the caster. Must be called within 2\nseconds of the attack. It is possible to use this to cross a ward or protection which would otherwise block the\ncaster’s passage, as long as it is purely spiritual.",
+    "description": "Negates any one purely spiritual effect (not blow) directed at the caster. Must be called within 2 seconds of the attack. It is possible to use this to cross a ward or protection which would otherwise block the caster’s passage, as long as it is purely spiritual.",
     "alignment": "Neutral",
     "sphere": "Major Force",
     "isAdvanced": true
@@ -1660,7 +1712,7 @@
     "name": "Rite of the Bright God",
     "description": "To cast this miracle the priest needs a 'focus' of his faith, of significant size; this may be an altar, or a\nbanner with his religious symbol, or similar. This must be Blessed before the rite begins. During the casting he\nmust spend 15 minutes performing appropriate ritual acts to please his deity, with only the start and final\nincantations fixed. It is permissible during this period to cast appropriate Goodly miracles - their cost is taken from\nthe total cost of the rite. These miracles must be targeted or centred on the focus - not for example a Total Heal\nmiracle cast on another party-member. Once the rite is complete, an uplifting feeling fills the radius, strong enough\nthat any priest is aware of the presence of the powers of light here. For the duration of the rite all undead touch\neffects which would last 5 minutes instead last only 30 seconds, and other undead touch effects are halved in effect.\nRestore Life miracles require no candles. To disrupt the rite, its focus must first be freed from the Bless, either with\na Curse or by slaying the caster, and then the focus either destroyed physically or moved outside the radius of the\nrite. This is not a releasable miracle.",
     "alignment": "Good",
-    "sphere": "Major Benediction /",
+    "sphere": "Major Benediction",
     "isAdvanced": true
   },
   {
@@ -1676,15 +1728,33 @@
     "name": "Shaehan's Mercy",
     "description": "Cure light wounds every minute for 15 minutes.",
     "alignment": "Good",
+    "healType": ["Worst"],
+    "healing": [
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6],
+      [6, 6]
+    ],
     "sphere": "Major Healing",
     "isAdvanced": true
   },
   {
     "power": 5,
     "name": "Shield Against the Dark",
-    "description": "This acts as a double-effect (36 points) Spirit Shield but only applies to evil spiritual attacks (including\nundead touch effects). This miracle does not affect the undead.",
+    "description": "This acts as a double-effect Spirit Shield but only applies to evil spiritual attacks. This miracle does not affect the undead.",
     "alignment": "Good",
-    "sphere": "Minor Benediction /",
+    "sphere": "Minor Benediction",
     "isAdvanced": true
   },
   {
@@ -1698,7 +1768,7 @@
   {
     "power": 5,
     "name": "Sight of the Blind",
-    "description": "Recipient must be a worshipper of St Michael (either a priest or a Lay Believer). For duration of the\nmiracle, the beneficiary may not see colours, read writing, see two-dimensional pictures or similar. However they\ngain full spirit-sight, which allows them to perceive spirits even when in walls or when normal vision is blocked by\nother non-spiritual barriers. It does not allow them to gain other information by spirit-sight, such as size or\nalignment of spirits. It also grants them the ability to see through spiritual darkness. This is a releasable miracle.\nServants of Evil",
+    "description": "Recipient must be a worshipper of St Michael. For duration of the miracle, the beneficiary may not see colours, read writing, see two-dimensional pictures or similar. However they\ngain full spirit-sight, which allows them to perceive spirits even when in walls or when normal vision is blocked by\nother non-spiritual barriers. It does not allow them to gain other information by spirit-sight, such as size or\nalignment of spirits. It also grants them the ability to see through spiritual darkness. This is a releasable miracle.",
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false
@@ -1714,8 +1784,10 @@
   {
     "power": 3,
     "name": "Soothe the Pain",
-    "description": "Cures the target 24/4 damage, as with most healing miracles this does not affect the undead.\n~ 43 ~\n\f4th Level Goodly Advanced Miracles",
+    "description": "Cures the target 24/4 damage, as with most healing miracles this does not affect the undead.",
     "alignment": "Good",
+    "healType": ["Body"],
+    "healing": [[24, 4]],
     "sphere": "Minor Healing",
     "isAdvanced": true
   },
@@ -1724,13 +1796,15 @@
     "name": "Soul Lance",
     "description": "The caster sends a bolt of pure spiritual evil power at the target's spirit. If the target is goodly or\nneutral in Alignment they suffer tblp damage equal to 20% of their maximum tblp. SAC does not apply to this,\nalthough resistance to Soul Lance does. Evil targets are unaffected.",
     "alignment": "Evil",
+    "damType": ["Body"],
+    "damageOverride": "soulLance",
     "sphere": "Major Causing",
     "isAdvanced": true
   },
   {
     "power": 4,
     "name": "Soul Sharing",
-    "description": "Recipient must be a willing goodly elf, drave, half-drave or half-elf. For the duration of the miracle\nthe casting priest is considered to be in all ways 2 levels lower, as his spirit is shared with the target. The target, if\nan elf or drave, gains a half-spirit (as half-elf) for the duration, or if already half-elven gains a full spirit for the\nduration. It should be noted however that the miracle is released on death of either the caster or the recipient, and\nshould the recipient die the caster cannot regain the lost levels until the end of the day. This miracle is not\ndischarged by the use of magical powers by the recipient.\nThis is a releasable miracle, but may only be voluntarily released with same gesture (linked hands) as the casting. It\nonly works on living targets.\nNote: Technically, this miracle could be cast on any object at all, as the spirits cannot recognise elven nature, goodly\nor otherwise. However, once the target is infused with the caster's spirit it can be identified, and the spirit will\nimmediately flee unless the target is valid, thus wasting the spirits cast on it.\nMortai",
+    "description": "Recipient must be a willing goodly elf, drave, half-drave or half-elf. For the duration of the miracle\nthe casting priest is considered to be in all ways 2 levels lower, as his spirit is shared with the target. The target, if\nan elf or drave, gains a half-spirit (as half-elf) for the duration, or if already half-elven gains a full spirit for the\nduration. It should be noted however that the miracle is released on death of either the caster or the recipient, and\nshould the recipient die the caster cannot regain the lost levels until the end of the day. This miracle is not\ndischarged by the use of magical powers by the recipient.\nThis is a releasable miracle, but may only be voluntarily released with same gesture (linked hands) as the casting. It\nonly works on living targets.\nNote: Technically, this miracle could be cast on any object at all, as the spirits cannot recognise elven nature, goodly\nor otherwise. However, once the target is infused with the caster's spirit it can be identified, and the spirit will\nimmediately flee unless the target is valid, thus wasting the spirits cast on it.",
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false

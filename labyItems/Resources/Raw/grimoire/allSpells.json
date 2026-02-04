@@ -1720,7 +1720,7 @@
     "description": "Causes the target’s heart to cease to beat for a few seconds, causing them to suffer 18 TBLP, 18 to the chest (6 hits to a monster), to which MAC does\nnot apply. Additionally, the target suffers a magical Halt, at the caster’s skill level. This is a flesh and blood effect, and immunity to flesh and blood effects applies.",
     "IsAdvanced": false,
     "damage": [[18, 18]],
-    "damType": ["Missile"],
+    "damType": ["chest"],
     "MACApplies": [[0, 0]],
     "Immunity": "Flesh and Blood",
     "sourcePage": 36
@@ -2306,6 +2306,8 @@
     "colour": "Blue",
     "verbal": "By the will of the lord of air and the power of the storms I call forth the breath from your body, may the air within your body be dragged forth!",
     "description": "The spell causes all the air in the targets lung to be drawn rapidly from them, causes extreme damage to their lungs. This acts as per a sever (which\ninflicts sufficient damage to sever the location based on its current health) to the target’s abdomen. Resistances to sever/loc to zero apply as normal, while resistances\nto / 1/2 effect blue mana reduce the damage suffered. Additionally Large Lung Capacity acts as an additional resistance to sever. This is a flesh and blood effect and\ndoes not work on most elves (as they do not breathe). It does work on air elves.",
+    "damageOverride": "sever",
+    "damType": ["chest"],
     "IsAdvanced": true,
     "sourcePage": 61
   },
@@ -3336,7 +3338,9 @@
     "level": 17,
     "colour": "Green",
     "verbal": "Feel as the crushing depths of the ocean surround your form. Let the weight of the ancient seas and oceans be upon thee and bring you low.",
-    "description": "Causes the targets chest to be crushed by water pressure. This acts as a Location to Zero to the chest. Resistances to Sever applies, and resistances to\nGreen mana provide a stacking resistance to sever. Walk through water (or an Aquatic Elves unimpeded by water ability) means the target is unaffected. This spell\nonly effects those with a physical presence.\nGrey Magic",
+    "description": "Causes the targets chest to be crushed by water pressure. This acts as a Location to Zero to the chest. Resistances to Sever applies, and resistances to\nGreen mana provide a stacking resistance to sever. Walk through water (or an Aquatic Elves unimpeded by water ability) means the target is unaffected. This spell\nonly effects those with a physical presence.",
+    "damageOverride": "loc0",
+    "damType": ["chest"],
     "IsAdvanced": true,
     "sourcePage": 73
   },
@@ -3958,6 +3962,8 @@
     "colour": "Onyx",
     "verbal": "With the power of the Onyx Dragon I bid they body snap and break. Let thy form suffer at my touch as I break bone, sunder flesh, and destroy the essence\nthat binds you to life!",
     "description": "Once cast the spell hangs for 10 seconds. The target touched suddenly finds their chest begins to crumple and break. This acts as per a sever to the chest,\nwhich obviously kills the target if they do not have any resistances. If resistances to sever are owned then damage is suffered based on the target’s current life, not\ntheir maximum (EG if they had 30 life to the chest, were down 15, and had one resistance to sever then they would suffer 15 points of damage as their chest is reduced\nto zero).\nRed Magic",
+    "damageOverride": "sever",
+    "damType": ["chest"],
     "IsAdvanced": true,
     "sourcePage": 79
   },
@@ -4626,6 +4632,9 @@
     "colour": "White",
     "verbal": "Winter's here, the air is chill. You fall upon a snow-topped hill. You try to rise, to crawl once more, then slump again, you've lost this war. The gods it\nseems have rolled their dice. Your blood is cold, your heart is ice! Heart of Ice!",
     "description": "One flesh-and-blood creature has their heart turned briefly to ice, causing terrible system shock. Effects as per a Location-to-Zero the chest. In other\nwords, chest location is reduced to zero life-points (unless it was already below that, in which case the spell has no effect). Immunity to Flesh and Blood Effects\napplies and Resistance to Sever or Immunity to Cold mean that location is reduced only to half its current life points. No form of armour class may be applied.\nWitch Doctor Magic\nThese spells may only be acquired by a Witchdoctor.",
+    "damageOverride": "loc0",
+    "damType": ["chest"],
+    "Immunity": "Flesh and Blood",
     "IsAdvanced": true,
     "sourcePage": 87
   },
@@ -4725,6 +4734,7 @@
     "colour": "Sorcery",
     "verbal": "As I inscribe this run let it strike deep and sharp, let mortal armour offer no defence to this power.",
     "description": "Castable on a Bastard Sword, Bastard Axe, or large sword/axe. It causes the next blow delivered to be a sever. If the blow is parried then the rune is\nwasted. Resistance to Sever applies as normal, and damage is based on the current life of the location, not its maximum.",
+    "damageOverride": "sever",
     "IsAdvanced": true,
     "sourcePage": 89
   },

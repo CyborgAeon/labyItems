@@ -122,7 +122,7 @@
                 <VerticalStackLayout Padding="16"
                                      Spacing="12">
                     <Entry Text="{Binding Search}"
-                           Placeholder="Search damaging spells"/>
+                           Placeholder="Search spells or miracles"/>
 
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding DamageSpells}"
                                          Spacing="8">
@@ -138,6 +138,9 @@
                                         <VerticalStackLayout Spacing="2">
                                             <Label Text="{Binding Name}"
                                                    FontAttributes="Bold"/>
+                                            <Label Text="{Binding Kind}"
+                                                   FontSize="11"
+                                                   Opacity="0.6"/>
                                             <Label Text="{Binding Summary}"
                                                    FontSize="12"
                                                    Opacity="0.7"/>
@@ -206,6 +209,9 @@
                         </VerticalStackLayout>
                     </Frame>
 
+                    <Entry Text="{Binding HealingSearch}"
+                           Placeholder="Search healing miracles"/>
+
                     <Label Text="No healing entries yet."
                            Opacity="0.7"
                            IsVisible="{Binding HasHealingEntries, Converter={StaticResource InverseBoolConverter}}"/>
@@ -217,14 +223,22 @@
                                 <Frame Padding="12"
                                        CornerRadius="12"
                                        HasShadow="False"
-                                       BorderColor="#E5E7EB">
+                                       BorderColor="#E5E7EB"
+                                       IsVisible="{Binding IsVisible}">
                                     <Grid ColumnDefinitions="*,Auto"
                                           ColumnSpacing="8">
-                                        <Label Text="{Binding Name}"
-                                               FontAttributes="Bold"/>
-                                        <Label Grid.Column="1"
-                                               Text="{Binding Summary}"
-                                               Opacity="0.7"/>
+                                        <VerticalStackLayout Spacing="2">
+                                            <Label Text="{Binding Name}"
+                                                   FontAttributes="Bold"/>
+                                            <Label Text="{Binding Summary}"
+                                                   FontSize="12"
+                                                   Opacity="0.7"/>
+                                        </VerticalStackLayout>
+                                        <Button Grid.Column="1"
+                                                Text="Apply"
+                                                Padding="10,4"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ApplyHealingEntryCommand}"
+                                                CommandParameter="{Binding .}"/>
                                     </Grid>
                                 </Frame>
                             </DataTemplate>

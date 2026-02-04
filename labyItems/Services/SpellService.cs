@@ -14,6 +14,11 @@ public static class SpellService
         public string verbal { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;
         public bool? isAdvanced { get; set; } = false;
+        public List<int[]>? damage { get; set; }
+        public List<string>? damType { get; set; }
+        public List<int[]>? MACApplies { get; set; }
+        public List<int>? PACDam { get; set; }
+        public string? damageOverride { get; set; }
     }
 
     private static List<SpellRaw>? _cache;

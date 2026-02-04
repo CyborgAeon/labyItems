@@ -53,6 +53,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private bool _showMiraclesTab;
     public bool ShowMiraclesTab { get => _showMiraclesTab; private set => Set(ref _showMiraclesTab, value); }
 
+    private bool _showPriestMiracleLists;
+    public bool ShowPriestMiracleLists { get => _showPriestMiracleLists; private set => Set(ref _showPriestMiracleLists, value); }
+
+    private bool _showEvilStairway;
+    public bool ShowEvilStairway { get => _showEvilStairway; private set => Set(ref _showEvilStairway, value); }
+
     private bool _showEvocationsTab;
     public bool ShowEvocationsTab { get => _showEvocationsTab; private set => Set(ref _showEvocationsTab, value); }
 
@@ -226,6 +232,9 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public ICommand AddMiracleListCommand { get; }
     public ICommand RemoveMiracleListCommand { get; }
 
+    private EvilStairwayVm? _evilStairway;
+    public EvilStairwayVm? EvilStairway { get => _evilStairway; private set => Set(ref _evilStairway, value); }
+
     public ObservableCollection<EvocationListVm> EvocationLists { get; } = new();
     public ICommand AddEvocationListCommand { get; }
     public ICommand RemoveEvocationListCommand { get; }
@@ -247,7 +256,9 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     public bool CanAddEvocationList => EvocationLists.Count == 0;
 
-    public bool CanSave => MiracleLists.All(m => m.IsAlignmentCompatible(_draft.Alignment));
+    public bool CanSave =>
+        MiracleLists.All(m => m.IsAlignmentCompatible(_draft.Alignment))
+        && (!ShowEvilStairway || EvilStairway?.HasValidationError != true);
 
     public async Task InitializeAsync()
     {
@@ -303,6 +314,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             EnsureWizardSpellListImported();
         LoadSpellListsFromDraft();
         LoadMiracleListsFromDraft();
+        await LoadEvilStairwayAsync();
         LoadEvocationListsFromDraft();
 
         Raise(nameof(CanSave));
@@ -356,9 +368,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         var isWizard = HasBracket(classRecord?.Brackets, "Wizard");
         var isPriest = HasBracket(classRecord?.Brackets, "Priest");
         var isDruid = HasBracket(classRecord?.Brackets, "Druid");
+        var hasEvilStairway = HasClassAbility(classRecord, "Evil stairway", "evil stairway list");
 
         ShowSpellsTab = isWizard;
-        ShowMiraclesTab = isPriest;
+        ShowMiraclesTab = isPriest || hasEvilStairway;
+        ShowPriestMiracleLists = isPriest;
+        ShowEvilStairway = hasEvilStairway;
         ShowEvocationsTab = isDruid;
     }
 
@@ -367,6 +382,31 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     private static bool HasBracket(IEnumerable<string>? brackets, string token)
         => brackets != null && brackets.Any(b => b.Contains(token, StringComparison.OrdinalIgnoreCase));
+
+    private static bool HasClassAbility(ServiceCharacterClassRecord? classRecord, params string[] names)
+    {
+        if (classRecord?.Levels == null || names.Length == 0)
+            return false;
+
+        foreach (var level in classRecord.Levels.Values)
+        {
+            if (level == null) continue;
+            foreach (var ability in level)
+            {
+                var name = ability?.Name?.Trim();
+                if (string.IsNullOrWhiteSpace(name))
+                    continue;
+
+                foreach (var token in names)
+                {
+                    if (string.Equals(name, token, StringComparison.OrdinalIgnoreCase))
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     private void LoadAbilitiesFromDraft()
     {
@@ -733,6 +773,64 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         NormalizeMiracleListExpansion();
         Raise(nameof(CanAddMiracleList));
         Raise(nameof(AddMiracleListLabel));
+    }
+
+    private async Task LoadEvilStairwayAsync()
+    {
+        if (!ShowEvilStairway)
+        {
+            EvilStairway = null;
+            return;
+        }
+
+        _draft.EvilStairwayList ??= new MiracleListDraft
+        {
+            Name = "Evil Stairway",
+            IsScriptures = false,
+            IsMinimized = false
+        };
+
+        if (string.IsNullOrWhiteSpace(_draft.EvilStairwayList.Name))
+            _draft.EvilStairwayList.Name = "Evil Stairway";
+
+        var prereqs = await MiracleTreeService.GetPreReqsAsync();
+        var (churchName, miracleNames) = TryGetChurchMiracleNames();
+
+        EvilStairway = new EvilStairwayVm(
+            _draft.EvilStairwayList,
+            _allMiracles,
+            prereqs,
+            churchName,
+            miracleNames,
+            OnEvilStairwayValidationChanged);
+    }
+
+    private (string? ChurchName, HashSet<string>? MiracleNames) TryGetChurchMiracleNames()
+    {
+        if (_draft.Guilds == null || _draft.Guilds.Count == 0)
+            return (null, null);
+
+        var church = _draft.Guilds
+            .Select(g => g ?? string.Empty)
+            .FirstOrDefault(g =>
+                _guilds.TryGetValue(g, out var rec)
+                && rec?.MiracleList != null
+                && rec.MiracleList.Count > 0);
+
+        if (string.IsNullOrWhiteSpace(church))
+            return (null, null);
+
+        if (!_guilds.TryGetValue(church, out var record) || record?.MiracleList == null)
+            return (null, null);
+
+        var sourceName = CleanChurchName(church);
+        var allNames = record.MiracleList.Values
+            .SelectMany(v => v ?? new List<string>())
+            .Select(n => (n ?? string.Empty).Trim())
+            .Where(n => n.Length > 0)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        return (sourceName, allNames.Count == 0 ? null : allNames);
     }
 
     private MiracleListDraft? TryBuildChurchMiracleList()
@@ -1352,6 +1450,13 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         PersistDraft();
     }
 
+    private void OnEvilStairwayValidationChanged()
+    {
+        Raise(nameof(CanSave));
+        (SaveCommand as Command)?.ChangeCanExecute();
+        PersistDraft();
+    }
+
     private void HookMiracleList(MiracleListVm vm)
     {
         vm.PropertyChanged += OnMiracleListPropertyChanged;
@@ -1545,12 +1650,16 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         sb.AppendLine($"{_draft.Name} - Miracles");
 
         var baseList = _draft.MiracleLists?.FirstOrDefault(l => !l.IsScriptures);
-        if (baseList != null)
+        if (baseList != null && (ShowPriestMiracleLists || baseList.Entries.Any(e => !string.IsNullOrWhiteSpace(e.Name))))
             AppendMiracleListText(sb, FormatMiracleListHeader(baseList), baseList);
 
         var scripturesList = _draft.MiracleLists?.FirstOrDefault(l => l.IsScriptures);
-        if (scripturesList != null)
+        if (scripturesList != null && (ShowPriestMiracleLists || scripturesList.Entries.Any(e => !string.IsNullOrWhiteSpace(e.Name))))
             AppendMiracleListText(sb, "Scriptures of Faith", scripturesList);
+
+        var evilStairway = _draft.EvilStairwayList;
+        if (evilStairway != null && evilStairway.Entries.Any(e => !string.IsNullOrWhiteSpace(e.Name)))
+            AppendMiracleListText(sb, "Evil Stairway", evilStairway);
 
         return sb.ToString().TrimEnd();
     }
@@ -1592,13 +1701,26 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     private IEnumerable<(string ListName, MiracleListEntryDraft Entry)> EnumerateMiracleEntries()
     {
-        if (_draft.MiracleLists == null)
-            yield break;
-
-        foreach (var list in _draft.MiracleLists)
+        if (_draft.MiracleLists != null)
         {
-            var listName = list.IsScriptures ? "Scriptures of Faith" : FormatMiracleListHeader(list);
-            foreach (var entry in list.Entries ?? new List<MiracleListEntryDraft>())
+            foreach (var list in _draft.MiracleLists)
+            {
+                var listName = list.IsScriptures ? "Scriptures of Faith" : FormatMiracleListHeader(list);
+                foreach (var entry in list.Entries ?? new List<MiracleListEntryDraft>())
+                {
+                    if (string.IsNullOrWhiteSpace(entry.Name))
+                        continue;
+                    yield return (listName, entry);
+                }
+            }
+        }
+
+        if (_draft.EvilStairwayList != null)
+        {
+            var listName = string.IsNullOrWhiteSpace(_draft.EvilStairwayList.Name)
+                ? "Evil Stairway"
+                : _draft.EvilStairwayList.Name;
+            foreach (var entry in _draft.EvilStairwayList.Entries ?? new List<MiracleListEntryDraft>())
             {
                 if (string.IsNullOrWhiteSpace(entry.Name))
                     continue;

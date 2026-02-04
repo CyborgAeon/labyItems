@@ -23,63 +23,23 @@ If you want the PATH change to persist, add `export PATH="$HOME/.dotnet:$PATH"` 
 
 Make sure an emulator or device is running, then:
 
-```bash
+````bash
 PKG=bard.uk.labyitems
 DB=output/laby.db
-rm -f "$DB" && \
-$HOME/.dotnet/dotnet run --project tools/evocdbgen -c Release -- \
-labyItems/Resources/Raw/druids_way/evocs.json "$DB" && \
-$HOME/.dotnet/dotnet run --project tools/migrator -c Release -- "$DB" && \
-adb push "$DB" /data/local/tmp/laby.db && \
-adb shell run-as "$PKG" mkdir -p files && \
-adb shell run-as "$PKG" cp /data/local/tmp/laby.db files/laby.db && \
-adb shell run-as "$PKG" ls -l files/laby.db
-```
-
-then run
-
-```bash
+./tools/migrate-any-data.sh "$DB"
+adb push "$DB" /data/local/tmp/laby.db
+adb shell run-as "$PKG" sh -c 'cd /data/user/0/'"$PKG"' && mkdir -p files && cp /data/local/tmp/laby.db files/laby.db'
+``` then run ```bash
 DOTNET_USE_POLLING_FILE_WATCHER=1 \
 $HOME/.dotnet/dotnet watch \
   --project labyItems/labyItems.csproj \
   --framework net10.0-android \
   run --configuration Debug
-```
+````
 
 If you hit `NETSDK1147` (missing `maui-android`) or similar, you’re probably running the system `dotnet` instead of the one installed by `dotnet-install.sh` — the command above pins to `$HOME/.dotnet/dotnet`.
 
 If watch ever complains about launch profiles, ensure `Properties/launchSettings.json` contains the `Android` profile (added in this repo).
-
-## debug steps:
-
-Single shot debug launch + logcat:
-
-```bash
-PKG=bard.uk.labyitems; $HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c Debug -clp:ErrorsOnly && adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 && PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); echo "PID=$PID"; adb logcat --pid "$PID" -v time
-```
-
----
-
-### Debugging the seeded database (single-shot local workflow)
-
-With an emulator running, this one liner will generate the DB, apply migrations, push it into the app sandbox, and launch the app:
-
-```bash
-PKG=bard.uk.labyitems DB=output/laby.db && \
-$HOME/.dotnet/dotnet run --project tools/evocdbgen -c Release -- labyItems/Resources/Raw/druids_way/evocs.json "$DB" && \
-$HOME/.dotnet/dotnet run --project tools/migrator -c Release -- "$DB" && \
-adb push "$DB" /data/local/tmp/laby.db && \
-adb shell run-as "$PKG" sh -c 'mkdir -p files && cp /data/local/tmp/laby.db files/laby.db && ls -l files/laby.db' && \
-$HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c Debug -clp:ErrorsOnly && \
-adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1
-```
-
-Notes:
-
-- The app must have been launched once (or the `mkdir -p files` step will create the sandbox folder).
-- If you want logs after launch: `PID=$(adb shell pidof -s "$PKG" | tr -d '\r'); adb logcat --pid "$PID" -v time --regex '^\[.*'`.
-
----
 
 ## Data generation & migrations
 
@@ -88,35 +48,6 @@ Notes:
 - If you already created a DB only via migrations and it’s missing evolution data, delete `output/laby.db` first so `evocdbgen` can rebuild it from the raw tables.
 - The script uses `$HOME/.dotnet/dotnet` by default; override with `DOTNET=/path/to/dotnet ./tools/migrate-any-data.sh ...` if needed.
 - APK builds now keep all `Resources/Raw` JSON assets and the `Template.xlsx` so the app and migrations can load packaged data directly.
-
-Install the generated DB into an emulator/device (so the app uses the full evolution tables, not just migrations):
-
-```bash
-PKG=bard.uk.labyitems DB=output/laby.db && \
-adb shell run-as "$PKG" mkdir -p files
-adb shell run-as "$PKG" cp /data/local/tmp/laby.db files/laby.db
-adb shell run-as "$PKG" ls -l files/laby.db
-```
-
-Run migrations only (when the DB already exists):
-
-```bash
-$HOME/.dotnet/dotnet run --project tools/migrator -c Release -- output/laby.db
-```
-
----
-
-## view debug logs
-
-`PKG=bard.uk.labyitems`
-`$HOME/.dotnet/dotnet build -t:Run -f net10.0-android -c Debug`
-
-`PID=$(adb shell pidof -s "$PKG" | tr -d '\r')`
-`echo "PID=$PID"`
-
-# Show ALL levels (Verbose, Debug, Info, etc.)
-
-`adb logcat --pid "$PID" -v time --regex '^\[.*'`
 
 ## Android release signing (CI)
 

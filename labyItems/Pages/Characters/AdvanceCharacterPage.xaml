@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
     xmlns:sliders="clr-namespace:labyItems.Controls.Sliders"
+    xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
     xmlns:viewModels="clr-namespace:labyItems.Pages.Characters.ViewModels"
     Title="Advance Character">
 
@@ -284,6 +285,148 @@
             <ScrollView>
                 <VerticalStackLayout Padding="16"
                                      Spacing="12">
+                <VerticalStackLayout IsVisible="{Binding ShowEvilStairway}"
+                                     Spacing="10">
+                    <Label Text="Evil Stairway"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+                    <Frame Padding="12"
+                           CornerRadius="12"
+                           BorderColor="#E5E7EB"
+                           HasShadow="False"
+                           BindingContext="{Binding EvilStairway}">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding ListSourceLabel}"
+                                   FontSize="12"
+                                   Opacity="0.7"/>
+
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="8">
+                                <controls:DictionarySearchBar x:TypeArguments="viewModels:MiracleOption"
+                                                              ItemsSource="{Binding FilteredOptions}"
+                                                              SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"
+                                                              SelectedText="{Binding SearchText, Mode=TwoWay}"
+                                                              PlaceholderText="Type miracle name"
+                                                              SelectionDisplayMemberPath="Name"/>
+                                <Button Grid.Column="1"
+                                        Text="Add"
+                                        Command="{Binding AddSelectedCommand}"
+                                        IsEnabled="{Binding CanAddSelected}"/>
+                            </Grid>
+
+                            <ScrollView Orientation="Horizontal">
+                                <controls:MultiChipGroup Items="{Binding SphereFilterOptions}"
+                                                         SelectedItems="{Binding SelectedSphereFilters}"
+                                                         WrapMode="NoWrap"/>
+                            </ScrollView>
+                            <controls:MultiChipGroup Items="{Binding AdvancedFilterOptions}"
+                                                     SelectedItems="{Binding SelectedAdvancedFilters}"
+                                                     WrapMode="NoWrap"
+                                                     IsVisible="{Binding ShowAdvancedFilters}"/>
+
+                            <Grid ColumnDefinitions="Auto,Auto,Auto"
+                                  ColumnSpacing="12">
+                                <Label Text="{Binding SpiritProgressText}"/>
+                                <Label Grid.Column="1"
+                                       Text="{Binding RemainingSpiritText}"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding CausingProgressText}"
+                                       IsVisible="{Binding ShowCausingRequirement}"/>
+                            </Grid>
+
+                            <ScrollView Orientation="Horizontal">
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding PyramidRows}"
+                                                     Spacing="6">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Slots}"
+                                                                   Spacing="8"
+                                                                   HorizontalOptions="Center">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid WidthRequest="120"
+                                                              HeightRequest="70">
+                                                            <Grid IsVisible="{Binding HasEntry}">
+                                                                <shapes:Polygon Points="0,70 60,0 120,70"
+                                                                                Fill="#FDE68A"
+                                                                                Stroke="#92400E"
+                                                                                StrokeThickness="1"
+                                                                                IsVisible="{Binding IsPeak}"/>
+                                                                <Frame CornerRadius="8"
+                                                                       Padding="0"
+                                                                       BackgroundColor="#FDE68A"
+                                                                       BorderColor="#92400E"
+                                                                       HasShadow="False"
+                                                                       IsVisible="{Binding IsPeak, Converter={StaticResource InverseBoolConverter}}"/>
+                                                                <VerticalStackLayout Padding="6"
+                                                                                     Spacing="2"
+                                                                                     HorizontalOptions="Center"
+                                                                                     VerticalOptions="Center">
+                                                                    <Label Text="{Binding Name}"
+                                                                           FontSize="11"
+                                                                           HorizontalTextAlignment="Center"
+                                                                           LineBreakMode="TailTruncation"
+                                                                           MaxLines="2"/>
+                                                                </VerticalStackLayout>
+                                                                <Label Text="{Binding PowerLabel}"
+                                                                       FontSize="10"
+                                                                       Margin="4"
+                                                                       HorizontalOptions="End"
+                                                                       VerticalOptions="Start"/>
+                                                                <Label Text="ADV"
+                                                                       FontSize="9"
+                                                                       TextColor="#9A3412"
+                                                                       Margin="4,0"
+                                                                       HorizontalOptions="Start"
+                                                                       VerticalOptions="Start"
+                                                                       IsVisible="{Binding IsAdvanced}"/>
+                                                                <ImageButton HeightRequest="20"
+                                                                             WidthRequest="20"
+                                                                             Padding="0"
+                                                                             BackgroundColor="Transparent"
+                                                                             HorizontalOptions="End"
+                                                                             VerticalOptions="End"
+                                                                             Command="{Binding RemoveCommand}"
+                                                                             CommandParameter="{Binding RemoveCommandParameter}"
+                                                                             IsVisible="{Binding HasEntry}">
+                                                                    <ImageButton.Source>
+                                                                        <FontImageSource Glyph="✖️"
+                                                                                         Size="12"
+                                                                                         Color="#7F1D1D"/>
+                                                                    </ImageButton.Source>
+                                                                </ImageButton>
+                                                            </Grid>
+                                                            <Frame CornerRadius="8"
+                                                                   Padding="0"
+                                                                   BackgroundColor="#F3F4F6"
+                                                                   BorderColor="#D1D5DB"
+                                                                   HasShadow="False"
+                                                                   IsVisible="{Binding IsPlaceholder}">
+                                                                <Label Text="+"
+                                                                       FontSize="18"
+                                                                       TextColor="#9CA3AF"
+                                                                       HorizontalOptions="Center"
+                                                                       VerticalOptions="Center"/>
+                                                            </Frame>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </HorizontalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </ScrollView>
+
+                            <Label Text="{Binding ValidationMessage}"
+                                   TextColor="#7F1D1D"
+                                   FontSize="12"
+                                   IsVisible="{Binding HasValidationError}"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout IsVisible="{Binding ShowPriestMiracleLists}"
+                                     Spacing="12">
                 <Label Text="Miracle Lists"
                        FontAttributes="Bold"
                        FontSize="18"/>
@@ -441,6 +584,7 @@
                             </Frame>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
                 </VerticalStackLayout>
 
                 <HorizontalStackLayout Spacing="8">

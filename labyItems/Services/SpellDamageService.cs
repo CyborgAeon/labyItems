@@ -1,6 +1,7 @@
-using System.Text.Json;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Maui.Storage;
+using System.Threading.Tasks;
 
 namespace labyItems.Services;
 
@@ -10,169 +11,101 @@ public static class SpellDamageService
 
     public static async Task<List<DamageSpell>> GetDamagingSpellsAsync()
     {
-        if (_cache != null)
-            return _cache;
+        if (_cache != null) return _cache;
 
-        await using var s = await FileSystem.OpenAppPackageFileAsync("grimoire/allSpells.json");
-        using var r = new StreamReader(s);
-        var json = await r.ReadToEndAsync();
+        var all = await SpellService.GetAllAsync();
 
-        using var doc = JsonDocument.Parse(json);
-        var list = new List<DamageSpell>();
+        _cache = all
+            .Where(s => s.damage is { Count: > 0 } || !string.IsNullOrWhiteSpace(s.damageOverride))
+            .Select(s => new DamageSpell(
+                Name: s.name,
+                Level: s.level,
+                Kind: "Spell",
+                Parts: BuildParts(s)))
+            .ToList();
 
-        if (doc.RootElement.ValueKind != JsonValueKind.Array)
-            return list;
-
-        foreach (var el in doc.RootElement.EnumerateArray())
-        {
-            if (!el.TryGetProperty("damage", out var damageEl))
-                continue;
-
-            var name = GetString(el, "name");
-            var level = GetInt(el, "level");
-            var damageList = ReadIntArrayList(damageEl);
-            if (damageList.Count == 0)
-                continue;
-
-            var types = el.TryGetProperty("damType", out var typeEl)
-                ? ReadStringList(typeEl)
-                : new List<string>();
-            var macApplies = el.TryGetProperty("MACApplies", out var macEl)
-                ? ReadIntArrayList(macEl)
-                : new List<int[]>();
-            var pacDam = el.TryGetProperty("PACDam", out var pacEl)
-                ? ReadIntList(pacEl)
-                : new List<int>();
-
-            var parts = new List<DamagePart>();
-            for (var i = 0; i < damageList.Count; i++)
-            {
-                var dmg = damageList[i];
-                var tblp = dmg.Length > 0 ? dmg[0] : 0;
-                var loc = dmg.Length > 1 ? dmg[1] : 0;
-
-                var type = types.Count > i ? types[i] : (types.Count > 0 ? types[^1] : "Missile");
-                var mac = macApplies.Count > i ? macApplies[i] : new[] { 0, 0 };
-                var macTblp = mac.Length > 0 ? mac[0] : 0;
-                var macLoc = mac.Length > 1 ? mac[1] : 0;
-                var pac = pacDam.Count > i ? pacDam[i] : 0;
-
-                parts.Add(new DamagePart(tblp, loc, type, macTblp, macLoc, pac));
-            }
-
-            if (parts.Count > 0)
-                list.Add(new DamageSpell(name, level, parts));
-        }
-
-        _cache = list;
-        return list;
+        return _cache;
     }
 
-    private static string GetString(JsonElement el, string name)
-        => el.TryGetProperty(name, out var p) && p.ValueKind == JsonValueKind.String ? p.GetString() ?? string.Empty : string.Empty;
-
-    private static int GetInt(JsonElement el, string name)
+    private static IReadOnlyList<DamagePart> BuildParts(SpellService.SpellRaw s)
     {
-        if (!el.TryGetProperty(name, out var p))
-            return 0;
+        var damage = s.damage ?? new();
+        if (damage.Count == 0 && string.IsNullOrWhiteSpace(s.damageOverride))
+            return Array.Empty<DamagePart>();
 
-        return p.ValueKind switch
+        var types = s.damType ?? new();
+        var macs = s.MACApplies ?? new();
+        var pacs = s.PACDam ?? new();
+
+        var partCount = damage.Count > 0 ? damage.Count : 1;
+        return Enumerable.Range(0, partCount)
+            .Select(i =>
+            {
+                var dmg = damage.Count > 0 ? damage[i] : Array.Empty<int>();
+
+                var tblp = At(dmg, 0);
+                var loc = At(dmg, 1);
+
+                var type = OrLast(types, i) ?? "Missile";
+
+                var macPair = OrDefault(macs, i, new[] { 0, 0 });
+                var macTblp = At(macPair, 0);
+                var macLoc = At(macPair, 1);
+
+                var pac = OrLast(pacs, i);
+
+                return new DamagePart(tblp, loc, type, macTblp, macLoc, pac, s.damageOverride, UseSac: false);
+            })
+            .ToList();
+    }
+
+    private static int At(int[]? arr, int index)
+        => (arr != null && index >= 0 && index < arr.Length) ? arr[index] : 0;
+
+    private static T? OrLast<T>(IReadOnlyList<T> list, int index)
+        => list.Count == 0 ? default : (index < list.Count ? list[index] : list[^1]);
+
+    private static T OrDefault<T>(IReadOnlyList<T> list, int index, T fallback)
+        => list.Count == 0 ? fallback : (index < list.Count ? list[index] : list[^1]);
+}
+
+public sealed record DamageSpell(string Name, int Level, string Kind, IReadOnlyList<DamagePart> Parts)
+{
+    public string Summary => string.Join("; ", Parts.Select(FormatPart));
+
+    private static string FormatPart(DamagePart part)
+    {
+        var type = part.DamType?.Trim();
+        if (!string.IsNullOrWhiteSpace(part.DamageOverride))
         {
-            JsonValueKind.Number => p.GetInt32(),
-            JsonValueKind.String => int.TryParse(p.GetString(), out var v) ? v : 0,
-            _ => 0
+            var label = FormatOverride(part.DamageOverride);
+            return string.IsNullOrWhiteSpace(type) ? label : $"{label} ({type})";
+        }
+
+        var prefix = string.IsNullOrWhiteSpace(type) ? string.Empty : $"{type}:";
+        return $"{prefix}{part.Tblp}/{part.Loc}";
+    }
+
+    private static string FormatOverride(string raw)
+    {
+        var token = raw.Trim().ToLowerInvariant();
+        return token switch
+        {
+            "sever" => "Sever",
+            "loc0" => "Loc 0",
+            "soullance" => "Soul lance",
+            _ => raw
         };
     }
-
-    private static List<string> ReadStringList(JsonElement el)
-    {
-        var list = new List<string>();
-        if (el.ValueKind != JsonValueKind.Array)
-            return list;
-
-        foreach (var item in el.EnumerateArray())
-        {
-            if (item.ValueKind == JsonValueKind.String)
-            {
-                var value = item.GetString();
-                if (!string.IsNullOrWhiteSpace(value))
-                    list.Add(value.Trim());
-            }
-        }
-
-        return list;
-    }
-
-    private static List<int[]> ReadIntArrayList(JsonElement el)
-    {
-        var list = new List<int[]>();
-
-        if (el.ValueKind != JsonValueKind.Array)
-            return list;
-
-        if (el.GetArrayLength() == 0)
-            return list;
-
-        if (el[0].ValueKind != JsonValueKind.Array)
-        {
-            var single = new List<int>();
-            foreach (var item in el.EnumerateArray())
-            {
-                if (item.ValueKind == JsonValueKind.Number)
-                    single.Add(item.GetInt32());
-                else if (item.ValueKind == JsonValueKind.String && int.TryParse(item.GetString(), out var v))
-                    single.Add(v);
-            }
-
-            if (single.Count > 0)
-                list.Add(single.ToArray());
-
-            return list;
-        }
-
-        foreach (var arr in el.EnumerateArray())
-        {
-            if (arr.ValueKind != JsonValueKind.Array)
-                continue;
-
-            var values = new List<int>();
-            foreach (var item in arr.EnumerateArray())
-            {
-                if (item.ValueKind == JsonValueKind.Number)
-                    values.Add(item.GetInt32());
-                else if (item.ValueKind == JsonValueKind.String && int.TryParse(item.GetString(), out var v))
-                    values.Add(v);
-            }
-
-            if (values.Count > 0)
-                list.Add(values.ToArray());
-        }
-
-        return list;
-    }
-
-    private static List<int> ReadIntList(JsonElement el)
-    {
-        var list = new List<int>();
-        if (el.ValueKind != JsonValueKind.Array)
-            return list;
-
-        foreach (var item in el.EnumerateArray())
-        {
-            if (item.ValueKind == JsonValueKind.Number)
-                list.Add(item.GetInt32());
-            else if (item.ValueKind == JsonValueKind.String && int.TryParse(item.GetString(), out var v))
-                list.Add(v);
-        }
-
-        return list;
-    }
 }
 
-public sealed record DamageSpell(string Name, int Level, IReadOnlyList<DamagePart> Parts)
-{
-    public string Summary
-        => string.Join("; ", Parts.Select(p => $"{p.DamType}:{p.Tblp}/{p.Loc}"));
-}
-
-public sealed record DamagePart(int Tblp, int Loc, string DamType, int MacTblp, int MacLoc, int PacDam);
+public sealed record DamagePart(
+    int Tblp,
+    int Loc,
+    string DamType,
+    int MacTblp,
+    int MacLoc,
+    int PacDam,
+    string? DamageOverride,
+    bool UseSac
+);

@@ -487,6 +487,29 @@ public sealed class BattleboardViewModel : ObservableObject
             }
         }
 
+        if (_draft.EvilStairwayList != null)
+        {
+            var listName = string.IsNullOrWhiteSpace(_draft.EvilStairwayList.Name)
+                ? "Evil Stairway"
+                : _draft.EvilStairwayList.Name;
+            foreach (var entry in _draft.EvilStairwayList.Entries ?? new List<MiracleListEntryDraft>())
+            {
+                var name = (entry.Name ?? string.Empty).Trim();
+                if (name.Length == 0)
+                    continue;
+
+                var key = $"miracle::{name}";
+                if (!seen.Add(key))
+                    continue;
+
+                _allCastingEntries.Add(new CastingEntryVm(
+                    name,
+                    "Miracle",
+                    entry.Power,
+                    listName));
+            }
+        }
+
         foreach (var list in _draft.SpellLists ?? new List<SpellListDraft>())
         {
             foreach (var entry in list.Entries ?? new List<SpellListEntryDraft>())

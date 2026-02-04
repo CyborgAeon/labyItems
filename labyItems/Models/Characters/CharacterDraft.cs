@@ -28,6 +28,7 @@ public sealed class CharacterDraft
     public List<string> AdvancementAbilities { get; set; } = new();
     public List<string> AdvancementItems { get; set; } = new();
     public List<MiracleListDraft> MiracleLists { get; set; } = new();
+    public MiracleListDraft? EvilStairwayList { get; set; }
     public List<SpellListDraft> SpellLists { get; set; } = new();
     public List<EvocationListDraft> EvocationLists { get; set; } = new();
     public Dictionary<string, int> PowerPools { get; set; } = new(StringComparer.OrdinalIgnoreCase);
