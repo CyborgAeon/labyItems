@@ -646,7 +646,7 @@
     "damage": [[36, 6]],
     "damType": ["Missile"],
     "sacApplies": [6, 1],
-    "sphere": "Universal",
+    "sphere": "Causing",
     "isAdvanced": false
   },
   {
@@ -808,7 +808,7 @@
     "name": "Spirit Travel",
     "description": "As per the 6mp standard Blue Glyph Blink except is spiritual. I.e. allows the caster to travel up to 20' in distance or within line of sight. On arriving at destination it takes the caster 2 seconds to re-materialise, during which time he is not vulnerable to damage.",
     "alignment": "Other",
-    "sphere": "Universal / Any",
+    "sphere": "Universal",
     "isAdvanced": false
   },
   {
@@ -816,7 +816,7 @@
     "name": "Spirit Walk",
     "description": "Grants the ability to walk through walls as a Minor Angel. Note: This is a Goodly miracle innate. Or Grants the ability to walk through walls as per an Abishai. Note: This is an Evil miracle innate. Or Grants Walk through Walls as Abishai, as a neutral miracle innate. Evil Wayfinder Cost Spirit Shift 50* Repel Good 20* Repel Life 35* Remove Rune Of Power 10* Paralysing Touch 55* Freezing Touch 65* Total Heal Capping Innates of the Total Heal miracle, or any other effect which duplicates or is similar to it, are limited to a maximum number per character as described below: For 1st-class Priest subclasses, Paladins and Power-Masters the maximum allowed is: 1 + BASE SPIRITS PER LEVEL (E.G. 3 FOR A WARRIOR-PRIEST) + HIGHEST POINTS THRESHOLD REACHED /2 (ROUND DOWN) So for example a Pure Priest on Table 9 may have 1 + 5 (base spirits) + 4 (9/2rounded down) =10 Total Heal effects as a maximum number of innates For all other classes the maximum allowed is: 1 (IF IN PRIEST SUBCLASS) + BASE SPIRITS PER LEVEL + HIGHEST POINTS THRESHOLD REACHED /3 (ROUND DOWN), TO A MINIMUM OF 1. So for example a Warrior on Table 12 could have 4 maximum, while if he had multiclassed to Crusading Priest he could have 6. This maximum number applies over all similar innates possessed by any character, so that they may not have more than this value between all their totally healing innates combined. If in doubt as to whether this maximum applies to a particular non-standard ability, such as a 120 tblp and loc cure, or an 'other-only Total Heal, assume that it does unless specifically clarified in writing by the system manager. This maximum number may be exceeded by one only, if the character gains such abilities from items or guild benefits, or similar exterior sources. Wound Staunch, Healing Hand and Cure Critical Wounds -type abilities are considered to be equal to half a total heal for this purpose. Innates that can be used to cast Total Heal (EG True Believer) count towards this cap if the innate is used in that way. Races Ancientfolk Details on Ancient Folk can be found in Evolution: Races, Ancient Folk may be Spirit Warriors, Warrior Priests, or Pure Priests. They have all the abilities of the class chosen as listed above, as well as their own racial abilities, but their life points are lower. They may choose to be members of a church or act as Hermits. Choice is made at",
     "alignment": "Other",
-    "sphere": "Universal / Any",
+    "sphere": "Universal",
     "isAdvanced": false
   },
   {
@@ -838,7 +838,7 @@
   {
     "power": 6,
     "name": "Affinity with Evil",
-    "description": "This miracle binds one of the priest's associated spirits to his form. The next time the priest is targeted\nby an evil spiritual effect (not blow), e.g. Cause Grievous, the minion spirit will interpose itself and take the effect\ninstead. This does not affect powers used by the priest himself, but will stop even beneficial powers from other\nsources. Only one such miracle may be active on a priest at one time.",
+    "description": "This miracle binds one of the priest's associated spirits to his form. The next time the priest is targeted by an evil spiritual effect (not blow), e.g. Cause Grievous, the minion spirit will interpose itself and take the effect instead. This does not affect powers used by the priest himself, but will stop even beneficial powers from other sources. Only one such miracle may be active on a priest at one time.",
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": true
@@ -854,7 +854,7 @@
   {
     "power": 5,
     "name": "Angelic Shift",
-    "description": "As Spiritshift (see Neutral miracles) but is a goodly aligned miracle. Caster suffers a 2 second period\nof disorientation on arrival, during which he is not vulnerable to damage or effects and may not act, as per the Blink\nspell.",
+    "description": "As Spiritshift (see Neutral miracles) but is a goodly aligned miracle. Caster suffers a 2 second period of disorientation on arrival, during which he is not vulnerable to damage or effects and may not act, as per the Blink spell.",
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": true
@@ -862,7 +862,7 @@
   {
     "power": 8,
     "name": "Animate Corpse",
-    "description": "This miracle animates a corpse as an undead creature with 10 hits +1/level of the caster, to each\nlocation. Each location continues to operate until it has been individually slain, and if it suffers damage equal to\ntwice its starting hits then the location is severed. This does mean locations do stop functioning separately. An\nAnimate Corpse delivers 9pts of damage by unarmed combat or damage by weapon type used +1 Strength. E.g. 15pt\ntriple with a bastard weapon wielded in two hands. An Animate Corpse has a dismiss level of 5 for controlling or\ndismissing.",
+    "description": "This miracle animates a corpse as an undead creature with 10 hits +1/level of the caster, to each location. Each location continues to operate until it has been individually slain, and if it suffers damage equal to twice its starting hits then the location is severed. This does mean locations do stop functioning separately. An Animate Corpse delivers 9pts of damage by unarmed combat or damage by weapon type used +1 Strength. E.g. 15pt triple with a bastard weapon wielded in two hands. An Animate Corpse has a dismiss level of 5 for controlling or dismissing.",
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true
@@ -870,7 +870,7 @@
   {
     "power": 4,
     "name": "Animate Greater Zombie",
-    "description": "Animates a flesh-and-blood body as per Animate Zombie. However, only one corpse can be so\nanimated, and it has hits equal to 8 +2/level of the priest. The Greater Zombie has +1 Strength, and B skill, so able\nto inflict Double in either hand or Triple with a two-handed weapon. It is a Level 3 undead, and can move up to 12\npaces from the point of its animation.",
+    "description": "Animates a flesh-and-blood body as per Animate Zombie. However, only one corpse can be so animated, and it has hits equal to 8 +2/level of the priest. The Greater Zombie has +1 Strength, and B skill, so able to inflict Double in either hand or Triple with a two-handed weapon. It is a Level 3 undead, and can move up to 12 paces from the point of its animation.",
     "alignment": "Evil",
     "sphere": "Minor Necromancy",
     "isAdvanced": true
@@ -878,7 +878,7 @@
   {
     "power": 5,
     "name": "Armour of the Spirit World",
-    "description": "This miracle grants spiritual and physical armour class 5 to the caster for the miracles duration. This\nmiracle does not stack with any other form of armour class. A Good or Evil version of this miracle is available as a\n6sp miracle, and a 4sp version is available as a Neutral Minor Warding miracle.",
+    "description": "This miracle grants spiritual and physical armour class 5 to the caster for the miracles duration. This miracle does not stack with any other form of armour class. A Good or Evil version of this miracle is available as a 6sp miracle, and a 4sp version is available as a Neutral Minor Warding miracle.",
     "alignment": "Neutral",
     "sphere": "Universal Only",
     "isAdvanced": true
@@ -886,7 +886,7 @@
   {
     "power": 4,
     "name": "Asylum",
-    "description": "This permits a shaman to enable a willing person of the same race but of a different tribe to leave his\nold tribe and join the shaman’s one without any side effects. This miracle may only be cast once ever on a character.\nThe second time around the miracle simply does not work.",
+    "description": "This permits a shaman to enable a willing person of the same race but of a different tribe to leave his old tribe and join the shaman’s one without any side effects. This miracle may only be cast once ever on a character. The second time around the miracle simply does not work.",
     "alignment": "Neutral",
     "sphere": "Shamanic",
     "isAdvanced": true
@@ -894,7 +894,7 @@
   {
     "power": 5,
     "name": "Aversion",
-    "description": "The target is held unable to approach the caster or in fact perform any act towards the caster other than\nspeak (not cast). However this only holds while the caster continues to hold their palm outwards towards the target,\nand takes no other actions themselves. This miracle only affects targets of lower than or equal to the priest’s level.\nIf the target is struck or harmed the miracle is broken. This is a Domination effect.",
+    "description": "The target is held unable to approach the caster or in fact perform any act towards the caster other than speak (not cast). However this only holds while the caster continues to hold their palm outwards towards the target, and takes no other actions themselves. This miracle only affects targets of lower than or equal to the priest’s level. If the target is struck or harmed the miracle is broken. This is a Domination effect.",
     "alignment": "Evil",
     "sphere": "Minor Dominion",
     "isAdvanced": true
@@ -910,7 +910,7 @@
   {
     "power": 8,
     "name": "Bind Weapon Spirit",
-    "description": "Infuses one normal physical weapon with a spirit, allowing it to inflict spiritual damage. Wielder must\nbe able to utilise neutral spirit items. In own hands weapon is now +1 vs. spirits. This is a releasable miracle, and\naffects the undead. Good and evil versions of this miracle are available, also at 8 spirits – however, for these aligned\nversions, any user must be a member of own faith, and weapon only ever counts as +0 spiritual.",
+    "description": "Infuses one normal physical weapon with a spirit, allowing it to inflict spiritual damage. Wielder must be able to utilise neutral spirit items. In own hands weapon is now +1 vs. spirits. This is a releasable miracle, and affects the undead. Good and evil versions of this miracle are available, also at 8 spirits – however, for these aligned versions, any user must be a member of own faith, and weapon only ever counts as +0 spiritual.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true
@@ -926,7 +926,7 @@
   {
     "power": 6,
     "name": "Bless of Warding",
-    "description": "As per standard 2sp Bless miracle in all respects except that it grants +2 SAC instead of +2 DAC.\nRecipient must be Goodly. Will not stack with any other Bless. This is a releasable miracle.\n~ 80 ~\n\fMiracles by Denomination\nThe following miracles are Universal miracles but available only to priests of specific faiths. Once the miracle is\nacquired the Priest may learn innates of it at a cost of 10pts per spirit.\nAny",
+    "description": "As per standard 2sp Bless miracle in all respects except that it grants +2 SAC instead of +2 DAC. Recipient must be Goodly. Will not stack with any other Bless. This is a releasable miracle. ~ 80 ~ \fMiracles by Denomination The following miracles are Universal miracles but available only to priests of specific faiths. Once the miracle is acquired the Priest may learn innates of it at a cost of 10pts per spirit. Any",
     "alignment": "Good",
     "sphere": "Witchcraft",
     "isAdvanced": true
@@ -950,7 +950,7 @@
   {
     "power": 4,
     "name": "Blessing of Life",
-    "description": "Grants the recipient Fortified Spirit for the duration, meaning that they cannot be raised as any form of\nundead. Recipient may not be Evil. This is not a releasable miracle and does not go down when the recipient dies.\nIt may not be cast on Undead but it may be cast on a dead body, however long dead.",
+    "description": "Grants the recipient Fortified Spirit for the duration, meaning that they cannot be raised as any form of undead. Recipient may not be Evil. This is not a releasable miracle and does not go down when the recipient dies. It may not be cast on Undead but it may be cast on a dead body, however long dead.",
     "alignment": "Good",
     "sphere": "Minor",
     "isAdvanced": true
@@ -982,7 +982,7 @@
   {
     "power": 3,
     "name": "Borders Blessing",
-    "description": "Grants a goodly recipient a stacking live to minus 12 (doubled if they are a member, including Lay\nBeliever, of the Church of Border). Does not stack with other supernaturally generated live to minus, and if the\nperson performs an evil act (as per Bless) this miracle is lost and they may never benefit from it again.\nIt is not a releasable miracle\nBright Lady",
+    "description": "Grants a goodly recipient a stacking live to minus 12 (doubled if they are a member, including Lay Believer, of the Church of Border). Does not stack with other supernaturally generated live to minus, and if the person performs an evil act (as per Bless) this miracle is lost and they may never benefit from it again. It is not a releasable miracle Bright Lady",
     "alignment": "Good",
     "sphere": "Denominational",
     "isAdvanced": false
@@ -990,7 +990,7 @@
   {
     "power": 12,
     "name": "Bound Force of Power",
-    "description": "One normal non-supernatural weapon wielded in two hands by the caster is imbued with spiritual\npower such that every blow it may now inflict Spirit Bolt rather than any normal damage. It cannot inflict normal\ndamage and Spirit Bolt every blow; one or the other must be called only.",
+    "description": "One normal non-supernatural weapon wielded in two hands by the caster is imbued with spiritual power such that every blow it may now inflict Spirit Bolt rather than any normal damage. It cannot inflict normal damage and Spirit Bolt every blow; one or the other must be called only.",
     "alignment": "Neutral",
     "sphere": "Major Force",
     "isAdvanced": true
@@ -1006,7 +1006,7 @@
   {
     "power": 8,
     "name": "Bound Lesser Wings of Darkness",
-    "description": "Allows the cast to cast lesser wings of darkness at will for 1 tblp with full verbal, to a maximum of 1\ncasting per 10 seconds for the duration of the miracle. If the caster receives any goodly spiritual healing while this\nmiracle is active then the miracle fades. The spirits for this cannot be regained while it is active. This is a releasable\nmiracle and can be cast by the undead.\n~ 68 ~\n\fWither\nLevel: 7th (8sp)\nAlignment: Evil\nDuration: 5 minutes\nSphere: Major Necromancy\nor Major Causing\nRange: Touch\nGesture: Touch limb\nVerbal: “Spirits of evil I bid thee touch this one’s limb with the weight of the world”\nDescription: Causes the touched limb (not critical location) to wither and become unusable. Immunity to wither\napplies, and this can be countered by a regeneration miracle. This miracle does not affect the undead, and is a\nreleasable miracle.",
+    "description": "Allows the cast to cast lesser wings of darkness at will for 1 tblp with full verbal, to a maximum of 1 casting per 10 seconds for the duration of the miracle. If the caster receives any goodly spiritual healing while this miracle is active then the miracle fades. The spirits for this cannot be regained while it is active. This is a releasable miracle and can be cast by the undead. ~ 68 ~ \fWither Level: 7th (8sp) Alignment: Evil Duration: 5 minutes Sphere: Major Necromancy or Major Causing Range: Touch Gesture: Touch limb Verbal: “Spirits of evil I bid thee touch this one’s limb with the weight of the world” Description: Causes the touched limb (not critical location) to wither and become unusable. Immunity to wither applies, and this can be countered by a regeneration miracle. This miracle does not affect the undead, and is a releasable miracle.",
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true
@@ -1014,7 +1014,7 @@
   {
     "power": 8,
     "name": "Bound Spirit of Causing",
-    "description": "While this miracle is active the caster cannot regain the spirits used in its casting. For the duration of\nthe miracle the caster may cast Cause Wound for 0 spirits and 0 tblp casting, at will. A full verbal is still required for\neach use, and all normal strictures still hold. Soul’s Hunger may not be used with these ‘free’ castings. Should the\ncaster receive any sort of goodly curing miracle this miracle is negated.",
+    "description": "While this miracle is active the caster cannot regain the spirits used in its casting. For the duration of the miracle the caster may cast Cause Wound for 0 spirits and 0 tblp casting, at will. A full verbal is still required for each use, and all normal strictures still hold. Soul’s Hunger may not be used with these ‘free’ castings. Should the caster receive any sort of goodly curing miracle this miracle is negated.",
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true
@@ -1022,7 +1022,7 @@
   {
     "power": 3,
     "name": "Broken Heart",
-    "description": "May only be used on the priest's slayer, as they die, in a manner similar to Curse. This is not a Curse\nhowever, but a dying effect. The target will be completely unable to harm any living being while they have a spirit.\nThe only way to be freed from this effect is to receive either the forgiveness of the dead priest, or the forgiveness of\nthe High Priest of the Sacred Heart. This miracle affects the undead.\n~ 83 ~\n\fSt Michael",
+    "description": "May only be used on the priest's slayer, as they die, in a manner similar to Curse. This is not a Curse however, but a dying effect. The target will be completely unable to harm any living being while they have a spirit. The only way to be freed from this effect is to receive either the forgiveness of the dead priest, or the forgiveness of the High Priest of the Sacred Heart. This miracle affects the undead. ~ 83 ~ \fSt Michael",
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false
@@ -1030,7 +1030,7 @@
   {
     "power": 10,
     "name": "Cage Of Light",
-    "description": "This miracle will only affect a spiritual undead, but regardless of its power level the undead is held\nstationary even if struck. This helplessness is sufficient for completing a dismissal miracle. This is a releasable\nmiracle.",
+    "description": "This miracle will only affect a spiritual undead, but regardless of its power level the undead is held stationary even if struck. This helplessness is sufficient for completing a dismissal miracle. This is a releasable miracle.",
     "alignment": "Good",
     "sphere": "Major Dismissal",
     "isAdvanced": true
@@ -1038,7 +1038,7 @@
   {
     "power": 6,
     "name": "Calming Trance (Other)",
-    "description": "As Calming Trance above, but may be cast on any non-evil spirit. This miracle does not affect the\nundead. This miracle and the self-version can be bought together by a Major Benediction Sphere priest for 50\npoints.",
+    "description": "As Calming Trance above, but may be cast on any non-evil spirit. This miracle does not affect the undead. This miracle and the self-version can be bought together by a Major Benediction Sphere priest for 50 points.",
     "alignment": "Good",
     "sphere": "Major Benediction",
     "isAdvanced": true
@@ -1046,7 +1046,7 @@
   {
     "power": 5,
     "name": "Calming Trance (Self)",
-    "description": "This miracle causes goodly spirits to surround and calm the caster’s mind and spirit thus making him\nimmune to the effects of spiritual Beguiles, Befriends, Spiritual Masteries, Fear and Voice of Powers. It is a\nreleasable miracle, and does not affect the undead. This miracle and the (Other) version can be bought together by a\nMajor Benediction Sphere priest for 50 points.",
+    "description": "This miracle causes goodly spirits to surround and calm the caster’s mind and spirit thus making him immune to the effects of spiritual Beguiles, Befriends, Spiritual Masteries, Fear and Voice of Powers. It is a releasable miracle, and does not affect the undead. This miracle and the (Other) version can be bought together by a Major Benediction Sphere priest for 50 points.",
     "alignment": "Good",
     "sphere": "Minor Benediction",
     "isAdvanced": true
@@ -1054,7 +1054,7 @@
   {
     "power": 6,
     "name": "Cause Critical Wounds",
-    "description": "As per the standard miracle Cause Grievous but inflicts 60 tblp and 10 to each location (20 Hits to\nmonsters).",
+    "description": "As per the standard miracle Cause Grievous but inflicts 60 tblp and 10 to each location (20 Hits to monsters).",
     "alignment": "Evil",
     "sphere": "Major Causing",
     "damage": [[60, 10]],
@@ -1067,7 +1067,7 @@
     "power": 6,
     "Sphere": "Minor Causing",
     "alignment": "Evil",
-    "description": "Target suffers 36 tblp evil spirit damage (12 Hits to monsters). Resistances to Spiritbolt apply to this damage and SAC as normal. Despite falling in the sphere of Causing Resistances to Causes do not apply to this\nmiracle.",
+    "description": "Target suffers 36 tblp evil spirit damage (12 Hits to monsters). Resistances to Spiritbolt apply to this damage and SAC as normal. Despite falling in the sphere of Causing Resistances to Causes do not apply to this miracle.",
     "damage": [[36, 0]],
     "damType": ["Body"],
     "sacApplies": [1, 1],
@@ -1088,7 +1088,7 @@
   {
     "power": 8,
     "name": "Claws of the Imbaiu",
-    "description": "The caster's hands are enveloped in a shadowy ethereal force that projects purely spiritual talons from\ntheir fingers. These talons inflict 9pt Double, and the caster may use each hand in fighting with them, even if E skill\nis not possessed. Strength may only be used with these talons if the appropriate ability has been bought post-8th\nlevel, and weapon masteries must be acquired specifically with the claws, as they are unique in their usage. This is a\nreleasable miracle, and affects the undead.\nUnity",
+    "description": "The caster's hands are enveloped in a shadowy ethereal force that projects purely spiritual talons from their fingers. These talons inflict 9pt Double, and the caster may use each hand in fighting with them, even if E skill is not possessed. Strength may only be used with these talons if the appropriate ability has been bought post-8th level, and weapon masteries must be acquired specifically with the claws, as they are unique in their usage. This is a releasable miracle, and affects the undead. Unity",
     "alignment": "Evil",
     "sphere": "Rites",
     "isAdvanced": false
@@ -1104,7 +1104,7 @@
   {
     "power": 8,
     "name": "Cloak of Fear",
-    "description": "The caster is surrounded by evil spirits of fear which touch any who approach him too closely. All\ncreatures which come within 20’ of him are affected as if by a Cause Fear miracle. This Cause Fear does not affect\nthe undead.",
+    "description": "The caster is surrounded by evil spirits of fear which touch any who approach him too closely. All creatures which come within 20’ of him are affected as if by a Cause Fear miracle. This Cause Fear does not affect the undead.",
     "alignment": "Evil",
     "sphere": "Major Dominion",
     "isAdvanced": true
@@ -1112,7 +1112,7 @@
   {
     "power": 5,
     "name": "Comfort",
-    "description": "A willing target is granted Immunity to Fear, Immunity to Emotional Attacks, Insanity and Pain for the\nduration. However, if an evil priest receives this miracle the constant touch of the Bright Lady's love and caring is\ndisturbing, and if the priest accepts the miracle willingly they cast miracles as if one level lower for the duration\n(and so may not cast 8th level miracles).\nCondesecration\nLakh\nLevel: 7th level (8) sp\nAlignment: Evil\nFaith: Condesecration\nDuration: N/A\nRange: 20ft radius\nGesture: Raise hands\nVerbal: \"Dark Spirits empower my voice, Lakh!\"\nDescription: This miracle is also an unholy word, and the final word must be shouted. All within range (except the\ncaster) suffer a Cause Serious to their head. The caster benefits from a Soul’s Hunger miracle for each person\neffected. An individual can only be harmed by this miracle once each day.\n~ 81 ~\n\fCult of the Eternal Vampire",
+    "description": "A willing target is granted Immunity to Fear, Immunity to Emotional Attacks, Insanity and Pain for the duration. However, if an evil priest receives this miracle the constant touch of the Bright Lady's love and caring is disturbing, and if the priest accepts the miracle willingly they cast miracles as if one level lower for the duration (and so may not cast 8th level miracles). Condesecration Lakh Level: 7th level (8) sp Alignment: Evil Faith: Condesecration Duration: N/A Range: 20ft radius Gesture: Raise hands Verbal: \"Dark Spirits empower my voice, Lakh!\" Description: This miracle is also an unholy word, and the final word must be shouted. All within range (except the caster) suffer a Cause Serious to their head. The caster benefits from a Soul’s Hunger miracle for each person effected. An individual can only be harmed by this miracle once each day. ~ 81 ~ \fCult of the Eternal Vampire",
     "alignment": "Good",
     "sphere": "Denominational",
     "isAdvanced": false
@@ -1120,7 +1120,7 @@
   {
     "power": 8,
     "name": "Commanding Voice",
-    "description": "As Voice of Power except that it will only work on members of the Shaman’s tribe and has no level\nlimit for resistance purposes. The only tribe member not normally affected by this miracle is the Witchdoctor. As\nwell as being a releasable miracle this miracle is removed by the Remove Voice of Power miracle.",
+    "description": "As Voice of Power except that it will only work on members of the Shaman’s tribe and has no level limit for resistance purposes. The only tribe member not normally affected by this miracle is the Witchdoctor. As well as being a releasable miracle this miracle is removed by the Remove Voice of Power miracle.",
     "alignment": "Neutral",
     "sphere": "Shamanic",
     "isAdvanced": true
@@ -1137,7 +1137,7 @@
   {
     "power": 6,
     "name": "Converse With Spirit",
-    "description": "As per Talk To Spirits in all respects, including which spirits will respond truthfully but as many\nquestions may be asked as required for duration.",
+    "description": "As per Talk To Spirits in all respects, including which spirits will respond truthfully but as many questions may be asked as required for duration.",
     "alignment": "Neutral",
     "sphere": "Major Communication",
     "isAdvanced": true
@@ -1154,7 +1154,7 @@
   {
     "power": 3,
     "name": "Cure Poison",
-    "description": "The miracle causes all non-magical poisons within the targets system that have not yet “kicked in” to\nbe purged and become ineffective. This miracle does not affect the undead.",
+    "description": "The miracle causes all non-magical poisons within the targets system that have not yet “kicked in” to be purged and become ineffective. This miracle does not affect the undead.",
     "alignment": "Good",
     "sphere": "Minor Healing",
     "isAdvanced": true
@@ -1170,7 +1170,7 @@
   {
     "power": 6,
     "name": "Curse Of Pain",
-    "description": "Any damage suffered by the target is increased by 25% before armour and other damage reductions.\nFor monsters reduce their hits by 1/4 for the duration. The 25% increase in damage is unlike cold rage or berserk\nrage abilities in that rages are deducted after all armour calculations, whereas this curse is before all armour\ncalculations. The effect of multiple castings of this miracle is not cumulative and is removed by a single bless. This\nmiracle does not affect the undead.\n~ 78 ~\n\fCurse Of Death\nLevel: 6sp\nAlignment: Evil\nDuration: Until blessed or 15 mins\nSphere: Witchcraft\nRange: 20’\nGesture: Point at target\nVerbal: “By my evil spirits I curse thee to die!”\nDescription: As Voice of Power with the command of “Die!” but affects up to and including levels of resistance\nequal to the caster’s level, and is only removed by the death of the caster, the Remove Voice of Power miracle, or by\na Bless or the duration expires. This miracle does not affect the undead.",
+    "description": "Any damage suffered by the target is increased by 25% before armour and other damage reductions. For monsters reduce their hits by 1/4 for the duration. The 25% increase in damage is unlike cold rage or berserk rage abilities in that rages are deducted after all armour calculations, whereas this curse is before all armour calculations. The effect of multiple castings of this miracle is not cumulative and is removed by a single bless. This miracle does not affect the undead. ~ 78 ~ \fCurse Of Death Level: 6sp Alignment: Evil Duration: Until blessed or 15 mins Sphere: Witchcraft Range: 20’ Gesture: Point at target Verbal: “By my evil spirits I curse thee to die!” Description: As Voice of Power with the command of “Die!” but affects up to and including levels of resistance equal to the caster’s level, and is only removed by the death of the caster, the Remove Voice of Power miracle, or by a Bless or the duration expires. This miracle does not affect the undead.",
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true
@@ -1178,7 +1178,7 @@
   {
     "power": 10,
     "name": "Curse Of Unhealing",
-    "description": "This miracle is only removed by a bless from a Witch, Hospitaller or Paladin or 2 blesses from a\nnormal 8th level goodly priest and causes spiritual healing rates for the afflicted character to be greatly reduced as\nfollows:\nCure Wound Cures 3/3\nCure Serious Cures 6/6\nCure Disease Slows to 1/2 rate\nHeal Cures 18/18\nCure Critical Cures 24/4 to locs\nTotal Heal Cures 36/36\nIf the character has a reduced effect from curing for any other reason this applies after the modifier listed above and\nis an extension of that listed above. If a character receives an increased benefit from curing abilities this is negated\nwhilst the miracle is active upon him, in addition to the modifiers listed above! All other healing miracles only heal\n1/2 of what they would normally cure. Other sources of healing work at normal rate including Empathic Healing.\nAn 8th level Witch who possesses this miracle may elect to use it as their dying curse in which case it may only be\nremoved by an 8th level goodly Witch and until that point is permanent in duration. If used as a dying curse suffix\nthe verbal with “...Forever!”. Should the Witch spend 25 points on Table 7 the dying curse will then need 3 different\ngoodly witches to each cast a Bless before it is removed.",
+    "description": "This miracle is only removed by a bless from a Witch, Hospitaller or Paladin or 2 blesses from a normal 8th level goodly priest and causes spiritual healing rates for the afflicted character to be greatly reduced as follows: Cure Wound Cures 3/3 Cure Serious Cures 6/6 Cure Disease Slows to 1/2 rate Heal Cures 18/18 Cure Critical Cures 24/4 to locs Total Heal Cures 36/36 If the character has a reduced effect from curing for any other reason this applies after the modifier listed above and is an extension of that listed above. If a character receives an increased benefit from curing abilities this is negated whilst the miracle is active upon him, in addition to the modifiers listed above! All other healing miracles only heal 1/2 of what they would normally cure. Other sources of healing work at normal rate including Empathic Healing. An 8th level Witch who possesses this miracle may elect to use it as their dying curse in which case it may only be removed by an 8th level goodly Witch and until that point is permanent in duration. If used as a dying curse suffix the verbal with “...Forever!”. Should the Witch spend 25 points on Table 7 the dying curse will then need 3 different goodly witches to each cast a Bless before it is removed.",
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true
@@ -1186,7 +1186,7 @@
   {
     "power": 10,
     "name": "Curse Of Unliving",
-    "description": "This miracle reduces the restore life percentage of the victim by 10% permanently, if the target is not\nimmune to curses. This lost percentage can only be regained if the character is blessed by a good witch.\nAn 8th level Witch who possesses this miracle may elect to use it as her dying curse in which case it may only be\nremoved by an 8th level goodly Witch and until that point is permanent in duration. If used as a dying curse suffix\nthe verbal with “...Forever!”. Should the Witch spend 25 points on Table 7 the dying curse will then need 3 different\ngoodly witches to each cast a Bless before it is removed.\nThis miracle does not stack with itself. i.e. a victim may never be suffering more than 10% restore life chance loss\nfrom it at any given time.\nThis miracle does not affect the undead.\n~ 79 ~\n\fWitchcraft ~ Goodly",
+    "description": "This miracle reduces the restore life percentage of the victim by 10% permanently, if the target is not immune to curses. This lost percentage can only be regained if the character is blessed by a good witch. An 8th level Witch who possesses this miracle may elect to use it as her dying curse in which case it may only be removed by an 8th level goodly Witch and until that point is permanent in duration. If used as a dying curse suffix the verbal with “...Forever!”. Should the Witch spend 25 points on Table 7 the dying curse will then need 3 different goodly witches to each cast a Bless before it is removed. This miracle does not stack with itself. i.e. a victim may never be suffering more than 10% restore life chance loss from it at any given time. This miracle does not affect the undead. ~ 79 ~ \fWitchcraft ~ Goodly",
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true
@@ -1194,7 +1194,7 @@
   {
     "power": 5,
     "name": "Curse To Fumble",
-    "description": "The target becomes unable to manipulate objects with his hands to the degree that nothing may be held within them, though unarmed combat may still be used with a penalty of -1 maximum damage grade. Spells and\nmiracles may still be cast without difficulty.",
+    "description": "The target becomes unable to manipulate objects with his hands to the degree that nothing may be held within them, though unarmed combat may still be used with a penalty of -1 maximum damage grade. Spells and miracles may still be cast without difficulty.",
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true
@@ -1202,7 +1202,7 @@
   {
     "power": 3,
     "name": "Curse To Smell",
-    "description": "This afflicts the target with a spiritual odour only discernible by his allies. This causes the loss of 1 point of dexterity armour class as eyes water and the senses are assailed, affecting all those within line of sight of or\n100’ of the target. This miracle does not actually cause any disbenefit for the target who has been so cursed, other\nthan his allies not being very keen to be near him! Should a character within the radius make use of the Sniff or\nLocational Sniff ability the acrid smell disrupts further use of the Sniff ability for that adventure. If the character\nuses a perfume or scent potion to try and negate the smell it mixes in such a fashion that he is also now affected by\nthe miracle. If the target was not Immune to Curses then he begins to smell affecting those indicated above. If one of\nthe secondary victims listed above is immune to curses then they still suffer the penalties, even if an Elf, Faerie,\nDrave or similar spirit less being, immunity to olfactory attacks is required.",
+    "description": "This afflicts the target with a spiritual odour only discernible by his allies. This causes the loss of 1 point of dexterity armour class as eyes water and the senses are assailed, affecting all those within line of sight of or 100’ of the target. This miracle does not actually cause any disbenefit for the target who has been so cursed, other than his allies not being very keen to be near him! Should a character within the radius make use of the Sniff or Locational Sniff ability the acrid smell disrupts further use of the Sniff ability for that adventure. If the character uses a perfume or scent potion to try and negate the smell it mixes in such a fashion that he is also now affected by the miracle. If the target was not Immune to Curses then he begins to smell affecting those indicated above. If one of the secondary victims listed above is immune to curses then they still suffer the penalties, even if an Elf, Faerie, Drave or similar spirit less being, immunity to olfactory attacks is required.",
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true
@@ -1210,7 +1210,7 @@
   {
     "power": 2,
     "name": "Curse to Trip",
-    "description": "The target trips over and falls to the ground. The target needs to be moving but does not require an\nobject to ‘trip’ over.",
+    "description": "The target trips over and falls to the ground. The target needs to be moving but does not require an object to ‘trip’ over.",
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true
@@ -1218,7 +1218,7 @@
   {
     "power": 3,
     "name": "Death Rites",
-    "description": "This miracle must be cast within 15minutes of the targets death. It grants the target Fortified Spirit and\nImmunity to all ‘Slayer’ type effects. They also gain the benefits of ‘Fated Hero’ meaning that they will only lose\n10% res chance if ressed off-dungeon.\nDunatis",
+    "description": "This miracle must be cast within 15minutes of the targets death. It grants the target Fortified Spirit and Immunity to all ‘Slayer’ type effects. They also gain the benefits of ‘Fated Hero’ meaning that they will only lose 10% res chance if ressed off-dungeon. Dunatis",
     "alignment": "Neutral",
     "sphere": "Denominational",
     "isAdvanced": false
@@ -1226,7 +1226,7 @@
   {
     "power": 8,
     "name": "Degeneration",
-    "description": "The target ceases to be able to use any form of healing Regeneration for the duration (e.g. a Troll could\nnot regen).\nThis is not a releasable miracle, and resistances to Degeneration reduce the duration.",
+    "description": "The target ceases to be able to use any form of healing Regeneration for the duration (e.g. a Troll could not regen). This is not a releasable miracle, and resistances to Degeneration reduce the duration.",
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true
@@ -1234,7 +1234,7 @@
   {
     "power": 14,
     "name": "Devour the Spirit",
-    "description": "Must be able to cast Wraith’s Touch. Causes the touched target to lose 8 levels, as per the wraith’s\ntouch miracle. Immunity to level drain applies. This does effect the undead. This miracle costs a level to cast, and\nreductions in level loss may be purchased as per reductions in level loss to Touch of Death. Those that have multiraced Vampire or Wraith may learn this as a minor necromancy miracle.\nA priest must be table 8 to cast this miracle.",
+    "description": "Must be able to cast Wraith’s Touch. Causes the touched target to lose 8 levels, as per the wraith’s touch miracle. Immunity to level drain applies. This does effect the undead. This miracle costs a level to cast, and reductions in level loss may be purchased as per reductions in level loss to Touch of Death. Those that have multiraced Vampire or Wraith may learn this as a minor necromancy miracle. A priest must be table 8 to cast this miracle.",
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true
@@ -1242,7 +1242,7 @@
   {
     "power": 5,
     "name": "Diminish Spirit",
-    "description": "This miracle causes the target to lose 12 tblp and 4 locational life points, which cannot be regained\nuntil the miracle expires. This miracle is not cumulative with itself. This loss of life points is not affected by\nSpiritual Armour Class or other damage reductions. If this miracle is cast upon a target with the Enhance Spirit\nmiracle active on it then both miracles are cancelled and vice versa.",
+    "description": "This miracle causes the target to lose 12 tblp and 4 locational life points, which cannot be regained until the miracle expires. This miracle is not cumulative with itself. This loss of life points is not affected by Spiritual Armour Class or other damage reductions. If this miracle is cast upon a target with the Enhance Spirit miracle active on it then both miracles are cancelled and vice versa.",
     "alignment": "Evil",
     "sphere": "Minor Dominion",
     "isAdvanced": true
@@ -1250,7 +1250,7 @@
   {
     "power": 14,
     "name": "Dismiss Level 10 Undead",
-    "description": "As Dismiss Vampire but will affect up to level 10 undead.\nIn order to acquire this miracle must first possess Dismiss Level 9. Note: Dismiss Levels 7 to 10 may be purchased\nas a single ability for 225pts.\n~ 50 ~\n\fNeutral Miracles\n1st Level Neutral Advanced Miracles",
+    "description": "As Dismiss Vampire but will affect up to level 10 undead. In order to acquire this miracle must first possess Dismiss Level 9. Note: Dismiss Levels 7 to 10 may be purchased as a single ability for 225pts. ~ 50 ~ \fNeutral Miracles 1st Level Neutral Advanced Miracles",
     "alignment": "Good",
     "sphere": "Major Dismissal",
     "isAdvanced": true
@@ -1266,7 +1266,7 @@
   {
     "power": 10,
     "name": "Dismiss Level 8 Undead",
-    "description": "As Dismiss Vampire but will affect up to level 8 undead.\nIn order to acquire this miracle must first possess Dismiss Level 7.\n~ 49 ~\n\fDismiss Level 9 Undead\nLevel: 8th (12sp)\nAlignment: Good\nDuration: Until dismissed\nSphere: Major Dismissal\nRange: 10’\nGesture: Open palm towards target\nVerbal: “Spirit of... (Dismiss Name)... I dismiss thee hence.”\nDescription: As Dismiss Vampire but will affect up to level 9 undead.\nIn order to acquire this miracle must first possess Dismiss Level 8.",
+    "description": "As Dismiss Vampire but will affect up to level 8 undead. In order to acquire this miracle must first possess Dismiss Level 7. ~ 49 ~ \fDismiss Level 9 Undead Level: 8th (12sp) Alignment: Good Duration: Until dismissed Sphere: Major Dismissal Range: 10’ Gesture: Open palm towards target Verbal: “Spirit of... (Dismiss Name)... I dismiss thee hence.” Description: As Dismiss Vampire but will affect up to level 9 undead. In order to acquire this miracle must first possess Dismiss Level 8.",
     "alignment": "Good",
     "sphere": "Major Dismissal",
     "isAdvanced": true
@@ -1282,7 +1282,7 @@
   {
     "power": 8,
     "name": "Divine Invocation",
-    "description": "The caster receives a 9pt reduction against all spiritual blows struck against him for the duration. This\nis a numerical damage reduction, and does not stack with any other numerical reduction. The reduction is reduced\nto 6pts if the caster strikes anything themselves – they may cast miracles however.",
+    "description": "The caster receives a 9pt reduction against all spiritual blows struck against him for the duration. This is a numerical damage reduction, and does not stack with any other numerical reduction. The reduction is reduced to 6pts if the caster strikes anything themselves – they may cast miracles however.",
     "alignment": "Good",
     "sphere": "Major Benediction",
     "isAdvanced": true
@@ -1290,7 +1290,7 @@
   {
     "power": 8,
     "name": "Empower Spirit",
-    "description": "Acts as per an enhanced spirit, but note the duration. This is a releasable miracle, fades on the\nrecipient’s death, and does not affect the undead.",
+    "description": "Acts as per an enhanced spirit, but note the duration. This is a releasable miracle, fades on the recipient’s death, and does not affect the undead.",
     "alignment": "Good",
     "sphere": "Major Benediction",
     "isAdvanced": true
@@ -1298,7 +1298,7 @@
   {
     "power": 4,
     "name": "Enhance Spirit",
-    "description": "This miracle grants the target +12/4 life for the duration of the miracle. This life functions exactly as if\nthey were normal life points for the target. Effects such as permanent damage are taken from this temporary life\nfirst, so possibly 'vanishing' at the end of the duration. Life from this miracle is non-stacking with life from any\nother miracle or spell, although it will stack with abilities such as Adrenal Surge. It is a releasable miracle. It does\nnot affect the undead.",
+    "description": "This miracle grants the target +12/4 life for the duration of the miracle. This life functions exactly as if they were normal life points for the target. Effects such as permanent damage are taken from this temporary life first, so possibly 'vanishing' at the end of the duration. Life from this miracle is non-stacking with life from any other miracle or spell, although it will stack with abilities such as Adrenal Surge. It is a releasable miracle. It does not affect the undead.",
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1306,7 +1306,7 @@
   {
     "power": 3,
     "name": "Enhanced Stasis",
-    "description": "As the 2sp standard miracle Stasis but works on characters of level equal to or below the caster’s. This\nmiracle does not affect the undead.",
+    "description": "As the 2sp standard miracle Stasis but works on characters of level equal to or below the caster’s. This miracle does not affect the undead.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1314,7 +1314,7 @@
   {
     "power": 10,
     "name": "Enslaved Spirit",
-    "description": "This miracle places a spirit within a humanoid shape. This can be a corpse, or it can be a stone or\nmetal figure crafted for the purpose. However, such crafting is usually impractical during “Time-In” due to the\nlabour and time required – it might be possible however to animate a statue or similar which was otherwise\nunmoving. This miracle can never be used on any form of animate creature, whether living, golem or undead.\nThe animated form is an entirely mindless unintelligent spirit bound to do nothing but obey the caster’s will, and\nwill follow his commands to the letter, but take no other acts, even in defence of itself. It is considered to have 2\ngrades of strength. It has 30 hits per location, plus an additional 2 hits for each extra spirit spent during its creation.\nIt moves at only ¾ speed, and can wield any weapon given it or use unarmed at base damage, plus strength. Each\nlocation functions independently of every other. If the animation is made from a stone or metal statue, it gains ½\neffect all damage except for purely spiritual. Under no circumstances can it be healed, and a Spiritual Freedom will\ndestroy it. It is considered to have 8th level resistances. Although the miracle is permanent, the spirits used cannot\nbe regained while the miracle is active, so most priests will release the miracle once the spirit has served its purpose.\n~ 71 ~\n\fIncarna Mortis\nLevel: 8th (10sp)\nAlignment: Evil\nDuration: 15 minutes\nSphere: Major Necromancy\nRange: 20’\nGesture: Point at target\nVerbal: “Spirits of the dead cluster around (him / her) with the touch of the grave.”\nDescription: The target is surrounded by undead spirits plucking at their spirit. This feels extremely uncomfortable,\nand has the additional side effect of making the target immune to all miracles to which undead are immune. They\nnow discern as (but are not actually) a level 6 type unknown (Dismiss name “Incarna Mortis”) – if this spirit is\ndismissed the miracle is removed but, if not, at the end of the duration the target suffers a Paralysis, Fear, Disease,\nFreeze and Level Drain simultaneously, as undead touch effects. Should resistance (half-effect) be possessed to this\nmiracle, the duration is halved and the touch effects are never triggered on the victim. This miracle does not affect\nthe undead. Fortified Spirit grants immunity to this miracle, unless willing.",
+    "description": "This miracle places a spirit within a humanoid shape. This can be a corpse, or it can be a stone or metal figure crafted for the purpose. However, such crafting is usually impractical during “Time-In” due to the labour and time required – it might be possible however to animate a statue or similar which was otherwise unmoving. This miracle can never be used on any form of animate creature, whether living, golem or undead. The animated form is an entirely mindless unintelligent spirit bound to do nothing but obey the caster’s will, and will follow his commands to the letter, but take no other acts, even in defence of itself. It is considered to have 2 grades of strength. It has 30 hits per location, plus an additional 2 hits for each extra spirit spent during its creation. It moves at only ¾ speed, and can wield any weapon given it or use unarmed at base damage, plus strength. Each location functions independently of every other. If the animation is made from a stone or metal statue, it gains ½ effect all damage except for purely spiritual. Under no circumstances can it be healed, and a Spiritual Freedom will destroy it. It is considered to have 8th level resistances. Although the miracle is permanent, the spirits used cannot be regained while the miracle is active, so most priests will release the miracle once the spirit has served its purpose. ~ 71 ~ \fIncarna Mortis Level: 8th (10sp) Alignment: Evil Duration: 15 minutes Sphere: Major Necromancy Range: 20’ Gesture: Point at target Verbal: “Spirits of the dead cluster around (him / her) with the touch of the grave.” Description: The target is surrounded by undead spirits plucking at their spirit. This feels extremely uncomfortable, and has the additional side effect of making the target immune to all miracles to which undead are immune. They now discern as (but are not actually) a level 6 type unknown (Dismiss name “Incarna Mortis”) – if this spirit is dismissed the miracle is removed but, if not, at the end of the duration the target suffers a Paralysis, Fear, Disease, Freeze and Level Drain simultaneously, as undead touch effects. Should resistance (half-effect) be possessed to this miracle, the duration is halved and the touch effects are never triggered on the victim. This miracle does not affect the undead. Fortified Spirit grants immunity to this miracle, unless willing.",
     "alignment": "Evil",
     "sphere": "Major Dominion",
     "isAdvanced": true
@@ -1322,7 +1322,7 @@
   {
     "power": 3,
     "name": "Extend Control",
-    "description": "The duration of a control undead miracle or raise, create, summon undead miracle is raised to 30\nminutes for undead up to 4th level or 15 minutes for undead of 5th level and above.\n~ 61 ~\n\fBind Zombie Spirit\nLevel: 3sp\nAlignment: Evil\nDuration: 5 minutes\nSphere: Minor Necromancy\nRange: Self\nGesture: Both hands touch head\nVerbal: \"Spirit of zombie I bind thee to my body, to do as I command!\"\nDescription: The caster summons the spirit which would normally animate a zombie into his own body. The effect\nof this is that the zombie spirit is the outer layer around the priest's own spirit. The priest will discern as a Level 1\nZombie, even if they would normally discern as some other sort of undead, and any effect targeted against undead,\nsuch as a dismiss miracle or a Hand of Purity will only destroy the zombie spirit, leaving the priest untouched. The\ndisadvantage to this state is that the caster will be repelled by repel undead and such, and will be unable to cross\nprotections and wards which could not be crossed by a standard zombie. This miracle can be used by the undead.",
+    "description": "The duration of a control undead miracle or raise, create, summon undead miracle is raised to 30 minutes for undead up to 4th level or 15 minutes for undead of 5th level and above. ~ 61 ~ \fBind Zombie Spirit Level: 3sp Alignment: Evil Duration: 5 minutes Sphere: Minor Necromancy Range: Self Gesture: Both hands touch head Verbal: \"Spirit of zombie I bind thee to my body, to do as I command!\" Description: The caster summons the spirit which would normally animate a zombie into his own body. The effect of this is that the zombie spirit is the outer layer around the priest's own spirit. The priest will discern as a Level 1 Zombie, even if they would normally discern as some other sort of undead, and any effect targeted against undead, such as a dismiss miracle or a Hand of Purity will only destroy the zombie spirit, leaving the priest untouched. The disadvantage to this state is that the caster will be repelled by repel undead and such, and will be unable to cross protections and wards which could not be crossed by a standard zombie. This miracle can be used by the undead.",
     "alignment": "Evil",
     "sphere": "Minor Necromancy",
     "isAdvanced": true
@@ -1348,7 +1348,7 @@
   {
     "power": 6,
     "name": "Foul Touch",
-    "description": "May be cast on any full undead (not just the subject of an Animate Life). The target undead now\ninflicts a Foul Touch of equal to its dismiss level, every blow (as per points tables ability). This damage cannot\nstack above Quad, as normal. Foul Touch inflicts 1 Hit to monsters for every 3 pts or part thereof. It is spiritual\ndamage.\nThis miracle costs 40pts to buy.",
+    "description": "May be cast on any full undead (not just the subject of an Animate Life). The target undead now inflicts a Foul Touch of equal to its dismiss level, every blow (as per points tables ability). This damage cannot stack above Quad, as normal. Foul Touch inflicts 1 Hit to monsters for every 3 pts or part thereof. It is spiritual damage. This miracle costs 40pts to buy.",
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true
@@ -1356,7 +1356,7 @@
   {
     "power": 5,
     "name": "Freezing Touch",
-    "description": "This miracle grants the priest the ability to freeze a single target as though the target was touched by a\nWight. The miracle once incanted stays on the caster’s weapon hand for 30 seconds or until discharged. This is not\nconsidered an undead touch effect.\nIn order to have this miracle on his miracle list the priest must also have the Summon Wraith / Wight miracle.\n~ 64 ~\n\fUndead Alacrity\nLevel: 5sp\nAlignment: Evil\nDuration: 15 minutes\nSphere: Major Necromancy\nRange: Touch\nGesture: Touch target\nVerbal: \"Dark Spirits of the Netherworld grant this creature thy watching!\"\nDescription: This miracle only affects Undead. If the creature previously had a movement restriction, e.g. Zombie\nhalf speed, it is removed. If they did not then they gain +1 weapon mastery. They additionally gain 6HTK, if a\nplayer character +18tblp. This extra life will stack with any other temp life, bar itself.\n6th Level Evil Advanced Miracles",
+    "description": "This miracle grants the priest the ability to freeze a single target as though the target was touched by a Wight. The miracle once incanted stays on the caster’s weapon hand for 30 seconds or until discharged. This is not considered an undead touch effect. In order to have this miracle on his miracle list the priest must also have the Summon Wraith / Wight miracle. ~ 64 ~ \fUndead Alacrity Level: 5sp Alignment: Evil Duration: 15 minutes Sphere: Major Necromancy Range: Touch Gesture: Touch target Verbal: \"Dark Spirits of the Netherworld grant this creature thy watching!\" Description: This miracle only affects Undead. If the creature previously had a movement restriction, e.g. Zombie half speed, it is removed. If they did not then they gain +1 weapon mastery. They additionally gain 6HTK, if a player character +18tblp. This extra life will stack with any other temp life, bar itself. 6th Level Evil Advanced Miracles",
     "alignment": "Evil",
     "sphere": "Minor Necromancy",
     "isAdvanced": true
@@ -1364,7 +1364,7 @@
   {
     "power": 5,
     "name": "Greater Bless",
-    "description": "As per standard 3sp Bless miracle in all respects except it grants +3 DAC instead of +2. Recipient\nmust be Goodly. Will not stack with any other Bless. This is a releasable miracle.",
+    "description": "As per standard 3sp Bless miracle in all respects except it grants +3 DAC instead of +2. Recipient must be Goodly. Will not stack with any other Bless. This is a releasable miracle.",
     "alignment": "Good",
     "sphere": "Witchcraft",
     "isAdvanced": true
@@ -1372,7 +1372,7 @@
   {
     "power": 14,
     "name": "Greater Word of Recall",
-    "description": "All priests of the church of the caster are returned to their temple if they are within 1 mile of the\ncasting Priest. Each Priest present when returned to the Temple loses all spiritual powers for the remainder of the\nday should they leave the temple. The return point is shielded by the god to prevent the priests being interfered with\nor even contacted during this time.\nIf this miracle is cast by a Shaman allows him to take his entire tribe using the verbal: “May the totems return us to\nour home, Greater Word of Recall.”\nA Good or Evil version of this miracle is available also as an 8th (14sp) miracle.\nFor 50pts Tb 8: This miracle may now be used to affect any Lay Believers of the Church that possess a spirit.",
+    "description": "All priests of the church of the caster are returned to their temple if they are within 1 mile of the casting Priest. Each Priest present when returned to the Temple loses all spiritual powers for the remainder of the day should they leave the temple. The return point is shielded by the god to prevent the priests being interfered with or even contacted during this time. If this miracle is cast by a Shaman allows him to take his entire tribe using the verbal: “May the totems return us to our home, Greater Word of Recall.” A Good or Evil version of this miracle is available also as an 8th (14sp) miracle. For 50pts Tb 8: This miracle may now be used to affect any Lay Believers of the Church that possess a spirit.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1380,7 +1380,7 @@
   {
     "power": 6,
     "name": "Hand Of Purity",
-    "description": "This miracle functions in all manners as per the Tables ability Hand of Purity i.e. This miracle destroys\n1 undead by touch with the Caster suffering 10 tblp per level of the undead. If the caster dies, he dies perm. This\nDamage may not be reduced by use of “No Damage Casting” abilities but the normal casting damage for spirits\nexpended may be resisted as normal. Once the verbal is incanted the caster has 30 seconds to touch an undead.\nIn order to acquire this miracle, the priest must first possess Dismiss Level 10.",
+    "description": "This miracle functions in all manners as per the Tables ability Hand of Purity i.e. This miracle destroys 1 undead by touch with the Caster suffering 10 tblp per level of the undead. If the caster dies, he dies perm. This Damage may not be reduced by use of “No Damage Casting” abilities but the normal casting damage for spirits expended may be resisted as normal. Once the verbal is incanted the caster has 30 seconds to touch an undead. In order to acquire this miracle, the priest must first possess Dismiss Level 10.",
     "alignment": "Good",
     "sphere": "Major Dismissal",
     "isAdvanced": true
@@ -1388,7 +1388,7 @@
   {
     "power": 3,
     "name": "Healing Hand",
-    "description": "This miracle enables the caster to completely heal one location of any damage that it has taken, if 30\nseconds of calm preparation are spent with the recipient first (Cf. Total Heal). It will also heal the same amount of\nTBLP that has been lost on the location healed. On a creature with only half a spirit this miracle will not cure more\nthan 36pts of damage. If the miracle is not prepared as above, it cures only 36 points of damage, or 18 on a creature\nwith half a spirit. This miracle does not affect the undead.",
+    "description": "This miracle enables the caster to completely heal one location of any damage that it has taken, if 30 seconds of calm preparation are spent with the recipient first (Cf. Total Heal). It will also heal the same amount of TBLP that has been lost on the location healed. On a creature with only half a spirit this miracle will not cure more than 36pts of damage. If the miracle is not prepared as above, it cures only 36 points of damage, or 18 on a creature with half a spirit. This miracle does not affect the undead.",
     "alignment": "Good",
     "sphere": "Major Healing",
     "isAdvanced": true
@@ -1396,7 +1396,7 @@
   {
     "power": 8,
     "name": "Holy Ground",
-    "description": "For the duration of this miracle any undead within its range count as one level lower for the purpose of\ndismissal, destruction and warding effects.",
+    "description": "For the duration of this miracle any undead within its range count as one level lower for the purpose of dismissal, destruction and warding effects.",
     "alignment": "Good",
     "sphere": "Major Dismissal",
     "isAdvanced": true
@@ -1404,7 +1404,7 @@
   {
     "power": 5,
     "name": "Identify Spirit",
-    "description": "Only usable on inanimate spirits such as artefacts or wards – not on any sort of creature, even undead.\nThe caster is made aware immediately of all (spiritual) properties of the spirit. In the case of an item of power, this\nwould mean exactly what powers it had and how it was activated. In the case of a ward, this would mean exactly\nwhat effects the ward had and how it was triggered and deactivated. An object which also has magical or other nonspiritual properties will reveal only the spiritual ones, revealing nothing about other aspects of its power.",
+    "description": "Only usable on inanimate spirits such as artefacts or wards – not on any sort of creature, even undead. The caster is made aware immediately of all (spiritual) properties of the spirit. In the case of an item of power, this would mean exactly what powers it had and how it was activated. In the case of a ward, this would mean exactly what effects the ward had and how it was triggered and deactivated. An object which also has magical or other nonspiritual properties will reveal only the spiritual ones, revealing nothing about other aspects of its power.",
     "alignment": "Neutral",
     "sphere": "Major Communication",
     "isAdvanced": true
@@ -1420,7 +1420,7 @@
   {
     "power": 12,
     "name": "Insight of the Gods",
-    "description": "Must be able to cast Commune with the Gods. Allows the caster to ask a single question of a\ncommunication miracle once per 15 minutes. The spirits for the miracle cannot be regained while it is active.",
+    "description": "Must be able to cast Commune with the Gods. Allows the caster to ask a single question of a communication miracle once per 15 minutes. The spirits for the miracle cannot be regained while it is active.",
     "alignment": "Neutral",
     "sphere": "Major Communication",
     "isAdvanced": true
@@ -1428,7 +1428,7 @@
   {
     "power": 8,
     "name": "Instant Regeneration",
-    "description": "This acts as the 6sp standard miracle Regeneration in all respects except that it is instant in effect and\ncures the limb to full and an amount of tblp equal to the location's value (e.g. has 30 per location, is restored 30 tblp\n– not 60). This miracle does not affect the undead.\n~ 48 ~\n\fBlessing of Battle\nLevel: 7th (8sp)\nAlignment: Good\nDuration: 5 minutes\nSphere: Major Benediction\nRange: Touch\nGesture: Touch targets chest from the front (heart area)\nVerbal: “May the spirits of light fill your soul with their power. Go forth to purge the darkness from this world”\nDescription: This infuses the recipient, who must be goodly, with the power of the spirits of light. This grants them\nthe benefits of a Holy Fury (as per Paladin ability), being + 12/4 life, 25% rage vs. evil, + 1 max damage vs. evil,\nand + 1 strength (above current max). This is a releasable miracle and life from this miracle DOES stack with\nenhanced spirit.",
+    "description": "This acts as the 6sp standard miracle Regeneration in all respects except that it is instant in effect and cures the limb to full and an amount of tblp equal to the location's value (e.g. has 30 per location, is restored 30 tblp – not 60). This miracle does not affect the undead. ~ 48 ~ \fBlessing of Battle Level: 7th (8sp) Alignment: Good Duration: 5 minutes Sphere: Major Benediction Range: Touch Gesture: Touch targets chest from the front (heart area) Verbal: “May the spirits of light fill your soul with their power. Go forth to purge the darkness from this world” Description: This infuses the recipient, who must be goodly, with the power of the spirits of light. This grants them the benefits of a Holy Fury (as per Paladin ability), being + 12/4 life, 25% rage vs. evil, + 1 max damage vs. evil, and + 1 strength (above current max). This is a releasable miracle and life from this miracle DOES stack with enhanced spirit.",
     "alignment": "Good",
     "sphere": "Major Healing",
     "isAdvanced": true
@@ -1436,7 +1436,7 @@
   {
     "power": 10,
     "name": "Interdiction",
-    "description": "The caster must have observed the target performing one of the following overtly good or evil acts in\norder to cast this miracle upon them:\n\nCasting a Restore Life miracle or Casting a Touch of Death miracle\n\nCuring a non party member or Stealing another’s property\n\nSlaying an evil party member or Slaying a goodly party member\n\nUse of any Paladinic Spiritual power or Use of any Unholy Champion’s Spiritual power\nThis is by no means a complete use of overt acts of good or evil but represents the limits for this miracle. The target\nof this miracle will no longer benefit from miracles cast upon him, suffers twice normal effect from miracles cast by\npriests of the opposite alignment and if he dies whilst this miracle is active upon him will gain no benefit from\nowning a returner or having a dying effect. This miracle may only be used by the Grey Warden in part of his balance\nkeeping operation. i.e. if the party consists of 5 good characters, the Grey Warden and 3 evil characters he will not\nuse it upon the evil characters, only the good ones. If the miracle is being cast upon an NPC or monster, then the\nalignment of the mission with regards to its aims should be determined by the referee in advance; on a 'Goodly'\nmission the miracle may only be cast on Goodly NPC’s, and the converse for Evil. If the mission is deemed\n'Neutral' by the referee then the Grey Warden may use his own judgement as to when the casting of this miracle is\nappropriate. This miracle affects the undead.\n~ 76 ~\n\fShamanic Miracles\nThese miracles may only be acquired by a Shaman of a tribe, they may not be bought by any other form of Priest.",
+    "description": "The caster must have observed the target performing one of the following overtly good or evil acts in order to cast this miracle upon them:  Casting a Restore Life miracle or Casting a Touch of Death miracle  Curing a non party member or Stealing another’s property  Slaying an evil party member or Slaying a goodly party member  Use of any Paladinic Spiritual power or Use of any Unholy Champion’s Spiritual power This is by no means a complete use of overt acts of good or evil but represents the limits for this miracle. The target of this miracle will no longer benefit from miracles cast upon him, suffers twice normal effect from miracles cast by priests of the opposite alignment and if he dies whilst this miracle is active upon him will gain no benefit from owning a returner or having a dying effect. This miracle may only be used by the Grey Warden in part of his balance keeping operation. i.e. if the party consists of 5 good characters, the Grey Warden and 3 evil characters he will not use it upon the evil characters, only the good ones. If the miracle is being cast upon an NPC or monster, then the alignment of the mission with regards to its aims should be determined by the referee in advance; on a 'Goodly' mission the miracle may only be cast on Goodly NPC’s, and the converse for Evil. If the mission is deemed 'Neutral' by the referee then the Grey Warden may use his own judgement as to when the casting of this miracle is appropriate. This miracle affects the undead. ~ 76 ~ \fShamanic Miracles These miracles may only be acquired by a Shaman of a tribe, they may not be bought by any other form of Priest.",
     "alignment": "Neutral",
     "sphere": "Balance",
     "isAdvanced": true
@@ -1444,7 +1444,7 @@
   {
     "power": 4,
     "name": "Invoke Evil",
-    "description": "This miracle costs the caster 10% of his Restore to Life chance, and as such this means that this\nmiracle may only be cast by characters or NPCs with vitae! As referees should be aware, few NPCs have restore to\nlife chance, and are likely to have less than PCs at any rate, so this miracle should be very rarely if ever used by\nNPCs. This miracle causes the target to suffer 36 tblp and 6 to each location. This damage is generated from the\ntraces of evil within each person, and as such Spiritual Armour Class and Resistance to Causing Miracles have no\neffect upon this miracle. In addition the target suffers a no level limit Halt with a duration of 30 seconds.",
+    "description": "This miracle costs the caster 10% of his Restore to Life chance, and as such this means that this miracle may only be cast by characters or NPCs with vitae! As referees should be aware, few NPCs have restore to life chance, and are likely to have less than PCs at any rate, so this miracle should be very rarely if ever used by NPCs. This miracle causes the target to suffer 36 tblp and 6 to each location. This damage is generated from the traces of evil within each person, and as such Spiritual Armour Class and Resistance to Causing Miracles have no effect upon this miracle. In addition the target suffers a no level limit Halt with a duration of 30 seconds.",
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1452,7 +1452,7 @@
   {
     "power": 6,
     "name": "Judgement",
-    "description": "All within the radius are weighed up by the spirits of balance. Whichever alignment of Good and Evil\nis found to be predominant (i.e. whichever there is more of) among the spirits of the creatures in the area (not\nassociated spirits, items, etc), all those of that alignment suffer a neutrally aligned Diminish Spirit and Curse.\nImmunity to either grants immunity to that effect. This miracle and its results affect the undead.",
+    "description": "All within the radius are weighed up by the spirits of balance. Whichever alignment of Good and Evil is found to be predominant (i.e. whichever there is more of) among the spirits of the creatures in the area (not associated spirits, items, etc), all those of that alignment suffer a neutrally aligned Diminish Spirit and Curse. Immunity to either grants immunity to that effect. This miracle and its results affect the undead.",
     "alignment": "Neutral",
     "sphere": "Balance",
     "isAdvanced": true
@@ -1460,7 +1460,7 @@
   {
     "power": 4,
     "name": "Kneel before the Master",
-    "description": "This miracle forces the target to drop to their knees if they are of lower level than the caster. This is a\nDomination Effect, and is removed by a Spiritual Freedom but immunity to Spiritual Mastery does not apply. The\ntarget cannot leave their knees for the duration, although they may otherwise act freely.\n~ 62 ~\n\fParalysing Touch\nLevel: 4sp\nAlignment: Evil\nDuration: 5 minutes\nSphere: Minor Necromancy\nRange: Touch\nGesture: Touch Target\nVerbal: “By these evil spirits may I paralyse thee...”\nDescription: This miracle grants the priest the ability to paralyse a single target as thought the target had been\ntouched by a ghoul, this touch will only inflict damage if the priest casting the miracle has the skill of unarmed\ncombat. The miracle once incanted stays on the caster’s weapon hand for 30 seconds or until discharged. This is not\nconsidered an undead touch effect. In order to have this miracle on his miracle list the priest must also have the\nmiracle of Create Ghoul.",
+    "description": "This miracle forces the target to drop to their knees if they are of lower level than the caster. This is a Domination Effect, and is removed by a Spiritual Freedom but immunity to Spiritual Mastery does not apply. The target cannot leave their knees for the duration, although they may otherwise act freely. ~ 62 ~ \fParalysing Touch Level: 4sp Alignment: Evil Duration: 5 minutes Sphere: Minor Necromancy Range: Touch Gesture: Touch Target Verbal: “By these evil spirits may I paralyse thee...” Description: This miracle grants the priest the ability to paralyse a single target as thought the target had been touched by a ghoul, this touch will only inflict damage if the priest casting the miracle has the skill of unarmed combat. The miracle once incanted stays on the caster’s weapon hand for 30 seconds or until discharged. This is not considered an undead touch effect. In order to have this miracle on his miracle list the priest must also have the miracle of Create Ghoul.",
     "alignment": "Evil",
     "sphere": "Minor Dominion",
     "isAdvanced": true
@@ -1468,7 +1468,7 @@
   {
     "power": 22,
     "name": "Knowledge of the Gods",
-    "description": "Must be able to cast Insight of the Gods. Allows the caster to ask a single question of a greater\ncommunication miracle once per 15 minutes. The spirits for the miracle cannot be regained.\nEvil Miracles\nThese miracles may be only cast by a character that is CN, CE, NE or LE in alignment and possesses spirit points\nwhich may be used to cast evil miracles.\n1st Level Evil Advanced Miracles",
+    "description": "Must be able to cast Insight of the Gods. Allows the caster to ask a single question of a greater communication miracle once per 15 minutes. The spirits for the miracle cannot be regained. Evil Miracles These miracles may be only cast by a character that is CN, CE, NE or LE in alignment and possesses spirit points which may be used to cast evil miracles. 1st Level Evil Advanced Miracles",
     "alignment": "Neutral",
     "sphere": "Major",
     "isAdvanced": true
@@ -1484,7 +1484,7 @@
   {
     "power": 1,
     "name": "Lesser Wings of Darkness",
-    "description": "This miracle will allow the caster to turn a standard Causing tree miracle up to 7th level [8spirits] that\nthey currently have ‘hanging’ into a ranged attack. It is not possible to use Soul’s Hunger with any of the Wings of\nDarkness miracles. This miracle may be learnt as a Universal Miracle for 3 spirits.",
+    "description": "This miracle will allow the caster to turn a standard Causing tree miracle up to 7th level [8spirits] that they currently have ‘hanging’ into a ranged attack. It is not possible to use Soul’s Hunger with any of the Wings of Darkness miracles. This miracle may be learnt as a Universal Miracle for 3 spirits.",
     "alignment": "Evil",
     "sphere": "Minor Causing",
     "isAdvanced": true
@@ -1500,7 +1500,7 @@
   {
     "power": 6,
     "name": "Major Blessing",
-    "description": "This miracle functions as Bless in all ways, except that it is much more powerful, granting 6 points of\nDexterity AC for the duration. This AC of course does not stack with that from other Blesses, Watchings or similar.\nWitches may learn this as a Minor Benediction miracle.",
+    "description": "This miracle functions as Bless in all ways, except that it is much more powerful, granting 6 points of Dexterity AC for the duration. This AC of course does not stack with that from other Blesses, Watchings or similar. Witches may learn this as a Minor Benediction miracle.",
     "alignment": "Good",
     "sphere": "Major Benediction",
     "isAdvanced": true
@@ -1508,7 +1508,7 @@
   {
     "power": 4,
     "name": "Major Prayer",
-    "description": "Acts as a single question from a Greater Communication miracle.\n~ 53 ~\nRange: Self\n\fWard Against the Traveller\nLevel: 4sp\nAlignment: Neutral\nDuration: 15 minutes\nSphere: Major Warding\nRange: As Prot\nGesture: As protection from spirits.\nVerbal: “Spirits of protection I invoke thee permit not those travelling the worlds to pass.”\nDescription: This acts as per a stronghold in all ways, including the need for the caster to remain inside it. However\nrather than stopping a specific alignment it instead bars against anyone with a spirit that is using supernatural means\nof transport (shifting, walking through walls/floors etc.) from crossing it.",
+    "description": "Acts as a single question from a Greater Communication miracle. ~ 53 ~ Range: Self \fWard Against the Traveller Level: 4sp Alignment: Neutral Duration: 15 minutes Sphere: Major Warding Range: As Prot Gesture: As protection from spirits. Verbal: “Spirits of protection I invoke thee permit not those travelling the worlds to pass.” Description: This acts as per a stronghold in all ways, including the need for the caster to remain inside it. However rather than stopping a specific alignment it instead bars against anyone with a spirit that is using supernatural means of transport (shifting, walking through walls/floors etc.) from crossing it.",
     "alignment": "Neutral",
     "sphere": "Minor Communications",
     "isAdvanced": true
@@ -1516,7 +1516,7 @@
   {
     "power": 8,
     "name": "Mark Of The Totem",
-    "description": "The recipient of the casting of this miracle gains +6/2 life points per tribe member standing around him\nat the time the miracle is cast. If more than 3 tribe members are standing around him when it is cast he gains +1\nDAC, +1 SAC and +1 PAC. If more than 9 tribe members are standing around him when it is cast he also gains\nimmunity to listed stopping effects for duration. “Standing around him” means within 20’ and focusing their\nattention on the casting of the miracle.",
+    "description": "The recipient of the casting of this miracle gains +6/2 life points per tribe member standing around him at the time the miracle is cast. If more than 3 tribe members are standing around him when it is cast he gains +1 DAC, +1 SAC and +1 PAC. If more than 9 tribe members are standing around him when it is cast he also gains immunity to listed stopping effects for duration. “Standing around him” means within 20’ and focusing their attention on the casting of the miracle.",
     "alignment": "Neutral",
     "sphere": "Shamanic",
     "isAdvanced": true
@@ -1524,7 +1524,7 @@
   {
     "power": 4,
     "name": "Mass Halt",
-    "description": "Causes everyone (allies and foes) within the radius to suffer a Halt miracle affecting those lower than\nthe caster’s level. This does not affect the undead.\n5th Level Neutral Advanced Miracles",
+    "description": "Causes everyone (allies and foes) within the radius to suffer a Halt miracle affecting those lower than the caster’s level. This does not affect the undead. 5th Level Neutral Advanced Miracles",
     "alignment": "Neutral",
     "sphere": "Minor forces",
     "isAdvanced": true
@@ -1532,7 +1532,7 @@
   {
     "power": 8,
     "name": "Spirit Travel",
-    "description": "As per the 6mp standard Blue Glyph Blink except is spiritual. I.e. allows the caster to travel up to 20’\nin distance or within line of sight. On arriving at destination it takes the caster 2 seconds to re-materialise, during\nwhich time he is not vulnerable to damage.",
+    "description": "As per the 6mp standard Blue Glyph Blink except is spiritual. I.e. allows the caster to travel up to 20’ in distance or within line of sight. On arriving at destination it takes the caster 2 seconds to re-materialise, during which time he is not vulnerable to damage.",
     "alignment": "Other",
     "sphere": "Universal / Any",
     "isAdvanced": false
@@ -1540,7 +1540,7 @@
   {
     "power": 8,
     "name": "Spirit Walk",
-    "description": "Grants the ability to walk through walls as a Minor Angel. Note: This is a Goodly miracle innate.\nOr Grants the ability to walk through walls as per an Abishai. Note: This is an Evil miracle innate.\nOr Grants Walk through Walls as Abishai, as a neutral miracle innate.\n~ 38 ~\n\fTotal Heal Capping\nInnates of the Total Heal miracle, or any other effect which duplicates or is similar to it, are limited to a maximum\nnumber per character as described below:\nFor 1st-class Priest subclasses, Paladins and Power-Masters the maximum allowed is:\n1 + BASE SPIRITS PER LEVEL (E.G. 3 FOR A WARRIOR-PRIEST) + HIGHEST POINTS THRESHOLD REACHED /2 (ROUND\nDOWN)\nSo for example a Pure Priest on Table 9 may have 1 + 5 (base spirits) + 4 (9/2rounded down) =10 Total Heal effects as\na maximum number of innates\nFor all other classes the maximum allowed is:\n1 (IF IN PRIEST SUBCLASS) + BASE SPIRITS PER LEVEL + HIGHEST POINTS THRESHOLD REACHED /3 (ROUND DOWN),\nTO A MINIMUM OF 1.\nSo for example a Warrior on Table 12 could have 4 maximum, while if he had multiclassed to Crusading Priest he\ncould have 6.\nThis maximum number applies over all similar innates possessed by any character, so that they may not have more than\nthis value between all their totally healing innates combined. If in doubt as to whether this maximum applies to a\nparticular non-standard ability, such as a 120 tblp and loc cure, or an ‘other-only Total Heal, assume that it does unless\nspecifically clarified in writing by the system manager.\nThis maximum number may be exceeded by one only, if the character gains such abilities from items or guild benefits,\nor similar exterior sources.\nWound Staunch, Healing Hand and Cure Critical Wounds -type abilities are considered to be equal to half a total heal\nfor this purpose. Innates that can be used to cast Total Heal (EG True Believer) count towards this cap if the innate is\nused in that way.\n~ 39 ~\n\fRaces\nAncientfolk\nDetails on Ancient Folk can be found in Evolution: Races, Ancient Folk may be Spirit Warriors, Warrior Priests, or\nPure Priests. They have all the abilities of the class chosen as listed above, as well as their own racial abilities, but\ntheir life points are lower. They may choose to be members of a church or act as Hermits. Choice is made at 1st\nlevel.\nSilverfolk\nAs described in Evolution: Races, Silverfolk may be Spirit Warriors, Warrior Priests, Hermit or Pure Priests. They\nhave all the abilities of the class chosen as listed above, as well their own racial abilities, but their life points are\nlower. They may join churches or choose to act as per Hermits. Choice is made at 1st level.\nElysians\nAs described in the Evolution: Races, Elysians may be Pure Priests or Hospitallers. They have all the abilities of the\nclass as listed above, as well their own racial abilities, but their life points are lower. Elysian Vivomancers are\ndetailed within the Wizards Grimoire book.\nDwarves\nDwarves may be Warrior-Priests (only). However they gain all dwarven racial benefits, and their life points are\ncalculated as warrior-priest for tblp, but at half their tblp (rounded up) per location - so that at 8th level, with 39 tblp,\nthey have 20 per location. They may join churches as normal.\nHalf-Elves\nHalf-Elves may be any of the basic priest classes, but they are greatly disadvantaged by their heritage; due to their\nmixed parentage, they have only half a spirit, so taking only half-effect from all spiritual powers, whether beneficial\nor detrimental. They gain only half the number of spirits that their Human counterparts would have (round up by\nlevel, so that a half-elven warrior-priest gains 2 spirits per level), may not cast 8th level miracles, and pay double for\nall priestly abilities post-8th! Half-Elves do not make talented priests. They may join churches.\nAlfar\nAlfar may be Pure Priests, Spiritual Warriors, as described in Evolution: Races. In this case their class stats are\nidentical to those of a half-elven pure priest. May join churches or act as hermits – choice is made at 1st level.\n~ 40 ~\n\fSpheres of Spirituality\nSome of the miracles listed are divided into Spheres. A Sphere will be described as being either Major or Minor and\nrelated to a specific tree. A priest may acquire any miracle of any Minor Sphere provided that he is of the relevant\nalignment.\nAlternatively he may choose to specialise, selecting Primary and Secondary Spheres. In this case, the priest may learn\nMajor miracles of his Primary Sphere, Minor miracles in his Secondary Sphere but no other Sphere-based miracles.\nStandard miracles are universally accessible to Priests of the correct alignment and are hence non Sphere based.\nIt costs 40pts on Table 1 to specialise as described above.\nNote: It is not possible to possess the Post 8th ability Devotion to a tree other than that in which the Priest has bought\nPrimary Sphere or vice versa, if the Priest has bought Devotion he may only buy Primary Sphere in the tree to which he\nis devoted.\nOn Table 10, a priest may choose either to upgrade his Secondary Sphere so that he may cast Major miracles of that\nSphere, for +60 pts, or acquire a Tertiary Sphere from which he may learn Minor miracles, for +40 pts (not both).\nNon-weapon using priests that have not left the priest bracket may learn an additional minor Sphere on table 7 for 40\npoints, and may upgrade this to a major Sphere on table 11 for a further 40 points.\nHere follows a list of the different Spheres of miracles currently available and what they relate to:\nSphere\nType\nUniversal\nCastable by any\nHealing\nCurative miracles\nCausing\nCausing miracles\nDismissal\nAnti-Undead\nNecromancy\nPro-Undead\nCommunication\nInformational\nDominion\nCommanding\nBenediction\nAid\nForce\nDirect power\nWarding\nProtections\nShamanic *\nShamans only\nWitchcraft *\nWitches only\nBalance *\n“Grey Wardens”\nUniversal: Miracles in this Sphere are universally castable and do not fall into any specific Sphere and as such are\ncastable by any priest, of the correct alignment, who wishes to acquire them regardless of their own speciality.\n*These are not actual Spheres in themselves but represent miracles only available to a certain class of Priest. They are\nconsidered to be exactly as Universal miracles but only castable by that class and do not affect the Sphere that that\nPriest may specialise in an.\nSome miracles may be appropriate to more than one Sphere and will be marked as such.\nThe ‘standard’ 1st-8th miracles listed earlier in this book are considered Universal because although many of them are\nclearly fitting to one Sphere it is possible for anyone of the appropriate alignment to acquire the ability to cast them.\n~ 41 ~\n\fAdvanced Miracles\nWhat follows is a list of priestly miracles which are more specialised and less easily acquired than the standard\nmiracles listed above.\nThese miracles may be purchased either with points post 8th, placed upon any new miracle list (following the\nrestrictions set out in list construction above), or learnt from Scriptures of the Faith.\nNone of these miracles appear on any of the trees for the purpose of free 7th or 8th level miracles during the\nconstruction of a miracle list.\nAny of these miracles which do not affect the undead are specifically marked as such.\nGoodly Miracles\n2nd Level Goodly Advanced Miracles",
+    "description": "Grants the ability to walk through walls as a Minor Angel. Note: This is a Goodly miracle innate. Or Grants the ability to walk through walls as per an Abishai. Note: This is an Evil miracle innate. Or Grants Walk through Walls as Abishai, as a neutral miracle innate. ~ 38 ~ \fTotal Heal Capping Innates of the Total Heal miracle, or any other effect which duplicates or is similar to it, are limited to a maximum number per character as described below: For 1st-class Priest subclasses, Paladins and Power-Masters the maximum allowed is: 1 + BASE SPIRITS PER LEVEL (E.G. 3 FOR A WARRIOR-PRIEST) + HIGHEST POINTS THRESHOLD REACHED /2 (ROUND DOWN) So for example a Pure Priest on Table 9 may have 1 + 5 (base spirits) + 4 (9/2rounded down) =10 Total Heal effects as a maximum number of innates For all other classes the maximum allowed is: 1 (IF IN PRIEST SUBCLASS) + BASE SPIRITS PER LEVEL + HIGHEST POINTS THRESHOLD REACHED /3 (ROUND DOWN), TO A MINIMUM OF 1. So for example a Warrior on Table 12 could have 4 maximum, while if he had multiclassed to Crusading Priest he could have 6. This maximum number applies over all similar innates possessed by any character, so that they may not have more than this value between all their totally healing innates combined. If in doubt as to whether this maximum applies to a particular non-standard ability, such as a 120 tblp and loc cure, or an ‘other-only Total Heal, assume that it does unless specifically clarified in writing by the system manager. This maximum number may be exceeded by one only, if the character gains such abilities from items or guild benefits, or similar exterior sources. Wound Staunch, Healing Hand and Cure Critical Wounds -type abilities are considered to be equal to half a total heal for this purpose. Innates that can be used to cast Total Heal (EG True Believer) count towards this cap if the innate is used in that way. ~ 39 ~ \fRaces Ancientfolk Details on Ancient Folk can be found in Evolution: Races, Ancient Folk may be Spirit Warriors, Warrior Priests, or Pure Priests. They have all the abilities of the class chosen as listed above, as well as their own racial abilities, but their life points are lower. They may choose to be members of a church or act as Hermits. Choice is made at 1st level. Silverfolk As described in Evolution: Races, Silverfolk may be Spirit Warriors, Warrior Priests, Hermit or Pure Priests. They have all the abilities of the class chosen as listed above, as well their own racial abilities, but their life points are lower. They may join churches or choose to act as per Hermits. Choice is made at 1st level. Elysians As described in the Evolution: Races, Elysians may be Pure Priests or Hospitallers. They have all the abilities of the class as listed above, as well their own racial abilities, but their life points are lower. Elysian Vivomancers are detailed within the Wizards Grimoire book. Dwarves Dwarves may be Warrior-Priests (only). However they gain all dwarven racial benefits, and their life points are calculated as warrior-priest for tblp, but at half their tblp (rounded up) per location - so that at 8th level, with 39 tblp, they have 20 per location. They may join churches as normal. Half-Elves Half-Elves may be any of the basic priest classes, but they are greatly disadvantaged by their heritage; due to their mixed parentage, they have only half a spirit, so taking only half-effect from all spiritual powers, whether beneficial or detrimental. They gain only half the number of spirits that their Human counterparts would have (round up by level, so that a half-elven warrior-priest gains 2 spirits per level), may not cast 8th level miracles, and pay double for all priestly abilities post-8th! Half-Elves do not make talented priests. They may join churches. Alfar Alfar may be Pure Priests, Spiritual Warriors, as described in Evolution: Races. In this case their class stats are identical to those of a half-elven pure priest. May join churches or act as hermits – choice is made at 1st level. ~ 40 ~ \fSpheres of Spirituality Some of the miracles listed are divided into Spheres. A Sphere will be described as being either Major or Minor and related to a specific tree. A priest may acquire any miracle of any Minor Sphere provided that he is of the relevant alignment. Alternatively he may choose to specialise, selecting Primary and Secondary Spheres. In this case, the priest may learn Major miracles of his Primary Sphere, Minor miracles in his Secondary Sphere but no other Sphere-based miracles. Standard miracles are universally accessible to Priests of the correct alignment and are hence non Sphere based. It costs 40pts on Table 1 to specialise as described above. Note: It is not possible to possess the Post 8th ability Devotion to a tree other than that in which the Priest has bought Primary Sphere or vice versa, if the Priest has bought Devotion he may only buy Primary Sphere in the tree to which he is devoted. On Table 10, a priest may choose either to upgrade his Secondary Sphere so that he may cast Major miracles of that Sphere, for +60 pts, or acquire a Tertiary Sphere from which he may learn Minor miracles, for +40 pts (not both). Non-weapon using priests that have not left the priest bracket may learn an additional minor Sphere on table 7 for 40 points, and may upgrade this to a major Sphere on table 11 for a further 40 points. Here follows a list of the different Spheres of miracles currently available and what they relate to: Sphere Type Universal Castable by any Healing Curative miracles Causing Causing miracles Dismissal Anti-Undead Necromancy Pro-Undead Communication Informational Dominion Commanding Benediction Aid Force Direct power Warding Protections Shamanic * Shamans only Witchcraft * Witches only Balance * “Grey Wardens” Universal: Miracles in this Sphere are universally castable and do not fall into any specific Sphere and as such are castable by any priest, of the correct alignment, who wishes to acquire them regardless of their own speciality. *These are not actual Spheres in themselves but represent miracles only available to a certain class of Priest. They are considered to be exactly as Universal miracles but only castable by that class and do not affect the Sphere that that Priest may specialise in an. Some miracles may be appropriate to more than one Sphere and will be marked as such. The ‘standard’ 1st-8th miracles listed earlier in this book are considered Universal because although many of them are clearly fitting to one Sphere it is possible for anyone of the appropriate alignment to acquire the ability to cast them. ~ 41 ~ \fAdvanced Miracles What follows is a list of priestly miracles which are more specialised and less easily acquired than the standard miracles listed above. These miracles may be purchased either with points post 8th, placed upon any new miracle list (following the restrictions set out in list construction above), or learnt from Scriptures of the Faith. None of these miracles appear on any of the trees for the purpose of free 7th or 8th level miracles during the construction of a miracle list. Any of these miracles which do not affect the undead are specifically marked as such. Goodly Miracles 2nd Level Goodly Advanced Miracles",
     "alignment": "Other",
     "sphere": "Universal / Any",
     "isAdvanced": false
@@ -1572,7 +1572,7 @@
   {
     "power": 4,
     "name": "Passive Heal",
-    "description": "This miracle acts as a receptacle for a Heal miracle and is useless until one is cast into it. At this point\nit becomes active and stores the Heal miracle until one of the following conditions are met:\n\nOne of the targets’ locations falls below 1 life point.\n\nThe target is injured 36 tblp or more.\nThis miracle does not affect the undead.",
+    "description": "This miracle acts as a receptacle for a Heal miracle and is useless until one is cast into it. At this point it becomes active and stores the Heal miracle until one of the following conditions are met:  One of the targets’ locations falls below 1 life point.  The target is injured 36 tblp or more. This miracle does not affect the undead.",
     "alignment": "Good",
     "sphere": "Minor Healing",
     "healType": ["Worst"],
@@ -1582,7 +1582,7 @@
   {
     "power": 6,
     "name": "Passive Total Heal",
-    "description": "Must be able to cast passive heal. This acts in a similar manner to a passive heal except any healing\nSphere/tree miracle that cures damage can be placed in it. The miracle triggers when a critical location goes below 1\npoint, or the person falls to 1 (or less) tblp. If the miracle’s duration expires then the healing is wasted.\nThe maximum that can be healed by the triggered healing is 72 points of damage (cf. an Un-prepped Total heal).\n~ 47 ~\n\fWard against the Dead\nLevel: 6sp\nAlignment: Good\nSphere: Major Dismissal\nDuration: 5 minutes\nRange: Touch\nGesture: Touch targets head\nVerbal: “Spirits of light ward this one against the touch of the undead”\nDescription: Grants the recipient immunity to undead touch effects for the duration. This is a releasable miracle.\n7th Level Goodly Advanced Miracles",
+    "description": "Must be able to cast passive heal. This acts in a similar manner to a passive heal except any healing Sphere/tree miracle that cures damage can be placed in it. The miracle triggers when a critical location goes below 1 point, or the person falls to 1 (or less) tblp. If the miracle’s duration expires then the healing is wasted. The maximum that can be healed by the triggered healing is 72 points of damage (cf. an Un-prepped Total heal). ~ 47 ~ \fWard against the Dead Level: 6sp Alignment: Good Sphere: Major Dismissal Duration: 5 minutes Range: Touch Gesture: Touch targets head Verbal: “Spirits of light ward this one against the touch of the undead” Description: Grants the recipient immunity to undead touch effects for the duration. This is a releasable miracle. 7th Level Goodly Advanced Miracles",
     "alignment": "Good",
     "sphere": "Major Healing",
     "isAdvanced": true
@@ -1590,7 +1590,7 @@
   {
     "power": 10,
     "name": "Possession",
-    "description": "This miracle possesses the target in a similar way to Spiritual Mastery, but more fully. It affects\ntargets of equal to the caster’s level and below, and the target is completely unable to perform any act whatsoever\nother than those ordered by the caster. The possession is full enough that absolutely any command will be obeyed,\neven completely suicidal ones, but the target will be unable to use any abilities which require conscious thought,\nsuch as casting spells, miracles or neuronics. However they gain +1 stacking strength for the duration, without\nmaximum.\nThis is a Domination effect and Immunity to Spiritual Mastery grants immunity. Spiritual Freedom will also\nremove the effects. The priestly ability to Discern Spiritual Mastery will reveal the presence of this miracle. This\nmiracle does not affect the undead.",
+    "description": "This miracle possesses the target in a similar way to Spiritual Mastery, but more fully. It affects targets of equal to the caster’s level and below, and the target is completely unable to perform any act whatsoever other than those ordered by the caster. The possession is full enough that absolutely any command will be obeyed, even completely suicidal ones, but the target will be unable to use any abilities which require conscious thought, such as casting spells, miracles or neuronics. However they gain +1 stacking strength for the duration, without maximum. This is a Domination effect and Immunity to Spiritual Mastery grants immunity. Spiritual Freedom will also remove the effects. The priestly ability to Discern Spiritual Mastery will reveal the presence of this miracle. This miracle does not affect the undead.",
     "alignment": "Evil",
     "sphere": "Major Dominion",
     "isAdvanced": true
@@ -1598,7 +1598,7 @@
   {
     "power": 5,
     "name": "Power of the Throne",
-    "description": "Grants the recipient Divine Guidance and immunity to lack of faith or similar for the duration. A priest\nof Glass can always cast this miracle, even if they do not have Divine Guidance themselves. This miracle does not,\noddly, function on Talthar priests.\nLady of the Stars",
+    "description": "Grants the recipient Divine Guidance and immunity to lack of faith or similar for the duration. A priest of Glass can always cast this miracle, even if they do not have Divine Guidance themselves. This miracle does not, oddly, function on Talthar priests. Lady of the Stars",
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false
@@ -1606,7 +1606,7 @@
   {
     "power": 5,
     "name": "Protection from All Spirits",
-    "description": "As Protection from Spirits, except that it will keep out spirits of any alignment, level-based as normal.\n~ 54 ~\n\fWarding Rune of Transgression\nLevel: 5sp\nAlignment: Neutral\nDuration: 15 mins\nSphere: Major Warding\nRange: -\nGesture: Inscribe rune\nVerbal: “Spirit of power I bind thee to this rune I now inscribe. Let any that seek passage suffer the consequences\nof their transgression.”\nDescription: This miracle is a very specific form of a Rune of Power. The form the rune must take is the same as\nthat for a Rune of Power, with a spirit rune ‘W’ in the centre of the triangle. It is triggered in all ways as a Rune of\nTransgression is, except that the caster cannot choose to allow anyone passage – even the caster himself will trigger\nit if he passes the door or entrance-way it wards. The victim of the miracle suffers 30 tblp of spiritual damage, as if\nthey had crossed a Minor Ward of Power – however this is the only effect of the rune. This miracle does affect the\nundead, unlike normal runes of power.\nNote the reduced duration of the miracle in comparison with other runes. Immunity to Rune of Power means that\nthe rune is not triggered by that person – ½ Damage from Wards of Power does halve the damage received.",
+    "description": "As Protection from Spirits, except that it will keep out spirits of any alignment, level-based as normal. ~ 54 ~ \fWarding Rune of Transgression Level: 5sp Alignment: Neutral Duration: 15 mins Sphere: Major Warding Range: - Gesture: Inscribe rune Verbal: “Spirit of power I bind thee to this rune I now inscribe. Let any that seek passage suffer the consequences of their transgression.” Description: This miracle is a very specific form of a Rune of Power. The form the rune must take is the same as that for a Rune of Power, with a spirit rune ‘W’ in the centre of the triangle. It is triggered in all ways as a Rune of Transgression is, except that the caster cannot choose to allow anyone passage – even the caster himself will trigger it if he passes the door or entrance-way it wards. The victim of the miracle suffers 30 tblp of spiritual damage, as if they had crossed a Minor Ward of Power – however this is the only effect of the rune. This miracle does affect the undead, unlike normal runes of power. Note the reduced duration of the miracle in comparison with other runes. Immunity to Rune of Power means that the rune is not triggered by that person – ½ Damage from Wards of Power does halve the damage received.",
     "alignment": "Neutral",
     "sphere": "Major Warding",
     "isAdvanced": true
@@ -1614,7 +1614,7 @@
   {
     "power": 4,
     "name": "Protection From Neutral Spirits",
-    "description": "This acts in all ways as the 3sp standard miracle Protection From Spirits except that it only works\nagainst neutral targets. This miracle is level based in the same manner as the Protection From Spirits miracle.",
+    "description": "This acts in all ways as the 3sp standard miracle Protection From Spirits except that it only works against neutral targets. This miracle is level based in the same manner as the Protection From Spirits miracle.",
     "alignment": "Neutral",
     "sphere": "Minor Warding",
     "isAdvanced": true
@@ -1630,7 +1630,7 @@
   {
     "power": 12,
     "name": "Purification",
-    "description": "This miracle has the power to dismiss and remove the taint that an undead has left in a body allowing\nit to then benefit from a Restore Life miracle or similar. Casting this miracle causes the Priest to lose a full level. As\nnoted above, Holy Water is required, to lightly sprinkle over target's body.\nIn order to acquire this miracle as a Major Dismissal must first possess Dismiss Level 9 undead.",
+    "description": "This miracle has the power to dismiss and remove the taint that an undead has left in a body allowing it to then benefit from a Restore Life miracle or similar. Casting this miracle causes the Priest to lose a full level. As noted above, Holy Water is required, to lightly sprinkle over target's body. In order to acquire this miracle as a Major Dismissal must first possess Dismiss Level 9 undead.",
     "alignment": "Good",
     "sphere": "Major Dismissal / Healing",
     "isAdvanced": true
@@ -1638,7 +1638,7 @@
   {
     "power": 6,
     "name": "Questioning Spirits",
-    "description": "This miracle allows the caster to ask as many questions as per Communication as desired within the\nduration of the miracle. The speed and pace of the questioning should remain respectful of the all knowing spirits,\nelse the miracle may fail.",
+    "description": "This miracle allows the caster to ask as many questions as per Communication as desired within the duration of the miracle. The speed and pace of the questioning should remain respectful of the all knowing spirits, else the miracle may fail.",
     "alignment": "Neutral",
     "sphere": "Minor Communication",
     "isAdvanced": true
@@ -1646,7 +1646,7 @@
   {
     "power": 4,
     "name": "Renewal",
-    "description": "The target receives a cure serious wounds miracle every minute for the duration as long as they remain\nat rest in the same general location that it is cast.\n~ 44 ~\n\fShield Blessing\nLevel: 4sp\nAlignment: Good\nDuration: 24 hours\nSphere: Major Benediction\nRange: Touch\nGesture: Touch the shield\nVerbal: “Spirits of light I call upon thee to bless and ward this shield here”\nDescription: This miracles acts as per a bless on a shield, but additionally allows it to parry purely spiritual weapon\nblows.\n5th Level Goodly Advanced Miracles",
+    "description": "The target receives a cure serious wounds miracle every minute for the duration as long as they remain at rest in the same general location that it is cast. ~ 44 ~ \fShield Blessing Level: 4sp Alignment: Good Duration: 24 hours Sphere: Major Benediction Range: Touch Gesture: Touch the shield Verbal: “Spirits of light I call upon thee to bless and ward this shield here” Description: This miracles acts as per a bless on a shield, but additionally allows it to parry purely spiritual weapon blows. 5th Level Goodly Advanced Miracles",
     "alignment": "Good",
     "sphere": "Minor Healing",
     "isAdvanced": true
@@ -1654,7 +1654,7 @@
   {
     "power": 3,
     "name": "Repel Evil Spirits",
-    "description": "As per the Paladinic ability (Unholy Champions are not immune), this throws all evil spirits within\nrange back 20’.",
+    "description": "As per the Paladinic ability (Unholy Champions are not immune), this throws all evil spirits within range back 20’.",
     "alignment": "Good",
     "sphere": "Minor Force / Warding",
     "isAdvanced": true
@@ -1662,7 +1662,7 @@
   {
     "power": 2,
     "name": "Repel Good Spirits",
-    "description": "As per the Unholy Champion ability, repelling the targets in the front arc of the caster 20’. This\nmiracle is cheaper than the converse Goodly miracle as Evil spirits lend themselves more readily to such tasks.",
+    "description": "As per the Unholy Champion ability, repelling the targets in the front arc of the caster 20’. This miracle is cheaper than the converse Goodly miracle as Evil spirits lend themselves more readily to such tasks.",
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1670,7 +1670,7 @@
   {
     "power": 3,
     "name": "Repel Life",
-    "description": "As per Repel Undead but affects the living instead. By definition, this miracle does not affect the\nundead.",
+    "description": "As per Repel Undead but affects the living instead. By definition, this miracle does not affect the undead.",
     "alignment": "Evil",
     "sphere": "Minor (Force / Necromancy / Warding)",
     "isAdvanced": true
@@ -1678,7 +1678,7 @@
   {
     "power": 6,
     "name": "Restoration",
-    "description": "This miracle must be cast upon a person who has been level drained within the course of the adventure\nin which they were drained. When it is cast it restores one level lost to evil spiritual level drain effects (not selfinflicted). Additional levels may be restored at the cost of 1sp each per lost level at the time of casting.",
+    "description": "This miracle must be cast upon a person who has been level drained within the course of the adventure in which they were drained. When it is cast it restores one level lost to evil spiritual level drain effects (not selfinflicted). Additional levels may be restored at the cost of 1sp each per lost level at the time of casting.",
     "alignment": "Good",
     "sphere": "Major (Benediction /",
     "isAdvanced": true
@@ -1686,7 +1686,7 @@
   {
     "power": 5,
     "name": "Reveal Undead Name",
-    "description": "The Caster is told the full true dismiss/control name of the indicated Undead.\nA Neutral version of this miracle is available as a 4sp miracle. An Evil version of this miracle is available as a 5sp\nmiracle.\n~ 45 ~\n\fCure Critical\nLevel: 5sp\nAlignment: Good\nDuration: Instant\nSphere: Minor Healing\nRange: Touch\nGesture: Palms on target head\nVerbal: “I call upon the spirits of light to staunch these mortal wounds and reforge this shattered body... Cure\nCritical Wounds!”\nDescription: This miracle heals 60 tblp damage and 60 pts of locational damage, in a similar manner to Heal.\nUnder no circumstances can this miracle heal more than 72 points of damage, ever. This miracle does not affect the\nundead.\n6th Level Goodly Advanced Miracles",
+    "description": "The Caster is told the full true dismiss/control name of the indicated Undead. A Neutral version of this miracle is available as a 4sp miracle. An Evil version of this miracle is available as a 5sp miracle. ~ 45 ~ \fCure Critical Level: 5sp Alignment: Good Duration: Instant Sphere: Minor Healing Range: Touch Gesture: Palms on target head Verbal: “I call upon the spirits of light to staunch these mortal wounds and reforge this shattered body... Cure Critical Wounds!” Description: This miracle heals 60 tblp damage and 60 pts of locational damage, in a similar manner to Heal. Under no circumstances can this miracle heal more than 72 points of damage, ever. This miracle does not affect the undead. 6th Level Goodly Advanced Miracles",
     "alignment": "Good",
     "sphere": "Minor",
     "isAdvanced": true
@@ -1694,7 +1694,7 @@
   {
     "power": 10,
     "name": "Righteous Aura",
-    "description": "The priest's spirit is concentrated more fully in opposition of undead spirits. For the duration, the\npriest may not cast any miracle except directly against undead. However, any undead creature of level 5 or below\nwhich touches or is touched by the priest is destroyed instantly, costing the priest 3 tblp per level of the undead.\nUndead of levels greater than 6th take 12 tblp (4 hits) of goodly spiritual damage for each touch. This is a releasable\nmiracle, and does affect the undead.\nSacred Heart",
+    "description": "The priest's spirit is concentrated more fully in opposition of undead spirits. For the duration, the priest may not cast any miracle except directly against undead. However, any undead creature of level 5 or below which touches or is touched by the priest is destroyed instantly, costing the priest 3 tblp per level of the undead. Undead of levels greater than 6th take 12 tblp (4 hits) of goodly spiritual damage for each touch. This is a releasable miracle, and does affect the undead. Sacred Heart",
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false
@@ -1702,7 +1702,7 @@
   {
     "power": 14,
     "name": "Rite of the Bane God",
-    "description": "To cast this miracle the priest needs a 'focus' of his faith, of significant size; this may be an altar, or a\nbanner with his religious symbol, or similar. This must be Cursed before the rite begins. During the casting he must\nspend 15 minutes performing appropriate ritual acts to please his deity, with only the start and final incantations\nfixed. It is permissible during this period to cast appropriate Evil miracles - their cost is taken from the total cost of\nthe rite. These miracles must be targeted on/centred on the focus - not a Beguile on another party-member, for\nexample. At the end of the rite, a pall falls across every spirit within the radius, as dark powers watch. This feeling\nof foreboding is strong enough that any Priest within the radius is aware that there is an evil presence here. All\nCausing miracles cast within the area inflict 1pt of permanent damage to tblp and loc for each 6 pts they normally\ninflict - so that a Cause Wound inflicts 6 tblp and loc, of which 1pt is permanent and cannot be cured. Resistance to\nCause miracles halves the amount of permanent damage (round up). Resisted TODs and Suspend Lifes inflict\npermanent harm in the same way, and unresisted their effects cannot be removed for the duration - so that a Suspend\nLife'd target is not brought round by a Heal miracle. The effects of Cause Disease are not restored when the miracle\nis removed - so that if a sufferer of a disease has reached the stage where they are no longer conscious, curing the\ndisease only prevents further progression - the victim remains unconscious.\nThis damage (or other effect) fades only after a full day's rest, or may be healed if the focus of the rite is desecrated.\nTo disrupt the rite, its focus must first be freed from the Curse, either with a Bless or by slaying the caster, and then\nthe focus either destroyed physically or moved outside the radius of the rite. This is not a releasable miracle, and\ndoes affect the undead.\n~ 74 ~\n\fGood or Evil Miracles\nThese miracles may be acquired as either a goodly aligned miracle or as an evilly aligned miracle but not as a neutral\nmiracle. Neutral priests cannot acquire these miracles unless specifically stated in the miracle’s description that they\nmay.",
+    "description": "To cast this miracle the priest needs a 'focus' of his faith, of significant size; this may be an altar, or a banner with his religious symbol, or similar. This must be Cursed before the rite begins. During the casting he must spend 15 minutes performing appropriate ritual acts to please his deity, with only the start and final incantations fixed. It is permissible during this period to cast appropriate Evil miracles - their cost is taken from the total cost of the rite. These miracles must be targeted on/centred on the focus - not a Beguile on another party-member, for example. At the end of the rite, a pall falls across every spirit within the radius, as dark powers watch. This feeling of foreboding is strong enough that any Priest within the radius is aware that there is an evil presence here. All Causing miracles cast within the area inflict 1pt of permanent damage to tblp and loc for each 6 pts they normally inflict - so that a Cause Wound inflicts 6 tblp and loc, of which 1pt is permanent and cannot be cured. Resistance to Cause miracles halves the amount of permanent damage (round up). Resisted TODs and Suspend Lifes inflict permanent harm in the same way, and unresisted their effects cannot be removed for the duration - so that a Suspend Life'd target is not brought round by a Heal miracle. The effects of Cause Disease are not restored when the miracle is removed - so that if a sufferer of a disease has reached the stage where they are no longer conscious, curing the disease only prevents further progression - the victim remains unconscious. This damage (or other effect) fades only after a full day's rest, or may be healed if the focus of the rite is desecrated. To disrupt the rite, its focus must first be freed from the Curse, either with a Bless or by slaying the caster, and then the focus either destroyed physically or moved outside the radius of the rite. This is not a releasable miracle, and does affect the undead. ~ 74 ~ \fGood or Evil Miracles These miracles may be acquired as either a goodly aligned miracle or as an evilly aligned miracle but not as a neutral miracle. Neutral priests cannot acquire these miracles unless specifically stated in the miracle’s description that they may.",
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true
@@ -1710,7 +1710,7 @@
   {
     "power": 14,
     "name": "Rite of the Bright God",
-    "description": "To cast this miracle the priest needs a 'focus' of his faith, of significant size; this may be an altar, or a\nbanner with his religious symbol, or similar. This must be Blessed before the rite begins. During the casting he\nmust spend 15 minutes performing appropriate ritual acts to please his deity, with only the start and final\nincantations fixed. It is permissible during this period to cast appropriate Goodly miracles - their cost is taken from\nthe total cost of the rite. These miracles must be targeted or centred on the focus - not for example a Total Heal\nmiracle cast on another party-member. Once the rite is complete, an uplifting feeling fills the radius, strong enough\nthat any priest is aware of the presence of the powers of light here. For the duration of the rite all undead touch\neffects which would last 5 minutes instead last only 30 seconds, and other undead touch effects are halved in effect.\nRestore Life miracles require no candles. To disrupt the rite, its focus must first be freed from the Bless, either with\na Curse or by slaying the caster, and then the focus either destroyed physically or moved outside the radius of the\nrite. This is not a releasable miracle.",
+    "description": "To cast this miracle the priest needs a 'focus' of his faith, of significant size; this may be an altar, or a banner with his religious symbol, or similar. This must be Blessed before the rite begins. During the casting he must spend 15 minutes performing appropriate ritual acts to please his deity, with only the start and final incantations fixed. It is permissible during this period to cast appropriate Goodly miracles - their cost is taken from the total cost of the rite. These miracles must be targeted or centred on the focus - not for example a Total Heal miracle cast on another party-member. Once the rite is complete, an uplifting feeling fills the radius, strong enough that any priest is aware of the presence of the powers of light here. For the duration of the rite all undead touch effects which would last 5 minutes instead last only 30 seconds, and other undead touch effects are halved in effect. Restore Life miracles require no candles. To disrupt the rite, its focus must first be freed from the Bless, either with a Curse or by slaying the caster, and then the focus either destroyed physically or moved outside the radius of the rite. This is not a releasable miracle.",
     "alignment": "Good",
     "sphere": "Major Benediction",
     "isAdvanced": true
@@ -1718,7 +1718,7 @@
   {
     "power": 6,
     "name": "Serin's Bound Spirit of Undeath",
-    "description": "undead spirit to merge with the caster, granting them the undead touch effects of that creature (This includes limit in numbers). While\nactive, the caster discerns as the relevant undead and if dismissed this miracle ends",
+    "description": "undead spirit to merge with the caster, granting them the undead touch effects of that creature (This includes limit in numbers). While active, the caster discerns as the relevant undead and if dismissed this miracle ends",
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true
@@ -1768,7 +1768,7 @@
   {
     "power": 5,
     "name": "Sight of the Blind",
-    "description": "Recipient must be a worshipper of St Michael. For duration of the miracle, the beneficiary may not see colours, read writing, see two-dimensional pictures or similar. However they\ngain full spirit-sight, which allows them to perceive spirits even when in walls or when normal vision is blocked by\nother non-spiritual barriers. It does not allow them to gain other information by spirit-sight, such as size or\nalignment of spirits. It also grants them the ability to see through spiritual darkness. This is a releasable miracle.",
+    "description": "Recipient must be a worshipper of St Michael. For duration of the miracle, the beneficiary may not see colours, read writing, see two-dimensional pictures or similar. However they gain full spirit-sight, which allows them to perceive spirits even when in walls or when normal vision is blocked by other non-spiritual barriers. It does not allow them to gain other information by spirit-sight, such as size or alignment of spirits. It also grants them the ability to see through spiritual darkness. This is a releasable miracle.",
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false
@@ -1776,7 +1776,7 @@
   {
     "power": 5,
     "name": "Song of Blood",
-    "description": "One target is Level Drained and then Beguiled (as miracle). The lost level returns at the end of the\nmiracle's duration. This miracle does not affect the undead.\nDark Deliverers",
+    "description": "One target is Level Drained and then Beguiled (as miracle). The lost level returns at the end of the miracle's duration. This miracle does not affect the undead. Dark Deliverers",
     "alignment": "Evil",
     "sphere": "Denominational",
     "isAdvanced": false
@@ -1794,7 +1794,7 @@
   {
     "power": 8,
     "name": "Soul Lance",
-    "description": "The caster sends a bolt of pure spiritual evil power at the target's spirit. If the target is goodly or\nneutral in Alignment they suffer tblp damage equal to 20% of their maximum tblp. SAC does not apply to this,\nalthough resistance to Soul Lance does. Evil targets are unaffected.",
+    "description": "The caster sends a bolt of pure spiritual evil power at the target's spirit. If the target is goodly or neutral in Alignment they suffer tblp damage equal to 20% of their maximum tblp. SAC does not apply to this, although resistance to Soul Lance does. Evil targets are unaffected.",
     "alignment": "Evil",
     "damType": ["Body"],
     "damageOverride": "soulLance",
@@ -1804,7 +1804,7 @@
   {
     "power": 4,
     "name": "Soul Sharing",
-    "description": "Recipient must be a willing goodly elf, drave, half-drave or half-elf. For the duration of the miracle\nthe casting priest is considered to be in all ways 2 levels lower, as his spirit is shared with the target. The target, if\nan elf or drave, gains a half-spirit (as half-elf) for the duration, or if already half-elven gains a full spirit for the\nduration. It should be noted however that the miracle is released on death of either the caster or the recipient, and\nshould the recipient die the caster cannot regain the lost levels until the end of the day. This miracle is not\ndischarged by the use of magical powers by the recipient.\nThis is a releasable miracle, but may only be voluntarily released with same gesture (linked hands) as the casting. It\nonly works on living targets.\nNote: Technically, this miracle could be cast on any object at all, as the spirits cannot recognise elven nature, goodly\nor otherwise. However, once the target is infused with the caster's spirit it can be identified, and the spirit will\nimmediately flee unless the target is valid, thus wasting the spirits cast on it.",
+    "description": "Recipient must be a willing goodly elf, drave, half-drave or half-elf. For the duration of the miracle the casting priest is considered to be in all ways 2 levels lower, as his spirit is shared with the target. The target, if an elf or drave, gains a half-spirit (as half-elf) for the duration, or if already half-elven gains a full spirit for the duration. It should be noted however that the miracle is released on death of either the caster or the recipient, and should the recipient die the caster cannot regain the lost levels until the end of the day. This miracle is not discharged by the use of magical powers by the recipient. This is a releasable miracle, but may only be voluntarily released with same gesture (linked hands) as the casting. It only works on living targets. Note: Technically, this miracle could be cast on any object at all, as the spirits cannot recognise elven nature, goodly or otherwise. However, once the target is infused with the caster's spirit it can be identified, and the spirit will immediately flee unless the target is valid, thus wasting the spirits cast on it.",
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false
@@ -1812,7 +1812,7 @@
   {
     "power": 1,
     "name": "Soul's Hunger",
-    "description": "This miracle only functions when cast while the priest already has a Causing miracle 'hanging' on their\nhands. It means that if that Causing miracle successfully injures a living spirit their life essence is taken for the\ncasting priest, instead of going to feed the evil spirits as is normal. This means that according to the miracle's power\nlevel, the priest is cured 3 tblp and 1 to each loc per spirit of the Cause miracle 30 seconds later - so that a Cause\nGrievous Wounds miracle heals 15 and 5 to each loc. However, each Resistance to Causing possessed by the target\nhalves the benefit to the caster. The caster may not use this ability to target themselves with a Causing miracle.\nOnly damaging Causing miracles combine with this miracle - not Cause Disease, for example, nor Degeneration.\nFor ease of use in combat, the caster should call \"Vampiric Cause XXX\" when used - this allows the target (or the\nref) to warn the priest if no benefit was received, within the 30 seconds before the curing is received.\n~ 60 ~\n\fTaint Spirit\nLevel: 1sp\nAlignment: Evil\nDuration: Instant\nSphere: Minor Necromancy\nRange: Touch\nGesture: Touch Target with palms\nVerbal: “Spirits of death taint this form such that its death is final.”\nDescription: When cast upon a dead body the body is treated as though it has been raised as an undead, without it\nactually rising up as an undead, preventing the dead body from being restored to life. Fortified Spirit grants\nimmunity to this miracle.\n2nd Level Evil Advanced Miracles",
+    "description": "This miracle only functions when cast while the priest already has a Causing miracle 'hanging' on their hands. It means that if that Causing miracle successfully injures a living spirit their life essence is taken for the casting priest, instead of going to feed the evil spirits as is normal. This means that according to the miracle's power level, the priest is cured 3 tblp and 1 to each loc per spirit of the Cause miracle 30 seconds later - so that a Cause Grievous Wounds miracle heals 15 and 5 to each loc. However, each Resistance to Causing possessed by the target halves the benefit to the caster. The caster may not use this ability to target themselves with a Causing miracle. Only damaging Causing miracles combine with this miracle - not Cause Disease, for example, nor Degeneration. For ease of use in combat, the caster should call \"Vampiric Cause XXX\" when used - this allows the target (or the ref) to warn the priest if no benefit was received, within the 30 seconds before the curing is received. ~ 60 ~ \fTaint Spirit Level: 1sp Alignment: Evil Duration: Instant Sphere: Minor Necromancy Range: Touch Gesture: Touch Target with palms Verbal: “Spirits of death taint this form such that its death is final.” Description: When cast upon a dead body the body is treated as though it has been raised as an undead, without it actually rising up as an undead, preventing the dead body from being restored to life. Fortified Spirit grants immunity to this miracle. 2nd Level Evil Advanced Miracles",
     "alignment": "Evil",
     "sphere": "Minor Causing",
     "isAdvanced": true
@@ -1820,7 +1820,7 @@
   {
     "power": 10,
     "name": "Spirit Form",
-    "description": "The caster of this miracle is now only influenced by spiritual effects and damage, though physical\nbarriers still block his motion. A Good or Evil version of this miracle is available also as a 8th (10sp) miracle. This\nmiracle affects the undead.\n40pts Tb 9: Post 6th Undead Multi-race may now cast the Evil version of this miracle as a 7th (8sp) miracle and post\n6th Angel of War / Mercy Multi-race may now cast the Good version of this miracle as a 7th (8sp) miracle.\nNOTE: In both cases Spirit Form still counts as a 10sp miracle for the purpose of purchasing the miracle and this\nreduction may not be accumulated with any other reduction, such as that from Embody Wight Spirit (see below).",
+    "description": "The caster of this miracle is now only influenced by spiritual effects and damage, though physical barriers still block his motion. A Good or Evil version of this miracle is available also as a 8th (10sp) miracle. This miracle affects the undead. 40pts Tb 9: Post 6th Undead Multi-race may now cast the Evil version of this miracle as a 7th (8sp) miracle and post 6th Angel of War / Mercy Multi-race may now cast the Good version of this miracle as a 7th (8sp) miracle. NOTE: In both cases Spirit Form still counts as a 10sp miracle for the purpose of purchasing the miracle and this reduction may not be accumulated with any other reduction, such as that from Embody Wight Spirit (see below).",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1828,7 +1828,7 @@
   {
     "power": 20,
     "name": "Spirit Rend",
-    "description": "Once cast the Shaman has 30 seconds to touch a target who then takes the effect of 6 simultaneously\ncast Spiritbolts. SAC and Resistances to Spiritbolt apply separately to each Spiritbolt. This miracle will not affect\nmembers of the Shaman’s own tribe.\n~ 77 ~\n\fWitchcraft\nThese miracles may only be acquired post 8th by a witch of the appropriate alignment. No other class or alignment may\ncast one of these miracles.\nWitchcraft ~ Evil",
+    "description": "Once cast the Shaman has 30 seconds to touch a target who then takes the effect of 6 simultaneously cast Spiritbolts. SAC and Resistances to Spiritbolt apply separately to each Spiritbolt. This miracle will not affect members of the Shaman’s own tribe. ~ 77 ~ \fWitchcraft These miracles may only be acquired post 8th by a witch of the appropriate alignment. No other class or alignment may cast one of these miracles. Witchcraft ~ Evil",
     "alignment": "Neutral",
     "sphere": "Shamanic",
     "isAdvanced": true
@@ -1836,7 +1836,7 @@
   {
     "power": 4,
     "name": "Spirit Shift",
-    "description": "This miracle instantly transports the priest and his possessions across the indicated distance of up to\n20' in a similar manner to the 6mp standard Blue Wizard Spell Blink. This includes the 2 seconds disorientation\nupon arrival.",
+    "description": "This miracle instantly transports the priest and his possessions across the indicated distance of up to 20' in a similar manner to the 6mp standard Blue Wizard Spell Blink. This includes the 2 seconds disorientation upon arrival.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1860,7 +1860,7 @@
   {
     "power": 10,
     "name": "Spiritual Aegis",
-    "description": "Must be able to cast Greater Spirit Shield. Acts as per a Spirit Shield but absorbs the first 72 points of\ndamage.\n~ 58 ~\n\fBound Force of Stasis\nLevel: 8th (10sp)\nAlignment: Neutral\nDuration: 5 minutes\nSphere: Major Force\nRange: Touch / Self\nGesture: Touch weapon\nVerbal: “Spirits bide here and let all smitten stand and be held by thy power.”\nDescription: Cast on a normal, non-supernatural weapon wielded by the caster the weapon has a spirit bound to it\nwhich allows the priest to strike non-damaging blows for ‘Stasis 9 levels’ (i.e. affecting 8th level and below targets)\ninstead of normal damage, at will. The priest may alternate, striking a blow for Stasis, then a damaging blow, then a\nStasis blow again, and so forth. This miracle does not affect the undead.",
+    "description": "Must be able to cast Greater Spirit Shield. Acts as per a Spirit Shield but absorbs the first 72 points of damage. ~ 58 ~ \fBound Force of Stasis Level: 8th (10sp) Alignment: Neutral Duration: 5 minutes Sphere: Major Force Range: Touch / Self Gesture: Touch weapon Verbal: “Spirits bide here and let all smitten stand and be held by thy power.” Description: Cast on a normal, non-supernatural weapon wielded by the caster the weapon has a spirit bound to it which allows the priest to strike non-damaging blows for ‘Stasis 9 levels’ (i.e. affecting 8th level and below targets) instead of normal damage, at will. The priest may alternate, striking a blow for Stasis, then a damaging blow, then a Stasis blow again, and so forth. This miracle does not affect the undead.",
     "alignment": "Neutral",
     "sphere": "Major Warding",
     "isAdvanced": true
@@ -1868,7 +1868,7 @@
   {
     "power": 16,
     "name": "Spiritual Cataclysm",
-    "description": "Acts as per a 144 tblp spirit bolt (48 HTK). Note the range of touch. After completing the verbal the\ncaster has 30 seconds to touch the target. To learn this miracle the priest must be on table 11.\n~ 59 ~\n\fCommunication with the Gods\nLevel: 8th (16sp)\nAlignment: Neutral\nDuration: 2 minutes/5 minutes (see below)\nSphere: Major Communication\nRange: Infinite\nGesture: As Greater Communication\nVerbal: “All Seeing All K\nnowing Spirits, guardians of the unknown, knowers of knowledge, keepers of secrets, you whose vision and hearing\nare mighty grant me thy wisdom and understanding. Listen to me and converse for I have need of thy insight.”\nDescription: As per Greater Communication but no limit to the number of questions asked and the spirits may\nrespond to an individual question with more than just seven words. Questions must be asked in a measured and\nrespectful manner, or no response will be gained. The caster may choose to have all questions be only regarding one\nspecific area, in which case the divination lasts 5 minutes, or simply answering any questions they desire, in which\ncase the duration is only two minutes but the miracle becomes far more versatile.\nIn order to acquire this miracle must first possess Communication and Greater Communication.",
+    "description": "Acts as per a 144 tblp spirit bolt (48 HTK). Note the range of touch. After completing the verbal the caster has 30 seconds to touch the target. To learn this miracle the priest must be on table 11. ~ 59 ~ \fCommunication with the Gods Level: 8th (16sp) Alignment: Neutral Duration: 2 minutes/5 minutes (see below) Sphere: Major Communication Range: Infinite Gesture: As Greater Communication Verbal: “All Seeing All K nowing Spirits, guardians of the unknown, knowers of knowledge, keepers of secrets, you whose vision and hearing are mighty grant me thy wisdom and understanding. Listen to me and converse for I have need of thy insight.” Description: As per Greater Communication but no limit to the number of questions asked and the spirits may respond to an individual question with more than just seven words. Questions must be asked in a measured and respectful manner, or no response will be gained. The caster may choose to have all questions be only regarding one specific area, in which case the divination lasts 5 minutes, or simply answering any questions they desire, in which case the duration is only two minutes but the miracle becomes far more versatile. In order to acquire this miracle must first possess Communication and Greater Communication.",
     "alignment": "Neutral",
     "sphere": "Major Forces",
     "isAdvanced": true
@@ -1892,7 +1892,7 @@
   {
     "power": 8,
     "name": "Storm of Power",
-    "description": "As Voice of Power but all within radius of up to two levels below the caster are affected (i.e. 6th level\ncharacters are affected assuming the caster is 8th level). Releasing the miracle releases all targets simultaneously.\nThis miracle does not affect the undead.",
+    "description": "As Voice of Power but all within radius of up to two levels below the caster are affected (i.e. 6th level characters are affected assuming the caster is 8th level). Releasing the miracle releases all targets simultaneously. This miracle does not affect the undead.",
     "alignment": "Neutral",
     "sphere": "Major Force",
     "isAdvanced": true
@@ -1900,7 +1900,7 @@
   {
     "power": 6,
     "name": "Strengthen the Spirit",
-    "description": "The willing beneficiary gains the effects of Determination against non-magical stopping effects for the\nduration; that is to say, any stopping effect targeted on the beneficiary for the duration has no effect but costs the\ntarget 6 tblp to shrug it off. This is involuntary, and occurs even if the beneficiary was actually immune to the\neffect! This miracle does not affect the undead.\n~ 46 ~\n\fLight Of Purity\nLevel: 6sp\nAlignment: Good\nSphere: Minor Dismissal\nDuration: Instant\nRange: 20’\nGesture: Point at target\nVerbal: “Spirits of light blaze your glorious radiance upon this undead spirit and let it be consumed in your divine\nbrilliance... Light of Purity!”\nDescription: This miracle inflicts 12 spiritual hits on an undead, it has no effect on any other creature. On a Player\nCharacter undead it inflicts 36pts of damage as per Spiritbolt. However Resistance to Spirit-Bolt does not apply,\nalthough SAC does.\nDestroy Gaseous Form\nLevel: Variable\nAlignment: Good\nSphere: Major Dismissal\nDuration:5 minutes\nRange: 20’\nGesture: Point at target\nVerbal: “By the power of the spirits of light I bid that you return to your true form!”\nDescription: This miracle costs spirits equal to the dismiss level of the target minus two (so 4 sp for use on a level 6\nvampire) to cast. If the target is not undead it costs 6 spirits. This causes any one target which is benefiting from a\nVampiric Gaseous Form to return to their normal form and then be unable to turn Gaseous for the remainder of the\nmiracle’s duration. Immunity to Involuntary Shapeshifting grants immunity to this miracle’s effects.\nThis miracle costs 40pts to buy",
+    "description": "The willing beneficiary gains the effects of Determination against non-magical stopping effects for the duration; that is to say, any stopping effect targeted on the beneficiary for the duration has no effect but costs the target 6 tblp to shrug it off. This is involuntary, and occurs even if the beneficiary was actually immune to the effect! This miracle does not affect the undead. ~ 46 ~ \fLight Of Purity Level: 6sp Alignment: Good Sphere: Minor Dismissal Duration: Instant Range: 20’ Gesture: Point at target Verbal: “Spirits of light blaze your glorious radiance upon this undead spirit and let it be consumed in your divine brilliance... Light of Purity!” Description: This miracle inflicts 12 spiritual hits on an undead, it has no effect on any other creature. On a Player Character undead it inflicts 36pts of damage as per Spiritbolt. However Resistance to Spirit-Bolt does not apply, although SAC does. Destroy Gaseous Form Level: Variable Alignment: Good Sphere: Major Dismissal Duration:5 minutes Range: 20’ Gesture: Point at target Verbal: “By the power of the spirits of light I bid that you return to your true form!” Description: This miracle costs spirits equal to the dismiss level of the target minus two (so 4 sp for use on a level 6 vampire) to cast. If the target is not undead it costs 6 spirits. This causes any one target which is benefiting from a Vampiric Gaseous Form to return to their normal form and then be unable to turn Gaseous for the remainder of the miracle’s duration. Immunity to Involuntary Shapeshifting grants immunity to this miracle’s effects. This miracle costs 40pts to buy",
     "alignment": "Good",
     "sphere": "Major Benediction",
     "isAdvanced": true
@@ -1908,7 +1908,7 @@
   {
     "power": 3,
     "name": "Strengthen Ward",
-    "description": "May be cast on any Minor or Major Ward of Power that the priest has cast themselves. That Ward no\nlonger has a duration, but lasts until the caster releases it or it is assaulted with sufficient miracle attacks to destroy\nit. However while the Ward remains, the spirits used on the Strengthen Ward miracle may not be regained.\nThis is not a releasable miracle, although releasing the ward upon which it was cast will end it automatically.\n4th Level Neutral Advanced Miracles",
+    "description": "May be cast on any Minor or Major Ward of Power that the priest has cast themselves. That Ward no longer has a duration, but lasts until the caster releases it or it is assaulted with sufficient miracle attacks to destroy it. However while the Ward remains, the spirits used on the Strengthen Ward miracle may not be regained. This is not a releasable miracle, although releasing the ward upon which it was cast will end it automatically. 4th Level Neutral Advanced Miracles",
     "alignment": "Neutral",
     "sphere": "Major Warding",
     "isAdvanced": true
@@ -1916,7 +1916,7 @@
   {
     "power": 6,
     "name": "Stronghold of Goodness",
-    "description": "This functions in all exactly as per a Protection from Spirits cast versus evil in every way except where\nnoted above and will act as a barrier to keep out any evil spirit regardless of level. The miracle stops if the casting\nPriest leaves the area of effect. This miracle is releasable.",
+    "description": "This functions in all exactly as per a Protection from Spirits cast versus evil in every way except where noted above and will act as a barrier to keep out any evil spirit regardless of level. The miracle stops if the casting Priest leaves the area of effect. This miracle is releasable.",
     "alignment": "Good",
     "sphere": "Minor Warding",
     "isAdvanced": true
@@ -1924,7 +1924,7 @@
   {
     "power": 6,
     "name": "Stronghold of Hatred",
-    "description": "This miracle is identical to the miracle Protection From Good Spirits in every way except where noted\nabove and the fact that the barrier keeps out any good spirit regardless of level.\n7th Level Evil Advanced Miracles\nWild Evil\nLevel: Variable*\nDuration: Instant\nAlignment: Evil\nSphere: Universal\nRange:20' radius\nGesture: See below\nVerbal: \"Darkness feed on my essence and let all feel your touch!\" to be shouted, followed by a declaration of the\ndamage inflicted (see below)\nDescription: As the verbal is incanted the caster must slash a body part with a dedicated ritual knife (which cannot\nbe used in normal combat - it is permissible to carry this blade), inflicting 6 points of damage to the location and\nTBLP. The caster must be flesh-and-blood. The blood is then sucked from the wound by wild and hungry evil\nspirits that cluster around the priest. These spirits form a dark and evil maelstrom centred on the priest which\ninflicts 6/1 spiritual damage to all within the radius for each 2 spirits the priest releases, to a maximum of 12 spirits\nand 36/6 damage to all. SAC applies against this damage as normal, except for the casting priest, who cannot in any\nway shield against the attentions of the spirits, and must take the full damage. Should this miracle be cast a second\ntime within an hour, the casting priest loses all remaining spirits to the uncontrolled evil spirits drawn to the bloodshed, including his own - thus dying. Damage from this second casting is still limited to 36/6 however.\nThis miracle affects the undead, but may not be cast by them (as they have no blood).\n*This miracle costs 50pts to buy\n~ 67 ~\n\fPact of Blood\nLevel: 7th (8sp)\nAlignment: Evil\nDuration: 15 minutes\nSphere: Universal\nRange: Touch\nGesture: Touch with both hands\nVerbal: “Black spirits watch this one, and let the blood-shed he/she causes free thee to act as ye will.\"\nDescription: This miracle ‘hangs’ on the hands of the caster for 30 seconds, in the same manner as causing\nmiracles. While under the effect of this miracle each time the target draws the blood of a spiritual target (hits a\nflesh-and-blood creature with a sharp weapon for the first time) they are struck by the drawn evil spirits, taking 36/6\nevil spiritual damage to which SAC applies (12 Hits to monsters). This damage is taken each time a new flesh-andblood target is struck after the miracle becomes active, but once taken from a given creature there is no further\npenalty for striking that creature again. This miracle does not affect the undead.",
+    "description": "This miracle is identical to the miracle Protection From Good Spirits in every way except where noted above and the fact that the barrier keeps out any good spirit regardless of level. 7th Level Evil Advanced Miracles Wild Evil Level: Variable* Duration: Instant Alignment: Evil Sphere: Universal Range:20' radius Gesture: See below Verbal: \"Darkness feed on my essence and let all feel your touch!\" to be shouted, followed by a declaration of the damage inflicted (see below) Description: As the verbal is incanted the caster must slash a body part with a dedicated ritual knife (which cannot be used in normal combat - it is permissible to carry this blade), inflicting 6 points of damage to the location and TBLP. The caster must be flesh-and-blood. The blood is then sucked from the wound by wild and hungry evil spirits that cluster around the priest. These spirits form a dark and evil maelstrom centred on the priest which inflicts 6/1 spiritual damage to all within the radius for each 2 spirits the priest releases, to a maximum of 12 spirits and 36/6 damage to all. SAC applies against this damage as normal, except for the casting priest, who cannot in any way shield against the attentions of the spirits, and must take the full damage. Should this miracle be cast a second time within an hour, the casting priest loses all remaining spirits to the uncontrolled evil spirits drawn to the bloodshed, including his own - thus dying. Damage from this second casting is still limited to 36/6 however. This miracle affects the undead, but may not be cast by them (as they have no blood). *This miracle costs 50pts to buy ~ 67 ~ \fPact of Blood Level: 7th (8sp) Alignment: Evil Duration: 15 minutes Sphere: Universal Range: Touch Gesture: Touch with both hands Verbal: “Black spirits watch this one, and let the blood-shed he/she causes free thee to act as ye will.\" Description: This miracle ‘hangs’ on the hands of the caster for 30 seconds, in the same manner as causing miracles. While under the effect of this miracle each time the target draws the blood of a spiritual target (hits a flesh-and-blood creature with a sharp weapon for the first time) they are struck by the drawn evil spirits, taking 36/6 evil spiritual damage to which SAC applies (12 Hits to monsters). This damage is taken each time a new flesh-andblood target is struck after the miracle becomes active, but once taken from a given creature there is no further penalty for striking that creature again. This miracle does not affect the undead.",
     "alignment": "Evil",
     "sphere": "Minor Warding",
     "isAdvanced": true
@@ -1932,7 +1932,7 @@
   {
     "power": 8,
     "name": "Stronghold Of Neutrality",
-    "description": "This miracle is identical to the miracle Protection From Spirits except that it functions only against\nneutral spirits and will keep out any neutral spirit regardless of level. If cast by a neutral spirit user they will be\nunhindered by the miracle and able to cross it themselves.\n~ 57 ~\n\f8th Level Neutral Advanced Miracles",
+    "description": "This miracle is identical to the miracle Protection From Spirits except that it functions only against neutral spirits and will keep out any neutral spirit regardless of level. If cast by a neutral spirit user they will be unhindered by the miracle and able to cross it themselves. ~ 57 ~ \f8th Level Neutral Advanced Miracles",
     "alignment": "Neutral",
     "sphere": "Major Warding",
     "isAdvanced": true
@@ -1940,7 +1940,7 @@
   {
     "power": 8,
     "name": "Summon Barrow-Wight",
-    "description": "The miracle must be incanted over a corpse within a Protection from Good Spirits. This corpse need\nnot be fresh, and in fact is often an ancient body within a tomb. At the incanting of the final words a dagger must be\ndriven into the chest of the corpse, and from the wound the Barrow-Wight will arise. Barrow-Wights are shadowy,\nethereal creatures called to guard the sanctity of an area. They are fully intelligent and may walk through walls at\nwill in the same fashion as a wraith (suffering a 2-second disorientation on leaving). They have 25 supernatural hits,\nand inflict Purely Spiritual 9pt Double by unarmed blow. This does mean that magic hurts them, and for example an\nelf with a magic weapon could kill them while they could not harm it. Additionally their touch causes 2 points of\npermanent damage to the touched location (not tblp). This is an undead touch-effect, and no AC or damage\nreductions apply to it (having half a spirit means that only 1 point of perm is inflicted). This damage can only be\ncured by exposing the wounds to the rays of the next dawn (normally, lasts till end of adventure). Barrow-Wights\nare level 6 undead. A barrow-Wight will not willingly leave the area in which it was summoned, which may be a\nspecific building if summoned within one, or a roughly 60' area otherwise. Even if controlled they will refuse to do\nso. They are banished whence they came by sunlight, and fear it terribly.\n~ 70 ~\n\fSummon Wraith-Warrior\nLevel: 7th (8sp)\nAlignment: Evil\nDuration: 30 minutes\nSphere: Major Necromancy\nRange: 3'\nGesture: As Summon Wraith\nVerbal: \"By all the powers of darkness, spirit of evil I summon thee forth! By the shades of the netherworld and\nblood you have shed, wraith warrior I name thee! I call thee from the land of the spirits! By my powers I summon\nthee here! Behold! By the power of my spirits thou art summoned here! Come forth!\"\nDescription: In all ways as Summon Wraith (not Wight), except that the summoned undead arrives equipped with\ndark and ethereal armour and sword. It now discerns as a Level 6 Wraith Warrior, has 16 spiritual Hits, and may\ninflict purely spiritual damage by weapon type + one weapon mastery with its sword, which no other may wield. It\nmay also channel its powers of level-draining and fear through sword-blows.\n8th Level Evil Advanced Miracles",
+    "description": "The miracle must be incanted over a corpse within a Protection from Good Spirits. This corpse need not be fresh, and in fact is often an ancient body within a tomb. At the incanting of the final words a dagger must be driven into the chest of the corpse, and from the wound the Barrow-Wight will arise. Barrow-Wights are shadowy, ethereal creatures called to guard the sanctity of an area. They are fully intelligent and may walk through walls at will in the same fashion as a wraith (suffering a 2-second disorientation on leaving). They have 25 supernatural hits, and inflict Purely Spiritual 9pt Double by unarmed blow. This does mean that magic hurts them, and for example an elf with a magic weapon could kill them while they could not harm it. Additionally their touch causes 2 points of permanent damage to the touched location (not tblp). This is an undead touch-effect, and no AC or damage reductions apply to it (having half a spirit means that only 1 point of perm is inflicted). This damage can only be cured by exposing the wounds to the rays of the next dawn (normally, lasts till end of adventure). Barrow-Wights are level 6 undead. A barrow-Wight will not willingly leave the area in which it was summoned, which may be a specific building if summoned within one, or a roughly 60' area otherwise. Even if controlled they will refuse to do so. They are banished whence they came by sunlight, and fear it terribly. ~ 70 ~ \fSummon Wraith-Warrior Level: 7th (8sp) Alignment: Evil Duration: 30 minutes Sphere: Major Necromancy Range: 3' Gesture: As Summon Wraith Verbal: \"By all the powers of darkness, spirit of evil I summon thee forth! By the shades of the netherworld and blood you have shed, wraith warrior I name thee! I call thee from the land of the spirits! By my powers I summon thee here! Behold! By the power of my spirits thou art summoned here! Come forth!\" Description: In all ways as Summon Wraith (not Wight), except that the summoned undead arrives equipped with dark and ethereal armour and sword. It now discerns as a Level 6 Wraith Warrior, has 16 spiritual Hits, and may inflict purely spiritual damage by weapon type + one weapon mastery with its sword, which no other may wield. It may also channel its powers of level-draining and fear through sword-blows. 8th Level Evil Advanced Miracles",
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true
@@ -1948,7 +1948,7 @@
   {
     "power": 5,
     "name": "Summon Haunt",
-    "description": "This miracle summons a non corporeal spirit which inflicts Fear (as the miracle) by each touch at will.\nIt is slain by a total of 12 spirit only hits. The Haunt has a Dismiss / Control level of 4 and is controlled by its\nsummoner only for the first 5 minutes of its existence. The Haunt’s general outlook on life is that it likes to be scary,\nand should be given due respect, it is an intelligent undead. It may walk through walls at will, in the same fashion as\na wraith.",
+    "description": "This miracle summons a non corporeal spirit which inflicts Fear (as the miracle) by each touch at will. It is slain by a total of 12 spirit only hits. The Haunt has a Dismiss / Control level of 4 and is controlled by its summoner only for the first 5 minutes of its existence. The Haunt’s general outlook on life is that it likes to be scary, and should be given due respect, it is an intelligent undead. It may walk through walls at will, in the same fashion as a wraith.",
     "alignment": "Evil",
     "sphere": "Minor Necromancy",
     "isAdvanced": true
@@ -1956,7 +1956,7 @@
   {
     "power": 10,
     "name": "Summon Rod of Power",
-    "description": "Summons a purely spiritual 'O' class rod into the caster's hands. This weapon is +1 spiritual, and can\nonly be wielded by the caster. It may not be thrown. The caster may call the weapon back to his hands at will with\nthe phrase 'Rod to me!'. Strength may not be used with this weapon unless the appropriate tables ability is bought.\nThis is a releasable miracle, and affects the undead.",
+    "description": "Summons a purely spiritual 'O' class rod into the caster's hands. This weapon is +1 spiritual, and can only be wielded by the caster. It may not be thrown. The caster may call the weapon back to his hands at will with the phrase 'Rod to me!'. Strength may not be used with this weapon unless the appropriate tables ability is bought. This is a releasable miracle, and affects the undead.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1972,7 +1972,7 @@
   {
     "power": 10,
     "name": "Sunder Spirit",
-    "description": "The effect of this miracle is as per Spirit Bolt but it inflicts 72 tblp [24HTK]. Resistances to Spirit Bolt\nand SAC apply as normal.",
+    "description": "The effect of this miracle is as per Spirit Bolt but it inflicts 72 tblp [24HTK]. Resistances to Spirit Bolt and SAC apply as normal.",
     "alignment": "Neutral",
     "sphere": "Major Force",
     "isAdvanced": true
@@ -1980,7 +1980,7 @@
   {
     "power": 6,
     "name": "Taint of Blood",
-    "description": "Should the target shed the blood of a spiritual being after this miracle is cast (use a sharp weapon\nagainst a flesh-and-blood target) evil spirits are drawn to cluster around them. As such, for the rest of the miracle's\nduration the target cannot benefit from goodly miracles and is considered 'Evil' for all disbeneficial spiritual\npurposes (e.g. crossing Protections). Additionally they will be unable to use goodly spiritual powers unless they\npossess Divine Guidance. An effect which repels Evil spirits will remove the miracle from a target unless they are\nthemselves spiritually Evil.",
+    "description": "Should the target shed the blood of a spiritual being after this miracle is cast (use a sharp weapon against a flesh-and-blood target) evil spirits are drawn to cluster around them. As such, for the rest of the miracle's duration the target cannot benefit from goodly miracles and is considered 'Evil' for all disbeneficial spiritual purposes (e.g. crossing Protections). Additionally they will be unable to use goodly spiritual powers unless they possess Divine Guidance. An effect which repels Evil spirits will remove the miracle from a target unless they are themselves spiritually Evil.",
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1996,7 +1996,7 @@
   {
     "power": 12,
     "name": "The Black Death",
-    "description": "This acts as per the Cause Disease miracle, but begins at the 5 minute stage and progresses rapidly.\nReaching the 10 minute stage after 1 minute, the 30 minute stage after 3, and death occurs at 5 minutes.\nPeople that have multi-raced Mummy may learn this as a minor causing miracle.\n~ 73 ~\n\fTreare’s Harm\nLevel: 8th (12sp)\nAlignment: Evil\nSphere: Major Causing\nDuration: Instant\nRange: Touch\nGesture: Touch target\nVerbal: “Spirits of Darkness and Suffering answer my call! I summon you here to bring my foes low. Spirit feel now\nthe anguish as they life suffers mortal….. Harm!”\nDescription: Must be able to cast Touch of Death, and be on table 10. This miracle hangs for 30 seconds as with\nmost causing miracles. When touched it causes the target to suffer causing equal to their starting tblp. SAC applies\nat 6 points for every point of SAC the target has. Resistances to causing then apply. This miracle costs the caster a\nlevel to cast (reductions can be purchased as per level loss from Touch of Death). It does not affect the undead.",
+    "description": "This acts as per the Cause Disease miracle, but begins at the 5 minute stage and progresses rapidly. Reaching the 10 minute stage after 1 minute, the 30 minute stage after 3, and death occurs at 5 minutes. People that have multi-raced Mummy may learn this as a minor causing miracle. ~ 73 ~ \fTreare’s Harm Level: 8th (12sp) Alignment: Evil Sphere: Major Causing Duration: Instant Range: Touch Gesture: Touch target Verbal: “Spirits of Darkness and Suffering answer my call! I summon you here to bring my foes low. Spirit feel now the anguish as they life suffers mortal….. Harm!” Description: Must be able to cast Touch of Death, and be on table 10. This miracle hangs for 30 seconds as with most causing miracles. When touched it causes the target to suffer causing equal to their starting tblp. SAC applies at 6 points for every point of SAC the target has. Resistances to causing then apply. This miracle costs the caster a level to cast (reductions can be purchased as per level loss from Touch of Death). It does not affect the undead.",
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true
@@ -2012,7 +2012,7 @@
   {
     "power": 8,
     "name": "The Light Of Faith",
-    "description": "Upon completion of the miracle all undead which are not permitted to enter daylight are feared and\nmust leave the area immediately. Any other undead who enter suffer 4 spiritual hits, or 12 tblp to Player Character\nundead, this only affects them the first time they enter the area. No undead may spiritually Shift into or within the\narea for the duration of the miracle. If the caster leaves the area of effect for any reason then the miracle is cancelled.",
+    "description": "Upon completion of the miracle all undead which are not permitted to enter daylight are feared and must leave the area immediately. Any other undead who enter suffer 4 spiritual hits, or 12 tblp to Player Character undead, this only affects them the first time they enter the area. No undead may spiritually Shift into or within the area for the duration of the miracle. If the caster leaves the area of effect for any reason then the miracle is cancelled.",
     "alignment": "Good",
     "sphere": "Major Dismissal / Warding",
     "isAdvanced": true
@@ -2020,7 +2020,7 @@
   {
     "power": 14,
     "name": "The Touch of the Forge",
-    "description": "Causes the chosen weapon to become +0 spirit for the duration. Additionally it counts as Master\nStatus, making it immune to Shatter, Warp, Disintegrate, Melt, Magnetise, Vanish, and all similar effects.",
+    "description": "Causes the chosen weapon to become +0 spirit for the duration. Additionally it counts as Master Status, making it immune to Shatter, Warp, Disintegrate, Melt, Magnetise, Vanish, and all similar effects.",
     "alignment": "Other",
     "sphere": "Rites",
     "isAdvanced": false
@@ -2028,7 +2028,7 @@
   {
     "power": 3,
     "name": "The Tranquil Seas",
-    "description": "One willing target becomes unable to enter any form of rage (willing or otherwise) for the duration.\nAdditionally they gain purest self-defence restrictions. This is NOT a releasable miracle, and does effect the undead.\nThe Forge",
+    "description": "One willing target becomes unable to enter any form of rage (willing or otherwise) for the duration. Additionally they gain purest self-defence restrictions. This is NOT a releasable miracle, and does effect the undead. The Forge",
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false
@@ -2036,7 +2036,7 @@
   {
     "power": 10,
     "name": "Torrent of the Netherworld",
-    "description": "After casting the target has 30 seconds to touch the target. The target suffers a freeze, paralysis, fear,\ndisease, and Level drain. All as per the undead touch effects (including that spirit shields apply vs. them). This\nmiracle does effect the undead and is NOT releasable.",
+    "description": "After casting the target has 30 seconds to touch the target. The target suffers a freeze, paralysis, fear, disease, and Level drain. All as per the undead touch effects (including that spirit shields apply vs. them). This miracle does effect the undead and is NOT releasable.",
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true
@@ -2060,7 +2060,7 @@
   {
     "power": 5,
     "name": "Unified Strength",
-    "description": "The priest and at least two other people who are goodly spirits must link hands in a closed chain. All\nthose who participate in the chain then gain +1 strength (max +2), +1 level of resistance to Evil spirits, and a Spirit\nShield. Only goodly people may benefit.\n~ 84 ~\n\fTalthar\nBlessing of the Aspects of Hope\nLevel: See miracle\nAlignment: Good\nDuration: 24 hours\nFaith: Talthar\nRange: Self\nGesture: Kneel in prayer\nVerbal: “Spirits of hope I call to thee. Grant me the watching of the aspect of ….”\nDescription: This is learnt as a 7th level (8 spirit) miracle. The caster chooses one of the aspects of Talthar and\ndraws power from it. This causes them to gain benefits from one of the aspects as per the current guild benefits\nlisted in the Almanac. It costs 4 spirits to gain basic tier, 8 for intermediate and 12 for advanced. The priest may\nonly have this miracle active for one aspect at a time, and may only be cast once per aspect per day. This is a\nreleasable miracle.\nTsu-Ling",
+    "description": "The priest and at least two other people who are goodly spirits must link hands in a closed chain. All those who participate in the chain then gain +1 strength (max +2), +1 level of resistance to Evil spirits, and a Spirit Shield. Only goodly people may benefit. ~ 84 ~ \fTalthar Blessing of the Aspects of Hope Level: See miracle Alignment: Good Duration: 24 hours Faith: Talthar Range: Self Gesture: Kneel in prayer Verbal: “Spirits of hope I call to thee. Grant me the watching of the aspect of ….” Description: This is learnt as a 7th level (8 spirit) miracle. The caster chooses one of the aspects of Talthar and draws power from it. This causes them to gain benefits from one of the aspects as per the current guild benefits listed in the Almanac. It costs 4 spirits to gain basic tier, 8 for intermediate and 12 for advanced. The priest may only have this miracle active for one aspect at a time, and may only be cast once per aspect per day. This is a releasable miracle. Tsu-Ling",
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false
@@ -2068,7 +2068,7 @@
   {
     "power": 6,
     "name": "Voice of Command",
-    "description": "This miracle is as Voice of Power except that it affects targets of a level equal to the caster, rather than\none below, making it far more versatile. Note however the extremely short duration! This miracle does not affect\nthe undead.\n~ 55 ~\n\fSpirit Sundering\nLevel: 6sp\nAlignment: Neutral\nDuration: Instant\nSphere: Major Force\nRange: 20’\nGesture: Point at Spirit\nVerbal: “By all the powers of the spirits let thy spirit be smitten and struck…”\nDescription: This miracle affects the target as a double-effect Spirit Bolt, doing 36 tblp of neutral spirit damage to\nthe target, with SAC and resistances to Spirit Bolt applying appropriately. [Note that Dark Sundering is an identical\nevil version of this miracle, and also available as Major Force Sphere – Evil priests may therefore buy either if\ndesired.]",
+    "description": "This miracle is as Voice of Power except that it affects targets of a level equal to the caster, rather than one below, making it far more versatile. Note however the extremely short duration! This miracle does not affect the undead. ~ 55 ~ \fSpirit Sundering Level: 6sp Alignment: Neutral Duration: Instant Sphere: Major Force Range: 20’ Gesture: Point at Spirit Verbal: “By all the powers of the spirits let thy spirit be smitten and struck…” Description: This miracle affects the target as a double-effect Spirit Bolt, doing 36 tblp of neutral spirit damage to the target, with SAC and resistances to Spirit Bolt applying appropriately. [Note that Dark Sundering is an identical evil version of this miracle, and also available as Major Force Sphere – Evil priests may therefore buy either if desired.]",
     "alignment": "Neutral",
     "sphere": "Minor Force",
     "isAdvanced": true
@@ -2092,7 +2092,7 @@
   {
     "power": 4,
     "name": "Ward of the Dead",
-    "description": "May be cast on any Minor Ward of Power or Major Ward of Power, or other similar non-standard\nmiracles at ref's discretion. The affected Ward no longer bars undead from crossing in any fashion, nor damages\nthem. It otherwise functions as normal. This is a releasable miracle.\nDead Heroes",
+    "description": "May be cast on any Minor Ward of Power or Major Ward of Power, or other similar non-standard miracles at ref's discretion. The affected Ward no longer bars undead from crossing in any fashion, nor damages them. It otherwise functions as normal. This is a releasable miracle. Dead Heroes",
     "alignment": "Other",
     "sphere": "Denominational",
     "isAdvanced": false
@@ -2108,7 +2108,7 @@
   {
     "power": 2,
     "name": "Wings of Darkness",
-    "description": "This miracle will allow the caster to turn a Causing tree or Sphere miracle up to 6th level that they\ncurrently have ‘hanging’ into a ranged attack. Must possess Lesser Wings of Darkness.\n3rd Level Evil Advanced Miracles",
+    "description": "This miracle will allow the caster to turn a Causing tree or Sphere miracle up to 6th level that they currently have ‘hanging’ into a ranged attack. Must possess Lesser Wings of Darkness. 3rd Level Evil Advanced Miracles",
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true
@@ -2116,7 +2116,7 @@
   {
     "power": 8,
     "name": "Word of Banishment",
-    "description": "Allows the caster to cast Dismiss Ghoul at will for 3 tblp for the duration (full verbal required). This is\na releasable miracle, and clearly does effect the undead.\n8th Level Goodly Advanced Miracles",
+    "description": "Allows the caster to cast Dismiss Ghoul at will for 3 tblp for the duration (full verbal required). This is a releasable miracle, and clearly does effect the undead. 8th Level Goodly Advanced Miracles",
     "alignment": "Good",
     "sphere": "Major Dismissal",
     "isAdvanced": true
@@ -2124,7 +2124,7 @@
   {
     "power": 10,
     "name": "Word of Recall",
-    "description": "This miracle returns the Priest to his temple across any distance or barrier including time, whilst\ntravelling the Priest is safe from any attack. It is impossible to prevent this miracle from working if it is successfully\ncast by a priest with sufficient remaining spirits.\nA Good or Evil version of this miracle is available also as a 8th (10sp) miracle.",
+    "description": "This miracle returns the Priest to his temple across any distance or barrier including time, whilst travelling the Priest is safe from any attack. It is impossible to prevent this miracle from working if it is successfully cast by a priest with sufficient remaining spirits. A Good or Evil version of this miracle is available also as a 8th (10sp) miracle.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true
@@ -2132,7 +2132,7 @@
   {
     "power": 4,
     "name": "Wound Staunch",
-    "description": "This miracle enables the caster to completely heal any tblp damage that the target has taken, if 30\nseconds of calm preparation are spent with the recipient before casting (cf. Total Heal). This miracle does not cure\nlocational damage and on a creature with only half a spirit this miracle will not cure more than 72pts of damage. If\nthe miracle is not prepared for (see Total Heal), it cures only 72 tblp or 36 tblp for a creature with half a spirit. This\nmiracle does not affect the undead.",
+    "description": "This miracle enables the caster to completely heal any tblp damage that the target has taken, if 30 seconds of calm preparation are spent with the recipient before casting (cf. Total Heal). This miracle does not cure locational damage and on a creature with only half a spirit this miracle will not cure more than 72pts of damage. If the miracle is not prepared for (see Total Heal), it cures only 72 tblp or 36 tblp for a creature with half a spirit. This miracle does not affect the undead.",
     "alignment": "Good",
     "sphere": "Major Healing",
     "isAdvanced": true
@@ -2148,7 +2148,7 @@
   {
     "power": 8,
     "name": "Wrath of the Lord",
-    "description": "This miracle may only ever be cast by the current High Priest of an existing church (with seven or\nmore members, etc) – even if bought while High Priest, should a character lose that status it may no longer be used.\nShaman may learn this miracle and apply it to the death of their tribe-members or attacks on them.\nIt may only be cast on a target who has either harmed the High Priest or slain a member of the guild within the last 5\nminutes. The target suffers 48 tblp, 8 to every location, and is knocked to the ground and is unable to act for 30\nseconds or until struck, regardless of level (This stunning effect is as per a non-level based stasis). Spiritual AC\napplies at 6/1 per point to the damage but the only way to avoid being knocked to the ground is to have Resistance\nto Wrath of the Lord or half a spirit.\nBorder",
+    "description": "This miracle may only ever be cast by the current High Priest of an existing church (with seven or more members, etc) – even if bought while High Priest, should a character lose that status it may no longer be used. Shaman may learn this miracle and apply it to the death of their tribe-members or attacks on them. It may only be cast on a target who has either harmed the High Priest or slain a member of the guild within the last 5 minutes. The target suffers 48 tblp, 8 to every location, and is knocked to the ground and is unable to act for 30 seconds or until struck, regardless of level (This stunning effect is as per a non-level based stasis). Spiritual AC applies at 6/1 per point to the damage but the only way to avoid being knocked to the ground is to have Resistance to Wrath of the Lord or half a spirit. Border",
     "alignment": "Other",
     "sphere": "Denominational",
     "isAdvanced": false
@@ -2156,7 +2156,7 @@
   {
     "power": 3,
     "name": "Writhe",
-    "description": "Causes the target to collapse in agony as per a spasm (immunity to spasm applies). Resistances to\ncausing reduce the time the miracle lasts by 15 seconds per resistance owned. If a resistance to causing is owned\nthen the effects of this miracle will break if the target suffers damage.\nThis miracle does effect the undead and is releasable.\n4th Level Evil Advanced Miracles",
+    "description": "Causes the target to collapse in agony as per a spasm (immunity to spasm applies). Resistances to causing reduce the time the miracle lasts by 15 seconds per resistance owned. If a resistance to causing is owned then the effects of this miracle will break if the target suffers damage. This miracle does effect the undead and is releasable. 4th Level Evil Advanced Miracles",
     "alignment": "Evil",
     "sphere": "Minor Causing",
     "isAdvanced": true

@@ -2035,7 +2035,6 @@ public sealed class SpellListVm : INotifyPropertyChanged
         vm.SelectedSpell = SelectedSpellOption.Value;
         Entries.Add(vm);
         SelectedSpellOption = null;
-        SearchText = string.Empty;
     }
 
     private void RemoveEntry(SpellEntryVm? entry)
@@ -2874,7 +2873,6 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         vm.SelectedMiracle = SelectedMiracleOption.Value;
         Entries.Add(vm);
         SelectedMiracleOption = null;
-        SearchText = string.Empty;
         UpdateFilteredOptions();
         UpdateValidation();
     }

@@ -64,6 +64,372 @@
     "Max AC": 9,
     "Buy as": ["1st class Warrior"]
   },
+  "Ranger": {
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["MaxAC 9", "Versatile", "Simple"],
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        { "Name": "Tracking", "Type": "AtWill" }
+      ],
+      "3": [{ "Name": "Survival", "Type": "AtWill" }],
+      "4": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Perception",
+          "Type": "AtWill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Stop Bleeding",
+          "Type": "AtWill"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Ranger Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Ranger Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Ranger Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Ranger Specialist"
+        }
+      ]
+    },
+    "Max AC": 9,
+    "Buy as": ["1st class Warrior"]
+  },
+  "Archer": {
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["MaxAC 8", "Huge damage", "Fire & Forget"],
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        { "Name": "1st Weapon Mastery (Bows)", "Type": "Static" }
+      ],
+      "3": [{ "Name": "Survival", "Type": "AtWill" }],
+      "4": [],
+      "5": [],
+      "6": [
+        {
+          "Name": "2nd Weapon Mastery (Bows)",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Archer Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Archer Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Archer Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Archer Specialist"
+        }
+      ]
+    },
+    "Max AC": 9,
+    "Buy as": ["1st class Warrior"]
+  },
+  "Monk": {
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["MaxAC 9", "Kung fu", "Simple"],
+    "Armour": {
+      "Wearable": [],
+      "Restrictions": []
+    },
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Good", "Neutral", "Evil"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Good", "Lawful Neutral", "Lawful Evil"]
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Immunity to Halt",
+          "Type": "Immunity"
+        }
+      ],
+      "2": [
+        { "Name": "1 DAC", "Type": "DAC", "Count": 1 },
+        {
+          "Name": "H",
+          "Type": "WeaponSkill"
+        },
+        { "Name": "Detect Possible Neuronic Activity", "Type": "AtWill" }
+      ],
+      "3": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        { "Name": "Immunity to Disease", "Type": "Immunity" }
+      ],
+      "4": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "1st Weapon Mastery (O)",
+          "Type": "WeaponSkill"
+        },
+        { "Name": "2 DAC", "Type": "DAC", "Count": 2 }
+      ],
+      "5": [
+        { "Name": "3 DAC", "Type": "DAC", "Count": 3 },
+        {
+          "Name": "UAC",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "6": [
+        { "Name": "4 DAC", "Type": "DAC", "Count": 4 },
+        {
+          "Name": "1st Weapon Mastery (H)",
+          "Type": "WeaponSkill"
+        },
+        { "Name": "Immunity to Befriend", "Type": "Immunity" },
+        { "Name": "Immunity to Beguile", "Type": "Immunity" },
+        { "Name": "Immunity to Spiritual Mastery", "Type": "Immunity" }
+      ],
+      "7": [
+        { "Name": "5 DAC", "Type": "DAC", "Count": 5 },
+        {
+          "Name": "1st Weapon Mastery (B)",
+          "Type": "WeaponSkill"
+        },
+        { "Name": "Immunity to Fear", "Type": "Immunity" },
+        {
+          "Name": "Monk Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Monk Specialist"
+        }
+      ],
+      "8": [
+        { "Name": "6 DAC", "Type": "DAC", "Count": 6 },
+        { "Name": "Immunity to Poison", "Type": "Immunity" },
+        { "Name": "Immunity to Bless/Curse", "Type": "Immunity" },
+        {
+          "Name": "2nd Weapon Mastery (O)",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Monk Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Monk Specialist"
+        }
+      ]
+    },
+    "Max AC": 9,
+    "Buy as": ["1st class Warrior"]
+  },
+  "Duellist": {
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["MaxAC 9", "Kung fu", "Simple"],
+    "Armour": {
+      "Wearable": ["light"],
+      "Restrictions": []
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O (Sword or Dagger only)",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E (Sword and Dagger only)",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "3": [
+        { "Name": "1 DAC", "Type": "DAC", "Count": 1 },
+        {
+          "Name": "H (Dagger only)",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "4": [
+        {
+          "Name": "MP",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "5": [
+        { "Name": "2 DAC", "Type": "DAC", "Count": 2 },
+
+        {
+          "Name": "UAC",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "1st Weapon Mastery (Sword or Dagger only)",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "6": [],
+      "7": [
+        { "Name": "3 DAC", "Type": "DAC", "Count": 3 },
+        {
+          "Name": "Duellist Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Duellist Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Duellist Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Duellist Specialist"
+        }
+      ]
+    },
+    "Max AC": 9,
+    "Buy as": ["1st class Warrior"]
+  },
+  "Cavalier": {
+    "Brackets": ["🛡️ Warrior"],
+    "Tags": ["MaxAC 9", "Kung fu", "Simple"],
+    "Armour": {
+      "Wearable": ["medium", "heavy"],
+      "Restrictions": []
+    },
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Good", "Neutral", "Evil"],
+        "order": ["Lawful"]
+      },
+      "allowedPairs": ["Lawful Good", "Lawful Neutral", "Lawful Evil"]
+    },
+    "Levels": {
+      "1": [
+        {
+          "Name": "O",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "U",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "2": [
+        {
+          "Name": "E",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Immunity to Halt",
+          "Type": "Immunity"
+        }
+      ],
+      "3": [
+        {
+          "Name": "B",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Immunity to Fear",
+          "Type": "Immunity"
+        }
+      ],
+      "4": [
+        { "Name": "Perm Bless", "Type": "DAC", "Count": 2, "Source": "Bless" }
+      ],
+      "5": [{ "Name": "Immunity to Alignment Change", "Type": "Immunity" }],
+      "6": [
+        { "Name": "Immunity to Befriend", "Type": "Immunity" },
+        { "Name": "Immunity to Beguile", "Type": "Immunity" },
+        { "Name": "Immunity to Spiritual Mastery", "Type": "Immunity" }
+      ],
+      "7": [
+        { "Name": "Immunity to Domination", "Type": "Immunity" },
+        {
+          "Name": "Cavalier Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Duellist Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Cavalier Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Duellist Specialist"
+        },
+        { "Name": "Cold Rage", "Type": "Innate", "Count": 1 },
+        { "Name": "Live to Minus", "Type": "LiveToMinus", "Count": 16 }
+      ]
+    },
+    "Max AC": 9,
+    "Buy as": ["1st class Warrior"]
+  },
   "Warrior-Priest": {
     "Brackets": ["🛡️ Warrior", "🙏 Priest"],
     "Tags": ["Spiritual caster", "𐂫 Armoured", "Combatant"],

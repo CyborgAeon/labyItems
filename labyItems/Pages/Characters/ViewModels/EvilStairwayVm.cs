@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using labyItems.Controls;
+using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
@@ -40,7 +41,7 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
     public MiracleListDraft Draft { get; }
 
     public ObservableCollection<MiracleEntryVm> Entries { get; } = new();
-    public ObservableCollection<PyramidRowVm> PyramidRows { get; } = new();
+    public ObservableCollection<EvilStairwayRowVm> Rows { get; } = new();
 
     private MiracleOption? _selectedMiracleOption;
     public MiracleOption? SelectedMiracleOption
@@ -181,7 +182,7 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
             Entries.Add(vm);
         }
 
-        RebuildPyramid();
+        RebuildRows();
     }
 
     private void AddSelectedMiracle()
@@ -189,17 +190,32 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
         if (!CanAddSelected || SelectedMiracleOption == null)
             return;
 
+        AddMiracle(SelectedMiracleOption.Value);
+
+        SelectedMiracleOption = null;
+        UpdateFilteredOptions();
+        UpdateValidation();
+        RebuildRows();
+    }
+
+    private void AddMiracle(MiracleOption option)
+    {
         var draft = new MiracleListEntryDraft();
         Draft.Entries.Add(draft);
         var vm = new MiracleEntryVm(draft, OnEntryChanged);
-        vm.SelectedMiracle = SelectedMiracleOption.Value;
+        vm.SelectedMiracle = option;
         Entries.Add(vm);
+    }
 
-        SelectedMiracleOption = null;
-        SearchText = string.Empty;
+    private void AddMiracleFromRow(MiracleOption option)
+    {
+        if (!CanAddOption(option))
+            return;
+
+        AddMiracle(option);
         UpdateFilteredOptions();
         UpdateValidation();
-        RebuildPyramid();
+        RebuildRows();
     }
 
     private void RemoveEntry(MiracleEntryVm? entry)
@@ -209,14 +225,32 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
         Draft.Entries.Remove(entry.Draft);
         UpdateFilteredOptions();
         UpdateValidation();
-        RebuildPyramid();
+        RebuildRows();
+    }
+
+    private void RemoveOneByName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return;
+
+        var entry = Entries.LastOrDefault(e =>
+            string.Equals(e.Draft.Name, name, StringComparison.OrdinalIgnoreCase));
+
+        if (entry == null)
+            return;
+
+        Entries.Remove(entry);
+        Draft.Entries.Remove(entry.Draft);
+        UpdateFilteredOptions();
+        UpdateValidation();
+        RebuildRows();
     }
 
     private void OnEntryChanged()
     {
         UpdateFilteredOptions();
         UpdateValidation();
-        RebuildPyramid();
+        RebuildRows();
     }
 
     private void UpdateFilteredOptions()
@@ -231,6 +265,17 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
         filtered = filtered
             .Where(m => IsAllowedAlignment(m.alignment))
             .ToList();
+
+        var activeTree = GetActiveTree();
+        if (activeTree != null)
+        {
+            var treeNames = activeTree.AllNames;
+            filtered = filtered
+                .Where(m =>
+                    treeNames.Contains(m.name ?? string.Empty, StringComparer.OrdinalIgnoreCase)
+                    || IsUniversalNonGoodly(m))
+                .ToList();
+        }
 
         if (SelectedSphereFilters.Count > 0)
         {
@@ -286,7 +331,6 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
 
         var totalCost = 0;
         var causingCost = 0;
-        var powerCounts = new Dictionary<int, int>();
 
         var entries = Entries.Where(e => !string.IsNullOrWhiteSpace(e.Draft.Name)).ToList();
 
@@ -307,9 +351,6 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
             if (!HasChurchList && entry.Draft.IsAdvanced)
                 invalidAdvanced.Add(name);
 
-            if (power > 0)
-                powerCounts[power] = powerCounts.TryGetValue(power, out var c) ? c + 1 : 1;
-
             var cost = GetSpiritCost(power, entry.Draft.IsAdvanced);
             totalCost += cost;
 
@@ -325,21 +366,9 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
                 }
             }
 
-            var row = GetRowForPosition(i + 1);
-            if (power > row)
-                messages.Add($"Row {row} cannot include P{power} miracles.");
         }
 
-        foreach (var kvp in powerCounts)
-        {
-            if (kvp.Key <= 1) continue;
-            var lowerCount = powerCounts.TryGetValue(kvp.Key - 1, out var lower) ? lower : 0;
-            if (kvp.Value > lowerCount)
-            {
-                messages.Add($"Pyramid rule: P{kvp.Key} exceeds P{kvp.Key - 1} count.");
-                break;
-            }
-        }
+        ApplyTreeValidation(entries, messages);
 
         if (totalCost > MaxSpiritTotal)
             messages.Add($"Exceeds {MaxSpiritTotal} spirit limit.");
@@ -378,42 +407,49 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
         _onValidationChanged();
     }
 
-    private void RebuildPyramid()
+    private void RebuildRows()
     {
-        PyramidRows.Clear();
+        Rows.Clear();
+
         var entries = Entries.Where(e => !string.IsNullOrWhiteSpace(e.Draft.Name)).ToList();
-
-        var index = 0;
-        var row = 1;
-
         if (entries.Count == 0)
-        {
-            var slots = new List<PyramidSlotVm>
-            {
-                new(null, RemoveEntryCommand, isPeak: true)
-            };
-            PyramidRows.Add(new PyramidRowVm(row, slots));
             return;
-        }
 
-        while (index < entries.Count)
-        {
-            var slots = new List<PyramidSlotVm>();
-            for (var col = 0; col < row; col++)
+        var grouped = entries
+            .GroupBy(e => e.Draft.Name, StringComparer.OrdinalIgnoreCase)
+            .Select(g => new
             {
-                if (index < entries.Count)
-                {
-                    slots.Add(new PyramidSlotVm(entries[index], RemoveEntryCommand, row == 1 && col == 0));
-                    index++;
-                }
-                else
-                {
-                    slots.Add(new PyramidSlotVm(null, RemoveEntryCommand, row == 1 && col == 0));
-                }
-            }
+                Name = g.Key,
+                Count = g.Count(),
+                Sample = g.First()
+            })
+            .OrderBy(g => g.Sample.Draft.Power)
+            .ThenBy(g => g.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
-            PyramidRows.Add(new PyramidRowVm(row, slots));
-            row++;
+        var running = 0;
+        foreach (var group in grouped)
+        {
+            var option = new MiracleOption(
+                group.Sample.Draft.Name,
+                group.Sample.Draft.Power,
+                group.Sample.Draft.Alignment,
+                group.Sample.Draft.Sphere,
+                group.Sample.Draft.IsAdvanced);
+
+            var costPer = GetSpiritCost(option.Power, option.IsAdvanced);
+            var rowTotal = costPer * group.Count;
+            running += rowTotal;
+
+            var canIncrease = CanAddOption(option);
+            Rows.Add(new EvilStairwayRowVm(
+                option,
+                group.Count,
+                costPer,
+                running,
+                canIncrease,
+                () => AddMiracleFromRow(option),
+                () => RemoveOneByName(option.Name)));
         }
     }
 
@@ -428,19 +464,18 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
         if (HasChurchList && !_churchMiracleNames!.Contains(option.Name))
             return false;
 
-        var cost = GetSpiritCost(option.Power, option.IsAdvanced);
-        if (TotalSpiritCost + cost > MaxSpiritTotal)
+        var activeTree = GetActiveTree();
+        if (activeTree != null && !activeTree.ContainsName(option.Name) && !IsUniversalNonGoodly(option))
             return false;
 
-        var position = Entries.Count(e => !string.IsNullOrWhiteSpace(e.Draft.Name)) + 1;
-        var row = GetRowForPosition(position);
-        if (option.Power > row)
+        var cost = GetSpiritCost(option.Power, option.IsAdvanced);
+        if (TotalSpiritCost + cost > MaxSpiritTotal)
             return false;
 
         if (!HasPrereqs(option.Name))
             return false;
 
-        if (ViolatesPyramidCounts(option.Power))
+        if (ViolatesTreeCounts(option.Name))
             return false;
 
         return true;
@@ -449,7 +484,7 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
     private bool HasPrereqs(string name)
     {
         if (!_preReqs.TryGetValue(name, out var reqs) || reqs.Count == 0)
-            return true;
+            return HasTreePrereqs(name);
 
         foreach (var req in reqs)
         {
@@ -457,23 +492,103 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
                 return false;
         }
 
-        return true;
+        return HasTreePrereqs(name);
     }
 
-    private bool ViolatesPyramidCounts(int power)
+    private void ApplyTreeValidation(List<MiracleEntryVm> entries, List<string> messages)
     {
-        if (power <= 1)
+        var tree = GetActiveTree();
+        if (tree == null)
+            return;
+
+        for (var i = 0; i < tree.Nodes.Count; i++)
+        {
+            var node = tree.Nodes[i];
+            var prevIndex = tree.GetPreviousRequiredIndex(i);
+            if (prevIndex < 0)
+                continue;
+
+            var prev = tree.Nodes[prevIndex];
+            var count = CountEntriesForNode(node);
+            var prevCount = CountEntriesForNode(prev);
+
+            if (count > prevCount)
+                messages.Add($"Tree rule: {node.DisplayName} exceeds {prev.DisplayName} count.");
+
+            if (count > 0 && prevCount == 0)
+                messages.Add($"Missing prerequisite: {prev.DisplayName} required for {node.DisplayName}.");
+        }
+    }
+
+    private int CountEntriesForNode(EvilStairwayNode node)
+    {
+        return Entries.Count(e =>
+            !string.IsNullOrWhiteSpace(e.Draft.Name)
+            && node.Matches(e.Draft.Name));
+    }
+
+    private EvilStairwayTree? GetActiveTree()
+    {
+        var first = Draft.Entries.FirstOrDefault(e => !string.IsNullOrWhiteSpace(e.Name));
+        if (first == null)
+            return null;
+
+        return EvilStairwayTrees.TreeLookup.TryGetValue(first.Name, out var tree) ? tree : null;
+    }
+
+    private bool HasTreePrereqs(string name)
+    {
+        var tree = GetActiveTree();
+        if (tree == null)
+            return true;
+
+        var nodeIndex = tree.FindNodeIndex(name);
+        if (nodeIndex < 0)
+            return true;
+
+        var prevIndex = tree.GetPreviousRequiredIndex(nodeIndex);
+        if (prevIndex < 0)
+            return true;
+
+        var prevCount = CountEntriesForNode(tree.Nodes[prevIndex]);
+        return prevCount > 0;
+    }
+
+    private bool ViolatesTreeCounts(string name)
+    {
+        var tree = GetActiveTree();
+        if (tree == null)
             return false;
 
-        var lowerCount = Entries.Count(e => e.Draft.Power == power - 1 && !string.IsNullOrWhiteSpace(e.Draft.Name));
-        var currentCount = Entries.Count(e => e.Draft.Power == power && !string.IsNullOrWhiteSpace(e.Draft.Name));
-        return currentCount + 1 > lowerCount;
+        var nodeIndex = tree.FindNodeIndex(name);
+        if (nodeIndex < 0)
+            return false;
+
+        var prevIndex = tree.GetPreviousRequiredIndex(nodeIndex);
+        if (prevIndex < 0)
+            return false;
+
+        var currentCount = CountEntriesForNode(tree.Nodes[nodeIndex]);
+        var prevCount = CountEntriesForNode(tree.Nodes[prevIndex]);
+        return currentCount + 1 > prevCount;
     }
 
     private bool IsAllowedAlignment(string? alignment)
     {
         var token = NormalizeAlignment(alignment);
         return token is "evil" or "neutral";
+    }
+
+    private bool IsUniversalNonGoodly(MiracleService.MiracRaw miracle)
+    {
+        var sphere = MapSphereLabel(miracle.sphere);
+        return IsUniversalSphere(sphere) && IsAllowedAlignment(miracle.alignment);
+    }
+
+    private bool IsUniversalNonGoodly(MiracleOption option)
+    {
+        var sphere = MapSphereLabel(option.Sphere);
+        return IsUniversalSphere(sphere) && IsAllowedAlignment(option.Alignment);
     }
 
     private string ResolveEntrySphere(MiracleEntryVm entry)
@@ -510,19 +625,6 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
 
     private static int GetSpiritCost(int power, bool isAdvanced)
         => isAdvanced ? power * 2 : power;
-
-    private static int GetRowForPosition(int position)
-    {
-        var row = 1;
-        var total = 1;
-        while (total < position)
-        {
-            row++;
-            total += row;
-        }
-
-        return row;
-    }
 
     private string MapSphereLabel(string raw)
     {
@@ -588,41 +690,41 @@ public sealed class EvilStairwayVm : INotifyPropertyChanged
         }
         return lookup;
     }
+
 }
 
-public sealed class PyramidRowVm
+public sealed class EvilStairwayRowVm
 {
-    public int RowIndex { get; }
-    public ObservableCollection<PyramidSlotVm> Slots { get; }
-
-    public PyramidRowVm(int rowIndex, IEnumerable<PyramidSlotVm> slots)
+    public EvilStairwayRowVm(
+        MiracleOption option,
+        int count,
+        int costPer,
+        int runningTotal,
+        bool canIncrease,
+        Action onIncrease,
+        Action onDecrease)
     {
-        RowIndex = rowIndex;
-        Slots = new ObservableCollection<PyramidSlotVm>(slots);
-    }
-}
-
-public sealed class PyramidSlotVm
-{
-    public MiracleEntryVm? Entry { get; }
-    public ICommand? RemoveCommand { get; }
-    public bool IsPeak { get; }
-
-    public bool HasEntry => Entry != null;
-    public bool IsPlaceholder => Entry == null;
-
-    public PyramidSlotVm(MiracleEntryVm? entry, ICommand? removeCommand, bool isPeak)
-    {
-        Entry = entry;
-        RemoveCommand = removeCommand;
-        IsPeak = isPeak;
+        Option = option;
+        Count = count;
+        CostPer = costPer;
+        RunningTotal = runningTotal;
+        CanIncrease = canIncrease;
+        IncreaseCommand = new Command(onIncrease);
+        DecreaseCommand = new Command(onDecrease);
     }
 
-    public object? RemoveCommandParameter => Entry;
+    public MiracleOption Option { get; }
+    public int Count { get; }
+    public int CostPer { get; }
+    public int RunningTotal { get; }
+    public bool CanIncrease { get; }
+    public bool CanDecrease => Count > 0;
 
-    public string Name => Entry?.Draft.Name ?? string.Empty;
+    public string Name => Option.Name;
+    public int Power => Option.Power;
+    public string UsesLabel => Count.ToString();
+    public string TotalLabel => RunningTotal.ToString();
 
-    public string PowerLabel => Entry == null ? string.Empty : $"P{Entry.Draft.Power}";
-
-    public bool IsAdvanced => Entry?.Draft.IsAdvanced ?? false;
+    public ICommand IncreaseCommand { get; }
+    public ICommand DecreaseCommand { get; }
 }

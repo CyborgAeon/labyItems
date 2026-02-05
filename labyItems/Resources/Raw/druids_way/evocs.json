@@ -97,6 +97,8 @@
     "fields": ["Spring", "Rivers", "Mother Nature"],
     "verbal": "Water heal and fire seal!",
     "description": "Heals a flesh-and-blood target (not elvenkind) for 12 tblp and 12 locational damage (split as desired).",
+    "healing": [[12, 12]],
+    "healType": ["worst"],
     "isAdvanced": false
   },
   {
@@ -267,6 +269,8 @@
     "fields": ["Spring", "Skies", "Keeper of the Winds"],
     "verbal": "By the powers of air, wind and thunder...Call Lightning!",
     "description": "Must be under a reasonably cloudy sky (usually outdoors). One target takes 36/6 electrical damage (12 hits to monsters).",
+    "damage": [[36.6]],
+    "damType": ["blast"],
     "isAdvanced": false
   },
   {
@@ -287,6 +291,8 @@
     "fields": ["Autumn", "Mother Nature"],
     "verbal": "May the strength of the world abide here for a time and may its strength replenish thine own",
     "description": "Tie a bandage; after 30s the target receives 4/4 curing (1 HTK). Bandage must remain for full duration; stacks with published bandaging where relevant.",
+    "healing": [[4, 4]],
+    "healType": ["worst"],
     "isAdvanced": true
   },
   {
@@ -337,6 +343,9 @@
     "fields": ["Winter", "Deserts", "Shadow of the Dawn"],
     "verbal": "May the world turn its hand against thee",
     "description": "Inflicts 6 tblp and 1 point of damage to each location to 1 target. It will only harm fully Flesh and Blood (F&B) creatures thus elves and undead (for example) are immune to this evocation. Innate PAC applies to this damage (thus a target with innate PAC 1 is immune to this evocation). This evocation inflicts 2 HTK against monsters.",
+    "damage": [6, 1],
+    "InnatePacApplies": [6, 1],
+    "damType": ["blast"],
     "isAdvanced": true
   },
   {
@@ -432,6 +441,8 @@
     "preReqs": ["Water of Life"],
     "verbal": "Let Nature infuse this liquid with its power",
     "description": "Empowers one 6 point healing potion (including one created by lesser water of life or similar) so that it now cures 9 tblp and 9 points of locational damage. This can be benefited from by Elves and similar, but is obviously a flesh and blood effect. For those individuals with potion restrictions the result is still considered to be a single 6 point. If the potion is not drunk within the duration it is wasted.",
+    "healing": [[9, 9]],
+    "healType": ["worst"],
     "isAdvanced": true
   },
   {
@@ -442,7 +453,9 @@
     "fields": ["Spring", "Skies", "Keeper of the Winds"],
     "preReqs": ["Call Lightning"],
     "verbal": "By the powers of air and thunder I strike thee",
-    "description": "As per the 8EP evocation Call Lightning, but only inflicts 12/2 damage. (4HTK). Requires cloud cover as Call Lightning does",
+    "description": "Inflicts 12TBLP & 2 Lightning damage to each location. (4HTK). Requires cloud cover as Call Lightning does",
+    "damage": [[12, 2]],
+    "damType": ["blast"],
     "isAdvanced": true
   },
   {
@@ -469,11 +482,11 @@
   {
     "name": "Breeze",
     "power": 3,
-    "range": "—",
-    "duration": "—",
+    "range": "10'",
+    "duration": "Instant",
     "fields": ["Spring", "Skies", "Keeper of the Winds"],
-    "verbal": "",
-    "description": "As per advanced listing; minor wind manipulation per write-up.",
+    "verbal": "Breeze!",
+    "description": "Causes one chosen target to suffer the effects of a Gust of Wind evocation.",
     "isAdvanced": true
   },
   {
@@ -489,19 +502,22 @@
   {
     "name": "Druidic Harm",
     "power": 3,
-    "range": "—",
-    "duration": "—",
+    "range": "Touch",
+    "duration": "Instant",
     "fields": ["Winter", "Deserts", "Shadow of the Dawn"],
-    "verbal": "",
+    "verbal": "May the world turn its hand against you and may you suffer",
     "preReqs": ["Lesser Druidic Harm"],
-    "description": "As per advanced listing.",
+    "damage": [[12, 12]],
+    "InnatePacApplies": [2, 2],
+    "damType": "Missile",
+    "description": "This evocation inflicts 6 points of damage with each hand to a target flesh and blood creature. 2 HTK with each hand vs. monsters. Innate PAC applies to this damage (thus a target with innate PAC 6 is immune to this evocation).",
     "isAdvanced": true
   },
   {
     "name": "Greater Water of Life",
     "power": 3,
-    "range": "—",
-    "duration": "—",
+    "range": "2 inches",
+    "duration": "30 seconds",
     "fields": ["Spring", "Rivers", "Mother Nature"],
     "verbal": "May this water bring you health and strength",
     "preReqs": ["Lesser Water of Life"],
@@ -511,12 +527,12 @@
   {
     "name": "Greater Water of Spite",
     "power": 3,
-    "range": "—",
-    "duration": "—",
+    "range": "2 inches",
+    "duration": "30 seconds",
     "fields": ["Rivers", "Horned Man"],
     "verbal": "May this water twist and change and be your undoing",
     "preReqs": ["Lesser Water of Spite"],
-    "description": "As per advanced listing.",
+    "description": "Turns 50 ml of normal liquid into a single dose of BV 4 or IV 6. Note that poison created by this evocation only lasts for a brief while. These poisons cannot ever heal damage or grant any other system benefit, unless their target has an ability that specifically mentions this evocation ~ this means that even if a target would normally be healed by poison they are not healed by this evocation",
     "isAdvanced": true
   },
   {
@@ -548,6 +564,9 @@
     "fields": ["Summer", "Deserts"],
     "verbal": "Flames kindled by my call gather here and sear [this/these] fools!",
     "description": "Target Suffers 6/6 (2 HTK) physical fire to two locations chosen by the caster, Innate PAC applies at 1:1 to each strike separately, the caster must target different locations on 1 target, or may choose to separate the damage between 2 different targets, though these must then be standing within 3’ of each other.",
+    "damage": [[12, 12]],
+    "InnatePacApplies": [2, 2],
+    "damType": ["Missile"],
     "isAdvanced": true
   },
   {
@@ -559,6 +578,9 @@
     "preReqs": ["Searing Flame"],
     "verbal": "Flames kindled by my call lash out now and strike this fool!",
     "description": "This evocation inflicts 18/3 natural fire damage (6 HTK). Innate PAC applies at 6/1 per point although the damage is physical fire only.",
+    "damage": [18, 3],
+    "damType": ["blast"],
+    "InnatePacApplies": [6, 1],
     "isAdvanced": true
   },
   {
@@ -787,7 +809,7 @@
     "power": 5,
     "range": "Self",
     "duration": "5 minutes",
-    "fields": ["Spring", "Skies", "Keeper of the Winds "],
+    "fields": ["Spring", "Skies", "Keeper of the Winds"],
     "preReqs": ["Predict Weather"],
     "verbal": "From the skies above I call forth a cloud to dwell below with me for a time!",
     "description": "This evocation causes a small cloud to form and hover just over the head of the caster. This cloud may be used by any Druid within 20’ as a source of lightning for the evocation Call Lightning (or similar). If cast under an already cloudy sky any use of Call Lightning (not Spark or other abilities) cast within 20’ of the cloud will also act as a Knockdown and leave the target stunned for 5 seconds (as per non-level based Halt). Immunity to physical electricity grants immunity to these FX’s, or immunities to Halt and Knockdown may be applied separately.",
@@ -802,10 +824,12 @@
     "preReqs": ["Predict Weather", "Resist Fire"],
     "fields": ["Winter", "Skies", "Keeper of the Winds"],
     "verbal": "Hail come and assail my foes",
-    "description": "Affects all targets within a 20’ 60 cone (cf. Neuronic Flare). All suffer 6/1 (2 HTK) natural cold damage (innate PAC 1 grants immunity) and are knocked back to the edge of the effect. Immunity to Natural Cold grants complete immunity to this evocation, Immunity to Repels to the knockback. A creature that suffers baneful effects for being in a cold environment will suffer from those effects for 5 minutes after being affected by this evocation.",
+    "description": "Affects all targets within a 20’ cone suffer 6/1 (2 HTK) natural cold damage (innate PAC 1 grants immunity) and are knocked back to the edge of the effect. Immunity to Natural Cold grants complete immunity to this evocation, Immunity to Repels to the knockback. A creature that suffers baneful effects for being in a cold environment will suffer from those effects for 5 minutes after being affected by this evocation.",
+    "damage": [[6, 1]],
+    "damType": ["blast"],
+    "InnatePacApplies": [6, 1],
     "isAdvanced": true
   },
-
   {
     "name": "Puma's Speed",
     "power": 5,
@@ -901,6 +925,9 @@
     "fields": ["Winter", "Deserts", "Shadow of the Dawn"],
     "verbal": "May the world turn its hand against thee and may you suffer great harm",
     "description": "The caster inflicts 36/6 points of damage (12 HTK) by touch (with both hands) in a manner similar to Druidic Harm. Innate PAC applies so 1 PAC negates 6/1 damage.",
+    "InnatePacApplies": [6, 1],
+    "damage": [[36, 6]],
+    "damType": ["Missile"],
     "isAdvanced": true
   },
   {
@@ -911,6 +938,8 @@
     "fields": ["Spring", "Rivers", "Mother Nature"],
     "verbal": "Water heal and fire seal these mortal wounds that you may breathe easy once more",
     "description": "This evocation cures a Flesh and Blood creature 36 tblp and 36pts locational damage, this healing may be split between as many locations as desired by caster. Should the target have the post 8th tables ability Affinity with Nature then this spell instead cures 54/54 as long as the prerequisite time is spent in preparation.",
+    "healing": [[36, 36]],
+    "healType": ["worst"],
     "isAdvanced": true
   },
   {
@@ -941,6 +970,9 @@
     "fields": ["Summer", "Forest", "Horned Man"],
     "preReqs": ["Entangle"],
     "verbal": "May the trees of the forest rise up against thee",
+    "damage": [[24, 24]],
+    "damType": "Missile",
+    "immunity": "Called Loc Shot",
     "description": "May only be cast on a target that is standing within 5’ of a tree. A large branch shoots off the tree, inflicting a 24 point quad to a location chosen by the caster (8 HTK vs. monsters). This inflicts damage in the same way as a thrown weapon, so any abilities that would apply to a mundane thrown weapon applies, as does any reductions that specifically apply vs. H class weapons (Arrow Cutting, for example). Immunity to Call Loc. Shot grants complete immunity to this evocation.",
     "isAdvanced": true
   },
@@ -1108,17 +1140,213 @@
     "verbal": "And so they come gathered by my call, a flowing torrent of creatures small, ever creeping over frail skin, clawing biting digging in, feasting upon your flesh so warm, arises here the creeping swarm!",
     "preReqs": ["Resist Fire"],
     "description": "A swarm of tiny biting insects will crawl all over a Flesh & Blood target. These inflict 6/1 (2 HTK to monsters) physical damage every 15 seconds for the duration. The swarm will only remain in place as long as the caster concentrates on maintaining this evocation. Caster may move at a slow walk and talk slowly and still maintain this, but if the caster runs, fights, casts or suffers harm this evocation will end. Innate PAC 1 grants complete immunity to this.",
+    "damage": [
+      [12, 2],
+      [12, 2],
+      [12, 2],
+      [12, 2],
+      [12, 2],
+      [12, 2],
+      [12, 2],
+      [12, 2],
+      [12, 2],
+      [12, 2]
+    ],
+    "damType": ["blast"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Deluge's Uplifting Gust",
+    "power": 8,
+    "range": "20'",
+    "duration": "5 minutes",
+    "fields": ["Skies", "Keeper of the Winds"],
+    "verbal": "To the azure realms of the clouds I cast you skyward",
+    "description": "Causes the target to be thrown high (To the High height) in the sky and held there. The target can act freely but cannot move from the spot unless they are able to walk on air or shift away. At the end of evocation (even if ended early by some means) they return safely to the ground (in a similar manner to snowflake). Immunity to repels applies.",
+    "preReqs": ["Gust of Wind"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Ironskin",
+    "power": 8,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Mountains", "Horned Man"],
+    "verbal": "May the strength of the greatest mountains be upon me now, may my body be armoured in the toughest rock, my muscles be hard as diamond and my skin as strong as iron. The natural power fills me and defends me.",
+    "description": " This evocation armours the recipient such that they take only 1pt of damage per damage grade. Thus 1 point from a single, 3 from a triple 5 from a quin. This defence only applies against blows with no supernatural component however. Whilst this evocation is active, the caster may only travel at ½ speed and may not run, but may still fight at full speed. It is not standardly possible to benefit from this evocation and any form of active parry ability - since this evocation clearly does not allow ‘free movement’.",
+    "preReqs": ["Stoneskin (Self)"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Slow Death",
+    "power": 8,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Winter", "Deserts", "Shadow of the Dawn"],
+    "verbal": "May the world turn its hand against thee and may you suffer in lingering agony",
+    "description": "This evocation causes the target to suffer a Druidic Harm to the locations touched when this evocation was cast upon them, and then again at the end of every 30 seconds for the duration of this evocation. If the target receives a Druidic Heal whilst this evocation is upon them then this will be removed from them. If a target should be suffering from multiple castings of this evocation, each requires a separate Druidic Heal to remove. This evocation hangs for 30 seconds on the caster’s hands.",
+    "preReqs": ["Druidic Harm"],
+    "damage": [
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12]
+    ],
+    "damType": ["Missile"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Slow Healing",
+    "power": 8,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Spring", "Rivers", "Mother Nature"],
+    "verbal": "Water heal and fire seal as the world holds you in its embrace",
+    "description": "Target is healed 12/12 in a similar manner to Druidic Heal, for every 30 seconds within the duration. This evocation is broken if target moves from the point of casting in any significant way, casts or fights, i.e. the recipient could sit down, talk & generally be relaxed, but could not do anything that isn’t “restful”.",
+    "preReqs": ["Druidid Heal"],
+    "healing": [
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12],
+      [12, 12]
+    ],
+    "healType": ["worst"],
+    "isAdvanced": true
+  },
+  {
+    "name": "The Crowd Fades",
+    "power": 8,
+    "range": "Touch",
+    "duration": "1 Hour",
+    "fields": ["Cities"],
+    "verbal": "As we walk these streets let the city forget us as we become as nothing",
+    "description": "Acts as the Lost in the Crowd Evocation except it effects the caster and everyone that is under a joining evocation as long as they remain within 20ft of the caster.",
+    "preReqs": ["Lost in the Crowd"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Tiger's Prowl",
+    "power": 8,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Forest", "Horned Man"],
+    "verbal": "May the world grant me the guise of the Prowling Tiger",
+    "description": "Whilst in a natural/woodland environment the caster becomes invisible, he can move at a normal walk, or talk quietly and still maintain this evocation. This evocation will go down if the caster runs, fights, casts or suffers harm.",
+    "preReqs": ["Camouflage"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Wither",
+    "power": 8,
+    "range": "Touch",
+    "duration": "5 minutes",
+    "fields": ["Autumn", "Deserts", "Shadow of the Dawn"],
+    "verbal": "Flesh rot and bone crumble, flames dance within this limb",
+    "description": "Only works on non-critical locations of Flesh & Blood targets. Target limb rots and withers away becoming unusable for the duration. This can instead be removed instantly by a Regeneration miracle or a Regrowth evocation. Immunity to Wither applies and the evocation hangs on the hand for 30 seconds after casting.",
+    "preReqs": ["Greater Druidic Harm", "Druidic Harm", "Lesser Druidic Harm"],
     "isAdvanced": true
   },
 
   {
-    "name": "Well of Knowledge",
+    "name": "Breath of Life",
     "power": 10,
-    "range": "Caster",
-    "duration": "2 minutes",
-    "fields": ["Rivers", "Father of the World"],
-    "verbal": "As I drink from the Well of Knowledge I abjure thee, open my eyes and let me see the truth of all things!",
-    "description": "3 questions as a Communication II miracle (up to 7 words each) about physical/natural matters; must ritually drink water before each.",
+    "range": "Touch",
+    "duration": "Instant",
+    "fields": ["Spring", "Rivers", "Mother Nature"],
+    "verbal": "Powers of Nature breathe thy life giving essence into this creatures mortal form, let it arise and walk free in your world, Primus has taken its toll but this soul of..[target’s res name]… needs to return. By my power and rites thou art called back to this place. Your body takes its first breath…the Breath of Life",
+    "description": "You lose 1 level of resistance & This costs the recipient 10% res chance. It requires a 5 minute ritual ending with the verbal above. If the recipient remains restful in the area of the resurrection for 5 minutes after being returned to life they are then completely healed. This miracle only works on flesh and blood creatures, regardless of alignment.",
+    "preReqs": ["Druidic Total Heal"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Druidic Total Heal",
+    "power": 10,
+    "range": "Touch",
+    "duration": "Instant",
+    "fields": ["Spring", "Rivers", "Mother Nature"],
+    "verbal": "Child of the World how badly you fare, but you may rest easy in my care. Water heal this ravaged one, Earth regrow the shattered bone, Fire seal the wounds of strife, and Air flow in and renew life",
+    "description": "This evocation cures the target Flesh & Blood creature 72tblp and 72pts of location damage, or fully if prepped for 30 seconds",
+    "preReqs": ["Greater Druidic Heal", "Slow Heal"],
+    "healing": [[72, 72]],
+    "healType": ["total"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Natural Death",
+    "power": 10,
+    "range": "Touch",
+    "duration": "Instant",
+    "fields": ["Winter", "Deserts", "Shadow of the Dawn"],
+    "verbal": "May the world turn its hand against thee and may you suffer and die, the natural forces gather at my call and the end comes near!",
+    "description": "As this evocation is cast upon a target Flesh & Blood creature they will collapse into a cataleptic state. At the end of the evocation’s duration the target will die. If the target has 1 resistance to Touch of Death they will not die, but will come round. If the victim receives 36 points of EP healing while unconscious they will come round (and thus not die at the end of the duration). If the target is immune to Catalepsy, uses a War-Cry or has Determination they can keep moving for the 5 minutes but will still die at the end of the duration unless they possess at least 1 resistance to Touch of Death or receive 36 points of Druidic Healing. This evocation will hang for 30secs.",
+    "preReqs": ["Greater Druidic Harm", "Druidic Harm", "Lesser Druidic Harm"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Remus' Tremors",
+    "power": 10,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Mountains"],
+    "verbal": "May the earth tremble beneath my step. Let the ground shake and quake.",
+    "description": "Causes the ground within 10ft of the caster to tremble and shake. Anyone walking on the ground that is not benefitting from a Walk on Earth (or similar) is unable to stand (this does not include the caster). Neuro-Balance or Stability grant immunity to this. Should the caster leave the ground for any reason the evocation ends. At the ref’s discretion this may be used to cause damage to weak structures.",
+    "preReqs": ["Quake"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Shroud of Halgar",
+    "power": 10,
+    "range": "Self",
+    "duration": "5 minutes",
+    "fields": ["Cities"],
+    "verbal": "Let my presence in this world be touched by the throne and become one with nature.",
+    "description": "Grants the caster Immunity to Magic and Spirit for the duration. This evocation can only be cast while on Primus.",
+    "preReqs": ["Quake"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Swarm of flies",
+    "power": 10,
+    "range": "20'",
+    "duration": "5 minutes",
+    "fields": ["Summer", "Deserts", "Horned Man"],
+    "verbal": "Flies rise up and engulf thee!",
+    "description": " This evocation causes flies and other insects to swarm around the target in a distracting fashion. The victim cannot use any melee skill based abilities (weapon masteries, back stab, counter mastery etc) while under this effect unless they have Insensitive Skin or Immunity to Loss of Weapon Masteries due to Visual Environment, or do not have physical hits at all. Any ‘blast’ style damage to the target ends the spell – e.g. a Fireblast, or Call Lightning spell as this will kill the flies.",
+    "preReqs": ["Control Animal"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Travel the Hidden Paths",
+    "power": 12,
+    "range": "Same Plane",
+    "duration": "5 minutes",
+    "fields": ["Cities"],
+    "description": "The evocation may only be cast while in a large city, and must be cast on a large gate or archway. It mystically enchants the gate so that when walked through those under a joining evocation are transported to the chosen city. The entrance to the path closes as soon as the caster steps on it. The journey between cities takes 5 minutes to complete.",
+    "verbal": "Let this path before me pass from [Here] to the city of [Name]. Allow those that travel with me to pass along these hidden paths",
+    "preReqs": ["Control Animal"],
+    "isAdvanced": true
+  },
+  {
+    "name": "Verdant Flesh",
+    "power": 10,
+    "range": "Self",
+    "duration": "3 Hours",
+    "fields": ["Mother Nature"],
+    "description": "The evocation infuses the caster with exceptional healing powers. This results in the next 3 times they are struck they instantly receive a Druidic Heal (regardless of the damage suffered). An individual can only be under one such evocation at a time.",
+    "verbal": "Let the touch of nature be upon me and come to my aid as it is needed",
+    "preReqs": ["Slow Heal"],
     "isAdvanced": true
   },
   {
@@ -1132,11 +1360,23 @@
     "isAdvanced": true
   },
   {
+    "name": "Well of Knowledge",
+    "power": 10,
+    "range": "Caster",
+    "duration": "2 minutes",
+    "fields": ["Rivers", "Father of the World"],
+    "verbal": "As I drink from the Well of Knowledge I abjure thee, open my eyes and let me see the truth of all things!",
+    "description": "3 questions as a Communication II miracle (up to 7 words each) about physical/natural matters; must ritually drink water before each.",
+    "isAdvanced": true
+  },
+
+  {
     "name": "Travelling the World Tree",
     "power": 12,
     "range": "Touch",
     "duration": "30 seconds",
     "fields": ["Forest", "Father of the World"],
+    "preReqs": ["Forest Shift"],
     "verbal": "From here to there we wish to travel! May the pathways open! Each must pay a toll, which the World Tree seeks",
     "description": "Opens a portal between trees (LoS or memorised). Travel takes 15 minutes; each traveller takes 12 tblp; 12 EP to open + 1 EP per traveller.",
     "isAdvanced": true
@@ -1144,7 +1384,7 @@
   {
     "name": "Spring's Soothing Rain",
     "power": 20,
-    "range": "Caster",
+    "range": "Self",
     "duration": "24 hours",
     "fields": ["Spring", "Mother Nature"],
     "verbal": "Let the cleansing touch of spring’s rain be upon be and allow me to nurture the ills of the world for a time",
