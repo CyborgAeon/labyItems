@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Services;
 using Microsoft.Maui.Graphics;
@@ -7,9 +8,10 @@ namespace labyItems.Pages.SpellCard;
 
 public partial class SpellDetailCardView : ContentView
 {
-    private const int DescriptionCollapsedLines = 5;
-    private const int VerbalCollapsedLines = 3;
+    private const int DescriptionCollapsedLines = 1;
+    private const int VerbalCollapsedLines = 1;
     private const int NotesCollapsedLines = 2;
+    private const double ExpanderOverflowTolerance = 0.01;
 
     public static readonly BindableProperty SpellProperty = BindableProperty.Create(
         nameof(Spell),
@@ -34,6 +36,7 @@ public partial class SpellDetailCardView : ContentView
             _isDescriptionExpanded = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(DescriptionMaxLines));
+            OnPropertyChanged(nameof(DescriptionChevronText));
         }
     }
 
@@ -47,6 +50,7 @@ public partial class SpellDetailCardView : ContentView
             _isVerbalExpanded = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(VerbalMaxLines));
+            OnPropertyChanged(nameof(VerbalChevronText));
         }
     }
 
@@ -102,12 +106,20 @@ public partial class SpellDetailCardView : ContentView
     public int DescriptionMaxLines => IsDescriptionExpanded ? -1 : DescriptionCollapsedLines;
     public int VerbalMaxLines => IsVerbalExpanded ? -1 : VerbalCollapsedLines;
     public int NotesMaxLines => IsNotesExpanded ? -1 : NotesCollapsedLines;
+    public string DescriptionChevronText => IsDescriptionExpanded ? "▴" : "▾";
+    public string VerbalChevronText => IsVerbalExpanded ? "▴" : "▾";
+
+    private bool _isDescriptionAnimating;
+    private bool _isVerbalAnimating;
+    private bool IsAnimatingExpand => _isDescriptionAnimating || _isVerbalAnimating;
 
     public string SpellName => ReadOrFallback(Spell?.name, fallback: "Unnamed Spell");
     public string DescriptionText => ReadOrFallback(Spell?.description, fallback: "No description provided.");
     public string VerbalText => ReadOrFallback(Spell?.verbal, fallback: "No verbal provided.");
     public string NotesText => (Spell?.notes ?? string.Empty).Trim();
     public bool HasNotes => NotesText.Length > 0;
+    public bool ShowDescriptionChevron => DescriptionText.Length > 0;
+    public bool ShowVerbalChevron => VerbalText.Length > 0;
 
     public string ColourDisplayText => BuildColourDisplayText(Spell?.colour);
     public string LevelDisplayText => $"Lvl {Math.Max(0, Spell?.level ?? 0)}";
@@ -152,6 +164,10 @@ public partial class SpellDetailCardView : ContentView
         OnPropertyChanged(nameof(VerbalText));
         OnPropertyChanged(nameof(NotesText));
         OnPropertyChanged(nameof(HasNotes));
+        OnPropertyChanged(nameof(ShowDescriptionChevron));
+        OnPropertyChanged(nameof(ShowVerbalChevron));
+        OnPropertyChanged(nameof(DescriptionChevronText));
+        OnPropertyChanged(nameof(VerbalChevronText));
         OnPropertyChanged(nameof(ColourDisplayText));
         OnPropertyChanged(nameof(LevelDisplayText));
         OnPropertyChanged(nameof(ColourCircleColor));
@@ -179,14 +195,56 @@ public partial class SpellDetailCardView : ContentView
         MetaChips.Add(new SpellMetaChipVm(iconFactory(value), $"{label}: {value}"));
     }
 
-    private void OnDescriptionToggleClicked(object sender, EventArgs e)
+    private async void OnDescriptionToggleClicked(object sender, EventArgs e)
     {
-        IsDescriptionExpanded = !IsDescriptionExpanded;
+        if (_isDescriptionAnimating)
+            return;
+
+        _isDescriptionAnimating = true;
+        try
+        {
+            await AnimateSectionToggleAsync(
+                DescriptionTextContainer,
+                DescriptionLabel,
+                DescriptionText,
+                DescriptionCollapsedLines,
+                "SpellDescriptionExpand",
+                () =>
+                {
+                    IsDescriptionExpanded = !IsDescriptionExpanded;
+                    return IsDescriptionExpanded;
+                });
+        }
+        finally
+        {
+            _isDescriptionAnimating = false;
+        }
     }
 
-    private void OnVerbalToggleClicked(object sender, EventArgs e)
+    private async void OnVerbalToggleClicked(object sender, EventArgs e)
     {
-        IsVerbalExpanded = !IsVerbalExpanded;
+        if (_isVerbalAnimating)
+            return;
+
+        _isVerbalAnimating = true;
+        try
+        {
+            await AnimateSectionToggleAsync(
+                VerbalTextContainer,
+                VerbalLabel,
+                VerbalText,
+                VerbalCollapsedLines,
+                "SpellVerbalExpand",
+                () =>
+                {
+                    IsVerbalExpanded = !IsVerbalExpanded;
+                    return IsVerbalExpanded;
+                });
+        }
+        finally
+        {
+            _isVerbalAnimating = false;
+        }
     }
 
     private void OnNotesToggleClicked(object sender, EventArgs e)
@@ -209,6 +267,12 @@ public partial class SpellDetailCardView : ContentView
         CanExpandDescription = ShouldShowExpander(DescriptionLabel, DescriptionText, DescriptionCollapsedLines);
         CanExpandVerbal = ShouldShowExpander(VerbalLabel, VerbalText, VerbalCollapsedLines);
         CanExpandNotes = HasNotes && ShouldShowExpander(NotesLabel, NotesText, NotesCollapsedLines);
+
+        if (IsAnimatingExpand)
+            return;
+
+        if (!CanExpandNotes && IsNotesExpanded)
+            IsNotesExpanded = false;
     }
 
     private static bool ShouldShowExpander(Label label, string text, int collapsedLines)
@@ -216,14 +280,14 @@ public partial class SpellDetailCardView : ContentView
         if (label == null || string.IsNullOrWhiteSpace(text))
             return false;
 
-        var width = label.Width;
+        var width = ResolveMeasureWidth(label);
         if (width <= 0)
             return false;
 
         var fullHeight = MeasureHeight(label, text, width, maxLines: -1);
         var collapsedHeight = MeasureHeight(label, text, width, maxLines: collapsedLines);
 
-        return fullHeight > (collapsedHeight + 0.5);
+        return fullHeight > (collapsedHeight + ExpanderOverflowTolerance);
     }
 
     private static double MeasureHeight(Label template, string text, double width, int maxLines)
@@ -239,6 +303,54 @@ public partial class SpellDetailCardView : ContentView
         };
 
         return probe.Measure(width, double.PositiveInfinity).Height;
+    }
+
+    private static double ResolveMeasureWidth(Label label)
+    {
+        if (label.Parent is VisualElement parent)
+            return CardExpandAnimationHelper.ResolveMeasureWidth(label, parent);
+
+        return CardExpandAnimationHelper.ResolveMeasureWidth(label);
+    }
+
+    private async Task AnimateSectionToggleAsync(
+        ContentView container,
+        Label label,
+        string text,
+        int collapsedLines,
+        string animationName,
+        Func<bool> toggleAndGetExpandedState)
+    {
+        var width = ResolveMeasureWidth(label);
+        if (width <= 0)
+        {
+            toggleAndGetExpandedState();
+            ScheduleExpandabilityRefresh();
+            return;
+        }
+
+        var beforeExpanded = label.MaxLines < 0;
+        var beforeHeight = MeasureHeight(label, text, width, beforeExpanded ? -1 : collapsedLines);
+        var afterExpanded = toggleAndGetExpandedState();
+        var afterHeight = MeasureHeight(label, text, width, afterExpanded ? -1 : collapsedLines);
+
+        if (Math.Abs(afterHeight - beforeHeight) < ExpanderOverflowTolerance)
+        {
+            ScheduleExpandabilityRefresh();
+            return;
+        }
+
+        container.HeightRequest = beforeHeight;
+        await CardExpandAnimationHelper.AnimateHeightAsync(
+            owner: container,
+            target: container,
+            animationName: animationName,
+            from: beforeHeight,
+            to: afterHeight,
+            length: 180,
+            easing: Easing.CubicInOut);
+        container.HeightRequest = -1;
+        ScheduleExpandabilityRefresh();
     }
 
     private static string BuildColourDisplayText(string? rawColour)

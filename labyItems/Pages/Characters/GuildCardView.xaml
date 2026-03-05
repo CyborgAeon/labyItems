@@ -73,8 +73,9 @@
             </Grid>
 
             <!-- Expanded -->
-            <VerticalStackLayout Grid.Row="1"
-                                 IsVisible="{Binding IsExpanded}"
+            <VerticalStackLayout x:Name="ExpandedContent"
+                                 Grid.Row="1"
+                                 IsVisible="False"
                                  Spacing="10">
 
                 <!-- Restrictions -->

@@ -73,7 +73,8 @@
                             </VerticalStackLayout>
                      </Frame>
 
-                     <Frame HasShadow="False"
+                     <Frame x:Name="Post8CardFrame"
+                            HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
                             BorderColor="#E5E7EB">
@@ -95,7 +96,8 @@
                                                   Command="{Binding ToggleAdvancementExpandedCommand}"/>
                                    </Grid>
 
-                                   <VerticalStackLayout IsVisible="{Binding IsAdvancementExpanded}"
+                                   <VerticalStackLayout x:Name="Post8ExpandedContent"
+                                                        IsVisible="False"
                                                         Spacing="6">
                                           <Grid ColumnDefinitions="*,*">
 

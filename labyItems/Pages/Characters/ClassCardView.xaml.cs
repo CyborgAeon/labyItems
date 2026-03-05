@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Input;
+using labyItems.Helpers;
 
 namespace labyItems.Pages.Characters;
 
@@ -130,11 +131,10 @@ public partial class ClassCardView : ContentView
             await Task.Yield();
             await Task.Delay(1, token);
 
-            var width = ExpandedContent.Width > 0 ? ExpandedContent.Width : CardFrame.Width;
-            if (width <= 0)
-                width = Width;
-
-            var measured = ExpandedContent.Measure(width, double.PositiveInfinity).Height;
+            var width = CardExpandAnimationHelper.ResolveMeasureWidth(ExpandedContent, CardFrame, this);
+            var measured = width > 0
+                ? CardExpandAnimationHelper.MeasureContentHeight(ExpandedContent, width)
+                : -1;
             if (measured <= 0)
             {
                 ExpandedContent.Opacity = 1;
@@ -144,19 +144,16 @@ public partial class ClassCardView : ContentView
 
             ExpandedContent.HeightRequest = 0;
             ExpandedContent.Opacity = 0;
-
-            var tcs = new TaskCompletionSource();
-            var animation = new Animation(
-                v =>
-                {
-                    ExpandedContent.HeightRequest = v;
-                    ExpandedContent.Opacity = Math.Min(1, v / measured);
-                },
-                0,
-                measured,
-                Easing.CubicOut);
-            animation.Commit(this, "expand", length: 240, finished: (_, __) => tcs.TrySetResult());
-            await tcs.Task;
+            await CardExpandAnimationHelper.AnimateHeightAsync(
+                owner: this,
+                target: ExpandedContent,
+                animationName: "expand",
+                from: 0,
+                to: measured,
+                length: 240,
+                easing: Easing.CubicOut,
+                onStep: v => ExpandedContent.Opacity = Math.Min(1, v / measured),
+                cancellationToken: token);
 
             if (token.IsCancellationRequested) return;
 
@@ -178,18 +175,16 @@ public partial class ClassCardView : ContentView
         }
 
         ExpandedContent.HeightRequest = startHeight;
-        var collapseTcs = new TaskCompletionSource();
-        var collapse = new Animation(
-            v =>
-            {
-                ExpandedContent.HeightRequest = v;
-                ExpandedContent.Opacity = startHeight <= 0 ? 0 : Math.Max(0, v / startHeight);
-            },
-            startHeight,
-            0,
-            Easing.CubicIn);
-        collapse.Commit(this, "expand", length: 200, finished: (_, __) => collapseTcs.TrySetResult());
-        await collapseTcs.Task;
+        await CardExpandAnimationHelper.AnimateHeightAsync(
+            owner: this,
+            target: ExpandedContent,
+            animationName: "expand",
+            from: startHeight,
+            to: 0,
+            length: 200,
+            easing: Easing.CubicIn,
+            onStep: v => ExpandedContent.Opacity = startHeight <= 0 ? 0 : Math.Max(0, v / startHeight),
+            cancellationToken: token);
 
         if (token.IsCancellationRequested) return;
 

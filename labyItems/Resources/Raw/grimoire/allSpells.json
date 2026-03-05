@@ -538,7 +538,7 @@
     "level": 6,
     "colour": "Blue",
     "verbal": "Mighty sylph speak to me and relate what thou knowest",
-    "description": "The Sylph will have knowledge of what has transpired in the air of the area (10' radius) of the caster and it will have knowledge of such things as conversation, etc. A Sylph's memory is not reliable when recalling things of a week of more in the past. Otherwise see Talk to Shade on page 14.",
+    "description": "The Sylph will have knowledge of what has transpired in the air of the area (10' radius) of the caster and it will have knowledge of such things as conversation, etc. A Sylph's memory is not reliable when recalling things of a week of more in the past. The shades will have knowledge of what has happened in any darkness or shadows within a 10' radius. Shades have excellent memories. This can also be used to converse with any actual elemental shades present.",
     "IsAdvanced": false,
     "sourcePage": 15
   },
@@ -709,7 +709,7 @@
     "level": 6,
     "colour": "Brown",
     "verbal": "Mighty gnome speak to me and relate what thou knowest",
-    "description": "A gnome will know what has happened on or around earth or stone. Gnomes have excellent memories. Otherwise see Talk to Shade on page 14.",
+    "description": "A gnome will know what has happened on or around earth or stone. Gnomes have excellent memories. The shades will have knowledge of what has happened in any darkness or shadows within a 10' radius. Shades have excellent memories. This can also be used to converse with any actual elemental shades present.",
     "IsAdvanced": false,
     "sourcePage": 17
   },
@@ -889,7 +889,7 @@
     "level": 6,
     "colour": "Green",
     "verbal": "Mighty undine speak to me and relate what thou knowest",
-    "description": "An Undine will know what has happened in or around liquids. Otherwise see Talk to Shade.",
+    "description": "An Undine will know what has happened in or around liquids. The shades will have knowledge of what has happened in any darkness or shadows within a 10' radius. Shades have excellent memories. This can also be used to converse with any actual elemental shades present..",
     "IsAdvanced": false,
     "sourcePage": 19
   },
@@ -907,7 +907,7 @@
     "level": 8,
     "colour": "Green",
     "verbal": "By all my power I command that... to vanish!",
-    "description": "By casting this spell the wizard causes one non-living item that does not possess a spirit or exceed 27 cubic feet in volume to vanish for 5 minutes. After the expiry of the spell the item will re-appear in the same spot it disappeared from. If the item was worn it reappears in the same position relative to the wearer. The item, whilst vanished, does not exist at any other location. E.g. A small trap door would re-appear closed (locked) if it was originally closed and locked. E.g. A magic ring vanished from a finger would re-appear on that finger even if the person wearing the ring has moved several miles / light years / planes, etc.",
+    "description": "one non-living item that does not possess a spirit or exceed 27 cubic feet in volume to vanish for 5 minutes. After the item will re-appear in the same spot it disappeared from. If the item was worn it reappears in the same position relative to the wearer. The item, whilst vanished, does not exist at any other location. E.g. A small trap door would re-appear closed (locked) if it was originally closed and locked. E.g. A magic ring vanished from a finger would re-appear on that finger even if the person wearing the ring has moved several miles / light years / planes, etc.",
     "IsAdvanced": false,
     "sourcePage": 19
   },

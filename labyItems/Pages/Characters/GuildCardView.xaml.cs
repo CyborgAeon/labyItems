@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows.Input;
+using labyItems.Helpers;
 
 namespace labyItems.Pages.Characters;
 
@@ -29,7 +30,7 @@ public partial class GuildCardView : ContentView
     }
 
     private INotifyPropertyChanged? _boundVm;
-    private CancellationTokenSource? _scrollCts;
+    private CancellationTokenSource? _expandCts;
 
     protected override void OnBindingContextChanged()
     {
@@ -38,10 +39,25 @@ public partial class GuildCardView : ContentView
 
         base.OnBindingContextChanged();
 
-        _scrollCts?.Cancel();
+        _expandCts?.Cancel();
         _boundVm = BindingContext as INotifyPropertyChanged;
         if (_boundVm != null)
             _boundVm.PropertyChanged += OnVmPropertyChanged;
+
+        if (BindingContext is GuildCardVm vm)
+        {
+            ExpandedContent.AbortAnimation("expand");
+            ExpandedContent.IsVisible = vm.IsExpanded;
+            ExpandedContent.HeightRequest = -1;
+            ExpandedContent.Opacity = 1;
+        }
+        else
+        {
+            ExpandedContent.AbortAnimation("expand");
+            ExpandedContent.IsVisible = false;
+            ExpandedContent.HeightRequest = -1;
+            ExpandedContent.Opacity = 1;
+        }
     }
 
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -50,7 +66,7 @@ public partial class GuildCardView : ContentView
             Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
 
         if (e.PropertyName == nameof(GuildCardVm.IsExpanded))
-            Dispatcher.Dispatch(async () => await ScrollIntoViewIfExpandedAsync());
+            Dispatcher.Dispatch(async () => await HandleExpandedChangedAsync());
     }
 
     private async Task AnimateSelectionAsync()
@@ -64,14 +80,40 @@ public partial class GuildCardView : ContentView
         }
     }
 
-    private async Task ScrollIntoViewIfExpandedAsync()
+    private async Task HandleExpandedChangedAsync()
     {
         if (BindingContext is not GuildCardVm vm) return;
-        if (!vm.IsExpanded) return;
 
-        _scrollCts?.Cancel();
-        _scrollCts = new CancellationTokenSource();
-        var token = _scrollCts.Token;
+        _expandCts?.Cancel();
+        _expandCts = new CancellationTokenSource();
+        var token = _expandCts.Token;
+
+        try
+        {
+            if (vm.IsExpanded)
+            {
+                await ScrollIntoViewIfExpandedAsync(vm, token);
+                await AnimateExpandedContentAsync(expand: true, token);
+            }
+            else
+            {
+                await AnimateExpandedContentAsync(expand: false, token);
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            // Ignore rapid expand/collapse interactions.
+        }
+        catch (OperationCanceledException)
+        {
+            // Ignore rapid expand/collapse interactions.
+        }
+    }
+
+    private async Task ScrollIntoViewIfExpandedAsync(GuildCardVm vm, CancellationToken token)
+    {
+        if (!vm.IsExpanded)
+            return;
 
         try
         {
@@ -94,6 +136,85 @@ public partial class GuildCardView : ContentView
         {
             // Ignore rapid expand/collapse interactions.
         }
+    }
+
+    private async Task AnimateExpandedContentAsync(bool expand, CancellationToken token)
+    {
+        if (ExpandedContent == null)
+            return;
+
+        ExpandedContent.AbortAnimation("expand");
+
+        if (expand)
+        {
+            ExpandedContent.IsVisible = true;
+            ExpandedContent.Opacity = 0;
+            ExpandedContent.HeightRequest = -1;
+
+            await Task.Yield();
+            await Task.Delay(1, token);
+
+            var width = CardExpandAnimationHelper.ResolveMeasureWidth(ExpandedContent, CardFrame, this);
+            var measured = width > 0
+                ? CardExpandAnimationHelper.MeasureContentHeight(ExpandedContent, width)
+                : -1;
+
+            if (measured <= 0)
+            {
+                ExpandedContent.Opacity = 1;
+                ExpandedContent.HeightRequest = -1;
+                return;
+            }
+
+            ExpandedContent.HeightRequest = 0;
+            ExpandedContent.Opacity = 0;
+            await CardExpandAnimationHelper.AnimateHeightAsync(
+                owner: this,
+                target: ExpandedContent,
+                animationName: "expand",
+                from: 0,
+                to: measured,
+                length: 240,
+                easing: Easing.CubicOut,
+                onStep: v => ExpandedContent.Opacity = Math.Min(1, v / measured),
+                cancellationToken: token);
+
+            if (token.IsCancellationRequested) return;
+
+            ExpandedContent.HeightRequest = -1;
+            ExpandedContent.Opacity = 1;
+            return;
+        }
+
+        if (!ExpandedContent.IsVisible)
+            return;
+
+        var startHeight = ExpandedContent.Height;
+        if (startHeight <= 0)
+        {
+            ExpandedContent.IsVisible = false;
+            ExpandedContent.HeightRequest = -1;
+            ExpandedContent.Opacity = 1;
+            return;
+        }
+
+        ExpandedContent.HeightRequest = startHeight;
+        await CardExpandAnimationHelper.AnimateHeightAsync(
+            owner: this,
+            target: ExpandedContent,
+            animationName: "expand",
+            from: startHeight,
+            to: 0,
+            length: 200,
+            easing: Easing.CubicIn,
+            onStep: v => ExpandedContent.Opacity = startHeight <= 0 ? 0 : Math.Max(0, v / startHeight),
+            cancellationToken: token);
+
+        if (token.IsCancellationRequested) return;
+
+        ExpandedContent.IsVisible = false;
+        ExpandedContent.HeightRequest = -1;
+        ExpandedContent.Opacity = 1;
     }
 
     private CollectionView? FindParentCollectionView()
