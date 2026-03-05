@@ -65,8 +65,27 @@
                                                         Spacing="6">
                                           <BindableLayout.ItemTemplate>
                                                  <DataTemplate>
-                                                        <Label Text="{Binding .}"
-                                                               LineBreakMode="WordWrap"/>
+                                                        <Grid ColumnDefinitions="*,Auto"
+                                                              ColumnSpacing="8">
+                                                               <Label Text="{Binding Text}"
+                                                                      LineBreakMode="WordWrap"
+                                                                      VerticalTextAlignment="Center"/>
+                                                               <Button Grid.Column="1"
+                                                                       Text="&#xF05A;"
+                                                                       FontFamily="FASolid"
+                                                                       FontSize="12"
+                                                                       Padding="0"
+                                                                       BackgroundColor="Transparent"
+                                                                       TextColor="#4B5563"
+                                                                       HeightRequest="18"
+                                                                       WidthRequest="18"
+                                                                       MinimumHeightRequest="0"
+                                                                       MinimumWidthRequest="0"
+                                                                       VerticalOptions="Center"
+                                                                       IsVisible="{Binding HasAbilityDetails}"
+                                                                       Clicked="OnViewSpecialisationAbilityDetailsClicked"
+                                                                       CommandParameter="{Binding .}"/>
+                                                        </Grid>
                                                  </DataTemplate>
                                           </BindableLayout.ItemTemplate>
                                    </VerticalStackLayout>

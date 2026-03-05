@@ -2,6 +2,7 @@ using System.ComponentModel;
 using labyItems.Helpers;
 using labyItems.Pages.Characters.ViewModels;
 using Microsoft.Maui.Controls;
+using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 
 namespace labyItems.Pages.Characters;
 
@@ -166,5 +167,19 @@ public partial class CharacterReviewView : ContentView
         Post8ExpandedContent.IsVisible = false;
         Post8ExpandedContent.HeightRequest = -1;
         Post8ExpandedContent.Opacity = 1;
+    }
+
+    private async void OnViewSpecialisationAbilityDetailsClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button)
+            return;
+
+        if (button.CommandParameter is not WizardVm.SpecialisationSummaryLineVm line || line.Ability == null)
+            return;
+
+        if (Navigation == null)
+            return;
+
+        await Navigation.PushAsync(new AbilityCardPage(line.Ability));
     }
 }

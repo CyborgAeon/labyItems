@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Text.Json;
 using labyItems.Helpers;
 using labyItems.Services;
@@ -24,7 +25,7 @@ public partial class AbilityDetailCardView : ContentView
     }
 
     public string AbilityIndex => ReadOrFallback(Ability?.Index, "Unnamed Ability");
-    public string TableDisplayText => $"Table {Math.Max(0, Ability?.Table ?? 0)}";
+    public string TableDisplayText => $"Table: {Math.Max(0, Ability?.Table ?? 0)}";
     public string AvailabilityText => BuildAvailabilityDisplay(Ability?.Available);
 
     public bool ShowInfiniteCost => Ability?.CanBuyMultiple == true && Ability?.MaxAvailable is not > 0;
@@ -35,16 +36,22 @@ public partial class AbilityDetailCardView : ContentView
         {
             var cost = Math.Max(0, Ability?.Cost ?? 0);
             if (Ability?.CanBuyMultiple == true && Ability?.MaxAvailable is { } max && max > 0)
-                return $"({cost}/{max})";
+                return $"Cost: ({cost}/{max})";
 
-            return cost.ToString();
+            return $"Cost: {cost}";
         }
     }
 
-    public string InfiniteCostPrefixText => $"({Math.Max(0, Ability?.Cost ?? 0)}/";
+    public string InfiniteCostPrefixText => $"Cost: ({Math.Max(0, Ability?.Cost ?? 0)}/";
     public string InfinityGlyph => InfinityGlyphCode;
 
     public string DescriptionText => ReadOrFallback(Ability?.Description, "No description provided.");
+    public string NotesText => BuildNotesText(Ability);
+    public bool HasNotesText => NotesText.Length > 0;
+    public bool HasPreReqs => PreReqEntries.Count > 0;
+    public bool HasNotesSection => HasNotesText || HasPreReqs;
+
+    public ObservableCollection<AbilityPreReqEntryVm> PreReqEntries { get; } = new();
 
     private bool _isDescriptionExpanded;
     public bool IsDescriptionExpanded
@@ -76,11 +83,17 @@ public partial class AbilityDetailCardView : ContentView
     public string DescriptionChevronText => IsDescriptionExpanded ? "▴" : "▾";
 
     private bool _isDescriptionAnimating;
+    private int _preReqRefreshVersion;
 
     public AbilityDetailCardView()
     {
         InitializeComponent();
         SizeChanged += (_, __) => ScheduleExpandabilityRefresh();
+        PreReqEntries.CollectionChanged += (_, __) =>
+        {
+            OnPropertyChanged(nameof(HasPreReqs));
+            OnPropertyChanged(nameof(HasNotesSection));
+        };
     }
 
     private static void OnAbilityChanged(BindableObject bindable, object oldValue, object newValue)
@@ -96,6 +109,7 @@ public partial class AbilityDetailCardView : ContentView
         IsDescriptionExpanded = false;
         RaiseComputedProperties();
         ScheduleExpandabilityRefresh();
+        _ = RebuildPreReqEntriesAsync();
     }
 
     private void RaiseComputedProperties()
@@ -109,6 +123,9 @@ public partial class AbilityDetailCardView : ContentView
         OnPropertyChanged(nameof(InfiniteCostPrefixText));
         OnPropertyChanged(nameof(InfinityGlyph));
         OnPropertyChanged(nameof(DescriptionText));
+        OnPropertyChanged(nameof(NotesText));
+        OnPropertyChanged(nameof(HasNotesText));
+        OnPropertyChanged(nameof(HasNotesSection));
         OnPropertyChanged(nameof(DescriptionChevronText));
     }
 
@@ -141,6 +158,20 @@ public partial class AbilityDetailCardView : ContentView
     private void OnExpandableLabelSizeChanged(object sender, EventArgs e)
     {
         ScheduleExpandabilityRefresh();
+    }
+
+    private async void OnPreReqInfoClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button)
+            return;
+
+        if (button.CommandParameter is not AbilityPreReqEntryVm entry || entry.Ability == null)
+            return;
+
+        if (Navigation == null)
+            return;
+
+        await Navigation.PushAsync(new AbilityCard(entry.Ability));
     }
 
     private void ScheduleExpandabilityRefresh()
@@ -233,19 +264,31 @@ public partial class AbilityDetailCardView : ContentView
 
     private static string BuildAvailabilityDisplay(string? rawAvailability)
     {
+        var entries = ParseAvailabilityEntries(rawAvailability);
+        if (entries.Count == 0)
+            return "Available: unspecified";
+
+        var lowered = entries
+            .Select(e => e.ToLowerInvariant())
+            .ToList();
+        return $"Available: {string.Join(", ", lowered)}";
+    }
+
+    private static List<string> ParseAvailabilityEntries(string? rawAvailability)
+    {
         var text = (rawAvailability ?? string.Empty).Trim();
         if (text.Length == 0)
-            return "Availability unspecified.";
+            return new List<string>();
 
         if (TryParseAvailabilityJson(text, out var parsed))
             return parsed;
 
-        return text;
+        return new List<string> { text };
     }
 
-    private static bool TryParseAvailabilityJson(string raw, out string display)
+    private static bool TryParseAvailabilityJson(string raw, out List<string> entries)
     {
-        display = string.Empty;
+        entries = new List<string>();
 
         try
         {
@@ -256,14 +299,14 @@ public partial class AbilityDetailCardView : ContentView
                 if (single.Length == 0)
                     return false;
 
-                display = single;
+                entries.Add(single);
                 return true;
             }
 
             if (doc.RootElement.ValueKind != JsonValueKind.Array)
                 return false;
 
-            var items = doc.RootElement
+            entries = doc.RootElement
                 .EnumerateArray()
                 .Where(e => e.ValueKind == JsonValueKind.String)
                 .Select(e => (e.GetString() ?? string.Empty).Trim())
@@ -271,10 +314,9 @@ public partial class AbilityDetailCardView : ContentView
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            if (items.Count == 0)
+            if (entries.Count == 0)
                 return false;
 
-            display = string.Join(", ", items);
             return true;
         }
         catch
@@ -283,9 +325,72 @@ public partial class AbilityDetailCardView : ContentView
         }
     }
 
+    private async Task RebuildPreReqEntriesAsync()
+    {
+        var refreshVersion = ++_preReqRefreshVersion;
+        var names = (Ability?.PreReqs ?? Array.Empty<string>())
+            .Select(p => (p ?? string.Empty).Trim())
+            .Where(p => p.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (names.Count == 0)
+        {
+            if (refreshVersion != _preReqRefreshVersion)
+                return;
+
+            PreReqEntries.Clear();
+            return;
+        }
+
+        var lookup = await AbilityDetailsLookupService.GetLookupAsync();
+        if (refreshVersion != _preReqRefreshVersion)
+            return;
+
+        var entries = names
+            .Select(name => new AbilityPreReqEntryVm(
+                name,
+                AbilityDetailsLookupService.FindByIndex(lookup, name)))
+            .ToList();
+
+        if (refreshVersion != _preReqRefreshVersion)
+            return;
+
+        PreReqEntries.Clear();
+        foreach (var entry in entries)
+            PreReqEntries.Add(entry);
+    }
+
+    private static string BuildNotesText(EvolutionService.AbilityResult? ability)
+    {
+        if (ability == null)
+            return string.Empty;
+
+        if (ability.CanBuyMultiple && ability.MaxAvailable is { } max && max > 0)
+            return $"Can be purchased multiple times (maximum {max}).";
+
+        if (ability.CanBuyMultiple)
+            return "Can be purchased multiple times.";
+
+        return string.Empty;
+    }
+
     private static string ReadOrFallback(string? value, string fallback)
     {
         var text = (value ?? string.Empty).Trim();
         return text.Length == 0 ? fallback : text;
+    }
+}
+
+public sealed class AbilityPreReqEntryVm
+{
+    public string Name { get; }
+    public EvolutionService.AbilityResult? Ability { get; }
+    public bool HasDetails => Ability != null;
+
+    public AbilityPreReqEntryVm(string name, EvolutionService.AbilityResult? ability)
+    {
+        Name = name;
+        Ability = ability;
     }
 }

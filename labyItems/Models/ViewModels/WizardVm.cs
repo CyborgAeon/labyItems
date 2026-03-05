@@ -99,6 +99,10 @@ public sealed class WizardVm : INotifyPropertyChanged
     private bool _isAdvancementExpanded;
     private int _advancementPointsSpent;
     private readonly Dictionary<string, int> _abilityCostIndex = new(StringComparer.OrdinalIgnoreCase);
+    private IReadOnlyDictionary<string, EvolutionService.AbilityResult> _specialisationAbilityLookup =
+        new Dictionary<string, EvolutionService.AbilityResult>(StringComparer.OrdinalIgnoreCase);
+    private bool _isLoadingSpecialisationAbilityLookup;
+    private IReadOnlyList<SpecialisationSummaryLineVm> _specialisationSummaryLines = Array.Empty<SpecialisationSummaryLineVm>();
 
     public ObservableCollection<AbilitySpendLine> AdvancementAbilityLines { get; } = new();
 
@@ -167,6 +171,8 @@ public sealed class WizardVm : INotifyPropertyChanged
         UpdateArmourUiFromDraft();
 
         CurrentStep = _flow.CurrentStep;
+        RefreshSpecialisationSummaryLines();
+        _ = EnsureSpecialisationAbilityLookupLoadedAsync();
 
         MainThread.BeginInvokeOnMainThread(async () => await SyncDraftStateAsync(allowBackground: true));
     }
@@ -291,9 +297,9 @@ public sealed class WizardVm : INotifyPropertyChanged
         ? "Guilds: none selected"
         : $"Guilds: {string.Join(", ", Draft.Guilds)}";
 
-    public IEnumerable<string> SpecialisationSummaryLines => BuildSpecialisationSummary();
+    public IReadOnlyList<SpecialisationSummaryLineVm> SpecialisationSummaryLines => _specialisationSummaryLines;
 
-    public string SpecialisationSummaryHeader => SpecialisationSummaryLines.Any()
+    public string SpecialisationSummaryHeader => SpecialisationSummaryLines.Count > 0
         ? "Chosen options:"
         : "No specialisations selected.";
 
@@ -545,14 +551,14 @@ public sealed class WizardVm : INotifyPropertyChanged
             }
         };
 
-    private IEnumerable<string> BuildSpecialisationSummary()
+    private IReadOnlyList<SpecialisationSummaryLineVm> BuildSpecialisationSummary()
     {
-        var lines = new List<string>();
+        var lines = new List<SpecialisationSummaryLineVm>();
         var includedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         var subtype = Draft.RaceSubtypeValue ?? Draft.RaceSubtype;
         if (!string.IsNullOrWhiteSpace(subtype))
-            lines.Add($"Subtype: {subtype}");
+            lines.Add(new SpecialisationSummaryLineVm($"Subtype: {subtype}", null));
 
         var specVm = CharacterBuilderVm?.SpecialisationVm;
         if (specVm != null)
@@ -567,9 +573,10 @@ public sealed class WizardVm : INotifyPropertyChanged
                     continue;
 
                 var multipleSlots = group.Slots.Count > 1;
-                lines.Add(multipleSlots
+                var lineText = multipleSlots
                     ? $"{group.Title} ({slot.LevelLabel}): {selection}"
-                    : $"{group.Title}: {selection}");
+                    : $"{group.Title}: {selection}";
+                lines.Add(CreateSpecialisationSummaryLine(lineText, selection));
                 includedKeys.Add(group.Title);
             }
 
@@ -582,7 +589,7 @@ public sealed class WizardVm : INotifyPropertyChanged
                 if (picked.Length == 0)
                     continue;
 
-                lines.Add($"{mapped.Title}: {picked}");
+                lines.Add(CreateSpecialisationSummaryLine($"{mapped.Title}: {picked}", picked));
                 includedKeys.Add(mapped.Key);
             }
         }
@@ -592,10 +599,55 @@ public sealed class WizardVm : INotifyPropertyChanged
             if (includedKeys.Contains(kvp.Key))
                 continue;
 
-            lines.Add($"{kvp.Key}: {kvp.Value}");
+            lines.Add(CreateSpecialisationSummaryLine($"{kvp.Key}: {kvp.Value}", kvp.Value));
         }
 
         return lines;
+    }
+
+    private SpecialisationSummaryLineVm CreateSpecialisationSummaryLine(string text, string? potentialAbilityIndex)
+    {
+        EvolutionService.AbilityResult? ability = null;
+        if (_specialisationAbilityLookup.Count > 0)
+            ability = AbilityDetailsLookupService.FindByIndex(_specialisationAbilityLookup, potentialAbilityIndex);
+
+        return new SpecialisationSummaryLineVm(text, ability);
+    }
+
+    private void RefreshSpecialisationSummaryLines()
+    {
+        _specialisationSummaryLines = BuildSpecialisationSummary();
+        Raise(nameof(SpecialisationSummaryLines));
+        Raise(nameof(SpecialisationSummaryHeader));
+    }
+
+    private async Task EnsureSpecialisationAbilityLookupLoadedAsync()
+    {
+        if (_specialisationAbilityLookup.Count > 0 || _isLoadingSpecialisationAbilityLookup)
+            return;
+
+        _isLoadingSpecialisationAbilityLookup = true;
+        try
+        {
+            var lookup = await AbilityDetailsLookupService.GetLookupAsync();
+            if (lookup.Count == 0)
+                return;
+
+            _specialisationAbilityLookup = lookup;
+
+            if (MainThread.IsMainThread)
+                RefreshSpecialisationSummaryLines();
+            else
+                await MainThread.InvokeOnMainThreadAsync(RefreshSpecialisationSummaryLines);
+        }
+        catch
+        {
+            // Ignore lookup failures and keep showing text-only lines.
+        }
+        finally
+        {
+            _isLoadingSpecialisationAbilityLookup = false;
+        }
     }
 
     private static string FormatSlotSelection(SpecialisationSlotVm slot)
@@ -774,8 +826,8 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(RaceSubtypeSummary));
         Raise(nameof(ClassSummary));
         Raise(nameof(GuildSummary));
-        Raise(nameof(SpecialisationSummaryLines));
-        Raise(nameof(SpecialisationSummaryHeader));
+        RefreshSpecialisationSummaryLines();
+        _ = EnsureSpecialisationAbilityLookupLoadedAsync();
         Raise(nameof(NotesSummary));
         Raise(nameof(AlignmentSummary));
         Raise(nameof(AdvancementPointsSummary));
@@ -900,6 +952,19 @@ public sealed class WizardVm : INotifyPropertyChanged
             Name = name;
             Cost = cost;
             RunningTotal = runningTotal;
+        }
+    }
+
+    public sealed class SpecialisationSummaryLineVm
+    {
+        public string Text { get; }
+        public EvolutionService.AbilityResult? Ability { get; }
+        public bool HasAbilityDetails => Ability != null;
+
+        public SpecialisationSummaryLineVm(string text, EvolutionService.AbilityResult? ability)
+        {
+            Text = text;
+            Ability = ability;
         }
     }
 

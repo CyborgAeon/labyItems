@@ -433,7 +433,7 @@
                                                         HorizontalOptions="FillAndExpand">
                                             <CollectionView.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid ColumnDefinitions="Auto,*"
+                                                    <Grid ColumnDefinitions="Auto,*,Auto"
                                                           Padding="0,6">
                                                         <Label Text="{Binding LevelLabel}"
                                                                VerticalOptions="Center"
@@ -612,6 +612,22 @@
                                                                                               IsVisible="{Binding UseWardPactEnum}"/>
                                                             </VerticalStackLayout>
                                                         </VerticalStackLayout>
+
+                                                        <Button Grid.Column="2"
+                                                                Text="&#xF05A;"
+                                                                FontFamily="FASolid"
+                                                                FontSize="12"
+                                                                Padding="0"
+                                                                BackgroundColor="Transparent"
+                                                                TextColor="#4B5563"
+                                                                HeightRequest="18"
+                                                                WidthRequest="18"
+                                                                MinimumHeightRequest="0"
+                                                                MinimumWidthRequest="0"
+                                                                VerticalOptions="Center"
+                                                                IsVisible="{Binding HasSelectedAbilityForDetails}"
+                                                                Clicked="OnViewSpecialisationAbilityDetailsClicked"
+                                                                CommandParameter="{Binding .}"/>
                                                     </Grid>
 
                                                 </DataTemplate>

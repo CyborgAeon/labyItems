@@ -15,52 +15,45 @@
                    FontAttributes="Bold"
                    LineBreakMode="WordWrap"/>
 
-            <Grid RowDefinitions="Auto,Auto,Auto"
-                  ColumnDefinitions="Auto,*"
-                  RowSpacing="6"
-                  ColumnSpacing="8">
-                <Label Text="TABLE"
-                       FontAttributes="Bold"
-                       FontSize="12"
-                       Opacity="0.7"
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="10">
+                <Label Text="{Binding TableDisplayText, Source={x:Reference Root}}"
+                       FontAttributes="Italic"
+                       TextColor="#6B7280"
                        VerticalTextAlignment="Center"/>
+
                 <Label Grid.Column="1"
-                       Text="{Binding TableDisplayText, Source={x:Reference Root}}"
-                       VerticalTextAlignment="Center"/>
-
-                <Label Grid.Row="1"
-                       Text="AVAILABILITY"
-                       FontAttributes="Bold"
-                       FontSize="12"
-                       Opacity="0.7"
-                       VerticalTextAlignment="Center"/>
-                <Label Grid.Row="1"
-                       Grid.Column="1"
                        Text="{Binding AvailabilityText, Source={x:Reference Root}}"
-                       LineBreakMode="WordWrap"
+                       FontAttributes="Italic"
+                       TextColor="#6B7280"
+                       MaxLines="1"
+                       LineBreakMode="TailTruncation"
                        VerticalTextAlignment="Center"/>
 
-                <Label Grid.Row="2"
-                       Text="COST"
-                       FontAttributes="Bold"
-                       FontSize="12"
-                       Opacity="0.7"
-                       VerticalTextAlignment="Center"/>
-                <Label Grid.Row="2"
-                       Grid.Column="1"
+                <Label Grid.Column="2"
                        Text="{Binding CostDisplayText, Source={x:Reference Root}}"
+                       FontAttributes="Italic"
+                       TextColor="#6B7280"
+                       HorizontalTextAlignment="End"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding ShowCostText, Source={x:Reference Root}}"/>
-                <HorizontalStackLayout Grid.Row="2"
-                                       Grid.Column="1"
+
+                <HorizontalStackLayout Grid.Column="2"
                                        Spacing="2"
+                                       HorizontalOptions="End"
                                        IsVisible="{Binding ShowInfiniteCost, Source={x:Reference Root}}">
                     <Label Text="{Binding InfiniteCostPrefixText, Source={x:Reference Root}}"
+                           FontAttributes="Italic"
+                           TextColor="#6B7280"
                            VerticalTextAlignment="Center"/>
                     <Label Text="{Binding InfinityGlyph, Source={x:Reference Root}}"
                            FontFamily="FASolid"
+                           FontAttributes="Italic"
+                           TextColor="#6B7280"
                            VerticalTextAlignment="Center"/>
                     <Label Text=")"
+                           FontAttributes="Italic"
+                           TextColor="#6B7280"
                            VerticalTextAlignment="Center"/>
                 </HorizontalStackLayout>
             </Grid>
@@ -94,6 +87,54 @@
                        LineBreakMode="WordWrap"
                        SizeChanged="OnExpandableLabelSizeChanged"/>
             </ContentView>
+
+            <VerticalStackLayout Spacing="8"
+                                 IsVisible="{Binding HasNotesSection, Source={x:Reference Root}}">
+                <Label Text="NOTES"
+                       FontAttributes="Bold"
+                       FontSize="12"
+                       Opacity="0.7"/>
+
+                <Label Text="{Binding NotesText, Source={x:Reference Root}}"
+                       IsVisible="{Binding HasNotesText, Source={x:Reference Root}}"
+                       LineBreakMode="WordWrap"/>
+
+                <VerticalStackLayout Spacing="6"
+                                     IsVisible="{Binding HasPreReqs, Source={x:Reference Root}}">
+                    <Label Text="PREREQUISITES"
+                           FontAttributes="Bold"
+                           FontSize="12"
+                           Opacity="0.7"/>
+
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding PreReqEntries, Source={x:Reference Root}}"
+                                         Spacing="6">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <Label Text="{Binding Name}"
+                                           LineBreakMode="WordWrap"
+                                           VerticalTextAlignment="Center"/>
+                                    <Button Grid.Column="1"
+                                            Text="&#xF05A;"
+                                            FontFamily="FASolid"
+                                            FontSize="12"
+                                            Padding="0"
+                                            BackgroundColor="Transparent"
+                                            TextColor="#4B5563"
+                                            HeightRequest="18"
+                                            WidthRequest="18"
+                                            MinimumHeightRequest="0"
+                                            MinimumWidthRequest="0"
+                                            IsVisible="{Binding HasDetails}"
+                                            Clicked="OnPreReqInfoClicked"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </Frame>
 </ContentView>

@@ -147,6 +147,23 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public bool HasSelection
         => HasBaseSelection && IsCustomisationComplete;
 
+    public string SelectedAbilityNameForDetails
+    {
+        get
+        {
+            if (UseMagicColourEnum || UseVivomancerColourEnum || UseWardPactEnum)
+                return string.Empty;
+
+            if (IsLocked)
+                return ((ForcedAbilityDefinition?.Name ?? _lockedDisplayText) ?? string.Empty).Trim();
+
+            return (_selectedOption ?? string.Empty).Trim();
+        }
+    }
+
+    public bool HasSelectedAbilityForDetails
+        => !string.IsNullOrWhiteSpace(SelectedAbilityNameForDetails);
+
     public string SelectionKey
     {
         get
@@ -193,6 +210,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
             Raise(nameof(IsWeaponMasterySelection));
             Raise(nameof(ShowCustomisationInline));
             Raise(nameof(ShowCustomisationBelow));
+            Raise(nameof(SelectedAbilityNameForDetails));
+            Raise(nameof(HasSelectedAbilityForDetails));
             _onChanged();
         }
     }
@@ -329,6 +348,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(ShowCustomisationInline));
         Raise(nameof(ShowCustomisationBelow));
         Raise(nameof(IsCustomisationComplete));
+        Raise(nameof(SelectedAbilityNameForDetails));
+        Raise(nameof(HasSelectedAbilityForDetails));
 
         if (changed && !suppressNotify)
             _onChanged();
@@ -349,6 +370,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(LockedDisplayText));
         Raise(nameof(HasSelection));
         Raise(nameof(SelectionKey));
+        Raise(nameof(SelectedAbilityNameForDetails));
+        Raise(nameof(HasSelectedAbilityForDetails));
 
         if (!suppressNotify)
             _onChanged();

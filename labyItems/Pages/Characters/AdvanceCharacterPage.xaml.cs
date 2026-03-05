@@ -12,6 +12,7 @@ using AndroidConfig = Microsoft.Maui.Controls.PlatformConfiguration.Android;
 using SpellCardPage = labyItems.Pages.SpellCard.SpellCard;
 using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
 using EvocationCardPage = labyItems.Pages.EvocationCard.EvocationCard;
+using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 namespace labyItems.Pages.Characters;
 
 public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
@@ -183,5 +184,20 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
             return;
 
         await Navigation.PushAsync(new EvocationCardPage(evocation));
+    }
+
+    private async void OnViewAbilityDetailsClicked(object sender, EventArgs e)
+    {
+        if (sender is not Microsoft.Maui.Controls.Button button)
+            return;
+
+        if (button.CommandParameter is not AbilityEntryVm entry)
+            return;
+
+        var ability = await _vm.FindAbilityByNameAsync(entry.Name);
+        if (ability == null)
+            return;
+
+        await Navigation.PushAsync(new AbilityCardPage(ability));
     }
 }

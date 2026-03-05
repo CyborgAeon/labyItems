@@ -1,3 +1,6 @@
+using labyItems.Services;
+using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
+
 namespace labyItems.Pages.Characters;
 
 public partial class CharacterSpecialisation : ContentView
@@ -37,5 +40,24 @@ public partial class CharacterSpecialisation : ContentView
 
         if (Handler == null)
             _boundVm?.CancelReloads();
+    }
+
+    private async void OnViewSpecialisationAbilityDetailsClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button)
+            return;
+
+        if (button.CommandParameter is not SpecialisationSlotVm slot)
+            return;
+
+        var abilityName = slot.SelectedAbilityNameForDetails;
+        if (string.IsNullOrWhiteSpace(abilityName))
+            return;
+
+        var ability = await AbilityDetailsLookupService.FindByIndexAsync(abilityName);
+        if (ability == null || Navigation == null)
+            return;
+
+        await Navigation.PushAsync(new AbilityCardPage(ability));
     }
 }

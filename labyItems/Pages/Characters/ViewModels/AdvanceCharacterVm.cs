@@ -50,6 +50,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private Dictionary<string, ServiceCharacterClassRecord> _classes = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, ManuAbilityOption> _abilityOptions = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, ManuAbilityOption> _abilityOptionsByName = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, EvolutionService.AbilityResult> _abilityDetailsByKey = new(StringComparer.OrdinalIgnoreCase);
 
     private bool _showSpellsTab;
     public bool ShowSpellsTab { get => _showSpellsTab; private set => Set(ref _showSpellsTab, value); }
@@ -680,6 +681,28 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             _abilityOptionsByName[kvp.Key] = kvp.Value;
 
         return BuildAbilityOptionsWithLabels(byName.Values);
+    }
+
+    public async Task<EvolutionService.AbilityResult?> FindAbilityByNameAsync(string? abilityName)
+    {
+        var key = AbilityDetailsLookupService.NormalizeKey(abilityName);
+        if (key.Length == 0)
+            return null;
+
+        if (_abilityDetailsByKey.TryGetValue(key, out var cached))
+            return cached;
+
+        try
+        {
+            var ability = await AbilityDetailsLookupService.FindByIndexAsync(abilityName);
+            if (ability != null)
+                _abilityDetailsByKey[key] = ability;
+            return ability;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public SpellService.SpellRaw? FindSpellByName(string? spellName)
