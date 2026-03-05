@@ -23,19 +23,23 @@ If you want the PATH change to persist, add `export PATH="$HOME/.dotnet:$PATH"` 
 
 Make sure an emulator or device is running, then:
 
-````bash
+```bash
 PKG=bard.uk.labyitems
 DB=output/laby.db
 ./tools/migrate-any-data.sh "$DB"
 adb push "$DB" /data/local/tmp/laby.db
 adb shell run-as "$PKG" sh -c 'cd /data/user/0/'"$PKG"' && mkdir -p files && cp /data/local/tmp/laby.db files/laby.db'
-``` then run ```bash
+```
+
+then run
+
+```bash
 DOTNET_USE_POLLING_FILE_WATCHER=1 \
 $HOME/.dotnet/dotnet watch \
   --project labyItems/labyItems.csproj \
   --framework net10.0-android \
   run --configuration Debug
-````
+```
 
 If you hit `NETSDK1147` (missing `maui-android`) or similar, you’re probably running the system `dotnet` instead of the one installed by `dotnet-install.sh` — the command above pins to `$HOME/.dotnet/dotnet`.
 
@@ -44,8 +48,6 @@ If watch ever complains about launch profiles, ensure `Properties/launchSettings
 ## Data generation & migrations
 
 - To generate or migrate any SQLite DB against the latest migrations, run: `./tools/migrate-any-data.sh output/laby.db` (optional second arg: custom seed JSON; defaults to `labyItems/Resources/Raw/druids_way/evocs.json`). The script will create the DB from the seed if it does not exist, then apply FluentMigrator migrations.
-- We now use a single database file (`laby.db`). Delete old `output/default.db` or `output/evocs.db` files if you still have them.
-- If you already created a DB only via migrations and it’s missing evolution data, delete `output/laby.db` first so `evocdbgen` can rebuild it from the raw tables.
 - The script uses `$HOME/.dotnet/dotnet` by default; override with `DOTNET=/path/to/dotnet ./tools/migrate-any-data.sh ...` if needed.
 - APK builds now keep all `Resources/Raw` JSON assets and the `Template.xlsx` so the app and migrations can load packaged data directly.
 
