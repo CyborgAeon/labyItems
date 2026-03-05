@@ -9,10 +9,9 @@
 
 	<PropertyGroup>
 		<WarningLevel>0</WarningLevel>
-		<!-- Default to Android only for local dev; switch to TargetFrameworks with additional TFMs when needed -->
-		<TargetFramework>net10.0-android</TargetFramework>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
-			$(TargetFramework);net10.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFramework Condition="$([MSBuild]::IsOSPlatform('osx'))">net10.0-ios</TargetFramework>
+		<TargetFramework Condition="!$([MSBuild]::IsOSPlatform('osx')) and !$([MSBuild]::IsOSPlatform('windows'))">net10.0-android</TargetFramework>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">net10.0-android;net10.0-windows10.0.19041.0</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>labyItems</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -30,6 +29,8 @@
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+			14.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
 			13.1</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
@@ -79,11 +80,8 @@
 		<ProjectReference Include="../tools/migrationslib/migrationslib.csproj" />
 	</ItemGroup>
 
-	<Target Name="ForceRegenerateAndroidNativeSourcesInDebug"
-	        BeforeTargets="_GeneratePackageManagerJava"
-	        Condition="'$(Configuration)' == 'Debug' and $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-		<Delete Files="$(_AndroidStampDirectory)_GeneratePackageManagerJava.stamp"
-		        Condition="Exists('$(_AndroidStampDirectory)_GeneratePackageManagerJava.stamp')" />
+	<Target Name="ForceRegenerateAndroidNativeSourcesInDebug" BeforeTargets="_GeneratePackageManagerJava" Condition="'$(Configuration)' == 'Debug' and $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+		<Delete Files="$(_AndroidStampDirectory)_GeneratePackageManagerJava.stamp" Condition="Exists('$(_AndroidStampDirectory)_GeneratePackageManagerJava.stamp')" />
 	</Target>
 
 </Project>
