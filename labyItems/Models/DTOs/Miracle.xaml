@@ -27,7 +27,7 @@
           <Border
               Margin="12"
               Padding="16"
-              BackgroundColor="#21FFFFFF"
+              BackgroundColor="{StaticResource GlassOverlayColor}"
               StrokeShape="RoundRectangle 14">
 
             <!-- Two rows (top/bottom), two columns (left/right) -->
