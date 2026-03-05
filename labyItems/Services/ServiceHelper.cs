@@ -1,4 +1,6 @@
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using SQLite;
 
@@ -31,6 +33,18 @@ public static class ServiceHelper
         _dbPath = null;
         return null;
     }
+
+    public static IFileService ResolveFileService()
+    {
+        var fileService = Application.Current?.Handler?.MauiContext?.Services?.GetService<IFileService>();
+        return fileService ?? new MauiFileService();
+    }
+
+    public static T? ResolveService<T>() where T : class
+        => Application.Current?.Handler?.MauiContext?.Services?.GetService<T>();
+
+    public static Task<string> ReadPackageTextAsync(string relativePath)
+        => ResolveFileService().ReadPackageTextAsync(relativePath);
 
     public static SQLiteConnection OpenReadOnlyConnection()
     {

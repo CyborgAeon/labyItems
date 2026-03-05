@@ -18,9 +18,7 @@ public static class SpecialisationService
     {
         if (_cache != null) return _cache;
 
-        await using var stream = await FileSystem.OpenAppPackageFileAsync("specialisation/specialisation.json");
-        using var reader = new StreamReader(stream);
-        var json = await reader.ReadToEndAsync();
+        var json = await ServiceHelper.ReadPackageTextAsync("specialisation/specialisation.json");
 
         var dict = JsonSerializer.Deserialize<Dictionary<string, SpecialisationRecord>>(json, _jsonOptions)
                    ?? new Dictionary<string, SpecialisationRecord>(StringComparer.OrdinalIgnoreCase);

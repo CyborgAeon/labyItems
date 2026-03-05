@@ -192,9 +192,7 @@ public static class SpellService
     {
         try
         {
-            using var s = await FileSystem.OpenAppPackageFileAsync(path);
-            using var r = new StreamReader(s);
-            var json = await r.ReadToEndAsync();
+            var json = await ServiceHelper.ReadPackageTextAsync(path);
             try
             {
                 var list = JsonSerializer.Deserialize<List<SpellRaw>>(json, _jsonOptions) ?? new List<SpellRaw>();

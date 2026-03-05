@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.Maui.Storage;
 
 namespace labyItems.Services;
 
@@ -31,9 +29,7 @@ public static class MiracleTreeService
             {
                 try
                 {
-                    await using var stream = await FileSystem.OpenAppPackageFileAsync(path);
-                    using var reader = new StreamReader(stream);
-                    json = await reader.ReadToEndAsync();
+                    json = await ServiceHelper.ReadPackageTextAsync(path);
                     if (!string.IsNullOrWhiteSpace(json))
                         break;
                 }

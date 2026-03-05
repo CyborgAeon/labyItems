@@ -26,9 +26,7 @@ public static class ClassService
         try
         {
 #if DEBUG
-            using var s = await FileSystem.OpenAppPackageFileAsync("people/classes.json");
-            using var r = new StreamReader(s);
-            var json = await r.ReadToEndAsync();
+            var json = await ServiceHelper.ReadPackageTextAsync("people/classes.json");
             using var doc = JsonDocument.Parse(json);
             var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
             if (doc.RootElement.ValueKind == JsonValueKind.Object)

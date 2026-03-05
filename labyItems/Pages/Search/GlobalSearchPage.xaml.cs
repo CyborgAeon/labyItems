@@ -1,5 +1,6 @@
 using SpellCardPage = labyItems.Pages.SpellCard.SpellCard;
 using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
+using EvocationCardPage = labyItems.Pages.EvocationCard.EvocationCard;
 
 namespace labyItems.Pages.Search;
 
@@ -34,6 +35,12 @@ public partial class GlobalSearchPage : ContentPage
         }
 
         if (result.Miracle != null)
+        {
             await Navigation.PushAsync(new MiracleCardPage(result.Miracle));
+            return;
+        }
+
+        if (result.Evocation != null)
+            await Navigation.PushAsync(new EvocationCardPage(result.Evocation));
     }
 }

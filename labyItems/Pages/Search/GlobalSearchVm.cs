@@ -253,7 +253,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             MetaText: meta,
             DescriptionText: (description ?? string.Empty).Trim(),
             Spell: null,
-            Miracle: null);
+            Miracle: null,
+            Evocation: null);
     }
 
     private static GlobalSearchResultVm CreateSpellResult(SpellService.SpellRaw spell)
@@ -270,7 +271,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             MetaText: meta,
             DescriptionText: (spell.description ?? string.Empty).Trim(),
             Spell: spell,
-            Miracle: null);
+            Miracle: null,
+            Evocation: null);
     }
 
     private static GlobalSearchResultVm CreateMiracleResult(MiracleService.MiracRaw miracle)
@@ -292,7 +294,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             MetaText: meta,
             DescriptionText: (miracle.description ?? string.Empty).Trim(),
             Spell: null,
-            Miracle: miracle);
+            Miracle: miracle,
+            Evocation: null);
     }
 
     private static GlobalSearchResultVm CreateEvocationResult(DruidEvocationService.EvocRaw evocation)
@@ -312,9 +315,10 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             Name: (evocation.name ?? string.Empty).Trim(),
             IconGlyph: "\uf06c",
             MetaText: meta,
-            DescriptionText: string.Empty,
+            DescriptionText: (evocation.description ?? string.Empty).Trim(),
             Spell: null,
-            Miracle: null);
+            Miracle: null,
+            Evocation: evocation);
     }
 
     private void Raise([CallerMemberName] string? name = null)
@@ -346,9 +350,10 @@ public sealed record GlobalSearchResultVm(
     string MetaText,
     string DescriptionText,
     SpellService.SpellRaw? Spell,
-    MiracleService.MiracRaw? Miracle)
+    MiracleService.MiracRaw? Miracle,
+    DruidEvocationService.EvocRaw? Evocation)
 {
-    public bool CanOpenDetails => Spell != null || Miracle != null;
+    public bool CanOpenDetails => Spell != null || Miracle != null || Evocation != null;
 
     public bool HasDescription => !string.IsNullOrWhiteSpace(DescriptionText);
 

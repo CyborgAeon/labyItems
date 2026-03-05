@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Maui.Storage;
 using SQLite;
 
 namespace labyItems.Services;
@@ -47,9 +45,7 @@ public static class LifeScalesService
 #if DEBUG
             try
             {
-                using var s = await FileSystem.OpenAppPackageFileAsync("people/lifescales.json");
-                using var r = new StreamReader(s);
-                var json = await r.ReadToEndAsync();
+                var json = await ServiceHelper.ReadPackageTextAsync("people/lifescales.json");
                 _cache = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<int[]>>>>(json)
                          ?? new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
             }

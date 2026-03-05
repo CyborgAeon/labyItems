@@ -5,16 +5,22 @@ using labyItems.Services;
 using System.Linq;
 using System.Diagnostics;
 using Microsoft.Maui.ApplicationModel;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
 using AndroidConfig = Microsoft.Maui.Controls.PlatformConfiguration.Android;
 using SpellCardPage = labyItems.Pages.SpellCard.SpellCard;
 using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
+using EvocationCardPage = labyItems.Pages.EvocationCard.EvocationCard;
 namespace labyItems.Pages.Characters;
 
 public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 {
     private readonly AdvanceCharacterVm _vm;
+    private readonly AdvanceCharacterDetailsTabVm _detailsTabVm;
+    private readonly AdvanceCharacterSpellsTabVm _spellsTabVm;
+    private readonly AdvanceCharacterMiraclesTabVm _miraclesTabVm;
+    private readonly AdvanceCharacterEvocationsTabVm _evocationsTabVm;
 
     public AdvanceCharacterPage(Character character)
         : this(LiteDbService.ToDraft(character) ?? new CharacterDraft())
@@ -26,12 +32,25 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
     {
         InitializeComponent();
         this.On<AndroidConfig>().SetIsSwipePagingEnabled(false);
-        _vm = new AdvanceCharacterVm(draft);
-        BindingContext = _vm;
-        foreach (var child in Children)
-            child.BindingContext = _vm;
+        var serviceProvider = Microsoft.Maui.Controls.Application.Current?.Handler?.MauiContext?.Services;
+        _vm = new AdvanceCharacterVm(
+            draft,
+            draftStore: new CharacterDraftStore(draft),
+            domainService: serviceProvider?.GetService<ICharacterAdvancementDomainService>(),
+            tabVisibilityService: serviceProvider?.GetService<IAdvancementTabVisibilityService>(),
+            validationService: serviceProvider?.GetService<IAdvancementValidationService>(),
+            exportService: serviceProvider?.GetService<IExportService>(),
+            fileService: serviceProvider?.GetService<IFileService>());
 
-        AbilitySearch.RemoteSearchProvider = _vm.SearchAbilityOptionsAsync;
+        _detailsTabVm = new AdvanceCharacterDetailsTabVm(_vm);
+        _spellsTabVm = new AdvanceCharacterSpellsTabVm(_vm);
+        _miraclesTabVm = new AdvanceCharacterMiraclesTabVm(_vm);
+        _evocationsTabVm = new AdvanceCharacterEvocationsTabVm(_vm);
+
+        BindingContext = _vm;
+        BindTabContexts();
+
+        AbilitySearch.RemoteSearchProvider = _detailsTabVm.SearchAbilityOptionsAsync;
         ApplyTabVisibility();
 
         ToolbarItems.Add(new ToolbarItem
@@ -79,7 +98,7 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
             if (!Children.Contains(page))
             {
                 Children.Insert(i, page);
-                page.BindingContext = _vm;
+                BindTabContext(page);
                 continue;
             }
 
@@ -93,6 +112,26 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
         if (Children.Contains(DetailsTab))
             CurrentPage = DetailsTab;
+    }
+
+    private void BindTabContexts()
+    {
+        BindTabContext(DetailsTab);
+        BindTabContext(SpellsTab);
+        BindTabContext(MiraclesTab);
+        BindTabContext(EvocsTab);
+    }
+
+    private void BindTabContext(Page page)
+    {
+        if (ReferenceEquals(page, DetailsTab))
+            page.BindingContext = _detailsTabVm;
+        else if (ReferenceEquals(page, SpellsTab))
+            page.BindingContext = _spellsTabVm;
+        else if (ReferenceEquals(page, MiraclesTab))
+            page.BindingContext = _miraclesTabVm;
+        else if (ReferenceEquals(page, EvocsTab))
+            page.BindingContext = _evocationsTabVm;
     }
 
     protected override void OnDisappearing()
@@ -129,5 +168,20 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
             return;
 
         await Navigation.PushAsync(new MiracleCardPage(miracle));
+    }
+
+    private async void OnViewEvocationDetailsClicked(object sender, EventArgs e)
+    {
+        if (sender is not Microsoft.Maui.Controls.ImageButton button)
+            return;
+
+        if (button.CommandParameter is not EvocationEntryVm entry)
+            return;
+
+        var evocation = _vm.FindEvocationByName(entry.Draft.Name);
+        if (evocation == null)
+            return;
+
+        await Navigation.PushAsync(new EvocationCardPage(evocation));
     }
 }

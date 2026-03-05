@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using labyItems.Pages.Configs;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Storage;
 
 namespace labyItems.Services;
 
@@ -24,9 +22,7 @@ public static class ConsumableService
     {
         if (_cache != null) return _cache;
 
-        using var s = await FileSystem.OpenAppPackageFileAsync("grimoire/allSpells.json");
-        using var r = new StreamReader(s);
-        var json = await r.ReadToEndAsync();
+        var json = await ServiceHelper.ReadPackageTextAsync("grimoire/allSpells.json");
 
         _cache = JsonSerializer.Deserialize<List<GenericRaw>>(json)
                  ?? new List<GenericRaw>();

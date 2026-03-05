@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -26,9 +25,7 @@ public static class PeopleService
         try
         {
 #if DEBUG
-            using var s = await FileSystem.OpenAppPackageFileAsync("people/people.json");
-            using var r = new StreamReader(s);
-            var json = await r.ReadToEndAsync();
+            var json = await ServiceHelper.ReadPackageTextAsync("people/people.json");
             _cache = JsonSerializer.Deserialize<Dictionary<string, PeopleRecord>>(json, _jsonOptions)
                      ?? new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase);
 #else

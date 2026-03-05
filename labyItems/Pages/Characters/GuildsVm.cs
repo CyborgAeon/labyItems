@@ -6,7 +6,6 @@ using System.Windows.Input;
 using labyItems.Models.Characters;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
-using ServiceCharacterClassRecord = labyItems.Services.CharacterClassRecord;
 
 namespace labyItems.Pages.Characters;
 
@@ -40,15 +39,24 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     private readonly CharacterDraft _draft;
     private readonly Action _notifyWizardGatingChanged;
+    private readonly ICharacterCreationDataService _creationDataService;
 
     public CharacterDraft Draft => _draft;
     private readonly Func<IEnumerable<AlignmentRule?>> _getNonGuildRules;
-    public GuildsVm(CharacterDraft draft, Action notifyWizardGatingChanged, Func<IEnumerable<AlignmentRule?>>? getNonGuildRules = null, Func<Task>? refreshDraftAbilitiesAsync = null)
+    public GuildsVm(
+        CharacterDraft draft,
+        Action notifyWizardGatingChanged,
+        Func<IEnumerable<AlignmentRule?>>? getNonGuildRules = null,
+        Func<Task>? refreshDraftAbilitiesAsync = null,
+        ICharacterCreationDataService? creationDataService = null)
     {
         _draft = draft;
         _notifyWizardGatingChanged = notifyWizardGatingChanged;
         _getNonGuildRules = getNonGuildRules ?? (() => Enumerable.Empty<AlignmentRule?>());
         _refreshDraftAbilitiesAsync = refreshDraftAbilitiesAsync;
+        _creationDataService = creationDataService
+            ?? ServiceHelper.ResolveService<ICharacterCreationDataService>()
+            ?? new CharacterCreationDataService();
 
         TypeFilters = new ObservableCollection<string> { "All" };
         _selectedTypeFilter = "All";
@@ -104,7 +112,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
     {
         _slotRules = GuildSlotRules.FromDraft(_draft);
 
-        _guildRecords = await GuildsService.GetAllAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
+        _guildRecords = await _creationDataService.GetGuildsAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
         if (ShouldForceKhaniabadCity())
             _slotRules.ForceCity("Khaniabad");
         _slotRules.ResolvePeopleTypeOverrides(_guildRecords);
@@ -127,7 +135,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             }
         }
         ApplyAvailabilityToCurrentSelection();
-        var types = await GuildsService.GetTypesAsync();
+        var types = await _creationDataService.GetGuildTypesAsync();
         TypeFilters.Clear();
         TypeFilters.Add("All");
         foreach (var t in types)
@@ -246,42 +254,6 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return (true, null);
     }
 
-    private static bool TryGetClass(Dictionary<string, ServiceCharacterClassRecord> map, string key, out ServiceCharacterClassRecord? record)
-    {
-        if (map.TryGetValue(key, out record) && record != null)
-            return true;
-
-        foreach (var kvp in map)
-        {
-            if (string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase))
-            {
-                record = kvp.Value;
-                return true;
-            }
-        }
-
-        record = null;
-        return false;
-    }
-
-    private static bool TryGetRace(Dictionary<string, PeopleRecord> map, string key, out PeopleRecord? record)
-    {
-        if (map.TryGetValue(key, out record) && record != null)
-            return true;
-
-        foreach (var kvp in map)
-        {
-            if (string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase))
-            {
-                record = kvp.Value;
-                return true;
-            }
-        }
-
-        record = null;
-        return false;
-    }
-
     private async Task RefreshContextAsync()
     {
         _currentClassName = (_draft.Class ?? string.Empty).Trim();
@@ -292,8 +264,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         if (_currentClassName.Length > 0)
         {
-            var classMap = await ClassService.GetAllAsync();
-            if (TryGetClass(classMap, _currentClassName, out var rec) && rec != null)
+            var classMap = await _creationDataService.GetClassesAsync();
+            if (_creationDataService.TryGetByName(classMap, _currentClassName, out var rec) && rec != null)
             {
                 foreach (var b in rec.Brackets ?? Enumerable.Empty<string>())
                     _currentClassBrackets.Add((b ?? string.Empty).Trim());
@@ -302,8 +274,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         if (_currentRaceName.Length > 0)
         {
-            var peopleMap = await PeopleService.GetAllAsync();
-            if (TryGetRace(peopleMap, _currentRaceName, out var rec) && rec != null)
+            var peopleMap = await _creationDataService.GetPeopleAsync();
+            if (_creationDataService.TryGetByName(peopleMap, _currentRaceName, out var rec) && rec != null)
             {
                 foreach (var t in rec.PeopleType ?? new List<string>())
                 {
@@ -679,7 +651,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (!_guildRecords.TryGetValue(guildName, out var rec) || rec == null)
             return null;
 
-        return GuildsService.GetAlignmentRule(rec);
+        return _creationDataService.GetGuildAlignmentRule(rec);
     }
 
     public int SelectedCount => _draft.Guilds.Count;

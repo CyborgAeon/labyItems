@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using labyItems.Models.Characters;
-using Microsoft.Maui.Storage;
 
 namespace labyItems.Services;
 
@@ -22,9 +20,7 @@ public static class GuildsService
     public static async Task<Dictionary<string, GuildRecord>> GetAllAsync()
     {
         if (_cache != null) return _cache;
-        using var s = await FileSystem.OpenAppPackageFileAsync("people/guilds.json");
-        using var r = new StreamReader(s);
-        var json = await r.ReadToEndAsync();
+        var json = await ServiceHelper.ReadPackageTextAsync("people/guilds.json");
 
         _cache = JsonSerializer.Deserialize<Dictionary<string, GuildRecord>>(json, _jsonOptions)
                  ?? new Dictionary<string, GuildRecord>();

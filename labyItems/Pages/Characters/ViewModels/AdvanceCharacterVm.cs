@@ -15,11 +15,8 @@ using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
-using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
-using Microsoft.Maui.Storage;
 using ServiceCharacterClassRecord = labyItems.Services.CharacterClassRecord;
 
 namespace labyItems.Pages.Characters.ViewModels;
@@ -39,6 +36,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         return true;
     }
 
+    private readonly ICharacterDraftStore _draftStore;
+    private readonly ICharacterAdvancementDomainService _domainService;
+    private readonly IAdvancementTabVisibilityService _tabVisibilityService;
+    private readonly IAdvancementValidationService _validationService;
+    private readonly IExportService _exportService;
+    private readonly IFileService _fileService;
     private readonly CharacterDraft _draft;
     private IReadOnlyList<MiracleService.MiracRaw> _allMiracles = Array.Empty<MiracleService.MiracRaw>();
     private IReadOnlyList<SpellService.SpellRaw> _allSpells = Array.Empty<SpellService.SpellRaw>();
@@ -100,9 +103,25 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     public bool CanAddSpecialistList => SpecialistSlotsTotal > 0 && SpecialistSpellLists.Count == 0;
 
-    public AdvanceCharacterVm(CharacterDraft draft)
+    public AdvanceCharacterVm(
+        CharacterDraft draft,
+        ICharacterDraftStore? draftStore = null,
+        ICharacterAdvancementDomainService? domainService = null,
+        IAdvancementTabVisibilityService? tabVisibilityService = null,
+        IAdvancementValidationService? validationService = null,
+        IExportService? exportService = null,
+        IFileService? fileService = null)
     {
-        _draft = draft;
+        _draftStore = draftStore ?? new CharacterDraftStore(draft);
+        _draft = _draftStore.Draft;
+        _domainService = domainService ?? new CharacterAdvancementDomainService();
+        _tabVisibilityService = tabVisibilityService ?? new AdvancementTabVisibilityService();
+        _validationService = validationService ?? new AdvancementValidationService();
+        _fileService = fileService ?? new MauiFileService();
+        _exportService = exportService ?? new ExportService(
+            new MauiClipboardService(),
+            new MauiLauncherService(),
+            new MauiShareService());
 
         Items.CollectionChanged += (_, __) => SyncItemsToDraft();
         Abilities.CollectionChanged += (_, __) =>
@@ -129,9 +148,6 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         AddMiracleListCommand = new Command(AddMiracleList);
         RemoveMiracleListCommand = new Command<MiracleListVm>(RemoveMiracleList);
-
-        AddEvocationListCommand = new Command(AddEvocationList);
-        RemoveEvocationListCommand = new Command<EvocationListVm>(RemoveEvocationList);
 
         SaveCommand = new Command(SaveDraft, () => CanSave);
 
@@ -239,8 +255,6 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public EvilStairwayVm? EvilStairway { get => _evilStairway; private set => Set(ref _evilStairway, value); }
 
     public ObservableCollection<EvocationListVm> EvocationLists { get; } = new();
-    public ICommand AddEvocationListCommand { get; }
-    public ICommand RemoveEvocationListCommand { get; }
 
     public ICommand SaveCommand { get; }
     public ICommand ExportSpellsToExcelCommand { get; }
@@ -257,11 +271,11 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public string AddMiracleListLabel
         => GetBaseMiracleList() == null ? "+ Add miracle list" : "Add Scriptures of Faith";
 
-    public bool CanAddEvocationList => EvocationLists.Count == 0;
-
     public bool CanSave =>
-        MiracleLists.All(m => m.IsAlignmentCompatible(_draft.Alignment))
-        && (!ShowEvilStairway || EvilStairway?.HasValidationError != true);
+        _validationService.CanSave(
+            hasMiracleAlignmentIssues: MiracleLists.Any(m => !m.IsAlignmentCompatible(_draft.Alignment)),
+            showEvilStairway: ShowEvilStairway,
+            hasEvilStairwayValidationError: EvilStairway?.HasValidationError == true);
 
     public async Task InitializeAsync()
     {
@@ -499,46 +513,29 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private void UpdateTabVisibility()
     {
         var classRecord = ResolveClassRecord();
-        var className = (_draft.Class ?? string.Empty).Trim();
-        var hasClassName = className.Length > 0;
-
-        var isWizard = HasBracket(classRecord?.Brackets, "Wizard")
-                       || (hasClassName && (className.Contains("Wizard", StringComparison.OrdinalIgnoreCase)
-                                            || className.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
-                                            || className.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase)));
-        var isPriest = HasBracket(classRecord?.Brackets, "Priest")
-                       || (hasClassName && className.Contains("Priest", StringComparison.OrdinalIgnoreCase));
-        var isDruid = HasBracket(classRecord?.Brackets, "Druid")
-                      || (hasClassName && className.Contains("Druid", StringComparison.OrdinalIgnoreCase));
-        var hasEvilStairway = HasClassAbility(classRecord, "Evil stairway", "evil stairway list");
-
-        ShowSpellsTab = isWizard;
-        ShowMiraclesTab = isPriest || hasEvilStairway;
-        ShowPriestMiracleLists = isPriest;
-        ShowEvilStairway = hasEvilStairway;
-        ShowEvocationsTab = isDruid;
+        var state = _tabVisibilityService.Resolve(_draft.Class, classRecord);
+        ShowSpellsTab = state.ShowSpellsTab;
+        ShowMiraclesTab = state.ShowMiraclesTab;
+        ShowPriestMiracleLists = state.ShowPriestMiracleLists;
+        ShowEvilStairway = state.ShowEvilStairway;
+        ShowEvocationsTab = state.ShowEvocationsTab;
     }
 
     private void ApplyDraftClassTabVisibilityFallback()
     {
-        var className = (_draft.Class ?? string.Empty).Trim();
-        if (className.Length == 0)
-            return;
+        var current = new AdvancementTabState(
+            ShowSpellsTab,
+            ShowMiraclesTab,
+            ShowPriestMiracleLists,
+            ShowEvilStairway,
+            ShowEvocationsTab);
 
-        if (className.Contains("Wizard", StringComparison.OrdinalIgnoreCase)
-            || className.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
-            || className.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase))
-            ShowSpellsTab = true;
-
-        if (className.Contains("Priest", StringComparison.OrdinalIgnoreCase)
-            || className.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase))
-        {
-            ShowMiraclesTab = true;
-            ShowPriestMiracleLists = true;
-        }
-
-        if (className.Contains("Druid", StringComparison.OrdinalIgnoreCase))
-            ShowEvocationsTab = true;
+        var state = _tabVisibilityService.ApplyNameFallback(_draft.Class, current);
+        ShowSpellsTab = state.ShowSpellsTab;
+        ShowMiraclesTab = state.ShowMiraclesTab;
+        ShowPriestMiracleLists = state.ShowPriestMiracleLists;
+        ShowEvilStairway = state.ShowEvilStairway;
+        ShowEvocationsTab = state.ShowEvocationsTab;
     }
 
     private static bool HasBracket(IEnumerable<string>? brackets, string token)
@@ -698,9 +695,19 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             string.Equals((m?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
     }
 
+    public DruidEvocationService.EvocRaw? FindEvocationByName(string? evocationName)
+    {
+        var name = (evocationName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return null;
+
+        return _allEvocations.FirstOrDefault(e =>
+            string.Equals((e?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
+    }
+
     public void PersistDraft()
     {
-        LiteDbService.UpsertDraft(_draft);
+        _draftStore.Save();
     }
 
     private void LoadItemsFromDraft()
@@ -957,6 +964,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             var vm = new MiracleListVm(
                 list,
                 _allMiracles,
+                _domainService,
                 OnMiracleListValidationChanged,
                 () => _draft.Alignment,
                 () => _draft.Points,
@@ -1441,6 +1449,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             var vm = new MiracleListVm(
                 draft,
                 _allMiracles,
+                _domainService,
                 OnMiracleListValidationChanged,
                 () => _draft.Alignment,
                 () => _draft.Points,
@@ -1464,6 +1473,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         var scripturesVm = new MiracleListVm(
             scripturesDraft,
             _allMiracles,
+            _domainService,
             OnMiracleListValidationChanged,
             () => _draft.Alignment,
             () => _draft.Points,
@@ -1496,45 +1506,71 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         RaiseMiracleListStateChanged();
     }
 
+    private const string BaseEvocationListName = "base list";
+    private const string PostEighthEvocationListName = "post 8th";
+
     private void LoadEvocationListsFromDraft()
     {
         EvocationLists.Clear();
-        if (_draft.EvocationLists == null)
-            _draft.EvocationLists = new List<EvocationListDraft>();
+        _draft.EvocationLists ??= new List<EvocationListDraft>();
 
-        var first = _draft.EvocationLists.FirstOrDefault();
-        _draft.EvocationLists = first != null ? new List<EvocationListDraft> { first } : new List<EvocationListDraft>();
+        var baseDraft = ResolveBaseEvocationDraft(_draft.EvocationLists);
+        var postEighthDraft = ResolvePostEighthEvocationDraft(_draft.EvocationLists, baseDraft);
 
-        if (first != null)
-        {
-            var vm = new EvocationListVm(first, _allEvocations);
-            EvocationLists.Add(vm);
-        }
+        baseDraft.IsPost8th = false;
+        postEighthDraft.IsPost8th = true;
+        baseDraft.Name = BaseEvocationListName;
+        postEighthDraft.Name = PostEighthEvocationListName;
+        baseDraft.Entries ??= new List<EvocationListEntryDraft>();
+        postEighthDraft.Entries ??= new List<EvocationListEntryDraft>();
 
-        Raise(nameof(CanAddEvocationList));
+        _draft.EvocationLists = new List<EvocationListDraft> { baseDraft, postEighthDraft };
+
+        EvocationLists.Add(new EvocationListVm(baseDraft, _allEvocations, _domainService));
+        EvocationLists.Add(new EvocationListVm(postEighthDraft, _allEvocations, _domainService));
     }
 
-    private void AddEvocationList()
+    private static EvocationListDraft ResolveBaseEvocationDraft(IReadOnlyList<EvocationListDraft> drafts)
     {
-        if (!CanAddEvocationList)
-            return;
+        var baseDraft = drafts.FirstOrDefault(d => !d.IsPost8th);
+        if (baseDraft != null)
+            return baseDraft;
 
-        var draft = new EvocationListDraft
+        if (drafts.Count > 0)
+            return drafts[0];
+
+        return new EvocationListDraft
         {
-            Name = $"Evocation List {EvocationLists.Count + 1}"
+            Name = BaseEvocationListName,
+            IsPost8th = false,
+            IsMinimized = false
         };
-        _draft.EvocationLists.Add(draft);
-        var vm = new EvocationListVm(draft, _allEvocations);
-        EvocationLists.Add(vm);
-        Raise(nameof(CanAddEvocationList));
     }
 
-    private void RemoveEvocationList(EvocationListVm? list)
+    private static EvocationListDraft ResolvePostEighthEvocationDraft(
+        IReadOnlyList<EvocationListDraft> drafts,
+        EvocationListDraft baseDraft)
     {
-        if (list == null) return;
-        EvocationLists.Remove(list);
-        _draft.EvocationLists.Remove(list.Draft);
-        Raise(nameof(CanAddEvocationList));
+        var postDraft = drafts.FirstOrDefault(d => d.IsPost8th && !ReferenceEquals(d, baseDraft));
+        if (postDraft != null)
+            return postDraft;
+
+        var byName = drafts.FirstOrDefault(d =>
+            !ReferenceEquals(d, baseDraft)
+            && string.Equals(d.Name?.Trim(), PostEighthEvocationListName, StringComparison.OrdinalIgnoreCase));
+        if (byName != null)
+            return byName;
+
+        var next = drafts.FirstOrDefault(d => !ReferenceEquals(d, baseDraft));
+        if (next != null)
+            return next;
+
+        return new EvocationListDraft
+        {
+            Name = PostEighthEvocationListName,
+            IsPost8th = true,
+            IsMinimized = true
+        };
     }
 
     private void OnMiracleListValidationChanged()
@@ -1608,57 +1644,43 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (!CanSave)
             return;
 
-        LiteDbService.UpsertDraft(_draft);
+        _draftStore.Save();
     }
 
     private async Task ExportSpellsToExcelAsync()
     {
         var path = BuildSpellsExcel();
-        await Share.Default.RequestAsync(new ShareFileRequest
-        {
-            Title = $"{_draft.Name}'s spells",
-            File = new ShareFile(path)
-        });
+        await _exportService.ShareFileAsync($"{_draft.Name}'s spells", path);
     }
 
     private async Task CopySpellsToClipboardAsync()
     {
         var text = BuildSpellsText();
-        await Clipboard.Default.SetTextAsync(text);
+        await _exportService.CopyTextAsync(text);
     }
 
     private async Task SaveSpellsToTextAsync()
     {
         var path = await BuildSpellsTextFileAsync();
-        await Launcher.OpenAsync(new OpenFileRequest
-        {
-            File = new ReadOnlyFile(path)
-        });
+        await _exportService.OpenFileAsync(path);
     }
 
     private async Task ExportMiraclesToExcelAsync()
     {
         var path = BuildMiraclesExcel();
-        await Share.Default.RequestAsync(new ShareFileRequest
-        {
-            Title = $"{_draft.Name}'s miracles",
-            File = new ShareFile(path)
-        });
+        await _exportService.ShareFileAsync($"{_draft.Name}'s miracles", path);
     }
 
     private async Task CopyMiraclesToClipboardAsync()
     {
         var text = BuildMiraclesText();
-        await Clipboard.Default.SetTextAsync(text);
+        await _exportService.CopyTextAsync(text);
     }
 
     private async Task SaveMiraclesToTextAsync()
     {
         var path = await BuildMiraclesTextFileAsync();
-        await Launcher.OpenAsync(new OpenFileRequest
-        {
-            File = new ReadOnlyFile(path)
-        });
+        await _exportService.OpenFileAsync(path);
     }
 
     private string BuildSpellsExcel()
@@ -1686,7 +1708,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         sheet.Columns().AdjustToContents();
 
         var fileName = $"Spells_{SanitizeFileName(_draft.Name)}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.xlsx";
-        var path = Path.Combine(FileSystem.CacheDirectory, fileName);
+        var path = _fileService.CombineCachePath(fileName);
         workbook.SaveAs(path);
         return path;
     }
@@ -1718,7 +1740,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         sheet.Columns().AdjustToContents();
 
         var fileName = $"Miracles_{SanitizeFileName(_draft.Name)}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.xlsx";
-        var path = Path.Combine(FileSystem.CacheDirectory, fileName);
+        var path = _fileService.CombineCachePath(fileName);
         workbook.SaveAs(path);
         return path;
     }
@@ -1763,8 +1785,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     {
         var content = BuildSpellsText();
         var fileName = $"Spells_{SanitizeFileName(_draft.Name)}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.txt";
-        var path = Path.Combine(FileSystem.CacheDirectory, fileName);
-        await File.WriteAllTextAsync(path, content);
+        var path = _fileService.CombineCachePath(fileName);
+        await _fileService.WriteTextAsync(path, content);
         return path;
     }
 
@@ -1772,8 +1794,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     {
         var content = BuildMiraclesText();
         var fileName = $"Miracles_{SanitizeFileName(_draft.Name)}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.txt";
-        var path = Path.Combine(FileSystem.CacheDirectory, fileName);
-        await File.WriteAllTextAsync(path, content);
+        var path = _fileService.CombineCachePath(fileName);
+        await _fileService.WriteTextAsync(path, content);
         return path;
     }
 
@@ -2376,19 +2398,16 @@ public sealed class EvocationListVm : INotifyPropertyChanged
 
     private readonly IReadOnlyList<DruidEvocationService.EvocRaw> _allEvocations;
     private readonly Dictionary<string, DruidEvocationService.EvocRaw> _evocationLookup;
+    private readonly ICharacterAdvancementDomainService _domainService;
 
     public EvocationListDraft Draft { get; }
 
-    public string Name
-    {
-        get => Draft.Name;
-        set
-        {
-            if (Draft.Name == value) return;
-            Draft.Name = value ?? string.Empty;
-            Raise();
-        }
-    }
+    public string Name => Draft.Name;
+    public string HeaderTitle =>
+        string.IsNullOrWhiteSpace(Draft.Name)
+            ? (Draft.IsPost8th ? "post 8th" : "base list")
+            : Draft.Name;
+    public bool IsPost8th => Draft.IsPost8th;
 
     public bool IsMinimized
     {
@@ -2424,6 +2443,23 @@ public sealed class EvocationListVm : INotifyPropertyChanged
     public ObservableCollection<string> SelectedFieldFilters { get; } = new();
     public ObservableCollection<string> TierFilterOptions { get; } = new() { "Advanced", "Standard" };
     public ObservableCollection<string> SelectedTierFilters { get; } = new();
+    public ObservableCollection<EvocationFieldSegmentVm> FieldBreakdownSegments { get; } = new();
+    public ObservableCollection<EvocationFieldLegendVm> FieldLegendItems { get; } = new();
+    public bool HasFieldBreakdown => FieldBreakdownSegments.Count > 0;
+
+    private bool _showFieldLegend;
+    public bool ShowFieldLegend
+    {
+        get => _showFieldLegend;
+        set
+        {
+            if (!Set(ref _showFieldLegend, value))
+                return;
+            Raise(nameof(FieldLegendChevronText));
+        }
+    }
+
+    public string FieldLegendChevronText => ShowFieldLegend ? "▴" : "▾";
 
     private Dictionary<string, EvocationOption> _filteredOptions = new();
     public Dictionary<string, EvocationOption> FilteredOptions
@@ -2462,11 +2498,16 @@ public sealed class EvocationListVm : INotifyPropertyChanged
     public ICommand AddSelectedCommand { get; }
     public ICommand RemoveEntryCommand { get; }
     public ICommand ToggleExpandedCommand { get; }
+    public ICommand ToggleFieldLegendCommand { get; }
 
-    public EvocationListVm(EvocationListDraft draft, IReadOnlyList<DruidEvocationService.EvocRaw> allEvocations)
+    public EvocationListVm(
+        EvocationListDraft draft,
+        IReadOnlyList<DruidEvocationService.EvocRaw> allEvocations,
+        ICharacterAdvancementDomainService domainService)
     {
         Draft = draft;
         _allEvocations = allEvocations ?? Array.Empty<DruidEvocationService.EvocRaw>();
+        _domainService = domainService;
         _evocationLookup = _allEvocations
             .Where(e => !string.IsNullOrWhiteSpace(e?.name))
             .GroupBy(e => e.name, StringComparer.OrdinalIgnoreCase)
@@ -2475,9 +2516,11 @@ public sealed class EvocationListVm : INotifyPropertyChanged
         AddSelectedCommand = new Command(AddSelectedEvocation);
         RemoveEntryCommand = new Command<EvocationEntryVm>(RemoveEntry);
         ToggleExpandedCommand = new Command(() => IsMinimized = !IsMinimized);
+        ToggleFieldLegendCommand = new Command(() => ShowFieldLegend = !ShowFieldLegend);
 
         SelectedFieldFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
         SelectedTierFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
+        FieldBreakdownSegments.CollectionChanged += (_, __) => Raise(nameof(HasFieldBreakdown));
 
         LoadFieldOptions();
         LoadEntriesFromDraft();
@@ -2488,16 +2531,8 @@ public sealed class EvocationListVm : INotifyPropertyChanged
     private void LoadFieldOptions()
     {
         FieldFilterOptions.Clear();
-        var fields = _allEvocations
-            .SelectMany(e => e.fields ?? new List<string>())
-            .Select(f => (f ?? string.Empty).Trim())
-            .Where(f => f.Length > 0)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(f => f, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        foreach (var field in fields)
-            FieldFilterOptions.Add(field);
+        foreach (var field in EvocationFieldCatalog.Definitions)
+            FieldFilterOptions.Add(field.DisplayName);
     }
 
     private void LoadEntriesFromDraft()
@@ -2519,6 +2554,7 @@ public sealed class EvocationListVm : INotifyPropertyChanged
             }
             Entries.Add(vm);
         }
+        ReindexEntries();
     }
 
     private void AddSelectedEvocation()
@@ -2531,7 +2567,10 @@ public sealed class EvocationListVm : INotifyPropertyChanged
         var vm = new EvocationEntryVm(draft, OnEntryChanged);
         vm.SelectedEvocation = SelectedEvocationOption.Value;
         Entries.Add(vm);
-        SelectedEvocationOption = null;
+        ReindexEntries();
+        SearchPickerStateHelper.ClearForNextSearch<EvocationOption>(
+            setSelection: v => SelectedEvocationOption = v,
+            setSearchText: _ => { });
         UpdateStats();
     }
 
@@ -2540,6 +2579,7 @@ public sealed class EvocationListVm : INotifyPropertyChanged
         if (entry == null) return;
         Entries.Remove(entry);
         Draft.Entries.Remove(entry.Draft);
+        ReindexEntries();
         UpdateStats();
     }
 
@@ -2570,8 +2610,7 @@ public sealed class EvocationListVm : INotifyPropertyChanged
 
             if (filterByFields)
             {
-                var fields = ev.fields ?? new List<string>();
-                if (!fields.Any(f => selectedFields.Contains(f)))
+                if (!EvocationFieldCatalog.MatchesAnySelectedField(ev.fields, selectedFields))
                     continue;
             }
 
@@ -2592,10 +2631,17 @@ public sealed class EvocationListVm : INotifyPropertyChanged
         FilteredOptions = dict;
     }
 
+    private void ReindexEntries()
+    {
+        for (var i = 0; i < Entries.Count; i++)
+            Entries[i].SetRowIndex(i);
+    }
+
     private void UpdateStats()
     {
-        var total = Draft.Entries.Sum(e => Math.Max(0, e.Power));
-        var advanced = Draft.Entries.Where(e => e.IsAdvanced).Sum(e => Math.Max(0, e.Power));
+        var totals = _domainService.ComputeEvocationPointTotals(Draft.Entries);
+        var total = totals.Total;
+        var advanced = totals.Advanced;
 
         TotalPower = total;
         AdvancedPower = advanced;
@@ -2617,30 +2663,82 @@ public sealed class EvocationListVm : INotifyPropertyChanged
 
             if (advancedEntries.Count > 1)
             {
-                HashSet<string>? commonFields = null;
-                foreach (var entry in advancedEntries)
-                {
-                    if (!_evocationLookup.TryGetValue(entry.Name, out var ev) || ev.fields == null || ev.fields.Count == 0)
+                var allShareField = _domainService.AdvancedEvocationsShareAField(
+                    advancedEntries,
+                    name =>
                     {
-                        commonFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                        break;
-                    }
+                        if (!_evocationLookup.TryGetValue(name, out var ev))
+                            return null;
+                        return EvocationFieldCatalog.GetComparableFieldKeys(ev.fields);
+                    });
 
-                    if (commonFields == null)
-                        commonFields = new HashSet<string>(ev.fields, StringComparer.OrdinalIgnoreCase);
-                    else
-                        commonFields.IntersectWith(ev.fields);
-
-                    if (commonFields.Count == 0)
-                        break;
-                }
-
-                if (commonFields == null || commonFields.Count == 0)
+                if (!allShareField)
                     message = "Advanced evocations must all come from the same field.";
             }
         }
 
+        RebuildFieldBreakdown();
         ValidationMessage = message;
+    }
+
+    private void RebuildFieldBreakdown()
+    {
+        var totals = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var entry in Draft.Entries ?? new List<EvocationListEntryDraft>())
+        {
+            if (string.IsNullOrWhiteSpace(entry.Name))
+                continue;
+
+            var power = Math.Max(0, entry.Power);
+            if (power <= 0)
+                continue;
+
+            if (!_evocationLookup.TryGetValue(entry.Name, out var evocation))
+                continue;
+
+            var fields = EvocationFieldCatalog.ResolveFields(evocation.fields);
+            if (fields.Count == 0)
+                continue;
+
+            var splitPower = power / (double)fields.Count;
+            foreach (var field in fields)
+                totals[field.Key] = totals.GetValueOrDefault(field.Key, 0d) + splitPower;
+        }
+
+        FieldBreakdownSegments.Clear();
+        FieldLegendItems.Clear();
+
+        if (totals.Count == 0)
+        {
+            ShowFieldLegend = false;
+            return;
+        }
+
+        var ordered = EvocationFieldCatalog.Definitions
+            .Where(def => totals.TryGetValue(def.Key, out var value) && value > 0d)
+            .ToList();
+
+        var totalWeight = ordered.Sum(def => totals[def.Key]);
+        foreach (var field in ordered)
+        {
+            var value = totals[field.Key];
+            var ratio = totalWeight > 0d ? (value / totalWeight) * 100d : 0d;
+
+            FieldBreakdownSegments.Add(new EvocationFieldSegmentVm(Math.Max(0.01, value), field.Colour));
+            FieldLegendItems.Add(new EvocationFieldLegendVm(
+                field.DisplayName,
+                field.Colour,
+                $"{FormatFieldPower(value)} EP ({ratio:0.#}%)"));
+        }
+    }
+
+    private static string FormatFieldPower(double value)
+    {
+        var rounded = Math.Round(value, 1);
+        if (Math.Abs(rounded - Math.Round(rounded)) < 0.01)
+            return ((int)Math.Round(rounded)).ToString();
+        return rounded.ToString("0.0");
     }
 }
 
@@ -2664,7 +2762,12 @@ public sealed class EvocationEntryVm : INotifyPropertyChanged
     public EvocationListEntryDraft Draft { get; }
 
     public string DisplayText
-        => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} ({Draft.Power})";
+        => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} (P{Draft.Power})";
+
+    public bool HasEvocation => !string.IsNullOrWhiteSpace(Draft.Name);
+
+    private int _rowIndex;
+    public Color RowBackgroundColor => (_rowIndex % 2) == 0 ? Colors.White : Color.FromArgb("#FAF8F3");
 
     private EvocationOption? _selectedEvocation;
     public EvocationOption? SelectedEvocation
@@ -2688,6 +2791,7 @@ public sealed class EvocationEntryVm : INotifyPropertyChanged
             }
 
             Raise(nameof(DisplayText));
+            Raise(nameof(HasEvocation));
             _onChanged();
         }
     }
@@ -2696,6 +2800,188 @@ public sealed class EvocationEntryVm : INotifyPropertyChanged
     {
         Draft = draft;
         _onChanged = onChanged;
+    }
+
+    public void SetRowIndex(int rowIndex)
+    {
+        if (_rowIndex == rowIndex)
+            return;
+
+        _rowIndex = rowIndex;
+        Raise(nameof(RowBackgroundColor));
+    }
+}
+
+public sealed class EvocationFieldSegmentVm
+{
+    public double Weight { get; }
+    public Color Colour { get; }
+
+    public EvocationFieldSegmentVm(double weight, Color colour)
+    {
+        Weight = weight;
+        Colour = colour;
+    }
+}
+
+public sealed class EvocationFieldLegendVm
+{
+    public string FieldName { get; }
+    public Color Colour { get; }
+    public string SummaryText { get; }
+
+    public EvocationFieldLegendVm(string fieldName, Color colour, string summaryText)
+    {
+        FieldName = fieldName;
+        Colour = colour;
+        SummaryText = summaryText;
+    }
+}
+
+internal sealed class EvocationFieldDefinition
+{
+    public EvocationFields Field { get; }
+    public string DisplayName { get; }
+    public string Key { get; }
+    public Color Colour { get; }
+
+    public EvocationFieldDefinition(EvocationFields field, string displayName, string key, Color colour)
+    {
+        Field = field;
+        DisplayName = displayName;
+        Key = key;
+        Colour = colour;
+    }
+}
+
+internal static class EvocationFieldCatalog
+{
+    private const string AllToken = "all";
+
+    public static IReadOnlyList<EvocationFieldDefinition> Definitions { get; } = new List<EvocationFieldDefinition>
+    {
+        BuildDefinition(EvocationFields.Spring, "Spring", "#22C55E"),
+        BuildDefinition(EvocationFields.Summer, "Summer", "#F59E0B"),
+        BuildDefinition(EvocationFields.Autumn, "Autumn", "#B45309"),
+        BuildDefinition(EvocationFields.Winter, "Winter", "#60A5FA"),
+        BuildDefinition(EvocationFields.HornedMan, "Horned Man", "#7C3AED"),
+        BuildDefinition(EvocationFields.MotherNature, "Mother Nature", "#16A34A"),
+        BuildDefinition(EvocationFields.ShadowOfTheDawn, "Shadow of the Dawn", "#4B5563"),
+        BuildDefinition(EvocationFields.KeeperOfWinds, "Keeper of the Winds", "#0EA5E9"),
+        BuildDefinition(EvocationFields.FatherOfTheWorld, "Father of the World", "#92400E"),
+        BuildDefinition(EvocationFields.Deserts, "Deserts", "#D97706"),
+        BuildDefinition(EvocationFields.Skies, "Skies", "#38BDF8"),
+        BuildDefinition(EvocationFields.Mountains, "Mountains", "#6B7280"),
+        BuildDefinition(EvocationFields.Rivers, "Rivers", "#0F766E"),
+        BuildDefinition(EvocationFields.Forests, "Forests", "#166534"),
+        BuildDefinition(EvocationFields.Cities, "Cities", "#334155")
+    };
+
+    private static readonly Dictionary<string, EvocationFieldDefinition> DefinitionLookup = BuildLookup();
+
+    private static readonly Dictionary<string, string> Synonyms = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["forest"] = NormalizeToken(EvocationFields.Forests.ToString()),
+        ["river"] = NormalizeToken(EvocationFields.Rivers.ToString()),
+        ["mountain"] = NormalizeToken(EvocationFields.Mountains.ToString()),
+        ["desert"] = NormalizeToken(EvocationFields.Deserts.ToString()),
+        ["city"] = NormalizeToken(EvocationFields.Cities.ToString()),
+        ["sky"] = NormalizeToken(EvocationFields.Skies.ToString()),
+        ["keeperofthewind"] = NormalizeToken(EvocationFields.KeeperOfWinds.ToString())
+    };
+
+    public static bool MatchesAnySelectedField(IEnumerable<string>? rawFields, HashSet<string> selectedDisplayNames)
+    {
+        if (selectedDisplayNames.Count == 0)
+            return true;
+
+        var selectedKeys = new HashSet<string>(
+            selectedDisplayNames.Select(NormalizeToken),
+            StringComparer.OrdinalIgnoreCase);
+
+        var keys = ExtractComparableKeys(rawFields, includeAllAsEveryField: true);
+        return keys.Overlaps(selectedKeys);
+    }
+
+    public static HashSet<string> GetComparableFieldKeys(IEnumerable<string>? rawFields)
+        => ExtractComparableKeys(rawFields, includeAllAsEveryField: true);
+
+    public static IReadOnlyList<EvocationFieldDefinition> ResolveFields(IEnumerable<string>? rawFields)
+    {
+        var keys = ExtractComparableKeys(rawFields, includeAllAsEveryField: true);
+        if (keys.Count == 0)
+            return Array.Empty<EvocationFieldDefinition>();
+
+        return Definitions
+            .Where(def => keys.Contains(def.Key))
+            .ToList();
+    }
+
+    private static HashSet<string> ExtractComparableKeys(IEnumerable<string>? rawFields, bool includeAllAsEveryField)
+    {
+        var keys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var hasAll = false;
+
+        foreach (var rawField in rawFields ?? Array.Empty<string>())
+        {
+            var normalized = NormalizeToken(rawField);
+            if (normalized.Length == 0)
+                continue;
+
+            if (string.Equals(normalized, AllToken, StringComparison.OrdinalIgnoreCase))
+            {
+                hasAll = true;
+                continue;
+            }
+
+            if (!DefinitionLookup.TryGetValue(normalized, out var definition)
+                && Synonyms.TryGetValue(normalized, out var canonicalKey))
+            {
+                DefinitionLookup.TryGetValue(canonicalKey, out definition);
+            }
+
+            if (definition != null)
+                keys.Add(definition.Key);
+        }
+
+        if (hasAll && includeAllAsEveryField)
+        {
+            foreach (var definition in Definitions)
+                keys.Add(definition.Key);
+        }
+
+        return keys;
+    }
+
+    private static EvocationFieldDefinition BuildDefinition(EvocationFields field, string displayName, string colourHex)
+    {
+        var key = NormalizeToken(field.ToString());
+        return new EvocationFieldDefinition(field, displayName, key, Color.FromArgb(colourHex));
+    }
+
+    private static Dictionary<string, EvocationFieldDefinition> BuildLookup()
+    {
+        var lookup = new Dictionary<string, EvocationFieldDefinition>(StringComparer.OrdinalIgnoreCase);
+        foreach (var definition in Definitions)
+        {
+            lookup[definition.Key] = definition;
+            lookup[NormalizeToken(definition.DisplayName)] = definition;
+        }
+
+        return lookup;
+    }
+
+    private static string NormalizeToken(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        var chars = value
+            .Where(char.IsLetterOrDigit)
+            .Select(char.ToLowerInvariant)
+            .ToArray();
+
+        return new string(chars);
     }
 }
 
@@ -2739,6 +3025,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
     private readonly IReadOnlyList<MiracleService.MiracRaw> _allMiracles;
     private readonly Action _onValidationChanged;
     private readonly Dictionary<string, string> _sphereLookup;
+    private readonly ICharacterAdvancementDomainService _domainService;
     private readonly Func<Alignment?> _getAlignment;
     private readonly Func<int> _getPoints;
     private readonly Action<MiracleListVm>? _onExpandRequested;
@@ -2944,6 +3231,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
     public MiracleListVm(
         MiracleListDraft draft,
         IReadOnlyList<MiracleService.MiracRaw> allMiracles,
+        ICharacterAdvancementDomainService domainService,
         Action onValidationChanged,
         Func<Alignment?> getAlignment,
         Func<int> getPoints,
@@ -2951,6 +3239,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
     {
         Draft = draft;
         _allMiracles = allMiracles ?? Array.Empty<MiracleService.MiracRaw>();
+        _domainService = domainService;
         _onValidationChanged = onValidationChanged;
         _getAlignment = getAlignment;
         _getPoints = getPoints;
@@ -3053,9 +3342,12 @@ public sealed class MiracleListVm : INotifyPropertyChanged
     {
         var filtered = _allMiracles;
 
-        var allowedAlignments = GetAllowedAlignmentTokens(_getAlignment(), lockTrueNeutral: true);
+        var allowedAlignments = _domainService.GetAllowedMiracleAlignments(
+            _getAlignment(),
+            Draft.Entries ?? new List<MiracleListEntryDraft>(),
+            lockTrueNeutral: true);
         filtered = filtered
-            .Where(m => allowedAlignments.Contains(NormalizeAlignment(m.alignment)))
+            .Where(m => allowedAlignments.Contains(_domainService.NormalizeAlignmentToken(m.alignment)))
             .ToList();
 
         if (SelectedSphereFilters.Count > 0)
@@ -3137,86 +3429,6 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         return new string(chars).ToLowerInvariant();
     }
 
-    private static string NormalizeAlignment(string? value)
-    {
-        var token = NormalizeToken(value);
-        if (token.StartsWith("good", StringComparison.OrdinalIgnoreCase))
-            return "good";
-        if (token.StartsWith("evil", StringComparison.OrdinalIgnoreCase))
-            return "evil";
-        return "neutral";
-    }
-
-    private HashSet<string> GetAllowedAlignmentTokens(Alignment? alignment, bool lockTrueNeutral)
-    {
-        var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        if (!alignment.HasValue)
-        {
-            allowed.Add("good");
-            allowed.Add("neutral");
-            allowed.Add("evil");
-            return allowed;
-        }
-
-        var moral = alignment.Value.Moral;
-        var order = alignment.Value.Order;
-
-        if (moral == MoralAxis.Good)
-        {
-            allowed.Add("good");
-            allowed.Add("neutral");
-            return allowed;
-        }
-
-        if (moral == MoralAxis.Evil)
-        {
-            allowed.Add("evil");
-            allowed.Add("neutral");
-            return allowed;
-        }
-
-        if (order == OrderAxis.Lawful)
-        {
-            allowed.Add("good");
-            allowed.Add("neutral");
-            return allowed;
-        }
-
-        if (order == OrderAxis.Chaotic)
-        {
-            allowed.Add("evil");
-            allowed.Add("neutral");
-            return allowed;
-        }
-
-        // True Neutral: allow all, but optionally lock to the first non-neutral alignment chosen.
-        if (lockTrueNeutral)
-        {
-            var hasGood = Entries.Any(e => NormalizeAlignment(e.Draft.Alignment) == "good");
-            var hasEvil = Entries.Any(e => NormalizeAlignment(e.Draft.Alignment) == "evil");
-
-            if (hasGood && !hasEvil)
-            {
-                allowed.Add("good");
-                allowed.Add("neutral");
-                return allowed;
-            }
-
-            if (hasEvil && !hasGood)
-            {
-                allowed.Add("evil");
-                allowed.Add("neutral");
-                return allowed;
-            }
-        }
-
-        allowed.Add("good");
-        allowed.Add("neutral");
-        allowed.Add("evil");
-        return allowed;
-    }
-
     private Dictionary<string, string> BuildSphereLookup()
     {
         var lookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -3232,10 +3444,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
 
     private void UpdateValidation()
     {
-        var good = 0;
-        var evil = 0;
-        var neutral = 0;
-        var advanced = 0;
+        var totals = _domainService.ComputeMiraclePointTotals(Entries.Select(e => e.Draft));
         var advancedSpheres = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var entry in Entries)
@@ -3243,30 +3452,19 @@ public sealed class MiracleListVm : INotifyPropertyChanged
             if (string.IsNullOrWhiteSpace(entry.Draft.Name))
                 continue;
 
-            var power = Math.Max(0, entry.Draft.Power);
-            var alignment = NormalizeAlignment(entry.Draft.Alignment);
-
-            if (alignment == "good")
-                good += power;
-            else if (alignment == "evil")
-                evil += power;
-            else
-                neutral += power;
-
             if (entry.Draft.IsAdvanced)
             {
-                advanced += power;
                 var sphere = MapSphereLabel(entry.Draft.Sphere);
                 if (!string.IsNullOrWhiteSpace(sphere))
                     advancedSpheres.Add(sphere);
             }
         }
 
-        GoodPoints = good;
-        EvilPoints = evil;
-        NeutralPoints = neutral;
-        TotalPoints = good + evil + neutral;
-        AdvancedPoints = advanced;
+        GoodPoints = totals.Good;
+        EvilPoints = totals.Evil;
+        NeutralPoints = totals.Neutral;
+        TotalPoints = totals.Total;
+        AdvancedPoints = totals.Advanced;
 
         Raise(nameof(UnselectedPoints));
         Raise(nameof(GoodWidth));
@@ -3274,14 +3472,14 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         Raise(nameof(EvilWidth));
         Raise(nameof(UnselectedWidth));
 
-        var hasMixed = good > 0 && evil > 0;
+        var hasMixed = totals.Good > 0 && totals.Evil > 0;
 
         var messages = new List<string>();
         if (hasMixed)
             messages.Add("Cannot mix Good and Evil miracles in the same list.");
         if (IsScriptures)
         {
-            ScripturesAllowed = GetScriptureTablesReached(_getPoints());
+            ScripturesAllowed = _domainService.GetScriptureTablesReached(_getPoints());
             if (ScripturesUsed > ScripturesAllowed)
                 messages.Add($"Exceeds scriptures allowed ({ScripturesAllowed}).");
 
@@ -3294,13 +3492,13 @@ public sealed class MiracleListVm : INotifyPropertyChanged
             var overTotal = TotalPoints > MaxListPower;
             var overAdvanced = AdvancedPoints > MaxAdvancedPower;
             var tooManyAdvancedSpheres = advancedSpheres.Count > 1;
-            var needsNeutralChoice = good <= 10 && evil <= 10 && (good > 0 || evil > 0);
+            var needsNeutralChoice = totals.Good <= 10 && totals.Evil <= 10 && (totals.Good > 0 || totals.Evil > 0);
             var hasNeutralMismatch = needsNeutralChoice && string.IsNullOrWhiteSpace(Draft.NeutralAlignmentChoice);
             var neutralChoiceMismatch = false;
             if (needsNeutralChoice && !string.IsNullOrWhiteSpace(Draft.NeutralAlignmentChoice))
             {
-                var choice = NormalizeAlignment(Draft.NeutralAlignmentChoice);
-                neutralChoiceMismatch = (good > 0 && choice != "good") || (evil > 0 && choice != "evil");
+                var choice = _domainService.NormalizeAlignmentToken(Draft.NeutralAlignmentChoice);
+                neutralChoiceMismatch = (totals.Good > 0 && choice != "good") || (totals.Evil > 0 && choice != "evil");
             }
 
             if (SourceName == string.Empty)
@@ -3332,16 +3530,6 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         _onValidationChanged();
     }
 
-    public static int GetScriptureTablesReached(int points)
-    {
-        var thresholds = new[]
-        {
-            0, 200, 250, 275, 450, 600, 650, 1000, 1500, 3000, 5250, 7500, 10000
-        };
-
-        return thresholds.Count(t => points >= t);
-    }
-
     public void RefreshExternalLimits()
     {
         UpdateFilteredOptions();
@@ -3356,18 +3544,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         if (!alignment.HasValue)
             return true;
 
-        var allowed = GetAllowedAlignmentTokens(alignment, lockTrueNeutral: true);
-        foreach (var entry in Entries)
-        {
-            if (string.IsNullOrWhiteSpace(entry.Draft.Name))
-                continue;
-
-            var token = NormalizeAlignment(entry.Draft.Alignment);
-            if (!allowed.Contains(token))
-                return false;
-        }
-
-        return true;
+        return _domainService.AreMiracleEntriesAlignmentCompatible(alignment, Entries.Select(e => e.Draft));
     }
 }
 

@@ -53,6 +53,15 @@ public static class MauiProgram
 		builder.Services.AddSingleton<Services.IDefaultDatabaseInstaller, Services.DefaultDatabaseInstaller>();
 		builder.Services.AddSingleton<Services.IDatabaseInitializer, Services.DatabaseInitializer>();
 		builder.Services.AddSingleton<IBattleboardExportService, BattleboardExportService>();
+		builder.Services.AddSingleton<IFileService, MauiFileService>();
+		builder.Services.AddSingleton<IClipboardService, MauiClipboardService>();
+		builder.Services.AddSingleton<ILauncherService, MauiLauncherService>();
+		builder.Services.AddSingleton<IShareService, MauiShareService>();
+		builder.Services.AddSingleton<IExportService, ExportService>();
+		builder.Services.AddSingleton<ICharacterAdvancementDomainService, CharacterAdvancementDomainService>();
+		builder.Services.AddSingleton<IAdvancementTabVisibilityService, AdvancementTabVisibilityService>();
+		builder.Services.AddSingleton<IAdvancementValidationService, AdvancementValidationService>();
+		builder.Services.AddSingleton<ICharacterCreationDataService, CharacterCreationDataService>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

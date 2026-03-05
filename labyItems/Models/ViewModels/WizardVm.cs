@@ -11,7 +11,6 @@ using labyItems.Models.Characters;
 using labyItems.Pages.Characters;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -31,7 +30,11 @@ public sealed class WizardVm : INotifyPropertyChanged
     }
 
     public CharacterDraft Draft { get; }
-    private readonly IBattleboardExportService _exportService;
+    private readonly IBattleboardExportService _battleboardExportService;
+    private readonly IExportService _exportService;
+    private readonly ICharacterDraftStore _draftStore;
+    private readonly ICharacterAdvancementDomainService _domainService;
+    private readonly ICharacterCreationDataService _creationDataService;
     private readonly Func<Task>? _onFinished;
     private readonly WizardFlowStateMachine _flow;
 
@@ -111,11 +114,34 @@ public sealed class WizardVm : INotifyPropertyChanged
         private set => Set(ref _advancementPointsSpent, value);
     }
 
-    public WizardVm(CharacterDraft? draft = null, Func<Task>? onFinished = null)
+    public WizardVm(
+        CharacterDraft? draft = null,
+        Func<Task>? onFinished = null,
+        IBattleboardExportService? battleboardExportService = null,
+        IExportService? exportService = null,
+        ICharacterDraftStore? draftStore = null,
+        ICharacterAdvancementDomainService? domainService = null,
+        ICharacterCreationDataService? creationDataService = null)
     {
-        Draft = draft ?? new CharacterDraft();
+        var resolvedDraft = draftStore?.Draft ?? draft ?? new CharacterDraft();
+        _draftStore = draftStore ?? new CharacterDraftStore(resolvedDraft);
+        Draft = _draftStore.Draft;
         _onFinished = onFinished;
-        _exportService = new BattleboardExportService();
+        _battleboardExportService = battleboardExportService
+            ?? ServiceHelper.ResolveService<IBattleboardExportService>()
+            ?? new BattleboardExportService();
+        _exportService = exportService
+            ?? ServiceHelper.ResolveService<IExportService>()
+            ?? new ExportService(
+                new MauiClipboardService(),
+                new MauiLauncherService(),
+                new MauiShareService());
+        _domainService = domainService
+            ?? ServiceHelper.ResolveService<ICharacterAdvancementDomainService>()
+            ?? new CharacterAdvancementDomainService();
+        _creationDataService = creationDataService
+            ?? ServiceHelper.ResolveService<ICharacterCreationDataService>()
+            ?? new CharacterCreationDataService();
         BackCommand = new Command(async () => await OnBackAsync());
         NextCommand = new Command(async () => await OnNextAsync());
         StepClickCommand = new Command<int>(async i => await TryGoToStepAsync(i));
@@ -124,10 +150,15 @@ public sealed class WizardVm : INotifyPropertyChanged
         SaveToWalletCommand = new Command(SaveToWallet, () => Draft.IsRaceAndClassSelected);
         ContinueToAdvancementCommand = new Command(async () => await ContinueToAdvancementAsync());
         ToggleAdvancementExpandedCommand = new Command(() => IsAdvancementExpanded = !IsAdvancementExpanded);
-        CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged);
+        CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged, _creationDataService);
 
         // NEW: optional guild selection step
-        GuildsVm = new GuildsVm(Draft, NotifyGatingChanged, CharacterBuilderVm.GetNonGuildAlignmentRules, CharacterBuilderVm.RefreshDraftAbilitiesAsync);
+        GuildsVm = new GuildsVm(
+            Draft,
+            NotifyGatingChanged,
+            CharacterBuilderVm.GetNonGuildAlignmentRules,
+            CharacterBuilderVm.RefreshDraftAbilitiesAsync,
+            _creationDataService);
 
         _flow = new WizardFlowStateMachine(BuildSteps());
         foreach (var step in _flow.Steps)
@@ -794,29 +825,20 @@ public sealed class WizardVm : INotifyPropertyChanged
     private async Task ExportBattleboardAsync()
     {
         await SyncDraftStateAsync();
-        var path = await _exportService.ExportAsync(Draft);
-
-        await Share.Default.RequestAsync(new ShareFileRequest
-        {
-            Title = $"{Draft.Name}'s battleboard",
-            File = new ShareFile(path)
-        });
+        var path = await _battleboardExportService.ExportAsync(Draft);
+        await _exportService.ShareFileAsync($"{Draft.Name}'s battleboard", path);
     }
 
     private async Task ExportBattleboardToExcelAsync()
     {
         await SyncDraftStateAsync();
-        var path = await _exportService.ExportAsync(Draft);
-
-        await Launcher.OpenAsync(new OpenFileRequest
-        {
-            File = new ReadOnlyFile(path)
-        });
+        var path = await _battleboardExportService.ExportAsync(Draft);
+        await _exportService.OpenFileAsync(path);
     }
 
     private void SaveToWallet()
     {
-        LiteDbService.UpsertDraft(Draft);
+        _draftStore.Save();
         RaiseReviewProperties();
     }
 
@@ -839,19 +861,20 @@ public sealed class WizardVm : INotifyPropertyChanged
     private void ApplyAdvancementSummary()
     {
         AdvancementAbilityLines.Clear();
-        var running = 0;
-        foreach (var name in Draft.AdvancementAbilities ?? new List<string>())
+        var lines = _domainService.BuildAbilityPointSpendLines(
+            Draft.AdvancementAbilities ?? new List<string>(),
+            _abilityCostIndex);
+        foreach (var line in lines)
         {
-            var trimmed = (name ?? string.Empty).Trim();
-            if (trimmed.Length == 0)
-                continue;
-
-            var cost = _abilityCostIndex.TryGetValue(trimmed, out var c) ? c : 0;
-            running += cost;
-            AdvancementAbilityLines.Add(new AbilitySpendLine(trimmed, cost, running));
+            AdvancementAbilityLines.Add(new AbilitySpendLine(
+                line.Name,
+                line.Cost,
+                line.RunningTotal));
         }
 
-        AdvancementPointsSpent = running;
+        AdvancementPointsSpent = _domainService.ComputeAbilityPointsSpent(
+            Draft.AdvancementAbilities ?? new List<string>(),
+            _abilityCostIndex);
         RaiseReviewProperties();
     }
 

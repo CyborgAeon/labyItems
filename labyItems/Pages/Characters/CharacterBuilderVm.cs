@@ -49,6 +49,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private readonly CharacterDraft _draft;
     private readonly Action _notifyWizardGatingChanged;
+    private readonly ICharacterCreationDataService _creationDataService;
 
     public CharacterDraft Draft => _draft;
 
@@ -57,10 +58,16 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     public CharacterSpecialisationVm SpecialisationVm { get; }
 
-    public CharacterBuilderVm(CharacterDraft draft, Action notifyWizardGatingChanged)
+    public CharacterBuilderVm(
+        CharacterDraft draft,
+        Action notifyWizardGatingChanged,
+        ICharacterCreationDataService? creationDataService = null)
     {
         _draft = draft;
         _notifyWizardGatingChanged = notifyWizardGatingChanged;
+        _creationDataService = creationDataService
+            ?? ServiceHelper.ResolveService<ICharacterCreationDataService>()
+            ?? new CharacterCreationDataService();
 
         SpecialisationVm = new CharacterSpecialisationVm(this);
 
@@ -134,7 +141,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private async Task LoadRacesAsync()
     {
-        var all = await PeopleService.GetAllAsync();
+        var all = await _creationDataService.GetPeopleAsync();
 
         var list = new List<RaceCardVm>();
         var types = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -381,7 +388,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private async Task LoadClassesAsync()
     {
-        var all = await ClassService.GetAllAsync();
+        var all = await _creationDataService.GetClassesAsync();
 
         var list = new List<ClassCardVm>();
         var categories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -402,7 +409,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
             var raceKeyForLife = ResolveRaceKeyForLifeScale(_draft);
 
-            var points = await LifeScalesService.GetLifeScaleAsync(raceKeyForLife, classKey);
+            var points = await _creationDataService.GetLifeScaleAsync(raceKeyForLife, classKey);
             var tblp = points.Count >= 8 ? points[7].Body : 0;
 
             list.Add(new ClassCardVm
@@ -474,7 +481,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         // IMPORTANT: class availability is based on base race identity, not the life-scale override.
         var raceForFiltering = selectedRace;
 
-        var classes = await LifeScalesService.GetClassesForRaceAsync(raceForFiltering);
+        var classes = await _creationDataService.GetClassesForRaceAsync(raceForFiltering);
         if (classes.Count == 0)
         {
             _allowedClassKeysForSelectedRace = null;
@@ -483,7 +490,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
 
         _allowedClassKeysForSelectedRace = classes
-            .Select(LifeScalesService.NormalizeKey)
+            .Select(_creationDataService.NormalizeLifeScaleKey)
             .Where(k => k.Length > 0)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
@@ -507,10 +514,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             return;
         }
 
-        var races = await LifeScalesService.GetRacesForClassAsync(selectedClass);
+        var races = await _creationDataService.GetRacesForClassAsync(selectedClass);
 
         _allowedRaceKeysForSelectedClass = races
-            .Select(LifeScalesService.NormalizeKey)
+            .Select(_creationDataService.NormalizeLifeScaleKey)
             .Where(k => k.Length > 0)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
@@ -623,9 +630,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         RefilterClasses();
     }
 
-    private static async Task<LifeScalePoint?> GetLifePointAsync(string raceName, string className)
+    private async Task<LifeScalePoint?> GetLifePointAsync(string raceName, string className)
     {
-        var points = await LifeScalesService.GetLifeScaleAsync(raceName, className);
+        var points = await _creationDataService.GetLifeScaleAsync(raceName, className);
         var idx = PickLifeIndex(points);
         return idx >= 0 ? points[idx] : null;
     }
@@ -1293,8 +1300,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             return (list, guildRules);
         }
 
-        var all = await PeopleService.GetAllAsync();
-        if (TryGetRecord(all, raceName, out var rec) && rec != null)
+        var all = await _creationDataService.GetPeopleAsync();
+        if (_creationDataService.TryGetByName(all, raceName, out var rec) && rec != null)
         {
             _raceAlignmentRule = rec.AlignmentRule;
             if (rec.LevelledAbilities != null)
@@ -1323,8 +1330,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             return (list, record, guildRules);
         }
 
-        var all = await ClassService.GetAllAsync();
-        if (TryGetRecord(all, className, out var rec) && rec?.Levels != null)
+        var all = await _creationDataService.GetClassesAsync();
+        if (_creationDataService.TryGetByName(all, className, out var rec) && rec?.Levels != null)
         {
             record = rec;
             _classAlignmentRule = rec.AlignmentRule ?? BuildPaladinFallbackRule(className);
@@ -1347,10 +1354,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         if (Draft.Guilds.Count == 0)
             return list;
 
-        var all = await GuildsService.GetAllAsync();
+        var all = await _creationDataService.GetGuildsAsync();
         foreach (var guild in Draft.Guilds.Distinct(StringComparer.OrdinalIgnoreCase))
         {
-            if (!TryGetRecord(all, guild, out var rec) || rec?.Benefits?.Basic == null)
+            if (!_creationDataService.TryGetByName(all, guild, out var rec) || rec?.Benefits?.Basic == null)
                 continue;
 
             AppendGuildBenefits(list, rec.Benefits.Basic, guild, "Basic");
@@ -1438,12 +1445,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         try
         {
-            var guildMap = await GuildsService.GetAllAsync();
+            var guildMap = await _creationDataService.GetGuildsAsync();
             foreach (var guild in Draft.Guilds.Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 if (guildMap.TryGetValue(guild, out var rec))
                 {
-                    var rule = GuildsService.GetAlignmentRule(rec);
+                    var rule = _creationDataService.GetGuildAlignmentRule(rec);
                     if (rule != null)
                         rules.Add(rule);
                 }
@@ -1922,24 +1929,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return 0;
     }
 
-    private static bool TryGetRecord<T>(Dictionary<string, T> map, string key, out T? value)
-    {
-        if (map.TryGetValue(key, out value))
-            return true;
-
-        foreach (var kvp in map)
-        {
-            if (string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase))
-            {
-                value = kvp.Value;
-                return true;
-            }
-        }
-
-        value = default;
-        return false;
-    }
-
     private static int ParseInt(JsonElement e)
     {
         if (e.ValueKind == JsonValueKind.Number && e.TryGetInt32(out var n)) return n;
@@ -1989,7 +1978,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var list = AllClasses
             .Where(c =>
                 (filter == "All" || string.Equals(c.Category, filter, StringComparison.OrdinalIgnoreCase)) &&
-                (allowed == null || allowed.Contains(LifeScalesService.NormalizeKey(c.Name ?? c.Key ?? ""))) &&
+                (allowed == null || allowed.Contains(_creationDataService.NormalizeLifeScaleKey(c.Name ?? c.Key ?? ""))) &&
                 (q.Length == 0 ||
                  (c.Name ?? "").ToLowerInvariant().Contains(q) ||
                  (c.Summary ?? "").ToLowerInvariant().Contains(q)))
@@ -2009,7 +1998,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var list = AllRaces
             .Where(r =>
                 (filter == "All" || r.PeopleTypes.Any(t => string.Equals(t, filter, StringComparison.OrdinalIgnoreCase))) &&
-                (allowed == null || allowed.Contains(LifeScalesService.NormalizeKey(r.Name))) &&
+                (allowed == null || allowed.Contains(_creationDataService.NormalizeLifeScaleKey(r.Name))) &&
                 (q.Length == 0 ||
                  r.Name.ToLowerInvariant().Contains(q) ||
                  (r.Description ?? "").ToLowerInvariant().Contains(q) ||
