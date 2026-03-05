@@ -10,8 +10,8 @@
   </ContentView.Resources>
 
   <Border Padding="12,8"
-          BackgroundColor="#FFFFFF"
-          Stroke="#22000000"
+          BackgroundColor="{StaticResource White}"
+          Stroke="{StaticResource DividerShadowColor}"
           StrokeThickness="1">
     <Border.GestureRecognizers>
       <TapGestureRecognizer Tapped="OnToggleExpanded"/>

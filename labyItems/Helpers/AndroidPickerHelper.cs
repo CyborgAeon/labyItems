@@ -1,6 +1,8 @@
 using Microsoft.Maui.Controls;
+#if ANDROID
 using Android.Widget;
 using Android.Text;
+#endif
 
 namespace labyItems.Helpers;
 

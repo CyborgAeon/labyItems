@@ -6,7 +6,7 @@
     <Frame Padding="12"
            CornerRadius="12"
            HasShadow="False"
-           BorderColor="#E5E7EB">
+           BorderColor="{StaticResource SurfaceBorderColor}">
         <Grid ColumnDefinitions="*,Auto,Auto"
               ColumnSpacing="4">
             <Label Text="{Binding Name}"

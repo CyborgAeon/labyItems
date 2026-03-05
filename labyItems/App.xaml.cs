@@ -16,6 +16,7 @@ public partial class App : Application
     {
         _dbInitializer = dbInitializer;
         InitializeComponent();
+        UserAppTheme = AppTheme.Light;
         var navPage = new NavigationPage(new ItemRoutePage())
         {
             BarTextColor = Colors.White

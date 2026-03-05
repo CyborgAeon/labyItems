@@ -32,7 +32,7 @@
             HorizontalOptions="Center"
             VerticalOptions="Center"
             StrokeThickness="0"
-            BackgroundColor="#66000000"
+            BackgroundColor="{StaticResource OverlayBackdropColor}"
             Padding="10,6"
             StrokeShape="RoundRectangle 12">
             <Label x:Name="ValueLabel"
