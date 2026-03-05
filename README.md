@@ -41,6 +41,20 @@ $HOME/.dotnet/dotnet watch \
   run --configuration Debug
 ```
 
+IOS boot:
+
+```zsh
+xcrun simctl list devices available
+xcrun simctl install {answer from above} /Users/brbar/Source/labyItems/labyItems/bin/Debug/net10.0-ios/iossimulator-arm64/labyItems.app
+xcrun simctl launch {answer from above} bard.uk.labyitems
+```
+
+or
+
+```zsh
+dotnet build labyItems/labyItems.csproj -t:Run -f net10.0-ios -p:UseIosWorkload=true -p:RuntimeIdentifier=iossimulator-arm64 -p:_DeviceName=:v2:udid=<SIMULATOR_UDID>
+```
+
 If you hit `NETSDK1147` (missing `maui-android`) or similar, you’re probably running the system `dotnet` instead of the one installed by `dotnet-install.sh` — the command above pins to `$HOME/.dotnet/dotnet`.
 
 If watch ever complains about launch profiles, ensure `Properties/launchSettings.json` contains the `Android` profile (added in this repo).
