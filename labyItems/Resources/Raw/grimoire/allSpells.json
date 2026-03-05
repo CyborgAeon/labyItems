@@ -438,9 +438,12 @@
     "verbal": "By the powers of air and thunder, storm blast",
     "description": "This spell inflicts 12 total body life points (TBLP) of damage and two to each location (loc) on one character or 4 hits to a monster. Magical Armour class may be applies to this at 6/1 per point.",
     "IsAdvanced": false,
-    "damage": [[12, 2]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[12, 2]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 14
   },
   {
@@ -485,10 +488,13 @@
     "colour": "Blue",
     "verbal": "By the powers of air and rolling thunder… Lightning bolt!",
     "description": "This spell inflicts 24 points of damage on one character's total body life points (TBLP) and 4 points of damage to each of his locations (LOC). This spell damage ignores any non-magical armour. Alternatively, it delivers 8 hits of damage to a monster.",
-    "damage": [[24, 4]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
     "IsAdvanced": false,
+    "Damage": {
+      "amount": [[24, 4]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 15
   },
   {
@@ -642,9 +648,12 @@
     "verbal": "I call upon the gnomes of earth, imbue this rock with power - magic missile!",
     "description": "This spell charges one rock (a safe phys-rep must be used) with power. When thrown, it does 12 points of damage to the first player's location it hits, and 12 points of damage to their total life points. Alternatively, it does 4 hits to monsters. It disregards all forms of armour bar actual MAC, i.e. a suit of +0 Magic Armour would not offer any protection against a Magic Missile. The first object struck causes the rock to be discharged, so no rebounds.",
     "IsAdvanced": false,
-    "damage": [[12, 12]],
-    "damType": ["Missile"],
-    "MACApplies": [[1, 1]],
+    "Damage": {
+      "amount": [[12, 12]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 17
   },
   {
@@ -681,15 +690,18 @@
     "verbal": "I call upon the mighty gnomes of earth imbue this rock with great power – supermissile!",
     "description": "As Magic Missile (3 MP),above, but it does 12 points of damage to players via the location it hits and TBLP, to which only MAC applies, plus a further 12 TBLP and 2pts damage to each location as a blast effect. This blast effect ignores all armour, including MAC, as the missile detonates within the target. It does 8 hits to monsters.",
     "IsAdvanced": false,
-    "damage": [
-      [12, 12],
-      [12, 2]
-    ],
-    "damType": ["Missile", "Blast"],
-    "MACApplies": [
-      [1, 1],
-      [0, 0]
-    ],
+    "Damage": {
+      "amount": [
+        [12, 12],
+        [12, 2]
+      ],
+      "type": ["Missile", "Blast"],
+      "ArmourApplies": [
+        [1, 1],
+        [0, 0]
+      ],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 17
   },
   {
@@ -924,9 +936,12 @@
     "verbal": "By the powers of fire and brimstone... Fire Blast!",
     "description": "When he casts this spell the wizard causes one player to take 12 points of total body damage and 2 points per location. Alternatively, a monster takes 4 hits. This is magical damage against which MAC may be applied, with each point of MAC reducing the damage by 6/1.",
     "IsAdvanced": false,
-    "damType": ["Blast"],
-    "damage": [[12, 2]],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[12, 2]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 20
   },
   {
@@ -1008,9 +1023,12 @@
     "verbal": "By all the powers of fire be thou scorched, be charred, be burnt, disruption!",
     "description": "This spell causes 36 total body and 6 per location of magical fire damage to one character, or 12 hits to a monster. Only MAC may be applied versus this damage, with each point of MAC reducing the damage by 6/1.",
     "IsAdvanced": false,
-    "damage": [[36, 6]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[36, 6]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 21
   },
   {
@@ -1182,9 +1200,12 @@
     "verbal": "By the powers of the brightest light I smite thee... Laser Bolt!",
     "description": "By casting this spell the wizard creates a beam of light of great intensity that inflicts 24 magical points total body damage and 4 per location to one player. It does 8 hits to a monster. Only MAC may be applied versus the damage from this spell, with each point of MAC reducing the damage by 6/1.",
     "IsAdvanced": false,
-    "damage": [[24, 4]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[24, 4]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 23
   },
   {
@@ -1311,9 +1332,12 @@
     "verbal": "By the Ebony Drake I smite thee with Pain",
     "description": "The target of the spell is struck with a nerve-wracking pain which causes 12 TBLP damage (4 hits to a monster) – magical armour class does protect against this damage (at 1 for 1), and the damage is magical. Only creatures vulnerable to pain are affected, of course – undead and elementals, for example, are unharmed.",
     "IsAdvanced": false,
-    "damage": [[12, 0]],
-    "damType": ["Body"],
-    "MACApplies": [[1, 0]],
+    "Damage": {
+      "amount": [[12, 0]],
+      "type": ["Body"],
+      "ArmourApplies": [[1, 0]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 29
   },
   {
@@ -1719,10 +1743,13 @@
     "verbal": "The onyx dragon holds your heart in his claws, shudder and die now as they close... Heart Attack",
     "description": "Causes the target’s heart to cease to beat for a few seconds, causing them to suffer 18 TBLP, 18 to the chest (6 hits to a monster), to which MAC does not apply. Additionally, the target suffers a magical Halt, at the caster’s skill level. This is a flesh and blood effect, and immunity to flesh and blood effects applies.",
     "IsAdvanced": false,
-    "damage": [[18, 18]],
-    "damType": ["chest"],
-    "MACApplies": [[0, 0]],
     "Immunity": "Flesh and Blood",
+    "Damage": {
+      "amount": [[18, 18]],
+      "type": ["chest"],
+      "ArmourApplies": [[0, 0]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 36
   },
   {
@@ -1732,10 +1759,13 @@
     "verbal": "The onyx dragon rips through your flesh, severing muscles to rend the body ",
     "description": "Causes the target to suffer 24/4 (8 Hits) damage, to which MAC does not apply. Immunity to Involuntary Shape-shifting applies.",
     "IsAdvanced": false,
-    "damage": [[24, 4]],
-    "damType": ["Blast"],
-    "MACApplies": [[0, 0]],
     "Immunity": "Involuntary Shape Shifting",
+    "Damage": {
+      "amount": [[24, 4]],
+      "type": ["Blast"],
+      "ArmourApplies": [[0, 0]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 36
   },
   {
@@ -1876,7 +1906,7 @@
   {
     "name": "Elemental 'Port",
     "level": 12,
-    "colour": "Ele bar GR",
+    "colour": "Ele bar Grey",
     "verbal": "By the greatest power of the lords of the (B)s of (A) let me be taken away!",
     "description": "This spell transports the wizard from a spot immersed in the appropriate element to another similar point on the same plane. It may only be used for elements that the Wizard holds as a colour. There is a 2 second period of disorientation on arrival exactly as per the Standard 6mp Blue Glyph Blink. The wizard must have seen the destination before on this adventure, have the destination within line of sight, live there, i.e. a location not involved with the adventure which may be known as the wizard's home, or have memorised the location. It costs 5pts post 8th to memorise a location other than home, per location memorised. The referee of the location must have signed the ability onto your character card. If you have a location signed onto your card, but are on an adventure not being run by the same referee who countersigned the location onto your card, then they are within their rights to disallow that location as a point to which you may 'port to. In case of dispute, the player is assumed to have teleported home. In other ways this glyph functions as per the Elemental Shift spell above. Due to the stresses on the body caused by this glyph, casting damage for casting it a second time within a one hour period is calculated as if the glyph were three levels higher. No additional mana is used. This effect is cumulative, so a third use of the spell within an hour period would cause casting damage as an 18 mana glyph, and so on!",
     "IsAdvanced": true,
@@ -1885,7 +1915,7 @@
   {
     "name": "Summon Elemental 'Champion'",
     "level": 12,
-    "colour": "Ele not Grey",
+    "colour": "Ele bar Grey",
     "verbal": "By the power at my command I summon the element of ...(A)..., I entreat the elements of Fire, Air, Earth, Water, Light and Darkness. Come forth Champion of ...(A)... let a ...(B)... of ...(A)... appear to do my will.",
     "description": "This spell conjures an elemental ‘Champion' to be commanded. An elemental 'Champion' may take 40 hits before being destroyed, inflicts 15pts of damage with its hands and has 10th level Resistances. It will not be negated by being struck by a 4 or 6 mana elemental, only by an 8 mana or higher elemental. All other details are as standard summon elemental, such as Summon Sylph '6'.",
     "IsAdvanced": true,
@@ -1988,10 +2018,13 @@
     "verbal": "My dragon spits upon thee... Droplets of Death",
     "description": "One target within range is spattered with a droplet of magical venom from directly above. If they are wearing a helmet or similar the venom does not penetrate. Otherwise, the target suffers the effects of a Contact Venom 6, taking 30 seconds to take full effect as normal. This poison is black mana as well as venom, and resistances to either apply.",
     "IsAdvanced": true,
-    "damage": [[36, 36]],
-    "damType": ["Head"],
-    "MACApplies": [[0, 0]],
     "Immunity": "Poison",
+    "Damage": {
+      "amount": [[36, 36]],
+      "type": ["Head"],
+      "ArmourApplies": [[0, 0]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 56
   },
   {
@@ -2099,10 +2132,13 @@
     "colour": "Blue",
     "verbal": "The powers of lightning strike thee... Air Dart",
     "description": "Inflicts 6/1 magical lightning damage in the same manner as the Storm Blast spell. Causes 2 hits to monsters.",
-    "damage": [[6, 1]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
     "IsAdvanced": true,
+    "Damage": {
+      "amount": [[6, 1]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 58
   },
   {
@@ -2121,9 +2157,12 @@
     "verbal": "Into my hand I call forth lightning... Lightning Shock",
     "description": "Functions as the Red Spell Shock, except that the damage is blue magic lightning and Resistance to Lightning, not fire, applies.",
     "IsAdvanced": true,
-    "damage": [[12, 12]],
-    "damType": ["Missile"],
-    "MACApplies": [[0, 0]],
+    "Damage": {
+      "amount": [[12, 12]],
+      "type": ["Missile"],
+      "ArmourApplies": [[0, 0]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 58
   },
   {
@@ -2160,9 +2199,12 @@
     "verbal": "By all the powers of air and rolling thunder thou art struck and thou art struck!",
     "description": "This causes two separate targets that are indicated, to be hit with a Lightning Bolt style effect. If only one target is within range then one of the bolts strikes the wizard. The same person may never be struck twice with the same single casting of this spell. If the only person within range when this spell is cast is the caster himself than one of the bolts is grounded and that bolt inflicts no damage, rather than the wizard being struck twice.",
     "IsAdvanced": true,
-    "damage": [[24, 4]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[24, 4]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 59
   },
   {
@@ -2307,8 +2349,11 @@
     "verbal": "By the will of the lord of air and the power of the storms I call forth the breath from your body, may the air within your body be dragged forth!",
     "description": "The spell causes all the air in the targets lung to be drawn rapidly from them, causes extreme damage to their lungs. This acts as per a sever (which inflicts sufficient damage to sever the location based on its current health) to the target’s abdomen. Resistances to sever/loc to zero apply as normal, while resistances to / 1/2 effect blue mana reduce the damage suffered. Additionally Large Lung Capacity acts as an additional resistance to sever. This is a flesh and blood effect and does not work on most elves (as they do not breathe). It does work on air elves.",
     "damageOverride": "sever",
-    "damType": ["chest"],
     "IsAdvanced": true,
+    "Damage": {
+      "type": ["chest"],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 61
   },
   {
@@ -2570,12 +2615,15 @@
     "verbal": "Mighty lords of the earth, infuse this rock with all thy power... Great Missile",
     "description": "As Supermissile, except that the damage inflicted is 18 points to the location, 3pts to each other location, and 36 tblp overall (12 general hits to monsters).",
     "IsAdvanced": true,
-    "damage": [
-      [18, 3],
-      [18, 3]
-    ],
-    "damType": ["Missile", "Blast"],
-    "MACApplies": [[0, 0]],
+    "Damage": {
+      "amount": [
+        [18, 3],
+        [18, 3]
+      ],
+      "type": ["Missile", "Blast"],
+      "ArmourApplies": [[0, 0]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 64
   },
   {
@@ -3035,9 +3083,12 @@
     "verbal": "By the power of water I strike thee... Acid Blast!",
     "description": "This spell delivers 12 points TBLP and 2 points per location of magical acid damage against which only magical armour class defends. This spell delivers 4 hits to monsters.",
     "IsAdvanced": true,
-    "damType": ["Blast"],
-    "damage": [[12, 2]],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[12, 2]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 70
   },
   {
@@ -3128,10 +3179,13 @@
     "verbal": "By the mighty powers of the undine I dissolve thee... Acid Strike!",
     "description": "This spell delivers 24 points of TBLP and 4 points per location of magical damage against which only magical armour class applies. The spell also dissolves 2 points of physical armour class including toughened skin (which will regrow after the adventure only). Master crafted armour loses only one point of PAC per acid strike. This spell delivers 8 hits to monsters. Immunity to Acid stops the dissolving of the PAC and halves the damage suffered.",
     "IsAdvanced": true,
-    "damage": [[24, 4]],
-    "damType": ["Blast"],
     "PACDam": [2],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[24, 4]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 71
   },
   {
@@ -3240,9 +3294,12 @@
     "verbal": "Undines at my command bring forth a shower of rain to burn all around me with acid.",
     "description": "In a similar manner to Rain Shower [see page 70] this spell creates a short shower of acidic rain, which will burn the skin of all those within the radius. It causes 6/1 magical acid damage, against which MAC applies. Thus MAC 1 will stop its effects. Immunity to Acid grants 1/2 effect.",
     "IsAdvanced": true,
-    "damage": [[6, 1]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[6, 1]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 72
   },
   {
@@ -3252,9 +3309,12 @@
     "verbal": "By the mighty powers of the green dragon, may thee be dissolved utterly, may acid roil and blisters burn... Acid Stream!",
     "description": "This spell has the following effects on the target of the spell: 1. Target takes 36/6 magical acid damage against which only magical armour class applies. 2. All physical armour class on the target is destroyed. 3. All non magical/spiritual/\"Item\" objects are destroyed. To monsters this spell inflicts 12 Hits. Immunity to Acid stops parts 2 and 3 and halves the damage from 1.",
     "IsAdvanced": true,
-    "damage": [[36, 6]],
-    "damType": ["Blast"],
-    "MACApplies": [[0, 0]],
+    "Damage": {
+      "amount": [[36, 6]],
+      "type": ["Blast"],
+      "ArmourApplies": [[0, 0]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 72
   },
   {
@@ -3273,10 +3333,13 @@
     "verbal": "May the Green Dragon deny thee thy fluids, let thy body dry and fail... Dessication!",
     "description": "This spell delivers 24 points of TBLP damage and 4 points per location to a flesh and blood target and ignores magical armour class. The only exception to the flesh and blood rule are creatures who are made up of water and are not flesh and blood, who instead receive double the damage from the attack. Monsters suffer 8 hits from this spell, or 16 if they are an aquatic elf, an undine, et cetera...",
     "IsAdvanced": true,
-    "damage": [[24, 4]],
-    "damType": ["Blast"],
-    "MACApplies": [[0, 0]],
     "Immunity": "Flesh and Blood",
+    "Damage": {
+      "amount": [[24, 4]],
+      "type": ["Blast"],
+      "ArmourApplies": [[0, 0]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 72
   },
   {
@@ -3340,8 +3403,11 @@
     "verbal": "Feel as the crushing depths of the ocean surround your form. Let the weight of the ancient seas and oceans be upon thee and bring you low.",
     "description": "Causes the targets chest to be crushed by water pressure. This acts as a Location to Zero to the chest. Resistances to Sever applies, and resistances to Green mana provide a stacking resistance to sever. Walk through water (or an Aquatic Elves unimpeded by water ability) means the target is unaffected. This spell only effects those with a physical presence.",
     "damageOverride": "loc0",
-    "damType": ["chest"],
     "IsAdvanced": true,
+    "Damage": {
+      "type": ["chest"],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 73
   },
   {
@@ -3963,8 +4029,11 @@
     "verbal": "With the power of the Onyx Dragon I bid they body snap and break. Let thy form suffer at my touch as I break bone, sunder flesh, and destroy the essence that binds you to life!",
     "description": "Once cast the spell hangs for 10 seconds. The target touched suddenly finds their chest begins to crumple and break. This acts as per a sever to the chest, which obviously kills the target if they do not have any resistances. If resistances to sever are owned then damage is suffered based on the target’s current life, not their maximum (EG if they had 30 life to the chest, were down 15, and had one resistance to sever then they would suffer 15 points of damage as their chest is reduced to zero). Red Magic",
     "damageOverride": "sever",
-    "damType": ["chest"],
     "IsAdvanced": true,
+    "Damage": {
+      "type": ["chest"],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 79
   },
   {
@@ -3983,9 +4052,12 @@
     "verbal": "The powers of fire burn thee... Fire Dart,",
     "description": "Inflicts 6/1 magical fire damage in the same manner as the Fire Blast spell. Causes 2 hits to monsters.",
     "IsAdvanced": true,
-    "damage": [[6, 1]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[6, 1]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 79
   },
   {
@@ -4067,9 +4139,12 @@
     "verbal": "By the lesser powers of Fire and Brimstone, let all around be scorched.... Fireshower!",
     "description": "A shower of fire explodes outwards from the caster, inflicting 6/1 magical fire dart (2 Hits) to all within the radius. The caster also takes 6/1 magical fire damage, to which they may not apply MAC.",
     "IsAdvanced": true,
-    "damage": [[6, 1]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[6, 1]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 80
   },
   {
@@ -4079,9 +4154,12 @@
     "verbal": "Into my hand I call forth the power of fire and brimstone...Great Shock",
     "description": "As the Standard spell Shock in all ways, except that the damage inflicted is 24/24 (8 Hits to monsters).",
     "IsAdvanced": true,
-    "damage": [[24, 24]],
-    "damType": ["Missile"],
-    "MACApplies": [[1, 1]],
+    "Damage": {
+      "amount": [[24, 24]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 80
   },
   {
@@ -4091,9 +4169,12 @@
     "verbal": "Into my hand I call forth the purest power of fire to blast and destroy my foes!",
     "description": "This spell generates a tennis-ball sized globe of magical flame. 5 seconds after creation, or whenever thrown against a solid surface, the fireball explodes, inflicting 12/2 magical fire damage to all within 20' (4 hits to monsters) and igniting all flammable objects within the area (i.e. this is a magical Incendiary Cache).",
     "IsAdvanced": true,
-    "damage": [[12, 2]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[12, 2]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 80
   },
   {
@@ -4112,9 +4193,12 @@
     "verbal": "By the powers of fire and brimstone, let all around be burnt and charred... Firestorm!",
     "description": "A mass of fire explodes outwards from the caster, inflicting 24/4 magical fire damage (8 Hits) to all within the radius and hurling them back 6 paces unless they are Immune to Repels. The caster also takes 24/4 magical fire damage, to which he may not apply MAC.",
     "IsAdvanced": true,
-    "damage": [[24, 4]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[24, 4]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 81
   },
   {
@@ -4142,9 +4226,12 @@
     "verbal": "By all the greatest powers of fire, be thou scorched, be charred, be burnt and incinerated... Fire Strike!",
     "description": "This spell functions as per Disruption but inflicts 48/8 magical fire damage (16 Hits to monster).",
     "IsAdvanced": true,
-    "damage": [[48, 8]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[48, 8]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 81
   },
   {
@@ -4163,9 +4250,12 @@
     "verbal": "Here I leave great fire to greet those who are not welcome.",
     "description": "This functions in all fashion exactly as the Fire Trap spell above, except when triggered it releases a Disruption. If cast by a Red Wizard with Disruption Expertise it costs only 9 mana to cast.",
     "IsAdvanced": true,
-    "damage": [[36, 6]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[36, 6]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 81
   },
   {
@@ -4175,19 +4265,22 @@
     "verbal": "By the great powers of the fiery dragon be thou cast down... Implosion",
     "description": "This spell causes a great build-up of heat within the target's internal organs and causes 9 points of damage to the target's head, chest and abdomen, 3 points to each limb and a total of 36pts of TBLP damage (12 Hits to monsters). This damage ignores all magical armour class, e.g. such as that offered by the Plate (S) spell.",
     "IsAdvanced": true,
-    "damage": [
-      [0, 9],
-      [0, 9],
-      [0, 9],
-      [36, 3]
-    ],
-    "damType": ["head", "chest", "abdomen", "Blast"],
-    "MACApplies": [
-      [0, 0],
-      [0, 0],
-      [0, 0],
-      [0, 0]
-    ],
+    "Damage": {
+      "amount": [
+        [0, 9],
+        [0, 9],
+        [0, 9],
+        [36, 3]
+      ],
+      "type": ["head", "chest", "abdomen", "Blast"],
+      "ArmourApplies": [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0]
+      ],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 81
   },
   {
@@ -4233,9 +4326,12 @@
     "verbal": "By all the powers of fire be thou scorched, be charred, be burnt, and be incinerated as the fires consume you… Flaming Destruction!",
     "description": "Acts in a similar manner to Disruption, however, it causes the target to suffer 120/20 (40 HTK) and a magical halt at the caster’s skill level.",
     "IsAdvanced": true,
-    "damage": [[120, 20]],
-    "damType": ["Blast"],
-    "MACApplies": [0, 0],
+    "Damage": {
+      "amount": [[120, 20]],
+      "type": ["Blast"],
+      "ArmourApplies": [[0, 0]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 83
   },
   {
@@ -4245,9 +4341,12 @@
     "verbal": "Salamanders of fire I command thee to consume my foe with absolute heat, let flesh burn and bone melt.",
     "description": "This spell has several effects as the target is consumed in intense heat: 1. All normal metal on the target melts, 2. All potions boil dry, 3. Target suffers 36/6 magical fire damage (12 Hits), 4. All objects within 1' are ignited, 5. The target is blinded until a regeneration is cast upon their eyes (only one regeneration is required, which though it would not normally heal such damage does in this case).",
     "IsAdvanced": true,
-    "damage": [[36, 6]],
-    "damType": ["Blast"],
-    "MACApplies": [[0, 0]],
+    "Damage": {
+      "amount": [[36, 6]],
+      "type": ["Blast"],
+      "ArmourApplies": [[0, 0]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 83
   },
   {
@@ -4257,19 +4356,22 @@
     "verbal": "Mighty salamanders I command thee to consume my foe from the inside out - let all be charred and burnt til only ash remains ... Internal Combustion!",
     "description": "One target touched with both hands is consumed with flames from within. The effects of this are: • If the target has 7th Level Resistance or below to magic they are instantly killed by the shock to their system. • If they have 8th Level Resistance they are stricken by the incredible pain of the searing fire such that they may not fight, cast, speak or stand for 1 minute. • If they have 9th Level Resistance or greater or Immunity to Fire (1/2 effect magical fire) they may not cast, run or speak and may only parry for 30 seconds. • If they have both 9th Level Resistance or greater and Immunity to Fire (1/2 effect magical fire) the duration for which they may not act is halved to 15 seconds. The target also suffers great injury from the fires, taking 48 TBLP, 12 points each to the head, chest and abdomen and 6 points to each limb (16 hits to monsters), to which no armour class (including MAC) may be applied (cf. Implosion).",
     "IsAdvanced": true,
-    "damType": ["head", "chest", "abdomen", "Blast"],
-    "damage": [
-      [48, 12],
-      [0, 12],
-      [0, 12],
-      [0, 6]
-    ],
-    "MACApplies": [
-      [0, 0],
-      [0, 0],
-      [0, 0],
-      [0, 0]
-    ],
+    "Damage": {
+      "amount": [
+        [48, 12],
+        [0, 12],
+        [0, 12],
+        [0, 6]
+      ],
+      "type": ["head", "chest", "abdomen", "Blast"],
+      "ArmourApplies": [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0]
+      ],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 83
   },
   {
@@ -4468,9 +4570,12 @@
     "verbal": "Into my hands I call forth ice... Javelin of ice!",
     "description": "Replicates the Winter elf innate ability listed in the handbook, inflicting 24/4 magical cold damage to one target. MAC applies, stopping 6/1 per point.",
     "IsAdvanced": true,
-    "damage": [[24, 4]],
-    "damType": ["Blast"],
-    "MACApplies": [[6, 1]],
+    "Damage": {
+      "amount": [[24, 4]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 85
   },
   {
@@ -4498,15 +4603,18 @@
     "verbal": "I call the might of ice and frost into my hand... Super Snowball",
     "description": "In all ways as the brown spell Supermissile, except that no stone is needed as the snowball is created in the caster's hand, and the damage is cold-based, inflicting x2 damage to fire-based creatures.",
     "IsAdvanced": true,
-    "damage": [
-      [12, 12],
-      [12, 2]
-    ],
-    "damType": ["Missile", "Blast"],
-    "MACApplies": [
-      [1, 1],
-      [0, 0]
-    ],
+    "Damage": {
+      "amount": [
+        [12, 12],
+        [12, 2]
+      ],
+      "type": ["Missile", "Blast"],
+      "ArmourApplies": [
+        [1, 1],
+        [0, 0]
+      ],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 85
   },
   {
@@ -4633,9 +4741,12 @@
     "verbal": "Winter's here, the air is chill. You fall upon a snow-topped hill. You try to rise, to crawl once more, then slump again, you've lost this war. The gods it seems have rolled their dice. Your blood is cold, your heart is ice! Heart of Ice!",
     "description": "One flesh-and-blood creature has their heart turned briefly to ice, causing terrible system shock. Effects as per a Location-to-Zero the chest. In other words, chest location is reduced to zero life-points (unless it was already below that, in which case the spell has no effect). Immunity to Flesh and Blood Effects applies and Resistance to Sever or Immunity to Cold mean that location is reduced only to half its current life points. No form of armour class may be applied. Witch Doctor Magic These spells may only be acquired by a Witchdoctor.",
     "damageOverride": "loc0",
-    "damType": ["chest"],
     "Immunity": "Flesh and Blood",
     "IsAdvanced": true,
+    "Damage": {
+      "type": ["chest"],
+      "ArmourType": "MAC"
+    },
     "sourcePage": 87
   },
   {

@@ -118,6 +118,10 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public string CustomisationPlaceholder => _customisationPlaceholder;
     public Dictionary<string, string> CustomisationOptions => _customisationOptions;
     public bool ShowCustomisationPicker => HasCustomisation && (CustomisationAllowsCustom || _customisationOptions.Count > 0);
+    public bool IsWeaponMasterySelection
+        => string.Equals((_selectedOption ?? string.Empty).Trim(), "Weapon Mastery", StringComparison.OrdinalIgnoreCase);
+    public bool ShowCustomisationInline => ShowCustomisationPicker && IsWeaponMasterySelection && !UseDictionarySearch;
+    public bool ShowCustomisationBelow => ShowCustomisationPicker && !ShowCustomisationInline && !UseDictionarySearch;
 
     public string? CustomisationValue
     {
@@ -186,6 +190,9 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
             }
 
             ApplyCustomisation(_customisationResolver?.Invoke(normalized));
+            Raise(nameof(IsWeaponMasterySelection));
+            Raise(nameof(ShowCustomisationInline));
+            Raise(nameof(ShowCustomisationBelow));
             _onChanged();
         }
     }
@@ -319,6 +326,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(CustomisationPlaceholder));
         Raise(nameof(CustomisationValue));
         Raise(nameof(ShowCustomisationPicker));
+        Raise(nameof(ShowCustomisationInline));
+        Raise(nameof(ShowCustomisationBelow));
         Raise(nameof(IsCustomisationComplete));
 
         if (changed && !suppressNotify)
@@ -418,6 +427,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(HasSelection));
         Raise(nameof(SelectionKey));
         Raise(nameof(ShowCustomisationPicker));
+        Raise(nameof(ShowCustomisationInline));
+        Raise(nameof(ShowCustomisationBelow));
     }
 
     public void RefreshCustomisationOptions()
@@ -462,6 +473,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(HasSelection));
         Raise(nameof(SelectionKey));
         Raise(nameof(ShowCustomisationPicker));
+        Raise(nameof(ShowCustomisationInline));
+        Raise(nameof(ShowCustomisationBelow));
 
         if (!string.Equals(previousValue, _customisationValue, StringComparison.Ordinal))
             _onChanged();

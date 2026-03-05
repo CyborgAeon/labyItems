@@ -111,6 +111,10 @@ public partial class StepIndicator : ContentView
     }
 
     private readonly List<StepVisual> _items = new();
+    private int _lastProgressStep = -1;
+    private int _pendingProgressStep = -1;
+    private const uint ProgressAnimationLength = 400;
+    private const uint ProgressAnimationDelay = 120;
 
     private void OnStepsChanged(IList<StepItem>? oldSteps, IList<StepItem>? newSteps)
     {
@@ -296,6 +300,8 @@ public partial class StepIndicator : ContentView
         var current = Math.Max(0, Math.Min(CurrentStep, count - 1));
         if (current != CurrentStep)
             CurrentStep = current;
+        if (_lastProgressStep != current)
+            _pendingProgressStep = current;
 
         var primary = TryGetColor("PrimaryColor", ColourScheme.Primary);
         var primaryText = TryGetColor("PrimaryForegroundColor", Colors.White);
@@ -372,7 +378,10 @@ public partial class StepIndicator : ContentView
         var count = Steps?.Count ?? 0;
         if (count <= 1 || _items.Count < 2)
         {
+            LineFg.AbortAnimation("progress");
             LineFg.WidthRequest = 0;
+            _lastProgressStep = Math.Max(0, Math.Min(CurrentStep, count - 1));
+            _pendingProgressStep = -1;
             return;
         }
 
@@ -394,6 +403,34 @@ public partial class StepIndicator : ContentView
         LineBg.Margin = new Thickness(leftMargin, 0, rightMargin, 0);
         LineFg.Margin = new Thickness(leftMargin, 0, 0, 0);
         var fgWidth = Math.Max(0, Math.Min(lastCenter - firstCenter, currentCenter - firstCenter));
-        LineFg.WidthRequest = fgWidth;
+
+        var hasPending = _pendingProgressStep >= 0 && _pendingProgressStep == currentIndex;
+        var shouldAnimate = hasPending
+                            && _lastProgressStep >= 0
+                            && _lastProgressStep != currentIndex
+                            && Math.Abs(fgWidth - LineFg.WidthRequest) > 0.5;
+
+        LineFg.AbortAnimation("progress");
+
+        if (shouldAnimate)
+        {
+            var start = LineFg.WidthRequest;
+            var total = ProgressAnimationLength + ProgressAnimationDelay;
+            var delayFraction = ProgressAnimationDelay / (double)total;
+            var animation = new Animation();
+            animation.Add(0, delayFraction, new Animation(v => LineFg.WidthRequest = v, start, start));
+            animation.Add(delayFraction, 1, new Animation(v => LineFg.WidthRequest = v, start, fgWidth, Easing.CubicInOut));
+            LineFg.Animate("progress", animation, length: total);
+        }
+        else
+        {
+            LineFg.WidthRequest = fgWidth;
+        }
+
+        if (_lastProgressStep < 0 || hasPending)
+        {
+            _lastProgressStep = currentIndex;
+            _pendingProgressStep = -1;
+        }
     }
 }

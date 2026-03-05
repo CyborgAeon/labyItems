@@ -21,6 +21,9 @@ public class DictionarySearchBar<TValue> : ContentView
 {
     private readonly Action _selfDismisser;
     private const double DefaultDropdownMaxHeight = 320;
+    private const double KeyboardGuardRatio = 0.35;
+    private const double KeyboardGuardMin = 200;
+    private const double KeyboardGuardMax = 360;
     private string Exclude = string.Empty;
     private readonly Entry _searchBar;
     private readonly CollectionView _resultsView;
@@ -689,16 +692,12 @@ public class DictionarySearchBar<TValue> : ContentView
         if (createdHost)
             _suppressNextUnfocus = true;
 
-        _overlay = new AbsoluteLayout { BackgroundColor = Colors.Transparent, InputTransparent = false };
-
-        // scrim to capture outside taps and dismiss
-        var scrim = new BoxView { BackgroundColor = Colors.Transparent, Opacity = 1 };
-        var scrimTap = new TapGestureRecognizer();
-        scrimTap.Tapped += (s, e) => DismissLocalOverlay();
-        scrim.GestureRecognizers.Add(scrimTap);
-        AbsoluteLayout.SetLayoutBounds(scrim, new Rect(0, 0, 1, 1));
-        AbsoluteLayout.SetLayoutFlags(scrim, AbsoluteLayoutFlags.All);
-        _overlay.Children.Add(scrim);
+        _overlay = new AbsoluteLayout
+        {
+            BackgroundColor = Colors.Transparent,
+            InputTransparent = true,
+            CascadeInputTransparent = false
+        };
 
         // container
         _overlayContainer = new Border
@@ -790,24 +789,27 @@ public class DictionarySearchBar<TValue> : ContentView
         var pageHeight = _overlayHost.Height > 0 ? _overlayHost.Height : (Application.Current?.MainPage?.Height ?? 0);
         var availableBelow = Math.Max(0, pageHeight - localY - 8);
         var availableAbove = Math.Max(0, anchorPos.Y - hostPos.Y - 8);
+        var keyboardGuard = Math.Clamp(pageHeight * KeyboardGuardRatio, KeyboardGuardMin, KeyboardGuardMax);
+        var effectiveBelow = Math.Max(0, availableBelow - keyboardGuard);
+        var effectiveAbove = availableAbove;
 
         var visibleItems = Math.Min(4, Math.Max(1, _filteredResults.Count));
         var desiredHeight = Math.Min(DefaultDropdownMaxHeight, visibleItems * 48);
         double finalHeight = desiredHeight;
 
-        if (availableBelow < desiredHeight && availableAbove >= desiredHeight)
+        if (effectiveBelow < desiredHeight && effectiveAbove >= desiredHeight)
         {
             localY = Math.Max(8, anchorPos.Y - hostPos.Y - desiredHeight - 6);
         }
-        else if (availableBelow < desiredHeight && availableAbove < desiredHeight)
+        else if (effectiveBelow < desiredHeight && effectiveAbove < desiredHeight)
         {
-            if (availableBelow >= availableAbove)
+            if (effectiveBelow >= effectiveAbove)
             {
-                finalHeight = Math.Max(48, availableBelow);
+                finalHeight = Math.Max(48, effectiveBelow);
             }
             else
             {
-                finalHeight = Math.Max(48, availableAbove);
+                finalHeight = Math.Max(48, effectiveAbove);
                 localY = Math.Max(8, anchorPos.Y - hostPos.Y - finalHeight - 6);
             }
         }

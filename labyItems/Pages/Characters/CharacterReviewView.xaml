@@ -79,8 +79,9 @@
                             BorderColor="#E5E7EB">
                             <VerticalStackLayout Spacing="6">
                                    <Grid ColumnDefinitions="*,Auto">
-                                          <Label Text="Advancement"
-                                                 FontAttributes="Bold"/>
+                                          <Label Text="Post 8th"
+                                                 FontAttributes="Bold"
+                                                 VerticalTextAlignment="Center"/>
                                           <Button Grid.Column="1"
                                                   Text="{Binding IsAdvancementExpanded, Converter={StaticResource ChevronConverter}}"
                                                   BackgroundColor="Transparent"
@@ -94,24 +95,24 @@
                                                   Command="{Binding ToggleAdvancementExpandedCommand}"/>
                                    </Grid>
 
-                                   <Label Text="{Binding AdvancementPointsSummary}"/>
-                                   <Label Text="{Binding AdvancementPointsAccruedSummary}"
-                                          FontSize="12"
-                                          Opacity="0.7"/>
-                                   <Label Text="{Binding AdvancementVitaeSummary}"
-                                          FontSize="12"
-                                          Opacity="0.7"/>
-                                   <Label Text="{Binding AdvancementItemsSummary}"
-                                          LineBreakMode="WordWrap"/>
-                                   <Label Text="{Binding AdvancementNotesSummary}"
-                                          LineBreakMode="WordWrap"/>
-
                                    <VerticalStackLayout IsVisible="{Binding IsAdvancementExpanded}"
                                                         Spacing="6">
-                                          <Label Text="{Binding AdvancementAbilitiesHeader}"
-                                                 FontAttributes="Bold"/>
+                                          <Grid ColumnDefinitions="*,*">
+
+                                                 <Label Grid.Column="0"
+                                                        Text="{Binding AdvancementAbilitiesHeader}"
+                                                        FontAttributes="Bold"
+                                                        HorizontalTextAlignment="Start"/>
+
+                                                 <Label Grid.Column="1"
+                                                        Text="{Binding AdvancementPointsSummary}"
+                                                        HorizontalTextAlignment="End"/>
+                                          </Grid>
+
+
                                           <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancementAbilityLines}"
                                                                Spacing="4">
+
                                                  <BindableLayout.ItemTemplate>
                                                         <DataTemplate>
                                                                <Grid ColumnDefinitions="*,Auto"
@@ -123,6 +124,10 @@
                                                                              FontSize="12"
                                                                              Opacity="0.7"
                                                                              VerticalTextAlignment="Center"/>
+                                                                      <!--todo, fit these in. <Label Text="{Binding AdvancementItemsSummary}"
+                                                                             LineBreakMode="WordWrap"/>
+                                                                      <Label Text="{Binding AdvancementNotesSummary}"
+                                                                             LineBreakMode="WordWrap"/> -->
                                                                </Grid>
                                                         </DataTemplate>
                                                  </BindableLayout.ItemTemplate>
@@ -142,10 +147,6 @@
                                           LineBreakMode="WordWrap"/>
                             </VerticalStackLayout>
                      </Frame>
-
-                     <Button Text="Email battleboard"
-                             Command="{Binding ExportToBattleboardCommand}"/>
-
                      <Button Text="Export to Excel"
                              Command="{Binding ExportToExcelCommand}"/>
               </VerticalStackLayout>

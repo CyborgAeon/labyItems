@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Text;
 using ClosedXML.Excel;
 using labyItems.Controls;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
@@ -97,7 +98,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     public bool ShowSpecialistSlotsBar => SpecialistSlotsTotal > 0;
 
-    public bool CanAddSpecialistList => SpecialistSpellLists.Count == 0;
+    public bool CanAddSpecialistList => SpecialistSlotsTotal > 0 && SpecialistSpellLists.Count == 0;
 
     public AdvanceCharacterVm(CharacterDraft draft)
     {
@@ -141,6 +142,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         ExportMiraclesToExcelCommand = new Command(async () => await ExportMiraclesToExcelAsync());
         CopyMiraclesCommand = new Command(async () => await CopyMiraclesToClipboardAsync());
         SaveMiraclesTextCommand = new Command(async () => await SaveMiraclesToTextAsync());
+
+        ApplyDraftClassTabVisibilityFallback();
     }
 
     public CharacterDraft Draft => _draft;
@@ -206,7 +209,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public ICommand RemoveAbilityCommand { get; }
 
     public int AbilityPointsSpent => Abilities.Sum(a => a.Cost);
-    public string AbilityPointsSummary => $"Points spent: {AbilityPointsSpent} / {Points}";
+    public string AbilityPointsSummary => $"Spent: {AbilityPointsSpent} / {Points} Pts";
 
     public ObservableCollection<ItemLineVm> Items { get; } = new();
     public ICommand AddItemCommand { get; }
@@ -279,14 +282,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         {
             _allMiracles = Array.Empty<MiracleService.MiracRaw>();
         }
-        try
-        {
-            _allSpells = await SpellService.GetAllAsync();
-        }
-        catch
-        {
-            _allSpells = Array.Empty<SpellService.SpellRaw>();
-        }
+        await EnsureSpellCatalogueLoadedAsync(forceReload: true);
         try
         {
             _allEvocations = await DruidEvocationService.GetAllAsync();
@@ -313,6 +309,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (ShowSpellsTab)
             EnsureWizardSpellListImported();
         LoadSpellListsFromDraft();
+        await EnsureWizardBaseListHasEntriesAsync();
         LoadMiracleListsFromDraft();
         await LoadEvilStairwayAsync();
         LoadEvocationListsFromDraft();
@@ -321,53 +318,198 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         (SaveCommand as Command)?.ChangeCanExecute();
         UpdateAbilityPoints();
     }
+
+    private async Task<bool> EnsureSpellCatalogueLoadedAsync(bool forceReload = false)
+    {
+        if (!forceReload && _allSpells.Count > 0)
+            return true;
+
+        try
+        {
+            _allSpells = await SpellService.GetAllAsync();
+        }
+        catch
+        {
+            _allSpells = Array.Empty<SpellService.SpellRaw>();
+        }
+
+        System.Diagnostics.Debug.WriteLine($"[ADVANCE][SPELLS] Loaded spell catalogue count: {_allSpells.Count}");
+        return _allSpells.Count > 0;
+    }
+
+    private async Task EnsureWizardBaseListHasEntriesAsync()
+    {
+        if (!ShowSpellsTab)
+            return;
+
+        const int maxAttempts = 12;
+        for (var attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            var baseList = FindBaseSpellList();
+            if ((baseList?.Entries?.Count ?? 0) > 0)
+                return;
+
+            var forceReload = attempt > 0 || _allSpells.Count == 0;
+            if (!await EnsureSpellCatalogueLoadedAsync(forceReload))
+            {
+                if (attempt < maxAttempts - 1)
+                    await Task.Delay(500);
+
+                continue;
+            }
+
+            EnsureWizardSpellListImported();
+            LoadSpellListsFromDraft();
+
+            baseList = FindBaseSpellList();
+            if ((baseList?.Entries?.Count ?? 0) > 0)
+                return;
+
+            if (attempt < maxAttempts - 1)
+                await Task.Delay(500);
+        }
+
+        System.Diagnostics.Debug.WriteLine("[ADVANCE][SPELLS] Base spell list is still empty after retries.");
+    }
     private static readonly MagicColours[] GreyWizardColours =
     {
         MagicColours.Blue, MagicColours.Black, MagicColours.White,
         MagicColours.Green, MagicColours.Red, MagicColours.Brown
     };
+
+    private ServiceCharacterClassRecord? ResolveClassRecord()
+    {
+        var className = (_draft.Class ?? string.Empty).Trim();
+        if (className.Length == 0 || _classes == null || _classes.Count == 0)
+            return null;
+
+        if (_classes.TryGetValue(className, out var record))
+            return record;
+
+        var normalizedClassName = NormalizeClassKey(className);
+
+        foreach (var kvp in _classes)
+        {
+            if (string.Equals(kvp.Key, className, StringComparison.OrdinalIgnoreCase))
+                return kvp.Value;
+
+            if (NormalizeClassKey(kvp.Key) == normalizedClassName)
+                return kvp.Value;
+        }
+
+        // Handle colour-prefixed names such as "Brown Wizard" from older or derived records.
+        foreach (var kvp in _classes)
+        {
+            if (className.EndsWith(kvp.Key, StringComparison.OrdinalIgnoreCase))
+                return kvp.Value;
+
+            var normalizedKey = NormalizeClassKey(kvp.Key);
+            if (normalizedClassName.EndsWith(normalizedKey, StringComparison.Ordinal))
+                return kvp.Value;
+        }
+
+        return null;
+    }
+
+    private static string NormalizeClassKey(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return string.Empty;
+
+        var chars = raw.Trim().ToLowerInvariant()
+            .Where(char.IsLetterOrDigit)
+            .ToArray();
+        return new string(chars);
+    }
+
     public Dictionary<MagicColours, int> GetFreeSpecialistSlotsByColour()
     {
-        ServiceCharacterClassRecord? classRecord = null;
-        if (!string.IsNullOrWhiteSpace(_draft.Class))
-            _classes.TryGetValue(_draft.Class.Trim(), out classRecord);
-
-        var isEligible =
-            HasBracket(classRecord?.Brackets, "Wizard")
-            || HasBracket(classRecord?.Brackets, "High-Wizard")
-            || HasBracket(classRecord?.Brackets, "Rogue")
-            || HasBracket(classRecord?.Brackets, "Warlock");
+        var classRecord = ResolveClassRecord();
 
         var result = new Dictionary<MagicColours, int>();
-        if (!isEligible)
+        if (IsVivomancerClass())
             return result;
 
-        var wizColour = TryGetWizardColour();
-        if (wizColour.HasValue && wizColour.Value == MagicColours.Grey
-            && (HasBracket(classRecord?.Brackets, "Wizard") || HasBracket(classRecord?.Brackets, "High-Wizard")))
+        var selectedColours = GetWizardColourSelections();
+        var primaryColour = GetPrimaryWizardColour(selectedColours);
+
+        if (IsWarlockClass())
+        {
+            if (primaryColour.HasValue && primaryColour.Value == MagicColours.Grey)
+            {
+                foreach (var c in GreyWizardColours)
+                    result[c] = 1;
+                return result;
+            }
+
+            if (primaryColour.HasValue)
+                result[primaryColour.Value] = 3;
+            else
+                result[MagicColours.Grey] = 3;
+
+            return result;
+        }
+
+        if (!IsWizardTrackClass(classRecord))
+            return result;
+
+        if (primaryColour.HasValue && primaryColour.Value == MagicColours.Grey)
         {
             foreach (var c in GreyWizardColours)
                 result[c] = 3;
             return result;
         }
 
-        if (wizColour.HasValue)
-            result[wizColour.Value] = 5;
+        if (primaryColour.HasValue)
+            result[primaryColour.Value] = 5;
         else
             result[MagicColours.Grey] = 5;
 
         return result;
     }
 
+    private bool IsVivomancerClass()
+        => (_draft.Class ?? string.Empty).Contains("Vivomancer", StringComparison.OrdinalIgnoreCase);
+
+    private bool IsWarlockClass()
+    {
+        var className = (_draft.Class ?? string.Empty).Trim();
+        return className.Contains("Warlock", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool IsWizardTrackClass(ServiceCharacterClassRecord? classRecord)
+    {
+        var className = (_draft.Class ?? string.Empty).Trim();
+        if (className.Length > 0)
+        {
+            var hasWizardToken = className.Contains("Wizard", StringComparison.OrdinalIgnoreCase);
+            var isExcluded = className.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
+                             || className.Contains("Vochstelen", StringComparison.OrdinalIgnoreCase)
+                             || className.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase);
+
+            if (hasWizardToken && !isExcluded)
+                return true;
+        }
+
+        return HasBracket(classRecord?.Brackets, "Wizard")
+               && !HasBracket(classRecord?.Brackets, "Warrior")
+               && !HasBracket(classRecord?.Brackets, "Priest");
+    }
+
     private void UpdateTabVisibility()
     {
-        ServiceCharacterClassRecord? classRecord = null;
-        if (!string.IsNullOrWhiteSpace(_draft.Class))
-            _classes.TryGetValue(_draft.Class.Trim(), out classRecord);
+        var classRecord = ResolveClassRecord();
+        var className = (_draft.Class ?? string.Empty).Trim();
+        var hasClassName = className.Length > 0;
 
-        var isWizard = HasBracket(classRecord?.Brackets, "Wizard");
-        var isPriest = HasBracket(classRecord?.Brackets, "Priest");
-        var isDruid = HasBracket(classRecord?.Brackets, "Druid");
+        var isWizard = HasBracket(classRecord?.Brackets, "Wizard")
+                       || (hasClassName && (className.Contains("Wizard", StringComparison.OrdinalIgnoreCase)
+                                            || className.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
+                                            || className.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase)));
+        var isPriest = HasBracket(classRecord?.Brackets, "Priest")
+                       || (hasClassName && className.Contains("Priest", StringComparison.OrdinalIgnoreCase));
+        var isDruid = HasBracket(classRecord?.Brackets, "Druid")
+                      || (hasClassName && className.Contains("Druid", StringComparison.OrdinalIgnoreCase));
         var hasEvilStairway = HasClassAbility(classRecord, "Evil stairway", "evil stairway list");
 
         ShowSpellsTab = isWizard;
@@ -377,8 +519,27 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         ShowEvocationsTab = isDruid;
     }
 
-    private bool HasWizardColourSelection()
-        => !string.IsNullOrWhiteSpace(GetWizardColourSelectionRaw());
+    private void ApplyDraftClassTabVisibilityFallback()
+    {
+        var className = (_draft.Class ?? string.Empty).Trim();
+        if (className.Length == 0)
+            return;
+
+        if (className.Contains("Wizard", StringComparison.OrdinalIgnoreCase)
+            || className.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
+            || className.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase))
+            ShowSpellsTab = true;
+
+        if (className.Contains("Priest", StringComparison.OrdinalIgnoreCase)
+            || className.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase))
+        {
+            ShowMiraclesTab = true;
+            ShowPriestMiracleLists = true;
+        }
+
+        if (className.Contains("Druid", StringComparison.OrdinalIgnoreCase))
+            ShowEvocationsTab = true;
+    }
 
     private static bool HasBracket(IEnumerable<string>? brackets, string token)
         => brackets != null && brackets.Any(b => b.Contains(token, StringComparison.OrdinalIgnoreCase));
@@ -517,6 +678,16 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         return BuildAbilityOptionsWithLabels(byName.Values);
     }
 
+    public SpellService.SpellRaw? FindSpellByName(string? spellName)
+    {
+        var name = (spellName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return null;
+
+        return _allSpells.FirstOrDefault(s =>
+            string.Equals((s?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
+    }
+
     public void PersistDraft()
     {
         LiteDbService.UpsertDraft(_draft);
@@ -583,7 +754,10 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (ShowSpellsTab)
         {
             NormalizeWizardSpellLists();
-            EnsureSpecialistSpellList();
+            if (HasAnySpecialistSlots())
+                EnsureSpecialistSpellList();
+            else
+                RemoveSpecialistSpellLists();
         }
 
         var baseDraft = _draft.SpellLists.FirstOrDefault(l => l.IsBaseList);
@@ -652,6 +826,17 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         _draft.SpellLists = _draft.SpellLists
             .Where(l => ReferenceEquals(l, baseList) || ReferenceEquals(l, primary))
             .ToList();
+    }
+
+    private bool HasAnySpecialistSlots()
+        => GetFreeSpecialistSlotsByColour().Values.Sum() > 0;
+
+    private void RemoveSpecialistSpellLists()
+    {
+        if (_draft.SpellLists == null || _draft.SpellLists.Count == 0)
+            return;
+
+        _draft.SpellLists = _draft.SpellLists.Where(l => l.IsBaseList).ToList();
     }
 
     private SpellListDraft EnsureSpecialistSpellList()
@@ -898,38 +1083,54 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         return list.Entries.Count == 0 ? null : list;
     }
 
-    private string? GetWizardColourSelectionRaw()
+    private IReadOnlyList<string> GetWizardColourSelections()
     {
-        // Prefer SpecialisationSelections
+        var selections = new List<string>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
         if (_draft.SpecialisationSelections != null)
         {
-            var kvp = _draft.SpecialisationSelections.FirstOrDefault(x =>
-                x.Key.Contains("Wizard Colour", StringComparison.OrdinalIgnoreCase)
-                && !string.IsNullOrWhiteSpace(x.Value));
+            if (_draft.SpecialisationSelections.TryGetValue("Wizard Colour", out var wizardColour))
+                AddNormalizedWizardSelections(selections, seen, wizardColour);
 
-            if (!string.IsNullOrWhiteSpace(kvp.Value))
-                return kvp.Value.Trim();
+            if (_draft.SpecialisationSelections.TryGetValue("Vivomancer Colour", out var vivomancerColour))
+                AddNormalizedWizardSelections(selections, seen, vivomancerColour);
         }
 
-        if (_draft.Abilities != null)
+        if (selections.Count == 0 && _draft.Abilities != null)
         {
-            var ability = _draft.Abilities.FirstOrDefault(a =>
-                !string.IsNullOrWhiteSpace(a?.Source)
-                && a.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase));
+            foreach (var ability in _draft.Abilities)
+            {
+                if (ability == null || string.IsNullOrWhiteSpace(ability.Source))
+                    continue;
 
-            var name = ability?.Name ?? string.Empty;
-            if (!string.IsNullOrWhiteSpace(name))
-                return name.Trim();
+                if (ability.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase)
+                    || ability.Source.Contains("Specialisation:Vivomancer Colour", StringComparison.OrdinalIgnoreCase))
+                {
+                    AddNormalizedWizardSelections(selections, seen, ability.Name);
+                }
+            }
         }
 
-        var inferred = TryInferWizardColourFromSpellLists();
-        if (!string.IsNullOrWhiteSpace(inferred))
-            return inferred;
+        if (selections.Count == 0)
+            AddNormalizedWizardSelections(selections, seen, TryInferWizardColourFromSpellLists());
 
-        if (IsSorcorialClass())
-            return "Sorcorial";
+        if (selections.Count == 0)
+            AddNormalizedWizardSelections(selections, seen, TryInferWizardColourFromClassName());
 
-        return null;
+        if (selections.Count == 0 && IsSorcorialClass())
+            selections.Add("Sorcorial");
+
+        return selections;
+    }
+
+    private static void AddNormalizedWizardSelections(List<string> target, HashSet<string> seen, string? raw)
+    {
+        foreach (var selection in WizardSpellRules.ParseWizardSelections(raw))
+        {
+            if (seen.Add(selection))
+                target.Add(selection);
+        }
     }
 
     private string? TryInferWizardColourFromSpellLists()
@@ -952,12 +1153,33 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         return null;
     }
 
-    private MagicColours? TryGetWizardColour()
+    private string? TryInferWizardColourFromClassName()
     {
-        var selection = GetWizardColourSelectionRaw();
-        if (!string.IsNullOrWhiteSpace(selection)
-            && Enum.TryParse<MagicColours>(selection.Trim(), true, out var colour))
-            return colour;
+        var className = (_draft.Class ?? string.Empty).Trim();
+        if (className.Length == 0)
+            return null;
+
+        foreach (var colour in Enum.GetValues<MagicColours>())
+        {
+            var token = colour.ToString();
+            if (className.Contains(token, StringComparison.OrdinalIgnoreCase))
+                return token;
+        }
+
+        if (className.Contains("Sorc", StringComparison.OrdinalIgnoreCase))
+            return "Sorcorial";
+
+        return null;
+    }
+
+    private MagicColours? GetPrimaryWizardColour(IReadOnlyList<string>? selections = null)
+    {
+        var picked = selections ?? GetWizardColourSelections();
+        foreach (var selection in picked)
+        {
+            if (WizardSpellRules.TryParseMagicColour(selection, out var colour))
+                return colour;
+        }
 
         return null;
     }
@@ -975,79 +1197,30 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     private Func<SpellService.SpellRaw, bool>? BuildSpecialistSpellFilter()
     {
-        var colour = TryGetWizardColour();
-        if (!colour.HasValue)
+        var baseSelections = GetWizardColourSelections();
+        if (baseSelections.Count == 0)
             return null;
 
-        var opposite = GetOppositeColour(colour.Value);
-        if (!opposite.HasValue)
-            return null;
-
-        var oppositeValue = opposite.Value;
-        return spell => !SpellMatchesColour(spell?.colour, oppositeValue);
+        return spell => !WizardSpellRules.SpellMatchesAnyWizardSelection(spell?.colour, baseSelections);
     }
-
-    private static bool SpellMatchesColour(string? raw, MagicColours colour)
-    {
-        if (string.IsNullOrWhiteSpace(raw))
-            return false;
-
-        var parts = raw.Split(new[] { '/', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        foreach (var part in parts)
-        {
-            if (TryParseMagicColour(part, out var parsed) && parsed == colour)
-                return true;
-        }
-
-        return TryParseMagicColour(raw, out var single) && single == colour;
-    }
-
-    private static bool TryParseMagicColour(string? value, out MagicColours colour)
-    {
-        colour = default;
-        if (string.IsNullOrWhiteSpace(value))
-            return false;
-
-        var normalized = value.Trim().Replace(" ", string.Empty);
-        return Enum.TryParse(normalized, ignoreCase: true, out colour);
-    }
-
-    private static MagicColours? GetOppositeColour(MagicColours colour)
-        => colour switch
-        {
-            MagicColours.Red => MagicColours.Green,
-            MagicColours.Green => MagicColours.Red,
-            MagicColours.Brown => MagicColours.Blue,
-            MagicColours.Blue => MagicColours.Brown,
-            MagicColours.White => MagicColours.Black,
-            MagicColours.Black => MagicColours.White,
-            MagicColours.Gold => MagicColours.Bronze,
-            MagicColours.Bronze => MagicColours.Gold,
-            MagicColours.Ivory => MagicColours.Ebony,
-            MagicColours.Ebony => MagicColours.Ivory,
-            MagicColours.Jade => MagicColours.Onyx,
-            MagicColours.Onyx => MagicColours.Jade,
-            _ => null
-        };
 
     private void EnsureWizardSpellListImported()
     {
         if (!ShowSpellsTab)
             return;
 
-        var selection = GetWizardColourSelectionRaw();
-        if (string.IsNullOrWhiteSpace(selection))
-            return;
+        var selectedColours = GetWizardColourSelections();
+        var listLabel = BuildBaseSpellListLabel(selectedColours);
 
         if (_draft.SpellLists == null)
             _draft.SpellLists = new List<SpellListDraft>();
 
-        var baseList = FindBaseSpellList(selection);
+        var baseList = FindBaseSpellList();
         if (baseList == null)
         {
             baseList = new SpellListDraft
             {
-                Name = $"{selection} Spells",
+                Name = listLabel,
                 IsBaseList = true,
                 IsMinimized = true
             };
@@ -1056,8 +1229,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         else
         {
             baseList.IsBaseList = true;
-            if (string.IsNullOrWhiteSpace(baseList.Name))
-                baseList.Name = $"{selection} Spells";
+            baseList.Name = listLabel;
 
             var idx = _draft.SpellLists.IndexOf(baseList);
             if (idx > 0)
@@ -1067,10 +1239,10 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             }
         }
 
-        ImportSpellsForWizardSelection(selection, baseList);
+        RebuildBaseSpellEntries(baseList, selectedColours);
     }
 
-    private SpellListDraft? FindBaseSpellList(string selection)
+    private SpellListDraft? FindBaseSpellList()
     {
         if (_draft.SpellLists == null || _draft.SpellLists.Count == 0)
             return null;
@@ -1079,145 +1251,57 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (baseList != null)
             return baseList;
 
-        return _draft.SpellLists.FirstOrDefault(l => IsLikelyBaseSpellList(l, selection));
+        return _draft.SpellLists.FirstOrDefault(l =>
+            !string.IsNullOrWhiteSpace(l?.Name)
+            && l.Name.Contains("Spells", StringComparison.OrdinalIgnoreCase));
     }
 
-    private static bool IsLikelyBaseSpellList(SpellListDraft list, string selection)
+    private static string BuildBaseSpellListLabel(IReadOnlyList<string> selectedColours)
     {
-        if (list == null)
-            return false;
+        if (selectedColours == null || selectedColours.Count == 0)
+            return "Base Spells";
 
-        var name = (list.Name ?? string.Empty).Trim();
-        if (name.Length == 0)
-            return false;
+        if (selectedColours.Count == 1)
+            return $"{selectedColours[0]} Spells";
 
-        var colourToken = selection.Trim();
-        return name.Contains("Spells", StringComparison.OrdinalIgnoreCase)
-               && name.Contains(colourToken, StringComparison.OrdinalIgnoreCase);
+        return $"{string.Join(" / ", selectedColours)} Spells";
     }
 
-    private void ImportSpellsForWizardSelection(string selection, SpellListDraft target)
+    private void RebuildBaseSpellEntries(SpellListDraft target, IReadOnlyList<string> selectedColours)
     {
-        if (target == null) return;
+        if (target == null)
+            return;
 
-        var matches = _allSpells
-            .Where(s => !string.IsNullOrWhiteSpace(s?.name))
-            .Where(s => SpellMatchesWizardSelection(s.colour, selection))
-            .Where(s => (s.isAdvanced ?? false) == false)
-            .OrderBy(s => s.level)
-            .ThenBy(s => s.name, StringComparer.OrdinalIgnoreCase)
-            .ToList();
+        target.Entries ??= new List<SpellListEntryDraft>();
+        if (_allSpells.Count == 0)
+            return;
 
-        // Make sure target entries list exists
-        if (target.Entries == null)
-            target.Entries = new List<SpellListEntryDraft>();
+        var includeWizardGreyBonus = ShouldIncludeNonGreyWizardGreyBonus(selectedColours);
+        var rebuilt = WizardSpellRules.BuildBaseSpellEntries(_allSpells, selectedColours, includeWizardGreyBonus);
+        if (rebuilt.Count == 0 && target.Entries.Count > 0)
+            return;
 
-        var existing = new HashSet<string>(
-            target.Entries.Select(e => (e.Name ?? string.Empty).Trim()).Where(n => n.Length > 0),
-            StringComparer.OrdinalIgnoreCase);
+        target.Entries = rebuilt;
+    }
 
-        foreach (var s in matches)
-        {
-            if (existing.Contains(s.name!.Trim()))
-                continue;
+    private bool ShouldIncludeNonGreyWizardGreyBonus(IReadOnlyList<string> selectedColours)
+    {
+        if (selectedColours == null || selectedColours.Count == 0)
+            return false;
 
-            target.Entries.Add(new SpellListEntryDraft
-            {
-                Name = s.name ?? string.Empty,
-                Level = s.level,
-                Colour = s.colour ?? string.Empty,
-                IsAdvanced = s.isAdvanced ?? false
-            });
-        }
+        var classRecord = ResolveClassRecord();
+        if (IsVivomancerClass() || IsWarlockClass() || !IsWizardTrackClass(classRecord))
+            return false;
+
+        if (selectedColours.Any(s => WizardSpellRules.TryParseMagicColour(s, out var parsed) && parsed == MagicColours.Grey))
+            return false;
+
+        var primaryColour = GetPrimaryWizardColour(selectedColours);
+        return primaryColour.HasValue && primaryColour.Value != MagicColours.Grey;
     }
 
     internal static bool SpellMatchesWizardSelection(string? rawColour, string selection)
-    {
-        if (string.IsNullOrWhiteSpace(rawColour) || string.IsNullOrWhiteSpace(selection))
-            return false;
-
-        var trimmedSelection = selection.Trim();
-        var selectionIsElemental = IsElementalSelection(trimmedSelection);
-        var selectionIsSorcorial = IsSorcorialSelection(trimmedSelection);
-        var selectionColour = TryParseMagicColour(trimmedSelection, out var parsed) ? parsed : (MagicColours?)null;
-
-        var parts = rawColour.Split(new[] { '/', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        foreach (var part in parts)
-        {
-            if (SpellColourPartMatches(part, selectionColour, selectionIsElemental, selectionIsSorcorial))
-                return true;
-        }
-
-        return SpellColourPartMatches(rawColour, selectionColour, selectionIsElemental, selectionIsSorcorial);
-    }
-
-    private static bool SpellColourPartMatches(string rawPart, MagicColours? selectionColour, bool selectionIsElemental, bool selectionIsSorcorial)
-    {
-        var tokens = TokenizeColour(rawPart);
-        if (tokens.Count == 0)
-            return false;
-
-        if (tokens.Any(t => t == "all"))
-            return selectionColour.HasValue || selectionIsElemental || selectionIsSorcorial;
-
-        var hasEle = tokens.Any(t => t == "ele" || t == "elemental");
-        var hasSoc = tokens.Any(t => t.StartsWith("sorc", StringComparison.OrdinalIgnoreCase) || t == "soc");
-        var hasBar = tokens.Any(t => t == "bar" || t == "not" || t == "except");
-        var hasGrey = tokens.Any(t => t == "grey" || t == "gray" || t == "gr");
-
-        if (hasEle && hasBar && hasGrey)
-            return selectionIsElemental && selectionColour.HasValue && selectionColour.Value != MagicColours.Grey;
-
-        if (hasEle && hasSoc)
-            return selectionIsElemental || selectionIsSorcorial;
-
-        if (hasEle)
-            return selectionIsElemental;
-
-        if (hasSoc)
-            return selectionIsSorcorial;
-
-        foreach (var token in tokens)
-        {
-            if (TryParseMagicColour(token, out var colour))
-                return selectionColour.HasValue && colour == selectionColour.Value;
-        }
-
-        return false;
-    }
-
-    private static List<string> TokenizeColour(string? raw)
-    {
-        if (string.IsNullOrWhiteSpace(raw))
-            return new List<string>();
-
-        var chars = raw.ToLowerInvariant()
-            .Select(c => char.IsLetterOrDigit(c) ? c : ' ')
-            .ToArray();
-
-        return new string(chars)
-            .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .ToList();
-    }
-
-    private static bool IsElementalSelection(string selection)
-        => Enum.TryParse<ElementalColours>(selection.Trim(), ignoreCase: true, out _);
-
-    private static bool IsSorcorialSelection(string selection)
-    {
-        var trimmed = selection.Trim();
-        if (trimmed.Length == 0)
-            return false;
-
-        if (trimmed.StartsWith("Sorc", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        if (Enum.TryParse<MagicColours>(trimmed, ignoreCase: true, out var colour))
-            return !Enum.TryParse<ElementalColours>(colour.ToString(), ignoreCase: true, out _);
-
-        return Enum.TryParse<ExtendedMagicColours>(trimmed, ignoreCase: true, out var ext)
-               && ext == ExtendedMagicColours.Sorcorial;
-    }
+        => WizardSpellRules.SpellMatchesWizardSelection(rawColour, selection);
 
     private void OnSpellListChanged()
     {
@@ -1255,6 +1339,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             : Colors.Black;
         Raise(nameof(SpecialistSlotsSummary));
         Raise(nameof(ShowSpecialistSlotsBar));
+        Raise(nameof(CanAddSpecialistList));
     }
 
     private Dictionary<MagicColours, int> GetSelectedSpecialistCountsByColour()
@@ -1274,7 +1359,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
                 if (colourText.Length == 0)
                     continue;
 
-                if (!TryParseMagicColour(colourText, out var colour))
+                if (!WizardSpellRules.TryParseMagicColour(colourText, out var colour))
                     continue;
 
                 counts[colour] = counts.TryGetValue(colour, out var current) ? current + 1 : 1;
@@ -2021,7 +2106,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
                 vm.SelectedSpell = new SpellOption(entry.Name, entry.Level, entry.Colour ?? string.Empty, entry.IsAdvanced);
             Entries.Add(vm);
         }
-
+        ReindexEntries();
     }
 
     private void AddSelectedSpell()
@@ -2034,6 +2119,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
         var vm = new SpellEntryVm(draft, OnEntryChanged, _getCasterLevel);
         vm.SelectedSpell = SelectedSpellOption.Value;
         Entries.Add(vm);
+        ReindexEntries();
         SelectedSpellOption = null;
     }
 
@@ -2045,6 +2131,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
         if (entry == null) return;
         Entries.Remove(entry);
         Draft.Entries.Remove(entry.Draft);
+        ReindexEntries();
         _onListChanged?.Invoke();
     }
 
@@ -2052,6 +2139,12 @@ public sealed class SpellListVm : INotifyPropertyChanged
     {
         UpdateFilteredOptions();
         _onListChanged?.Invoke();
+    }
+
+    private void ReindexEntries()
+    {
+        for (var i = 0; i < Entries.Count; i++)
+            Entries[i].SetRowIndex(i);
     }
 
     private void LoadColourFilterOptions()
@@ -2155,12 +2248,18 @@ public sealed class SpellEntryVm : INotifyPropertyChanged
 
             RefreshLearningWarning();
             Raise(nameof(DisplayText));
+            Raise(nameof(HasSpell));
             _onChanged();
         }
     }
 
     public string DisplayText
         => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} (Lvl {Draft.Level})";
+
+    private int _rowIndex;
+    public Color RowBackgroundColor => (_rowIndex % 2) == 0 ? Colors.White : Color.FromArgb("#FAF8F3");
+
+    public bool HasSpell => !string.IsNullOrWhiteSpace(Draft.Name);
 
     private void RefreshLearningWarning()
     {
@@ -2219,6 +2318,15 @@ public sealed class SpellEntryVm : INotifyPropertyChanged
         _onChanged = onChanged;
         _getCasterLevel = getCasterLevel ?? (() => 0);
         RefreshLearningWarning();
+    }
+
+    public void SetRowIndex(int rowIndex)
+    {
+        if (_rowIndex == rowIndex)
+            return;
+
+        _rowIndex = rowIndex;
+        Raise(nameof(RowBackgroundColor));
     }
 }
 

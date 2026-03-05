@@ -29,7 +29,7 @@ public partial class ClassCardView : ContentView
     }
 
     private INotifyPropertyChanged? _boundVm;
-    private CancellationTokenSource? _scrollCts;
+    private CancellationTokenSource? _expandCts;
 
     protected override void OnBindingContextChanged()
     {
@@ -38,10 +38,18 @@ public partial class ClassCardView : ContentView
 
         base.OnBindingContextChanged();
 
-        _scrollCts?.Cancel();
+        _expandCts?.Cancel();
         _boundVm = BindingContext as INotifyPropertyChanged;
         if (_boundVm != null)
             _boundVm.PropertyChanged += OnVmPropertyChanged;
+
+        if (BindingContext is ClassCardVm vm)
+        {
+            ExpandedContent.AbortAnimation("expand");
+            ExpandedContent.IsVisible = vm.IsExpanded;
+            ExpandedContent.HeightRequest = -1;
+            ExpandedContent.Opacity = 1;
+        }
     }
 
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -51,7 +59,7 @@ public partial class ClassCardView : ContentView
 
 
         if (e.PropertyName == nameof(ClassCardVm.IsExpanded))
-            Dispatcher.Dispatch(async () => await ScrollIntoViewIfExpandedAsync());
+            Dispatcher.Dispatch(async () => await HandleExpandedChangedAsync());
     }
 
     private async Task AnimateSelectionAsync()
@@ -64,29 +72,25 @@ public partial class ClassCardView : ContentView
             await CardFrame.ScaleTo(1.0, 110, Easing.CubicOut);
         }
     }
-    private async Task ScrollIntoViewIfExpandedAsync()
+
+    private async Task HandleExpandedChangedAsync()
     {
         if (BindingContext is not ClassCardVm vm) return;
-        if (!vm.IsExpanded) return;
-
-        _scrollCts?.Cancel();
-        _scrollCts = new CancellationTokenSource();
-        var token = _scrollCts.Token;
+        _expandCts?.Cancel();
+        _expandCts = new CancellationTokenSource();
+        var token = _expandCts.Token;
 
         try
         {
-            // Let the expansion layout complete
-            await Task.Delay(80, token);
-            if (token.IsCancellationRequested) return;
-
-            var cv = FindParentCollectionView();
-            if (cv == null) return;
-
-            cv.ScrollTo(vm, position: ScrollToPosition.Center, animate: false);
-            await Task.Delay(150, token);
-            if (token.IsCancellationRequested) return;
-
-            cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
+            if (vm.IsExpanded)
+            {
+                await ScrollIntoViewAsync(vm, token);
+                await AnimateExpandedContentAsync(expand: true, token);
+            }
+            else
+            {
+                await AnimateExpandedContentAsync(expand: false, token);
+            }
         }
         catch (TaskCanceledException)
         {
@@ -96,6 +100,102 @@ public partial class ClassCardView : ContentView
         {
             // Ignore rapid expand/collapse interactions.
         }
+    }
+
+    private async Task ScrollIntoViewAsync(ClassCardVm vm, CancellationToken token)
+    {
+        await Task.Delay(40, token);
+        if (token.IsCancellationRequested) return;
+
+        var cv = FindParentCollectionView();
+        if (cv == null) return;
+
+        cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
+        await Task.Delay(120, token);
+    }
+
+    private async Task AnimateExpandedContentAsync(bool expand, CancellationToken token)
+    {
+        if (ExpandedContent == null)
+            return;
+
+        ExpandedContent.AbortAnimation("expand");
+
+        if (expand)
+        {
+            ExpandedContent.IsVisible = true;
+            ExpandedContent.Opacity = 0;
+            ExpandedContent.HeightRequest = -1;
+
+            await Task.Yield();
+            await Task.Delay(1, token);
+
+            var width = ExpandedContent.Width > 0 ? ExpandedContent.Width : CardFrame.Width;
+            if (width <= 0)
+                width = Width;
+
+            var measured = ExpandedContent.Measure(width, double.PositiveInfinity).Height;
+            if (measured <= 0)
+            {
+                ExpandedContent.Opacity = 1;
+                ExpandedContent.HeightRequest = -1;
+                return;
+            }
+
+            ExpandedContent.HeightRequest = 0;
+            ExpandedContent.Opacity = 0;
+
+            var tcs = new TaskCompletionSource();
+            var animation = new Animation(
+                v =>
+                {
+                    ExpandedContent.HeightRequest = v;
+                    ExpandedContent.Opacity = Math.Min(1, v / measured);
+                },
+                0,
+                measured,
+                Easing.CubicOut);
+            animation.Commit(this, "expand", length: 240, finished: (_, __) => tcs.TrySetResult());
+            await tcs.Task;
+
+            if (token.IsCancellationRequested) return;
+
+            ExpandedContent.HeightRequest = -1;
+            ExpandedContent.Opacity = 1;
+            return;
+        }
+
+        if (!ExpandedContent.IsVisible)
+            return;
+
+        var startHeight = ExpandedContent.Height;
+        if (startHeight <= 0)
+        {
+            ExpandedContent.IsVisible = false;
+            ExpandedContent.HeightRequest = -1;
+            ExpandedContent.Opacity = 1;
+            return;
+        }
+
+        ExpandedContent.HeightRequest = startHeight;
+        var collapseTcs = new TaskCompletionSource();
+        var collapse = new Animation(
+            v =>
+            {
+                ExpandedContent.HeightRequest = v;
+                ExpandedContent.Opacity = startHeight <= 0 ? 0 : Math.Max(0, v / startHeight);
+            },
+            startHeight,
+            0,
+            Easing.CubicIn);
+        collapse.Commit(this, "expand", length: 200, finished: (_, __) => collapseTcs.TrySetResult());
+        await collapseTcs.Task;
+
+        if (token.IsCancellationRequested) return;
+
+        ExpandedContent.IsVisible = false;
+        ExpandedContent.HeightRequest = -1;
+        ExpandedContent.Opacity = 1;
     }
 
     private CollectionView? FindParentCollectionView()

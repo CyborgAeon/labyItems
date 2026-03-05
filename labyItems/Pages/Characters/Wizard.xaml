@@ -19,27 +19,27 @@
             Grid.Row="1"
             Content="{Binding CurrentStepView}"/>
 
-        <Grid
-            Grid.Row="2"
-            ColumnDefinitions="Auto,*,Auto"
-            Padding="16,0,16,0">
-            <Button Text="Back"
-                    Command="{Binding BackCommand}"
-                    IsEnabled="{Binding CanGoBack}"
-                    Grid.Column="0"
-                    HorizontalOptions="Start"/>
+        <Grid Grid.Row="2"
+              RowDefinitions="1,Auto">
+            <BoxView Grid.Row="0"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource Gray200}"/>
 
-            <Button Grid.Column="1"
-                    Text="Continue to advancement"
-                    Command="{Binding ContinueToAdvancementCommand}"
-                    IsVisible="{Binding ShowContinueToAdvancement}"
-                    HorizontalOptions="Center"/>
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="Auto,*,Auto"
+                  Padding="16,0,16,0">
+                <Button Text="Back"
+                        Command="{Binding BackCommand}"
+                        IsEnabled="{Binding CanGoBack}"
+                        Grid.Column="0"
+                        HorizontalOptions="Start"/>
 
-            <Button Grid.Column="2"
-                    Text="{Binding NextButtonText}"
-                    Command="{Binding NextCommand}"
-                    IsEnabled="{Binding CanGoNext}"
-                    HorizontalOptions="End"/>
+                <Button Grid.Column="2"
+                        Text="{Binding NextButtonText}"
+                        Command="{Binding NextCommand}"
+                        IsEnabled="{Binding CanGoNext}"
+                        HorizontalOptions="End"/>
+            </Grid>
         </Grid>
     </Grid>
 </ContentPage>

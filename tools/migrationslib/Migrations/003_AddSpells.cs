@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FluentMigrator;
 
 namespace MigrationsLib.Migrations;
@@ -141,5 +142,8 @@ VALUES (@id, @name, @name_lower, @level, @colour, @range, @duration, @verbal, @d
         public string? verbal { get; set; }
         public string? description { get; set; }
         public bool isAdvanced { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, JsonElement>? ExtensionData { get; set; }
     }
 }

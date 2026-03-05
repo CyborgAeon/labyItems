@@ -2,6 +2,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using labyItems.Models;
 using labyItems.Models.Characters;
+using labyItems.Pages;
+using labyItems.Pages.Battleboard;
 using labyItems.Services;
 
 namespace labyItems.Pages.Characters;
@@ -35,7 +37,7 @@ public partial class CharacterWalletPage : ContentPage
         EmptyStateLabel.IsVisible = Characters.Count == 0;
     }
 
-    private async void OnViewClicked(object sender, EventArgs e)
+    private async void OnSummaryClicked(object sender, EventArgs e)
     {
         if (sender is BindableObject bo && bo.BindingContext is Character c)
         {
@@ -51,12 +53,37 @@ public partial class CharacterWalletPage : ContentPage
         }
     }
 
-    private async void OnEditClicked(object sender, EventArgs e)
+    private async void OnWizardClicked(object sender, EventArgs e)
     {
         if (sender is BindableObject bo && bo.BindingContext is Character c)
         {
-            var draft = LiteDbService.ToDraft(c);
-            await Navigation.PushAsync(new Wizard(draft, async () => await Navigation.PopToRootAsync()));
+            var draft = LiteDbService.ToDraft(c) ?? new CharacterDraft();
+            await Navigation.PushAsync(new Wizard(draft, async () => await Navigation.PopAsync()));
+        }
+    }
+
+    private async void OnAdvanceClicked(object sender, EventArgs e)
+    {
+        if (sender is BindableObject bo && bo.BindingContext is Character c)
+        {
+            await Navigation.PushAsync(new AdvanceCharacterPage(c));
+        }
+    }
+
+    private async void OnBattleboardClicked(object sender, EventArgs e)
+    {
+        if (sender is BindableObject bo && bo.BindingContext is Character c)
+        {
+            var draft = LiteDbService.ToDraft(c) ?? new CharacterDraft();
+            await Navigation.PushAsync(new BattleboardPage(draft));
+        }
+    }
+
+    private async void OnManufacturingClicked(object sender, EventArgs e)
+    {
+        if (sender is BindableObject bo && bo.BindingContext is Character c)
+        {
+            await Navigation.PushAsync(new MakeSheetPage(c));
         }
     }
 

@@ -8,8 +8,8 @@ using FluentMigrator;
 
 namespace MigrationsLib.Migrations;
 
-[Migration(4)]
-public class ReplaceSpells : Migration
+[Migration(9)]
+public sealed class ReplaceSpellsForDamageModel : Migration
 {
     public override void Up()
     {

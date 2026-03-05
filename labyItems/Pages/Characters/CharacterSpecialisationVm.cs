@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Input;
+using DocumentFormat.OpenXml.Spreadsheet;
 using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Infrastructure;
@@ -56,6 +57,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     private SpecialisationGroupVm? _baronialTraditionGroup;
     private const string BaronialTraditionKey = "BaronialTradition";
     private const string WizardColourKey = "Wizard Colour";
+    private const string VivomancerColourKey = "Vivomancer Colour";
     private const string BaronialAncestryKey = "Baronial Ancestry";
     private readonly List<SpecialisationGroupVm> _wizardColourGroups = new();
     private readonly List<SpecialisationGroupVm> _vivomancerColourGroups = new();
@@ -200,14 +202,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     }
 
     public bool HideRaceSubtypeLifeScale => !ShowRaceSubtypeLifeScale;
-
-    private string _headerText = "Make your selections below.";
-    public string HeaderText
-    {
-        get => _headerText;
-        private set => Set(ref _headerText, value);
-    }
-
     private bool _isComplete;
     public bool IsComplete
     {
@@ -278,7 +272,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             if (race.Length == 0 && cls.Length == 0)
             {
                 HasChoices = false;
-                HeaderText = "Select a race and class first.";
                 RecomputeCompletion();
                 return;
             }
@@ -304,7 +297,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                             continue;
 
                         // gathers by key, saves to 'required'
-                        var key = FindSpecialisationKey(abilityToken.Name, specialisationIndex.Keys);
+                        var key = FindSpecialisationKey(abilityToken.Name, specialisationIndex.Keys)
+                                  ?? FindSpecialisationKey(abilityToken.OverwriteKey, specialisationIndex.Keys)
+                                  ?? FindSpecialisationKey(abilityToken.UpdateKey, specialisationIndex.Keys);
                         if (key == null)
                             continue;
 
@@ -364,7 +359,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                         if (!int.TryParse(kvp.Key, out var level))
                             continue;
 
-                        var key = FindSpecialisationKey(abilityToken.Name, specialisationIndex.Keys);
+                        var key = FindSpecialisationKey(abilityToken.Name, specialisationIndex.Keys)
+                                  ?? FindSpecialisationKey(abilityToken.OverwriteKey, specialisationIndex.Keys)
+                                  ?? FindSpecialisationKey(abilityToken.UpdateKey, specialisationIndex.Keys);
                         if (key == null)
                             continue;
 
@@ -445,10 +442,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             UpdateDynamicSpecialisations();
             ApplyWardPactOverrides();
             SyncMappedSelectionsToDraft();
-
-            HasChoices = HasRaceSubtypeChoice || Groups.Count > 0 || HasMappedSpecialisations;
-            HeaderText = HasChoices ? "Make your selections below." : "No specialisation choices required.";
-
             EnsureActive();
             await RefreshPrereqOptionsAsync();
             EnsureActive();
@@ -481,10 +474,13 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         if (useDictionarySearch)
         {
-            // Map title → lookup service adapter
-            ILookupService svc = title.Trim().Equals("Earth Powers", StringComparison.OrdinalIgnoreCase)
-                ? new EarthPowerLookupService()
-                : new MiracleLookupService(); // example
+            ILookupService svc;
+            if (title.Trim().Equals("Earth Powers", StringComparison.OrdinalIgnoreCase))
+                svc = new EarthPowerLookupService();
+            else if (title.Trim().Equals("Spells", StringComparison.OrdinalIgnoreCase))
+                svc = new SpellLookupService();
+            else
+                svc = new MiracleLookupService();
 
             return new DictionarySearchSource(svc, optionNames);
         }
@@ -541,25 +537,47 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     private static bool IsPersistedNonMappedKey(string? key)
         => string.Equals(key?.Trim(), WizardColourKey, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(key?.Trim(), VivomancerColourKey, StringComparison.OrdinalIgnoreCase)
            || string.Equals(key?.Trim(), BaronialTraditionKey, StringComparison.OrdinalIgnoreCase);
 
     private void SyncWizardColourSelectionToDraft()
     {
-        var group = Groups.FirstOrDefault(g => string.Equals(g.Title?.Trim(), WizardColourKey, StringComparison.OrdinalIgnoreCase));
+        SyncCasterColourSelectionToDraft(WizardColourKey);
+        SyncCasterColourSelectionToDraft(VivomancerColourKey);
+    }
+
+    private void SyncCasterColourSelectionToDraft(string key)
+    {
+        var group = Groups.FirstOrDefault(g => string.Equals(g.Title?.Trim(), key, StringComparison.OrdinalIgnoreCase));
         if (group == null)
         {
-            Draft.SpecialisationSelections.Remove(WizardColourKey);
+            Draft.SpecialisationSelections.Remove(key);
             return;
         }
 
         var picked = group.Slots
             .Select(s => (s.SelectedOption ?? string.Empty).Trim())
-            .FirstOrDefault(s => !string.IsNullOrWhiteSpace(s)) ?? string.Empty;
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
-        if (string.IsNullOrWhiteSpace(picked))
-            Draft.SpecialisationSelections.Remove(WizardColourKey);
+        if (picked.Count == 0)
+            Draft.SpecialisationSelections.Remove(key);
         else
-            Draft.SpecialisationSelections[WizardColourKey] = picked;
+            Draft.SpecialisationSelections[key] = string.Join(" | ", picked);
+    }
+
+    private static List<string> ParseStoredSelections(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return new List<string>();
+
+        return raw
+            .Split(new[] { '|', ',', ';', '/' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(x => x.Trim())
+            .Where(x => x.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     private void SyncBaronialSelectionToDraft()
@@ -1781,15 +1799,23 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             HideAbilityPickerWhenSingleOption: hasSpellCustomisation || hasSingleOptionWithCustomisation);
 
         var seeded = initialByLevel;
-        if (seeded == null && string.Equals(title.Trim(), WizardColourKey, StringComparison.OrdinalIgnoreCase))
+        if (seeded == null
+            && (string.Equals(title.Trim(), WizardColourKey, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(title.Trim(), VivomancerColourKey, StringComparison.OrdinalIgnoreCase)))
         {
-            var saved = GetSavedSpecialisationSelection(WizardColourKey);
-            if (!string.IsNullOrWhiteSpace(saved))
+            var saved = GetSavedSpecialisationSelection(title);
+            var savedSelections = ParseStoredSelections(saved);
+            if (savedSelections.Count > 0)
             {
-                var level = levels.FirstOrDefault();
                 seeded = new Dictionary<int, string>();
-                if (level > 0)
-                    seeded[level] = saved.Trim();
+                var orderedLevels = levels.OrderBy(x => x).ToList();
+                var max = Math.Min(orderedLevels.Count, savedSelections.Count);
+                for (var i = 0; i < max; i++)
+                {
+                    var level = orderedLevels[i];
+                    if (level > 0)
+                        seeded[level] = savedSelections[i];
+                }
             }
         }
 
@@ -1797,12 +1823,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         group.IsExpanded = true;
 
-        // Track groups that need later updates
         if (useMagicColourEnum) _wizardColourGroups.Add(group);
         if (useVivomancerColourEnum) _vivomancerColourGroups.Add(group);
         if (hasSpellCustomisation) _spellCustomisationGroups.Add(group);
-
-        // Auto-default when needed (spell or strict single-option customisation)
         if (hasSpellCustomisation || hasSingleOptionWithCustomisation)
             ApplySingleOptionDefault(group);
 

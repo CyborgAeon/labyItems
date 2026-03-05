@@ -7,16 +7,11 @@
   <VerticalStackLayout Padding="20" Spacing="12">
     <Button
       Clicked="OnMakeCharacterClicked"
-      Text="Make a character" />
+      Text="Character Wizard" />
     <Button
       x:Name="CharacterWalletButton"
       Clicked="OnCharacterWalletClicked"
       Text="Character Wallet"
-      IsEnabled="False" />
-    <Button
-      x:Name="BattleboardButton"
-      Clicked="OnBattleboardClicked"
-      Text="View battleboard"
       IsEnabled="False" />
     <Button
       Clicked="OnCreateIspClicked"

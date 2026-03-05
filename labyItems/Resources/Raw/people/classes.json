@@ -1792,82 +1792,6 @@
     "Levels": {
       "1": [
         {
-          "Name": "Recognise Mana",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Vivomancer list",
-          "Type": "CastingList"
-        },
-        {
-          "Name": "Recognise Spirit",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern type of disease",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern Nature of Undead",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern Spiritual Mastery",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern Nature of Wounds",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Release own miracle",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Discern Bless/Curse",
-          "Type": "AtWill"
-        },
-        {
-          "Name": "Hermit list",
-          "Type": "CastingList"
-        },
-        {
-          "Name": "Vivomancer Colour",
-          "Type": "Overwrite"
-        }
-      ],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": []
-    },
-    "Max AC": 6,
-    "alignmentRule": {
-      "mode": "restrict",
-      "allowed": {
-        "moral": ["Good"],
-        "order": ["Lawful", "Neutral"]
-      },
-      "allowedPairs": ["Lawful Good", "Neutral Good"]
-    },
-    "Powerbase": ["🪄 Magic", "示 Spirit"],
-    "CasterLevel": 8,
-    "PowerCalculations": [
-      {
-        "PowerBase": "Magic",
-        "Calculation": "(CL^2+CL)/2"
-      },
-      {
-        "PowerBase": "Spirit",
-        "Calculation": "CL*3"
-      }
-    ],
-    "levels": {
-      "1": [
-        {
           "Name": "Recognise Spirit",
           "Type": "AtWill"
         },
@@ -1902,14 +1826,52 @@
           "Type": "AtWill"
         }
       ],
-      "5": [],
+      "5": [
+        {
+          "Name": "Release own miracle",
+          "Type": "AtWill"
+        }
+      ],
       "6": [
         {
           "Name": "Discern Spiritual Mastery",
           "Type": "AtWill"
         }
-      ]
-    }
+      ],
+      "7": [
+        {
+          "Name": "Hermit list",
+          "Type": "CastingList"
+        },
+        {
+          "Name": "Vivomancer Colour",
+          "Type": "Overwrite",
+          "OverwriteKey": "Vivomancer Colour"
+        }
+      ],
+      "8": []
+    },
+    "Max AC": 6,
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Good"],
+        "order": ["Lawful", "Neutral"]
+      },
+      "allowedPairs": ["Lawful Good", "Neutral Good"]
+    },
+    "Powerbase": ["🪄 Magic", "示 Spirit"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Magic",
+        "Calculation": "(CL^2+CL)/2"
+      },
+      {
+        "PowerBase": "Spirit",
+        "Calculation": "CL*3"
+      }
+    ]
   },
   "Vochstelen": {
     "Brackets": ["🛡️ Warrior", "🧙 Wizard"],

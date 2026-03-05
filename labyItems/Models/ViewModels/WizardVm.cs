@@ -45,8 +45,10 @@ public sealed class WizardVm : INotifyPropertyChanged
         get => _currentStep;
         private set
         {
-            if (!Set(ref _currentStep, value)) return;
+            if (_currentStep == value) return;
+            _currentStep = value;
             UpdateStepView();
+            Raise(nameof(CurrentStep));
             Raise(nameof(CanGoBack));
             Raise(nameof(CanGoNext));
             Raise(nameof(NextButtonText));
@@ -61,7 +63,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         private set => Set(ref _currentStepView, value);
     }
 
-    public bool CanGoBack => CurrentStep > 0;
+    public bool CanGoBack => CurrentStep > 0 || CanExitWizard();
 
     public bool CanGoNext
     {
@@ -135,7 +137,7 @@ public sealed class WizardVm : INotifyPropertyChanged
 
         CurrentStep = _flow.CurrentStep;
 
-        MainThread.BeginInvokeOnMainThread(async () => await SyncDraftStateAsync());
+        MainThread.BeginInvokeOnMainThread(async () => await SyncDraftStateAsync(allowBackground: true));
     }
 
     private IReadOnlyList<WizardStepDefinition> BuildSteps()
@@ -268,7 +270,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         ? "No notes provided."
         : Draft.Notes;
 
-    public string AdvancementPointsSummary => $"Points spent: {AdvancementPointsSpent} / {Draft.Points}";
+    public string AdvancementPointsSummary => $"Spent {AdvancementPointsSpent} / {Draft.Points} Pts";
     public string AdvancementPointsAccruedSummary => $"Points accrued: {Draft.Points}";
     public string AdvancementVitaeSummary => Draft.HasSetCurrentVitae
         ? $"Current vitae: {Draft.CurrentVitae}%"
@@ -356,8 +358,13 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     private async Task OnBackAsync()
     {
-        if (!CanGoBack) return;
-        await TryGoToStepAsync(CurrentStep - 1);
+        if (CurrentStep > 0)
+        {
+            await TryGoToStepAsync(CurrentStep - 1);
+            return;
+        }
+
+        await TryExitWizardAsync();
     }
 
     private async Task OnNextAsync()
@@ -372,6 +379,38 @@ public sealed class WizardVm : INotifyPropertyChanged
         }
 
         await TryGoToStepAsync(CurrentStep + 1);
+    }
+
+    private bool CanExitWizard()
+    {
+        var nav = ResolveNavigation();
+        return nav?.NavigationStack?.Count > 1;
+    }
+
+    private async Task<bool> TryExitWizardAsync()
+    {
+        var nav = ResolveNavigation();
+        if (nav?.NavigationStack?.Count > 1)
+        {
+            await nav.PopAsync();
+            return true;
+        }
+
+        if (Shell.Current != null)
+        {
+            await Shell.Current.GoToAsync("..");
+            return true;
+        }
+
+        return false;
+    }
+
+    private static INavigation? ResolveNavigation()
+    {
+        if (Shell.Current != null)
+            return Shell.Current.Navigation;
+
+        return Application.Current?.MainPage?.Navigation;
     }
 
     private async Task ContinueToAdvancementAsync()
@@ -390,26 +429,64 @@ public sealed class WizardVm : INotifyPropertyChanged
         });
     }
 
-    private async Task SyncDraftStateAsync()
+    private async Task SyncDraftStateAsync(bool allowBackground = false)
     {
         ClampWornArmourPac();
         Draft.WornArmour = ClampWornArmour(WornArmourPac);
+
+        if (allowBackground)
+        {
+            await Task.Run(async () =>
+            {
+                await CharacterBuilderVm.SyncDraftLifeAsync().ConfigureAwait(false);
+                await CharacterBuilderVm.RefreshDraftAbilitiesAsync().ConfigureAwait(false);
+                await EnsureAbilityCostIndexAsync().ConfigureAwait(false);
+            }).ConfigureAwait(false);
+
+            await MainThread.InvokeOnMainThreadAsync(ApplyAdvancementSummary);
+            return;
+        }
+
         await CharacterBuilderVm.SyncDraftLifeAsync();
         await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
-        await RefreshAdvancementSummaryAsync();
+        await EnsureAbilityCostIndexAsync();
+        if (MainThread.IsMainThread)
+            ApplyAdvancementSummary();
+        else
+            await MainThread.InvokeOnMainThreadAsync(ApplyAdvancementSummary);
     }
 
     private async Task TryGoToStepAsync(int targetIndex)
     {
         if (targetIndex == CurrentStep) return;
 
-        if (targetIndex > CurrentStep)
-            await SyncDraftStateAsync();
-
-        var moved = await _flow.TryTransitionAsync(targetIndex);
+        var movingForward = targetIndex > CurrentStep;
+        var moved = await _flow.TryTransitionAsync(targetIndex, deferEnter: movingForward);
         if (!moved) return;
 
         CurrentStep = _flow.CurrentStep;
+
+        if (movingForward)
+        {
+            var deferredEnter = _flow.ConsumePendingEnter();
+            _ = RunPostTransitionSyncAsync(deferredEnter);
+        }
+    }
+
+    private async Task RunPostTransitionSyncAsync(Func<Task>? deferredEnter)
+    {
+        try
+        {
+            await Task.Yield();
+            await Task.Delay(220);
+            await SyncDraftStateAsync(allowBackground: true);
+            if (deferredEnter != null)
+                await deferredEnter();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Wizard post-transition sync failed: {ex}");
+        }
     }
 
     private void UpdateStepView()
@@ -759,10 +836,8 @@ public sealed class WizardVm : INotifyPropertyChanged
         }
     }
 
-    private async Task RefreshAdvancementSummaryAsync()
+    private void ApplyAdvancementSummary()
     {
-        await EnsureAbilityCostIndexAsync();
-
         AdvancementAbilityLines.Clear();
         var running = 0;
         foreach (var name in Draft.AdvancementAbilities ?? new List<string>())
@@ -780,13 +855,22 @@ public sealed class WizardVm : INotifyPropertyChanged
         RaiseReviewProperties();
     }
 
+    private async Task RefreshAdvancementSummaryAsync()
+    {
+        await EnsureAbilityCostIndexAsync();
+        if (MainThread.IsMainThread)
+            ApplyAdvancementSummary();
+        else
+            await MainThread.InvokeOnMainThreadAsync(ApplyAdvancementSummary);
+    }
+
     public sealed class AbilitySpendLine
     {
         public string Name { get; }
         public int Cost { get; }
         public int RunningTotal { get; }
         public string NameWithCost => $"{Name} ({Cost})";
-        public string RunningTotalText => $"Total: {RunningTotal}";
+        public string RunningTotalText => $"{RunningTotal}";
 
         public AbilitySpendLine(string name, int cost, int runningTotal)
         {

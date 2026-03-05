@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -28,8 +29,20 @@ public static class ClassService
             using var s = await FileSystem.OpenAppPackageFileAsync("people/classes.json");
             using var r = new StreamReader(s);
             var json = await r.ReadToEndAsync();
-            _cache = JsonSerializer.Deserialize<Dictionary<string, CharacterClassRecord>>(json, _jsonOptions)
-                     ?? new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+            using var doc = JsonDocument.Parse(json);
+            var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+            if (doc.RootElement.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var cls in doc.RootElement.EnumerateObject())
+                {
+                    if (cls.Value.ValueKind != JsonValueKind.Object)
+                        continue;
+
+                    dict[cls.Name] = DeserializeClassRecord(cls.Value);
+                }
+            }
+
+            _cache = dict;
 #else
             using var conn = ServiceHelper.OpenReadOnlyConnection();
             var rows = conn.Query<ClassRow>("SELECT name, data_json FROM classes ORDER BY name;");
@@ -41,7 +54,7 @@ public static class ClassService
 
                 var record = string.IsNullOrWhiteSpace(row.data_json)
                     ? new CharacterClassRecord()
-                    : (JsonSerializer.Deserialize<CharacterClassRecord>(row.data_json, _jsonOptions) ?? new CharacterClassRecord());
+                    : DeserializeClassRecord(row.data_json);
 
                 dict[row.name] = record;
             }
@@ -56,6 +69,91 @@ public static class ClassService
         }
 
         return _cache;
+    }
+
+    private static CharacterClassRecord DeserializeClassRecord(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return new CharacterClassRecord();
+
+        using var doc = JsonDocument.Parse(json);
+        return DeserializeClassRecord(doc.RootElement);
+    }
+
+    private static CharacterClassRecord DeserializeClassRecord(JsonElement element)
+    {
+        var record = JsonSerializer.Deserialize<CharacterClassRecord>(element.GetRawText(), _jsonOptions)
+                     ?? new CharacterClassRecord();
+
+        record.Levels = MergeLevels(element, record.Levels);
+        return record;
+    }
+
+    private static Dictionary<string, List<AbilityDefinition>> MergeLevels(
+        JsonElement classElement,
+        Dictionary<string, List<AbilityDefinition>>? existingLevels)
+    {
+        var merged = new Dictionary<string, List<AbilityDefinition>>(StringComparer.OrdinalIgnoreCase);
+
+        if (existingLevels != null)
+        {
+            foreach (var kvp in existingLevels)
+            {
+                var key = (kvp.Key ?? string.Empty).Trim();
+                if (key.Length == 0)
+                    continue;
+
+                merged[key] = kvp.Value?.Where(a => a != null).ToList() ?? new List<AbilityDefinition>();
+            }
+        }
+
+        MergeLevelsFromProperty(classElement, "Levels", merged);
+        MergeLevelsFromProperty(classElement, "levels", merged);
+
+        return merged;
+    }
+
+    private static void MergeLevelsFromProperty(
+        JsonElement classElement,
+        string propertyName,
+        Dictionary<string, List<AbilityDefinition>> target)
+    {
+        if (!classElement.TryGetProperty(propertyName, out var levelsElement)
+            || levelsElement.ValueKind != JsonValueKind.Object)
+            return;
+
+        foreach (var level in levelsElement.EnumerateObject())
+        {
+            if (level.Value.ValueKind != JsonValueKind.Array)
+                continue;
+
+            var levelKey = (level.Name ?? string.Empty).Trim();
+            if (levelKey.Length == 0)
+                continue;
+
+            var incoming = JsonSerializer.Deserialize<List<AbilityDefinition>>(level.Value.GetRawText(), _jsonOptions)
+                           ?? new List<AbilityDefinition>();
+
+            if (!target.TryGetValue(levelKey, out var existing))
+            {
+                target[levelKey] = incoming.Where(a => a != null).ToList();
+                continue;
+            }
+
+            foreach (var ability in incoming)
+            {
+                if (ability == null)
+                    continue;
+
+                var alreadyPresent = existing.Any(a =>
+                    string.Equals(a?.Name ?? string.Empty, ability.Name ?? string.Empty, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(a?.Type ?? string.Empty, ability.Type ?? string.Empty, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(a?.OverwriteKey ?? string.Empty, ability.OverwriteKey ?? string.Empty, StringComparison.OrdinalIgnoreCase));
+
+                if (!alreadyPresent)
+                    existing.Add(ability);
+            }
+        }
     }
 
     private sealed class ClassRow

@@ -8,6 +8,7 @@ public sealed class WizardFlowStateMachine
 {
     private readonly IReadOnlyList<WizardStepDefinition> _steps;
     private int _currentStep;
+    private Func<Task>? _pendingEnter;
 
     public WizardFlowStateMachine(IReadOnlyList<WizardStepDefinition> steps, int initialStep = 0)
     {
@@ -32,7 +33,7 @@ public sealed class WizardFlowStateMachine
         return _steps[index].CanEnter();
     }
 
-    public async Task<bool> TryTransitionAsync(int targetIndex)
+    public async Task<bool> TryTransitionAsync(int targetIndex, bool deferEnter = false)
     {
         if (targetIndex < 0 || targetIndex >= _steps.Count)
             return false;
@@ -51,8 +52,27 @@ public sealed class WizardFlowStateMachine
 
         var enter = _steps[_currentStep].OnEnterAsync;
         if (enter != null)
-            await enter();
+        {
+            if (deferEnter)
+                _pendingEnter = enter;
+            else
+            {
+                _pendingEnter = null;
+                await enter();
+            }
+        }
+        else
+        {
+            _pendingEnter = null;
+        }
 
         return true;
+    }
+
+    public Func<Task>? ConsumePendingEnter()
+    {
+        var enter = _pendingEnter;
+        _pendingEnter = null;
+        return enter;
     }
 }

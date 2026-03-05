@@ -37,14 +37,6 @@ public partial class CharactersPage : ContentPage
         }
     }
 
-    private async void OnMakeSheetClicked(object sender, EventArgs e)
-    {
-        if (sender is BindableObject bo && bo.BindingContext is Character ch)
-        {
-            await Navigation.PushAsync(new MakeSheetPage(ch));
-        }
-    }
-
     private async void OnSelected(object sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection.FirstOrDefault() is Character c)

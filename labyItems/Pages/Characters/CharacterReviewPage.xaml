@@ -7,13 +7,40 @@
     Title="Character">
 
     <Grid Padding="0"
-          RowDefinitions="*,Auto"
+          RowDefinitions="*,Auto,Auto"
           RowSpacing="12">
         <local:CharacterReviewView x:Name="Review"
                                    Grid.Row="0"
                                    ShowSaveButton="False"/>
 
-        <Button Grid.Row="1"
+        <HorizontalStackLayout Grid.Row="1"
+                               Margin="16,0,16,0"
+                               Spacing="12"
+                               HorizontalOptions="Center">
+            <ImageButton AutomationProperties.Name="Battleboard"
+                         BackgroundColor="Transparent"
+                         Padding="6"
+                         HeightRequest="40"
+                         WidthRequest="40"
+                         Clicked="OnBattleboardClicked">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="⚔️" Size="20" Color="Black"/>
+                </ImageButton.Source>
+            </ImageButton>
+
+            <ImageButton AutomationProperties.Name="Manufacturing"
+                         BackgroundColor="Transparent"
+                         Padding="6"
+                         HeightRequest="40"
+                         WidthRequest="40"
+                         Clicked="OnManufacturingClicked">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="🛠️" Size="20" Color="Black"/>
+                </ImageButton.Source>
+            </ImageButton>
+        </HorizontalStackLayout>
+
+        <Button Grid.Row="2"
                 Text="Advance character"
                 Margin="16,0,16,16"
                 Clicked="OnAdvanceClicked"/>

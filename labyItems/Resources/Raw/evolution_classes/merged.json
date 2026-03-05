@@ -452,7 +452,7 @@
     "table": 3,
     "cost": "60",
     "index": "Immunity to Spiritual Freedom",
-    "desc": "Immunity to Spiritual Freedom (!)"
+    "desc": "Immunity to Spiritual Freedom"
   },
   {
     "available": ["ALL"],
@@ -479,7 +479,7 @@
     "available": ["ALL"],
     "table": 3,
     "cost": "60",
-    "index": "Resistance to Neuronics!9th Level",
+    "index": "9th Level Resistance to Neuronics",
     "desc": "9th level resistance to Neuronics"
   },
   {
@@ -549,28 +549,28 @@
     "available": ["ALL"],
     "table": 3,
     "cost": "80",
-    "index": "Mana Effect!Brown!½",
+    "index": "½ Effect Brown",
     "desc": "½ Effect from Brown Mana (not resistance levels)"
   },
   {
     "available": ["ALL"],
     "table": 3,
     "cost": "80",
-    "index": "Mana Effect!Bronze!½",
+    "index": "½ Effect Bronze",
     "desc": "½ Effect from Bronze Mana (not resistance levels)"
   },
   {
     "available": ["ALL"],
     "table": 3,
     "cost": "80",
-    "index": "Mana Effect!Green!½",
+    "index": "½ Effect Green",
     "desc": "½ Effect from Green Mana (not resistance levels or fluids)"
   },
   {
     "available": ["ALL"],
     "table": 3,
     "cost": "80",
-    "index": "Mana Effect!Ebony to ½",
+    "index": "½ Effect Ebony",
     "desc": "½ Effect from Ebony Mana (not resistance levels)"
   },
   {
@@ -668,21 +668,21 @@
     "available": ["ALL"],
     "table": 3,
     "cost": "80",
-    "index": "Mana Effect!Silver!½",
+    "index": "½ Effect Silver",
     "desc": "½ Effect Silver Mana"
   },
   {
     "available": ["ALL"],
     "table": 3,
     "cost": "80",
-    "index": "Mana Effect!Jade!½",
+    "index": "½ Effect Jade",
     "desc": "½ Effect Jade Mana"
   },
   {
     "available": ["ALL"],
     "table": 3,
     "cost": "80",
-    "index": "Mana Effect!Gold!½",
+    "index": "½ Effect Gold",
     "desc": "½ Effect Gold Mana"
   },
   {
@@ -815,7 +815,7 @@
     "available": ["ALL"],
     "table": 3,
     "cost": "100",
-    "index": "Mana Effect!Onyx!½",
+    "index": "½ Effect Onyx",
     "desc": "½ Effect Onyx Mana"
   },
   {
@@ -843,14 +843,14 @@
     "available": ["ALL"],
     "table": 3,
     "cost": "120",
-    "index": "Mana Effect!Ivory to ½",
+    "index": "½ Effect Ivory",
     "desc": "½ Effect Ivory Mana"
   },
   {
     "available": ["ALL"],
     "table": 3,
     "cost": "125",
-    "index": "Mana Effect!Black!½",
+    "index": "½ Effect Black",
     "desc": "½ Effect from Black Mana (not resistance levels)"
   },
   {
@@ -1156,7 +1156,7 @@
     "available": ["ALL"],
     "table": 7,
     "cost": "50",
-    "index": "Live to Minus!1: 6 TBLP",
+    "index": "Live to Minus 1: 6 TBLP",
     "desc": "Live to -6 tblp"
   },
   {
@@ -1558,7 +1558,7 @@
     "available": ["ALL"],
     "table": 11,
     "cost": "50",
-    "index": "Survival!2: Hero",
+    "index": "Survival of a Hero",
     "preReqs": ["Survival of a Mercenary", "Enhanced Rebirth", "Rebirth"],
     "desc": "Survival of a Hero: from Survival of a Mercenary, may now choose to rebirth at 20% of points as current class and race (inc. non-standard rebirths). Must be used within 4 weeks of death. If the person already has a non-standard rebirth then they may choose to keep it upon re birthing though this will be counted against the ISP limit of the new rebirth."
   },
@@ -1574,8 +1574,8 @@
     "available": ["ALL"],
     "table": 11,
     "cost": "+100",
-    "index": "Traitor's Shield!Enhanced",
-    "desc": "Enhanced Traitors Shield - From Traitors Shield now gains 12 points off the first two blows from behind and 6 points off all blows from behind. The conditions for this to apply are as Traitor's Shield."
+    "index": "Enhanced Traitor's Shield",
+    "desc": "From Traitors Shield now gains 12 points off the first two blows from behind and 6 points off all blows from behind. The conditions for this to apply are as Traitor's Shield."
   },
   {
     "available": ["ALL"],

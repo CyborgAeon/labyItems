@@ -157,8 +157,9 @@
                     </FlexLayout>
                 </Grid>
 
-                <Grid Grid.Row="1"
-                      IsVisible="{Binding IsExpanded}"
+                <Grid x:Name="ExpandedContent"
+                      Grid.Row="1"
+                      IsVisible="False"
                       BackgroundColor="Transparent">
                     <Grid Padding="16"
                           BackgroundColor="Transparent">

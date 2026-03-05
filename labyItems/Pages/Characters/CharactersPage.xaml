@@ -24,20 +24,12 @@
       <CollectionView.ItemTemplate>
         <DataTemplate>
           <Border Margin="12" Padding="16" BackgroundColor="#21FFFFFF"  StrokeShape="RoundRectangle 14">
-            <Grid BackgroundColor="Transparent" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+            <Grid BackgroundColor="Transparent" ColumnDefinitions="*,Auto" ColumnSpacing="8">
               <VerticalStackLayout InputTransparent="True">
                 <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="18" />
                 <Label Text="{Binding Class}" FontSize="12" Opacity="1" />
               </VerticalStackLayout>
               <ImageButton Grid.Column="1"
-                           Padding="6"
-                           Clicked="OnMakeSheetClicked"
-                           CommandParameter="{Binding}">
-                <ImageButton.Source>
-                  <FontImageSource Color="Black" Glyph="📋" Size="20" />
-                </ImageButton.Source>
-                </ImageButton>
-              <ImageButton Grid.Column="2"
                            Padding="6"
                            Clicked="OnEditClicked"
                            CommandParameter="{Binding}"

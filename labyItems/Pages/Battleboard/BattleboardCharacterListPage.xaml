@@ -6,7 +6,9 @@
     Title="Battleboard">
 
     <ContentPage.Content>
-        <Grid RowDefinitions="Auto,Auto,*" Padding="16" RowSpacing="12">
+        <Grid RowDefinitions="Auto,Auto,*"
+              Padding="16"
+              RowSpacing="12">
             <Label Text="Select a character"
                    FontSize="20"
                    FontAttributes="Bold"/>
@@ -30,20 +32,26 @@
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnCardTapped"/>
                             </Frame.GestureRecognizers>
-                            <VerticalStackLayout Spacing="2">
-                                <Label Text="{Binding Name}"
+                            <Grid ColumnDefinitions="Auto, Auto"
+                                  RowDefinitions="Auto, Auto">
+
+                                <Label Grid.Row="0"
+                                       Grid.ColumnSpan="2"
+                                       Text="{Binding Name}"
                                        FontAttributes="Bold"
                                        FontSize="17"/>
-                                <Label Text="{Binding Class}"
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       Text="{Binding Class}"
                                        FontSize="13"
                                        Opacity="0.8"/>
-                                <Label Text="{Binding PlayerName, StringFormat='Player: {0}'}"
+                                <Label Grid.Row="1"
+                                       Grid.Column="1"
+                                       Text="{Binding PlayerName, StringFormat='Player: {0}'}"
                                        FontSize="12"
                                        Opacity="0.7"/>
-                                <Label Text="{Binding UpdatedUtc, StringFormat='Updated: {0:dd MMM yyyy HH:mm}'}"
-                                       FontSize="11"
-                                       Opacity="0.6"/>
-                            </VerticalStackLayout>
+                            </Grid>
+
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

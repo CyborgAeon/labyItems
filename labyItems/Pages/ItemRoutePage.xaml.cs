@@ -44,18 +44,12 @@ public partial class ItemRoutePage : ContentPage
         await Navigation.PushAsync(new Characters.CharacterWalletPage());
     }
 
-    private async void OnBattleboardClicked(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new Battleboard.BattleboardCharacterListPage());
-    }
-
     private void RefreshWalletButton()
     {
         var any = LiteDbService.GetCharacters().Any();
-        if (CharacterWalletButton != null && BattleboardButton != null)
+        if (CharacterWalletButton != null)
         {
             CharacterWalletButton.IsEnabled = any;
-            BattleboardButton.IsEnabled = any;
         }
     }
 }

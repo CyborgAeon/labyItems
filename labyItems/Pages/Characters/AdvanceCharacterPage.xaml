@@ -21,117 +21,113 @@
             <ScrollView>
                 <VerticalStackLayout Padding="16"
                                      Spacing="16">
-                <Label Text="Details"
-                       FontAttributes="Bold"
-                       FontSize="18"/>
-
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Points accrued"
-                           FontAttributes="Bold"/>
-                    <Entry Text="{Binding Points, Mode=TwoWay}"
-                           Keyboard="Numeric"
-                           Placeholder="Total points"/>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Current vitae"
-                           FontAttributes="Bold"/>
-                    <sliders:VitaeSlider Value="{Binding CurrentVitae, Mode=TwoWay}"/>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Abilities"
-                           FontAttributes="Bold"/>
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="8">
-                        <controls:DictionarySearchBar x:Name="AbilitySearch"
-                                                      x:TypeArguments="viewModels:ManuAbilityOption"
-                                                      SelectedValue="{Binding SelectedAbilityOption, Mode=TwoWay}"
-                                                      PlaceholderText="Type ability name"
-                                                      SelectionDisplayMemberPath="Name"/>
-                        <Button Grid.Column="1"
-                                Text="Add"
-                                Command="{Binding AddAbilityCommand}"
-                                IsEnabled="{Binding CanAddAbility}"/>
-                    </Grid>
-                    <Label Text="{Binding AbilityPointsSummary}"
-                           FontSize="12"
-                           Opacity="0.7"/>
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Abilities}"
-                                         Spacing="8">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="*,Auto,Auto"
-                                      ColumnSpacing="8">
-                                    <Label Text="{Binding NameWithCost}"
-                                           VerticalTextAlignment="Center"/>
-                                    <Label Grid.Column="1"
-                                           Text="{Binding RunningTotalText}"
-                                           FontSize="12"
-                                           Opacity="0.7"
-                                           VerticalTextAlignment="Center"/>
-                                    <ImageButton Grid.Column="2"
-                                                 HeightRequest="36"
-                                                 WidthRequest="36"
-                                                 Padding="6"
-                                                 BackgroundColor="Transparent"
-                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveAbilityCommand}"
-                                                 CommandParameter="{Binding .}">
-                                        <ImageButton.Source>
-                                            <FontImageSource Glyph="🗑️"
-                                                             Size="16"
-                                                             Color="Black"/>
-                                        </ImageButton.Source>
-                                    </ImageButton>
-                                </Grid>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </VerticalStackLayout>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Notes"
-                           FontAttributes="Bold"/>
-                    <Editor Text="{Binding Notes, Mode=TwoWay}"
-                            AutoSize="TextChanges"
-                            Placeholder="Add notes about advancement, downtime, or approvals."/>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="8">
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="8">
-                        <Label Text="Items"
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Points accrued"
                                FontAttributes="Bold"/>
-                        <Button Grid.Column="1"
-                                Text="+ Add item"
-                                Command="{Binding AddItemCommand}"/>
-                    </Grid>
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}"
-                                         Spacing="8">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="*,Auto"
-                                      ColumnSpacing="8">
-                                    <Entry Text="{Binding Text, Mode=TwoWay}"
-                                           Placeholder="Item"/>
-                                    <ImageButton Grid.Column="1"
-                                                 HeightRequest="36"
-                                                 WidthRequest="36"
-                                                 Padding="6"
-                                                 BackgroundColor="Transparent"
-                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveItemCommand}"
-                                                 CommandParameter="{Binding .}">
-                                        <ImageButton.Source>
-                                            <FontImageSource Glyph="🗑️"
-                                                             Size="16"
-                                                             Color="Black"/>
-                                        </ImageButton.Source>
-                                    </ImageButton>
-                                </Grid>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
+                        <Entry Text="{Binding Points, Mode=TwoWay}"
+                               Keyboard="Numeric"
+                               Placeholder="Total points"/>
                     </VerticalStackLayout>
-                </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Current vitae"
+                               FontAttributes="Bold"/>
+                        <sliders:VitaeSlider Value="{Binding CurrentVitae, Mode=TwoWay}"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Abilities"
+                               FontAttributes="Bold"/>
+                        <Grid ColumnDefinitions="*,Auto"
+                              ColumnSpacing="8">
+                            <controls:DictionarySearchBar x:Name="AbilitySearch"
+                                                          x:TypeArguments="viewModels:ManuAbilityOption"
+                                                          SelectedValue="{Binding SelectedAbilityOption, Mode=TwoWay}"
+                                                          PlaceholderText="Type ability name"
+                                                          SelectionDisplayMemberPath="Name"/>
+                            <Button Grid.Column="1"
+                                    Text="Add"
+                                    Command="{Binding AddAbilityCommand}"
+                                    IsEnabled="{Binding CanAddAbility}"/>
+                        </Grid>
+                        <Label Text="{Binding AbilityPointsSummary}"
+                               FontSize="12"
+                               Opacity="0.7"/>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Abilities}"
+                                             Spacing="8">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="*,Auto,Auto"
+                                          ColumnSpacing="8">
+                                        <Label Text="{Binding NameWithCost}"
+                                               VerticalTextAlignment="Center"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding RunningTotalText}"
+                                               FontSize="12"
+                                               Opacity="0.7"
+                                               VerticalTextAlignment="Center"/>
+                                        <ImageButton Grid.Column="2"
+                                                     HeightRequest="36"
+                                                     WidthRequest="36"
+                                                     Padding="6"
+                                                     BackgroundColor="Transparent"
+                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveAbilityCommand}"
+                                                     CommandParameter="{Binding .}">
+                                            <ImageButton.Source>
+                                                <FontImageSource Glyph="🗑️"
+                                                                 Size="16"
+                                                                 Color="Black"/>
+                                            </ImageButton.Source>
+                                        </ImageButton>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Notes"
+                               FontAttributes="Bold"/>
+                        <Editor Text="{Binding Notes, Mode=TwoWay}"
+                                AutoSize="TextChanges"
+                                Placeholder="Add notes about advancement, downtime, or approvals."/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto"
+                              ColumnSpacing="8">
+                            <Label Text="Items"
+                                   FontAttributes="Bold"/>
+                            <Button Grid.Column="1"
+                                    Text="+ Add item"
+                                    Command="{Binding AddItemCommand}"/>
+                        </Grid>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}"
+                                             Spacing="8">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="8">
+                                        <Entry Text="{Binding Text, Mode=TwoWay}"
+                                               Placeholder="Item"/>
+                                        <ImageButton Grid.Column="1"
+                                                     HeightRequest="36"
+                                                     WidthRequest="36"
+                                                     Padding="6"
+                                                     BackgroundColor="Transparent"
+                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveItemCommand}"
+                                                     CommandParameter="{Binding .}">
+                                            <ImageButton.Source>
+                                                <FontImageSource Glyph="🗑️"
+                                                                 Size="16"
+                                                                 Color="Black"/>
+                                            </ImageButton.Source>
+                                        </ImageButton>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
         </Grid>
@@ -149,124 +145,143 @@
             <ScrollView>
                 <VerticalStackLayout Padding="16"
                                      Spacing="12">
-                <Label Text="Spells"
-                       FontAttributes="Bold"
-                       FontSize="18"/>
+                    <Label Text="Spells"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
 
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpellLists}"
-                                     Spacing="12">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   BorderColor="#E5E7EB"
-                                   HasShadow="False">
-                                <VerticalStackLayout Spacing="10">
-                                    <Grid ColumnDefinitions="*,Auto"
-                                          ColumnSpacing="8">
-                                        <Label Text="{Binding HeaderTitle}"
-                                               FontAttributes="Bold"
-                                               VerticalTextAlignment="Center"
-                                               IsVisible="{Binding ShowHeaderLabel}"/>
-                                        <Button Grid.Column="1"
-                                                Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
-                                                BackgroundColor="Transparent"
-                                                TextColor="#6B7280"
-                                                Padding="0"
-                                                WidthRequest="32"
-                                                HeightRequest="32"
-                                                Command="{Binding ToggleExpandedCommand}"/>
-                                    </Grid>
-                                    <VerticalStackLayout IsVisible="{Binding IsExpanded}"
-                                                         Spacing="8">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpellLists}"
+                                         Spacing="12">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="12"
+                                       CornerRadius="12"
+                                       BorderColor="#E5E7EB"
+                                       HasShadow="False">
+                                    <VerticalStackLayout Spacing="10">
                                         <Grid ColumnDefinitions="*,Auto"
-                                              ColumnSpacing="8"
-                                              IsVisible="{Binding CanEdit}">
-                                            <controls:DictionarySearchBar x:TypeArguments="viewModels:SpellOption"
-                                                                          ItemsSource="{Binding FilteredOptions}"
-                                                                          SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}"
-                                                                          SelectedText="{Binding SearchText, Mode=TwoWay}"
-                                                                          PlaceholderText="Type spell name"
-                                                                          SelectionDisplayMemberPath="Name"
-                                                                          IsEnabled="{Binding CanEdit}"/>
+                                              ColumnSpacing="8">
+                                            <Label Text="{Binding HeaderTitle}"
+                                                   FontAttributes="Bold"
+                                                   VerticalTextAlignment="Center"
+                                                   IsVisible="{Binding ShowHeaderLabel}"/>
                                             <Button Grid.Column="1"
-                                                    Text="Add"
-                                                    Command="{Binding AddSelectedCommand}"
-                                                    IsEnabled="{Binding CanAddSelected}"/>
+                                                    Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="#6B7280"
+                                                    Padding="0"
+                                                    WidthRequest="32"
+                                                    HeightRequest="32"
+                                                    Command="{Binding ToggleExpandedCommand}"/>
                                         </Grid>
+                                        <VerticalStackLayout IsVisible="{Binding IsExpanded}"
+                                                             Spacing="8">
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  ColumnSpacing="8"
+                                                  IsVisible="{Binding CanEdit}">
+                                                <controls:DictionarySearchBar x:TypeArguments="viewModels:SpellOption"
+                                                                              ItemsSource="{Binding FilteredOptions}"
+                                                                              SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}"
+                                                                              SelectedText="{Binding SearchText, Mode=TwoWay}"
+                                                                              PlaceholderText="Type spell name"
+                                                                              SelectionDisplayMemberPath="Name"
+                                                                              IsEnabled="{Binding CanEdit}"/>
+                                                <Button Grid.Column="1"
+                                                        Text="Add"
+                                                        Command="{Binding AddSelectedCommand}"
+                                                        IsEnabled="{Binding CanAddSelected}"/>
+                                            </Grid>
 
-                                        <VerticalStackLayout IsVisible="{Binding IsSpecialistList}"
-                                                             Spacing="6">
-                                            <Label Text="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SpecialistSlotsSummary}"
-                                                   TextColor="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SpecialistSlotsSummaryColor}"
-                                                   FontSize="12"
-                                                   Opacity="0.7"
-                                                   IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ShowSpecialistSlotsBar}"/>
-                                            <FlexLayout Direction="Row"
-                                                        HeightRequest="10"
-                                                        BindableLayout.ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SpecialistSlotSegments}"
-                                                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ShowSpecialistSlotsBar}">
+                                            <VerticalStackLayout IsVisible="{Binding IsSpecialistList}"
+                                                                 Spacing="6">
+                                                <Label Text="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SpecialistSlotsSummary}"
+                                                       TextColor="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SpecialistSlotsSummaryColor}"
+                                                       FontSize="12"
+                                                       Opacity="0.7"
+                                                       IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ShowSpecialistSlotsBar}"/>
+                                                <FlexLayout Direction="Row"
+                                                            HeightRequest="10"
+                                                            BindableLayout.ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SpecialistSlotSegments}"
+                                                            IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ShowSpecialistSlotsBar}">
+                                                    <BindableLayout.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <BoxView Color="{Binding Colour}"
+                                                                     FlexLayout.Grow="{Binding Weight}"/>
+                                                        </DataTemplate>
+                                                    </BindableLayout.ItemTemplate>
+                                                </FlexLayout>
+                                            </VerticalStackLayout>
+
+                                            <ScrollView Orientation="Horizontal"
+                                                        IsVisible="{Binding CanEdit}">
+                                                <controls:MultiChipGroup Items="{Binding ColourFilterOptions}"
+                                                                         SelectedItems="{Binding SelectedColourFilters}"
+                                                                         WrapMode="NoWrap"/>
+                                            </ScrollView>
+                                            <controls:MultiChipGroup Items="{Binding TierFilterOptions}"
+                                                                     SelectedItems="{Binding SelectedTierFilters}"
+                                                                     WrapMode="NoWrap"
+                                                                     IsVisible="{Binding CanEdit}"/>
+
+                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                                                 Spacing="8">
                                                 <BindableLayout.ItemTemplate>
                                                     <DataTemplate>
-                                                        <BoxView Color="{Binding Colour}"
-                                                                 FlexLayout.Grow="{Binding Weight}"/>
+                                                        <Border StrokeThickness="0"
+                                                                StrokeShape="RoundRectangle 8"
+                                                                BackgroundColor="{Binding RowBackgroundColor}">
+                                                            <Grid Padding="10,8"
+                                                                  ColumnDefinitions="*,Auto,Auto"
+                                                                  ColumnSpacing="4">
+                                                                <Label Text="{Binding DisplayText}"
+                                                                       VerticalTextAlignment="Center"/>
+                                                                <ImageButton Grid.Column="1"
+                                                                             HeightRequest="32"
+                                                                             WidthRequest="32"
+                                                                             Padding="4"
+                                                                             BackgroundColor="Transparent"
+                                                                             IsVisible="{Binding HasSpell}"
+                                                                             Clicked="OnViewSpellDetailsClicked"
+                                                                             CommandParameter="{Binding .}">
+                                                                    <ImageButton.Source>
+                                                                        <FontImageSource Glyph="👁️"
+                                                                                         Size="14"
+                                                                                         Color="#4B5563"/>
+                                                                    </ImageButton.Source>
+                                                                </ImageButton>
+                                                                <ImageButton Grid.Column="2"
+                                                                             HeightRequest="36"
+                                                                             WidthRequest="36"
+                                                                             Padding="6"
+                                                                             BackgroundColor="Transparent"
+                                                                             IsVisible="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.CanEdit}"
+                                                                             Command="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
+                                                                             CommandParameter="{Binding .}">
+                                                                    <ImageButton.Source>
+                                                                        <FontImageSource Glyph="🗑️"
+                                                                                         Size="16"
+                                                                                         Color="Black"/>
+                                                                    </ImageButton.Source>
+                                                                </ImageButton>
+                                                            </Grid>
+                                                        </Border>
                                                     </DataTemplate>
                                                 </BindableLayout.ItemTemplate>
-                                            </FlexLayout>
-                                        </VerticalStackLayout>
-
-                                        <ScrollView Orientation="Horizontal"
-                                                    IsVisible="{Binding CanEdit}">
-                                            <controls:MultiChipGroup Items="{Binding ColourFilterOptions}"
-                                                                     SelectedItems="{Binding SelectedColourFilters}"
-                                                                     WrapMode="NoWrap"/>
-                                        </ScrollView>
-                                        <controls:MultiChipGroup Items="{Binding TierFilterOptions}"
-                                                                 SelectedItems="{Binding SelectedTierFilters}"
-                                                                 WrapMode="NoWrap"
-                                                                 IsVisible="{Binding CanEdit}"/>
-
-                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
-                                                             Spacing="8">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid ColumnDefinitions="*,Auto"
-                                                          ColumnSpacing="8">
-                                                        <Label Text="{Binding DisplayText}"
-                                                               VerticalTextAlignment="Center"/>
-                                                        <ImageButton Grid.Column="1"
-                                                                     HeightRequest="36"
-                                                                     WidthRequest="36"
-                                                                     Padding="6"
-                                                                     BackgroundColor="Transparent"
-                                                                     IsVisible="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.CanEdit}"
-                                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
-                                                                     CommandParameter="{Binding .}">
-                                                            <ImageButton.Source>
-                                                                <FontImageSource Glyph="🗑️"
-                                                                                 Size="16"
-                                                                                 Color="Black"/>
-                                                            </ImageButton.Source>
-                                                        </ImageButton>
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
+                                            </VerticalStackLayout>
                                         </VerticalStackLayout>
                                     </VerticalStackLayout>
-                                </VerticalStackLayout>
-                            </Frame>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
 
-                <HorizontalStackLayout Spacing="8">
-                    <Button Text="Email Excel"
-                            Command="{Binding ExportSpellsToExcelCommand}"/>
-                    <Button Text="Copy"
-                            Command="{Binding CopySpellsCommand}"/>
-                    <Button Text="Save .txt"
-                            Command="{Binding SaveSpellsTextCommand}"/>
-                </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="8">
+                        <Button Text="Email Excel"
+                                Command="{Binding ExportSpellsToExcelCommand}"/>
+                        <Button Text="Copy"
+                                Command="{Binding CopySpellsCommand}"/>
+                        <Button Text="Save .txt"
+                                Command="{Binding SaveSpellsTextCommand}"/>
+                    </HorizontalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
         </Grid>
@@ -284,300 +299,296 @@
             <ScrollView>
                 <VerticalStackLayout Padding="16"
                                      Spacing="12">
-                <VerticalStackLayout IsVisible="{Binding ShowEvilStairway}"
-                                     Spacing="10">
-                    <Label Text="Evil Stairway"
-                           FontAttributes="Bold"
-                           FontSize="18"/>
-                    <Frame Padding="12"
-                           CornerRadius="12"
-                           BorderColor="#E5E7EB"
-                           HasShadow="False"
-                           BindingContext="{Binding EvilStairway}">
-                        <VerticalStackLayout Spacing="10">
-                            <Label Text="{Binding ListSourceLabel}"
-                                   FontSize="12"
-                                   Opacity="0.7"/>
+                    <VerticalStackLayout IsVisible="{Binding ShowEvilStairway}"
+                                         Spacing="10">
+                        <Label Text="Evil Stairway"
+                               FontAttributes="Bold"
+                               FontSize="18"/>
+                        <Frame Padding="12"
+                               CornerRadius="12"
+                               BorderColor="#E5E7EB"
+                               HasShadow="False"
+                               BindingContext="{Binding EvilStairway}">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="{Binding ListSourceLabel}"
+                                       FontSize="12"
+                                       Opacity="0.7"/>
 
-                            <Grid ColumnDefinitions="*,Auto"
-                                  ColumnSpacing="8">
-                                <controls:DictionarySearchBar x:TypeArguments="viewModels:MiracleOption"
-                                                              ItemsSource="{Binding FilteredOptions}"
-                                                              SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"
-                                                              SelectedText="{Binding SearchText, Mode=TwoWay}"
-                                                              PlaceholderText="Type miracle name"
-                                                              SelectionDisplayMemberPath="Name"/>
-                                <Button Grid.Column="1"
-                                        Text="Add"
-                                        Command="{Binding AddSelectedCommand}"
-                                        IsEnabled="{Binding CanAddSelected}"/>
-                            </Grid>
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <controls:DictionarySearchBar x:TypeArguments="viewModels:MiracleOption"
+                                                                  ItemsSource="{Binding FilteredOptions}"
+                                                                  SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"
+                                                                  SelectedText="{Binding SearchText, Mode=TwoWay}"
+                                                                  PlaceholderText="Type miracle name"
+                                                                  SelectionDisplayMemberPath="Name"/>
+                                    <Button Grid.Column="1"
+                                            Text="Add"
+                                            Command="{Binding AddSelectedCommand}"
+                                            IsEnabled="{Binding CanAddSelected}"/>
+                                </Grid>
 
-                            <ScrollView Orientation="Horizontal">
-                                <controls:MultiChipGroup Items="{Binding SphereFilterOptions}"
-                                                         SelectedItems="{Binding SelectedSphereFilters}"
-                                                         WrapMode="NoWrap"/>
-                            </ScrollView>
-                            <controls:MultiChipGroup Items="{Binding AdvancedFilterOptions}"
-                                                     SelectedItems="{Binding SelectedAdvancedFilters}"
-                                                     WrapMode="NoWrap"
-                                                     IsVisible="{Binding ShowAdvancedFilters}"/>
+                                <ScrollView Orientation="Horizontal">
+                                    <controls:MultiChipGroup Items="{Binding SphereFilterOptions}"
+                                                             SelectedItems="{Binding SelectedSphereFilters}"
+                                                             WrapMode="NoWrap"/>
+                                </ScrollView>
+                                <controls:MultiChipGroup Items="{Binding AdvancedFilterOptions}"
+                                                         SelectedItems="{Binding SelectedAdvancedFilters}"
+                                                         WrapMode="NoWrap"
+                                                         IsVisible="{Binding ShowAdvancedFilters}"/>
 
-                            <Grid ColumnDefinitions="Auto,Auto,Auto"
-                                  ColumnSpacing="12">
-                                <Label Text="{Binding SpiritProgressText}"/>
-                                <Label Grid.Column="1"
-                                       Text="{Binding RemainingSpiritText}"/>
-                                <Label Grid.Column="2"
-                                       Text="{Binding CausingProgressText}"
-                                       IsVisible="{Binding ShowCausingRequirement}"/>
-                            </Grid>
+                                <Grid ColumnDefinitions="Auto,Auto,Auto"
+                                      ColumnSpacing="12">
+                                    <Label Text="{Binding SpiritProgressText}"/>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding RemainingSpiritText}"/>
+                                    <Label Grid.Column="2"
+                                           Text="{Binding CausingProgressText}"
+                                           IsVisible="{Binding ShowCausingRequirement}"/>
+                                </Grid>
 
-                            <Grid ColumnDefinitions="50,*,40,90,Auto,Auto"
-                                  ColumnSpacing="6">
-                                <Label Text="Lvl"
-                                       FontAttributes="Bold"/>
-                                <Label Grid.Column="1"
-                                       Text="Miracle"
-                                       FontAttributes="Bold"/>
-                                <Label Grid.Column="2"
-                                       Text="Uses"
-                                       FontAttributes="Bold"/>
-                                <Label Grid.Column="3"
-                                       Text="Running total"
-                                       FontAttributes="Bold"/>
-                                <Label Grid.Column="4"
-                                       Grid.ColumnSpan="2"
-                                       Text="Adjust"
-                                       FontAttributes="Bold"/>
-                            </Grid>
+                                <Grid ColumnDefinitions="50,*,40,90,Auto,Auto"
+                                      ColumnSpacing="6">
+                                    <Label Text="Lvl"
+                                           FontAttributes="Bold"/>
+                                    <Label Grid.Column="1"
+                                           Text="Miracle"
+                                           FontAttributes="Bold"/>
+                                    <Label Grid.Column="2"
+                                           Text="Uses"
+                                           FontAttributes="Bold"/>
+                                    <Label Grid.Column="3"
+                                           Text="Running total"
+                                           FontAttributes="Bold"/>
+                                    <Label Grid.Column="4"
+                                           Grid.ColumnSpan="2"
+                                           Text="Adjust"
+                                           FontAttributes="Bold"/>
+                                </Grid>
 
-                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Rows}"
-                                                 Spacing="6">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="viewModels:EvilStairwayRowVm">
-                                        <Grid ColumnDefinitions="50,*,40,90,Auto,Auto"
-                                              ColumnSpacing="6"
-                                              Padding="0,2">
-                                            <Label Text="{Binding Power}"
-                                                   FontSize="12"
-                                                   VerticalOptions="Center"/>
-                                            <Label Grid.Column="1"
-                                                   Text="{Binding Name}"
-                                                   FontSize="12"
-                                                   LineBreakMode="TailTruncation"
-                                                   VerticalOptions="Center"/>
-                                            <Label Grid.Column="2"
-                                                   Text="{Binding UsesLabel}"
-                                                   FontSize="12"
-                                                   VerticalOptions="Center"/>
-                                            <Label Grid.Column="3"
-                                                   Text="{Binding TotalLabel}"
-                                                   FontSize="12"
-                                                   VerticalOptions="Center"/>
-                                            <Button Grid.Column="4"
-                                                    Text="+"
-                                                    FontSize="12"
-                                                    Padding="0"
-                                                    WidthRequest="28"
-                                                    HeightRequest="28"
-                                                    MinimumWidthRequest="28"
-                                                    MinimumHeightRequest="28"
-                                                    Command="{Binding IncreaseCommand}"
-                                                    IsEnabled="{Binding CanIncrease}"/>
-                                            <Button Grid.Column="5"
-                                                    Text="-"
-                                                    FontSize="12"
-                                                    Padding="0"
-                                                    WidthRequest="28"
-                                                    HeightRequest="28"
-                                                    MinimumWidthRequest="28"
-                                                    MinimumHeightRequest="28"
-                                                    Command="{Binding DecreaseCommand}"
-                                                    IsEnabled="{Binding CanDecrease}"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Rows}"
+                                                     Spacing="6">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="viewModels:EvilStairwayRowVm">
+                                            <Grid ColumnDefinitions="50,*,40,90,Auto,Auto"
+                                                  ColumnSpacing="6"
+                                                  Padding="0,2">
+                                                <Label Text="{Binding Power}"
+                                                       FontSize="12"
+                                                       VerticalOptions="Center"/>
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding Name}"
+                                                       FontSize="12"
+                                                       LineBreakMode="TailTruncation"
+                                                       VerticalOptions="Center"/>
+                                                <Label Grid.Column="2"
+                                                       Text="{Binding UsesLabel}"
+                                                       FontSize="12"
+                                                       VerticalOptions="Center"/>
+                                                <Label Grid.Column="3"
+                                                       Text="{Binding TotalLabel}"
+                                                       FontSize="12"
+                                                       VerticalOptions="Center"/>
+                                                <Button Grid.Column="4"
+                                                        Text="+"
+                                                        FontSize="12"
+                                                        Padding="0"
+                                                        WidthRequest="28"
+                                                        HeightRequest="28"
+                                                        MinimumWidthRequest="28"
+                                                        MinimumHeightRequest="28"
+                                                        Command="{Binding IncreaseCommand}"
+                                                        IsEnabled="{Binding CanIncrease}"/>
+                                                <Button Grid.Column="5"
+                                                        Text="-"
+                                                        FontSize="12"
+                                                        Padding="0"
+                                                        WidthRequest="28"
+                                                        HeightRequest="28"
+                                                        MinimumWidthRequest="28"
+                                                        MinimumHeightRequest="28"
+                                                        Command="{Binding DecreaseCommand}"
+                                                        IsEnabled="{Binding CanDecrease}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+
+                                <Label Text="{Binding ValidationMessage}"
+                                       TextColor="#7F1D1D"
+                                       FontSize="12"
+                                       IsVisible="{Binding HasValidationError}"/>
                             </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
 
-                            <Label Text="{Binding ValidationMessage}"
-                                   TextColor="#7F1D1D"
-                                   FontSize="12"
-                                   IsVisible="{Binding HasValidationError}"/>
-                        </VerticalStackLayout>
-                    </Frame>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout IsVisible="{Binding ShowPriestMiracleLists}"
-                                     Spacing="12">
-                <Label Text="Miracle Lists"
-                       FontAttributes="Bold"
-                       FontSize="18"/>
-
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding MiracleLists}"
-                                     Spacing="14">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   BorderColor="#E5E7EB"
-                                   HasShadow="False">
-                                <VerticalStackLayout Spacing="10">
-                                    <Grid ColumnDefinitions="*,Auto,Auto"
-                                          ColumnSpacing="8">
-                                        <VerticalStackLayout Spacing="2">
-                                            <Label Text="{Binding HeaderTitle}"
-                                                   FontAttributes="Bold"
-                                                   FontSize="16"/>
-                                            <Label Text="{Binding StateLabel}"
-                                                   FontSize="12"
-                                                   Opacity="0.6"/>
-                                        </VerticalStackLayout>
-                                        <ImageButton Grid.Column="1"
-                                                     HeightRequest="32"
-                                                     WidthRequest="32"
-                                                     Padding="6"
-                                                     BackgroundColor="Transparent"
-                                                     IsVisible="{Binding CanReopenScriptures}"
-                                                     Command="{Binding ReopenScripturesCommand}">
-                                            <ImageButton.Source>
-                                                <FontImageSource Glyph="✏️"
-                                                                 Size="16"
-                                                                 Color="Black"/>
-                                            </ImageButton.Source>
-                                        </ImageButton>
-                                        <Button Grid.Column="2"
-                                                Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
-                                                BackgroundColor="Transparent"
-                                                TextColor="#6B7280"
-                                                Padding="0"
-                                                WidthRequest="32"
-                                                HeightRequest="32"
-                                                Command="{Binding ToggleExpandedCommand}"/>
-                                    </Grid>
-
-                                    <VerticalStackLayout IsVisible="{Binding IsExpanded}"
-                                                         Spacing="10">
-                                        <VerticalStackLayout IsVisible="{Binding CanEdit}"
-                                                             Spacing="10">
-                                            <Grid ColumnDefinitions="*,Auto"
+                    <VerticalStackLayout IsVisible="{Binding ShowPriestMiracleLists}"
+                                         Spacing="12">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding MiracleLists}"
+                                             Spacing="14">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Padding="12"
+                                           CornerRadius="12"
+                                           BorderColor="#E5E7EB"
+                                           HasShadow="False">
+                                        <VerticalStackLayout Spacing="10">
+                                            <Grid ColumnDefinitions="*,Auto,Auto"
                                                   ColumnSpacing="8">
-                                                <controls:DictionarySearchBar x:TypeArguments="viewModels:MiracleOption"
-                                                                              ItemsSource="{Binding FilteredOptions}"
-                                                                              SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"
-                                                                              SelectedText="{Binding SearchText, Mode=TwoWay}"
-                                                                              PlaceholderText="Type miracle name"
-                                                                              SelectionDisplayMemberPath="Name"
-                                                                              IsEnabled="{Binding CanEdit}"/>
-                                                <Button Grid.Column="1"
-                                                        Text="Add"
-                                                        Command="{Binding AddSelectedCommand}"
-                                                        IsEnabled="{Binding CanAddSelected}"/>
+                                                <VerticalStackLayout Spacing="2">
+                                                    <Label Text="{Binding HeaderTitle}"
+                                                           FontAttributes="Bold"
+                                                           FontSize="16"/>
+                                                    <Label Text="{Binding StateLabel}"
+                                                           FontSize="12"
+                                                           Opacity="0.6"/>
+                                                </VerticalStackLayout>
+                                                <ImageButton Grid.Column="1"
+                                                             HeightRequest="32"
+                                                             WidthRequest="32"
+                                                             Padding="6"
+                                                             BackgroundColor="Transparent"
+                                                             IsVisible="{Binding CanReopenScriptures}"
+                                                             Command="{Binding ReopenScripturesCommand}">
+                                                    <ImageButton.Source>
+                                                        <FontImageSource Glyph="✏️"
+                                                                         Size="16"
+                                                                         Color="Black"/>
+                                                    </ImageButton.Source>
+                                                </ImageButton>
+                                                <Button Grid.Column="2"
+                                                        Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
+                                                        BackgroundColor="Transparent"
+                                                        TextColor="#6B7280"
+                                                        Padding="0"
+                                                        WidthRequest="32"
+                                                        HeightRequest="32"
+                                                        Command="{Binding ToggleExpandedCommand}"/>
                                             </Grid>
 
-                                            <ScrollView Orientation="Horizontal">
-                                                <controls:MultiChipGroup Items="{Binding SphereFilterOptions}"
-                                                                         SelectedItems="{Binding SelectedSphereFilters}"
-                                                                         WrapMode="NoWrap"/>
-                                            </ScrollView>
-                                            <controls:MultiChipGroup Items="{Binding AdvancedFilterOptions}"
-                                                                     SelectedItems="{Binding SelectedAdvancedFilters}"
-                                                                     WrapMode="NoWrap"/>
-
-
-                                            <VerticalStackLayout IsVisible="{Binding ShowNeutralAlignmentChoice}"
-                                                                 Spacing="4">
-                                                <Label Text="Neutral list alignment"
-                                                       FontAttributes="Bold"
-                                                       FontSize="12"
-                                                       Opacity="0.7"/>
-                                                <controls:ChipGroup Items="{Binding NeutralAlignmentOptions}"
-                                                                    SelectedItem="{Binding NeutralAlignmentChoice, Mode=TwoWay}"/>
-                                            </VerticalStackLayout>
-                                        </VerticalStackLayout>
-
-                                        <Label Text="{Binding ScripturesProgressText}"
-                                               IsVisible="{Binding IsScriptures}"
-                                               FontSize="12"
-                                               Opacity="0.8"/>
-
-                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
-                                                             Spacing="8">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate>
+                                            <VerticalStackLayout IsVisible="{Binding IsExpanded}"
+                                                                 Spacing="10">
+                                                <VerticalStackLayout IsVisible="{Binding CanEdit}"
+                                                                     Spacing="10">
                                                     <Grid ColumnDefinitions="*,Auto"
                                                           ColumnSpacing="8">
-                                                        <Label Text="{Binding DisplayText}"
-                                                               VerticalTextAlignment="Center"/>
-                                                        <ImageButton Grid.Column="1"
-                                                                     HeightRequest="36"
-                                                                     WidthRequest="36"
-                                                                     Padding="6"
-                                                                     BackgroundColor="Transparent"
-                                                                     IsVisible="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.CanEdit}"
-                                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
-                                                                     CommandParameter="{Binding .}">
-                                                            <ImageButton.Source>
-                                                                <FontImageSource Glyph="🗑️"
-                                                                                 Size="16"
-                                                                                 Color="Black"/>
-                                                            </ImageButton.Source>
-                                                        </ImageButton>
+                                                        <controls:DictionarySearchBar x:TypeArguments="viewModels:MiracleOption"
+                                                                                      ItemsSource="{Binding FilteredOptions}"
+                                                                                      SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"
+                                                                                      SelectedText="{Binding SearchText, Mode=TwoWay}"
+                                                                                      PlaceholderText="Type miracle name"
+                                                                                      SelectionDisplayMemberPath="Name"
+                                                                                      IsEnabled="{Binding CanEdit}"/>
+                                                        <Button Grid.Column="1"
+                                                                Text="Add"
+                                                                Command="{Binding AddSelectedCommand}"
+                                                                IsEnabled="{Binding CanAddSelected}"/>
                                                     </Grid>
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
+
+                                                    <ScrollView Orientation="Horizontal">
+                                                        <controls:MultiChipGroup Items="{Binding SphereFilterOptions}"
+                                                                                 SelectedItems="{Binding SelectedSphereFilters}"
+                                                                                 WrapMode="NoWrap"/>
+                                                    </ScrollView>
+                                                    <controls:MultiChipGroup Items="{Binding AdvancedFilterOptions}"
+                                                                             SelectedItems="{Binding SelectedAdvancedFilters}"
+                                                                             WrapMode="NoWrap"/>
+
+
+                                                    <VerticalStackLayout IsVisible="{Binding ShowNeutralAlignmentChoice}"
+                                                                         Spacing="4">
+                                                        <Label Text="Neutral list alignment"
+                                                               FontAttributes="Bold"
+                                                               FontSize="12"
+                                                               Opacity="0.7"/>
+                                                        <controls:ChipGroup Items="{Binding NeutralAlignmentOptions}"
+                                                                            SelectedItem="{Binding NeutralAlignmentChoice, Mode=TwoWay}"/>
+                                                    </VerticalStackLayout>
+                                                </VerticalStackLayout>
+
+                                                <Label Text="{Binding ScripturesProgressText}"
+                                                       IsVisible="{Binding IsScriptures}"
+                                                       FontSize="12"
+                                                       Opacity="0.8"/>
+
+                                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                                                     Spacing="8">
+                                                    <BindableLayout.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid ColumnDefinitions="*,Auto"
+                                                                  ColumnSpacing="8">
+                                                                <Label Text="{Binding DisplayText}"
+                                                                       VerticalTextAlignment="Center"/>
+                                                                <ImageButton Grid.Column="1"
+                                                                             HeightRequest="36"
+                                                                             WidthRequest="36"
+                                                                             Padding="6"
+                                                                             BackgroundColor="Transparent"
+                                                                             IsVisible="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.CanEdit}"
+                                                                             Command="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
+                                                                             CommandParameter="{Binding .}">
+                                                                    <ImageButton.Source>
+                                                                        <FontImageSource Glyph="🗑️"
+                                                                                         Size="16"
+                                                                                         Color="Black"/>
+                                                                    </ImageButton.Source>
+                                                                </ImageButton>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </BindableLayout.ItemTemplate>
+                                                </VerticalStackLayout>
+
+                                                <VerticalStackLayout Spacing="6">
+                                                    <Grid ColumnDefinitions="*,*,*"
+                                                          ColumnSpacing="8">
+                                                        <Label Text="{Binding GoodPoints, StringFormat='Good: {0}'}"
+                                                               TextColor="Green"/>
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding NeutralPoints, StringFormat='Neutral: {0}'}"
+                                                               TextColor="#8B5E3C"/>
+                                                        <Label Grid.Column="2"
+                                                               Text="{Binding EvilPoints, StringFormat='Evil: {0}'}"
+                                                               TextColor="Red"/>
+                                                    </Grid>
+
+                                                    <Grid HeightRequest="10">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="{Binding GoodWidth}"/>
+                                                            <ColumnDefinition Width="{Binding NeutralWidth}"/>
+                                                            <ColumnDefinition Width="{Binding EvilWidth}"/>
+                                                            <ColumnDefinition Width="{Binding UnselectedWidth}"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <BoxView Color="Green"/>
+                                                        <BoxView Grid.Column="1"
+                                                                 Color="#8B5E3C"/>
+                                                        <BoxView Grid.Column="2"
+                                                                 Color="Red"/>
+                                                        <BoxView Grid.Column="3"
+                                                                 Color="#D1D5DB"/>
+                                                    </Grid>
+
+                                                    <Label Text="{Binding ValidationMessage}"
+                                                           TextColor="#7F1D1D"
+                                                           IsVisible="{Binding HasValidationError}"
+                                                           FontSize="12"/>
+                                                </VerticalStackLayout>
+                                            </VerticalStackLayout>
                                         </VerticalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
 
-                                        <VerticalStackLayout Spacing="6">
-                                            <Grid ColumnDefinitions="*,*,*"
-                                                  ColumnSpacing="8">
-                                                <Label Text="{Binding GoodPoints, StringFormat='Good: {0}'}"
-                                                       TextColor="Green"/>
-                                                <Label Grid.Column="1"
-                                                       Text="{Binding NeutralPoints, StringFormat='Neutral: {0}'}"
-                                                       TextColor="#8B5E3C"/>
-                                                <Label Grid.Column="2"
-                                                       Text="{Binding EvilPoints, StringFormat='Evil: {0}'}"
-                                                       TextColor="Red"/>
-                                            </Grid>
-
-                                            <Grid HeightRequest="10">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="{Binding GoodWidth}"/>
-                                                    <ColumnDefinition Width="{Binding NeutralWidth}"/>
-                                                    <ColumnDefinition Width="{Binding EvilWidth}"/>
-                                                    <ColumnDefinition Width="{Binding UnselectedWidth}"/>
-                                                </Grid.ColumnDefinitions>
-                                                <BoxView Color="Green"/>
-                                                <BoxView Grid.Column="1"
-                                                         Color="#8B5E3C"/>
-                                                <BoxView Grid.Column="2"
-                                                         Color="Red"/>
-                                                <BoxView Grid.Column="3"
-                                                         Color="#D1D5DB"/>
-                                            </Grid>
-
-                                            <Label Text="{Binding ValidationMessage}"
-                                                   TextColor="#7F1D1D"
-                                                   IsVisible="{Binding HasValidationError}"
-                                                   FontSize="12"/>
-                                        </VerticalStackLayout>
-                                    </VerticalStackLayout>
-                                </VerticalStackLayout>
-                            </Frame>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-                </VerticalStackLayout>
-
-                <HorizontalStackLayout Spacing="8">
-                    <Button Text="Email Excel"
-                            Command="{Binding ExportMiraclesToExcelCommand}"/>
-                    <Button Text="Copy"
-                            Command="{Binding CopyMiraclesCommand}"/>
-                    <Button Text="Save .txt"
-                            Command="{Binding SaveMiraclesTextCommand}"/>
-                </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="8">
+                        <Button Text="Email Excel"
+                                Command="{Binding ExportMiraclesToExcelCommand}"/>
+                        <Button Text="Copy"
+                                Command="{Binding CopyMiraclesCommand}"/>
+                        <Button Text="Save .txt"
+                                Command="{Binding SaveMiraclesTextCommand}"/>
+                    </HorizontalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
         </Grid>
@@ -595,105 +606,105 @@
             <ScrollView>
                 <VerticalStackLayout Padding="16"
                                      Spacing="12">
-                <Label Text="Evocation List"
-                       FontAttributes="Bold"
-                       FontSize="18"/>
-                <Button Text="+ Add evocation list"
-                        IsVisible="{Binding CanAddEvocationList}"
-                        Command="{Binding AddEvocationListCommand}"/>
+                    <Label Text="Evocation List"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+                    <Button Text="+ Add evocation list"
+                            IsVisible="{Binding CanAddEvocationList}"
+                            Command="{Binding AddEvocationListCommand}"/>
 
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding EvocationLists}"
-                                     Spacing="12">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Frame Padding="12"
-                                   CornerRadius="12"
-                                   BorderColor="#E5E7EB"
-                                   HasShadow="False">
-                                <VerticalStackLayout Spacing="10">
-                                    <Grid ColumnDefinitions="*,Auto"
-                                          ColumnSpacing="8">
-                                        <Label Text="Evocation List"
-                                               FontAttributes="Bold"
-                                               FontSize="16"/>
-                                        <Button Grid.Column="1"
-                                                Text="Delete list"
-                                                Padding="10,4"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveEvocationListCommand}"
-                                                CommandParameter="{Binding .}"/>
-                                    </Grid>
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding EvocationLists}"
+                                         Spacing="12">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="12"
+                                       CornerRadius="12"
+                                       BorderColor="#E5E7EB"
+                                       HasShadow="False">
+                                    <VerticalStackLayout Spacing="10">
+                                        <Grid ColumnDefinitions="*,Auto"
+                                              ColumnSpacing="8">
+                                            <Label Text="Evocation List"
+                                                   FontAttributes="Bold"
+                                                   FontSize="16"/>
+                                            <Button Grid.Column="1"
+                                                    Text="Delete list"
+                                                    Padding="10,4"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveEvocationListCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
 
-                                    <Grid ColumnDefinitions="*,Auto"
-                                          ColumnSpacing="8">
-                                        <controls:DictionarySearchBar x:TypeArguments="viewModels:EvocationOption"
-                                                                      ItemsSource="{Binding FilteredOptions}"
-                                                                      SelectedValue="{Binding SelectedEvocationOption, Mode=TwoWay}"
-                                                                      PlaceholderText="Type evocation name"
-                                                                      SelectionDisplayMemberPath="Name"/>
-                                        <Button Grid.Column="1"
-                                                Text="Add"
-                                                Command="{Binding AddSelectedCommand}"
-                                                IsEnabled="{Binding CanAddSelected}"/>
-                                    </Grid>
+                                        <Grid ColumnDefinitions="*,Auto"
+                                              ColumnSpacing="8">
+                                            <controls:DictionarySearchBar x:TypeArguments="viewModels:EvocationOption"
+                                                                          ItemsSource="{Binding FilteredOptions}"
+                                                                          SelectedValue="{Binding SelectedEvocationOption, Mode=TwoWay}"
+                                                                          PlaceholderText="Type evocation name"
+                                                                          SelectionDisplayMemberPath="Name"/>
+                                            <Button Grid.Column="1"
+                                                    Text="Add"
+                                                    Command="{Binding AddSelectedCommand}"
+                                                    IsEnabled="{Binding CanAddSelected}"/>
+                                        </Grid>
 
-                                    <ScrollView Orientation="Horizontal">
-                                        <controls:MultiChipGroup Items="{Binding FieldFilterOptions}"
-                                                                 SelectedItems="{Binding SelectedFieldFilters}"
-                                                                 WrapMode="NoWrap"/>
-                                    </ScrollView>
+                                        <ScrollView Orientation="Horizontal">
+                                            <controls:MultiChipGroup Items="{Binding FieldFilterOptions}"
+                                                                     SelectedItems="{Binding SelectedFieldFilters}"
+                                                                     WrapMode="NoWrap"/>
+                                        </ScrollView>
 
-                                    <ScrollView Orientation="Horizontal">
-                                        <controls:MultiChipGroup Items="{Binding TierFilterOptions}"
-                                                                 SelectedItems="{Binding SelectedTierFilters}"
-                                                                 WrapMode="NoWrap"/>
-                                    </ScrollView>
+                                        <ScrollView Orientation="Horizontal">
+                                            <controls:MultiChipGroup Items="{Binding TierFilterOptions}"
+                                                                     SelectedItems="{Binding SelectedTierFilters}"
+                                                                     WrapMode="NoWrap"/>
+                                        </ScrollView>
 
-                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
-                                                         Spacing="8">
-                                        <BindableLayout.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid ColumnDefinitions="*,Auto"
-                                                      ColumnSpacing="8">
-                                                    <Label Text="{Binding DisplayText}"
-                                                           VerticalTextAlignment="Center"/>
-                                                    <ImageButton Grid.Column="1"
-                                                                 HeightRequest="36"
-                                                                 WidthRequest="36"
-                                                                 Padding="6"
-                                                                 BackgroundColor="Transparent"
-                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
-                                                                 CommandParameter="{Binding .}">
-                                                        <ImageButton.Source>
-                                                            <FontImageSource Glyph="🗑️"
-                                                                             Size="16"
-                                                                             Color="Black"/>
-                                                        </ImageButton.Source>
-                                                    </ImageButton>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </BindableLayout.ItemTemplate>
+                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                                             Spacing="8">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid ColumnDefinitions="*,Auto"
+                                                          ColumnSpacing="8">
+                                                        <Label Text="{Binding DisplayText}"
+                                                               VerticalTextAlignment="Center"/>
+                                                        <ImageButton Grid.Column="1"
+                                                                     HeightRequest="36"
+                                                                     WidthRequest="36"
+                                                                     Padding="6"
+                                                                     BackgroundColor="Transparent"
+                                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type Frame}}, Path=BindingContext.RemoveEntryCommand}"
+                                                                     CommandParameter="{Binding .}">
+                                                            <ImageButton.Source>
+                                                                <FontImageSource Glyph="🗑️"
+                                                                                 Size="16"
+                                                                                 Color="Black"/>
+                                                            </ImageButton.Source>
+                                                        </ImageButton>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </VerticalStackLayout>
+
+                                        <Grid ColumnDefinitions="*,*"
+                                              ColumnSpacing="8">
+                                            <Label Text="{Binding TotalPower, StringFormat='Total EP: {0}/60'}"
+                                                   FontSize="12"
+                                                   Opacity="0.8"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding AdvancedPower, StringFormat='Advanced EP: {0}/20'}"
+                                                   FontSize="12"
+                                                   Opacity="0.8"/>
+                                        </Grid>
+
+                                        <Label Text="{Binding ValidationMessage}"
+                                               TextColor="#7F1D1D"
+                                               IsVisible="{Binding HasValidationError}"
+                                               FontSize="12"/>
                                     </VerticalStackLayout>
-
-                                    <Grid ColumnDefinitions="*,*"
-                                          ColumnSpacing="8">
-                                        <Label Text="{Binding TotalPower, StringFormat='Total EP: {0}/60'}"
-                                               FontSize="12"
-                                               Opacity="0.8"/>
-                                        <Label Grid.Column="1"
-                                               Text="{Binding AdvancedPower, StringFormat='Advanced EP: {0}/20'}"
-                                               FontSize="12"
-                                               Opacity="0.8"/>
-                                    </Grid>
-
-                                    <Label Text="{Binding ValidationMessage}"
-                                           TextColor="#7F1D1D"
-                                           IsVisible="{Binding HasValidationError}"
-                                           FontSize="12"/>
-                                </VerticalStackLayout>
-                            </Frame>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
         </Grid>

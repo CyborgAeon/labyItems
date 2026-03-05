@@ -16,7 +16,7 @@ public static class SpellDamageService
         var all = await SpellService.GetAllAsync();
 
         _cache = all
-            .Where(s => s.damage is { Count: > 0 } || !string.IsNullOrWhiteSpace(s.damageOverride))
+            .Where(s => s.GetDamageAmounts().Count > 0 || !string.IsNullOrWhiteSpace(s.damageOverride))
             .Select(s => new DamageSpell(
                 Name: s.name,
                 Level: s.level,
@@ -29,13 +29,15 @@ public static class SpellDamageService
 
     private static IReadOnlyList<DamagePart> BuildParts(SpellService.SpellRaw s)
     {
-        var damage = s.damage ?? new();
+        var damage = s.GetDamageAmounts();
         if (damage.Count == 0 && string.IsNullOrWhiteSpace(s.damageOverride))
             return Array.Empty<DamagePart>();
 
-        var types = s.damType ?? new();
-        var macs = s.MACApplies ?? new();
-        var pacs = s.PACDam ?? new();
+        var types = s.GetDamageTypes();
+        var armours = s.GetArmourApplies();
+        var armourType = s.GetArmourType();
+        var useMacArmour = armourType.Equals("MAC", StringComparison.OrdinalIgnoreCase);
+        var pacs = s.GetPacDamage();
 
         var partCount = damage.Count > 0 ? damage.Count : 1;
         return Enumerable.Range(0, partCount)
@@ -48,7 +50,9 @@ public static class SpellDamageService
 
                 var type = OrLast(types, i) ?? "Missile";
 
-                var macPair = OrDefault(macs, i, new[] { 0, 0 });
+                var macPair = useMacArmour
+                    ? OrDefault(armours, i, new[] { 0, 0 })
+                    : new[] { 0, 0 };
                 var macTblp = At(macPair, 0);
                 var macLoc = At(macPair, 1);
 
