@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Infrastructure;
+using labyItems.Models.Enums;
 using labyItems.Services;
 
 namespace labyItems.Pages.Battleboard.ViewModels;
@@ -214,7 +215,16 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
 
     private (int Tblp, int Loc) ApplyMacReduction(DamagePart part)
     {
-        var ac = part.UseSac ? _board.Sac : _board.Mac;
+        var armourType = part.ArmourType ?? (part.UseSac ? ArmourType.SAC : ArmourType.MAC);
+        var ac = armourType switch
+        {
+            ArmourType.PAC => _board.Pac,
+            ArmourType.DAC => _board.Dac,
+            ArmourType.MAC => _board.Mac,
+            ArmourType.SAC => _board.Sac,
+            ArmourType.NAC => 0,
+            _ => _board.Mac
+        };
         var tblp = Math.Max(0, part.Tblp - (ac * Math.Max(0, part.MacTblp)));
         var loc = Math.Max(0, part.Loc - (ac * Math.Max(0, part.MacLoc)));
         return (tblp, loc);

@@ -250,6 +250,9 @@ VALUES (@id, @name, @name_lower, @data_json, @created_at, @updated_at);";
         var list = new List<AbilityRaw>();
 
         using var stream = assembly.GetManifestResourceStream(resourceName);
+        if (stream is null)
+            return list;
+
         using var reader = new StreamReader(stream);
         var json = reader.ReadToEnd();
         var opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };

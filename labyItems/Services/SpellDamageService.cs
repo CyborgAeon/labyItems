@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using labyItems.Models.Enums;
 
 namespace labyItems.Services;
 
@@ -35,8 +36,8 @@ public static class SpellDamageService
 
         var types = s.GetDamageTypes();
         var armours = s.GetArmourApplies();
-        var armourType = s.GetArmourType();
-        var useMacArmour = armourType.Equals("MAC", StringComparison.OrdinalIgnoreCase);
+        var armourType = s.GetArmourTypeEnum();
+        var useArmour = armourType.HasValue;
         var pacs = s.GetPacDamage();
 
         var partCount = damage.Count > 0 ? damage.Count : 1;
@@ -48,17 +49,17 @@ public static class SpellDamageService
                 var tblp = At(dmg, 0);
                 var loc = At(dmg, 1);
 
-                var type = OrLast(types, i) ?? "Missile";
+                var type = DamTypeParser.NormalizeOrFallback(OrLast(types, i), "Missile");
 
-                var macPair = useMacArmour
+                var armourPair = useArmour
                     ? OrDefault(armours, i, new[] { 0, 0 })
                     : new[] { 0, 0 };
-                var macTblp = At(macPair, 0);
-                var macLoc = At(macPair, 1);
+                var armourTblp = At(armourPair, 0);
+                var armourLoc = At(armourPair, 1);
 
                 var pac = OrLast(pacs, i);
 
-                return new DamagePart(tblp, loc, type, macTblp, macLoc, pac, s.damageOverride, UseSac: false);
+                return new DamagePart(tblp, loc, type, armourTblp, armourLoc, pac, s.damageOverride, armourType == ArmourType.SAC, armourType);
             })
             .ToList();
     }
@@ -111,5 +112,6 @@ public sealed record DamagePart(
     int MacLoc,
     int PacDam,
     string? DamageOverride,
-    bool UseSac
+    bool UseSac,
+    ArmourType? ArmourType
 );

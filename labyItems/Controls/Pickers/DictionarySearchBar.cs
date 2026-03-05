@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Layouts;
@@ -36,6 +37,9 @@ public class DictionarySearchBar<TValue> : ContentView
     private int _remoteRequestId;
     private bool _isUserEditing;
     private bool Enabled = false;
+    private ScrollView? _keyboardAvoidanceScrollView;
+    private Thickness _keyboardAvoidanceOriginalPadding;
+    private bool _hasKeyboardAvoidancePadding;
 
     public DictionarySearchBar()
     {
@@ -104,7 +108,10 @@ public class DictionarySearchBar<TValue> : ContentView
     {
         base.OnHandlerChanging(args);
         if (args.NewHandler == null)
+        {
+            RestoreKeyboardAvoidancePadding();
             DictionaryOverlayRegistry.Unregister(_selfDismisser);
+        }
     }
 
     protected override void OnPropertyChanged(string? propertyName = null)
@@ -236,6 +243,68 @@ public class DictionarySearchBar<TValue> : ContentView
         set => SetValue(SelectedValueProperty, value);
     }
 
+    public static readonly BindableProperty ResultSelectedCommandProperty = BindableProperty.Create(
+        nameof(ResultSelectedCommand),
+        typeof(ICommand),
+        typeof(DictionarySearchBar<TValue>),
+        defaultValue: null);
+
+    /// <summary>
+    /// Optional command executed after a user clicks a result in the dropdown.
+    /// Useful for one-click "select and add" workflows.
+    /// </summary>
+    public ICommand? ResultSelectedCommand
+    {
+        get => (ICommand?)GetValue(ResultSelectedCommandProperty);
+        set => SetValue(ResultSelectedCommandProperty, value);
+    }
+
+    public static readonly BindableProperty KeepFocusOnResultSelectionProperty = BindableProperty.Create(
+        nameof(KeepFocusOnResultSelection),
+        typeof(bool),
+        typeof(DictionarySearchBar<TValue>),
+        defaultValue: false);
+
+    /// <summary>
+    /// Keeps the entry focused after a result click so the keyboard stays open.
+    /// </summary>
+    public bool KeepFocusOnResultSelection
+    {
+        get => (bool)GetValue(KeepFocusOnResultSelectionProperty);
+        set => SetValue(KeepFocusOnResultSelectionProperty, value);
+    }
+
+    public static readonly BindableProperty KeyboardAvoidanceEnabledProperty = BindableProperty.Create(
+        nameof(KeyboardAvoidanceEnabled),
+        typeof(bool),
+        typeof(DictionarySearchBar<TValue>),
+        defaultValue: false);
+
+    /// <summary>
+    /// Adds temporary bottom padding to the parent ScrollView while focused so content can scroll above the keyboard.
+    /// </summary>
+    public bool KeyboardAvoidanceEnabled
+    {
+        get => (bool)GetValue(KeyboardAvoidanceEnabledProperty);
+        set => SetValue(KeyboardAvoidanceEnabledProperty, value);
+    }
+
+    public static readonly BindableProperty ClearAfterResultSelectionProperty = BindableProperty.Create(
+        nameof(ClearAfterResultSelection),
+        typeof(bool),
+        typeof(DictionarySearchBar<TValue>),
+        defaultValue: false);
+
+    /// <summary>
+    /// Clears selected value/text immediately after a result click command executes.
+    /// Useful for add-and-continue workflows where the next search should start empty.
+    /// </summary>
+    public bool ClearAfterResultSelection
+    {
+        get => (bool)GetValue(ClearAfterResultSelectionProperty);
+        set => SetValue(ClearAfterResultSelectionProperty, value);
+    }
+
     /// <summary>
     /// Optional async provider that will be called when the search text changes to fetch results.
     /// When set, the control will use the returned dictionary instead of local filtering.
@@ -291,6 +360,12 @@ public class DictionarySearchBar<TValue> : ContentView
         else
             RefreshFilteredResults(string.Empty);
 
+        if (KeyboardAvoidanceEnabled)
+        {
+            ApplyKeyboardAvoidancePadding();
+            await EnsureAnchorVisibleAsync(GetDesiredDropdownHeight());
+        }
+
         // When focused, show the full list then present inline overlay
         _ = ShowOverlayAsync();
     }
@@ -310,6 +385,9 @@ public class DictionarySearchBar<TValue> : ContentView
             _ = Device.InvokeOnMainThreadAsync(() => _searchBar.Focus());
             return;
         }
+
+        if (KeyboardAvoidanceEnabled)
+            RestoreKeyboardAvoidancePadding();
 
         CommitTextSelection(_searchBar.Text);
     }
@@ -613,8 +691,48 @@ public class DictionarySearchBar<TValue> : ContentView
         }
 
         _suppressTextChanged = false;
-        _searchBar.Unfocus();
+        ExecuteResultSelectedCommand(result);
+        if (ClearAfterResultSelection)
+            ClearSelectionForNextSearch();
         DismissLocalOverlay();
+
+        if (KeepFocusOnResultSelection)
+        {
+            _ = Device.InvokeOnMainThreadAsync(() =>
+            {
+                if (!_searchBar.IsFocused)
+                    _searchBar.Focus();
+            });
+        }
+        else
+        {
+            _searchBar.Unfocus();
+        }
+    }
+
+    private void ClearSelectionForNextSearch()
+    {
+        _suppressTextChanged = true;
+        SelectedValue = default;
+        SetSelectedTextInternal(string.Empty);
+        _searchBar.Text = string.Empty;
+        _suppressTextChanged = false;
+
+        RefreshFilteredResults(string.Empty);
+        UpdateResultsVisibility();
+    }
+
+    private void ExecuteResultSelectedCommand(SearchResult result)
+    {
+        var command = ResultSelectedCommand;
+        if (command == null)
+            return;
+
+        var parameter = result.IsCustom ? result.DisplayText : (object?)result.Value;
+        if (command.CanExecute(parameter))
+            command.Execute(parameter);
+        else if (command.CanExecute(null))
+            command.Execute(null);
     }
 
     private string GetSelectionDisplayText(TValue value, string fallback)
@@ -752,7 +870,16 @@ public class DictionarySearchBar<TValue> : ContentView
         await RepositionLocalOverlayAsync();
 
         // hooks for repositioning
-        _pageSizeChanged = async (s, e) => await RepositionLocalOverlayAsync();
+        _pageSizeChanged = async (s, e) =>
+        {
+            if (KeyboardAvoidanceEnabled)
+            {
+                ApplyKeyboardAvoidancePadding();
+                await EnsureAnchorVisibleAsync(GetDesiredDropdownHeight());
+            }
+
+            await RepositionLocalOverlayAsync();
+        };
         page.SizeChanged += _pageSizeChanged;
 
         var scrollParent = FindAncestorOfType<ScrollView>(_searchBar);
@@ -868,6 +995,74 @@ public class DictionarySearchBar<TValue> : ContentView
         _overlayPage = null;
         _pageSizeChanged = null;
         _scrollHandler = null;
+    }
+
+    private double GetDesiredDropdownHeight()
+    {
+        var visibleItems = Math.Min(4, Math.Max(1, _filteredResults.Count));
+        return Math.Min(DefaultDropdownMaxHeight, visibleItems * 48);
+    }
+
+    private async Task EnsureAnchorVisibleAsync(double desiredDropdownHeight)
+    {
+        var scroll = FindAncestorOfType<ScrollView>(_searchBar);
+        if (scroll == null)
+            return;
+
+        var anchorPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(_searchBar);
+        var scrollPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(scroll);
+
+        var anchorTop = anchorPos.Y - scrollPos.Y;
+        var availableBelow = scroll.Height - (anchorTop + _searchBar.Height);
+        var requiredSpace = Math.Max(0, desiredDropdownHeight + 6);
+
+        if (availableBelow >= requiredSpace)
+            return;
+
+        var deficit = requiredSpace - availableBelow;
+        var target = Math.Max(0, scroll.ScrollY + deficit + (_searchBar.Height * 0.25));
+        await scroll.ScrollToAsync(scroll.ScrollX, target, true);
+    }
+
+    private void ApplyKeyboardAvoidancePadding()
+    {
+        if (!KeyboardAvoidanceEnabled)
+            return;
+
+        var scroll = FindAncestorOfType<ScrollView>(_searchBar);
+        if (scroll == null)
+            return;
+
+        if (!_hasKeyboardAvoidancePadding || _keyboardAvoidanceScrollView != scroll)
+        {
+            _keyboardAvoidanceScrollView = scroll;
+            _keyboardAvoidanceOriginalPadding = scroll.Padding;
+            _hasKeyboardAvoidancePadding = true;
+        }
+
+        var page = GetOwningPage();
+        var pageHeight = page?.Height > 0 ? page.Height : (Application.Current?.MainPage?.Height ?? 0);
+        if (pageHeight <= 0)
+            return;
+
+        var keyboardGuard = Math.Clamp(pageHeight * KeyboardGuardRatio, KeyboardGuardMin, KeyboardGuardMax);
+        var targetBottom = Math.Max(_keyboardAvoidanceOriginalPadding.Bottom, keyboardGuard + 12);
+
+        scroll.Padding = new Thickness(
+            _keyboardAvoidanceOriginalPadding.Left,
+            _keyboardAvoidanceOriginalPadding.Top,
+            _keyboardAvoidanceOriginalPadding.Right,
+            targetBottom);
+    }
+
+    private void RestoreKeyboardAvoidancePadding()
+    {
+        if (!_hasKeyboardAvoidancePadding || _keyboardAvoidanceScrollView == null)
+            return;
+
+        _keyboardAvoidanceScrollView.Padding = _keyboardAvoidanceOriginalPadding;
+        _keyboardAvoidanceScrollView = null;
+        _hasKeyboardAvoidancePadding = false;
     }
 
     private async Task RefreshFromRemoteAsync(string? query)

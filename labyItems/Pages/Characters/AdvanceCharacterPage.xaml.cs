@@ -9,6 +9,7 @@ using Microsoft.Maui.Controls.PlatformConfiguration;
 using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
 using AndroidConfig = Microsoft.Maui.Controls.PlatformConfiguration.Android;
 using SpellCardPage = labyItems.Pages.SpellCard.SpellCard;
+using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
 namespace labyItems.Pages.Characters;
 
 public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
@@ -113,5 +114,20 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
             return;
 
         await Navigation.PushAsync(new SpellCardPage(spell));
+    }
+
+    private async void OnViewMiracleDetailsClicked(object sender, EventArgs e)
+    {
+        if (sender is not Microsoft.Maui.Controls.ImageButton button)
+            return;
+
+        if (button.CommandParameter is not MiracleEntryVm entry)
+            return;
+
+        var miracle = _vm.FindMiracleByName(entry.Draft.Name);
+        if (miracle == null)
+            return;
+
+        await Navigation.PushAsync(new MiracleCardPage(miracle));
     }
 }

@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using SQLite;
+using labyItems.Models.Enums;
 
 namespace labyItems.Services;
 
@@ -26,24 +27,106 @@ public sealed class MiracleLookupService : ILookupService
 
 public static class MiracleService
 {
+    public sealed class MiracleDamageRaw
+    {
+        [JsonConverter(typeof(IntArrayListConverter))]
+        public List<int[]>? amount { get; set; }
+        public List<string>? type { get; set; }
+        [JsonConverter(typeof(IntArrayListConverter))]
+        public List<int[]>? ArmourApplies { get; set; }
+        public string ArmourType { get; set; } = string.Empty;
+        public List<int>? PACDam { get; set; }
+    }
+
+    public sealed class MiracleHealRaw
+    {
+        [JsonConverter(typeof(IntArrayListConverter))]
+        public List<int[]>? amount { get; set; }
+        public List<string>? type { get; set; }
+    }
+
     public sealed record MiracRaw
     {
-        public int power { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public string sphere { get; set; }
-        public bool isAdvanced { get; set; }
-        public string alignment { get; set; }
+        public int power { get; set; } = 0;
+        public string name { get; set; } = string.Empty;
+        public string description { get; set; } = string.Empty;
+        public string sphere { get; set; } = string.Empty;
+        public bool isAdvanced { get; set; } = false;
+        public string alignment { get; set; } = string.Empty;
+
+        [JsonPropertyName("Damage")]
+        public MiracleDamageRaw? Damage { get; set; }
+
+        [JsonPropertyName("Heal")]
+        public MiracleHealRaw? Heal { get; set; }
+
+        // Legacy miracle damage/heal fields retained for backward compatibility with older stored JSON.
+        [JsonPropertyName("damage")]
         [JsonConverter(typeof(IntArrayListConverter))]
         public List<int[]>? damage { get; set; }
+        [JsonPropertyName("damType")]
         public List<string>? damType { get; set; }
+        [JsonPropertyName("sacApplies")]
         [JsonConverter(typeof(IntArrayListConverter))]
         public List<int[]>? sacApplies { get; set; }
         public string? damageOverride { get; set; }
+        [JsonPropertyName("healing")]
         [JsonConverter(typeof(IntArrayListConverter))]
         public List<int[]>? healing { get; set; }
+        [JsonPropertyName("healType")]
         public List<string>? healType { get; set; }
+        [JsonPropertyName("preReqs")]
+        public List<string>? preReqs { get; set; }
 
+        public List<int[]> GetDamageAmounts()
+            => Damage?.amount is { Count: > 0 } nested ? nested : (damage ?? new List<int[]>());
+
+        public List<string> GetDamageTypes()
+            => Damage?.type is { Count: > 0 } nested ? nested : (damType ?? new List<string>());
+
+        public List<int[]> GetArmourApplies()
+            => Damage?.ArmourApplies is { Count: > 0 } nested ? nested : (sacApplies ?? new List<int[]>());
+
+        public string GetArmourType()
+        {
+            var token = (Damage?.ArmourType ?? string.Empty).Trim();
+            if (token.Length > 0)
+                return token.ToUpperInvariant();
+
+            return (GetDamageAmounts().Count > 0 || !string.IsNullOrWhiteSpace(damageOverride))
+                ? ArmourType.SAC.ToString()
+                : string.Empty;
+        }
+
+        public ArmourType? GetArmourTypeEnum()
+            => ArmourTypeParser.ParseOrNull(GetArmourType());
+
+        public List<int> GetPacDamage()
+            => Damage?.PACDam is { Count: > 0 } nested ? nested : new List<int>();
+
+        public List<int[]> GetHealAmounts()
+            => Heal?.amount is { Count: > 0 } nested ? nested : (healing ?? new List<int[]>());
+
+        public List<string> GetHealTypes()
+        {
+            if (Heal?.type is { Count: > 0 } nested)
+                return nested;
+
+            if (healType is { Count: > 0 } legacy)
+                return legacy;
+
+            // Legacy typo compatibility: some older rows stored healing type in damType.
+            if (GetHealAmounts().Count > 0
+                && (damage == null || damage.Count == 0)
+                && (sacApplies == null || sacApplies.Count == 0)
+                && string.IsNullOrWhiteSpace(damageOverride)
+                && damType is { Count: > 0 } typoLegacy)
+            {
+                return typoLegacy;
+            }
+
+            return new List<string>();
+        }
     }
     private static List<MiracRaw>? _cache;
     private static readonly string? _dbPath = ResolveDbPath();
@@ -88,20 +171,35 @@ public static class MiracleService
 
     private static List<MiracRaw> Normalize(IEnumerable<MiracRaw> source) =>
         source
-            .Select(e => new MiracRaw
+            .Select(e =>
             {
-                power = e.power,
-                name = e.name ?? string.Empty,
-                description = e.description ?? string.Empty,
-                sphere = e.sphere ?? string.Empty,
-                isAdvanced = e.isAdvanced,
-                alignment = e.alignment ?? string.Empty,
-                damage = e.damage,
-                damType = e.damType,
-                sacApplies = e.sacApplies,
-                damageOverride = e.damageOverride,
-                healing = e.healing,
-                healType = e.healType,
+                e.name ??= string.Empty;
+                e.description ??= string.Empty;
+                e.sphere ??= string.Empty;
+                e.alignment ??= string.Empty;
+                e.damage ??= new List<int[]>();
+                e.damType ??= new List<string>();
+                e.sacApplies ??= new List<int[]>();
+                e.healing ??= new List<int[]>();
+                e.healType ??= new List<string>();
+                e.preReqs ??= new List<string>();
+
+                if (e.Damage != null)
+                {
+                    e.Damage.amount ??= new List<int[]>();
+                    e.Damage.type ??= new List<string>();
+                    e.Damage.ArmourApplies ??= new List<int[]>();
+                    e.Damage.PACDam ??= new List<int>();
+                    e.Damage.ArmourType = ArmourTypeParser.NormalizeOrEmpty(e.Damage.ArmourType);
+                }
+
+                if (e.Heal != null)
+                {
+                    e.Heal.amount ??= new List<int[]>();
+                    e.Heal.type ??= new List<string>();
+                }
+
+                return e;
             })
             .OrderBy(e => e.power)
             .ThenBy(e => e.name)

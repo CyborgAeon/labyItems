@@ -1,5 +1,6 @@
 using System.Linq;
 using labyItems.Pages.Calculator;
+using labyItems.Pages.Search;
 using labyItems.Services;
 
 namespace labyItems.Pages;
@@ -37,6 +38,11 @@ public partial class ItemRoutePage : ContentPage
     private async void OnCreateMpClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new MpCalculator());
+    }
+
+    private async void OnSearchClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new GlobalSearchPage());
     }
 
     private async void OnCharacterWalletClicked(object sender, EventArgs e)

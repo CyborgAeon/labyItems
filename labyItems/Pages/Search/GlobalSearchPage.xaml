@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Search.GlobalSearchPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Search">
+
+    <Grid RowDefinitions="Auto,Auto,*"
+          RowSpacing="10"
+          Padding="16">
+        <SearchBar Placeholder="Search abilities, spells, miracles, evocations..."
+                   Text="{Binding SearchText, Mode=TwoWay}"/>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Filters}"
+                        SelectionMode="None"
+                        ItemsLayout="HorizontalList"
+                        HeightRequest="34">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Button Text="{Binding .}"
+                            FontSize="12"
+                            Padding="12,6"
+                            BackgroundColor="#6D000000"
+                            TextColor="White"
+                            BorderColor="#E5E7EB"
+                            BorderWidth="1"
+                            CornerRadius="999"
+                            Command="{Binding BindingContext.SelectFilterCommand, Source={x:Reference Root}}"
+                            CommandParameter="{Binding .}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button"
+                                         Binding="{Binding BindingContext.SelectedFilter, Source={x:Reference Root}}"
+                                         Value="{Binding .}">
+                                <Setter Property="FontAttributes"
+                                        Value="Bold"/>
+                                <Setter Property="TextColor"
+                                        Value="#7F1D1D"/>
+                                <Setter Property="BorderColor"
+                                        Value="#7F1D1D"/>
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Grid Grid.Row="2">
+            <CollectionView ItemsSource="{Binding FilteredResults}"
+                            SelectionMode="None"
+                            Margin="0,2,0,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="12"
+                               CornerRadius="12"
+                               BorderColor="#E5E7EB"
+                               HasShadow="False"
+                               Margin="0,0,0,8">
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  ColumnSpacing="10">
+                                <Label Text="{Binding IconGlyph}"
+                                       FontFamily="FASolid"
+                                       FontSize="13"
+                                       TextColor="#4B5563"
+                                       VerticalTextAlignment="Start"
+                                       Margin="0,2,0,0"/>
+
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Spacing="2">
+                                    <Label Text="{Binding Name}"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="WordWrap"/>
+                                    <Label Text="{Binding MetaText}"
+                                           FontSize="12"
+                                           Opacity="0.75"
+                                           LineBreakMode="WordWrap"/>
+                                    <Label Text="{Binding DescriptionText}"
+                                           FontSize="12"
+                                           Opacity="0.8"
+                                           LineBreakMode="WordWrap"
+                                           MaxLines="2"
+                                           IsVisible="{Binding HasDescription}"/>
+                                </VerticalStackLayout>
+
+                                <ImageButton Grid.Column="2"
+                                             HeightRequest="22"
+                                             WidthRequest="22"
+                                             Padding="0"
+                                             BackgroundColor="Transparent"
+                                             IsVisible="{Binding CanOpenDetails}"
+                                             Clicked="OnOpenDetailsClicked"
+                                             CommandParameter="{Binding .}">
+                                    <ImageButton.Source>
+                                        <FontImageSource FontFamily="FASolid"
+                                                         Glyph="&#xF054;"
+                                                         Size="11"
+                                                         Color="#4B5563"/>
+                                    </ImageButton.Source>
+                                </ImageButton>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <VerticalStackLayout IsVisible="{Binding HasNoResults}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="8">
+                <Label Text="{Binding EmptyStateText}"
+                       FontSize="13"
+                       Opacity="0.75"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+
+            <ActivityIndicator IsVisible="{Binding IsLoading}"
+                               IsRunning="{Binding IsLoading}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+        </Grid>
+    </Grid>
+</ContentPage>

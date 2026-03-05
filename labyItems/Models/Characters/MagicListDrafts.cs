@@ -42,6 +42,7 @@ public sealed class SpellListEntryDraft
 public sealed class EvocationListDraft
 {
     public string Name { get; set; } = "Evocation List";
+    public bool IsMinimized { get; set; }
     public List<EvocationListEntryDraft> Entries { get; set; } = new();
 }
 

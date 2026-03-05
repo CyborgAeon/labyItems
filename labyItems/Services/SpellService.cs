@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Diagnostics;
+using labyItems.Models.Enums;
 
 namespace labyItems.Services;
 
@@ -76,6 +77,9 @@ public static class SpellService
             var value = (Damage?.ArmourType ?? string.Empty).Trim();
             return value.Length == 0 ? "MAC" : value.ToUpperInvariant();
         }
+
+        public ArmourType? GetArmourTypeEnum()
+            => ArmourTypeParser.ParseOrNull(GetArmourType());
     }
 
     private static List<SpellRaw>? _cache;

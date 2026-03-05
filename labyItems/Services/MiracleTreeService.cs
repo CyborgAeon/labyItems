@@ -20,9 +20,35 @@ public static class MiracleTreeService
 
         try
         {
-            await using var stream = await FileSystem.OpenAppPackageFileAsync("words_from_above/base-miracles1.json");
-            using var reader = new StreamReader(stream);
-            var json = await reader.ReadToEndAsync();
+            string json = string.Empty;
+            var candidates = new[]
+            {
+                "words_from_above/miracles.json",
+                "words_from_above/base-miracles1.json"
+            };
+
+            foreach (var path in candidates)
+            {
+                try
+                {
+                    await using var stream = await FileSystem.OpenAppPackageFileAsync(path);
+                    using var reader = new StreamReader(stream);
+                    json = await reader.ReadToEndAsync();
+                    if (!string.IsNullOrWhiteSpace(json))
+                        break;
+                }
+                catch
+                {
+                    // Try next candidate.
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                _cache = new Dictionary<string, IReadOnlyList<string>>(StringComparer.OrdinalIgnoreCase);
+                return _cache;
+            }
+
             var entries = JsonSerializer.Deserialize<List<MiracleTreeRaw>>(json, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true

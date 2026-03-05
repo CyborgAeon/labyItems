@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using labyItems.Models.Enums;
 
 namespace labyItems.Services;
 
@@ -25,7 +26,7 @@ public static class MiracleHealingService
         }
 
         _cache = all
-            .Where(m => m.healing is { Count: > 0 })
+            .Where(m => m.GetHealAmounts().Count > 0)
             .Select(m => new HealingEntry(
                 Name: m.name,
                 Parts: BuildParts(m)))
@@ -36,10 +37,10 @@ public static class MiracleHealingService
 
     private static IReadOnlyList<HealingPart> BuildParts(MiracleService.MiracRaw m)
     {
-        var healing = m.healing ?? new();
+        var healing = m.GetHealAmounts();
         if (healing.Count == 0) return Array.Empty<HealingPart>();
 
-        var types = m.healType ?? new();
+        var types = m.GetHealTypes();
 
         return Enumerable.Range(0, healing.Count)
             .Select(i =>
@@ -47,7 +48,7 @@ public static class MiracleHealingService
                 var heal = healing[i];
                 var tblp = At(heal, 0);
                 var loc = At(heal, 1);
-                var type = OrLast(types, i) ?? "Missile";
+                var type = DamTypeParser.NormalizeOrFallback(OrLast(types, i), "Missile");
                 return new HealingPart(tblp, loc, type);
             })
             .ToList();

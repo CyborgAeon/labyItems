@@ -79,4 +79,11 @@
 		<ProjectReference Include="../tools/migrationslib/migrationslib.csproj" />
 	</ItemGroup>
 
+	<Target Name="ForceRegenerateAndroidNativeSourcesInDebug"
+	        BeforeTargets="_GeneratePackageManagerJava"
+	        Condition="'$(Configuration)' == 'Debug' and $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+		<Delete Files="$(_AndroidStampDirectory)_GeneratePackageManagerJava.stamp"
+		        Condition="Exists('$(_AndroidStampDirectory)_GeneratePackageManagerJava.stamp')" />
+	</Target>
+
 </Project>

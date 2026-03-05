@@ -114,6 +114,7 @@ VALUES (@id, @name, @name_lower, @power, @sphere, @alignment, @description, @is_
         var assembly = Assembly.GetExecutingAssembly();
         var resourceName = assembly.GetManifestResourceNames()
             .FirstOrDefault(n =>
+                n.EndsWith("miracles.json", StringComparison.OrdinalIgnoreCase) ||
                 n.EndsWith("base-miracles1.json", StringComparison.OrdinalIgnoreCase) ||
                 n.EndsWith("miracles1.json", StringComparison.OrdinalIgnoreCase));
         if (resourceName is null)

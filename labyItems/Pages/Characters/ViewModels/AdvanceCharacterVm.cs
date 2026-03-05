@@ -688,6 +688,16 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             string.Equals((s?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
     }
 
+    public MiracleService.MiracRaw? FindMiracleByName(string? miracleName)
+    {
+        var name = (miracleName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return null;
+
+        return _allMiracles.FirstOrDefault(m =>
+            string.Equals((m?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
+    }
+
     public void PersistDraft()
     {
         LiteDbService.UpsertDraft(_draft);
@@ -2120,7 +2130,9 @@ public sealed class SpellListVm : INotifyPropertyChanged
         vm.SelectedSpell = SelectedSpellOption.Value;
         Entries.Add(vm);
         ReindexEntries();
-        SelectedSpellOption = null;
+        SearchPickerStateHelper.ClearForNextSearch<SpellOption>(
+            setSelection: v => SelectedSpellOption = v,
+            setSearchText: text => SearchText = text);
     }
 
     private void RemoveEntry(SpellEntryVm? entry)
@@ -2378,6 +2390,21 @@ public sealed class EvocationListVm : INotifyPropertyChanged
         }
     }
 
+    public bool IsMinimized
+    {
+        get => Draft.IsMinimized;
+        set
+        {
+            if (Draft.IsMinimized == value) return;
+            Draft.IsMinimized = value;
+            Raise();
+            Raise(nameof(IsExpanded));
+            Raise(nameof(CanAddSelected));
+        }
+    }
+
+    public bool IsExpanded => !IsMinimized;
+
     public ObservableCollection<EvocationEntryVm> Entries { get; } = new();
 
     private EvocationOption? _selectedEvocationOption;
@@ -2391,7 +2418,7 @@ public sealed class EvocationListVm : INotifyPropertyChanged
         }
     }
 
-    public bool CanAddSelected => SelectedEvocationOption != null;
+    public bool CanAddSelected => IsExpanded && SelectedEvocationOption != null;
 
     public ObservableCollection<string> FieldFilterOptions { get; } = new();
     public ObservableCollection<string> SelectedFieldFilters { get; } = new();
@@ -2434,6 +2461,7 @@ public sealed class EvocationListVm : INotifyPropertyChanged
 
     public ICommand AddSelectedCommand { get; }
     public ICommand RemoveEntryCommand { get; }
+    public ICommand ToggleExpandedCommand { get; }
 
     public EvocationListVm(EvocationListDraft draft, IReadOnlyList<DruidEvocationService.EvocRaw> allEvocations)
     {
@@ -2446,6 +2474,7 @@ public sealed class EvocationListVm : INotifyPropertyChanged
 
         AddSelectedCommand = new Command(AddSelectedEvocation);
         RemoveEntryCommand = new Command<EvocationEntryVm>(RemoveEntry);
+        ToggleExpandedCommand = new Command(() => IsMinimized = !IsMinimized);
 
         SelectedFieldFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
         SelectedTierFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
@@ -2980,7 +3009,9 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         var vm = new MiracleEntryVm(draft, OnEntryChanged);
         vm.SelectedMiracle = SelectedMiracleOption.Value;
         Entries.Add(vm);
-        SelectedMiracleOption = null;
+        SearchPickerStateHelper.ClearForNextSearch<MiracleOption>(
+            setSelection: v => SelectedMiracleOption = v,
+            setSearchText: text => SearchText = text);
         UpdateFilteredOptions();
         UpdateValidation();
     }
@@ -3362,6 +3393,8 @@ public sealed class MiracleEntryVm : INotifyPropertyChanged
     public string DisplayText
         => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} ({Draft.Power})";
 
+    public bool HasMiracle => !string.IsNullOrWhiteSpace(Draft.Name);
+
     private MiracleOption? _selectedMiracle;
     public MiracleOption? SelectedMiracle
     {
@@ -3388,6 +3421,7 @@ public sealed class MiracleEntryVm : INotifyPropertyChanged
             }
 
             Raise(nameof(DisplayText));
+            Raise(nameof(HasMiracle));
             _onChanged();
         }
     }

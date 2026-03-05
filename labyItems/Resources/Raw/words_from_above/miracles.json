@@ -13,9 +13,18 @@
     "description": "Cures 6 tblp to total body and touched location (or 2 Hits to monsters). Does not affect the undead.",
     "alignment": "Good",
     "sphere": "Universal",
-    "healing": [[6, 6]],
-    "damType": ["Missile"],
-    "isAdvanced": false
+    "isAdvanced": false,
+    "Heal": {
+      "amount": [
+        [
+          6,
+          6
+        ]
+      ],
+      "type": [
+        "Missile"
+      ]
+    }
   },
   {
     "power": 2,
@@ -95,10 +104,25 @@
     "description": "Ranged spiritual attack: 18 tblp to characters (applies SAC of least-protected location) or 6 Hits to monsters.",
     "alignment": "Neutral",
     "sphere": "Universal",
-    "damage": [[18, 0]],
-    "damType": ["Body"],
-    "sacApplies": [1, 1],
-    "isAdvanced": false
+    "isAdvanced": false,
+    "Damage": {
+      "amount": [
+        [
+          18,
+          0
+        ]
+      ],
+      "type": [
+        "Body"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
+      "ArmourType": "SAC"
+    }
   },
   {
     "power": 4,
@@ -161,11 +185,26 @@
     "name": "Spirit Dart",
     "description": "As Spirit Bolt but 6 tblp (or 2 Hits to monsters).",
     "alignment": "Neutral",
-    "damage": [[6, 0]],
-    "damType": ["Body"],
-    "sacApplies": [1, 0],
     "sphere": "Minor Force",
-    "isAdvanced": true
+    "isAdvanced": true,
+    "Damage": {
+      "amount": [
+        [
+          6,
+          0
+        ]
+      ],
+      "type": [
+        "Body"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          0
+        ]
+      ],
+      "ArmourType": "SAC"
+    }
   },
   {
     "power": 1,
@@ -436,10 +475,19 @@
     "name": "Cure Serious Wounds",
     "description": "Cure 12 tblp (or 4 Hits to a monster) distributed across locations as desired; not effective on undead.",
     "alignment": "Good",
-    "healing": [[12, 12]],
-    "healType": ["Missile"],
     "sphere": "Universal",
-    "isAdvanced": false
+    "isAdvanced": false,
+    "Heal": {
+      "amount": [
+        [
+          12,
+          12
+        ]
+      ],
+      "type": [
+        "Missile"
+      ]
+    }
   },
   {
     "power": 2,
@@ -480,8 +528,17 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "healing": [[36, 36]],
-    "healType": ["Missile"]
+    "Heal": {
+      "amount": [
+        [
+          36,
+          36
+        ]
+      ],
+      "type": [
+        "Missile"
+      ]
+    }
   },
   {
     "power": 5,
@@ -545,31 +602,70 @@
     "description": "As Minor Ward but stronger: bars all undead; bars creatures with resistance levels up to 7th; deals heavy spiritual damage on crossing; absorbs 20sp of directed miracles.",
     "alignment": "Neutral",
     "sphere": "Universal",
-    "damage": [60, 0],
-    "damType": ["Body"],
-    "isAdvanced": false
+    "isAdvanced": false,
+    "Damage": {
+      "amount": [
+        [
+          60,
+          0
+        ]
+      ],
+      "type": [
+        "Body"
+      ]
+    }
   },
   {
     "power": 1,
     "name": "Cause Minor Wound",
     "description": "Touch to inflict minor spiritual injury to a living target.",
     "alignment": "Evil",
-    "damage": [[4, 4]],
-    "damType": ["Missile"],
-    "sacApplies": [1, 1],
     "sphere": "Universal",
-    "isAdvanced": false
+    "isAdvanced": false,
+    "Damage": {
+      "amount": [
+        [
+          4,
+          4
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
+      "ArmourType": "SAC"
+    }
   },
   {
     "power": 2,
     "name": "Cause Wound",
     "description": "",
     "alignment": "Evil",
-    "damage": [[6, 6]],
-    "damType": ["Missile"],
-    "sacApplies": [1, 1],
     "sphere": "Universal",
-    "isAdvanced": false
+    "isAdvanced": false,
+    "Damage": {
+      "amount": [
+        [
+          6,
+          6
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
+      "ArmourType": "SAC"
+    }
   },
   {
     "power": 3,
@@ -577,10 +673,25 @@
     "description": "Touch to inflict serious spiritual injury to a living target.",
     "alignment": "Evil",
     "sphere": "Universal",
-    "damage": [[12, 12]],
-    "damType": ["Missile"],
-    "sacApplies": [1, 1],
-    "isAdvanced": false
+    "isAdvanced": false,
+    "Damage": {
+      "amount": [
+        [
+          12,
+          12
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
+      "ArmourType": "SAC"
+    }
   },
   {
     "power": 3,
@@ -643,11 +754,26 @@
     "name": "Cause Grievous Wounds",
     "description": "",
     "alignment": "Evil",
-    "damage": [[36, 6]],
-    "damType": ["Missile"],
-    "sacApplies": [6, 1],
     "sphere": "Causing",
-    "isAdvanced": false
+    "isAdvanced": false,
+    "Damage": {
+      "amount": [
+        [
+          36,
+          6
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
+      "ArmourType": "SAC"
+    }
   },
   {
     "power": 6,
@@ -686,10 +812,19 @@
     "name": "Total Heal",
     "description": "This miracle enables a priest to totally heal a character or monster of all damage, if both priest and recipient spend 30 seconds in calm preparation before the invocation, the priest praying to their patron and neither party in combat. If the miracle is cast without this preparation it cures only 72 tblp and 72 points of locational damage. This is an absolute system limit, and no ability under any circumstances circumvents this. Note that on creatures with half a spirit, like half-Elves, Total Heal only cures 72 points as above if prepared and only 36 points if unprepared. This miracle does not affect the undead.",
     "alignment": "Good",
-    "healing": [[72, 72]],
-    "healType": ["Worst"],
     "sphere": "Universal",
-    "isAdvanced": false
+    "isAdvanced": false,
+    "Heal": {
+      "amount": [
+        [
+          72,
+          72
+        ]
+      ],
+      "type": [
+        "Worst"
+      ]
+    }
   },
   {
     "power": 10,
@@ -1057,10 +1192,25 @@
     "description": "As per the standard miracle Cause Grievous but inflicts 60 tblp and 10 to each location (20 Hits to monsters).",
     "alignment": "Evil",
     "sphere": "Major Causing",
-    "damage": [[60, 10]],
-    "damType": ["Blast"],
-    "sacApplies": [6, 1],
-    "isAdvanced": true
+    "isAdvanced": true,
+    "Damage": {
+      "amount": [
+        [
+          60,
+          10
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
+      "ArmourType": "SAC"
+    }
   },
   {
     "name": "Dark Sundering",
@@ -1068,22 +1218,54 @@
     "Sphere": "Minor Causing",
     "alignment": "Evil",
     "description": "Target suffers 36 tblp evil spirit damage (12 Hits to monsters). Resistances to Spiritbolt apply to this damage and SAC as normal. Despite falling in the sphere of Causing Resistances to Causes do not apply to this miracle.",
-    "damage": [[36, 0]],
-    "damType": ["Body"],
-    "sacApplies": [1, 1],
-    "isAdvanced": true
+    "isAdvanced": true,
+    "Damage": {
+      "amount": [
+        [
+          36,
+          0
+        ]
+      ],
+      "type": [
+        "Body"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
+      "ArmourType": "SAC"
+    }
   },
   {
     "power": 10,
     "name": "Cause Mortal Wounds",
     "description": "Must be table 11 to learn. inflicts 120/20 life (40 hits).",
     "alignment": "Evil",
-    "damage": [[120, 20]],
-    "damType": ["Missile"],
-    "preReqs": ["Cause Critical Wounds"],
-    "sacApplies": [6, 1],
+    "preReqs": [
+      "Cause Critical Wounds"
+    ],
     "sphere": "Major Causing",
-    "isAdvanced": true
+    "isAdvanced": true,
+    "Damage": {
+      "amount": [
+        [
+          120,
+          20
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
+      "ArmourType": "SAC"
+    }
   },
   {
     "power": 8,
@@ -1130,7 +1312,10 @@
     "name": "Communication with the Gods",
     "description": "As per Greater Communication but no limit to the number of questions asked and the spirits may respond to an individual question with more than just seven words. Questions must be asked in a measured and respectful manner, or no response will be gained. The caster may choose to have all questions be only regarding one specific area, in which case the divination lasts 5 minutes, or simply answering any questions they desire, in which case the duration is only two minutes but the miracle becomes far more versatile.",
     "alignment": "Neutral",
-    "preReqs": ["Communication", "Greater Communication"],
+    "preReqs": [
+      "Communication",
+      "Greater Communication"
+    ],
     "sphere": "Major Communication",
     "isAdvanced": true
   },
@@ -1148,8 +1333,15 @@
     "description": "heals 60 tblp damage and 60 pts of locational damage, in a similar manner to Heal. Under no circumstances can this miracle heal more than 72 points of damage, ever. This miracle does not affect the undead.",
     "alignment": "Good",
     "sphere": "Minor Healing",
-    "healing": [[60, 60]],
-    "isAdvanced": true
+    "isAdvanced": true,
+    "Heal": {
+      "amount": [
+        [
+          60,
+          60
+        ]
+      ]
+    }
   },
   {
     "power": 3,
@@ -1333,9 +1525,18 @@
     "description": "Acts as per a spirit bolt but also inflicts damage to one chosen location.",
     "alignment": "Neutral",
     "sphere": "Major Forces",
-    "damage": [[18, 18]],
-    "damType": ["Missile"],
-    "isAdvanced": true
+    "isAdvanced": true,
+    "Damage": {
+      "amount": [
+        [
+          18,
+          18
+        ]
+      ],
+      "type": [
+        "Missile"
+      ]
+    }
   },
   {
     "power": 3,
@@ -1575,9 +1776,18 @@
     "description": "This miracle acts as a receptacle for a Heal miracle and is useless until one is cast into it. At this point it becomes active and stores the Heal miracle until one of the following conditions are met:  One of the targets’ locations falls below 1 life point.  The target is injured 36 tblp or more. This miracle does not affect the undead.",
     "alignment": "Good",
     "sphere": "Minor Healing",
-    "healType": ["Worst"],
-    "healing": [[36, 36]],
-    "isAdvanced": true
+    "isAdvanced": true,
+    "Heal": {
+      "amount": [
+        [
+          36,
+          36
+        ]
+      ],
+      "type": [
+        "Worst"
+      ]
+    }
   },
   {
     "power": 6,
@@ -1728,26 +1938,75 @@
     "name": "Shaehan's Mercy",
     "description": "Cure light wounds every minute for 15 minutes.",
     "alignment": "Good",
-    "healType": ["Worst"],
-    "healing": [
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6],
-      [6, 6]
-    ],
     "sphere": "Major Healing",
-    "isAdvanced": true
+    "isAdvanced": true,
+    "Heal": {
+      "amount": [
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          6
+        ]
+      ],
+      "type": [
+        "Worst"
+      ]
+    }
   },
   {
     "power": 5,
@@ -1786,20 +2045,33 @@
     "name": "Soothe the Pain",
     "description": "Cures the target 24/4 damage, as with most healing miracles this does not affect the undead.",
     "alignment": "Good",
-    "healType": ["Body"],
-    "healing": [[24, 4]],
     "sphere": "Minor Healing",
-    "isAdvanced": true
+    "isAdvanced": true,
+    "Heal": {
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Body"
+      ]
+    }
   },
   {
     "power": 8,
     "name": "Soul Lance",
     "description": "The caster sends a bolt of pure spiritual evil power at the target's spirit. If the target is goodly or neutral in Alignment they suffer tblp damage equal to 20% of their maximum tblp. SAC does not apply to this, although resistance to Soul Lance does. Evil targets are unaffected.",
     "alignment": "Evil",
-    "damType": ["Body"],
     "damageOverride": "soulLance",
     "sphere": "Major Causing",
-    "isAdvanced": true
+    "isAdvanced": true,
+    "Damage": {
+      "type": [
+        "Body"
+      ]
+    }
   },
   {
     "power": 4,
@@ -2161,7 +2433,6 @@
     "sphere": "Minor Causing",
     "isAdvanced": true
   },
-
   {
     "power": 6,
     "name": "Spiritual Freedom",
