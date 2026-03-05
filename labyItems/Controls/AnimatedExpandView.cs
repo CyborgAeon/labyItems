@@ -21,13 +21,13 @@ public class AnimatedExpandView : ContentView
         nameof(ExpandDuration),
         typeof(uint),
         typeof(AnimatedExpandView),
-        (uint)240);
+        CardExpandAnimationHelper.UnifiedDurationMs);
 
     public static readonly BindableProperty CollapseDurationProperty = BindableProperty.Create(
         nameof(CollapseDuration),
         typeof(uint),
         typeof(AnimatedExpandView),
-        (uint)200);
+        CardExpandAnimationHelper.UnifiedDurationMs);
 
     private CancellationTokenSource? _animationCts;
     private bool _isLoaded;

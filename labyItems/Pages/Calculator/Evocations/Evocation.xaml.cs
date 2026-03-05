@@ -33,7 +33,7 @@ public partial class Evocation : ContentPage
         {
             Name = e.name,
             Power = e.power,
-            Fields = e.fields.Count > 0 ? string.Join(", ", e.fields) : "—",
+            Fields = (e.fields != null && e.fields.Count > 0) ? string.Join(", ", e.fields) : "—",
             IsAdvanced = e.isAdvanced,
         }));
         Results.ItemsSource = null;

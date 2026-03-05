@@ -24,11 +24,11 @@ public partial class EvocationDetailCardView : ContentView
     }
 
     public string EvocationName => ReadOrFallback(Evocation?.name, "Unnamed Evocation");
-    public string PowerDisplayText => $"P{Math.Max(0, Evocation?.power ?? 0)}";
+    public string PowerDisplayText => $"{Math.Max(0, Evocation?.power ?? 0)} EP";
     public string FieldSummaryText => BuildFieldSummary(Evocation);
 
     public string DescriptionText => ReadOrFallback(Evocation?.description, "No description provided.");
-    public bool HasVerbal => !string.IsNullOrWhiteSpace(VerbalText);
+    public bool HasVerbal => !string.IsNullOrWhiteSpace((Evocation?.verbal ?? string.Empty).Trim());
     public string VerbalText => (Evocation?.verbal ?? string.Empty).Trim();
     public bool HasPrereqs => !string.IsNullOrWhiteSpace(PrereqText);
     public string PrereqText => BuildPrereqText(Evocation);
@@ -221,6 +221,7 @@ public partial class EvocationDetailCardView : ContentView
     {
         MetaChips.Clear();
 
+        AddMetaChip("\uf256", "Gesture", Evocation?.verbal);
         AddMetaChip("\uf124", "Range", Evocation?.range);
         AddMetaChip("\uf017", "Duration", Evocation?.duration);
 
@@ -416,17 +417,6 @@ public partial class EvocationDetailCardView : ContentView
 
         if (IsAnimatingExpand)
             return;
-
-        if (!CanExpandDescription && IsDescriptionExpanded)
-            IsDescriptionExpanded = false;
-        if (!CanExpandVerbal && IsVerbalExpanded)
-            IsVerbalExpanded = false;
-        if (!CanExpandPrereqs && IsPrereqExpanded)
-            IsPrereqExpanded = false;
-        if (!CanExpandDamage && IsDamageExpanded)
-            IsDamageExpanded = false;
-        if (!CanExpandHeal && IsHealExpanded)
-            IsHealExpanded = false;
     }
 
     private static bool ShouldShowExpander(Label label, string text)
@@ -483,16 +473,17 @@ public partial class EvocationDetailCardView : ContentView
 
         var beforeExpanded = label.MaxLines < 0;
         var beforeHeight = MeasureHeight(label, text, width, beforeExpanded ? -1 : CollapsedLines);
+        container.HeightRequest = beforeHeight;
         var afterExpanded = toggleAndGetExpandedState();
         var afterHeight = MeasureHeight(label, text, width, afterExpanded ? -1 : CollapsedLines);
 
         if (Math.Abs(afterHeight - beforeHeight) < ExpanderOverflowTolerance)
         {
+            container.HeightRequest = -1;
             ScheduleExpandabilityRefresh();
             return;
         }
 
-        container.HeightRequest = beforeHeight;
         await CardExpandAnimationHelper.AnimateHeightAsync(
             owner: container,
             target: container,
@@ -536,6 +527,8 @@ public partial class EvocationDetailCardView : ContentView
             return string.Empty;
 
         var damage = evocation.GetDamageAmounts();
+        var armours = evocation.GetArmourApplies();
+        var armourType = evocation.GetArmourType();
         if (damage.Count == 0)
             return string.Empty;
 
@@ -547,7 +540,18 @@ public partial class EvocationDetailCardView : ContentView
             var tblp = At(dmg, 0);
             var loc = At(dmg, 1);
             var type = DamTypeParser.NormalizeOrFallback(OrLast(types, i), "Missile");
-            parts.Add($"{type}: {tblp}/{loc}");
+            var text = $"{type}: {tblp}/{loc}";
+
+            if (!string.IsNullOrWhiteSpace(armourType))
+            {
+                var armourPair = OrDefault(armours, i, new[] { 0, 0 });
+                var armTblp = At(armourPair, 0);
+                var armLoc = At(armourPair, 1);
+                if (armTblp > 0 || armLoc > 0)
+                    text += $" [{armourType} {armTblp}/{armLoc}]";
+            }
+
+            parts.Add(text);
         }
 
         return string.Join("; ", parts);
@@ -569,7 +573,7 @@ public partial class EvocationDetailCardView : ContentView
             var heal = healing[i];
             var tblp = At(heal, 0);
             var loc = At(heal, 1);
-            var type = DamTypeParser.NormalizeOrFallback(OrLast(types, i), "Missile");
+            var type = DamTypeParser.NormalizeOrFallback(OrLast(types, i), "Worst");
             parts.Add($"{type}: {tblp}/{loc}");
         }
 
@@ -587,6 +591,9 @@ public partial class EvocationDetailCardView : ContentView
 
     private static T? OrLast<T>(IReadOnlyList<T> list, int index)
         => list.Count == 0 ? default : (index < list.Count ? list[index] : list[^1]);
+
+    private static T OrDefault<T>(IReadOnlyList<T> list, int index, T fallback)
+        => list.Count == 0 ? fallback : (index < list.Count ? list[index] : list[^1]);
 }
 
 public sealed class EvocationMetaChipVm

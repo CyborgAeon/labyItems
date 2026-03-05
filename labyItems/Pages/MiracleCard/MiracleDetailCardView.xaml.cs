@@ -36,6 +36,20 @@ public partial class MiracleDetailCardView : ContentView
         }
     }
 
+    private bool _isVerbalExpanded;
+    public bool IsVerbalExpanded
+    {
+        get => _isVerbalExpanded;
+        set
+        {
+            if (_isVerbalExpanded == value) return;
+            _isVerbalExpanded = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(VerbalMaxLines));
+            OnPropertyChanged(nameof(VerbalChevronText));
+        }
+    }
+
     private bool _isPrereqExpanded;
     public bool IsPrereqExpanded
     {
@@ -90,6 +104,18 @@ public partial class MiracleDetailCardView : ContentView
         }
     }
 
+    private bool _canExpandVerbal;
+    public bool CanExpandVerbal
+    {
+        get => _canExpandVerbal;
+        private set
+        {
+            if (_canExpandVerbal == value) return;
+            _canExpandVerbal = value;
+            OnPropertyChanged();
+        }
+    }
+
     private bool _canExpandPrereqs;
     public bool CanExpandPrereqs
     {
@@ -127,11 +153,13 @@ public partial class MiracleDetailCardView : ContentView
     }
 
     public int DescriptionMaxLines => IsDescriptionExpanded ? -1 : CollapsedLines;
+    public int VerbalMaxLines => IsVerbalExpanded ? -1 : CollapsedLines;
     public int PrereqMaxLines => IsPrereqExpanded ? -1 : CollapsedLines;
     public int DamageMaxLines => IsDamageExpanded ? -1 : CollapsedLines;
     public int HealMaxLines => IsHealExpanded ? -1 : CollapsedLines;
 
     public string DescriptionChevronText => IsDescriptionExpanded ? "▴" : "▾";
+    public string VerbalChevronText => IsVerbalExpanded ? "▴" : "▾";
     public string PrereqChevronText => IsPrereqExpanded ? "▴" : "▾";
     public string DamageChevronText => IsDamageExpanded ? "▴" : "▾";
     public string HealChevronText => IsHealExpanded ? "▴" : "▾";
@@ -144,6 +172,7 @@ public partial class MiracleDetailCardView : ContentView
     public bool HasAlignment => AlignmentDisplayText.Length > 0;
 
     public string DescriptionText => ReadOrFallback(Miracle?.description, "No description provided.");
+    public string VerbalText => ReadOrFallback(Miracle?.verbal, "No verbal provided.");
     public string PrereqText => BuildPrereqText(Miracle);
     public bool HasPrereqs => PrereqText.Length > 0;
     public string DamageSummaryText => BuildDamageSummary(Miracle);
@@ -152,10 +181,11 @@ public partial class MiracleDetailCardView : ContentView
     public bool HasHealSummary => HealSummaryText.Length > 0;
 
     private bool _isDescriptionAnimating;
+    private bool _isVerbalAnimating;
     private bool _isPrereqAnimating;
     private bool _isDamageAnimating;
     private bool _isHealAnimating;
-    private bool IsAnimatingExpand => _isDescriptionAnimating || _isPrereqAnimating || _isDamageAnimating || _isHealAnimating;
+    private bool IsAnimatingExpand => _isDescriptionAnimating || _isVerbalAnimating || _isPrereqAnimating || _isDamageAnimating || _isHealAnimating;
 
     public MiracleDetailCardView()
     {
@@ -174,6 +204,7 @@ public partial class MiracleDetailCardView : ContentView
     private void HandleMiracleChanged()
     {
         IsDescriptionExpanded = false;
+        IsVerbalExpanded = false;
         IsPrereqExpanded = false;
         IsDamageExpanded = false;
         IsHealExpanded = false;
@@ -191,6 +222,7 @@ public partial class MiracleDetailCardView : ContentView
         OnPropertyChanged(nameof(AlignmentDisplayText));
         OnPropertyChanged(nameof(HasAlignment));
         OnPropertyChanged(nameof(DescriptionText));
+        OnPropertyChanged(nameof(VerbalText));
         OnPropertyChanged(nameof(PrereqText));
         OnPropertyChanged(nameof(HasPrereqs));
         OnPropertyChanged(nameof(DamageSummaryText));
@@ -198,6 +230,7 @@ public partial class MiracleDetailCardView : ContentView
         OnPropertyChanged(nameof(HealSummaryText));
         OnPropertyChanged(nameof(HasHealSummary));
         OnPropertyChanged(nameof(DescriptionChevronText));
+        OnPropertyChanged(nameof(VerbalChevronText));
         OnPropertyChanged(nameof(PrereqChevronText));
         OnPropertyChanged(nameof(DamageChevronText));
         OnPropertyChanged(nameof(HealChevronText));
@@ -225,6 +258,31 @@ public partial class MiracleDetailCardView : ContentView
         finally
         {
             _isDescriptionAnimating = false;
+        }
+    }
+
+    private async void OnVerbalToggleClicked(object sender, EventArgs e)
+    {
+        if (_isVerbalAnimating)
+            return;
+
+        _isVerbalAnimating = true;
+        try
+        {
+            await AnimateSectionToggleAsync(
+                VerbalTextContainer,
+                VerbalLabel,
+                VerbalText,
+                "MiracleVerbalExpand",
+                () =>
+                {
+                    IsVerbalExpanded = !IsVerbalExpanded;
+                    return IsVerbalExpanded;
+                });
+        }
+        finally
+        {
+            _isVerbalAnimating = false;
         }
     }
 
@@ -316,21 +374,13 @@ public partial class MiracleDetailCardView : ContentView
     private void RefreshExpandability()
     {
         CanExpandDescription = ShouldShowExpander(DescriptionLabel, DescriptionText);
+        CanExpandVerbal = ShouldShowExpander(VerbalLabel, VerbalText);
         CanExpandPrereqs = HasPrereqs && ShouldShowExpander(PrereqLabel, PrereqText);
         CanExpandDamage = HasDamageSummary && ShouldShowExpander(DamageLabel, DamageSummaryText);
         CanExpandHeal = HasHealSummary && ShouldShowExpander(HealLabel, HealSummaryText);
 
         if (IsAnimatingExpand)
             return;
-
-        if (!CanExpandDescription && IsDescriptionExpanded)
-            IsDescriptionExpanded = false;
-        if (!CanExpandPrereqs && IsPrereqExpanded)
-            IsPrereqExpanded = false;
-        if (!CanExpandDamage && IsDamageExpanded)
-            IsDamageExpanded = false;
-        if (!CanExpandHeal && IsHealExpanded)
-            IsHealExpanded = false;
     }
 
     private static bool ShouldShowExpander(Label label, string text)
@@ -387,16 +437,17 @@ public partial class MiracleDetailCardView : ContentView
 
         var beforeExpanded = label.MaxLines < 0;
         var beforeHeight = MeasureHeight(label, text, width, beforeExpanded ? -1 : CollapsedLines);
+        container.HeightRequest = beforeHeight;
         var afterExpanded = toggleAndGetExpandedState();
         var afterHeight = MeasureHeight(label, text, width, afterExpanded ? -1 : CollapsedLines);
 
         if (Math.Abs(afterHeight - beforeHeight) < ExpanderOverflowTolerance)
         {
+            container.HeightRequest = -1;
             ScheduleExpandabilityRefresh();
             return;
         }
 
-        container.HeightRequest = beforeHeight;
         await CardExpandAnimationHelper.AnimateHeightAsync(
             owner: container,
             target: container,

@@ -22,6 +22,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     private bool _dataLoaded;
     private bool _isReady;
     private readonly ObservableCollection<ContributionRow> _breakdown = new();
+    private IReadOnlyList<DruidEvocationService.EvocRaw>? _evocationCatalogue;
 
     private const int DefaultRepelGoodEvilPerUse = 40;
     private const int DefaultRepelLifePerUse = 50;
@@ -176,7 +177,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     protected abstract DictionarySlider LifeSliderControl { get; }
     protected abstract DictionarySearchBar<WeaponType> WeaponSearchControl { get; }
 
-    public bool DbEnabled => EarthPowerService.HasDatabase;
+    public bool DbEnabled => true;
 
     protected MpCalculatorPageBase()
     {
@@ -232,12 +233,25 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
         _dataLoaded = true;
 
-        if (ShouldWarnWhenDbMissing && !EarthPowerService.HasDatabase)
+        if (ShouldWarnWhenDbMissing && !await HasEvocationDataAsync())
         {
-            await DisplayAlert("Data missing", "Evocation database not found. Please ensure laby.db is copied to the app data directory.", "OK");
+            await DisplayAlert("Data missing", "Evocation data not found. Please ensure packaged data or laby.db is available.", "OK");
         }
 
         await LoadLookupDataAsync();
+    }
+
+    private static async Task<bool> HasEvocationDataAsync()
+    {
+        try
+        {
+            var all = await EvocationCatalogService.GetAllAsync();
+            return all.Count > 0;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private async Task LoadLookupDataAsync()
@@ -319,11 +333,17 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     protected virtual async Task<Dictionary<string, EvocationOption>> FetchEvocationOptionsAsync(string query)
     {
-        var evocs = await EarthPowerService.SearchAsync(query ?? string.Empty, includeAdvanced: IncludeAdvancedEvocations, maxPower: MaxEvocationPower);
-        return evocs
+        var token = (query ?? string.Empty).Trim();
+        var evocations = await GetEvocationCatalogueAsync();
+        return evocations
+            .Where(ev => !string.IsNullOrWhiteSpace(ev?.name))
+            .Where(ev => IncludeAdvancedEvocations || !ev.isAdvanced)
             .Where(ev => !MaxEvocationPower.HasValue || ev.power <= MaxEvocationPower.Value)
+            .Where(ev =>
+                token.Length == 0
+                || (ev.name ?? string.Empty).Contains(token, StringComparison.OrdinalIgnoreCase))
             .OrderBy(ev => ev.power)
-            .ThenBy(ev => ev.name)
+            .ThenBy(ev => ev.name, StringComparer.OrdinalIgnoreCase)
             .Select(ev =>
             {
                 var option = new EvocationOption(ev.name, ev.power, ev.isAdvanced);
@@ -331,6 +351,15 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
             })
             .GroupBy(k => k.Key, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private async Task<IReadOnlyList<DruidEvocationService.EvocRaw>> GetEvocationCatalogueAsync()
+    {
+        if (_evocationCatalogue != null && _evocationCatalogue.Count > 0)
+            return _evocationCatalogue;
+
+        _evocationCatalogue = await EvocationCatalogService.GetAllAsync();
+        return _evocationCatalogue;
     }
 
     protected virtual bool ShouldIncludeSpell(SpellService.SpellRaw spell) => spell.level <= 6 && (spell.isAdvanced ?? false) == false;

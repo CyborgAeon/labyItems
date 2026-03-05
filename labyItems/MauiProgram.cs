@@ -4,8 +4,14 @@ using System.Reflection;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Storage;
+using Microsoft.Maui.LifecycleEvents;
+using Microsoft.Maui.Handlers;
 using MigrationsLib.Migrations;
 using labyItems.Services;
+using labyItems.Helpers;
+#if ANDROID
+using Android.Views;
+#endif
 
 namespace labyItems;
 
@@ -14,6 +20,22 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
+
+		EntryHandler.Mapper.AppendToMapping("GlobalKeyboardAvoidance", (handler, view) =>
+		{
+			if (view is Microsoft.Maui.Controls.VisualElement visual)
+				GlobalKeyboardAvoidance.Attach(visual);
+		});
+		EditorHandler.Mapper.AppendToMapping("GlobalKeyboardAvoidance", (handler, view) =>
+		{
+			if (view is Microsoft.Maui.Controls.VisualElement visual)
+				GlobalKeyboardAvoidance.Attach(visual);
+		});
+		SearchBarHandler.Mapper.AppendToMapping("GlobalKeyboardAvoidance", (handler, view) =>
+		{
+			if (view is Microsoft.Maui.Controls.VisualElement visual)
+				GlobalKeyboardAvoidance.Attach(visual);
+		});
 
 		// Path for the app's DB used by migrations and runtime. For local testing this will be in AppData.
 		var dbPath = Path.Combine(FileSystem.AppDataDirectory, "laby.db");
@@ -28,14 +50,26 @@ public static class MauiProgram
 		{
 			// If Batteries init fails, migrations that require ADO.NET may still fail later; we catch to avoid startup crash here.
 		}
-		builder
-			.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-				fonts.AddFont("fa-solid-900.ttf", "FASolid");
-			});
+			builder
+				.UseMauiApp<App>()
+				.ConfigureFonts(fonts =>
+				{
+					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+					fonts.AddFont("fa-solid-900.ttf", "FASolid");
+				})
+				.ConfigureLifecycleEvents(events =>
+				{
+#if ANDROID
+					events.AddAndroid(android =>
+					{
+						android.OnCreate((activity, _) =>
+						{
+							activity?.Window?.SetSoftInputMode(SoftInput.AdjustResize | SoftInput.StateHidden);
+						});
+					});
+#endif
+				});
 
 		// Register FluentMigrator runner to apply migrations against the app DB (use local file for testing)
 		builder.Services.AddFluentMigratorCore()

@@ -143,10 +143,13 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
 
         var spells = await SpellDamageService.GetDamagingSpellsAsync();
         var miracles = await MiracleDamageService.GetDamagingMiraclesAsync();
+        var evocations = await EvocationDamageService.GetDamagingEvocationsAsync();
+        System.Diagnostics.Debug.WriteLine($"[BATTLEBOARD][SUPERNATURAL] Loaded spells={spells.Count}, miracles={miracles.Count}, evocations={evocations.Count}");
 
         DamageSpells.Clear();
         DamageSpells.AddRange(spells
             .Concat(miracles)
+            .Concat(evocations)
             .OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase)
             .ThenBy(s => s.Kind, StringComparer.OrdinalIgnoreCase)
             .Select(s => new DamageSpellVm(s)));
@@ -222,6 +225,7 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
             ArmourType.DAC => _board.Dac,
             ArmourType.MAC => _board.Mac,
             ArmourType.SAC => _board.Sac,
+            ArmourType.InnatePac => _board.InnatePac,
             ArmourType.NAC => 0,
             _ => _board.Mac
         };

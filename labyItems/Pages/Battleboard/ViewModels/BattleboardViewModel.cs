@@ -79,6 +79,7 @@ public sealed class BattleboardViewModel : ObservableObject
 
         Tblp = Math.Max(0, _draft.TBLP);
         Loc = Math.Max(0, _draft.Loc);
+        InnatePac = Math.Max(0, _draft.ClassRaceArmour);
         Pac = Math.Max(0, _draft.WornArmour + _draft.ClassRaceArmour);
         Dac = Math.Max(0, _draft.DAC);
         Sac = Math.Max(0, _draft.SAC ?? 0);
@@ -204,6 +205,7 @@ public sealed class BattleboardViewModel : ObservableObject
     public int Tblp { get; }
     public int Loc { get; }
 
+    public int InnatePac { get; }
     public int Pac { get; }
     public int Dac { get; }
     public int Sac { get; }

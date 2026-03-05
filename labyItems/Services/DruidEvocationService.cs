@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -10,6 +11,31 @@ namespace labyItems.Services;
 
 public static class DruidEvocationService
 {
+    public sealed class EvocationDamageRaw
+    {
+        [JsonConverter(typeof(IntArrayListConverter))]
+        public List<int[]>? amount { get; set; }
+
+        [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+        public List<string>? type { get; set; }
+
+        [JsonConverter(typeof(IntArrayListConverter))]
+        public List<int[]>? ArmourApplies { get; set; }
+
+        public string ArmourType { get; set; } = string.Empty;
+
+        public List<int>? PACDam { get; set; }
+    }
+
+    public sealed class EvocationHealRaw
+    {
+        [JsonConverter(typeof(IntArrayListConverter))]
+        public List<int[]>? amount { get; set; }
+
+        [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+        public List<string>? type { get; set; }
+    }
+
     public sealed record EvocRaw
     {
         public string name { get; set; } = string.Empty;
@@ -20,27 +46,67 @@ public static class DruidEvocationService
         public string duration { get; set; } = string.Empty;
         public string verbal { get; set; } = string.Empty;
         public List<string> preReqs { get; set; } = new();
+
+        [JsonPropertyName("Damage")]
+        public EvocationDamageRaw? Damage { get; set; }
+
+        [JsonPropertyName("Heal")]
+        public EvocationHealRaw? Heal { get; set; }
+
+        // Legacy fields retained for compatibility with older JSON/DB rows.
+        [JsonPropertyName("damage")]
         [JsonConverter(typeof(IntArrayListConverter))]
         public List<int[]>? damage { get; set; }
+
+        [JsonPropertyName("damType")]
         [JsonConverter(typeof(SingleOrArrayStringListConverter))]
-        public List<string> damType { get; set; } = new();
+        public List<string>? damType { get; set; }
+
+        [JsonPropertyName("InnatePacApplies")]
+        [JsonConverter(typeof(IntArrayListConverter))]
+        public List<int[]>? InnatePacApplies { get; set; }
+
+        [JsonPropertyName("healing")]
         [JsonConverter(typeof(IntArrayListConverter))]
         public List<int[]>? healing { get; set; }
+
+        [JsonPropertyName("healType")]
         [JsonConverter(typeof(SingleOrArrayStringListConverter))]
-        public List<string> healType { get; set; } = new();
+        public List<string>? healType { get; set; }
+
         public bool isAdvanced { get; set; }
 
         public List<int[]> GetDamageAmounts()
-            => damage ?? new List<int[]>();
+            => Damage?.amount is { Count: > 0 } nested ? nested : (damage ?? new List<int[]>());
 
         public List<string> GetDamageTypes()
-            => damType ?? new List<string>();
+            => Damage?.type is { Count: > 0 } nested ? nested : (damType ?? new List<string>());
+
+        public List<int[]> GetArmourApplies()
+            => Damage?.ArmourApplies is { Count: > 0 } nested ? nested : (InnatePacApplies ?? new List<int[]>());
+
+        public string GetArmourType()
+        {
+            var token = ArmourTypeParser.NormalizeOrEmpty(Damage?.ArmourType);
+            if (!string.IsNullOrWhiteSpace(token))
+                return token;
+
+            return GetArmourApplies().Count > 0
+                ? ArmourType.InnatePac.ToString()
+                : string.Empty;
+        }
+
+        public ArmourType? GetArmourTypeEnum()
+            => ArmourTypeParser.ParseOrNull(GetArmourType());
+
+        public List<int> GetPacDamage()
+            => Damage?.PACDam is { Count: > 0 } nested ? nested : new List<int>();
 
         public List<int[]> GetHealAmounts()
-            => healing ?? new List<int[]>();
+            => Heal?.amount is { Count: > 0 } nested ? nested : (healing ?? new List<int[]>());
 
         public List<string> GetHealTypes()
-            => healType ?? new List<string>();
+            => Heal?.type is { Count: > 0 } nested ? nested : (healType ?? new List<string>());
     }
 
     private static readonly JsonSerializerOptions _jsonOptions = new()
@@ -54,8 +120,7 @@ public static class DruidEvocationService
     {
         if (_cache != null) return _cache;
 
-        var json = await ServiceHelper.ReadPackageTextAsync("druids_way/evocs.json");
-
+        var json = await ReadPackagedJsonAsync();
         var list = JsonSerializer.Deserialize<List<EvocRaw>>(json, _jsonOptions)
                    ?? new List<EvocRaw>();
 
@@ -63,39 +128,132 @@ public static class DruidEvocationService
         return _cache;
     }
 
+    private static async Task<string> ReadPackagedJsonAsync()
+    {
+        Exception? last = null;
+        var paths = new[]
+        {
+            "druids_way/evocs.json",
+            "Resources/Raw/druids_way/evocs.json"
+        };
+
+        foreach (var path in paths)
+        {
+            try
+            {
+                return await ServiceHelper.ReadPackageTextAsync(path);
+            }
+            catch (FileNotFoundException ex)
+            {
+                last = ex;
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                last = ex;
+            }
+        }
+
+        if (last != null)
+            throw last;
+
+        throw new FileNotFoundException("Unable to locate packaged evocations JSON.");
+    }
+
     private static List<EvocRaw> Normalize(IEnumerable<EvocRaw> source)
         => source
-            .Select(e => new EvocRaw
-            {
-                name = e.name ?? string.Empty,
-                power = e.power,
-                fields = (e.fields ?? new List<string>())
-                    .Select(f => (f ?? string.Empty).Trim())
-                    .Where(f => f.Length > 0)
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .ToList(),
-                description = e.description ?? string.Empty,
-                range = e.range ?? string.Empty,
-                duration = e.duration ?? string.Empty,
-                verbal = e.verbal ?? string.Empty,
-                preReqs = (e.preReqs ?? new List<string>())
-                    .Select(p => (p ?? string.Empty).Trim())
-                    .Where(p => p.Length > 0)
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .ToList(),
-                damage = (e.damage ?? new List<int[]>()),
-                damType = (e.damType ?? new List<string>())
-                    .Select(t => DamTypeParser.NormalizeOrFallback(t, "Missile"))
-                    .ToList(),
-                healing = (e.healing ?? new List<int[]>()),
-                healType = (e.healType ?? new List<string>())
-                    .Select(t => DamTypeParser.NormalizeOrFallback(t, "Missile"))
-                    .ToList(),
-                isAdvanced = e.isAdvanced
-            })
+            .Select(NormalizeEvocation)
             .OrderBy(e => e.power)
             .ThenBy(e => e.name)
             .ToList();
+
+    private static EvocRaw NormalizeEvocation(EvocRaw source)
+    {
+        var damageAmounts = (source.GetDamageAmounts() ?? new List<int[]>())
+            .Select(ToIntPairArray)
+            .ToList();
+        var damageTypes = (source.GetDamageTypes() ?? new List<string>())
+            .Select(t => DamTypeParser.NormalizeOrFallback(t, "Missile"))
+            .ToList();
+        var armourApplies = (source.GetArmourApplies() ?? new List<int[]>())
+            .Select(ToIntPairArray)
+            .ToList();
+        var armourType = ArmourTypeParser.NormalizeOrEmpty(source.GetArmourType());
+        if (string.IsNullOrWhiteSpace(armourType) && armourApplies.Count > 0)
+            armourType = ArmourType.InnatePac.ToString();
+
+        var healAmounts = (source.GetHealAmounts() ?? new List<int[]>())
+            .Select(ToIntPairArray)
+            .ToList();
+        var healTypes = (source.GetHealTypes() ?? new List<string>())
+            .Select(t => DamTypeParser.NormalizeOrFallback(t, "Worst"))
+            .ToList();
+        var pacDamage = (source.GetPacDamage() ?? new List<int>())
+            .Select(Math.Abs)
+            .Where(v => v > 0)
+            .ToList();
+
+        var normalizedDamage = (damageAmounts.Count > 0 || damageTypes.Count > 0 || armourApplies.Count > 0 || pacDamage.Count > 0)
+            ? new EvocationDamageRaw
+            {
+                amount = damageAmounts,
+                type = damageTypes,
+                ArmourApplies = armourApplies,
+                ArmourType = armourType,
+                PACDam = pacDamage
+            }
+            : null;
+
+        var normalizedHeal = (healAmounts.Count > 0 || healTypes.Count > 0)
+            ? new EvocationHealRaw
+            {
+                amount = healAmounts,
+                type = healTypes
+            }
+            : null;
+
+        var legacyInnateApplies = (armourType.Equals(ArmourType.InnatePac.ToString(), StringComparison.OrdinalIgnoreCase))
+            ? armourApplies
+            : new List<int[]>();
+
+        return new EvocRaw
+        {
+            name = source.name ?? string.Empty,
+            power = source.power,
+            fields = (source.fields ?? new List<string>())
+                .Select(f => (f ?? string.Empty).Trim())
+                .Where(f => f.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            description = source.description ?? string.Empty,
+            range = source.range ?? string.Empty,
+            duration = source.duration ?? string.Empty,
+            verbal = source.verbal ?? string.Empty,
+            preReqs = (source.preReqs ?? new List<string>())
+                .Select(p => (p ?? string.Empty).Trim())
+                .Where(p => p.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            Damage = normalizedDamage,
+            Heal = normalizedHeal,
+            damage = damageAmounts,
+            damType = damageTypes,
+            InnatePacApplies = legacyInnateApplies,
+            healing = healAmounts,
+            healType = healTypes,
+            isAdvanced = source.isAdvanced
+        };
+    }
+
+    private static int[] ToIntPairArray(int[]? values)
+    {
+        if (values == null || values.Length == 0)
+            return new[] { 0, 0 };
+
+        if (values.Length == 1)
+            return new[] { Math.Max(0, values[0]), 0 };
+
+        return new[] { Math.Max(0, values[0]), Math.Max(0, values[1]) };
+    }
 
     private sealed class IntArrayListConverter : JsonConverter<List<int[]>?>
     {
@@ -133,7 +291,7 @@ public static class DruidEvocationService
                 var values = new List<int>();
                 while (reader.TokenType == JsonTokenType.Number)
                 {
-                    values.Add(reader.GetInt32());
+                    values.Add(ReadNumberAsInt(ref reader));
                     reader.Read();
                 }
 
@@ -176,7 +334,7 @@ public static class DruidEvocationService
             reader.Read();
             while (reader.TokenType == JsonTokenType.Number)
             {
-                values.Add(reader.GetInt32());
+                values.Add(ReadNumberAsInt(ref reader));
                 reader.Read();
             }
 
@@ -184,6 +342,17 @@ public static class DruidEvocationService
                 throw new JsonException("Expected end of nested int array.");
 
             return values.ToArray();
+        }
+
+        private static int ReadNumberAsInt(ref Utf8JsonReader reader)
+        {
+            if (reader.TryGetInt32(out var value))
+                return value;
+
+            if (reader.TryGetDouble(out var dbl))
+                return (int)Math.Truncate(dbl);
+
+            throw new JsonException("Invalid numeric token in int array.");
         }
     }
 }

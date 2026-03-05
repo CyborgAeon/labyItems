@@ -37,7 +37,7 @@
   {
     "power": 2,
     "name": "Dismiss Skeleton",
-    "description": "As Dismiss Zombie but for level-2 (or level-1) undead; forces it back and collapses it when cornered.",
+    "description": "Backs a level-1 undead (e.g., Zombie) to a barrier and dismisses its spirit; caster must maintain the dismissal until it collapses. but for level-2 (or level-1) undead; forces it back and collapses it when cornered.",
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false
@@ -183,7 +183,7 @@
   {
     "power": 1,
     "name": "Spirit Dart",
-    "description": "As Spirit Bolt but 6 tblp (or 2 Hits to monsters).",
+    "description": "Ranged spiritual attack: 18 tblp to characters (applies SAC of least-protected location) or 6 Hits to monsters. but 6 tblp (or 2 Hits to monsters).",
     "alignment": "Neutral",
     "sphere": "Minor Force",
     "isAdvanced": true,
@@ -249,7 +249,7 @@
   {
     "power": 3,
     "name": "Enhance Stasis",
-    "description": "As Stasis but affects targets up to caster level; 20-second duration; does not affect undead.",
+    "description": "The effects of this miracle are as the Halt miracle in most ways except for Range and duration. The only other difference is that a touch is not sufficient to free the target of a Stasis – only actual damage will suffice. but affects targets up to caster level; 20-second duration; does not affect undead.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true
@@ -281,7 +281,7 @@
   {
     "power": 6,
     "name": "Greater Spirit Shield",
-    "description": "As Spirit Shield but absorbs 36 tblp; Minor Warding/Benediction sphere.",
+    "description": "Absorbs the first 18 tblp of purely spiritual damage or undead touch effects (6 pts per touch) on the recipient. but absorbs 36 tblp; Minor Warding/Benediction sphere.",
     "alignment": "Neutral",
     "sphere": "Minor Warding / Minor Benediction",
     "isAdvanced": true
@@ -393,7 +393,7 @@
   {
     "power": 8,
     "name": "Voice of Retribution",
-    "description": "As Voice of Power but only the command “Die!”; affects up to caster level and only vs. the opposite alignment; does not affect undead.",
+    "description": "Command a single-word imperative a lower-level target must obey (e.g., Sleep/Flee/Obey); listed stopping effect; does not affect undead. but only the command “Die!”; affects up to caster level and only vs. the opposite alignment; does not affect undead.",
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": true
@@ -417,7 +417,7 @@
   {
     "power": 10,
     "name": "Create Skeletal Knight",
-    "description": "As Animate Skeleton but tougher: not bound to point, blunt/spiritual only damage, +1 strength, DL 7, triple normal skeleton Hits.",
+    "description": "Raise one skeleton from a suitable corpse; gains hits based on your level; half damage from sharp; weak inherent control for 30 minutes. but tougher: not bound to point, blunt/spiritual only damage, +1 strength, DL 7, triple normal skeleton Hits.",
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true
@@ -591,7 +591,7 @@
   {
     "power": 8,
     "name": "Greater Communication",
-    "description": "As Communication but answers are short phrases/sentences (≈7 relevant words); three questions in five minutes.",
+    "description": "Ask three yes/no questions of knowledgeable spirits within five minutes; silence if unknown. but answers are short phrases/sentences (≈7 relevant words); three questions in five minutes.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false
@@ -599,7 +599,7 @@
   {
     "power": 8,
     "name": "Major Ward of Power",
-    "description": "As Minor Ward but stronger: bars all undead; bars creatures with resistance levels up to 7th; deals heavy spiritual damage on crossing; absorbs 20sp of directed miracles.",
+    "description": "Draw a four-cornered ward that bars low-level undead and creatures ≤4th level; inflicts spiritual damage on crossing; absorbs 10sp of directed miracles. but stronger: bars all undead; bars creatures with resistance levels up to 7th; deals heavy spiritual damage on crossing; absorbs 20sp of directed miracles.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
@@ -941,7 +941,7 @@
   {
     "power": 8,
     "name": "Spirit Travel",
-    "description": "As per the 6mp standard Blue Glyph Blink except is spiritual. I.e. allows the caster to travel up to 20' in distance or within line of sight. On arriving at destination it takes the caster 2 seconds to re-materialise, during which time he is not vulnerable to damage.",
+    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ~ 13 ~ except is spiritual. I.e. allows the caster to travel up to 20' in distance or within line of sight. On arriving at destination it takes the caster 2 seconds to re-materialise, during which time he is not vulnerable to damage.",
     "alignment": "Other",
     "sphere": "Universal",
     "isAdvanced": false
@@ -989,7 +989,7 @@
   {
     "power": 5,
     "name": "Angelic Shift",
-    "description": "As Spiritshift (see Neutral miracles) but is a goodly aligned miracle. Caster suffers a 2 second period of disorientation on arrival, during which he is not vulnerable to damage or effects and may not act, as per the Blink spell.",
+    "description": "This miracle instantly transports the priest and his possessions across the indicated distance of up to 20' in a similar manner to the 6mp standard Blue Wizard Spell Blink. This includes the 2 seconds disorientation upon arrival. but is a goodly aligned miracle. Caster suffers a 2 second period of disorientation on arrival, during which he is not vulnerable to damage or effects and may not act, as per the Blink spell.",
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1061,7 +1061,7 @@
   {
     "power": 6,
     "name": "Bless of Warding",
-    "description": "As per standard 2sp Bless miracle in all respects except that it grants +2 SAC instead of +2 DAC. Recipient must be Goodly. Will not stack with any other Bless. This is a releasable miracle. ~ 80 ~ \fMiracles by Denomination The following miracles are Universal miracles but available only to priests of specific faiths. Once the miracle is acquired the Priest may learn innates of it at a cost of 10pts per spirit. Any",
+    "description": "Blesses a person or item (generally 24 hours; special permanent cases as noted for specific classes). except that it grants +2 SAC instead of +2 DAC. Recipient must be Goodly. Will not stack with any other Bless. This is a releasable miracle. ~ 80 ~ \fMiracles by Denomination The following miracles are Universal miracles but available only to priests of specific faiths. Once the miracle is acquired the Priest may learn innates of it at a cost of 10pts per spirit. Any",
     "alignment": "Good",
     "sphere": "Witchcraft",
     "isAdvanced": true
@@ -1302,7 +1302,7 @@
   {
     "power": 8,
     "name": "Commanding Voice",
-    "description": "As Voice of Power except that it will only work on members of the Shaman’s tribe and has no level limit for resistance purposes. The only tribe member not normally affected by this miracle is the Witchdoctor. As well as being a releasable miracle this miracle is removed by the Remove Voice of Power miracle.",
+    "description": "Command a single-word imperative a lower-level target must obey (e.g., Sleep/Flee/Obey); listed stopping effect; does not affect undead. except that it will only work on members of the Shaman’s tribe and has no level limit for resistance purposes. The only tribe member not normally affected by this miracle is the Witchdoctor. As well as being a releasable miracle this miracle is removed by the Remove Voice of Power miracle.",
     "alignment": "Neutral",
     "sphere": "Shamanic",
     "isAdvanced": true
@@ -1310,7 +1310,7 @@
   {
     "power": 16,
     "name": "Communication with the Gods",
-    "description": "As per Greater Communication but no limit to the number of questions asked and the spirits may respond to an individual question with more than just seven words. Questions must be asked in a measured and respectful manner, or no response will be gained. The caster may choose to have all questions be only regarding one specific area, in which case the divination lasts 5 minutes, or simply answering any questions they desire, in which case the duration is only two minutes but the miracle becomes far more versatile.",
+    "description": "Ask three yes/no questions of knowledgeable spirits within five minutes; silence if unknown. but answers are short phrases/sentences (≈7 relevant words); three questions in five minutes. but no limit to the number of questions asked and the spirits may respond to an individual question with more than just seven words. Questions must be asked in a measured and respectful manner, or no response will be gained. The caster may choose to have all questions be only regarding one specific area, in which case the divination lasts 5 minutes, or simply answering any questions they desire, in which case the duration is only two minutes but the miracle becomes far more versatile.",
     "alignment": "Neutral",
     "preReqs": [
       "Communication",
@@ -1322,7 +1322,7 @@
   {
     "power": 6,
     "name": "Converse With Spirit",
-    "description": "As per Talk To Spirits in all respects, including which spirits will respond truthfully but as many questions may be asked as required for duration.",
+    "description": "Ask three yes/no (one-word) questions of a spirit within range; powerful living/intelligent undead may lie, lesser cannot. including which spirits will respond truthfully but as many questions may be asked as required for duration.",
     "alignment": "Neutral",
     "sphere": "Major Communication",
     "isAdvanced": true
@@ -1442,7 +1442,7 @@
   {
     "power": 14,
     "name": "Dismiss Level 10 Undead",
-    "description": "As Dismiss Vampire but will affect up to level 10 undead. In order to acquire this miracle must first possess Dismiss Level 9. Note: Dismiss Levels 7 to 10 may be purchased as a single ability for 225pts. ~ 50 ~ \fNeutral Miracles 1st Level Neutral Advanced Miracles",
+    "description": "Dismiss a level-6 undead (e.g., Vampire) by forcing it back to a barrier and completing the release phrase at the end. but will affect up to level 10 undead. In order to acquire this miracle must first possess Dismiss Level 9. Note: Dismiss Levels 7 to 10 may be purchased as a single ability for 225pts. ~ 50 ~ \fNeutral Miracles 1st Level Neutral Advanced Miracles",
     "alignment": "Good",
     "sphere": "Major Dismissal",
     "isAdvanced": true
@@ -1450,7 +1450,7 @@
   {
     "power": 8,
     "name": "Dismiss Level 7 Undead",
-    "description": "As Dismiss Vampire but will affect up to level 7 undead.",
+    "description": "Dismiss a level-6 undead (e.g., Vampire) by forcing it back to a barrier and completing the release phrase at the end. but will affect up to level 7 undead.",
     "alignment": "Good",
     "sphere": "Minor Dismissal",
     "isAdvanced": true
@@ -1458,7 +1458,7 @@
   {
     "power": 10,
     "name": "Dismiss Level 8 Undead",
-    "description": "As Dismiss Vampire but will affect up to level 8 undead. In order to acquire this miracle must first possess Dismiss Level 7. ~ 49 ~ \fDismiss Level 9 Undead Level: 8th (12sp) Alignment: Good Duration: Until dismissed Sphere: Major Dismissal Range: 10’ Gesture: Open palm towards target Verbal: “Spirit of... (Dismiss Name)... I dismiss thee hence.” Description: As Dismiss Vampire but will affect up to level 9 undead. In order to acquire this miracle must first possess Dismiss Level 8.",
+    "description": "Dismiss a level-6 undead (e.g., Vampire) by forcing it back to a barrier and completing the release phrase at the end. but will affect up to level 8 undead. In order to acquire this miracle must first possess Dismiss Level 7. ~ 49 ~ \fDismiss Level 9 Undead Level: 8th (12sp) Alignment: Good Duration: Until dismissed Sphere: Major Dismissal Range: 10’ Gesture: Open palm towards target Verbal: “Spirit of... (Dismiss Name)... I dismiss thee hence.” Description: As Dismiss Vampire but will affect up to level 9 undead. In order to acquire this miracle must first possess Dismiss Level 8.",
     "alignment": "Good",
     "sphere": "Major Dismissal",
     "isAdvanced": true
@@ -1498,7 +1498,7 @@
   {
     "power": 3,
     "name": "Enhanced Stasis",
-    "description": "As the 2sp standard miracle Stasis but works on characters of level equal to or below the caster’s. This miracle does not affect the undead.",
+    "description": "The effects of this miracle are as the Halt miracle in most ways except for Range and duration. The only other difference is that a touch is not sufficient to free the target of a Stasis – only actual damage will suffice. but works on characters of level equal to or below the caster’s. This miracle does not affect the undead.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true
@@ -1565,7 +1565,7 @@
   {
     "power": 5,
     "name": "Greater Bless",
-    "description": "As per standard 3sp Bless miracle in all respects except it grants +3 DAC instead of +2. Recipient must be Goodly. Will not stack with any other Bless. This is a releasable miracle.",
+    "description": "Blesses a person or item (generally 24 hours; special permanent cases as noted for specific classes). except it grants +3 DAC instead of +2. Recipient must be Goodly. Will not stack with any other Bless. This is a releasable miracle.",
     "alignment": "Good",
     "sphere": "Witchcraft",
     "isAdvanced": true
@@ -1733,7 +1733,7 @@
   {
     "power": 8,
     "name": "Spirit Travel",
-    "description": "As per the 6mp standard Blue Glyph Blink except is spiritual. I.e. allows the caster to travel up to 20’ in distance or within line of sight. On arriving at destination it takes the caster 2 seconds to re-materialise, during which time he is not vulnerable to damage.",
+    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ~ 13 ~ except is spiritual. I.e. allows the caster to travel up to 20’ in distance or within line of sight. On arriving at destination it takes the caster 2 seconds to re-materialise, during which time he is not vulnerable to damage.",
     "alignment": "Other",
     "sphere": "Universal / Any",
     "isAdvanced": false
@@ -1816,7 +1816,7 @@
   {
     "power": 5,
     "name": "Protection from All Spirits",
-    "description": "As Protection from Spirits, except that it will keep out spirits of any alignment, level-based as normal. ~ 54 ~ \fWarding Rune of Transgression Level: 5sp Alignment: Neutral Duration: 15 mins Sphere: Major Warding Range: - Gesture: Inscribe rune Verbal: “Spirit of power I bind thee to this rune I now inscribe. Let any that seek passage suffer the consequences of their transgression.” Description: This miracle is a very specific form of a Rune of Power. The form the rune must take is the same as that for a Rune of Power, with a spirit rune ‘W’ in the centre of the triangle. It is triggered in all ways as a Rune of Transgression is, except that the caster cannot choose to allow anyone passage – even the caster himself will trigger it if he passes the door or entrance-way it wards. The victim of the miracle suffers 30 tblp of spiritual damage, as if they had crossed a Minor Ward of Power – however this is the only effect of the rune. This miracle does affect the undead, unlike normal runes of power. Note the reduced duration of the miracle in comparison with other runes. Immunity to Rune of Power means that the rune is not triggered by that person – ½ Damage from Wards of Power does halve the damage received.",
+    "description": "Creates a chalk line that bars spirits of a chosen alignment (Good or Evil) from crossing/attacking through it within listed limits. except that it will keep out spirits of any alignment, level-based as normal. ~ 54 ~ \fWarding Rune of Transgression Level: 5sp Alignment: Neutral Duration: 15 mins Sphere: Major Warding Range: - Gesture: Inscribe rune Verbal: “Spirit of power I bind thee to this rune I now inscribe. Let any that seek passage suffer the consequences of their transgression.” Description: This miracle is a very specific form of a Rune of Power. The form the rune must take is the same as that for a Rune of Power, with a spirit rune ‘W’ in the centre of the triangle. It is triggered in all ways as a Rune of Transgression is, except that the caster cannot choose to allow anyone passage – even the caster himself will trigger it if he passes the door or entrance-way it wards. The victim of the miracle suffers 30 tblp of spiritual damage, as if they had crossed a Minor Ward of Power – however this is the only effect of the rune. This miracle does affect the undead, unlike normal runes of power. Note the reduced duration of the miracle in comparison with other runes. Immunity to Rune of Power means that the rune is not triggered by that person – ½ Damage from Wards of Power does halve the damage received.",
     "alignment": "Neutral",
     "sphere": "Major Warding",
     "isAdvanced": true
@@ -1880,7 +1880,7 @@
   {
     "power": 3,
     "name": "Repel Life",
-    "description": "As per Repel Undead but affects the living instead. By definition, this miracle does not affect the undead.",
+    "description": "Repels undead up to 21' as per the Paladinic effect. but affects the living instead. By definition, this miracle does not affect the undead.",
     "alignment": "Evil",
     "sphere": "Minor (Force / Necromancy / Warding)",
     "isAdvanced": true
@@ -2164,7 +2164,7 @@
   {
     "power": 8,
     "name": "Storm of Power",
-    "description": "As Voice of Power but all within radius of up to two levels below the caster are affected (i.e. 6th level characters are affected assuming the caster is 8th level). Releasing the miracle releases all targets simultaneously. This miracle does not affect the undead.",
+    "description": "Command a single-word imperative a lower-level target must obey (e.g., Sleep/Flee/Obey); listed stopping effect; does not affect undead. but all within radius of up to two levels below the caster are affected (i.e. 6th level characters are affected assuming the caster is 8th level). Releasing the miracle releases all targets simultaneously. This miracle does not affect the undead.",
     "alignment": "Neutral",
     "sphere": "Major Force",
     "isAdvanced": true
@@ -2580,7 +2580,7 @@
   {
     "power": 8,
     "name": "Spirit Travel",
-    "description": "As per the 6mp standard Blue Glyph Blink except is spiritual. I.e. allows the caster to travel up to 20' in distance or within line of sight. On arriving at destination it takes the caster 2 seconds to re-materialise, during which time he is not vulnerable to damage.",
+    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ~ 13 ~ except is spiritual. I.e. allows the caster to travel up to 20' in distance or within line of sight. On arriving at destination it takes the caster 2 seconds to re-materialise, during which time he is not vulnerable to damage.",
     "alignment": "Other",
     "sphere": "Universal / Any",
     "isAdvanced": false

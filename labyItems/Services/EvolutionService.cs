@@ -63,6 +63,7 @@ public static class EvolutionService
         public string Available { get; init; } = string.Empty;
         public bool CanBuyMultiple { get; init; }
         public IReadOnlyList<string> PreReqs { get; init; } = Array.Empty<string>();
+        public int? MaxAvailable { get; init; }
     }
 
     public static async Task<IReadOnlyList<AbilityResult>> GetAllAbilitiesAsync()
@@ -73,7 +74,7 @@ public static class EvolutionService
         {
             using var conn = ServiceHelper.OpenReadOnlyConnection();
 
-            var rows = conn.Query<AbilityRow>("SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json FROM evolution ORDER BY table_id, idx;");
+            var rows = conn.Query<AbilityRow>("SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution ORDER BY table_id, idx;");
             if (rows.Count == 0)
             {
                 var emptyEx = new InvalidOperationException("Evolution table returned zero rows. Ensure the abilities data has been migrated into laby.db.");
@@ -93,7 +94,8 @@ public static class EvolutionService
                     Table = r.table_id,
                     Available = r.available ?? string.Empty,
                     CanBuyMultiple = r.can_buy_multiple != 0,
-                    PreReqs = preReqs
+                    PreReqs = preReqs,
+                    MaxAvailable = ParseMaxAvailable(r.data_json)
                 });
             }
 
@@ -184,7 +186,7 @@ public static class EvolutionService
             }
 
             var inClause = string.Join(",", paramNames);
-            var sql = $"SELECT e.idx, e.description, e.cost, e.available, e.table_id, e.can_buy_multiple, e.prereqs_json FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
+            var sql = $"SELECT e.idx, e.description, e.cost, e.available, e.table_id, e.can_buy_multiple, e.prereqs_json, e.data_json FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
 
             var rows = conn.Query<AbilityRow>(sql, args.ToArray());
             var list = rows.Select(r => new AbilityResult
@@ -195,7 +197,8 @@ public static class EvolutionService
                 Table = r.table_id,
                 Available = r.available ?? string.Empty,
                 CanBuyMultiple = r.can_buy_multiple != 0,
-                PreReqs = ParsePreReqs(r.prereqs_json)
+                PreReqs = ParsePreReqs(r.prereqs_json),
+                MaxAvailable = ParseMaxAvailable(r.data_json)
             })
                 .Take(20)
                 .ToList();
@@ -219,6 +222,7 @@ public static class EvolutionService
     {
         _cache = null;
         _abilityCache = null;
+        AbilityDetailsLookupService.InvalidateCache();
     }
 
     private static IReadOnlyList<string> ParsePreReqs(string? raw)
@@ -239,7 +243,7 @@ public static class EvolutionService
 
     private static IReadOnlyList<AbilityResult> SearchAbilitiesByLike(SQLite.SQLiteConnection conn, string query, int? table)
     {
-        var sql = "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json FROM evolution WHERE idx LIKE ? ORDER BY table_id, idx LIMIT 50;";
+        var sql = "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE idx LIKE ? ORDER BY table_id, idx LIMIT 50;";
         var rows = conn.Query<AbilityRow>(sql, $"%{query}%");
         var list = rows.Select(r => new AbilityResult
         {
@@ -249,13 +253,59 @@ public static class EvolutionService
             Table = r.table_id,
             Available = r.available ?? string.Empty,
             CanBuyMultiple = r.can_buy_multiple != 0,
-            PreReqs = ParsePreReqs(r.prereqs_json)
+            PreReqs = ParsePreReqs(r.prereqs_json),
+            MaxAvailable = ParseMaxAvailable(r.data_json)
         }).ToList();
 
         if (table is { } t && t >= 1)
             list = list.Where(l => l.Table == t).ToList();
 
         return list.Take(20).ToList();
+    }
+
+    private static int? ParseMaxAvailable(string? dataJson)
+    {
+        if (string.IsNullOrWhiteSpace(dataJson))
+            return null;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(dataJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+                return null;
+
+            foreach (var property in doc.RootElement.EnumerateObject())
+            {
+                if (!property.Name.Equals("maxAvailable", StringComparison.OrdinalIgnoreCase)
+                    && !property.Name.Equals("max_available", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                return TryParseMaxAvailableValue(property.Value);
+            }
+        }
+        catch
+        {
+            // malformed data_json; treat as unbounded
+        }
+
+        return null;
+    }
+
+    private static int? TryParseMaxAvailableValue(JsonElement value)
+    {
+        if (value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out var asNumber) && asNumber > 0)
+            return asNumber;
+
+        if (value.ValueKind == JsonValueKind.String)
+        {
+            var token = (value.GetString() ?? string.Empty).Trim();
+            if (int.TryParse(token, out var asText) && asText > 0)
+                return asText;
+        }
+
+        return null;
     }
 
     private class EvoRow
@@ -274,5 +324,6 @@ public static class EvolutionService
         public int table_id { get; set; }
         public int can_buy_multiple { get; set; }
         public string? prereqs_json { get; set; }
+        public string? data_json { get; set; }
     }
 }

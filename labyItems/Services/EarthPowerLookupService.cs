@@ -63,7 +63,7 @@ public static class EarthPowerService
         _dbPath = null;
     }
 
-    public static Task<IReadOnlyList<EvocRaw>> GetAllAsync()
+    public static async Task<IReadOnlyList<EvocRaw>> GetAllAsync()
     {
         if (!string.IsNullOrEmpty(_dbPath) && File.Exists(_dbPath))
         {
@@ -77,16 +77,16 @@ public static class EarthPowerService
                 if (e != null) list.Add(e);
             }
 
-            return Task.FromResult<IReadOnlyList<EvocRaw>>(list);
+            return list;
         }
 
-        throw new InvalidOperationException("Evocations DB not found; please install laby.db in app data or provide the DB during development.");
+        return await LoadFromPackagedJsonAsync();
     }
 
-    public static Task<IReadOnlyList<EvocRaw>> SearchAsync(string query, bool includeAdvanced = true, int? maxPower = null)
+    public static async Task<IReadOnlyList<EvocRaw>> SearchAsync(string query, bool includeAdvanced = true, int? maxPower = null)
     {
         if (string.IsNullOrEmpty(_dbPath) || !File.Exists(_dbPath))
-            throw new InvalidOperationException("Evocations DB not found; ensure laby.db is installed and accessible.");
+            return await SearchPackagedJsonAsync(query, includeAdvanced, maxPower);
 
         var trimmed = query?.Trim() ?? string.Empty;
         using var conn = new SQLiteConnection(_dbPath, SQLiteOpenFlags.ReadOnly);
@@ -98,13 +98,13 @@ public static class EarthPowerService
         {
             var sql = $"SELECT e.data_json FROM evocs e{whereClause} ORDER BY e.name LIMIT 100;";
             var rows = conn.Query<DbRow>(sql, filterArgs.ToArray());
-            return Task.FromResult<IReadOnlyList<EvocRaw>>(Deserialize(rows));
+            return Deserialize(rows);
         }
 
         var normalized = NormalizeForNgrams(trimmed.ToLowerInvariant());
         var tokens = GenerateNGrams(normalized, NGRAM_N).Distinct().ToList();
         if (tokens.Count == 0)
-            return Task.FromResult<IReadOnlyList<EvocRaw>>(Array.Empty<EvocRaw>());
+            return Array.Empty<EvocRaw>();
 
         var tokenPlaceholders = string.Join(",", Enumerable.Repeat("?", tokens.Count));
         var args = tokens.Cast<object>().ToList();
@@ -114,13 +114,69 @@ public static class EarthPowerService
         var tokenRows = conn.Query<DbRow>(sqlWithTokens, args.ToArray());
         var tokenResults = Deserialize(tokenRows);
         if (tokenResults.Count > 0)
-            return Task.FromResult<IReadOnlyList<EvocRaw>>(tokenResults.Take(20).ToList());
+            return tokenResults.Take(20).ToList();
 
         var likeArgs = new List<object> { "%" + trimmed.ToLowerInvariant() + "%" };
         var likeWhere = BuildWhereClause(likeArgs, includeAdvanced, maxPower, " AND ");
         var fallbackSql = $"SELECT e.data_json FROM evocs e WHERE e.name_lower LIKE ?{likeWhere} ORDER BY e.name LIMIT 20;";
         var fallbackRows = conn.Query<DbRow>(fallbackSql, likeArgs.ToArray());
-        return Task.FromResult<IReadOnlyList<EvocRaw>>(Deserialize(fallbackRows));
+        return Deserialize(fallbackRows);
+    }
+
+    private static async Task<IReadOnlyList<EvocRaw>> LoadFromPackagedJsonAsync()
+    {
+        var evocations = await DruidEvocationService.GetAllAsync();
+        return evocations
+            .Select(MapFromPackagedEvocation)
+            .ToList();
+    }
+
+    private static async Task<IReadOnlyList<EvocRaw>> SearchPackagedJsonAsync(string? query, bool includeAdvanced, int? maxPower)
+    {
+        var all = await LoadFromPackagedJsonAsync();
+        var trimmed = (query ?? string.Empty).Trim();
+        IEnumerable<EvocRaw> filtered = all;
+
+        if (!includeAdvanced)
+            filtered = filtered.Where(e => !e.isAdvanced);
+
+        if (maxPower.HasValue)
+            filtered = filtered.Where(e => e.power <= maxPower.Value);
+
+        if (trimmed.Length > 0)
+        {
+            var token = trimmed.ToLowerInvariant();
+            filtered = filtered.Where(e =>
+                (e.name ?? string.Empty).Contains(trimmed, StringComparison.OrdinalIgnoreCase)
+                || (e.description ?? string.Empty).Contains(trimmed, StringComparison.OrdinalIgnoreCase)
+                || (e.fields ?? new List<string>()).Any(f => (f ?? string.Empty).Contains(trimmed, StringComparison.OrdinalIgnoreCase))
+                || NormalizeForNgrams($"{e.name} {string.Join(" ", e.fields ?? new List<string>())} {e.description}").Contains(token, StringComparison.OrdinalIgnoreCase));
+        }
+
+        return filtered
+            .OrderBy(e => e.power)
+            .ThenBy(e => e.name, StringComparer.OrdinalIgnoreCase)
+            .Take(100)
+            .ToList();
+    }
+
+    private static EvocRaw MapFromPackagedEvocation(DruidEvocationService.EvocRaw source)
+    {
+        return new EvocRaw
+        {
+            name = source.name ?? string.Empty,
+            power = source.power,
+            range = source.range ?? string.Empty,
+            duration = source.duration ?? string.Empty,
+            verbal = source.verbal ?? string.Empty,
+            fields = (source.fields ?? new List<string>())
+                .Select(f => (f ?? string.Empty).Trim())
+                .Where(f => f.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList(),
+            description = source.description ?? string.Empty,
+            isAdvanced = source.isAdvanced
+        };
     }
 
     private static string NormalizeForNgrams(string s)

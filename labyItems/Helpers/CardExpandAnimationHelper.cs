@@ -4,22 +4,55 @@ namespace labyItems.Helpers;
 
 public static class CardExpandAnimationHelper
 {
+    public const uint UnifiedDurationMs = 200;
+    public static readonly Easing UnifiedEasing = Easing.CubicInOut;
+
     public static double ResolveMeasureWidth(VisualElement primary, params VisualElement[] fallbacks)
     {
-        if (primary.Width > 0)
-            return primary.Width;
+        var resolved = ResolveWidthFromVisualTree(primary);
+        if (resolved > 0)
+            return resolved;
 
         foreach (var fallback in fallbacks)
         {
-            if (fallback != null && fallback.Width > 0)
-                return fallback.Width;
+            resolved = ResolveWidthFromVisualTree(fallback);
+            if (resolved > 0)
+                return resolved;
+        }
+
+        return ResolveWidthFromWindow(primary);
+    }
+
+    public static double MeasureContentHeight(VisualElement content, double width)
+        => content.Measure(width, double.PositiveInfinity).Height;
+
+    private static double ResolveWidthFromVisualTree(VisualElement? start)
+    {
+        var current = start;
+        while (current != null)
+        {
+            if (current.Width > 0)
+                return current.Width;
+
+            current = current.Parent as VisualElement;
         }
 
         return -1;
     }
 
-    public static double MeasureContentHeight(VisualElement content, double width)
-        => content.Measure(width, double.PositiveInfinity).Height;
+    private static double ResolveWidthFromWindow(VisualElement element)
+    {
+        var current = element.Parent;
+        while (current != null)
+        {
+            if (current is Page page && page.Width > 0)
+                return page.Width;
+
+            current = current.Parent;
+        }
+
+        return -1;
+    }
 
     public static async Task AnimateHeightAsync(
         VisualElement owner,
@@ -56,13 +89,13 @@ public static class CardExpandAnimationHelper
                 },
                 from,
                 to,
-                easing);
+                UnifiedEasing);
 
             animation.Commit(
                 owner: owner,
                 name: animationName,
                 rate: 16,
-                length: length,
+                length: UnifiedDurationMs,
                 finished: (_, __) => tcs.TrySetResult());
 
             await tcs.Task;

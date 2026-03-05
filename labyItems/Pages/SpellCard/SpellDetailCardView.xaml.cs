@@ -8,8 +8,8 @@ namespace labyItems.Pages.SpellCard;
 
 public partial class SpellDetailCardView : ContentView
 {
-    private const int DescriptionCollapsedLines = 1;
-    private const int VerbalCollapsedLines = 1;
+    private const int DescriptionCollapsedLines = 5;
+    private const int VerbalCollapsedLines = 3;
     private const int NotesCollapsedLines = 2;
     private const double ExpanderOverflowTolerance = 0.01;
 
@@ -76,6 +76,7 @@ public partial class SpellDetailCardView : ContentView
             if (_canExpandDescription == value) return;
             _canExpandDescription = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowDescriptionChevron));
         }
     }
 
@@ -88,6 +89,7 @@ public partial class SpellDetailCardView : ContentView
             if (_canExpandVerbal == value) return;
             _canExpandVerbal = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowVerbalChevron));
         }
     }
 
@@ -116,10 +118,12 @@ public partial class SpellDetailCardView : ContentView
     public string SpellName => ReadOrFallback(Spell?.name, fallback: "Unnamed Spell");
     public string DescriptionText => ReadOrFallback(Spell?.description, fallback: "No description provided.");
     public string VerbalText => ReadOrFallback(Spell?.verbal, fallback: "No verbal provided.");
+    public bool HasDescription => !string.IsNullOrWhiteSpace((Spell?.description ?? string.Empty).Trim());
+    public bool HasVerbal => !string.IsNullOrWhiteSpace((Spell?.verbal ?? string.Empty).Trim());
     public string NotesText => (Spell?.notes ?? string.Empty).Trim();
     public bool HasNotes => NotesText.Length > 0;
-    public bool ShowDescriptionChevron => DescriptionText.Length > 0;
-    public bool ShowVerbalChevron => VerbalText.Length > 0;
+    public bool ShowDescriptionChevron => HasDescription && CanExpandDescription;
+    public bool ShowVerbalChevron => HasVerbal && CanExpandVerbal;
 
     public string ColourDisplayText => BuildColourDisplayText(Spell?.colour);
     public string LevelDisplayText => $"Lvl {Math.Max(0, Spell?.level ?? 0)}";
@@ -162,6 +166,8 @@ public partial class SpellDetailCardView : ContentView
         OnPropertyChanged(nameof(SpellName));
         OnPropertyChanged(nameof(DescriptionText));
         OnPropertyChanged(nameof(VerbalText));
+        OnPropertyChanged(nameof(HasDescription));
+        OnPropertyChanged(nameof(HasVerbal));
         OnPropertyChanged(nameof(NotesText));
         OnPropertyChanged(nameof(HasNotes));
         OnPropertyChanged(nameof(ShowDescriptionChevron));
@@ -331,16 +337,17 @@ public partial class SpellDetailCardView : ContentView
 
         var beforeExpanded = label.MaxLines < 0;
         var beforeHeight = MeasureHeight(label, text, width, beforeExpanded ? -1 : collapsedLines);
+        container.HeightRequest = beforeHeight;
         var afterExpanded = toggleAndGetExpandedState();
         var afterHeight = MeasureHeight(label, text, width, afterExpanded ? -1 : collapsedLines);
 
         if (Math.Abs(afterHeight - beforeHeight) < ExpanderOverflowTolerance)
         {
+            container.HeightRequest = -1;
             ScheduleExpandabilityRefresh();
             return;
         }
 
-        container.HeightRequest = beforeHeight;
         await CardExpandAnimationHelper.AnimateHeightAsync(
             owner: container,
             target: container,

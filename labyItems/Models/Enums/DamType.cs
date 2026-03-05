@@ -8,7 +8,8 @@ public enum DamType
     Head,
     Chest,
     Abdomen,
-    Worst
+    Worst,
+    Total
 }
 
 public static class DamTypeParser

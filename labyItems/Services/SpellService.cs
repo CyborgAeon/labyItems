@@ -170,12 +170,12 @@ public static class SpellService
     {
         var candidates = new[]
         {
-            "grimoire/allSpells.json",
-            "Resources/Raw/grimoire/allSpells.json",
-            "grimoire\\allSpells.json",
-            "Resources\\Raw\\grimoire\\allSpells.json",
-            "resources/raw/grimoire/allspells.json",
-            "allSpells.json"
+            "grimoire/spells.json",
+            // "Resources/Raw/grimoire/allSpells.json",
+            // "grimoire\\allSpells.json",
+            // "Resources\\Raw\\grimoire\\allSpells.json",
+            // "resources/raw/grimoire/allspells.json",
+            // "allSpells.json"
         };
 
         foreach (var candidate in candidates)

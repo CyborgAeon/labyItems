@@ -4,7 +4,7 @@
     "level": 2,
     "colour": "Grey",
     "verbal": "I call upon the elements of fire, air, earth and water reveal to me where ... may be found",
-    "description": "As Detect Magic except that any ONE type of inanimate (non fluids) object (e.g. swords, shields, etc) is detected. It should be noted that treasure is to be found in many different configurations. Thus the wizard could detect gold bars, or grull notes, but not generic ‘treasure’. In a similar manner, traps cannot be located via Detect Inanimate, as they represent too broad a variety of potential threats.",
+    "description": "The target must be moving over a stone or earthen surface and the evocation will cause them to trip over. but it also reveals the mana point level and colour of the magic it detects. except that any ONE type of inanimate (non fluids) object (e.g. swords, shields, etc) is detected. It should be noted that treasure is to be found in many different configurations. Thus the wizard could detect gold bars, or grull notes, but not generic ‘treasure’. In a similar manner, traps cannot be located via Detect Inanimate, as they represent too broad a variety of potential threats.",
     "IsAdvanced": false,
     "sourcePage": 10
   },
@@ -121,7 +121,7 @@
     "level": 3,
     "colour": "Grey",
     "verbal": "I call upon the elements of fire, air, earth and water reveal to me where all that moves may be found",
-    "description": "As Detect Magic except that moving, living creatures (this includes fluids) are detected.",
+    "description": "The target must be moving over a stone or earthen surface and the evocation will cause them to trip over. but it also reveals the mana point level and colour of the magic it detects. except that moving, living creatures (this includes fluids) are detected.",
     "IsAdvanced": false,
     "sourcePage": 11
   },
@@ -238,7 +238,7 @@
     "level": 4,
     "colour": "Black",
     "verbal": "By the power of the shades of the dark let darkness descend over there",
-    "description": "As Darkness (Self) except it can be cast up to 20' distant from the caster. Alternatively it can be cast centred on the spell caster (only) and thus can move with him ~ 11 ~",
+    "description": "This spell creates total magical darkness in a 10' radius of the spell caster and can be simulated by all closing their eyes when within area of effect. The area of effect cannot be moved. All mundane light sources within the area are negated for the duration of the spell. The spell Light cancels the effect of this spell for the duration of the Light spell, and vice versa. except it can be cast up to 20' distant from the caster. Alternatively it can be cast centred on the spell caster (only) and thus can move with him ~ 11 ~",
     "IsAdvanced": false,
     "sourcePage": 12
   },
@@ -256,7 +256,7 @@
     "level": 2,
     "colour": "Black",
     "verbal": "By the power of darkness I disintegrate that...",
-    "description": "As Disintegrate (Touch)",
+    "description": "This spell will disintegrate one normal (non-magical or non-spiritual) item with a volume of less than 27 cubic feet.",
     "IsAdvanced": false,
     "sourcePage": 12
   },
@@ -283,7 +283,7 @@
     "level": 1,
     "colour": "Black",
     "verbal": "Embodiment of darkness go to there... Extinguish!",
-    "description": "See Extinguish (Touch)",
+    "description": "By means of this spell the caster can extinguish small non-magical light sources such as a candle, small fire, etc.",
     "IsAdvanced": false,
     "sourcePage": 12
   },
@@ -301,7 +301,7 @@
     "level": 4,
     "colour": "Black",
     "verbal": "Shades of dark grant this person the power to walk on darkness",
-    "description": "As Walk on Darkness (Self) bar range.",
+    "description": "This spell allows the caster to walk on darkness as if it were solid earth. The degree of darkness upon which walking may be attempted is total darkness to very weak candlelight. bar range.",
     "IsAdvanced": false,
     "sourcePage": 12
   },
@@ -391,7 +391,7 @@
     "level": 3,
     "colour": "Blue",
     "verbal": "Sylphs of air I bid thee take this person there",
-    "description": "See Jump (Self). The recipient of this spell must be willing.",
+    "description": "This spell allows the spell caster to jump 20' forwards, 10' backwards or 15' upwards. It nominally takes two seconds to complete the jump, and Time Stop should generally be called. “Jumping” will generally allow those involved (bar the Jumper) to perform one simple action such as a single blow or other 'instant' abilities, for which need no verbal can be used (just one ability - not a string of Neuronic Penetrations!), including speaking a single word. Complex actions will be disallowed by the ref! The recipient of this spell must be willing.",
     "IsAdvanced": false,
     "sourcePage": 14
   },
@@ -427,7 +427,7 @@
     "level": 2,
     "colour": "Blue",
     "verbal": "By the powers of air I shatter that...",
-    "description": "As Shatter (Touch), bar range.",
+    "description": "The spell will shatter one normal object (non-magical or non- spiritual) up to a volume of 27 cubic feet. bar range.",
     "IsAdvanced": false,
     "sourcePage": 14
   },
@@ -439,9 +439,21 @@
     "description": "This spell inflicts 12 total body life points (TBLP) of damage and two to each location (loc) on one character or 4 hits to a monster. Magical Armour class may be applies to this at 6/1 per point.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[12, 2]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          12,
+          2
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 14
@@ -460,7 +472,7 @@
     "level": 4,
     "colour": "Blue",
     "verbal": "Sylphs of the air grant this person the power to walk on air",
-    "description": "As Walk on Air (Self).",
+    "description": "This spell allows the caster to Walk on Air. The details of this are covered in the “Flying” section on page 9. Players should remember that it may not be possible on some occasions to reach certain heights, given the presence of (in character) ceilings, etc.",
     "IsAdvanced": false,
     "sourcePage": 14
   },
@@ -490,9 +502,21 @@
     "description": "This spell inflicts 24 points of damage on one character's total body life points (TBLP) and 4 points of damage to each of his locations (LOC). This spell damage ignores any non-magical armour. Alternatively, it delivers 8 hits of damage to a monster.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 15
@@ -583,7 +607,7 @@
     "level": 3,
     "colour": "Brown",
     "verbal": "By the powers of earth I reshape that... into a...",
-    "description": "See Reshape (touch). ~ 15 ~",
+    "description": "This spell enables the wizard to reshape any normal item that does not exceed 27 cubic feet in volume into another item of roughly the same size and material. It is not possible to reshape metal into swords or armour, etc, even if the caster has weapon- or armour-making abilities, as the product is not well-made, balanced, weighted or similar. Similarly, uncut gems cannot be made into polished valuable items, or lumps of gold into valuable goblets, etc. However, Reshape can reverse the effect of a 'Warp'. ~ 15 ~",
     "IsAdvanced": false,
     "sourcePage": 16
   },
@@ -601,7 +625,7 @@
     "level": 3,
     "colour": "Brown",
     "verbal": "I call upon the gnomes of earth to imbue this person's skin with the strength of stone",
-    "description": "As Stoneskin (Self), bar range.",
+    "description": "The caster gain PAC 6 for the duration. This PAC non-stacking with any other armour class, as per Plate(s). However the armour class counts as innate PAC. bar range.",
     "IsAdvanced": false,
     "sourcePage": 16
   },
@@ -619,7 +643,7 @@
     "level": 2,
     "colour": "Brown",
     "verbal": "By the powers of earth I warp that...",
-    "description": "See Warp (Touch).",
+    "description": "By casting this spell the wizard can warp one normal item with a volume of 27 cubic feet. Warped items are basically shapeless and useless. Warping a helmet will not cause it to damage the wearer. A warped object cannot be Mended although it can be Reshaped.",
     "IsAdvanced": false,
     "sourcePage": 16
   },
@@ -637,7 +661,7 @@
     "level": 4,
     "colour": "Brown",
     "verbal": "May the gnomes of earth grant this person the powers of chameleon",
-    "description": "See grey spell Chameleon (Self), except subject can only be hidden when surroundings are of stone, earth, etc.",
+    "description": "When cast the wizard blends into the background he stands against so that he cannot be seen by normal sight. He can however, be located by use of the Detect Magic spell etc.",
     "IsAdvanced": false,
     "sourcePage": 17
   },
@@ -649,9 +673,21 @@
     "description": "This spell charges one rock (a safe phys-rep must be used) with power. When thrown, it does 12 points of damage to the first player's location it hits, and 12 points of damage to their total life points. Alternatively, it does 4 hits to monsters. It disregards all forms of armour bar actual MAC, i.e. a suit of +0 Magic Armour would not offer any protection against a Magic Missile. The first object struck causes the rock to be discharged, so no rebounds.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[12, 12]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          12,
+          12
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 17
@@ -670,7 +706,7 @@
     "level": 4,
     "colour": "Brown",
     "verbal": "I call upon the gnomes of earth to imbue this person's skin with the strength of steel.",
-    "description": "See Plate (Self).",
+    "description": "This spell confers both MAC 5 and PAC 5 all over the wizard. This armour class does not stack with any other armour, dexterity, etc, including itself.",
     "IsAdvanced": false,
     "sourcePage": 17
   },
@@ -688,17 +724,32 @@
     "level": 5,
     "colour": "Brown",
     "verbal": "I call upon the mighty gnomes of earth imbue this rock with great power – supermissile!",
-    "description": "As Magic Missile (3 MP),above, but it does 12 points of damage to players via the location it hits and TBLP, to which only MAC applies, plus a further 12 TBLP and 2pts damage to each location as a blast effect. This blast effect ignores all armour, including MAC, as the missile detonates within the target. It does 8 hits to monsters.",
+    "description": "This spell charges one rock (a safe phys-rep must be used) with power. When thrown, it does 12 points of damage to the first player's location it hits, and 12 points of damage to their total life points. Alternatively, it does 4 hits to monsters. It disregards all forms of armour bar actual MAC, i.e. a suit of +0 Magic Armour would not offer any protection against a Magic Missile. The first object struck causes the rock to be discharged, so no rebounds. above, but it does 12 points of damage to players via the location it hits and TBLP, to which only MAC applies, plus a further 12 TBLP and 2pts damage to each location as a blast effect. This blast effect ignores all armour, including MAC, as the missile detonates within the target. It does 8 hits to monsters.",
     "IsAdvanced": false,
     "Damage": {
       "amount": [
-        [12, 12],
-        [12, 2]
+        [
+          12,
+          12
+        ],
+        [
+          12,
+          2
+        ]
       ],
-      "type": ["Missile", "Blast"],
+      "type": [
+        "Missile",
+        "Blast"
+      ],
       "ArmourApplies": [
-        [1, 1],
-        [0, 0]
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
       ],
       "ArmourType": "MAC"
     },
@@ -718,7 +769,7 @@
     "level": 4,
     "colour": "Brown",
     "verbal": "Gnomes of earth grant this person the power to walk on earth",
-    "description": "See Walk on Earth (Self).",
+    "description": "Allows the spell caster to walk on any stone or earthen surface, whether it is a cave wall, a stone roof or marshy ground, etc. While so benefiting, the caster is also rendered immune to ground-shaking 'knockdown' type effects like Earth Tremor.",
     "IsAdvanced": false,
     "sourcePage": 17
   },
@@ -790,7 +841,7 @@
     "level": 2,
     "colour": "Green",
     "verbal": "By the powers of water I rust that…",
-    "description": "See Rust (Touch).",
+    "description": "By the use of this spell the caster rusts one normal ferrous object of a volume not more than 27 cubic feet. It is totally rusted away to nothing and thus cannot be restored by a Mend, Reform or Reshape spell.",
     "IsAdvanced": false,
     "sourcePage": 18
   },
@@ -808,7 +859,7 @@
     "level": 1,
     "colour": "Green",
     "verbal": "By my power let that lock be opened",
-    "description": "See Unlock (Touch).",
+    "description": "This spell allows the caster to unlock one normal lock without the use of a key and will also unlock an object that has had Magic Lock cast upon it.",
     "IsAdvanced": false,
     "sourcePage": 18
   },
@@ -835,7 +886,7 @@
     "level": 4,
     "colour": "Green",
     "verbal": "Undine at my command create a phantasm of... to do my will and let it appear in (time 1 sec to 5 mins)",
-    "description": "As Passive Illusion (3 mana spell) except that the illusion can be programmed to appear from 1 second to 5 mins after the verbal is completed, and follow a set of instructions, rather than be directed by the caster at the time.",
+    "description": "By casting this spell the wizard creates a visual illusion of any object or creature he desires. The illusion can move and the wizard can see through its eyes. A wizard can play a passive illusion of himself. The illusion does not smell and cannot make any sound. Furthermore should it be struck or have a spell cast at it, it vanishes. Once the spell is cast the illusion may leave the range. A Passive Illusion can be no smaller than 1' across, and no larger than an object with a 10' radius, and can only be a single creature/object, not a 'scene'. If smaller than a small humanoid it is unstable, and should it move faster than a steady walk it will dissipate. except that the illusion can be programmed to appear from 1 second to 5 mins after the verbal is completed, and follow a set of instructions, rather than be directed by the caster at the time.",
     "IsAdvanced": false,
     "sourcePage": 19
   },
@@ -844,7 +895,7 @@
     "level": 6,
     "colour": "Green",
     "verbal": "Undines at my command create a phantasm of... to do my will and embody it with thy power",
-    "description": "As Passive Illusion except that the semi-active illusion is capable of doing 6 points of damage per blow it strikes. It can be dispelled in the normal manner or disbelieved. The illusion will waver and fade after taking 15 hits. If disbelieved the damage does not vanish. It otherwise follows the same strictures as Passive Illusion, but must be at least the size of a small humanoid or it is incapable of inflicting damage at all.",
+    "description": "By casting this spell the wizard creates a visual illusion of any object or creature he desires. The illusion can move and the wizard can see through its eyes. A wizard can play a passive illusion of himself. The illusion does not smell and cannot make any sound. Furthermore should it be struck or have a spell cast at it, it vanishes. Once the spell is cast the illusion may leave the range. A Passive Illusion can be no smaller than 1' across, and no larger than an object with a 10' radius, and can only be a single creature/object, not a 'scene'. If smaller than a small humanoid it is unstable, and should it move faster than a steady walk it will dissipate. except that the semi-active illusion is capable of doing 6 points of damage per blow it strikes. It can be dispelled in the normal manner or disbelieved. The illusion will waver and fade after taking 15 hits. If disbelieved the damage does not vanish. It otherwise follows the same strictures as Passive Illusion, but must be at least the size of a small humanoid or it is incapable of inflicting damage at all.",
     "IsAdvanced": false,
     "sourcePage": 19
   },
@@ -898,7 +949,7 @@
     "level": 4,
     "colour": "Green",
     "verbal": "By my power I summon a phantasm to fetch and carry as I direct",
-    "description": "As Blue spell Telekinesis except that once instructed the unseen servant will not require the continued concentration of the wizard unless he wishes to give it further instructions. The servant cannot pick up an item with a spiritual component. An unseen servant cannot fight, but is destroyed by 4 hits of damage.",
+    "description": "This spell will move one object as directed by the caster. The force of the telekinesis equals the force the referee can exert with one hand. It cannot be used to wield a weapon effectively. It cannot pick up objects that contain a spirit. Only one Telekinesis may be cast upon one object or by a wizard at any one time. except that once instructed the unseen servant will not require the continued concentration of the wizard unless he wishes to give it further instructions. The servant cannot pick up an item with a spiritual component. An unseen servant cannot fight, but is destroyed by 4 hits of damage.",
     "IsAdvanced": false,
     "sourcePage": 19
   },
@@ -916,7 +967,7 @@
     "level": 4,
     "colour": "Green",
     "verbal": "Undines of water grant this person the power to walk on or through water",
-    "description": "See Walk on or through Water (Self).",
+    "description": "This spell has two applications. It can be used to allow the wizard to walk on water as if it was normal ground or it can be used to allow him to breathe and move normally underwater. Either version of this spell grants the caster 50% off Acid, water-based attacks, poisons and potions. This includes beneficial potions.",
     "IsAdvanced": false,
     "sourcePage": 19
   },
@@ -937,9 +988,21 @@
     "description": "When he casts this spell the wizard causes one player to take 12 points of total body damage and 2 points per location. Alternatively, a monster takes 4 hits. This is magical damage against which MAC may be applied, with each point of MAC reducing the damage by 6/1.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[12, 2]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          12,
+          2
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 20
@@ -958,7 +1021,7 @@
     "level": 1,
     "colour": "Red",
     "verbal": "By the powers of fire ignite that...",
-    "description": "As Ignite (Touch) bar range.",
+    "description": "This spell when cast has the same effect as putting a small flame (e.g. a match) to an item for 2 to 3 seconds. bar range.",
     "IsAdvanced": false,
     "sourcePage": 20
   },
@@ -994,7 +1057,7 @@
     "level": 4,
     "colour": "Red",
     "verbal": "Salamanders of fire, grant this person the power to walk through fire.",
-    "description": "As Walk through Fire (Self) above.",
+    "description": "This spell confers upon the caster total immunity to normal fires and a 50% reduction in all damage taken from magical fires.",
     "IsAdvanced": false,
     "sourcePage": 20
   },
@@ -1024,9 +1087,21 @@
     "description": "This spell causes 36 total body and 6 per location of magical fire damage to one character, or 12 hits to a monster. Only MAC may be applied versus this damage, with each point of MAC reducing the damage by 6/1.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[36, 6]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          36,
+          6
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 21
@@ -1108,7 +1183,7 @@
     "level": 4,
     "colour": "White",
     "verbal": "Sprites of light I conjure thee shine forth over there / around me",
-    "description": "As Light (Self) except that the light centres on a point up to 20' distant from the wizard. Alternatively, it can be cast on the wizard and move with him.",
+    "description": "This spell creates sufficient light to illuminate a 20' diameter area. The lit area cannot be moved. The spells Darkness and Light cancel each other out for the duration of the spell effect: i.e. a 'Light’ spell will cancel the effect of a permanent 'Darkness' for 5 minutes. except that the light centres on a point up to 20' distant from the wizard. Alternatively, it can be cast on the wizard and move with him.",
     "IsAdvanced": false,
     "sourcePage": 22
   },
@@ -1135,7 +1210,7 @@
     "level": 3,
     "colour": "White",
     "verbal": "By the might of ice... snowball!",
-    "description": "As Magic Missile (page 18) except that this spell does double damage versus fire based creatures and does not need a pebble to be cast on. It does not gain Expertise benefits as per Magic Missile.",
+    "description": "This spell charges one rock (a safe phys-rep must be used) with power. When thrown, it does 12 points of damage to the first player's location it hits, and 12 points of damage to their total life points. Alternatively, it does 4 hits to monsters. It disregards all forms of armour bar actual MAC, i.e. a suit of +0 Magic Armour would not offer any protection against a Magic Missile. The first object struck causes the rock to be discharged, so no rebounds. except that this spell does double damage versus fire based creatures and does not need a pebble to be cast on. It does not gain Expertise benefits as per Magic Missile.",
     "IsAdvanced": false,
     "sourcePage": 22
   },
@@ -1162,7 +1237,7 @@
     "level": 4,
     "colour": "White",
     "verbal": "Sprites of light grant this person the power to walk on light",
-    "description": "As Walk on Light (Self). ~ 21 ~",
+    "description": "This spell allows the wizard to walk on rays of light (equal to a strong \"candlelight\" or greater intensity). Should the light disappear, the wizard will fall to the ground. ~ 21 ~",
     "IsAdvanced": false,
     "sourcePage": 22
   },
@@ -1201,9 +1276,21 @@
     "description": "By casting this spell the wizard creates a beam of light of great intensity that inflicts 24 magical points total body damage and 4 per location to one player. It does 8 hits to a monster. Only MAC may be applied versus the damage from this spell, with each point of MAC reducing the damage by 6/1.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 23
@@ -1333,9 +1420,21 @@
     "description": "The target of the spell is struck with a nerve-wracking pain which causes 12 TBLP damage (4 hits to a monster) – magical armour class does protect against this damage (at 1 for 1), and the damage is magical. Only creatures vulnerable to pain are affected, of course – undead and elementals, for example, are unharmed.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[12, 0]],
-      "type": ["Body"],
-      "ArmourApplies": [[1, 0]],
+      "amount": [
+        [
+          12,
+          0
+        ]
+      ],
+      "type": [
+        "Body"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 29
@@ -1399,7 +1498,7 @@
     "level": 3,
     "colour": "Gold",
     "verbal": "May the Golden Drake shield your body''",
-    "description": "As Shield (self), but this can only be cast on an ally, as described under the Mark Ally spell described above.",
+    "description": "The caster receives +2 Magical Armour Class and +2 Physical Armour Class. This armour can stack with any other magical or physical defence, but not Plate (Self), Plate (Other) or other spells which preclude the stacking of armour. It cannot stack with itself. but this can only be cast on an ally, as described under the Mark Ally spell described above.",
     "IsAdvanced": false,
     "sourcePage": 30
   },
@@ -1417,7 +1516,7 @@
     "level": 6,
     "colour": "Gold",
     "verbal": "Feel the power through your limbs, the Drake has strengthened your body to resist your foes''",
-    "description": "As Strengthen (Self), except that it works on those targets detailed under the Mark Ally spell.",
+    "description": "This increases the resistance level for the purposes of magical and physical effects for the wizard to 10 levels. If the spell is cast after a level-based spell has already affected the wizard then the increase is only to 9 levels of resistance. Note: this does not stack with already raised increases in resistance, or those bought on the post-8th tables – the increase is limited to 9 and 10. except that it works on those targets detailed under the Mark Ally spell.",
     "IsAdvanced": false,
     "sourcePage": 30
   },
@@ -1745,9 +1844,21 @@
     "IsAdvanced": false,
     "Immunity": "Flesh and Blood",
     "Damage": {
-      "amount": [[18, 18]],
-      "type": ["chest"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          18,
+          18
+        ]
+      ],
+      "type": [
+        "chest"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 36
@@ -1761,9 +1872,21 @@
     "IsAdvanced": false,
     "Immunity": "Involuntary Shape Shifting",
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 36
@@ -1944,7 +2067,7 @@
     "level": 6,
     "colour": "Black",
     "verbal": "By the power of the shades of the darkest depths I smite thee... Dark bolt!",
-    "description": "As the Standard 6mp Blue Glyph Lightning Bolt except as detailed above.",
+    "description": "This spell inflicts 24 points of damage on one character's total body life points (TBLP) and 4 points of damage to each of his locations (LOC). This spell damage ignores any non-magical armour. Alternatively, it delivers 8 hits of damage to a monster. except as detailed above.",
     "IsAdvanced": true,
     "sourcePage": 56
   },
@@ -2020,9 +2143,21 @@
     "IsAdvanced": true,
     "Immunity": "Poison",
     "Damage": {
-      "amount": [[36, 36]],
-      "type": ["Head"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          36,
+          36
+        ]
+      ],
+      "type": [
+        "Head"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 56
@@ -2134,9 +2269,21 @@
     "description": "Inflicts 6/1 magical lightning damage in the same manner as the Storm Blast spell. Causes 2 hits to monsters.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[6, 1]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          6,
+          1
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 58
@@ -2158,9 +2305,21 @@
     "description": "Functions as the Red Spell Shock, except that the damage is blue magic lightning and Resistance to Lightning, not fire, applies.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[12, 12]],
-      "type": ["Missile"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          12,
+          12
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 58
@@ -2200,9 +2359,21 @@
     "description": "This causes two separate targets that are indicated, to be hit with a Lightning Bolt style effect. If only one target is within range then one of the bolts strikes the wizard. The same person may never be struck twice with the same single casting of this spell. If the only person within range when this spell is cast is the caster himself than one of the bolts is grounded and that bolt inflicts no damage, rather than the wizard being struck twice.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 59
@@ -2212,7 +2383,7 @@
     "level": 6,
     "colour": "Blue",
     "verbal": "By the powers of the princes of air, I telekinesise that ... to there!",
-    "description": "As Telekinesis, but is considered to have 2 grades of strength for moving objects. Can only be used on inanimate objects, or completely motionless animate targets.",
+    "description": "This spell will move one object as directed by the caster. The force of the telekinesis equals the force the referee can exert with one hand. It cannot be used to wield a weapon effectively. It cannot pick up objects that contain a spirit. Only one Telekinesis may be cast upon one object or by a wizard at any one time. but is considered to have 2 grades of strength for moving objects. Can only be used on inanimate objects, or completely motionless animate targets.",
     "IsAdvanced": true,
     "sourcePage": 59
   },
@@ -2230,7 +2401,7 @@
     "level": 9,
     "colour": "Blue",
     "verbal": "Blink!",
-    "description": "As per the basic Blue spell of Blink but with the above differences. The use of this spell causes the caster the loss of a casting level for the following hour.",
+    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ~ 13 ~ but with the above differences. The use of this spell causes the caster the loss of a casting level for the following hour.",
     "IsAdvanced": true,
     "sourcePage": 59
   },
@@ -2320,7 +2491,7 @@
     "level": 10,
     "colour": "Blue",
     "verbal": "May the greater powers of air, teleport me to...",
-    "description": "As 6 mana point Standard spell Blink in all manners except the range is anywhere on the wizard's current plane of existence, even if it is out of line of sight with the following restrictions: The wizard must have seen, on this adventure, the destination before, have the destination within line of sight, live there (i.e. a location not involved with the adventure which may be known as the wizard's home) or have memorised the location. It costs 5pts post 8th to memorise a location other than home, per location memorised. The referee of the location must have signed the ability onto your character card. If you have a location signed onto your card and are on an adventure not being run by the same referee who signed the location onto your card, then the is within their rights to disallow that location as a point to which you may teleport. In case of dispute, the player is assumed to have teleported home. This spell is affected by the Advanced Grey spell of Phase Trap, which is described under Grey Magic in The Advanced Grimoire, starting on page 73. If this glyph is used twice within an hour, the stresses on the body are such that the caster takes casting damage as if the glyph were two levels higher. This applies to multiple uses, so that a third time in an hour the casting damage would be calculated as four levels higher, and so on. This in no way increases the actual mana cost of the spell. This rule applies to Mass Teleport, Plane Shift, and Mass Plane Shift below, plus Elemental 'Port above, and to combined castings of any of these spells.",
+    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ~ 13 ~ except the range is anywhere on the wizard's current plane of existence, even if it is out of line of sight with the following restrictions: The wizard must have seen, on this adventure, the destination before, have the destination within line of sight, live there (i.e. a location not involved with the adventure which may be known as the wizard's home) or have memorised the location. It costs 5pts post 8th to memorise a location other than home, per location memorised. The referee of the location must have signed the ability onto your character card. If you have a location signed onto your card and are on an adventure not being run by the same referee who signed the location onto your card, then the is within their rights to disallow that location as a point to which you may teleport. In case of dispute, the player is assumed to have teleported home. This spell is affected by the Advanced Grey spell of Phase Trap, which is described under Grey Magic in The Advanced Grimoire, starting on page 73. If this glyph is used twice within an hour, the stresses on the body are such that the caster takes casting damage as if the glyph were two levels higher. This applies to multiple uses, so that a third time in an hour the casting damage would be calculated as four levels higher, and so on. This in no way increases the actual mana cost of the spell. This rule applies to Mass Teleport, Plane Shift, and Mass Plane Shift below, plus Elemental 'Port above, and to combined castings of any of these spells.",
     "IsAdvanced": true,
     "sourcePage": 60
   },
@@ -2351,7 +2522,9 @@
     "damageOverride": "sever",
     "IsAdvanced": true,
     "Damage": {
-      "type": ["chest"],
+      "type": [
+        "chest"
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 61
@@ -2361,7 +2534,7 @@
     "level": 15,
     "colour": "Blue",
     "verbal": "By the power of the lords of the sylphs, may they grasp these people and take them 'twixt worlds to ... ",
-    "description": "As per Plane Shift but the wizard may take extra willing people with him at the additional cost of 1 mana point and 1 life point each. See Teleport above for additional restrictions on casting this glyph.",
+    "description": "Transports the caster to the corresponding point on a different plane 'of his choice', meaning that the caster must either have been previously to that plane, or have sufficient knowledge of it at the ref's discretion. This may not of course be used to go to 'the plane of Total Heal and Magical Bastard-swords', or similar! A wizard who has bought this glyph may begin to keep a 'visited list' of planes visited, signed by the referee of each adventure, in the same manner as a Sniff list. If this is not done, the referee is at liberty to declare the wizard's knowledge insufficient to travel anywhere but to Labyrinthia. Note that this spell only transports the caster to the corresponding point on the plane of choice, not where he wishes to go. but the wizard may take extra willing people with him at the additional cost of 1 mana point and 1 life point each. See Teleport above for additional restrictions on casting this glyph.",
     "IsAdvanced": true,
     "sourcePage": 61
   },
@@ -2370,7 +2543,7 @@
     "level": 15,
     "colour": "Blue",
     "verbal": "May the greatest powers of air grasp these people and take them there/to...",
-    "description": "As per Teleport but the wizard may take extra willing people with him at the additional cost of 1 mana point and 1 life point each. See Teleport above for restrictions.",
+    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ~ 13 ~ except the range is anywhere on the wizard's current plane of existence, even if it is out of line of sight with the following restrictions: The wizard must have seen, on this adventure, the destination before, have the destination within line of sight, live there (i.e. a location not involved with the adventure which may be known as the wizard's home) or have memorised the location. It costs 5pts post 8th to memorise a location other than home, per location memorised. The referee of the location must have signed the ability onto your character card. If you have a location signed onto your card and are on an adventure not being run by the same referee who signed the location onto your card, then the is within their rights to disallow that location as a point to which you may teleport. In case of dispute, the player is assumed to have teleported home. This spell is affected by the Advanced Grey spell of Phase Trap, which is described under Grey Magic in The Advanced Grimoire, starting on page 73. If this glyph is used twice within an hour, the stresses on the body are such that the caster takes casting damage as if the glyph were two levels higher. This applies to multiple uses, so that a third time in an hour the casting damage would be calculated as four levels higher, and so on. This in no way increases the actual mana cost of the spell. This rule applies to Mass Teleport, Plane Shift, and Mass Plane Shift below, plus Elemental 'Port above, and to combined castings of any of these spells. but the wizard may take extra willing people with him at the additional cost of 1 mana point and 1 life point each. See Teleport above for restrictions.",
     "IsAdvanced": true,
     "sourcePage": 61
   },
@@ -2613,15 +2786,29 @@
     "level": 7,
     "colour": "Brown",
     "verbal": "Mighty lords of the earth, infuse this rock with all thy power... Great Missile",
-    "description": "As Supermissile, except that the damage inflicted is 18 points to the location, 3pts to each other location, and 36 tblp overall (12 general hits to monsters).",
+    "description": "This spell charges one rock (a safe phys-rep must be used) with power. When thrown, it does 12 points of damage to the first player's location it hits, and 12 points of damage to their total life points. Alternatively, it does 4 hits to monsters. It disregards all forms of armour bar actual MAC, i.e. a suit of +0 Magic Armour would not offer any protection against a Magic Missile. The first object struck causes the rock to be discharged, so no rebounds. above, but it does 12 points of damage to players via the location it hits and TBLP, to which only MAC applies, plus a further 12 TBLP and 2pts damage to each location as a blast effect. This blast effect ignores all armour, including MAC, as the missile detonates within the target. It does 8 hits to monsters. except that the damage inflicted is 18 points to the location, 3pts to each other location, and 36 tblp overall (12 general hits to monsters).",
     "IsAdvanced": true,
     "Damage": {
       "amount": [
-        [18, 3],
-        [18, 3]
+        [
+          18,
+          3
+        ],
+        [
+          18,
+          3
+        ]
       ],
-      "type": ["Missile", "Blast"],
-      "ArmourApplies": [[0, 0]],
+      "type": [
+        "Missile",
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 64
@@ -2766,7 +2953,7 @@
     "level": 3,
     "colour": "Ebony",
     "verbal": "May the ebony Drake strike thee with Agony!",
-    "description": "As the 2 mana point Ebony Spell Pain, but it inflicts 18pts of TBLP damage. As with the Pain spell, this spell does not harm those creatures unable to feel pain, such as elementals, true undead, statues and plants.",
+    "description": "The target of the spell is struck with a nerve-wracking pain which causes 12 TBLP damage (4 hits to a monster) – magical armour class does protect against this damage (at 1 for 1), and the damage is magical. Only creatures vulnerable to pain are affected, of course – undead and elementals, for example, are unharmed. but it inflicts 18pts of TBLP damage. As with the Pain spell, this spell does not harm those creatures unable to feel pain, such as elementals, true undead, statues and plants.",
     "IsAdvanced": true,
     "sourcePage": 66
   },
@@ -2820,7 +3007,7 @@
     "level": 8,
     "colour": "Ebony",
     "verbal": "May the ebony Drake strike thee down with great Torment!",
-    "description": "As the 2 mana point Ebony Spell Pain, but it inflicts 36pts of TBLP damage. As with the Pain spell, this spell does not harm those creatures unable to feel pain, such as elementals, true undead, statues and plants.",
+    "description": "The target of the spell is struck with a nerve-wracking pain which causes 12 TBLP damage (4 hits to a monster) – magical armour class does protect against this damage (at 1 for 1), and the damage is magical. Only creatures vulnerable to pain are affected, of course – undead and elementals, for example, are unharmed. but it inflicts 36pts of TBLP damage. As with the Pain spell, this spell does not harm those creatures unable to feel pain, such as elementals, true undead, statues and plants.",
     "IsAdvanced": true,
     "sourcePage": 66
   },
@@ -2910,7 +3097,7 @@
     "level": 2,
     "colour": "Gold",
     "verbal": "The Gold Drake attracts thee!",
-    "description": "As per the 10mp spell Warding but attracts back one target a total of 40' (14 paces), regardless of the number of hits/levels of resistance that it possesses. Target is stopped by contact with solid objects, at which point the target is released. This spell only functions on Marked Allies.",
+    "description": "This spell prevents one opponent with less than 10 levels of resistance from attacking the wizard, or from approaching within 10', forcing them to back away if need be. The spell is broken if the wizard casts another spell, moves faster than a walk, attacks, or if the target is cornered and cannot get out of the 10' radius. but attracts back one target a total of 40' (14 paces), regardless of the number of hits/levels of resistance that it possesses. Target is stopped by contact with solid objects, at which point the target is released. This spell only functions on Marked Allies.",
     "IsAdvanced": true,
     "sourcePage": 68
   },
@@ -2982,7 +3169,7 @@
     "level": 6,
     "colour": "Gold",
     "verbal": "Golden Drake I require rest and shelter - I seek peace and tranquillity in this place",
-    "description": "As per the Haven spell, but the only person affected by the spell and its Pacification effect is the caster. The spell grants a temporary version of Greater Aware Meditation [see Post 8th tables for details]. The spell lasts as long as the casting wizard remains within the area of affect [30' radius], during which time the wizard counts as though meditating and gains +x1 Meditation Rate [non-stacking with any other temporarily increase].",
+    "description": "Within the radius of effect all creatures that are not mindless feel at ease. None may initiate any conflict or carry on if the fight enters the area of affect, or if the target is in the area of effect. I.e. you cannot attack into the area. Any creature which is not completely immune to magic that tries to enter the area of affect, but who is not affected by the pacification above, will find themselves unable to do so (e.g. mindless creatures like animated statues or similar). If any conflict occurs within the haven, the spell is cancelled immediately, e.g. if a purely spiritual creature attacks a creature who is affected by the spell and is within the area of effect. The spell lasts as long as the casting wizard remains at the centre of effect and meditates, during which time that wizard gains +x1 Meditation Rate, e.g. if he had standard meditation gains double meditation rate, if he had double it becomes triple meditation rate, et cetera. ~ 68 ~ but the only person affected by the spell and its Pacification effect is the caster. The spell grants a temporary version of Greater Aware Meditation [see Post 8th tables for details]. The spell lasts as long as the casting wizard remains within the area of affect [30' radius], during which time the wizard counts as though meditating and gains +x1 Meditation Rate [non-stacking with any other temporarily increase].",
     "IsAdvanced": true,
     "sourcePage": 68
   },
@@ -2991,7 +3178,7 @@
     "level": 2,
     "colour": "Gold",
     "verbal": "The Gold Drake repels thee!",
-    "description": "As per the 10mp spell Warding but flings back one target a total of 40' (14 paces) regardless of the number of hits/levels of resistance that it possesses. Target is stopped by contact with solid objects, at which point the target is released.",
+    "description": "This spell prevents one opponent with less than 10 levels of resistance from attacking the wizard, or from approaching within 10', forcing them to back away if need be. The spell is broken if the wizard casts another spell, moves faster than a walk, attacks, or if the target is cornered and cannot get out of the 10' radius. but flings back one target a total of 40' (14 paces) regardless of the number of hits/levels of resistance that it possesses. Target is stopped by contact with solid objects, at which point the target is released.",
     "IsAdvanced": true,
     "sourcePage": 68
   },
@@ -3084,9 +3271,21 @@
     "description": "This spell delivers 12 points TBLP and 2 points per location of magical acid damage against which only magical armour class defends. This spell delivers 4 hits to monsters.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[12, 2]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          12,
+          2
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 70
@@ -3141,7 +3340,7 @@
     "level": 2,
     "colour": "Green",
     "verbal": "Undines of water converse with me and tell me of your purpose!",
-    "description": "As Talk To Inanimate but only works on fluids. Fluids have absolutely no perception beyond themselves and will generally be hedgy about what they are, requiring intensive discussion and persuasion. Fluids have excellent memories. A wizard may not speak to the fluid contained within an animate object by use of this spell.",
+    "description": "This spell empowers the wizard to talk to a specific non-living and non-fluid item. The item will answer truthfully if it is not spiritual or magical. Spiritual items do not answer and magical items may answer as they choose, but will generally have no reason not to be truthful. Non-supernatural items will only be aware of themselves; supernatural items may have more extensive perceptions at the referee's discretion. but only works on fluids. Fluids have absolutely no perception beyond themselves and will generally be hedgy about what they are, requiring intensive discussion and persuasion. Fluids have excellent memories. A wizard may not speak to the fluid contained within an animate object by use of this spell.",
     "IsAdvanced": true,
     "sourcePage": 70
   },
@@ -3150,7 +3349,7 @@
     "level": 5,
     "colour": "Green",
     "verbal": "Undines at my command, create for me a servant and ally to act unseen in my name.",
-    "description": "As per Unseen Servant; however, may wield up to two weapons (which remain visible!) and inflict base damage with them. ~ 69 ~",
+    "description": "This spell will move one object as directed by the caster. The force of the telekinesis equals the force the referee can exert with one hand. It cannot be used to wield a weapon effectively. It cannot pick up objects that contain a spirit. Only one Telekinesis may be cast upon one object or by a wizard at any one time. except that once instructed the unseen servant will not require the continued concentration of the wizard unless he wishes to give it further instructions. The servant cannot pick up an item with a spiritual component. An unseen servant cannot fight, but is destroyed by 4 hits of damage. however, may wield up to two weapons (which remain visible!) and inflict base damage with them. ~ 69 ~",
     "IsAdvanced": true,
     "sourcePage": 70
   },
@@ -3179,11 +3378,25 @@
     "verbal": "By the mighty powers of the undine I dissolve thee... Acid Strike!",
     "description": "This spell delivers 24 points of TBLP and 4 points per location of magical damage against which only magical armour class applies. The spell also dissolves 2 points of physical armour class including toughened skin (which will regrow after the adventure only). Master crafted armour loses only one point of PAC per acid strike. This spell delivers 8 hits to monsters. Immunity to Acid stops the dissolving of the PAC and halves the damage suffered.",
     "IsAdvanced": true,
-    "PACDam": [2],
+    "PACDam": [
+      2
+    ],
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 71
@@ -3295,9 +3508,21 @@
     "description": "In a similar manner to Rain Shower [see page 70] this spell creates a short shower of acidic rain, which will burn the skin of all those within the radius. It causes 6/1 magical acid damage, against which MAC applies. Thus MAC 1 will stop its effects. Immunity to Acid grants 1/2 effect.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[6, 1]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          6,
+          1
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 72
@@ -3310,9 +3535,21 @@
     "description": "This spell has the following effects on the target of the spell: 1. Target takes 36/6 magical acid damage against which only magical armour class applies. 2. All physical armour class on the target is destroyed. 3. All non magical/spiritual/\"Item\" objects are destroyed. To monsters this spell inflicts 12 Hits. Immunity to Acid stops parts 2 and 3 and halves the damage from 1.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[36, 6]],
-      "type": ["Blast"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          36,
+          6
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 72
@@ -3335,9 +3572,21 @@
     "IsAdvanced": true,
     "Immunity": "Flesh and Blood",
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 72
@@ -3405,7 +3654,9 @@
     "damageOverride": "loc0",
     "IsAdvanced": true,
     "Damage": {
-      "type": ["chest"],
+      "type": [
+        "chest"
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 73
@@ -3442,7 +3693,7 @@
     "level": 2,
     "colour": "Grey",
     "verbal": "I call upon the elements of fire, air, earth and water, reveal unto me where you may be found and relate thy potency!",
-    "description": "As the Standard Detect Magic cantrip but it also reveals the mana point level and colour of the magic it detects.",
+    "description": "The target must be moving over a stone or earthen surface and the evocation will cause them to trip over. but it also reveals the mana point level and colour of the magic it detects.",
     "IsAdvanced": true,
     "sourcePage": 73
   },
@@ -3469,7 +3720,7 @@
     "level": 4,
     "colour": "Grey",
     "verbal": "May the elements throw light and dark in confusion over there.",
-    "description": "As Twilight (Self) but the caster may chose to focus it on themselves so that it moves with them (cf. Light Range).",
+    "description": "Causes the area within 10ft of where the spell is cast to be filled with twilight. This negates any magical darkness or light as it is appears. but the caster may chose to focus it on themselves so that it moves with them (cf. Light Range).",
     "IsAdvanced": true,
     "sourcePage": 73
   },
@@ -3784,7 +4035,7 @@
     "level": 6,
     "colour": "Ivory",
     "verbal": "May the Ivory Drake twist this weapon and its blow strike true.",
-    "description": "As per the spell Enhance Weapon but does not grant any additional damage grades.",
+    "description": "This spell will magically augment a traditional wizard’s weapon, i.e. staff, spear or dagger. The weapon can only be used by the wizard who cast the spell, and they cannot be physically disarmed, although a Vanish will remove the weapon for 5 minutes. The weapon is modified as follows: 1: The weapon does 3 more magical damage grades, (i.e. +3 magical damage) stopping at the wizards maximum damage. Normally, the maximum is quad. 2: The damage done ignores Physical armour – only Magical and Dexterity armour can be used in defence against it. 3: The weapon will shatter any normal weapon, shield or armour used in defence against it. It does not shatter anything else. If cast by a Warlock (only), this spell will enhance any weapon instead of the above weapon types, if so desired. but does not grant any additional damage grades.",
     "IsAdvanced": true,
     "sourcePage": 76
   },
@@ -3847,7 +4098,7 @@
     "level": 10,
     "colour": "Ivory",
     "verbal": "May the Ivory Drake grant me the power to take her conflict to her foes.",
-    "description": "As the Sanctuary spell however only the casting wizard is affected and there is no limit to the distance that he may move and still receive the benefits of the spell. This may be enhanced with spells that empower a sanctuary.",
+    "description": "Within the range of the spell all Marked Allies of the wizard receive the following bonuses: 1: +2 Dexterity armour class. This acts as the Chosen Of The Dragon ability in the Post 8th Tables (Later in the book). This means that the +2 DAC does not stack with blesses, curses or similar watchings. 2: 25% reduction of non-purely spiritual damage after armour calculations. which does not stack with any other percentile reductions of damage. 3: 9th level of resistance to magical attacks – this does not stack with any other resistance level increases. This may be enhanced with spells that empower a sanctuary.",
     "IsAdvanced": true,
     "sourcePage": 77
   },
@@ -3856,7 +4107,7 @@
     "level": 15,
     "colour": "Ivory",
     "verbal": "The Ivory Drake offers battle to all those that seek conflict and resolution. We go forth to take the battle to the Enemy.",
-    "description": "As per Sanctuary but the spell moves with the caster, maintaining a 30' radius around them at all times. Please note the greatly reduced duration. This may be empowered via Sanctuary-enhancing spells. ~ 76 ~",
+    "description": "Within the range of the spell all Marked Allies of the wizard receive the following bonuses: 1: +2 Dexterity armour class. This acts as the Chosen Of The Dragon ability in the Post 8th Tables (Later in the book). This means that the +2 DAC does not stack with blesses, curses or similar watchings. 2: 25% reduction of non-purely spiritual damage after armour calculations. which does not stack with any other percentile reductions of damage. 3: 9th level of resistance to magical attacks – this does not stack with any other resistance level increases. but the spell moves with the caster, maintaining a 30' radius around them at all times. Please note the greatly reduced duration. This may be empowered via Sanctuary-enhancing spells. ~ 76 ~",
     "IsAdvanced": true,
     "sourcePage": 77
   },
@@ -4031,7 +4282,9 @@
     "damageOverride": "sever",
     "IsAdvanced": true,
     "Damage": {
-      "type": ["chest"],
+      "type": [
+        "chest"
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 79
@@ -4053,9 +4306,21 @@
     "description": "Inflicts 6/1 magical fire damage in the same manner as the Fire Blast spell. Causes 2 hits to monsters.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[6, 1]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          6,
+          1
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 79
@@ -4140,9 +4405,21 @@
     "description": "A shower of fire explodes outwards from the caster, inflicting 6/1 magical fire dart (2 Hits) to all within the radius. The caster also takes 6/1 magical fire damage, to which they may not apply MAC.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[6, 1]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          6,
+          1
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 80
@@ -4152,12 +4429,24 @@
     "level": 4,
     "colour": "Red",
     "verbal": "Into my hand I call forth the power of fire and brimstone...Great Shock",
-    "description": "As the Standard spell Shock in all ways, except that the damage inflicted is 24/24 (8 Hits to monsters).",
+    "description": "By casting this spell the wizard causes his touch to do 12 points of damage to the location and total body points (TBLP) of players. Alternatively it does 4 hits to monsters. The only AC that may be applies versus this damage is MAC, which applies on a 1 for 1 basis (so MAC2 reduces the damage by 2 TBLP and 2 to the location touched). Once the verbal is completed the wizard has 5 seconds to discharge the spell or it is wasted. He cannot cast any more spells in this time. This spell only causes damage to the first target struck so don't pick your nose! except that the damage inflicted is 24/24 (8 Hits to monsters).",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[24, 24]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          24,
+          24
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 80
@@ -4170,9 +4459,21 @@
     "description": "This spell generates a tennis-ball sized globe of magical flame. 5 seconds after creation, or whenever thrown against a solid surface, the fireball explodes, inflicting 12/2 magical fire damage to all within 20' (4 hits to monsters) and igniting all flammable objects within the area (i.e. this is a magical Incendiary Cache).",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[12, 2]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          12,
+          2
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 80
@@ -4194,9 +4495,21 @@
     "description": "A mass of fire explodes outwards from the caster, inflicting 24/4 magical fire damage (8 Hits) to all within the radius and hurling them back 6 paces unless they are Immune to Repels. The caster also takes 24/4 magical fire damage, to which he may not apply MAC.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 81
@@ -4227,9 +4540,21 @@
     "description": "This spell functions as per Disruption but inflicts 48/8 magical fire damage (16 Hits to monster).",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[48, 8]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          48,
+          8
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 81
@@ -4251,9 +4576,21 @@
     "description": "This functions in all fashion exactly as the Fire Trap spell above, except when triggered it releases a Disruption. If cast by a Red Wizard with Disruption Expertise it costs only 9 mana to cast.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[36, 6]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          36,
+          6
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 81
@@ -4267,17 +4604,46 @@
     "IsAdvanced": true,
     "Damage": {
       "amount": [
-        [0, 9],
-        [0, 9],
-        [0, 9],
-        [36, 3]
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          36,
+          3
+        ]
       ],
-      "type": ["head", "chest", "abdomen", "Blast"],
+      "type": [
+        "head",
+        "chest",
+        "abdomen",
+        "Blast"
+      ],
       "ArmourApplies": [
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0]
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
       ],
       "ArmourType": "MAC"
     },
@@ -4327,9 +4693,21 @@
     "description": "Acts in a similar manner to Disruption, however, it causes the target to suffer 120/20 (40 HTK) and a magical halt at the caster’s skill level.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[120, 20]],
-      "type": ["Blast"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          120,
+          20
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 83
@@ -4342,9 +4720,21 @@
     "description": "This spell has several effects as the target is consumed in intense heat: 1. All normal metal on the target melts, 2. All potions boil dry, 3. Target suffers 36/6 magical fire damage (12 Hits), 4. All objects within 1' are ignited, 5. The target is blinded until a regeneration is cast upon their eyes (only one regeneration is required, which though it would not normally heal such damage does in this case).",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[36, 6]],
-      "type": ["Blast"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          36,
+          6
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 83
@@ -4358,17 +4748,46 @@
     "IsAdvanced": true,
     "Damage": {
       "amount": [
-        [48, 12],
-        [0, 12],
-        [0, 12],
-        [0, 6]
+        [
+          48,
+          12
+        ],
+        [
+          0,
+          12
+        ],
+        [
+          0,
+          12
+        ],
+        [
+          0,
+          6
+        ]
       ],
-      "type": ["head", "chest", "abdomen", "Blast"],
+      "type": [
+        "head",
+        "chest",
+        "abdomen",
+        "Blast"
+      ],
       "ArmourApplies": [
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0]
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
       ],
       "ArmourType": "MAC"
     },
@@ -4571,9 +4990,21 @@
     "description": "Replicates the Winter elf innate ability listed in the handbook, inflicting 24/4 magical cold damage to one target. MAC applies, stopping 6/1 per point.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 85
@@ -4605,13 +5036,28 @@
     "IsAdvanced": true,
     "Damage": {
       "amount": [
-        [12, 12],
-        [12, 2]
+        [
+          12,
+          12
+        ],
+        [
+          12,
+          2
+        ]
       ],
-      "type": ["Missile", "Blast"],
+      "type": [
+        "Missile",
+        "Blast"
+      ],
       "ArmourApplies": [
-        [1, 1],
-        [0, 0]
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
       ],
       "ArmourType": "MAC"
     },
@@ -4658,7 +5104,7 @@
     "level": 10,
     "colour": "White",
     "verbal": "Mighty powers of cold freeze the ground, as though winter has come...Glacier Field",
-    "description": "As per Sheet of Ice, above, except that the sheet causes any person within the radius of the spellto Slip each time they try to take a step. The Glacier Field may be destroyed by 400 hits, or 100 fire-based hits. ~ 85 ~",
+    "description": "All creatures within 20', excluding the caster, are affected by a Slip spell, as above. above, except that the sheet causes any person within the radius of the spellto Slip each time they try to take a step. The Glacier Field may be destroyed by 400 hits, or 100 fire-based hits. ~ 85 ~",
     "IsAdvanced": true,
     "sourcePage": 86
   },
@@ -4744,7 +5190,9 @@
     "Immunity": "Flesh and Blood",
     "IsAdvanced": true,
     "Damage": {
-      "type": ["chest"],
+      "type": [
+        "chest"
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 87
@@ -4854,7 +5302,7 @@
     "level": 16,
     "colour": "Sorcery",
     "verbal": "I entreat the powers of magic, let an enchanted guardian appear, come forth greater guardian, your aid is demanded to defend me from assault!",
-    "description": "As per Evoke Guardian, above, but the creature has 40htk and possesses +2 grades of strength.",
+    "description": "This summons a humanoid Demonkind, which will stay with the Sorcerer and remain passive until either the Sorcerer himself or the guardian is attacked. At this point it will attack the assailant until either the assailant or the guardian are killed. If the guardian is still alive he will return to a neutral stance until the activation sequence is triggered again. The guardian requires 25 hits to kill and delivers damage by weapon type with +1 Strength. The guardian is summoned with a one-handed weapon, but may use any class of weapon bar machine propelled or hand thrown. The guardian may not use a shield. above, but the creature has 40htk and possesses +2 grades of strength.",
     "IsAdvanced": true,
     "sourcePage": 89
   },
@@ -4863,7 +5311,7 @@
     "level": 18,
     "colour": "Sorcery",
     "verbal": "Mighty Portal Guardian I evoke thee, come hither now, heed my commands and guard this way lest I be angered and cast thee down!",
-    "description": "As per Evoke Portal Guardian, above, bar the creature has 50htk and possesses +2 grades of strength.",
+    "description": "This summons a humanoid Demonkind to guard an indicated doorway. The SECFAP cannot attack anyone until it is attacked, or if an individual tries to pass the portal. If activated it will attack no further than 4 paces from its portal, and is only vulnerable to attacks originating from within 4 paces of its portal. If not activated it will stand in the portal, blocking access. The nature of the portal guardian means that it is not possible to bypass it unobserved by the use of Invisibility or similar. It is totally aware of the presence of all animate things with in its defence area, similar to Wanderer's Hunch. It is not possible to Blink or otherwise magically shift through the doorway the guardian protects, but it is possible to do so through the wall at least 4 paces away from the portal. Where paces are used they are measured as the paces of the portal guardian. The portal guardian requires 30 hits to slay it and delivers damage by weapon type +1 strength. When summoned it arrives armed with a +0 magical Bastard sword only usable by the portal guardian which is destroyed when the guardian dies. above, bar the creature has 50htk and possesses +2 grades of strength.",
     "IsAdvanced": true,
     "sourcePage": 89
   },

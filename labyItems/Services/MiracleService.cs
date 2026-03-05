@@ -50,6 +50,7 @@ public static class MiracleService
         public int power { get; set; } = 0;
         public string name { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;
+        public string verbal { get; set; } = string.Empty;
         public string sphere { get; set; } = string.Empty;
         public bool isAdvanced { get; set; } = false;
         public string alignment { get; set; } = string.Empty;
@@ -175,6 +176,7 @@ public static class MiracleService
             {
                 e.name ??= string.Empty;
                 e.description ??= string.Empty;
+                e.verbal ??= string.Empty;
                 e.sphere ??= string.Empty;
                 e.alignment ??= string.Empty;
                 e.damage ??= new List<int[]>();

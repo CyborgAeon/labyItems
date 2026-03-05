@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Input;
+using System.Text.Json;
+using labyItems.Controls;
+using labyItems.Models.Enums;
 using labyItems.Services;
-using Microsoft.Maui.Controls;
 
 namespace labyItems.Pages.Search;
 
@@ -12,6 +13,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private const int MaxVisibleResults = 300;
+    private const string BackChipKey = "__back";
+    private const string TierHandbook = "Handbook";
+    private const string TierAdvanced = "Advanced";
 
     private static readonly IReadOnlyDictionary<string, GlobalSearchKind?> FilterMap =
         new Dictionary<string, GlobalSearchKind?>(StringComparer.OrdinalIgnoreCase)
@@ -23,18 +27,44 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             ["Evocations"] = GlobalSearchKind.Evocation
         };
 
-    private readonly List<GlobalSearchResultVm> _allResults = new();
-    private bool _isLoaded;
-
-    public ObservableCollection<string> Filters { get; } = new()
-    {
+    private static readonly IReadOnlyList<string> PrimaryFilterOrder =
+    [
         "All",
         "Abilities",
         "Spells",
         "Miracles",
         "Evocations"
+    ];
+
+    private static readonly IReadOnlyList<FilterOption> SpellColourOptions = BuildSpellColourOptions();
+    private static readonly IReadOnlyList<FilterOption> MiracleSphereOptions = BuildMiracleSphereOptions();
+    private static readonly IReadOnlyList<FilterOption> EvocationFieldOptions = BuildEvocationFieldOptions();
+    private static readonly HashSet<string> EvocationFieldTokens = new(EvocationFieldOptions.Select(o => o.Token), StringComparer.OrdinalIgnoreCase);
+
+    private static readonly Dictionary<string, string> EvocationFieldAliases = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["forest"] = NormalizeToken(EvocationFields.Forests.ToString()),
+        ["river"] = NormalizeToken(EvocationFields.Rivers.ToString()),
+        ["mountain"] = NormalizeToken(EvocationFields.Mountains.ToString()),
+        ["desert"] = NormalizeToken(EvocationFields.Deserts.ToString()),
+        ["city"] = NormalizeToken(EvocationFields.Cities.ToString()),
+        ["sky"] = NormalizeToken(EvocationFields.Skies.ToString()),
+        ["keeperofthewind"] = NormalizeToken(EvocationFields.KeeperOfWinds.ToString())
     };
 
+    private readonly List<GlobalSearchResultVm> _allResults = new();
+    private readonly HashSet<string> _selectedSpellColourTokens = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _selectedSpellTierTokens = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _selectedMiracleSphereTokens = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _selectedMiracleTierTokens = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _selectedEvocationFieldTokens = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _selectedEvocationTierTokens = new(StringComparer.OrdinalIgnoreCase);
+
+    private bool _isLoaded;
+    private string _selectedPrimaryFilter = "All";
+    private SearchSecondaryFilterMode _secondaryFilterMode = SearchSecondaryFilterMode.None;
+
+    public ObservableCollection<GlobalSearchFilterChipVm> ActiveFilterChips { get; } = new();
     public ObservableCollection<GlobalSearchResultVm> FilteredResults { get; } = new();
 
     private string _searchText = string.Empty;
@@ -50,19 +80,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         }
     }
 
-    private string _selectedFilter = "All";
-    public string SelectedFilter
-    {
-        get => _selectedFilter;
-        set
-        {
-            var resolved = string.IsNullOrWhiteSpace(value) ? "All" : value.Trim();
-            if (!Set(ref _selectedFilter, resolved))
-                return;
-
-            ApplyFilters();
-        }
-    }
+    public string SelectedPrimaryFilter => _selectedPrimaryFilter;
 
     private bool _isLoading;
     public bool IsLoading
@@ -94,16 +112,63 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         }
     }
 
-    public ICommand SelectFilterCommand { get; }
-
     public GlobalSearchVm()
     {
-        SelectFilterCommand = new Command<string>(filter => SelectedFilter = filter ?? "All");
+        RebuildActiveFilterChips();
+
         FilteredResults.CollectionChanged += (_, __) =>
         {
             Raise(nameof(HasNoResults));
             Raise(nameof(EmptyStateText));
         };
+    }
+
+    public GlobalSearchFilterTransition PreviewFilterTransition(GlobalSearchFilterChipVm? chip)
+    {
+        if (chip == null)
+            return GlobalSearchFilterTransition.None;
+
+        if (_secondaryFilterMode == SearchSecondaryFilterMode.None && TryResolveSecondaryMode(chip.Key, out _))
+            return GlobalSearchFilterTransition.ToSecondary;
+
+        if (_secondaryFilterMode != SearchSecondaryFilterMode.None && chip.IsBack)
+            return GlobalSearchFilterTransition.ToPrimary;
+
+        return GlobalSearchFilterTransition.None;
+    }
+
+    public void ApplyFilterChip(GlobalSearchFilterChipVm? chip)
+    {
+        if (chip == null)
+            return;
+
+        if (_secondaryFilterMode == SearchSecondaryFilterMode.None)
+        {
+            if (!FilterMap.ContainsKey(chip.Key))
+                return;
+
+            _selectedPrimaryFilter = chip.Key;
+            Raise(nameof(SelectedPrimaryFilter));
+
+            if (TryResolveSecondaryMode(chip.Key, out var mode))
+                _secondaryFilterMode = mode;
+            else
+                _secondaryFilterMode = SearchSecondaryFilterMode.None;
+        }
+        else
+        {
+            if (chip.IsBack)
+            {
+                _secondaryFilterMode = SearchSecondaryFilterMode.None;
+            }
+            else
+            {
+                ToggleSecondarySelection(chip.Key);
+            }
+        }
+
+        RebuildActiveFilterChips();
+        ApplyFilters();
     }
 
     public async Task EnsureLoadedAsync()
@@ -118,16 +183,15 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         try
         {
             var evolutionAbilities = await SafeLoadAsync(EvolutionService.GetAllAbilitiesAsync);
-            var manuAbilities = await SafeLoadAsync(ManuAbilityService.GetAllAsync);
             var spells = await SafeLoadAsync(async () =>
             {
                 var list = await SpellService.GetAllAsync();
                 return (IReadOnlyList<SpellService.SpellRaw>)list;
             });
             var miracles = await SafeLoadAsync(MiracleService.GetAllAsync);
-            var evocations = await SafeLoadAsync(DruidEvocationService.GetAllAsync);
+            var evocations = await SafeLoadEvocationsAsync();
 
-            BuildUnifiedResults(evolutionAbilities, manuAbilities, spells, miracles, evocations);
+            BuildUnifiedResults(evolutionAbilities, spells, miracles, evocations);
             _isLoaded = true;
             ApplyFilters();
         }
@@ -139,7 +203,6 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
 
     private void BuildUnifiedResults(
         IReadOnlyList<EvolutionService.AbilityResult> evolutionAbilities,
-        IReadOnlyList<ManuAbilityService.ManuAbilityEntry> manuAbilities,
         IReadOnlyList<SpellService.SpellRaw> spells,
         IReadOnlyList<MiracleService.MiracRaw> miracles,
         IReadOnlyList<DruidEvocationService.EvocRaw> evocations)
@@ -147,29 +210,13 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         _allResults.Clear();
 
         var abilityMap = new Dictionary<string, GlobalSearchResultVm>(StringComparer.OrdinalIgnoreCase);
-        foreach (var ability in manuAbilities)
-        {
-            var key = BuildAbilityKey(ability.name, ability.table);
-            abilityMap[key] = CreateAbilityResult(
-                name: ability.name,
-                table: ability.table,
-                cost: ability.cost,
-                availability: ability.availability,
-                description: ability.description);
-        }
-
         foreach (var ability in evolutionAbilities)
         {
             var key = BuildAbilityKey(ability.Index, ability.Table);
             if (abilityMap.ContainsKey(key))
                 continue;
 
-            abilityMap[key] = CreateAbilityResult(
-                name: ability.Index,
-                table: ability.Table,
-                cost: ability.Cost,
-                availability: ability.Available,
-                description: ability.Description);
+            abilityMap[key] = CreateAbilityResult(ability);
         }
 
         _allResults.AddRange(abilityMap.Values);
@@ -194,12 +241,21 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     {
         var query = (_searchText ?? string.Empty).Trim();
         var normalized = query.ToLowerInvariant();
-        var selectedKind = ResolveFilterKind(_selectedFilter);
+        var selectedKind = ResolveFilterKind(_selectedPrimaryFilter);
 
         IEnumerable<GlobalSearchResultVm> results = _allResults;
 
         if (selectedKind.HasValue)
             results = results.Where(r => r.Kind == selectedKind.Value);
+
+        if (selectedKind == GlobalSearchKind.Spell && _secondaryFilterMode == SearchSecondaryFilterMode.Spell)
+            results = results.Where(r => r.Spell != null && PassesSpellSubFilters(r.Spell));
+
+        if (selectedKind == GlobalSearchKind.Miracle && _secondaryFilterMode == SearchSecondaryFilterMode.Miracle)
+            results = results.Where(r => r.Miracle != null && PassesMiracleSubFilters(r.Miracle));
+
+        if (selectedKind == GlobalSearchKind.Evocation && _secondaryFilterMode == SearchSecondaryFilterMode.Evocation)
+            results = results.Where(r => r.Evocation != null && PassesEvocationSubFilters(r.Evocation));
 
         if (normalized.Length > 0)
             results = results.Where(r => r.SearchBlob.Contains(normalized, StringComparison.Ordinal));
@@ -213,6 +269,221 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         FilteredResults.Clear();
         foreach (var item in ordered)
             FilteredResults.Add(item);
+    }
+
+    private bool PassesSpellSubFilters(SpellService.SpellRaw spell)
+    {
+        if (!PassesTierFilter(_selectedSpellTierTokens, spell.isAdvanced ?? false))
+            return false;
+
+        if (_selectedSpellColourTokens.Count == 0)
+            return true;
+
+        return _selectedSpellColourTokens.Any(token => SpellMatchesColourToken(spell, token));
+    }
+
+    private bool PassesMiracleSubFilters(MiracleService.MiracRaw miracle)
+    {
+        if (!PassesTierFilter(_selectedMiracleTierTokens, miracle.isAdvanced))
+            return false;
+
+        if (_selectedMiracleSphereTokens.Count == 0)
+            return true;
+
+        var sphereToken = NormalizeMiracleSphereToken(miracle.sphere);
+        if (sphereToken == "universal")
+            return true;
+
+        return _selectedMiracleSphereTokens.Contains(sphereToken);
+    }
+
+    private bool PassesEvocationSubFilters(DruidEvocationService.EvocRaw evocation)
+    {
+        if (!PassesTierFilter(_selectedEvocationTierTokens, evocation.isAdvanced))
+            return false;
+
+        if (_selectedEvocationFieldTokens.Count == 0)
+            return true;
+
+        var fieldTokens = ExtractEvocationFieldTokens(evocation.fields);
+        return fieldTokens.Overlaps(_selectedEvocationFieldTokens);
+    }
+
+    private static bool PassesTierFilter(HashSet<string> selectedTierTokens, bool isAdvanced)
+    {
+        if (selectedTierTokens.Count != 1)
+            return true;
+
+        if (selectedTierTokens.Contains(NormalizeToken(TierAdvanced)))
+            return isAdvanced;
+
+        if (selectedTierTokens.Contains(NormalizeToken(TierHandbook)))
+            return !isAdvanced;
+
+        return true;
+    }
+
+    private static bool SpellMatchesColourToken(SpellService.SpellRaw spell, string selectedToken)
+    {
+        var rawColour = (spell.colour ?? string.Empty).Trim();
+        if (rawColour.Length == 0)
+            return false;
+
+        var normalizedRaw = NormalizeToken(rawColour);
+        if (selectedToken == NormalizeToken("Sorcorial"))
+            return normalizedRaw.Contains("sorc", StringComparison.OrdinalIgnoreCase);
+
+        var split = rawColour
+            .Split([',', '/', ';', '|'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(NormalizeToken)
+            .Where(t => t.Length > 0)
+            .ToList();
+
+        if (split.Any(t => string.Equals(t, selectedToken, StringComparison.OrdinalIgnoreCase)))
+            return true;
+
+        return normalizedRaw.Contains(selectedToken, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static HashSet<string> ExtractEvocationFieldTokens(IEnumerable<string>? rawFields)
+    {
+        var tokens = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var hasAll = false;
+
+        foreach (var raw in rawFields ?? Array.Empty<string>())
+        {
+            var token = CanonicalizeEvocationFieldToken(NormalizeToken(raw));
+            if (token.Length == 0)
+                continue;
+
+            if (token == "all")
+            {
+                hasAll = true;
+                continue;
+            }
+
+            if (EvocationFieldTokens.Contains(token))
+                tokens.Add(token);
+        }
+
+        if (hasAll)
+        {
+            foreach (var token in EvocationFieldTokens)
+                tokens.Add(token);
+        }
+
+        return tokens;
+    }
+
+    private static string CanonicalizeEvocationFieldToken(string token)
+    {
+        if (EvocationFieldAliases.TryGetValue(token, out var canonical))
+            return canonical;
+
+        return token;
+    }
+
+    private void ToggleSecondarySelection(string key)
+    {
+        switch (_secondaryFilterMode)
+        {
+            case SearchSecondaryFilterMode.Spell:
+                ToggleSelectionForMode(key, "spell-colour:", _selectedSpellColourTokens);
+                ToggleSelectionForMode(key, "spell-tier:", _selectedSpellTierTokens);
+                break;
+            case SearchSecondaryFilterMode.Miracle:
+                ToggleSelectionForMode(key, "miracle-sphere:", _selectedMiracleSphereTokens);
+                ToggleSelectionForMode(key, "miracle-tier:", _selectedMiracleTierTokens);
+                break;
+            case SearchSecondaryFilterMode.Evocation:
+                ToggleSelectionForMode(key, "evocation-field:", _selectedEvocationFieldTokens);
+                ToggleSelectionForMode(key, "evocation-tier:", _selectedEvocationTierTokens);
+                break;
+        }
+    }
+
+    private static void ToggleSelectionForMode(string key, string prefix, HashSet<string> selected)
+    {
+        if (!key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        var token = key[prefix.Length..];
+        if (token.Length == 0)
+            return;
+
+        if (!selected.Add(token))
+            selected.Remove(token);
+    }
+
+    private void RebuildActiveFilterChips()
+    {
+        ActiveFilterChips.Clear();
+
+        if (_secondaryFilterMode == SearchSecondaryFilterMode.None)
+        {
+            foreach (var filter in PrimaryFilterOrder)
+            {
+                ActiveFilterChips.Add(new GlobalSearchFilterChipVm(
+                    Key: filter,
+                    Label: filter,
+                    IsSelected: string.Equals(_selectedPrimaryFilter, filter, StringComparison.OrdinalIgnoreCase),
+                    IsBack: false));
+            }
+
+            return;
+        }
+
+        ActiveFilterChips.Add(new GlobalSearchFilterChipVm(BackChipKey, "◀", false, true));
+
+        switch (_secondaryFilterMode)
+        {
+            case SearchSecondaryFilterMode.Spell:
+                AddTierChips("spell-tier:", _selectedSpellTierTokens);
+                AddOptionChips("spell-colour:", SpellColourOptions, _selectedSpellColourTokens);
+                break;
+            case SearchSecondaryFilterMode.Miracle:
+                AddTierChips("miracle-tier:", _selectedMiracleTierTokens);
+                AddOptionChips("miracle-sphere:", MiracleSphereOptions, _selectedMiracleSphereTokens);
+                break;
+            case SearchSecondaryFilterMode.Evocation:
+                AddTierChips("evocation-tier:", _selectedEvocationTierTokens);
+                AddOptionChips("evocation-field:", EvocationFieldOptions, _selectedEvocationFieldTokens);
+                break;
+        }
+    }
+
+    private void AddTierChips(string prefix, HashSet<string> selectedTokens)
+    {
+        var handbookToken = NormalizeToken(TierHandbook);
+        var advancedToken = NormalizeToken(TierAdvanced);
+
+        ActiveFilterChips.Add(new GlobalSearchFilterChipVm($"{prefix}{handbookToken}", TierHandbook, selectedTokens.Contains(handbookToken), false));
+        ActiveFilterChips.Add(new GlobalSearchFilterChipVm($"{prefix}{advancedToken}", TierAdvanced, selectedTokens.Contains(advancedToken), false));
+    }
+
+    private void AddOptionChips(string prefix, IReadOnlyList<FilterOption> options, HashSet<string> selectedTokens)
+    {
+        foreach (var option in options)
+        {
+            ActiveFilterChips.Add(new GlobalSearchFilterChipVm(
+                Key: $"{prefix}{option.Token}",
+                Label: option.Label,
+                IsSelected: selectedTokens.Contains(option.Token),
+                IsBack: false));
+        }
+    }
+
+    private static bool TryResolveSecondaryMode(string key, out SearchSecondaryFilterMode mode)
+    {
+        mode = key switch
+        {
+            "Spells" => SearchSecondaryFilterMode.Spell,
+            "Miracles" => SearchSecondaryFilterMode.Miracle,
+            "Evocations" => SearchSecondaryFilterMode.Evocation,
+            _ => SearchSecondaryFilterMode.None
+        };
+
+        return mode != SearchSecondaryFilterMode.None;
     }
 
     private static GlobalSearchKind? ResolveFilterKind(string? filter)
@@ -235,26 +506,140 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         }
     }
 
+    private static async Task<IReadOnlyList<DruidEvocationService.EvocRaw>> SafeLoadEvocationsAsync()
+    {
+        return await EvocationCatalogService.GetAllAsync();
+    }
+
     private static string BuildAbilityKey(string? name, int table)
         => $"{(name ?? string.Empty).Trim().ToLowerInvariant()}|{table}";
 
-    private static GlobalSearchResultVm CreateAbilityResult(string? name, int table, int cost, string? availability, string? description)
+    private static string NormalizeMiracleSphereToken(string? raw)
+        => NormalizeToken(StripMajorMinorPrefix(raw));
+
+    private static string StripMajorMinorPrefix(string? raw)
     {
-        var title = (name ?? string.Empty).Trim();
-        var avail = (availability ?? string.Empty).Trim();
+        var text = (raw ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return string.Empty;
+
+        if (text.StartsWith("Major", StringComparison.OrdinalIgnoreCase)
+            || text.StartsWith("Minor", StringComparison.OrdinalIgnoreCase))
+        {
+            if (text.Length <= 5)
+                return string.Empty;
+
+            return text[5..].TrimStart(' ', ':', '-').Trim();
+        }
+
+        return text;
+    }
+
+    private static string NormalizeToken(string? value)
+    {
+        var text = value ?? string.Empty;
+        var chars = text.Where(char.IsLetterOrDigit).ToArray();
+        return new string(chars).ToLowerInvariant();
+    }
+
+    private static IReadOnlyList<FilterOption> BuildSpellColourOptions()
+    {
+        var options = Enum.GetValues<MagicColours>()
+            .Select(c => new FilterOption(
+                Token: NormalizeToken(c.ToString()),
+                Label: EnumDisplayFormatter.Format(c)))
+            .ToList();
+
+        if (options.All(o => !string.Equals(o.Label, "Sorcorial", StringComparison.OrdinalIgnoreCase)))
+            options.Add(new FilterOption(NormalizeToken("Sorcorial"), "Sorcorial"));
+
+        return options;
+    }
+
+    private static IReadOnlyList<FilterOption> BuildMiracleSphereOptions()
+    {
+        return Enum.GetValues<SpiritualSpheres>()
+            .Select(s => StripMajorMinorPrefix(EnumDisplayFormatter.Format(s)))
+            .Where(label => !string.IsNullOrWhiteSpace(label))
+            .Where(label => !string.Equals(NormalizeToken(label), "universal", StringComparison.OrdinalIgnoreCase))
+            .Select(label => new FilterOption(NormalizeToken(label), label))
+            .Distinct()
+            .ToList();
+    }
+
+    private static IReadOnlyList<FilterOption> BuildEvocationFieldOptions()
+    {
+        return Enum.GetValues<EvocationFields>()
+            .Select(field => new FilterOption(
+                Token: NormalizeToken(field.ToString()),
+                Label: EnumDisplayFormatter.Format(field)))
+            .ToList();
+    }
+
+    private static GlobalSearchResultVm CreateAbilityResult(EvolutionService.AbilityResult ability)
+    {
+        var title = (ability.Index ?? string.Empty).Trim();
+        var avail = BuildAvailabilityDisplay(ability.Available);
+        var cost = BuildAbilityCostDisplay(ability);
         var meta = avail.Length > 0
-            ? $"Ability · Table {table} · Cost {cost} · {avail}"
-            : $"Ability · Table {table} · Cost {cost}";
+            ? $"Ability · Table {ability.Table} · Cost {cost} · {avail}"
+            : $"Ability · Table {ability.Table} · Cost {cost}";
 
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Ability,
             Name: title,
             IconGlyph: "\uf013",
             MetaText: meta,
-            DescriptionText: (description ?? string.Empty).Trim(),
+            DescriptionText: (ability.Description ?? string.Empty).Trim(),
+            Ability: ability,
             Spell: null,
             Miracle: null,
             Evocation: null);
+    }
+
+    private static string BuildAbilityCostDisplay(EvolutionService.AbilityResult ability)
+    {
+        var cost = Math.Max(0, ability.Cost);
+        if (!ability.CanBuyMultiple)
+            return cost.ToString();
+
+        if (ability.MaxAvailable is { } max && max > 0)
+            return $"({cost}/{max})";
+
+        return $"({cost}/∞)";
+    }
+
+    private static string BuildAvailabilityDisplay(string? rawAvailability)
+    {
+        var text = (rawAvailability ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return string.Empty;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(text);
+            if (doc.RootElement.ValueKind == JsonValueKind.String)
+                return (doc.RootElement.GetString() ?? string.Empty).Trim();
+
+            if (doc.RootElement.ValueKind == JsonValueKind.Array)
+            {
+                var parts = doc.RootElement
+                    .EnumerateArray()
+                    .Where(e => e.ValueKind == JsonValueKind.String)
+                    .Select(e => (e.GetString() ?? string.Empty).Trim())
+                    .Where(e => e.Length > 0)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                return parts.Count == 0 ? string.Empty : string.Join(", ", parts);
+            }
+        }
+        catch
+        {
+            // non-JSON availability string
+        }
+
+        return text;
     }
 
     private static GlobalSearchResultVm CreateSpellResult(SpellService.SpellRaw spell)
@@ -267,9 +652,10 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Spell,
             Name: (spell.name ?? string.Empty).Trim(),
-            IconGlyph: "\uf0e7",
+            IconGlyph: "\uf518",
             MetaText: meta,
             DescriptionText: (spell.description ?? string.Empty).Trim(),
+            Ability: null,
             Spell: spell,
             Miracle: null,
             Evocation: null);
@@ -293,6 +679,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             IconGlyph: "\uf005",
             MetaText: meta,
             DescriptionText: (miracle.description ?? string.Empty).Trim(),
+            Ability: null,
             Spell: null,
             Miracle: miracle,
             Evocation: null);
@@ -307,8 +694,8 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             .ToList();
 
         var meta = fields.Count > 0
-            ? $"Evocation · P{Math.Max(0, evocation.power)} · {string.Join(", ", fields)}"
-            : $"Evocation · P{Math.Max(0, evocation.power)}";
+            ? $"Evocation · {Math.Max(0, evocation.power)} EP · {string.Join(", ", fields)}"
+            : $"Evocation · {Math.Max(0, evocation.power)} EP";
 
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Evocation,
@@ -316,6 +703,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             IconGlyph: "\uf06c",
             MetaText: meta,
             DescriptionText: (evocation.description ?? string.Empty).Trim(),
+            Ability: null,
             Spell: null,
             Miracle: null,
             Evocation: evocation);
@@ -333,6 +721,16 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         Raise(name);
         return true;
     }
+
+    private enum SearchSecondaryFilterMode
+    {
+        None,
+        Spell,
+        Miracle,
+        Evocation
+    }
+
+    private readonly record struct FilterOption(string Token, string Label);
 }
 
 public enum GlobalSearchKind
@@ -343,20 +741,61 @@ public enum GlobalSearchKind
     Evocation
 }
 
+public enum GlobalSearchFilterTransition
+{
+    None,
+    ToSecondary,
+    ToPrimary
+}
+
+public sealed record GlobalSearchFilterChipVm(
+    string Key,
+    string Label,
+    bool IsSelected,
+    bool IsBack);
+
 public sealed record GlobalSearchResultVm(
     GlobalSearchKind Kind,
     string Name,
     string IconGlyph,
     string MetaText,
     string DescriptionText,
+    EvolutionService.AbilityResult? Ability,
     SpellService.SpellRaw? Spell,
     MiracleService.MiracRaw? Miracle,
     DruidEvocationService.EvocRaw? Evocation)
 {
-    public bool CanOpenDetails => Spell != null || Miracle != null || Evocation != null;
+    public bool CanOpenDetails => Ability != null || Spell != null || Miracle != null || Evocation != null;
 
     public bool HasDescription => !string.IsNullOrWhiteSpace(DescriptionText);
 
+    public string IconBackgroundColor => Kind switch
+    {
+        GlobalSearchKind.Ability => "#E0F2FE",
+        GlobalSearchKind.Spell => "#DBEAFE",
+        GlobalSearchKind.Miracle => "#FEF3C7",
+        GlobalSearchKind.Evocation => "#DCFCE7",
+        _ => "#E5E7EB"
+    };
+
+    public string IconBorderColor => Kind switch
+    {
+        GlobalSearchKind.Ability => "#7DD3FC",
+        GlobalSearchKind.Spell => "#93C5FD",
+        GlobalSearchKind.Miracle => "#FCD34D",
+        GlobalSearchKind.Evocation => "#86EFAC",
+        _ => "#D1D5DB"
+    };
+
+    public string IconColor => Kind switch
+    {
+        GlobalSearchKind.Ability => "#0C4A6E",
+        GlobalSearchKind.Spell => "#1E3A8A",
+        GlobalSearchKind.Miracle => "#92400E",
+        GlobalSearchKind.Evocation => "#166534",
+        _ => "#374151"
+    };
+
     public string SearchBlob
-        => $"{Name} {MetaText} {DescriptionText}".ToLowerInvariant();
+        => $"{Name} {MetaText} {DescriptionText} {Ability?.Available ?? string.Empty} {string.Join(" ", Ability?.PreReqs ?? Array.Empty<string>())}".ToLowerInvariant();
 }

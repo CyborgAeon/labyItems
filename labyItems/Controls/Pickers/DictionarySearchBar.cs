@@ -8,6 +8,11 @@ using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Layouts;
 using Microsoft.Maui.Graphics;
 using labyItems.Controls.Pickers;
+#if ANDROID
+using Android.OS;
+using Android.Views;
+using Microsoft.Maui.ApplicationModel;
+#endif
 
 namespace labyItems.Controls;
 
@@ -22,9 +27,9 @@ public class DictionarySearchBar<TValue> : ContentView
 {
     private readonly Action _selfDismisser;
     private const double DefaultDropdownMaxHeight = 320;
-    private const double KeyboardGuardRatio = 0.35;
-    private const double KeyboardGuardMin = 200;
-    private const double KeyboardGuardMax = 360;
+    private const double KeyboardGuardRatioFallback = 0.35;
+    private const double KeyboardGuardMinFallback = 200;
+    private const double KeyboardGuardMaxFallback = 360;
     private string Exclude = string.Empty;
     private readonly Entry _searchBar;
     private readonly CollectionView _resultsView;
@@ -278,7 +283,7 @@ public class DictionarySearchBar<TValue> : ContentView
         nameof(KeyboardAvoidanceEnabled),
         typeof(bool),
         typeof(DictionarySearchBar<TValue>),
-        defaultValue: false);
+        defaultValue: true);
 
     /// <summary>
     /// Adds temporary bottom padding to the parent ScrollView while focused so content can scroll above the keyboard.
@@ -916,7 +921,7 @@ public class DictionarySearchBar<TValue> : ContentView
         var pageHeight = _overlayHost.Height > 0 ? _overlayHost.Height : (Application.Current?.MainPage?.Height ?? 0);
         var availableBelow = Math.Max(0, pageHeight - localY - 8);
         var availableAbove = Math.Max(0, anchorPos.Y - hostPos.Y - 8);
-        var keyboardGuard = Math.Clamp(pageHeight * KeyboardGuardRatio, KeyboardGuardMin, KeyboardGuardMax);
+        var keyboardGuard = ResolveKeyboardAvoidanceBottom();
         var effectiveBelow = Math.Max(0, availableBelow - keyboardGuard);
         var effectiveAbove = availableAbove;
 
@@ -1013,7 +1018,8 @@ public class DictionarySearchBar<TValue> : ContentView
         var scrollPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(scroll);
 
         var anchorTop = anchorPos.Y - scrollPos.Y;
-        var availableBelow = scroll.Height - (anchorTop + _searchBar.Height);
+        var keyboardGuard = ResolveKeyboardAvoidanceBottom();
+        var availableBelow = scroll.Height - (anchorTop + _searchBar.Height) - keyboardGuard;
         var requiredSpace = Math.Max(0, desiredDropdownHeight + 6);
 
         if (availableBelow >= requiredSpace)
@@ -1040,12 +1046,13 @@ public class DictionarySearchBar<TValue> : ContentView
             _hasKeyboardAvoidancePadding = true;
         }
 
-        var page = GetOwningPage();
-        var pageHeight = page?.Height > 0 ? page.Height : (Application.Current?.MainPage?.Height ?? 0);
-        if (pageHeight <= 0)
+        var keyboardGuard = ResolveKeyboardAvoidanceBottom();
+        if (keyboardGuard <= 0)
+        {
+            RestoreKeyboardAvoidancePadding();
             return;
+        }
 
-        var keyboardGuard = Math.Clamp(pageHeight * KeyboardGuardRatio, KeyboardGuardMin, KeyboardGuardMax);
         var targetBottom = Math.Max(_keyboardAvoidanceOriginalPadding.Bottom, keyboardGuard + 12);
 
         scroll.Padding = new Thickness(
@@ -1063,6 +1070,65 @@ public class DictionarySearchBar<TValue> : ContentView
         _keyboardAvoidanceScrollView.Padding = _keyboardAvoidanceOriginalPadding;
         _keyboardAvoidanceScrollView = null;
         _hasKeyboardAvoidancePadding = false;
+    }
+
+    private double ResolveKeyboardAvoidanceBottom()
+    {
+        var dynamicKeyboardHeight = GetSystemKeyboardHeight();
+        if (dynamicKeyboardHeight > 0)
+            return dynamicKeyboardHeight;
+        if (dynamicKeyboardHeight == 0)
+            return 0;
+
+        var page = GetOwningPage();
+        var pageHeight = page?.Height > 0 ? page.Height : (Application.Current?.MainPage?.Height ?? 0);
+        if (pageHeight <= 0)
+            return 0;
+
+        return Math.Clamp(
+            pageHeight * KeyboardGuardRatioFallback,
+            KeyboardGuardMinFallback,
+            KeyboardGuardMaxFallback);
+    }
+
+    private static double GetSystemKeyboardHeight()
+    {
+#if ANDROID
+        try
+        {
+            var activity = Platform.CurrentActivity;
+            var decor = activity?.Window?.DecorView;
+            if (decor == null)
+                return -1;
+
+            var density = activity?.Resources?.DisplayMetrics?.Density ?? 1f;
+            if (density <= 0)
+                density = 1f;
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
+            {
+                var insets = decor.RootWindowInsets;
+                if (insets == null)
+                    return -1;
+
+                var imeBottom = insets.GetInsets(WindowInsets.Type.Ime()).Bottom;
+                var navBottom = insets.GetInsets(WindowInsets.Type.NavigationBars()).Bottom;
+                var keyboardPx = Math.Max(0, imeBottom - navBottom);
+                return keyboardPx / density;
+            }
+
+            var visibleRect = new Android.Graphics.Rect();
+            decor.GetWindowVisibleDisplayFrame(visibleRect);
+            var keyboardPxLegacy = Math.Max(0, decor.Height - visibleRect.Bottom);
+            return keyboardPxLegacy / density;
+        }
+        catch
+        {
+            return -1;
+        }
+#else
+        return 0;
+#endif
     }
 
     private async Task RefreshFromRemoteAsync(string? query)

@@ -6,7 +6,8 @@ public enum ArmourType
     DAC,
     MAC,
     SAC,
-    NAC
+    NAC,
+    InnatePac
 }
 
 public static class ArmourTypeParser

@@ -122,7 +122,7 @@
                 <VerticalStackLayout Padding="16"
                                      Spacing="12">
                     <Entry Text="{Binding Search}"
-                           Placeholder="Search spells or miracles"/>
+                           Placeholder="Search spells, miracles, or evocations"/>
 
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding DamageSpells}"
                                          Spacing="8">

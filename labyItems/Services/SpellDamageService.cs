@@ -76,7 +76,7 @@ public static class SpellDamageService
 
 public sealed record DamageSpell(string Name, int Level, string Kind, IReadOnlyList<DamagePart> Parts)
 {
-    public string Summary => string.Join("; ", Parts.Select(FormatPart));
+    public string Summary => Parts.Count == 0 ? "No direct damage" : string.Join("; ", Parts.Select(FormatPart));
 
     private static string FormatPart(DamagePart part)
     {

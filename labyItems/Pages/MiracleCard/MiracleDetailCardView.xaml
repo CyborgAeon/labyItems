@@ -67,6 +67,33 @@
                        SizeChanged="OnExpandableLabelSizeChanged"/>
             </ContentView>
 
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="8">
+                <Label Text="VERBAL"
+                       FontAttributes="Bold"
+                       FontSize="12"
+                       Opacity="0.7"
+                       VerticalTextAlignment="Center"/>
+                <Button Grid.Column="1"
+                        Text="{Binding VerbalChevronText, Source={x:Reference Root}}"
+                        IsVisible="{Binding CanExpandVerbal, Source={x:Reference Root}}"
+                        Clicked="OnVerbalToggleClicked"
+                        BackgroundColor="Transparent"
+                        TextColor="#6B7280"
+                        FontSize="18"
+                        Padding="0"
+                        WidthRequest="32"
+                        HeightRequest="32"/>
+            </Grid>
+
+            <ContentView x:Name="VerbalTextContainer">
+                <Label x:Name="VerbalLabel"
+                       Text="{Binding VerbalText, Source={x:Reference Root}}"
+                       MaxLines="{Binding VerbalMaxLines, Source={x:Reference Root}}"
+                       LineBreakMode="WordWrap"
+                       SizeChanged="OnExpandableLabelSizeChanged"/>
+            </ContentView>
+
             <VerticalStackLayout Spacing="8"
                                  IsVisible="{Binding HasPrereqs, Source={x:Reference Root}}">
                 <Grid ColumnDefinitions="*,Auto"

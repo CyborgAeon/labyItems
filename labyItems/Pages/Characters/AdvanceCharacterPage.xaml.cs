@@ -142,7 +142,7 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
     private async void OnViewSpellDetailsClicked(object sender, EventArgs e)
     {
-        if (sender is not Microsoft.Maui.Controls.ImageButton button)
+        if (sender is not Microsoft.Maui.Controls.Button button)
             return;
 
         if (button.CommandParameter is not SpellEntryVm entry)
@@ -157,7 +157,7 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
     private async void OnViewMiracleDetailsClicked(object sender, EventArgs e)
     {
-        if (sender is not Microsoft.Maui.Controls.ImageButton button)
+        if (sender is not Microsoft.Maui.Controls.Button button)
             return;
 
         if (button.CommandParameter is not MiracleEntryVm entry)
@@ -172,7 +172,7 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
     private async void OnViewEvocationDetailsClicked(object sender, EventArgs e)
     {
-        if (sender is not Microsoft.Maui.Controls.ImageButton button)
+        if (sender is not Microsoft.Maui.Controls.Button button)
             return;
 
         if (button.CommandParameter is not EvocationEntryVm entry)

@@ -12,31 +12,34 @@
         <SearchBar Placeholder="Search abilities, spells, miracles, evocations..."
                    Text="{Binding SearchText, Mode=TwoWay}"/>
 
-        <CollectionView Grid.Row="1"
-                        ItemsSource="{Binding Filters}"
+        <CollectionView x:Name="FilterChipView"
+                        Grid.Row="1"
+                        ItemsSource="{Binding ActiveFilterChips}"
                         SelectionMode="None"
                         ItemsLayout="HorizontalList"
-                        HeightRequest="34">
+                        HeightRequest="38">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Button Text="{Binding .}"
+                    <Button Text="{Binding Label}"
                             FontSize="12"
+                            FontAttributes="Bold"
                             Padding="12,6"
-                            BackgroundColor="#6D000000"
-                            TextColor="White"
-                            BorderColor="#E5E7EB"
+                            Margin="0,0,8,0"
+                            BackgroundColor="#F3F4F6"
+                            TextColor="#1F2937"
+                            BorderColor="#D1D5DB"
                             BorderWidth="1"
                             CornerRadius="999"
-                            Command="{Binding BindingContext.SelectFilterCommand, Source={x:Reference Root}}"
+                            Clicked="OnFilterChipClicked"
                             CommandParameter="{Binding .}">
                         <Button.Triggers>
                             <DataTrigger TargetType="Button"
-                                         Binding="{Binding BindingContext.SelectedFilter, Source={x:Reference Root}}"
-                                         Value="{Binding .}">
-                                <Setter Property="FontAttributes"
-                                        Value="Bold"/>
-                                <Setter Property="TextColor"
+                                         Binding="{Binding IsSelected}"
+                                         Value="True">
+                                <Setter Property="BackgroundColor"
                                         Value="#7F1D1D"/>
+                                <Setter Property="TextColor"
+                                        Value="White"/>
                                 <Setter Property="BorderColor"
                                         Value="#7F1D1D"/>
                             </DataTrigger>
@@ -54,21 +57,36 @@
                     <DataTemplate>
                         <Frame Padding="12"
                                CornerRadius="12"
-                               BorderColor="#E5E7EB"
+                               BorderColor="#4B5563"
                                HasShadow="False"
                                Margin="0,0,0,8">
-                            <Grid ColumnDefinitions="Auto,*,Auto"
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnResultTapped"
+                                                      CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+
+                            <Grid ColumnDefinitions="Auto,*"
                                   ColumnSpacing="10">
-                                <Label Text="{Binding IconGlyph}"
-                                       FontFamily="FASolid"
-                                       FontSize="13"
-                                       TextColor="#4B5563"
-                                       VerticalTextAlignment="Start"
-                                       Margin="0,2,0,0"/>
+                                <Border Stroke="{Binding IconBorderColor}"
+                                        BackgroundColor="{Binding IconBackgroundColor}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 999"
+                                        WidthRequest="26"
+                                        HeightRequest="26"
+                                        VerticalOptions="Start"
+                                        Margin="0,2,0,0">
+                                    <Label Text="{Binding IconGlyph}"
+                                           FontFamily="FASolid"
+                                           FontSize="12"
+                                           TextColor="{Binding IconColor}"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center"/>
+                                </Border>
 
                                 <VerticalStackLayout Grid.Column="1"
                                                      Spacing="2">
                                     <Label Text="{Binding Name}"
+                                           FontSize="18"
                                            FontAttributes="Bold"
                                            LineBreakMode="WordWrap"/>
                                     <Label Text="{Binding MetaText}"
@@ -82,22 +100,6 @@
                                            MaxLines="2"
                                            IsVisible="{Binding HasDescription}"/>
                                 </VerticalStackLayout>
-
-                                <ImageButton Grid.Column="2"
-                                             HeightRequest="22"
-                                             WidthRequest="22"
-                                             Padding="0"
-                                             BackgroundColor="Transparent"
-                                             IsVisible="{Binding CanOpenDetails}"
-                                             Clicked="OnOpenDetailsClicked"
-                                             CommandParameter="{Binding .}">
-                                    <ImageButton.Source>
-                                        <FontImageSource FontFamily="FASolid"
-                                                         Glyph="&#xF054;"
-                                                         Size="11"
-                                                         Color="#4B5563"/>
-                                    </ImageButton.Source>
-                                </ImageButton>
                             </Grid>
                         </Frame>
                     </DataTemplate>

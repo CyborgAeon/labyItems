@@ -73,6 +73,13 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         private set => Set(ref _specialistSlotSegments, value);
     }
 
+    private IReadOnlyList<SpecialistSlotLegendVm> _specialistSlotLegendItems = Array.Empty<SpecialistSlotLegendVm>();
+    public IReadOnlyList<SpecialistSlotLegendVm> SpecialistSlotLegendItems
+    {
+        get => _specialistSlotLegendItems;
+        private set => Set(ref _specialistSlotLegendItems, value);
+    }
+
     private int _specialistSlotsUsed;
     public int SpecialistSlotsUsed
     {
@@ -100,6 +107,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             : string.Empty;
 
     public bool ShowSpecialistSlotsBar => SpecialistSlotsTotal > 0;
+    public bool ShowSpecialistSlotsLegend => SpecialistSlotLegendItems.Count > 0;
 
     public bool CanAddSpecialistList => SpecialistSlotsTotal > 0 && SpecialistSpellLists.Count == 0;
 
@@ -297,14 +305,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             _allMiracles = Array.Empty<MiracleService.MiracRaw>();
         }
         await EnsureSpellCatalogueLoadedAsync(forceReload: true);
-        try
-        {
-            _allEvocations = await DruidEvocationService.GetAllAsync();
-        }
-        catch
-        {
-            _allEvocations = Array.Empty<DruidEvocationService.EvocRaw>();
-        }
+        await EnsureEvocationCatalogueLoadedAsync();
         try
         {
             var allAbilities = await ManuAbilityService.GetAllAsync();
@@ -349,6 +350,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         System.Diagnostics.Debug.WriteLine($"[ADVANCE][SPELLS] Loaded spell catalogue count: {_allSpells.Count}");
         return _allSpells.Count > 0;
+    }
+
+    private async Task EnsureEvocationCatalogueLoadedAsync()
+    {
+        _allEvocations = await EvocationCatalogService.GetAllAsync();
+        System.Diagnostics.Debug.WriteLine($"[ADVANCE][EVOCS] Loaded evocation catalogue count: {_allEvocations.Count}");
     }
 
     private async Task EnsureWizardBaseListHasEntriesAsync()
@@ -1333,6 +1340,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         var totalAvailable = available.Values.Sum();
         var selected = GetSelectedSpecialistCountsByColour();
         var segments = new List<SpecialistSlotSegmentVm>();
+        var legend = new List<SpecialistSlotLegendVm>();
         var selectedTotal = selected.Values.Sum();
 
         foreach (var colour in Enum.GetValues<MagicColours>())
@@ -1341,15 +1349,21 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             if (used <= 0)
                 continue;
 
-            segments.Add(new SpecialistSlotSegmentVm(used, GetMagicColourColor(colour)));
+            var colourValue = GetMagicColourColor(colour);
+            segments.Add(new SpecialistSlotSegmentVm(used, colourValue));
+            legend.Add(new SpecialistSlotLegendVm(colour.ToString(), used, colourValue));
         }
 
         var totalUsed = segments.Sum(s => s.Weight);
         var unselected = Math.Max(0, totalAvailable - totalUsed);
+        var unselectedColour = Color.FromArgb("#D1D5DB");
         if (unselected > 0)
-            segments.Add(new SpecialistSlotSegmentVm(unselected, Color.FromArgb("#D1D5DB")));
+            segments.Add(new SpecialistSlotSegmentVm(unselected, unselectedColour, isUnselected: true));
+        if (totalAvailable > 0)
+            legend.Add(new SpecialistSlotLegendVm("Unselected", unselected, unselectedColour, isUnselected: true));
 
         SpecialistSlotSegments = segments;
+        SpecialistSlotLegendItems = legend;
         SpecialistSlotsUsed = selectedTotal;
         SpecialistSlotsTotal = totalAvailable;
         SpecialistSlotsSummaryColor = totalAvailable > 0 && selectedTotal > totalAvailable
@@ -1357,6 +1371,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             : Colors.Black;
         Raise(nameof(SpecialistSlotsSummary));
         Raise(nameof(ShowSpecialistSlotsBar));
+        Raise(nameof(ShowSpecialistSlotsLegend));
         Raise(nameof(CanAddSpecialistList));
     }
 
@@ -2282,6 +2297,8 @@ public sealed class SpellEntryVm : INotifyPropertyChanged
 
             RefreshLearningWarning();
             Raise(nameof(DisplayText));
+            Raise(nameof(NameText));
+            Raise(nameof(LevelText));
             Raise(nameof(HasSpell));
             _onChanged();
         }
@@ -2289,6 +2306,8 @@ public sealed class SpellEntryVm : INotifyPropertyChanged
 
     public string DisplayText
         => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} (Lvl {Draft.Level})";
+    public string NameText => Draft.Name ?? string.Empty;
+    public string LevelText => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : Draft.Level.ToString();
 
     private int _rowIndex;
     public Color RowBackgroundColor => (_rowIndex % 2) == 0 ? Colors.White : Color.FromArgb("#FAF8F3");
@@ -2370,11 +2389,30 @@ public sealed class SpecialistSlotSegmentVm
 {
     public int Weight { get; }
     public Color Colour { get; }
+    public bool IsUnselected { get; }
 
-    public SpecialistSlotSegmentVm(int weight, Color colour)
+    public SpecialistSlotSegmentVm(int weight, Color colour, bool isUnselected = false)
     {
         Weight = weight;
         Colour = colour;
+        IsUnselected = isUnselected;
+    }
+}
+
+public sealed class SpecialistSlotLegendVm
+{
+    public string Label { get; }
+    public int Amount { get; }
+    public Color Colour { get; }
+    public bool IsUnselected { get; }
+    public string DisplayText => $"{Label} {Amount}";
+
+    public SpecialistSlotLegendVm(string label, int amount, Color colour, bool isUnselected = false)
+    {
+        Label = label;
+        Amount = amount;
+        Colour = colour;
+        IsUnselected = isUnselected;
     }
 }
 
@@ -2762,7 +2800,9 @@ public sealed class EvocationEntryVm : INotifyPropertyChanged
     public EvocationListEntryDraft Draft { get; }
 
     public string DisplayText
-        => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} (P{Draft.Power})";
+        => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} ({Draft.Power} EP)";
+    public string NameText => Draft.Name ?? string.Empty;
+    public string PowerText => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Power} EP";
 
     public bool HasEvocation => !string.IsNullOrWhiteSpace(Draft.Name);
 
@@ -2791,6 +2831,8 @@ public sealed class EvocationEntryVm : INotifyPropertyChanged
             }
 
             Raise(nameof(DisplayText));
+            Raise(nameof(NameText));
+            Raise(nameof(PowerText));
             Raise(nameof(HasEvocation));
             _onChanged();
         }
@@ -3286,6 +3328,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
             }
             Entries.Add(vm);
         }
+        ReindexEntries();
     }
 
     private void AddSelectedMiracle()
@@ -3298,6 +3341,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         var vm = new MiracleEntryVm(draft, OnEntryChanged);
         vm.SelectedMiracle = SelectedMiracleOption.Value;
         Entries.Add(vm);
+        ReindexEntries();
         SearchPickerStateHelper.ClearForNextSearch<MiracleOption>(
             setSelection: v => SelectedMiracleOption = v,
             setSearchText: text => SearchText = text);
@@ -3310,8 +3354,15 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         if (entry == null || !CanEdit) return;
         Entries.Remove(entry);
         Draft.Entries.Remove(entry.Draft);
+        ReindexEntries();
         UpdateFilteredOptions();
         UpdateValidation();
+    }
+
+    private void ReindexEntries()
+    {
+        for (var i = 0; i < Entries.Count; i++)
+            Entries[i].SetRowIndex(i);
     }
 
     private void OnEntryChanged()
@@ -3569,8 +3620,12 @@ public sealed class MiracleEntryVm : INotifyPropertyChanged
 
     public string DisplayText
         => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} ({Draft.Power})";
+    public string NameText => Draft.Name ?? string.Empty;
+    public string PowerText => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : Draft.Power.ToString();
 
     public bool HasMiracle => !string.IsNullOrWhiteSpace(Draft.Name);
+    private int _rowIndex;
+    public Color RowBackgroundColor => (_rowIndex % 2) == 0 ? Colors.White : Color.FromArgb("#FAF8F3");
 
     private MiracleOption? _selectedMiracle;
     public MiracleOption? SelectedMiracle
@@ -3598,6 +3653,8 @@ public sealed class MiracleEntryVm : INotifyPropertyChanged
             }
 
             Raise(nameof(DisplayText));
+            Raise(nameof(NameText));
+            Raise(nameof(PowerText));
             Raise(nameof(HasMiracle));
             _onChanged();
         }
@@ -3607,6 +3664,15 @@ public sealed class MiracleEntryVm : INotifyPropertyChanged
     {
         Draft = draft;
         _onChanged = onChanged;
+    }
+
+    public void SetRowIndex(int rowIndex)
+    {
+        if (_rowIndex == rowIndex)
+            return;
+
+        _rowIndex = rowIndex;
+        Raise(nameof(RowBackgroundColor));
     }
 }
 

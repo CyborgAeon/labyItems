@@ -9,7 +9,10 @@
 
 	<PropertyGroup>
 		<WarningLevel>0</WarningLevel>
-		<TargetFramework Condition="$([MSBuild]::IsOSPlatform('osx'))">net10.0-ios</TargetFramework>
+		<!-- Default macOS local dev to Android to avoid requiring iOS workload for dotnet watch/build.
+		     Set -p:UseIosWorkload=true when you explicitly want to build iOS. -->
+		<TargetFramework Condition="$([MSBuild]::IsOSPlatform('osx')) and '$(UseIosWorkload)' == 'true'">net10.0-ios</TargetFramework>
+		<TargetFramework Condition="$([MSBuild]::IsOSPlatform('osx')) and '$(UseIosWorkload)' != 'true'">net10.0-android</TargetFramework>
 		<TargetFramework Condition="!$([MSBuild]::IsOSPlatform('osx')) and !$([MSBuild]::IsOSPlatform('windows'))">net10.0-android</TargetFramework>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">net10.0-android;net10.0-windows10.0.19041.0</TargetFrameworks>
 		<OutputType>Exe</OutputType>
