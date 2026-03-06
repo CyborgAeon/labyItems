@@ -5,10 +5,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Frame Padding="16"
-           CornerRadius="12"
-           HasShadow="False"
-           BorderColor="#E5E7EB">
+    <Frame Style="{StaticResource DetailCardFrameStyle}">
         <VerticalStackLayout Spacing="12">
             <Label Text="{Binding AbilityIndex, Source={x:Reference Root}}"
                    FontSize="28"
@@ -19,13 +16,13 @@
                   ColumnSpacing="10">
                 <Label Text="{Binding TableDisplayText, Source={x:Reference Root}}"
                        FontAttributes="Italic"
-                       TextColor="#6B7280"
+                       TextColor="{StaticResource MutedTextColor}"
                        VerticalTextAlignment="Center"/>
 
                 <Label Grid.Column="1"
                        Text="{Binding AvailabilityText, Source={x:Reference Root}}"
                        FontAttributes="Italic"
-                       TextColor="#6B7280"
+                       TextColor="{StaticResource MutedTextColor}"
                        MaxLines="1"
                        LineBreakMode="TailTruncation"
                        VerticalTextAlignment="Center"/>
@@ -33,7 +30,7 @@
                 <Label Grid.Column="2"
                        Text="{Binding CostDisplayText, Source={x:Reference Root}}"
                        FontAttributes="Italic"
-                       TextColor="#6B7280"
+                       TextColor="{StaticResource MutedTextColor}"
                        HorizontalTextAlignment="End"
                        VerticalTextAlignment="Center"
                        IsVisible="{Binding ShowCostText, Source={x:Reference Root}}"/>
@@ -44,40 +41,32 @@
                                        IsVisible="{Binding ShowInfiniteCost, Source={x:Reference Root}}">
                     <Label Text="{Binding InfiniteCostPrefixText, Source={x:Reference Root}}"
                            FontAttributes="Italic"
-                           TextColor="#6B7280"
+                           TextColor="{StaticResource MutedTextColor}"
                            VerticalTextAlignment="Center"/>
                     <Label Text="{Binding InfinityGlyph, Source={x:Reference Root}}"
                            FontFamily="FASolid"
                            FontAttributes="Italic"
-                           TextColor="#6B7280"
+                           TextColor="{StaticResource MutedTextColor}"
                            VerticalTextAlignment="Center"/>
                     <Label Text=")"
                            FontAttributes="Italic"
-                           TextColor="#6B7280"
+                           TextColor="{StaticResource MutedTextColor}"
                            VerticalTextAlignment="Center"/>
                 </HorizontalStackLayout>
             </Grid>
 
-            <BoxView HeightRequest="1"
-                     Color="#E5E7EB"/>
+            <BoxView Style="{StaticResource SectionDividerBoxStyle}"/>
 
             <Grid ColumnDefinitions="*,Auto"
                   ColumnSpacing="8">
                 <Label Text="DESCRIPTION"
-                       FontAttributes="Bold"
-                       FontSize="12"
-                       Opacity="0.7"
+                       Style="{StaticResource SectionHeaderLabelStyle}"
                        VerticalTextAlignment="Center"/>
                 <Button Grid.Column="1"
                         Text="{Binding DescriptionChevronText, Source={x:Reference Root}}"
                         IsVisible="{Binding CanExpandDescription, Source={x:Reference Root}}"
                         Clicked="OnDescriptionToggleClicked"
-                        BackgroundColor="Transparent"
-                        TextColor="#6B7280"
-                        FontSize="18"
-                        Padding="0"
-                        WidthRequest="32"
-                        HeightRequest="32"/>
+                        Style="{StaticResource ChevronButtonStyle}"/>
             </Grid>
 
             <ContentView x:Name="DescriptionTextContainer">
@@ -91,9 +80,7 @@
             <VerticalStackLayout Spacing="8"
                                  IsVisible="{Binding HasNotesSection, Source={x:Reference Root}}">
                 <Label Text="NOTES"
-                       FontAttributes="Bold"
-                       FontSize="12"
-                       Opacity="0.7"/>
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
 
                 <Label Text="{Binding NotesText, Source={x:Reference Root}}"
                        IsVisible="{Binding HasNotesText, Source={x:Reference Root}}"
@@ -102,9 +89,7 @@
                 <VerticalStackLayout Spacing="6"
                                      IsVisible="{Binding HasPreReqs, Source={x:Reference Root}}">
                     <Label Text="PREREQUISITES"
-                           FontAttributes="Bold"
-                           FontSize="12"
-                           Opacity="0.7"/>
+                           Style="{StaticResource SectionHeaderLabelStyle}"/>
 
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding PreReqEntries, Source={x:Reference Root}}"
                                          Spacing="6">
@@ -121,7 +106,7 @@
                                             FontSize="12"
                                             Padding="0"
                                             BackgroundColor="Transparent"
-                                            TextColor="#4B5563"
+                                            TextColor="{StaticResource SubtleTextColor}"
                                             HeightRequest="18"
                                             WidthRequest="18"
                                             MinimumHeightRequest="0"

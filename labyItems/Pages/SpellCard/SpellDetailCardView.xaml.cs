@@ -11,6 +11,8 @@ public partial class SpellDetailCardView : ContentView
     private const int DescriptionCollapsedLines = 5;
     private const int VerbalCollapsedLines = 3;
     private const int NotesCollapsedLines = 2;
+    private const int DescriptionChevronThresholdChars = 200;
+    private const int VerbalChevronThresholdChars = 150;
     private const double ExpanderOverflowTolerance = 0.01;
 
     public static readonly BindableProperty SpellProperty = BindableProperty.Create(
@@ -270,8 +272,14 @@ public partial class SpellDetailCardView : ContentView
 
     private void RefreshExpandability()
     {
-        CanExpandDescription = ShouldShowExpander(DescriptionLabel, DescriptionText, DescriptionCollapsedLines);
-        CanExpandVerbal = ShouldShowExpander(VerbalLabel, VerbalText, VerbalCollapsedLines);
+        CanExpandDescription =
+            ExceedsCharacterThreshold(DescriptionText, DescriptionChevronThresholdChars)
+            || ShouldShowExpander(DescriptionLabel, DescriptionText, DescriptionCollapsedLines);
+
+        CanExpandVerbal =
+            HasVerbal && (ExceedsCharacterThreshold(VerbalText, VerbalChevronThresholdChars)
+            || ShouldShowExpander(VerbalLabel, VerbalText, VerbalCollapsedLines));
+
         CanExpandNotes = HasNotes && ShouldShowExpander(NotesLabel, NotesText, NotesCollapsedLines);
 
         if (IsAnimatingExpand)
@@ -280,6 +288,9 @@ public partial class SpellDetailCardView : ContentView
         if (!CanExpandNotes && IsNotesExpanded)
             IsNotesExpanded = false;
     }
+
+    private static bool ExceedsCharacterThreshold(string text, int threshold)
+        => (text ?? string.Empty).Trim().Length > threshold;
 
     private static bool ShouldShowExpander(Label label, string text, int collapsedLines)
     {

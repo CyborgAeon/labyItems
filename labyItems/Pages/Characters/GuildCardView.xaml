@@ -18,9 +18,9 @@
                 <Setter Property="HasShadow"
                         Value="True"/>
                 <Setter Property="BorderColor"
-                        Value="#7F1D1D"/>
+                        Value="{StaticResource AccentMaroonColor}"/>
                 <Setter Property="BackgroundColor"
-                        Value="#FFF7ED"/>
+                        Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
             </DataTrigger>
         </Frame.Triggers>
 
@@ -60,11 +60,7 @@
                         Text="⌄"
                         FontSize="18"
                         Rotation="{Binding ChevronRotation}"
-                        BackgroundColor="Transparent"
-                        TextColor="#6B7280"
-                        Padding="0"
-                        WidthRequest="32"
-                        HeightRequest="32"
+                        Style="{StaticResource ChevronButtonStyle}"
                         VerticalOptions="Center"
                         HorizontalOptions="End"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=ToggleExpandedCommand}"

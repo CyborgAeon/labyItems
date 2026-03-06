@@ -13,7 +13,7 @@
     <CollectionView x:Name="Results" SelectionMode="Single" SelectionChanged="OnPick">
       <CollectionView.ItemTemplate>
         <DataTemplate>
-          <Border Margin="12" Padding="16" BackgroundColor="#21FFFFFF"  StrokeShape="RoundRectangle 14">
+          <Border Margin="12" Padding="16" BackgroundColor="{StaticResource GlassOverlayColor}"  StrokeShape="RoundRectangle 14">
             <VerticalStackLayout Spacing="4">
               <Label Text="{Binding Name}" FontAttributes="Bold"/>
               <Label Text="{Binding Cost}" FontSize="12" Opacity="0.7"/>

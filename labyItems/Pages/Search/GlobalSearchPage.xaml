@@ -4,14 +4,15 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Search">
+    Shell.NavBarIsVisible="False"
+    NavigationPage.HasNavigationBar="False">
 
     <Grid RowDefinitions="Auto,Auto,*"
           RowSpacing="10"
           Padding="16">
-        <SearchBar Placeholder="Search abilities, spells, miracles, evocations..."
+        <SearchBar SearchIconColor="Transparent"
+                   Placeholder="Search abilities, spells, miracles, evocations..."
                    Text="{Binding SearchText, Mode=TwoWay}"/>
-
         <CollectionView x:Name="FilterChipView"
                         Grid.Row="1"
                         ItemsSource="{Binding ActiveFilterChips}"
@@ -25,9 +26,9 @@
                             FontAttributes="Bold"
                             Padding="12,6"
                             Margin="0,0,8,0"
-                            BackgroundColor="#F3F4F6"
-                            TextColor="#1F2937"
-                            BorderColor="#D1D5DB"
+                            BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
+                            TextColor="{StaticResource PrimaryTextStrongColor}"
+                            BorderColor="{StaticResource SoftStrokeColor}"
                             BorderWidth="1"
                             CornerRadius="999"
                             Clicked="OnFilterChipClicked"
@@ -37,18 +38,17 @@
                                          Binding="{Binding IsSelected}"
                                          Value="True">
                                 <Setter Property="BackgroundColor"
-                                        Value="#7F1D1D"/>
+                                        Value="{StaticResource AccentMaroonColor}"/>
                                 <Setter Property="TextColor"
                                         Value="White"/>
                                 <Setter Property="BorderColor"
-                                        Value="#7F1D1D"/>
+                                        Value="{StaticResource AccentMaroonColor}"/>
                             </DataTrigger>
                         </Button.Triggers>
                     </Button>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
         <Grid Grid.Row="2">
             <CollectionView ItemsSource="{Binding FilteredResults}"
                             SelectionMode="None"
@@ -57,7 +57,7 @@
                     <DataTemplate>
                         <Frame Padding="12"
                                CornerRadius="12"
-                               BorderColor="#4B5563"
+                               BorderColor="{StaticResource SubtleTextColor}"
                                HasShadow="False"
                                Margin="0,0,0,8">
                             <Frame.GestureRecognizers>

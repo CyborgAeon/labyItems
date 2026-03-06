@@ -51,6 +51,10 @@ public static class MiracleService
         public string name { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;
         public string verbal { get; set; } = string.Empty;
+        public string range { get; set; } = string.Empty;
+        public string duration { get; set; } = string.Empty;
+        public string gesture { get; set; } = string.Empty;
+        public string level { get; set; } = string.Empty;
         public string sphere { get; set; } = string.Empty;
         public bool isAdvanced { get; set; } = false;
         public string alignment { get; set; } = string.Empty;
@@ -177,6 +181,10 @@ public static class MiracleService
                 e.name ??= string.Empty;
                 e.description ??= string.Empty;
                 e.verbal ??= string.Empty;
+                e.range ??= string.Empty;
+                e.duration ??= string.Empty;
+                e.gesture ??= string.Empty;
+                e.level ??= string.Empty;
                 e.sphere ??= string.Empty;
                 e.alignment ??= string.Empty;
                 e.damage ??= new List<int[]>();

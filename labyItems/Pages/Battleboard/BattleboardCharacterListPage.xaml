@@ -28,7 +28,7 @@
                                Padding="12"
                                CornerRadius="12"
                                HasShadow="False"
-                               BorderColor="#E5E7EB">
+                               BorderColor="{StaticResource SurfaceBorderColor}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnCardTapped"/>
                             </Frame.GestureRecognizers>

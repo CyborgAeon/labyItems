@@ -72,7 +72,7 @@
                                                 FontSize="12"
                                                 Padding="0"
                                                 BackgroundColor="Transparent"
-                                                TextColor="#4B5563"
+                                                TextColor="{StaticResource SubtleTextColor}"
                                                 HeightRequest="18"
                                                 WidthRequest="18"
                                                 MinimumHeightRequest="0"
@@ -85,7 +85,7 @@
                                                 FontSize="12"
                                                 Padding="0"
                                                 BackgroundColor="Transparent"
-                                                TextColor="#4B5563"
+                                                TextColor="{StaticResource SubtleTextColor}"
                                                 HeightRequest="18"
                                                 WidthRequest="18"
                                                 MinimumHeightRequest="0"
@@ -134,7 +134,7 @@
                                                 <FontImageSource FontFamily="FASolid"
                                                                  Glyph="&#xF2ED;"
                                                                  Size="50"
-                                                                 Color="#4B5563"/>
+                                                                 Color="{StaticResource SubtleTextColor}"/>
                                             </ImageButton.Source>
                                         </ImageButton>
                                     </Grid>
@@ -165,7 +165,7 @@
                             <DataTemplate>
                                 <Frame Padding="12"
                                        CornerRadius="12"
-                                       BorderColor="#E5E7EB"
+                                       BorderColor="{StaticResource SurfaceBorderColor}"
                                        HasShadow="False">
                                     <VerticalStackLayout Spacing="10">
                                         <Grid ColumnDefinitions="*,Auto"
@@ -177,7 +177,7 @@
                                             <Button Grid.Column="1"
                                                     Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
                                                     BackgroundColor="Transparent"
-                                                    TextColor="#6B7280"
+                                                    TextColor="{StaticResource MutedTextColor}"
                                                     Padding="0"
                                                     WidthRequest="32"
                                                     HeightRequest="32"
@@ -263,7 +263,7 @@
                                                                             FontSize="12"
                                                                             Padding="0"
                                                                             BackgroundColor="Transparent"
-                                                                            TextColor="#4B5563"
+                                                                            TextColor="{StaticResource SubtleTextColor}"
                                                                             HeightRequest="18"
                                                                             WidthRequest="18"
                                                                             MinimumHeightRequest="0"
@@ -277,7 +277,7 @@
                                                                             FontSize="12"
                                                                             Padding="0"
                                                                             BackgroundColor="Transparent"
-                                                                            TextColor="#4B5563"
+                                                                            TextColor="{StaticResource SubtleTextColor}"
                                                                             HeightRequest="18"
                                                                             WidthRequest="18"
                                                                             MinimumHeightRequest="0"
@@ -305,7 +305,7 @@
                                                         <BindableLayout.ItemTemplate>
                                                             <DataTemplate>
                                                                 <Border FlexLayout.Grow="{Binding Weight}"
-                                                                        Stroke="#374151"
+                                                                        Stroke="{StaticResource StrongStrokeColor}"
                                                                         StrokeThickness="0.75">
                                                                     <Border.Triggers>
                                                                         <DataTrigger TargetType="Border"
@@ -330,7 +330,7 @@
                                                                                        Margin="0,0,10,2">
                                                                     <Border WidthRequest="10"
                                                                             HeightRequest="10"
-                                                                            Stroke="#374151"
+                                                                            Stroke="{StaticResource StrongStrokeColor}"
                                                                             StrokeThickness="0.75"
                                                                             BackgroundColor="{Binding Colour}"
                                                                             VerticalOptions="Center">
@@ -392,7 +392,7 @@
                                FontSize="18"/>
                         <Frame Padding="12"
                                CornerRadius="12"
-                               BorderColor="#E5E7EB"
+                               BorderColor="{StaticResource SurfaceBorderColor}"
                                HasShadow="False"
                                BindingContext="{Binding EvilStairway}">
                             <VerticalStackLayout Spacing="10">
@@ -502,7 +502,7 @@
                                 </VerticalStackLayout>
 
                                 <Label Text="{Binding ValidationMessage}"
-                                       TextColor="#7F1D1D"
+                                       TextColor="{StaticResource AccentMaroonColor}"
                                        FontSize="12"
                                        IsVisible="{Binding HasValidationError}"/>
                             </VerticalStackLayout>
@@ -517,7 +517,7 @@
                                 <DataTemplate>
                                     <Frame Padding="12"
                                            CornerRadius="12"
-                                           BorderColor="#E5E7EB"
+                                           BorderColor="{StaticResource SurfaceBorderColor}"
                                            HasShadow="False">
                                         <VerticalStackLayout Spacing="10">
                                             <Grid ColumnDefinitions="*,Auto,Auto"
@@ -546,7 +546,7 @@
                                                 <Button Grid.Column="2"
                                                         Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
                                                         BackgroundColor="Transparent"
-                                                        TextColor="#6B7280"
+                                                        TextColor="{StaticResource MutedTextColor}"
                                                         Padding="0"
                                                         WidthRequest="32"
                                                         HeightRequest="32"
@@ -649,7 +649,7 @@
                                                                                 FontSize="12"
                                                                                 Padding="0"
                                                                                 BackgroundColor="Transparent"
-                                                                                TextColor="#4B5563"
+                                                                                TextColor="{StaticResource SubtleTextColor}"
                                                                                 HeightRequest="18"
                                                                                 WidthRequest="18"
                                                                                 MinimumHeightRequest="0"
@@ -663,7 +663,7 @@
                                                                                 FontSize="12"
                                                                                 Padding="0"
                                                                                 BackgroundColor="Transparent"
-                                                                                TextColor="#4B5563"
+                                                                                TextColor="{StaticResource SubtleTextColor}"
                                                                                 HeightRequest="18"
                                                                                 WidthRequest="18"
                                                                                 MinimumHeightRequest="0"
@@ -682,7 +682,7 @@
                                                         <Label Text="Alignment split"
                                                                FontSize="12"
                                                                Opacity="0.7"/>
-                                                        <Border Stroke="#D1D5DB"
+                                                        <Border Stroke="{StaticResource SoftStrokeColor}"
                                                                 StrokeThickness="1"
                                                                 StrokeShape="RoundRectangle 6"
                                                                 BackgroundColor="#F9FAFB"
@@ -695,33 +695,33 @@
                                                                     <ColumnDefinition Width="{Binding EvilWidth}"/>
                                                                     <ColumnDefinition Width="{Binding UnselectedWidth}"/>
                                                                 </Grid.ColumnDefinitions>
-                                                                <Border Stroke="#374151"
+                                                                <Border Stroke="{StaticResource StrongStrokeColor}"
                                                                         StrokeThickness="0.75"
-                                                                        BackgroundColor="#FFFFFF">
+                                                                        BackgroundColor="{StaticResource White}">
                                                                     <Border.Shadow>
-                                                                        <Shadow Brush="#33000000"
+                                                                        <Shadow Brush="{StaticResource ShadowColor}"
                                                                                 Offset="0,1"
                                                                                 Radius="3"
                                                                                 Opacity="0.45"/>
                                                                     </Border.Shadow>
                                                                 </Border>
                                                                 <Border Grid.Column="1"
-                                                                        Stroke="#374151"
+                                                                        Stroke="{StaticResource StrongStrokeColor}"
                                                                         StrokeThickness="0.75"
-                                                                        BackgroundColor="#4B5563">
+                                                                        BackgroundColor="{StaticResource SubtleTextColor}">
                                                                     <Border.Shadow>
-                                                                        <Shadow Brush="#33000000"
+                                                                        <Shadow Brush="{StaticResource ShadowColor}"
                                                                                 Offset="0,1"
                                                                                 Radius="3"
                                                                                 Opacity="0.45"/>
                                                                     </Border.Shadow>
                                                                 </Border>
                                                                 <Border Grid.Column="2"
-                                                                        Stroke="#374151"
+                                                                        Stroke="{StaticResource StrongStrokeColor}"
                                                                         StrokeThickness="0.75"
-                                                                        BackgroundColor="#111827">
+                                                                        BackgroundColor="{StaticResource StrongBackgroundColor}">
                                                                     <Border.Shadow>
-                                                                        <Shadow Brush="#33000000"
+                                                                        <Shadow Brush="{StaticResource ShadowColor}"
                                                                                 Offset="0,1"
                                                                                 Radius="3"
                                                                                 Opacity="0.45"/>
@@ -729,7 +729,7 @@
                                                                 </Border>
                                                                 <Border Grid.Column="3"
                                                                         StrokeThickness="0"
-                                                                        BackgroundColor="#D1D5DB"/>
+                                                                        BackgroundColor="{StaticResource SoftStrokeColor}"/>
                                                             </Grid>
                                                         </Border>
 
@@ -738,7 +738,7 @@
                                                             <HorizontalStackLayout Spacing="4">
                                                                 <BoxView WidthRequest="10"
                                                                          HeightRequest="10"
-                                                                         Color="#FFFFFF"
+                                                                         Color="{StaticResource White}"
                                                                          VerticalOptions="Center"/>
                                                                 <Label Text="{Binding GoodPoints, StringFormat='Goodly {0}'}"
                                                                        FontSize="12"
@@ -749,7 +749,7 @@
                                                                                    Spacing="4">
                                                                 <BoxView WidthRequest="10"
                                                                          HeightRequest="10"
-                                                                         Color="#4B5563"
+                                                                         Color="{StaticResource SubtleTextColor}"
                                                                          VerticalOptions="Center"/>
                                                                 <Label Text="{Binding NeutralPoints, StringFormat='Neutral {0}'}"
                                                                        FontSize="12"
@@ -760,7 +760,7 @@
                                                                                    Spacing="4">
                                                                 <BoxView WidthRequest="10"
                                                                          HeightRequest="10"
-                                                                         Color="#111827"
+                                                                         Color="{StaticResource StrongBackgroundColor}"
                                                                          VerticalOptions="Center"/>
                                                                 <Label Text="{Binding EvilPoints, StringFormat='Evil {0}'}"
                                                                        FontSize="12"
@@ -771,7 +771,7 @@
                                                                                    Spacing="4">
                                                                 <BoxView WidthRequest="10"
                                                                          HeightRequest="10"
-                                                                         Color="#D1D5DB"
+                                                                         Color="{StaticResource SoftStrokeColor}"
                                                                          VerticalOptions="Center"/>
                                                                 <Label Text="{Binding UnselectedPoints, StringFormat='Unset {0}'}"
                                                                        FontSize="12"
@@ -793,7 +793,7 @@
                                                     </Grid>
 
                                                     <Label Text="{Binding ValidationMessage}"
-                                                           TextColor="#7F1D1D"
+                                                           TextColor="{StaticResource AccentMaroonColor}"
                                                            IsVisible="{Binding HasValidationError}"
                                                            FontSize="12"/>
                                                 </VerticalStackLayout>
@@ -827,7 +827,7 @@
                             <DataTemplate>
                                 <Frame Padding="12"
                                        CornerRadius="12"
-                                       BorderColor="#E5E7EB"
+                                       BorderColor="{StaticResource SurfaceBorderColor}"
                                        HasShadow="False">
                                     <VerticalStackLayout Spacing="10">
                                         <Grid ColumnDefinitions="*,Auto"
@@ -838,7 +838,7 @@
                                             <Button Grid.Column="1"
                                                     Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
                                                     BackgroundColor="Transparent"
-                                                    TextColor="#6B7280"
+                                                    TextColor="{StaticResource MutedTextColor}"
                                                     Padding="0"
                                                     WidthRequest="32"
                                                     HeightRequest="32"
@@ -923,7 +923,7 @@
                                                                             FontSize="12"
                                                                             Padding="0"
                                                                             BackgroundColor="Transparent"
-                                                                            TextColor="#4B5563"
+                                                                            TextColor="{StaticResource SubtleTextColor}"
                                                                             HeightRequest="18"
                                                                             WidthRequest="18"
                                                                             MinimumHeightRequest="0"
@@ -937,7 +937,7 @@
                                                                             FontSize="12"
                                                                             Padding="0"
                                                                             BackgroundColor="Transparent"
-                                                                            TextColor="#4B5563"
+                                                                            TextColor="{StaticResource SubtleTextColor}"
                                                                             HeightRequest="18"
                                                                             WidthRequest="18"
                                                                             MinimumHeightRequest="0"
@@ -960,7 +960,7 @@
                                                         <Button Grid.Column="1"
                                                                 Text="{Binding FieldLegendChevronText}"
                                                                 BackgroundColor="Transparent"
-                                                                TextColor="#6B7280"
+                                                                TextColor="{StaticResource MutedTextColor}"
                                                                 Padding="0"
                                                                 WidthRequest="28"
                                                                 HeightRequest="28"
@@ -1017,7 +1017,7 @@
                                                 </Grid>
 
                                                 <Label Text="{Binding ValidationMessage}"
-                                                       TextColor="#7F1D1D"
+                                                       TextColor="{StaticResource AccentMaroonColor}"
                                                        IsVisible="{Binding HasValidationError}"
                                                        FontSize="12"/>
                                             </VerticalStackLayout>

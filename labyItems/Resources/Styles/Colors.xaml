@@ -24,6 +24,23 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
+    <!-- Shared surface/content palette used across cards and detail views -->
+    <Color x:Key="SurfaceBorderColor">#E5E7EB</Color>
+    <Color x:Key="MutedTextColor">#6B7280</Color>
+    <Color x:Key="SubtleTextColor">#4B5563</Color>
+    <Color x:Key="AccentMaroonColor">#7F1D1D</Color>
+    <Color x:Key="SurfaceMutedBackgroundColor">#F3F4F6</Color>
+    <Color x:Key="SelectedSurfaceBackgroundColor">#FFF7ED</Color>
+    <Color x:Key="SoftStrokeColor">#D1D5DB</Color>
+    <Color x:Key="GlassOverlayColor">#21FFFFFF</Color>
+    <Color x:Key="StrongStrokeColor">#374151</Color>
+    <Color x:Key="StrongBackgroundColor">#111827</Color>
+    <Color x:Key="ShadowColor">#33000000</Color>
+    <Color x:Key="ModalScrimColor">#6D000000</Color>
+    <Color x:Key="OverlayBackdropColor">#66000000</Color>
+    <Color x:Key="DividerShadowColor">#22000000</Color>
+    <Color x:Key="PrimaryTextStrongColor">#1F2937</Color>
+
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>

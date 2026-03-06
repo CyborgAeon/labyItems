@@ -14,7 +14,7 @@ public partial class IspCalculator
         if (items is null)
             return;
 
-        var attributes = new UITextAttributes
+        var attributes = new UIStringAttributes
         {
             Font = UIFont.SystemFontOfSize((nfloat)fontSize),
         };

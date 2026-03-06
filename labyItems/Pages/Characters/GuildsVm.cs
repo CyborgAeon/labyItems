@@ -24,6 +24,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private HashSet<string> _currentPeopleTypes = new(StringComparer.OrdinalIgnoreCase);
     private HashSet<string> _currentRaceSelections = new(StringComparer.OrdinalIgnoreCase);
     private readonly Func<Task>? _refreshDraftAbilitiesAsync;
+    private readonly bool _applyCharacterAvailabilityFilters;
+    private readonly bool _allowGuildSelection;
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
@@ -48,12 +50,16 @@ public sealed class GuildsVm : INotifyPropertyChanged
         Action notifyWizardGatingChanged,
         Func<IEnumerable<AlignmentRule?>>? getNonGuildRules = null,
         Func<Task>? refreshDraftAbilitiesAsync = null,
-        ICharacterCreationDataService? creationDataService = null)
+        ICharacterCreationDataService? creationDataService = null,
+        bool applyCharacterAvailabilityFilters = true,
+        bool allowGuildSelection = true)
     {
         _draft = draft;
         _notifyWizardGatingChanged = notifyWizardGatingChanged;
         _getNonGuildRules = getNonGuildRules ?? (() => Enumerable.Empty<AlignmentRule?>());
         _refreshDraftAbilitiesAsync = refreshDraftAbilitiesAsync;
+        _applyCharacterAvailabilityFilters = applyCharacterAvailabilityFilters;
+        _allowGuildSelection = allowGuildSelection;
         _creationDataService = creationDataService
             ?? ServiceHelper.ResolveService<ICharacterCreationDataService>()
             ?? new CharacterCreationDataService();
@@ -152,7 +158,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             if (!_slotRules.ShouldShowGuild(type, kv.Key, _draft.Guilds))
                 return false;
 
-            var availability = EvaluateAvailability(kv.Value, kv.Key);
+            var availability = EvaluateAvailabilityForCurrentContext(kv.Value, kv.Key);
             if (!availability.Allowed)
                 return false;
 
@@ -169,12 +175,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
             var isSelected = _draft.Guilds.Contains(name, StringComparer.OrdinalIgnoreCase);
             var alignmentOk = WouldStillHaveAnyAlignmentIfSelected(name);
             var slotCheck = _slotRules.CanSelect(rec.Type ?? string.Empty, name, _draft.Guilds, _guildRecords);
-            var availability = EvaluateAvailability(rec, name);
+            var availability = EvaluateAvailabilityForCurrentContext(rec, name);
             var selectable = alignmentOk && slotCheck.Allowed && availability.Allowed;
             var reason = "";
             if (!alignmentOk) reason = "Conflicts with current alignment restrictions.";
             else if (!slotCheck.Allowed) reason = slotCheck.Reason;
             else if (!availability.Allowed) reason = availability.Reason;
+            var cardSelectable = _allowGuildSelection && (selectable || isSelected);
 
             var vm = new GuildCardVm
             {
@@ -191,8 +198,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 MiracleRows = BuildMiracleRows(rec.MiracleList),
                 IsSelected = isSelected,
                 IsExpanded = false,
-                IsSelectable = selectable || isSelected,
-                NotSelectableReason = selectable ? "" : reason,
+                IsSelectable = cardSelectable,
+                NotSelectableReason = cardSelectable ? "" : (_allowGuildSelection ? reason : ""),
                 IsLocked = _slotRules.IsGuildLocked(type: rec.Type ?? string.Empty, guildName: name),
             };
 
@@ -299,6 +306,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     private void ApplyAvailabilityToCurrentSelection()
     {
+        if (!_applyCharacterAvailabilityFilters)
+            return;
+
         var kept = new List<string>();
         foreach (var g in _draft.Guilds)
         {
@@ -364,13 +374,29 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return AvailabilityResult.Ok();
     }
 
+    private AvailabilityResult EvaluateAvailabilityForCurrentContext(GuildRecord rec, string guildName)
+    {
+        if (!_applyCharacterAvailabilityFilters)
+            return AvailabilityResult.Ok();
+
+        return EvaluateAvailability(rec, guildName);
+    }
+
+    private AvailabilityResult EvaluateAvailabilityForCurrentContext(string guildName)
+    {
+        if (!_applyCharacterAvailabilityFilters)
+            return AvailabilityResult.Ok();
+
+        return EvaluateAvailability(guildName);
+    }
+
     private bool MatchesBlacklist(GuildAvailabilityRules? rules, out string reason)
     {
         reason = "";
         if (rules == null)
             return false;
 
-        if (rules.Classes?.Contains(_currentClassName, StringComparer.OrdinalIgnoreCase) == true)
+        if (ContainsClassName(rules.Classes, _currentClassName))
         {
             reason = "Class not permitted.";
             return true;
@@ -403,7 +429,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (rules == null)
             return true;
 
-        if (rules.Classes is { Count: > 0 } && !rules.Classes.Contains(_currentClassName, StringComparer.OrdinalIgnoreCase))
+        if (rules.Classes is { Count: > 0 } && !ContainsClassName(rules.Classes, _currentClassName))
         {
             reason = $"Only: {string.Join(", ", rules.Classes)}";
             return false;
@@ -462,6 +488,33 @@ public sealed class GuildsVm : INotifyPropertyChanged
         }
 
         return false;
+    }
+
+    private static bool ContainsClassName(IEnumerable<string>? classNames, string className)
+    {
+        var wanted = NormalizeLookupKey(className);
+        if (wanted.Length == 0)
+            return false;
+
+        foreach (var candidate in classNames ?? Enumerable.Empty<string>())
+        {
+            if (NormalizeLookupKey(candidate) == wanted)
+                return true;
+        }
+
+        return false;
+    }
+
+    private static string NormalizeLookupKey(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return new string(value
+            .Trim()
+            .ToLowerInvariant()
+            .Where(char.IsLetterOrDigit)
+            .ToArray());
     }
 
     private static HashSet<OrderAxis> ParseOrders(IEnumerable<string>? values)
@@ -675,11 +728,11 @@ public sealed class GuildsVm : INotifyPropertyChanged
             card.IsSelected = _draft.Guilds.Contains(card.Name, StringComparer.OrdinalIgnoreCase);
             var alignmentOk = WouldStillHaveAnyAlignmentIfSelected(card.Name);
             var slotsResult = _slotRules.CanSelect(card.Type, card.Name, _draft.Guilds, _guildRecords);
-            var availability = EvaluateAvailability(card.Name);
+            var availability = EvaluateAvailabilityForCurrentContext(card.Name);
             var selectable = alignmentOk && slotsResult.Allowed && availability.Allowed;
 
             // Allow already-selected guilds to stay selectable so the user can deselect them
-            card.IsSelectable = selectable || card.IsSelected;
+            card.IsSelectable = _allowGuildSelection && (selectable || card.IsSelected);
 
             if (!alignmentOk)
                 card.NotSelectableReason = "Conflicts with current alignment restrictions.";
@@ -688,6 +741,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
             else if (!availability.Allowed)
                 card.NotSelectableReason = availability.Reason;
             else
+                card.NotSelectableReason = "";
+
+            if (!_allowGuildSelection)
                 card.NotSelectableReason = "";
         }
 
@@ -811,6 +867,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     private void ToggleSelected(GuildCardVm? item)
     {
+        if (!_allowGuildSelection)
+            return;
+
         if (item is null || item.IsLocked || (!item.IsSelectable && !item.IsSelected))
             return;
 
@@ -821,7 +880,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             return;
         }
 
-        var availability = EvaluateAvailability(item.Name);
+        var availability = EvaluateAvailabilityForCurrentContext(item.Name);
         if (!item.IsSelected && !availability.Allowed)
         {
             item.NotSelectableReason = availability.Reason;

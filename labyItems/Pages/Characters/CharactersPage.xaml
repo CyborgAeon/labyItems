@@ -23,7 +23,7 @@
                     BackgroundColor="Transparent">
       <CollectionView.ItemTemplate>
         <DataTemplate>
-          <Border Margin="12" Padding="16" BackgroundColor="#21FFFFFF"  StrokeShape="RoundRectangle 14">
+          <Border Margin="12" Padding="16" BackgroundColor="{StaticResource GlassOverlayColor}"  StrokeShape="RoundRectangle 14">
             <Grid BackgroundColor="Transparent" ColumnDefinitions="*,Auto" ColumnSpacing="8">
               <VerticalStackLayout InputTransparent="True">
                 <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="18" />

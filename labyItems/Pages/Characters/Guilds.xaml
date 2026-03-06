@@ -23,7 +23,7 @@
                             Padding="12,6"
                             FontSize="13"
                             Margin="0,0,8,8"
-                            BackgroundColor="#FFF7ED"
+                            BackgroundColor="{StaticResource SelectedSurfaceBackgroundColor}"
                             TextColor="{StaticResource Primary}"
                             BorderColor="{StaticResource Primary}"
                             BorderWidth="1"

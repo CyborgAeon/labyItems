@@ -1467,7 +1467,7 @@
         "Cause Disease",
         "Conceal Lie",
         "Create Ghoul",
-        "Beguile",
+        "Beguile Spirit",
         "Control Ghoul"
       ],
       "5": ["Voice of Power", "Cause Grievous Wounds"],
@@ -1689,7 +1689,7 @@
     },
     "MiracleList": {
       "1": ["Halt", "Dismiss Zombie"],
-      "2": ["Halt Undead", "Cure Serious"],
+      "2": ["Halt Undead", "Cure Serious Wounds"],
       "3": [
         "Bless",
         "Spirit Shield",
@@ -1787,6 +1787,133 @@
       }
     }
   },
+  "Church of Knowledge": {
+    "Type": "professional",
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Good"],
+        "order": ["Chaotic", "Neutral", "Lawful"]
+      },
+      "allowedPairs": ["Chaotic Good", "Neutral Good", "Lawful Good"]
+    },
+    "MiracleList": {
+      "1": [
+        "Halt",
+        "Detect Spirit's Nature",
+        "Milly's Detect Spirits",
+        "Spirit of Seeing"
+      ],
+      "2": ["Spirit of Seeing and Hearing"],
+      "3": [
+        "Detect Lie",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Talk to Spirit"
+      ],
+      "4": ["Major Prayer", "Rune of Power", "Spirit Bolt", "Communication"],
+      "5": [
+        "Identify Spirit",
+        "Spiritual Invisibility",
+        "Voice of Power",
+        "Remove Voice of Power"
+      ],
+      "6": ["Control Wraith"],
+      "8": ["Greater Communication"]
+    },
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "Study of the book",
+          "Type": "Static",
+          "Description": "At the start of the day gains an adventure temp Scripture of the Faith tied to the faith of Knowledge.  Before the dungeon these can be read by any member of the faith on dungeon."
+        },
+        {
+          "Name": "I give you my Knowledge",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "with 30 seconds prep time, can grant another priest (of any faith), knowledge of a miracle on the user's list.  Must be of an alignment the user can cast, but can break sphere restrictions (not devotion, however).  Lasts 5 minutes and after this time, the user loses knowledge of the miracle."
+        },
+        {
+          "Name": "I seek Knowledge and Understanding",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "acts as a knowledge of the arcane and then a single yes/no question around the inital answer."
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "I give you my Knowledge",
+          "Type": "Update",
+          "Description": "with 30 seconds prep time, can grant another priest (of any faith), knowledge of a miracle on the user's list.  Must be of an alignment the user can cast, but can break sphere restrictions (not devotion, however).  Lasts 15 minutes and during this time, the user loses knowledge of the miracle."
+        },
+        {
+          "Name": "I seek Knowledge and Understanding",
+          "Type": "Update",
+          "Count": 2
+        },
+        {
+          "Name": "Improved Spirit of seeing & hearing",
+          "Type": "Static",
+          "Description": "With 30 seconds prep, Spirit of Seeing and Spirit of Seeing and Hearing now reveal the alignment of spirits present."
+        },
+        {
+          "Name": "Rec spirit reveals Y/N: living, undead, inanimate",
+          "Type": "Static",
+          "Description": "Rec Spirit reveals if a spirit is living, undead, or inanimate (item, ward, scroll etc, doesn't reveal which of these it is)"
+        },
+        {
+          "Name": "After casting Identify Spirit sucessfully on something, gains a follow up major prayer.",
+          "Type": "Static",
+          "Description": "After casting Identify Spirit sucessfully on something, gains a follow up major prayer."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Study of the book",
+          "Type": "Update",
+          "Description": " Scruptures can be any faith but that faith must be chosen at the start of the day."
+        },
+        {
+          "Name": "I seek Knowledge and Understanding",
+          "Type": "Update",
+          "Count": 3
+        },
+        {
+          "Name": "Improved Detect Spirits",
+          "Type": "Static",
+          "Description": "With 30 seconds prep, Rec spirit and Milly's Detect Spirits now reveal the alignment of spirits present.\n with 30 seconds additional prep, Detect Spirits provides Guage Spirit details too (if guage spirit is owned)"
+        },
+        {
+          "Name": "Ask the correct God",
+          "Type": "Static",
+          "Description": "When casting a Comm sphere miracle that asks the spirits of Knowledge (eg Comm 2, Major Prayer etc) can choose to seek guidance from a specific patron (eg St Michael) and the answer should be shaped by this."
+        }
+      ]
+    },
+    "Availability": {
+      "Whitelist": {
+        "Classes": [],
+        "Brackets": ["🙏 Priest"],
+        "Alignments": {
+          "Order": ["Chaotic", "Neutral", "Lawful"],
+          "Moral": ["Neutral"]
+        },
+        "Races": [],
+        "PeopleType": []
+      },
+      "Blacklist": {
+        "Classes": [],
+        "Brackets": [],
+        "Alignments": {
+          "Order": [],
+          "Moral": []
+        },
+        "Races": [],
+        "PeopleType": []
+      }
+    }
+  },
   "Church of Iron & Empire": {
     "Type": "professional",
     "alignmentRule": {
@@ -1798,7 +1925,7 @@
       "allowedPairs": ["Chaotic Evil", "Neutral Evil", "Lawful Evil"]
     },
     "MiracleList": {
-      "1": ["Souls Hunger", "Halt", "Lesser Wings Of Darkness"],
+      "1": ["Soul's Hunger", "Halt", "Lesser Wings Of Darkness"],
       "2": ["Cause Wound", "Animate Zombie", "Halt Undead"],
       "3": [
         "Curse",
@@ -1914,7 +2041,8 @@
     },
     "MiracleList": {
       "1": [
-        "Halt, Cure Wound",
+        "Halt",
+        "Cure Wound",
         "Detect Spirit's Nature",
         "Power Meld",
         "Spirit of Seeing"
@@ -2138,7 +2266,7 @@
         {
           "Name": "Discern Associated Spirits",
           "Type": "Static",
-          "Description": "If already possessed then gains Discern Nature of wounds to 20' ."
+          "Description": "If already possessed then gains Discern Nature of wounds to 20 feet."
         },
         {
           "Name": "Extra Miracle",
@@ -2200,7 +2328,14 @@
         "PeopleType": []
       },
       "Blacklist": {
-        "Classes": [],
+        "Classes": [
+          "Warrior Priest",
+          "Crusading Priest",
+          "Friar",
+          "Paladin",
+          "Battle Priest",
+          "Spiritual Warrior"
+        ],
         "Brackets": [],
         "Alignments": {
           "Order": [],
@@ -2701,6 +2836,113 @@
       }
     }
   },
+  "Church of Condesecration": {
+    "Type": "professional",
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": ["Evil"],
+        "order": ["Chaotic", "Neutral", "Lawful"]
+      },
+      "allowedPairs": ["Chaotic Evil", "Neutral Evil", "Lawful Evil"]
+    },
+    "MiracleList": {
+      "1": ["Halt", "Spirit of Seeing"],
+      "2": ["Cause Wound"],
+      "3": [
+        "Cause Serious Wounds",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection From Spirits",
+        "Curse"
+      ],
+      "4": ["Spirit Shift", "Cause Disease", "Control Ghoul"],
+      "5": [
+        "Spiritual Invisibility",
+        "Cause Grievous Wounds",
+        "Voice of Power"
+      ],
+      "6": ["Control Wraith"],
+      "7": ["Suspend Life"],
+      "8": ["Touch of Death"]
+    },
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "Drain Soul",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Gains Slayer (as tables). If already owned, then 1/day can use a slayer to gain one of the following: \n• 12/12 evil spiritual cure serious wounds\n• 2 spirits back\n• regain a level lost for casting an evil miracle"
+        },
+        {
+          "Name": "Deny Healing",
+          "Type": "Static",
+          "Description": "Adds a 6th level miracle to base list that acts as deny power, but only functions vs healing miracles.  Verbal is `Waste denies thy gift!`"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Drain Soul",
+          "Type": "Update",
+          "Count": 1,
+          "Description": "Gains Slayer (as tables). 1/3 hours can use a slayer to gain one of the following: \n• 12/12 evil spiritual cure serious wounds\n• 2 spirits back\n• regain a level lost for casting an evil miracle.\n If Slayer is already owned, can use this 1/hour"
+        },
+        {
+          "Name": "Draw on the Suffering",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "with 30 seconds preperation, can reverse the effects of a causing miracle cast on the user by a Condesecration member, so that it heals the base amount of damage it would cause. Suspend Life heals 72/72 for these purposes."
+        },
+        {
+          "Name": "Take this, Elf",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Can cast a handbook causing miracle 'mantic (black mana) vs an elf or similar (not an elemental or mana formed human, for example)."
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Take this, Elf",
+          "Type": "Update",
+          "Count": 2,
+          "Description": "Can cast a handbook causing miracle 'mantic (black mana) vs an elf or similar (not an elemental or mana formed human, for example).\n Can spend both innates to enhance a published causing miracle to be mantic (black mana)"
+        },
+        {
+          "Name": "Armour of Waste",
+          "Type": "Innate",
+          "Count": 1,
+          "Description": "Grants immunity to baneful causing (anything resistance to causing would apply to or is a miracle in the causing sphere) - lasts 5 minutes."
+        },
+        {
+          "Name": "Deny Healing",
+          "Type": "Update",
+          "Description": "Adds a 4th level miracle that acts as deny power, but only functions vs healing miracles. Verbal: `Waste denies thy gift!`"
+        }
+      ]
+    },
+    "Availability": {
+      "Whitelist": {
+        "Classes": ["Unholy Champion"],
+        "Brackets": ["🙏 Priest"],
+        "Alignments": {
+          "Order": ["Chaotic", "Neutral", "Lawful"],
+          "Moral": ["Evil"]
+        },
+        "Races": [],
+        "PeopleType": []
+      },
+      "Blacklist": {
+        "Classes": [],
+        "Brackets": [],
+        "Alignments": {
+          "Order": [],
+          "Moral": []
+        },
+        "Races": [],
+        "PeopleType": []
+      }
+    }
+  },
   "Church of the Destroyer": {
     "Type": "professional",
     "alignmentRule": {
@@ -2716,7 +2958,7 @@
         "Halt",
         "Lesser Wings of Darkness",
         "Soul's Hunger",
-        "Millie's Detect Spirits"
+        "Milly's Detect Spirits"
       ],
       "2": ["Cause Wound", "Spirit of Seeing and Hearing"],
       "3": [
@@ -4618,6 +4860,26 @@
         },
         "Races": [],
         "PeopleType": []
+      },
+      "MiracleList": {
+        "1": ["Cure Wound", "Summon Spiritual Candles", "Halt"],
+        "2": ["Cure Serious Wounds"],
+        "3": [
+          "Cure Disease",
+          "Talk to Spirit",
+          "Spirit Shield",
+          "Protection from Spirits",
+          "Healing Hand",
+          "Bless"
+        ],
+        "4": ["Heal"],
+        "5": [
+          "Remove Voice of Power",
+          "Remove Fear and Paralysis",
+          "Spiritual Invisibility"
+        ],
+        "6": ["Total Heal", "Spiritual Freedom", "Stronghold of Goodness"],
+        "8": ["Restore Life"]
       }
     }
   },
