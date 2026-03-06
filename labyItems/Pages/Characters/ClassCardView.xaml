@@ -10,11 +10,7 @@
         Margin="0,0,0,5">
         <Frame
             x:Name="CardFrame"
-            CornerRadius="12"
-            Padding="0"
-            HasShadow="False"
-            BorderColor="#E5E7EB"
-            BackgroundColor="#FFFFFF">
+            Style="{StaticResource SelectableCardFrameStyle}">
             <Frame.Triggers>
                 <DataTrigger TargetType="Frame"
                              Binding="{Binding IsSelected}"
@@ -22,9 +18,9 @@
                     <Setter Property="HasShadow"
                             Value="True"/>
                     <Setter Property="BorderColor"
-                            Value="#7F1D1D"/>
+                            Value="{StaticResource AccentMaroonColor}"/>
                     <Setter Property="BackgroundColor"
-                            Value="#FFF7ED"/>
+                            Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
                 </DataTrigger>
             </Frame.Triggers>
             <Grid RowDefinitions="Auto,Auto">
@@ -50,7 +46,7 @@
                                    CornerRadius="20"
                                    Padding="0"
                                    HasShadow="False"
-                                   BorderColor="#E5E7EB"
+                                   BorderColor="{StaticResource SurfaceBorderColor}"
                                    BackgroundColor="{Binding SingleBg}">
                                 <Frame.Triggers>
                                     <DataTrigger TargetType="Frame"
@@ -74,7 +70,7 @@
                                                      RightEmoji="{Binding SplitRightEmoji}"
                                                      LeftColor="{Binding SplitLeftBg}"
                                                      RightColor="{Binding SplitRightBg}"
-                                                     BorderColor="#E5E7EB">
+                                                     BorderColor="{StaticResource SurfaceBorderColor}">
                                 <controls:SplitEmojiIcon.Triggers>
                                     <DataTrigger TargetType="controls:SplitEmojiIcon"
                                                  Binding="{Binding HasSplitIcon}"
@@ -100,14 +96,7 @@
                         <Button
                             Grid.Column="2"
                             Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
-                            BackgroundColor="Transparent"
-                            TextColor="#6B7280"
-                            FontSize="18"
-                            Padding="0"
-                            WidthRequest="40"
-                            HeightRequest="40"
-                            HorizontalOptions="End"
-                            VerticalOptions="Center"
+                            Style="{StaticResource CardChevronButtonStyle}"
                             Command="{Binding ToggleExpandedCommand, Source={x:Reference Self}}"
                             CommandParameter="{Binding .}"/>
                     </Grid>
@@ -125,32 +114,17 @@
                                 AlignItems="Start"
                                 JustifyContent="Start"
                                 Margin="0,2,0,0">
-                        <Frame Padding="8,2"
-                               CornerRadius="999"
-                               Margin="0,0,8,8"
-                               HasShadow="False"
-                               BorderColor="#E5E7EB"
-                               BackgroundColor="Transparent">
+                        <Frame Style="{StaticResource TagPillFrameStyle}">
                             <Label Text="{Binding Tag1}"
                                    FontSize="12"/>
                         </Frame>
 
-                        <Frame Padding="8,2"
-                               CornerRadius="999"
-                               Margin="0,0,8,8"
-                               HasShadow="False"
-                               BorderColor="#E5E7EB"
-                               BackgroundColor="Transparent">
+                        <Frame Style="{StaticResource TagPillFrameStyle}">
                             <Label Text="{Binding Tag2}"
                                    FontSize="12"/>
                         </Frame>
 
-                        <Frame Padding="8,2"
-                               CornerRadius="999"
-                               Margin="0,0,8,8"
-                               HasShadow="False"
-                               BorderColor="#E5E7EB"
-                               BackgroundColor="Transparent">
+                        <Frame Style="{StaticResource TagPillFrameStyle}">
                             <Label Text="{Binding Tag3}"
                                    FontSize="12"/>
                         </Frame>

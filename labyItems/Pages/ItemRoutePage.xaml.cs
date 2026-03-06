@@ -45,6 +45,11 @@ public partial class ItemRoutePage : ContentPage
         await Navigation.PushAsync(new GlobalSearchPage());
     }
 
+    private async void OnGuildSearchClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new GuildSearchPage());
+    }
+
     private async void OnCharacterWalletClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new Characters.CharacterWalletPage());

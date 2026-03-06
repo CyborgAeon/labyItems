@@ -10,7 +10,7 @@
       <DataTemplate>
         <Border Margin="12"
             Padding="16"
-            BackgroundColor="#21FFFFFF"
+            BackgroundColor="{StaticResource GlassOverlayColor}"
             StrokeShape="RoundRectangle 14">
           <VerticalStackLayout Spacing="4">
             <Label Text="{Binding ItemType}"

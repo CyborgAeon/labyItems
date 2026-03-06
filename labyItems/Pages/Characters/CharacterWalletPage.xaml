@@ -28,7 +28,7 @@
                                Padding="12"
                                CornerRadius="12"
                                HasShadow="False"
-                               BorderColor="#E5E7EB">
+                               BorderColor="{StaticResource SurfaceBorderColor}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnCardTapped"/>
                             </Frame.GestureRecognizers>
@@ -149,7 +149,7 @@
                                     <ImageButton.Source>
                                         <FontImageSource Glyph="🗑️"
                                                          Size="18"
-                                                         Color="#7F1D1D"/>
+                                                         Color="{StaticResource AccentMaroonColor}"/>
                                     </ImageButton.Source>
                                 </ImageButton>
                             </Grid>

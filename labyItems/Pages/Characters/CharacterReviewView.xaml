@@ -16,7 +16,7 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="#E5E7EB">
+                            BorderColor="{StaticResource SurfaceBorderColor}">
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Identity"
                                           FontAttributes="Bold"/>
@@ -28,7 +28,7 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="#E5E7EB">
+                            BorderColor="{StaticResource SurfaceBorderColor}">
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Race and class"
                                           FontAttributes="Bold"/>
@@ -42,7 +42,7 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="#E5E7EB">
+                            BorderColor="{StaticResource SurfaceBorderColor}">
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Guilds"
                                           FontAttributes="Bold"/>
@@ -54,7 +54,7 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="#E5E7EB">
+                            BorderColor="{StaticResource SurfaceBorderColor}">
                             <VerticalStackLayout Spacing="8">
                                    <Label Text="Specialisations"
                                           FontAttributes="Bold"/>
@@ -76,7 +76,7 @@
                                                                        FontSize="12"
                                                                        Padding="0"
                                                                        BackgroundColor="Transparent"
-                                                                       TextColor="#4B5563"
+                                                                       TextColor="{StaticResource SubtleTextColor}"
                                                                        HeightRequest="18"
                                                                        WidthRequest="18"
                                                                        MinimumHeightRequest="0"
@@ -96,7 +96,7 @@
                             HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="#E5E7EB">
+                            BorderColor="{StaticResource SurfaceBorderColor}">
                             <VerticalStackLayout Spacing="6">
                                    <Grid ColumnDefinitions="*,Auto">
                                           <Label Text="Post 8th"
@@ -105,7 +105,7 @@
                                           <Button Grid.Column="1"
                                                   Text="{Binding IsAdvancementExpanded, Converter={StaticResource ChevronConverter}}"
                                                   BackgroundColor="Transparent"
-                                                  TextColor="#6B7280"
+                                                  TextColor="{StaticResource MutedTextColor}"
                                                   FontSize="18"
                                                   Padding="0"
                                                   WidthRequest="40"
@@ -160,7 +160,7 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
-                            BorderColor="#E5E7EB">
+                            BorderColor="{StaticResource SurfaceBorderColor}">
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Notes"
                                           FontAttributes="Bold"/>

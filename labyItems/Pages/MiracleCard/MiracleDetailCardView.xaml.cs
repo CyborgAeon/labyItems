@@ -7,6 +7,8 @@ namespace labyItems.Pages.MiracleCard;
 public partial class MiracleDetailCardView : ContentView
 {
     private const int CollapsedLines = 3;
+    private const int DescriptionChevronThresholdChars = 200;
+    private const int VerbalChevronThresholdChars = 150;
     private const double ExpanderOverflowTolerance = 0.01;
 
     public static readonly BindableProperty MiracleProperty = BindableProperty.Create(
@@ -373,8 +375,14 @@ public partial class MiracleDetailCardView : ContentView
 
     private void RefreshExpandability()
     {
-        CanExpandDescription = ShouldShowExpander(DescriptionLabel, DescriptionText);
-        CanExpandVerbal = ShouldShowExpander(VerbalLabel, VerbalText);
+        CanExpandDescription =
+            ExceedsCharacterThreshold(DescriptionText, DescriptionChevronThresholdChars)
+            || ShouldShowExpander(DescriptionLabel, DescriptionText);
+
+        CanExpandVerbal =
+            ExceedsCharacterThreshold(VerbalText, VerbalChevronThresholdChars)
+            || ShouldShowExpander(VerbalLabel, VerbalText);
+
         CanExpandPrereqs = HasPrereqs && ShouldShowExpander(PrereqLabel, PrereqText);
         CanExpandDamage = HasDamageSummary && ShouldShowExpander(DamageLabel, DamageSummaryText);
         CanExpandHeal = HasHealSummary && ShouldShowExpander(HealLabel, HealSummaryText);
@@ -396,6 +404,9 @@ public partial class MiracleDetailCardView : ContentView
         var collapsedHeight = MeasureHeight(label, text, width, maxLines: CollapsedLines);
         return fullHeight > (collapsedHeight + ExpanderOverflowTolerance);
     }
+
+    private static bool ExceedsCharacterThreshold(string text, int threshold)
+        => (text ?? string.Empty).Trim().Length > threshold;
 
     private static double MeasureHeight(Label template, string text, double width, int maxLines)
     {

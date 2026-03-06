@@ -76,9 +76,9 @@
                 <Button Text="{Binding .}"
                         FontSize="12"
                         Padding="12,6"
-                        BackgroundColor="#6D000000"
+                        BackgroundColor="{StaticResource ModalScrimColor}"
                         TextColor="White"
-                        BorderColor="#E5E7EB"
+                        BorderColor="{StaticResource SurfaceBorderColor}"
                         BorderWidth="1"
                         CornerRadius="999"
                         Command="{Binding BindingContext.SelectClassFilterCommand, Source={x:Reference Root}}"
@@ -90,9 +90,9 @@
                       <Setter Property="FontAttributes"
                               Value="Bold"/>
                       <Setter Property="TextColor"
-                              Value="#7F1D1D"/>
+                              Value="{StaticResource AccentMaroonColor}"/>
                       <Setter Property="BorderColor"
-                              Value="#7F1D1D"/>
+                              Value="{StaticResource AccentMaroonColor}"/>
                     </DataTrigger>
                   </Button.Triggers>
                 </Button>
@@ -123,9 +123,9 @@
                 <Button Text="{Binding .}"
                         FontSize="12"
                         Padding="12,6"
-                        BackgroundColor="#6D000000"
+                        BackgroundColor="{StaticResource ModalScrimColor}"
                         TextColor="White"
-                        BorderColor="#E5E7EB"
+                        BorderColor="{StaticResource SurfaceBorderColor}"
                         BorderWidth="1"
                         CornerRadius="999"
                         Command="{Binding BindingContext.SelectRaceFilterCommand, Source={x:Reference Root}}"
@@ -137,9 +137,9 @@
                       <Setter Property="FontAttributes"
                               Value="Bold"/>
                       <Setter Property="TextColor"
-                              Value="#7F1D1D"/>
+                              Value="{StaticResource AccentMaroonColor}"/>
                       <Setter Property="BorderColor"
-                              Value="#7F1D1D"/>
+                              Value="{StaticResource AccentMaroonColor}"/>
                     </DataTrigger>
                   </Button.Triggers>
                 </Button>

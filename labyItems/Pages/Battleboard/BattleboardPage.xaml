@@ -18,7 +18,7 @@
                             <Frame Padding="12"
                                    CornerRadius="12"
                                    HasShadow="False"
-                                   BorderColor="#E5E7EB">
+                                   BorderColor="{StaticResource SurfaceBorderColor}">
                                    <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                                          ColumnSpacing="8">
                                           <Label Text="PAC"
@@ -46,7 +46,7 @@
                             <Frame Padding="12"
                                    CornerRadius="12"
                                    HasShadow="False"
-                                   BorderColor="#E5E7EB"
+                                   BorderColor="{StaticResource SurfaceBorderColor}"
                                    BackgroundColor="{Binding TotalLife.BackgroundColor}">
                                    <Grid RowDefinitions="Auto,Auto"
                                          ColumnDefinitions="*,Auto"
@@ -82,7 +82,7 @@
                             <Frame Padding="12"
                                    CornerRadius="12"
                                    HasShadow="False"
-                                   BorderColor="#E5E7EB">
+                                   BorderColor="{StaticResource SurfaceBorderColor}">
                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                                          ColumnDefinitions="*,*,*,*"
                                          RowSpacing="4">
@@ -92,7 +92,7 @@
                                                  Padding="8"
                                                  CornerRadius="12"
                                                  HasShadow="False"
-                                                 BorderColor="#E5E7EB"
+                                                 BorderColor="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding Head}"
                                                  HorizontalOptions="Center"
@@ -131,7 +131,7 @@
                                                  Grid.Column="0"
                                                  CornerRadius="12"
                                                  HasShadow="False"
-                                                 BorderColor="#E5E7EB"
+                                                 BorderColor="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding LeftArm}"
                                                  WidthRequest="75"
@@ -169,7 +169,7 @@
                                                  Grid.ColumnSpan="2"
                                                  CornerRadius="12"
                                                  HasShadow="False"
-                                                 BorderColor="#E5E7EB"
+                                                 BorderColor="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding Chest}"
                                                  WidthRequest="140"
@@ -207,7 +207,7 @@
                                                  Grid.Column="3"
                                                  CornerRadius="12"
                                                  HasShadow="False"
-                                                 BorderColor="#E5E7EB"
+                                                 BorderColor="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding RightArm}"
                                                  WidthRequest="75"
@@ -245,7 +245,7 @@
                                                  Grid.ColumnSpan="2"
                                                  CornerRadius="12"
                                                  HasShadow="False"
-                                                 BorderColor="#E5E7EB"
+                                                 BorderColor="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding Abdomen}"
                                                  WidthRequest="110"
@@ -284,7 +284,7 @@
                                                  Padding="8"
                                                  CornerRadius="12"
                                                  HasShadow="False"
-                                                 BorderColor="#E5E7EB"
+                                                 BorderColor="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding LeftLeg}"
                                                  WidthRequest="80"
@@ -324,7 +324,7 @@
                                                  Padding="8"
                                                  CornerRadius="12"
                                                  HasShadow="False"
-                                                 BorderColor="#E5E7EB"
+                                                 BorderColor="{StaticResource SurfaceBorderColor}"
                                                  BackgroundColor="{Binding BackgroundColor}"
                                                  BindingContext="{Binding RightLeg}"
                                                  WidthRequest="80"
@@ -398,8 +398,8 @@
                                                                CornerRadius="14"
                                                                HasShadow="False"
                                                                Margin="4"
-                                                               BorderColor="#E5E7EB"
-                                                               BackgroundColor="#F3F4F6">
+                                                               BorderColor="{StaticResource SurfaceBorderColor}"
+                                                               BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}">
                                                                <Label Text="{Binding .}"
                                                                       FontSize="13"/>
                                                         </Frame>
@@ -438,7 +438,7 @@
                                                  <Frame Padding="12"
                                                         CornerRadius="12"
                                                         HasShadow="False"
-                                                        BorderColor="#E5E7EB">
+                                                        BorderColor="{StaticResource SurfaceBorderColor}">
                                                         <Grid ColumnDefinitions="*,Auto,Auto,Auto"
                                                               ColumnSpacing="8">
                                                                <Label Text="{Binding Name}"
@@ -484,7 +484,7 @@
                                                  <Frame Padding="12"
                                                         CornerRadius="12"
                                                         HasShadow="False"
-                                                        BorderColor="#E5E7EB">
+                                                        BorderColor="{StaticResource SurfaceBorderColor}">
                                                         <VerticalStackLayout Spacing="8">
                                                                <Grid ColumnDefinitions="*,Auto,Auto,Auto"
                                                                      ColumnSpacing="6">
@@ -511,7 +511,7 @@
                                                                       <Button Grid.Column="1"
                                                                               Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
                                                                               BackgroundColor="Transparent"
-                                                                              TextColor="#6B7280"
+                                                                              TextColor="{StaticResource MutedTextColor}"
                                                                               FontSize="18"
                                                                               Padding="0"
                                                                               WidthRequest="40"
@@ -532,7 +532,7 @@
                                                                                            <Frame Padding="10"
                                                                                                   CornerRadius="12"
                                                                                                   HasShadow="False"
-                                                                                                  BorderColor="#E5E7EB">
+                                                                                                  BorderColor="{StaticResource SurfaceBorderColor}">
                                                                                                   <Grid ColumnDefinitions="*,Auto"
                                                                                                         ColumnSpacing="8">
                                                                                                          <VerticalStackLayout Spacing="2">
@@ -571,7 +571,7 @@
                             <Frame Padding="12"
                                    CornerRadius="12"
                                    HasShadow="False"
-                                   BorderColor="#E5E7EB">
+                                   BorderColor="{StaticResource SurfaceBorderColor}">
                                    <VerticalStackLayout Spacing="8">
                                           <Label Text="Vitae"
                                                  FontAttributes="Bold"/>
@@ -583,7 +583,7 @@
                             <Frame Padding="12"
                                    CornerRadius="12"
                                    HasShadow="False"
-                                   BorderColor="#E5E7EB">
+                                   BorderColor="{StaticResource SurfaceBorderColor}">
                                    <VerticalStackLayout Spacing="4">
                                           <Label Text="Identity"
                                                  FontAttributes="Bold"/>
@@ -596,7 +596,7 @@
                             <Frame Padding="12"
                                    CornerRadius="12"
                                    HasShadow="False"
-                                   BorderColor="#E5E7EB">
+                                   BorderColor="{StaticResource SurfaceBorderColor}">
                                    <VerticalStackLayout Spacing="4">
                                           <Label Text="Race &amp; class"
                                                  FontAttributes="Bold"/>
@@ -609,7 +609,7 @@
                             <Frame Padding="12"
                                    CornerRadius="12"
                                    HasShadow="False"
-                                   BorderColor="#E5E7EB">
+                                   BorderColor="{StaticResource SurfaceBorderColor}">
                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto"
                                          ColumnSpacing="8">
                                           <Label Text="{Binding AlignmentDisplay}"
@@ -635,7 +635,7 @@
                             <Frame Padding="12"
                                    CornerRadius="12"
                                    HasShadow="False"
-                                   BorderColor="#E5E7EB">
+                                   BorderColor="{StaticResource SurfaceBorderColor}">
                                    <Grid ColumnDefinitions="*,Auto"
                                          RowDefinitions="Auto,Auto"
                                          ColumnSpacing="8"
@@ -658,7 +658,7 @@
                             <Frame Padding="12"
                                    CornerRadius="12"
                                    HasShadow="False"
-                                   BorderColor="#E5E7EB">
+                                   BorderColor="{StaticResource SurfaceBorderColor}">
                                    <VerticalStackLayout Spacing="8">
                                           <Label Text="Guilds"
                                                  FontAttributes="Bold"/>
@@ -670,8 +670,8 @@
                                                                       CornerRadius="14"
                                                                       HasShadow="False"
                                                                       Margin="4"
-                                                                      BorderColor="#E5E7EB"
-                                                                      BackgroundColor="#F3F4F6">
+                                                                      BorderColor="{StaticResource SurfaceBorderColor}"
+                                                                      BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}">
                                                                       <Label Text="{Binding .}"
                                                                              FontSize="13"/>
                                                                </Frame>
