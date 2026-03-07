@@ -175,10 +175,10 @@ jobs:
         id: aab
         run: |
           set -euo pipefail
-          aab_path=$(find labyItems/bin/Release/net10.0-android -name "*-signed.aab" | head -n 1)
+          aab_path=$(find labyItems/bin/Release/net10.0-android/publish -name "*-signed.aab" | head -n 1)
           if [ -z "$aab_path" ]; then
-            echo "No signed AAB found under labyItems/bin/Release/net10.0-android" >&2
-            find labyItems/bin/Release/net10.0-android -type f
+            echo "No signed AAB found under labyItems/bin/Release/net10.0-android/publish" >&2
+            find labyItems/bin/Release/net10.0-android/publish -type f
             exit 1
           fi
           echo "aab_path=$aab_path" >> "$GITHUB_OUTPUT"
