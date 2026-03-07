@@ -6,20 +6,17 @@
     Title="Character Wallet">
 
     <ContentPage.Content>
-        <Grid RowDefinitions="Auto,Auto,*"
+        <Grid RowDefinitions="Auto,*"
               Padding="16"
               RowSpacing="12">
-            <Label Text="Saved characters"
-                   FontSize="20"
-                   FontAttributes="Bold"/>
-            <Label Grid.Row="1"
+            <Label Grid.Row="0"
                    x:Name="EmptyStateLabel"
                    Text="No characters saved yet."
                    Opacity="0.7"
                    IsVisible="False"/>
 
             <CollectionView x:Name="WalletView"
-                            Grid.Row="2"
+                            Grid.Row="1"
                             SelectionMode="None"
                             ItemsSource="{Binding Characters}">
                 <CollectionView.ItemTemplate>

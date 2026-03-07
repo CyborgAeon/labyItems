@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="labyItems.Pages.Characters.Guilds"
+    x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:labyItems.Pages.Characters">
@@ -37,9 +38,28 @@
 
         <Grid Grid.Row="1"
               ColumnDefinitions="*,12,160">
-            <SearchBar Grid.Column="0"
-                       Placeholder="Search guilds..."
-                       Text="{Binding SearchText}"/>
+            <Grid Grid.Column="0"
+                  ColumnDefinitions="Auto,*">
+                <ImageButton Grid.Column="0"
+                             AutomationProperties.Name="Back"
+                             IsVisible="{Binding Source={x:Reference Root}, Path=ShowBackButton}"
+                             Command="{Binding Source={x:Reference Root}, Path=BackCommand}"
+                             BackgroundColor="Transparent"
+                             Padding="6"
+                             WidthRequest="36"
+                             HeightRequest="36"
+                             Margin="0,0,4,0">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="FASolid"
+                                         Glyph="&#xf060;"
+                                         Size="22"
+                                         Color="{StaticResource Gray300}"/>
+                    </ImageButton.Source>
+                </ImageButton>
+                <SearchBar Grid.Column="1"
+                           Placeholder="Search guilds..."
+                           Text="{Binding SearchText}"/>
+            </Grid>
             <Picker Grid.Column="2"
                     Title="Type"
                     ItemsSource="{Binding TypeFilters}"

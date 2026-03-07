@@ -26,6 +26,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private readonly Func<Task>? _refreshDraftAbilitiesAsync;
     private readonly bool _applyCharacterAvailabilityFilters;
     private readonly bool _allowGuildSelection;
+    private readonly bool _searchByNameOnly;
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
@@ -52,7 +53,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
         Func<Task>? refreshDraftAbilitiesAsync = null,
         ICharacterCreationDataService? creationDataService = null,
         bool applyCharacterAvailabilityFilters = true,
-        bool allowGuildSelection = true)
+        bool allowGuildSelection = true,
+        bool searchByNameOnly = false)
     {
         _draft = draft;
         _notifyWizardGatingChanged = notifyWizardGatingChanged;
@@ -60,6 +62,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         _refreshDraftAbilitiesAsync = refreshDraftAbilitiesAsync;
         _applyCharacterAvailabilityFilters = applyCharacterAvailabilityFilters;
         _allowGuildSelection = allowGuildSelection;
+        _searchByNameOnly = searchByNameOnly;
         _creationDataService = creationDataService
             ?? ServiceHelper.ResolveService<ICharacterCreationDataService>()
             ?? new CharacterCreationDataService();
@@ -675,6 +678,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
             if (string.IsNullOrWhiteSpace(text))
                 return true;
+
+            if (_searchByNameOnly)
+                return g.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false;
 
             return (g.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
                    || (g.Restrictions?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)

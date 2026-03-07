@@ -257,14 +257,41 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         if (selectedKind == GlobalSearchKind.Evocation && _secondaryFilterMode == SearchSecondaryFilterMode.Evocation)
             results = results.Where(r => r.Evocation != null && PassesEvocationSubFilters(r.Evocation));
 
+        List<GlobalSearchResultVm> ordered;
         if (normalized.Length > 0)
-            results = results.Where(r => r.SearchBlob.Contains(normalized, StringComparison.Ordinal));
-
-        var ordered = results
-            .OrderBy(r => r.Name, StringComparer.OrdinalIgnoreCase)
-            .ThenBy(r => r.Kind)
-            .Take(MaxVisibleResults)
-            .ToList();
+        {
+            ordered = results
+                .Where(r => MatchesQuery(r, normalized))
+                .Select(r => new
+                {
+                    Result = r,
+                    NameRank = ComputeFieldMatchRank(r.Name, normalized),
+                    GroupRank = ComputeFieldMatchRank(r.GroupText, normalized),
+                    DescriptionRank = ComputeFieldMatchRank(r.DescriptionText, normalized)
+                })
+                .OrderBy(x => x.NameRank.MatchType)
+                .ThenBy(x => x.NameRank.Position)
+                .ThenBy(x => x.NameRank.LengthDelta)
+                .ThenBy(x => x.GroupRank.MatchType)
+                .ThenBy(x => x.GroupRank.Position)
+                .ThenBy(x => x.GroupRank.LengthDelta)
+                .ThenBy(x => x.DescriptionRank.MatchType)
+                .ThenBy(x => x.DescriptionRank.Position)
+                .ThenBy(x => x.DescriptionRank.LengthDelta)
+                .ThenBy(x => x.Result.Name, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(x => x.Result.Kind)
+                .Take(MaxVisibleResults)
+                .Select(x => x.Result)
+                .ToList();
+        }
+        else
+        {
+            ordered = results
+                .OrderBy(r => r.Name, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(r => r.Kind)
+                .Take(MaxVisibleResults)
+                .ToList();
+        }
 
         FilteredResults.Clear();
         foreach (var item in ordered)
@@ -381,6 +408,65 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             return canonical;
 
         return token;
+    }
+
+    private static bool MatchesQuery(GlobalSearchResultVm result, string query)
+    {
+        return ContainsQuery(result.Name, query)
+            || ContainsQuery(result.GroupText, query)
+            || ContainsQuery(result.DescriptionText, query);
+    }
+
+    private static bool ContainsQuery(string? value, string query)
+    {
+        if (query.Length == 0)
+            return true;
+
+        if (string.IsNullOrWhiteSpace(value))
+            return false;
+
+        return value.Contains(query, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static (int MatchType, int Position, int LengthDelta) ComputeFieldMatchRank(string? value, string query)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return (4, int.MaxValue, int.MaxValue);
+
+        var text = value.ToLowerInvariant();
+        if (text.Equals(query, StringComparison.Ordinal))
+            return (0, 0, 0);
+
+        if (text.StartsWith(query, StringComparison.Ordinal))
+            return (1, 0, text.Length - query.Length);
+
+        var wordStartIndex = FindWordStartIndex(text, query);
+        if (wordStartIndex >= 0)
+            return (2, wordStartIndex, text.Length - query.Length);
+
+        var containsIndex = text.IndexOf(query, StringComparison.Ordinal);
+        if (containsIndex >= 0)
+            return (3, containsIndex, text.Length - query.Length);
+
+        return (4, int.MaxValue, int.MaxValue);
+    }
+
+    private static int FindWordStartIndex(string text, string query)
+    {
+        var start = 0;
+        while (start < text.Length)
+        {
+            var index = text.IndexOf(query, start, StringComparison.Ordinal);
+            if (index < 0)
+                return -1;
+
+            if (index == 0 || !char.IsLetterOrDigit(text[index - 1]))
+                return index;
+
+            start = index + 1;
+        }
+
+        return -1;
     }
 
     private void ToggleSecondarySelection(string key)
@@ -588,6 +674,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Ability,
             Name: title,
+            GroupText: $"Table {ability.Table}",
             IconGlyph: "\uf013",
             MetaText: meta,
             DescriptionText: (ability.Description ?? string.Empty).Trim(),
@@ -652,6 +739,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Spell,
             Name: (spell.name ?? string.Empty).Trim(),
+            GroupText: colour,
             IconGlyph: "\uf518",
             MetaText: meta,
             DescriptionText: (spell.description ?? string.Empty).Trim(),
@@ -676,6 +764,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Miracle,
             Name: (miracle.name ?? string.Empty).Trim(),
+            GroupText: sphere,
             IconGlyph: "\uf005",
             MetaText: meta,
             DescriptionText: (miracle.description ?? string.Empty).Trim(),
@@ -700,6 +789,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Evocation,
             Name: (evocation.name ?? string.Empty).Trim(),
+            GroupText: string.Join(", ", fields),
             IconGlyph: "\uf06c",
             MetaText: meta,
             DescriptionText: (evocation.description ?? string.Empty).Trim(),
@@ -757,6 +847,7 @@ public sealed record GlobalSearchFilterChipVm(
 public sealed record GlobalSearchResultVm(
     GlobalSearchKind Kind,
     string Name,
+    string GroupText,
     string IconGlyph,
     string MetaText,
     string DescriptionText,
@@ -796,6 +887,4 @@ public sealed record GlobalSearchResultVm(
         _ => "#374151"
     };
 
-    public string SearchBlob
-        => $"{Name} {MetaText} {DescriptionText} {Ability?.Available ?? string.Empty} {string.Join(" ", Ability?.PreReqs ?? Array.Empty<string>())}".ToLowerInvariant();
 }

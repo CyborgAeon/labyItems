@@ -9,6 +9,7 @@ public partial class GlobalSearchPage : ContentPage
 {
     private readonly GlobalSearchVm _vm = new();
     private bool _isAnimatingFilters;
+    private bool _isNavigatingBack;
 
     public GlobalSearchPage()
     {
@@ -20,6 +21,29 @@ public partial class GlobalSearchPage : ContentPage
     {
         base.OnAppearing();
         await _vm.EnsureLoadedAsync();
+    }
+
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        if (_isNavigatingBack)
+            return;
+
+        _isNavigatingBack = true;
+        try
+        {
+            if (Navigation.NavigationStack.Count > 1)
+            {
+                await Navigation.PopAsync();
+                return;
+            }
+
+            if (Shell.Current != null)
+                await Shell.Current.GoToAsync("..");
+        }
+        finally
+        {
+            _isNavigatingBack = false;
+        }
     }
 
     private async void OnFilterChipClicked(object sender, EventArgs e)

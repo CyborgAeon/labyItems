@@ -98,6 +98,7 @@ public sealed class WizardVm : INotifyPropertyChanged
     private IList<string> _armourPacLabels = new List<string>();
     private bool _isAdvancementExpanded;
     private int _advancementPointsSpent;
+    private bool _isBackNavigationInProgress;
     private readonly Dictionary<string, int> _abilityCostIndex = new(StringComparer.OrdinalIgnoreCase);
     private IReadOnlyDictionary<string, EvolutionService.AbilityResult> _specialisationAbilityLookup =
         new Dictionary<string, EvolutionService.AbilityResult>(StringComparer.OrdinalIgnoreCase);
@@ -395,13 +396,24 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     private async Task OnBackAsync()
     {
-        if (CurrentStep > 0)
-        {
-            await TryGoToStepAsync(CurrentStep - 1);
+        if (_isBackNavigationInProgress)
             return;
-        }
 
-        await TryExitWizardAsync();
+        _isBackNavigationInProgress = true;
+        try
+        {
+            if (CurrentStep > 0)
+            {
+                await TryGoToStepAsync(CurrentStep - 1);
+                return;
+            }
+
+            await TryExitWizardAsync();
+        }
+        finally
+        {
+            _isBackNavigationInProgress = false;
+        }
     }
 
     private async Task OnNextAsync()
