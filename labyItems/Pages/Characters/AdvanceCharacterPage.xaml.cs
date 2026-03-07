@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
 using AndroidConfig = Microsoft.Maui.Controls.PlatformConfiguration.Android;
+using AndroidToolbarPlacement = Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific.ToolbarPlacement;
 using SpellCardPage = labyItems.Pages.SpellCard.SpellCard;
 using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
 using EvocationCardPage = labyItems.Pages.EvocationCard.EvocationCard;
@@ -22,17 +23,25 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
     private readonly AdvanceCharacterSpellsTabVm _spellsTabVm;
     private readonly AdvanceCharacterMiraclesTabVm _miraclesTabVm;
     private readonly AdvanceCharacterEvocationsTabVm _evocationsTabVm;
+    private Page? _lastNonBackTab;
+    private bool _isHandlingBackTabSelection;
 
     public AdvanceCharacterPage(Character character)
         : this(LiteDbService.ToDraft(character) ?? new CharacterDraft())
     {
-        Title = string.IsNullOrWhiteSpace(character?.Name) ? "Advance Character" : $"Advance {character.Name}";
+        Title = string.Empty;
     }
 
     public AdvanceCharacterPage(CharacterDraft draft)
     {
         InitializeComponent();
+        Shell.SetNavBarIsVisible(this, false);
+        NavigationPage.SetHasNavigationBar(this, false);
+        NavigationPage.SetHasBackButton(this, false);
+        Shell.SetBackButtonBehavior(this, CreateHiddenBackButtonBehavior());
         this.On<AndroidConfig>().SetIsSwipePagingEnabled(false);
+        this.On<AndroidConfig>().SetToolbarPlacement(AndroidToolbarPlacement.Top);
+        Title = string.Empty;
         var serviceProvider = Microsoft.Maui.Controls.Application.Current?.Handler?.MauiContext?.Services;
         _vm = new AdvanceCharacterVm(
             draft,
@@ -50,15 +59,16 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
         BindingContext = _vm;
         BindTabContexts();
+        CurrentPageChanged += OnCurrentPageChanged;
+        ConfigureTabPageChrome(BackTab);
+        ConfigureTabPageChrome(DetailsTab);
+        ConfigureTabPageChrome(SpellsTab);
+        ConfigureTabPageChrome(MiraclesTab);
+        ConfigureTabPageChrome(EvocsTab);
 
         AbilitySearch.RemoteSearchProvider = _detailsTabVm.SearchAbilityOptionsAsync;
         ApplyTabVisibility();
-
-        ToolbarItems.Add(new ToolbarItem
-        {
-            Text = "Save",
-            Command = _vm.SaveCommand
-        });
+        QueuePlatformTabLayoutRefresh();
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
@@ -79,7 +89,8 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
     private void ApplyTabVisibility()
     {
-        var desiredTabs = new List<Page> { DetailsTab };
+        var currentBeforeUpdate = CurrentPage;
+        var desiredTabs = new List<Page> { BackTab, DetailsTab };
         if (_vm.ShowSpellsTab)
             desiredTabs.Add(SpellsTab);
         if (_vm.ShowMiraclesTab)
@@ -96,6 +107,7 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         for (var i = 0; i < desiredTabs.Count; i++)
         {
             var page = desiredTabs[i];
+            ConfigureTabPageChrome(page);
             if (!Children.Contains(page))
             {
                 Children.Insert(i, page);
@@ -111,8 +123,14 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
             }
         }
 
-        if (Children.Contains(DetailsTab))
-            CurrentPage = DetailsTab;
+        var fallbackPage = ResolveFallbackPage(currentBeforeUpdate, desiredTabs);
+        if (fallbackPage != null && !ReferenceEquals(CurrentPage, fallbackPage))
+            CurrentPage = fallbackPage;
+
+        if (CurrentPage != null && !ReferenceEquals(CurrentPage, BackTab))
+            _lastNonBackTab = CurrentPage;
+
+        QueuePlatformTabLayoutRefresh();
     }
 
     private void BindTabContexts()
@@ -125,6 +143,9 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
     private void BindTabContext(Page page)
     {
+        if (ReferenceEquals(page, BackTab))
+            return;
+
         if (ReferenceEquals(page, DetailsTab))
             page.BindingContext = _detailsTabVm;
         else if (ReferenceEquals(page, SpellsTab))
@@ -139,6 +160,83 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
     {
         base.OnDisappearing();
         _vm.PersistDraft();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        Shell.SetNavBarIsVisible(this, false);
+        NavigationPage.SetHasNavigationBar(this, false);
+        NavigationPage.SetHasBackButton(this, false);
+        Shell.SetBackButtonBehavior(this, CreateHiddenBackButtonBehavior());
+
+        foreach (var page in Children)
+            ConfigureTabPageChrome(page);
+
+        QueuePlatformTabLayoutRefresh();
+    }
+
+    private Page? ResolveFallbackPage(Page? currentBeforeUpdate, IReadOnlyCollection<Page> desiredTabs)
+    {
+        if (currentBeforeUpdate != null
+            && desiredTabs.Contains(currentBeforeUpdate)
+            && !ReferenceEquals(currentBeforeUpdate, BackTab))
+        {
+            return currentBeforeUpdate;
+        }
+
+        if (_lastNonBackTab != null && desiredTabs.Contains(_lastNonBackTab))
+            return _lastNonBackTab;
+
+        if (desiredTabs.Contains(DetailsTab))
+            return DetailsTab;
+
+        return desiredTabs.FirstOrDefault(page => !ReferenceEquals(page, BackTab))
+               ?? desiredTabs.FirstOrDefault();
+    }
+
+    private void OnCurrentPageChanged(object? sender, EventArgs e)
+    {
+        if (CurrentPage == null)
+            return;
+
+        if (ReferenceEquals(CurrentPage, BackTab))
+        {
+            _ = HandleBackTabSelectionAsync();
+            return;
+        }
+
+        _lastNonBackTab = CurrentPage;
+    }
+
+    private async Task HandleBackTabSelectionAsync()
+    {
+        if (_isHandlingBackTabSelection)
+            return;
+
+        _isHandlingBackTabSelection = true;
+        try
+        {
+            var returnTab = _lastNonBackTab != null && Children.Contains(_lastNonBackTab)
+                ? _lastNonBackTab
+                : (Children.Contains(DetailsTab) ? DetailsTab : Children.FirstOrDefault());
+
+            if (returnTab != null && !ReferenceEquals(CurrentPage, returnTab))
+                CurrentPage = returnTab;
+
+            if (Navigation.NavigationStack.Count > 1)
+            {
+                await Navigation.PopAsync();
+                return;
+            }
+
+            if (Shell.Current != null)
+                await Shell.Current.GoToAsync("..");
+        }
+        finally
+        {
+            _isHandlingBackTabSelection = false;
+        }
     }
 
     private async void OnViewSpellDetailsClicked(object sender, EventArgs e)
@@ -200,4 +298,28 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
         await Navigation.PushAsync(new AbilityCardPage(ability));
     }
+
+    private static void ConfigureTabPageChrome(Page page)
+    {
+        Shell.SetNavBarIsVisible(page, false);
+        NavigationPage.SetHasNavigationBar(page, false);
+        NavigationPage.SetHasBackButton(page, false);
+        Shell.SetBackButtonBehavior(page, CreateHiddenBackButtonBehavior());
+    }
+
+    private static BackButtonBehavior CreateHiddenBackButtonBehavior()
+        => new() { IsVisible = false };
+
+    private void QueuePlatformTabLayoutRefresh()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Task.Delay(10);
+            ApplyPlatformTabLayoutTweaks();
+            await Task.Delay(60);
+            ApplyPlatformTabLayoutTweaks();
+        });
+    }
+
+    partial void ApplyPlatformTabLayoutTweaks();
 }

@@ -7,148 +7,161 @@
 
     <ContentPage.Content>
         <Grid RowDefinitions="Auto,*"
-              Padding="16"
-              RowSpacing="12">
+              Padding="16,8,16,8"
+              RowSpacing="0">
             <Label Grid.Row="0"
                    x:Name="EmptyStateLabel"
                    Text="No characters saved yet."
                    Opacity="0.7"
+                   Margin="0,0,0,8"
                    IsVisible="False"/>
 
             <CollectionView x:Name="WalletView"
                             Grid.Row="1"
                             SelectionMode="None"
-                            ItemsSource="{Binding Characters}">
+                            ItemsSource="{Binding CharacterRows}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame Margin="0,0,0,12"
                                Padding="12"
                                CornerRadius="12"
                                HasShadow="False"
-                               BorderColor="{StaticResource SurfaceBorderColor}">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnCardTapped"/>
-                            </Frame.GestureRecognizers>
+                               BorderColor="{StaticResource SurfaceBorderColor}"
+                               BindingContextChanged="OnWalletCardBindingContextChanged">
                             <Grid RowDefinitions="Auto,Auto,Auto"
-                                  ColumnDefinitions="*,*,*,*,*,*"
                                   RowSpacing="8">
-                                <Label Grid.ColumnSpan="5"
+                                <Grid Grid.Row="0"
+                                      ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <Label Grid.Column="0"
                                        Grid.Row="0"
                                        Text="{Binding Name}"
                                        FontAttributes="Bold"
                                        FontSize="17"/>
-                                <Label Text="{Binding Class}"
-                                       Grid.ColumnSpan="2"
+                                    <Button Grid.Column="1"
+                                            Grid.Row="0"
+                                            Text="{Binding IsExpanded, Converter={StaticResource ChevronConverter}}"
+                                            Style="{StaticResource CardChevronButtonStyle}"
+                                            Clicked="OnToggleExpandedClicked"/>
+                                </Grid>
+
+                                <Grid Grid.Row="1"
+                                      ColumnDefinitions="*,*">
+                                    <Label Text="{Binding Class}"
                                        Grid.Row="1"
                                        FontSize="13"
                                        Opacity="0.8"/>
-                                <Label Text="{Binding PlayerName, StringFormat='{0}'}"
+                                    <Label Text="{Binding PlayerName, StringFormat='{0}'}"
                                        FontSize="13"
-                                       Grid.Column="2"
-                                       Grid.ColumnSpan="3"
+                                       Grid.Column="1"
                                        Grid.Row="1"
                                        Opacity="0.8"
                                        HorizontalTextAlignment="End"/>
-                                <ImageButton Grid.Row="2"
-                                             Grid.Column="0"
-                                             AutomationProperties.Name="Summary"
-                                             BackgroundColor="Transparent"
-                                             Padding="6"
-                                             HeightRequest="36"
-                                             WidthRequest="36"
-                                             Clicked="OnSummaryClicked"
-                                             CommandParameter="{Binding .}">
-                                    <ImageButton.Source>
-                                        <FontImageSource Glyph="📄"
-                                                         Size="18"
-                                                         Color="Black"/>
-                                    </ImageButton.Source>
-                                </ImageButton>
+                                </Grid>
 
-                                <ImageButton
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    AutomationProperties.Name="Character Wizard"
-                                    BackgroundColor="Transparent"
-                                    Padding="6"
-                                    HeightRequest="36"
-                                    WidthRequest="36"
-                                    Clicked="OnWizardClicked"
-                                    CommandParameter="{Binding .}">
-                                    <ImageButton.Source>
-                                        <FontImageSource Glyph="🪄"
-                                                         Size="18"
-                                                         Color="Black"/>
-                                    </ImageButton.Source>
-                                </ImageButton>
+                                <Grid Grid.Row="2"
+                                      Margin="0,4,0,0">
+                                    <HorizontalStackLayout StyleId="wallet-collapsed-icons"
+                                                           Spacing="4"
+                                                           HorizontalOptions="Start">
+                                        <ImageButton AutomationProperties.Name="Review full details"
+                                                     StyleId="character-action-review"
+                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
+                                                     Clicked="OnSummaryClicked"
+                                                     CommandParameter="{Binding Character}">
+                                            <ImageButton.Source>
+                                                <FontImageSource Glyph="📄" Size="20" Color="Black"/>
+                                            </ImageButton.Source>
+                                        </ImageButton>
 
-                                <ImageButton
-                                    Grid.Row="2"
-                                    Grid.Column="2"
-                                    AutomationProperties.Name="Advance character"
-                                    BackgroundColor="Transparent"
-                                    Padding="6"
-                                    HeightRequest="36"
-                                    WidthRequest="36"
-                                    Clicked="OnAdvanceClicked"
-                                    CommandParameter="{Binding .}">
-                                    <ImageButton.Source>
-                                        <FontImageSource Glyph="⬆️"
-                                                         Size="18"
-                                                         Color="Black"/>
-                                    </ImageButton.Source>
-                                </ImageButton>
+                                        <ImageButton AutomationProperties.Name="Edit character"
+                                                     StyleId="character-action-edit"
+                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
+                                                     Clicked="OnWizardClicked"
+                                                     CommandParameter="{Binding Character}">
+                                            <ImageButton.Source>
+                                                <FontImageSource Glyph="🪄" Size="20" Color="Black"/>
+                                            </ImageButton.Source>
+                                        </ImageButton>
 
-                                <ImageButton
-                                    Grid.Row="2"
-                                    Grid.Column="3"
-                                    AutomationProperties.Name="Battleboard"
-                                    BackgroundColor="Transparent"
-                                    Padding="6"
-                                    HeightRequest="36"
-                                    WidthRequest="36"
-                                    Clicked="OnBattleboardClicked"
-                                    CommandParameter="{Binding .}">
-                                    <ImageButton.Source>
-                                        <FontImageSource Glyph="⚔️"
-                                                         Size="18"
-                                                         Color="Black"/>
-                                    </ImageButton.Source>
-                                </ImageButton>
+                                        <ImageButton AutomationProperties.Name="Advance character"
+                                                     StyleId="character-action-advance"
+                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
+                                                     Clicked="OnAdvanceClicked"
+                                                     CommandParameter="{Binding Character}">
+                                            <ImageButton.Source>
+                                                <FontImageSource Glyph="⬆️" Size="20" Color="Black"/>
+                                            </ImageButton.Source>
+                                        </ImageButton>
 
-                                <ImageButton
-                                    Grid.Row="2"
-                                    Grid.Column="4"
-                                    AutomationProperties.Name="Manufacturing"
-                                    BackgroundColor="Transparent"
-                                    Padding="6"
-                                    HeightRequest="36"
-                                    WidthRequest="36"
-                                    Clicked="OnManufacturingClicked"
-                                    CommandParameter="{Binding .}">
-                                    <ImageButton.Source>
-                                        <FontImageSource Glyph="🛠️"
-                                                         Size="18"
-                                                         Color="Black"/>
-                                    </ImageButton.Source>
-                                </ImageButton>
+                                        <ImageButton AutomationProperties.Name="View battleboard"
+                                                     StyleId="character-action-battleboard"
+                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
+                                                     Clicked="OnBattleboardClicked"
+                                                     CommandParameter="{Binding Character}">
+                                            <ImageButton.Source>
+                                                <FontImageSource Glyph="⚔️" Size="20" Color="Black"/>
+                                            </ImageButton.Source>
+                                        </ImageButton>
 
-                                <ImageButton
-                                    Grid.Row="2"
-                                    Grid.Column="5"
-                                    AutomationProperties.Name="Delete character"
-                                    BackgroundColor="Transparent"
-                                    Padding="6"
-                                    HeightRequest="36"
-                                    WidthRequest="36"
-                                    Clicked="OnDeleteClicked"
-                                    CommandParameter="{Binding .}">
-                                    <ImageButton.Source>
-                                        <FontImageSource Glyph="🗑️"
-                                                         Size="18"
-                                                         Color="{StaticResource AccentMaroonColor}"/>
-                                    </ImageButton.Source>
-                                </ImageButton>
+                                        <ImageButton AutomationProperties.Name="View make sheet"
+                                                     StyleId="character-action-makesheet"
+                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
+                                                     Clicked="OnManufacturingClicked"
+                                                     CommandParameter="{Binding Character}">
+                                            <ImageButton.Source>
+                                                <FontImageSource Glyph="🛠️" Size="20" Color="Black"/>
+                                            </ImageButton.Source>
+                                        </ImageButton>
+
+                                        <ImageButton AutomationProperties.Name="Delete character"
+                                                     StyleId="character-action-delete"
+                                                     Style="{StaticResource EmojiActionIconButtonStyle}"
+                                                     Clicked="OnDeleteClicked"
+                                                     CommandParameter="{Binding Character}">
+                                            <ImageButton.Source>
+                                                <FontImageSource Glyph="🗑️" Size="20" Color="Black"/>
+                                            </ImageButton.Source>
+                                        </ImageButton>
+                                    </HorizontalStackLayout>
+
+                                    <VerticalStackLayout StyleId="wallet-expanded-actions"
+                                                         IsVisible="False"
+                                                         Opacity="0"
+                                                         Spacing="8">
+                                        <Button Text="Review full details 📄"
+                                                StyleId="character-action-review"
+                                                Style="{StaticResource ExpandedActionButtonStyle}"
+                                                Clicked="OnSummaryClicked"
+                                                CommandParameter="{Binding Character}"/>
+                                        <Button Text="Edit character 🪄"
+                                                StyleId="character-action-edit"
+                                                Style="{StaticResource ExpandedActionButtonStyle}"
+                                                Clicked="OnWizardClicked"
+                                                CommandParameter="{Binding Character}"/>
+                                        <Button Text="Advance character ⬆️"
+                                                StyleId="character-action-advance"
+                                                Style="{StaticResource ExpandedActionButtonStyle}"
+                                                Clicked="OnAdvanceClicked"
+                                                CommandParameter="{Binding Character}"/>
+                                        <Button Text="View battleboard ⚔️"
+                                                StyleId="character-action-battleboard"
+                                                Style="{StaticResource ExpandedActionButtonStyle}"
+                                                Clicked="OnBattleboardClicked"
+                                                CommandParameter="{Binding Character}"/>
+                                        <Button Text="View make sheet 🛠️"
+                                                StyleId="character-action-makesheet"
+                                                Style="{StaticResource ExpandedActionButtonStyle}"
+                                                Clicked="OnManufacturingClicked"
+                                                CommandParameter="{Binding Character}"/>
+                                        <Button Text="Delete character 🗑️"
+                                                StyleId="character-action-delete"
+                                                Style="{StaticResource ExpandedActionButtonStyle}"
+                                                TextColor="{StaticResource White}"
+                                                Clicked="OnDeleteClicked"
+                                                CommandParameter="{Binding Character}"/>
+                                    </VerticalStackLayout>
+                                </Grid>
                             </Grid>
                         </Frame>
                     </DataTemplate>

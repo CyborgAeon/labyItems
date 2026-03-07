@@ -24,73 +24,44 @@
     </ResourceDictionary>
   </ContentView.Resources>
 
-  <Grid RowDefinitions="Auto,*"
-        RowSpacing="12"
+  <Grid RowDefinitions="*"
         Padding="16">
-
-    <Grid ColumnDefinitions="*,*"
-          ColumnSpacing="8">
-      <Button Text="Class"
-              Command="{Binding SelectTabCommand}"
-              CommandParameter="0">
-        <Button.Triggers>
-          <DataTrigger TargetType="Button"
-                       Binding="{Binding SelectedTabIndex}"
-                       Value="0">
-            <Setter Property="FontAttributes"
-                    Value="Bold"/>
-          </DataTrigger>
-        </Button.Triggers>
-      </Button>
-
-      <Button Grid.Column="1"
-              Text="Race"
-              Command="{Binding SelectTabCommand}"
-              CommandParameter="1">
-        <Button.Triggers>
-          <DataTrigger TargetType="Button"
-                       Binding="{Binding SelectedTabIndex}"
-                       Value="1">
-            <Setter Property="FontAttributes"
-                    Value="Bold"/>
-          </DataTrigger>
-        </Button.Triggers>
-      </Button>
-    </Grid>
-
-    <Grid Grid.Row="1">
+    <Grid Grid.Row="0">
       <ContentView IsVisible="{Binding IsClassTabSelected}">
         <Grid RowDefinitions="Auto,Auto,*"
               RowSpacing="8"
               Padding="12,8">
-          <SearchBar Placeholder="Search classes..."
-                     Text="{Binding ClassSearchText}"/>
+          <Entry Grid.Row="0"
+                 Placeholder="Search classes..."
+                 ClearButtonVisibility="WhileEditing"
+                 Text="{Binding ClassSearchText}"/>
           <CollectionView
             Grid.Row="1"
-            ItemsSource="{Binding ClassFilters}"
+            ItemsSource="{Binding ClassFilterChips}"
             SelectionMode="None"
             ItemsLayout="HorizontalList"
-            HeightRequest="30">
+            HeightRequest="38">
             <CollectionView.ItemTemplate>
               <DataTemplate>
-                <Button Text="{Binding .}"
+                <Button Text="{Binding Label}"
                         FontSize="12"
                         Padding="12,6"
-                        BackgroundColor="{StaticResource ModalScrimColor}"
-                        TextColor="White"
-                        BorderColor="{StaticResource SurfaceBorderColor}"
+                        Margin="0,0,8,0"
+                        BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
+                        TextColor="{StaticResource PrimaryTextStrongColor}"
+                        BorderColor="{StaticResource SoftStrokeColor}"
                         BorderWidth="1"
                         CornerRadius="999"
-                        Command="{Binding BindingContext.SelectClassFilterCommand, Source={x:Reference Root}}"
+                        Command="{Binding BindingContext.ToggleClassFilterChipCommand, Source={x:Reference Root}}"
                         CommandParameter="{Binding .}">
                   <Button.Triggers>
                     <DataTrigger TargetType="Button"
-                                 Binding="{Binding BindingContext.SelectedClassFilter, Source={x:Reference Root}}"
-                                 Value="{Binding .}">
-                      <Setter Property="FontAttributes"
-                              Value="Bold"/>
-                      <Setter Property="TextColor"
+                                 Binding="{Binding IsSelected}"
+                                 Value="True">
+                      <Setter Property="BackgroundColor"
                               Value="{StaticResource AccentMaroonColor}"/>
+                      <Setter Property="TextColor"
+                              Value="White"/>
                       <Setter Property="BorderColor"
                               Value="{StaticResource AccentMaroonColor}"/>
                     </DataTrigger>
@@ -99,6 +70,7 @@
               </DataTemplate>
             </CollectionView.ItemTemplate>
           </CollectionView>
+
           <CollectionView Grid.Row="2"
                           ItemsSource="{Binding FilteredClasses}"
                           ItemTemplate="{StaticResource ClassCardTemplate}"
@@ -109,9 +81,10 @@
       <ContentView IsVisible="{Binding IsRaceTabSelected}">
         <Grid RowDefinitions="Auto,Auto,*"
               RowSpacing="12">
-
-          <SearchBar Placeholder="Search races..."
-                     Text="{Binding RaceSearchText}"/>
+          <Entry Grid.Row="0"
+                 Placeholder="Search races..."
+                 ClearButtonVisibility="WhileEditing"
+                 Text="{Binding RaceSearchText}"/>
 
           <CollectionView Grid.Row="1"
                           ItemsSource="{Binding RaceFilters}"
@@ -154,6 +127,5 @@
         </Grid>
       </ContentView>
     </Grid>
-
   </Grid>
 </ContentView>

@@ -6,9 +6,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:labyItems.Pages.Characters">
 
-    <Grid RowDefinitions="Auto,Auto,*"
+    <Grid RowDefinitions="Auto,Auto,Auto,*"
           Padding="16"
-          RowSpacing="12">
+          RowSpacing="10">
 
         <FlexLayout Grid.Row="0"
                     Direction="Row"
@@ -37,36 +37,70 @@
         </FlexLayout>
 
         <Grid Grid.Row="1"
-              ColumnDefinitions="*,12,160">
-            <Grid Grid.Column="0"
-                  ColumnDefinitions="Auto,*">
+              ColumnDefinitions="Auto,*"
+              ColumnSpacing="8">
                 <ImageButton Grid.Column="0"
                              AutomationProperties.Name="Back"
                              IsVisible="{Binding Source={x:Reference Root}, Path=ShowBackButton}"
                              Command="{Binding Source={x:Reference Root}, Path=BackCommand}"
-                             BackgroundColor="Transparent"
-                             Padding="6"
-                             WidthRequest="36"
-                             HeightRequest="36"
-                             Margin="0,0,4,0">
+                             Style="{StaticResource BackArrowImageButtonStyle}">
                     <ImageButton.Source>
                         <FontImageSource FontFamily="FASolid"
                                          Glyph="&#xf060;"
-                                         Size="22"
+                                         Size="24"
                                          Color="{StaticResource Gray300}"/>
                     </ImageButton.Source>
                 </ImageButton>
-                <SearchBar Grid.Column="1"
-                           Placeholder="Search guilds..."
-                           Text="{Binding SearchText}"/>
-            </Grid>
-            <Picker Grid.Column="2"
-                    Title="Type"
-                    ItemsSource="{Binding TypeFilters}"
-                    SelectedItem="{Binding SelectedTypeFilter}"/>
+                <Entry Grid.Column="1"
+                       Placeholder="Search guilds..."
+                       ClearButtonVisibility="WhileEditing"
+                       Text="{Binding SearchText}"/>
         </Grid>
 
-        <CollectionView Grid.Row="2"
+        <Grid Grid.Row="2">
+            <Picker Title="Type"
+                    ItemsSource="{Binding TypeFilters}"
+                    SelectedItem="{Binding SelectedTypeFilter}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=UseTypePills, Converter={StaticResource InverseBoolConverter}}"/>
+
+            <CollectionView ItemsSource="{Binding TypeFilterChips}"
+                            SelectionMode="None"
+                            IsVisible="{Binding Source={x:Reference Root}, Path=UseTypePills}"
+                            ItemsLayout="HorizontalList"
+                            HeightRequest="38">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Text="{Binding Label}"
+                                FontSize="12"
+                                FontAttributes="Bold"
+                                Padding="12,6"
+                                Margin="0,0,8,0"
+                                BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
+                                TextColor="{StaticResource PrimaryTextStrongColor}"
+                                BorderColor="{StaticResource SoftStrokeColor}"
+                                BorderWidth="1"
+                                CornerRadius="999"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:Guilds}}, Path=BindingContext.ToggleTypeFilterChipCommand}"
+                                CommandParameter="{Binding .}">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button"
+                                             Binding="{Binding IsSelected}"
+                                             Value="True">
+                                    <Setter Property="BackgroundColor"
+                                            Value="{StaticResource AccentMaroonColor}"/>
+                                    <Setter Property="TextColor"
+                                            Value="White"/>
+                                    <Setter Property="BorderColor"
+                                            Value="{StaticResource AccentMaroonColor}"/>
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <CollectionView Grid.Row="3"
                         ItemsSource="{Binding FilteredGuilds}"
                         SelectionMode="None">
 

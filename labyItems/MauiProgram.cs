@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Reflection;
+#if !IOS
 using FluentMigrator.Runner;
+#endif
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Storage;
 using Microsoft.Maui.LifecycleEvents;
@@ -71,7 +73,8 @@ public static class MauiProgram
 #endif
 				});
 
-		// Register FluentMigrator runner to apply migrations against the app DB (use local file for testing)
+#if !IOS
+		// Register FluentMigrator runner to apply migrations against the app DB.
 		builder.Services.AddFluentMigratorCore()
 			.ConfigureRunner(rb => rb
 				.AddSQLite()
@@ -82,6 +85,7 @@ public static class MauiProgram
 				lb.ClearProviders();
 				lb.AddDebug();
 			});
+#endif
 
 		// Register default-db installer which will copy a packaged laby.db on first-run (if present)
 		builder.Services.AddSingleton<Services.IDefaultDatabaseInstaller, Services.DefaultDatabaseInstaller>();

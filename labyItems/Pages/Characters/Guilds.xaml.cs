@@ -17,6 +17,12 @@ public partial class Guilds : ContentView
         typeof(Guilds),
         null);
 
+    public static readonly BindableProperty UseTypePillsProperty = BindableProperty.Create(
+        nameof(UseTypePills),
+        typeof(bool),
+        typeof(Guilds),
+        false);
+
     public Guilds(GuildsVm vm)
     {
         InitializeComponent();
@@ -33,5 +39,11 @@ public partial class Guilds : ContentView
     {
         get => (ICommand?)GetValue(BackCommandProperty);
         set => SetValue(BackCommandProperty, value);
+    }
+
+    public bool UseTypePills
+    {
+        get => (bool)GetValue(UseTypePillsProperty);
+        set => SetValue(UseTypePillsProperty, value);
     }
 }

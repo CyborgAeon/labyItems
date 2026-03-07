@@ -8,11 +8,6 @@
        <ScrollView>
               <VerticalStackLayout Padding="16"
                                    Spacing="14">
-
-                     <Label Text="Review"
-                            FontSize="20"
-                            FontAttributes="Bold"/>
-
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
@@ -168,8 +163,6 @@
                                           LineBreakMode="WordWrap"/>
                             </VerticalStackLayout>
                      </Frame>
-                     <Button Text="Export to Excel"
-                             Command="{Binding ExportToExcelCommand}"/>
               </VerticalStackLayout>
        </ScrollView>
 </ContentView>

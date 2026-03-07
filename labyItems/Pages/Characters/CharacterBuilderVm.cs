@@ -27,6 +27,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private HashSet<string>? _allowedClassKeysForSelectedRace;
     private string? _allowedClassKeysForRace;
+    private readonly HashSet<string> _selectedClassFilterKeys = new(StringComparer.OrdinalIgnoreCase);
     private readonly SemaphoreSlim _abilityRefreshLock = new(1, 1);
     private LifeScalePoint? _humanLifeForSelectedClass;
     private ArmourTier _armourTier = ArmourTier.None;
@@ -71,32 +72,25 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         SpecialisationVm = new CharacterSpecialisationVm(this);
 
-        SelectTabCommand = new Command<object>(p =>
-        {
-            if (p == null) return;
-
-            if (p is int i) SelectedTabIndex = i;
-            else if (int.TryParse(p.ToString(), out var j)) SelectedTabIndex = j;
-        });
-
         ToggleClassExpandedCommand = new Command<ClassCardVm>(ToggleExpandedCommand);
         SelectClassCommand = new Command<ClassCardVm>(SelectClass);
         SelectRaceCommand = new Command<RaceCardVm>(SelectRace);
         ToggleRaceExpandedCommand = new Command<RaceCardVm>(ToggleRaceExpandedCommandImpl);
+        ToggleClassFilterChipCommand = new Command<ClassFilterChipVm>(ToggleClassFilterChip);
+        ShowClassSelectionCommand = new Command(() => SelectedTabIndex = 0);
 
         SelectRaceFilterCommand = new Command<string>(s =>
         {
             SelectedRaceFilter = string.IsNullOrWhiteSpace(s) ? "All" : s;
         });
 
-        ClassFilters = new ObservableCollection<string> { "All" };
+        ClassFilterChips = new ObservableCollection<ClassFilterChipVm>();
         RaceFilters = new ObservableCollection<string> { "All" };
-
-        _selectedClassFilter = "All";
         _selectedRaceFilter = "All";
 
         AllClasses = new ObservableCollection<ClassCardVm>();
         AllRaces = new ObservableCollection<RaceCardVm>();
+        SelectedTabIndex = string.IsNullOrWhiteSpace(_draft.Class) ? 0 : 1;
 
         RefilterClasses();
         RefilterRaces();
@@ -225,13 +219,87 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return nonDemon ?? peopleTypes[0];
     }
 
+    private void ToggleClassFilterChip(ClassFilterChipVm? chip)
+    {
+        if (chip == null)
+            return;
+
+        var shouldSelect = !chip.IsSelected;
+        chip.IsSelected = shouldSelect;
+
+        if (shouldSelect)
+            _selectedClassFilterKeys.Add(chip.Key);
+        else
+            _selectedClassFilterKeys.Remove(chip.Key);
+
+        RefilterClasses();
+    }
+
+    private void RebuildClassFilterChips()
+    {
+        var labelsByKey = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var classVm in AllClasses)
+        {
+            foreach (var bracket in classVm.Brackets)
+            {
+                var label = (bracket ?? string.Empty).Trim();
+                var key = NormalizeClassFilterKey(label);
+                if (key.Length == 0 || labelsByKey.ContainsKey(key))
+                    continue;
+
+                labelsByKey[key] = label;
+            }
+        }
+
+        _selectedClassFilterKeys.RemoveWhere(key => !labelsByKey.ContainsKey(key));
+
+        ClassFilterChips.Clear();
+        foreach (var entry in labelsByKey
+                     .OrderBy(kvp => NormalizeClassFilterSortLabel(kvp.Value), StringComparer.OrdinalIgnoreCase))
+        {
+            ClassFilterChips.Add(new ClassFilterChipVm(
+                entry.Key,
+                entry.Value,
+                _selectedClassFilterKeys.Contains(entry.Key)));
+        }
+    }
+
+    private static string NormalizeClassFilterKey(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return new string(value
+            .Trim()
+            .ToLowerInvariant()
+            .Where(char.IsLetterOrDigit)
+            .ToArray());
+    }
+
+    private static string NormalizeClassFilterSortLabel(string? value)
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return string.Empty;
+
+        var firstSpace = text.IndexOf(' ');
+        if (firstSpace <= 0 || firstSpace >= text.Length - 1)
+            return text;
+
+        var prefix = text[..firstSpace];
+        var hasEmojiPrefix = prefix.Any(ch => !char.IsLetterOrDigit(ch));
+        return hasEmojiPrefix ? text[(firstSpace + 1)..].Trim() : text;
+    }
+
     private int _selectedTabIndex;
     public int SelectedTabIndex
     {
         get => _selectedTabIndex;
         set
         {
-            if (!Set(ref _selectedTabIndex, value)) return;
+            var next = value == 1 && !CanSelectRace ? 0 : value;
+            if (!Set(ref _selectedTabIndex, next)) return;
             Raise(nameof(IsClassTabSelected));
             Raise(nameof(IsRaceTabSelected));
         }
@@ -239,9 +307,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     public bool IsClassTabSelected => SelectedTabIndex == 0;
     public bool IsRaceTabSelected => SelectedTabIndex == 1;
+    public bool CanSelectRace => !string.IsNullOrWhiteSpace((_draft.Class ?? string.Empty).Trim());
 
-    public ICommand SelectTabCommand { get; }
+    public ICommand ShowClassSelectionCommand { get; }
     public ICommand SelectRaceFilterCommand { get; }
+    public ICommand ToggleClassFilterChipCommand { get; }
 
     private string _classSearchText = "";
     public string ClassSearchText
@@ -257,15 +327,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         set { if (Set(ref _raceSearchText, value)) RefilterRaces(); }
     }
 
-    public ObservableCollection<string> ClassFilters { get; }
+    public ObservableCollection<ClassFilterChipVm> ClassFilterChips { get; }
     public ObservableCollection<string> RaceFilters { get; }
-
-    private string? _selectedClassFilter;
-    public string? SelectedClassFilter
-    {
-        get => _selectedClassFilter;
-        set { if (Set(ref _selectedClassFilter, value)) RefilterClasses(); }
-    }
 
     private string? _selectedRaceFilter;
     public string? SelectedRaceFilter
@@ -318,12 +381,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             _humanLifeForSelectedClass = null;
             _allowedRaceKeysForSelectedClass = null;
             _allowedRaceKeysForClass = null;
+            SelectedTabIndex = 0;
         }
         else
         {
             _humanLifeForSelectedClass = null;
             _draft.Class = item.Name;
         }
+        Raise(nameof(CanSelectRace));
         _notifyWizardGatingChanged();
 
         MainThread.BeginInvokeOnMainThread(async () =>
@@ -391,7 +456,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var all = await _creationDataService.GetClassesAsync();
 
         var list = new List<ClassCardVm>();
-        var categories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         var ordered = all.OrderBy(k => k.Key, StringComparer.OrdinalIgnoreCase).ToList();
         for (var idx = 0; idx < ordered.Count; idx++)
@@ -400,9 +464,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             var record = ordered[idx].Value;
 
             var (icon, category, bracketTags) = ClassCardVm.ParseBrackets(record.Brackets);
-
-            if (!string.IsNullOrWhiteSpace(category))
-                categories.Add(category);
 
             var maxAc = ParseInt(record.MaxAC);
             var powerBase = ExtractPowerBase(record);
@@ -434,11 +495,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             foreach (var vm in list)
                 AllClasses.Add(vm);
 
-            ClassFilters.Clear();
-            ClassFilters.Add("All");
-            foreach (var c in categories.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
-                ClassFilters.Add(c);
-
+            RebuildClassFilterChips();
             RefilterClasses();
         });
     }
@@ -1971,13 +2028,13 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private void RefilterClasses()
     {
         var q = (ClassSearchText ?? "").Trim().ToLowerInvariant();
-        var filter = SelectedClassFilter ?? "All";
 
         var allowed = _allowedClassKeysForSelectedRace;
+        var selectedFilters = _selectedClassFilterKeys;
 
         var list = AllClasses
             .Where(c =>
-                (filter == "All" || string.Equals(c.Category, filter, StringComparison.OrdinalIgnoreCase)) &&
+                (selectedFilters.Count == 0 || ClassMatchesSelectedBracketFilter(c, selectedFilters)) &&
                 (allowed == null || allowed.Contains(_creationDataService.NormalizeLifeScaleKey(c.Name ?? c.Key ?? ""))) &&
                 (q.Length == 0 ||
                  (c.Name ?? "").ToLowerInvariant().Contains(q) ||
@@ -1986,6 +2043,28 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             .ToList();
 
         ReplaceItems(FilteredClasses, list);
+    }
+
+    private static bool ClassMatchesSelectedBracketFilter(ClassCardVm classVm, HashSet<string> selectedFilters)
+    {
+        if (selectedFilters.Count == 0)
+            return true;
+
+        foreach (var bracket in classVm.Brackets)
+        {
+            var key = NormalizeClassFilterKey(bracket);
+            if (key.Length > 0 && selectedFilters.Contains(key))
+                return true;
+        }
+
+        foreach (var label in classVm.BracketLabels)
+        {
+            var key = NormalizeClassFilterKey(label);
+            if (key.Length > 0 && selectedFilters.Contains(key))
+                return true;
+        }
+
+        return false;
     }
 
     private void RefilterRaces()
@@ -2014,6 +2093,35 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         target.Clear();
         foreach (var i in items)
             target.Add(i);
+    }
+
+    public sealed class ClassFilterChipVm : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public ClassFilterChipVm(string key, string label, bool isSelected)
+        {
+            Key = (key ?? string.Empty).Trim();
+            Label = (label ?? string.Empty).Trim();
+            _isSelected = isSelected;
+        }
+
+        public string Key { get; }
+        public string Label { get; }
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                if (_isSelected == value)
+                    return;
+
+                _isSelected = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+            }
+        }
     }
 
     private enum ArmourTier

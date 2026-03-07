@@ -2,7 +2,9 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+#if !IOS
 using FluentMigrator.Runner;
+#endif
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Storage;
@@ -63,6 +65,17 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 
 		var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
 		var log2 = loggerFactory.CreateLogger("Migrations");
+#if IOS
+		try
+		{
+			LightweightMigrator.ApplyInitialSchema(dbPath, scope.ServiceProvider.GetService<ILogger>());
+			log2.LogInformation("Applied lightweight migrations on iOS.");
+		}
+		catch (Exception ex)
+		{
+			log2.LogError(ex, "Lightweight migrations failed on iOS: {Message}", ex.Message);
+		}
+#else
 		try
 		{
 			var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
@@ -83,5 +96,6 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 				log2.LogError(inner, "Lightweight migrations also failed: {Message}", inner.Message);
 			}
 		}
+#endif
 	}
 }

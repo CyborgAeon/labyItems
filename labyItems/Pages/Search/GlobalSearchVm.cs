@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using labyItems.Controls;
@@ -37,6 +38,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     ];
 
     private static readonly IReadOnlyList<FilterOption> SpellColourOptions = BuildSpellColourOptions();
+    private static readonly IReadOnlyList<FilterOption> AbilityTableOptions = BuildAbilityTableOptions();
     private static readonly IReadOnlyList<FilterOption> MiracleSphereOptions = BuildMiracleSphereOptions();
     private static readonly IReadOnlyList<FilterOption> EvocationFieldOptions = BuildEvocationFieldOptions();
     private static readonly HashSet<string> EvocationFieldTokens = new(EvocationFieldOptions.Select(o => o.Token), StringComparer.OrdinalIgnoreCase);
@@ -55,6 +57,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     private readonly List<GlobalSearchResultVm> _allResults = new();
     private readonly HashSet<string> _selectedSpellColourTokens = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedSpellTierTokens = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _selectedAbilityTableTokens = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedMiracleSphereTokens = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedMiracleTierTokens = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedEvocationFieldTokens = new(StringComparer.OrdinalIgnoreCase);
@@ -251,6 +254,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         if (selectedKind == GlobalSearchKind.Spell && _secondaryFilterMode == SearchSecondaryFilterMode.Spell)
             results = results.Where(r => r.Spell != null && PassesSpellSubFilters(r.Spell));
 
+        if (selectedKind == GlobalSearchKind.Ability && _secondaryFilterMode == SearchSecondaryFilterMode.Ability)
+            results = results.Where(r => r.Ability != null && PassesAbilitySubFilters(r.Ability));
+
         if (selectedKind == GlobalSearchKind.Miracle && _secondaryFilterMode == SearchSecondaryFilterMode.Miracle)
             results = results.Where(r => r.Miracle != null && PassesMiracleSubFilters(r.Miracle));
 
@@ -307,6 +313,15 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             return true;
 
         return _selectedSpellColourTokens.Any(token => SpellMatchesColourToken(spell, token));
+    }
+
+    private bool PassesAbilitySubFilters(EvolutionService.AbilityResult ability)
+    {
+        if (_selectedAbilityTableTokens.Count == 0)
+            return true;
+
+        var abilityTableToken = FormatAbilityTableToken(ability.Table);
+        return _selectedAbilityTableTokens.Contains(abilityTableToken);
     }
 
     private bool PassesMiracleSubFilters(MiracleService.MiracRaw miracle)
@@ -477,6 +492,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                 ToggleSelectionForMode(key, "spell-colour:", _selectedSpellColourTokens);
                 ToggleSelectionForMode(key, "spell-tier:", _selectedSpellTierTokens);
                 break;
+            case SearchSecondaryFilterMode.Ability:
+                ToggleSelectionForMode(key, "ability-table:", _selectedAbilityTableTokens);
+                break;
             case SearchSecondaryFilterMode.Miracle:
                 ToggleSelectionForMode(key, "miracle-sphere:", _selectedMiracleSphereTokens);
                 ToggleSelectionForMode(key, "miracle-tier:", _selectedMiracleTierTokens);
@@ -527,6 +545,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                 AddTierChips("spell-tier:", _selectedSpellTierTokens);
                 AddOptionChips("spell-colour:", SpellColourOptions, _selectedSpellColourTokens);
                 break;
+            case SearchSecondaryFilterMode.Ability:
+                AddOptionChips("ability-table:", AbilityTableOptions, _selectedAbilityTableTokens);
+                break;
             case SearchSecondaryFilterMode.Miracle:
                 AddTierChips("miracle-tier:", _selectedMiracleTierTokens);
                 AddOptionChips("miracle-sphere:", MiracleSphereOptions, _selectedMiracleSphereTokens);
@@ -563,6 +584,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     {
         mode = key switch
         {
+            "Abilities" => SearchSecondaryFilterMode.Ability,
             "Spells" => SearchSecondaryFilterMode.Spell,
             "Miracles" => SearchSecondaryFilterMode.Miracle,
             "Evocations" => SearchSecondaryFilterMode.Evocation,
@@ -641,6 +663,22 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
 
         return options;
     }
+
+    private static IReadOnlyList<FilterOption> BuildAbilityTableOptions()
+    {
+        return Enum.GetValues<AbilityTables>()
+            .OrderBy(table => (int)table)
+            .Select(table =>
+            {
+                var tableValue = (int)table;
+                var token = FormatAbilityTableToken(tableValue);
+                return new FilterOption(token, token);
+            })
+            .ToList();
+    }
+
+    private static string FormatAbilityTableToken(int table)
+        => table.ToString(CultureInfo.InvariantCulture);
 
     private static IReadOnlyList<FilterOption> BuildMiracleSphereOptions()
     {
@@ -815,6 +853,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     private enum SearchSecondaryFilterMode
     {
         None,
+        Ability,
         Spell,
         Miracle,
         Evocation

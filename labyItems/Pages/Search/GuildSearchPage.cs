@@ -17,11 +17,13 @@ public sealed class GuildSearchPage : ContentPage
             notifyWizardGatingChanged: () => { },
             applyCharacterAvailabilityFilters: false,
             allowGuildSelection: false,
-            searchByNameOnly: true);
+            searchByNameOnly: true,
+            useMultiTypeFilters: true);
 
         Content = new Guilds(vm)
         {
             ShowBackButton = true,
+            UseTypePills = true,
             BackCommand = new Command(async () => await NavigateBackAsync())
         };
     }

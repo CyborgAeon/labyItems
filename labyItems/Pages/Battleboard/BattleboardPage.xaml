@@ -6,8 +6,17 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:controls="clr-namespace:labyItems.Controls"
        xmlns:sliders="clr-namespace:labyItems.Controls.Sliders"
-       Title="Battleboard"
+       Title=""
+       Shell.NavBarIsVisible="False"
+       NavigationPage.HasNavigationBar="False"
+       NavigationPage.HasBackButton="False"
        BackgroundColor="White">
+
+       <ContentPage x:Name="BackTab"
+                    Title="←"
+                    BackgroundColor="White">
+              <Grid />
+       </ContentPage>
 
        <ContentPage x:Name="LifeTab"
                     Title="Life"

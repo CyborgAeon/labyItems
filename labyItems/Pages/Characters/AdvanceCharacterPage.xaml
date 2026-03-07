@@ -7,7 +7,15 @@
     xmlns:controls="clr-namespace:labyItems.Controls"
     xmlns:sliders="clr-namespace:labyItems.Controls.Sliders"
     xmlns:viewModels="clr-namespace:labyItems.Pages.Characters.ViewModels"
-    Title="Advance Character">
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    Shell.NavBarIsVisible="False"
+    Title="">
+
+    <ContentPage x:Name="BackTab"
+                 Title="←">
+        <Grid />
+    </ContentPage>
 
     <ContentPage x:Name="DetailsTab"
                  Title="Details">

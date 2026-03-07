@@ -89,13 +89,13 @@ public static class CardExpandAnimationHelper
                 },
                 from,
                 to,
-                UnifiedEasing);
+                easing ?? UnifiedEasing);
 
             animation.Commit(
                 owner: owner,
                 name: animationName,
                 rate: 16,
-                length: UnifiedDurationMs,
+                length: length == 0 ? UnifiedDurationMs : length,
                 finished: (_, __) => tcs.TrySetResult());
 
             await tcs.Task;
@@ -105,4 +105,10 @@ public static class CardExpandAnimationHelper
             registration.Dispose();
         }
     }
+
+    public static Task FadeAsync(VisualElement target, double to)
+        => target.FadeTo(to, UnifiedDurationMs, UnifiedEasing);
+
+    public static Task TranslateYAsync(VisualElement target, double to)
+        => target.TranslateTo(0, to, UnifiedDurationMs, UnifiedEasing);
 }

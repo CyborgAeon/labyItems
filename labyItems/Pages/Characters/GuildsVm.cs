@@ -11,6 +11,8 @@ namespace labyItems.Pages.Characters;
 
 public sealed class GuildsVm : INotifyPropertyChanged
 {
+    private const string AllTypeFilterValue = "All";
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void Raise([CallerMemberName] string? name = null)
@@ -27,6 +29,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private readonly bool _applyCharacterAvailabilityFilters;
     private readonly bool _allowGuildSelection;
     private readonly bool _searchByNameOnly;
+    private readonly bool _useMultiTypeFilters;
+    private readonly HashSet<string> _selectedTypeFilters = new(StringComparer.OrdinalIgnoreCase);
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
@@ -54,7 +58,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
         ICharacterCreationDataService? creationDataService = null,
         bool applyCharacterAvailabilityFilters = true,
         bool allowGuildSelection = true,
-        bool searchByNameOnly = false)
+        bool searchByNameOnly = false,
+        bool useMultiTypeFilters = false)
     {
         _draft = draft;
         _notifyWizardGatingChanged = notifyWizardGatingChanged;
@@ -63,22 +68,25 @@ public sealed class GuildsVm : INotifyPropertyChanged
         _applyCharacterAvailabilityFilters = applyCharacterAvailabilityFilters;
         _allowGuildSelection = allowGuildSelection;
         _searchByNameOnly = searchByNameOnly;
+        _useMultiTypeFilters = useMultiTypeFilters;
         _creationDataService = creationDataService
             ?? ServiceHelper.ResolveService<ICharacterCreationDataService>()
             ?? new CharacterCreationDataService();
 
-        TypeFilters = new ObservableCollection<string> { "All" };
-        _selectedTypeFilter = "All";
+        TypeFilters = new ObservableCollection<string> { AllTypeFilterValue };
+        _selectedTypeFilter = AllTypeFilterValue;
 
         AllGuilds = new ObservableCollection<GuildCardVm>();
         FilteredGuilds = new ObservableCollection<GuildCardVm>();
+        TypeFilterChips = new ObservableCollection<GuildTypeFilterChipVm>();
 
         ToggleExpandedCommand = new Command<GuildCardVm>(ToggleExpanded);
         ToggleSelectedCommand = new Command<GuildCardVm>(ToggleSelected);
+        ToggleTypeFilterChipCommand = new Command<GuildTypeFilterChipVm>(ToggleTypeFilterChip);
 
         SelectTypeFilterCommand = new Command<string>(s =>
         {
-            SelectedTypeFilter = string.IsNullOrWhiteSpace(s) ? "All" : s;
+            SelectedTypeFilter = string.IsNullOrWhiteSpace(s) ? AllTypeFilterValue : s;
         });
 
         MainThread.BeginInvokeOnMainThread(async () =>
@@ -105,6 +113,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     public ObservableCollection<GuildCardVm> AllGuilds { get; }
     public ObservableCollection<GuildCardVm> FilteredGuilds { get; }
+    public ObservableCollection<GuildTypeFilterChipVm> TypeFilterChips { get; }
     public IEnumerable<GuildCardVm> SelectedGuilds =>
         AllGuilds
             .Where(g => g.IsSelected)
@@ -116,6 +125,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
     public ICommand ToggleExpandedCommand { get; }
     public ICommand ToggleSelectedCommand { get; }
     public ICommand SelectTypeFilterCommand { get; }
+    public ICommand ToggleTypeFilterChipCommand { get; }
 
     public async Task ReloadAsync()
     {
@@ -146,19 +156,24 @@ public sealed class GuildsVm : INotifyPropertyChanged
         ApplyAvailabilityToCurrentSelection();
         var types = await _creationDataService.GetGuildTypesAsync();
         TypeFilters.Clear();
-        TypeFilters.Add("All");
+        TypeFilters.Add(AllTypeFilterValue);
         foreach (var t in types)
             TypeFilters.Add(t);
 
         if (string.IsNullOrWhiteSpace(SelectedTypeFilter) || !TypeFilters.Contains(SelectedTypeFilter))
-            SelectedTypeFilter = "All";
+            SelectedTypeFilter = AllTypeFilterValue;
+
+        if (_useMultiTypeFilters)
+            RebuildTypeFilterChips();
+        else
+            TypeFilterChips.Clear();
 
         var ordered = _guildRecords
         .Where(kv =>
         {
             var type = (kv.Value?.Type ?? "").Trim();
 
-            if (!_slotRules.ShouldShowGuild(type, kv.Key, _draft.Guilds))
+            if (_allowGuildSelection && !_slotRules.ShouldShowGuild(type, kv.Key, _draft.Guilds))
                 return false;
 
             var availability = EvaluateAvailabilityForCurrentContext(kv.Value, kv.Key);
@@ -666,15 +681,63 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return display;
     }
 
+    private void RebuildTypeFilterChips()
+    {
+        var distinctTypes = TypeFilters
+            .Where(t => !string.IsNullOrWhiteSpace(t) && !string.Equals(t, AllTypeFilterValue, StringComparison.OrdinalIgnoreCase))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        _selectedTypeFilters.RemoveWhere(type => !distinctTypes.Contains(type, StringComparer.OrdinalIgnoreCase));
+        var isAllSelected = _selectedTypeFilters.Count == 0;
+
+        TypeFilterChips.Clear();
+        TypeFilterChips.Add(new GuildTypeFilterChipVm(AllTypeFilterValue, isAllSelected));
+        foreach (var type in distinctTypes)
+        {
+            TypeFilterChips.Add(new GuildTypeFilterChipVm(
+                type,
+                _selectedTypeFilters.Contains(type)));
+        }
+    }
+
+    private void ToggleTypeFilterChip(GuildTypeFilterChipVm? chip)
+    {
+        if (!_useMultiTypeFilters || chip == null)
+            return;
+
+        if (string.Equals(chip.Type, AllTypeFilterValue, StringComparison.OrdinalIgnoreCase))
+        {
+            _selectedTypeFilters.Clear();
+        }
+        else
+        {
+            if (!_selectedTypeFilters.Add(chip.Type))
+                _selectedTypeFilters.Remove(chip.Type);
+        }
+
+        RebuildTypeFilterChips();
+        Refilter();
+    }
+
     private void Refilter()
     {
         var text = (SearchText ?? "").Trim();
-        var type = (SelectedTypeFilter ?? "All").Trim();
+        var type = (SelectedTypeFilter ?? AllTypeFilterValue).Trim();
 
         bool Matches(GuildCardVm g)
         {
-            if (type != "All" && !string.Equals(g.Type, type, StringComparison.OrdinalIgnoreCase))
-                return false;
+            if (_useMultiTypeFilters)
+            {
+                if (_selectedTypeFilters.Count > 0 && !_selectedTypeFilters.Contains(g.Type))
+                    return false;
+            }
+            else
+            {
+                if (!string.Equals(type, AllTypeFilterValue, StringComparison.OrdinalIgnoreCase)
+                    && !string.Equals(g.Type, type, StringComparison.OrdinalIgnoreCase))
+                    return false;
+            }
 
             if (string.IsNullOrWhiteSpace(text))
                 return true;
@@ -917,6 +980,35 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (_refreshDraftAbilitiesAsync != null)
         {
             MainThread.BeginInvokeOnMainThread(async () => await _refreshDraftAbilitiesAsync());
+        }
+    }
+}
+
+public sealed class GuildTypeFilterChipVm : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private bool _isSelected;
+
+    public GuildTypeFilterChipVm(string type, bool isSelected)
+    {
+        Type = (type ?? string.Empty).Trim();
+        _isSelected = isSelected;
+    }
+
+    public string Type { get; }
+    public string Label => Type;
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            if (_isSelected == value)
+                return;
+
+            _isSelected = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
         }
     }
 }

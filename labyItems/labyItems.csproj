@@ -67,10 +67,13 @@
 		<!-- Microsoft.Data.Sqlite and SQLitePCL bundle for runtime provider on platforms like Android -->
 		<PackageReference Include="Microsoft.Data.Sqlite" />
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" />
-		<!-- FluentMigrator for schema migrations -->
+
+	</ItemGroup>
+
+	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'ios'">
+		<!-- FluentMigrator runtime runner is disabled on iOS due SQL CE transitive AOT issues. -->
 		<PackageReference Include="FluentMigrator.Runner" />
 		<PackageReference Include="FluentMigrator.Runner.SQLite" />
-
 	</ItemGroup>
 
 	<ItemGroup>

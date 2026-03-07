@@ -4,46 +4,118 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:labyItems.Pages.Characters"
-    Title="Character">
+    Title="Character"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False">
 
-    <Grid Padding="0"
-          RowDefinitions="*,Auto,Auto"
-          RowSpacing="12">
+    <Grid Padding="0">
         <local:CharacterReviewView x:Name="Review"
-                                   Grid.Row="0"
+                                   Margin="0,60,0,0"
                                    ShowSaveButton="False"/>
 
-        <HorizontalStackLayout Grid.Row="1"
-                               Margin="16,0,16,0"
-                               Spacing="12"
-                               HorizontalOptions="Center">
-            <ImageButton AutomationProperties.Name="Battleboard"
-                         BackgroundColor="Transparent"
-                         Padding="6"
-                         HeightRequest="40"
-                         WidthRequest="40"
-                         Clicked="OnBattleboardClicked">
-                <ImageButton.Source>
-                    <FontImageSource Glyph="⚔️" Size="20" Color="Black"/>
-                </ImageButton.Source>
-            </ImageButton>
+        <BoxView x:Name="ActionBackdrop"
+                 BackgroundColor="#88000000"
+                 IsVisible="False"
+                 InputTransparent="True"
+                 Opacity="0">
+            <BoxView.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnActionBackdropTapped"/>
+            </BoxView.GestureRecognizers>
+        </BoxView>
 
-            <ImageButton AutomationProperties.Name="Manufacturing"
-                         BackgroundColor="Transparent"
-                         Padding="6"
-                         HeightRequest="40"
-                         WidthRequest="40"
-                         Clicked="OnManufacturingClicked">
-                <ImageButton.Source>
-                    <FontImageSource Glyph="🛠️" Size="20" Color="Black"/>
-                </ImageButton.Source>
-            </ImageButton>
-        </HorizontalStackLayout>
+        <Grid x:Name="HeaderBar"
+              VerticalOptions="Start"
+              BackgroundColor="{StaticResource White}"
+              Padding="4,6,4,6"
+              RowDefinitions="Auto,Auto">
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="6">
+                <ImageButton Grid.Column="0"
+                             AutomationProperties.Name="Back"
+                             Style="{StaticResource BackArrowImageButtonStyle}"
+                             Clicked="OnBackClicked">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="FASolid"
+                                         Glyph="&#xf060;"
+                                         Size="24"
+                                         Color="{StaticResource Gray300}"/>
+                    </ImageButton.Source>
+                </ImageButton>
 
-        <Button Grid.Row="2"
-                Text="Advance character"
-                Margin="16,0,16,16"
-                Clicked="OnAdvanceClicked"/>
+                <HorizontalStackLayout x:Name="CollapsedActionIcons"
+                                       Grid.Column="1"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center"
+                                       Spacing="4">
+                    <ImageButton AutomationProperties.Name="Battleboard"
+                                 StyleId="character-action-battleboard"
+                                 Style="{StaticResource EmojiActionIconButtonStyle}"
+                                 Clicked="OnBattleboardClicked">
+                        <ImageButton.Source>
+                            <FontImageSource Glyph="⚔️" Size="20" Color="Black"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+
+                    <ImageButton AutomationProperties.Name="Manufacturing"
+                                 StyleId="character-action-makesheet"
+                                 Style="{StaticResource EmojiActionIconButtonStyle}"
+                                 Clicked="OnManufacturingClicked">
+                        <ImageButton.Source>
+                            <FontImageSource Glyph="🛠️" Size="20" Color="Black"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+
+                    <ImageButton AutomationProperties.Name="Export to Excel"
+                                 StyleId="character-action-export"
+                                 Style="{StaticResource EmojiActionIconButtonStyle}"
+                                 Clicked="OnExportExcelClicked">
+                        <ImageButton.Source>
+                            <FontImageSource Glyph="📄" Size="20" Color="Black"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+
+                    <ImageButton AutomationProperties.Name="Advance character"
+                                 StyleId="character-action-advance"
+                                 Style="{StaticResource EmojiActionIconButtonStyle}"
+                                 Clicked="OnAdvanceClicked">
+                        <ImageButton.Source>
+                            <FontImageSource Glyph="⬆️" Size="20" Color="Black"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+                </HorizontalStackLayout>
+
+                <Button x:Name="ActionsChevronButton"
+                        Grid.Column="2"
+                        Text="▾"
+                        Style="{StaticResource HeaderChevronButtonStyle}"
+                        Clicked="OnActionsChevronClicked"/>
+            </Grid>
+
+            <VerticalStackLayout x:Name="ExpandedActionsPanel"
+                                 Grid.Row="1"
+                                 IsVisible="False"
+                                 Opacity="0"
+                                 Spacing="8"
+                                 Padding="8,8,8,4">
+                <Button Text="Export to Excel 📄"
+                        StyleId="character-action-export"
+                        Style="{StaticResource ExpandedActionButtonStyle}"
+                        Clicked="OnExportExcelClicked"/>
+                <Button Text="Advance character ⬆️"
+                        StyleId="character-action-advance"
+                        Style="{StaticResource ExpandedActionButtonStyle}"
+                        Clicked="OnAdvanceClicked"/>
+                <Button Text="View battleboard ⚔️"
+                        StyleId="character-action-battleboard"
+                        Style="{StaticResource ExpandedActionButtonStyle}"
+                        Clicked="OnBattleboardClicked"/>
+                <Button Text="View make sheet 🛠️"
+                        StyleId="character-action-makesheet"
+                        Style="{StaticResource ExpandedActionButtonStyle}"
+                        Clicked="OnManufacturingClicked"/>
+            </VerticalStackLayout>
+        </Grid>
     </Grid>
 
 </ContentPage>

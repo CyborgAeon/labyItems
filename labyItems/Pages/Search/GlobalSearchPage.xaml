@@ -15,23 +15,19 @@
               ColumnSpacing="8">
             <ImageButton Grid.Column="0"
                          AutomationProperties.Name="Back"
-                         BackgroundColor="Transparent"
-                         Padding="6"
-                         WidthRequest="36"
-                         HeightRequest="36"
-                         Margin="0,0,4,0"
+                         Style="{StaticResource BackArrowImageButtonStyle}"
                          Clicked="OnBackClicked">
                 <ImageButton.Source>
                     <FontImageSource FontFamily="FASolid"
                                      Glyph="&#xf060;"
-                                     Size="22"
+                                     Size="24"
                                      Color="{StaticResource Gray300}"/>
                 </ImageButton.Source>
             </ImageButton>
-            <SearchBar Grid.Column="1"
-                       SearchIconColor="Transparent"
-                       Placeholder="Search abilities, spells, miracles, evocations..."
-                       Text="{Binding SearchText, Mode=TwoWay}"/>
+            <Entry Grid.Column="1"
+                   ClearButtonVisibility="WhileEditing"
+                   Placeholder="Search abilities, spells, miracles, evocations..."
+                   Text="{Binding SearchText, Mode=TwoWay}"/>
         </Grid>
         <CollectionView x:Name="FilterChipView"
                         Grid.Row="1"
