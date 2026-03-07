@@ -25,6 +25,9 @@ obj/
 *.bak
 *.swp
 **/**.DS_Store
+**/*.DS_Store
+*.DS_Store
+.DS_Store
 ehthumbs.db
 Thumbs.db
 
