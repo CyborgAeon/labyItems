@@ -35,6 +35,7 @@ public partial class MiracleDetailCardView : ContentView
             OnPropertyChanged();
             OnPropertyChanged(nameof(DescriptionMaxLines));
             OnPropertyChanged(nameof(DescriptionChevronText));
+            OnPropertyChanged(nameof(ShowDescriptionSeeMore));
         }
     }
 
@@ -49,6 +50,7 @@ public partial class MiracleDetailCardView : ContentView
             OnPropertyChanged();
             OnPropertyChanged(nameof(VerbalMaxLines));
             OnPropertyChanged(nameof(VerbalChevronText));
+            OnPropertyChanged(nameof(ShowVerbalSeeMore));
         }
     }
 
@@ -63,6 +65,7 @@ public partial class MiracleDetailCardView : ContentView
             OnPropertyChanged();
             OnPropertyChanged(nameof(PrereqMaxLines));
             OnPropertyChanged(nameof(PrereqChevronText));
+            OnPropertyChanged(nameof(ShowPrereqSeeMore));
         }
     }
 
@@ -77,6 +80,7 @@ public partial class MiracleDetailCardView : ContentView
             OnPropertyChanged();
             OnPropertyChanged(nameof(DamageMaxLines));
             OnPropertyChanged(nameof(DamageChevronText));
+            OnPropertyChanged(nameof(ShowDamageSeeMore));
         }
     }
 
@@ -91,6 +95,7 @@ public partial class MiracleDetailCardView : ContentView
             OnPropertyChanged();
             OnPropertyChanged(nameof(HealMaxLines));
             OnPropertyChanged(nameof(HealChevronText));
+            OnPropertyChanged(nameof(ShowHealSeeMore));
         }
     }
 
@@ -103,6 +108,7 @@ public partial class MiracleDetailCardView : ContentView
             if (_canExpandDescription == value) return;
             _canExpandDescription = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowDescriptionSeeMore));
         }
     }
 
@@ -115,6 +121,7 @@ public partial class MiracleDetailCardView : ContentView
             if (_canExpandVerbal == value) return;
             _canExpandVerbal = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowVerbalSeeMore));
         }
     }
 
@@ -127,6 +134,7 @@ public partial class MiracleDetailCardView : ContentView
             if (_canExpandPrereqs == value) return;
             _canExpandPrereqs = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowPrereqSeeMore));
         }
     }
 
@@ -139,6 +147,7 @@ public partial class MiracleDetailCardView : ContentView
             if (_canExpandDamage == value) return;
             _canExpandDamage = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowDamageSeeMore));
         }
     }
 
@@ -151,6 +160,7 @@ public partial class MiracleDetailCardView : ContentView
             if (_canExpandHeal == value) return;
             _canExpandHeal = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowHealSeeMore));
         }
     }
 
@@ -165,6 +175,11 @@ public partial class MiracleDetailCardView : ContentView
     public string PrereqChevronText => IsPrereqExpanded ? "▴" : "▾";
     public string DamageChevronText => IsDamageExpanded ? "▴" : "▾";
     public string HealChevronText => IsHealExpanded ? "▴" : "▾";
+    public bool ShowDescriptionSeeMore => CanExpandDescription && !IsDescriptionExpanded;
+    public bool ShowVerbalSeeMore => CanExpandVerbal && !IsVerbalExpanded;
+    public bool ShowPrereqSeeMore => CanExpandPrereqs && !IsPrereqExpanded;
+    public bool ShowDamageSeeMore => CanExpandDamage && !IsDamageExpanded;
+    public bool ShowHealSeeMore => CanExpandHeal && !IsHealExpanded;
 
     public string MiracleName => ReadOrFallback(Miracle?.name, "Unnamed Miracle");
     public string SphereDisplayText => BuildSphereDisplay(Miracle?.sphere);
@@ -236,6 +251,11 @@ public partial class MiracleDetailCardView : ContentView
         OnPropertyChanged(nameof(PrereqChevronText));
         OnPropertyChanged(nameof(DamageChevronText));
         OnPropertyChanged(nameof(HealChevronText));
+        OnPropertyChanged(nameof(ShowDescriptionSeeMore));
+        OnPropertyChanged(nameof(ShowVerbalSeeMore));
+        OnPropertyChanged(nameof(ShowPrereqSeeMore));
+        OnPropertyChanged(nameof(ShowDamageSeeMore));
+        OnPropertyChanged(nameof(ShowHealSeeMore));
     }
 
     private async void OnDescriptionToggleClicked(object sender, EventArgs e)
@@ -361,6 +381,46 @@ public partial class MiracleDetailCardView : ContentView
         {
             _isHealAnimating = false;
         }
+    }
+
+    private void OnDescriptionSectionTapped(object sender, TappedEventArgs e)
+    {
+        if (!CanExpandDescription)
+            return;
+
+        OnDescriptionToggleClicked(sender, EventArgs.Empty);
+    }
+
+    private void OnVerbalSectionTapped(object sender, TappedEventArgs e)
+    {
+        if (!CanExpandVerbal)
+            return;
+
+        OnVerbalToggleClicked(sender, EventArgs.Empty);
+    }
+
+    private void OnPrereqSectionTapped(object sender, TappedEventArgs e)
+    {
+        if (!CanExpandPrereqs)
+            return;
+
+        OnPrereqToggleClicked(sender, EventArgs.Empty);
+    }
+
+    private void OnDamageSectionTapped(object sender, TappedEventArgs e)
+    {
+        if (!CanExpandDamage)
+            return;
+
+        OnDamageToggleClicked(sender, EventArgs.Empty);
+    }
+
+    private void OnHealSectionTapped(object sender, TappedEventArgs e)
+    {
+        if (!CanExpandHeal)
+            return;
+
+        OnHealToggleClicked(sender, EventArgs.Empty);
     }
 
     private void OnExpandableLabelSizeChanged(object sender, EventArgs e)

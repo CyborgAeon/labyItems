@@ -58,6 +58,18 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     }
     private int _totalMp;
 
+    public ObservableCollection<SelectedItemUseVm<SpellOption>> SpellSelections { get; } = new();
+    public ObservableCollection<SelectedItemUseVm<MiracleOption>> MiracleSelections { get; } = new();
+    public ObservableCollection<SelectedItemUseVm<EvocationOption>> EvocationSelections { get; } = new();
+
+    public bool HasSpellSelections => SpellSelections.Count > 0;
+    public bool HasMiracleSelections => MiracleSelections.Count > 0;
+    public bool HasEvocationSelections => EvocationSelections.Count > 0;
+
+    public ICommand AddSelectedSpellCommand { get; }
+    public ICommand AddSelectedMiracleCommand { get; }
+    public ICommand AddSelectedEvocationCommand { get; }
+
     public int SpellCount { get => _spellCount; set { if (SetProperty(ref _spellCount, value)) Recalculate(); } }
     private int _spellCount;
 
@@ -181,6 +193,28 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     protected MpCalculatorPageBase()
     {
+        AddSelectedSpellCommand = new Command<object?>(OnSpellResultSelected);
+        AddSelectedMiracleCommand = new Command<object?>(OnMiracleResultSelected);
+        AddSelectedEvocationCommand = new Command<object?>(OnEvocationResultSelected);
+
+        SpellSelections.CollectionChanged += (_, __) =>
+        {
+            OnPropertyChanged(nameof(HasSpellSelections));
+            Recalculate();
+        };
+
+        MiracleSelections.CollectionChanged += (_, __) =>
+        {
+            OnPropertyChanged(nameof(HasMiracleSelections));
+            Recalculate();
+        };
+
+        EvocationSelections.CollectionChanged += (_, __) =>
+        {
+            OnPropertyChanged(nameof(HasEvocationSelections));
+            Recalculate();
+        };
+
         BindingContext = this;
     }
 
@@ -375,6 +409,103 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         return $"{option.Name} ({option.Power})";
     }
 
+    private void OnSpellResultSelected(object? parameter)
+    {
+        if (parameter is SpellOption option)
+            AddOrIncrementSpell(option);
+    }
+
+    private void OnMiracleResultSelected(object? parameter)
+    {
+        if (parameter is MiracleOption option)
+            AddOrIncrementMiracle(option);
+    }
+
+    private void OnEvocationResultSelected(object? parameter)
+    {
+        if (parameter is EvocationOption option)
+            AddOrIncrementEvocation(option);
+    }
+
+    private void AddOrIncrementSpell(SpellOption option)
+    {
+        if (string.IsNullOrWhiteSpace(option.Name))
+            return;
+
+        var existing = SpellSelections.FirstOrDefault(s => s.Option.Equals(option));
+        if (existing != null)
+        {
+            existing.Uses++;
+            return;
+        }
+
+        SpellSelections.Add(new SelectedItemUseVm<SpellOption>(
+            option,
+            FormatSpellLabel(option),
+            OnSpellSelectionUsesChanged));
+    }
+
+    private void AddOrIncrementMiracle(MiracleOption option)
+    {
+        if (string.IsNullOrWhiteSpace(option.Name))
+            return;
+
+        var existing = MiracleSelections.FirstOrDefault(s => s.Option.Equals(option));
+        if (existing != null)
+        {
+            existing.Uses++;
+            return;
+        }
+
+        MiracleSelections.Add(new SelectedItemUseVm<MiracleOption>(
+            option,
+            FormatMiracleLabel(option),
+            OnMiracleSelectionUsesChanged));
+    }
+
+    private void AddOrIncrementEvocation(EvocationOption option)
+    {
+        if (string.IsNullOrWhiteSpace(option.Name))
+            return;
+
+        var existing = EvocationSelections.FirstOrDefault(s => s.Option.Equals(option));
+        if (existing != null)
+        {
+            existing.Uses++;
+            return;
+        }
+
+        var label = $"{option.Name} ({option.Power}{(option.IsAdvanced ? " adv" : string.Empty)})";
+        EvocationSelections.Add(new SelectedItemUseVm<EvocationOption>(
+            option,
+            label,
+            OnEvocationSelectionUsesChanged));
+    }
+
+    private void OnSpellSelectionUsesChanged(SelectedItemUseVm<SpellOption> entry)
+    {
+        if (entry.Uses < 1)
+            SpellSelections.Remove(entry);
+
+        Recalculate();
+    }
+
+    private void OnMiracleSelectionUsesChanged(SelectedItemUseVm<MiracleOption> entry)
+    {
+        if (entry.Uses < 1)
+            MiracleSelections.Remove(entry);
+
+        Recalculate();
+    }
+
+    private void OnEvocationSelectionUsesChanged(SelectedItemUseVm<EvocationOption> entry)
+    {
+        if (entry.Uses < 1)
+            EvocationSelections.Remove(entry);
+
+        Recalculate();
+    }
+
     protected void OnLifeSelectionChanged(object sender, DictionarySelectionChangedEventArgs e)
     {
         Recalculate();
@@ -390,22 +521,40 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         var items = new List<ContributionRow>();
         int running = 0;
 
-        if (SelectedSpellOption is SpellOption s && SpellCount > 0)
+        for (var i = 0; i < SpellSelections.Count; i++)
         {
-            var cost = CalculateSpellCost(s, SpellCount);
-            AddContribution(items, ref running, "spell", $"Spell: {FormatSpellLabel(s)} x{SpellCount}", cost);
+            var selection = SpellSelections[i];
+            var count = Math.Max(0, selection.Uses);
+            if (count == 0)
+                continue;
+
+            var option = selection.Option;
+            var cost = CalculateSpellCost(option, count);
+            AddContribution(items, ref running, $"spell-{i}", $"Spell: {FormatSpellLabel(option)} x{count}", cost);
         }
 
-        if (SelectedMiracleOption is MiracleOption m && MiracleCount > 0)
+        for (var i = 0; i < MiracleSelections.Count; i++)
         {
-            var cost = CalculateMiracleCost(m, MiracleCount);
-            AddContribution(items, ref running, "miracle", $"Miracle: {FormatMiracleLabel(m)} x{MiracleCount}", cost);
+            var selection = MiracleSelections[i];
+            var count = Math.Max(0, selection.Uses);
+            if (count == 0)
+                continue;
+
+            var option = selection.Option;
+            var cost = CalculateMiracleCost(option, count);
+            AddContribution(items, ref running, $"miracle-{i}", $"Miracle: {FormatMiracleLabel(option)} x{count}", cost);
         }
 
-        if (SelectedEvocationOption is EvocationOption ev && EvocationCount > 0)
+        for (var i = 0; i < EvocationSelections.Count; i++)
         {
-            var cost = CalculateEvocationCost(ev, EvocationCount);
-            AddContribution(items, ref running, "evocation", $"Evocation: {ev.Name} x{EvocationCount}", cost);
+            var selection = EvocationSelections[i];
+            var count = Math.Max(0, selection.Uses);
+            if (count == 0)
+                continue;
+
+            var option = selection.Option;
+            var cost = CalculateEvocationCost(option, count);
+            AddContribution(items, ref running, $"evocation-{i}", $"Evocation: {option.Name} x{count}", cost);
         }
 
         if (ActiveNeuroCount > 0)
@@ -468,31 +617,46 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         var items = new List<ContributionRow>();
         int running = 0;
 
-        var spellCount = Math.Max(0, SpellCount);
-        if (SelectedSpellOption is SpellOption spell && spellCount > 0)
+        for (var i = 0; i < SpellSelections.Count; i++)
         {
+            var selection = SpellSelections[i];
+            var count = Math.Max(0, selection.Uses);
+            if (count == 0)
+                continue;
+
+            var spell = selection.Option;
             var power = Math.Max(0, spell.Level);
             var unit = spell.IsAdvanced ? 3 : 2;
-            var cost = unit * power * spellCount;
-            AddIspContribution(items, ref running, "spell", $"Spell: {FormatSpellLabel(spell)} x{spellCount}", cost);
+            var cost = unit * power * count;
+            AddIspContribution(items, ref running, $"spell-{i}", $"Spell: {FormatSpellLabel(spell)} x{count}", cost);
         }
 
-        var miracleCount = Math.Max(0, MiracleCount);
-        if (SelectedMiracleOption is MiracleOption miracle && miracleCount > 0)
+        for (var i = 0; i < MiracleSelections.Count; i++)
         {
+            var selection = MiracleSelections[i];
+            var count = Math.Max(0, selection.Uses);
+            if (count == 0)
+                continue;
+
+            var miracle = selection.Option;
             var power = Math.Max(0, miracle.Power);
             var unit = miracle.IsAdvanced ? 3 : 2;
-            var cost = unit * power * miracleCount;
-            AddIspContribution(items, ref running, "miracle", $"Miracle: {FormatMiracleLabel(miracle)} x{miracleCount}", cost);
+            var cost = unit * power * count;
+            AddIspContribution(items, ref running, $"miracle-{i}", $"Miracle: {FormatMiracleLabel(miracle)} x{count}", cost);
         }
 
-        var evocationCount = Math.Max(0, EvocationCount);
-        if (SelectedEvocationOption is EvocationOption evocation && evocationCount > 0)
+        for (var i = 0; i < EvocationSelections.Count; i++)
         {
+            var selection = EvocationSelections[i];
+            var count = Math.Max(0, selection.Uses);
+            if (count == 0)
+                continue;
+
+            var evocation = selection.Option;
             var power = Math.Max(0, evocation.Power);
             var unit = evocation.IsAdvanced ? 3 : 2;
-            var cost = unit * power * evocationCount;
-            AddIspContribution(items, ref running, "evocation", $"Evocation: {evocation.Name} x{evocationCount}", cost);
+            var cost = unit * power * count;
+            AddIspContribution(items, ref running, $"evocation-{i}", $"Evocation: {evocation.Name} x{count}", cost);
         }
 
         if (LifeSliderControl.SelectedIndex >= 0)
@@ -635,6 +799,53 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     #endregion
+}
+
+public sealed class SelectedItemUseVm<TOption> : INotifyPropertyChanged where TOption : struct
+{
+    private readonly Action<SelectedItemUseVm<TOption>> _onUsesChanged;
+
+    public TOption Option { get; }
+    public string DisplayText { get; }
+
+    private int _uses;
+    public int Uses
+    {
+        get => _uses;
+        set
+        {
+            var sanitized = Math.Max(0, value);
+            if (_uses == sanitized)
+                return;
+
+            _uses = sanitized;
+            OnPropertyChanged();
+            _onUsesChanged(this);
+        }
+    }
+
+    public ICommand IncrementCommand { get; }
+    public ICommand DecrementCommand { get; }
+
+    public SelectedItemUseVm(
+        TOption option,
+        string displayText,
+        Action<SelectedItemUseVm<TOption>> onUsesChanged,
+        int initialUses = 1)
+    {
+        Option = option;
+        DisplayText = displayText ?? string.Empty;
+        _onUsesChanged = onUsesChanged ?? (_ => { });
+        _uses = Math.Max(1, initialUses);
+
+        IncrementCommand = new Command(() => Uses++);
+        DecrementCommand = new Command(() => Uses = Math.Max(0, Uses - 1));
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
 
 public class MpSubmissionPayload

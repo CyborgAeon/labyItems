@@ -64,6 +64,7 @@ public partial class AbilityDetailCardView : ContentView
             OnPropertyChanged();
             OnPropertyChanged(nameof(DescriptionMaxLines));
             OnPropertyChanged(nameof(DescriptionChevronText));
+            OnPropertyChanged(nameof(ShowDescriptionSeeMore));
         }
     }
 
@@ -76,11 +77,13 @@ public partial class AbilityDetailCardView : ContentView
             if (_canExpandDescription == value) return;
             _canExpandDescription = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowDescriptionSeeMore));
         }
     }
 
     public int DescriptionMaxLines => IsDescriptionExpanded ? -1 : DescriptionCollapsedLines;
     public string DescriptionChevronText => IsDescriptionExpanded ? "▴" : "▾";
+    public bool ShowDescriptionSeeMore => CanExpandDescription && !IsDescriptionExpanded;
 
     private bool _isDescriptionAnimating;
     private int _preReqRefreshVersion;
@@ -127,6 +130,7 @@ public partial class AbilityDetailCardView : ContentView
         OnPropertyChanged(nameof(HasNotesText));
         OnPropertyChanged(nameof(HasNotesSection));
         OnPropertyChanged(nameof(DescriptionChevronText));
+        OnPropertyChanged(nameof(ShowDescriptionSeeMore));
     }
 
     private async void OnDescriptionToggleClicked(object sender, EventArgs e)
@@ -158,6 +162,14 @@ public partial class AbilityDetailCardView : ContentView
     private void OnExpandableLabelSizeChanged(object sender, EventArgs e)
     {
         ScheduleExpandabilityRefresh();
+    }
+
+    private void OnDescriptionSectionTapped(object sender, TappedEventArgs e)
+    {
+        if (!CanExpandDescription)
+            return;
+
+        OnDescriptionToggleClicked(sender, EventArgs.Empty);
     }
 
     private async void OnPreReqInfoClicked(object sender, EventArgs e)

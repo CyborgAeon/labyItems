@@ -66,12 +66,32 @@ public sealed class WizardVm : INotifyPropertyChanged
         private set => Set(ref _currentStepView, value);
     }
 
-    public bool CanGoBack => CurrentStep > 0 || CanExitWizard();
+    public bool CanGoBack
+    {
+        get
+        {
+            if (IsRaceClassStep && CharacterBuilderVm.IsRaceTabSelected)
+                return true;
+
+            return CurrentStep > 0 || CanExitWizard();
+        }
+    }
 
     public bool CanGoNext
     {
         get
         {
+            if (IsRaceClassStep)
+            {
+                if (CharacterBuilderVm.IsClassTabSelected)
+                    return CharacterBuilderVm.CanSelectRace;
+
+                if (CurrentStep >= StepSteps.Count - 1)
+                    return true;
+
+                return _flow.CanEnter(CurrentStep + 1);
+            }
+
             if (CurrentStep >= StepSteps.Count - 1) return true;
             return _flow.CanEnter(CurrentStep + 1);
         }
@@ -106,6 +126,8 @@ public sealed class WizardVm : INotifyPropertyChanged
     private IReadOnlyList<SpecialisationSummaryLineVm> _specialisationSummaryLines = Array.Empty<SpecialisationSummaryLineVm>();
 
     public ObservableCollection<AbilitySpendLine> AdvancementAbilityLines { get; } = new();
+
+    private bool IsRaceClassStep => CurrentStep == 0;
 
     public bool IsAdvancementExpanded
     {
@@ -402,6 +424,17 @@ public sealed class WizardVm : INotifyPropertyChanged
         _isBackNavigationInProgress = true;
         try
         {
+            if (IsRaceClassStep && CharacterBuilderVm.IsRaceTabSelected)
+            {
+                if (CharacterBuilderVm.TryMoveToClassSelection())
+                {
+                    Raise(nameof(CanGoBack));
+                    Raise(nameof(CanGoNext));
+                }
+
+                return;
+            }
+
             if (CurrentStep > 0)
             {
                 await TryGoToStepAsync(CurrentStep - 1);
@@ -418,6 +451,17 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     private async Task OnNextAsync()
     {
+        if (IsRaceClassStep && CharacterBuilderVm.IsClassTabSelected)
+        {
+            if (CharacterBuilderVm.TryMoveToRaceSelection())
+            {
+                Raise(nameof(CanGoBack));
+                Raise(nameof(CanGoNext));
+            }
+
+            return;
+        }
+
         if (CurrentStep == StepSteps.Count - 1)
         {
             await SyncDraftStateAsync();

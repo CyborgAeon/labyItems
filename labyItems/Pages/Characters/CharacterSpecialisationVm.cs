@@ -1496,18 +1496,45 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             foreach (var group in Groups)
             {
                 if (!_groupOptionDefinitions.TryGetValue(group.Title, out var defs))
+                {
+                    group.SetIssueMessage(string.Empty);
                     continue;
+                }
 
-                var allowed = defs
-                    .Where(d => d != null && MeetsPrereqs(d, abilityNames, peopleTypes, className))
+                var allOptions = defs
+                    .Where(d => d != null)
                     .Select(d => d.Name ?? string.Empty)
                     .Where(n => !string.IsNullOrWhiteSpace(n))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .OrderBy(n => n, StringComparer.OrdinalIgnoreCase)
                     .ToList();
 
-                group.UpdateOptionNames(allowed);
-                ClearDisallowedSelections(group, allowed);
+                group.UpdateOptionNames(allOptions);
+
+                var issueLines = new List<string>();
+                foreach (var slot in group.Slots)
+                {
+                    var forced = slot.ForcedAbilityDefinition;
+                    var selectedName = (forced?.Name ?? slot.SelectedOption ?? string.Empty).Trim();
+                    if (selectedName.Length == 0)
+                        continue;
+
+                    var selectedDef = forced ?? defs.FirstOrDefault(d =>
+                        d != null && string.Equals(d.Name, selectedName, StringComparison.OrdinalIgnoreCase));
+                    if (selectedDef == null)
+                        continue;
+
+                    var unmet = GetUnmetPrerequisites(selectedDef, abilityNames, peopleTypes, className);
+                    if (unmet.Count == 0)
+                        continue;
+
+                    issueLines.Add($"'{selectedName}' requires {string.Join(", ", unmet)}.");
+                }
+
+                var issueMessage = issueLines.Count == 0
+                    ? string.Empty
+                    : $"Issue: {string.Join(" ", issueLines)}";
+                group.SetIssueMessage(issueMessage);
             }
         }
         finally
@@ -1516,17 +1543,48 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         }
     }
 
-    private static void ClearDisallowedSelections(SpecialisationGroupVm group, IReadOnlyList<string> allowed)
+    private static List<string> GetUnmetPrerequisites(
+        AbilityDefinition def,
+        HashSet<string> abilityNames,
+        HashSet<string> peopleTypes,
+        string className)
     {
-        foreach (var slot in group.Slots)
+        var missing = new List<string>();
+        if (def.PreReqs == null || def.PreReqs.Count == 0)
+            return missing;
+
+        foreach (var raw in def.PreReqs)
         {
-            if (string.IsNullOrWhiteSpace(slot.SelectedOption))
+            if (string.IsNullOrWhiteSpace(raw))
                 continue;
 
-            var match = allowed.Any(a => string.Equals(a, slot.SelectedOption, StringComparison.OrdinalIgnoreCase));
-            if (!match)
-                slot.SelectedOption = null;
+            var (kind, value) = ParsePrereq(raw);
+            if (string.IsNullOrWhiteSpace(value))
+                continue;
+
+            switch (kind)
+            {
+                case "Ability":
+                    if (!abilityNames.Contains(value))
+                        missing.Add($"ability '{value}'");
+                    break;
+                case "PeopleType":
+                    if (!peopleTypes.Contains(NormalizePrereqToken(value)))
+                        missing.Add($"people type '{value}'");
+                    break;
+                case "Class":
+                    if (string.IsNullOrWhiteSpace(className)
+                        || !string.Equals(className, value, StringComparison.OrdinalIgnoreCase))
+                    {
+                        missing.Add($"class '{value}'");
+                    }
+                    break;
+            }
         }
+
+        return missing
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     private async Task<HashSet<string>> GetCurrentPeopleTypesAsync()

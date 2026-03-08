@@ -38,62 +38,96 @@
 
             <Grid ColumnDefinitions="*,Auto"
                   ColumnSpacing="8">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDescriptionSectionTapped"/>
+                </Grid.GestureRecognizers>
                 <Label Text="DESCRIPTION"
                        Style="{StaticResource SectionHeaderLabelStyle}"
                        VerticalTextAlignment="Center"/>
-                <Button Grid.Column="1"
-                        Text="{Binding DescriptionChevronText, Source={x:Reference Root}}"
-                        IsVisible="{Binding ShowDescriptionChevron, Source={x:Reference Root}}"
-                        Clicked="OnDescriptionToggleClicked"
-                        Style="{StaticResource ChevronButtonStyle}"/>
+                <Label Grid.Column="1"
+                       Text="{Binding DescriptionChevronText, Source={x:Reference Root}}"
+                       IsVisible="{Binding ShowDescriptionChevron, Source={x:Reference Root}}"
+                       TextColor="{StaticResource MutedTextColor}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="End"/>
             </Grid>
 
             <ContentView x:Name="DescriptionTextContainer">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDescriptionSectionTapped"/>
+                </ContentView.GestureRecognizers>
                 <Label x:Name="DescriptionLabel"
                        Text="{Binding DescriptionText, Source={x:Reference Root}}"
                        MaxLines="{Binding DescriptionMaxLines, Source={x:Reference Root}}"
                        LineBreakMode="WordWrap"
                        SizeChanged="OnExpandableLabelSizeChanged"/>
             </ContentView>
+            <Label Text="... see more"
+                   TextColor="{StaticResource MutedTextColor}"
+                   FontSize="12"
+                   IsVisible="{Binding ShowDescriptionSeeMore, Source={x:Reference Root}}"/>
 
             <Grid ColumnDefinitions="*,Auto"
                   ColumnSpacing="8">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnVerbalSectionTapped"/>
+                </Grid.GestureRecognizers>
                 <Label Text="VERBAL"
                        Style="{StaticResource SectionHeaderLabelStyle}"
                        VerticalTextAlignment="Center"/>
-                <Button Grid.Column="1"
-                        Text="{Binding VerbalChevronText, Source={x:Reference Root}}"
-                        IsVisible="{Binding ShowVerbalChevron, Source={x:Reference Root}}"
-                        Clicked="OnVerbalToggleClicked"
-                        Style="{StaticResource ChevronButtonStyle}"/>
+                <Label Grid.Column="1"
+                       Text="{Binding VerbalChevronText, Source={x:Reference Root}}"
+                       IsVisible="{Binding ShowVerbalChevron, Source={x:Reference Root}}"
+                       TextColor="{StaticResource MutedTextColor}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="End"/>
             </Grid>
 
             <ContentView x:Name="VerbalTextContainer">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnVerbalSectionTapped"/>
+                </ContentView.GestureRecognizers>
                 <Label x:Name="VerbalLabel"
                        Text="{Binding VerbalText, Source={x:Reference Root}}"
                        MaxLines="{Binding VerbalMaxLines, Source={x:Reference Root}}"
                        LineBreakMode="WordWrap"
                        SizeChanged="OnExpandableLabelSizeChanged"/>
             </ContentView>
+            <Label Text="... see more"
+                   TextColor="{StaticResource MutedTextColor}"
+                   FontSize="12"
+                   IsVisible="{Binding ShowVerbalSeeMore, Source={x:Reference Root}}"/>
 
             <VerticalStackLayout Spacing="6"
                                  IsVisible="{Binding HasNotes, Source={x:Reference Root}}">
-                <Label Text="NOTES"
-                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <Grid ColumnDefinitions="*,Auto"
+                      ColumnSpacing="8">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNotesSectionTapped"/>
+                    </Grid.GestureRecognizers>
+                    <Label Text="NOTES"
+                           Style="{StaticResource SectionHeaderLabelStyle}"/>
+                    <Label Grid.Column="1"
+                           Text="{Binding IsNotesExpanded, Source={x:Reference Root}, Converter={StaticResource ChevronConverter}}"
+                           IsVisible="{Binding CanExpandNotes, Source={x:Reference Root}}"
+                           TextColor="{StaticResource MutedTextColor}"
+                           VerticalTextAlignment="Center"
+                           HorizontalTextAlignment="End"/>
+                </Grid>
 
                 <VerticalStackLayout Spacing="2">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNotesSectionTapped"/>
+                    </VerticalStackLayout.GestureRecognizers>
                     <Label x:Name="NotesLabel"
                            Text="{Binding NotesText, Source={x:Reference Root}}"
                            MaxLines="{Binding NotesMaxLines, Source={x:Reference Root}}"
                            LineBreakMode="WordWrap"
                            SizeChanged="OnExpandableLabelSizeChanged"/>
-                    <Button Text="{Binding IsNotesExpanded, Source={x:Reference Root}, Converter={StaticResource ChevronConverter}}"
-                            IsVisible="{Binding CanExpandNotes, Source={x:Reference Root}}"
-                            Clicked="OnNotesToggleClicked"
-                            Style="{StaticResource ChevronButtonStyle}"
-                            WidthRequest="36"
-                            HeightRequest="36"
-                            HorizontalOptions="End"/>
+                    <Label Text="... see more"
+                           TextColor="{StaticResource MutedTextColor}"
+                           FontSize="12"
+                           IsVisible="{Binding ShowNotesSeeMore, Source={x:Reference Root}}"/>
                 </VerticalStackLayout>
             </VerticalStackLayout>
 

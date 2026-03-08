@@ -38,111 +38,166 @@
 
             <Grid ColumnDefinitions="*,Auto"
                   ColumnSpacing="8">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDescriptionSectionTapped"/>
+                </Grid.GestureRecognizers>
                 <Label Text="DESCRIPTION"
                        Style="{StaticResource SectionHeaderLabelStyle}"
                        VerticalTextAlignment="Center"/>
-                <Button Grid.Column="1"
-                        Text="{Binding DescriptionChevronText, Source={x:Reference Root}}"
-                        IsVisible="{Binding CanExpandDescription, Source={x:Reference Root}}"
-                        Clicked="OnDescriptionToggleClicked"
-                        Style="{StaticResource ChevronButtonStyle}"/>
+                <Label Grid.Column="1"
+                       Text="{Binding DescriptionChevronText, Source={x:Reference Root}}"
+                       IsVisible="{Binding CanExpandDescription, Source={x:Reference Root}}"
+                       TextColor="{StaticResource MutedTextColor}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="End"/>
             </Grid>
 
             <ContentView x:Name="DescriptionTextContainer">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDescriptionSectionTapped"/>
+                </ContentView.GestureRecognizers>
                 <Label x:Name="DescriptionLabel"
                        Text="{Binding DescriptionText, Source={x:Reference Root}}"
                        MaxLines="{Binding DescriptionMaxLines, Source={x:Reference Root}}"
                        LineBreakMode="WordWrap"
                        SizeChanged="OnExpandableLabelSizeChanged"/>
             </ContentView>
+            <Label Text="... see more"
+                   TextColor="{StaticResource MutedTextColor}"
+                   FontSize="12"
+                   IsVisible="{Binding ShowDescriptionSeeMore, Source={x:Reference Root}}"/>
 
             <Grid ColumnDefinitions="*,Auto"
                   ColumnSpacing="8">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnVerbalSectionTapped"/>
+                </Grid.GestureRecognizers>
                 <Label Text="VERBAL"
                        Style="{StaticResource SectionHeaderLabelStyle}"
                        VerticalTextAlignment="Center"/>
-                <Button Grid.Column="1"
-                        Text="{Binding VerbalChevronText, Source={x:Reference Root}}"
-                        IsVisible="{Binding CanExpandVerbal, Source={x:Reference Root}}"
-                        Clicked="OnVerbalToggleClicked"
-                        Style="{StaticResource ChevronButtonStyle}"/>
+                <Label Grid.Column="1"
+                       Text="{Binding VerbalChevronText, Source={x:Reference Root}}"
+                       IsVisible="{Binding CanExpandVerbal, Source={x:Reference Root}}"
+                       TextColor="{StaticResource MutedTextColor}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="End"/>
             </Grid>
 
             <ContentView x:Name="VerbalTextContainer">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnVerbalSectionTapped"/>
+                </ContentView.GestureRecognizers>
                 <Label x:Name="VerbalLabel"
                        Text="{Binding VerbalText, Source={x:Reference Root}}"
                        MaxLines="{Binding VerbalMaxLines, Source={x:Reference Root}}"
                        LineBreakMode="WordWrap"
                        SizeChanged="OnExpandableLabelSizeChanged"/>
             </ContentView>
+            <Label Text="... see more"
+                   TextColor="{StaticResource MutedTextColor}"
+                   FontSize="12"
+                   IsVisible="{Binding ShowVerbalSeeMore, Source={x:Reference Root}}"/>
 
             <VerticalStackLayout Spacing="8"
                                  IsVisible="{Binding HasPrereqs, Source={x:Reference Root}}">
                 <Grid ColumnDefinitions="*,Auto"
                       ColumnSpacing="8">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPrereqSectionTapped"/>
+                    </Grid.GestureRecognizers>
                     <Label Text="PREREQUISITES"
                            Style="{StaticResource SectionHeaderLabelStyle}"
                            VerticalTextAlignment="Center"/>
-                    <Button Grid.Column="1"
-                            Text="{Binding PrereqChevronText, Source={x:Reference Root}}"
-                            IsVisible="{Binding CanExpandPrereqs, Source={x:Reference Root}}"
-                            Clicked="OnPrereqToggleClicked"
-                            Style="{StaticResource ChevronButtonStyle}"/>
+                    <Label Grid.Column="1"
+                           Text="{Binding PrereqChevronText, Source={x:Reference Root}}"
+                           IsVisible="{Binding CanExpandPrereqs, Source={x:Reference Root}}"
+                           TextColor="{StaticResource MutedTextColor}"
+                           VerticalTextAlignment="Center"
+                           HorizontalTextAlignment="End"/>
                 </Grid>
 
                 <ContentView x:Name="PrereqTextContainer">
+                    <ContentView.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPrereqSectionTapped"/>
+                    </ContentView.GestureRecognizers>
                     <Label x:Name="PrereqLabel"
                            Text="{Binding PrereqText, Source={x:Reference Root}}"
                            MaxLines="{Binding PrereqMaxLines, Source={x:Reference Root}}"
                            LineBreakMode="WordWrap"
                            SizeChanged="OnExpandableLabelSizeChanged"/>
                 </ContentView>
+                <Label Text="... see more"
+                       TextColor="{StaticResource MutedTextColor}"
+                       FontSize="12"
+                       IsVisible="{Binding ShowPrereqSeeMore, Source={x:Reference Root}}"/>
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="8"
                                  IsVisible="{Binding HasDamageSummary, Source={x:Reference Root}}">
                 <Grid ColumnDefinitions="*,Auto"
                       ColumnSpacing="8">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnDamageSectionTapped"/>
+                    </Grid.GestureRecognizers>
                     <Label Text="DAMAGE"
                            Style="{StaticResource SectionHeaderLabelStyle}"
                            VerticalTextAlignment="Center"/>
-                    <Button Grid.Column="1"
-                            Text="{Binding DamageChevronText, Source={x:Reference Root}}"
-                            IsVisible="{Binding CanExpandDamage, Source={x:Reference Root}}"
-                            Clicked="OnDamageToggleClicked"
-                            Style="{StaticResource ChevronButtonStyle}"/>
+                    <Label Grid.Column="1"
+                           Text="{Binding DamageChevronText, Source={x:Reference Root}}"
+                           IsVisible="{Binding CanExpandDamage, Source={x:Reference Root}}"
+                           TextColor="{StaticResource MutedTextColor}"
+                           VerticalTextAlignment="Center"
+                           HorizontalTextAlignment="End"/>
                 </Grid>
 
                 <ContentView x:Name="DamageTextContainer">
+                    <ContentView.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnDamageSectionTapped"/>
+                    </ContentView.GestureRecognizers>
                     <Label x:Name="DamageLabel"
                            Text="{Binding DamageSummaryText, Source={x:Reference Root}}"
                            MaxLines="{Binding DamageMaxLines, Source={x:Reference Root}}"
                            LineBreakMode="WordWrap"
                            SizeChanged="OnExpandableLabelSizeChanged"/>
                 </ContentView>
+                <Label Text="... see more"
+                       TextColor="{StaticResource MutedTextColor}"
+                       FontSize="12"
+                       IsVisible="{Binding ShowDamageSeeMore, Source={x:Reference Root}}"/>
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="8"
                                  IsVisible="{Binding HasHealSummary, Source={x:Reference Root}}">
                 <Grid ColumnDefinitions="*,Auto"
                       ColumnSpacing="8">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHealSectionTapped"/>
+                    </Grid.GestureRecognizers>
                     <Label Text="HEAL"
                            Style="{StaticResource SectionHeaderLabelStyle}"
                            VerticalTextAlignment="Center"/>
-                    <Button Grid.Column="1"
-                            Text="{Binding HealChevronText, Source={x:Reference Root}}"
-                            IsVisible="{Binding CanExpandHeal, Source={x:Reference Root}}"
-                            Clicked="OnHealToggleClicked"
-                            Style="{StaticResource ChevronButtonStyle}"/>
+                    <Label Grid.Column="1"
+                           Text="{Binding HealChevronText, Source={x:Reference Root}}"
+                           IsVisible="{Binding CanExpandHeal, Source={x:Reference Root}}"
+                           TextColor="{StaticResource MutedTextColor}"
+                           VerticalTextAlignment="Center"
+                           HorizontalTextAlignment="End"/>
                 </Grid>
 
                 <ContentView x:Name="HealTextContainer">
+                    <ContentView.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHealSectionTapped"/>
+                    </ContentView.GestureRecognizers>
                     <Label x:Name="HealLabel"
                            Text="{Binding HealSummaryText, Source={x:Reference Root}}"
                            MaxLines="{Binding HealMaxLines, Source={x:Reference Root}}"
                            LineBreakMode="WordWrap"
                            SizeChanged="OnExpandableLabelSizeChanged"/>
                 </ContentView>
+                <Label Text="... see more"
+                       TextColor="{StaticResource MutedTextColor}"
+                       FontSize="12"
+                       IsVisible="{Binding ShowHealSeeMore, Source={x:Reference Root}}"/>
             </VerticalStackLayout>
         </VerticalStackLayout>
     </Frame>

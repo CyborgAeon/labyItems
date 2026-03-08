@@ -39,6 +39,7 @@ public partial class SpellDetailCardView : ContentView
             OnPropertyChanged();
             OnPropertyChanged(nameof(DescriptionMaxLines));
             OnPropertyChanged(nameof(DescriptionChevronText));
+            OnPropertyChanged(nameof(ShowDescriptionSeeMore));
         }
     }
 
@@ -53,6 +54,7 @@ public partial class SpellDetailCardView : ContentView
             OnPropertyChanged();
             OnPropertyChanged(nameof(VerbalMaxLines));
             OnPropertyChanged(nameof(VerbalChevronText));
+            OnPropertyChanged(nameof(ShowVerbalSeeMore));
         }
     }
 
@@ -66,6 +68,7 @@ public partial class SpellDetailCardView : ContentView
             _isNotesExpanded = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(NotesMaxLines));
+            OnPropertyChanged(nameof(ShowNotesSeeMore));
         }
     }
 
@@ -79,6 +82,7 @@ public partial class SpellDetailCardView : ContentView
             _canExpandDescription = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(ShowDescriptionChevron));
+            OnPropertyChanged(nameof(ShowDescriptionSeeMore));
         }
     }
 
@@ -92,6 +96,7 @@ public partial class SpellDetailCardView : ContentView
             _canExpandVerbal = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(ShowVerbalChevron));
+            OnPropertyChanged(nameof(ShowVerbalSeeMore));
         }
     }
 
@@ -104,6 +109,7 @@ public partial class SpellDetailCardView : ContentView
             if (_canExpandNotes == value) return;
             _canExpandNotes = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ShowNotesSeeMore));
         }
     }
 
@@ -126,6 +132,9 @@ public partial class SpellDetailCardView : ContentView
     public bool HasNotes => NotesText.Length > 0;
     public bool ShowDescriptionChevron => HasDescription && CanExpandDescription;
     public bool ShowVerbalChevron => HasVerbal && CanExpandVerbal;
+    public bool ShowDescriptionSeeMore => CanExpandDescription && !IsDescriptionExpanded;
+    public bool ShowVerbalSeeMore => CanExpandVerbal && !IsVerbalExpanded;
+    public bool ShowNotesSeeMore => CanExpandNotes && !IsNotesExpanded;
 
     public string ColourDisplayText => BuildColourDisplayText(Spell?.colour);
     public string LevelDisplayText => $"Lvl {Math.Max(0, Spell?.level ?? 0)}";
@@ -174,6 +183,9 @@ public partial class SpellDetailCardView : ContentView
         OnPropertyChanged(nameof(HasNotes));
         OnPropertyChanged(nameof(ShowDescriptionChevron));
         OnPropertyChanged(nameof(ShowVerbalChevron));
+        OnPropertyChanged(nameof(ShowDescriptionSeeMore));
+        OnPropertyChanged(nameof(ShowVerbalSeeMore));
+        OnPropertyChanged(nameof(ShowNotesSeeMore));
         OnPropertyChanged(nameof(DescriptionChevronText));
         OnPropertyChanged(nameof(VerbalChevronText));
         OnPropertyChanged(nameof(ColourDisplayText));
@@ -258,6 +270,30 @@ public partial class SpellDetailCardView : ContentView
     private void OnNotesToggleClicked(object sender, EventArgs e)
     {
         IsNotesExpanded = !IsNotesExpanded;
+    }
+
+    private void OnDescriptionSectionTapped(object sender, TappedEventArgs e)
+    {
+        if (!CanExpandDescription)
+            return;
+
+        OnDescriptionToggleClicked(sender, EventArgs.Empty);
+    }
+
+    private void OnVerbalSectionTapped(object sender, TappedEventArgs e)
+    {
+        if (!CanExpandVerbal)
+            return;
+
+        OnVerbalToggleClicked(sender, EventArgs.Empty);
+    }
+
+    private void OnNotesSectionTapped(object sender, TappedEventArgs e)
+    {
+        if (!CanExpandNotes)
+            return;
+
+        OnNotesToggleClicked(sender, EventArgs.Empty);
     }
 
     private void OnExpandableLabelSizeChanged(object sender, EventArgs e)

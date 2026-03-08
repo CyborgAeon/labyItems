@@ -308,6 +308,22 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     public bool IsClassTabSelected => SelectedTabIndex == 0;
     public bool IsRaceTabSelected => SelectedTabIndex == 1;
     public bool CanSelectRace => !string.IsNullOrWhiteSpace((_draft.Class ?? string.Empty).Trim());
+    public bool HasRaceSelection => !string.IsNullOrWhiteSpace((_draft.Race ?? string.Empty).Trim());
+
+    public bool TryMoveToRaceSelection()
+    {
+        if (!CanSelectRace)
+            return false;
+
+        SelectedTabIndex = 1;
+        return IsRaceTabSelected;
+    }
+
+    public bool TryMoveToClassSelection()
+    {
+        SelectedTabIndex = 0;
+        return IsClassTabSelected;
+    }
 
     public ICommand ShowClassSelectionCommand { get; }
     public ICommand SelectRaceFilterCommand { get; }
@@ -435,6 +451,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             _draft.ColourChoiceOverride.Clear();
             _draft.Race = item.Name;
         }
+        Raise(nameof(HasRaceSelection));
         _notifyWizardGatingChanged();
 
         MainThread.BeginInvokeOnMainThread(async () =>

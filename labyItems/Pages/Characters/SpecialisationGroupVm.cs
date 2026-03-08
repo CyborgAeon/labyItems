@@ -120,14 +120,23 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
 
     public bool HasValidationError => !string.IsNullOrWhiteSpace(ValidationMessage);
 
+    private string _issueMessage = string.Empty;
+    public string IssueMessage
+    {
+        get => _issueMessage;
+        private set => Set(ref _issueMessage, value);
+    }
+
+    public bool HasIssue => !string.IsNullOrWhiteSpace(IssueMessage);
+
     public bool IsComplete
     {
         get
         {
             if (_isOptional)
-                return !HasDuplicates && !HasValidationError;
+                return !HasDuplicates && !HasValidationError && !HasIssue;
 
-            return SelectedCount == RequiredCount && !HasDuplicates && !HasValidationError;
+            return SelectedCount == RequiredCount && !HasDuplicates && !HasValidationError && !HasIssue;
         }
     }
 
@@ -145,9 +154,10 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         get
         {
             if (HasValidationError) return ValidationMessage;
+            if (HasDuplicates) return "Duplicate selections detected. Choose different abilities for each level.";
+            if (HasIssue) return IssueMessage;
             if (_isOptional && SelectedCount == 0) return "Optional selection.";
             if (SelectedCount == 0) return "Make your selections below.";
-            if (HasDuplicates) return "Duplicate selections detected. Choose different abilities for each level.";
             if (IsComplete) return "Selection complete.";
             return "Continue selecting until all levels are filled.";
         }
@@ -157,8 +167,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     {
         get
         {
-            if (IsComplete) return SpecialisationCardState.Success;
             if (HasDuplicates || HasValidationError) return SpecialisationCardState.Error;
+            if (HasIssue) return SpecialisationCardState.Issue;
+            if (IsComplete) return SpecialisationCardState.Success;
             return SpecialisationCardState.Neutral;
         }
     }
@@ -166,6 +177,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     {
         Neutral,
         Success,
+        Issue,
         Error
     }
     public bool UseWardPactEnum { get; }
@@ -311,12 +323,24 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         Raise(nameof(SelectedCount));
         Raise(nameof(HasDuplicates));
         Raise(nameof(HasValidationError));
+        Raise(nameof(HasIssue));
+        Raise(nameof(IssueMessage));
         Raise(nameof(ValidationMessage));
         Raise(nameof(IsComplete));
         Raise(nameof(StatusText));
         Raise(nameof(HelperText));
         Raise(nameof(CardState));
         Raise(nameof(Subtitle));
+    }
+
+    public void SetIssueMessage(string? message)
+    {
+        var normalized = (message ?? string.Empty).Trim();
+        if (string.Equals(_issueMessage, normalized, StringComparison.Ordinal))
+            return;
+
+        IssueMessage = normalized;
+        RaiseComputed();
     }
 
     private void UpdateValidation()

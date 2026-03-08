@@ -59,23 +59,34 @@
 
             <Grid ColumnDefinitions="*,Auto"
                   ColumnSpacing="8">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDescriptionSectionTapped"/>
+                </Grid.GestureRecognizers>
                 <Label Text="DESCRIPTION"
                        Style="{StaticResource SectionHeaderLabelStyle}"
                        VerticalTextAlignment="Center"/>
-                <Button Grid.Column="1"
-                        Text="{Binding DescriptionChevronText, Source={x:Reference Root}}"
-                        IsVisible="{Binding CanExpandDescription, Source={x:Reference Root}}"
-                        Clicked="OnDescriptionToggleClicked"
-                        Style="{StaticResource ChevronButtonStyle}"/>
+                <Label Grid.Column="1"
+                       Text="{Binding DescriptionChevronText, Source={x:Reference Root}}"
+                       IsVisible="{Binding CanExpandDescription, Source={x:Reference Root}}"
+                       TextColor="{StaticResource MutedTextColor}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="End"/>
             </Grid>
 
             <ContentView x:Name="DescriptionTextContainer">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDescriptionSectionTapped"/>
+                </ContentView.GestureRecognizers>
                 <Label x:Name="DescriptionLabel"
                        Text="{Binding DescriptionText, Source={x:Reference Root}}"
                        MaxLines="{Binding DescriptionMaxLines, Source={x:Reference Root}}"
                        LineBreakMode="WordWrap"
                        SizeChanged="OnExpandableLabelSizeChanged"/>
             </ContentView>
+            <Label Text="... see more"
+                   TextColor="{StaticResource MutedTextColor}"
+                   FontSize="12"
+                   IsVisible="{Binding ShowDescriptionSeeMore, Source={x:Reference Root}}"/>
 
             <VerticalStackLayout Spacing="8"
                                  IsVisible="{Binding HasNotesSection, Source={x:Reference Root}}">

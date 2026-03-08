@@ -12,9 +12,13 @@
 
         <Color x:Key="CardBorderSuccessLight">#2E7D32</Color>
 
+        <Color x:Key="CardBorderIssueLight">#F9A825</Color>
+
         <Color x:Key="CardBorderErrorLight">#C62828</Color>
 
         <Color x:Key="CardBgSuccessLight">#E8F5E9</Color>
+
+        <Color x:Key="CardBgIssueLight">#FFF8E1</Color>
 
         <Color x:Key="CardBgErrorLight">#FFEBEE</Color>
     </ContentView.Resources>
@@ -66,6 +70,15 @@
                                     Value="{StaticResource CardBorderSuccessLight}"/>
                             <Setter Property="BackgroundColor"
                                     Value="{StaticResource CardBgSuccessLight}"/>
+                        </DataTrigger>
+
+                        <DataTrigger TargetType="Frame"
+                                     Binding="{Binding RaceSubtypeCardState}"
+                                     Value="Issue">
+                            <Setter Property="BorderColor"
+                                    Value="{StaticResource CardBorderIssueLight}"/>
+                            <Setter Property="BackgroundColor"
+                                    Value="{StaticResource CardBgIssueLight}"/>
                         </DataTrigger>
 
                         <DataTrigger TargetType="Frame"
@@ -240,6 +253,15 @@
 
                                     <DataTrigger TargetType="Frame"
                                                  Binding="{Binding CardState}"
+                                                 Value="Issue">
+                                        <Setter Property="BorderColor"
+                                                Value="{StaticResource CardBorderIssueLight}"/>
+                                        <Setter Property="BackgroundColor"
+                                                Value="{StaticResource CardBgIssueLight}"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger TargetType="Frame"
+                                                 Binding="{Binding CardState}"
                                                  Value="Error">
                                         <Setter Property="BorderColor"
                                                 Value="{StaticResource CardBorderErrorLight}"/>
@@ -370,6 +392,15 @@
                                                 Value="{StaticResource CardBorderSuccessLight}"/>
                                         <Setter Property="BackgroundColor"
                                                 Value="{StaticResource CardBgSuccessLight}"/>
+                                    </DataTrigger>
+
+                                    <DataTrigger TargetType="Frame"
+                                                 Binding="{Binding CardState}"
+                                                 Value="Issue">
+                                        <Setter Property="BorderColor"
+                                                Value="{StaticResource CardBorderIssueLight}"/>
+                                        <Setter Property="BackgroundColor"
+                                                Value="{StaticResource CardBgIssueLight}"/>
                                     </DataTrigger>
 
                                     <DataTrigger TargetType="Frame"

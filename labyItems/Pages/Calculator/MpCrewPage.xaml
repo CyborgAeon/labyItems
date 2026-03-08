@@ -11,24 +11,67 @@
       <VerticalStackLayout Padding="20" Spacing="12">
         <!-- Spells -->
         <Label Text="Add standard spell (1st-10th) or advanced (0-3)" FontAttributes="Bold" />
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-          <controls:DictionarySearchBar Grid.Column="0" x:Name="SpellSearch" x:TypeArguments="local:SpellOption" PlaceholderText="Type spell name" SelectionDisplayMemberPath="Name" SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}" />
-          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding SpellCount, Mode=TwoWay}" Min="0" />
+        <Grid ColumnDefinitions="*" ColumnSpacing="12">
+          <controls:DictionarySearchBar Grid.Column="0"
+                                        x:Name="SpellSearch"
+                                        x:TypeArguments="local:SpellOption"
+                                        PlaceholderText="Type spell name"
+                                        SelectionDisplayMemberPath="Name"
+                                        SelectedValue="{Binding SelectedSpellOption, Mode=TwoWay}"
+                                        ResultSelectedCommand="{Binding AddSelectedSpellCommand}"
+                                        KeepFocusOnResultSelection="True"
+                                        ClearAfterResultSelection="True" />
         </Grid>
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpellSelections}" IsVisible="{Binding HasSpellSelections}" Spacing="6">
+          <BindableLayout.ItemTemplate>
+            <DataTemplate>
+              <controls:PlusMinusControl LabelText="{Binding DisplayText}" AllowMultiple="True" Count="{Binding Uses, Mode=TwoWay}" Min="0" />
+            </DataTemplate>
+          </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
 
         <!-- Miracles -->
         <Label Text="Add standard miracle (1st-5th) or advanced (1-3)" FontAttributes="Bold" />
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-          <controls:DictionarySearchBar Grid.Column="0" x:Name="MiracleSearch" x:TypeArguments="local:MiracleOption" PlaceholderText="Type miracle name" SelectionDisplayMemberPath="Name" SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}" />
-          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding MiracleCount, Mode=TwoWay}" Min="0" />
+        <Grid ColumnDefinitions="*" ColumnSpacing="12">
+          <controls:DictionarySearchBar Grid.Column="0"
+                                        x:Name="MiracleSearch"
+                                        x:TypeArguments="local:MiracleOption"
+                                        PlaceholderText="Type miracle name"
+                                        SelectionDisplayMemberPath="Name"
+                                        SelectedValue="{Binding SelectedMiracleOption, Mode=TwoWay}"
+                                        ResultSelectedCommand="{Binding AddSelectedMiracleCommand}"
+                                        KeepFocusOnResultSelection="True"
+                                        ClearAfterResultSelection="True" />
         </Grid>
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding MiracleSelections}" IsVisible="{Binding HasMiracleSelections}" Spacing="6">
+          <BindableLayout.ItemTemplate>
+            <DataTemplate>
+              <controls:PlusMinusControl LabelText="{Binding DisplayText}" AllowMultiple="True" Count="{Binding Uses, Mode=TwoWay}" Min="0" />
+            </DataTemplate>
+          </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
 
         <!-- Evocations -->
         <Label Text="Add 0-4th standard evocation" FontAttributes="Bold" />
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-          <controls:DictionarySearchBar IsEnabled="{Binding DbEnabled}" Grid.Column="0" x:Name="EvocationSearch" x:TypeArguments="local:EvocationOption" PlaceholderText="Type evocation name" SelectionDisplayMemberPath="Name" SelectedValue="{Binding SelectedEvocationOption, Mode=TwoWay}" />
-          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding EvocationCount, Mode=TwoWay}" Min="0" />
+        <Grid ColumnDefinitions="*" ColumnSpacing="12">
+          <controls:DictionarySearchBar IsEnabled="{Binding DbEnabled}"
+                                        Grid.Column="0"
+                                        x:Name="EvocationSearch"
+                                        x:TypeArguments="local:EvocationOption"
+                                        PlaceholderText="Type evocation name"
+                                        SelectionDisplayMemberPath="Name"
+                                        SelectedValue="{Binding SelectedEvocationOption, Mode=TwoWay}"
+                                        ResultSelectedCommand="{Binding AddSelectedEvocationCommand}"
+                                        KeepFocusOnResultSelection="True"
+                                        ClearAfterResultSelection="True" />
         </Grid>
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding EvocationSelections}" IsVisible="{Binding HasEvocationSelections}" Spacing="6">
+          <BindableLayout.ItemTemplate>
+            <DataTemplate>
+              <controls:PlusMinusControl LabelText="{Binding DisplayText}" AllowMultiple="True" Count="{Binding Uses, Mode=TwoWay}" Min="0" />
+            </DataTemplate>
+          </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
 
         <VerticalStackLayout Spacing="8">
           <controls:PlusMinusControl LabelText="Active neuro" AllowMultiple="True" Count="{Binding ActiveNeuroCount, Mode=TwoWay}" IsEnabled="False" />
