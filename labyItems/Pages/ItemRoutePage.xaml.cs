@@ -57,10 +57,21 @@ public partial class ItemRoutePage : ContentPage
 
     private void RefreshWalletButton()
     {
-        var any = LiteDbService.GetCharacters().Any();
-        if (CharacterWalletButton != null)
+        try
         {
-            CharacterWalletButton.IsEnabled = any;
+            var any = LiteDbService.GetCharacters().Any();
+            if (CharacterWalletButton != null)
+            {
+                CharacterWalletButton.IsEnabled = any;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[WALLET_BUTTON] {ex}");
+            if (CharacterWalletButton != null)
+            {
+                CharacterWalletButton.IsEnabled = false;
+            }
         }
     }
 }

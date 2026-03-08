@@ -18,8 +18,9 @@ public static class LiteDbService
         var path = Path.Combine(FileSystem.AppDataDirectory, "items.db");
         _db = new LiteDatabase($"Filename={path};Connection=shared");
 
-        _db.GetCollection<Item>("items").EnsureIndex(x => x.CreatedDate);
-        _db.GetCollection<Character>("characters").EnsureIndex(x => x.Name);
+        // AOT-safe index creation for iOS Release builds.
+        _db.GetCollection<Item>("items").EnsureIndex(nameof(Item.CreatedDate));
+        _db.GetCollection<Character>("characters").EnsureIndex(nameof(Character.Name));
         return _db;
     }
 
