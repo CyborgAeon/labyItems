@@ -1,0 +1,174 @@
+name: MAUI iOS Release + TestFlight
+
+on:
+  push:
+    tags:
+      - "r*.*"
+  workflow_dispatch:
+    inputs:
+      app_display_version:
+        description: "Version shown in TestFlight/App Store (e.g. 1.2.3)"
+        required: false
+      app_build_number:
+        description: "Integer build number (defaults to run number if blank)"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-upload-ios:
+    runs-on: macos-latest
+
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      IOS_CERT_P12_BASE64: ${{ secrets.IOS_CERT_P12_BASE64 }}
+      IOS_CERT_PASSWORD: ${{ secrets.IOS_CERT_PASSWORD }}
+      IOS_PROFILE_BASE64: ${{ secrets.IOS_PROFILE_BASE64 }}
+      APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+      APP_STORE_CONNECT_API_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY }}
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+          global-json-file: global.json
+
+      - name: Validate required secrets
+        run: |
+          set -euo pipefail
+          for var in \
+            IOS_CERT_P12_BASE64 \
+            IOS_CERT_PASSWORD \
+            IOS_PROFILE_BASE64 \
+            APP_STORE_CONNECT_API_KEY_ID \
+            APP_STORE_CONNECT_API_ISSUER_ID \
+            APP_STORE_CONNECT_API_PRIVATE_KEY; do
+            if [ -z "${!var:-}" ]; then
+              echo "Missing required secret: $var" >&2
+              exit 1
+            fi
+          done
+
+      - name: Install .NET iOS workloads
+        run: |
+          dotnet workload install ios
+          dotnet workload install maui-ios
+
+      - name: Setup signing keychain and provisioning profile
+        run: |
+          set -euo pipefail
+
+          KEYCHAIN_PATH="$RUNNER_TEMP/app-signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(openssl rand -base64 24)"
+          CERT_PATH="$RUNNER_TEMP/dist-cert.p12"
+          PROFILE_PATH="$RUNNER_TEMP/profile.mobileprovision"
+          PROFILE_PLIST="$RUNNER_TEMP/profile.plist"
+
+          echo "$IOS_CERT_P12_BASE64" | base64 --decode > "$CERT_PATH"
+          echo "$IOS_PROFILE_BASE64" | base64 --decode > "$PROFILE_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$IOS_CERT_PASSWORD" -A -t cert -f pkcs12
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH" "$HOME/Library/Keychains/login.keychain-db"
+
+          CODESIGN_KEY="$(security find-identity -v -p codesigning | awk -F'\"' '/Apple Distribution/ {print $2; exit}')"
+          if [ -z "$CODESIGN_KEY" ]; then
+            echo "No Apple Distribution identity found after importing certificate." >&2
+            security find-identity -v -p codesigning || true
+            exit 1
+          fi
+
+          security cms -D -i "$PROFILE_PATH" > "$PROFILE_PLIST"
+          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" "$PROFILE_PLIST")
+
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"
+          cp "$PROFILE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+          cp "$PROFILE_PATH" "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+
+          echo "CODESIGN_KEY=$CODESIGN_KEY" >> "$GITHUB_ENV"
+          echo "CODESIGN_PROVISION_UUID=$PROFILE_UUID" >> "$GITHUB_ENV"
+          echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+          echo "KEYCHAIN_PASSWORD=$KEYCHAIN_PASSWORD" >> "$GITHUB_ENV"
+
+      - name: Resolve version values
+        run: |
+          set -euo pipefail
+          DISPLAY_VERSION="${{ github.event.inputs.app_display_version }}"
+          BUILD_NUMBER="${{ github.event.inputs.app_build_number }}"
+
+          if [ "${{ github.event_name }}" = "push" ] && [[ "${GITHUB_REF_NAME}" == r* ]]; then
+            DISPLAY_VERSION="${GITHUB_REF_NAME#r}"
+          fi
+
+          if [ -z "$DISPLAY_VERSION" ]; then
+            echo "app_display_version is required for manual runs, or provide a tag like r1.2.3 for push runs." >&2
+            exit 1
+          fi
+
+          if [ -z "$BUILD_NUMBER" ]; then
+            BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
+          fi
+          echo "APP_DISPLAY_VERSION=$DISPLAY_VERSION" >> "$GITHUB_ENV"
+          echo "APP_BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_ENV"
+
+      - name: Restore
+        run: dotnet restore labyItems/labyItems.csproj
+
+      - name: Publish signed iOS IPA
+        run: |
+          set -euo pipefail
+          UseIosWorkload=true dotnet publish labyItems/labyItems.csproj \
+            -f net10.0-ios \
+            -c Release \
+            -p:RuntimeIdentifier=ios-arm64 \
+            -p:ArchiveOnBuild=true \
+            -p:BuildIpa=true \
+            -p:CodesignKey="$CODESIGN_KEY" \
+            -p:CodesignProvision="$CODESIGN_PROVISION_UUID" \
+            -p:ApplicationDisplayVersion="$APP_DISPLAY_VERSION" \
+            -p:ApplicationVersion="$APP_BUILD_NUMBER"
+
+      - name: Find IPA
+        id: ipa
+        run: |
+          set -euo pipefail
+          IPA_PATH=$(find labyItems/bin/Release/net10.0-ios/ios-arm64/publish -name "*.ipa" | head -n1)
+          if [ -z "$IPA_PATH" ]; then
+            echo "No IPA found." >&2
+            find labyItems/bin/Release/net10.0-ios -maxdepth 5 -type f | sed -n '1,200p'
+            exit 1
+          fi
+          echo "ipa_path=$IPA_PATH" >> "$GITHUB_OUTPUT"
+          echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: labyItems-ios-ipa
+          path: ${{ steps.ipa.outputs.ipa_path }}
+
+      - name: Upload to TestFlight
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.appstoreconnect/private_keys"
+          KEY_FILE="$HOME/.appstoreconnect/private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
+          printf "%s" "$APP_STORE_CONNECT_API_PRIVATE_KEY" > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+
+          xcrun iTMSTransporter \
+            -m upload \
+            -assetFile "$IPA_PATH" \
+            -apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+            -apiIssuer "$APP_STORE_CONNECT_API_ISSUER_ID" \
+            -v informational
