@@ -122,7 +122,7 @@ jobs:
           echo "APP_BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_ENV"
 
       - name: Restore
-        run: dotnet restore labyItems/labyItems.csproj
+        run: UseIosWorkload=true dotnet restore labyItems/labyItems.csproj -p:TargetFramework=net10.0-ios
 
       - name: Publish signed iOS IPA
         run: |
