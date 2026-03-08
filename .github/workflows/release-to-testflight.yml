@@ -68,6 +68,12 @@ jobs:
           dotnet workload install ios
           dotnet workload install maui-ios
 
+      - name: Build bundled database
+        run: |
+          set -euo pipefail
+          DOTNET=dotnet ./tools/migrate-any-data.sh output/laby.db
+          ls -la output/laby.db
+
       - name: Setup signing keychain and provisioning profile
         run: |
           set -euo pipefail
