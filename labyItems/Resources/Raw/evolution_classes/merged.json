@@ -386,7 +386,7 @@
     "available": ["ALL"],
     "table": 3,
     "cost": "40",
-    "preReqs": ["9th level resistance to Magic and Spirits"],
+    "preReqs": ["9th Level Resistance to Magic and Spirits"],
     "index": "9th Level Resistance to All but Neuronics",
     "desc": "9th Level Resistance to all bar Neuronics"
   },

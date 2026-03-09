@@ -1,10 +1,19 @@
 [
   {
+    "name": "Detect Magic",
+    "level": 0,
+    "colour": "Grey",
+    "verbal": "I call upon the elements of fire, air, earth and water, reveal to me where you may be found... Detect Magic!",
+    "description": "This spell indicates the location and shape of all things magical to the wizard.",
+    "IsAdvanced": false,
+    "sourcePage": 10
+  },
+  {
     "name": "Detect Inanimate",
     "level": 2,
     "colour": "Grey",
     "verbal": "I call upon the elements of fire, air, earth and water reveal to me where ... may be found",
-    "description": "The target must be moving over a stone or earthen surface and the evocation will cause them to trip over. but it also reveals the mana point level and colour of the magic it detects. except that any ONE type of inanimate (non fluids) object (e.g. swords, shields, etc) is detected. It should be noted that treasure is to be found in many different configurations. Thus the wizard could detect gold bars, or grull notes, but not generic ‘treasure’. In a similar manner, traps cannot be located via Detect Inanimate, as they represent too broad a variety of potential threats.",
+    "description": "any one type of inanimate (non fluids) object (e.g. swords, shields, etc) is detected. It should be noted that treasure is to be found in many different configurations. Thus the wizard could detect gold bars, or grull notes, but not generic ‘treasure’. In a similar manner, traps cannot be located via Detect Inanimate, as they represent too broad a variety of potential threats.",
     "IsAdvanced": false,
     "sourcePage": 10
   },
@@ -121,7 +130,7 @@
     "level": 3,
     "colour": "Grey",
     "verbal": "I call upon the elements of fire, air, earth and water reveal to me where all that moves may be found",
-    "description": "The target must be moving over a stone or earthen surface and the evocation will cause them to trip over. but it also reveals the mana point level and colour of the magic it detects. except that moving, living creatures (this includes fluids) are detected.",
+    "description": "This spell indicates the location and shape of all things animate to the wizard.",
     "IsAdvanced": false,
     "sourcePage": 11
   },
@@ -235,7 +244,7 @@
     "sourcePage": 12
   },
   {
-    "name": "Darkness (Range)",
+    "name": "Darkness (Ranged)",
     "level": 4,
     "colour": "Black",
     "verbal": "By the power of the shades of the dark let darkness descend over there",
@@ -253,7 +262,7 @@
     "sourcePage": 12
   },
   {
-    "name": "Disintegrate (Range)",
+    "name": "Disintegrate (Ranged)",
     "level": 2,
     "colour": "Black",
     "verbal": "By the power of darkness I disintegrate that...",
@@ -280,7 +289,7 @@
     "sourcePage": 12
   },
   {
-    "name": "Extinguish (Range)",
+    "name": "Extinguish (Ranged)",
     "level": 1,
     "colour": "Black",
     "verbal": "Embodiment of darkness go to there... Extinguish!",
@@ -406,7 +415,7 @@
     "sourcePage": 14
   },
   {
-    "name": "Mend (Range)",
+    "name": "Mend (Ranged)",
     "level": 2,
     "colour": "Blue",
     "verbal": "By the powers of air I mend that...",
@@ -424,7 +433,7 @@
     "sourcePage": 14
   },
   {
-    "name": "Shatter (Range)",
+    "name": "Shatter (Ranged)",
     "level": 2,
     "colour": "Blue",
     "verbal": "By the powers of air I shatter that...",
@@ -580,7 +589,7 @@
     "sourcePage": 16
   },
   {
-    "name": "Reshape (Range)",
+    "name": "Reshape (Ranged)",
     "level": 3,
     "colour": "Brown",
     "verbal": "By the powers of earth I reshape that... into a...",
@@ -616,7 +625,7 @@
     "sourcePage": 16
   },
   {
-    "name": "Warp (Range)",
+    "name": "Warp (Ranged)",
     "level": 2,
     "colour": "Brown",
     "verbal": "By the powers of earth I warp that...",
@@ -778,6 +787,15 @@
     "sourcePage": 18
   },
   {
+    "name": "Pass Unknown",
+    "level": 8,
+    "colour": "Ebony",
+    "verbal": "May Ebony power make my step unknown",
+    "description": "Description: The caster makes no noise (unless deliberate), nor can be located by smell, granting invisibility to those two senses only – immunity to Acute Hearing and Locational Sniff. It also prevents detection by Mana Sight and Elemental Sight, and other visual detections by creatures made by magic without minds, e.g. statues, not elves. This spell is broken if the caster engages in melee combat (including use of any weapon, including MP and HP, or pure summoned ones).",
+    "IsAdvanced": false,
+    "sourcePage": 28
+  },
+  {
     "name": "Passive Illusion",
     "level": 3,
     "colour": "Green",
@@ -787,7 +805,7 @@
     "sourcePage": 18
   },
   {
-    "name": "Rust (Range)",
+    "name": "Rust (Ranged)",
     "level": 2,
     "colour": "Green",
     "verbal": "By the powers of water I rust that…",
@@ -805,7 +823,7 @@
     "sourcePage": 18
   },
   {
-    "name": "Unlock (Range)",
+    "name": "Unlock (Ranged)",
     "level": 1,
     "colour": "Green",
     "verbal": "By my power let that lock be opened",
@@ -955,7 +973,7 @@
     "sourcePage": 20
   },
   {
-    "name": "Ignite (Range)",
+    "name": "Ignite (Ranged)",
     "level": 1,
     "colour": "Red",
     "verbal": "By the powers of fire ignite that...",
@@ -986,7 +1004,7 @@
     "level": 2,
     "colour": "Red",
     "verbal": "Into my hand I call forth fire... Shock!",
-    "description": "By casting this spell the wizard causes his touch to do 12 points of damage to the location and total body points (TBLP) of players. Alternatively it does 4 hits to monsters. The only AC that may be applies versus this damage is MAC, which applies on a 1 for 1 basis (so MAC2 reduces the damage by 2 TBLP and 2 to the location touched). Once the verbal is completed the wizard has 5 seconds to discharge the spell or it is wasted. He cannot cast any more spells in this time. This spell only causes damage to the first target struck so don't pick your nose!",
+    "description": "By casting this spell the wizard causes his touch to do 12 points of damage to the location and total body points (TBLP) of players. Alternatively it does 4 hits to monsters. The only AC that may be applies versus this damage is MAC, which applies on a 1 for 1 basis (so MAC2 reduces the damage by 2 TBLP and 2 to the location touched). Once the verbal is completed the wizard has 5 seconds to discharge the spell or it is wasted. He cannot cast any more spells in this time.",
     "IsAdvanced": false,
     "sourcePage": 20
   },
@@ -1105,7 +1123,7 @@
     "sourcePage": 22
   },
   {
-    "name": "Light (Range)",
+    "name": "Light (Ranged)",
     "level": 4,
     "colour": "White",
     "verbal": "Sprites of light I conjure thee shine forth over there / around me",
@@ -1267,7 +1285,7 @@
     "name": "Shudder",
     "level": 4,
     "colour": "Bronze",
-    "verbal": "Fool, feel your mortal form twist and shudder under my power''",
+    "verbal": "Fool, feel your mortal form twist and shudder under my power",
     "description": "The target of the spell suffers a 3 point drop in Dexterity Armour Class, caused by uncontrollable shakes. This can negate Physical Armour Class, but will not drop the total armour class below 0. If this is cast on a monster then it decreases the monsters hits by 6. The minimum number of hits that a monster can be left with is 1, as clearly this spell cannot kill, but merely increase the amount of damage that the victim receives during combat. This spell does not stack with itself. Immunity to Dexterity Drain or Domination effects applies. ",
     "IsAdvanced": false,
     "sourcePage": 28
@@ -1276,8 +1294,8 @@
     "name": "Tell Strength",
     "level": 0,
     "colour": "Bronze",
-    "verbal": "By the Drake reveal thine strength''",
-    "description": "This reveals to the wizard the resistance level of the target with respect to bronze magic. The response that the wizard receives is the number of stackable runes that would need to be cast on the target in order for a stackable spell to work. See Silver cantrip 'Tell Strength' on page 33 for further details.",
+    "verbal": "By the Drake reveal thine strength",
+    "description": "This reveals to the wizard the resistance level of the target with respect to Bronze magic. The response is the number of stackable runes that would need to be cast on the target in order for a stackable spell to work.\n1 stackable rune: 4th level \n2 stackable runes: 5th level \n3 stackable runes: 6th level \n4 stackable runes: 7th level \n5 stackable runes: 8th level \neach additional rune is +1 level \nFor example, Tell Strength on a 5th level player character would result in the response being `2 stackable runes'.",
     "IsAdvanced": false,
     "sourcePage": 28
   },
@@ -1294,7 +1312,7 @@
     "name": "Words of Death",
     "level": 16,
     "colour": "Bronze",
-    "verbal": "Hear now my Words of Death.....''",
+    "verbal": "Hear now my Words of Death.....",
     "description": "As long as the wizard does not move from where they stand and they keep talking to the target then the target will suffer the effects of a magical disorder, which progresses at the following rate: Up to 1 minute: they become too weak to move or cast, and collapse After 1 minute: they are unconscious After 2 minutes: they die This spell is broken if the wizard takes damage, casts another spell or moves from where he is standing, and then the mana is wasted. The spell is not broken should the target be struck, however. As this produces effects like a disease, any creatures that are immune to disease are not affected by this spell.",
     "IsAdvanced": false,
     "sourcePage": 29
@@ -1303,7 +1321,7 @@
     "name": "Words of Pain",
     "level": 14,
     "colour": "Bronze",
-    "verbal": "Hear now my Words Of Pain.....''",
+    "verbal": "Hear now my Words Of Pain.....",
     "description": "The target stands or falls writhing in agony, unable to make any other action unless struck by another blow or spell. During this period the target takes 6 TBLP damage and 1 point to each location (2 hits to a monster) per 15 seconds, as long as the casting wizard stands talking to the target, up to a maximum of 5 minutes. The damage ignores any form of armour class. Should the wizard elect to move around or stop talking, if the wizard takes damage, or if the target takes any other damage then the spell is cancelled. This spell does not affect creatures which do not feel pain, such as elementals, undead and the like. This is not a listed stopping effect, and only complete immunity to pain effects can prevent the writhing detailed above.",
     "IsAdvanced": false,
     "sourcePage": 29
@@ -1312,7 +1330,7 @@
     "name": "Confusion",
     "level": 4,
     "colour": "Ebony",
-    "verbal": "Be thou filled with doubt and confusion\"'",
+    "verbal": "Be thou filled with doubt and confusion",
     "description": "This stackable spell causes a target affected to become unsure of what they are doing. They regard all around them as potential enemies, but will only initiate violence against those who attack them. They will otherwise take no other action other than to defend themselves. This is a domination effect, not a stopping effect.",
     "IsAdvanced": false,
     "sourcePage": 29
@@ -1372,7 +1390,7 @@
     "name": "Hearten (Self)",
     "level": 6,
     "colour": "Gold",
-    "verbal": "Golden Drake, strengthen my heart with your power''.",
+    "verbal": "Golden Drake, strengthen my heart with your power.",
     "description": "This spell temporarily grants immunity to all forms of non-spiritual domination, non-spiritual fear and non-spiritual paralysis. If the caster is still mobile he may cast this spell after another spell has affected him, e.g. if he is not paralysed.",
     "IsAdvanced": false,
     "sourcePage": 30
@@ -1390,7 +1408,7 @@
     "name": "Mark Ally",
     "level": 0,
     "colour": "Gold",
-    "verbal": "Let our trust reside together''",
+    "verbal": "Let our trust reside together",
     "description": "This cantrip can only be cast upon a willing target and cannot be dispelled – the casting wizard must be told by the target if they refuse to accept the mark, thus making them an unwilling target. This spell has several purposes. Firstly, certain spells can only be cast on a target who has been marked as an ally by the wizard; these spells are the ‘beneficial other’ spells from Gold magic, and certain other Gold spells contained in this supplement. Secondly, should a marked ally attack the wizard, then they will suffer the reverse effect of any spell cast upon them by the golden wizard – this includes any spells cast prior or subsequent to the treachery. This spell may be cast on self if desired.",
     "IsAdvanced": false,
     "sourcePage": 30
@@ -1399,7 +1417,7 @@
     "name": "Shield (Other)",
     "level": 3,
     "colour": "Gold",
-    "verbal": "May the Golden Drake shield your body''",
+    "verbal": "May the Golden Drake shield your body",
     "description": "The caster receives +2 Magical Armour Class and +2 Physical Armour Class. This armour can stack with any other magical or physical defence, but not Plate (Self), Plate (Other) or other spells which preclude the stacking of armour. It cannot stack with itself. but this can only be cast on an ally, as described under the Mark Ally spell described above.",
     "IsAdvanced": false,
     "sourcePage": 30
@@ -1408,7 +1426,7 @@
     "name": "Shield (Self)",
     "level": 2,
     "colour": "Gold",
-    "verbal": "May the Golden Drake shield my body''",
+    "verbal": "May the Golden Drake shield my body",
     "description": "The caster receives +2 Magical Armour Class and +2 Physical Armour Class. This armour can stack with any other magical or physical defence, but not Plate (Self), Plate (Other) or other spells which preclude the stacking of armour. It cannot stack with itself.",
     "IsAdvanced": false,
     "sourcePage": 30
@@ -1417,7 +1435,7 @@
     "name": "Strengthen (Other)",
     "level": 6,
     "colour": "Gold",
-    "verbal": "Feel the power through your limbs, the Drake has strengthened your body to resist your foes''",
+    "verbal": "Feel the power through your limbs, the Drake has strengthened your body to resist your foes",
     "description": "This increases the resistance level for the purposes of magical and physical effects for the wizard to 10 levels. If the spell is cast after a level-based spell has already affected the wizard then the increase is only to 9 levels of resistance. Note: this does not stack with already raised increases in resistance, or those bought on the post-8th tables – the increase is limited to 9 and 10. except that it works on those targets detailed under the Mark Ally spell.",
     "IsAdvanced": false,
     "sourcePage": 30
@@ -1426,7 +1444,7 @@
     "name": "Strengthen (Self)",
     "level": 5,
     "colour": "Gold",
-    "verbal": "Feel the power through my limbs, the Drake has strengthened my body to resist my foes''.",
+    "verbal": "Feel the power through my limbs, the Drake has strengthened my body to resist my foes.",
     "description": "This increases the resistance level for the purposes of magical and physical effects for the wizard to 10 levels. If the spell is cast after a level-based spell has already affected the wizard then the increase is only to 9 levels of resistance. Note: this does not stack with already raised increases in resistance, or those bought on the post-8th tables – the increase is limited to 9 and 10.",
     "IsAdvanced": false,
     "sourcePage": 30
@@ -1435,7 +1453,7 @@
     "name": "Forcewall",
     "level": 12,
     "colour": "Gold",
-    "verbal": "Golden Drake, I beseech thee, erect a wall of force to protect my companions''",
+    "verbal": "Golden Drake, I beseech thee, erect a wall of force to protect my companions",
     "description": "This creates a wall of force, which is purely magical, and will prevent any creature, which is not purely spiritual or completely immune to magic, from passing the wall. It can be up to 30' long and 30' high, but must be in a straight line. The wizard can elect to cancel it at any time, otherwise it can be released by use of a command word. The same command word must always be used by the wizard and must be written on his character card. The command word can be acquired by casting a Talk to Inanimate spell onto the Forcewall. Any who know the password may also lower the Forcewall. Ivory Magic The Ivory Drake seeks to grant her followers might in magic, on the condition that they accept her own rules and conditions. She is a lawful entity, and her code is to be adhered to by all her followers. To break the code results in the loss of all Ivory spells until the character has atoned. This atonement either happens at the end of the adventure or at a time previous to that at the referees' discretion. This applies to Ivory Draves equally. Additionally any active Ivory spells on the character immediately go down. The Code of the Ivory Wizard  Never attack or harm a Marked Ally, except in defence of self or another Marked Ally.  Never knowingly lie or allow your statements to be misunderstood, although you may refuse to answer or speak.  Never hide your status, nor allow those to misunderstand your status. Those that acquire these spells as specialists find the mana difficult to use and as such may not apply any form of mana reduction to the spell.",
     "IsAdvanced": false,
     "sourcePage": 32
@@ -1444,7 +1462,7 @@
     "name": "Warding",
     "level": 10,
     "colour": "Gold",
-    "verbal": "The Golden Drake wards your presence from me, foe''",
+    "verbal": "The Golden Drake wards your presence from me, foe",
     "description": "This spell prevents one opponent with less than 10 levels of resistance from attacking the wizard, or from approaching within 10', forcing them to back away if need be. The spell is broken if the wizard casts another spell, moves faster than a walk, attacks, or if the target is cornered and cannot get out of the 10' radius.",
     "IsAdvanced": false,
     "sourcePage": 32
@@ -1489,7 +1507,7 @@
     "name": "Traitors Shield",
     "level": 6,
     "colour": "Ivory",
-    "verbal": "May the Ivory Drake shield me from the acts of a traitor''",
+    "verbal": "May the Ivory Drake shield me from the acts of a traitor",
     "description": "This spell only works if the wizard is attacked by a creature/character who previously on the adventure was marked as being an ally by the Mark Ally spell. Should that ally subsequently attack the caster, the caster benefits as follows: 1: Armour class rises to the maximum armour class of the wizard against attacks from the traitor – this means Magical, Physical and Dexterity armour class. 2: The wizard gains 18 TBLP and 3 life per location with respect to damage from the Traitor, and the Traitor only. These extra life points cannot be cured by spiritual means.",
     "IsAdvanced": false,
     "sourcePage": 32
@@ -1498,7 +1516,7 @@
     "name": "Enhance Weapon",
     "level": 10,
     "colour": "Ivory",
-    "verbal": "Ivory Drake, twist and transform this wizard’s weapon such that my opponents will fear its blow''",
+    "verbal": "Ivory Drake, twist and transform this wizard’s weapon such that my opponents will fear its blow",
     "description": "This spell will magically augment a traditional wizard’s weapon, i.e. staff, spear or dagger. The weapon can only be used by the wizard who cast the spell, and they cannot be physically disarmed, although a Vanish will remove the weapon for 5 minutes. The weapon is modified as follows: 1: The weapon does 3 more magical damage grades, (i.e. +3 magical damage) stopping at the wizards maximum damage. Normally, the maximum is quad. 2: The damage done ignores Physical armour – only Magical and Dexterity armour can be used in defence against it. 3: The weapon will shatter any normal weapon, shield or armour used in defence against it. It does not shatter anything else. If cast by a Warlock (only), this spell will enhance any weapon instead of the above weapon types, if so desired.",
     "IsAdvanced": false,
     "sourcePage": 33
@@ -1507,7 +1525,7 @@
     "name": "Ivory Warrior",
     "level": 8,
     "colour": "Ivory",
-    "verbal": "May the Ivory Drake grant me the might of her champion, let the power enter my form and strengthen my purpose to that of X men''",
+    "verbal": "May the Ivory Drake grant me the might of her champion, let the power enter my form and strengthen my purpose to that of X men",
     "description": "Each glyph that the wizard activates on himself at the time of casting strengthens them, turning them into a mighty war machine. For each additional glyph used, the verbal changes to granting the power of 3, 4 or more men. Once the spell has been cast it cannot be added to until the previous spell expires. As with all stackable spells each glyph must be dispelled, and until all glyphs have been dispelled the spell remains at full potency. Glyphs Cast Max A/C increase Life increase Additional DAC 1 +1 +6/2 +1 2 +2 (Total) +12/4 +2 (Total) 3 +3 (Total) +18/6 +3 (Total) Each additional glyph adds +6/+2 life points, +1 maximum armour class (up to a maximum armour class of 12) and 1 point of Dexterity armour class.",
     "IsAdvanced": false,
     "sourcePage": 33
@@ -1516,7 +1534,7 @@
     "name": "Mobility",
     "level": 8,
     "colour": "Ivory",
-    "verbal": "May the Ivory Drake grant me great purpose in my actions''",
+    "verbal": "May the Ivory Drake grant me great purpose in my actions",
     "description": "The wizard cannot, for the duration of the spell, suffer from the effects of the following spells: Bind, Entangle, Magnetise, Freeze (white glyph only), Trip, Slip, Catalepsy, Sleep, Slow, spells which repel the wizard, magical petrification or similar magical stopping/slowing effects. Neither are they affected by physical effects that would mimic the above, such as Knockbacks or Knockdowns.",
     "IsAdvanced": false,
     "sourcePage": 33
@@ -1525,7 +1543,7 @@
     "name": "Sanctuary",
     "level": 15,
     "colour": "Ivory",
-    "verbal": "The Ivory Drake offers shelter to all her allies who seek rest and shelter within the boundaries of her sanctuary''",
+    "verbal": "The Ivory Drake offers shelter to all her allies who seek rest and shelter within the boundaries of her sanctuary",
     "description": "Within the range of the spell all Marked Allies of the wizard receive the following bonuses: 1: +2 Dexterity armour class. This acts as the Chosen Of The Dragon ability in the Post 8th Tables (Later in the book). This means that the +2 DAC does not stack with blesses, curses or similar watchings. 2: 25% reduction of non-purely spiritual damage after armour calculations. which does not stack with any other percentile reductions of damage. 3: 9th level of resistance to magical attacks – this does not stack with any other resistance level increases.",
     "IsAdvanced": false,
     "sourcePage": 33
@@ -1534,7 +1552,7 @@
     "name": "Tell Power",
     "level": 1,
     "colour": "Silver",
-    "verbal": "The Silver Dragon desires knowledge of your power''",
+    "verbal": "The Silver Dragon desires knowledge of your power",
     "description": "This tells the caster what mana points and colours of mana are currently active on the target, but not what the actual spells are.",
     "IsAdvanced": false,
     "sourcePage": 33
@@ -1588,7 +1606,7 @@
     "name": "Know Foe",
     "level": 12,
     "colour": "Silver",
-    "verbal": "The Silver Dragon demands knowledge of thee, foe''",
+    "verbal": "The Silver Dragon demands knowledge of thee, foe",
     "description": "The caster sets up a link between themselves and a target creature. The wizard receives a bonus of 4 points of Dexterity Armour Class with respect to damage from the target, and gains a non-cumulative weapon mastery in any physical weapon, or weapon created by mana, used by the wizard. The target is unable to use any attack mode against the wizard bar a weapon, and may not use any special attack modes bar from the innate nature of the weapon. For instance, a target Warlock could continue to use their magic sword, but they could not cast a Lightning Bolt, nor could they use the Shock spell that their sword could otherwise use once per day. Note, the benefits are the game effects of the casting wizard deducing all magical information about the target – no other information is to be given to the wizard. Jade Magic In order to cast a Jade spell a person must be of goodly alignment. As such, only Goodly aligned characters may learn them as Specialists. Jade magic will only function against the living. So Undead, Golems, Elementals and the like are immune.",
     "IsAdvanced": false,
     "sourcePage": 34
@@ -1597,7 +1615,7 @@
     "name": "Tell Colour",
     "level": 1,
     "colour": "Silver",
-    "verbal": "The Silver Dragon desires knowledge of your colour''",
+    "verbal": "The Silver Dragon desires knowledge of your colour",
     "description": "This tells the caster the colour of either a spell that they can see the ongoing effects of, or the colour of another Wizard, Warlock, Power Master (or any other type of spellcaster who uses either innate power points or innate spells). If the target possesses more than one colour, knowledge is granted of all colours.",
     "IsAdvanced": false,
     "sourcePage": 34
@@ -1606,7 +1624,7 @@
     "name": "Tell Form",
     "level": 2,
     "colour": "Silver",
-    "verbal": "Tell me your form''",
+    "verbal": "Tell me your form",
     "description": "This tells the wizard the species of the target (e.g. Human, Troll, 1/2-Orc, Undead, Wood Elf or Statue). Note that this spell will not differentiate between different types of the same species.",
     "IsAdvanced": false,
     "sourcePage": 34
@@ -1615,7 +1633,7 @@
     "name": "Tell Tracks",
     "level": 2,
     "colour": "Silver",
-    "verbal": "Silver Dragon, what has passed here?''",
+    "verbal": "Silver Dragon, what has passed here?",
     "description": "This spell grants the caster the skills Tracking and Shadowing for the duration, except that the caster has no need to keep a Track list as would a ranger, as the Silver Drake has prior knowledge of all forms.",
     "IsAdvanced": false,
     "sourcePage": 34
@@ -1624,7 +1642,7 @@
     "name": "Tell Wounds",
     "level": 2,
     "colour": "Silver",
-    "verbal": "The Silver Dragon desires knowledge of your wounds''",
+    "verbal": "The Silver Dragon desires knowledge of your wounds",
     "description": "This acts in all manners as the priestly Discern Nature of Wounds ability. However, this spell will only work on either Elves or similar magical creatures, or on the wizard who cast it.",
     "IsAdvanced": false,
     "sourcePage": 34
@@ -1633,7 +1651,7 @@
     "name": "True Sight",
     "level": 6,
     "colour": "Silver",
-    "verbal": "Silver Dragon, remove all deceptions from my sight''",
+    "verbal": "Silver Dragon, remove all deceptions from my sight",
     "description": "The caster is no longer affected by illusions and can see them for what they are. The wizard can see magically or physically chameleoned, invisible or otherwise hidden objects – they are immune to all visual magic or physical deceptions, seeing through disguises instantly and so on. This spell is however an Infomational spell – and Immunity to Informational Spells stops it working on that individual.",
     "IsAdvanced": false,
     "sourcePage": 34
@@ -3470,7 +3488,7 @@
     "level": 4,
     "colour": "Grey",
     "verbal": "May the elements throw light and dark in confusion over there.",
-    "description": "Causes the area within 10ft of where the spell is cast to be filled with twilight. This negates any magical darkness or light as it is appears. but the caster may chose to focus it on themselves so that it moves with them (cf. Light Range).",
+    "description": "Causes the area within 10ft of where the spell is cast to be filled with twilight. This negates any magical darkness or light as it is appears. but the caster may chose to focus it on themselves so that it moves with them (cf. Light Ranged).",
     "IsAdvanced": true,
     "sourcePage": 73
   },
@@ -4549,7 +4567,7 @@
     "sourcePage": 85
   },
   {
-    "name": "Crystallise (Range)",
+    "name": "Crystallise (Ranged)",
     "level": 2,
     "colour": "White",
     "verbal": "Mighty cold freeze and crystallise that...",
@@ -4688,7 +4706,7 @@
     "level": 8,
     "colour": "White",
     "verbal": "By the greater powers of light, I do smite thee... Plasma Streak.",
-    "description": "As the Standard spell Plasma Bolt but with the above modifications (increased range).",
+    "description": "As the Standard spell Plasma Bolt but with the above modifications (increased Ranged).",
     "IsAdvanced": true,
     "sourcePage": 86
   },
