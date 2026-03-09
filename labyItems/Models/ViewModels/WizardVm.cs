@@ -179,13 +179,13 @@ public sealed class WizardVm : INotifyPropertyChanged
         ToggleAdvancementExpandedCommand = new Command(() => IsAdvancementExpanded = !IsAdvancementExpanded);
         CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged, _creationDataService);
 
-        // NEW: optional guild selection step
         GuildsVm = new GuildsVm(
             Draft,
             NotifyGatingChanged,
             CharacterBuilderVm.GetNonGuildAlignmentRules,
             CharacterBuilderVm.RefreshDraftAbilitiesAsync,
-            _creationDataService);
+            _creationDataService,
+            useMultiTypeFilters: true);
 
         _flow = new WizardFlowStateMachine(BuildSteps());
         foreach (var step in _flow.Steps)
@@ -217,7 +217,10 @@ public sealed class WizardVm : INotifyPropertyChanged
                 index: 2,
                 label: "Guilds",
                 canEnter: () => WizardStepRules.CanEnterGuilds(Draft, CharacterBuilderVm.SpecialisationVm),
-                createView: () => new Guilds(GuildsVm),
+                createView: () => new Guilds(GuildsVm)
+                {
+                    UseTypePills = true
+                },
                 onEnterAsync: async () => await GuildsVm.ReloadAsync()),
             new(
                 index: 3,
