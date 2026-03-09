@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Maui.Controls;
 #if ANDROID
 using Android.OS;
 using Android.Views;
 using Microsoft.Maui.ApplicationModel;
+#endif
+#if IOS || MACCATALYST
+using Foundation;
+using UIKit;
 #endif
 
 namespace labyItems.Helpers;
@@ -28,6 +33,13 @@ public static class GlobalKeyboardAvoidance
     private static WeakReference<VisualElement>? _currentFocusedView;
     private static bool _keyboardMonitorStarted;
     private static bool _lastKeyboardVisible;
+#if IOS || MACCATALYST
+    private static bool _iosKeyboardObserversInitialized;
+    private static NSObject? _iosKeyboardWillShowObserver;
+    private static NSObject? _iosKeyboardWillHideObserver;
+    private static NSObject? _iosKeyboardWillChangeFrameObserver;
+    private static double _iosKeyboardHeight;
+#endif
 
     public static void Attach(VisualElement view)
     {
@@ -263,6 +275,8 @@ public static class GlobalKeyboardAvoidance
             return 0;
 
         return Math.Clamp(pageHeight * FallbackRatio, FallbackMin, FallbackMax);
+#elif IOS || MACCATALYST
+        return Math.Max(0, _iosKeyboardHeight);
 #else
         return 0;
 #endif
@@ -308,6 +322,10 @@ public static class GlobalKeyboardAvoidance
 
     private static void EnsureKeyboardMonitorStarted()
     {
+#if IOS || MACCATALYST
+        EnsureIosKeyboardObservers();
+#endif
+
         if (_keyboardMonitorStarted)
             return;
 
@@ -361,8 +379,62 @@ public static class GlobalKeyboardAvoidance
 #if ANDROID
         var raw = GetAndroidKeyboardHeight();
         return raw < 0 ? 0 : raw;
+#elif IOS || MACCATALYST
+        return Math.Max(0, _iosKeyboardHeight);
 #else
         return 0;
 #endif
     }
+
+#if IOS || MACCATALYST
+    private static void EnsureIosKeyboardObservers()
+    {
+        if (_iosKeyboardObserversInitialized)
+            return;
+
+        _iosKeyboardObserversInitialized = true;
+        _iosKeyboardWillShowObserver = UIKeyboard.Notifications.ObserveWillShow((_, args) =>
+        {
+            _iosKeyboardHeight = ResolveIosKeyboardHeight(args);
+        });
+        _iosKeyboardWillChangeFrameObserver = UIKeyboard.Notifications.ObserveWillChangeFrame((_, args) =>
+        {
+            _iosKeyboardHeight = ResolveIosKeyboardHeight(args);
+        });
+        _iosKeyboardWillHideObserver = UIKeyboard.Notifications.ObserveWillHide((_, __) =>
+        {
+            _iosKeyboardHeight = 0;
+        });
+    }
+
+    private static double ResolveIosKeyboardHeight(UIKeyboardEventArgs args)
+    {
+        var window = GetKeyWindow();
+        if (window == null)
+            return Math.Max(0, args.FrameEnd.Height);
+
+        var frameInWindow = window.ConvertRectFromWindow(args.FrameEnd, null);
+        return Math.Max(0, window.Bounds.Bottom - frameInWindow.Top - window.SafeAreaInsets.Bottom);
+    }
+
+    private static UIWindow? GetKeyWindow()
+    {
+        var app = UIApplication.SharedApplication;
+        foreach (var scene in app.ConnectedScenes)
+        {
+            if (scene is not UIWindowScene windowScene)
+                continue;
+
+            foreach (var window in windowScene.Windows)
+            {
+                if (window.IsKeyWindow)
+                    return window;
+            }
+        }
+
+#pragma warning disable CS0618
+        return app.Windows.FirstOrDefault(w => w.IsKeyWindow);
+#pragma warning restore CS0618
+    }
+#endif
 }

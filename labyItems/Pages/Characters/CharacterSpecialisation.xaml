@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="labyItems.Pages.Characters.CharacterSpecialisation"
+    x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:labyItems.Controls"
@@ -94,7 +95,7 @@
                     <VerticalStackLayout Spacing="0">
 
                         <Grid Padding="12"
-                              ColumnDefinitions="*,Auto"
+                              ColumnDefinitions="*,Auto,Auto"
                               RowDefinitions="Auto,Auto">
                             <Label Grid.Row="0"
                                    Grid.Column="0"
@@ -107,9 +108,27 @@
                                    Text="{Binding RaceSubtypeStatusText}"
                                    Opacity="0.75"/>
 
+                            <Button Grid.Row="0"
+                                    Grid.RowSpan="2"
+                                    Grid.Column="2"
+                                    Text="&#xF05A;"
+                                    FontFamily="FASolid"
+                                    FontSize="12"
+                                    Padding="0"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource SubtleTextColor}"
+                                    HeightRequest="18"
+                                    WidthRequest="18"
+                                    MinimumHeightRequest="0"
+                                    MinimumWidthRequest="0"
+                                    VerticalOptions="Center"
+                                    IsVisible="{Binding HasRaceSubtypeDetail}"
+                                    Command="{Binding Source={x:Reference Root}, Path=ViewSpecialisationDetailsCommand}"
+                                    CommandParameter="{Binding .}"/>
+
                             <Label Grid.Row="1"
                                    Grid.Column="0"
-                                   Grid.ColumnSpan="2"
+                                   Grid.ColumnSpan="3"
                                    Text="{Binding RaceSubtypeSubtitle}"
                                    Opacity="0.75"
                                    LineBreakMode="WordWrap"/>
@@ -273,7 +292,7 @@
                                 <VerticalStackLayout Spacing="0">
 
                                     <Grid Padding="12"
-                                          ColumnDefinitions="*,Auto"
+                                          ColumnDefinitions="*,Auto,Auto"
                                           RowDefinitions="Auto,Auto">
                                         <Label Grid.Row="0"
                                                Grid.Column="0"
@@ -286,10 +305,27 @@
                                                Text="{Binding StatusText}"
                                                Opacity="0.75"/>
 
+                                        <Button Grid.Row="0"
+                                                Grid.RowSpan="2"
+                                                Grid.Column="2"
+                                                Text="&#xF05A;"
+                                                FontFamily="FASolid"
+                                                FontSize="12"
+                                                Padding="0"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{StaticResource SubtleTextColor}"
+                                                HeightRequest="18"
+                                                WidthRequest="18"
+                                                MinimumHeightRequest="0"
+                                                MinimumWidthRequest="0"
+                                                VerticalOptions="Center"
+                                                Command="{Binding Source={x:Reference Root}, Path=ViewSpecialisationDetailsCommand}"
+                                                CommandParameter="{Binding .}"/>
+
                                         <Label Grid.Row="1"
                                                Grid.Column="0"
-                                               Grid.ColumnSpan="2"
-                                               Text="{Binding Subtitle}"
+                                               Grid.ColumnSpan="3"
+                                               Text="{Binding DisplaySubtitle}"
                                                Opacity="0.75"
                                                LineBreakMode="WordWrap"/>
                                     </Grid>
@@ -418,7 +454,7 @@
                                     <Grid
                                         Padding="12"
                                         ColumnDefinitions="*,Auto"
-                                        RowDefinitions="Auto,Auto">
+                                        RowDefinitions="Auto">
                                         <Grid.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}"/>
                                         </Grid.GestureRecognizers>
@@ -435,14 +471,6 @@
                                             Grid.Column="1"
                                             Text="{Binding StatusText}"
                                             Opacity="0.75"/>
-
-                                        <Label
-                                            Grid.Row="1"
-                                            Grid.Column="0"
-                                            Grid.ColumnSpan="2"
-                                            Text="{Binding Subtitle}"
-                                            Opacity="0.75"
-                                            LineBreakMode="WordWrap"/>
                                     </Grid>
 
                                     <BoxView HeightRequest="1"
@@ -461,10 +489,12 @@
 
                                         <CollectionView ItemsSource="{Binding Slots}"
                                                         SelectionMode="None"
+                                                        ItemSizingStrategy="MeasureAllItems"
                                                         HorizontalOptions="FillAndExpand">
                                             <CollectionView.ItemTemplate>
                                                 <DataTemplate>
                                                     <Grid ColumnDefinitions="Auto,*,Auto"
+                                                          ColumnSpacing="10"
                                                           Padding="0,6">
                                                         <Label Text="{Binding LevelLabel}"
                                                                VerticalOptions="Center"
@@ -579,35 +609,23 @@
                                                                                     IsVisible="{Binding UseVivomancerColourEnum}"
                                                                                     HorizontalOptions="FillAndExpand"/>
 
-                                                                <Grid ColumnDefinitions="*,*"
-                                                                      ColumnSpacing="8"
-                                                                      IsVisible="{Binding UseDictionarySearch}">
-                                                                    <controls:DictionarySearchBar Grid.Column="0"
-                                                                                                  x:TypeArguments="x:String"
+                                                                <VerticalStackLayout Spacing="6"
+                                                                                     IsVisible="{Binding UseDictionarySearch}">
+                                                                    <controls:DictionarySearchBar x:TypeArguments="x:String"
                                                                                                   ItemsSource="{Binding SearchOptions}"
                                                                                                   SelectedText="{Binding SelectedOption, Mode=TwoWay}"
                                                                                                   PlaceholderText="Search abilities"
                                                                                                   AllowCustomOptions="False"
-                                                                                                  HorizontalOptions="FillAndExpand">
-                                                                        <controls:DictionarySearchBar.Triggers>
-                                                                            <DataTrigger TargetType="ContentView"
-                                                                                         Binding="{Binding ShowCustomisationPicker}"
-                                                                                         Value="False">
-                                                                                <Setter Property="Grid.ColumnSpan"
-                                                                                        Value="2"/>
-                                                                            </DataTrigger>
-                                                                        </controls:DictionarySearchBar.Triggers>
-                                                                    </controls:DictionarySearchBar>
+                                                                                                  HorizontalOptions="FillAndExpand"/>
 
-                                                                    <controls:DictionarySearchBar Grid.Column="1"
-                                                                                                  x:TypeArguments="x:String"
+                                                                    <controls:DictionarySearchBar x:TypeArguments="x:String"
                                                                                                   ItemsSource="{Binding CustomisationOptions}"
                                                                                                   SelectedText="{Binding CustomisationValue, Mode=TwoWay}"
                                                                                                   PlaceholderText="{Binding CustomisationPlaceholder}"
                                                                                                   AllowCustomOptions="{Binding CustomisationAllowsCustom}"
                                                                                                   HorizontalOptions="FillAndExpand"
                                                                                                   IsVisible="{Binding ShowCustomisationPicker}"/>
-                                                                </Grid>
+                                                                </VerticalStackLayout>
 
                                                                 <controls:DictionarySearchBar x:TypeArguments="enums:MagicColours"
                                                                                               ItemsSource="{Binding MagicColourOptions}"
@@ -655,9 +673,10 @@
                                                                 WidthRequest="18"
                                                                 MinimumHeightRequest="0"
                                                                 MinimumWidthRequest="0"
+                                                                Margin="6,0,0,0"
                                                                 VerticalOptions="Center"
                                                                 IsVisible="{Binding HasSelectedAbilityForDetails}"
-                                                                Clicked="OnViewSpecialisationAbilityDetailsClicked"
+                                                                Command="{Binding Source={x:Reference Root}, Path=ViewSpecialisationAbilityDetailsCommand}"
                                                                 CommandParameter="{Binding .}"/>
                                                     </Grid>
 

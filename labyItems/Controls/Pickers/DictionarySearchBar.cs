@@ -13,6 +13,10 @@ using Android.OS;
 using Android.Views;
 using Microsoft.Maui.ApplicationModel;
 #endif
+#if IOS || MACCATALYST
+using Foundation;
+using UIKit;
+#endif
 
 namespace labyItems.Controls;
 
@@ -27,6 +31,7 @@ public class DictionarySearchBar<TValue> : ContentView
 {
     private readonly Action _selfDismisser;
     private const double DefaultDropdownMaxHeight = 320;
+    private const double DropdownEdgeGap = 0;
     private const double KeyboardGuardRatioFallback = 0.35;
     private const double KeyboardGuardMinFallback = 200;
     private const double KeyboardGuardMaxFallback = 360;
@@ -45,9 +50,17 @@ public class DictionarySearchBar<TValue> : ContentView
     private ScrollView? _keyboardAvoidanceScrollView;
     private Thickness _keyboardAvoidanceOriginalPadding;
     private bool _hasKeyboardAvoidancePadding;
+#if IOS || MACCATALYST
+    private static bool _iosKeyboardObserversInitialized;
+    private static NSObject? _iosKeyboardWillShowObserver;
+    private static NSObject? _iosKeyboardWillHideObserver;
+    private static NSObject? _iosKeyboardWillChangeFrameObserver;
+    private static double _iosKeyboardHeight;
+#endif
 
     public DictionarySearchBar()
     {
+        EnsureKeyboardObserversInitialized();
         _selfDismisser = DismissLocalOverlay;
         DictionaryOverlayRegistry.Register(_selfDismisser);
         _defaultOptions = BuildDefaultOptions();
@@ -372,7 +385,18 @@ public class DictionarySearchBar<TValue> : ContentView
         }
 
         // When focused, show the full list then present inline overlay
-        _ = ShowOverlayAsync();
+        await ShowOverlayAsync();
+
+        if (KeyboardAvoidanceEnabled)
+        {
+            _ = Device.InvokeOnMainThreadAsync(async () =>
+            {
+                await Task.Delay(180);
+                ApplyKeyboardAvoidancePadding();
+                await EnsureAnchorVisibleAsync(GetDesiredDropdownHeight());
+                await RepositionLocalOverlayAsync();
+            });
+        }
     }
 
     private void OnSearchUnfocused(object? sender, FocusEventArgs e)
@@ -916,7 +940,7 @@ public class DictionarySearchBar<TValue> : ContentView
         var anchorHeight = _searchBar.Height;
 
         var localX = Math.Max(8, anchorPos.X - hostPos.X);
-        var localY = anchorPos.Y - hostPos.Y + anchorHeight + 6; // small gap
+        var localY = anchorPos.Y - hostPos.Y + anchorHeight + DropdownEdgeGap;
 
         var pageHeight = _overlayHost.Height > 0 ? _overlayHost.Height : (Application.Current?.MainPage?.Height ?? 0);
         var availableBelow = Math.Max(0, pageHeight - localY - 8);
@@ -931,7 +955,7 @@ public class DictionarySearchBar<TValue> : ContentView
 
         if (effectiveBelow < desiredHeight && effectiveAbove >= desiredHeight)
         {
-            localY = Math.Max(8, anchorPos.Y - hostPos.Y - desiredHeight - 6);
+            localY = Math.Max(8, anchorPos.Y - hostPos.Y - desiredHeight - DropdownEdgeGap);
         }
         else if (effectiveBelow < desiredHeight && effectiveAbove < desiredHeight)
         {
@@ -942,7 +966,7 @@ public class DictionarySearchBar<TValue> : ContentView
             else
             {
                 finalHeight = Math.Max(48, effectiveAbove);
-                localY = Math.Max(8, anchorPos.Y - hostPos.Y - finalHeight - 6);
+                localY = Math.Max(8, anchorPos.Y - hostPos.Y - finalHeight - DropdownEdgeGap);
             }
         }
 
@@ -1020,7 +1044,7 @@ public class DictionarySearchBar<TValue> : ContentView
         var anchorTop = anchorPos.Y - scrollPos.Y;
         var keyboardGuard = ResolveKeyboardAvoidanceBottom();
         var availableBelow = scroll.Height - (anchorTop + _searchBar.Height) - keyboardGuard;
-        var requiredSpace = Math.Max(0, desiredDropdownHeight + 6);
+        var requiredSpace = Math.Max(0, desiredDropdownHeight + DropdownEdgeGap);
 
         if (availableBelow >= requiredSpace)
             return;
@@ -1126,10 +1150,67 @@ public class DictionarySearchBar<TValue> : ContentView
         {
             return -1;
         }
+#elif IOS || MACCATALYST
+        return _iosKeyboardHeight;
 #else
         return 0;
 #endif
     }
+
+    private static void EnsureKeyboardObserversInitialized()
+    {
+#if IOS || MACCATALYST
+        if (_iosKeyboardObserversInitialized)
+            return;
+
+        _iosKeyboardObserversInitialized = true;
+        _iosKeyboardWillShowObserver = UIKeyboard.Notifications.ObserveWillShow((_, args) =>
+        {
+            _iosKeyboardHeight = ResolveIosKeyboardHeight(args);
+        });
+        _iosKeyboardWillChangeFrameObserver = UIKeyboard.Notifications.ObserveWillChangeFrame((_, args) =>
+        {
+            _iosKeyboardHeight = ResolveIosKeyboardHeight(args);
+        });
+        _iosKeyboardWillHideObserver = UIKeyboard.Notifications.ObserveWillHide((_, __) =>
+        {
+            _iosKeyboardHeight = 0;
+        });
+#endif
+    }
+
+#if IOS || MACCATALYST
+    private static double ResolveIosKeyboardHeight(UIKeyboardEventArgs args)
+    {
+        var window = GetKeyWindow();
+        if (window == null)
+            return Math.Max(0, args.FrameEnd.Height);
+
+        var frameInWindow = window.ConvertRectFromWindow(args.FrameEnd, null);
+        var overlap = Math.Max(0, window.Bounds.Bottom - frameInWindow.Top - window.SafeAreaInsets.Bottom);
+        return overlap;
+    }
+
+    private static UIWindow? GetKeyWindow()
+    {
+        var app = UIApplication.SharedApplication;
+        foreach (var scene in app.ConnectedScenes)
+        {
+            if (scene is not UIWindowScene windowScene)
+                continue;
+
+            foreach (var window in windowScene.Windows)
+            {
+                if (window.IsKeyWindow)
+                    return window;
+            }
+        }
+
+#pragma warning disable CS0618
+        return app.Windows.FirstOrDefault(w => w.IsKeyWindow);
+#pragma warning restore CS0618
+    }
+#endif
 
     private async Task RefreshFromRemoteAsync(string? query)
     {

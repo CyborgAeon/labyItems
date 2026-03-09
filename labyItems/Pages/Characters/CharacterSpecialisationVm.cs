@@ -140,6 +140,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     }
 
     public bool HasRaceSubtypeSelection => !string.IsNullOrWhiteSpace(_selectedRaceSubtype);
+    public string RaceSubtypeDetailKey => (_raceSubtypeAbilityMapKey ?? string.Empty).Trim();
+    public bool HasRaceSubtypeDetail => RaceSubtypeDetailKey.Length > 0;
 
     private string _raceSubtypeTitle = "Race subtype";
     public string RaceSubtypeTitle
@@ -248,6 +250,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             _raceSubtypeSlot = null;
             _raceSubtypeKey = "";
             _raceSubtypeAbilityMapKey = "";
+            Raise(nameof(RaceSubtypeDetailKey));
+            Raise(nameof(HasRaceSubtypeDetail));
             _raceSubtypeRequired = false;
             _raceSubtypeTitleBase = "Race subtype";
             _raceSubtypeDescription = string.Empty;
@@ -330,6 +334,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
                         _raceSubtypeKey = (subtype.Key ?? string.Empty).Trim();
                         _raceSubtypeAbilityMapKey = (subtype.AbilityMapKey ?? string.Empty).Trim();
+                        Raise(nameof(RaceSubtypeDetailKey));
+                        Raise(nameof(HasRaceSubtypeDetail));
                         _raceSubtypeTitleBase = string.IsNullOrWhiteSpace(subtype.DisplayName)
                             ? $"{race} subtype"
                             : subtype.DisplayName.Trim();
@@ -392,8 +398,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
                 if (def.ColourAbilities != null && def.ColourAbilities.Count > 0)
                 {
-                    var filtered = FilterOptionMapForClass(def.ColourAbilities);
-                    if (filtered.Count == 0)
+                    var optionMap = CloneOptionMap(def.ColourAbilities);
+                    if (optionMap.Count == 0)
                         continue;
 
                     var subtitle = BuildSubtitle(g);
@@ -401,10 +407,11 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                         key: title,
                         subtitle: string.IsNullOrWhiteSpace(subtitle) ? "Select a subtype to unlock its benefits." : subtitle,
                         levels: levels,
-                        optionMap: filtered,
+                        optionMap: optionMap,
                         initialSelection: GetSavedSpecialisationSelection(title),
                         required: true,
-                        onSelectionChanged: OnMappedSpecialisationChanged);
+                        onSelectionChanged: OnMappedSpecialisationChanged,
+                        selectionIssueResolver: ResolveMappedOptionIssue);
 
                     MappedSpecialisations.Add(mapped);
                     continue;
@@ -440,6 +447,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             EnsureActive();
             UpdateSpellCustomisationVisibility();
             UpdateDynamicSpecialisations();
+            RefreshMappedSelectionIssues();
             ApplyWardPactOverrides();
             SyncMappedSelectionsToDraft();
             EnsureActive();
@@ -503,6 +511,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     private void OnMappedSpecialisationChanged()
     {
+        RefreshMappedSelectionIssues();
         SyncMappedSelectionsToDraft();
         SyncWizardColourSelectionToDraft();
         UpdateBaronialAncestryNote();
@@ -623,6 +632,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             UpdateRaceSubtypeCardState(effectivePicked);
             UpdateWizardColourGroups();
             UpdateDynamicSpecialisations();
+            RefreshMappedSelectionIssues();
             ApplyWardPactOverrides();
             SyncMappedSelectionsToDraft();
             SyncWizardColourSelectionToDraft();
@@ -638,6 +648,12 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         {
             _isSyncingRaceSubtype = false;
         }
+    }
+
+    private void RefreshMappedSelectionIssues()
+    {
+        foreach (var mapped in MappedSpecialisations)
+            mapped.RefreshIssue();
     }
 
     private void RecomputeCompletion()
@@ -669,6 +685,12 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         // this is mostly belt-and-braces if subtype group isn't created for some reason)
         if (_raceSubtypeRequired && string.IsNullOrWhiteSpace(_selectedRaceSubtype))
             complete = false;
+        else if (!string.IsNullOrWhiteSpace(_selectedRaceSubtype))
+        {
+            var subtypeIssue = ResolveRaceSubtypeIssue(_selectedRaceSubtype!);
+            if (!string.IsNullOrWhiteSpace(subtypeIssue))
+                complete = false;
+        }
 
         IsComplete = complete;
         HasChoices = HasRaceSubtypeChoice || Groups.Count > 0 || HasMappedSpecialisations;
@@ -728,6 +750,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         foreach (var (mapped, entry) in LoopHelper.Flatten(MappedSpecialisations, m => m.GetSelectedAbilities()))
         {
+            if (mapped.HasIssue)
+                continue;
+
             if (entry.AbilityDef != null)
             {
                 if (entry.AbilityDef.GuildOverrides != null)
@@ -778,7 +803,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         if (!mapDef.ColourAbilities.TryGetValue(picked, out var entry) || entry == null)
             return list;
 
-        if (!IsClassAllowed(entry.ClassRestriction))
+        if (!IsClassAllowed(entry.ClassRestriction) || !IsAlignmentAllowed(entry.AlignmentRestriction))
             return list;
 
         if (entry.GuildOverrides != null)
@@ -824,17 +849,13 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         {
             if (IsBaselineHumanStandard(picked))
                 return;
-
-            SelectedRaceSubtype = null;
             return;
         }
 
-        if (!IsClassAllowed(entry.ClassRestriction))
+        if (!IsClassAllowed(entry.ClassRestriction) || !IsAlignmentAllowed(entry.AlignmentRestriction))
         {
             if (IsBaselineHumanStandard(picked))
                 return;
-
-            SelectedRaceSubtype = null;
             return;
         }
 
@@ -971,16 +992,22 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     private void UpdateRaceSubtypeCardState(string picked)
     {
         var hasSelection = !string.IsNullOrWhiteSpace(picked);
+        var issueMessage = hasSelection ? ResolveRaceSubtypeIssue(picked) : string.Empty;
+        var hasIssue = !string.IsNullOrWhiteSpace(issueMessage);
 
         RaceSubtypeTitle = hasSelection
             ? $"{picked} benefits"
             : _raceSubtypeTitleBase;
 
-        RaceSubtypeStatusText = hasSelection
+        RaceSubtypeStatusText = hasIssue
+            ? "Issue"
+            : hasSelection
             ? "Selected"
             : (_raceSubtypeRequired ? "Required" : "Optional");
 
-        RaceSubtypeCardState = hasSelection
+        RaceSubtypeCardState = hasIssue
+            ? "Issue"
+            : hasSelection
             ? "Success"
             : (_raceSubtypeRequired ? "Error" : "Neutral");
 
@@ -997,7 +1024,29 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 ? "Preview your racial abilities by level."
                 : "Choose a subtype to preview its abilities.";
 
+        if (hasIssue)
+            subtitle = issueMessage;
+
         RaceSubtypeSubtitle = subtitle;
+    }
+
+    private string ResolveRaceSubtypeIssue(string picked)
+    {
+        if (!HasRaceSubtypeChoice)
+            return string.Empty;
+
+        if (string.IsNullOrWhiteSpace(_raceSubtypeAbilityMapKey))
+            return string.Empty;
+
+        if (!_specialisationIndex.TryGetValue(_raceSubtypeAbilityMapKey, out var mapDef) || mapDef?.ColourAbilities == null)
+            return string.Empty;
+
+        if (!mapDef.ColourAbilities.TryGetValue(picked, out var entry) || entry == null)
+            return IsBaselineHumanStandard(picked)
+                ? string.Empty
+                : "Selection cannot be applied because no subtype data was found.";
+
+        return BuildRestrictionIssueMessage(entry);
     }
 
     private static bool UsesInlineDictionarySearch(string groupTitle)
@@ -1371,7 +1420,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             AddDynamicMappedSpecialisation(
                 key: "Ishmaic Clan",
                 subtitle: "Human • clan choice",
-                optionMap: FilterOptionMapForClass(ishmaicDef.ColourAbilities),
+                optionMap: CloneOptionMap(ishmaicDef.ColourAbilities),
                 required: required);
         }
 
@@ -1382,7 +1431,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             AddDynamicMappedSpecialisation(
                 key: "Amlesian Caste",
                 subtitle: "Amlesian caste (required)",
-                optionMap: FilterOptionMapForClass(amlesianDef.ColourAbilities),
+                optionMap: CloneOptionMap(amlesianDef.ColourAbilities),
                 required: true);
         }
 
@@ -1393,7 +1442,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             AddDynamicMappedSpecialisation(
                 key: "Ratfolk Clan",
                 subtitle: "Ratfolk clan (optional)",
-                optionMap: FilterOptionMapForClass(ratClanDef.ColourAbilities),
+                optionMap: CloneOptionMap(ratClanDef.ColourAbilities),
                 required: false);
         }
 
@@ -1401,13 +1450,13 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             && _specialisationIndex.TryGetValue("BaronialAncestry", out var ancestryDef)
             && ancestryDef?.ColourAbilities != null)
         {
-            var filtered = FilterOptionMapForClass(ancestryDef.ColourAbilities);
-            if (filtered.Count > 0)
+            var optionMap = CloneOptionMap(ancestryDef.ColourAbilities);
+            if (optionMap.Count > 0)
             {
                 AddDynamicMappedSpecialisation(
                     key: BaronialAncestryKey,
                     subtitle: "Baronial ancestry (required)",
-                    optionMap: filtered,
+                    optionMap: optionMap,
                     required: true);
             }
         }
@@ -1906,7 +1955,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             optionMap: optionMap,
             initialSelection: GetSavedSpecialisationSelection(key),
             required: required,
-            onSelectionChanged: OnMappedSpecialisationChanged);
+            onSelectionChanged: OnMappedSpecialisationChanged,
+            selectionIssueResolver: ResolveMappedOptionIssue);
 
         mapped.LevelsExpanded = true;
         MappedSpecialisations.Add(mapped);
@@ -2014,7 +2064,121 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         return false;
     }
 
-    private Dictionary<string, ColourAbilityDefinition> FilterOptionMapForClass(Dictionary<string, ColourAbilityDefinition>? optionMap)
+    private bool IsAlignmentAllowed(IEnumerable<string>? restrictions)
+    {
+        var normalized = restrictions?
+            .Select(r => (r ?? string.Empty).Trim())
+            .Where(r => r.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList() ?? new List<string>();
+
+        if (normalized.Count == 0)
+            return true;
+
+        var allowedAlignments = Draft.AvailableAlignments?.ToList() ?? new List<Alignment>();
+        if (allowedAlignments.Count == 0 && Draft.Alignment is Alignment selectedAlignment)
+            allowedAlignments.Add(selectedAlignment);
+
+        if (allowedAlignments.Count == 0)
+            return true;
+
+        var allowedMorals = new HashSet<MoralAxis>();
+        var allowedOrders = new HashSet<OrderAxis>();
+        var allowedPairs = new HashSet<Alignment>();
+
+        foreach (var raw in normalized)
+        {
+            if (TryParseAlignmentPair(raw, out var pair))
+            {
+                allowedPairs.Add(pair);
+                continue;
+            }
+
+            var token = NormalizeAlignmentKeyword(raw);
+            switch (token)
+            {
+                case "good":
+                case "goodly":
+                    allowedMorals.Add(MoralAxis.Good);
+                    continue;
+                case "evil":
+                    allowedMorals.Add(MoralAxis.Evil);
+                    continue;
+                case "neutral":
+                    allowedMorals.Add(MoralAxis.Neutral);
+                    continue;
+                case "lawful":
+                    allowedOrders.Add(OrderAxis.Lawful);
+                    continue;
+                case "chaotic":
+                    allowedOrders.Add(OrderAxis.Chaotic);
+                    continue;
+            }
+        }
+
+        if (allowedMorals.Count == 0 && allowedOrders.Count == 0 && allowedPairs.Count == 0)
+            return true;
+
+        return allowedAlignments.Any(alignment =>
+            (allowedPairs.Count == 0 || allowedPairs.Contains(alignment))
+            && (allowedMorals.Count == 0 || allowedMorals.Contains(alignment.Moral))
+            && (allowedOrders.Count == 0 || allowedOrders.Contains(alignment.Order)));
+    }
+
+    private static bool TryParseAlignmentPair(string value, out Alignment pair)
+    {
+        pair = default;
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return false;
+
+        if (text.Equals("True Neutral", StringComparison.OrdinalIgnoreCase))
+        {
+            pair = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral);
+            return true;
+        }
+
+        var parts = text.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length != 2)
+            return false;
+
+        if (!Enum.TryParse<OrderAxis>(parts[0], ignoreCase: true, out var order))
+            return false;
+        if (!Enum.TryParse<MoralAxis>(parts[1], ignoreCase: true, out var moral))
+            return false;
+
+        pair = new Alignment(order, moral);
+        return true;
+    }
+
+    private static string NormalizeAlignmentKeyword(string value)
+        => new string((value ?? string.Empty)
+            .Where(char.IsLetterOrDigit)
+            .ToArray())
+            .ToLowerInvariant();
+
+    private string ResolveMappedOptionIssue(ColourAbilityDefinition? option)
+        => BuildRestrictionIssueMessage(option);
+
+    private string BuildRestrictionIssueMessage(ColourAbilityDefinition? option)
+    {
+        if (option == null)
+            return string.Empty;
+
+        var classAllowed = IsClassAllowed(option.ClassRestriction);
+        var alignmentAllowed = IsAlignmentAllowed(option.AlignmentRestriction);
+
+        if (classAllowed && alignmentAllowed)
+            return string.Empty;
+
+        if (!classAllowed && !alignmentAllowed)
+            return "Class and alignment requirements conflict with the current character.";
+        if (!alignmentAllowed)
+            return "Alignment requirements conflict with the current character.";
+        return "Class requirements conflict with the current character.";
+    }
+
+    private Dictionary<string, ColourAbilityDefinition> CloneOptionMap(Dictionary<string, ColourAbilityDefinition>? optionMap)
     {
         var result = new Dictionary<string, ColourAbilityDefinition>(StringComparer.OrdinalIgnoreCase);
         if (optionMap == null)
@@ -2022,7 +2186,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         foreach (var kvp in optionMap)
         {
-            if (kvp.Value != null && IsClassAllowed(kvp.Value.ClassRestriction))
+            if (kvp.Value != null)
                 result[kvp.Key] = kvp.Value;
         }
 
@@ -2040,41 +2204,11 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         if (!_specialisationIndex.TryGetValue(_raceSubtypeAbilityMapKey, out var mapDef) || mapDef?.ColourAbilities == null)
             return;
 
-        var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var option in RaceSubtypeOptions.ToList())
-        {
-            if (mapDef.ColourAbilities.TryGetValue(option, out var entry))
-            {
-                if (IsClassAllowed(entry.ClassRestriction))
-                    allowed.Add(option);
-            }
-            else
-            {
-                allowed.Add(option);
-            }
-        }
-
         // Always allow the baseline human subtype "Standard" so it cannot be filtered out
         // by mis-parsed restrictions or missing map entries.
         if (string.Equals(_currentRaceForSubtype, "Human", StringComparison.OrdinalIgnoreCase))
-            allowed.Add("Standard");
-
-        if (allowed.Count == 0)
-        {
-            RaceSubtypeOptions.Clear();
-            SelectedRaceSubtype = null;
-            HasRaceSubtypeChoice = false;
-            return;
-        }
-
-        for (var i = RaceSubtypeOptions.Count - 1; i >= 0; i--)
-        {
-            if (!allowed.Contains(RaceSubtypeOptions[i]))
-                RaceSubtypeOptions.RemoveAt(i);
-        }
-
-        if (!string.IsNullOrWhiteSpace(SelectedRaceSubtype) && !allowed.Contains(SelectedRaceSubtype!))
-            SelectedRaceSubtype = null;
+            if (!RaceSubtypeOptions.Contains("Standard", StringComparer.OrdinalIgnoreCase))
+                RaceSubtypeOptions.Add("Standard");
 
         HasRaceSubtypeChoice = RaceSubtypeOptions.Count > 0;
         EnsureDefaultHumanStandardSelection();
@@ -2426,6 +2560,23 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     .ToList();
             }
 
+            if (colourProp.Value.TryGetProperty("AlignmentRestriction", out var alignmentRestrictEl) && alignmentRestrictEl.ValueKind == JsonValueKind.Array)
+            {
+                entry.AlignmentRestriction = alignmentRestrictEl
+                    .EnumerateArray()
+                    .Select(x => x.GetString() ?? string.Empty)
+                    .Where(x => x.Length > 0)
+                    .ToList();
+            }
+            else if (colourProp.Value.TryGetProperty("AlignmentRestrictions", out var alignmentRestrictsEl) && alignmentRestrictsEl.ValueKind == JsonValueKind.Array)
+            {
+                entry.AlignmentRestriction = alignmentRestrictsEl
+                    .EnumerateArray()
+                    .Select(x => x.GetString() ?? string.Empty)
+                    .Where(x => x.Length > 0)
+                    .ToList();
+            }
+
             // Preferred shape: colour -> { Levels: { "1": [..], ... } }
             if (colourProp.Value.TryGetProperty("Levels", out var levelsEl) && levelsEl.ValueKind == JsonValueKind.Object)
                 entry.Levels = ParseLevelArrays(levelsEl);
@@ -2439,7 +2590,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 || entry.ColourChoiceOverride.Count > 0
                 || entry.GuildOverrides != null
                 || entry.HedgeOrCircle.Count > 0
-                || entry.ClassRestriction.Count > 0)
+                || entry.ClassRestriction.Count > 0
+                || entry.AlignmentRestriction.Count > 0)
                 outer[colourProp.Name] = entry;
         }
 
@@ -2521,6 +2673,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         private readonly Action _onChanged;
         private readonly Dictionary<string, ColourAbilityDefinition> _optionMap;
         private readonly bool _required;
+        private readonly Func<ColourAbilityDefinition?, string>? _selectionIssueResolver;
         private bool _suppressNotify;
 
         public string Key { get; }
@@ -2541,6 +2694,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 if (!Set(ref _selectedOption, normalized)) return;
 
                 UpdatePreview();
+                RefreshIssue();
                 RaiseComputed();
 
                 if (!_suppressNotify)
@@ -2558,9 +2712,18 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         public ICommand ToggleLevelsCommand { get; }
 
         public bool HasSelection => !string.IsNullOrWhiteSpace(_selectedOption);
-        public bool IsComplete => !_required || HasSelection;
-        public string StatusText => HasSelection ? "Selected" : (_required ? "Required" : "Optional");
-        public string CardState => HasSelection ? "Success" : (_required ? "Error" : "Neutral");
+        public bool HasIssue => !string.IsNullOrWhiteSpace(IssueMessage);
+        public bool IsComplete => (!_required || HasSelection) && !HasIssue;
+        public string StatusText => HasIssue ? "Issue" : (HasSelection ? "Selected" : (_required ? "Required" : "Optional"));
+        public string CardState => HasIssue ? "Issue" : (HasSelection ? "Success" : (_required ? "Error" : "Neutral"));
+        public string DisplaySubtitle => HasIssue ? IssueMessage : Subtitle;
+
+        private string _issueMessage = string.Empty;
+        public string IssueMessage
+        {
+            get => _issueMessage;
+            private set => Set(ref _issueMessage, value);
+        }
 
         public MappedSpecialisationVm(
             string key,
@@ -2569,7 +2732,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             Dictionary<string, ColourAbilityDefinition> optionMap,
             string? initialSelection,
             bool required,
-            Action onSelectionChanged)
+            Action onSelectionChanged,
+            Func<ColourAbilityDefinition?, string>? selectionIssueResolver = null)
         {
             Key = key;
             Title = key;
@@ -2579,6 +2743,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 : subtitle;
             _onChanged = onSelectionChanged;
             _required = required;
+            _selectionIssueResolver = selectionIssueResolver;
             _optionMap = new Dictionary<string, ColourAbilityDefinition>(optionMap ?? new Dictionary<string, ColourAbilityDefinition>(), StringComparer.OrdinalIgnoreCase);
 
             ToggleLevelsCommand = new Command(() => LevelsExpanded = !LevelsExpanded);
@@ -2600,6 +2765,21 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             _suppressNotify = false;
 
             UpdatePreview();
+            RefreshIssue();
+            RaiseComputed();
+        }
+
+        public void RefreshIssue()
+        {
+            ColourAbilityDefinition? selectedOption = null;
+            if (!string.IsNullOrWhiteSpace(_selectedOption)
+                && _optionMap.TryGetValue(_selectedOption, out var option)
+                && option != null)
+            {
+                selectedOption = option;
+            }
+
+            IssueMessage = (_selectionIssueResolver?.Invoke(selectedOption) ?? string.Empty).Trim();
             RaiseComputed();
         }
 
@@ -2695,9 +2875,12 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         private void RaiseComputed()
         {
             Raise(nameof(HasSelection));
+            Raise(nameof(HasIssue));
+            Raise(nameof(IssueMessage));
             Raise(nameof(IsComplete));
             Raise(nameof(StatusText));
             Raise(nameof(CardState));
+            Raise(nameof(DisplaySubtitle));
         }
     }
 
@@ -2733,6 +2916,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         public GuildOverrideRules? GuildOverrides { get; set; }
         public List<string> HedgeOrCircle { get; set; } = new();
         public List<string> ClassRestriction { get; set; } = new();
+        public List<string> AlignmentRestriction { get; set; } = new();
     }
 
     public sealed class RaceSubtypePreviewLine

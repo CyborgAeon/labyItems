@@ -50,12 +50,14 @@ Make sure a simulator is booted, then:
 PKG=bard.uk.labyitems
 SIMULATOR_UDID="$(xcrun simctl list devices | awk -F '[()]' '/Booted/{print $2; exit}')"
 $HOME/.dotnet/dotnet build labyItems/labyItems.csproj \
+  -t:Rebuild \
   -f net10.0-ios \
   -c Debug \
   -p:UseIosWorkload=true \
   -p:RuntimeIdentifier=iossimulator-arm64
 APP_PATH="labyItems/bin/Debug/net10.0-ios/iossimulator-arm64/labyItems.app"
 xcrun simctl terminate "$SIMULATOR_UDID" "$PKG" || true
+xcrun simctl uninstall "$SIMULATOR_UDID" "$PKG" || true
 xcrun simctl install "$SIMULATOR_UDID" "$APP_PATH"
 xcrun simctl launch "$SIMULATOR_UDID" "$PKG"
 ```

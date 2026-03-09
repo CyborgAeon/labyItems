@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Pages.SpecialisationCard.SpecialisationDetailCardView"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Frame Style="{StaticResource DetailCardFrameStyle}">
+        <VerticalStackLayout Spacing="12">
+            <Label Text="{Binding TitleText, Source={x:Reference Root}}"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   LineBreakMode="WordWrap"/>
+
+            <Label Text="{Binding SubheadingText, Source={x:Reference Root}}"
+                   FontAttributes="Italic"
+                   TextColor="{StaticResource MutedTextColor}"
+                   IsVisible="{Binding HasSubheading, Source={x:Reference Root}}"/>
+
+            <BoxView Style="{StaticResource SectionDividerBoxStyle}"/>
+
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="8">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDescriptionSectionTapped"/>
+                </Grid.GestureRecognizers>
+                <Label Text="DESCRIPTION"
+                       Style="{StaticResource SectionHeaderLabelStyle}"
+                       VerticalTextAlignment="Center"/>
+                <Label Grid.Column="1"
+                       Text="{Binding DescriptionChevronText, Source={x:Reference Root}}"
+                       IsVisible="{Binding CanExpandDescription, Source={x:Reference Root}}"
+                       TextColor="{StaticResource MutedTextColor}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="End"/>
+            </Grid>
+
+            <ContentView x:Name="DescriptionTextContainer">
+                <ContentView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDescriptionSectionTapped"/>
+                </ContentView.GestureRecognizers>
+                <Label x:Name="DescriptionLabel"
+                       Text="{Binding DescriptionText, Source={x:Reference Root}}"
+                       MaxLines="{Binding DescriptionMaxLines, Source={x:Reference Root}}"
+                       LineBreakMode="WordWrap"
+                       SizeChanged="OnExpandableLabelSizeChanged"/>
+            </ContentView>
+
+            <Label Text="... see more"
+                   TextColor="{StaticResource MutedTextColor}"
+                   FontSize="12"
+                   IsVisible="{Binding ShowDescriptionSeeMore, Source={x:Reference Root}}"/>
+
+            <VerticalStackLayout Spacing="6"
+                                 IsVisible="{Binding HasHint, Source={x:Reference Root}}">
+                <Label Text="HINT"
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <Label Text="{Binding HintText, Source={x:Reference Root}}"
+                       LineBreakMode="WordWrap"/>
+            </VerticalStackLayout>
+
+            <FlexLayout Direction="Row"
+                        Wrap="Wrap"
+                        AlignItems="Start"
+                        JustifyContent="Start"
+                        BindableLayout.ItemsSource="{Binding MetadataChips, Source={x:Reference Root}}"
+                        IsVisible="{Binding HasMetadataChips, Source={x:Reference Root}}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource FilterPillBorderStyle}"
+                                Margin="0,0,8,8">
+                            <Label Text="{Binding .}"
+                                   Style="{StaticResource FilterPillLabelStyle}"/>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </VerticalStackLayout>
+    </Frame>
+</ContentView>

@@ -217,6 +217,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
                 hideAbilityPickerWhenSingleOption: cfg.HideAbilityPickerWhenSingleOption);
 
             _optionSource.ApplyToSlot(slot, pre);
+            slot.SetSpecialisationKeyForDetails(cfg.Title);
             Slots.Add(slot);
         }
 
@@ -234,7 +235,33 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         if (string.IsNullOrWhiteSpace(option))
             return null;
 
-        return _optionCustomisations.TryGetValue(option.Trim(), out var custom) ? custom : null;
+        var lookup = option.Trim();
+        if (_optionCustomisations.TryGetValue(lookup, out var custom))
+            return custom;
+
+        var normalizedLookup = NormalizeAbilityKey(lookup);
+        if (normalizedLookup.Length == 0)
+            return null;
+
+        foreach (var kvp in _optionCustomisations)
+        {
+            if (NormalizeAbilityKey(kvp.Key) == normalizedLookup)
+                return kvp.Value;
+        }
+
+        return null;
+    }
+
+    private static string NormalizeAbilityKey(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return new string(value
+            .Trim()
+            .ToLowerInvariant()
+            .Where(char.IsLetterOrDigit)
+            .ToArray());
     }
 
     public void UpdateOptionNames(IEnumerable<string> optionNames)

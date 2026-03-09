@@ -12,6 +12,8 @@ namespace labyItems.Controls;
 
 public partial class MultiChipGroup : ContentView
 {
+    private INotifyCollectionChanged? _itemsCollection;
+
     public MultiChipGroup()
     {
         InitializeComponent();
@@ -56,8 +58,25 @@ public partial class MultiChipGroup : ContentView
     private static void OnItemsChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (MultiChipGroup)bindable;
+        control.AttachItemsCollection(oldValue as INotifyCollectionChanged, newValue as INotifyCollectionChanged);
         control.Rebuild();
     }
+
+    private void AttachItemsCollection(INotifyCollectionChanged? oldCollection, INotifyCollectionChanged? newCollection)
+    {
+        if (ReferenceEquals(_itemsCollection, oldCollection) && oldCollection != null)
+            oldCollection.CollectionChanged -= OnItemsCollectionChanged;
+
+        if (oldCollection != null && !ReferenceEquals(oldCollection, newCollection))
+            oldCollection.CollectionChanged -= OnItemsCollectionChanged;
+
+        _itemsCollection = newCollection;
+        if (_itemsCollection != null)
+            _itemsCollection.CollectionChanged += OnItemsCollectionChanged;
+    }
+
+    private void OnItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        => Rebuild();
 
     public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(
         nameof(SelectedItems),
@@ -185,6 +204,7 @@ public partial class MultiChipGroup : ContentView
 
     private static void ApplyPalette(Border border, Color background, Color strokeColor, Color textColor)
     {
+        border.Background = new SolidColorBrush(background);
         border.BackgroundColor = background;
         border.Stroke = new SolidColorBrush(strokeColor);
         if (border.Content is Label label)

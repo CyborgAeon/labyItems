@@ -30,6 +30,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     private readonly Func<string?, AbilityCustomisation?>? _customisationResolver;
     private readonly Func<AbilityCustomisation?, Dictionary<string, string>?>? _customisationOptionsProvider;
     private readonly bool _hideAbilityPickerWhenSingleOption;
+    private string _specialisationKeyForDetails = string.Empty;
 
     public int Level { get; }
     public string LevelLabel => $"Lvl {Level}";
@@ -164,6 +165,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public bool HasSelectedAbilityForDetails
         => !string.IsNullOrWhiteSpace(SelectedAbilityNameForDetails);
 
+    public string SpecialisationKeyForDetails => _specialisationKeyForDetails;
+
     public string SelectionKey
     {
         get
@@ -250,6 +253,11 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(FilteredOptionNames));
         Raise(nameof(SearchOptions));
         Raise(nameof(HideAbilityPicker));
+    }
+
+    public void SetSpecialisationKeyForDetails(string? key)
+    {
+        _specialisationKeyForDetails = (key ?? string.Empty).Trim();
     }
 
     public void ConfigureMagicColours(IEnumerable<MagicColours> allowed)

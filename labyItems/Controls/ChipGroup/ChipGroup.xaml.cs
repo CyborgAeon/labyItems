@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
@@ -8,6 +9,8 @@ namespace labyItems.Controls;
 
 public partial class ChipGroup : ContentView
 {
+    private INotifyCollectionChanged? _itemsCollection;
+
     public ChipGroup()
     {
         InitializeComponent();
@@ -31,8 +34,25 @@ public partial class ChipGroup : ContentView
     private static void OnItemsChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var control = (ChipGroup)bindable;
+        control.AttachItemsCollection(oldValue as INotifyCollectionChanged, newValue as INotifyCollectionChanged);
         control.Rebuild();
     }
+
+    private void AttachItemsCollection(INotifyCollectionChanged? oldCollection, INotifyCollectionChanged? newCollection)
+    {
+        if (ReferenceEquals(_itemsCollection, oldCollection) && oldCollection != null)
+            oldCollection.CollectionChanged -= OnItemsCollectionChanged;
+
+        if (oldCollection != null && !ReferenceEquals(oldCollection, newCollection))
+            oldCollection.CollectionChanged -= OnItemsCollectionChanged;
+
+        _itemsCollection = newCollection;
+        if (_itemsCollection != null)
+            _itemsCollection.CollectionChanged += OnItemsCollectionChanged;
+    }
+
+    private void OnItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        => Rebuild();
 
     public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(
         nameof(SelectedItem),
@@ -139,6 +159,7 @@ public partial class ChipGroup : ContentView
 
     private static void ApplyPalette(Border border, Color background, Color strokeColor, Color textColor)
     {
+        border.Background = new SolidColorBrush(background);
         border.BackgroundColor = background;
         border.Stroke = new SolidColorBrush(strokeColor);
         if (border.Content is Label label)
