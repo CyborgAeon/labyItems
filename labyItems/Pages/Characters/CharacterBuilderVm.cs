@@ -79,13 +79,13 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         ToggleClassFilterChipCommand = new Command<ClassFilterChipVm>(ToggleClassFilterChip);
         ShowClassSelectionCommand = new Command(() => SelectedTabIndex = 0);
 
-        SelectRaceFilterCommand = new Command<string>(s =>
+        SelectRaceFilterCommand = new Command<RaceFilterChipVm>(chip =>
         {
-            SelectedRaceFilter = string.IsNullOrWhiteSpace(s) ? "All" : s;
+            SelectedRaceFilter = string.IsNullOrWhiteSpace(chip?.Label) ? "All" : chip.Label;
         });
 
         ClassFilterChips = new ObservableCollection<ClassFilterChipVm>();
-        RaceFilters = new ObservableCollection<string> { "All" };
+        RaceFilterChips = new ObservableCollection<RaceFilterChipVm> { new("All", true) };
         _selectedRaceFilter = "All";
 
         AllClasses = new ObservableCollection<ClassCardVm>();
@@ -174,13 +174,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         foreach (var vm in list)
             AllRaces.Add(vm);
 
-        RaceFilters.Clear();
-        RaceFilters.Add("All");
-        foreach (var t in types.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
-            RaceFilters.Add(t);
-
-        if (string.IsNullOrWhiteSpace(SelectedRaceFilter) || !RaceFilters.Contains(SelectedRaceFilter))
-            SelectedRaceFilter = "All";
+        RebuildRaceFilterChips(types);
 
         RefilterRaces();
     }
@@ -344,13 +338,21 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     }
 
     public ObservableCollection<ClassFilterChipVm> ClassFilterChips { get; }
-    public ObservableCollection<string> RaceFilters { get; }
+    public ObservableCollection<RaceFilterChipVm> RaceFilterChips { get; }
 
     private string? _selectedRaceFilter;
     public string? SelectedRaceFilter
     {
         get => _selectedRaceFilter;
-        set { if (Set(ref _selectedRaceFilter, value)) RefilterRaces(); }
+        set
+        {
+            var normalized = string.IsNullOrWhiteSpace(value) ? "All" : value;
+            if (!Set(ref _selectedRaceFilter, normalized))
+                return;
+
+            SyncRaceFilterChipSelection();
+            RefilterRaces();
+        }
     }
 
     public ObservableCollection<ClassCardVm> AllClasses { get; }
@@ -2091,7 +2093,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private void RefilterRaces()
     {
         var q = (RaceSearchText ?? "").Trim().ToLowerInvariant();
-        var filter = SelectedRaceFilter ?? "All";
+        var filter = string.IsNullOrWhiteSpace(SelectedRaceFilter) ? "All" : SelectedRaceFilter!;
 
         var allowed = _allowedRaceKeysForSelectedClass;
 
@@ -2107,6 +2109,36 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             .ToList();
 
         ReplaceItems(FilteredRaces, list);
+    }
+
+    private void RebuildRaceFilterChips(IEnumerable<string> raceTypes)
+    {
+        var options = new List<string> { "All" };
+        options.AddRange((raceTypes ?? Enumerable.Empty<string>())
+            .Where(type => !string.IsNullOrWhiteSpace(type))
+            .OrderBy(type => type, StringComparer.OrdinalIgnoreCase));
+
+        var selected = string.IsNullOrWhiteSpace(SelectedRaceFilter) ? "All" : SelectedRaceFilter!;
+        if (!options.Contains(selected, StringComparer.OrdinalIgnoreCase))
+            selected = "All";
+
+        _selectedRaceFilter = selected;
+        Raise(nameof(SelectedRaceFilter));
+
+        RaceFilterChips.Clear();
+        foreach (var option in options)
+        {
+            RaceFilterChips.Add(new RaceFilterChipVm(
+                option,
+                string.Equals(option, selected, StringComparison.OrdinalIgnoreCase)));
+        }
+    }
+
+    private void SyncRaceFilterChipSelection()
+    {
+        var selected = string.IsNullOrWhiteSpace(SelectedRaceFilter) ? "All" : SelectedRaceFilter!;
+        foreach (var chip in RaceFilterChips)
+            chip.IsSelected = string.Equals(chip.Label, selected, StringComparison.OrdinalIgnoreCase);
     }
 
     private static void ReplaceItems<T>(ObservableCollection<T> target, IList<T> items)
@@ -2128,6 +2160,33 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
 
         public string Key { get; }
+        public string Label { get; }
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                if (_isSelected == value)
+                    return;
+
+                _isSelected = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+            }
+        }
+    }
+
+    public sealed class RaceFilterChipVm : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public RaceFilterChipVm(string label, bool isSelected)
+        {
+            Label = (label ?? string.Empty).Trim();
+            _isSelected = isSelected;
+        }
+
         public string Label { get; }
 
         private bool _isSelected;

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using labyItems.Infrastructure;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Layouts;
+using Microsoft.Maui.Controls.Shapes;
+using Microsoft.Maui.Graphics;
 
 namespace labyItems.Controls;
 
@@ -14,7 +14,6 @@ public partial class ChipGroup : ContentView
         Rebuild();
     }
 
-    // -------- Items (labels for chips) --------
     public static readonly BindableProperty ItemsProperty = BindableProperty.Create(
         nameof(Items),
         typeof(IEnumerable<string>),
@@ -35,7 +34,6 @@ public partial class ChipGroup : ContentView
         control.Rebuild();
     }
 
-    // -------- Selected item (single-choice, can be null) --------
     public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(
         nameof(SelectedItem),
         typeof(string),
@@ -61,7 +59,6 @@ public partial class ChipGroup : ContentView
         control.UpdateVisualState();
     }
 
-    // -------- UI building --------
     private void Rebuild()
     {
         Container.Children.Clear();
@@ -78,67 +75,107 @@ public partial class ChipGroup : ContentView
         UpdateVisualState();
     }
 
-    private Button CreateChip(string text)
+    private Border CreateChip(string text)
     {
-        var primary = GetPrimaryColor();
-        var primaryText = Colors.Black;
+        var palette = ResolvePalette();
 
-        var button = new Button
+        var label = new Label
         {
             Text = text,
-            FontSize = 14, // Slightly bigger looks better for chips
-            BackgroundColor = Colors.Transparent,
-            TextColor = primary,
-            Padding = new Thickness(10, 4), // <-- 10 left/right, 4 top/bottom
-            CornerRadius = 4, // rounder pill
-            BorderColor = primary,
-            BorderWidth = 1,
+            FontSize = 12,
+            FontAttributes = FontAttributes.Bold,
+            TextColor = palette.UnselectedText,
+            VerticalTextAlignment = TextAlignment.Center,
+            HorizontalTextAlignment = TextAlignment.Center,
+            LineBreakMode = LineBreakMode.NoWrap,
+        };
+
+        var border = new Border
+        {
+            Content = label,
+            Padding = new Thickness(12, 6),
+            StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(999) },
+            StrokeThickness = 1,
             HorizontalOptions = LayoutOptions.Start,
             VerticalOptions = LayoutOptions.Center,
             Margin = new Thickness(4),
-            MinimumHeightRequest = 28, // helps maintain a clean shape
+            MinimumHeightRequest = 34,
+            MinimumWidthRequest = 0,
+            BindingContext = text,
         };
 
-        // Do not force chips to grow — let them size to their content so the layout measures height correctly
+        ApplyPalette(border, palette.UnselectedBackground, palette.UnselectedBorder, palette.UnselectedText);
 
-        button.Clicked += (_, __) =>
+        var tap = new TapGestureRecognizer();
+        tap.Tapped += (_, __) =>
         {
-            // Clicking the same chip again clears the selection (null)
             if (SelectedItem == text)
                 SelectedItem = null;
             else
                 SelectedItem = text;
         };
+        border.GestureRecognizers.Add(tap);
 
-        return button;
+        return border;
     }
 
     private void UpdateVisualState()
     {
-        var primary = GetPrimaryColor();
-        var primaryText = Colors.White;
+        var palette = ResolvePalette();
 
-        foreach (var child in Container.Children.OfType<Button>())
+        foreach (var child in Container.Children.OfType<Border>())
         {
-            bool isSelected = child.Text == SelectedItem;
+            if (child.BindingContext is not string text)
+                continue;
 
-            child.BackgroundColor = isSelected ? primary : Colors.Transparent;
-            child.TextColor = isSelected ? primaryText : primary;
-            child.BorderColor = primary;
+            var isSelected = string.Equals(text, SelectedItem, System.StringComparison.Ordinal);
+            var background = isSelected ? palette.SelectedBackground : palette.UnselectedBackground;
+            var textColor = isSelected ? palette.SelectedText : palette.UnselectedText;
+            var border = isSelected ? palette.SelectedBorder : palette.UnselectedBorder;
+
+            ApplyPalette(child, background, border, textColor);
         }
     }
 
-    private Color GetPrimaryColor()
+    private static void ApplyPalette(Border border, Color background, Color strokeColor, Color textColor)
     {
-        if (
-            Application.Current?.Resources != null
-            && Application.Current.Resources.TryGetValue("Primary", out var value)
-            && value is Color c
-        )
+        border.BackgroundColor = background;
+        border.Stroke = new SolidColorBrush(strokeColor);
+        if (border.Content is Label label)
+            label.TextColor = textColor;
+    }
+
+    private static ChipPalette ResolvePalette()
+    {
+        var unselectedBackground = ResolveColor("Gray500", Color.FromArgb("#6E6E6E"));
+        var unselectedText = ResolveColor("White", Colors.White);
+        var unselectedBorder = ResolveColor("Gray600", Color.FromArgb("#404040"));
+        var selectedBackground = ResolveColor("AccentMaroonColor", Color.FromArgb("#7F1D1D"));
+        var selectedText = ResolveColor("White", Colors.White);
+        var selectedBorder = ResolveColor("Primary", Color.FromArgb("#530000"));
+        return new ChipPalette(unselectedBackground, unselectedText, unselectedBorder, selectedBackground, selectedText, selectedBorder);
+    }
+
+    private static Color ResolveColor(string key, Color fallback)
+    {
+        if (Application.Current?.Resources != null
+            && Application.Current.Resources.TryGetValue(key, out var value))
         {
-            return c;
+            if (value is Color color)
+                return color;
+
+            if (value is SolidColorBrush brush)
+                return brush.Color;
         }
 
-        return ColourScheme.Primary;
+        return fallback;
     }
+
+    private readonly record struct ChipPalette(
+        Color UnselectedBackground,
+        Color UnselectedText,
+        Color UnselectedBorder,
+        Color SelectedBackground,
+        Color SelectedText,
+        Color SelectedBorder);
 }

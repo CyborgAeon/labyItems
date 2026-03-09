@@ -7,7 +7,7 @@ public partial class AdvanceCharacterPage
 {
     partial void ApplyPlatformTabLayoutTweaks()
     {
-        IosTabBarPlacementHelper.MoveToTop(this);
+        IosTabBarPlacementHelper.EnsurePinnedToTop(this);
     }
 }
 #endif

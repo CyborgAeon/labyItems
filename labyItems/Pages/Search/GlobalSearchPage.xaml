@@ -37,31 +37,15 @@
                         HeightRequest="38">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Button Text="{Binding Label}"
-                            FontSize="12"
-                            FontAttributes="Bold"
-                            Padding="12,6"
-                            Margin="0,0,8,0"
-                            BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
-                            TextColor="{StaticResource PrimaryTextStrongColor}"
-                            BorderColor="{StaticResource SoftStrokeColor}"
-                            BorderWidth="1"
-                            CornerRadius="999"
-                            Clicked="OnFilterChipClicked"
-                            CommandParameter="{Binding .}">
-                        <Button.Triggers>
-                            <DataTrigger TargetType="Button"
-                                         Binding="{Binding IsSelected}"
-                                         Value="True">
-                                <Setter Property="BackgroundColor"
-                                        Value="{StaticResource AccentMaroonColor}"/>
-                                <Setter Property="TextColor"
-                                        Value="White"/>
-                                <Setter Property="BorderColor"
-                                        Value="{StaticResource AccentMaroonColor}"/>
-                            </DataTrigger>
-                        </Button.Triggers>
-                    </Button>
+                    <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
+                            Margin="0,0,8,0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnFilterChipTapped"
+                                                  CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="{Binding Label}"
+                               Style="{StaticResource FilterPillLabelStyle}"/>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

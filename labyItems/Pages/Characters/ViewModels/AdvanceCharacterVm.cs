@@ -3235,9 +3235,8 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         private set
         {
             if (!Set(ref _scripturesAllowed, value)) return;
-            Raise(nameof(ScripturesRemaining));
-            Raise(nameof(ScripturesUsed));
-            Raise(nameof(ScripturesProgressText));
+            RaiseScripturesProgressProperties();
+            UpdateScripturesVisuals();
             Raise(nameof(CanAddSelected));
         }
     }
@@ -3247,6 +3246,55 @@ public sealed class MiracleListVm : INotifyPropertyChanged
     public int ScripturesRemaining => Math.Max(0, ScripturesAllowed - ScripturesUsed);
 
     public string ScripturesProgressText => $"Scriptures remaining: {ScripturesRemaining}/{ScripturesAllowed}";
+
+    public string ScripturesUnusedText => $"Unused scriptures: {ScripturesRemaining}/{ScripturesAllowed}";
+
+    public double ScripturesUsedRatio
+        => ScripturesAllowed <= 0 ? 0 : Math.Clamp((double)ScripturesUsed / ScripturesAllowed, 0d, 1d);
+
+    public double ScripturesRemainingRatio
+        => ScripturesAllowed <= 0 ? 1 : Math.Clamp((double)ScripturesRemaining / ScripturesAllowed, 0d, 1d);
+
+    public bool HasUsedScriptures => ScripturesUsed > 0;
+
+    public GridLength ScripturesUsedWidth
+    {
+        get
+        {
+            if (ScripturesAllowed <= 0)
+                return new GridLength(0, GridUnitType.Star);
+
+            var used = Math.Clamp(ScripturesUsed, 0, ScripturesAllowed);
+            return new GridLength(used, GridUnitType.Star);
+        }
+    }
+
+    public GridLength ScripturesUnusedWidth
+    {
+        get
+        {
+            if (ScripturesAllowed <= 0)
+                return new GridLength(1, GridUnitType.Star);
+
+            var used = Math.Clamp(ScripturesUsed, 0, ScripturesAllowed);
+            var remaining = Math.Max(0, ScripturesAllowed - used);
+            return new GridLength(remaining, GridUnitType.Star);
+        }
+    }
+
+    private Color _scripturesFillColor = Colors.White;
+    public Color ScripturesFillColor
+    {
+        get => _scripturesFillColor;
+        private set => Set(ref _scripturesFillColor, value);
+    }
+
+    private Color _scripturesFillStrokeColor = Color.FromArgb("#374151");
+    public Color ScripturesFillStrokeColor
+    {
+        get => _scripturesFillStrokeColor;
+        private set => Set(ref _scripturesFillStrokeColor, value);
+    }
 
     public string StateLabel => IsSaved ? "Saved" : "Editing";
 
@@ -3598,10 +3646,60 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         Raise(nameof(EffectiveAlignment));
         Raise(nameof(CanSaveList));
         Raise(nameof(CanAddSelected));
+        UpdateScripturesVisuals();
+        RaiseScripturesProgressProperties();
+        _onValidationChanged();
+    }
+
+    private void RaiseScripturesProgressProperties()
+    {
         Raise(nameof(ScripturesUsed));
         Raise(nameof(ScripturesRemaining));
         Raise(nameof(ScripturesProgressText));
-        _onValidationChanged();
+        Raise(nameof(ScripturesUnusedText));
+        Raise(nameof(ScripturesUsedRatio));
+        Raise(nameof(ScripturesRemainingRatio));
+        Raise(nameof(HasUsedScriptures));
+        Raise(nameof(ScripturesUsedWidth));
+        Raise(nameof(ScripturesUnusedWidth));
+    }
+
+    private void UpdateScripturesVisuals()
+    {
+        var alignmentToken = ResolveScripturesAlignmentToken();
+        switch (alignmentToken)
+        {
+            case "good":
+                ScripturesFillColor = Colors.White;
+                ScripturesFillStrokeColor = Color.FromArgb("#374151");
+                break;
+            case "evil":
+                ScripturesFillColor = Color.FromArgb("#111827");
+                ScripturesFillStrokeColor = Color.FromArgb("#374151");
+                break;
+            default:
+                ScripturesFillColor = Color.FromArgb("#4B5563");
+                ScripturesFillStrokeColor = Color.FromArgb("#374151");
+                break;
+        }
+    }
+
+    private string ResolveScripturesAlignmentToken()
+    {
+        var selectedEntries = Entries
+            .Where(e => !string.IsNullOrWhiteSpace(e.Draft.Name))
+            .ToList();
+        if (selectedEntries.Count == 0)
+            return "neutral";
+
+        var hasGood = selectedEntries.Any(e => _domainService.NormalizeAlignmentToken(e.Draft.Alignment) == "good");
+        var hasEvil = selectedEntries.Any(e => _domainService.NormalizeAlignmentToken(e.Draft.Alignment) == "evil");
+        if (hasGood && !hasEvil)
+            return "good";
+        if (hasEvil && !hasGood)
+            return "evil";
+
+        return "neutral";
     }
 
     public void RefreshExternalLimits()

@@ -1,7 +1,6 @@
 using Microsoft.Maui.Controls;
 
 #if IOS || MACCATALYST
-using CoreGraphics;
 using UIKit;
 #endif
 
@@ -9,39 +8,58 @@ namespace labyItems.Helpers;
 
 internal static class IosTabBarPlacementHelper
 {
+    public static void EnsurePinnedToTop(TabbedPage page)
+    {
+        MoveToTop(page);
+    }
+
     public static void MoveToTop(TabbedPage page)
     {
 #if IOS || MACCATALYST
-        if (page?.Handler?.PlatformView is not UITabBarController controller)
+        if (page is null)
             return;
 
-        var hostView = controller.View;
-        var tabBar = controller.TabBar;
-        if (hostView == null || tabBar == null)
+        var tabBarController = ResolveTabBarController(page);
+        if (tabBarController is null)
             return;
 
-        var bounds = hostView.Bounds;
-        if (bounds.Width <= 0 || bounds.Height <= 0)
-            return;
-
-        var safeTop = hostView.SafeAreaInsets.Top;
-        var safeBottom = hostView.SafeAreaInsets.Bottom;
-        var tabHeight = tabBar.Frame.Height > 0 ? tabBar.Frame.Height : 49;
-        var contentTop = safeTop + tabHeight;
-        var contentHeight = Math.Max(0, bounds.Height - contentTop - safeBottom);
-
-        tabBar.Frame = new CGRect(0, safeTop, bounds.Width, tabHeight);
-
-        foreach (var child in controller.ViewControllers ?? Array.Empty<UIViewController>())
-        {
-            if (child.View == null)
-                continue;
-
-            child.AdditionalSafeAreaInsets = new UIEdgeInsets(tabHeight, 0, 0, 0);
-            child.View.Frame = new CGRect(0, contentTop, bounds.Width, contentHeight);
-        }
+        ConfigureTabController(tabBarController);
 #else
         _ = page;
 #endif
     }
+
+#if IOS || MACCATALYST
+    private static UITabBarController? ResolveTabBarController(TabbedPage page)
+    {
+        if (page.Handler?.PlatformView is UITabBarController direct)
+            return direct;
+
+        if (page.Handler?.PlatformView is not UIViewController viewController)
+            return null;
+
+        for (var current = viewController; current != null; current = current.ParentViewController)
+        {
+            if (current is UITabBarController tabBarController)
+                return tabBarController;
+        }
+
+        return viewController.TabBarController;
+    }
+
+    private static void ConfigureTabController(UITabBarController controller)
+    {
+        controller.CustomizableViewControllers = Array.Empty<UIViewController>();
+
+        var tabBar = controller.TabBar;
+        tabBar.Hidden = false;
+        tabBar.UserInteractionEnabled = true;
+
+        if (controller.Editing)
+            controller.SetEditing(false, false);
+
+        if (controller.MoreNavigationController.Editing)
+            controller.MoreNavigationController.SetEditing(false, false);
+    }
+#endif
 }

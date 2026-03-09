@@ -46,14 +46,14 @@ public partial class GlobalSearchPage : ContentPage
         }
     }
 
-    private async void OnFilterChipClicked(object sender, EventArgs e)
+    private async void OnFilterChipTapped(object? sender, TappedEventArgs e)
     {
         if (_isAnimatingFilters)
             return;
 
-        if (sender is not Button button)
-            return;
-        if (button.CommandParameter is not GlobalSearchFilterChipVm chip)
+        var chip = e.Parameter as GlobalSearchFilterChipVm
+            ?? (sender as BindableObject)?.BindingContext as GlobalSearchFilterChipVm;
+        if (chip == null)
             return;
 
         var transition = _vm.PreviewFilterTransition(chip);

@@ -14,6 +14,9 @@ using labyItems.Helpers;
 #if ANDROID
 using Android.Views;
 #endif
+#if IOS || MACCATALYST
+using UIKit;
+#endif
 
 namespace labyItems;
 
@@ -37,6 +40,20 @@ public static class MauiProgram
 		{
 			if (view is Microsoft.Maui.Controls.VisualElement visual)
 				GlobalKeyboardAvoidance.Attach(visual);
+		});
+		TabbedViewHandler.Mapper.AppendToMapping("DisableIosTabCustomization", (handler, view) =>
+		{
+#if IOS || MACCATALYST
+			if (handler.PlatformView is not UITabBarController controller)
+				return;
+
+			controller.CustomizableViewControllers = Array.Empty<UIViewController>();
+			if (controller.Editing)
+				controller.SetEditing(false, false);
+
+			if (controller.MoreNavigationController.Editing)
+				controller.MoreNavigationController.SetEditing(false, false);
+#endif
 		});
 
 		// Path for the app's DB used by migrations and runtime. For local testing this will be in AppData.

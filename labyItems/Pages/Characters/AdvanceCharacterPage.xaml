@@ -686,7 +686,7 @@
                                                     </VerticalStackLayout>
 
                                                     <VerticalStackLayout Spacing="6"
-                                                                         IsVisible="{Binding IsExpanded}">
+                                                                         IsVisible="{Binding IsScriptures, Converter={StaticResource InverseBoolConverter}}">
                                                         <Label Text="Alignment split"
                                                                FontSize="12"
                                                                Opacity="0.7"/>
@@ -787,18 +787,50 @@
                                                                        VerticalTextAlignment="Center"/>
                                                             </HorizontalStackLayout>
                                                         </Grid>
+
+                                                        <Grid ColumnDefinitions="*,*"
+                                                              ColumnSpacing="8">
+                                                            <Label Text="{Binding TotalPoints, StringFormat='Total spirit: {0}/60'}"
+                                                                   FontSize="12"
+                                                                   Opacity="0.8"/>
+                                                            <Label Grid.Column="1"
+                                                                   Text="{Binding AdvancedPoints, StringFormat='Advanced spirit: {0}/10'}"
+                                                                   FontSize="12"
+                                                                   Opacity="0.8"/>
+                                                        </Grid>
                                                     </VerticalStackLayout>
 
-                                                    <Grid ColumnDefinitions="*,*"
-                                                          ColumnSpacing="8">
-                                                        <Label Text="{Binding TotalPoints, StringFormat='Total spirit: {0}/60'}"
-                                                               FontSize="12"
-                                                               Opacity="0.8"/>
-                                                        <Label Grid.Column="1"
-                                                               Text="{Binding AdvancedPoints, StringFormat='Advanced spirit: {0}/10'}"
-                                                               FontSize="12"
-                                                               Opacity="0.8"/>
-                                                    </Grid>
+                                                    <VerticalStackLayout Spacing="6"
+                                                                         IsVisible="{Binding IsScriptures}">
+                                                        <Border Stroke="{StaticResource SoftStrokeColor}"
+                                                                StrokeThickness="1"
+                                                                StrokeShape="RoundRectangle 6"
+                                                                BackgroundColor="{StaticResource SoftStrokeColor}"
+                                                                Padding="0">
+                                                            <Grid HeightRequest="10"
+                                                                  ColumnSpacing="0">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="{Binding ScripturesUsedWidth}"/>
+                                                                    <ColumnDefinition Width="{Binding ScripturesUnusedWidth}"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Border Grid.Column="0"
+                                                                        Stroke="{Binding ScripturesFillStrokeColor}"
+                                                                        StrokeThickness="0.75"
+                                                                        BackgroundColor="{Binding ScripturesFillColor}"
+                                                                        IsVisible="{Binding HasUsedScriptures}">
+                                                                    <Border.Shadow>
+                                                                        <Shadow Brush="{StaticResource ShadowColor}"
+                                                                                Offset="0,1"
+                                                                                Radius="3"
+                                                                                Opacity="0.45"/>
+                                                                    </Border.Shadow>
+                                                                </Border>
+                                                                <Border Grid.Column="1"
+                                                                        StrokeThickness="0"
+                                                                        BackgroundColor="{StaticResource SoftStrokeColor}"/>
+                                                            </Grid>
+                                                        </Border>
+                                                    </VerticalStackLayout>
 
                                                     <Label Text="{Binding ValidationMessage}"
                                                            TextColor="{StaticResource AccentMaroonColor}"
