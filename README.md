@@ -13,6 +13,7 @@ curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
   && dotnet --info \
   && dotnet workload install maui \
   && dotnet workload install maui-android \
+  && dotnet workload install ios \
   && dotnet build -t:InstallAndroidDependencies -f net10.0-android \
   && brew install --cask temurin@17
 ```
@@ -41,21 +42,44 @@ $HOME/.dotnet/dotnet watch \
   run --configuration Debug
 ```
 
-IOS boot:
+## iOS (build latest + push to simulator)
 
-```zsh
-xcrun simctl list devices available
-xcrun simctl install {answer from above} /Users/brbar/Source/labyItems/labyItems/bin/Debug/net10.0-ios/iossimulator-arm64/labyItems.app
-xcrun simctl launch {answer from above} bard.uk.labyitems
+Make sure a simulator is booted, then:
+
+```bash
+PKG=bard.uk.labyitems
+SIMULATOR_UDID="$(xcrun simctl list devices | awk -F '[()]' '/Booted/{print $2; exit}')"
+$HOME/.dotnet/dotnet build labyItems/labyItems.csproj \
+  -f net10.0-ios \
+  -c Debug \
+  -p:UseIosWorkload=true \
+  -p:RuntimeIdentifier=iossimulator-arm64
+APP_PATH="labyItems/bin/Debug/net10.0-ios/iossimulator-arm64/labyItems.app"
+xcrun simctl terminate "$SIMULATOR_UDID" "$PKG" || true
+xcrun simctl install "$SIMULATOR_UDID" "$APP_PATH"
+xcrun simctl launch "$SIMULATOR_UDID" "$PKG"
 ```
 
-or
+`dotnet build -t:Run` on iOS stays attached to app output/logs and can look like it is "stuck"; use `Ctrl+C` to detach.
 
-```zsh
-dotnet build labyItems/labyItems.csproj -t:Run -f net10.0-ios -p:UseIosWorkload=true -p:RuntimeIdentifier=iossimulator-arm64 -p:_DeviceName=:v2:udid=<SIMULATOR_UDID>
+then push the latest DB into that simulator app container:
+
+```bash
+PKG=bard.uk.labyitems
+DB=output/laby.db
+SIMULATOR_UDID="$(xcrun simctl list devices | awk -F '[()]' '/Booted/{print $2; exit}')"
+./tools/migrate-any-data.sh "$DB"
+APP_DATA_DIR="$(xcrun simctl get_app_container "$SIMULATOR_UDID" "$PKG" data)"
+cp "$DB" "$APP_DATA_DIR/Library/laby.db"
+xcrun simctl terminate "$SIMULATOR_UDID" "$PKG" || true
+xcrun simctl launch "$SIMULATOR_UDID" "$PKG"
 ```
 
-If you hit `NETSDK1147` (missing `maui-android`) or similar, you’re probably running the system `dotnet` instead of the one installed by `dotnet-install.sh` — the command above pins to `$HOME/.dotnet/dotnet`.
+If you hit `NETSDK1147` (missing `ios`/`maui-android`) or similar, you’re probably running mixed dotnet installs. This repo uses `$HOME/.dotnet/dotnet`, so install workloads with that exact binary (and do not use `sudo`), e.g.:
+
+```bash
+$HOME/.dotnet/dotnet workload install ios maui-android
+```
 
 If watch ever complains about launch profiles, ensure `Properties/launchSettings.json` contains the `Android` profile (added in this repo).
 
