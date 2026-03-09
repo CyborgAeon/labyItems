@@ -84,7 +84,8 @@ public sealed class SplitEmojiIcon : GraphicsView, IDrawable
 
     void IDrawable.Draw(ICanvas canvas, RectF dirtyRect)
     {
-        var size = Math.Min(dirtyRect.Width - 5, dirtyRect.Height - 5);
+        const float outerInset = 2f;
+        var size = Math.Min(dirtyRect.Width - outerInset, dirtyRect.Height - outerInset);
         if (size <= 0)
             return;
 
@@ -127,13 +128,13 @@ public sealed class SplitEmojiIcon : GraphicsView, IDrawable
         canvas.StrokeSize = 1;
         canvas.DrawCircle(cx, cy, radius - 0.5f);
 
-        var fontSize = size * 0.42f;
+        var fontSize = Math.Max(10f, size * 0.42f);
         canvas.FontSize = fontSize;
 
-        var leftCenter = new PointF(rect.Left + size * 0.32f, rect.Top + size * 0.32f);
-        var rightCenter = new PointF(rect.Left + size * 0.68f, rect.Top + size * 0.68f);
+        var leftCenter = new PointF(rect.Left + size * 0.33f, rect.Top + size * 0.33f);
+        var rightCenter = new PointF(rect.Left + size * 0.67f, rect.Top + size * 0.67f);
 
-        var textBoxSize = size * 0.5f;
+        var textBoxSize = size * 0.62f;
         var leftBox = new RectF(
             leftCenter.X - textBoxSize / 2f,
             leftCenter.Y - textBoxSize / 2f,
@@ -154,7 +155,7 @@ public sealed class SplitEmojiIcon : GraphicsView, IDrawable
                 leftBox.Height,
                 HorizontalAlignment.Center,
                 VerticalAlignment.Center,
-                TextFlow.ClipBounds,
+                TextFlow.OverflowBounds,
                 1f);
 
         if (!string.IsNullOrWhiteSpace(RightEmoji))
@@ -166,7 +167,7 @@ public sealed class SplitEmojiIcon : GraphicsView, IDrawable
                 rightBox.Height,
                 HorizontalAlignment.Center,
                 VerticalAlignment.Center,
-                TextFlow.ClipBounds,
+                TextFlow.OverflowBounds,
                 1f);
     }
 

@@ -137,47 +137,48 @@
                       BackgroundColor="Transparent">
                     <Grid Padding="16"
                           BackgroundColor="Transparent">
-                        <CollectionView ItemsSource="{Binding LevelRows}"
-                                        SelectionMode="None">
-                            <CollectionView.Header>
-                                <Grid RowDefinitions="Auto,Auto"
-                                      RowSpacing="6">
-                                    <Label Grid.Row="0"
-                                           Text="Level Progression"
-                                           FontSize="13"
-                                           FontAttributes="Bold"/>
-                                    <Grid Grid.Row="1"
-                                          Grid.ColumnDefinitions="50,60,*,*"
-                                          ColumnSpacing="8"
-                                          Opacity="0.7">
-                                        <Label Text="Lvl"/>
-                                        <Label Grid.Column="1"
-                                               Text="Body"/>
-                                        <Label Grid.Column="2"
-                                               Text="Loc"/>
-                                        <Label Grid.Column="3"
-                                               Text="Skills/Abilities"/>
-                                    </Grid>
+                        <VerticalStackLayout Spacing="6">
+                            <Grid RowDefinitions="Auto,Auto"
+                                  RowSpacing="6">
+                                <Label Grid.Row="0"
+                                       Text="Level Progression"
+                                       FontSize="13"
+                                       FontAttributes="Bold"/>
+                                <Grid Grid.Row="1"
+                                      Grid.ColumnDefinitions="50,60,*,*"
+                                      ColumnSpacing="8"
+                                      Opacity="0.7">
+                                    <Label Text="Lvl"/>
+                                    <Label Grid.Column="1"
+                                           Text="Body"/>
+                                    <Label Grid.Column="2"
+                                           Text="Loc"/>
+                                    <Label Grid.Column="3"
+                                           Text="Skills/Abilities"/>
                                 </Grid>
-                            </CollectionView.Header>
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid RowDefinitions="Auto"
-                                          ColumnDefinitions="50,60,*,*"
-                                          ColumnSpacing="8"
-                                          Padding="0,2">
-                                        <Label Text="{Binding Level}"/>
-                                        <Label Grid.Column="1"
-                                               Text="{Binding Body}"/>
-                                        <Label Grid.Column="2"
-                                               Text="{Binding Loc}"/>
-                                        <Label Grid.Column="3"
-                                               Text="{Binding Skills}"
-                                               Opacity="0.8"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
+                            </Grid>
+
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding LevelRows}"
+                                                 Spacing="2">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid RowDefinitions="Auto"
+                                              ColumnDefinitions="50,60,*,*"
+                                              ColumnSpacing="8"
+                                              Padding="0,2">
+                                            <Label Text="{Binding Level}"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding Body}"/>
+                                            <Label Grid.Column="2"
+                                                   Text="{Binding Loc}"/>
+                                            <Label Grid.Column="3"
+                                                   Text="{Binding Skills}"
+                                                   Opacity="0.8"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
                     </Grid>
                 </Grid>
 

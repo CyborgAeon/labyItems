@@ -72,7 +72,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         SpecialisationVm = new CharacterSpecialisationVm(this);
 
-        ToggleClassExpandedCommand = new Command<ClassCardVm>(ToggleExpandedCommand);
+        ToggleClassExpandedCommand = new Command<ClassCardVm>(item => _ = ToggleExpandedCommandAsync(item));
         SelectClassCommand = new Command<ClassCardVm>(SelectClass);
         SelectRaceCommand = new Command<RaceCardVm>(SelectRace);
         ToggleRaceExpandedCommand = new Command<RaceCardVm>(ToggleRaceExpandedCommandImpl);
@@ -363,7 +363,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     public ICommand SelectClassCommand { get; }
     public ICommand SelectRaceCommand { get; }
 
-    private void ToggleExpandedCommand(ClassCardVm? item)
+    private async Task ToggleExpandedCommandAsync(ClassCardVm? item)
     {
         if (item == null) return;
 
@@ -373,7 +373,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 c.IsExpanded = false;
         }
 
-        item.IsExpanded = !item.IsExpanded;
+        var shouldExpand = !item.IsExpanded;
+        if (shouldExpand)
+            await item.EnsureProgressionLoadedAsync();
+
+        item.IsExpanded = shouldExpand;
         RefilterClasses();
     }
 

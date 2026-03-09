@@ -1,4 +1,5 @@
 #if IOS || MACCATALYST
+using labyItems.Helpers;
 using UIKit;
 
 namespace labyItems.Pages.Calculator;
@@ -24,6 +25,8 @@ public partial class IspCalculator
             item.SetTitleTextAttributes(attributes, UIControlState.Normal);
             item.SetTitleTextAttributes(attributes, UIControlState.Selected);
         }
+
+        IosTabBarPlacementHelper.MoveToTop(this);
     }
 }
 #endif
