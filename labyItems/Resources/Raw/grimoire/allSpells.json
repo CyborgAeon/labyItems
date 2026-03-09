@@ -239,7 +239,7 @@
     "level": 4,
     "colour": "Black",
     "verbal": "By the power of the shades of the dark let darkness descend over there",
-    "description": "This spell creates total magical darkness in a 10' radius of the spell caster and can be simulated by all closing their eyes when within area of effect. The area of effect cannot be moved. All mundane light sources within the area are negated for the duration of the spell. The spell Light cancels the effect of this spell for the duration of the Light spell, and vice versa. except it can be cast up to 20' distant from the caster. Alternatively it can be cast centred on the spell caster (only) and thus can move with him ~ 11 ~",
+    "description": "This spell creates total magical darkness in a 10' radius of the spell caster and can be simulated by all closing their eyes when within area of effect. The area of effect cannot be moved. All mundane light sources within the area are negated for the duration of the spell. The spell Light cancels the effect of this spell for the duration of the Light spell, and vice versa. except it can be cast up to 20' distant from the caster. Alternatively it can be cast centred on the spell caster (only) and thus can move with him",
     "IsAdvanced": false,
     "sourcePage": 12
   },
