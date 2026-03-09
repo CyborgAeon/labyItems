@@ -212,7 +212,7 @@
     "level": 8,
     "colour": "Grey",
     "verbal": "By the power at my command I summon the element of 'A', come forth child of 'A' I conjure thee, let a 'B' of 'A' appear!",
-    "description": "The spellcaster causes the named elemental to appear under his control. Only one elemental, regardless of type, may be controlled at a time. Elementals, regardless of type or size, upon contact cancel each other immediately. A wizard cannot summon elementals of the type that directly opposes his own element. For a further description on elementals see Elementals on page 7. ~ 10 ~",
+    "description": "The spellcaster causes the named elemental to appear under his control. Only one elemental, regardless of type, may be controlled at a time. Elementals, regardless of type or size, upon contact cancel each other immediately. A wizard cannot summon elementals of the type that directly opposes his own element. For a further description on elementals see Elementals on page 7.",
     "IsAdvanced": false,
     "sourcePage": 11
   },
@@ -356,7 +356,7 @@
     "level": 10,
     "colour": "Black",
     "verbal": "By the power at my command I summon the element of darkness, I abjure the elements of light, fire, air, earth and water and I conjure thee, come forth Lord of darkness I summon thee, let a shade of darkness appear",
-    "description": "Summons a Shade with 25 hits which inflicts 12pt Double by Unarmed Combat ~ 12 ~",
+    "description": "Summons a Shade with 25 hits which inflicts 12pt Double by Unarmed Combat ",
     "IsAdvanced": false,
     "sourcePage": 13
   },
@@ -383,7 +383,7 @@
     "level": 6,
     "colour": "Blue",
     "verbal": "By the powers of the sylphs of air let me be taken there… Blink",
-    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ~ 13 ~",
+    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ",
     "IsAdvanced": false,
     "sourcePage": 14
   },
@@ -521,7 +521,7 @@
     "level": 10,
     "colour": "Blue",
     "verbal": "By the power at my command I summon the element of air, I abjure the elements of fire, earth, water, darkness and light and I conjure thee, come forth lord of air I summon thee, let a sylph of air appear.",
-    "description": "Summons a Sylph with 25 hits, which inflicts 12pt Double by Unarmed Combat. ~ 14 ~",
+    "description": "Summons a Sylph with 25 hits, which inflicts 12pt Double by Unarmed Combat. ",
     "IsAdvanced": false,
     "sourcePage": 15
   },
@@ -584,7 +584,7 @@
     "level": 3,
     "colour": "Brown",
     "verbal": "By the powers of earth I reshape that... into a...",
-    "description": "This spell enables the wizard to reshape any normal item that does not exceed 27 cubic feet in volume into another item of roughly the same size and material. It is not possible to reshape metal into swords or armour, etc, even if the caster has weapon- or armour-making abilities, as the product is not well-made, balanced, weighted or similar. Similarly, uncut gems cannot be made into polished valuable items, or lumps of gold into valuable goblets, etc. However, Reshape can reverse the effect of a 'Warp'. ~ 15 ~",
+    "description": "This spell enables the wizard to reshape any normal item that does not exceed 27 cubic feet in volume into another item of roughly the same size and material. It is not possible to reshape metal into swords or armour, etc, even if the caster has weapon- or armour-making abilities, as the product is not well-made, balanced, weighted or similar. Similarly, uncut gems cannot be made into polished valuable items, or lumps of gold into valuable goblets, etc. However, Reshape can reverse the effect of a 'Warp'. ",
     "IsAdvanced": false,
     "sourcePage": 16
   },
@@ -680,7 +680,7 @@
     "level": 6,
     "colour": "Brown",
     "verbal": "By the power my command I summon the element of earth, come forth child of earth, I conjure thee let a gnome of earth appear",
-    "description": "Summons a Gnome with 10 hits, which inflicts 6pt Single by Unarmed Combat. ~ 16 ~",
+    "description": "Summons a Gnome with 10 hits, which inflicts 6pt Single by Unarmed Combat. ",
     "IsAdvanced": false,
     "sourcePage": 17
   },
@@ -773,7 +773,7 @@
     "level": 4,
     "colour": "Green",
     "verbal": "Undines grant him/her phantasms of power and valour to aid him.",
-    "description": "This spell grants the beneficiary immunity to non-spiritual Fear and Emotion Attacks, and +6/2 temporary life (non-stacking with other temporary life increases), unless they are immune to insanity (or to illusions for any reason). It may not be cast on any person capable of casting the glyph themselves, as the deeper understanding of the glyph precludes the needed subconscious belief. It cannot otherwise be 'disbelieved'. ~ 17 ~",
+    "description": "This spell grants the beneficiary immunity to non-spiritual Fear and Emotion Attacks, and +6/2 temporary life (non-stacking with other temporary life increases), unless they are immune to insanity (or to illusions for any reason). It may not be cast on any person capable of casting the glyph themselves, as the deeper understanding of the glyph precludes the needed subconscious belief. It cannot otherwise be 'disbelieved'. ",
     "IsAdvanced": false,
     "sourcePage": 18
   },
@@ -881,7 +881,7 @@
     "level": 8,
     "colour": "Green",
     "verbal": "By the power at my command I summon the element of water, come forth prince of water, let an undine of water appear",
-    "description": "Summons an Undine with 15 hits, which inflicts 9pt Double by Unarmed Combat. ~ 18 ~",
+    "description": "Summons an Undine with 15 hits, which inflicts 9pt Double by Unarmed Combat. ",
     "IsAdvanced": false,
     "sourcePage": 19
   },
@@ -1013,7 +1013,7 @@
     "level": 4,
     "colour": "Red",
     "verbal": "Salamander of fire I conjure thee, build for me a wall of fire",
-    "description": "By casting this spell the wizard creates an opaque wall of fire that stretches from wall to wall and floor to roof, to a maximum of 40' in any direction. Any player breaking through the wall of fire will take 12 points damage to total body life points and 2 to each location. A monster will take 4 hits. Only MAC may be applied versus this damage. It is not possible to see through a wall of fire. A Wall of Fire cannot be cast within 2 paces of another wall of fire. If they are created too close both are negated. Any creature remaining within a Wall of Fire for over 10 seconds takes an Ignite [Touch] to all equipment carried. ~ 19 ~",
+    "description": "By casting this spell the wizard creates an opaque wall of fire that stretches from wall to wall and floor to roof, to a maximum of 40' in any direction. Any player breaking through the wall of fire will take 12 points damage to total body life points and 2 to each location. A monster will take 4 hits. Only MAC may be applied versus this damage. It is not possible to see through a wall of fire. A Wall of Fire cannot be cast within 2 paces of another wall of fire. If they are created too close both are negated. Any creature remaining within a Wall of Fire for over 10 seconds takes an Ignite [Touch] to all equipment carried. ",
     "IsAdvanced": false,
     "sourcePage": 20
   },
@@ -1055,7 +1055,7 @@
     "level": 10,
     "colour": "Red",
     "verbal": "By the power at my command I summon the element of fire, I abjure the elements of air, earth, water, darkness and light and I conjure thee, come forth Lord of fire I summon thee, let a salamander of fire appear",
-    "description": "Summons a Salamander with 25 hits, which inflicts 12pt Double by Unarmed Combat. ~ 20 ~",
+    "description": "Summons a Salamander with 25 hits, which inflicts 12pt Double by Unarmed Combat. ",
     "IsAdvanced": false,
     "sourcePage": 21
   },
@@ -1163,7 +1163,7 @@
     "level": 4,
     "colour": "White",
     "verbal": "Sprites of light grant this person the power to walk on light",
-    "description": "This spell allows the wizard to walk on rays of light (equal to a strong \"candlelight\" or greater intensity). Should the light disappear, the wizard will fall to the ground. ~ 21 ~",
+    "description": "This spell allows the wizard to walk on rays of light (equal to a strong \"candlelight\" or greater intensity). Should the light disappear, the wizard will fall to the ground. ",
     "IsAdvanced": false,
     "sourcePage": 22
   },
@@ -1232,7 +1232,7 @@
     "level": 10,
     "colour": "White",
     "verbal": "By the power at my command I summon the element of light, I abjure the elements of darkness, fire, air, earth, and water and I conjure thee, come forth Lord of light I summon thee, let a sprite of light appear",
-    "description": "Summons a Sprite with 25 hits, which inflicts 12pt Double by Unarmed Combat. ~ 22 ~",
+    "description": "Summons a Sprite with 25 hits, which inflicts 12pt Double by Unarmed Combat. ",
     "IsAdvanced": false,
     "sourcePage": 23
   },
@@ -1268,7 +1268,7 @@
     "level": 4,
     "colour": "Bronze",
     "verbal": "Fool, feel your mortal form twist and shudder under my power''",
-    "description": "The target of the spell suffers a 3 point drop in Dexterity Armour Class, caused by uncontrollable shakes. This can negate Physical Armour Class, but will not drop the total armour class below 0. If this is cast on a monster then it decreases the monsters hits by 6. The minimum number of hits that a monster can be left with is 1, as clearly this spell cannot kill, but merely increase the amount of damage that the victim receives during combat. This spell does not stack with itself. Immunity to Dexterity Drain or Domination effects applies. ~ 27 ~",
+    "description": "The target of the spell suffers a 3 point drop in Dexterity Armour Class, caused by uncontrollable shakes. This can negate Physical Armour Class, but will not drop the total armour class below 0. If this is cast on a monster then it decreases the monsters hits by 6. The minimum number of hits that a monster can be left with is 1, as clearly this spell cannot kill, but merely increase the amount of damage that the victim receives during combat. This spell does not stack with itself. Immunity to Dexterity Drain or Domination effects applies. ",
     "IsAdvanced": false,
     "sourcePage": 28
   },
@@ -1454,7 +1454,7 @@
     "level": 6,
     "colour": "Ivory",
     "verbal": "I have the strength of my Drake",
-    "description": "In most ways as the published ability War Cry. If used within 2 seconds of a listed stopping effect, Freedom of the Drake allows the caster to shrug it off and continue to act normally. Furthermore, the caster becomes immune to that stopping effect for a further 5 minutes. However, this spell may not be used against spiritual or 'mantic stopping effects, except by elves or draves. ~ 31 ~",
+    "description": "In most ways as the published ability War Cry. If used within 2 seconds of a listed stopping effect, Freedom of the Drake allows the caster to shrug it off and continue to act normally. Furthermore, the caster becomes immune to that stopping effect for a further 5 minutes. However, this spell may not be used against spiritual or 'mantic stopping effects, except by elves or draves.",
     "IsAdvanced": false,
     "sourcePage": 32
   },
@@ -1535,7 +1535,7 @@
     "level": 1,
     "colour": "Silver",
     "verbal": "The Silver Dragon desires knowledge of your power''",
-    "description": "This tells the caster what mana points and colours of mana are currently active on the target, but not what the actual spells are. ~ 32 ~",
+    "description": "This tells the caster what mana points and colours of mana are currently active on the target, but not what the actual spells are.",
     "IsAdvanced": false,
     "sourcePage": 33
   },
@@ -1571,7 +1571,7 @@
     "level": 4,
     "colour": "Jade",
     "verbal": "Let verdant force strengthen your body",
-    "description": "Grants the recipient immunity to bruising using PAC, DAC, and/or MAC. ~ 33 ~ Touch",
+    "description": "Grants the recipient immunity to bruising using PAC, DAC, and/or MAC.  Touch",
     "IsAdvanced": false,
     "sourcePage": 34
   },
@@ -2008,7 +2008,7 @@
     "level": 7,
     "colour": "Black",
     "verbal": "By all the greatest powers of darkness I bid the shadows linger around thee!",
-    "description": "Causes the target to be covered in shadows. No matter where they travel they are within a Darkness spell, including the obscuring of vision. This only effects the target and not others around them. ~ 55 ~",
+    "description": "Causes the target to be covered in shadows. No matter where they travel they are within a Darkness spell, including the obscuring of vision. This only effects the target and not others around them. ",
     "IsAdvanced": true,
     "sourcePage": 56
   },
@@ -2060,7 +2060,7 @@
     "level": 12,
     "colour": "Black",
     "verbal": "Shades of dark I conjure thee imbue this persons skin with the strength of the darknest steel",
-    "description": "This spell hangs on the caster’s hands for 5 seconds after being cast. It grants the target non-stacking PAC 10 (in a similar manner to Plate Self), but reduces their MAC by 10 (to a minimum of 0) at the same time. Immunity to Shadow Plate applies. ~ 56 ~",
+    "description": "This spell hangs on the caster’s hands for 5 seconds after being cast. It grants the target non-stacking PAC 10 (in a similar manner to Plate Self), but reduces their MAC by 10 (to a minimum of 0) at the same time. Immunity to Shadow Plate applies. ",
     "IsAdvanced": true,
     "sourcePage": 57
   },
@@ -2231,7 +2231,7 @@
     "level": 9,
     "colour": "Blue",
     "verbal": "Blink!",
-    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ~ 13 ~ but with the above differences. The use of this spell causes the caster the loss of a casting level for the following hour.",
+    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds.  but with the above differences. The use of this spell causes the caster the loss of a casting level for the following hour.",
     "IsAdvanced": true,
     "sourcePage": 59
   },
@@ -2249,7 +2249,7 @@
     "level": 10,
     "colour": "Blue",
     "verbal": "By the greater powers of Air - let us all be taken there...Mass Blink",
-    "description": "This spell causes all those who are willing and touching the caster to be 'blinked' - as per the Blink spell - Each person arrives in the position /arrangement that they left from. This spell costs 10 mana +1 per person affected. Casting damage is calculated as a 10th level spell plus 1tblp per additional person. This spell is learnt as a 10th level spell. ~ 58 ~",
+    "description": "This spell causes all those who are willing and touching the caster to be 'blinked' - as per the Blink spell - Each person arrives in the position /arrangement that they left from. This spell costs 10 mana +1 per person affected. Casting damage is calculated as a 10th level spell plus 1tblp per additional person. This spell is learnt as a 10th level spell. ",
     "IsAdvanced": true,
     "sourcePage": 59
   },
@@ -2294,7 +2294,7 @@
     "level": 13,
     "colour": "Blue",
     "verbal": "Lords of air I implore thee, lend me thy aid and let this sword dance to my will!",
-    "description": "Exactly as the 8mp Handbook Blue Glyph Dancing Sword but the caster does not need to concentrate on the sword, although he is required to be able to view the blade at all times for it to be active. If he cannot see the sword it stands floating in the air, inactive until he can see it again. The damage delivered by the sword is 24 magic points rather than the 18 points usually delivered by a Dancing Sword. This spell cannot be further enhanced by any means, e.g. not via poison, Blackblade, et cetera. A wizard may not have more than one Intelligent Dancing Sword active at any time, nor may any elementals be under the control of the wizard, or both spells are cancelled. A Dancing Sword and an Intelligent Dancing Sword may never be grappled with and forced to the ground as they are extremely nimble and sharp edged – so do not try! ~ 59 ~",
+    "description": "Exactly as the 8mp Handbook Blue Glyph Dancing Sword but the caster does not need to concentrate on the sword, although he is required to be able to view the blade at all times for it to be active. If he cannot see the sword it stands floating in the air, inactive until he can see it again. The damage delivered by the sword is 24 magic points rather than the 18 points usually delivered by a Dancing Sword. This spell cannot be further enhanced by any means, e.g. not via poison, Blackblade, et cetera. A wizard may not have more than one Intelligent Dancing Sword active at any time, nor may any elementals be under the control of the wizard, or both spells are cancelled. A Dancing Sword and an Intelligent Dancing Sword may never be grappled with and forced to the ground as they are extremely nimble and sharp edged – so do not try! ",
     "IsAdvanced": true,
     "sourcePage": 60
   },
@@ -2321,7 +2321,7 @@
     "level": 10,
     "colour": "Blue",
     "verbal": "May the greater powers of air, teleport me to...",
-    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ~ 13 ~ except the range is anywhere on the wizard's current plane of existence, even if it is out of line of sight with the following restrictions: The wizard must have seen, on this adventure, the destination before, have the destination within line of sight, live there (i.e. a location not involved with the adventure which may be known as the wizard's home) or have memorised the location. It costs 5pts post 8th to memorise a location other than home, per location memorised. The referee of the location must have signed the ability onto your character card. If you have a location signed onto your card and are on an adventure not being run by the same referee who signed the location onto your card, then the is within their rights to disallow that location as a point to which you may teleport. In case of dispute, the player is assumed to have teleported home. This spell is affected by the Advanced Grey spell of Phase Trap, which is described under Grey Magic in The Advanced Grimoire, starting on page 73. If this glyph is used twice within an hour, the stresses on the body are such that the caster takes casting damage as if the glyph were two levels higher. This applies to multiple uses, so that a third time in an hour the casting damage would be calculated as four levels higher, and so on. This in no way increases the actual mana cost of the spell. This rule applies to Mass Teleport, Plane Shift, and Mass Plane Shift below, plus Elemental 'Port above, and to combined castings of any of these spells.",
+    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds.  except the range is anywhere on the wizard's current plane of existence, even if it is out of line of sight with the following restrictions: The wizard must have seen, on this adventure, the destination before, have the destination within line of sight, live there (i.e. a location not involved with the adventure which may be known as the wizard's home) or have memorised the location. It costs 5pts post 8th to memorise a location other than home, per location memorised. The referee of the location must have signed the ability onto your character card. If you have a location signed onto your card and are on an adventure not being run by the same referee who signed the location onto your card, then the is within their rights to disallow that location as a point to which you may teleport. In case of dispute, the player is assumed to have teleported home. This spell is affected by the Advanced Grey spell of Phase Trap, which is described under Grey Magic in The Advanced Grimoire, starting on page 73. If this glyph is used twice within an hour, the stresses on the body are such that the caster takes casting damage as if the glyph were two levels higher. This applies to multiple uses, so that a third time in an hour the casting damage would be calculated as four levels higher, and so on. This in no way increases the actual mana cost of the spell. This rule applies to Mass Teleport, Plane Shift, and Mass Plane Shift below, plus Elemental 'Port above, and to combined castings of any of these spells.",
     "IsAdvanced": true,
     "sourcePage": 60
   },
@@ -2371,7 +2371,7 @@
     "level": 15,
     "colour": "Blue",
     "verbal": "May the greatest powers of air grasp these people and take them there/to...",
-    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds. ~ 13 ~ except the range is anywhere on the wizard's current plane of existence, even if it is out of line of sight with the following restrictions: The wizard must have seen, on this adventure, the destination before, have the destination within line of sight, live there (i.e. a location not involved with the adventure which may be known as the wizard's home) or have memorised the location. It costs 5pts post 8th to memorise a location other than home, per location memorised. The referee of the location must have signed the ability onto your character card. If you have a location signed onto your card and are on an adventure not being run by the same referee who signed the location onto your card, then the is within their rights to disallow that location as a point to which you may teleport. In case of dispute, the player is assumed to have teleported home. This spell is affected by the Advanced Grey spell of Phase Trap, which is described under Grey Magic in The Advanced Grimoire, starting on page 73. If this glyph is used twice within an hour, the stresses on the body are such that the caster takes casting damage as if the glyph were two levels higher. This applies to multiple uses, so that a third time in an hour the casting damage would be calculated as four levels higher, and so on. This in no way increases the actual mana cost of the spell. This rule applies to Mass Teleport, Plane Shift, and Mass Plane Shift below, plus Elemental 'Port above, and to combined castings of any of these spells. but the wizard may take extra willing people with him at the additional cost of 1 mana point and 1 life point each. See Teleport above for restrictions.",
+    "description": "This spell allows the spell caster to teleport up to 20' in distance or within sight! On arriving at the destination the caster appears in the same orientation and pose as when he phased. It takes the spell caster 2 seconds to re-materialise, during which time he is not vulnerable to external damage and any ongoing effects are delayed by 2 seconds.  except the range is anywhere on the wizard's current plane of existence, even if it is out of line of sight with the following restrictions: The wizard must have seen, on this adventure, the destination before, have the destination within line of sight, live there (i.e. a location not involved with the adventure which may be known as the wizard's home) or have memorised the location. It costs 5pts post 8th to memorise a location other than home, per location memorised. The referee of the location must have signed the ability onto your character card. If you have a location signed onto your card and are on an adventure not being run by the same referee who signed the location onto your card, then the is within their rights to disallow that location as a point to which you may teleport. In case of dispute, the player is assumed to have teleported home. This spell is affected by the Advanced Grey spell of Phase Trap, which is described under Grey Magic in The Advanced Grimoire, starting on page 73. If this glyph is used twice within an hour, the stresses on the body are such that the caster takes casting damage as if the glyph were two levels higher. This applies to multiple uses, so that a third time in an hour the casting damage would be calculated as four levels higher, and so on. This in no way increases the actual mana cost of the spell. This rule applies to Mass Teleport, Plane Shift, and Mass Plane Shift below, plus Elemental 'Port above, and to combined castings of any of these spells. but the wizard may take extra willing people with him at the additional cost of 1 mana point and 1 life point each. See Teleport above for restrictions.",
     "IsAdvanced": true,
     "sourcePage": 61
   },
@@ -2398,7 +2398,7 @@
     "level": 5,
     "colour": "Bronze",
     "verbal": "By the might of the Bronze Drake... Fear X levels",
-    "description": "This spell only affects the target if it has a resistance level lower than the wizard's skill level (not casting level) as measured by the zero mana Bronze cantrip Tell Strength. In addition, this spell will only affect living creatures that are vulnerable to magical effects. Apart from where detailed above this spell is identical to the evil miracle Cause Fear. It is also a Domination Effect. ~ 60 ~",
+    "description": "This spell only affects the target if it has a resistance level lower than the wizard's skill level (not casting level) as measured by the zero mana Bronze cantrip Tell Strength. In addition, this spell will only affect living creatures that are vulnerable to magical effects. Apart from where detailed above this spell is identical to the evil miracle Cause Fear. It is also a Domination Effect. ",
     "IsAdvanced": true,
     "sourcePage": 61
   },
@@ -2560,7 +2560,7 @@
     "level": 6,
     "colour": "Brown",
     "verbal": "Gnome lords, I am as one with the earth - let the lightning dissipate into your depths.",
-    "description": "As long as the caster does not move from the spot, all ranged electrical attacks which pass within 20' are drawn to strike him (and no other target). The caster also gains MAC 6 versus electrical attacks only. If the caster moves this effect is disturbed but if within the duration he should spend 10 seconds standing in one spot the effect resumes. ~ 62 ~",
+    "description": "As long as the caster does not move from the spot, all ranged electrical attacks which pass within 20' are drawn to strike him (and no other target). The caster also gains MAC 6 versus electrical attacks only. If the caster moves this effect is disturbed but if within the duration he should spend 10 seconds standing in one spot the effect resumes. ",
     "IsAdvanced": true,
     "sourcePage": 63
   },
@@ -2677,7 +2677,7 @@
     "level": 10,
     "colour": "Brown",
     "verbal": "Lords of Earth allow me thy servant, passage through your world for a while",
-    "description": "This spell allows the caster to 'walk through walls' made of earth or stone for the duration. There is 2 seconds of disorientation when emerging as normal (cf. Walk through Walls). When in any wall, can only cast touch and self spells unless has active mana / mage / elemental sight. ~ 63 ~",
+    "description": "This spell allows the caster to 'walk through walls' made of earth or stone for the duration. There is 2 seconds of disorientation when emerging as normal (cf. Walk through Walls). When in any wall, can only cast touch and self spells unless has active mana / mage / elemental sight. ",
     "IsAdvanced": true,
     "sourcePage": 64
   },
@@ -2758,7 +2758,7 @@
     "level": 3,
     "colour": "Ebony",
     "verbal": "May the Ebony Drake grant me the power to see through another's Mists.",
-    "description": "This enables the wizard to see through a mist spell cast by another ebony wizard only, and any form of natural mist. ~ 64 ~",
+    "description": "This enables the wizard to see through a mist spell cast by another ebony wizard only, and any form of natural mist. ",
     "IsAdvanced": true,
     "sourcePage": 65
   },
@@ -2839,7 +2839,7 @@
     "level": 8,
     "colour": "Ebony",
     "verbal": "May Ebon mists rise and confound your sight",
-    "description": "Causes the target’s vision to become obscured and confused. This prevents them using any ranged effects beyond a distance of 10ft. Enhanced Perception grants immunity, as does Immunity to Blindness. ~ 65 ~",
+    "description": "Causes the target’s vision to become obscured and confused. This prevents them using any ranged effects beyond a distance of 10ft. Enhanced Perception grants immunity, as does Immunity to Blindness. ",
     "IsAdvanced": true,
     "sourcePage": 66
   },
@@ -2902,7 +2902,7 @@
     "level": 22,
     "colour": "Ebony",
     "verbal": "With Ebon power I cast your life in the mists of the forgotten. Let your very being fade from existence and be as nothing.",
-    "description": "The target of the spell is forgotten by the world and instantly dies. Any target with vitae partially resists this spell and only falls unconscious for 5 minutes. ½ effect ebony mana also means the person is only rendered unconscious for 5 minutes. If both are possessed then the target is only unconscious for two and a half minutes. Immunity to Forget grants complete immunity to the spell. ~ 66 ~",
+    "description": "The target of the spell is forgotten by the world and instantly dies. Any target with vitae partially resists this spell and only falls unconscious for 5 minutes. ½ effect ebony mana also means the person is only rendered unconscious for 5 minutes. If both are possessed then the target is only unconscious for two and a half minutes. Immunity to Forget grants complete immunity to the spell. ",
     "IsAdvanced": true,
     "sourcePage": 67
   },
@@ -2983,7 +2983,7 @@
     "level": 6,
     "colour": "Gold",
     "verbal": "Golden Drake I require rest and shelter - I seek peace and tranquillity in this place",
-    "description": "Within the radius of effect all creatures that are not mindless feel at ease. None may initiate any conflict or carry on if the fight enters the area of affect, or if the target is in the area of effect. I.e. you cannot attack into the area. Any creature which is not completely immune to magic that tries to enter the area of affect, but who is not affected by the pacification above, will find themselves unable to do so (e.g. mindless creatures like animated statues or similar). If any conflict occurs within the haven, the spell is cancelled immediately, e.g. if a purely spiritual creature attacks a creature who is affected by the spell and is within the area of effect. The spell lasts as long as the casting wizard remains at the centre of effect and meditates, during which time that wizard gains +x1 Meditation Rate, e.g. if he had standard meditation gains double meditation rate, if he had double it becomes triple meditation rate, et cetera. ~ 68 ~ but the only person affected by the spell and its Pacification effect is the caster. The spell grants a temporary version of Greater Aware Meditation [see Post 8th tables for details]. The spell lasts as long as the casting wizard remains within the area of affect [30' radius], during which time the wizard counts as though meditating and gains +x1 Meditation Rate [non-stacking with any other temporarily increase].",
+    "description": "Within the radius of effect all creatures that are not mindless feel at ease. None may initiate any conflict or carry on if the fight enters the area of affect, or if the target is in the area of effect. I.e. you cannot attack into the area. Any creature which is not completely immune to magic that tries to enter the area of affect, but who is not affected by the pacification above, will find themselves unable to do so (e.g. mindless creatures like animated statues or similar). If any conflict occurs within the haven, the spell is cancelled immediately, e.g. if a purely spiritual creature attacks a creature who is affected by the spell and is within the area of effect. The spell lasts as long as the casting wizard remains at the centre of effect and meditates, during which time that wizard gains +x1 Meditation Rate, e.g. if he had standard meditation gains double meditation rate, if he had double it becomes triple meditation rate, et cetera.  but the only person affected by the spell and its Pacification effect is the caster. The spell grants a temporary version of Greater Aware Meditation [see Post 8th tables for details]. The spell lasts as long as the casting wizard remains within the area of affect [30' radius], during which time the wizard counts as though meditating and gains +x1 Meditation Rate [non-stacking with any other temporarily increase].",
     "IsAdvanced": true,
     "sourcePage": 68
   },
@@ -3037,7 +3037,7 @@
     "level": 18,
     "colour": "Gold",
     "verbal": "Golden Drake your children require time to rest and recover, wounds need attention, and mana grows short!",
-    "description": "Within the radius of effect all creatures that are not mindless feel at ease. None may initiate any conflict or carry on if the fight enters the area of affect, or if the target is in the area of effect. I.e. you cannot attack into the area. Any creature which is not completely immune to magic that tries to enter the area of affect, but who is not affected by the pacification above, will find themselves unable to do so (e.g. mindless creatures like animated statues or similar). If any conflict occurs within the haven, the spell is cancelled immediately, e.g. if a purely spiritual creature attacks a creature who is affected by the spell and is within the area of effect. The spell lasts as long as the casting wizard remains at the centre of effect and meditates, during which time that wizard gains +x1 Meditation Rate, e.g. if he had standard meditation gains double meditation rate, if he had double it becomes triple meditation rate, et cetera. ~ 68 ~",
+    "description": "Within the radius of effect all creatures that are not mindless feel at ease. None may initiate any conflict or carry on if the fight enters the area of affect, or if the target is in the area of effect. I.e. you cannot attack into the area. Any creature which is not completely immune to magic that tries to enter the area of affect, but who is not affected by the pacification above, will find themselves unable to do so (e.g. mindless creatures like animated statues or similar). If any conflict occurs within the haven, the spell is cancelled immediately, e.g. if a purely spiritual creature attacks a creature who is affected by the spell and is within the area of effect. The spell lasts as long as the casting wizard remains at the centre of effect and meditates, during which time that wizard gains +x1 Meditation Rate, e.g. if he had standard meditation gains double meditation rate, if he had double it becomes triple meditation rate, et cetera. ",
     "IsAdvanced": true,
     "sourcePage": 69
   },
@@ -3151,7 +3151,7 @@
     "level": 5,
     "colour": "Green",
     "verbal": "Undines at my command, create for me a servant and ally to act unseen in my name.",
-    "description": "This spell will move one object as directed by the caster. The force of the telekinesis equals the force the referee can exert with one hand. It cannot be used to wield a weapon effectively. It cannot pick up objects that contain a spirit. Only one Telekinesis may be cast upon one object or by a wizard at any one time. except that once instructed the unseen servant will not require the continued concentration of the wizard unless he wishes to give it further instructions. The servant cannot pick up an item with a spiritual component. An unseen servant cannot fight, but is destroyed by 4 hits of damage. however, may wield up to two weapons (which remain visible!) and inflict base damage with them. ~ 69 ~",
+    "description": "This spell will move one object as directed by the caster. The force of the telekinesis equals the force the referee can exert with one hand. It cannot be used to wield a weapon effectively. It cannot pick up objects that contain a spirit. Only one Telekinesis may be cast upon one object or by a wizard at any one time. except that once instructed the unseen servant will not require the continued concentration of the wizard unless he wishes to give it further instructions. The servant cannot pick up an item with a spiritual component. An unseen servant cannot fight, but is destroyed by 4 hits of damage. however, may wield up to two weapons (which remain visible!) and inflict base damage with them. ",
     "IsAdvanced": true,
     "sourcePage": 70
   },
@@ -3230,7 +3230,7 @@
     "level": 9,
     "colour": "Green",
     "verbal": "Water distort my features, twist and hide me from my foe such that I may avoid his every blow.",
-    "description": "The spell grants the wizard immunity to the following attack modes or skills: Force Majeure / Damage Focus / Backstab / Accuracy / Call Location Shot / H & MP Class Weapons / Puissant D'Armes. ~ 70 ~",
+    "description": "The spell grants the wizard immunity to the following attack modes or skills: Force Majeure / Damage Focus / Backstab / Accuracy / Call Location Shot / H & MP Class Weapons / Puissant D'Armes. ",
     "IsAdvanced": true,
     "sourcePage": 71
   },
@@ -3366,7 +3366,7 @@
     "level": 16,
     "colour": "Green",
     "verbal": "By all my powers and the will of the Green Dragon I command all before me to Vanish!",
-    "description": "Causes all objects within the area to suffer the effects of the Vanish. Note the short duration of the spell. Also due to the nature of the spell it is not possible to use collection with it as the spell cannot distinguish between vanished objects. ~ 71 ~",
+    "description": "Causes all objects within the area to suffer the effects of the Vanish. Note the short duration of the spell. Also due to the nature of the spell it is not possible to use collection with it as the spell cannot distinguish between vanished objects. ",
     "IsAdvanced": true,
     "sourcePage": 72
   },
@@ -3515,7 +3515,7 @@
     "level": 8,
     "colour": "Grey",
     "verbal": "Let the elements of fire, air, earth and water, light and darkness, turn away from me.",
-    "description": "This spell grants the wizard total immunity to all forms of magic, including dispels to remove this glyph. Note: if cast by a magical creature such as an Elf, Drave or Faerie, the creature instantly dies (and if cast mantically by a creature which has a spirit that creature also instantly dies). Whilst this spell is running the wizard may not use spells or magical items or benefit from any source of magic. ~ 73 ~",
+    "description": "This spell grants the wizard total immunity to all forms of magic, including dispels to remove this glyph. Note: if cast by a magical creature such as an Elf, Drave or Faerie, the creature instantly dies (and if cast mantically by a creature which has a spirit that creature also instantly dies). Whilst this spell is running the wizard may not use spells or magical items or benefit from any source of magic. ",
     "IsAdvanced": true,
     "sourcePage": 74
   },
@@ -3668,7 +3668,7 @@
     "level": 15,
     "colour": "Grey",
     "verbal": "By the power at my command I summon the element of ...(A)..., I entreat the elements of Fire, Air, Earth, Water, Light and Darkness. Come forth Champion of ...(A)... let a ...(B)... of ...(A)... appear to do my will.",
-    "description": "This spell conjures an elemental '12' to be commanded. An elemental '12' may take 40 hits before being destroyed and inflicts 15pts of damage with its hands. It will not be negated by being struck by a 4 or 6 mana elemental, only by an 8 mana or higher elemental. All other details are as standard summon elemental such as sylph '6'. ~ 74 ~",
+    "description": "This spell conjures an elemental '12' to be commanded. An elemental '12' may take 40 hits before being destroyed and inflicts 15pts of damage with its hands. It will not be negated by being struck by a 4 or 6 mana elemental, only by an 8 mana or higher elemental. All other details are as standard summon elemental such as sylph '6'. ",
     "IsAdvanced": true,
     "sourcePage": 75
   },
@@ -3857,7 +3857,7 @@
     "level": 15,
     "colour": "Ivory",
     "verbal": "The Ivory Drake offers battle to all those that seek conflict and resolution. We go forth to take the battle to the Enemy.",
-    "description": "Within the range of the spell all Marked Allies of the wizard receive the following bonuses: 1: +2 Dexterity armour class. This acts as the Chosen Of The Dragon ability in the Post 8th Tables (Later in the book). This means that the +2 DAC does not stack with blesses, curses or similar watchings. 2: 25% reduction of non-purely spiritual damage after armour calculations. which does not stack with any other percentile reductions of damage. 3: 9th level of resistance to magical attacks – this does not stack with any other resistance level increases. but the spell moves with the caster, maintaining a 30' radius around them at all times. Please note the greatly reduced duration. This may be empowered via Sanctuary-enhancing spells. ~ 76 ~",
+    "description": "Within the range of the spell all Marked Allies of the wizard receive the following bonuses: 1: +2 Dexterity armour class. This acts as the Chosen Of The Dragon ability in the Post 8th Tables (Later in the book). This means that the +2 DAC does not stack with blesses, curses or similar watchings. 2: 25% reduction of non-purely spiritual damage after armour calculations. which does not stack with any other percentile reductions of damage. 3: 9th level of resistance to magical attacks – this does not stack with any other resistance level increases. but the spell moves with the caster, maintaining a 30' radius around them at all times. Please note the greatly reduced duration. This may be empowered via Sanctuary-enhancing spells. ",
     "IsAdvanced": true,
     "sourcePage": 77
   },
@@ -3974,7 +3974,7 @@
     "level": 4,
     "colour": "Onyx",
     "verbal": "Feel the weight of the years upon thee as your body suffers.",
-    "description": "The spell causes the target to age briefly, before returning to their normal state. The resulting shock to the system causes them to suffer 12/2 (4 hits) damage, to which MAC does not apply. Immunity to Ageing Effects applies. ~ 77 ~",
+    "description": "The spell causes the target to age briefly, before returning to their normal state. The resulting shock to the system causes them to suffer 12/2 (4 hits) damage, to which MAC does not apply. Immunity to Ageing Effects applies. ",
     "IsAdvanced": true,
     "sourcePage": 78
   },
@@ -4067,7 +4067,7 @@
     "level": 4,
     "colour": "Red",
     "verbal": "Onto my arm I call forth flame; Boss, Grip and Rim, shield of power, I conjure thee to guard my flank!",
-    "description": "The created shield counts as a normal shield with magic properties. It grants non-stackable MAC 3 (with limitations akin to the Plate (S) spell) against ranged attacks, and permits a Sword of Power to be wielded one handed, doing 6pts less damage (Bastard Double to Monsters). ~ 78 ~",
+    "description": "The created shield counts as a normal shield with magic properties. It grants non-stackable MAC 3 (with limitations akin to the Plate (S) spell) against ranged attacks, and permits a Sword of Power to be wielded one handed, doing 6pts less damage (Bastard Double to Monsters). ",
     "IsAdvanced": true,
     "sourcePage": 79
   },
@@ -4184,7 +4184,7 @@
     "level": 8,
     "colour": "Red",
     "verbal": "Into my hands I call forth fire - blade, hilt and guard. Sabre of fire I conjure thee for all to burn their enemies.",
-    "description": "Summons a sword in all ways identical to a Sword of Power, except that it may be used by anyone who can use magical items. ~ 79 ~",
+    "description": "Summons a sword in all ways identical to a Sword of Power, except that it may be used by anyone who can use magical items. ",
     "IsAdvanced": true,
     "sourcePage": 80
   },
@@ -4454,7 +4454,7 @@
     "level": 8,
     "colour": "Silver",
     "verbal": "Silver Dragon! I seek insight and wisdom here, reveal to me the hidden knowledge bound to this magic.",
-    "description": "This spell reveals to the caster all the information about a particular source of magic, its name, duration and effect. Additionally the wizard has up to 5 minutes to further quiz the magic about its nature, removal and purpose. This would include any side effects and disadvantages associated to the magic. E.g. The spell is cast on a Magic Sword. The spell instantly reveals it is a permanently bound grey enchanted weapon. Further quizzing will reveal that it is currently unpersonalised and that the words \"Al'Rath Some\" will bind it to an individual. More quizzing will reveal that once bound the weapon may never be taken from your hand and that you can never leave it behind, or remove it from your possession. Any item without a spirit will answer truthfully. An object with a spirit will answer as it pleases. ~ 83 ~",
+    "description": "This spell reveals to the caster all the information about a particular source of magic, its name, duration and effect. Additionally the wizard has up to 5 minutes to further quiz the magic about its nature, removal and purpose. This would include any side effects and disadvantages associated to the magic. E.g. The spell is cast on a Magic Sword. The spell instantly reveals it is a permanently bound grey enchanted weapon. Further quizzing will reveal that it is currently unpersonalised and that the words \"Al'Rath Some\" will bind it to an individual. More quizzing will reveal that once bound the weapon may never be taken from your hand and that you can never leave it behind, or remove it from your possession. Any item without a spirit will answer truthfully. An object with a spirit will answer as it pleases. ",
     "IsAdvanced": true,
     "sourcePage": 84
   },
@@ -4661,7 +4661,7 @@
     "level": 10,
     "colour": "White",
     "verbal": "Mighty powers of cold freeze the ground, as though winter has come...Glacier Field",
-    "description": "All creatures within 20', excluding the caster, are affected by a Slip spell, as above. above, except that the sheet causes any person within the radius of the spellto Slip each time they try to take a step. The Glacier Field may be destroyed by 400 hits, or 100 fire-based hits. ~ 85 ~",
+    "description": "All creatures within 20', excluding the caster, are affected by a Slip spell, as above. above, except that the sheet causes any person within the radius of the spellto Slip each time they try to take a step. The Glacier Field may be destroyed by 400 hits, or 100 fire-based hits. ",
     "IsAdvanced": true,
     "sourcePage": 86
   },
