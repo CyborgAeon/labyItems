@@ -64,6 +64,7 @@ public partial class SpecialisationDetailCardView : ContentView
     public bool HasMetadataChips => MetadataChips.Count > 0;
 
     private AbilityDefinition? _resolvedAbility;
+    private ColourAbilityRecord? _resolvedColourAbility;
 
     private bool _isDescriptionExpanded;
     public bool IsDescriptionExpanded
@@ -117,6 +118,7 @@ public partial class SpecialisationDetailCardView : ContentView
     private void HandleSpecialisationChanged()
     {
         _resolvedAbility = ResolveSelectedAbility();
+        _resolvedColourAbility = ResolveSelectedColourAbility();
         RebuildMetadataChips();
         IsDescriptionExpanded = false;
         RaiseComputedProperties();
@@ -127,7 +129,24 @@ public partial class SpecialisationDetailCardView : ContentView
     {
         MetadataChips.Clear();
         if (_resolvedAbility == null)
+        {
+            if (_resolvedColourAbility == null)
+                return;
+
+            AddChip("Life scale", _resolvedColourAbility.LifeScaleOverride);
+            AddChip("Armour", _resolvedColourAbility.ArmourAvailabilityOverride);
+
+            if (_resolvedColourAbility.ColourChoiceOverride is { Count: > 0 })
+                AddChip("Colours", string.Join(", ", _resolvedColourAbility.ColourChoiceOverride.Where(x => !string.IsNullOrWhiteSpace(x))));
+
+            if (_resolvedColourAbility.ClassRestriction is { Count: > 0 })
+                AddChip("Class", string.Join(", ", _resolvedColourAbility.ClassRestriction.Where(x => !string.IsNullOrWhiteSpace(x))));
+
+            if (_resolvedColourAbility.HedgeOrCircle is { Count: > 0 })
+                AddChip("Options", string.Join(", ", _resolvedColourAbility.HedgeOrCircle.Where(x => !string.IsNullOrWhiteSpace(x))));
+
             return;
+        }
 
         AddChip("Type", _resolvedAbility.Type);
         AddChip("Count", _resolvedAbility.Count?.ToString());
@@ -187,6 +206,9 @@ public partial class SpecialisationDetailCardView : ContentView
         if (_resolvedAbility != null)
             return ResolveDescriptionFromAbility(_resolvedAbility);
 
+        if (_resolvedColourAbility != null)
+            return ResolveDescriptionFromColourAbility(_resolvedColourAbility);
+
         var fromRecord = ReadOrFallback(Specialisation?.Description, string.Empty);
         if (fromRecord.Length > 0)
             return fromRecord;
@@ -210,6 +232,18 @@ public partial class SpecialisationDetailCardView : ContentView
     {
         var effect = ReadOrFallback(ability.Effect, string.Empty);
         return effect.Length > 0 ? effect : "No description provided.";
+    }
+
+    private static string ResolveDescriptionFromColourAbility(ColourAbilityRecord colourAbility)
+    {
+        var fromDescription = ReadOrFallback(colourAbility.Description, string.Empty);
+        if (fromDescription.Length > 0)
+            return fromDescription;
+
+        if (TryGetFirstAbilityFromLevels(colourAbility.Levels, out var ability) && ability != null)
+            return ResolveDescriptionFromAbility(ability);
+
+        return "No description provided.";
     }
 
     private AbilityDefinition? ResolveSelectedAbility()
@@ -240,9 +274,51 @@ public partial class SpecialisationDetailCardView : ContentView
                         return found;
                 }
             }
+
+            if (Specialisation.ColourAbilities.TryGetValue(targetName, out var selectedColour))
+            {
+                if (TryGetFirstAbilityFromLevels(selectedColour?.Levels, out var firstAbility))
+                    return firstAbility;
+            }
         }
 
         return null;
+    }
+
+    private ColourAbilityRecord? ResolveSelectedColourAbility()
+    {
+        var targetName = (SelectedOption ?? string.Empty).Trim();
+        if (targetName.Length == 0 || Specialisation?.ColourAbilities == null)
+            return null;
+
+        return Specialisation.ColourAbilities.TryGetValue(targetName, out var matched)
+            ? matched
+            : null;
+    }
+
+    private static bool TryGetFirstAbilityFromLevels(
+        Dictionary<string, List<AbilityDefinition>>? levels,
+        out AbilityDefinition? ability)
+    {
+        ability = null;
+        if (levels == null || levels.Count == 0)
+            return false;
+
+        var first = levels
+            .Select(kvp => new
+            {
+                Level = int.TryParse(kvp.Key, out var parsed) ? parsed : int.MaxValue,
+                Abilities = kvp.Value ?? new List<AbilityDefinition>()
+            })
+            .OrderBy(x => x.Level)
+            .SelectMany(x => x.Abilities)
+            .FirstOrDefault(a => a != null && !string.IsNullOrWhiteSpace(a.Name));
+
+        if (first == null)
+            return false;
+
+        ability = first;
+        return true;
     }
 
     private static AbilityDefinition? FindByName(IEnumerable<AbilityDefinition>? list, string targetName)

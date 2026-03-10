@@ -25,6 +25,7 @@ public partial class AbilityDetailCardView : ContentView
     }
 
     public string AbilityIndex => ReadOrFallback(Ability?.Index, "Unnamed Ability");
+    public bool ShowNonStandardBadge => Ability?.IsNonStandard == true;
     public string TableDisplayText => $"Table: {Math.Max(0, Ability?.Table ?? 0)}";
     public string AvailabilityText => BuildAvailabilityDisplay(Ability?.Available);
 
@@ -118,6 +119,7 @@ public partial class AbilityDetailCardView : ContentView
     private void RaiseComputedProperties()
     {
         OnPropertyChanged(nameof(AbilityIndex));
+        OnPropertyChanged(nameof(ShowNonStandardBadge));
         OnPropertyChanged(nameof(TableDisplayText));
         OnPropertyChanged(nameof(AvailabilityText));
         OnPropertyChanged(nameof(CostDisplayText));

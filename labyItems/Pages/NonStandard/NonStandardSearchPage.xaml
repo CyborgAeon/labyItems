@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.NonStandard.NonStandardSearchPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Search">
+
+    <Grid Padding="16"
+          RowDefinitions="Auto,*"
+          RowSpacing="10">
+        <SearchBar Grid.Row="0"
+                   x:Name="SearchBar"
+                   Placeholder="Search"
+                   TextChanged="OnSearchTextChanged"/>
+
+        <CollectionView Grid.Row="1"
+                        x:Name="OptionsView"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,0,0,8"
+                           Padding="10"
+                           BorderColor="{StaticResource SurfaceBorderColor}"
+                           HasShadow="False">
+                        <Grid>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOptionTapped"
+                                                      CommandParameter="{Binding .}"/>
+                            </Grid.GestureRecognizers>
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding Title}"
+                                       FontAttributes="Bold"
+                                       LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding Subtitle}"
+                                       FontSize="12"
+                                       Opacity="0.75"
+                                       IsVisible="{Binding HasSubtitle}"
+                                       LineBreakMode="WordWrap"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

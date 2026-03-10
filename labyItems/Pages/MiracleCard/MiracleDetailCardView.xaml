@@ -12,6 +12,12 @@
                    FontAttributes="Bold"
                    LineBreakMode="WordWrap"/>
 
+            <Label Text="Non-standard"
+                   TextColor="{StaticResource AccentMaroonColor}"
+                   FontSize="12"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding IsNonStandard, Source={x:Reference Root}}"/>
+
             <Grid ColumnDefinitions="Auto,*,Auto"
                   ColumnSpacing="8">
                 <Label Text="{Binding SphereIconGlyph, Source={x:Reference Root}}"

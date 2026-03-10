@@ -24,27 +24,55 @@ public static class PeopleService
         if (_cache != null) return _cache;
         try
         {
-#if DEBUG
-            var json = await ServiceHelper.ReadPackageTextAsync("people/people.json");
-            _cache = JsonSerializer.Deserialize<Dictionary<string, PeopleRecord>>(json, _jsonOptions)
-                     ?? new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase);
-#else
-            using var conn = ServiceHelper.OpenReadOnlyConnection();
-            var rows = conn.Query<PeopleRow>("SELECT name, data_json FROM races ORDER BY name;");
-            var dict = new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase);
-            foreach (var row in rows)
+            static Dictionary<string, PeopleRecord> LoadFromDb()
             {
-                if (string.IsNullOrWhiteSpace(row.name))
-                    continue;
+                using var conn = ServiceHelper.OpenReadOnlyConnection();
+                var rows = conn.Query<PeopleRow>("SELECT name, data_json FROM races ORDER BY name;");
+                var dict = new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase);
+                foreach (var row in rows)
+                {
+                    if (string.IsNullOrWhiteSpace(row.name))
+                        continue;
 
-                var record = string.IsNullOrWhiteSpace(row.data_json)
-                    ? new PeopleRecord()
-                    : (JsonSerializer.Deserialize<PeopleRecord>(row.data_json, _jsonOptions) ?? new PeopleRecord());
+                    var record = string.IsNullOrWhiteSpace(row.data_json)
+                        ? new PeopleRecord()
+                        : (JsonSerializer.Deserialize<PeopleRecord>(row.data_json, _jsonOptions) ?? new PeopleRecord());
 
-                dict[row.name] = record;
+                    dict[row.name] = record;
+                }
+
+                return dict;
+            }
+
+#if DEBUG
+            var dict = new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase);
+            try
+            {
+                var json = await ServiceHelper.ReadPackageTextAsync("people/people.json");
+                var packaged = JsonSerializer.Deserialize<Dictionary<string, PeopleRecord>>(json, _jsonOptions)
+                               ?? new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase);
+                foreach (var kvp in packaged)
+                    dict[kvp.Key] = kvp.Value;
+            }
+            catch (Exception ex)
+            {
+                ServiceHelper.LogDbError("Get races (debug package)", ex);
+            }
+
+            try
+            {
+                var fromDb = LoadFromDb();
+                foreach (var kvp in fromDb)
+                    dict[kvp.Key] = kvp.Value;
+            }
+            catch (Exception ex)
+            {
+                ServiceHelper.LogDbError("Get races (debug db merge)", ex);
             }
 
             _cache = dict;
+#else
+            _cache = LoadFromDb();
 #endif
         }
         catch (Exception ex)
@@ -55,6 +83,9 @@ public static class PeopleService
 
         return _cache;
     }
+
+    public static void InvalidateCache()
+        => _cache = null;
 }
 
 internal sealed class PeopleRow
@@ -64,6 +95,8 @@ internal sealed class PeopleRow
 }
 public sealed class PeopleRecord
 {
+    public bool NonStandard { get; set; }
+
     [JsonConverter(typeof(SingleOrArrayStringListConverter))]
     public List<string> PeopleType { get; set; } = new();
     public string Description { get; set; } = "";

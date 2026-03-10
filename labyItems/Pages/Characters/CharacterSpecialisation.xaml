@@ -128,6 +128,7 @@
                                                  IsVisible="{Binding HasRaceSubtypeSelection}">
                                 <Grid ColumnDefinitions="72,*,24"
                                       ColumnSpacing="8"
+                                      IsVisible="{Binding RaceSubtypeAbilityRows.Count, Converter={StaticResource GreaterThanZeroConverter}}"
                                       Opacity="0.7">
                                     <Label Text="Lvl"/>
                                     <Label Grid.Column="1"
@@ -280,6 +281,7 @@
                                                              IsVisible="{Binding HasSelection}">
                                             <Grid ColumnDefinitions="72,*,24"
                                                   ColumnSpacing="8"
+                                                  IsVisible="{Binding AbilityRows.Count, Converter={StaticResource GreaterThanZeroConverter}}"
                                                   Opacity="0.7">
                                                 <Label Text="Lvl"/>
                                                 <Label Grid.Column="1"

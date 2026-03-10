@@ -92,41 +92,12 @@ public partial class GuildCardView : ContentView
         {
             if (vm.IsExpanded)
             {
-                await ScrollIntoViewIfExpandedAsync(vm, token);
                 await AnimateExpandedContentAsync(expand: true, token);
             }
             else
             {
                 await AnimateExpandedContentAsync(expand: false, token);
             }
-        }
-        catch (TaskCanceledException)
-        {
-            // Ignore rapid expand/collapse interactions.
-        }
-        catch (OperationCanceledException)
-        {
-            // Ignore rapid expand/collapse interactions.
-        }
-    }
-
-    private async Task ScrollIntoViewIfExpandedAsync(GuildCardVm vm, CancellationToken token)
-    {
-        if (!vm.IsExpanded)
-            return;
-
-        try
-        {
-            await Task.Delay(80, token);
-            if (token.IsCancellationRequested) return;
-
-            var cv = FindParentCollectionView();
-            if (cv == null) return;
-
-            cv.ScrollTo(vm, position: ScrollToPosition.Center, animate: false);
-            await Task.Delay(150, token);
-            if (token.IsCancellationRequested) return;
-            cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
         }
         catch (TaskCanceledException)
         {
@@ -215,13 +186,5 @@ public partial class GuildCardView : ContentView
         ExpandedContent.IsVisible = false;
         ExpandedContent.HeightRequest = -1;
         ExpandedContent.Opacity = 1;
-    }
-
-    private CollectionView? FindParentCollectionView()
-    {
-        Element? parent = this;
-        while (parent != null && parent is not CollectionView)
-            parent = parent.Parent;
-        return parent as CollectionView;
     }
 }

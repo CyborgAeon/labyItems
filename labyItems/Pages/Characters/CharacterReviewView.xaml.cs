@@ -1,8 +1,11 @@
+using System.Linq;
 using System.ComponentModel;
 using labyItems.Helpers;
 using labyItems.Pages.Characters.ViewModels;
+using labyItems.Services;
 using Microsoft.Maui.Controls;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
+using SpecialisationCardPage = labyItems.Pages.SpecialisationCard.SpecialisationCard;
 
 namespace labyItems.Pages.Characters;
 
@@ -14,10 +17,22 @@ public partial class CharacterReviewView : ContentView
         typeof(CharacterReviewView),
         true);
 
+    public static readonly BindableProperty ShowPost8CardProperty = BindableProperty.Create(
+        nameof(ShowPost8Card),
+        typeof(bool),
+        typeof(CharacterReviewView),
+        true);
+
     public bool ShowSaveButton
     {
         get => (bool)GetValue(ShowSaveButtonProperty);
         set => SetValue(ShowSaveButtonProperty, value);
+    }
+
+    public bool ShowPost8Card
+    {
+        get => (bool)GetValue(ShowPost8CardProperty);
+        set => SetValue(ShowPost8CardProperty, value);
     }
 
     public CharacterReviewView(object bindingContext)
@@ -174,12 +189,36 @@ public partial class CharacterReviewView : ContentView
         if (sender is not Button button)
             return;
 
-        if (button.CommandParameter is not WizardVm.SpecialisationSummaryLineVm line || line.Ability == null)
+        if (button.CommandParameter is not WizardVm.SpecialisationSummaryLineVm line || !line.HasDetails)
             return;
 
-        if (Navigation == null)
+        var nav = ResolveNavigation();
+        if (nav == null)
             return;
 
-        await Navigation.PushAsync(new AbilityCardPage(line.Ability));
+        if (!string.IsNullOrWhiteSpace(line.SpecialisationKey))
+        {
+            var lookup = await SpecialisationService.GetAllAsync();
+            var match = lookup.FirstOrDefault(kvp => string.Equals(kvp.Key, line.SpecialisationKey, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrWhiteSpace(match.Key) && match.Value != null)
+            {
+                await nav.PushAsync(new SpecialisationCardPage(match.Key, match.Value, line.SelectedOption));
+                return;
+            }
+        }
+
+        if (line.Ability != null)
+            await nav.PushAsync(new AbilityCardPage(line.Ability));
+    }
+
+    private INavigation? ResolveNavigation()
+    {
+        if (Navigation?.NavigationStack is { Count: > 0 })
+            return Navigation;
+
+        if (Shell.Current?.Navigation is { } shellNav)
+            return shellNav;
+
+        return Application.Current?.MainPage?.Navigation;
     }
 }

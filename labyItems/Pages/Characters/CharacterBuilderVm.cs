@@ -159,6 +159,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 Name = name,
                 PeopleTypes = peopleTypes,
                 PeopleType = displayPeopleType,
+                IsNonStandard = record.NonStandard,
                 Description = record.Description ?? "",
                 BuyAsRaw = record.BuyAs ?? "",
                 Icon = IconForPeopleType(primaryPeopleType),
@@ -518,6 +519,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 MaxAc = maxAc,
                 TBLP = tblp,
                 PowerBase = powerBase,
+                IsNonStandard = record.NonStandard,
                 BracketTags = bracketTags,
                 IsSelected = string.Equals(classKey, _draft.Class, StringComparison.OrdinalIgnoreCase)
             });
@@ -1588,6 +1590,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         if (choice.Equals("circle", StringComparison.OrdinalIgnoreCase))
         {
+            list.Add(new AbilityDraft
+            {
+                Name = "Circle Membership",
+                AbilityType = AbilityType.Static
+            });
+
             if (powerBaseLower.Contains("magic"))
             {
                 list.Add(new AbilityDraft
@@ -1610,6 +1618,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
         else if (choice.Equals("hedge", StringComparison.OrdinalIgnoreCase))
         {
+            list.Add(new AbilityDraft
+            {
+                Name = "Hedge Wizardry",
+                AbilityType = AbilityType.Static
+            });
+
             if (isWizard)
             {
                 list.Add(new AbilityDraft { Name = "Disguise skill", AbilityType = AbilityType.Static });
@@ -1648,7 +1662,18 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     }
 
     private static string NormalizeBaronialChoice(string raw)
-        => (raw ?? string.Empty).Replace("Ⓞ", string.Empty).Trim();
+    {
+        var normalized = (raw ?? string.Empty).Trim().ToLowerInvariant();
+        if (normalized.Contains("hedge"))
+            return "hedge";
+        if (normalized.Contains("circle"))
+            return "circle";
+
+        return normalized
+            .Replace("Ⓞ", string.Empty)
+            .Replace("🌳", string.Empty)
+            .Trim();
+    }
 
     private void UpdateArmourStats(
         ServiceCharacterClassRecord? classRecord,

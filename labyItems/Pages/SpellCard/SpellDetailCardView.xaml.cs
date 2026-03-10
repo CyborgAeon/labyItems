@@ -203,6 +203,9 @@ public partial class SpellDetailCardView : ContentView
         AddMetaChip("Duration", Spell?.duration, ResolveDurationIcon);
         AddMetaChip("Gesture", Spell?.gesture, ResolveGestureIcon);
 
+        if (Spell?.nonStandard == true)
+            MetaChips.Add(new SpellMetaChipVm("✳", "Non-standard"));
+
         OnPropertyChanged(nameof(HasMetaChips));
     }
 

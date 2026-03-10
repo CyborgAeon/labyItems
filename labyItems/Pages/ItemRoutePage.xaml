@@ -23,6 +23,9 @@
       Clicked="OnGuildSearchClicked"
       Text="Guild Search"/>
     <Button
+      Clicked="OnCreateNonStandardClicked"
+      Text="Create New Non-Standard"/>
+    <Button
       Clicked="OnCreateIspClicked"
       Text="Create ISP Item"/>
     <Button

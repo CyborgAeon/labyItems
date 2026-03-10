@@ -43,6 +43,7 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     public int MaxAc { get; init; }
     public int TBLP { get; init; }
     public string? PowerBase { get; init; } = "";
+    public bool IsNonStandard { get; init; }
 
     public Dictionary<int, string> CardTags { get; set; }
     public string Tag1 => $"AC {MaxAc}";
@@ -351,10 +352,15 @@ public sealed class ClassCardVm : INotifyPropertyChanged
 
     private IReadOnlyList<string> BuildTagChips()
     {
-        return new[] { Tag1, Tag2, Tag3 }
+        var chips = new[] { Tag1, Tag2, Tag3 }
             .Where(t => !string.IsNullOrWhiteSpace(t))
             .Select(t => t.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
+
+        if (IsNonStandard)
+            chips.Add("Non-standard");
+
+        return chips;
     }
 }

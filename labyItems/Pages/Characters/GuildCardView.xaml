@@ -48,13 +48,17 @@
                            FontSize="12"/>
                 </VerticalStackLayout>
 
-                <!-- Selected indicator -->
-                <Label Grid.Column="3"
-                       Text="Selected"
-                       IsVisible="{Binding IsSelected}"
-                       FontSize="12"
-                       Opacity="0.8"
-                       VerticalOptions="Center"/>
+                <Button Grid.Column="3"
+                        Text="{Binding SelectionActionText}"
+                        FontSize="12"
+                        Padding="10,2"
+                        HeightRequest="28"
+                        MinimumHeightRequest="0"
+                        MinimumWidthRequest="0"
+                        VerticalOptions="Center"
+                        IsVisible="{Binding ShowSelectionAction}"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=SelectCommand}"
+                        CommandParameter="{Binding .}"/>
 
                 <Button Grid.Column="5"
                         Text="⌄"
@@ -242,7 +246,7 @@
         </Grid>
         <Frame.GestureRecognizers>
             <TapGestureRecognizer
-                Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=SelectCommand}"
+                Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=ToggleExpandedCommand}"
                 CommandParameter="{Binding .}"/>
         </Frame.GestureRecognizers>
     </Frame>

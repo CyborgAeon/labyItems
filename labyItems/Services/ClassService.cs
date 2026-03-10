@@ -25,39 +25,62 @@ public static class ClassService
 
         try
         {
-#if DEBUG
-            var json = await ServiceHelper.ReadPackageTextAsync("people/classes.json");
-            using var doc = JsonDocument.Parse(json);
-            var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
-            if (doc.RootElement.ValueKind == JsonValueKind.Object)
+            static Dictionary<string, CharacterClassRecord> LoadFromDb()
             {
-                foreach (var cls in doc.RootElement.EnumerateObject())
+                using var conn = ServiceHelper.OpenReadOnlyConnection();
+                var rows = conn.Query<ClassRow>("SELECT name, data_json FROM classes ORDER BY name;");
+                var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+                foreach (var row in rows)
                 {
-                    if (cls.Value.ValueKind != JsonValueKind.Object)
+                    if (string.IsNullOrWhiteSpace(row.name))
                         continue;
 
-                    dict[cls.Name] = DeserializeClassRecord(cls.Value);
+                    var record = string.IsNullOrWhiteSpace(row.data_json)
+                        ? new CharacterClassRecord()
+                        : DeserializeClassRecord(row.data_json);
+
+                    dict[row.name] = record;
                 }
+
+                return dict;
+            }
+
+#if DEBUG
+            var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+            try
+            {
+                var json = await ServiceHelper.ReadPackageTextAsync("people/classes.json");
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.ValueKind == JsonValueKind.Object)
+                {
+                    foreach (var cls in doc.RootElement.EnumerateObject())
+                    {
+                        if (cls.Value.ValueKind != JsonValueKind.Object)
+                            continue;
+
+                        dict[cls.Name] = DeserializeClassRecord(cls.Value);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ServiceHelper.LogDbError("Get classes (debug package)", ex);
+            }
+
+            try
+            {
+                var fromDb = LoadFromDb();
+                foreach (var kvp in fromDb)
+                    dict[kvp.Key] = kvp.Value;
+            }
+            catch (Exception ex)
+            {
+                ServiceHelper.LogDbError("Get classes (debug db merge)", ex);
             }
 
             _cache = dict;
 #else
-            using var conn = ServiceHelper.OpenReadOnlyConnection();
-            var rows = conn.Query<ClassRow>("SELECT name, data_json FROM classes ORDER BY name;");
-            var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
-            foreach (var row in rows)
-            {
-                if (string.IsNullOrWhiteSpace(row.name))
-                    continue;
-
-                var record = string.IsNullOrWhiteSpace(row.data_json)
-                    ? new CharacterClassRecord()
-                    : DeserializeClassRecord(row.data_json);
-
-                dict[row.name] = record;
-            }
-
-            _cache = dict;
+            _cache = LoadFromDb();
 #endif
         }
         catch (Exception ex)
@@ -68,6 +91,9 @@ public static class ClassService
 
         return _cache;
     }
+
+    public static void InvalidateCache()
+        => _cache = null;
 
     private static CharacterClassRecord DeserializeClassRecord(string json)
     {
@@ -163,6 +189,7 @@ public static class ClassService
 
 public sealed class CharacterClassRecord
 {
+    public bool NonStandard { get; set; }
     public List<string> Brackets { get; set; } = new();
     public Dictionary<string, List<AbilityDefinition>> Levels { get; set; } = new();
 

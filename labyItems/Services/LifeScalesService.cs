@@ -43,17 +43,51 @@ public static class LifeScalesService
             }
 
 #if DEBUG
+            var dict = new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
             try
             {
                 var json = await ServiceHelper.ReadPackageTextAsync("people/lifescales.json");
-                _cache = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<int[]>>>>(json)
-                         ?? new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
+                var packaged = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<int[]>>>>(json)
+                               ?? new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var (race, classMap) in packaged)
+                {
+                    if (!dict.TryGetValue(race, out var targetClassMap))
+                    {
+                        targetClassMap = new Dictionary<string, List<int[]>>(StringComparer.OrdinalIgnoreCase);
+                        dict[race] = targetClassMap;
+                    }
+
+                    foreach (var (className, points) in classMap)
+                        targetClassMap[className] = points ?? new List<int[]>();
+                }
             }
             catch (Exception ex)
             {
                 ServiceHelper.LogDbError("Get lifescales (debug json)", ex);
-                _cache = LoadFromDb();
             }
+
+            try
+            {
+                var db = LoadFromDb();
+                foreach (var (race, classMap) in db)
+                {
+                    if (!dict.TryGetValue(race, out var targetClassMap))
+                    {
+                        targetClassMap = new Dictionary<string, List<int[]>>(StringComparer.OrdinalIgnoreCase);
+                        dict[race] = targetClassMap;
+                    }
+
+                    foreach (var (className, points) in classMap)
+                        targetClassMap[className] = points ?? new List<int[]>();
+                }
+            }
+            catch (Exception ex)
+            {
+                ServiceHelper.LogDbError("Get lifescales (debug db merge)", ex);
+            }
+
+            _cache = dict;
 #else
             _cache = LoadFromDb();
 #endif
@@ -66,6 +100,9 @@ public static class LifeScalesService
 
         return _cache;
     }
+
+    public static void InvalidateCache()
+        => _cache = null;
 
     public static async Task<IReadOnlyList<string>> GetRaceNamesAsync()
     {

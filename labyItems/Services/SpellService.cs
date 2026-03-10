@@ -49,6 +49,9 @@ public static class SpellService
         public bool? isAdvanced { get; set; } = false;
         [JsonPropertyName("IsAdvanced")]
         public bool? IsAdvancedCompat { get; set; }
+        public bool nonStandard { get; set; }
+        [JsonPropertyName("NonStandard")]
+        public bool? NonStandardCompat { get; set; }
 
         // Legacy spell damage fields retained for backward compatibility with older stored JSON.
         [JsonPropertyName("damage")]
@@ -127,6 +130,9 @@ public static class SpellService
                 e.name.ToLowerInvariant().Contains(query))
             .ToList();
     }
+
+    public static void InvalidateCache()
+        => _cache = null;
 
     private static List<SpellRaw>? LoadFromDatabase(string? dbPath)
     {
@@ -275,6 +281,8 @@ public static class SpellService
         raw.MACApplies ??= new List<int[]>();
         if (!raw.isAdvanced.HasValue && raw.IsAdvancedCompat.HasValue)
             raw.isAdvanced = raw.IsAdvancedCompat;
+        if (!raw.nonStandard && raw.NonStandardCompat == true)
+            raw.nonStandard = true;
 
         if (raw.Damage != null)
         {

@@ -58,6 +58,9 @@ public static class MiracleService
         public string sphere { get; set; } = string.Empty;
         public bool isAdvanced { get; set; } = false;
         public string alignment { get; set; } = string.Empty;
+        public bool nonStandard { get; set; }
+        [JsonPropertyName("NonStandard")]
+        public bool? NonStandardCompat { get; set; }
 
         [JsonPropertyName("Damage")]
         public MiracleDamageRaw? Damage { get; set; }
@@ -187,6 +190,8 @@ public static class MiracleService
                 e.level ??= string.Empty;
                 e.sphere ??= string.Empty;
                 e.alignment ??= string.Empty;
+                if (!e.nonStandard && e.NonStandardCompat == true)
+                    e.nonStandard = true;
                 e.damage ??= new List<int[]>();
                 e.damType ??= new List<string>();
                 e.sacApplies ??= new List<int[]>();
@@ -225,6 +230,9 @@ public static class MiracleService
                 e.name.ToLowerInvariant().Contains(query))
             .ToList();
     }
+
+    public static void InvalidateCache()
+        => _cache = null;
 
     private sealed class DbRow
     {

@@ -709,6 +709,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             ? $"Ability · Table {ability.Table} · Cost {cost} · {avail}"
             : $"Ability · Table {ability.Table} · Cost {cost}";
 
+        if (ability.IsNonStandard)
+            meta += " · Non-standard";
+
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Ability,
             Name: title,
@@ -774,6 +777,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             ? $"Spell · Lvl {Math.Max(0, spell.level)} · {colour}"
             : $"Spell · Lvl {Math.Max(0, spell.level)}";
 
+        if (spell.nonStandard)
+            meta += " · Non-standard";
+
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Spell,
             Name: (spell.name ?? string.Empty).Trim(),
@@ -799,6 +805,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             ? $"Miracle · {string.Join(" · ", tags)}"
             : "Miracle";
 
+        if (miracle.nonStandard)
+            meta += " · Non-standard";
+
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Miracle,
             Name: (miracle.name ?? string.Empty).Trim(),
@@ -823,6 +832,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         var meta = fields.Count > 0
             ? $"Evocation · {Math.Max(0, evocation.power)} EP · {string.Join(", ", fields)}"
             : $"Evocation · {Math.Max(0, evocation.power)} EP";
+
+        if (evocation.nonStandard)
+            meta += " · Non-standard";
 
         return new GlobalSearchResultVm(
             Kind: GlobalSearchKind.Evocation,

@@ -12,6 +12,12 @@
                    FontAttributes="Bold"
                    LineBreakMode="WordWrap"/>
 
+            <Label Text="Non-standard"
+                   TextColor="{StaticResource AccentMaroonColor}"
+                   FontSize="12"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding ShowNonStandardBadge, Source={x:Reference Root}}"/>
+
             <Grid ColumnDefinitions="Auto,*,Auto"
                   ColumnSpacing="10">
                 <Label Text="{Binding TableDisplayText, Source={x:Reference Root}}"

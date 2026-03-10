@@ -55,6 +55,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     private readonly Dictionary<string, SpecialisationDefinition> _specialisationIndex = new(StringComparer.OrdinalIgnoreCase);
     private bool _isSyncingRaceSubtype;
+    private bool _raceSubtypeSyncQueued;
     private SpecialisationGroupVm? _baronialTraditionGroup;
     private const string BaronialTraditionKey = "BaronialTradition";
     private const string WizardColourKey = "Wizard Colour";
@@ -136,7 +137,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 _isSyncingRaceSubtype = false;
             }
 
-            SyncRaceSubtypeDraftAndPreview();
+            QueueRaceSubtypeDraftAndPreviewSync();
         }
     }
 
@@ -357,7 +358,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                         if (initialSelection.TryGetValue(0, out var pre) && !string.IsNullOrWhiteSpace(pre))
                             SelectedRaceSubtype = pre;
                         else
-                            SyncRaceSubtypeDraftAndPreview();
+                            QueueRaceSubtypeDraftAndPreviewSync();
                     }
 
                     foreach (var (kvp, abilityToken) in LoopHelper.Flatten(
@@ -502,7 +503,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     private void OnAnySelectionChanged()
     {
         SyncWizardColourSelectionToDraft();
-        SyncRaceSubtypeDraftAndPreview();
+        QueueRaceSubtypeDraftAndPreviewSync();
         SyncBaronialSelectionToDraft();
         UpdateSpellCustomisationVisibility();
         _ = RefreshSpellCustomisationOptionsAsync();
@@ -608,48 +609,61 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             Draft.SpecialisationSelections[BaronialTraditionKey] = choice;
     }
 
-    private async void SyncRaceSubtypeDraftAndPreview()
+    private void QueueRaceSubtypeDraftAndPreviewSync()
     {
         if (_isSyncingRaceSubtype)
+        {
+            _raceSubtypeSyncQueued = true;
             return;
-
-        _isSyncingRaceSubtype = true;
-
-        try
-        {
-            var picked = (_raceSubtypeSlot?.SelectedOption ?? _selectedRaceSubtype ?? string.Empty).Trim();
-
-            if (Set(ref _selectedRaceSubtype, picked, nameof(SelectedRaceSubtype)))
-                Raise(nameof(HasRaceSubtypeSelection));
-
-            var effectiveKey = HasRaceSubtypeChoice ? _raceSubtypeKey : string.Empty;
-            var effectivePicked = HasRaceSubtypeChoice ? picked : string.Empty;
-
-            Draft.RaceSubtypeKey = effectiveKey;
-            Draft.RaceSubtypeValue = effectivePicked;
-            Draft.RaceSubtype = effectivePicked;
-
-            await UpdateRaceSubtypePreviewAsync(effectivePicked);
-            await _builder.SyncDraftLifeAsync(expandIfChanged: true);
-            UpdateRaceSubtypeCardState(effectivePicked);
-            UpdateWizardColourGroups();
-            UpdateDynamicSpecialisations();
-            RefreshMappedSelectionIssues();
-            ApplyWardPactOverrides();
-            SyncMappedSelectionsToDraft();
-            SyncWizardColourSelectionToDraft();
-            UpdateBaronialTraditionGroup();
-            UpdateBaronialAncestryNote();
-            SyncBaronialSelectionToDraft();
-
-            RecomputeCompletion();
-            _builder.NotifyGatingChanged();
-            _ = _builder.RefreshDraftAbilitiesAsync();
         }
-        finally
+
+        _ = SyncRaceSubtypeDraftAndPreviewAsync();
+    }
+
+    private async Task SyncRaceSubtypeDraftAndPreviewAsync()
+    {
+        do
         {
-            _isSyncingRaceSubtype = false;
+            _isSyncingRaceSubtype = true;
+            _raceSubtypeSyncQueued = false;
+
+            try
+            {
+                var picked = (_raceSubtypeSlot?.SelectedOption ?? _selectedRaceSubtype ?? string.Empty).Trim();
+
+                if (Set(ref _selectedRaceSubtype, picked, nameof(SelectedRaceSubtype)))
+                    Raise(nameof(HasRaceSubtypeSelection));
+
+                var effectiveKey = HasRaceSubtypeChoice ? _raceSubtypeKey : string.Empty;
+                var effectivePicked = HasRaceSubtypeChoice ? picked : string.Empty;
+
+                Draft.RaceSubtypeKey = effectiveKey;
+                Draft.RaceSubtypeValue = effectivePicked;
+                Draft.RaceSubtype = effectivePicked;
+
+                await UpdateRaceSubtypePreviewAsync(effectivePicked);
+                await _builder.SyncDraftLifeAsync(expandIfChanged: true);
+                UpdateRaceSubtypeCardState(effectivePicked);
+                UpdateWizardColourGroups();
+                UpdateDynamicSpecialisations();
+                RefreshMappedSelectionIssues();
+                ApplyWardPactOverrides();
+                SyncMappedSelectionsToDraft();
+                SyncWizardColourSelectionToDraft();
+                UpdateBaronialTraditionGroup();
+                UpdateBaronialAncestryNote();
+                SyncBaronialSelectionToDraft();
+
+                RecomputeCompletion();
+                _builder.NotifyGatingChanged();
+                _ = _builder.RefreshDraftAbilitiesAsync();
+            }
+            finally
+            {
+                _isSyncingRaceSubtype = false;
+            }
         }
+        while (_raceSubtypeSyncQueued);
     }
 
     private void RefreshMappedSelectionIssues()
@@ -1341,6 +1355,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             var required = !IsIshmaicClanOptionalForClass();
             AddDynamicMappedSpecialisation(
                 key: "Ishmaic Clan",
+                detailKey: "IshmaicClanAbilities",
                 optionMap: CloneOptionMap(ishmaicDef.ColourAbilities),
                 required: required);
         }
@@ -1351,6 +1366,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         {
             AddDynamicMappedSpecialisation(
                 key: "Amlesian Caste",
+                detailKey: "AmlesianCasteAbilities",
                 optionMap: CloneOptionMap(amlesianDef.ColourAbilities),
                 required: true);
         }
@@ -1361,6 +1377,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         {
             AddDynamicMappedSpecialisation(
                 key: "Ratfolk Clan",
+                detailKey: "RatfolkClanAbilities",
                 optionMap: CloneOptionMap(ratClanDef.ColourAbilities),
                 required: false);
         }
@@ -1374,6 +1391,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             {
                 AddDynamicMappedSpecialisation(
                     key: BaronialAncestryKey,
+                    detailKey: "BaronialAncestry",
                     optionMap: optionMap,
                     required: true);
             }
@@ -1724,7 +1742,11 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         var initSelections = new Dictionary<int, string>();
         if (Draft.SpecialisationSelections.TryGetValue(BaronialTraditionKey, out var savedInitial) && !string.IsNullOrWhiteSpace(savedInitial))
-            initSelections[1] = savedInitial;
+        {
+            var normalized = NormalizeBaronialTraditionSelection(savedInitial, options);
+            if (!string.IsNullOrWhiteSpace(normalized))
+                initSelections[1] = normalized;
+        }
 
         var classHasPowerBase = ClassHasPowerBase();
         var optional = !classHasPowerBase;
@@ -1732,9 +1754,11 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         if (_baronialTraditionGroup == null)
         {
             _baronialTraditionGroup = CreateSingleLevelGroup(
-                title: "Baronial tradition",
+                title: "Baronial Tradition",
                 optionNames: options,
-                savedSelection: Draft.SpecialisationSelections.TryGetValue(BaronialTraditionKey, out var savedSelection) ? savedSelection : null,
+                savedSelection: Draft.SpecialisationSelections.TryGetValue(BaronialTraditionKey, out var savedSelection)
+                    ? NormalizeBaronialTraditionSelection(savedSelection, options)
+                    : null,
                 isOptional: optional);
 
             Groups.Insert(0, _baronialTraditionGroup);
@@ -1746,11 +1770,30 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             if (Draft.SpecialisationSelections.TryGetValue(BaronialTraditionKey, out var saved)
                 && !string.IsNullOrWhiteSpace(saved))
             {
-                _baronialTraditionGroup.Slots[0].SelectedOption = saved.Trim();
+                _baronialTraditionGroup.Slots[0].SelectedOption = NormalizeBaronialTraditionSelection(saved, options);
             }
 
             _baronialTraditionGroup.IsOptional = optional;
         }
+    }
+
+    private static string NormalizeBaronialTraditionSelection(string? raw, IReadOnlyList<string> options)
+    {
+        var text = (raw ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return string.Empty;
+
+        var direct = options.FirstOrDefault(o => string.Equals(o, text, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(direct))
+            return direct;
+
+        if (text.Contains("hedge", StringComparison.OrdinalIgnoreCase))
+            return options.FirstOrDefault(o => o.Contains("hedge", StringComparison.OrdinalIgnoreCase)) ?? text;
+
+        if (text.Contains("circle", StringComparison.OrdinalIgnoreCase))
+            return options.FirstOrDefault(o => o.Contains("circle", StringComparison.OrdinalIgnoreCase)) ?? text;
+
+        return text;
     }
 
     private SpecialisationGroupVm CreateSingleLevelGroup(
@@ -1860,6 +1903,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     private void AddDynamicMappedSpecialisation(
         string key,
+        string detailKey,
         Dictionary<string, ColourAbilityDefinition> optionMap,
         bool required)
     {
@@ -1868,12 +1912,15 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         var mapped = new MappedSpecialisationVm(
             key: key,
+            subtitle: "Select an option to unlock its benefits.",
             levels: new[] { 1 },
             optionMap: optionMap,
             initialSelection: GetSavedSpecialisationSelection(key),
             required: required,
             onSelectionChanged: OnMappedSpecialisationChanged,
-            selectionIssueResolver: ResolveMappedOptionIssue);
+            selectionIssueResolver: ResolveMappedOptionIssue,
+            detailKey: detailKey,
+            title: key);
 
         mapped.LevelsExpanded = true;
         MappedSpecialisations.Add(mapped);
@@ -2767,6 +2814,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         private bool _suppressNotify;
 
         public string Key { get; }
+        public string DetailKey { get; }
         public string Title { get; }
         public string Subtitle { get; }
 
@@ -2818,16 +2866,20 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         public MappedSpecialisationVm(
             string key,
+            string? subtitle,
             IEnumerable<int> levels,
             Dictionary<string, ColourAbilityDefinition> optionMap,
             string? initialSelection,
             bool required,
             Action onSelectionChanged,
-            Func<ColourAbilityDefinition?, string>? selectionIssueResolver = null)
+            Func<ColourAbilityDefinition?, string>? selectionIssueResolver = null,
+            string? detailKey = null,
+            string? title = null)
         {
             Key = key;
-            Title = key;
-            var levelList = levels?.Distinct().OrderBy(x => x).ToList() ?? new List<int>();
+            DetailKey = string.IsNullOrWhiteSpace(detailKey) ? key : detailKey.Trim();
+            Title = string.IsNullOrWhiteSpace(title) ? key : title.Trim();
+            Subtitle = (subtitle ?? string.Empty).Trim();
             _onChanged = onSelectionChanged;
             _required = required;
             _selectionIssueResolver = selectionIssueResolver;
@@ -2926,7 +2978,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 {
                     Level = level,
                     Ability = ability.Name,
-                    SpecialisationKey = Key,
+                    SpecialisationKey = DetailKey,
                     SelectedOption = _selectedOption,
                     SelectedAbility = ability.Name
                 });

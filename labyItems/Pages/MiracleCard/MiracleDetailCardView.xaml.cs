@@ -182,6 +182,7 @@ public partial class MiracleDetailCardView : ContentView
     public bool ShowHealSeeMore => CanExpandHeal && !IsHealExpanded;
 
     public string MiracleName => ReadOrFallback(Miracle?.name, "Unnamed Miracle");
+    public bool IsNonStandard => Miracle?.nonStandard == true;
     public string SphereDisplayText => BuildSphereDisplay(Miracle?.sphere);
     public string SphereIconGlyph => FontAwesomeGlyphs.GetSphereIcon(SphereDisplayText);
     public string PowerDisplayText => $"P{Math.Max(0, Miracle?.power ?? 0)}";
@@ -233,6 +234,7 @@ public partial class MiracleDetailCardView : ContentView
     private void RaiseComputedProperties()
     {
         OnPropertyChanged(nameof(MiracleName));
+        OnPropertyChanged(nameof(IsNonStandard));
         OnPropertyChanged(nameof(SphereDisplayText));
         OnPropertyChanged(nameof(SphereIconGlyph));
         OnPropertyChanged(nameof(PowerDisplayText));

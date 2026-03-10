@@ -75,6 +75,9 @@ public static class DruidEvocationService
         public List<string>? healType { get; set; }
 
         public bool isAdvanced { get; set; }
+        public bool nonStandard { get; set; }
+        [JsonPropertyName("NonStandard")]
+        public bool? NonStandardCompat { get; set; }
 
         public List<int[]> GetDamageAmounts()
             => Damage?.amount is { Count: > 0 } nested ? nested : (damage ?? new List<int[]>());
@@ -120,13 +123,33 @@ public static class DruidEvocationService
     {
         if (_cache != null) return _cache;
 
-        var json = await ReadPackagedJsonAsync();
-        var list = JsonSerializer.Deserialize<List<EvocRaw>>(json, _jsonOptions)
-                   ?? new List<EvocRaw>();
+        var merged = new Dictionary<string, EvocRaw>(StringComparer.OrdinalIgnoreCase);
 
-        _cache = Normalize(list);
+        var json = await ReadPackagedJsonAsync();
+        var packaged = JsonSerializer.Deserialize<List<EvocRaw>>(json, _jsonOptions)
+                       ?? new List<EvocRaw>();
+        foreach (var item in packaged)
+        {
+            if (string.IsNullOrWhiteSpace(item?.name))
+                continue;
+
+            merged[item.name.Trim()] = item;
+        }
+
+        foreach (var item in LoadFromDatabase())
+        {
+            if (string.IsNullOrWhiteSpace(item?.name))
+                continue;
+
+            merged[item.name.Trim()] = item;
+        }
+
+        _cache = Normalize(merged.Values);
         return _cache;
     }
+
+    public static void InvalidateCache()
+        => _cache = null;
 
     private static async Task<string> ReadPackagedJsonAsync()
     {
@@ -165,6 +188,42 @@ public static class DruidEvocationService
             .OrderBy(e => e.power)
             .ThenBy(e => e.name)
             .ToList();
+
+    private static List<EvocRaw> LoadFromDatabase()
+    {
+        var path = ServiceHelper.EnsureDbPath();
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+            return new List<EvocRaw>();
+
+        try
+        {
+            using var conn = new SQLite.SQLiteConnection(path, SQLite.SQLiteOpenFlags.ReadOnly);
+            var rows = conn.Query<EvocationDbRow>("SELECT data_json FROM evocs ORDER BY name;");
+            var list = new List<EvocRaw>();
+            foreach (var row in rows)
+            {
+                if (string.IsNullOrWhiteSpace(row.data_json))
+                    continue;
+
+                try
+                {
+                    var parsed = JsonSerializer.Deserialize<EvocRaw>(row.data_json, _jsonOptions);
+                    if (parsed != null)
+                        list.Add(parsed);
+                }
+                catch
+                {
+                    // skip malformed rows
+                }
+            }
+
+            return list;
+        }
+        catch
+        {
+            return new List<EvocRaw>();
+        }
+    }
 
     private static EvocRaw NormalizeEvocation(EvocRaw source)
     {
@@ -240,8 +299,14 @@ public static class DruidEvocationService
             InnatePacApplies = legacyInnateApplies,
             healing = healAmounts,
             healType = healTypes,
-            isAdvanced = source.isAdvanced
+            isAdvanced = source.isAdvanced,
+            nonStandard = source.nonStandard || source.NonStandardCompat == true
         };
+    }
+
+    private sealed class EvocationDbRow
+    {
+        public string data_json { get; set; } = string.Empty;
     }
 
     private static int[] ToIntPairArray(int[]? values)

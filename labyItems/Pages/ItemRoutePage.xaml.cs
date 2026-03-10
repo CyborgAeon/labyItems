@@ -1,5 +1,6 @@
 using System.Linq;
 using labyItems.Pages.Calculator;
+using labyItems.Pages.NonStandard;
 using labyItems.Pages.Search;
 using labyItems.Services;
 
@@ -48,6 +49,11 @@ public partial class ItemRoutePage : ContentPage
     private async void OnGuildSearchClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new GuildSearchPage());
+    }
+
+    private async void OnCreateNonStandardClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new NonStandardCreatePage());
     }
 
     private async void OnCharacterWalletClicked(object sender, EventArgs e)

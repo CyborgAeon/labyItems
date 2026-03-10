@@ -37,11 +37,15 @@ public sealed class RaceCardVm : INotifyPropertyChanged
     public string Name { get; init; } = "";
     public IReadOnlyList<string> PeopleTypes { get; init; } = Array.Empty<string>();
     public string PeopleType { get; init; } = "";
+    public bool IsNonStandard { get; init; }
     public string Description { get; init; } = "";
     public string BuyAsRaw { get; init; } = "";
     public string SearchText { get; set; } = "";
 
     public string Icon { get; init; } = "👤";
+    public string PeopleTypeDisplay => IsNonStandard
+        ? string.IsNullOrWhiteSpace(PeopleType) ? "Non-standard" : $"{PeopleType} • Non-standard"
+        : PeopleType;
 
     public ObservableCollection<RaceLevelRowVm> LevelRows { get; } = new();
     public ObservableCollection<string> BuyAsChips { get; } = new();

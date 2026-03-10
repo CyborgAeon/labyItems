@@ -185,7 +185,8 @@ public sealed class WizardVm : INotifyPropertyChanged
             CharacterBuilderVm.GetNonGuildAlignmentRules,
             CharacterBuilderVm.RefreshDraftAbilitiesAsync,
             _creationDataService,
-            useMultiTypeFilters: true);
+            useMultiTypeFilters: true,
+            autoReload: false);
 
         _flow = new WizardFlowStateMachine(BuildSteps());
         foreach (var step in _flow.Steps)
@@ -236,7 +237,10 @@ public sealed class WizardVm : INotifyPropertyChanged
                 index: 4,
                 label: "Review",
                 canEnter: () => WizardStepRules.CanEnterReview(Draft, CharacterBuilderVm.SpecialisationVm, GuildsVm),
-                createView: () => new CharacterReviewView(this))
+                createView: () => new CharacterReviewView(this)
+                {
+                    ShowPost8Card = false
+                })
         };
 
     public async Task RefreshReviewAsync()
@@ -614,10 +618,23 @@ public sealed class WizardVm : INotifyPropertyChanged
     {
         var lines = new List<SpecialisationSummaryLineVm>();
         var includedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        string NormalizeKey(string? key)
+            => new string((key ?? string.Empty)
+                .Trim()
+                .ToLowerInvariant()
+                .Where(char.IsLetterOrDigit)
+                .ToArray());
 
         var subtype = Draft.RaceSubtypeValue ?? Draft.RaceSubtype;
         if (!string.IsNullOrWhiteSpace(subtype))
-            lines.Add(new SpecialisationSummaryLineVm($"Subtype: {subtype}", null));
+        {
+            var subtypeKey = CharacterBuilderVm?.SpecialisationVm?.RaceSubtypeDetailKey ?? string.Empty;
+            lines.Add(CreateSpecialisationSummaryLine(
+                text: $"Subtype: {subtype}",
+                potentialAbilityIndex: subtype,
+                specialisationKey: subtypeKey,
+                selectedOption: subtype));
+        }
 
         var specVm = CharacterBuilderVm?.SpecialisationVm;
         if (specVm != null)
@@ -635,8 +652,14 @@ public sealed class WizardVm : INotifyPropertyChanged
                 var lineText = multipleSlots
                     ? $"{group.Title} ({slot.LevelLabel}): {selection}"
                     : $"{group.Title}: {selection}";
-                lines.Add(CreateSpecialisationSummaryLine(lineText, selection));
-                includedKeys.Add(group.Title);
+                lines.Add(CreateSpecialisationSummaryLine(
+                    text: lineText,
+                    potentialAbilityIndex: selection,
+                    specialisationKey: group.Title,
+                    selectedOption: slot.SelectedOption));
+                var normalizedGroupKey = NormalizeKey(group.Title);
+                if (normalizedGroupKey.Length > 0)
+                    includedKeys.Add(normalizedGroupKey);
             }
 
             foreach (var mapped in specVm.MappedSpecialisations)
@@ -648,29 +671,48 @@ public sealed class WizardVm : INotifyPropertyChanged
                 if (picked.Length == 0)
                     continue;
 
-                lines.Add(CreateSpecialisationSummaryLine($"{mapped.Title}: {picked}", picked));
-                includedKeys.Add(mapped.Key);
+                lines.Add(CreateSpecialisationSummaryLine(
+                    text: $"{mapped.Title}: {picked}",
+                    potentialAbilityIndex: picked,
+                    specialisationKey: mapped.DetailKey,
+                    selectedOption: picked));
+                var normalizedMappedKey = NormalizeKey(mapped.Key);
+                if (normalizedMappedKey.Length > 0)
+                    includedKeys.Add(normalizedMappedKey);
             }
         }
 
         foreach (var kvp in Draft.SpecialisationSelections.OrderBy(k => k.Key, StringComparer.OrdinalIgnoreCase))
         {
-            if (includedKeys.Contains(kvp.Key))
+            var normalizedDraftKey = NormalizeKey(kvp.Key);
+            if (normalizedDraftKey.Length > 0 && includedKeys.Contains(normalizedDraftKey))
                 continue;
 
-            lines.Add(CreateSpecialisationSummaryLine($"{kvp.Key}: {kvp.Value}", kvp.Value));
+            lines.Add(CreateSpecialisationSummaryLine(
+                text: $"{kvp.Key}: {kvp.Value}",
+                potentialAbilityIndex: kvp.Value,
+                specialisationKey: kvp.Key,
+                selectedOption: kvp.Value));
         }
 
         return lines;
     }
 
-    private SpecialisationSummaryLineVm CreateSpecialisationSummaryLine(string text, string? potentialAbilityIndex)
+    private SpecialisationSummaryLineVm CreateSpecialisationSummaryLine(
+        string text,
+        string? potentialAbilityIndex,
+        string? specialisationKey,
+        string? selectedOption)
     {
         EvolutionService.AbilityResult? ability = null;
         if (_specialisationAbilityLookup.Count > 0)
             ability = AbilityDetailsLookupService.FindByIndex(_specialisationAbilityLookup, potentialAbilityIndex);
 
-        return new SpecialisationSummaryLineVm(text, ability);
+        return new SpecialisationSummaryLineVm(
+            text: text,
+            ability: ability,
+            specialisationKey: specialisationKey,
+            selectedOption: selectedOption);
     }
 
     private void RefreshSpecialisationSummaryLines()
@@ -1018,12 +1060,20 @@ public sealed class WizardVm : INotifyPropertyChanged
     {
         public string Text { get; }
         public EvolutionService.AbilityResult? Ability { get; }
-        public bool HasAbilityDetails => Ability != null;
+        public string SpecialisationKey { get; }
+        public string SelectedOption { get; }
+        public bool HasDetails => Ability != null || SpecialisationKey.Length > 0;
 
-        public SpecialisationSummaryLineVm(string text, EvolutionService.AbilityResult? ability)
+        public SpecialisationSummaryLineVm(
+            string text,
+            EvolutionService.AbilityResult? ability,
+            string? specialisationKey,
+            string? selectedOption)
         {
             Text = text;
             Ability = ability;
+            SpecialisationKey = (specialisationKey ?? string.Empty).Trim();
+            SelectedOption = (selectedOption ?? string.Empty).Trim();
         }
     }
 

@@ -256,6 +256,9 @@ public partial class EvocationDetailCardView : ContentView
         if (Evocation?.isAdvanced == true)
             MetaChips.Add(new EvocationMetaChipVm("\uf005", "Advanced"));
 
+        if (Evocation?.nonStandard == true)
+            MetaChips.Add(new EvocationMetaChipVm("\uf12a", "Non-standard"));
+
         OnPropertyChanged(nameof(HasMetaChips));
     }
 

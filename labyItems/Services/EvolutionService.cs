@@ -64,6 +64,7 @@ public static class EvolutionService
         public bool CanBuyMultiple { get; init; }
         public IReadOnlyList<string> PreReqs { get; init; } = Array.Empty<string>();
         public int? MaxAvailable { get; init; }
+        public bool IsNonStandard { get; init; }
     }
 
     public static async Task<IReadOnlyList<AbilityResult>> GetAllAbilitiesAsync()
@@ -95,7 +96,8 @@ public static class EvolutionService
                     Available = r.available ?? string.Empty,
                     CanBuyMultiple = r.can_buy_multiple != 0,
                     PreReqs = preReqs,
-                    MaxAvailable = ParseMaxAvailable(r.data_json)
+                    MaxAvailable = ParseMaxAvailable(r.data_json),
+                    IsNonStandard = ParseNonStandard(r.data_json)
                 });
             }
 
@@ -198,7 +200,8 @@ public static class EvolutionService
                 Available = r.available ?? string.Empty,
                 CanBuyMultiple = r.can_buy_multiple != 0,
                 PreReqs = ParsePreReqs(r.prereqs_json),
-                MaxAvailable = ParseMaxAvailable(r.data_json)
+                MaxAvailable = ParseMaxAvailable(r.data_json),
+                IsNonStandard = ParseNonStandard(r.data_json)
             })
                 .Take(20)
                 .ToList();
@@ -254,7 +257,8 @@ public static class EvolutionService
             Available = r.available ?? string.Empty,
             CanBuyMultiple = r.can_buy_multiple != 0,
             PreReqs = ParsePreReqs(r.prereqs_json),
-            MaxAvailable = ParseMaxAvailable(r.data_json)
+            MaxAvailable = ParseMaxAvailable(r.data_json),
+            IsNonStandard = ParseNonStandard(r.data_json)
         }).ToList();
 
         if (table is { } t && t >= 1)
@@ -306,6 +310,48 @@ public static class EvolutionService
         }
 
         return null;
+    }
+
+    private static bool ParseNonStandard(string? dataJson)
+    {
+        if (string.IsNullOrWhiteSpace(dataJson))
+            return false;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(dataJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+                return false;
+
+            foreach (var property in doc.RootElement.EnumerateObject())
+            {
+                if (property.Name.Equals("nonStandard", StringComparison.OrdinalIgnoreCase)
+                    || property.Name.Equals("non-standard", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (property.Value.ValueKind == JsonValueKind.True)
+                        return true;
+
+                    if (property.Value.ValueKind == JsonValueKind.Number
+                        && property.Value.TryGetInt32(out var numeric)
+                        && numeric != 0)
+                    {
+                        return true;
+                    }
+
+                    if (property.Value.ValueKind == JsonValueKind.String
+                        && bool.TryParse(property.Value.GetString(), out var parsedBool))
+                    {
+                        return parsedBool;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // malformed data_json; treat as standard
+        }
+
+        return false;
     }
 
     private class EvoRow

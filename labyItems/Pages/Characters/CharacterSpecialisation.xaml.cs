@@ -102,7 +102,7 @@ public partial class CharacterSpecialisation : ContentView
                 break;
 
             case CharacterSpecialisationVm.MappedSpecialisationVm mapped:
-                key = (mapped.Key ?? string.Empty).Trim();
+                key = (mapped.DetailKey ?? mapped.Key ?? string.Empty).Trim();
                 selectedOption = (mapped.SelectedOption ?? string.Empty).Trim();
                 break;
 

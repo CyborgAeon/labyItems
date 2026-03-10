@@ -59,7 +59,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
         bool applyCharacterAvailabilityFilters = true,
         bool allowGuildSelection = true,
         bool searchByNameOnly = false,
-        bool useMultiTypeFilters = false)
+        bool useMultiTypeFilters = false,
+        bool autoReload = true)
     {
         _draft = draft;
         _notifyWizardGatingChanged = notifyWizardGatingChanged;
@@ -89,10 +90,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
             SelectedTypeFilter = string.IsNullOrWhiteSpace(s) ? AllTypeFilterValue : s;
         });
 
-        MainThread.BeginInvokeOnMainThread(async () =>
+        if (autoReload)
         {
-            await ReloadAsync();
-        });
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await ReloadAsync();
+            });
+        }
     }
 
     public ObservableCollection<string> TypeFilters { get; }
@@ -1036,6 +1040,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
             if (_isSelectable == value) return;
             _isSelectable = value;
             Raise();
+            Raise(nameof(ShowSelectionAction));
         }
     }
 
@@ -1067,6 +1072,8 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     }
 
     public string DisplayName => _name.Length > 15 ? $"{_name[..12]}..." : _name;
+    public string SelectionActionText => IsSelected ? "Remove" : "Add";
+    public bool ShowSelectionAction => IsSelectable || IsSelected;
     public string Type { get; set; } = "";
     public string Icon { get; set; } = "📜";
 
@@ -1122,6 +1129,8 @@ public sealed class GuildCardVm : INotifyPropertyChanged
             if (_isSelected == value) return;
             _isSelected = value;
             Raise();
+            Raise(nameof(SelectionActionText));
+            Raise(nameof(ShowSelectionAction));
         }
     }
 }
