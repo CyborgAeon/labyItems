@@ -146,94 +146,50 @@
 
                             <VerticalStackLayout Spacing="8"
                                                  IsVisible="{Binding HasRaceSubtypeSelection}">
-
-                                <Grid ColumnDefinitions="*,Auto"
-                                      ColumnSpacing="8">
-                                    <Label Text="Level progression"
-                                           FontAttributes="Bold"/>
-                                    <Button Text="{Binding RaceSubtypeLevelsExpanded, Converter={StaticResource ChevronConverter}}"
-                                            Command="{Binding ToggleRaceSubtypeLevelsCommand}"
-                                            BackgroundColor="Transparent"
-                                            TextColor="{StaticResource MutedTextColor}"
-                                            Padding="0"
-                                            WidthRequest="32"
-                                            HeightRequest="32"
-                                            HorizontalOptions="End"/>
+                                <Grid ColumnDefinitions="72,*,24"
+                                      ColumnSpacing="8"
+                                      Opacity="0.7">
+                                    <Label Text="Lvl"/>
+                                    <Label Grid.Column="1"
+                                           Text="Ability"/>
                                 </Grid>
 
-                                <Grid IsVisible="{Binding RaceSubtypeLevelsExpanded}"
-                                      RowSpacing="4">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-
-                                    <Grid Grid.Row="0"
-                                          ColumnDefinitions="50,60,*,*"
-                                          ColumnSpacing="8"
-                                          Opacity="0.7"
-                                          IsVisible="{Binding ShowRaceSubtypeLifeScale}">
-                                        <Label Text="Lvl"/>
-                                        <Label Grid.Column="1"
-                                               Text="Body"/>
-                                        <Label Grid.Column="2"
-                                               Text="Loc"/>
-                                        <Label Grid.Column="3"
-                                               Text="Abilities"/>
-                                    </Grid>
-
-                                    <Grid Grid.Row="0"
-                                          ColumnDefinitions="50,*"
-                                          ColumnSpacing="8"
-                                          Opacity="0.7"
-                                          IsVisible="{Binding HideRaceSubtypeLifeScale}">
-                                        <Label Text="Lvl"/>
-                                        <Label Grid.Column="1"
-                                               Text="Abilities"/>
-                                    </Grid>
-
-                                    <CollectionView Grid.Row="1"
-                                                    ItemsSource="{Binding RaceSubtypeLevelRows}"
-                                                    SelectionMode="None"
-                                                    IsVisible="{Binding ShowRaceSubtypeLifeScale}">
-                                        <CollectionView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid ColumnDefinitions="50,60,*,*"
-                                                      ColumnSpacing="8"
-                                                      Padding="0,2">
-                                                    <Label Text="{Binding Level}"/>
-                                                    <Label Grid.Column="1"
-                                                           Text="{Binding Body}"/>
-                                                    <Label Grid.Column="2"
-                                                           Text="{Binding Loc}"/>
-                                                    <Label Grid.Column="3"
-                                                           Text="{Binding Abilities}"
-                                                           LineBreakMode="WordWrap"
-                                                           Opacity="0.85"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </CollectionView.ItemTemplate>
-                                    </CollectionView>
-
-                                    <CollectionView Grid.Row="1"
-                                                    ItemsSource="{Binding RaceSubtypeLevelRows}"
-                                                    SelectionMode="None"
-                                                    IsVisible="{Binding HideRaceSubtypeLifeScale}">
-                                        <CollectionView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid ColumnDefinitions="50,*"
-                                                      ColumnSpacing="8"
-                                                      Padding="0,2">
-                                                    <Label Text="{Binding Level}"/>
-                                                    <Label Grid.Column="1"
-                                                           Text="{Binding Abilities}"
-                                                           LineBreakMode="WordWrap"
-                                                           Opacity="0.85"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </CollectionView.ItemTemplate>
-                                    </CollectionView>
-                                </Grid>
+                                <CollectionView ItemsSource="{Binding RaceSubtypeAbilityRows}"
+                                                SelectionMode="None">
+                                    <CollectionView.EmptyView>
+                                        <Label Text="No abilities available for this subtype and class."
+                                               Opacity="0.75"/>
+                                    </CollectionView.EmptyView>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="72,*,24"
+                                                  ColumnSpacing="8"
+                                                  Padding="0,2">
+                                                <Label Text="{Binding LevelText}"
+                                                       Opacity="0.85"/>
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding Ability}"
+                                                       LineBreakMode="TailTruncation"
+                                                       MaxLines="1"
+                                                       Opacity="0.85"/>
+                                                <Button Grid.Column="2"
+                                                        Text="&#xF05A;"
+                                                        FontFamily="FASolid"
+                                                        FontSize="12"
+                                                        Padding="0"
+                                                        BackgroundColor="Transparent"
+                                                        TextColor="{StaticResource SubtleTextColor}"
+                                                        HeightRequest="18"
+                                                        WidthRequest="18"
+                                                        MinimumHeightRequest="0"
+                                                        MinimumWidthRequest="0"
+                                                        VerticalOptions="Center"
+                                                        Command="{Binding Source={x:Reference Root}, Path=ViewSpecialisationRowDetailsCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
 
                             </VerticalStackLayout>
 
@@ -342,55 +298,50 @@
 
                                         <VerticalStackLayout Spacing="8"
                                                              IsVisible="{Binding HasSelection}">
-
-                                            <Grid ColumnDefinitions="*,Auto"
-                                                  ColumnSpacing="8">
-                                                <Label Text="Level progression"
-                                                       FontAttributes="Bold"/>
-                                                <Button Text="{Binding LevelsExpanded, Converter={StaticResource ChevronConverter}}"
-                                                        Command="{Binding ToggleLevelsCommand}"
-                                                        BackgroundColor="Transparent"
-                                                        TextColor="{StaticResource MutedTextColor}"
-                                                        Padding="0"
-                                                        WidthRequest="32"
-                                                        HeightRequest="32"
-                                                        HorizontalOptions="End"/>
+                                            <Grid ColumnDefinitions="72,*,24"
+                                                  ColumnSpacing="8"
+                                                  Opacity="0.7">
+                                                <Label Text="Lvl"/>
+                                                <Label Grid.Column="1"
+                                                       Text="Ability"/>
                                             </Grid>
 
-                                            <Grid IsVisible="{Binding LevelsExpanded}"
-                                                  RowSpacing="4">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="*"/>
-                                                </Grid.RowDefinitions>
-
-                                                <Grid Grid.Row="0"
-                                                      ColumnDefinitions="50,*"
-                                                      ColumnSpacing="8"
-                                                      Opacity="0.7">
-                                                    <Label Text="Lvl"/>
-                                                    <Label Grid.Column="1"
-                                                           Text="Abilities"/>
-                                                </Grid>
-
-                                                <CollectionView Grid.Row="1"
-                                                                ItemsSource="{Binding LevelRows}"
-                                                                SelectionMode="None">
-                                                    <CollectionView.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Grid ColumnDefinitions="50,*"
-                                                                  ColumnSpacing="8"
-                                                                  Padding="0,2">
-                                                                <Label Text="{Binding Level}"/>
-                                                                <Label Grid.Column="1"
-                                                                       Text="{Binding Abilities}"
-                                                                       LineBreakMode="WordWrap"
-                                                                       Opacity="0.85"/>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </CollectionView.ItemTemplate>
-                                                </CollectionView>
-                                            </Grid>
+                                            <CollectionView ItemsSource="{Binding AbilityRows}"
+                                                            SelectionMode="None">
+                                                <CollectionView.EmptyView>
+                                                    <Label Text="No abilities available for this selection."
+                                                           Opacity="0.75"/>
+                                                </CollectionView.EmptyView>
+                                                <CollectionView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid ColumnDefinitions="72,*,24"
+                                                              ColumnSpacing="8"
+                                                              Padding="0,2">
+                                                            <Label Text="{Binding LevelText}"
+                                                                   Opacity="0.85"/>
+                                                            <Label Grid.Column="1"
+                                                                   Text="{Binding Ability}"
+                                                                   LineBreakMode="TailTruncation"
+                                                                   MaxLines="1"
+                                                                   Opacity="0.85"/>
+                                                            <Button Grid.Column="2"
+                                                                    Text="&#xF05A;"
+                                                                    FontFamily="FASolid"
+                                                                    FontSize="12"
+                                                                    Padding="0"
+                                                                    BackgroundColor="Transparent"
+                                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                                    HeightRequest="18"
+                                                                    WidthRequest="18"
+                                                                    MinimumHeightRequest="0"
+                                                                    MinimumWidthRequest="0"
+                                                                    VerticalOptions="Center"
+                                                                    Command="{Binding Source={x:Reference Root}, Path=ViewSpecialisationRowDetailsCommand}"
+                                                                    CommandParameter="{Binding .}"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </CollectionView.ItemTemplate>
+                                            </CollectionView>
 
                                         </VerticalStackLayout>
 

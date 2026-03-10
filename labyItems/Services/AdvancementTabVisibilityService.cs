@@ -14,7 +14,8 @@ public sealed class AdvancementTabVisibilityService : IAdvancementTabVisibilityS
         var isWizard = HasBracket(classRecord?.Brackets, "Wizard")
                        || (hasClassName && (trimmed.Contains("Wizard", StringComparison.OrdinalIgnoreCase)
                                             || trimmed.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
-                                            || trimmed.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase)));
+                                            || trimmed.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase)
+                                            || trimmed.Contains("Sorc", StringComparison.OrdinalIgnoreCase)));
         var isPriest = HasBracket(classRecord?.Brackets, "Priest")
                        || (hasClassName && trimmed.Contains("Priest", StringComparison.OrdinalIgnoreCase));
         var isDruid = HasBracket(classRecord?.Brackets, "Druid")
@@ -38,7 +39,8 @@ public sealed class AdvancementTabVisibilityService : IAdvancementTabVisibilityS
         var showSpells = current.ShowSpellsTab
                          || name.Contains("Wizard", StringComparison.OrdinalIgnoreCase)
                          || name.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
-                         || name.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase);
+                         || name.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase)
+                         || name.Contains("Sorc", StringComparison.OrdinalIgnoreCase);
 
         var showMiracles = current.ShowMiraclesTab
                            || name.Contains("Priest", StringComparison.OrdinalIgnoreCase)

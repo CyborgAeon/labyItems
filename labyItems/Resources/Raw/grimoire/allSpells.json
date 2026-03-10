@@ -1817,7 +1817,7 @@
   {
     "name": "Empower Weapon",
     "level": 3,
-    "colour": "ANY",
+    "colour": "All",
     "verbal": " … .(B).... of ....(A).... I bind thee to this weapon, may the magics of ....(A).... embrace this ...(weapon type)...!",
     "description": "Makes one weapon of the caster's choice +0 magical and of the colour of the caster. If the caster has more than one wizardly colour they may buy this glyph more than once if desired. This weapon must be a normal non-supernatural weapon and cannot be further enhanced. The weapon is only magical while in the hands of the caster.",
     "IsAdvanced": true,
@@ -1826,7 +1826,7 @@
   {
     "name": "Pact with the … Drake / Dragon",
     "level": 4,
-    "colour": "Any",
+    "colour": "All",
     "verbal": "May the Dragon/Drake of ...(element).... bear witness to my actions, I embrace the magic, I call to it, to further me in my goals, actions and dreams this day\".",
     "description": "This stackable glyph will grant the caster a boon from his Dragon or Drake. This takes the form in game terms equivalent to the innate powers granted to the Elves / Draves of the respective Dragon / Drake. Obviously only Elves and Draves with an established Mana Dragon or Drake may be pacted. Thus this may not be used to gain Drowe, Winter, Wood, Faerie nor Seasonal Elf innates. The first rune grants 4 levels of elven innates, each additional rune will grant +1 level of innates. Thus 5 runes will grant 8th level magical innates. Whilst active the caster may not recover the mana spent on this spell, without it ending the Pact early. This spell may only be learnt and cast once per colour held and if purchased with points comes with a set of 5 runes comes. Should the Mage hold more than one, each colour must be learnt separately. This spell can only grant one set of innates each day. It is not possible to cast it, use the innates, remove it, and re-cast it for a new set of innates. The duration of the spell is based on the number of runes cast: 1 Rune – One Hour 2 Runes – Three Hours 3 Runes – Six Hours 4 Runes – 12 Hours 5 Runes – 24 Hours It is not possible to cast this spell with greater than 5 runes. This spell stacks with normal Elven innates but is not multiplied by x2/3 innates or similar abilities.",
     "IsAdvanced": true,
@@ -1898,7 +1898,7 @@
   {
     "name": "Palewise’s Reforge The Fallen Child",
     "level": 12,
-    "colour": "Any",
+    "colour": "All",
     "verbal": "A 5 minute ritual that ends with “I call now to my Dragon and ask him/her to breathe life once more into his fallen child. Let them rise again to serve the will of their creator!",
     "description": "This acts as per a Restore Life miracle except: 1) It does not require a protection from spirits. 2) It functions regardless of alignment. 3) It will only function vs an elf, drave, faerie, or similar being that is harmed by Dispels, that is the same racial colour as the spell (e.g. a Red wizard can restore a fire elf, or a red/white faierie). 4) It must be cast within 20ft of their death, or over their body if they have one. Grey wizards may choose to learn this as a 14 mana spell, in which case it will function on any elf/similar regardless of their colours. Black Magic",
     "IsAdvanced": true,
@@ -4845,7 +4845,7 @@
   {
     "name": "Ward the Supernatural",
     "level": 8,
-    "colour": "Sorcorial",
+    "colour": "Sorcery",
     "verbal": "With my arts and powers and these runes I inscribe let those not of this world be barred from passage.",
     "description": "Acts in a similar manner to Protection from Spirits, except it functions vs Demonkind, Angels, and similar otherworldly beings. It functions vs creatures below the caster’s skill level, and only vs those susceptible to magic. It does not affect Undead or Elementals. The Ward may be a 15ft Line, or a 6ft Radius circle.",
     "IsAdvanced": true,

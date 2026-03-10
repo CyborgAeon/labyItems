@@ -10,6 +10,7 @@ public partial class CharacterSpecialisation : ContentView
     private CharacterSpecialisationVm? _boundVm;
     public ICommand ViewSpecialisationDetailsCommand { get; }
     public ICommand ViewSpecialisationAbilityDetailsCommand { get; }
+    public ICommand ViewSpecialisationRowDetailsCommand { get; }
 
     public CharacterSpecialisation()
     {
@@ -18,6 +19,8 @@ public partial class CharacterSpecialisation : ContentView
             ViewSpecialisationDetails(parameter));
         ViewSpecialisationAbilityDetailsCommand = new Command<object?>(parameter =>
             ViewSpecialisationAbilityDetails(parameter));
+        ViewSpecialisationRowDetailsCommand = new Command<object?>(parameter =>
+            ViewSpecialisationRowDetails(parameter));
     }
 
     public CharacterSpecialisation(CharacterBuilderVm builderVm) : this()
@@ -114,6 +117,31 @@ public partial class CharacterSpecialisation : ContentView
 
         var nav = ResolveNavigation();
         if (key.Length == 0 || nav == null)
+            return;
+
+        var lookup = await SpecialisationService.GetAllAsync();
+        var match = lookup.FirstOrDefault(kvp => string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrWhiteSpace(match.Key) || match.Value == null)
+            return;
+
+        await nav.PushAsync(new SpecialisationCardPage(match.Key, match.Value, selectedOption));
+    }
+
+    private async void ViewSpecialisationRowDetails(object? parameter)
+    {
+        if (parameter is not CharacterSpecialisationVm.SpecialisationAbilityRow row)
+            return;
+
+        var key = (row.SpecialisationKey ?? string.Empty).Trim();
+        if (key.Length == 0)
+            return;
+
+        var selectedOption = (row.SelectedAbility ?? row.Ability ?? row.SelectedOption ?? string.Empty).Trim();
+        if (selectedOption.Length == 0)
+            selectedOption = (row.SelectedOption ?? string.Empty).Trim();
+
+        var nav = ResolveNavigation();
+        if (nav == null)
             return;
 
         var lookup = await SpecialisationService.GetAllAsync();

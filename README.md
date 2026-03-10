@@ -42,6 +42,14 @@ $HOME/.dotnet/dotnet watch \
   run --configuration Debug
 ```
 
+## unit tests (logic-only)
+
+MAUI UI layers are hard to run in fast local unit tests, so this repo includes logic-focused tests (no device/emulator required):
+
+```bash
+$HOME/.dotnet/dotnet test tests/labyItems.Tests/labyItems.Tests.csproj
+```
+
 ## iOS (build latest + push to simulator)
 
 Make sure a simulator is booted, then:

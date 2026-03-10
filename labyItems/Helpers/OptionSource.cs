@@ -102,16 +102,26 @@ public sealed class EnumPickerSource<TEnum> : IOptionSource where TEnum : struct
             slot.ConfigureMagicColours(_allowed.Cast<MagicColours>());
             slot.SetOptionsSource(() => slot.MagicColourOptionNames);
             if (!string.IsNullOrWhiteSpace(preselected))
-                slot.SelectedMagicColour = _allowed.Cast<MagicColours>()
-                    .FirstOrDefault(m => string.Equals(EnumDisplayFormatter.Format(m), preselected, StringComparison.OrdinalIgnoreCase));
+            {
+                var match = _allowed.Cast<MagicColours?>()
+                    .FirstOrDefault(m => m.HasValue
+                        && string.Equals(EnumDisplayFormatter.Format(m.Value), preselected, StringComparison.OrdinalIgnoreCase));
+                if (match.HasValue)
+                    slot.SelectedMagicColour = match.Value;
+            }
         }
         else if (typeof(TEnum) == typeof(VivomancerColours))
         {
             slot.ConfigureVivomancerColours(_allowed.Cast<VivomancerColours>());
             slot.SetOptionsSource(() => slot.VivomancerColourOptionNames);
             if (!string.IsNullOrWhiteSpace(preselected))
-                slot.SelectedVivomancerColour = _allowed.Cast<VivomancerColours>()
-                    .FirstOrDefault(v => string.Equals(EnumDisplayFormatter.Format(v), preselected, StringComparison.OrdinalIgnoreCase));
+            {
+                var match = _allowed.Cast<VivomancerColours?>()
+                    .FirstOrDefault(v => v.HasValue
+                        && string.Equals(EnumDisplayFormatter.Format(v.Value), preselected, StringComparison.OrdinalIgnoreCase));
+                if (match.HasValue)
+                    slot.SelectedVivomancerColour = match.Value;
+            }
         }
         else
         {

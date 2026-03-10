@@ -111,6 +111,16 @@ public static class WizardSpellRules
         return Enum.TryParse(normalized, ignoreCase: true, out colour);
     }
 
+    public static bool TryExtractSingleMagicColour(string? rawColour, out MagicColours colour)
+    {
+        colour = default;
+        var tokens = TokenizeColour(rawColour);
+        if (tokens.Count != 1)
+            return false;
+
+        return TryParseMagicColour(tokens[0], out colour);
+    }
+
     public static bool IsAllOrAnyColour(string? rawColour)
     {
         if (string.IsNullOrWhiteSpace(rawColour))
@@ -162,10 +172,41 @@ public static class WizardSpellRules
             {
                 Name = s.name ?? string.Empty,
                 Level = s.level,
-                Colour = s.colour ?? string.Empty,
+                Colour = ResolveListEntryColour(s.colour, selectedColours),
                 IsAdvanced = s.isAdvanced ?? false
             })
             .ToList();
+    }
+
+    private static string ResolveListEntryColour(string? rawColour, IReadOnlyList<string> selectedColours)
+    {
+        if (TryExtractSingleMagicColour(rawColour, out var single))
+            return single.ToString();
+
+        var normalizedSelections = (selectedColours ?? Array.Empty<string>())
+            .Select(NormalizeWizardSelection)
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .ToList();
+
+        if (normalizedSelections.Count == 0)
+            return (rawColour ?? string.Empty).Trim();
+
+        foreach (var selection in normalizedSelections)
+        {
+            if (TryParseMagicColour(selection, out var parsed)
+                && SpellMatchesWizardSelection(rawColour, parsed.ToString()))
+            {
+                return parsed.ToString();
+            }
+        }
+
+        foreach (var selection in normalizedSelections)
+        {
+            if (SpellMatchesWizardSelection(rawColour, selection))
+                return selection;
+        }
+
+        return (rawColour ?? string.Empty).Trim();
     }
 
     private static bool SpellColourPartMatches(string rawPart, MagicColours? selectionColour, bool selectionIsElemental, bool selectionIsSorcorial)

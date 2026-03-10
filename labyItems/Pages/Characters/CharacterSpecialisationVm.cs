@@ -49,6 +49,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     public ObservableCollection<MappedSpecialisationVm> MappedSpecialisations { get; } = new();
 
     public ObservableCollection<string> RaceSubtypeOptions { get; } = new();
+    public ObservableCollection<SpecialisationAbilityRow> RaceSubtypeAbilityRows { get; } = new();
     public ObservableCollection<RaceSubtypePreviewLine> RaceSubtypeAbilitiesPreview { get; } = new();
     public ObservableCollection<RaceSubtypeLevelRow> RaceSubtypeLevelRows { get; } = new();
 
@@ -242,6 +243,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             _spellCustomisationGroups.Clear();
             _groupOptionDefinitions.Clear();
             RaceSubtypeOptions.Clear();
+            RaceSubtypeAbilityRows.Clear();
             RaceSubtypeAbilitiesPreview.Clear();
             RaceSubtypeLevelRows.Clear();
             HasRaceSubtypeChoice = false;
@@ -823,8 +825,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         return list;
     }
 
-    private async Task UpdateRaceSubtypePreviewAsync(string picked)
+    private Task UpdateRaceSubtypePreviewAsync(string picked)
     {
+        RaceSubtypeAbilityRows.Clear();
         RaceSubtypeAbilitiesPreview.Clear();
         RaceSubtypeLevelRows.Clear();
         _raceSubtypeLifeScaleOverride = string.Empty;
@@ -837,38 +840,24 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         ShowRaceSubtypeLifeScale = false;
 
         if (!HasRaceSubtypeChoice)
-            return;
+            return Task.CompletedTask;
 
         if (string.IsNullOrWhiteSpace(_raceSubtypeAbilityMapKey) || string.IsNullOrWhiteSpace(picked))
-            return;
+            return Task.CompletedTask;
 
         if (!_specialisationIndex.TryGetValue(_raceSubtypeAbilityMapKey, out var mapDef) || mapDef?.ColourAbilities == null)
-            return;
+            return Task.CompletedTask;
 
         if (!mapDef.ColourAbilities.TryGetValue(picked, out var entry) || entry == null)
-        {
-            if (IsBaselineHumanStandard(picked))
-                return;
-            return;
-        }
+            return Task.CompletedTask;
 
         if (!IsClassAllowed(entry.ClassRestriction) || !IsAlignmentAllowed(entry.AlignmentRestriction))
-        {
-            if (IsBaselineHumanStandard(picked))
-                return;
-            return;
-        }
+            return Task.CompletedTask;
 
         if (!string.IsNullOrWhiteSpace(entry.ArmourAvailabilityOverride))
         {
             _raceSubtypeArmourOverride = entry.ArmourAvailabilityOverride.Trim();
             Draft.ArmourAvailabilityOverride = _raceSubtypeArmourOverride;
-
-            RaceSubtypeAbilitiesPreview.Add(new RaceSubtypePreviewLine
-            {
-                Level = "Armour",
-                Ability = $"Armour availability override: {_raceSubtypeArmourOverride}"
-            });
         }
 
         _raceSubtypeColourOverride = (entry.ColourChoiceOverride ?? new List<string>())
@@ -882,111 +871,44 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         {
             _raceSubtypeLifeScaleOverride = entry.LifeScaleOverride.Trim();
             Draft.LifeScaleKeyOverride = _raceSubtypeLifeScaleOverride;
-
-            RaceSubtypeAbilitiesPreview.Add(new RaceSubtypePreviewLine
-            {
-                Level = "Life",
-                Ability = $"Life scale override: {_raceSubtypeLifeScaleOverride}"
-            });
-        }
-
-        if (entry.GuildOverrides != null)
-        {
-            var guildSummary = SummarizeGuildOverrides(entry.GuildOverrides);
-            if (!string.IsNullOrWhiteSpace(guildSummary))
-            {
-                RaceSubtypeAbilitiesPreview.Add(new RaceSubtypePreviewLine
-                {
-                    Level = "Guild",
-                    Ability = guildSummary
-                });
-            }
         }
 
         var levels = entry.Levels ?? new Dictionary<string, List<AbilityDefinition>>();
-        var abilityByLevel = new Dictionary<int, List<string>>();
-        var hasAbilities = false;
-
         var ordered = levels
             .Select(kvp => new
             {
                 Key = kvp.Key ?? string.Empty,
                 Level = int.TryParse(kvp.Key, out var n) ? n : int.MaxValue,
                 Abilities = (kvp.Value ?? new List<AbilityDefinition>())
-                    .Select(ToDisplayName)
-                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Where(a => a != null)
+                    .Select(a => new
+                    {
+                        Name = (a.Name ?? string.Empty).Trim(),
+                        Level = int.TryParse(kvp.Key, out var parsedLevel) ? parsedLevel : (int?)null
+                    })
+                    .Where(a => a.Name.Length > 0)
                     .ToList()
             })
             .Where(x => x.Abilities.Count > 0)
             .OrderBy(x => x.Level)
-            .ThenBy(x => x.Key, StringComparer.OrdinalIgnoreCase);
+            .ThenBy(x => x.Key, StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
-        foreach (var (lvl, ability) in LoopHelper.Flatten(ordered, entry => entry.Abilities))
+        foreach (var (lvl, ability) in LoopHelper.Flatten(ordered, entryLevel => entryLevel.Abilities))
         {
-            var label = lvl.Level == int.MaxValue ? lvl.Key : $"Lvl {lvl.Level}: ";
-            RaceSubtypeAbilitiesPreview.Add(new RaceSubtypePreviewLine
-            {
-                Level = label,
-                Ability = ability
-            });
-        }
-
-        foreach (var lvl in ordered)
-        {
-            if (lvl.Level == int.MaxValue)
-                continue;
-
-            if (!abilityByLevel.TryGetValue(lvl.Level, out var list))
-            {
-                list = new List<string>();
-                abilityByLevel[lvl.Level] = list;
-            }
-
-            list.AddRange(lvl.Abilities);
-            hasAbilities = true;
-        }
-
-        var className = (Draft.Class ?? string.Empty).Trim();
-        var hasOverride = !string.IsNullOrWhiteSpace(_raceSubtypeLifeScaleOverride);
-        var lifeScaleRace = hasOverride ? _raceSubtypeLifeScaleOverride : string.Empty;
-
-        IReadOnlyList<LifeScalePoint> life = Array.Empty<LifeScalePoint>();
-        if (hasOverride && className.Length > 0)
-        {
-            life = await LifeScalesService.GetLifeScaleAsync(lifeScaleRace, className);
-
-            if ((life == null || life.Count == 0) && !string.Equals(lifeScaleRace, _currentRaceForSubtype, StringComparison.OrdinalIgnoreCase))
-            {
-                // Fallback to base race if override is missing in lifescales
-                life = await LifeScalesService.GetLifeScaleAsync(_currentRaceForSubtype, className);
-            }
-        }
-
-        var hasLife = hasOverride && life != null && life.Count > 0;
-
-        for (var level = 1; level <= 8; level++)
-        {
-            var body = hasLife && life.Count >= level ? life[level - 1].Body.ToString() : "";
-            var loc = hasLife && life.Count >= level ? life[level - 1].Loc.ToString() : "";
-            var abilities = abilityByLevel.TryGetValue(level, out var list)
-                ? string.Join(", ", list.Distinct(StringComparer.OrdinalIgnoreCase))
-                : "";
-
-            var includeRow = hasLife || !string.IsNullOrWhiteSpace(abilities);
-            if (!includeRow)
-                continue;
-
-            RaceSubtypeLevelRows.Add(new RaceSubtypeLevelRow
+            var level = lvl.Level == int.MaxValue ? ability.Level : lvl.Level;
+            RaceSubtypeAbilityRows.Add(new SpecialisationAbilityRow
             {
                 Level = level,
-                Body = body,
-                Loc = loc,
-                Abilities = abilities
+                Ability = ability.Name,
+                SpecialisationKey = _raceSubtypeAbilityMapKey,
+                SelectedOption = picked,
+                SelectedAbility = ability.Name
             });
         }
 
-        ShowRaceSubtypeLifeScale = hasLife;
-        RaceSubtypeLevelsExpanded = hasLife || hasAbilities;
+        RaceSubtypeLevelsExpanded = RaceSubtypeAbilityRows.Count > 0;
+        return Task.CompletedTask;
     }
 
     private void UpdateRaceSubtypeCardState(string picked)
@@ -2046,22 +1968,78 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         if (list.Count == 0)
             return true;
 
-        var clsNorm = className.ToLowerInvariant();
-        foreach (var r in list)
+        var selectedClass = _builder.AllClasses.FirstOrDefault(c =>
+            string.Equals(c.Name, className, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(c.Key, className, StringComparison.OrdinalIgnoreCase));
+
+        var classTokens = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        AddClassToken(classTokens, className);
+        AddClassToken(classTokens, selectedClass?.Name);
+        AddClassToken(classTokens, selectedClass?.Key);
+        foreach (var bracket in selectedClass?.Brackets ?? Array.Empty<string>())
+            AddClassToken(classTokens, bracket);
+        foreach (var bracketLabel in selectedClass?.BracketLabels ?? Array.Empty<string>())
+            AddClassToken(classTokens, bracketLabel);
+
+        foreach (var restriction in list)
         {
-            var norm = r.ToLowerInvariant();
-            if (clsNorm.Equals(norm))
-                return true;
+            var restrictionToken = NormalizeClassToken(restriction);
+            if (restrictionToken.Length == 0)
+                continue;
 
-            var singular = norm.EndsWith("s") ? norm.TrimEnd('s') : norm;
-            if (clsNorm.Equals(singular))
-                return true;
+            var singularRestriction = TrimPluralToken(restrictionToken);
+            foreach (var classToken in classTokens)
+            {
+                var singularClass = TrimPluralToken(classToken);
 
-            if (clsNorm.Contains(norm) || norm.Contains(clsNorm))
-                return true;
+                if (classToken.Equals(restrictionToken, StringComparison.OrdinalIgnoreCase)
+                    || singularClass.Equals(restrictionToken, StringComparison.OrdinalIgnoreCase)
+                    || classToken.Equals(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                    || singularClass.Equals(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                    || classToken.Contains(restrictionToken, StringComparison.OrdinalIgnoreCase)
+                    || restrictionToken.Contains(classToken, StringComparison.OrdinalIgnoreCase)
+                    || classToken.Contains(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                    || singularRestriction.Contains(classToken, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
         }
 
         return false;
+    }
+
+    private static void AddClassToken(HashSet<string> sink, string? raw)
+    {
+        var token = NormalizeClassToken(raw);
+        if (token.Length > 0)
+            sink.Add(token);
+    }
+
+    private static string NormalizeClassToken(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return string.Empty;
+
+        return new string(raw
+            .Trim()
+            .Where(char.IsLetterOrDigit)
+            .Select(char.ToLowerInvariant)
+            .ToArray());
+    }
+
+    private static string TrimPluralToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            return string.Empty;
+
+        if (token.EndsWith("ies", StringComparison.OrdinalIgnoreCase) && token.Length > 3)
+            return $"{token[..^3]}y";
+
+        if (token.EndsWith('s') && !token.EndsWith("ss", StringComparison.OrdinalIgnoreCase) && token.Length > 1)
+            return token[..^1];
+
+        return token;
     }
 
     private bool IsAlignmentAllowed(IEnumerable<string>? restrictions)
@@ -2198,17 +2176,43 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         if (RaceSubtypeOptions.Count == 0)
             return;
 
-        if (string.IsNullOrWhiteSpace(_raceSubtypeAbilityMapKey))
-            return;
+        if (!string.IsNullOrWhiteSpace(_raceSubtypeAbilityMapKey)
+            && _specialisationIndex.TryGetValue(_raceSubtypeAbilityMapKey, out var mapDef)
+            && mapDef?.ColourAbilities != null)
+        {
+            var currentlySelected = (SelectedRaceSubtype ?? string.Empty).Trim();
+            var filtered = RaceSubtypeOptions
+                .Where(option =>
+                {
+                    if (string.Equals(_currentRaceForSubtype, "Human", StringComparison.OrdinalIgnoreCase)
+                        && string.Equals(option, "Standard", StringComparison.OrdinalIgnoreCase))
+                        return true;
 
-        if (!_specialisationIndex.TryGetValue(_raceSubtypeAbilityMapKey, out var mapDef) || mapDef?.ColourAbilities == null)
-            return;
+                    if (!mapDef.ColourAbilities.TryGetValue(option, out var entry) || entry == null)
+                        return true;
 
-        // Always allow the baseline human subtype "Standard" so it cannot be filtered out
-        // by mis-parsed restrictions or missing map entries.
-        if (string.Equals(_currentRaceForSubtype, "Human", StringComparison.OrdinalIgnoreCase))
-            if (!RaceSubtypeOptions.Contains("Standard", StringComparer.OrdinalIgnoreCase))
-                RaceSubtypeOptions.Add("Standard");
+                    return IsClassAllowed(entry.ClassRestriction) && IsAlignmentAllowed(entry.AlignmentRestriction);
+                })
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            RaceSubtypeOptions.Clear();
+            foreach (var option in filtered)
+                RaceSubtypeOptions.Add(option);
+
+            if (currentlySelected.Length > 0
+                && !RaceSubtypeOptions.Any(o => string.Equals(o, currentlySelected, StringComparison.OrdinalIgnoreCase)))
+            {
+                SelectedRaceSubtype = string.Empty;
+            }
+        }
+
+        // Always allow the baseline human subtype "Standard" so it cannot be filtered out.
+        if (string.Equals(_currentRaceForSubtype, "Human", StringComparison.OrdinalIgnoreCase)
+            && !RaceSubtypeOptions.Contains("Standard", StringComparer.OrdinalIgnoreCase))
+        {
+            RaceSubtypeOptions.Add("Standard");
+        }
 
         HasRaceSubtypeChoice = RaceSubtypeOptions.Count > 0;
         EnsureDefaultHumanStandardSelection();
@@ -2583,6 +2587,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             else
                 entry.Levels = ParseLevelArrays(colourProp.Value);
 
+            MergeLevelEntries(entry.Levels, ParseLegacyLevelArrays(colourProp.Value));
+
             if (entry.Levels.Count > 0
                 || entry.Description.Length > 0
                 || entry.LifeScaleOverride.Length > 0
@@ -2643,7 +2649,13 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         foreach (var lvlProp in levelsObject.EnumerateObject())
         {
-            if (lvlProp.Value.ValueKind != JsonValueKind.Array)
+            if (lvlProp.NameEquals("Levels") && lvlProp.Value.ValueKind == JsonValueKind.Object)
+            {
+                MergeLevelEntries(levels, ParseLevelArrays(lvlProp.Value));
+                continue;
+            }
+
+            if (!IsLevelKey(lvlProp.Name) || lvlProp.Value.ValueKind != JsonValueKind.Array)
                 continue;
 
             var list = ParseAbilityArray(lvlProp.Value);
@@ -2653,6 +2665,89 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         }
 
         return levels;
+    }
+
+    private static bool IsLevelKey(string? key)
+        => int.TryParse((key ?? string.Empty).Trim(), out _);
+
+    private static void MergeLevelEntries(
+        Dictionary<string, List<AbilityDefinition>> target,
+        Dictionary<string, List<AbilityDefinition>> source)
+    {
+        if (target == null || source == null || source.Count == 0)
+            return;
+
+        foreach (var kvp in source)
+        {
+            if (!target.TryGetValue(kvp.Key, out var existing))
+            {
+                target[kvp.Key] = kvp.Value?.ToList() ?? new List<AbilityDefinition>();
+                continue;
+            }
+
+            foreach (var ability in kvp.Value ?? new List<AbilityDefinition>())
+            {
+                var name = (ability?.Name ?? string.Empty).Trim();
+                if (name.Length == 0)
+                    continue;
+
+                if (existing.All(a => !string.Equals((a?.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
+                    existing.Add(ability);
+            }
+        }
+    }
+
+    private static Dictionary<string, List<AbilityDefinition>> ParseLegacyLevelArrays(JsonElement element)
+    {
+        var levels = new Dictionary<string, List<AbilityDefinition>>(StringComparer.OrdinalIgnoreCase);
+        if (element.ValueKind != JsonValueKind.Object)
+            return levels;
+
+        if (element.TryGetProperty("Abilities", out var abilitiesEl) && abilitiesEl.ValueKind == JsonValueKind.Array)
+        {
+            var parsed = ParseAbilityArray(abilitiesEl);
+            if (parsed.Count > 0)
+                levels["1"] = parsed;
+        }
+
+        if (element.TryGetProperty("Talents", out var talentsEl) && talentsEl.ValueKind == JsonValueKind.Object)
+        {
+            MergeLegacyTalents(levels, talentsEl, "Minor", "2");
+            MergeLegacyTalents(levels, talentsEl, "Medium", "5");
+            MergeLegacyTalents(levels, talentsEl, "Major", "8");
+        }
+
+        return levels;
+    }
+
+    private static void MergeLegacyTalents(
+        Dictionary<string, List<AbilityDefinition>> levels,
+        JsonElement talentsElement,
+        string talentKey,
+        string levelKey)
+    {
+        if (!talentsElement.TryGetProperty(talentKey, out var bucket) || bucket.ValueKind != JsonValueKind.Array)
+            return;
+
+        var parsed = ParseAbilityArray(bucket);
+        if (parsed.Count == 0)
+            return;
+
+        if (!levels.TryGetValue(levelKey, out var existing))
+        {
+            levels[levelKey] = parsed;
+            return;
+        }
+
+        foreach (var ability in parsed)
+        {
+            var name = (ability?.Name ?? string.Empty).Trim();
+            if (name.Length == 0)
+                continue;
+
+            if (existing.All(a => !string.Equals((a?.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
+                existing.Add(ability);
+        }
     }
 
     public sealed class MappedSpecialisationVm : INotifyPropertyChanged
@@ -2681,6 +2776,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         public string Subtitle { get; }
 
         public ObservableCollection<string> Options { get; } = new();
+        public ObservableCollection<SpecialisationAbilityRow> AbilityRows { get; } = new();
         public ObservableCollection<RaceSubtypePreviewLine> AbilitiesPreview { get; } = new();
         public ObservableCollection<RaceSubtypeLevelRow> LevelRows { get; } = new();
 
@@ -2803,6 +2899,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         private void UpdatePreview()
         {
+            AbilityRows.Clear();
             AbilitiesPreview.Clear();
             LevelRows.Clear();
             LevelsExpanded = false;
@@ -2818,7 +2915,39 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     Key = kvp.Key ?? string.Empty,
                     Level = int.TryParse(kvp.Key, out var n) ? n : int.MaxValue,
                     Abilities = (kvp.Value ?? new List<AbilityDefinition>())
-                        .Select(ToDisplayName)
+                        .Select(a => new
+                        {
+                            Name = (a?.Name ?? string.Empty).Trim(),
+                            Level = int.TryParse(kvp.Key, out var parsedLevel) ? parsedLevel : (int?)null
+                        })
+                        .Where(a => a.Name.Length > 0)
+                        .ToList()
+                })
+                .Where(x => x.Abilities.Count > 0)
+                .OrderBy(x => x.Level)
+                .ThenBy(x => x.Key, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            foreach (var (lvl, ability) in LoopHelper.Flatten(ordered, entryLevel => entryLevel.Abilities))
+            {
+                var level = lvl.Level == int.MaxValue ? ability.Level : lvl.Level;
+                AbilityRows.Add(new SpecialisationAbilityRow
+                {
+                    Level = level,
+                    Ability = ability.Name,
+                    SpecialisationKey = Key,
+                    SelectedOption = _selectedOption,
+                    SelectedAbility = ability.Name
+                });
+            }
+
+            var orderedDisplay = (entry.Levels ?? new Dictionary<string, List<AbilityDefinition>>())
+                .Select(kvp => new
+                {
+                    Key = kvp.Key ?? string.Empty,
+                    Level = int.TryParse(kvp.Key, out var n) ? n : int.MaxValue,
+                    Abilities = (kvp.Value ?? new List<AbilityDefinition>())
+                        .Select(a => (a?.Name ?? string.Empty).Trim())
                         .Where(x => !string.IsNullOrWhiteSpace(x))
                         .ToList()
                 })
@@ -2826,7 +2955,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 .OrderBy(x => x.Level)
                 .ThenBy(x => x.Key, StringComparer.OrdinalIgnoreCase);
 
-            foreach (var (lvl, ability) in LoopHelper.Flatten(ordered, entry => entry.Abilities))
+            foreach (var (lvl, ability) in LoopHelper.Flatten(orderedDisplay, entryLevel => entryLevel.Abilities))
             {
                 var label = lvl.Level == int.MaxValue ? lvl.Key : $"Lv {lvl.Level}";
                 AbilitiesPreview.Add(new RaceSubtypePreviewLine
@@ -2836,7 +2965,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 });
             }
 
-            foreach (var lvl in ordered)
+            foreach (var lvl in orderedDisplay)
             {
                 if (lvl.Level == int.MaxValue)
                     continue;
@@ -2869,7 +2998,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 });
             }
 
-            LevelsExpanded = LevelRows.Count > 0;
+            LevelsExpanded = AbilityRows.Count > 0;
         }
 
         private void RaiseComputed()
@@ -2917,6 +3046,16 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         public List<string> HedgeOrCircle { get; set; } = new();
         public List<string> ClassRestriction { get; set; } = new();
         public List<string> AlignmentRestriction { get; set; } = new();
+    }
+
+    public sealed class SpecialisationAbilityRow
+    {
+        public int? Level { get; init; }
+        public string LevelText => Level.HasValue ? $"Lvl {Level.Value}" : string.Empty;
+        public string Ability { get; init; } = string.Empty;
+        public string SpecialisationKey { get; init; } = string.Empty;
+        public string SelectedOption { get; init; } = string.Empty;
+        public string SelectedAbility { get; init; } = string.Empty;
     }
 
     public sealed class RaceSubtypePreviewLine

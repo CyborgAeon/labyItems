@@ -148,6 +148,8 @@ public static class SpecialisationService
         else
             entry.Levels = ParseLevelArrays(value);
 
+        MergeLevelEntries(entry.Levels, ParseLegacyLevelArrays(value));
+
         var extras = new Dictionary<string, JsonElement>(StringComparer.OrdinalIgnoreCase);
         var hasLevelsProperty = value.TryGetProperty("Levels", out _);
         foreach (var prop in value.EnumerateObject())
@@ -184,6 +186,12 @@ public static class SpecialisationService
 
         foreach (var lvlProp in levelsObject.EnumerateObject())
         {
+            if (lvlProp.NameEquals("Levels") && lvlProp.Value.ValueKind == JsonValueKind.Object)
+            {
+                MergeLevelEntries(levels, ParseLevelArrays(lvlProp.Value));
+                continue;
+            }
+
             if (!IsLevelKey(lvlProp.Name))
                 continue;
 
@@ -196,6 +204,86 @@ public static class SpecialisationService
         }
 
         return levels;
+    }
+
+    private static void MergeLevelEntries(
+        Dictionary<string, List<AbilityDefinition>> target,
+        Dictionary<string, List<AbilityDefinition>> source)
+    {
+        if (target == null || source == null || source.Count == 0)
+            return;
+
+        foreach (var kvp in source)
+        {
+            if (!target.TryGetValue(kvp.Key, out var existing))
+            {
+                target[kvp.Key] = kvp.Value?.ToList() ?? new List<AbilityDefinition>();
+                continue;
+            }
+
+            foreach (var ability in kvp.Value ?? new List<AbilityDefinition>())
+            {
+                var name = (ability?.Name ?? string.Empty).Trim();
+                if (name.Length == 0)
+                    continue;
+
+                if (existing.All(a => !string.Equals((a?.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
+                    existing.Add(ability);
+            }
+        }
+    }
+
+    private static Dictionary<string, List<AbilityDefinition>> ParseLegacyLevelArrays(JsonElement element)
+    {
+        var levels = new Dictionary<string, List<AbilityDefinition>>(StringComparer.OrdinalIgnoreCase);
+        if (element.ValueKind != JsonValueKind.Object)
+            return levels;
+
+        if (element.TryGetProperty("Abilities", out var abilitiesEl) && abilitiesEl.ValueKind == JsonValueKind.Array)
+        {
+            var parsed = ParseAbilityArray(abilitiesEl);
+            if (parsed.Count > 0)
+                levels["1"] = parsed;
+        }
+
+        if (element.TryGetProperty("Talents", out var talentsEl) && talentsEl.ValueKind == JsonValueKind.Object)
+        {
+            MergeLegacyTalents(levels, talentsEl, "Minor", "2");
+            MergeLegacyTalents(levels, talentsEl, "Medium", "5");
+            MergeLegacyTalents(levels, talentsEl, "Major", "8");
+        }
+
+        return levels;
+    }
+
+    private static void MergeLegacyTalents(
+        Dictionary<string, List<AbilityDefinition>> levels,
+        JsonElement talentsElement,
+        string talentKey,
+        string levelKey)
+    {
+        if (!talentsElement.TryGetProperty(talentKey, out var bucket) || bucket.ValueKind != JsonValueKind.Array)
+            return;
+
+        var parsed = ParseAbilityArray(bucket);
+        if (parsed.Count == 0)
+            return;
+
+        if (!levels.TryGetValue(levelKey, out var existing))
+        {
+            levels[levelKey] = parsed;
+            return;
+        }
+
+        foreach (var ability in parsed)
+        {
+            var name = (ability?.Name ?? string.Empty).Trim();
+            if (name.Length == 0)
+                continue;
+
+            if (existing.All(a => !string.Equals((a?.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
+                existing.Add(ability);
+        }
     }
 
     private static bool IsLevelKey(string? key)

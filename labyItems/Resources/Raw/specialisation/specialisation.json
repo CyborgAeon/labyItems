@@ -300,6 +300,7 @@
       },
       {
         "Name": "2nd Weapon Mastery",
+        "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple).",
         "Type": "Static"
       },
       {
@@ -488,6 +489,7 @@
       },
       {
         "Name": "2nd Weapon Mastery",
+        "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple).",
         "Type": "Static"
       },
       {
@@ -532,6 +534,7 @@
       },
       {
         "Name": "2nd Weapon Mastery",
+        "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple).",
         "Type": "Static"
       },
       {
@@ -548,6 +551,7 @@
       },
       {
         "Name": "Empower Chosen Weapon",
+        "Description": "This skill allows the Power Master to inflict magic damage with their chosen weapon, at will.",
         "Type": "Static"
       }
     ]
@@ -572,6 +576,7 @@
       },
       {
         "Name": "2nd Weapon Mastery",
+        "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple).",
         "Type": "Static"
       },
       {
@@ -664,13 +669,48 @@
       }
     }
   },
+  "Power Warrior Specialist": {
+    "Abilities": [
+      {
+        "Description": "This skill imbues the armour worn with a magical essence, granting magical armour class equal to half the value of the armour’s physical armour class (round up), and half effect the warrior’s opposite element (light or dark). These benefits are only gained when wearing master crafted armour, which appears appropriate to the warrior’s colour (e.g. should have white or black designs etc.).",
+        "Name": "Empower Armour",
+        "Type": "Static"
+      },
+      {
+        "Name": "+6/2 Stamina",
+        "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character.",
+        "Type": "Life",
+        "Source": "Tables"
+      },
+      {
+        "Name": "1st Weapon Mastery",
+        "Type": "Static",
+        "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+        "Customisation": {
+          "OptionEnum": "WeaponType",
+          "CustomValuesPermitted": true
+        }
+      },
+      {
+        "Name": "1st Enhanced Reflexes",
+        "Description": "By means of rigorous training, the warrior may learn greater agility in combat, thus giving him a bonus of +1 Dexterity Armour Class. This replaces the first point of dexterity armour class available post eighth on table one and may only be taken once. Note: If you are a class which naturally gains innate DAC this extra DAC will stack with the DAC that you already have",
+        "Type": "DAC",
+        "Effect": "+1 DAC",
+        "Count": 1
+      },
+      {
+        "Name": "Unarmed Combat",
+        "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it.",
+        "Type": "WeaponSkill"
+      }
+    ]
+  },
   "Valdstayn Specialist": {
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
         "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character.",
         "Type": "Life",
-
         "Source": "Tables"
       },
       {
@@ -751,6 +791,7 @@
 
       {
         "Name": "2nd Weapon Mastery",
+        "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple).",
         "Type": "Static"
       }
     ]
@@ -788,6 +829,7 @@
       },
       {
         "Name": "2nd Weapon Mastery",
+        "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple).",
         "Type": "Static"
       },
       {
@@ -2630,6 +2672,7 @@
         "Name": "Lvl 2 Spell",
         "Type": "Innate",
         "Count": 4,
+        "Description": "From third level, they can cast any one standard 2nd level spell once per two levels. At sixth level they may cast a standard 3rd level spell once per 2 levels. These spells cannot be of the same colour, nor may they be of opposite colours.",
         "Customisation": {
           "OptionEnum": "SpellUpTo:2",
           "CustomValuesPermitted": false
@@ -2642,6 +2685,7 @@
       {
         "Name": "Lvl 3 Spell",
         "Type": "Innate",
+        "Description": "From third level, they can cast any one standard 2nd level spell once per two levels. At sixth level they may cast a standard 3rd level spell once per 2 levels. These spells cannot be of the same colour, nor may they be of opposite colours.",
         "Count": 4,
         "Customisation": {
           "OptionEnum": "SpellUpTo:3",

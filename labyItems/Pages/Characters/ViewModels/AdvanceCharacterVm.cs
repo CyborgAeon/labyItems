@@ -504,7 +504,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         var className = (_draft.Class ?? string.Empty).Trim();
         if (className.Length > 0)
         {
-            var hasWizardToken = className.Contains("Wizard", StringComparison.OrdinalIgnoreCase);
+            var hasWizardToken = className.Contains("Wizard", StringComparison.OrdinalIgnoreCase)
+                                 || className.Contains("Sorc", StringComparison.OrdinalIgnoreCase);
             var isExcluded = className.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
                              || className.Contains("Vochstelen", StringComparison.OrdinalIgnoreCase)
                              || className.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase);
@@ -1239,6 +1240,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return false;
 
         return className.Contains("Sorcerer", StringComparison.OrdinalIgnoreCase)
+               || className.Contains("Sorceror", StringComparison.OrdinalIgnoreCase)
                || className.Contains("Sorcorial", StringComparison.OrdinalIgnoreCase)
                || className.Contains("Sorcery", StringComparison.OrdinalIgnoreCase);
     }
@@ -2039,6 +2041,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
     private readonly IReadOnlyList<SpellService.SpellRaw> _allSpells;
     private readonly Func<SpellService.SpellRaw, bool>? _spellFilter;
     private readonly Action? _onListChanged;
+    private bool _isAddingSelected;
 
     public SpellListDraft Draft { get; }
 
@@ -2126,6 +2129,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
     public bool CanAddSelected =>
         CanEdit
         && IsExpanded
+        && !_isAddingSelected
         && !string.IsNullOrWhiteSpace(SelectedSpellOption?.Name);
 
     private readonly Func<int> _getCasterLevel;
@@ -2146,7 +2150,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
         if (!IsBaseList)
             Draft.Name = "Specialists";
 
-        AddSelectedCommand = new Command(AddSelectedSpell);
+        AddSelectedCommand = new Command(async () => await AddSelectedSpellAsync());
         RemoveEntryCommand = new Command<SpellEntryVm>(RemoveEntry);
         ToggleExpandedCommand = new Command(() => IsMinimized = !IsMinimized);
 
@@ -2179,20 +2183,69 @@ public sealed class SpellListVm : INotifyPropertyChanged
         ReindexEntries();
     }
 
-    private void AddSelectedSpell()
+    private async Task AddSelectedSpellAsync()
     {
         if (!CanAddSelected || SelectedSpellOption == null)
             return;
 
-        var draft = new SpellListEntryDraft();
-        Draft.Entries.Add(draft);
-        var vm = new SpellEntryVm(draft, OnEntryChanged, _getCasterLevel);
-        vm.SelectedSpell = SelectedSpellOption.Value;
-        Entries.Add(vm);
-        ReindexEntries();
-        SearchPickerStateHelper.ClearForNextSearch<SpellOption>(
-            setSelection: v => SelectedSpellOption = v,
-            setSearchText: text => SearchText = text);
+        _isAddingSelected = true;
+        Raise(nameof(CanAddSelected));
+        try
+        {
+            var selectedOption = SelectedSpellOption.Value;
+            if (IsSpecialistList && !WizardSpellRules.TryExtractSingleMagicColour(selectedOption.Colour, out _))
+            {
+                var chosenColour = await PromptForSpecialistColourAsync(selectedOption.Name);
+                if (!chosenColour.HasValue)
+                    return;
+
+                selectedOption = selectedOption with { Colour = chosenColour.Value.ToString() };
+            }
+
+            var draft = new SpellListEntryDraft();
+            Draft.Entries.Add(draft);
+            var vm = new SpellEntryVm(draft, OnEntryChanged, _getCasterLevel);
+            vm.SelectedSpell = selectedOption;
+            Entries.Add(vm);
+            ReindexEntries();
+            SearchPickerStateHelper.ClearForNextSearch<SpellOption>(
+                setSelection: v => SelectedSpellOption = v,
+                setSearchText: text => SearchText = text);
+        }
+        finally
+        {
+            _isAddingSelected = false;
+            Raise(nameof(CanAddSelected));
+        }
+    }
+
+    private static async Task<MagicColours?> PromptForSpecialistColourAsync(string spellName)
+    {
+        var page = Shell.Current?.CurrentPage ?? Application.Current?.MainPage;
+        if (page == null)
+            return null;
+
+        var colourOptions = Enum.GetValues<MagicColours>()
+            .Select(c => (Colour: c, Label: EnumDisplayFormatter.Format(c)))
+            .ToList();
+        var options = colourOptions
+            .Select(c => c.Label)
+            .ToArray();
+
+        var title = string.IsNullOrWhiteSpace(spellName)
+            ? "Choose a magic colour"
+            : $"Choose a magic colour for {spellName}";
+        var picked = await page.DisplayActionSheet(title, "Cancel", null, options);
+        if (string.IsNullOrWhiteSpace(picked) || picked.Equals("Cancel", StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        var match = colourOptions.FirstOrDefault(c => string.Equals(c.Label, picked, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(match.Label))
+            return match.Colour;
+
+        return WizardSpellRules.TryParseMagicColour(picked, out var parsedColour)
+            ? parsedColour
+            : null;
     }
 
     private void RemoveEntry(SpellEntryVm? entry)
