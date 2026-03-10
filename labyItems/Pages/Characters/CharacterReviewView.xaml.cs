@@ -198,11 +198,10 @@ public partial class CharacterReviewView : ContentView
 
         if (!string.IsNullOrWhiteSpace(line.SpecialisationKey))
         {
-            var lookup = await SpecialisationService.GetAllAsync();
-            var match = lookup.FirstOrDefault(kvp => string.Equals(kvp.Key, line.SpecialisationKey, StringComparison.OrdinalIgnoreCase));
-            if (!string.IsNullOrWhiteSpace(match.Key) && match.Value != null)
+            var match = await DetailCardLookupService.FindSpecialisationAsync(line.SpecialisationKey);
+            if (!string.IsNullOrWhiteSpace(match.Key) && match.Record != null)
             {
-                await nav.PushAsync(new SpecialisationCardPage(match.Key, match.Value, line.SelectedOption));
+                await nav.PushAsync(new SpecialisationCardPage(match.Key, match.Record, line.SelectedOption));
                 return;
             }
         }

@@ -618,6 +618,7 @@ public sealed class WizardVm : INotifyPropertyChanged
     {
         var lines = new List<SpecialisationSummaryLineVm>();
         var includedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var seenSelections = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         string NormalizeKey(string? key)
             => new string((key ?? string.Empty)
                 .Trim()
@@ -625,15 +626,32 @@ public sealed class WizardVm : INotifyPropertyChanged
                 .Where(char.IsLetterOrDigit)
                 .ToArray());
 
+        void AddLine(string text, string? potentialAbilityIndex, string? specialisationKey, string? selectedOption)
+        {
+            var dedupeKey = SpecialisationSummaryDedupe.BuildKey(
+                text,
+                specialisationKey,
+                selectedOption);
+
+            if (dedupeKey.Length > 0 && !seenSelections.Add(dedupeKey))
+                return;
+
+            lines.Add(CreateSpecialisationSummaryLine(
+                text: text,
+                potentialAbilityIndex: potentialAbilityIndex,
+                specialisationKey: specialisationKey,
+                selectedOption: selectedOption));
+        }
+
         var subtype = Draft.RaceSubtypeValue ?? Draft.RaceSubtype;
         if (!string.IsNullOrWhiteSpace(subtype))
         {
             var subtypeKey = CharacterBuilderVm?.SpecialisationVm?.RaceSubtypeDetailKey ?? string.Empty;
-            lines.Add(CreateSpecialisationSummaryLine(
+            AddLine(
                 text: $"Subtype: {subtype}",
                 potentialAbilityIndex: subtype,
                 specialisationKey: subtypeKey,
-                selectedOption: subtype));
+                selectedOption: subtype);
         }
 
         var specVm = CharacterBuilderVm?.SpecialisationVm;
@@ -652,11 +670,11 @@ public sealed class WizardVm : INotifyPropertyChanged
                 var lineText = multipleSlots
                     ? $"{group.Title} ({slot.LevelLabel}): {selection}"
                     : $"{group.Title}: {selection}";
-                lines.Add(CreateSpecialisationSummaryLine(
+                AddLine(
                     text: lineText,
                     potentialAbilityIndex: selection,
-                    specialisationKey: group.Title,
-                    selectedOption: slot.SelectedOption));
+                    specialisationKey: group.DetailKey,
+                    selectedOption: slot.SelectedOption);
                 var normalizedGroupKey = NormalizeKey(group.Title);
                 if (normalizedGroupKey.Length > 0)
                     includedKeys.Add(normalizedGroupKey);
@@ -671,11 +689,11 @@ public sealed class WizardVm : INotifyPropertyChanged
                 if (picked.Length == 0)
                     continue;
 
-                lines.Add(CreateSpecialisationSummaryLine(
+                AddLine(
                     text: $"{mapped.Title}: {picked}",
                     potentialAbilityIndex: picked,
                     specialisationKey: mapped.DetailKey,
-                    selectedOption: picked));
+                    selectedOption: picked);
                 var normalizedMappedKey = NormalizeKey(mapped.Key);
                 if (normalizedMappedKey.Length > 0)
                     includedKeys.Add(normalizedMappedKey);
@@ -688,11 +706,11 @@ public sealed class WizardVm : INotifyPropertyChanged
             if (normalizedDraftKey.Length > 0 && includedKeys.Contains(normalizedDraftKey))
                 continue;
 
-            lines.Add(CreateSpecialisationSummaryLine(
+            AddLine(
                 text: $"{kvp.Key}: {kvp.Value}",
                 potentialAbilityIndex: kvp.Value,
                 specialisationKey: kvp.Key,
-                selectedOption: kvp.Value));
+                selectedOption: kvp.Value);
         }
 
         return lines;

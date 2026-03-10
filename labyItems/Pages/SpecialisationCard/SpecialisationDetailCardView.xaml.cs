@@ -327,7 +327,10 @@ public partial class SpecialisationDetailCardView : ContentView
             return null;
 
         return list.FirstOrDefault(a =>
-            a != null && string.Equals((a.Name ?? string.Empty).Trim(), targetName, StringComparison.OrdinalIgnoreCase));
+            a != null
+            && (
+                string.Equals((a.Name ?? string.Empty).Trim(), targetName, StringComparison.OrdinalIgnoreCase)
+                || string.Equals((a.Key ?? string.Empty).Trim(), targetName, StringComparison.OrdinalIgnoreCase)));
     }
 
     private static string ReadOrFallback(string? value, string fallback)

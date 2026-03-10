@@ -315,12 +315,20 @@
                                                                 <Border FlexLayout.Grow="{Binding Weight}"
                                                                         Stroke="{StaticResource StrongStrokeColor}"
                                                                         StrokeThickness="0.75">
+                                                                    <Border.Shadow>
+                                                                        <Shadow Brush="{StaticResource ShadowColor}"
+                                                                                Offset="0,1"
+                                                                                Radius="3"
+                                                                                Opacity="0.45"/>
+                                                                    </Border.Shadow>
                                                                     <Border.Triggers>
                                                                         <DataTrigger TargetType="Border"
                                                                                      Binding="{Binding IsUnselected}"
                                                                                      Value="True">
                                                                             <Setter Property="StrokeThickness"
                                                                                     Value="0"/>
+                                                                            <Setter Property="Shadow"
+                                                                                    Value="{x:Null}"/>
                                                                         </DataTrigger>
                                                                     </Border.Triggers>
                                                                     <BoxView Color="{Binding Colour}"/>
@@ -807,28 +815,35 @@
                                                                 StrokeShape="RoundRectangle 6"
                                                                 BackgroundColor="{StaticResource SoftStrokeColor}"
                                                                 Padding="0">
-                                                            <Grid HeightRequest="10"
-                                                                  ColumnSpacing="0">
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="{Binding ScripturesUsedWidth}"/>
-                                                                    <ColumnDefinition Width="{Binding ScripturesUnusedWidth}"/>
-                                                                </Grid.ColumnDefinitions>
-                                                                <Border Grid.Column="0"
-                                                                        Stroke="{Binding ScripturesFillStrokeColor}"
-                                                                        StrokeThickness="0.75"
-                                                                        BackgroundColor="{Binding ScripturesFillColor}"
-                                                                        IsVisible="{Binding HasUsedScriptures}">
-                                                                    <Border.Shadow>
-                                                                        <Shadow Brush="{StaticResource ShadowColor}"
-                                                                                Offset="0,1"
-                                                                                Radius="3"
-                                                                                Opacity="0.45"/>
-                                                                    </Border.Shadow>
-                                                                </Border>
-                                                                <Border Grid.Column="1"
-                                                                        StrokeThickness="0"
-                                                                        BackgroundColor="{StaticResource SoftStrokeColor}"/>
-                                                            </Grid>
+                                                            <FlexLayout Direction="Row"
+                                                                        HeightRequest="10"
+                                                                        BindableLayout.ItemsSource="{Binding ScripturesSegments}">
+                                                                <BindableLayout.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <Border FlexLayout.Grow="{Binding Weight}"
+                                                                                Stroke="{StaticResource StrongStrokeColor}"
+                                                                                StrokeThickness="0.75">
+                                                                            <Border.Shadow>
+                                                                                <Shadow Brush="{StaticResource ShadowColor}"
+                                                                                        Offset="0,1"
+                                                                                        Radius="3"
+                                                                                        Opacity="0.45"/>
+                                                                            </Border.Shadow>
+                                                                            <Border.Triggers>
+                                                                                <DataTrigger TargetType="Border"
+                                                                                             Binding="{Binding IsUnselected}"
+                                                                                             Value="True">
+                                                                                    <Setter Property="StrokeThickness"
+                                                                                            Value="0"/>
+                                                                                    <Setter Property="Shadow"
+                                                                                            Value="{x:Null}"/>
+                                                                                </DataTrigger>
+                                                                            </Border.Triggers>
+                                                                            <BoxView Color="{Binding Colour}"/>
+                                                                        </Border>
+                                                                    </DataTemplate>
+                                                                </BindableLayout.ItemTemplate>
+                                                            </FlexLayout>
                                                         </Border>
                                                     </VerticalStackLayout>
 

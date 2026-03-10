@@ -1,0 +1,242 @@
+{
+  "$schemaVersion": 1,
+  "definitions": {
+    "1st Weapon Mastery": {
+      "Key": "definition.1st-weapon-mastery",
+      "DisplayName": "1st Weapon Mastery",
+      "ChoiceSetRefs": [
+        "choice.1st-weapon-mastery.primary"
+      ]
+    },
+    "1st Weapon Mastery (O)": {
+      "Key": "definition.1st-weapon-mastery-o",
+      "DisplayName": "1st Weapon Mastery (O)",
+      "ChoiceSetRefs": [
+        "choice.1st-weapon-mastery-o.primary"
+      ]
+    },
+    "Warrior Specialist": {
+      "Key": "definition.warrior-specialist",
+      "DisplayName": "Warrior Specialist",
+      "ChoiceSetRefs": [
+        "choice.warrior-specialist.primary"
+      ]
+    },
+    "Battle-Priest Specialist": {
+      "Key": "definition.battle-priest-specialist",
+      "DisplayName": "Battle-Priest Specialist",
+      "ChoiceSetRefs": [
+        "choice.battle-priest-specialist.primary"
+      ]
+    },
+    "Crusading-Priest Specialist": {
+      "Key": "definition.crusading-priest-specialist",
+      "DisplayName": "Crusading-Priest Specialist",
+      "ChoiceSetRefs": [
+        "choice.crusading-priest-specialist.primary"
+      ]
+    },
+    "Ranger Specialist": {
+      "Key": "definition.ranger-specialist",
+      "DisplayName": "Ranger Specialist",
+      "ChoiceSetRefs": [
+        "choice.ranger-specialist.primary"
+      ]
+    },
+    "Archer Specialist": {
+      "Key": "definition.archer-specialist",
+      "DisplayName": "Archer Specialist",
+      "ChoiceSetRefs": [
+        "choice.archer-specialist.primary"
+      ]
+    },
+    "Monk Specialist": {
+      "Key": "definition.monk-specialist",
+      "DisplayName": "Monk Specialist",
+      "ChoiceSetRefs": [
+        "choice.monk-specialist.primary"
+      ]
+    },
+    "Duellist Specialist": {
+      "Key": "definition.duellist-specialist",
+      "DisplayName": "Duellist Specialist",
+      "ChoiceSetRefs": [
+        "choice.duellist-specialist.primary"
+      ]
+    },
+    "Cavalier Specialist": {
+      "Key": "definition.cavalier-specialist",
+      "DisplayName": "Cavalier Specialist",
+      "ChoiceSetRefs": [
+        "choice.cavalier-specialist.primary"
+      ]
+    },
+    "Paladin Specialist": {
+      "Key": "definition.paladin-specialist",
+      "DisplayName": "Paladin Specialist",
+      "ChoiceSetRefs": [
+        "choice.paladin-specialist.primary"
+      ]
+    },
+    "Unholy Champion Specialist": {
+      "Key": "definition.unholy-champion-specialist",
+      "DisplayName": "Unholy Champion Specialist",
+      "ChoiceSetRefs": [
+        "choice.unholy-champion-specialist.primary"
+      ]
+    },
+    "Grey Knight": {
+      "Key": "definition.grey-knight",
+      "DisplayName": "Grey Knight",
+      "ChoiceSetRefs": [
+        "choice.grey-knight.primary"
+      ]
+    },
+    "Budoka Specialist": {
+      "Key": "definition.budoka-specialist",
+      "DisplayName": "Budoka Specialist",
+      "ChoiceSetRefs": [
+        "choice.budoka-specialist.primary"
+      ]
+    },
+    "Power Master Specialist": {
+      "Key": "definition.power-master-specialist",
+      "DisplayName": "Power Master Specialist",
+      "ChoiceSetRefs": [
+        "choice.power-master-specialist.primary"
+      ]
+    },
+    "Power Warrior": {
+      "Key": "definition.power-warrior",
+      "DisplayName": "Power Warrior",
+      "ChoiceSetRefs": [
+        "choice.power-warrior.mapped"
+      ]
+    },
+    "Power Warrior Specialist": {
+      "Key": "definition.power-warrior-specialist",
+      "DisplayName": "Power Warrior Specialist",
+      "ChoiceSetRefs": [
+        "choice.power-warrior-specialist.primary"
+      ]
+    },
+    "Valdstayn Specialist": {
+      "Key": "definition.valdstayn-specialist",
+      "DisplayName": "Valdstayn Specialist",
+      "ChoiceSetRefs": [
+        "choice.valdstayn-specialist.primary"
+      ]
+    },
+    "Rovfuger Specialist": {
+      "Key": "definition.rovfuger-specialist",
+      "DisplayName": "Rovfuger Specialist",
+      "ChoiceSetRefs": [
+        "choice.rovfuger-specialist.primary"
+      ]
+    },
+    "Wind dancer Specialist": {
+      "Key": "definition.wind-dancer-specialist",
+      "DisplayName": "Wind dancer Specialist",
+      "ChoiceSetRefs": [
+        "choice.wind-dancer-specialist.primary"
+      ]
+    },
+    "Standard Scout skill": {
+      "Key": "definition.standard-scout-skill",
+      "DisplayName": "Standard Scout skill",
+      "ChoiceSetRefs": [
+        "choice.standard-scout-skill.primary"
+      ]
+    },
+    "Specialist Scout skill": {
+      "Key": "definition.specialist-scout-skill",
+      "DisplayName": "Specialist Scout skill",
+      "ChoiceSetRefs": [
+        "choice.specialist-scout-skill.primary"
+      ]
+    },
+    "Warrior-Priest specialist": {
+      "Key": "definition.warrior-priest-specialist",
+      "DisplayName": "Warrior-Priest specialist",
+      "ChoiceSetRefs": [
+        "choice.warrior-priest-specialist.primary"
+      ]
+    },
+    "Ward pact": {
+      "Key": "definition.ward-pact",
+      "DisplayName": "Ward pact",
+      "ChoiceSetRefs": [
+        "choice.ward-pact.primary"
+      ]
+    },
+    "Warlock Specialist": {
+      "Key": "definition.warlock-specialist",
+      "DisplayName": "Warlock Specialist",
+      "ChoiceSetRefs": [
+        "choice.warlock-specialist.primary"
+      ],
+      "Notes": [
+        "Warlocks choose a specialist skill at 6th, 7th and 8th level from this list."
+      ]
+    },
+    "Wizard Specialist": {
+      "Key": "definition.wizard-specialist",
+      "DisplayName": "Wizard Specialist",
+      "ChoiceSetRefs": [
+        "choice.wizard-specialist.primary"
+      ]
+    },
+    "Vochstelen Specialist": {
+      "Key": "definition.vochstelen-specialist",
+      "DisplayName": "Vochstelen Specialist",
+      "ChoiceSetRefs": [
+        "choice.vochstelen-specialist.primary"
+      ],
+      "Notes": [
+        "Vochstelen choose a specialist skill at 7th and 8th level from this list."
+      ]
+    },
+    "Awakener Specialist": {
+      "Key": "definition.awakener-specialist",
+      "DisplayName": "Awakener Specialist",
+      "ChoiceSetRefs": [
+        "choice.awakener-specialist.primary"
+      ]
+    },
+    "Wizard Colour": {
+      "Key": "definition.wizard-colour",
+      "DisplayName": "Wizard Colour",
+      "ChoiceSetRefs": [
+        "choice.wizard-colour.primary"
+      ]
+    },
+    "Vivomancer Colour": {
+      "Key": "definition.vivomancer-colour",
+      "DisplayName": "Vivomancer Colour",
+      "ChoiceSetRefs": [
+        "choice.vivomancer-colour.primary"
+      ]
+    },
+    "Lvl 2 Spell": {
+      "Key": "definition.lvl-2-spell",
+      "DisplayName": "Lvl 2 Spell",
+      "ChoiceSetRefs": [
+        "choice.lvl-2-spell.primary"
+      ]
+    },
+    "Lvl 3 Spell": {
+      "Key": "definition.lvl-3-spell",
+      "DisplayName": "Lvl 3 Spell",
+      "ChoiceSetRefs": [
+        "choice.lvl-3-spell.primary"
+      ]
+    },
+    "Faerie Colour": {
+      "Key": "definition.faerie-colour",
+      "DisplayName": "Faerie Colour",
+      "ChoiceSetRefs": [
+        "choice.faerie-colour.primary"
+      ]
+    }
+  }
+}

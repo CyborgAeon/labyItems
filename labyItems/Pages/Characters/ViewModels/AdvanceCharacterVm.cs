@@ -1417,8 +1417,17 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
                 if (colourText.Length == 0)
                     continue;
 
-                if (!WizardSpellRules.TryParseMagicColour(colourText, out var colour))
-                    continue;
+                MagicColours colour;
+                if (WizardSpellRules.TryExtractSingleMagicColour(colourText, out var extracted))
+                {
+                    colour = extracted;
+                }
+                else
+                {
+                    var normalized = WizardSpellRules.NormalizeWizardSelection(colourText);
+                    if (!WizardSpellRules.TryParseMagicColour(normalized, out colour))
+                        continue;
+                }
 
                 counts[colour] = counts.TryGetValue(colour, out var current) ? current + 1 : 1;
             }
@@ -2475,6 +2484,20 @@ public sealed class SpecialistSlotSegmentVm
     }
 }
 
+public sealed class ScriptureSegmentVm
+{
+    public int Weight { get; }
+    public Color Colour { get; }
+    public bool IsUnselected { get; }
+
+    public ScriptureSegmentVm(int weight, Color colour, bool isUnselected = false)
+    {
+        Weight = weight;
+        Colour = colour;
+        IsUnselected = isUnselected;
+    }
+}
+
 public sealed class SpecialistSlotLegendVm
 {
     public string Label { get; }
@@ -3335,6 +3358,9 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         }
     }
 
+    public ObservableCollection<ScriptureSegmentVm> ScripturesSegments { get; } = new();
+    public bool HasScripturesSegments => ScripturesSegments.Count > 0;
+
     private Color _scripturesFillColor = Colors.White;
     public Color ScripturesFillColor
     {
@@ -3428,6 +3454,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
 
         SelectedSphereFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
         SelectedAdvancedFilters.CollectionChanged += (_, __) => UpdateFilteredOptions();
+        ScripturesSegments.CollectionChanged += (_, __) => Raise(nameof(HasScripturesSegments));
 
         LoadEntriesFromDraft();
         UpdateFilteredOptions();
@@ -3715,10 +3742,13 @@ public sealed class MiracleListVm : INotifyPropertyChanged
         Raise(nameof(HasUsedScriptures));
         Raise(nameof(ScripturesUsedWidth));
         Raise(nameof(ScripturesUnusedWidth));
+        Raise(nameof(HasScripturesSegments));
     }
 
     private void UpdateScripturesVisuals()
     {
+        RebuildScriptureSegments();
+
         var alignmentToken = ResolveScripturesAlignmentToken();
         switch (alignmentToken)
         {
@@ -3735,6 +3765,33 @@ public sealed class MiracleListVm : INotifyPropertyChanged
                 ScripturesFillStrokeColor = Color.FromArgb("#374151");
                 break;
         }
+    }
+
+    private void RebuildScriptureSegments()
+    {
+        ScripturesSegments.Clear();
+        if (!IsScriptures || ScripturesAllowed <= 0)
+            return;
+
+        var selectedEntries = Entries
+            .Where(entry => !string.IsNullOrWhiteSpace(entry.Draft.Name))
+            .ToList();
+
+        var good = selectedEntries.Count(entry =>
+            _domainService.NormalizeAlignmentToken(entry.Draft.Alignment) == "good");
+        var evil = selectedEntries.Count(entry =>
+            _domainService.NormalizeAlignmentToken(entry.Draft.Alignment) == "evil");
+        var neutral = Math.Max(0, selectedEntries.Count - good - evil);
+        var remaining = ScripturesRemaining;
+
+        if (good > 0)
+            ScripturesSegments.Add(new ScriptureSegmentVm(good, Colors.White));
+        if (neutral > 0)
+            ScripturesSegments.Add(new ScriptureSegmentVm(neutral, Color.FromArgb("#6B7280")));
+        if (evil > 0)
+            ScripturesSegments.Add(new ScriptureSegmentVm(evil, Color.FromArgb("#111827")));
+        if (remaining > 0)
+            ScripturesSegments.Add(new ScriptureSegmentVm(remaining, Color.FromArgb("#80D1D5DB"), isUnselected: true));
     }
 
     private string ResolveScripturesAlignmentToken()

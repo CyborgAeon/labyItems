@@ -24,6 +24,12 @@ public sealed record NonStandardFieldAlternative(
     string ValueJson,
     string DisplayText);
 
+public sealed record NonStandardWalletEntry(
+    NonStandardEntityType EntityType,
+    string Name,
+    string DataJson,
+    string Subtitle);
+
 public sealed class NonStandardSaveRequest
 {
     public NonStandardEntityType EntityType { get; set; }
@@ -139,11 +145,10 @@ public static class NonStandardContentService
         if (request == null)
             throw new ArgumentNullException(nameof(request));
 
-        var name = (request.Name ?? string.Empty).Trim();
-        if (name.Length == 0)
+        var requestedName = (request.Name ?? string.Empty).Trim();
+        if (requestedName.Length == 0)
             throw new InvalidOperationException("Name is required.");
 
-        var payload = BuildPayload(request.EntityType, name, request.DataJson);
         var dbPath = ServiceHelper.EnsureDbPath();
         if (string.IsNullOrWhiteSpace(dbPath))
             throw new InvalidOperationException("Database path is unavailable.");
@@ -152,35 +157,41 @@ public static class NonStandardContentService
         conn.Open();
 
         EnsureTables(conn);
+        var saveName = request.EntityType == NonStandardEntityType.CharacterClass
+            ? ResolveClassNameForSave(conn, requestedName)
+            : requestedName;
+
+        request.Name = saveName;
+        var payload = BuildPayload(request.EntityType, saveName, request.DataJson);
 
         switch (request.EntityType)
         {
             case NonStandardEntityType.CharacterClass:
-                UpsertClass(conn, name, payload);
-                SaveLifeScaleForClass(conn, name, request);
+                UpsertClass(conn, saveName, payload);
+                SaveLifeScaleForClass(conn, saveName, request);
                 ClassService.InvalidateCache();
                 LifeScalesService.InvalidateCache();
                 break;
             case NonStandardEntityType.CharacterRace:
-                UpsertRace(conn, name, payload);
-                SaveLifeScaleForRace(conn, name, request);
+                UpsertRace(conn, saveName, payload);
+                SaveLifeScaleForRace(conn, saveName, request);
                 PeopleService.InvalidateCache();
                 LifeScalesService.InvalidateCache();
                 break;
             case NonStandardEntityType.Ability:
-                UpsertAbility(conn, name, payload);
+                UpsertAbility(conn, saveName, payload);
                 EvolutionService.InvalidateCache();
                 break;
             case NonStandardEntityType.Miracle:
-                UpsertMiracle(conn, name, payload);
+                UpsertMiracle(conn, saveName, payload);
                 MiracleService.InvalidateCache();
                 break;
             case NonStandardEntityType.Spell:
-                UpsertSpell(conn, name, payload);
+                UpsertSpell(conn, saveName, payload);
                 SpellService.InvalidateCache();
                 break;
             case NonStandardEntityType.Evocation:
-                UpsertEvocation(conn, name, payload);
+                UpsertEvocation(conn, saveName, payload);
                 DruidEvocationService.InvalidateCache();
                 break;
             default:
@@ -188,6 +199,31 @@ public static class NonStandardContentService
         }
 
         return Task.CompletedTask;
+    }
+
+    public static Task<IReadOnlyList<NonStandardWalletEntry>> GetWalletEntriesAsync()
+    {
+        var dbPath = ServiceHelper.EnsureDbPath();
+        if (string.IsNullOrWhiteSpace(dbPath))
+            return Task.FromResult<IReadOnlyList<NonStandardWalletEntry>>(Array.Empty<NonStandardWalletEntry>());
+
+        var entries = new List<NonStandardWalletEntry>();
+        using var conn = new SqliteConnection($"Data Source={dbPath}");
+        conn.Open();
+
+        AppendWalletEntries(conn, entries, NonStandardEntityType.CharacterClass, "classes", "name");
+        AppendWalletEntries(conn, entries, NonStandardEntityType.CharacterRace, "races", "name");
+        AppendWalletEntries(conn, entries, NonStandardEntityType.Ability, "evolution", "idx");
+        AppendWalletEntries(conn, entries, NonStandardEntityType.Miracle, "miracles", "name");
+        AppendWalletEntries(conn, entries, NonStandardEntityType.Spell, "spells", "name");
+        AppendWalletEntries(conn, entries, NonStandardEntityType.Evocation, "evocs", "name");
+
+        var ordered = entries
+            .OrderBy(entry => entry.EntityType)
+            .ThenBy(entry => entry.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return Task.FromResult<IReadOnlyList<NonStandardWalletEntry>>(ordered);
     }
 
     private static async Task<IReadOnlyList<NonStandardTemplate>> GetClassTemplatesAsync()
@@ -346,6 +382,141 @@ public static class NonStandardContentService
             model["PowerPerLevel"] = powerPerLevel;
 
         return model.ToJsonString(PrettyJson);
+    }
+
+    private static void AppendWalletEntries(
+        SqliteConnection conn,
+        ICollection<NonStandardWalletEntry> destination,
+        NonStandardEntityType entityType,
+        string table,
+        string nameColumn)
+    {
+        try
+        {
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = $"SELECT {nameColumn}, data_json FROM {table};";
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var name = reader.IsDBNull(0) ? string.Empty : reader.GetString(0);
+                var dataJson = reader.IsDBNull(1) ? "{}" : reader.GetString(1);
+                var trimmedName = (name ?? string.Empty).Trim();
+                if (trimmedName.Length == 0)
+                    continue;
+
+                if (!TryParseNonStandardFlag(dataJson))
+                    continue;
+
+                destination.Add(new NonStandardWalletEntry(
+                    EntityType: entityType,
+                    Name: trimmedName,
+                    DataJson: dataJson,
+                    Subtitle: $"{FormatEntityLabel(entityType)} • Non-standard"));
+            }
+        }
+        catch
+        {
+            // The wallet is best-effort: skip missing/legacy tables.
+        }
+    }
+
+    private static string ResolveClassNameForSave(SqliteConnection conn, string requestedName)
+    {
+        var existingId = FindIdByName(conn, "classes", requestedName);
+        if (existingId == null)
+            return requestedName;
+
+        if (TryIsExistingClassNonStandard(conn, requestedName))
+            return requestedName;
+
+        var baseName = $"(NS) {requestedName}";
+        if (FindIdByName(conn, "classes", baseName) == null)
+            return baseName;
+
+        var suffix = 2;
+        while (true)
+        {
+            var candidate = $"{baseName} ({suffix})";
+            if (FindIdByName(conn, "classes", candidate) == null)
+                return candidate;
+
+            suffix++;
+        }
+    }
+
+    private static bool TryIsExistingClassNonStandard(SqliteConnection conn, string className)
+    {
+        try
+        {
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT data_json FROM classes WHERE lower(name)=lower($name) LIMIT 1;";
+            cmd.Parameters.AddWithValue("$name", className);
+            var scalar = cmd.ExecuteScalar();
+            var json = scalar?.ToString() ?? string.Empty;
+            return TryParseNonStandardFlag(json);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static bool TryParseNonStandardFlag(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return false;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+                return false;
+
+            foreach (var property in doc.RootElement.EnumerateObject())
+            {
+                var key = NormalizeFieldKey(property.Name);
+                if (!string.Equals(key, NormalizeFieldKey("nonStandard"), StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                if (property.Value.ValueKind == JsonValueKind.True)
+                    return true;
+
+                if (property.Value.ValueKind == JsonValueKind.Number
+                    && property.Value.TryGetInt32(out var numeric))
+                {
+                    return numeric != 0;
+                }
+
+                if (property.Value.ValueKind == JsonValueKind.String)
+                {
+                    var text = (property.Value.GetString() ?? string.Empty).Trim();
+                    if (bool.TryParse(text, out var boolValue))
+                        return boolValue;
+                    if (int.TryParse(text, out var intValue))
+                        return intValue != 0;
+                }
+            }
+        }
+        catch
+        {
+            return false;
+        }
+
+        return false;
+    }
+
+    private static string FormatEntityLabel(NonStandardEntityType entityType)
+    {
+        return entityType switch
+        {
+            NonStandardEntityType.CharacterClass => "Class",
+            NonStandardEntityType.CharacterRace => "Race",
+            NonStandardEntityType.Ability => "Ability",
+            NonStandardEntityType.Spell => "Spell",
+            NonStandardEntityType.Miracle => "Miracle",
+            NonStandardEntityType.Evocation => "Evocation",
+            _ => entityType.ToString()
+        };
     }
 
     private static void SaveLifeScaleForClass(SqliteConnection conn, string className, NonStandardSaveRequest request)

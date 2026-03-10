@@ -105,6 +105,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     private readonly ObservableCollection<string> _classOptions = new();
 
     private bool _initialized;
+    private bool _suppressTypeReload;
     private bool _isBusy;
     private string _name = string.Empty;
     private string _saveStatus = string.Empty;
@@ -143,7 +144,8 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             Raise(nameof(ShowRaceLifeScaleSelectors));
             Raise(nameof(CanSave));
 
-            _ = ReloadForSelectedTypeAsync(preferredTemplateName: null);
+            if (!_suppressTypeReload)
+                _ = ReloadForSelectedTypeAsync(preferredTemplateName: null);
         }
     }
 
@@ -499,6 +501,30 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         IsLifeScaleExpanded = !IsLifeScaleExpanded;
     }
 
+    public async Task LoadFromWalletEntryAsync(NonStandardWalletEntry? entry)
+    {
+        if (entry == null)
+            return;
+
+        await InitializeAsync();
+        var typeOption = _entityTypes.FirstOrDefault(option => option.EntityType == entry.EntityType);
+        if (typeOption == null)
+            return;
+
+        _suppressTypeReload = true;
+        SelectedEntityType = typeOption;
+        _suppressTypeReload = false;
+
+        await ReloadForSelectedTypeAsync(entry.Name);
+        BuildFields(entry.EntityType, entry.DataJson);
+        Name = entry.Name;
+        SaveStatus = string.Empty;
+        UpdatePreview();
+
+        await LoadExistingLifeScaleSelectionAsync(entry.EntityType, entry.Name);
+        Raise(nameof(CanSave));
+    }
+
     private async Task ReloadForSelectedTypeAsync(string? preferredTemplateName)
     {
         if (!_initialized)
@@ -584,6 +610,48 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
 
         var tuples = points.Select(point => new[] { point.Body, point.Loc }).ToList();
         LifeScalePointsJson = JsonSerializer.Serialize(tuples, PrettyJson);
+    }
+
+    private async Task LoadExistingLifeScaleSelectionAsync(NonStandardEntityType entityType, string name)
+    {
+        if (entityType is not (NonStandardEntityType.CharacterClass or NonStandardEntityType.CharacterRace))
+            return;
+
+        var token = (name ?? string.Empty).Trim();
+        if (token.Length == 0)
+            return;
+
+        var allLifeScales = await LifeScalesService.GetAllAsync();
+        if (entityType == NonStandardEntityType.CharacterClass)
+        {
+            foreach (var raceEntry in allLifeScales)
+            {
+                if (!raceEntry.Value.TryGetValue(token, out var points) || points.Count == 0)
+                    continue;
+
+                SelectedLifeScaleTargetRace = raceEntry.Key;
+                SelectedLifeScaleSourceClass = token;
+                LifeScalePointsJson = JsonSerializer.Serialize(
+                    points.Where(point => point is { Length: >= 2 }).Select(point => new[] { point[0], point[1] }).ToList(),
+                    PrettyJson);
+                return;
+            }
+
+            return;
+        }
+
+        if (!allLifeScales.TryGetValue(token, out var classOptions) || classOptions.Count == 0)
+            return;
+
+        var first = classOptions
+            .OrderBy(option => option.Key, StringComparer.OrdinalIgnoreCase)
+            .First();
+
+        SelectedLifeScaleTargetClass = first.Key;
+        SelectedLifeScaleSourceRace = token;
+        LifeScalePointsJson = JsonSerializer.Serialize(
+            first.Value.Where(point => point is { Length: >= 2 }).Select(point => new[] { point[0], point[1] }).ToList(),
+            PrettyJson);
     }
 
     private void ApplySelectedBaseTemplate()

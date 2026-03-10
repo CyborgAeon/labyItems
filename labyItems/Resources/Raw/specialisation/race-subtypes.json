@@ -1,0 +1,82 @@
+{
+  "$schemaVersion": 1,
+  "definitions": {
+    "ElfColourAbilities": {
+      "Key": "definition.elfcolourabilities",
+      "DisplayName": "ElfColourAbilities",
+      "ChoiceSetRefs": [
+        "choice.elfcolourabilities.mapped"
+      ]
+    },
+    "CrolSubtypeAbilities": {
+      "Key": "definition.crolsubtypeabilities",
+      "DisplayName": "CrolSubtypeAbilities",
+      "ChoiceSetRefs": [
+        "choice.crolsubtypeabilities.mapped"
+      ]
+    },
+    "Baronial Tradition": {
+      "Key": "definition.baronial-tradition",
+      "DisplayName": "Baronial Tradition",
+      "ChoiceSetRefs": [
+        "choice.baronial-tradition.primary"
+      ]
+    },
+    "HumanSubtypeAbilities": {
+      "Key": "definition.humansubtypeabilities",
+      "DisplayName": "HumanSubtypeAbilities",
+      "ChoiceSetRefs": [
+        "choice.humansubtypeabilities.mapped"
+      ]
+    },
+    "AmlesianCasteAbilities": {
+      "Key": "definition.amlesiancasteabilities",
+      "DisplayName": "AmlesianCasteAbilities",
+      "ChoiceSetRefs": [
+        "choice.amlesiancasteabilities.mapped"
+      ]
+    },
+    "BaronialAncestry": {
+      "Key": "definition.baronialancestry",
+      "DisplayName": "BaronialAncestry",
+      "ChoiceSetRefs": [
+        "choice.baronialancestry.mapped"
+      ]
+    },
+    "IshmaicClanAbilities": {
+      "Key": "definition.ishmaicclanabilities",
+      "DisplayName": "IshmaicClanAbilities",
+      "ChoiceSetRefs": [
+        "choice.ishmaicclanabilities.mapped"
+      ]
+    },
+    "AncientFolkSubtypeAbilities": {
+      "Key": "definition.ancientfolksubtypeabilities",
+      "DisplayName": "AncientFolkSubtypeAbilities",
+      "ChoiceSetRefs": [
+        "choice.ancientfolksubtypeabilities.mapped"
+      ]
+    },
+    "AlfarSubtypeAbilities": {
+      "Key": "definition.alfarsubtypeabilities",
+      "DisplayName": "AlfarSubtypeAbilities",
+      "ChoiceSetRefs": [
+        "choice.alfarsubtypeabilities.mapped"
+      ]
+    },
+    "RatfolkBreedAbilities": {
+      "Key": "definition.ratfolkbreedabilities",
+      "DisplayName": "RatfolkBreedAbilities",
+      "ChoiceSetRefs": [
+        "choice.ratfolkbreedabilities.mapped"
+      ]
+    },
+    "RatfolkClanAbilities": {
+      "Key": "definition.ratfolkclanabilities",
+      "DisplayName": "RatfolkClanAbilities",
+      "ChoiceSetRefs": [
+        "choice.ratfolkclanabilities.mapped"
+      ]
+    }
+  }
+}

@@ -4,7 +4,15 @@
             xmlns:controls="clr-namespace:labyItems.Controls"
             xmlns:local="clr-namespace:labyItems.Pages.Calculator"
             xmlns:nav="clr-namespace:labyItems.Pages.Calculator.CalcNav"
-        Title="ISP Calculator">
+            x:Name="Root"
+            NavigationPage.HasNavigationBar="False"
+            NavigationPage.HasBackButton="False"
+            Shell.NavBarIsVisible="False"
+            Title="">
+    <ContentPage x:Name="BackTab"
+                 Title="←">
+        <Grid />
+    </ContentPage>
     <nav:ArmourNav x:Name="ArmourCategoryPage"
             Title="Armour"/>
     <local:WeaponConfigPage x:Name="WeaponCategoryPage"
@@ -13,8 +21,6 @@
             Title="Charm"/>
     <nav:LifeConfigPage x:Name="LifeCategoryPage"
             Title="Life"/>
-    <TabbedPage.ToolbarItems>
-        <ToolbarItem Text="Return to Form"
-                Clicked="OnReturn"/>
-    </TabbedPage.ToolbarItems>
+    <nav:MoreNav x:Name="MoreCategoryPage"
+                 Title="More"/>
 </TabbedPage>

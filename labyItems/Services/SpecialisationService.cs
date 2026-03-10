@@ -1,326 +1,221 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using labyItems.Models.Characters;
+using labyItems.Services.Specialisations;
 
 namespace labyItems.Services;
 
 public static class SpecialisationService
 {
-    private static readonly HashSet<string> _knownColourEntryFields = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "Description",
-        "Levels",
-        "LifeScaleOverride",
-        "ArmourAvailabilityOverride",
-        "ColourChoiceOverride",
-        "GuildOverrides",
-        "HedgeOrCircle",
-        "ClassRestriction"
-    };
-
-    private static readonly JsonSerializerOptions _jsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        Converters = { new GuildOverrideRulesConverter() }
-    };
-
     private static Dictionary<string, SpecialisationRecord>? _cache;
 
     public static async Task<Dictionary<string, SpecialisationRecord>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        if (_cache != null)
+            return _cache;
 
-        var json = await ServiceHelper.ReadPackageTextAsync("specialisation/specialisation.json");
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+        var records = new Dictionary<string, SpecialisationRecord>(StringComparer.OrdinalIgnoreCase);
 
-        var dict = JsonSerializer.Deserialize<Dictionary<string, SpecialisationRecord>>(json, _jsonOptions)
-                   ?? new Dictionary<string, SpecialisationRecord>(StringComparer.OrdinalIgnoreCase);
+        foreach (var entry in index.Definitions)
+            records[entry.Key] = ConvertDefinition(entry.Value);
 
-        foreach (var record in dict.Values)
-            NormalizeRecord(record);
-
-        _cache = new Dictionary<string, SpecialisationRecord>(dict, StringComparer.OrdinalIgnoreCase);
+        _cache = records;
         return _cache;
     }
 
-    private static void NormalizeRecord(SpecialisationRecord? record)
+    private static SpecialisationRecord ConvertDefinition(SpecialisationDefinition definition)
     {
-        if (record == null)
-            return;
+        var record = new SpecialisationRecord
+        {
+            Description = ResolveDescription(definition)
+        };
 
-        if (record.ColourAbilities is { Count: > 0 })
-            return;
+        var abilityList = new List<AbilityDefinition>();
+        var optionList = new List<AbilityDefinition>();
+        Dictionary<string, ColourAbilityRecord>? colourAbilities = null;
 
-        var parsed = ParseColourAbilities(record.ExtraFields);
-        if (parsed == null || parsed.Count == 0)
-            return;
+        foreach (var grant in definition.PassiveGrants ?? Array.Empty<AbilityGrant>())
+        {
+            if (grant?.Ability == null || string.IsNullOrWhiteSpace(grant.Ability.Name))
+                continue;
 
-        record.ColourAbilities = parsed;
+            abilityList.Add(CloneAbility(grant.Ability));
+        }
 
-        if (record.ExtraFields == null)
-            return;
+        foreach (var choiceSet in definition.ChoiceSets ?? Array.Empty<SpecialisationChoiceSet>())
+        {
+            switch (choiceSet.Mode)
+            {
+                case ChoiceMode.MappedSingle:
+                    colourAbilities ??= new Dictionary<string, ColourAbilityRecord>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var option in choiceSet.Options ?? Array.Empty<ChoiceOption>())
+                    {
+                        var key = (option.Key ?? option.Label ?? string.Empty).Trim();
+                        if (key.Length == 0)
+                            continue;
 
-        foreach (var key in parsed.Keys)
-            record.ExtraFields.Remove(key);
+                        colourAbilities[key] = BuildColourAbilityRecord(option);
+                    }
+                    break;
 
-        if (record.ExtraFields.Count == 0)
-            record.ExtraFields = null;
+                case ChoiceMode.Lookup:
+                case ChoiceMode.Multi:
+                case ChoiceMode.Single:
+                {
+                    foreach (var option in choiceSet.Options ?? Array.Empty<ChoiceOption>())
+                    {
+                        var optionName = (option.Label ?? option.Key ?? string.Empty).Trim();
+                        if (optionName.Length == 0)
+                            continue;
+
+                        if (option.Grants?.Count > 0)
+                        {
+                            foreach (var grant in option.Grants)
+                            {
+                                if (grant?.Ability == null)
+                                    continue;
+
+                                var cloned = CloneAbility(grant.Ability);
+                                if (string.IsNullOrWhiteSpace(cloned.Name))
+                                    cloned.Name = optionName;
+
+                                if (string.IsNullOrWhiteSpace(cloned.Effect) && !string.IsNullOrWhiteSpace(option.Description))
+                                    cloned.Effect = option.Description;
+
+                                abilityList.Add(cloned);
+                            }
+                        }
+                        else
+                        {
+                            optionList.Add(new AbilityDefinition
+                            {
+                                Name = optionName,
+                                Effect = option.Description ?? string.Empty,
+                                Type = "Static"
+                            });
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        record.Abilities = abilityList
+            .GroupBy(a => (a.Name ?? string.Empty).Trim(), StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .Where(ability => !string.IsNullOrWhiteSpace(ability.Name))
+            .ToList();
+
+        record.Options = optionList
+            .GroupBy(a => (a.Name ?? string.Empty).Trim(), StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .Where(ability => !string.IsNullOrWhiteSpace(ability.Name))
+            .ToList();
+
+        if (record.Abilities.Count == 0)
+            record.Abilities = null;
+
+        if (record.Options.Count == 0)
+            record.Options = null;
+
+        if (colourAbilities is { Count: > 0 })
+            record.ColourAbilities = colourAbilities;
+
+        return record;
     }
 
-    private static Dictionary<string, ColourAbilityRecord>? ParseColourAbilities(Dictionary<string, JsonElement>? extraFields)
+    private static string ResolveDescription(SpecialisationDefinition definition)
     {
-        if (extraFields == null || extraFields.Count == 0)
+        var note = definition.Notes?
+            .FirstOrDefault(text => !string.IsNullOrWhiteSpace(text));
+
+        return (note ?? string.Empty).Trim();
+    }
+
+    private static ColourAbilityRecord BuildColourAbilityRecord(ChoiceOption option)
+    {
+        return new ColourAbilityRecord
+        {
+            Description = (option.Description ?? string.Empty).Trim(),
+            Levels = BuildLevelledAbilityMap(option.Grants),
+            LifeScaleOverride = option.Effects?.LifeScaleOverride ?? string.Empty,
+            ArmourAvailabilityOverride = option.Effects?.ArmourAvailabilityOverride ?? string.Empty,
+            ColourChoiceOverride = option.Effects?.ColourChoiceOverride?.Where(IsNotBlank).ToList(),
+            GuildOverrides = option.Effects?.GuildOverrides,
+            HedgeOrCircle = option.Effects?.HedgeOrCircle?.Where(IsNotBlank).ToList(),
+            ClassRestriction = option.Restrictions?.ClassRestriction?.Where(IsNotBlank).ToList()
+        };
+    }
+
+    private static Dictionary<string, List<AbilityDefinition>>? BuildLevelledAbilityMap(IReadOnlyList<AbilityGrant>? grants)
+    {
+        if (grants == null || grants.Count == 0)
             return null;
 
-        var parsed = new Dictionary<string, ColourAbilityRecord>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var kvp in extraFields)
-        {
-            if (!TryParseColourAbilityRecord(kvp.Value, out var entry))
-                continue;
-
-            parsed[kvp.Key] = entry;
-        }
-
-        return parsed.Count > 0 ? parsed : null;
-    }
-
-    private static bool TryParseColourAbilityRecord(JsonElement value, out ColourAbilityRecord entry)
-    {
-        entry = new ColourAbilityRecord();
-
-        if (value.ValueKind == JsonValueKind.Array)
-        {
-            var list = ParseAbilityArray(value);
-            if (list.Count == 0)
-                return false;
-
-            entry.Levels = new Dictionary<string, List<AbilityDefinition>>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["1"] = list
-            };
-            return true;
-        }
-
-        if (value.ValueKind != JsonValueKind.Object)
-            return false;
-
-        if (value.TryGetProperty("Description", out var descEl) && descEl.ValueKind == JsonValueKind.String)
-            entry.Description = descEl.GetString() ?? string.Empty;
-
-        if (value.TryGetProperty("LifeScaleOverride", out var lifeEl) && lifeEl.ValueKind == JsonValueKind.String)
-            entry.LifeScaleOverride = lifeEl.GetString() ?? string.Empty;
-
-        if (value.TryGetProperty("ArmourAvailabilityOverride", out var armourEl) && armourEl.ValueKind == JsonValueKind.String)
-            entry.ArmourAvailabilityOverride = armourEl.GetString() ?? string.Empty;
-
-        if (value.TryGetProperty("ColourChoiceOverride", out var colourEl) && colourEl.ValueKind == JsonValueKind.Array)
-        {
-            entry.ColourChoiceOverride = colourEl
-                .EnumerateArray()
-                .Select(x => x.GetString() ?? string.Empty)
-                .Where(x => x.Length > 0)
-                .ToList();
-        }
-
-        if (value.TryGetProperty("GuildOverrides", out var guildEl))
-            entry.GuildOverrides = GuildOverrideRulesConverter.FromElement(guildEl, _jsonOptions);
-
-        if (value.TryGetProperty("HedgeOrCircle", out var hedgeEl) && hedgeEl.ValueKind == JsonValueKind.Array)
-        {
-            entry.HedgeOrCircle = hedgeEl
-                .EnumerateArray()
-                .Select(x => x.GetString() ?? string.Empty)
-                .Where(x => x.Length > 0)
-                .ToList();
-        }
-
-        if (value.TryGetProperty("ClassRestriction", out var classEl) && classEl.ValueKind == JsonValueKind.Array)
-        {
-            entry.ClassRestriction = classEl
-                .EnumerateArray()
-                .Select(x => x.GetString() ?? string.Empty)
-                .Where(x => x.Length > 0)
-                .ToList();
-        }
-
-        if (value.TryGetProperty("Levels", out var levelsEl) && levelsEl.ValueKind == JsonValueKind.Object)
-            entry.Levels = ParseLevelArrays(levelsEl);
-        else
-            entry.Levels = ParseLevelArrays(value);
-
-        MergeLevelEntries(entry.Levels, ParseLegacyLevelArrays(value));
-
-        var extras = new Dictionary<string, JsonElement>(StringComparer.OrdinalIgnoreCase);
-        var hasLevelsProperty = value.TryGetProperty("Levels", out _);
-        foreach (var prop in value.EnumerateObject())
-        {
-            if (_knownColourEntryFields.Contains(prop.Name))
-                continue;
-
-            if (!hasLevelsProperty && IsLevelKey(prop.Name) && prop.Value.ValueKind == JsonValueKind.Array)
-                continue;
-
-            extras[prop.Name] = prop.Value.Clone();
-        }
-
-        if (extras.Count > 0)
-            entry.ExtraFields = extras;
-
-        var hasLevels = entry.Levels is { Count: > 0 };
-        var hasDescription = !string.IsNullOrWhiteSpace(entry.Description);
-        var hasOverrides = !string.IsNullOrWhiteSpace(entry.LifeScaleOverride)
-                           || !string.IsNullOrWhiteSpace(entry.ArmourAvailabilityOverride)
-                           || entry.ColourChoiceOverride is { Count: > 0 }
-                           || entry.HedgeOrCircle is { Count: > 0 }
-                           || entry.ClassRestriction is { Count: > 0 }
-                           || entry.GuildOverrides != null;
-
-        return hasLevels || hasDescription || hasOverrides;
-    }
-
-    private static Dictionary<string, List<AbilityDefinition>> ParseLevelArrays(JsonElement levelsObject)
-    {
         var levels = new Dictionary<string, List<AbilityDefinition>>(StringComparer.OrdinalIgnoreCase);
-        if (levelsObject.ValueKind != JsonValueKind.Object)
-            return levels;
-
-        foreach (var lvlProp in levelsObject.EnumerateObject())
+        foreach (var grant in grants)
         {
-            if (lvlProp.NameEquals("Levels") && lvlProp.Value.ValueKind == JsonValueKind.Object)
-            {
-                MergeLevelEntries(levels, ParseLevelArrays(lvlProp.Value));
+            if (grant?.Ability == null || string.IsNullOrWhiteSpace(grant.Ability.Name))
                 continue;
+
+            var level = grant.Level ?? 1;
+            var levelKey = level.ToString();
+            if (!levels.TryGetValue(levelKey, out var list))
+            {
+                list = new List<AbilityDefinition>();
+                levels[levelKey] = list;
             }
 
-            if (!IsLevelKey(lvlProp.Name))
-                continue;
+            list.Add(CloneAbility(grant.Ability));
+        }
 
-            if (lvlProp.Value.ValueKind != JsonValueKind.Array)
-                continue;
+        if (levels.Count == 0)
+            return null;
 
-            var list = ParseAbilityArray(lvlProp.Value);
-            if (list.Count > 0)
-                levels[lvlProp.Name] = list;
+        foreach (var entry in levels)
+        {
+            var unique = entry.Value
+                .Where(ability => !string.IsNullOrWhiteSpace(ability?.Name))
+                .GroupBy(ability => (ability.Name ?? string.Empty).Trim(), StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.First())
+                .ToList();
+
+            entry.Value.Clear();
+            entry.Value.AddRange(unique);
         }
 
         return levels;
     }
 
-    private static void MergeLevelEntries(
-        Dictionary<string, List<AbilityDefinition>> target,
-        Dictionary<string, List<AbilityDefinition>> source)
+    private static AbilityDefinition CloneAbility(AbilityDefinition source)
     {
-        if (target == null || source == null || source.Count == 0)
-            return;
-
-        foreach (var kvp in source)
+        return new AbilityDefinition
         {
-            if (!target.TryGetValue(kvp.Key, out var existing))
-            {
-                target[kvp.Key] = kvp.Value?.ToList() ?? new List<AbilityDefinition>();
-                continue;
-            }
-
-            foreach (var ability in kvp.Value ?? new List<AbilityDefinition>())
-            {
-                var name = (ability?.Name ?? string.Empty).Trim();
-                if (name.Length == 0)
-                    continue;
-
-                if (existing.All(a => !string.Equals((a?.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
-                    existing.Add(ability);
-            }
-        }
+            Key = source.Key,
+            Name = source.Name,
+            Type = source.Type,
+            Effect = source.Effect,
+            BattleboardNameOverride = source.BattleboardNameOverride,
+            UpdateKey = source.UpdateKey,
+            Source = source.Source,
+            Count = source.Count,
+            Amount = source.Amount?.ToList(),
+            Frequency = source.Frequency,
+            OverwriteKey = source.OverwriteKey,
+            PreReqs = source.PreReqs?.ToList(),
+            GuildOverrides = source.GuildOverrides?.ToList(),
+            Customisation = source.Customisation == null
+                ? null
+                : new AbilityCustomisation
+                {
+                    OptionEnum = source.Customisation.OptionEnum,
+                    CustomValuesPermitted = source.Customisation.CustomValuesPermitted
+                }
+        };
     }
 
-    private static Dictionary<string, List<AbilityDefinition>> ParseLegacyLevelArrays(JsonElement element)
-    {
-        var levels = new Dictionary<string, List<AbilityDefinition>>(StringComparer.OrdinalIgnoreCase);
-        if (element.ValueKind != JsonValueKind.Object)
-            return levels;
-
-        if (element.TryGetProperty("Abilities", out var abilitiesEl) && abilitiesEl.ValueKind == JsonValueKind.Array)
-        {
-            var parsed = ParseAbilityArray(abilitiesEl);
-            if (parsed.Count > 0)
-                levels["1"] = parsed;
-        }
-
-        if (element.TryGetProperty("Talents", out var talentsEl) && talentsEl.ValueKind == JsonValueKind.Object)
-        {
-            MergeLegacyTalents(levels, talentsEl, "Minor", "2");
-            MergeLegacyTalents(levels, talentsEl, "Medium", "5");
-            MergeLegacyTalents(levels, talentsEl, "Major", "8");
-        }
-
-        return levels;
-    }
-
-    private static void MergeLegacyTalents(
-        Dictionary<string, List<AbilityDefinition>> levels,
-        JsonElement talentsElement,
-        string talentKey,
-        string levelKey)
-    {
-        if (!talentsElement.TryGetProperty(talentKey, out var bucket) || bucket.ValueKind != JsonValueKind.Array)
-            return;
-
-        var parsed = ParseAbilityArray(bucket);
-        if (parsed.Count == 0)
-            return;
-
-        if (!levels.TryGetValue(levelKey, out var existing))
-        {
-            levels[levelKey] = parsed;
-            return;
-        }
-
-        foreach (var ability in parsed)
-        {
-            var name = (ability?.Name ?? string.Empty).Trim();
-            if (name.Length == 0)
-                continue;
-
-            if (existing.All(a => !string.Equals((a?.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
-                existing.Add(ability);
-        }
-    }
-
-    private static bool IsLevelKey(string? key)
-        => int.TryParse((key ?? string.Empty).Trim(), out _);
-
-    private static List<AbilityDefinition> ParseAbilityArray(JsonElement array)
-    {
-        var list = new List<AbilityDefinition>();
-        if (array.ValueKind != JsonValueKind.Array)
-            return list;
-
-        foreach (var item in array.EnumerateArray())
-        {
-            var def = ParseAbilityDefinition(item);
-            if (!string.IsNullOrWhiteSpace(def.Name))
-                list.Add(def);
-        }
-
-        return list;
-    }
-
-    private static AbilityDefinition ParseAbilityDefinition(JsonElement element)
-    {
-        try
-        {
-            return JsonSerializer.Deserialize<AbilityDefinition>(element.GetRawText(), _jsonOptions)
-                   ?? new AbilityDefinition();
-        }
-        catch
-        {
-            return element.ValueKind switch
-            {
-                JsonValueKind.String => new AbilityDefinition { Name = element.GetString() ?? string.Empty },
-                _ => new AbilityDefinition { Name = element.GetRawText() }
-            };
-        }
-    }
+    private static bool IsNotBlank(string? value)
+        => !string.IsNullOrWhiteSpace(value);
 }
 
 public sealed class SpecialisationRecord
@@ -332,9 +227,6 @@ public sealed class SpecialisationRecord
 
     // For tables like ElfColourAbilities
     public Dictionary<string, ColourAbilityRecord>? ColourAbilities { get; set; }
-
-    [JsonExtensionData]
-    public Dictionary<string, JsonElement>? ExtraFields { get; set; }
 }
 
 public sealed class ColourAbilityRecord
@@ -347,16 +239,10 @@ public sealed class ColourAbilityRecord
     public GuildOverrideRules? GuildOverrides { get; set; }
     public List<string>? HedgeOrCircle { get; set; }
     public List<string>? ClassRestriction { get; set; }
-
-    [JsonExtensionData]
-    public Dictionary<string, JsonElement>? ExtraFields { get; set; }
 }
 
 public sealed class PowerListRecord
 {
     public int Max { get; set; }
     public List<string>? Requirements { get; set; }
-
-    [JsonExtensionData]
-    public Dictionary<string, JsonElement>? ExtraFields { get; set; }
 }

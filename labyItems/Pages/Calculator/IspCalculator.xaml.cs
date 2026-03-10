@@ -1,9 +1,11 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using labyItems.Categories;
 using labyItems.Controls;
+using labyItems.Helpers;
 using labyItems.Models;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Devices;
@@ -19,6 +21,8 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
     private TaskCompletionSource<IspCalculationResult?>? _tcsCalc;
     private double _lastAppliedTabFontSize;
     private double _lastMeasuredWidth;
+    private bool _isHandlingBackTabSelection;
+    private Page? _lastNonBackTab;
 
     public ICommand? ReturnToFormCommand { get; set; }
     public ICommand RemoveContributionCommand { get; }
@@ -43,6 +47,10 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
     public IspCalculator(int baseTotal, IEnumerable<CalcResult>? existingAbilities = null)
     {
         InitializeComponent();
+        TabbedPageChromeHelper.ApplyHiddenNavigation(this);
+        foreach (var page in Children)
+            TabbedPageChromeHelper.ConfigureTabPageChrome(page);
+
         _baseIsp = baseTotal;
         Total = baseTotal;
 
@@ -51,6 +59,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         // Consumable tab temporarily removed per request:
         // ConsumableCategoryPage.BindingContext = this;
         LifeCategoryPage.BindingContext = this;
+        MoreCategoryPage.CalculatorContext = this;
         WeaponCategoryPage.CalculatorContext = this;
 
         ArmourCategoryPage.ContributionAdded += AddContribution;
@@ -59,6 +68,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         // Consumable tab temporarily removed per request:
         // ConsumableCategoryPage.ContributionAdded += AddContribution;
         LifeCategoryPage.ContributionAdded += AddContribution;
+        MoreCategoryPage.ContributionAdded += AddContribution;
 
         ReturnToFormCommand = new Command(async () => await ExecuteReturnAsync());
         ArmourCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
@@ -67,8 +77,12 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         // Consumable tab temporarily removed per request:
         // ConsumableCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
         LifeCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
+        MoreCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
 
         RemoveContributionCommand = new Command<string>(RemoveContributionById);
+        CurrentPageChanged += OnCurrentPageChanged;
+        CurrentPage = ArmourCategoryPage;
+        _lastNonBackTab = ArmourCategoryPage;
         Loaded += OnLoaded;
         SizeChanged += OnSizeChanged;
 
@@ -76,6 +90,14 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
             SeedExisting(existingAbilities);
 
         UpdateTotal();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        TabbedPageChromeHelper.ApplyHiddenNavigation(this);
+        foreach (var page in Children)
+            TabbedPageChromeHelper.ConfigureTabPageChrome(page);
     }
 
     public void UpsertContribution(CalcContribution contribution) => AddContribution(contribution);
@@ -118,9 +140,34 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         await Navigation.PopAsync();
     }
 
-    private async void OnReturn(object sender, EventArgs e) => await ExecuteReturnAsync();
     private void OnLoaded(object? sender, EventArgs e) => UpdateTabFontSize();
     private void OnSizeChanged(object? sender, EventArgs e) => UpdateTabFontSize();
+
+    private void OnCurrentPageChanged(object? sender, EventArgs e)
+    {
+        if (CurrentPage == null)
+            return;
+
+        if (ReferenceEquals(CurrentPage, BackTab))
+        {
+            _ = TabbedPageChromeHelper.HandleBackTabSelectionAsync(
+                owner: this,
+                backTab: BackTab,
+                fallbackFactory: () =>
+                {
+                    if (Children.Contains(ArmourCategoryPage))
+                        return ArmourCategoryPage;
+
+                    return Children.FirstOrDefault(page => !ReferenceEquals(page, BackTab));
+                },
+                getIsNavigationInProgress: () => _isHandlingBackTabSelection,
+                setIsNavigationInProgress: value => _isHandlingBackTabSelection = value,
+                lastNonBackTab: _lastNonBackTab);
+            return;
+        }
+
+        _lastNonBackTab = CurrentPage;
+    }
 
     public async Task<IspCalculationResult?> GetResultAsync(INavigation nav)
     {

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="labyItems.Controls.Pickers.AlignmentToggleGridPicker"
+             x:Name="Root"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <VerticalStackLayout Spacing="10">
+        <Grid x:Name="GridHost"
+              RowSpacing="6"
+              ColumnSpacing="6"
+              RowDefinitions="Auto,*,*,*"
+              ColumnDefinitions="Auto,*,*,*">
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Text="Lawful"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   Opacity="0.75"/>
+            <Label Grid.Row="0"
+                   Grid.Column="2"
+                   Text="Neutral"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   Opacity="0.75"/>
+            <Label Grid.Row="0"
+                   Grid.Column="3"
+                   Text="Chaotic"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   Opacity="0.75"/>
+
+            <Label Grid.Row="1"
+                   Grid.Column="0"
+                   Text="Good"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Start"
+                   VerticalTextAlignment="Center"
+                   Opacity="0.75"/>
+            <Label Grid.Row="2"
+                   Grid.Column="0"
+                   Text="Neutral"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Start"
+                   VerticalTextAlignment="Center"
+                   Opacity="0.75"/>
+            <Label Grid.Row="3"
+                   Grid.Column="0"
+                   Text="Evil"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Start"
+                   VerticalTextAlignment="Center"
+                   Opacity="0.75"/>
+        </Grid>
+
+        <Label x:Name="SelectedLabel"
+               Text="Select allowed alignments"
+               FontSize="13"
+               Opacity="0.8"/>
+    </VerticalStackLayout>
+</ContentView>

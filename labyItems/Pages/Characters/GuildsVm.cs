@@ -825,7 +825,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     private void ToggleExpanded(GuildCardVm? item)
     {
-        if (item == null) return;
+        if (item == null || !item.CanToggleSelection)
+            return;
+
         foreach (var g in FilteredGuilds)
         {
             if (!ReferenceEquals(g, item) && g.IsExpanded)
@@ -1040,7 +1042,8 @@ public sealed class GuildCardVm : INotifyPropertyChanged
             if (_isSelectable == value) return;
             _isSelectable = value;
             Raise();
-            Raise(nameof(ShowSelectionAction));
+            Raise(nameof(CanToggleSelection));
+            Raise(nameof(HasNotSelectableReason));
         }
     }
 
@@ -1053,6 +1056,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
             if (_notSelectableReason == value) return;
             _notSelectableReason = value;
             Raise();
+            Raise(nameof(HasNotSelectableReason));
         }
     }
     private void Raise([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -1072,8 +1076,9 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     }
 
     public string DisplayName => _name.Length > 15 ? $"{_name[..12]}..." : _name;
-    public string SelectionActionText => IsSelected ? "Remove" : "Add";
-    public bool ShowSelectionAction => IsSelectable || IsSelected;
+    public string SelectionActionGlyph => IsSelected ? "\uf068" : "\uf067";
+    public bool CanToggleSelection => IsSelectable || IsSelected;
+    public bool HasNotSelectableReason => !CanToggleSelection && !string.IsNullOrWhiteSpace(NotSelectableReason);
     public string Type { get; set; } = "";
     public string Icon { get; set; } = "📜";
 
@@ -1129,8 +1134,9 @@ public sealed class GuildCardVm : INotifyPropertyChanged
             if (_isSelected == value) return;
             _isSelected = value;
             Raise();
-            Raise(nameof(SelectionActionText));
-            Raise(nameof(ShowSelectionAction));
+            Raise(nameof(SelectionActionGlyph));
+            Raise(nameof(CanToggleSelection));
+            Raise(nameof(HasNotSelectableReason));
         }
     }
 }

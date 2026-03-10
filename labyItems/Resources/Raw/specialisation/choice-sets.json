@@ -1,0 +1,3993 @@
+{
+  "$schemaVersion": 1,
+  "choiceSets": {
+    "choice.1st-weapon-mastery.primary": {
+      "Key": "choice.1st-weapon-mastery.primary",
+      "Title": "1st Weapon Mastery",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        }
+      ]
+    },
+    "choice.1st-weapon-mastery-o.primary": {
+      "Key": "choice.1st-weapon-mastery-o.primary",
+      "Title": "1st Weapon Mastery (O)",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery",
+              "Overrides": {
+                "Effect": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type..",
+                "Customisation": {
+                  "OptionEnum": "WeaponTypeO",
+                  "CustomValuesPermitted": true
+                }
+              }
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type..",
+          "Customisation": {
+            "OptionEnum": "WeaponTypeO",
+            "CustomValuesPermitted": true
+          }
+        }
+      ]
+    },
+    "choice.warrior-specialist.primary": {
+      "Key": "choice.warrior-specialist.primary",
+      "Title": "Warrior Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "Smithing",
+          "Label": "Smithing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.smithing"
+            }
+          ],
+          "Description": "This skill allows the Warrior to manufacture weapons and armour. Unlike other specialist skills this one costs 1000 grulls to learn. The cost of armour made by the character is then only 10 grulls per point of AC per location (e.g. a suit of AC 1 all over is 70 grulls, a suit of AC 3, or a suit of AC 1+2, is 210 grulls). The cost of the skill mostly consists of the cost of wasted materials in getting used to the equipment and preparing the forge. Thus another individual could not benefit from the forge without similar expenditure. The amount of equipment the character with this skill may manufacture is limited to 700 grulls per weekly visit to Labyrinthe. All handbook manufacturing takes place at the Desk. It is assumed that a Smith will adjust and make running repairs to their own armour, preventing wear, and as such someone with this skill does not lose adventure ‘uses’ on their own armour. Standardly weapons in Labyrinthe are assumed to be free, but in cases where it may matter a Smith can manufacture a weapon at 1/3 of the ‘bought price’. Advanced rules that build on the Smithing skill can be found in the “Manufacturers Guide” (Downloadable on the forums)."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "Cold Rage",
+          "Label": "Cold Rage",
+          "Grants": [
+            {
+              "AbilityRef": "ability.cold-rage"
+            }
+          ],
+          "Description": "This ability allows the Warrior to enter a Rage – such that for the next 5 minutes, the Warrior takes 25% less from any damage suffered – bar that suffered from purely magic weapons and magical spells. In a Cold Rage the Warrior is able to distinguish friend from foe and as such is not required to attack them. In a Cold Rage you may use ‘offensive powers’ such as Knock Back, but not other powers like Monk Locational Healing or using your magical ring to Blink away. This ability is usable 1/day."
+        },
+        {
+          "Key": "War Cry",
+          "Label": "War Cry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.war-cry"
+            }
+          ],
+          "Description": "This ability allows the Warrior to negate one listed stopping effect, and grants immunity to that effect for the following five minutes. It must be used within 2 seconds of the effect occurring and accompanied with a loud shout. This ability is usable 1/day."
+        },
+        {
+          "Key": "Athletic Training",
+          "Label": "Athletic Training",
+          "Grants": [
+            {
+              "AbilityRef": "ability.athletic-training"
+            }
+          ],
+          "Description": "This skill grants the Warrior the ability to jump a large distance. Also found listed under the spell Jump, or Salmon Leap, the distance jumped cannot be more than 20’ forwards, 10’ backwards, or 15’ upwards. Jumping past a person will enable that person to take one swing at the jumper; simple actions or other ‘instant’ abilities which need no verbal can be used (just one ability – not a string of Neuronic Penetrations!) instead of a weapon swing, including speaking a single word. This ability is usable 2/day"
+        }
+      ]
+    },
+    "choice.battle-priest-specialist.primary": {
+      "Key": "choice.battle-priest-specialist.primary",
+      "Title": "Battle-Priest Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "Smithing",
+          "Label": "Smithing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.smithing"
+            }
+          ],
+          "Description": "This skill allows the Warrior to manufacture weapons and armour. Unlike other specialist skills this one costs 1000 grulls to learn. The cost of armour made by the character is then only 10 grulls per point of AC per location (e.g. a suit of AC 1 all over is 70 grulls, a suit of AC 3, or a suit of AC 1+2, is 210 grulls). The cost of the skill mostly consists of the cost of wasted materials in getting used to the equipment and preparing the forge. Thus another individual could not benefit from the forge without similar expenditure. The amount of equipment the character with this skill may manufacture is limited to 700 grulls per weekly visit to Labyrinthe. All handbook manufacturing takes place at the Desk. It is assumed that a Smith will adjust and make running repairs to their own armour, preventing wear, and as such someone with this skill does not lose adventure ‘uses’ on their own armour. Standardly weapons in Labyrinthe are assumed to be free, but in cases where it may matter a Smith can manufacture a weapon at 1/3 of the ‘bought price’. Advanced rules that build on the Smithing skill can be found in the “Manufacturers Guide” (Downloadable on the forums)."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        }
+      ]
+    },
+    "choice.crusading-priest-specialist.primary": {
+      "Key": "choice.crusading-priest-specialist.primary",
+      "Title": "Crusading-Priest Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "Smithing",
+          "Label": "Smithing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.smithing"
+            }
+          ],
+          "Description": "This skill allows the Warrior to manufacture weapons and armour. Unlike other specialist skills this one costs 1000 grulls to learn. The cost of armour made by the character is then only 10 grulls per point of AC per location (e.g. a suit of AC 1 all over is 70 grulls, a suit of AC 3, or a suit of AC 1+2, is 210 grulls). The cost of the skill mostly consists of the cost of wasted materials in getting used to the equipment and preparing the forge. Thus another individual could not benefit from the forge without similar expenditure. The amount of equipment the character with this skill may manufacture is limited to 700 grulls per weekly visit to Labyrinthe. All handbook manufacturing takes place at the Desk. It is assumed that a Smith will adjust and make running repairs to their own armour, preventing wear, and as such someone with this skill does not lose adventure ‘uses’ on their own armour. Standardly weapons in Labyrinthe are assumed to be free, but in cases where it may matter a Smith can manufacture a weapon at 1/3 of the ‘bought price’. Advanced rules that build on the Smithing skill can be found in the “Manufacturers Guide” (Downloadable on the forums)."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        }
+      ]
+    },
+    "choice.ranger-specialist.primary": {
+      "Key": "choice.ranger-specialist.primary",
+      "Title": "Ranger Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "Shadowing",
+          "Label": "Shadowing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.shadowing"
+            }
+          ],
+          "Description": "This allows the user to follow the tracks of creatures in urban, built up environments or in tunnels or buildings. The user can determine what kind of creatures frequent an area by the tracks that they have left behind. In some circumstances, at referee’s discretion, this skill can be used to provide further details, such as following a specific target’s trail. Its use requires slow and careful inspection of surrounding area."
+        }
+      ]
+    },
+    "choice.archer-specialist.primary": {
+      "Key": "choice.archer-specialist.primary",
+      "Title": "Archer Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "3rd Weapon Mastery (Bows)",
+          "Label": "3rd Weapon Mastery (Bows)",
+          "Grants": [
+            {
+              "AbilityRef": "ability.3rd-weapon-mastery-bows"
+            }
+          ],
+          "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be By weapon type (single), + 3 masteries (becoming quad)."
+        },
+        {
+          "Key": "Accuracy",
+          "Label": "Accuracy",
+          "Grants": [
+            {
+              "AbilityRef": "ability.accuracy"
+            }
+          ],
+          "Description": "This skill allows the Archer to do all arrow damage regardless of the PAC possessed by the target (e.g. Triple becomes Triple Through) but it requires 5 seconds concentration to perform"
+        },
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        }
+      ]
+    },
+    "choice.monk-specialist.primary": {
+      "Key": "choice.monk-specialist.primary",
+      "Title": "Monk Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Mind Block",
+          "Label": "Mind Block",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mind-block"
+            }
+          ]
+        },
+        {
+          "Key": "Stop Bleeding",
+          "Label": "Stop Bleeding",
+          "Grants": [
+            {
+              "AbilityRef": "ability.stop-bleeding"
+            }
+          ]
+        },
+        {
+          "Key": "Monk Locational Curing",
+          "Label": "Monk Locational Curing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.monk-locational-curing"
+            }
+          ]
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "ForeArm Parry",
+          "Label": "ForeArm Parry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.forearm-parry"
+            }
+          ]
+        },
+        {
+          "Key": "Relaxed Fall",
+          "Label": "Relaxed Fall",
+          "Grants": [
+            {
+              "AbilityRef": "ability.relaxed-fall"
+            }
+          ]
+        },
+        {
+          "Key": "Athletic Training",
+          "Label": "Athletic Training",
+          "Grants": [
+            {
+              "AbilityRef": "ability.athletic-training"
+            }
+          ],
+          "Description": "This skill grants the Warrior the ability to jump a large distance. Also found listed under the spell Jump, or Salmon Leap, the distance jumped cannot be more than 20’ forwards, 10’ backwards, or 15’ upwards. Jumping past a person will enable that person to take one swing at the jumper; simple actions or other ‘instant’ abilities which need no verbal can be used (just one ability – not a string of Neuronic Penetrations!) instead of a weapon swing, including speaking a single word. This ability is usable 2/day"
+        }
+      ]
+    },
+    "choice.duellist-specialist.primary": {
+      "Key": "choice.duellist-specialist.primary",
+      "Title": "Duellist Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "ForeArm Parry",
+          "Label": "ForeArm Parry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.forearm-parry"
+            }
+          ]
+        },
+        {
+          "Key": "Relaxed Fall",
+          "Label": "Relaxed Fall",
+          "Grants": [
+            {
+              "AbilityRef": "ability.relaxed-fall"
+            }
+          ]
+        },
+        {
+          "Key": "Athletic Training",
+          "Label": "Athletic Training",
+          "Grants": [
+            {
+              "AbilityRef": "ability.athletic-training"
+            }
+          ],
+          "Description": "This skill grants the Warrior the ability to jump a large distance. Also found listed under the spell Jump, or Salmon Leap, the distance jumped cannot be more than 20’ forwards, 10’ backwards, or 15’ upwards. Jumping past a person will enable that person to take one swing at the jumper; simple actions or other ‘instant’ abilities which need no verbal can be used (just one ability – not a string of Neuronic Penetrations!) instead of a weapon swing, including speaking a single word. This ability is usable 2/day"
+        },
+        {
+          "Key": "2nd Weapon Mastery",
+          "Label": "2nd Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.2nd-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple)."
+        },
+        {
+          "Key": "War Cry",
+          "Label": "War Cry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.war-cry"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.cavalier-specialist.primary": {
+      "Key": "choice.cavalier-specialist.primary",
+      "Title": "Cavalier Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "War Cry",
+          "Label": "War Cry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.war-cry"
+            }
+          ],
+          "Description": "This ability allows the Warrior to negate one listed stopping effect, and grants immunity to that effect for the following five minutes. It must be used within 2 seconds of the effect occurring and accompanied with a loud shout. This ability is usable 1/day."
+        },
+        {
+          "Key": "Cold Rage",
+          "Label": "Cold Rage",
+          "Grants": [
+            {
+              "AbilityRef": "ability.cold-rage"
+            }
+          ],
+          "Description": "This ability allows the Warrior to enter a Rage – such that for the next 5 minutes, the Warrior takes 25% less from any damage suffered – bar that suffered from purely magic weapons and magical spells. In a Cold Rage the Warrior is able to distinguish friend from foe and as such is not required to attack them. In a Cold Rage you may use ‘offensive powers’ such as Knock Back, but not other powers like Monk Locational Healing or using your magical ring to Blink away. This ability is usable 1/day."
+        }
+      ]
+    },
+    "choice.paladin-specialist.primary": {
+      "Key": "choice.paladin-specialist.primary",
+      "Title": "Paladin Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "Make healing balm",
+          "Label": "Make healing balm",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-healing-balm"
+            }
+          ]
+        },
+        {
+          "Key": "Read Spirit Runes and Utilise Goodly Scrolls",
+          "Label": "Read Spirit Runes and Utilise Goodly Scrolls",
+          "Grants": [
+            {
+              "AbilityRef": "ability.read-spirit-runes-and-utilise-goodly-scrolls"
+            }
+          ]
+        },
+        {
+          "Key": "Read Spirit Runes and Utilise Goodly Item",
+          "Label": "Read Spirit Runes and Utilise Goodly Item",
+          "Grants": [
+            {
+              "AbilityRef": "ability.read-spirit-runes-and-utilise-goodly-item"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.unholy-champion-specialist.primary": {
+      "Key": "choice.unholy-champion-specialist.primary",
+      "Title": "Unholy Champion Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Utilise Evil Spirit Item",
+          "Label": "Utilise Evil Spirit Item",
+          "Grants": [
+            {
+              "AbilityRef": "ability.utilise-evil-spirit-item"
+            }
+          ]
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Make Poison",
+          "Label": "Make Poison",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-poison"
+            }
+          ]
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "Read Spirit Runes and Utilise Evil Scrolls",
+          "Label": "Read Spirit Runes and Utilise Evil Scrolls",
+          "Grants": [
+            {
+              "AbilityRef": "ability.read-spirit-runes-and-utilise-evil-scrolls"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.grey-knight.primary": {
+      "Key": "choice.grey-knight.primary",
+      "Title": "Grey Knight",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Utilise Neutral Spirit Item",
+          "Label": "Utilise Neutral Spirit Item",
+          "Grants": [
+            {
+              "AbilityRef": "ability.utilise-neutral-spirit-item"
+            }
+          ]
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Chosen of the Faithful",
+          "Label": "Chosen of the Faithful",
+          "Grants": [
+            {
+              "AbilityRef": "ability.chosen-of-the-faithful"
+            }
+          ],
+          "Description": "+2 DAC"
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "Read Spirit Runes and Utilise Neutral Scrolls",
+          "Label": "Read Spirit Runes and Utilise Neutral Scrolls",
+          "Grants": [
+            {
+              "AbilityRef": "ability.read-spirit-runes-and-utilise-neutral-scrolls"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.budoka-specialist.primary": {
+      "Key": "choice.budoka-specialist.primary",
+      "Title": "Budoka Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "2nd Weapon Mastery",
+          "Label": "2nd Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.2nd-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple)."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "ForeArm Parry",
+          "Label": "ForeArm Parry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.forearm-parry"
+            }
+          ]
+        },
+        {
+          "Key": "Relaxed Fall",
+          "Label": "Relaxed Fall",
+          "Grants": [
+            {
+              "AbilityRef": "ability.relaxed-fall"
+            }
+          ]
+        },
+        {
+          "Key": "War Cry",
+          "Label": "War Cry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.war-cry"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.power-master-specialist.primary": {
+      "Key": "choice.power-master-specialist.primary",
+      "Title": "Power Master Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "2nd Weapon Mastery",
+          "Label": "2nd Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.2nd-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple)."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "Empower Chosen Weapon",
+          "Label": "Empower Chosen Weapon",
+          "Grants": [
+            {
+              "AbilityRef": "ability.empower-chosen-weapon"
+            }
+          ],
+          "Description": "This skill allows the Power Master to inflict magic damage with their chosen weapon, at will."
+        }
+      ]
+    },
+    "choice.power-warrior.mapped": {
+      "Key": "choice.power-warrior.mapped",
+      "Title": "Power Warrior",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "Gem",
+          "Label": "Gem",
+          "Grants": [
+            {
+              "AbilityRef": "ability.extinguish-range",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.darkness-self",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.see-through-magical-darkness-self",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.black-blade",
+              "Level": 7
+            }
+          ]
+        },
+        {
+          "Key": "Jewel",
+          "Label": "Jewel",
+          "Grants": [
+            {
+              "AbilityRef": "ability.flash",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.light-self",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.walk-on-light-self",
+              "Level": 4
+            },
+            {
+              "AbilityRef": "ability.sabre-of-light-truth",
+              "Level": 7
+            }
+          ]
+        }
+      ]
+    },
+    "choice.power-warrior-specialist.primary": {
+      "Key": "choice.power-warrior-specialist.primary",
+      "Title": "Power Warrior Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Empower Armour",
+          "Label": "Empower Armour",
+          "Grants": [
+            {
+              "AbilityRef": "ability.empower-armour"
+            }
+          ],
+          "Description": "This skill imbues the armour worn with a magical essence, granting magical armour class equal to half the value of the armour’s physical armour class (round up), and half effect the warrior’s opposite element (light or dark). These benefits are only gained when wearing master crafted armour, which appears appropriate to the warrior’s colour (e.g. should have white or black designs etc.)."
+        },
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        }
+      ]
+    },
+    "choice.valdstayn-specialist.primary": {
+      "Key": "choice.valdstayn-specialist.primary",
+      "Title": "Valdstayn Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Athletic Training",
+          "Label": "Athletic Training",
+          "Grants": [
+            {
+              "AbilityRef": "ability.athletic-training"
+            }
+          ],
+          "Description": "This skill grants the Warrior the ability to jump a large distance. Also found listed under the spell Jump, or Salmon Leap, the distance jumped cannot be more than 20’ forwards, 10’ backwards, or 15’ upwards. Jumping past a person will enable that person to take one swing at the jumper; simple actions or other ‘instant’ abilities which need no verbal can be used (just one ability – not a string of Neuronic Penetrations!) instead of a weapon swing, including speaking a single word. This ability is usable 2/day"
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "War Cry",
+          "Label": "War Cry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.war-cry"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.rovfuger-specialist.primary": {
+      "Key": "choice.rovfuger-specialist.primary",
+      "Title": "Rovfuger Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Athletic Training",
+          "Label": "Athletic Training",
+          "Grants": [
+            {
+              "AbilityRef": "ability.athletic-training"
+            }
+          ],
+          "Description": "This skill grants the Warrior the ability to jump a large distance. Also found listed under the spell Jump, or Salmon Leap, the distance jumped cannot be more than 20’ forwards, 10’ backwards, or 15’ upwards. Jumping past a person will enable that person to take one swing at the jumper; simple actions or other ‘instant’ abilities which need no verbal can be used (just one ability – not a string of Neuronic Penetrations!) instead of a weapon swing, including speaking a single word. This ability is usable 2/day"
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "ForeArm Parry",
+          "Label": "ForeArm Parry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.forearm-parry"
+            }
+          ]
+        },
+        {
+          "Key": "War Cry",
+          "Label": "War Cry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.war-cry"
+            }
+          ],
+          "Description": "This ability allows the Warrior to negate one listed stopping effect, and grants immunity to that effect for the following five minutes. It must be used within 2 seconds of the effect occurring and accompanied with a loud shout. This ability is usable 1/day."
+        },
+        {
+          "Key": "2nd Weapon Mastery",
+          "Label": "2nd Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.2nd-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple)."
+        }
+      ]
+    },
+    "choice.wind-dancer-specialist.primary": {
+      "Key": "choice.wind-dancer-specialist.primary",
+      "Title": "Wind dancer Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Athletic Training",
+          "Label": "Athletic Training",
+          "Grants": [
+            {
+              "AbilityRef": "ability.athletic-training"
+            }
+          ],
+          "Description": "This skill grants the Warrior the ability to jump a large distance. Also found listed under the spell Jump, or Salmon Leap, the distance jumped cannot be more than 20’ forwards, 10’ backwards, or 15’ upwards. Jumping past a person will enable that person to take one swing at the jumper; simple actions or other ‘instant’ abilities which need no verbal can be used (just one ability – not a string of Neuronic Penetrations!) instead of a weapon swing, including speaking a single word. This ability is usable 2/day"
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes",
+              "Overrides": {
+                "Effect": "1 DAC"
+              }
+            }
+          ],
+          "Description": "1 DAC"
+        },
+        {
+          "Key": "2nd Weapon Mastery",
+          "Label": "2nd Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.2nd-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple)."
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        }
+      ]
+    },
+    "choice.standard-scout-skill.primary": {
+      "Key": "choice.standard-scout-skill.primary",
+      "Title": "Standard Scout skill",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice",
+        "lookup:scout-skill"
+      ],
+      "Options": [
+        {
+          "Key": "Athlete",
+          "Label": "Athlete",
+          "Grants": [
+            {
+              "AbilityRef": "ability.athlete"
+            }
+          ],
+          "Description": "From long practice leaping from rooftop to rooftop and similar, gains one Jump innate per 3 skill levels or fraction thereof."
+        },
+        {
+          "Key": "Bandaging",
+          "Label": "Bandaging",
+          "Grants": [
+            {
+              "AbilityRef": "ability.bandaging"
+            }
+          ],
+          "Description": "May Stop Bleeding by application of phys-rep bandages. Doing so heals the location by 1pt at the time of application. Only 1 bandage may be applied per location, and if the wound has not been further healed before the bandage is removed the damage returns. This curing is cumulative with that from potions such as Medicated or Treated Bandages."
+        },
+        {
+          "Key": "Climber",
+          "Label": "Climber",
+          "Grants": [
+            {
+              "AbilityRef": "ability.climber"
+            }
+          ],
+          "Description": "The Pathfinder has been scaling trees, walls and buildings since a young age. They gain one innate Assisted Climb per three skills levels or fraction thereof. If skill level is at least 6th may use it to climb across ceilings as well. Assisted Climb allows the user to move along non-overhanging surfaces at zombie speed, provided they have at least 3-limb contact with the surface."
+        },
+        {
+          "Key": "Combat-Wary",
+          "Label": "Combat-Wary",
+          "Grants": [
+            {
+              "AbilityRef": "ability.combat-wary"
+            }
+          ],
+          "Description": "Gains a damage reduction versus the first blow taken in any combat, only. This damage reduction is 1pt per skill level. This ability may not be used when using any sort of rage. Regardless of circumstances this ability may not be used more than once per 5 minutes."
+        },
+        {
+          "Key": "Discern General Potion",
+          "Label": "Discern General Potion",
+          "Grants": [
+            {
+              "AbilityRef": "ability.discern-general-potion"
+            }
+          ],
+          "Description": "This skill allows a Pathfinder, by means of a quick test, to determine whether a potion is a general potion or not. In addition, he will be aware of the potency and number of doses. Colourless, odourless and tasteless potions in opaque containers can also be discerned by the use of this skill, but the Pathfinder must be able to see the substance in question, which may mean unsealing the container if it is opaque. In the case of supernatural potions the pathfinder will be able to recognise that it is a potion, but will not know its quality or potency. If the potion is an unknown type (at the ref’s discretion), a rough idea of its effects may be given."
+        },
+        {
+          "Key": "Discern Healing Potion",
+          "Label": "Discern Healing Potion",
+          "Grants": [
+            {
+              "AbilityRef": "ability.discern-healing-potion"
+            }
+          ],
+          "Description": "This skill allows a Pathfinder, by means of a quick test, to determine whether a substance is a healing potion. If it is, the Pathfinder will be aware of its potency and the number of doses. Colourless, odourless and tasteless potions contained in opaque containers can also be discerned using this skill. However, the Pathfinder must be able to see the substance in question, which may require unsealing the container if it is opaque. In the case of supernatural healing potions, the Pathfinder will be able to recognise that the substance is a healing potion, but will not know its quality or potency. If the potion is of an unknown type (at the referee’s discretion), the Pathfinder may instead be given a rough idea of its effects."
+        },
+        {
+          "Key": "Discern Poison",
+          "Label": "Discern Poison",
+          "Grants": [
+            {
+              "AbilityRef": "ability.discern-poison"
+            }
+          ],
+          "Description": "This skill allows a Pathfinder, by means of a quick test, to determine whether a substance is a poison or venom. If it is, the Pathfinder will be aware of its potency and the number of doses. Colourless, odourless and tasteless poisons contained in opaque containers can also be discerned using this skill. However, the Pathfinder must be able to see the substance in question, which may require unsealing the container if it is opaque. In the case of supernatural venoms, the Pathfinder will be able to recognise that the substance is poison, but will not know its quality or potency. If the poison is of an unknown type (at the referee’s discretion), the Pathfinder may instead be given a rough idea of its effects."
+        },
+        {
+          "Key": "Discern Smell (Sniff)",
+          "Label": "Discern Smell (Sniff)",
+          "Grants": [
+            {
+              "AbilityRef": "ability.discern-smell-sniff"
+            }
+          ],
+          "Description": "Most monsters have their own distinctive smell. By the use of this skill the Pathfinder `sniffs` for smells he has met before, thus he is able to put a smell to a monster and have some idea of what is coming up. Only broad categories of information are given by the use of this skill – ‘goblin-kind’ for example, not ‘four goblins and a hobgoblin’. Numbers cannot be distinguished, nor may exact race type necessarily be discerned. At ref’s discretion, unusual or peculiar creatures may be described as an unknown or unfamiliar scent."
+        },
+        {
+          "Key": "Disguise",
+          "Label": "Disguise",
+          "Grants": [
+            {
+              "AbilityRef": "ability.disguise"
+            }
+          ],
+          "Description": "This skill allows the pathfinder to attempt to take on the disguise of a monster or character of a different race.\nIt costs nothing for the scout to apply the disguise to themselves. It costs 200 grulls to disguise someone else for one adventure, buying them an appropriate card from the Desk before the adventure, or giving the money to the referee. Alternatively, if excellent in-character phys reps in non-20th (or 21st) Century containers are possessed it is free to apply a disguise during Time In on adventure. However, whilst it is possible to disguise your physical appearance you cannot change your smell, size of spirit etc. So a disguise is only as good as a disguise is good.\n If a non-human is to be disguised, they need to apply their normal make up first and then apply the ‘disguise’ over the top of this. Though it might be acceptable for him to be disguised as another non-human with appropriate face paint etc.\n NB you cannot under any circumstances be disguised as another one of your own characters."
+        },
+        {
+          "Key": "Distillation",
+          "Label": "Distillation",
+          "Grants": [
+            {
+              "AbilityRef": "ability.distillation"
+            }
+          ],
+          "Description": "By use of distillation techniques the Pathfinder is able to reduce the amount of liquid in a potion without affecting its efficacy. For ingestive potions the liquid required to represent the potion is halved to 25 ml, and for salves and blade venoms the quantity is reduced to only 10 ml of liquid or 2 ml of paste or cream."
+        },
+        {
+          "Key": "Draw Venom",
+          "Label": "Draw Venom",
+          "Grants": [
+            {
+              "AbilityRef": "ability.draw-venom"
+            }
+          ],
+          "Description": "The Artificer's knowledge of the biology of their race allows them to easily neutralise or extract the poison from a wound suffered by a member of their own race.\nOnce per day per skill level the Artificer may spend 5 seconds treating a wound through which blade venom was administered, to negate one dose of blade venom in an individual’s system. Once the process is started no poison will “kick in” unless the Draw Venom process is stopped/interrupted. At this stage this skill may only be used on members of their own race."
+        },
+        {
+          "Key": "Evaluate",
+          "Label": "Evaluate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.evaluate"
+            }
+          ],
+          "Description": "This skill allows the Pathfinder to judge the intrinsic value of an item. It will not tell the Pathfinder whether an item has any special properties (i.e. magic, spirit, etc); simply the fiscal value of the item in grulls."
+        },
+        {
+          "Key": "Examine Construct",
+          "Label": "Examine Construct",
+          "Grants": [
+            {
+              "AbilityRef": "ability.examine-construct"
+            }
+          ],
+          "Description": "This enables the Artificer to consider a number of crafted objects or puzzles. He is able to pose one query per day for each skill level possessed. After 30 seconds examining the relevant thing, the Artificer can ask a question and receive an answer approximately seven words in length (cf. Major Prayer). This is a physical information effect based on scholarly knowledge. It may be used solely on constructed objects or structures, although this may be quite loosely interpreted. For example, it could be used about an animated golem or a statue, a trapped door, a wizard's tower, or a crossbow. It cannot be used regarding undead or elementals. The information granted is solely about physical properties, however. For example, if the artificer considers the question `How may this statue be broken?` the answer may be `By no physical means` if it is affected only by ranged magical attacks."
+        },
+        {
+          "Key": "Hollow Tooth",
+          "Label": "Hollow Tooth",
+          "Grants": [
+            {
+              "AbilityRef": "ability.hollow-tooth"
+            }
+          ],
+          "Description": "Traditionally used to hold a virulent poison to kill the user quickly in case of capture, it is perfectly possible for this operation to hold a dose of any ingestive potion. The Pathfinder has one of their back teeth pulled, causing 1 pt of ‘item’ permanent damage to the head location – this cannot be cured or ‘slept off’ by any means while the ability is possessed. They may then go to the Desk with a card for a potion. A new card for a ‘Hollow Tooth containing xxxxx’, as appropriate, will be issued in exchange for 100 Grulls and the potion. The new card has an expiry date of 6 days if the potion was temporary, or 6 months if it was permanent.\nTo use the Hollow Tooth the user must simply be able to move of their own free will; they are considered to break the tooth and immediately swallow the potion dose. Doing this uses up the card, which must be handed to the ref at the end of the adventure. Another one can be purchased, however.\nUnder no circumstances is it possible to give the potion contained in a Hollow Tooth to anyone else. Hollow Teeth are not affected by effects such as the Shattering or similar. Unlike most skills, Hollow Tooth may be selected twice if desired."
+        },
+        {
+          "Key": "Lock-Picking",
+          "Label": "Lock-Picking",
+          "Grants": [
+            {
+              "AbilityRef": "ability.lock-picking"
+            }
+          ],
+          "Description": "With appropriate tools, the scout may pick a physical lock after 30 seconds of phys-repping, in the manner of a physical Unlock spell. This can be done once per day for each skill level possessed."
+        },
+        {
+          "Key": "Make Concealable Weapon",
+          "Label": "Make Concealable Weapon",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-concealable-weapon"
+            }
+          ],
+          "Description": "The scout may begin the adventure with two daggers that are designed to be easily concealed. They may at will be ‘put away’ and hidden about the scout’s person so that they cannot be found by physical means unless the scout is completely helpless. This may be phys-repped by asking the ref to carry the daggers when hidden. To retrieve the daggers appropriate actions must be made for a few seconds. They are not retrievable with Quick Draw-style skills."
+        },
+        {
+          "Key": "Make General Potion",
+          "Label": "Make General Potion",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-general-potion"
+            }
+          ]
+        },
+        {
+          "Key": "Make Healing Potion",
+          "Label": "Make Healing Potion",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-healing-potion"
+            }
+          ]
+        },
+        {
+          "Key": "Make Poisons Potion",
+          "Label": "Make Poisons Potion",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-poisons-potion"
+            }
+          ]
+        },
+        {
+          "Key": "Make and Arm Snap Trap",
+          "Label": "Make and Arm Snap Trap",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-and-arm-snap-trap"
+            }
+          ],
+          "Description": "This skill enables the Pathfinder to make and arm a snap trap which, when set off, inflicts 9 tblp or 3 hits to a monster. If a weapon mastery in snap traps is possessed then it inflicts 15 tblp or 5 hits to a monster. Additionally, for each skill level above 3rd, it inflicts another 3 tblp or 1 Hit. For example, at 4th level skill 12 tblp (or 18 tblp if weapon mastery is taken) would be inflicted. Furthermore, if 6th level skill is possessed, the location of the target that is closest to the triggered trap takes the damage as locational damage as well, stopped only by innate (non-armour) PAC, at 1pt per point of AC. Snap traps cannot be thrown and are ineffective if placed within 1 foot of another trap.\nThe Pathfinder can make 1 trap for each skill level he possesses in this skill.\nWhen possible, the adventure referee will provide phys reps for these traps if available from the Desk, though the user will often be asked to provide their own."
+        },
+        {
+          "Key": "Potion Preserving",
+          "Label": "Potion Preserving",
+          "Grants": [
+            {
+              "AbilityRef": "ability.potion-preserving"
+            }
+          ],
+          "Description": "By use of this skill, permanent potions can be combined into larger bottles than their initial small bottles of three doses, without being exposed to the air and made temporary – thus a Pathfinder may start an adventure with a 500ml bottle containing 10 permanent 12pt cure potions, for example. These are still made temporary when the bottle is opened, but are generally easier to carry until then."
+        },
+        {
+          "Key": "Read Glyphs",
+          "Label": "Read Glyphs",
+          "Grants": [
+            {
+              "AbilityRef": "ability.read-glyphs"
+            }
+          ],
+          "Description": "Read Languages must be taken before this skill can be learnt. This skill allows the Pathfinder to read written glyphs such as wizard spell glyphs, etc, and actually trigger their power. As with read languages, you must actually be able to read the glyphs yourself. A Pathfinder with this skill coupled with read languages may cast SPELLS but not MIRACLES written on scrolls. Their casting level for purposes of damage calculation is taken to be their skill level in Read Glyphs"
+        },
+        {
+          "Key": "Read Languages",
+          "Label": "Read Languages",
+          "Grants": [
+            {
+              "AbilityRef": "ability.read-languages"
+            }
+          ],
+          "Description": "This skill allows the Pathfinder to read written languages such as wizardly glyphs, priest runes, elfish high script, dwarfish, etc. To read these runes, however, you must actually be able to read them yourself; the referee will not translate them for you, although use of a crib sheet is acceptable."
+        },
+        {
+          "Key": "Sealing",
+          "Label": "Sealing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.sealing"
+            }
+          ],
+          "Description": "May reseal a potion bottle that has been opened on the current adventure. This means that, rather than losing their potency at the end of the dungeon, the potions remain as they were. This may be used at any time up to and including the debrief."
+        },
+        {
+          "Key": "Self-Awareness",
+          "Label": "Self-Awareness",
+          "Grants": [
+            {
+              "AbilityRef": "ability.self-awareness"
+            }
+          ],
+          "Description": "May Tell Wounds on self after 2 seconds consideration. This reveals how wounded the character is."
+        },
+        {
+          "Key": "Stealth",
+          "Label": "Stealth",
+          "Grants": [
+            {
+              "AbilityRef": "ability.stealth"
+            }
+          ],
+          "Description": "The Pathfinder is naturally inclined to stealth and concealment. By dint of long practice, they may hide themselves as per a non-magical Chameleon(s), once per day for each four skill levels or fraction thereof (so that with 5th level skill the user gains 2 innate Chameleons)."
+        },
+        {
+          "Key": "Tell Time and Direction",
+          "Label": "Tell Time and Direction",
+          "Grants": [
+            {
+              "AbilityRef": "ability.tell-time-and-direction"
+            }
+          ],
+          "Description": "The scout has an accurate internal clock and compass – he is always able to judge roughly what time of day it is and which way is north. This is not based on seeing the sky or similar."
+        },
+        {
+          "Key": "Tolerance",
+          "Label": "Tolerance",
+          "Grants": [
+            {
+              "AbilityRef": "ability.tolerance"
+            }
+          ],
+          "Description": "Must have Discern General Potion. Kick-out from potions is reduced by 1 pt in every 6 per skill level possessed. If 6 or more skill levels are possessed, non-damaging effects are halved in effect or duration, and if it would have caused death instead causes unconsciousness for 1 hour."
+        },
+        {
+          "Key": "Trap-Wary",
+          "Label": "Trap-Wary",
+          "Grants": [
+            {
+              "AbilityRef": "ability.trap-wary"
+            }
+          ],
+          "Description": "May use a Jump innate that requires no verbal to leap out of the area of an area-effect attack, if the Jump has sufficient range to leave the area of effect. If the effect was damaging, only half damage is taken – if non-damaging, it does not affect the user."
+        },
+        {
+          "Key": "User of Avalorash",
+          "Label": "User of Avalorash",
+          "Grants": [
+            {
+              "AbilityRef": "ability.user-of-avalorash"
+            }
+          ],
+          "Description": "Requires 3 or more skill levels in Make General Potion to acquire or use this skill. The user has a number of doses of the distilled essence of this plant at the beginning of each adventure. If gently anointed to an inanimate object for a period of 10 seconds, it will glow slightly if the object is magical. The colour of the glow reflects the colour of the magic in the object, while the intensity of the glow tells the user the mana level of the magic, if appropriate. The exact effect therefore will reveal if an object is magical (Yes/No answer), what colour magic is present (Red, Blue, etc) and what level it is (1 to 20+).\nOne dose of Avalorash is possessed for each skill level possessed\nNon-Ishmaic scouts may only learn this skill post 8th."
+        },
+        {
+          "Key": "Well Equipped",
+          "Label": "Well Equipped",
+          "Grants": [
+            {
+              "AbilityRef": "ability.well-equipped"
+            }
+          ],
+          "Description": "As opposed to making potions using die rolls, a Pathfinder may elect to simply battle board a number of doses of adventure temporary potions. These potions will rot by the end of the adventure. This does not take up a make slot for the user.\nThe Pathfinder chooses which type of potion he wishes to take on the adventure using this method. He can only choose one type of potion, and then subtracts the difficulty level of the potion from his “Well Equipped” skill level.\nThis is the number of batches he can take. The minimum number is 1, however low the skill level. This skill only applies to Immediately Available potions.\nFor example: Jim-Bob took ‘Well Equipped’ at 3rd level, and he is now 7th, so has a skill level of 5. At the beginning of an adventure he selects 6pt TBLP Cure potions, which have a difficulty level of 3; so 5-3=2, he begins with 2 batches of 3 doses for free.\nThe potion recipe may be chosen at the beginning of each adventure. Unlike other skills, this may be taken more than once, in fact as often as desired."
+        },
+        {
+          "Key": "Well-Made Daggers",
+          "Label": "Well-Made Daggers",
+          "Grants": [
+            {
+              "AbilityRef": "ability.well-made-daggers"
+            }
+          ],
+          "Description": "Must have Make Concealable Weapon first. Two concealable daggers are now considered ‘Apprentice Status’ and as such they become immune to effects such as Shatter, Warp or Disintegrate, although they can still be affected by Magnetise, Vanish and similar non-destructive effects. Effects that would destroy a magical weapon, such as Grand Shattering Blow will still destroy them, but they are not magical. There is no penalty for their loss, and they may be replaced before the next adventure at no cost."
+        }
+      ]
+    },
+    "choice.specialist-scout-skill.primary": {
+      "Key": "choice.specialist-scout-skill.primary",
+      "Title": "Specialist Scout skill",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice",
+        "lookup:scout-skill"
+      ],
+      "Options": [
+        {
+          "Key": "Assassin's Eye",
+          "Label": "Assassin's Eye",
+          "Grants": [
+            {
+              "AbilityRef": "ability.assassin-s-eye"
+            }
+          ],
+          "Description": "Must have Tell Wounds. After 30 seconds observation of a target within 9’ [3 paces], can estimate their physical hits or tblp and loc strength. It may be used up to 18’ [6 paces] but will only reveal if the target is small / medium / large / huge / titanic – obviously at ref’s discretion. This will work in relation to the adventure level/ Pathfinder’s skill and is a physical informational effect."
+        },
+        {
+          "Key": "Blade Sharpening",
+          "Label": "Blade Sharpening",
+          "Grants": [
+            {
+              "AbilityRef": "ability.blade-sharpening"
+            }
+          ],
+          "Description": "Must have phys reps for whetstone and polishing cloths. When these are used for 2 minutes to phys rep sharpening a non-supernatural bladed weapon, the next blow struck with that weapon is through PAC and has +1 max damage [max Quin], regardless of who wields it. The increase from this ability does not stack with any other temporary increase in the max damage called. This sharpening must be phys-repped in time in."
+        },
+        {
+          "Key": "Boleq Manufacture",
+          "Label": "Boleq Manufacture",
+          "Grants": [
+            {
+              "AbilityRef": "ability.boleq-manufacture"
+            }
+          ],
+          "Description": "Requires Make Concealable Weapon skill. A Boleq is a type of glass knife, which can be ground into dust and concealed around the person. It can then be reformed by putting the dust back together and breathing on it gently. A Boleq is not made of metal and does not count towards a wizard’s metal allowance. An excellent phys rep is required for a Boleq (obviously not actually made of glass, but should give that impression!). Three Boleqs may be made each week by the pathfinder, and it costs 200 grulls to manufacture. An item card is issued for it, with no blow up date, and it does not blow up on death. However, once blown on and turned into dagger, it will only last until the end of the dungeon. The phys rep for a dust Boleq should be a pouch full of earth or sand or similar. In addition, a Boleq that is shattered or disintegrated will reform five minutes after the spell took effect. Once manufactured, a Boleq is usable by any character class which can use a dagger, not just the character who possesses Boleq Manufacture."
+        },
+        {
+          "Key": "Detect Possible Neuronic Activity",
+          "Label": "Detect Possible Neuronic Activity",
+          "Grants": [
+            {
+              "AbilityRef": "ability.detect-possible-neuronic-activity"
+            }
+          ],
+          "Description": "This neuronic skill allows the pathfinder to sense whether there is any creature with psionic or neuronic abilities within a 60-foot radius. This will not tell him in which direction the creatures are or their number. The referee will only answer yes or no; they will not indicate a direction or distance. If this skill is taken, it may be skipped when buying the Passive Neuronics Tree"
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "1st Extra Level of Life",
+          "Label": "1st Extra Level of Life",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-extra-level-of-life"
+            }
+          ],
+          "Description": "Gains 1st extra level of life. This replaces the post-8th tables ability"
+        },
+        {
+          "Key": "Flesh Mending",
+          "Label": "Flesh Mending",
+          "Grants": [
+            {
+              "AbilityRef": "ability.flesh-mending"
+            }
+          ],
+          "Description": "An Artificer's experience in the structure of objects allows them to mend flesh in much the same way as other objects. By meansThis skill grants them 40pts of locational curing (as the monk skill) per day, applied by appropriate phys-repping at the rate of 2 pts per second of treatment."
+        },
+        {
+          "Key": "Healing Facility",
+          "Label": "Healing Facility",
+          "Grants": [
+            {
+              "AbilityRef": "ability.healing-facility"
+            }
+          ],
+          "Description": "Must have Make Healing Potion to benefit. Through practice and body training experience, the scout may prepare themselves to assimilate healing potions more effectively. If spends 30 seconds relaxing, deep breathing, etc, before using a healing potion, the scout receives 4 tblp in curing for every 3 tblp normally cured. Additionally, for every three healing salves applied, receives the benefit of four – if applied simultaneously."
+        },
+        {
+          "Key": "Judge Profession",
+          "Label": "Judge Profession",
+          "Grants": [
+            {
+              "AbilityRef": "ability.judge-profession"
+            }
+          ],
+          "Description": "After 30 seconds observation of a target within 18’ [6 paces], can judge their primary class-bracket (e.g. scout, warrior, wizard, priest, druid, neuronicist, none). This is a physical informational effect."
+        },
+        {
+          "Key": "Judge Strength",
+          "Label": "Judge Strength",
+          "Grants": [
+            {
+              "AbilityRef": "ability.judge-strength"
+            }
+          ],
+          "Description": "Must have Tell Wounds. After 30 seconds observation of a target within 18’ [6 paces], can estimate their physical level of resistance. This is a physical informational effect."
+        },
+        {
+          "Key": "Metal Resistance",
+          "Label": "Metal Resistance",
+          "Grants": [
+            {
+              "AbilityRef": "ability.metal-resistance"
+            }
+          ],
+          "Description": "This skill increases the Rogue’s metal allowance to now allow up to studded leather and two O-class weapons. Or studded leather and one B-class weapon."
+        },
+        {
+          "Key": "Perception",
+          "Label": "Perception",
+          "Grants": [
+            {
+              "AbilityRef": "ability.perception"
+            }
+          ],
+          "Description": "Allows the user to spot supernaturally hidden or chameleoned targets, including those using Invisibility, etc. This does not work on creatures that are actually ‘phys-rep’ hidden from sight! Nor does it work on non-supernaturally hidden creatures."
+        },
+        {
+          "Key": "Poison Facility",
+          "Label": "Poison Facility",
+          "Grants": [
+            {
+              "AbilityRef": "ability.poison-facility"
+            }
+          ],
+          "Description": "Must have Make Poison to benefit. May spend 30 seconds preparing an ingestive poison so that the kick-in time is reduced to 5 seconds from 30 seconds, if drunk within the next 5 minutes. May spend 30 seconds treating a weapon with a blade venom so that if the blow struck is to a critical location the kick-in time is reduced to 5 seconds from 30 seconds – when used by the applier."
+        },
+        {
+          "Key": "Potion Facility",
+          "Label": "Potion Facility",
+          "Grants": [
+            {
+              "AbilityRef": "ability.potion-facility"
+            }
+          ],
+          "Description": "Must have Make General Potion to benefit. Armour Class granted by potions can exceed the scout’s maximum armour class by 1 pt per skill level [in Make General Potion], still to a max of 12. Strength potions no longer prevent the Pathfinder from using weapon masteries."
+        },
+        {
+          "Key": "Recognise Mana",
+          "Label": "Recognise Mana",
+          "Grants": [
+            {
+              "AbilityRef": "ability.recognise-mana"
+            }
+          ],
+          "Description": "This allows you to discern if an item is magical or not. It has a 1 inch range, and allows the user to identify magic in any creature or object. If the target has a specific spell or spells present upon it, an exact mana level will be given in reply, and whether the magic is currently active or not. In the case of innately magical objects, such as a magical sword or a wizard, these are considered to be “Artefact Level”, indicating that their magic is strong but not a fixed quantity as a spell is."
+        },
+        {
+          "Key": "Recognise Spirit",
+          "Label": "Recognise Spirit",
+          "Grants": [
+            {
+              "AbilityRef": "ability.recognise-spirit"
+            }
+          ],
+          "Description": "This ability enables you to discern if an object or item is of a spiritual nature. The priest does this by passing his empty weapon hand within one inch of the object or item. This ability can be used to determine whether a weapon is spiritual, or if a rune of power is still charged etc. The only information gained by use of this ability at this stage is Yes or No – as to whether there is a spirit within 1”. If there is more than one spirit, this information is not revealed and there is still only a Yes answer."
+        },
+        {
+          "Key": "Recognise Earthpower",
+          "Label": "Recognise Earthpower",
+          "Grants": [
+            {
+              "AbilityRef": "ability.recognise-earthpower"
+            }
+          ],
+          "Description": "This skill has a 1” range, and allows the user to identify whether any creature or object within range has earthpower within them. A Yes/No answer is returned."
+        },
+        {
+          "Key": "Recognise Neuronics",
+          "Label": "Recognise Neuronics",
+          "Grants": [
+            {
+              "AbilityRef": "ability.recognise-neuronics"
+            }
+          ],
+          "Description": "The user may identify whether any object or creature within 1” of their touch has neuronic powers."
+        },
+        {
+          "Key": "Shadowing",
+          "Label": "Shadowing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.shadowing"
+            }
+          ],
+          "Description": "This allows the user to follow the tracks of creatures in urban, built up environments or in tunnels or buildings. The user can determine what kind of creatures frequent an area by the tracks that they have left behind. In some circumstances, at referee’s discretion, this skill can be used to provide further details, such as following a specific target’s trail. Its use requires slow and careful inspection of surrounding area."
+        },
+        {
+          "Key": "Tracking",
+          "Label": "Tracking",
+          "Grants": [
+            {
+              "AbilityRef": "ability.tracking"
+            }
+          ],
+          "Description": "Allows the user to follow the tracks of creatures in outdoors, non-city environments. It is assumed that the owner of this skill will be able to recognise most common tracks automatically – unique and rare creatures will be identified at the ref’s discretion. This works as per the ranger ability, although it can only be used in rural, outdoor environments."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Tell Wounds",
+          "Label": "Tell Wounds",
+          "Grants": [
+            {
+              "AbilityRef": "ability.tell-wounds"
+            }
+          ],
+          "Description": "Must have Self-Awareness standard skill. Gains Tell Wounds on any flesh-and-blood creature after 10 seconds inspection at 1” range"
+        }
+      ]
+    },
+    "choice.warrior-priest-specialist.primary": {
+      "Key": "choice.warrior-priest-specialist.primary",
+      "Title": "Warrior-Priest specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "Smithing",
+          "Label": "Smithing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.smithing"
+            }
+          ],
+          "Description": "This skill allows the Warrior to manufacture weapons and armour. Unlike other specialist skills this one costs 1000 grulls to learn. The cost of armour made by the character is then only 10 grulls per point of AC per location (e.g. a suit of AC 1 all over is 70 grulls, a suit of AC 3, or a suit of AC 1+2, is 210 grulls). The cost of the skill mostly consists of the cost of wasted materials in getting used to the equipment and preparing the forge. Thus another individual could not benefit from the forge without similar expenditure. The amount of equipment the character with this skill may manufacture is limited to 700 grulls per weekly visit to Labyrinthe. All handbook manufacturing takes place at the Desk. It is assumed that a Smith will adjust and make running repairs to their own armour, preventing wear, and as such someone with this skill does not lose adventure ‘uses’ on their own armour. Standardly weapons in Labyrinthe are assumed to be free, but in cases where it may matter a Smith can manufacture a weapon at 1/3 of the ‘bought price’. Advanced rules that build on the Smithing skill can be found in the “Manufacturers Guide” (Downloadable on the forums)."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        }
+      ]
+    },
+    "choice.ward-pact.primary": {
+      "Key": "choice.ward-pact.primary",
+      "Title": "Ward pact",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice",
+        "lookup:ward-pact"
+      ],
+      "Options": [
+        {
+          "Key": "Undead",
+          "Label": "Undead",
+          "Grants": [
+            {
+              "AbilityRef": "ability.undead"
+            }
+          ]
+        },
+        {
+          "Key": "Salamanders",
+          "Label": "Salamanders",
+          "Grants": [
+            {
+              "AbilityRef": "ability.salamanders"
+            }
+          ]
+        },
+        {
+          "Key": "Shades",
+          "Label": "Shades",
+          "Grants": [
+            {
+              "AbilityRef": "ability.shades"
+            }
+          ]
+        },
+        {
+          "Key": "Sprites",
+          "Label": "Sprites",
+          "Grants": [
+            {
+              "AbilityRef": "ability.sprites"
+            }
+          ]
+        },
+        {
+          "Key": "Sylphs",
+          "Label": "Sylphs",
+          "Grants": [
+            {
+              "AbilityRef": "ability.sylphs"
+            }
+          ]
+        },
+        {
+          "Key": "Gnomes",
+          "Label": "Gnomes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.gnomes"
+            }
+          ]
+        },
+        {
+          "Key": "Undines",
+          "Label": "Undines",
+          "Grants": [
+            {
+              "AbilityRef": "ability.undines"
+            }
+          ]
+        },
+        {
+          "Key": "Supernatural Power (add in your notes)",
+          "Label": "Supernatural Power (add in your notes)",
+          "Grants": [
+            {
+              "AbilityRef": "ability.supernatural-power-add-in-your-notes"
+            }
+          ]
+        },
+        {
+          "Key": "Fire-Elves",
+          "Label": "Fire-Elves",
+          "Grants": [
+            {
+              "AbilityRef": "ability.fire-elves"
+            }
+          ]
+        },
+        {
+          "Key": "Air-Elves",
+          "Label": "Air-Elves",
+          "Grants": [
+            {
+              "AbilityRef": "ability.air-elves"
+            }
+          ]
+        },
+        {
+          "Key": "Earth-Elves",
+          "Label": "Earth-Elves",
+          "Grants": [
+            {
+              "AbilityRef": "ability.earth-elves"
+            }
+          ]
+        },
+        {
+          "Key": "Aquatic-Elves",
+          "Label": "Aquatic-Elves",
+          "Grants": [
+            {
+              "AbilityRef": "ability.aquatic-elves"
+            }
+          ]
+        },
+        {
+          "Key": "Light-Elves",
+          "Label": "Light-Elves",
+          "Grants": [
+            {
+              "AbilityRef": "ability.light-elves"
+            }
+          ]
+        },
+        {
+          "Key": "Dark-Elves",
+          "Label": "Dark-Elves",
+          "Grants": [
+            {
+              "AbilityRef": "ability.dark-elves"
+            }
+          ]
+        },
+        {
+          "Key": "Drowe",
+          "Label": "Drowe",
+          "Grants": [
+            {
+              "AbilityRef": "ability.drowe"
+            }
+          ]
+        },
+        {
+          "Key": "Winter-Elves",
+          "Label": "Winter-Elves",
+          "Grants": [
+            {
+              "AbilityRef": "ability.winter-elves"
+            }
+          ]
+        },
+        {
+          "Key": "Twilight-Elves",
+          "Label": "Twilight-Elves",
+          "Grants": [
+            {
+              "AbilityRef": "ability.twilight-elves"
+            }
+          ]
+        },
+        {
+          "Key": "Wood-Elves",
+          "Label": "Wood-Elves",
+          "Grants": [
+            {
+              "AbilityRef": "ability.wood-elves"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.elfcolourabilities.mapped": {
+      "Key": "choice.elfcolourabilities.mapped",
+      "Title": "ElfColourAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "Light",
+          "Label": "Light",
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-light",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.light-ranged",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.1-dac",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Dark",
+          "Label": "Dark",
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-darkness",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.darkness-ranged",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.shadow-shift",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Air",
+          "Label": "Air",
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-air",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.jump-self",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.walk-on-air-self",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Earth",
+          "Label": "Earth",
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-stone",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.chameleon",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.talk-to-earth",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Fire",
+          "Label": "Fire",
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-fire",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.shock",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.permanent-walk-through-fire",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Aquatic",
+          "Label": "Aquatic",
+          "Grants": [
+            {
+              "AbilityRef": "ability.detect-fluid",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.body-of-water",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.unimpeded-by-water",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.rust-ranged",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.walk-on-through-water-self",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.vanish",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Twilight",
+          "Label": "Twilight",
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-twilight",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.detect-magic",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.twilight-self",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.silence",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Gold",
+          "Label": "Gold",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1-dac",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.shield-self",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.spell-shield",
+              "Level": 4
+            },
+            {
+              "AbilityRef": "ability.strengthen-self",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Ivory",
+          "Label": "Ivory",
+          "Grants": [
+            {
+              "AbilityRef": "ability.gains-ivory-code-restriction",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.mark-ally",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.traitor-s-shield",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.ivory-warrior",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.spell-shield",
+              "Level": 4
+            },
+            {
+              "AbilityRef": "ability.mobility",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Silver",
+          "Label": "Silver",
+          "Grants": [
+            {
+              "AbilityRef": "ability.tell-wounds",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.tell-strength",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.inquiry",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Bronze",
+          "Label": "Bronze",
+          "Grants": [
+            {
+              "AbilityRef": "ability.tell-strength",
+              "Level": 2,
+              "Overrides": {
+                "Effect": "This reveals to the wizard the resistance level of the target with respect to Bronze magic. The response is the number of stackable runes that would need to be cast on the target in order for a stackable spell to work.\n1 stackable rune: 4th level \n2 stackable runes: 5th level \n3 stackable runes: 6th level \n4 stackable runes: 7th level \n5 stackable runes: 8th level \neach additional rune is +1 level \nFor example, Tell Strength on a 5th level player character would result in the response being `2 stackable runes'.\nVerbal: By the Drake reveal thine strength"
+              }
+            },
+            {
+              "AbilityRef": "ability.limb-thrall-8",
+              "Level": 4
+            },
+            {
+              "AbilityRef": "ability.shudder",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Ebony",
+          "Label": "Ebony",
+          "Grants": [
+            {
+              "AbilityRef": "ability.confusion",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.pain",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.spell-shield",
+              "Level": 4
+            },
+            {
+              "AbilityRef": "ability.pass-unknown",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Wood",
+          "Label": "Wood",
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-wood",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.warp-ranged",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.entangle",
+              "Level": 4
+            },
+            {
+              "AbilityRef": "ability.talk-to-plant",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Drowe",
+          "Label": "Drowe",
+          "Grants": [
+            {
+              "AbilityRef": "ability.returner",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.2-dac-in-sunlight",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.extinguish-ranged",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.darkness-ranged-2",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.see-through-magical-darkness-self",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.blindness",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Winter",
+          "Label": "Winter",
+          "Effects": {
+            "LifeScaleOverride": "Winter Elf"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.skinning",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.body-of-ice",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.immunity-to-cold",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.javelin-of-ice",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Autumn",
+          "Label": "Autumn",
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-autumn",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.warp-ranged",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.wither-touch",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Spring",
+          "Label": "Spring",
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-spring",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.salmon-leap",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.sun-s-healing",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Summer",
+          "Label": "Summer",
+          "Effects": {
+            "LifeScaleOverride": "Drowe"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-summer",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.scorching-heat",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.light-self",
+              "Level": 4
+            },
+            {
+              "AbilityRef": "ability.summer-s-warmth",
+              "Level": 6
+            }
+          ]
+        }
+      ]
+    },
+    "choice.crolsubtypeabilities.mapped": {
+      "Key": "choice.crolsubtypeabilities.mapped",
+      "Title": "CrolSubtypeAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "Yashtar",
+          "Label": "Yashtar",
+          "Effects": {
+            "ArmourAvailabilityOverride": "Light"
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warrior"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.4-pac",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.toughened-feet",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.large-lung-capacity",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.insensitive-skin",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.leg-sweep",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.stability",
+              "Level": 8
+            },
+            {
+              "AbilityRef": "ability.immunity-to-poison",
+              "Level": 8
+            },
+            {
+              "AbilityRef": "ability.immunity-to-disease",
+              "Level": 8
+            },
+            {
+              "AbilityRef": "ability.immunity-to-acid",
+              "Level": 8
+            }
+          ]
+        },
+        {
+          "Key": "Kaerssor",
+          "Label": "Kaerssor",
+          "Effects": {
+            "ArmourAvailabilityOverride": "Light"
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Ranger",
+              "Monk",
+              "Warrior"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.2-pac",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.discern-smell-sniff",
+              "Level": 2,
+              "Overrides": {
+                "Effect": "Most monsters have their own distinctive smell. By the use of this skill the Crol `sniffs` for smells he has met before, thus he is able to put a smell to a monster and have some idea of what is coming up. Only broad categories of information are given by the use of this skill – ‘goblin-kind’ for example, not ‘four goblins and a hobgoblin’. Numbers cannot be distinguished, nor may exact race type necessarily be discerned. At ref’s discretion, unusual or peculiar creatures may be described as an unknown or unfamiliar scent."
+              }
+            },
+            {
+              "AbilityRef": "ability.large-lung-capacity",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.shed-skin",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.acid-potions",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.bask",
+              "Level": 8
+            },
+            {
+              "AbilityRef": "ability.potent-blood",
+              "Level": 8
+            }
+          ]
+        },
+        {
+          "Key": "Jaerseen",
+          "Label": "Jaerseen",
+          "Effects": {
+            "ArmourAvailabilityOverride": "Light",
+            "ColourChoiceOverride": [
+              "Red",
+              "Green",
+              "Brown",
+              "Blue"
+            ]
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Wizard",
+              "Warlock",
+              "Power Master"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.1-casting-level-chosen-colour",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.bronze-jewellery",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.large-lung-capacity",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.self-heal",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.mystical-tattoos",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.bask",
+              "Level": 8
+            },
+            {
+              "AbilityRef": "ability.elementalist",
+              "Level": 8
+            }
+          ]
+        }
+      ]
+    },
+    "choice.warlock-specialist.primary": {
+      "Key": "choice.warlock-specialist.primary",
+      "Title": "Warlock Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "Proficiency",
+          "Label": "Proficiency",
+          "Grants": [
+            {
+              "AbilityRef": "ability.proficiency"
+            }
+          ],
+          "Description": "+1 Caster Level"
+        },
+        {
+          "Key": "Metal Resistance",
+          "Label": "Metal Resistance",
+          "Grants": [
+            {
+              "AbilityRef": "ability.metal-resistance"
+            }
+          ]
+        },
+        {
+          "Key": "Chosen of the Dragon",
+          "Label": "Chosen of the Dragon",
+          "Grants": [
+            {
+              "AbilityRef": "ability.chosen-of-the-dragon"
+            }
+          ],
+          "Description": "+2 DAC"
+        }
+      ]
+    },
+    "choice.wizard-specialist.primary": {
+      "Key": "choice.wizard-specialist.primary",
+      "Title": "Wizard Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Make Teaching Scrolls",
+          "Label": "Make Teaching Scrolls",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-teaching-scrolls"
+            }
+          ]
+        },
+        {
+          "Key": "Make Magical Armour",
+          "Label": "Make Magical Armour",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-magical-armour"
+            }
+          ]
+        },
+        {
+          "Key": "Make Magical Weapons",
+          "Label": "Make Magical Weapons",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-magical-weapons"
+            }
+          ]
+        },
+        {
+          "Key": "Make Artefacts",
+          "Label": "Make Artefacts",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-artefacts"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.vochstelen-specialist.primary": {
+      "Key": "choice.vochstelen-specialist.primary",
+      "Title": "Vochstelen Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character."
+        },
+        {
+          "Key": "1st Weapon Mastery",
+          "Label": "1st Weapon Mastery",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+          "Customisation": {
+            "OptionEnum": "WeaponType",
+            "CustomValuesPermitted": true
+          }
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it."
+        },
+        {
+          "Key": "1st Enhanced Reflexes",
+          "Label": "1st Enhanced Reflexes",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-enhanced-reflexes"
+            }
+          ],
+          "Description": "+1 DAC"
+        },
+        {
+          "Key": "War Cry",
+          "Label": "War Cry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.war-cry"
+            }
+          ],
+          "Description": "This ability allows the Warrior to negate one listed stopping effect, and grants immunity to that effect for the following five minutes. It must be used within 2 seconds of the effect occurring and accompanied with a loud shout. This ability is usable 1/day."
+        },
+        {
+          "Key": "Chosen of the Dragon",
+          "Label": "Chosen of the Dragon",
+          "Grants": [
+            {
+              "AbilityRef": "ability.chosen-of-the-dragon"
+            }
+          ],
+          "Description": "+2 DAC"
+        }
+      ]
+    },
+    "choice.awakener-specialist.primary": {
+      "Key": "choice.awakener-specialist.primary",
+      "Title": "Awakener Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Auric Colour",
+          "Label": "Auric Colour",
+          "Grants": [
+            {
+              "AbilityRef": "ability.auric-colour"
+            }
+          ],
+          "Description": "This allows the user to recognise the colour of the mental aura of one target within range. In game terms, this means that those of Goodly alignment are seen to have a White aura, those of Neutral a Grey aura, and Evil a Black aura. Targets immune to neuronic informational effects, or all neuronics, or that simply have no mind, such as inanimate objects, have no aura at all. It is possible by training to conceal the colour of one’s aura so that only a clear aura can be seen – this is not the same as having no aura."
+        },
+        {
+          "Key": "1st Weapon Mastery (O)",
+          "Label": "1st Weapon Mastery (O)",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery-o"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any one-handed weapon may be chosen."
+        },
+        {
+          "Key": "1st Weapon Mastery (H)",
+          "Label": "1st Weapon Mastery (H)",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-weapon-mastery-h"
+            }
+          ],
+          "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any thrown weapon may be chosen."
+        },
+        {
+          "Key": "1 DAC",
+          "Label": "1 DAC",
+          "Grants": [
+            {
+              "AbilityRef": "ability.1-dac"
+            }
+          ],
+          "Description": "+1 DAC"
+        }
+      ]
+    },
+    "choice.wizard-colour.primary": {
+      "Key": "choice.wizard-colour.primary",
+      "Title": "Wizard Colour",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice",
+        "options:magic-colour",
+        "selection:multi-delimited"
+      ],
+      "Options": [
+        {
+          "Key": "Red",
+          "Label": "Red",
+          "Grants": [
+            {
+              "AbilityRef": "ability.red"
+            }
+          ]
+        },
+        {
+          "Key": "Blue",
+          "Label": "Blue",
+          "Grants": [
+            {
+              "AbilityRef": "ability.blue"
+            }
+          ]
+        },
+        {
+          "Key": "Brown",
+          "Label": "Brown",
+          "Grants": [
+            {
+              "AbilityRef": "ability.brown"
+            }
+          ]
+        },
+        {
+          "Key": "Green",
+          "Label": "Green",
+          "Grants": [
+            {
+              "AbilityRef": "ability.green"
+            }
+          ]
+        },
+        {
+          "Key": "White",
+          "Label": "White",
+          "Grants": [
+            {
+              "AbilityRef": "ability.white"
+            }
+          ]
+        },
+        {
+          "Key": "Black",
+          "Label": "Black",
+          "Grants": [
+            {
+              "AbilityRef": "ability.black"
+            }
+          ]
+        },
+        {
+          "Key": "Grey",
+          "Label": "Grey",
+          "Grants": [
+            {
+              "AbilityRef": "ability.grey"
+            }
+          ]
+        },
+        {
+          "Key": "Bronze",
+          "Label": "Bronze",
+          "Grants": [
+            {
+              "AbilityRef": "ability.bronze"
+            }
+          ]
+        },
+        {
+          "Key": "Ebony",
+          "Label": "Ebony",
+          "Grants": [
+            {
+              "AbilityRef": "ability.ebony"
+            }
+          ]
+        },
+        {
+          "Key": "Gold",
+          "Label": "Gold",
+          "Grants": [
+            {
+              "AbilityRef": "ability.gold"
+            }
+          ]
+        },
+        {
+          "Key": "Ivory",
+          "Label": "Ivory",
+          "Grants": [
+            {
+              "AbilityRef": "ability.ivory"
+            }
+          ]
+        },
+        {
+          "Key": "Jade",
+          "Label": "Jade",
+          "Grants": [
+            {
+              "AbilityRef": "ability.jade"
+            }
+          ]
+        },
+        {
+          "Key": "Onyx",
+          "Label": "Onyx",
+          "Grants": [
+            {
+              "AbilityRef": "ability.onyx"
+            }
+          ]
+        },
+        {
+          "Key": "Silver",
+          "Label": "Silver",
+          "Grants": [
+            {
+              "AbilityRef": "ability.silver"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.vivomancer-colour.primary": {
+      "Key": "choice.vivomancer-colour.primary",
+      "Title": "Vivomancer Colour",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice",
+        "options:vivomancer-colour",
+        "selection:multi-delimited"
+      ],
+      "Options": [
+        {
+          "Key": "Gold",
+          "Label": "Gold",
+          "Grants": [
+            {
+              "AbilityRef": "ability.gold"
+            }
+          ]
+        },
+        {
+          "Key": "Jade",
+          "Label": "Jade",
+          "Grants": [
+            {
+              "AbilityRef": "ability.jade"
+            }
+          ]
+        },
+        {
+          "Key": "White",
+          "Label": "White",
+          "Grants": [
+            {
+              "AbilityRef": "ability.white"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.baronial-tradition.primary": {
+      "Key": "choice.baronial-tradition.primary",
+      "Title": "Baronial Tradition",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Hedge Wizardry",
+          "Label": "Hedge Wizardry",
+          "Grants": [
+            {
+              "AbilityRef": "ability.hedge-wizardry"
+            }
+          ],
+          "Description": "Hedge Wizards are those Barony Humans who practise their magicks outside the protection of the Circle, and are actively hunted by Circle members when found. Hedge Wizards are normally followers of Earthpower, as the Circle does not regard such close tampering with the structure of Primus as a good thing, but can include many other professions as well. These renegades are normally self-taught and often quite well meaning in their actions, simply independent of the Circle.\nHedge Wizards are well advised to keep either their nationality or profession quiet depending on where they are adventuring, as members of the Circle are duty bound to bring them in to their masters. Such captured Hedge Wizards are never seen again, though there are strange and unfounded rumours that some Hedge Wizards are not simply burnt at the stake or hanged.\nA Baronies Human who is not a member of the circle and uses mystical powers has the word \"Hedge\" prefixed to their class name. e.g. Hedge Mystic, Hedge Rogue etc. Hedge Wizards are a little different to their Labyrinthian counterparts due to their self-taught nature.\nHedge gain power as a normal character (this is a change from previous rules).\nA Hedge Wizard gains the scout standard skill of Disguise.\n44\nA Hedge Wizard gains Immunity to Informational Effects of their own primary power-base (not their own), and a cumulative resistance level to their own primary power-base, except when cast by themselves. This natural survival trait meant that the Vochstelen never found them when young to take to the Circle.\nDue to the Hedge Wizard’s hazardous life style, a Hedge Wizard gains an extra level of life, cumulative with other levels of life. Before 8th level, this means that their life is calculated as if they were one level higher.\nA Hedge Wizard cannot join any organisation which specifically requires them to be a Barony Human, as they would be apprehended as a matter of course, and they may not join professional guilds. However they may freely join political guilds unlike other Baronial characters.\nHedge Wizards, rather surprisingly, are not bitter people driven by the fear of capture into slaying those of the Circle, but quiet revolutionaries, seeking alliances, and trying to draw members of the Circle into their own secret cults.\nMatters in the south are seldom clear-cut, black and white, and few Hedge Wizards wish the attention of a hunt for the killer of a member of the Circle by the massed might of the local Waldgraf, or a determined band of Vochstelen.\nHedge characters are Ostracised within the Baronies, so may be killed freely."
+        },
+        {
+          "Key": "Circle Membership",
+          "Label": "Circle Membership",
+          "Grants": [
+            {
+              "AbilityRef": "ability.circle-membership"
+            }
+          ],
+          "Description": "Because of their history the use of power in the southern Baronies is carefully monitored and controlled by a group called The Circle. Fearful of the bad old days when power used frivolously or maliciously smashed its way around the Baronies, the Circle recognises that such regulating of use is very important.\nIn addition the Circle offers an excellent range of tuition and political support within the Baronies, and as such the following modifiers are accrued by a character who is a Circle Wizard or a Circle Hermit Priest or similar.\nCircle Unholy Champions are not outlawed as they normally would be. \nIf a Circle member casts a magical spell, the casting damage for that spell is reduced by1pt if the spell consumes at least one power point and is normally one point of TBLP damage. This does not help in the casting of cantrips or innate spells which cause casting damage as no power points are consumed.\nIf a Circle member uses a Neuronic power, they are assumed to have two more Neural Foci than normal, and take no life points at all when casting neuronics that would otherwise cost only l life point.\nIf a Circle member casts a miracle which is level based, then by doubling the casting damage taken in its casting, the miracle affects targets of l level higher than normal. If no damage is normally taken then normal casting damage is taken (if no damage casting was owned twice then this could be reduced to 0).\nCensure.\nShould a member of the Circle perform a mystic event which is in breach of the ethos of the Circle, then the above benefits are reversed until the end of the adventure. For example level based miracles have one less level of effect unless double casting damage is taken. Such acts would include acting against the Circle, drawing power from a God.\nInquisidore.\nA Circle member should attempt to capture any Baronies Human who is a Hedge Wizard as detailed below. Only Barony Humans can qualify as this as Labyrinthian Humans, even those who are travelling through the Southern Baronies, are normally granted honorary Circle membership by default. Once captured they should be taken to a Commissionaire of the Circle, one of these centres of the Circle exists in Takalia.\nCircle members are expected to give absolute loyalty to the Circle - they are not permitted to be members of any other professional organisation, be it a guild, church or similar.\nMembers of the Circle vary dramatically in moral and political outlook but all, when it comes down to it, support the basic political principles of the Southern Baronies.\nCircle members often find it simple to gain appointments as advisors to lords of manors both north in the Empire or south in the Baronies, but sometimes feel the need not to identify their nature to a Labyrinthian lord, too many years of bad feelings have left them concerned over what kinds of treatment they may receive, what bias or bigotry might be unleashed upon them.\nMembers of the Circle in full regalia, when displaying their post in the order of things publicly, often wear the symbol of the Circle (rather unsurprisingly a Circle) upon their garb. Often the colouration, size and pattern of the circle says a lot about the wearer a loud and boisterous magician might wear a gold scaled circle proudly upon his tabard, whilst a quieter Mystic might have a simple ivory badge an inch across over his breast."
+        }
+      ]
+    },
+    "choice.humansubtypeabilities.mapped": {
+      "Key": "choice.humansubtypeabilities.mapped",
+      "Title": "HumanSubtypeAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped",
+        "subtype:human-map"
+      ],
+      "Options": [
+        {
+          "Key": "Baronial",
+          "Label": "Baronial",
+          "Description": "Because of their history the use of power in the southern Baronies is carefully monitored and controlled by a group called The Circle. Fearful of the bad old days when power used frivolously or maliciously smashed its way around the Baronies, the Circle recognises that such regulating of use is very important.\nIn addition the Circle offers an excellent range of tuition and political support within the Baronies, and as such the following modifiers are accrued by a character who is a Circle Wizard or a Circle Hermit Priest or similar.\nCircle Unholy Champions are not outlawed as they normally would be. \nIf a Circle member casts a magical spell, the casting damage for that spell is reduced by1pt if the spell consumes at least one power point and is normally one point of TBLP damage. This does not help in the casting of cantrips or innate spells which cause casting damage as no power points are consumed.\nIf a Circle member uses a Neuronic power, they are assumed to have two more Neural Foci than normal, and take no life points at all when casting neuronics that would otherwise cost only l life point.\nIf a Circle member casts a miracle which is level based, then by doubling the casting damage taken in its casting, the miracle affects targets of l level higher than normal. If no damage is normally taken then normal casting damage is taken (if no damage casting was owned twice then this could be reduced to 0).\nCensure.\nShould a member of the Circle perform a mystic event which is in breach of the ethos of the Circle, then the above benefits are reversed until the end of the adventure. For example level based miracles have one less level of effect unless double casting damage is taken. Such acts would include acting against the Circle, drawing power from a God.\nInquisidore.\nA Circle member should attempt to capture any Baronies Human who is a Hedge Wizard as detailed below. Only Barony Humans can qualify as this as Labyrinthian Humans, even those who are travelling through the Southern Baronies, are normally granted honorary Circle membership by default. Once captured they should be taken to a Commissionaire of the Circle, one of these centres of the Circle exists in Takalia.\nCircle members are expected to give absolute loyalty to the Circle - they are not permitted to be members of any other professional organisation, be it a guild, church or similar.\nMembers of the Circle vary dramatically in moral and political outlook but all, when it comes down to it, support the basic political principles of the Southern Baronies.\nCircle members often find it simple to gain appointments as advisors to lords of manors both north in the Empire or south in the Baronies, but sometimes feel the need not to identify their nature to a Labyrinthian lord, too many years of bad feelings have left them concerned over what kinds of treatment they may receive, what bias or bigotry might be unleashed upon them.\nMembers of the Circle in full regalia, when displaying their post in the order of things publicly, often wear the symbol of the Circle (rather unsurprisingly a Circle) upon their garb. Often the colouration, size and pattern of the circle says a lot about the wearer a loud and boisterous magician might wear a gold scaled circle proudly upon his tabard, whilst a quieter Mystic might have a simple ivory badge an inch across over his breast.",
+          "Effects": {
+            "GuildOverrides": [
+              "po:Type-Baronial"
+            ],
+            "HedgeOrCircle": [
+              "Hedge Wizardry",
+              "Circle Membership"
+            ]
+          },
+          "Restrictions": {
+            "PeopleType": [
+              "Baronial"
+            ]
+          }
+        },
+        {
+          "Key": "Ishmaic",
+          "Label": "Ishmaic",
+          "Effects": {
+            "GuildOverrides": [
+              "po:Wahadamune"
+            ]
+          },
+          "Restrictions": {
+            "PeopleType": [
+              "Ishmaic"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.survival",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.1st-extra-level-of-life",
+              "Level": 1
+            }
+          ]
+        },
+        {
+          "Key": "Barbarian",
+          "Label": "Barbarian",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warriors",
+              "Archers",
+              "Rangers",
+              "Witchdoctor",
+              "Shaman",
+              "Druid",
+              "Pathfinder"
+            ],
+            "PeopleType": [
+              "Tribal"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.skinning",
+              "Level": 1,
+              "Overrides": {
+                "Type": "Craft",
+                "Effect": "Skinning has no official text at this time."
+              }
+            }
+          ]
+        },
+        {
+          "Key": "Amlesian",
+          "Label": "Amlesian",
+          "Description": "Select an Amlesian caste to define your standing.",
+          "Restrictions": {
+            "PeopleType": [
+              "Amlesian"
+            ]
+          }
+        }
+      ]
+    },
+    "choice.amlesiancasteabilities.mapped": {
+      "Key": "choice.amlesiancasteabilities.mapped",
+      "Title": "AmlesianCasteAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped",
+        "dynamic:amlesian-caste"
+      ],
+      "Options": [
+        {
+          "Key": "Eta",
+          "Label": "Eta",
+          "Description": "The lowest of the low. They have no position, no honour, and no regard. It is impossible for one of this caste to rise beyond their starting position. They perform the most menial of tasks."
+        },
+        {
+          "Key": "Peasant",
+          "Label": "Peasant",
+          "Description": "The class of the masses. Many fall within the caste, even those with great talents. It is common, and although all but the Eta are above their station they are important within the social system."
+        },
+        {
+          "Key": "Artisan",
+          "Label": "Artisan",
+          "Description": "From a family of trade or talent the family will have money and some respect. They are rarely skilled in arms or the mystical arts, but they serve a valued role."
+        },
+        {
+          "Key": "Mystical One",
+          "Label": "Mystical One",
+          "Description": "A Priest, Wizard or similar. They are respected for their wisdom and power, though seen as less important than warriors in a land dominated by martial talent."
+        },
+        {
+          "Key": "Protector",
+          "Label": "Protector",
+          "Description": "The warriors of the land. They serve and protect the people and clans. Their duty is to ensure the Empire remains intact and its power strong."
+        },
+        {
+          "Key": "Samurai",
+          "Label": "Samurai",
+          "Description": "The highest standing an individual can start with. They sit beneath the clan heads, and are considered the most honourable within the lands. An individual of Samurai standing is bound by the Code of Jade and if they fail to fulfil it are expected to commit Seppuku. Those seeking to start at the Samurai caste must buy the Honoured One Status unless they are a warrior and have purchased the Samurai tradition. Should an individual rise in social rank they must buy their new caste ability, but any points spent on previous castes reduce the cost of this."
+        },
+        {
+          "Key": "Dishonoured One",
+          "Label": "Dishonoured One",
+          "Description": "These are people who have failed to adhere to the strict caste system of Amles and refused to submit to justice. They may be dishonoured warriors, rebel heroes, or bandits. Those choosing this route must purchase the Dishonoured One Status rather than a caste ability. Dishonoured Ones are all Ostracised within Amles."
+        },
+        {
+          "Key": "Fortune",
+          "Label": "Fortune",
+          "Description": "A servant of the Celestial Realms. An individual choosing this path must purchase the Fortune Status rather than a caste. Fortunes often move through Amles keeping their identities a secret to avoid the Oni that hunt them."
+        },
+        {
+          "Key": "Oni",
+          "Label": "Oni",
+          "Description": "A creature born from the Shadowlands. They purchase the Oni Status rather than a caste. It is important to note that Oni are hunted within Amles and may be killed on sight."
+        }
+      ]
+    },
+    "choice.baronialancestry.mapped": {
+      "Key": "choice.baronialancestry.mapped",
+      "Title": "BaronialAncestry",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped",
+        "dynamic:baronial-ancestry"
+      ],
+      "Options": [
+        {
+          "Key": "Rhagrimm",
+          "Label": "Rhagrimm",
+          "Grants": [
+            {
+              "AbilityRef": "ability.invoke-ancestor-rhagrimm",
+              "Level": 1
+            }
+          ]
+        },
+        {
+          "Key": "Issalania",
+          "Label": "Issalania",
+          "Grants": [
+            {
+              "AbilityRef": "ability.invoke-ancestor-issalania",
+              "Level": 1
+            }
+          ]
+        },
+        {
+          "Key": "Ulio",
+          "Label": "Ulio",
+          "Grants": [
+            {
+              "AbilityRef": "ability.invoke-ancestor-ulio",
+              "Level": 1
+            }
+          ]
+        },
+        {
+          "Key": "Eva",
+          "Label": "Eva",
+          "Grants": [
+            {
+              "AbilityRef": "ability.invoke-ancestor-eva",
+              "Level": 1
+            }
+          ]
+        }
+      ]
+    },
+    "choice.ishmaicclanabilities.mapped": {
+      "Key": "choice.ishmaicclanabilities.mapped",
+      "Title": "IshmaicClanAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped",
+        "dynamic:ishmaic-clan"
+      ],
+      "Options": [
+        {
+          "Key": "Galahbad",
+          "Label": "Galahbad",
+          "Effects": {
+            "GuildOverrides": []
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warrior",
+              "Wizard",
+              "Pathfinder",
+              "Thug",
+              "Hannot Beggar",
+              "Kallah Beggar",
+              "Archer",
+              "Pure Priest",
+              "Warrior Priest",
+              "Spiritual Warrior"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.laminar-armour",
+              "Level": 1
+            }
+          ]
+        },
+        {
+          "Key": "Buladajn",
+          "Label": "Buladajn",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Pathfinder",
+              "Assassin",
+              "Spy",
+              "Rogue",
+              "Thug"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.disguise",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.conditioned-heartstop",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.psi-scan",
+              "Level": 8
+            }
+          ]
+        },
+        {
+          "Key": "Benhai",
+          "Label": "Benhai",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Ranger",
+              "Pathfinder",
+              "Rogue",
+              "Wizard",
+              "Archer",
+              "Wayfinder"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.disarm-traps",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.trap-wary-8",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.read-languages",
+              "Level": 3
+            }
+          ]
+        },
+        {
+          "Key": "Salahmen",
+          "Label": "Salahmen",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warrior",
+              "Pathfinder",
+              "Thug",
+              "Wizard",
+              "Warlock",
+              "Archer"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.immunity-to-blindness",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.see-through-darkness",
+              "Level": 1
+            }
+          ]
+        },
+        {
+          "Key": "Harazaen",
+          "Label": "Harazaen",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Witch",
+              "Pure Priest",
+              "Spiritual Warrior",
+              "Wayfinder",
+              "Leywalker",
+              "Druid",
+              "High Druid",
+              "Ranger",
+              "Pathfinder"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.spiritual-discern-insanity",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Rain",
+          "Label": "Rain",
+          "Restrictions": {
+            "ClassRestriction": [
+              "High-Wizard",
+              "Wizard",
+              "Warlock",
+              "Rogue",
+              "Power Master"
+            ]
+          }
+        },
+        {
+          "Key": "Rainfinder",
+          "Label": "Rainfinder",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Wizards",
+              "High-Wizards",
+              "Druids",
+              "High Druids"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.detect-lie",
+              "Level": 1
+            }
+          ]
+        }
+      ]
+    },
+    "choice.ancientfolksubtypeabilities.mapped": {
+      "Key": "choice.ancientfolksubtypeabilities.mapped",
+      "Title": "AncientFolkSubtypeAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "The cloud way",
+          "Label": "The cloud way",
+          "Grants": [
+            {
+              "AbilityRef": "ability.ward-pact-undead",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.ward-pact-wyvern",
+              "Level": 4
+            },
+            {
+              "AbilityRef": "ability.ward-pact-dwarf",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "House D'trael",
+          "Label": "House D'trael",
+          "Grants": [
+            {
+              "AbilityRef": "ability.ward-pact-glass",
+              "Level": 2
+            }
+          ]
+        }
+      ]
+    },
+    "choice.alfarsubtypeabilities.mapped": {
+      "Key": "choice.alfarsubtypeabilities.mapped",
+      "Title": "AlfarSubtypeAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "Löss light (white)",
+          "Label": "Löss light (white)",
+          "Effects": {
+            "ColourChoiceOverride": [
+              "White"
+            ]
+          }
+        },
+        {
+          "Key": "Svart dark (black)",
+          "Label": "Svart dark (black)",
+          "Effects": {
+            "ColourChoiceOverride": [
+              "Black"
+            ]
+          }
+        },
+        {
+          "Key": "Alfamir seas (green)",
+          "Label": "Alfamir seas (green)",
+          "Effects": {
+            "ColourChoiceOverride": [
+              "Green"
+            ]
+          }
+        },
+        {
+          "Key": "Fjell mountain (brown)",
+          "Label": "Fjell mountain (brown)",
+          "Effects": {
+            "ColourChoiceOverride": [
+              "Brown"
+            ]
+          }
+        }
+      ]
+    },
+    "choice.ratfolkbreedabilities.mapped": {
+      "Key": "choice.ratfolkbreedabilities.mapped",
+      "Title": "RatfolkBreedAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "Ourstlav",
+          "Label": "Ourstlav",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Pathfinder",
+              "Archer",
+              "Leywalker"
+            ]
+          }
+        },
+        {
+          "Key": "Rachatat",
+          "Label": "Rachatat",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warrior",
+              "Forest Guardian",
+              "Thug"
+            ]
+          }
+        },
+        {
+          "Key": "Horstval",
+          "Label": "Horstval",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Druid",
+              "Wizard",
+              "Warrior Priest"
+            ]
+          }
+        },
+        {
+          "Key": "Slav",
+          "Label": "Slav",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Psi Master",
+              "Spy",
+              "Assassin"
+            ]
+          }
+        }
+      ]
+    },
+    "choice.ratfolkclanabilities.mapped": {
+      "Key": "choice.ratfolkclanabilities.mapped",
+      "Title": "RatfolkClanAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped",
+        "dynamic:ratfolk-clan"
+      ],
+      "Options": [
+        {
+          "Key": "Caslevasp (long hairs)",
+          "Label": "Caslevasp (long hairs)",
+          "Effects": {
+            "GuildOverrides": [
+              "po:Thimon"
+            ]
+          }
+        },
+        {
+          "Key": "Hislehasp (tatterpelts)",
+          "Label": "Hislehasp (tatterpelts)",
+          "Effects": {
+            "GuildOverrides": [
+              "so:The Swarm"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-and-arm-snap-trap",
+              "Level": 5,
+              "Overrides": {
+                "Effect": "This skill enables the Hislehasp to make and arm a snap trap which, when set off, inflicts 9 tblp or 3 hits to a monster. If a weapon mastery in snap traps is possessed then it inflicts 15 tblp or 5 hits to a monster. Additionally, for each skill level above 3rd, it inflicts another 3 tblp or 1 Hit. For example, at 4th level skill 12 tblp (or 18 tblp if weapon mastery is taken) would be inflicted. Furthermore, if 6th level skill is possessed, the location of the target that is closest to the triggered trap takes the damage as locational damage as well, stopped only by innate (non-armour) PAC, at 1pt per point of AC. Snap traps cannot be thrown and are ineffective if placed within 1 foot of another trap.\nThe Pathfinder can make 1 trap for each skill level he possesses in this skill.\nWhen possible, the adventure referee will provide phys reps for these traps if available from the Desk, though the user will often be asked to provide their own."
+              }
+            },
+            {
+              "AbilityRef": "ability.acute-hearing",
+              "Level": 5
+            }
+          ]
+        },
+        {
+          "Key": "Crepultaval (needlefangs)",
+          "Label": "Crepultaval (needlefangs)",
+          "Effects": {
+            "GuildOverrides": [
+              "po:"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.1-caster-level-dominion",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.2-dac-in-sunlight",
+              "Level": 1
+            }
+          ]
+        },
+        {
+          "Key": "Altunhast (stubbytails)",
+          "Label": "Altunhast (stubbytails)",
+          "Grants": [
+            {
+              "AbilityRef": "ability.perfect-human-disguise",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.acute-hearing",
+              "Level": 1
+            }
+          ]
+        },
+        {
+          "Key": "Gwavysvayne (Winterscorns)",
+          "Label": "Gwavysvayne (Winterscorns)",
+          "Grants": [
+            {
+              "AbilityRef": "ability.immunity-to-cold",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.1-pac",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.2-pac",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.3-pac",
+              "Level": 7
+            }
+          ]
+        }
+      ]
+    },
+    "choice.lvl-2-spell.primary": {
+      "Key": "choice.lvl-2-spell.primary",
+      "Title": "Lvl 2 Spell",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Lvl 2 Spell",
+          "Label": "Lvl 2 Spell",
+          "Grants": [
+            {
+              "AbilityRef": "ability.lvl-2-spell"
+            }
+          ],
+          "Description": "From third level, they can cast any one standard 2nd level spell once per two levels. At sixth level they may cast a standard 3rd level spell once per 2 levels. These spells cannot be of the same colour, nor may they be of opposite colours.",
+          "Customisation": {
+            "OptionEnum": "SpellUpTo:2",
+            "CustomValuesPermitted": false
+          }
+        }
+      ]
+    },
+    "choice.lvl-3-spell.primary": {
+      "Key": "choice.lvl-3-spell.primary",
+      "Title": "Lvl 3 Spell",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Lvl 3 Spell",
+          "Label": "Lvl 3 Spell",
+          "Grants": [
+            {
+              "AbilityRef": "ability.lvl-3-spell"
+            }
+          ],
+          "Description": "From third level, they can cast any one standard 2nd level spell once per two levels. At sixth level they may cast a standard 3rd level spell once per 2 levels. These spells cannot be of the same colour, nor may they be of opposite colours.",
+          "Customisation": {
+            "OptionEnum": "SpellUpTo:3",
+            "CustomValuesPermitted": false
+          }
+        }
+      ]
+    },
+    "choice.faerie-colour.primary": {
+      "Key": "choice.faerie-colour.primary",
+      "Title": "Faerie Colour",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice",
+        "options:magic-colour",
+        "selection:multi-delimited",
+        "validation:faerie-opposites",
+        "spells:faerie-colour-filter"
+      ],
+      "Options": [
+        {
+          "Key": "Red",
+          "Label": "Red",
+          "Grants": [
+            {
+              "AbilityRef": "ability.red"
+            }
+          ]
+        },
+        {
+          "Key": "Blue",
+          "Label": "Blue",
+          "Grants": [
+            {
+              "AbilityRef": "ability.blue"
+            }
+          ]
+        },
+        {
+          "Key": "Brown",
+          "Label": "Brown",
+          "Grants": [
+            {
+              "AbilityRef": "ability.brown"
+            }
+          ]
+        },
+        {
+          "Key": "Green",
+          "Label": "Green",
+          "Grants": [
+            {
+              "AbilityRef": "ability.green"
+            }
+          ]
+        },
+        {
+          "Key": "White",
+          "Label": "White",
+          "Grants": [
+            {
+              "AbilityRef": "ability.white"
+            }
+          ]
+        },
+        {
+          "Key": "Black",
+          "Label": "Black",
+          "Grants": [
+            {
+              "AbilityRef": "ability.black"
+            }
+          ]
+        },
+        {
+          "Key": "Grey",
+          "Label": "Grey",
+          "Grants": [
+            {
+              "AbilityRef": "ability.grey"
+            }
+          ]
+        },
+        {
+          "Key": "Bronze",
+          "Label": "Bronze",
+          "Grants": [
+            {
+              "AbilityRef": "ability.bronze"
+            }
+          ]
+        },
+        {
+          "Key": "Ebony",
+          "Label": "Ebony",
+          "Grants": [
+            {
+              "AbilityRef": "ability.ebony"
+            }
+          ]
+        },
+        {
+          "Key": "Gold",
+          "Label": "Gold",
+          "Grants": [
+            {
+              "AbilityRef": "ability.gold"
+            }
+          ]
+        },
+        {
+          "Key": "Ivory",
+          "Label": "Ivory",
+          "Grants": [
+            {
+              "AbilityRef": "ability.ivory"
+            }
+          ]
+        },
+        {
+          "Key": "Silver",
+          "Label": "Silver",
+          "Grants": [
+            {
+              "AbilityRef": "ability.silver"
+            }
+          ]
+        },
+        {
+          "Key": "Jade",
+          "Label": "Jade",
+          "Grants": [
+            {
+              "AbilityRef": "ability.jade"
+            }
+          ]
+        },
+        {
+          "Key": "Onyx",
+          "Label": "Onyx",
+          "Grants": [
+            {
+              "AbilityRef": "ability.onyx"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

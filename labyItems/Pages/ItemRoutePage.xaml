@@ -26,8 +26,8 @@
       Clicked="OnCreateNonStandardClicked"
       Text="Create New Non-Standard"/>
     <Button
-      Clicked="OnCreateIspClicked"
-      Text="Create ISP Item"/>
+      Clicked="OnCalculateIspClicked"
+      Text="Calculate Item ISP"/>
     <Button
       Clicked="OnCreateMpClicked"
       Text="Create MP Item"/>

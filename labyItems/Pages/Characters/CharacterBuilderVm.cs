@@ -29,6 +29,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private string? _allowedClassKeysForRace;
     private readonly HashSet<string> _selectedClassFilterKeys = new(StringComparer.OrdinalIgnoreCase);
     private readonly SemaphoreSlim _abilityRefreshLock = new(1, 1);
+    private CancellationTokenSource? _selectionPipelineCts;
     private LifeScalePoint? _humanLifeForSelectedClass;
     private ArmourTier _armourTier = ArmourTier.None;
     private const string BaronialTraditionKey = "BaronialTradition";
@@ -390,6 +391,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         var wasSelected = item.IsSelected;
         var shouldSelect = !wasSelected;
+        var previousClass = (_draft.Class ?? string.Empty).Trim();
 
         item.IsSelected = shouldSelect;
         foreach (var c in AllClasses)
@@ -409,26 +411,50 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             _allowedRaceKeysForSelectedClass = null;
             _allowedRaceKeysForClass = null;
             SelectedTabIndex = 0;
+            ResetDependentDraftSelections();
         }
         else
         {
             _humanLifeForSelectedClass = null;
             _draft.Class = item.Name;
+            if (!string.Equals(previousClass, item.Name, StringComparison.OrdinalIgnoreCase))
+                ResetDependentDraftSelections();
         }
+
         Raise(nameof(CanSelectRace));
+        Raise(nameof(HasRaceSelection));
         _notifyWizardGatingChanged();
 
-        MainThread.BeginInvokeOnMainThread(async () =>
+        RunSelectionPipeline(async cancellationToken =>
         {
             await Task.Yield();
+            cancellationToken.ThrowIfCancellationRequested();
+
             await CaptureHumanLifeForSelectedClassAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
             await RefreshAllowedRacesForSelectedClassAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var raceStillValid = EnsureSelectedRaceAllowedForClass();
             RefilterRaces();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (!raceStillValid)
+            {
+                await RefreshAllowedClassesForSelectedRaceAsync();
+                cancellationToken.ThrowIfCancellationRequested();
+                RefilterClasses();
+            }
 
             await UpdateDraftLifeAsync(expandIfChanged: true);
+            cancellationToken.ThrowIfCancellationRequested();
 
-            await SpecialisationVm.ReloadAsync();
+            await SpecialisationVm.ReloadAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+
             await RefreshDraftAbilitiesAsync();
+            _notifyWizardGatingChanged();
         });
     }
 
@@ -438,6 +464,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         var wasSelected = item.IsSelected;
         var shouldSelect = !wasSelected;
+        var previousRace = (_draft.Race ?? string.Empty).Trim();
 
         // Apply selection state to the tapped card first so visual selection updates immediately.
         item.IsSelected = shouldSelect;
@@ -458,32 +485,154 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             _draft.LifeScaleKeyOverride = string.Empty;
             _draft.ArmourAvailabilityOverride = string.Empty;
             _draft.ColourChoiceOverride.Clear();
-            _draft.SpecialisationSelections.Clear();
             _allowedClassKeysForSelectedRace = null;
             _allowedClassKeysForRace = null;
+            ResetDependentDraftSelections();
         }
         else
         {
             _draft.ArmourAvailabilityOverride = string.Empty;
             _draft.ColourChoiceOverride.Clear();
             _draft.Race = item.Name;
+            if (!string.Equals(previousRace, item.Name, StringComparison.OrdinalIgnoreCase))
+                ResetDependentDraftSelections();
         }
+
         Raise(nameof(HasRaceSelection));
+        Raise(nameof(CanSelectRace));
         _notifyWizardGatingChanged();
+
+        RunSelectionPipeline(async cancellationToken =>
+        {
+            await Task.Yield();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await RefreshAllowedClassesForSelectedRaceAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            EnsureSelectedClassAllowedForRace();
+            RefilterClasses();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await ApplyRaceToClassesAsync(_draft.Race);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await UpdateDraftLifeAsync(expandIfChanged: true);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            RefilterRaces();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await SpecialisationVm.ReloadAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await RefreshDraftAbilitiesAsync();
+            _notifyWizardGatingChanged();
+        });
+    }
+
+    private void RunSelectionPipeline(Func<CancellationToken, Task> pipeline)
+    {
+        _selectionPipelineCts?.Cancel();
+        _selectionPipelineCts?.Dispose();
+
+        var cts = new CancellationTokenSource();
+        _selectionPipelineCts = cts;
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await Task.Yield();
-            await RefreshAllowedClassesForSelectedRaceAsync();
-            RefilterClasses();
+            try
+            {
+                await pipeline(cts.Token);
+            }
+            catch (OperationCanceledException) when (cts.IsCancellationRequested)
+            {
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"CharacterBuilder selection pipeline failed: {ex}");
+            }
+            finally
+            {
+                if (ReferenceEquals(_selectionPipelineCts, cts))
+                    _selectionPipelineCts = null;
 
-            await ApplyRaceToClassesAsync(_draft.Race);
-            await UpdateDraftLifeAsync(expandIfChanged: true);
-            RefilterRaces();
-
-            await SpecialisationVm.ReloadAsync();
-            await RefreshDraftAbilitiesAsync();
+                cts.Dispose();
+            }
         });
+    }
+
+    private void ResetDependentDraftSelections()
+    {
+        _draft.RaceSubtype = null;
+        _draft.RaceSubtypeKey = string.Empty;
+        _draft.RaceSubtypeValue = string.Empty;
+        _draft.LifeScaleKeyOverride = string.Empty;
+        _draft.ArmourAvailabilityOverride = string.Empty;
+        _draft.ColourChoiceOverride.Clear();
+        _draft.SpecialisationSelections.Clear();
+        _draft.Guilds.Clear();
+        _draft.GuildBenefitSelections.Clear();
+        _draft.GuildOverrideRules = new GuildOverrideRules();
+        _draft.Alignment = null;
+        _draft.Abilities.Clear();
+        _draft.Innates.Clear();
+    }
+
+    private bool EnsureSelectedRaceAllowedForClass()
+    {
+        var selectedRace = (_draft.Race ?? string.Empty).Trim();
+        if (selectedRace.Length == 0 || _allowedRaceKeysForSelectedClass == null || _allowedRaceKeysForSelectedClass.Count == 0)
+            return true;
+
+        var normalizedRace = _creationDataService.NormalizeLifeScaleKey(selectedRace);
+        if (_allowedRaceKeysForSelectedClass.Contains(normalizedRace))
+            return true;
+
+        _draft.Race = string.Empty;
+        _allowedClassKeysForSelectedRace = null;
+        _allowedClassKeysForRace = null;
+        ResetDependentDraftSelections();
+        SyncRaceSelectionFromDraft();
+        Raise(nameof(HasRaceSelection));
+        return false;
+    }
+
+    private bool EnsureSelectedClassAllowedForRace()
+    {
+        var selectedClass = (_draft.Class ?? string.Empty).Trim();
+        if (selectedClass.Length == 0 || _allowedClassKeysForSelectedRace == null || _allowedClassKeysForSelectedRace.Count == 0)
+            return true;
+
+        var normalizedClass = _creationDataService.NormalizeLifeScaleKey(selectedClass);
+        if (_allowedClassKeysForSelectedRace.Contains(normalizedClass))
+            return true;
+
+        _draft.Class = string.Empty;
+        _draft.TBLP = 0;
+        _draft.Loc = 0;
+        _humanLifeForSelectedClass = null;
+        _allowedRaceKeysForSelectedClass = null;
+        _allowedRaceKeysForClass = null;
+        SelectedTabIndex = 0;
+        ResetDependentDraftSelections();
+        SyncClassSelectionFromDraft();
+        Raise(nameof(CanSelectRace));
+        return false;
+    }
+
+    private void SyncClassSelectionFromDraft()
+    {
+        var selected = (_draft.Class ?? string.Empty).Trim();
+        foreach (var classVm in AllClasses)
+            classVm.IsSelected = selected.Length > 0 && classVm.Name.Equals(selected, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void SyncRaceSelectionFromDraft()
+    {
+        var selected = (_draft.Race ?? string.Empty).Trim();
+        foreach (var raceVm in AllRaces)
+            raceVm.IsSelected = selected.Length > 0 && raceVm.Name.Equals(selected, StringComparison.OrdinalIgnoreCase);
     }
 
     private async Task LoadClassesAsync()

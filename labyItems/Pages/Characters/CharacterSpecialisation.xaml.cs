@@ -65,14 +65,12 @@ public partial class CharacterSpecialisation : ContentView
         var specialisationKey = (slot.SpecialisationKeyForDetails ?? string.Empty).Trim();
         if (specialisationKey.Length > 0)
         {
-            var specialisationLookup = await SpecialisationService.GetAllAsync();
-            var specialisationMatch = specialisationLookup.FirstOrDefault(kvp =>
-                string.Equals(kvp.Key, specialisationKey, StringComparison.OrdinalIgnoreCase));
-            if (!string.IsNullOrWhiteSpace(specialisationMatch.Key) && specialisationMatch.Value != null)
+            var specialisationMatch = await DetailCardLookupService.FindSpecialisationAsync(specialisationKey);
+            if (!string.IsNullOrWhiteSpace(specialisationMatch.Key) && specialisationMatch.Record != null)
             {
                 await nav.PushAsync(new SpecialisationCardPage(
                     specialisationMatch.Key,
-                    specialisationMatch.Value,
+                    specialisationMatch.Record,
                     slot.SelectedOption));
                 return;
             }
@@ -101,7 +99,7 @@ public partial class CharacterSpecialisation : ContentView
                 selectedOption = (vm.SelectedRaceSubtype ?? string.Empty).Trim();
                 break;
 
-            case CharacterSpecialisationVm.MappedSpecialisationVm mapped:
+            case MappedSpecialisationSectionVm mapped:
                 key = (mapped.DetailKey ?? mapped.Key ?? string.Empty).Trim();
                 selectedOption = (mapped.SelectedOption ?? string.Empty).Trim();
                 break;
@@ -119,17 +117,16 @@ public partial class CharacterSpecialisation : ContentView
         if (key.Length == 0 || nav == null)
             return;
 
-        var lookup = await SpecialisationService.GetAllAsync();
-        var match = lookup.FirstOrDefault(kvp => string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase));
-        if (string.IsNullOrWhiteSpace(match.Key) || match.Value == null)
+        var match = await DetailCardLookupService.FindSpecialisationAsync(key);
+        if (string.IsNullOrWhiteSpace(match.Key) || match.Record == null)
             return;
 
-        await nav.PushAsync(new SpecialisationCardPage(match.Key, match.Value, selectedOption));
+        await nav.PushAsync(new SpecialisationCardPage(match.Key, match.Record, selectedOption));
     }
 
     private async void ViewSpecialisationRowDetails(object? parameter)
     {
-        if (parameter is not CharacterSpecialisationVm.SpecialisationAbilityRow row)
+        if (parameter is not SpecialisationAbilityRow row)
             return;
 
         var key = (row.SpecialisationKey ?? string.Empty).Trim();
@@ -140,16 +137,27 @@ public partial class CharacterSpecialisation : ContentView
         if (selectedOption.Length == 0)
             selectedOption = (row.SelectedOption ?? string.Empty).Trim();
 
+        var abilityLookupKey = (row.AbilityKey ?? row.SelectedAbility ?? row.Ability ?? string.Empty).Trim();
+        if (abilityLookupKey.Length > 0)
+        {
+            var abilityMatch = await DetailCardLookupService.FindSpecialisationAbilityAsync(abilityLookupKey);
+            if (!string.IsNullOrWhiteSpace(abilityMatch.Key) && abilityMatch.Ability != null)
+            {
+                var resolvedSelection = (abilityMatch.Ability.Key ?? abilityMatch.Ability.Name ?? string.Empty).Trim();
+                if (resolvedSelection.Length > 0)
+                    selectedOption = resolvedSelection;
+            }
+        }
+
         var nav = ResolveNavigation();
         if (nav == null)
             return;
 
-        var lookup = await SpecialisationService.GetAllAsync();
-        var match = lookup.FirstOrDefault(kvp => string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase));
-        if (string.IsNullOrWhiteSpace(match.Key) || match.Value == null)
+        var match = await DetailCardLookupService.FindSpecialisationAsync(key);
+        if (string.IsNullOrWhiteSpace(match.Key) || match.Record == null)
             return;
 
-        await nav.PushAsync(new SpecialisationCardPage(match.Key, match.Value, selectedOption));
+        await nav.PushAsync(new SpecialisationCardPage(match.Key, match.Record, selectedOption));
     }
 
     private INavigation? ResolveNavigation()

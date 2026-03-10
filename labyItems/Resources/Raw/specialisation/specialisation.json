@@ -2678,5 +2678,94 @@
       "Jade",
       "Onyx"
     ]
-  }
+  },
+  "injectionRules": [
+    {
+      "Id": "human-ishmaic-clan",
+      "Conditions": {
+        "Race": "Human",
+        "Subtype": "Ishmaic"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "IshmaicClanAbilities",
+        "Title": "Ishmaic Clan",
+        "DetailKey": "IshmaicClanAbilities",
+        "SectionId": "mapped:Ishmaic Clan",
+        "Required": true,
+        "OptionalClassIn": ["Kallah Beggar", "Kallah", "Hanot Beggar", "Hannot Beggar"],
+        "Subtitle": "Select an option to unlock its benefits."
+      }
+    },
+    {
+      "Id": "human-amlesian-caste",
+      "Conditions": {
+        "Race": "Human",
+        "Subtype": "Amlesian"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "AmlesianCasteAbilities",
+        "Title": "Amlesian Caste",
+        "DetailKey": "AmlesianCasteAbilities",
+        "SectionId": "mapped:Amlesian Caste",
+        "Required": true,
+        "Subtitle": "Select an option to unlock its benefits."
+      }
+    },
+    {
+      "Id": "ratfolk-clan",
+      "Conditions": {
+        "Race": "Ratfolk"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "RatfolkClanAbilities",
+        "Title": "Ratfolk Clan",
+        "DetailKey": "RatfolkClanAbilities",
+        "SectionId": "mapped:Ratfolk Clan",
+        "Required": false,
+        "Subtitle": "Select an option to unlock its benefits."
+      }
+    },
+    {
+      "Id": "human-baronial-ancestry",
+      "Conditions": {
+        "Race": "Human",
+        "Subtype": "Baronial"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "BaronialAncestry",
+        "Title": "Baronial Ancestry",
+        "DetailKey": "BaronialAncestry",
+        "SectionId": "mapped:Baronial Ancestry",
+        "Required": true,
+        "Subtitle": "Select an option to unlock its benefits."
+      }
+    },
+    {
+      "Id": "human-baronial-tradition",
+      "Conditions": {
+        "Race": "Human",
+        "Subtype": "Baronial"
+      },
+      "Section": {
+        "SectionType": "Choice",
+        "DefinitionKey": "Baronial Tradition",
+        "Title": "Baronial Tradition",
+        "Subtitle": "Select your Baronial magical tradition.",
+        "DetailKey": "Baronial Tradition",
+        "SectionId": "choice:Baronial Tradition",
+        "RequiredWhenClassHasPowerBase": true,
+        "Levels": [1],
+        "InsertIndex": 0,
+        "OptionFilter": {
+          "SourceDefinitionKey": "HumanSubtypeAbilities",
+          "SourceOption": "Baronial",
+          "EffectListField": "HedgeOrCircle"
+        }
+      }
+    }
+  ]
 }

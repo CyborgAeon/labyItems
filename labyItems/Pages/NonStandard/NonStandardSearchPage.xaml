@@ -4,7 +4,8 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Search">
+    Title="Search"
+    BackgroundColor="{StaticResource White}">
 
     <Grid Padding="16"
           RowDefinitions="Auto,*"
@@ -12,16 +13,20 @@
         <SearchBar Grid.Row="0"
                    x:Name="SearchBar"
                    Placeholder="Search"
+                   BackgroundColor="{StaticResource White}"
                    TextChanged="OnSearchTextChanged"/>
 
         <CollectionView Grid.Row="1"
                         x:Name="OptionsView"
+                        ItemsSource="{Binding FilteredOptions}"
+                        BackgroundColor="{StaticResource White}"
                         SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame Margin="0,0,0,8"
                            Padding="10"
                            BorderColor="{StaticResource SurfaceBorderColor}"
+                           BackgroundColor="{StaticResource White}"
                            HasShadow="False">
                         <Grid>
                             <Grid.GestureRecognizers>

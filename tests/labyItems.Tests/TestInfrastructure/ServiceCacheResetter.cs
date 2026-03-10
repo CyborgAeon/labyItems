@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using labyItems.Services;
+using labyItems.Services.Specialisations;
 
 namespace labyItems.Tests;
 
@@ -18,6 +19,7 @@ internal static class ServiceCacheResetter
         ResetField(typeof(PeopleService), "_cache");
         ResetField(typeof(LifeScalesService), "_cache");
         ResetField(typeof(SpecialisationService), "_cache");
+        ResetField(typeof(SpecialisationDefinitionRepository), "_cache");
     }
 
     private static void ResetField(Type type, string fieldName)

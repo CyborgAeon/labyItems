@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Controls.Pickers;
 using labyItems.Models.Characters;
@@ -23,7 +24,7 @@ public sealed record SpecialisationGroupConfig(
     Func<AbilityCustomisation?, Dictionary<string, string>?>? CustomisationOptionsProvider = null,
     bool HideAbilityPickerWhenSingleOption = true);
 
-public sealed class SpecialisationGroupVm : INotifyPropertyChanged
+public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisationSectionVm
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -47,8 +48,15 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
     private readonly IOptionSource _optionSource;
     private bool _isOptional;
     private bool _isVisible = true;
+    private string _sectionId = string.Empty;
+    private string _detailKey = string.Empty;
+    private IReadOnlyList<string> _strategyIds = Array.Empty<string>();
 
     public string Title { get; }
+    public string SectionId => _sectionId;
+    public string DetailKey => _detailKey.Length == 0 ? Title : _detailKey;
+    public IReadOnlyList<string> StrategyIds => _strategyIds;
+    public SpecialisationSectionType SectionType { get; private set; } = SpecialisationSectionType.Choice;
     public int RequiredCount => Slots.Count;
 
     public ObservableCollection<SpecialisationSlotVm> Slots { get; } = new();
@@ -83,7 +91,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         set => Set(ref _isExpanded, value);
     }
 
-    public Command ToggleExpandedCommand { get; }
+    public ICommand ToggleExpandedCommand { get; }
 
     public string Subtitle
     {
@@ -180,6 +188,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         Issue,
         Error
     }
+
+    public string CardStateText => CardState.ToString();
+    public string DisplaySubtitle => HelperText;
     public bool UseWardPactEnum { get; }
 
     public SpecialisationGroupVm(
@@ -200,6 +211,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         _useVivomancerColourEnum = _optionSource.EnumType == typeof(VivomancerColours);
         UseWardPactEnum = _optionSource.Mode == SlotOptionMode.WardPactEnum;
         _allOptionNames = _optionSource.GetOptionNames().ToList();
+        ToggleExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
 
         // Build slots
         foreach (var lvl in cfg.Levels.OrderBy(x => x))
@@ -224,6 +236,27 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         UpdateValidation();
         RaiseComputed();
     }
+
+    public void ConfigureSectionMetadata(
+        string sectionId,
+        string detailKey,
+        IEnumerable<string>? strategyIds,
+        SpecialisationSectionType sectionType = SpecialisationSectionType.Choice)
+    {
+        _sectionId = (sectionId ?? string.Empty).Trim();
+        _detailKey = (detailKey ?? string.Empty).Trim();
+        _strategyIds = strategyIds?
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => x.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList() ?? new List<string>();
+        SectionType = sectionType;
+        Raise(nameof(SectionId));
+        Raise(nameof(DetailKey));
+        Raise(nameof(StrategyIds));
+        Raise(nameof(SectionType));
+    }
+
     public void RefreshCustomisationOptions()
     {
         foreach (var slot in Slots)
@@ -357,7 +390,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged
         Raise(nameof(StatusText));
         Raise(nameof(HelperText));
         Raise(nameof(CardState));
+        Raise(nameof(CardStateText));
         Raise(nameof(Subtitle));
+        Raise(nameof(DisplaySubtitle));
     }
 
     public void SetIssueMessage(string? message)

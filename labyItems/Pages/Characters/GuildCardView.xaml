@@ -22,6 +22,16 @@
                 <Setter Property="BackgroundColor"
                         Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
             </DataTrigger>
+            <DataTrigger TargetType="Frame"
+                         Binding="{Binding CanToggleSelection}"
+                         Value="False">
+                <Setter Property="HasShadow"
+                        Value="False"/>
+                <Setter Property="BorderColor"
+                        Value="{StaticResource SoftStrokeColor}"/>
+                <Setter Property="BackgroundColor"
+                        Value="#E5E7EB"/>
+            </DataTrigger>
         </Frame.Triggers>
 
         <Grid RowDefinitions="Auto,Auto"
@@ -46,17 +56,24 @@
                     <Label Text="{Binding Type}"
                            Opacity="0.7"
                            FontSize="12"/>
+                    <Label Text="{Binding NotSelectableReason}"
+                           Opacity="0.8"
+                           FontSize="11"
+                           TextColor="{StaticResource MutedTextColor}"
+                           IsVisible="{Binding HasNotSelectableReason}"/>
                 </VerticalStackLayout>
 
                 <Button Grid.Column="3"
-                        Text="{Binding SelectionActionText}"
-                        FontSize="12"
-                        Padding="10,2"
-                        HeightRequest="28"
+                        Text="{Binding SelectionActionGlyph}"
+                        FontFamily="FASolid"
+                        FontSize="13"
+                        Padding="0"
+                        WidthRequest="30"
+                        HeightRequest="30"
                         MinimumHeightRequest="0"
                         MinimumWidthRequest="0"
                         VerticalOptions="Center"
-                        IsVisible="{Binding ShowSelectionAction}"
+                        IsEnabled="{Binding CanToggleSelection}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=SelectCommand}"
                         CommandParameter="{Binding .}"/>
 
@@ -67,6 +84,7 @@
                         Style="{StaticResource ChevronButtonStyle}"
                         VerticalOptions="Center"
                         HorizontalOptions="End"
+                        IsEnabled="{Binding CanToggleSelection}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=ToggleExpandedCommand}"
                         CommandParameter="{Binding .}"/>
 

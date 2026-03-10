@@ -31,9 +31,9 @@ public partial class ItemRoutePage : ContentPage
         }
     }
 
-    private async void OnCreateIspClicked(object sender, EventArgs e)
+    private async void OnCalculateIspClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new CharactersPage());
+        await Navigation.PushAsync(new IspCalculator(0));
     }
 
     private async void OnCreateMpClicked(object sender, EventArgs e)

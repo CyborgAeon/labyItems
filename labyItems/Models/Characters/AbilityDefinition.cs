@@ -6,6 +6,7 @@ namespace labyItems.Models.Characters;
 [JsonConverter(typeof(AbilityDefinitionConverter))]
 public sealed class AbilityDefinition
 {
+    public string? Key { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? BattleboardNameOverride { get; set; }
     public string? UpdateKey { get; set; }
@@ -43,6 +44,7 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             var el = doc.RootElement;
             var def = new AbilityDefinition
             {
+                Key = el.TryGetProperty("Key", out var keyEl) ? keyEl.GetString() : null,
                 Name = el.TryGetProperty("Name", out var nameEl) ? nameEl.GetString() ?? string.Empty : string.Empty,
                 BattleboardNameOverride = el.TryGetProperty("BattleboardNameOverride", out var battleNameEl)
                     ? battleNameEl.GetString()
@@ -154,6 +156,8 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
     public override void Write(Utf8JsonWriter writer, AbilityDefinition value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
+        if (!string.IsNullOrWhiteSpace(value.Key))
+            writer.WriteString("Key", value.Key);
         writer.WriteString("Name", value.Name);
         if (!string.IsNullOrWhiteSpace(value.BattleboardNameOverride))
             writer.WriteString("BattleboardNameOverride", value.BattleboardNameOverride);

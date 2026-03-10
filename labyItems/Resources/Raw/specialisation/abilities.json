@@ -1,0 +1,1707 @@
+{
+  "$schemaVersion": 1,
+  "abilities": {
+    "ability.1st-weapon-mastery": {
+      "Name": "1st Weapon Mastery",
+      "Type": "Static",
+      "Effect": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
+      "Customisation": {
+        "OptionEnum": "WeaponType",
+        "CustomValuesPermitted": true
+      },
+      "Key": "ability.1st-weapon-mastery"
+    },
+    "ability.unarmed-combat": {
+      "Name": "Unarmed Combat",
+      "Type": "WeaponSkill",
+      "Effect": "This skill allows the Warrior to do damage with their hands (and not any other part of their body), as if they were O class weapons. It should be remembered that a blow from any weapon must be a minimum of 12” long to be effective. Martial art skills must NOT be used. It is only necessary to gently touch the opponent; anything stronger is unsafe and must be avoided. NOTE: Anyone abusing this skill will lose it.",
+      "Key": "ability.unarmed-combat"
+    },
+    "ability.smithing": {
+      "Name": "Smithing",
+      "Type": "Static",
+      "Effect": "This skill allows the Warrior to manufacture weapons and armour. Unlike other specialist skills this one costs 1000 grulls to learn. The cost of armour made by the character is then only 10 grulls per point of AC per location (e.g. a suit of AC 1 all over is 70 grulls, a suit of AC 3, or a suit of AC 1+2, is 210 grulls). The cost of the skill mostly consists of the cost of wasted materials in getting used to the equipment and preparing the forge. Thus another individual could not benefit from the forge without similar expenditure. The amount of equipment the character with this skill may manufacture is limited to 700 grulls per weekly visit to Labyrinthe. All handbook manufacturing takes place at the Desk. It is assumed that a Smith will adjust and make running repairs to their own armour, preventing wear, and as such someone with this skill does not lose adventure ‘uses’ on their own armour. Standardly weapons in Labyrinthe are assumed to be free, but in cases where it may matter a Smith can manufacture a weapon at 1/3 of the ‘bought price’. Advanced rules that build on the Smithing skill can be found in the “Manufacturers Guide” (Downloadable on the forums).",
+      "Key": "ability.smithing"
+    },
+    "ability.1st-enhanced-reflexes": {
+      "Name": "1st Enhanced Reflexes",
+      "Type": "DAC",
+      "Effect": "+1 DAC",
+      "Count": 1,
+      "Key": "ability.1st-enhanced-reflexes"
+    },
+    "ability.6-2-stamina": {
+      "Name": "+6/2 Stamina",
+      "Type": "Life",
+      "Effect": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character.",
+      "Source": "Tables",
+      "Key": "ability.6-2-stamina"
+    },
+    "ability.cold-rage": {
+      "Name": "Cold Rage",
+      "Type": "Innate",
+      "Effect": "This ability allows the Warrior to enter a Rage – such that for the next 5 minutes, the Warrior takes 25% less from any damage suffered – bar that suffered from purely magic weapons and magical spells. In a Cold Rage the Warrior is able to distinguish friend from foe and as such is not required to attack them. In a Cold Rage you may use ‘offensive powers’ such as Knock Back, but not other powers like Monk Locational Healing or using your magical ring to Blink away. This ability is usable 1/day.",
+      "Count": 1,
+      "Key": "ability.cold-rage"
+    },
+    "ability.war-cry": {
+      "Name": "War Cry",
+      "Type": "Innate",
+      "Effect": "This ability allows the Warrior to negate one listed stopping effect, and grants immunity to that effect for the following five minutes. It must be used within 2 seconds of the effect occurring and accompanied with a loud shout. This ability is usable 1/day.",
+      "Count": 1,
+      "Key": "ability.war-cry"
+    },
+    "ability.athletic-training": {
+      "Name": "Athletic Training",
+      "Type": "Innate",
+      "Effect": "This skill grants the Warrior the ability to jump a large distance. Also found listed under the spell Jump, or Salmon Leap, the distance jumped cannot be more than 20’ forwards, 10’ backwards, or 15’ upwards. Jumping past a person will enable that person to take one swing at the jumper; simple actions or other ‘instant’ abilities which need no verbal can be used (just one ability – not a string of Neuronic Penetrations!) instead of a weapon swing, including speaking a single word. This ability is usable 2/day",
+      "Count": 2,
+      "Key": "ability.athletic-training"
+    },
+    "ability.shadowing": {
+      "Name": "Shadowing",
+      "Type": "AtWill",
+      "Effect": "This allows the user to follow the tracks of creatures in urban, built up environments or in tunnels or buildings. The user can determine what kind of creatures frequent an area by the tracks that they have left behind. In some circumstances, at referee’s discretion, this skill can be used to provide further details, such as following a specific target’s trail. Its use requires slow and careful inspection of surrounding area.",
+      "Key": "ability.shadowing"
+    },
+    "ability.3rd-weapon-mastery-bows": {
+      "Name": "3rd Weapon Mastery (Bows)",
+      "Type": "Static",
+      "Effect": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be By weapon type (single), + 3 masteries (becoming quad).",
+      "Key": "ability.3rd-weapon-mastery-bows"
+    },
+    "ability.accuracy": {
+      "Name": "Accuracy",
+      "Type": "Static",
+      "Effect": "This skill allows the Archer to do all arrow damage regardless of the PAC possessed by the target (e.g. Triple becomes Triple Through) but it requires 5 seconds concentration to perform",
+      "Key": "ability.accuracy"
+    },
+    "ability.mind-block": {
+      "Name": "Mind Block",
+      "Type": "Static",
+      "Key": "ability.mind-block"
+    },
+    "ability.stop-bleeding": {
+      "Name": "Stop Bleeding",
+      "Type": "AtWill",
+      "Key": "ability.stop-bleeding"
+    },
+    "ability.monk-locational-curing": {
+      "Name": "Monk Locational Curing",
+      "Type": "Power",
+      "Key": "ability.monk-locational-curing"
+    },
+    "ability.forearm-parry": {
+      "Name": "ForeArm Parry",
+      "Type": "Static",
+      "Key": "ability.forearm-parry"
+    },
+    "ability.relaxed-fall": {
+      "Name": "Relaxed Fall",
+      "Type": "Static",
+      "Key": "ability.relaxed-fall"
+    },
+    "ability.2nd-weapon-mastery": {
+      "Name": "2nd Weapon Mastery",
+      "Type": "Static",
+      "Effect": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple).",
+      "Key": "ability.2nd-weapon-mastery"
+    },
+    "ability.make-healing-balm": {
+      "Name": "Make healing balm",
+      "Type": "Craft",
+      "Key": "ability.make-healing-balm"
+    },
+    "ability.read-spirit-runes-and-utilise-goodly-scrolls": {
+      "Name": "Read Spirit Runes and Utilise Goodly Scrolls",
+      "Type": "Static",
+      "Key": "ability.read-spirit-runes-and-utilise-goodly-scrolls"
+    },
+    "ability.read-spirit-runes-and-utilise-goodly-item": {
+      "Name": "Read Spirit Runes and Utilise Goodly Item",
+      "Type": "Static",
+      "Key": "ability.read-spirit-runes-and-utilise-goodly-item"
+    },
+    "ability.utilise-evil-spirit-item": {
+      "Name": "Utilise Evil Spirit Item",
+      "Type": "Static",
+      "Key": "ability.utilise-evil-spirit-item"
+    },
+    "ability.make-poison": {
+      "Name": "Make Poison",
+      "Type": "Static",
+      "Key": "ability.make-poison"
+    },
+    "ability.read-spirit-runes-and-utilise-evil-scrolls": {
+      "Name": "Read Spirit Runes and Utilise Evil Scrolls",
+      "Type": "Static",
+      "Key": "ability.read-spirit-runes-and-utilise-evil-scrolls"
+    },
+    "ability.utilise-neutral-spirit-item": {
+      "Name": "Utilise Neutral Spirit Item",
+      "Type": "Static",
+      "Key": "ability.utilise-neutral-spirit-item"
+    },
+    "ability.chosen-of-the-faithful": {
+      "Name": "Chosen of the Faithful",
+      "Type": "DAC",
+      "Effect": "+2 DAC",
+      "Count": 2,
+      "Key": "ability.chosen-of-the-faithful"
+    },
+    "ability.read-spirit-runes-and-utilise-neutral-scrolls": {
+      "Name": "Read Spirit Runes and Utilise Neutral Scrolls",
+      "Type": "Static",
+      "Key": "ability.read-spirit-runes-and-utilise-neutral-scrolls"
+    },
+    "ability.empower-chosen-weapon": {
+      "Name": "Empower Chosen Weapon",
+      "Type": "Static",
+      "Effect": "This skill allows the Power Master to inflict magic damage with their chosen weapon, at will.",
+      "Key": "ability.empower-chosen-weapon"
+    },
+    "ability.extinguish-range": {
+      "Name": "Extinguish (Range)",
+      "Type": "Innate",
+      "Count": 8,
+      "Key": "ability.extinguish-range"
+    },
+    "ability.darkness-self": {
+      "Name": "Darkness (Self)",
+      "Type": "Innate",
+      "Count": 4,
+      "Key": "ability.darkness-self"
+    },
+    "ability.see-through-magical-darkness-self": {
+      "Name": "See through Magical Darkness Self",
+      "Type": "Innate",
+      "Count": 2,
+      "Effect": "This spell confers upon the spell caster the ability to see through magical darkness only. It does not mean he can see through ordinary darkness; thus he cannot employ an artificial light source or similar.\nThe verbal is: 'I call upon the elements to grant me sight through magical darkness'",
+      "Key": "ability.see-through-magical-darkness-self"
+    },
+    "ability.black-blade": {
+      "Name": "Black Blade",
+      "Type": "Innate",
+      "Count": 2,
+      "Key": "ability.black-blade"
+    },
+    "ability.flash": {
+      "Name": "Flash",
+      "Type": "Innate",
+      "Count": 8,
+      "Key": "ability.flash"
+    },
+    "ability.light-self": {
+      "Name": "Light Self",
+      "Type": "Innate",
+      "Count": 4,
+      "Effect": "This spell creates sufficient light to illuminate a 20' diameter area. The lit area cannot be moved. The spells Darkness and Light cancel each other out for the duration of the spell effect: i.e. a 'Light’ spell will cancel the effect of a permanent 'Darkness' for 5 minutes.",
+      "Key": "ability.light-self"
+    },
+    "ability.walk-on-light-self": {
+      "Name": "Walk on Light Self",
+      "Type": "Innate",
+      "Count": 2,
+      "Key": "ability.walk-on-light-self"
+    },
+    "ability.sabre-of-light-truth": {
+      "Name": "Sabre of Light & Truth",
+      "Type": "Innate",
+      "Count": 2,
+      "Key": "ability.sabre-of-light-truth"
+    },
+    "ability.empower-armour": {
+      "Name": "Empower Armour",
+      "Type": "Static",
+      "Effect": "This skill imbues the armour worn with a magical essence, granting magical armour class equal to half the value of the armour’s physical armour class (round up), and half effect the warrior’s opposite element (light or dark). These benefits are only gained when wearing master crafted armour, which appears appropriate to the warrior’s colour (e.g. should have white or black designs etc.).",
+      "Key": "ability.empower-armour"
+    },
+    "ability.athlete": {
+      "Name": "Athlete",
+      "Type": "Innate",
+      "Effect": "From long practice leaping from rooftop to rooftop and similar, gains one Jump innate per 3 skill levels or fraction thereof.",
+      "Frequency": 3,
+      "Key": "ability.athlete"
+    },
+    "ability.bandaging": {
+      "Name": "Bandaging",
+      "Type": "Power",
+      "Effect": "May Stop Bleeding by application of phys-rep bandages. Doing so heals the location by 1pt at the time of application. Only 1 bandage may be applied per location, and if the wound has not been further healed before the bandage is removed the damage returns. This curing is cumulative with that from potions such as Medicated or Treated Bandages.",
+      "Key": "ability.bandaging"
+    },
+    "ability.climber": {
+      "Name": "Climber",
+      "Type": "Innate",
+      "Effect": "The Pathfinder has been scaling trees, walls and buildings since a young age. They gain one innate Assisted Climb per three skills levels or fraction thereof. If skill level is at least 6th may use it to climb across ceilings as well. Assisted Climb allows the user to move along non-overhanging surfaces at zombie speed, provided they have at least 3-limb contact with the surface.",
+      "Frequency": 3,
+      "Key": "ability.climber"
+    },
+    "ability.combat-wary": {
+      "Name": "Combat-Wary",
+      "Type": "Static",
+      "Effect": "Gains a damage reduction versus the first blow taken in any combat, only. This damage reduction is 1pt per skill level. This ability may not be used when using any sort of rage. Regardless of circumstances this ability may not be used more than once per 5 minutes.",
+      "Frequency": 1,
+      "Key": "ability.combat-wary"
+    },
+    "ability.discern-general-potion": {
+      "Name": "Discern General Potion",
+      "Type": "AtWill",
+      "Effect": "This skill allows a Pathfinder, by means of a quick test, to determine whether a potion is a general potion or not. In addition, he will be aware of the potency and number of doses. Colourless, odourless and tasteless potions in opaque containers can also be discerned by the use of this skill, but the Pathfinder must be able to see the substance in question, which may mean unsealing the container if it is opaque. In the case of supernatural potions the pathfinder will be able to recognise that it is a potion, but will not know its quality or potency. If the potion is an unknown type (at the ref’s discretion), a rough idea of its effects may be given.",
+      "Key": "ability.discern-general-potion"
+    },
+    "ability.discern-healing-potion": {
+      "Name": "Discern Healing Potion",
+      "Type": "AtWill",
+      "Effect": "This skill allows a Pathfinder, by means of a quick test, to determine whether a substance is a healing potion. If it is, the Pathfinder will be aware of its potency and the number of doses. Colourless, odourless and tasteless potions contained in opaque containers can also be discerned using this skill. However, the Pathfinder must be able to see the substance in question, which may require unsealing the container if it is opaque. In the case of supernatural healing potions, the Pathfinder will be able to recognise that the substance is a healing potion, but will not know its quality or potency. If the potion is of an unknown type (at the referee’s discretion), the Pathfinder may instead be given a rough idea of its effects.",
+      "Key": "ability.discern-healing-potion"
+    },
+    "ability.discern-poison": {
+      "Name": "Discern Poison",
+      "Type": "AtWill",
+      "Effect": "This skill allows a Pathfinder, by means of a quick test, to determine whether a substance is a poison or venom. If it is, the Pathfinder will be aware of its potency and the number of doses. Colourless, odourless and tasteless poisons contained in opaque containers can also be discerned using this skill. However, the Pathfinder must be able to see the substance in question, which may require unsealing the container if it is opaque. In the case of supernatural venoms, the Pathfinder will be able to recognise that the substance is poison, but will not know its quality or potency. If the poison is of an unknown type (at the referee’s discretion), the Pathfinder may instead be given a rough idea of its effects.",
+      "Key": "ability.discern-poison"
+    },
+    "ability.discern-smell-sniff": {
+      "Name": "Discern Smell (Sniff)",
+      "Type": "AtWill",
+      "Effect": "Most monsters have their own distinctive smell. By the use of this skill the Pathfinder `sniffs` for smells he has met before, thus he is able to put a smell to a monster and have some idea of what is coming up. Only broad categories of information are given by the use of this skill – ‘goblin-kind’ for example, not ‘four goblins and a hobgoblin’. Numbers cannot be distinguished, nor may exact race type necessarily be discerned. At ref’s discretion, unusual or peculiar creatures may be described as an unknown or unfamiliar scent.",
+      "Key": "ability.discern-smell-sniff"
+    },
+    "ability.disguise": {
+      "Name": "Disguise",
+      "Type": "AtWill",
+      "Effect": "This skill allows the pathfinder to attempt to take on the disguise of a monster or character of a different race.\nIt costs nothing for the scout to apply the disguise to themselves. It costs 200 grulls to disguise someone else for one adventure, buying them an appropriate card from the Desk before the adventure, or giving the money to the referee. Alternatively, if excellent in-character phys reps in non-20th (or 21st) Century containers are possessed it is free to apply a disguise during Time In on adventure. However, whilst it is possible to disguise your physical appearance you cannot change your smell, size of spirit etc. So a disguise is only as good as a disguise is good.\n If a non-human is to be disguised, they need to apply their normal make up first and then apply the ‘disguise’ over the top of this. Though it might be acceptable for him to be disguised as another non-human with appropriate face paint etc.\n NB you cannot under any circumstances be disguised as another one of your own characters.",
+      "Key": "ability.disguise"
+    },
+    "ability.distillation": {
+      "Name": "Distillation",
+      "Type": "Static",
+      "Effect": "By use of distillation techniques the Pathfinder is able to reduce the amount of liquid in a potion without affecting its efficacy. For ingestive potions the liquid required to represent the potion is halved to 25 ml, and for salves and blade venoms the quantity is reduced to only 10 ml of liquid or 2 ml of paste or cream.",
+      "Key": "ability.distillation"
+    },
+    "ability.draw-venom": {
+      "Name": "Draw Venom",
+      "Type": "Innate",
+      "Effect": "The Artificer's knowledge of the biology of their race allows them to easily neutralise or extract the poison from a wound suffered by a member of their own race.\nOnce per day per skill level the Artificer may spend 5 seconds treating a wound through which blade venom was administered, to negate one dose of blade venom in an individual’s system. Once the process is started no poison will “kick in” unless the Draw Venom process is stopped/interrupted. At this stage this skill may only be used on members of their own race.",
+      "Frequency": 1,
+      "Key": "ability.draw-venom"
+    },
+    "ability.evaluate": {
+      "Name": "Evaluate",
+      "Type": "AtWill",
+      "Effect": "This skill allows the Pathfinder to judge the intrinsic value of an item. It will not tell the Pathfinder whether an item has any special properties (i.e. magic, spirit, etc); simply the fiscal value of the item in grulls.",
+      "Key": "ability.evaluate"
+    },
+    "ability.examine-construct": {
+      "Name": "Examine Construct",
+      "Type": "AtWill",
+      "Effect": "This enables the Artificer to consider a number of crafted objects or puzzles. He is able to pose one query per day for each skill level possessed. After 30 seconds examining the relevant thing, the Artificer can ask a question and receive an answer approximately seven words in length (cf. Major Prayer). This is a physical information effect based on scholarly knowledge. It may be used solely on constructed objects or structures, although this may be quite loosely interpreted. For example, it could be used about an animated golem or a statue, a trapped door, a wizard's tower, or a crossbow. It cannot be used regarding undead or elementals. The information granted is solely about physical properties, however. For example, if the artificer considers the question `How may this statue be broken?` the answer may be `By no physical means` if it is affected only by ranged magical attacks.",
+      "Key": "ability.examine-construct"
+    },
+    "ability.hollow-tooth": {
+      "Name": "Hollow Tooth",
+      "Type": "Static",
+      "Effect": "Traditionally used to hold a virulent poison to kill the user quickly in case of capture, it is perfectly possible for this operation to hold a dose of any ingestive potion. The Pathfinder has one of their back teeth pulled, causing 1 pt of ‘item’ permanent damage to the head location – this cannot be cured or ‘slept off’ by any means while the ability is possessed. They may then go to the Desk with a card for a potion. A new card for a ‘Hollow Tooth containing xxxxx’, as appropriate, will be issued in exchange for 100 Grulls and the potion. The new card has an expiry date of 6 days if the potion was temporary, or 6 months if it was permanent.\nTo use the Hollow Tooth the user must simply be able to move of their own free will; they are considered to break the tooth and immediately swallow the potion dose. Doing this uses up the card, which must be handed to the ref at the end of the adventure. Another one can be purchased, however.\nUnder no circumstances is it possible to give the potion contained in a Hollow Tooth to anyone else. Hollow Teeth are not affected by effects such as the Shattering or similar. Unlike most skills, Hollow Tooth may be selected twice if desired.",
+      "Key": "ability.hollow-tooth"
+    },
+    "ability.lock-picking": {
+      "Name": "Lock-Picking",
+      "Type": "Innate",
+      "Effect": "With appropriate tools, the scout may pick a physical lock after 30 seconds of phys-repping, in the manner of a physical Unlock spell. This can be done once per day for each skill level possessed.",
+      "Frequency": 1,
+      "Key": "ability.lock-picking"
+    },
+    "ability.make-concealable-weapon": {
+      "Name": "Make Concealable Weapon",
+      "Type": "AtWill",
+      "Effect": "The scout may begin the adventure with two daggers that are designed to be easily concealed. They may at will be ‘put away’ and hidden about the scout’s person so that they cannot be found by physical means unless the scout is completely helpless. This may be phys-repped by asking the ref to carry the daggers when hidden. To retrieve the daggers appropriate actions must be made for a few seconds. They are not retrievable with Quick Draw-style skills.",
+      "Key": "ability.make-concealable-weapon"
+    },
+    "ability.make-general-potion": {
+      "Name": "Make General Potion",
+      "Type": "Craft",
+      "Frequency": 1,
+      "Key": "ability.make-general-potion"
+    },
+    "ability.make-healing-potion": {
+      "Name": "Make Healing Potion",
+      "Type": "Craft",
+      "Frequency": 1,
+      "Key": "ability.make-healing-potion"
+    },
+    "ability.make-poisons-potion": {
+      "Name": "Make Poisons Potion",
+      "Type": "Craft",
+      "Frequency": 1,
+      "Key": "ability.make-poisons-potion"
+    },
+    "ability.make-and-arm-snap-trap": {
+      "Name": "Make and Arm Snap Trap",
+      "Type": "Craft",
+      "Effect": "This skill enables the Pathfinder to make and arm a snap trap which, when set off, inflicts 9 tblp or 3 hits to a monster. If a weapon mastery in snap traps is possessed then it inflicts 15 tblp or 5 hits to a monster. Additionally, for each skill level above 3rd, it inflicts another 3 tblp or 1 Hit. For example, at 4th level skill 12 tblp (or 18 tblp if weapon mastery is taken) would be inflicted. Furthermore, if 6th level skill is possessed, the location of the target that is closest to the triggered trap takes the damage as locational damage as well, stopped only by innate (non-armour) PAC, at 1pt per point of AC. Snap traps cannot be thrown and are ineffective if placed within 1 foot of another trap.\nThe Pathfinder can make 1 trap for each skill level he possesses in this skill.\nWhen possible, the adventure referee will provide phys reps for these traps if available from the Desk, though the user will often be asked to provide their own.",
+      "Frequency": 1,
+      "Key": "ability.make-and-arm-snap-trap"
+    },
+    "ability.potion-preserving": {
+      "Name": "Potion Preserving",
+      "Type": "Static",
+      "Effect": "By use of this skill, permanent potions can be combined into larger bottles than their initial small bottles of three doses, without being exposed to the air and made temporary – thus a Pathfinder may start an adventure with a 500ml bottle containing 10 permanent 12pt cure potions, for example. These are still made temporary when the bottle is opened, but are generally easier to carry until then.",
+      "Key": "ability.potion-preserving"
+    },
+    "ability.read-glyphs": {
+      "Name": "Read Glyphs",
+      "Type": "Static",
+      "Effect": "Read Languages must be taken before this skill can be learnt. This skill allows the Pathfinder to read written glyphs such as wizard spell glyphs, etc, and actually trigger their power. As with read languages, you must actually be able to read the glyphs yourself. A Pathfinder with this skill coupled with read languages may cast SPELLS but not MIRACLES written on scrolls. Their casting level for purposes of damage calculation is taken to be their skill level in Read Glyphs",
+      "Key": "ability.read-glyphs"
+    },
+    "ability.read-languages": {
+      "Name": "Read Languages",
+      "Type": "Static",
+      "Effect": "This skill allows the Pathfinder to read written languages such as wizardly glyphs, priest runes, elfish high script, dwarfish, etc. To read these runes, however, you must actually be able to read them yourself; the referee will not translate them for you, although use of a crib sheet is acceptable.",
+      "Key": "ability.read-languages"
+    },
+    "ability.sealing": {
+      "Name": "Sealing",
+      "Type": "Static",
+      "Effect": "May reseal a potion bottle that has been opened on the current adventure. This means that, rather than losing their potency at the end of the dungeon, the potions remain as they were. This may be used at any time up to and including the debrief.",
+      "Key": "ability.sealing"
+    },
+    "ability.self-awareness": {
+      "Name": "Self-Awareness",
+      "Type": "AtWill",
+      "Effect": "May Tell Wounds on self after 2 seconds consideration. This reveals how wounded the character is.",
+      "Key": "ability.self-awareness"
+    },
+    "ability.stealth": {
+      "Name": "Stealth",
+      "Type": "Innate",
+      "Effect": "The Pathfinder is naturally inclined to stealth and concealment. By dint of long practice, they may hide themselves as per a non-magical Chameleon(s), once per day for each four skill levels or fraction thereof (so that with 5th level skill the user gains 2 innate Chameleons).",
+      "Frequency": 4,
+      "Key": "ability.stealth"
+    },
+    "ability.tell-time-and-direction": {
+      "Name": "Tell Time and Direction",
+      "Type": "AtWill",
+      "Effect": "The scout has an accurate internal clock and compass – he is always able to judge roughly what time of day it is and which way is north. This is not based on seeing the sky or similar.",
+      "Key": "ability.tell-time-and-direction"
+    },
+    "ability.tolerance": {
+      "Name": "Tolerance",
+      "Type": "Static",
+      "Effect": "Must have Discern General Potion. Kick-out from potions is reduced by 1 pt in every 6 per skill level possessed. If 6 or more skill levels are possessed, non-damaging effects are halved in effect or duration, and if it would have caused death instead causes unconsciousness for 1 hour.",
+      "Key": "ability.tolerance"
+    },
+    "ability.trap-wary": {
+      "Name": "Trap-Wary",
+      "Type": "Static",
+      "Effect": "May use a Jump innate that requires no verbal to leap out of the area of an area-effect attack, if the Jump has sufficient range to leave the area of effect. If the effect was damaging, only half damage is taken – if non-damaging, it does not affect the user.",
+      "Frequency": 1,
+      "Key": "ability.trap-wary"
+    },
+    "ability.user-of-avalorash": {
+      "Name": "User of Avalorash",
+      "Type": "Static",
+      "Effect": "Requires 3 or more skill levels in Make General Potion to acquire or use this skill. The user has a number of doses of the distilled essence of this plant at the beginning of each adventure. If gently anointed to an inanimate object for a period of 10 seconds, it will glow slightly if the object is magical. The colour of the glow reflects the colour of the magic in the object, while the intensity of the glow tells the user the mana level of the magic, if appropriate. The exact effect therefore will reveal if an object is magical (Yes/No answer), what colour magic is present (Red, Blue, etc) and what level it is (1 to 20+).\nOne dose of Avalorash is possessed for each skill level possessed\nNon-Ishmaic scouts may only learn this skill post 8th.",
+      "PreReqs": [
+        {
+          "PeopleType": "Ishmaic"
+        }
+      ],
+      "Key": "ability.user-of-avalorash"
+    },
+    "ability.well-equipped": {
+      "Name": "Well Equipped",
+      "Type": "Static",
+      "Effect": "As opposed to making potions using die rolls, a Pathfinder may elect to simply battle board a number of doses of adventure temporary potions. These potions will rot by the end of the adventure. This does not take up a make slot for the user.\nThe Pathfinder chooses which type of potion he wishes to take on the adventure using this method. He can only choose one type of potion, and then subtracts the difficulty level of the potion from his “Well Equipped” skill level.\nThis is the number of batches he can take. The minimum number is 1, however low the skill level. This skill only applies to Immediately Available potions.\nFor example: Jim-Bob took ‘Well Equipped’ at 3rd level, and he is now 7th, so has a skill level of 5. At the beginning of an adventure he selects 6pt TBLP Cure potions, which have a difficulty level of 3; so 5-3=2, he begins with 2 batches of 3 doses for free.\nThe potion recipe may be chosen at the beginning of each adventure. Unlike other skills, this may be taken more than once, in fact as often as desired.",
+      "Key": "ability.well-equipped"
+    },
+    "ability.well-made-daggers": {
+      "Name": "Well-Made Daggers",
+      "Type": "Static",
+      "Effect": "Must have Make Concealable Weapon first. Two concealable daggers are now considered ‘Apprentice Status’ and as such they become immune to effects such as Shatter, Warp or Disintegrate, although they can still be affected by Magnetise, Vanish and similar non-destructive effects. Effects that would destroy a magical weapon, such as Grand Shattering Blow will still destroy them, but they are not magical. There is no penalty for their loss, and they may be replaced before the next adventure at no cost.",
+      "PreReqs": [
+        {
+          "Ability": "Make Concealable Weapon"
+        }
+      ],
+      "Key": "ability.well-made-daggers"
+    },
+    "ability.assassin-s-eye": {
+      "Name": "Assassin's Eye",
+      "Type": "AtWill",
+      "Effect": "Must have Tell Wounds. After 30 seconds observation of a target within 9’ [3 paces], can estimate their physical hits or tblp and loc strength. It may be used up to 18’ [6 paces] but will only reveal if the target is small / medium / large / huge / titanic – obviously at ref’s discretion. This will work in relation to the adventure level/ Pathfinder’s skill and is a physical informational effect.",
+      "PreReqs": [
+        {
+          "Ability": "Tell Wounds"
+        }
+      ],
+      "Key": "ability.assassin-s-eye"
+    },
+    "ability.blade-sharpening": {
+      "Name": "Blade Sharpening",
+      "Type": "AtWill",
+      "Effect": "Must have phys reps for whetstone and polishing cloths. When these are used for 2 minutes to phys rep sharpening a non-supernatural bladed weapon, the next blow struck with that weapon is through PAC and has +1 max damage [max Quin], regardless of who wields it. The increase from this ability does not stack with any other temporary increase in the max damage called. This sharpening must be phys-repped in time in.",
+      "Key": "ability.blade-sharpening"
+    },
+    "ability.boleq-manufacture": {
+      "Name": "Boleq Manufacture",
+      "Type": "Static",
+      "Effect": "Requires Make Concealable Weapon skill. A Boleq is a type of glass knife, which can be ground into dust and concealed around the person. It can then be reformed by putting the dust back together and breathing on it gently. A Boleq is not made of metal and does not count towards a wizard’s metal allowance. An excellent phys rep is required for a Boleq (obviously not actually made of glass, but should give that impression!). Three Boleqs may be made each week by the pathfinder, and it costs 200 grulls to manufacture. An item card is issued for it, with no blow up date, and it does not blow up on death. However, once blown on and turned into dagger, it will only last until the end of the dungeon. The phys rep for a dust Boleq should be a pouch full of earth or sand or similar. In addition, a Boleq that is shattered or disintegrated will reform five minutes after the spell took effect. Once manufactured, a Boleq is usable by any character class which can use a dagger, not just the character who possesses Boleq Manufacture.",
+      "PreReqs": [
+        {
+          "Ability": "Make Concealable Weapon"
+        }
+      ],
+      "Key": "ability.boleq-manufacture"
+    },
+    "ability.detect-possible-neuronic-activity": {
+      "Name": "Detect Possible Neuronic Activity",
+      "Type": "AtWill",
+      "Effect": "This neuronic skill allows the pathfinder to sense whether there is any creature with psionic or neuronic abilities within a 60-foot radius. This will not tell him in which direction the creatures are or their number. The referee will only answer yes or no; they will not indicate a direction or distance. If this skill is taken, it may be skipped when buying the Passive Neuronics Tree",
+      "Key": "ability.detect-possible-neuronic-activity"
+    },
+    "ability.1st-extra-level-of-life": {
+      "Name": "1st Extra Level of Life",
+      "Type": "Static",
+      "Effect": "Gains 1st extra level of life. This replaces the post-8th tables ability",
+      "Source": "Tables",
+      "Key": "ability.1st-extra-level-of-life"
+    },
+    "ability.flesh-mending": {
+      "Name": "Flesh Mending",
+      "Type": "AtWill",
+      "Effect": "An Artificer's experience in the structure of objects allows them to mend flesh in much the same way as other objects. By meansThis skill grants them 40pts of locational curing (as the monk skill) per day, applied by appropriate phys-repping at the rate of 2 pts per second of treatment. ",
+      "PreReqs": [
+        {
+          "Class": "Artificer"
+        }
+      ],
+      "Key": "ability.flesh-mending"
+    },
+    "ability.healing-facility": {
+      "Name": "Healing Facility",
+      "Type": "AtWill",
+      "Effect": "Must have Make Healing Potion to benefit. Through practice and body training experience, the scout may prepare themselves to assimilate healing potions more effectively. If spends 30 seconds relaxing, deep breathing, etc, before using a healing potion, the scout receives 4 tblp in curing for every 3 tblp normally cured. Additionally, for every three healing salves applied, receives the benefit of four – if applied simultaneously.",
+      "PreReqs": [
+        {
+          "Ability": "Make Healing Potion"
+        }
+      ],
+      "Key": "ability.healing-facility"
+    },
+    "ability.judge-profession": {
+      "Name": "Judge Profession",
+      "Type": "AtWill",
+      "Effect": "After 30 seconds observation of a target within 18’ [6 paces], can judge their primary class-bracket (e.g. scout, warrior, wizard, priest, druid, neuronicist, none). This is a physical informational effect.",
+      "Key": "ability.judge-profession"
+    },
+    "ability.judge-strength": {
+      "Name": "Judge Strength",
+      "Type": "AtWill",
+      "Effect": "Must have Tell Wounds. After 30 seconds observation of a target within 18’ [6 paces], can estimate their physical level of resistance. This is a physical informational effect.",
+      "PreReqs": [
+        {
+          "Ability": "Tell Wounds"
+        }
+      ],
+      "Key": "ability.judge-strength"
+    },
+    "ability.metal-resistance": {
+      "Name": "Metal Resistance",
+      "Type": "Static",
+      "Effect": "This skill increases the Rogue’s metal allowance to now allow up to studded leather and two O-class weapons. Or studded leather and one B-class weapon.",
+      "Key": "ability.metal-resistance"
+    },
+    "ability.perception": {
+      "Name": "Perception",
+      "Type": "AtWill",
+      "Effect": "Allows the user to spot supernaturally hidden or chameleoned targets, including those using Invisibility, etc. This does not work on creatures that are actually ‘phys-rep’ hidden from sight! Nor does it work on non-supernaturally hidden creatures.",
+      "Key": "ability.perception"
+    },
+    "ability.poison-facility": {
+      "Name": "Poison Facility",
+      "Type": "AtWill",
+      "Effect": "Must have Make Poison to benefit. May spend 30 seconds preparing an ingestive poison so that the kick-in time is reduced to 5 seconds from 30 seconds, if drunk within the next 5 minutes. May spend 30 seconds treating a weapon with a blade venom so that if the blow struck is to a critical location the kick-in time is reduced to 5 seconds from 30 seconds – when used by the applier.",
+      "PreReqs": [
+        {
+          "Ability": "Make Poison"
+        }
+      ],
+      "Key": "ability.poison-facility"
+    },
+    "ability.potion-facility": {
+      "Name": "Potion Facility",
+      "Type": "AtWill",
+      "Effect": "Must have Make General Potion to benefit. Armour Class granted by potions can exceed the scout’s maximum armour class by 1 pt per skill level [in Make General Potion], still to a max of 12. Strength potions no longer prevent the Pathfinder from using weapon masteries.",
+      "PreReqs": [
+        {
+          "Ability": "Make General Potion"
+        }
+      ],
+      "Key": "ability.potion-facility"
+    },
+    "ability.recognise-mana": {
+      "Name": "Recognise Mana",
+      "Type": "AtWill",
+      "Effect": "This allows you to discern if an item is magical or not. It has a 1 inch range, and allows the user to identify magic in any creature or object. If the target has a specific spell or spells present upon it, an exact mana level will be given in reply, and whether the magic is currently active or not. In the case of innately magical objects, such as a magical sword or a wizard, these are considered to be “Artefact Level”, indicating that their magic is strong but not a fixed quantity as a spell is.",
+      "Key": "ability.recognise-mana"
+    },
+    "ability.recognise-spirit": {
+      "Name": "Recognise Spirit",
+      "Type": "AtWill",
+      "Effect": "This ability enables you to discern if an object or item is of a spiritual nature. The priest does this by passing his empty weapon hand within one inch of the object or item. This ability can be used to determine whether a weapon is spiritual, or if a rune of power is still charged etc. The only information gained by use of this ability at this stage is Yes or No – as to whether there is a spirit within 1”. If there is more than one spirit, this information is not revealed and there is still only a Yes answer.",
+      "Key": "ability.recognise-spirit"
+    },
+    "ability.recognise-earthpower": {
+      "Name": "Recognise Earthpower",
+      "Type": "AtWill",
+      "Effect": "This skill has a 1” range, and allows the user to identify whether any creature or object within range has earthpower within them. A Yes/No answer is returned.",
+      "Key": "ability.recognise-earthpower"
+    },
+    "ability.recognise-neuronics": {
+      "Name": "Recognise Neuronics",
+      "Type": "AtWill",
+      "Effect": "The user may identify whether any object or creature within 1” of their touch has neuronic powers.",
+      "Key": "ability.recognise-neuronics"
+    },
+    "ability.tracking": {
+      "Name": "Tracking",
+      "Type": "AtWill",
+      "Effect": "Allows the user to follow the tracks of creatures in outdoors, non-city environments. It is assumed that the owner of this skill will be able to recognise most common tracks automatically – unique and rare creatures will be identified at the ref’s discretion. This works as per the ranger ability, although it can only be used in rural, outdoor environments.",
+      "Key": "ability.tracking"
+    },
+    "ability.tell-wounds": {
+      "Name": "Tell Wounds",
+      "Type": "AtWill",
+      "Effect": "This acts in all manners as the priestly Discern Nature of Wounds ability. However, this spell will only work on either Elves or similar magical creatures, or on the wizard who cast it\nVerbal:The Silver Dragon desires knowledge of your wounds",
+      "PreReqs": [
+        {
+          "Ability": "Self-Awareness"
+        }
+      ],
+      "Key": "ability.tell-wounds"
+    },
+    "ability.undead": {
+      "Name": "Undead",
+      "Key": "ability.undead"
+    },
+    "ability.salamanders": {
+      "Name": "Salamanders",
+      "Key": "ability.salamanders"
+    },
+    "ability.shades": {
+      "Name": "Shades",
+      "Key": "ability.shades"
+    },
+    "ability.sprites": {
+      "Name": "Sprites",
+      "Key": "ability.sprites"
+    },
+    "ability.sylphs": {
+      "Name": "Sylphs",
+      "Key": "ability.sylphs"
+    },
+    "ability.gnomes": {
+      "Name": "Gnomes",
+      "Key": "ability.gnomes"
+    },
+    "ability.undines": {
+      "Name": "Undines",
+      "Key": "ability.undines"
+    },
+    "ability.supernatural-power-add-in-your-notes": {
+      "Name": "Supernatural Power (add in your notes)",
+      "Key": "ability.supernatural-power-add-in-your-notes"
+    },
+    "ability.fire-elves": {
+      "Name": "Fire-Elves",
+      "Key": "ability.fire-elves"
+    },
+    "ability.air-elves": {
+      "Name": "Air-Elves",
+      "Key": "ability.air-elves"
+    },
+    "ability.earth-elves": {
+      "Name": "Earth-Elves",
+      "Key": "ability.earth-elves"
+    },
+    "ability.aquatic-elves": {
+      "Name": "Aquatic-Elves",
+      "Key": "ability.aquatic-elves"
+    },
+    "ability.light-elves": {
+      "Name": "Light-Elves",
+      "Key": "ability.light-elves"
+    },
+    "ability.dark-elves": {
+      "Name": "Dark-Elves",
+      "Key": "ability.dark-elves"
+    },
+    "ability.drowe": {
+      "Name": "Drowe",
+      "Key": "ability.drowe"
+    },
+    "ability.winter-elves": {
+      "Name": "Winter-Elves",
+      "Key": "ability.winter-elves"
+    },
+    "ability.twilight-elves": {
+      "Name": "Twilight-Elves",
+      "Key": "ability.twilight-elves"
+    },
+    "ability.wood-elves": {
+      "Name": "Wood-Elves",
+      "Key": "ability.wood-elves"
+    },
+    "ability.body-of-light": {
+      "Name": "Body of light",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) and physical armour class (PAC) by 1 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in a Light Elf the Affirm is called ‘Body of Light’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-light"
+    },
+    "ability.light-ranged": {
+      "Name": "Light Ranged",
+      "Type": "Innate",
+      "Count": 4,
+      "Key": "ability.light-ranged"
+    },
+    "ability.1-dac": {
+      "Name": "1 DAC",
+      "Type": "DAC",
+      "Count": 1,
+      "Effect": "+1 DAC",
+      "Key": "ability.1-dac"
+    },
+    "ability.body-of-darkness": {
+      "Name": "Body of Darkness",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) and physical armour class (PAC) by 1 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in a Dark Elf the Affirm is called ‘Body of Darkness’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-darkness"
+    },
+    "ability.darkness-ranged": {
+      "Name": "Darkness (Ranged)",
+      "Type": "Innate",
+      "Effect": "This spell creates total magical darkness in a 10' radius of the spell caster and can be simulated by all closing their eyes when within area of effect. The area of effect cannot be moved. All mundane light sources within the area are negated for the duration of the spell. The spell Light cancels the effect of this spell for the duration of the Light spell, and vice versa. except it can be cast up to 20' distant from the caster. Alternatively it can be cast centred on the spell caster (only) and thus can move with him.\nVerbal:By the power of the shades of the dark let darkness descend over there",
+      "Count": 4,
+      "Key": "ability.darkness-ranged"
+    },
+    "ability.shadow-shift": {
+      "Name": "Shadow Shift",
+      "Type": "Innate",
+      "Effect": "This spell transports the caster from a spot immersed in darkness to another similar point that the caster can see or is within 20'. There is a 2 second period of disorientation on arrival where the caster is unable to be interacted with. Shadow-shift may only be used in a circumstance where there is heavy shadow and no light source within 5', and Shadowshift only when the area and caster is surrounded with shadows.\nVerbal: By the greater power of the Shades of Darkness let me be taken hence!",
+      "Count": 2,
+      "Key": "ability.shadow-shift"
+    },
+    "ability.body-of-air": {
+      "Name": "Body of Air",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) and physical armour class (PAC) by 1 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in a Air Elf the Affirm is called ‘Body of Air’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-air"
+    },
+    "ability.jump-self": {
+      "Name": "Jump self",
+      "Type": "Innate",
+      "Effect": "This spell allows the spell caster to jump 20' forwards, 10' backwards or 15' upwards. It nominally takes two seconds to complete the jump, and Time Stop should generally be called. “Jumping” will generally allow those involved (bar the Jumper) to perform one simple action such as a single blow or other 'instant' abilities, for which need no verbal can be used (just one ability - not a string of Neuronic Penetrations!), including speaking a single word. Complex actions will be disallowed by the ref!\nVerbal: Sylphs of air take me there",
+      "Count": 4,
+      "Key": "ability.jump-self"
+    },
+    "ability.walk-on-air-self": {
+      "Name": "Walk on air self",
+      "Type": "Innate",
+      "Effect": "This spell allows the caster to Walk on Air. The details of this are covered in the “Flying” section on page 9. Players should remember that it may not be possible on some occasions to reach certain heights, given the presence of (in character) ceilings, etc.\nVerbal: Sylphs of the air grant this person the power to walk on air",
+      "Count": 2,
+      "Key": "ability.walk-on-air-self"
+    },
+    "ability.body-of-stone": {
+      "Name": "Body of Stone",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) and physical armour class (PAC) by 1 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in a Earth Elf the Affirm is called ‘Body of Stone’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-stone"
+    },
+    "ability.chameleon": {
+      "Name": "Chameleon",
+      "Type": "Innate",
+      "Effect": "When cast the wizard blends into the background he stands against so that he cannot be seen by normal sight. He can however, be located by use of the Detect Magic spell etc.\nVerbal:May the elements grant me the power of chameleon.",
+      "Count": 4,
+      "Key": "ability.chameleon"
+    },
+    "ability.talk-to-earth": {
+      "Name": "Talk to Earth",
+      "Type": "Innate",
+      "Effect": "This spell empowers the Elf to talk to a non-living Rock (or other natural/magical earth). The item will answer truthfully if it is not spiritual or magical. Spiritual items do not answer and magical items may answer as they choose, but will generally have no reason not to be truthful. Non-supernatural items will only be aware of themselves; supernatural items may have more extensive perceptions at the referee's discretion.\nVerbal:By the powers of the elements of fire, air, earth and water speak to me... and tell me what you know",
+      "Count": 2,
+      "Key": "ability.talk-to-earth"
+    },
+    "ability.body-of-fire": {
+      "Name": "Body of Fire",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) and physical armour class (PAC) by 1 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in a Fire Elf the Affirm is called ‘Body of Fire’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-fire"
+    },
+    "ability.shock": {
+      "Name": "Shock",
+      "Type": "Innate",
+      "Effect": "12 points of damage to the location and total body points (TBLP) of players. Alternatively it does 4 hits to monsters. The only AC that may be applies versus this damage is MAC, which applies on a 1 for 1 basis (so MAC2 reduces the damage by 2 TBLP and 2 to the location touched). Once the verbal is completed the wizard has 5 seconds to discharge the spell or it is wasted. He cannot cast any more spells in this time.\nVerbal: Into my hand I call forth fire... Shock!",
+      "Count": 4,
+      "Key": "ability.shock"
+    },
+    "ability.permanent-walk-through-fire": {
+      "Name": "Permanent Walk through fire",
+      "Type": "Immunity",
+      "Effect": "The Elf has total immunity to natural fires and a 50% reduction in all damage taken from magical fires.",
+      "Key": "ability.permanent-walk-through-fire"
+    },
+    "ability.detect-fluid": {
+      "Name": "Detect fluid",
+      "Type": "Innate",
+      "Effect": "Any one type of fluid (e.g. potion, poison, blood) is detected. It should be noted that treasure is to be found in many different configurations. Thus the wizard could detect gold bars, or grull notes, but not generic ‘treasure’. In a similar manner, traps cannot be located via Detect Inanimate, as they represent too broad a variety of potential threats.\nVerbal: I call upon the elements of fire, air, earth and water reveal to me where ... may be found",
+      "Count": 8,
+      "Key": "ability.detect-fluid"
+    },
+    "ability.body-of-water": {
+      "Name": "Body of Water",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) and physical armour class (PAC) by 1 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in an Aquatic Elf the Affirm is called ‘Body of Water’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-water"
+    },
+    "ability.unimpeded-by-water": {
+      "Name": "Unimpeded by water",
+      "Type": "Immunity",
+      "Effect": "Those Unimpeded by water may move freely under water, do not suffer adverse effects from the Drown or Water Cannon spells, and similar",
+      "Key": "ability.unimpeded-by-water"
+    },
+    "ability.rust-ranged": {
+      "Name": "Rust (Ranged)",
+      "Type": "Innate",
+      "Effect": "By the use of this spell the caster rusts one normal ferrous object of a volume not more than 27 cubic feet. It is totally rusted away to nothing and thus cannot be restored by a Mend, Reform or Reshape spell.\nVerbal: By the powers of water I rust that…",
+      "Count": 4,
+      "Key": "ability.rust-ranged"
+    },
+    "ability.walk-on-through-water-self": {
+      "Name": "Walk on/through water self",
+      "Type": "Innate",
+      "Effect": "This spell has two applications. It can be used to allow the wizard to walk on water as if it was normal ground or it can be used to allow him to breathe and move normally underwater. Either version of this spell grants the caster 50% off Acid, water-based attacks, poisons and potions. This includes beneficial potions.\nVerbal: Undines of water grant this person the power to walk on or through water.",
+      "Count": 2,
+      "Key": "ability.walk-on-through-water-self"
+    },
+    "ability.vanish": {
+      "Name": "Vanish",
+      "Type": "Innate",
+      "Effect": "One non-living item that does not possess a spirit or exceed 27 cubic feet in volume to vanish for 5 minutes. After the item will re-appear in the same spot it disappeared from. If the item was worn it reappears in the same position relative to the wearer. The item, whilst vanished, does not exist at any other location. E.g. A small trap door would re-appear closed (locked) if it was originally closed and locked. E.g. A magic ring vanished from a finger would re-appear on that finger even if the person wearing the ring has moved several miles / light years / planes, etc.\nBy all my power I command that... to vanish!",
+      "Count": 1,
+      "Key": "ability.vanish"
+    },
+    "ability.body-of-twilight": {
+      "Name": "Body of Twilight",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) and physical armour class (PAC) by 1 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in an Twilight Elf the Affirm is called ‘Body of Twilight’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-twilight"
+    },
+    "ability.detect-magic": {
+      "Name": "Detect Magic",
+      "Type": "Innate",
+      "Effect": "This spell indicates the location and shape of all things magical to the wizard.\nVerbal: I call upon the elements of fire, air, earth and water, reveal to me where you may be found... Detect Magic!",
+      "Count": 8,
+      "Key": "ability.detect-magic"
+    },
+    "ability.twilight-self": {
+      "Name": "Twilight Self",
+      "Type": "Innate",
+      "Effect": "Causes the area within 10ft of where the spell is cast to be filled with twilight. This negates any magical darkness or light as it is appears.\nVerbal: May the elements throw light and dark in confusion.",
+      "Count": 4,
+      "Key": "ability.twilight-self"
+    },
+    "ability.silence": {
+      "Name": "Silence",
+      "Type": "Innate",
+      "Effect": "By casting this spell the wizard causes 1 target creature with not more than 4 levels resistance to become unable to utter a sound.\nVerbal: By the power of the elements I strike thee dumb!",
+      "Count": 1,
+      "Key": "ability.silence"
+    },
+    "ability.shield-self": {
+      "Name": "Shield Self",
+      "Type": "Innate",
+      "Effect": "The caster receives +2 Magical Armour Class and +2 Physical Armour Class. This armour can stack with any other magical or physical defence, but not Plate (Self), Plate (Other) or other spells which preclude the stacking of armour. It cannot stack with itself.\nVerbal: May the Golden Drake shield my body",
+      "Count": 8,
+      "Key": "ability.shield-self"
+    },
+    "ability.spell-shield": {
+      "Name": "Spell Shield",
+      "Type": "Innate",
+      "Effect": "This spell prevents any information spell working on the Ebony wizard for the duration of the Spell Shield spell. This includes Detect Magic, but Recognise Mana will still give the normal responses.\nVerbal: Shield my body from magic, great Ebony Drake",
+      "Count": 2,
+      "Key": "ability.spell-shield"
+    },
+    "ability.strengthen-self": {
+      "Name": "Strengthen Self",
+      "Type": "Innate",
+      "Effect": "This increases the resistance level for the purposes of magical and physical effects for the wizard to 10 levels. If the spell is cast after a level-based spell has already affected the wizard then the increase is only to 9 levels of resistance. Note: this does not stack with already raised increases in resistance, or those bought on the post-8th tables – the increase is limited to 9 and 10.\nVerbal: Feel the power through my limbs, the Drake has strengthened my body to resist my foes.",
+      "Count": 4,
+      "Key": "ability.strengthen-self"
+    },
+    "ability.gains-ivory-code-restriction": {
+      "Name": "Gains Ivory Code Restriction",
+      "Type": "Static",
+      "Effect": "• Never attack or harm a Marked Ally, except in defence of self or another Marked Ally.\n• Never knowingly lie or allow your statements to be misunderstood, although you may refuse to answer or speak.\n• Never hide your status, nor allow those to misunderstand your status.",
+      "Key": "ability.gains-ivory-code-restriction"
+    },
+    "ability.mark-ally": {
+      "Name": "Mark Ally",
+      "Type": "AtWill",
+      "Effect": "This cantrip can only be cast upon a willing target and cannot be dispelled – the casting wizard must be told by the target if they refuse to accept the mark, thus making them an unwilling target. This spell has several purposes. Firstly, certain spells can only be cast on a target who has been marked as an ally by the wizard; these spells are the ‘beneficial other’ spells of Ivory magic, and certain other Ivory spells contained in this supplement. Secondly, should a marked ally attack the wizard then they will suffer the reverse effect of any spell cast upon them by the ivory wizard. This includes any spells cast prior or subsequent to the treachery.\nVerbal: Let our trust reside together",
+      "Key": "ability.mark-ally"
+    },
+    "ability.traitor-s-shield": {
+      "Name": "Traitor's Shield",
+      "Type": "AtWill",
+      "Effect": "This spell only works if the wizard is attacked by a creature/character who previously on the adventure was marked as being an ally by the Mark Ally spell. Should that ally subsequently attack the caster, the caster benefits as follows: 1: Armour class rises to the maximum armour class of the wizard against attacks from the traitor – this means Magical, Physical and Dexterity armour class. 2: The wizard gains 18 TBLP and 3 life per location with respect to damage from the Traitor, and the Traitor only. These extra life points cannot be cured by spiritual means.\nVerbal: May the Ivory Drake shield me from the acts of a traitor",
+      "Key": "ability.traitor-s-shield"
+    },
+    "ability.ivory-warrior": {
+      "Name": "Ivory Warrior",
+      "Type": "Innate",
+      "Count": 2,
+      "Key": "ability.ivory-warrior"
+    },
+    "ability.mobility": {
+      "Name": "Mobility",
+      "Type": "Innate",
+      "Effect": "The wizard cannot, for the duration of the spell, suffer from the effects of the following spells: Bind, Entangle, Magnetise, Freeze (white glyph only), Trip, Slip, Catalepsy, Sleep, Slow, spells which repel the wizard, magical petrification or similar magical stopping/slowing effects. Neither are they affected by physical effects that would mimic the above, such as Knockbacks or Knockdowns.\nVerbal: May the Ivory Drake grant me great purpose in my actions",
+      "Count": 1,
+      "Key": "ability.mobility"
+    },
+    "ability.tell-strength": {
+      "Name": "Tell Strength",
+      "Type": "Innate",
+      "Effect": "This reveals to the wizard the resistance level of the target with respect to Silver magic. The response is the number of stackable runes that would need to be cast on the target in order for a stackable spell to work.\n1 stackable rune: 4th level \n2 stackable runes: 5th level \n3 stackable runes: 6th level \n4 stackable runes: 7th level \n5 stackable runes: 8th level \neach additional rune is +1 level \nFor example, Tell Strength on a 5th level player character would result in the response being `2 stackable runes'.\nVerbal: By the Drake reveal thine strength",
+      "Count": 8,
+      "Key": "ability.tell-strength"
+    },
+    "ability.inquiry": {
+      "Name": "Inquiry",
+      "Type": "Innate",
+      "Effect": "This allows the wizard to ask one question of all of the surrounding ambient elements of Air, Earth, Fire, Water, Light and Darkness. The elements collectively answer with a phrase of up to 3 words. The subject of the question must be within 20' and the elements are only aware of events that have occurred in their presence. If animate elements (such as Elementals) are present then they may be asked the question, though their answer will depend on their intelligence and they may lie.\nVerbal: Elements, answer me this…",
+      "Count": 4,
+      "Key": "ability.inquiry"
+    },
+    "ability.limb-thrall-8": {
+      "Name": "Limb Thrall (8)",
+      "Type": "Innate",
+      "Effect": "This is a level-based stackable spell, with resistances applying as listed under the Tell Strength spell listed above. All other effects of the spell are as the spell Thrall, below, but it applies to only one limb at a time. The casting wizard may have more than one Limb Thrall active at a time.\nVerbal: Fool, feel the might of true power.....Limb Thrall",
+      "Count": 2,
+      "Key": "ability.limb-thrall-8"
+    },
+    "ability.shudder": {
+      "Name": "Shudder",
+      "Type": "Innate",
+      "Effect": "The target of the spell suffers a 3 point drop in Dexterity Armour Class, caused by uncontrollable shakes. This can negate Physical Armour Class, but will not drop the total armour class below 0. If this is cast on a monster then it decreases the monsters hits by 6. The minimum number of hits that a monster can be left with is 1, as clearly this spell cannot kill, but merely increase the amount of damage that the victim receives during combat. This spell does not stack with itself. Immunity to Dexterity Drain or Domination effects applies.\nVerbal: Fool, feel your mortal form twist and shudder under my power",
+      "Count": 4,
+      "Key": "ability.shudder"
+    },
+    "ability.confusion": {
+      "Name": "Confusion",
+      "Type": "Innate",
+      "Effect": "This stackable spell causes a target affected to become unsure of what they are doing. They regard all around them as potential enemies, but will only initiate violence against those who attack them. They will otherwise take no other action other than to defend themselves. This is a domination effect, not a stopping effect.\n Verbal: Be thou filled with doubt and confusion",
+      "Count": 1,
+      "Key": "ability.confusion"
+    },
+    "ability.pain": {
+      "Name": "Pain",
+      "Type": "Innate",
+      "Effect": "The target of the spell is struck with a nerve-wracking pain which causes 12 TBLP damage (4 hits to a monster) – magical armour class does protect against this damage (at 1 for 1), and the damage is magical. Only creatures vulnerable to pain are affected, of course – undead and elementals, for example, are unharmed.\nVerbal: By the Ebony Drake I smite thee with Pain",
+      "Count": 4,
+      "Key": "ability.pain"
+    },
+    "ability.pass-unknown": {
+      "Name": "Pass Unknown",
+      "Type": "Innate",
+      "Effect": "The caster makes no noise (unless deliberate), nor can be located by smell, granting invisibility to those two senses only – immunity to Acute Hearing and Locational Sniff. It also prevents detection by Mana Sight and Elemental Sight, and other visual detections by creatures made by magic without minds, e.g. statues, not elves. This spell is broken if the caster engages in melee combat (including use of any weapon, including MP and HP, or pure summoned ones).\nVerbal: May Ebony power make my step unknown",
+      "Count": 2,
+      "Key": "ability.pass-unknown"
+    },
+    "ability.body-of-wood": {
+      "Name": "Body of Wood",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) and physical armour class (PAC) by 1 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in an Wood Elf the Affirm is called ‘Body of Wood’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-wood"
+    },
+    "ability.warp-ranged": {
+      "Name": "Warp Ranged",
+      "Type": "Innate",
+      "Effect": "When cast, the Elf can warp one normal item with a volume of 27 cubic feet. Warped items are basically shapeless and useless. Warping a helmet will not cause it to damage the wearer. A warped object cannot be Mended although it can be Reshaped.\n The verbal is: `By the powers of earth I warp that...`",
+      "Count": 4,
+      "Key": "ability.warp-ranged"
+    },
+    "ability.entangle": {
+      "Name": "Entangle",
+      "Type": "Innate",
+      "Effect": "Causes the natural vegetation to spring up and entangle all creatures within a 3' radius area as directed by the wizard. There must be sufficient natural vegetation for this spell to work. The size of the vegetation is proportional to size of the creature that can be captured and the extent of the restraint. For example, trees could entangle a dragon, at least temporarily! In general it should be assumed that 'normal' creatures cannot tear free of any constraint more extensive than grass, but also that, except in the cases of the densest vegetation, only the target's legs are tangled, and they are still free to move their arms and speak, etc. Extended work with a sharp weapon to cut free may be acceptable at the ref's discretion.\nCast with the verbal: `By the powers of earth I entangle you.`",
+      "Count": 2,
+      "Key": "ability.entangle"
+    },
+    "ability.talk-to-plant": {
+      "Name": "Talk to Plant",
+      "Type": "Innate",
+      "Effect": "This spell empowers the user to talk to any plant. The item will answer truthfully if it is not spiritual or magical. Spiritual items do not answer and magical items may answer as they choose, but will generally have no reason not to be truthful. Non-supernatural items will only be aware of themselves; supernatural items may have more extensive perceptions at the referee's discretion.",
+      "Count": 1,
+      "Key": "ability.talk-to-plant"
+    },
+    "ability.returner": {
+      "Name": "Returner",
+      "Type": "Static",
+      "Effect": "when slain a Drowe's magical essence lingers but only to wreak vengeance on his slayer. The Returner has 1 hit per level achieved before death (up to 8), and inflicts 1point of damage with an unarmed blow per level in a like fashion (A/C applies as normal to this). The Returner may use any of the Drowe’s innate abilities that it had left when slain.",
+      "Key": "ability.returner"
+    },
+    "ability.2-dac-in-sunlight": {
+      "Name": "-2 DAC in sunlight",
+      "Type": "Static",
+      "Effect": " Drowe hate daylight and suffer a -2 reduction to their armour class in it.",
+      "Key": "ability.2-dac-in-sunlight"
+    },
+    "ability.extinguish-ranged": {
+      "Name": "Extinguish Ranged",
+      "Type": "Innate",
+      "Effect": "By means of this spell the caster can extinguish small non-magical light sources such as a candle, small fire, etc.\n The verbal is: `Embodiment of darkness go to there... Extinguish!`",
+      "Count": 8,
+      "Key": "ability.extinguish-ranged"
+    },
+    "ability.darkness-ranged-2": {
+      "Name": "Darkness Ranged",
+      "Type": "Innate",
+      "Count": 4,
+      "Key": "ability.darkness-ranged-2"
+    },
+    "ability.blindness": {
+      "Name": "Blindness",
+      "Type": "Innate",
+      "Effect": "Blindness may be used to destroy a Fire Blade, 7 Levels a Sword of Power, and 8 levels blindness may destroy a Sabre of Light and Truth. Blindness is in all ways similar to the spell Silence with regards to duration, dispelling etc.",
+      "Count": 1,
+      "Key": "ability.blindness"
+    },
+    "ability.skinning": {
+      "Name": "Skinning",
+      "Type": "AtWill",
+      "Effect": "Skinning has no official text at this time. The only fur Winter Elves will wear is that of bugbears. This does not prevent them from wearing other armour however.",
+      "Key": "ability.skinning"
+    },
+    "ability.body-of-ice": {
+      "Name": "Body of Ice",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) by 2 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in a Winter Elf the Affirm is called ‘Body of Ice’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-ice"
+    },
+    "ability.immunity-to-cold": {
+      "Name": "Immunity to cold",
+      "Type": "Immunity",
+      "Effect": "The Gwavysvayne has total immunity to natural cold and a 50% reduction in all damage taken from magical cold.",
+      "Key": "ability.immunity-to-cold"
+    },
+    "ability.javelin-of-ice": {
+      "Name": "Javelin of Ice",
+      "Type": "Innate",
+      "Effect": "This has a range of 20' and does 8 hits to a monster or 24/4 points of damage to a character. The verbal for this ability is `Into my hand I call forth Ice.......Javelin of Ice!`",
+      "Count": 2,
+      "Key": "ability.javelin-of-ice"
+    },
+    "ability.body-of-autumn": {
+      "Name": "Body of Autumn",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) by 2 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in a Autumn Elf the Affirm is called ‘Body of Autumn’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-autumn"
+    },
+    "ability.wither-touch": {
+      "Name": "Wither touch",
+      "Type": "Innate",
+      "Count": 1,
+      "Key": "ability.wither-touch"
+    },
+    "ability.body-of-spring": {
+      "Name": "Body of Spring",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) by 2 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in a Spring Elf the Affirm is called ‘Body of Spring’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-spring"
+    },
+    "ability.salmon-leap": {
+      "Name": "Salmon Leap",
+      "Type": "Innate",
+      "Effect": "This spell allows the Elf to jump 20' forwards, 10' backwards or 15' upwards. It nominally takes two seconds to complete the jump, and Time Stop should generally be called. “Jumping” will generally allow those involved (bar the Jumper) to perform one simple action such as a single blow or other 'instant' abilities, for which need no verbal can be used (just one ability - not a string of Neuronic Penetrations!), including speaking a single word. Complex actions will be disallowed by the ref!",
+      "Count": 4,
+      "Key": "ability.salmon-leap"
+    },
+    "ability.sun-s-healing": {
+      "Name": "Sun's healing",
+      "Type": "Static",
+      "Effect": "3/1 regen every five minutes resting in sunlight",
+      "Key": "ability.sun-s-healing"
+    },
+    "ability.body-of-summer": {
+      "Name": "Body of Summer",
+      "Type": "Innate",
+      "Effect": "This increases the Elf's magical armour class (MAC) by 2 for 5 minutes. It can only be `cast` on the Elf himself and is usually called “Body of [element]”. For example in a Summer Elf the Affirm is called ‘Body of Summer’ and the skin of the Elf is seen to be covered with a one inch thick layer of light. This light surface is however very diffuse and will not light a room, much as the air of an Air Elf’s affirmation cannot be breathed, and an Earth Elf can still walk when covered with a Body of Earth. Regardless of the type of Affirm they are the same effect and as such do not stack. The required verbal is `I affirm my nature as that of [element]`.",
+      "Count": 8,
+      "Key": "ability.body-of-summer"
+    },
+    "ability.scorching-heat": {
+      "Name": "Scorching Heat",
+      "Type": "Innate",
+      "Effect": "Scorching Heat affects one target within 20’ who is in direct natural sunlight, inflicting 18/3 magical heat damage, to which magical armour class and resistance to fire both apply. The verbal is “May the scorching sun’s heat blister your skin...",
+      "Count": 4,
+      "Key": "ability.scorching-heat"
+    },
+    "ability.summer-s-warmth": {
+      "Name": "Summer's Warmth",
+      "Type": "Innate",
+      "Effect": "Summer’s Warmth grants the beneficiary half-effect cold for the following 5 minutes, and additionally grants them immunity to all non-spiritual Freeze effects. The verbal is “Summer’s warmth is shared with thee…”.",
+      "Count": 4,
+      "Key": "ability.summer-s-warmth"
+    },
+    "ability.4-pac": {
+      "Name": "4 PAC",
+      "Type": "PAC",
+      "Count": 4,
+      "Key": "ability.4-pac"
+    },
+    "ability.toughened-feet": {
+      "Name": "Toughened Feet",
+      "Type": "Immunity",
+      "Effect": "No longer effected by any instance of bind.",
+      "Key": "ability.toughened-feet"
+    },
+    "ability.large-lung-capacity": {
+      "Name": "Large lung capacity",
+      "Type": "Static",
+      "Effect": "Character can hold their breath for up to 5 minutes.",
+      "Key": "ability.large-lung-capacity"
+    },
+    "ability.insensitive-skin": {
+      "Name": "Insensitive Skin",
+      "Type": "Static",
+      "Effect": "Touch/contact poisons and potions have no effect",
+      "Key": "ability.insensitive-skin"
+    },
+    "ability.leg-sweep": {
+      "Name": "Leg Sweep",
+      "Type": "Innate",
+      "Effect": "With a phys repped blow to the legs (not a martial arts-style leg sweep!) one two-legged opponent is knocked to the ground. Immunity to Trip applies.",
+      "Count": 2,
+      "Key": "ability.leg-sweep"
+    },
+    "ability.stability": {
+      "Name": "Stability",
+      "Type": "Immunity",
+      "Effect": "You don't fall over due to Earth Tremor type effects",
+      "Key": "ability.stability"
+    },
+    "ability.immunity-to-poison": {
+      "Name": "Immunity to Poison",
+      "Type": "Immunity",
+      "Effect": "Grants complete immunity to poison",
+      "Key": "ability.immunity-to-poison"
+    },
+    "ability.immunity-to-disease": {
+      "Name": "Immunity to Disease",
+      "Type": "Immunity",
+      "Effect": "Grants complete immunity to disease",
+      "Key": "ability.immunity-to-disease"
+    },
+    "ability.immunity-to-acid": {
+      "Name": "Immunity to Acid",
+      "Type": "Immunity",
+      "Effect": "Grants complete immunity to acid",
+      "Key": "ability.immunity-to-acid"
+    },
+    "ability.2-pac": {
+      "Name": "2 PAC",
+      "Type": "PAC",
+      "Count": 2,
+      "Key": "ability.2-pac"
+    },
+    "ability.shed-skin": {
+      "Name": "Shed Skin",
+      "Type": "Innate",
+      "Effect": "12/2 cure which cures permanent and normal damage, but takes 10 seconds (e.g. may cure 12/2 damage which would otherwise be permanent as they lose the part of their body which is damaged)",
+      "Count": 2,
+      "Key": "ability.shed-skin"
+    },
+    "ability.acid-potions": {
+      "Name": "Acid Potions",
+      "Type": "Innate",
+      "Effect": "May cut palm for 1 loc and 6 TBLP that is then useable as an acid potion.",
+      "Count": 2,
+      "Key": "ability.acid-potions"
+    },
+    "ability.bask": {
+      "Name": "Bask",
+      "Type": "Static",
+      "Effect": "Gains regen as a troll whilst they are resting in sunlight",
+      "Key": "ability.bask"
+    },
+    "ability.potent-blood": {
+      "Name": "Potent Blood",
+      "Type": "Innate",
+      "Effect": "the Crol may spit CV 6 at one target within 20' or when they have been struck, after the character takes the damage, the weapon they are struck with dissolves because of the acid (as disintegrate touch). The 'spit' must not be phys repped, it is deemed to automatically hit.",
+      "Count": 2,
+      "Key": "ability.potent-blood"
+    },
+    "ability.1-casting-level-chosen-colour": {
+      "Name": "+1 Casting level chosen colour",
+      "Key": "ability.1-casting-level-chosen-colour"
+    },
+    "ability.bronze-jewellery": {
+      "Name": "Bronze Jewellery",
+      "Type": "Static",
+      "Effect": "Each piece of Bronze jewellery counts as a magical focus for a single spell, there must be one piece of jewellery per spell ",
+      "Key": "ability.bronze-jewellery"
+    },
+    "ability.self-heal": {
+      "Name": "Self Heal",
+      "Type": "Innate",
+      "Effect": "This ability may only be used whilst in contact with the appropriate element, which means underground for earth, in a strong breeze for air, up to the waist in water for water, and within or near a bonfire-size blaze for fire. \nThis effect magically heals all normal damage to tblp and locations, and negates diseases and potions or poisons on the master.\nThe phrase “Let the power of [element] come onto me” must be repeatedly chanted for two minutes to achieve the effect. During this time the master cannot fight, cast spells, move etc or the process is interrupted and the innate is wasted. Diseases, potions and poisons do not progress further during this time.",
+      "Count": 1,
+      "Key": "ability.self-heal"
+    },
+    "ability.mystical-tattoos": {
+      "Name": "Mystical Tattoos",
+      "Type": "Static",
+      "Effect": "grants the character 2 MAC vs Elemental",
+      "Key": "ability.mystical-tattoos"
+    },
+    "ability.elementalist": {
+      "Name": "Elementalist",
+      "Type": "Static",
+      "Effect": "Power Masters now calculate their mana as if they were a Warlock, Warlocks as if they were a Sorcerer and Wizards as if they were a High Wizard",
+      "Key": "ability.elementalist"
+    },
+    "ability.proficiency": {
+      "Name": "Proficiency",
+      "Type": "Static",
+      "Effect": "+1 Caster Level",
+      "Source": "Tables",
+      "Key": "ability.proficiency"
+    },
+    "ability.chosen-of-the-dragon": {
+      "Name": "Chosen of the Dragon",
+      "Type": "DAC",
+      "Effect": "+2 DAC",
+      "Count": 2,
+      "Key": "ability.chosen-of-the-dragon"
+    },
+    "ability.make-teaching-scrolls": {
+      "Name": "Make Teaching Scrolls",
+      "Key": "ability.make-teaching-scrolls"
+    },
+    "ability.make-magical-armour": {
+      "Name": "Make Magical Armour",
+      "Key": "ability.make-magical-armour"
+    },
+    "ability.make-magical-weapons": {
+      "Name": "Make Magical Weapons",
+      "Key": "ability.make-magical-weapons"
+    },
+    "ability.make-artefacts": {
+      "Name": "Make Artefacts",
+      "Key": "ability.make-artefacts"
+    },
+    "ability.auric-colour": {
+      "Name": "Auric Colour",
+      "Type": "AtWill",
+      "Effect": "This allows the user to recognise the colour of the mental aura of one target within range. In game terms, this means that those of Goodly alignment are seen to have a White aura, those of Neutral a Grey aura, and Evil a Black aura. Targets immune to neuronic informational effects, or all neuronics, or that simply have no mind, such as inanimate objects, have no aura at all. It is possible by training to conceal the colour of one’s aura so that only a clear aura can be seen – this is not the same as having no aura.",
+      "Key": "ability.auric-colour"
+    },
+    "ability.1st-weapon-mastery-o": {
+      "Name": "1st Weapon Mastery (O)",
+      "Type": "Static",
+      "Effect": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any one-handed weapon may be chosen.",
+      "Key": "ability.1st-weapon-mastery-o"
+    },
+    "ability.1st-weapon-mastery-h": {
+      "Name": "1st Weapon Mastery (H)",
+      "Type": "Static",
+      "Effect": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any thrown weapon may be chosen.",
+      "Key": "ability.1st-weapon-mastery-h"
+    },
+    "ability.red": {
+      "Name": "Red",
+      "Key": "ability.red"
+    },
+    "ability.blue": {
+      "Name": "Blue",
+      "Key": "ability.blue"
+    },
+    "ability.brown": {
+      "Name": "Brown",
+      "Key": "ability.brown"
+    },
+    "ability.green": {
+      "Name": "Green",
+      "Key": "ability.green"
+    },
+    "ability.white": {
+      "Name": "White",
+      "Key": "ability.white"
+    },
+    "ability.black": {
+      "Name": "Black",
+      "Key": "ability.black"
+    },
+    "ability.grey": {
+      "Name": "Grey",
+      "Key": "ability.grey"
+    },
+    "ability.bronze": {
+      "Name": "Bronze",
+      "Key": "ability.bronze"
+    },
+    "ability.ebony": {
+      "Name": "Ebony",
+      "Key": "ability.ebony"
+    },
+    "ability.gold": {
+      "Name": "Gold",
+      "Key": "ability.gold"
+    },
+    "ability.ivory": {
+      "Name": "Ivory",
+      "Key": "ability.ivory"
+    },
+    "ability.jade": {
+      "Name": "Jade",
+      "Key": "ability.jade"
+    },
+    "ability.onyx": {
+      "Name": "Onyx",
+      "Key": "ability.onyx"
+    },
+    "ability.silver": {
+      "Name": "Silver",
+      "Key": "ability.silver"
+    },
+    "ability.hedge-wizardry": {
+      "Name": "Hedge Wizardry",
+      "Type": "Static",
+      "Effect": "Hedge Wizards are those Barony Humans who practise their magicks outside the protection of the Circle, and are actively hunted by Circle members when found. Hedge Wizards are normally followers of Earthpower, as the Circle does not regard such close tampering with the structure of Primus as a good thing, but can include many other professions as well. These renegades are normally self-taught and often quite well meaning in their actions, simply independent of the Circle.\nHedge Wizards are well advised to keep either their nationality or profession quiet depending on where they are adventuring, as members of the Circle are duty bound to bring them in to their masters. Such captured Hedge Wizards are never seen again, though there are strange and unfounded rumours that some Hedge Wizards are not simply burnt at the stake or hanged.\nA Baronies Human who is not a member of the circle and uses mystical powers has the word \"Hedge\" prefixed to their class name. e.g. Hedge Mystic, Hedge Rogue etc. Hedge Wizards are a little different to their Labyrinthian counterparts due to their self-taught nature.\nHedge gain power as a normal character (this is a change from previous rules).\nA Hedge Wizard gains the scout standard skill of Disguise.\n44\nA Hedge Wizard gains Immunity to Informational Effects of their own primary power-base (not their own), and a cumulative resistance level to their own primary power-base, except when cast by themselves. This natural survival trait meant that the Vochstelen never found them when young to take to the Circle.\nDue to the Hedge Wizard’s hazardous life style, a Hedge Wizard gains an extra level of life, cumulative with other levels of life. Before 8th level, this means that their life is calculated as if they were one level higher.\nA Hedge Wizard cannot join any organisation which specifically requires them to be a Barony Human, as they would be apprehended as a matter of course, and they may not join professional guilds. However they may freely join political guilds unlike other Baronial characters.\nHedge Wizards, rather surprisingly, are not bitter people driven by the fear of capture into slaying those of the Circle, but quiet revolutionaries, seeking alliances, and trying to draw members of the Circle into their own secret cults.\nMatters in the south are seldom clear-cut, black and white, and few Hedge Wizards wish the attention of a hunt for the killer of a member of the Circle by the massed might of the local Waldgraf, or a determined band of Vochstelen.\nHedge characters are Ostracised within the Baronies, so may be killed freely.",
+      "Key": "ability.hedge-wizardry"
+    },
+    "ability.circle-membership": {
+      "Name": "Circle Membership",
+      "Type": "Static",
+      "Effect": "Because of their history the use of power in the southern Baronies is carefully monitored and controlled by a group called The Circle. Fearful of the bad old days when power used frivolously or maliciously smashed its way around the Baronies, the Circle recognises that such regulating of use is very important.\nIn addition the Circle offers an excellent range of tuition and political support within the Baronies, and as such the following modifiers are accrued by a character who is a Circle Wizard or a Circle Hermit Priest or similar.\nCircle Unholy Champions are not outlawed as they normally would be. \nIf a Circle member casts a magical spell, the casting damage for that spell is reduced by1pt if the spell consumes at least one power point and is normally one point of TBLP damage. This does not help in the casting of cantrips or innate spells which cause casting damage as no power points are consumed.\nIf a Circle member uses a Neuronic power, they are assumed to have two more Neural Foci than normal, and take no life points at all when casting neuronics that would otherwise cost only l life point.\nIf a Circle member casts a miracle which is level based, then by doubling the casting damage taken in its casting, the miracle affects targets of l level higher than normal. If no damage is normally taken then normal casting damage is taken (if no damage casting was owned twice then this could be reduced to 0).\nCensure.\nShould a member of the Circle perform a mystic event which is in breach of the ethos of the Circle, then the above benefits are reversed until the end of the adventure. For example level based miracles have one less level of effect unless double casting damage is taken. Such acts would include acting against the Circle, drawing power from a God.\nInquisidore.\nA Circle member should attempt to capture any Baronies Human who is a Hedge Wizard as detailed below. Only Barony Humans can qualify as this as Labyrinthian Humans, even those who are travelling through the Southern Baronies, are normally granted honorary Circle membership by default. Once captured they should be taken to a Commissionaire of the Circle, one of these centres of the Circle exists in Takalia.\nCircle members are expected to give absolute loyalty to the Circle - they are not permitted to be members of any other professional organisation, be it a guild, church or similar.\nMembers of the Circle vary dramatically in moral and political outlook but all, when it comes down to it, support the basic political principles of the Southern Baronies.\nCircle members often find it simple to gain appointments as advisors to lords of manors both north in the Empire or south in the Baronies, but sometimes feel the need not to identify their nature to a Labyrinthian lord, too many years of bad feelings have left them concerned over what kinds of treatment they may receive, what bias or bigotry might be unleashed upon them.\nMembers of the Circle in full regalia, when displaying their post in the order of things publicly, often wear the symbol of the Circle (rather unsurprisingly a Circle) upon their garb. Often the colouration, size and pattern of the circle says a lot about the wearer a loud and boisterous magician might wear a gold scaled circle proudly upon his tabard, whilst a quieter Mystic might have a simple ivory badge an inch across over his breast.",
+      "Key": "ability.circle-membership"
+    },
+    "ability.survival": {
+      "Name": "Survival",
+      "Type": "AtWill",
+      "Effect": "Can find food, water and shelter in the wilderness. In practical terms this means that on extended length adventures the player may supply their own provisions, which may be kept in an Out-Of-Character location until foraged for",
+      "Key": "ability.survival"
+    },
+    "ability.invoke-ancestor-rhagrimm": {
+      "Name": "Invoke Ancestor (Rhagrimm)",
+      "Type": "Innate",
+      "Effect": "Invoking Duke Rhagrimm grants the descendant +2 resistance levels against magical effects, and 1 point of MAC for every 2 levels possessed (1st to 8th only, not multi-classes). These benefits last 5 minutes.",
+      "Count": 1,
+      "Key": "ability.invoke-ancestor-rhagrimm"
+    },
+    "ability.invoke-ancestor-issalania": {
+      "Name": "Invoke Ancestor (Issalania)",
+      "Type": "Innate",
+      "Effect": "Invoking Issalania allows the descendant to trigger turbulent and opposing emotions in one target within 20'. This is considered a magical and spiritual effect. At the user's choice the target is filled either with love or terror of them, either being Beguiled or struck with Fear at unlimited levels of effect. However, this influence lasts only five minutes, after which time the target is filled with hatred for the user, and gains a 25% rage against them if the target chooses to attack them.",
+      "Count": 1,
+      "Key": "ability.invoke-ancestor-issalania"
+    },
+    "ability.invoke-ancestor-ulio": {
+      "Name": "Invoke Ancestor (Ulio)",
+      "Type": "Innate",
+      "Effect": "Invoking Ulio makes the descendant shimmer and disappear, albeit briefly. For 10 seconds the user becomes entirely invisible to any form of sight. However this invisibility is broken should they strike a blow, cast a spell, or use other innate abilities. The sensations involved in being clouded from men's gaze by Ulio are unpleasant, and the user suffers a -2 dexterity AC penalty for 5 minutes afterwards (cannot reduce dexterity below 0).",
+      "Count": 1,
+      "Key": "ability.invoke-ancestor-ulio"
+    },
+    "ability.invoke-ancestor-eva": {
+      "Name": "Invoke Ancestor (Eva)",
+      "Type": "Innate",
+      "Effect": "Invoking Duchess Eva fills the user with potent power, albeit temporarily, this grants them + 1 strength above normal maximums, and + 1 max damage vs. one chosen target. This lasts for a maximum of 1 minute.",
+      "Count": 1,
+      "Key": "ability.invoke-ancestor-eva"
+    },
+    "ability.laminar-armour": {
+      "Name": "Laminar Armour",
+      "Type": "PAC",
+      "Effect": "+1 PAC",
+      "Count": 1,
+      "Key": "ability.laminar-armour"
+    },
+    "ability.conditioned-heartstop": {
+      "Name": "Conditioned Heartstop",
+      "Type": "Static",
+      "Effect": "If ever reveals information regarding the Buladajn Clan, their heart stops immediately and permanently. This has no immunity.",
+      "Key": "ability.conditioned-heartstop"
+    },
+    "ability.psi-scan": {
+      "Name": "Psi-Scan",
+      "Type": "Innate",
+      "Effect": "Tells the user the surface thoughts of one target at time of use. The creature must be within sight.",
+      "Count": 4,
+      "Key": "ability.psi-scan"
+    },
+    "ability.disarm-traps": {
+      "Name": "Disarm Traps",
+      "Type": "AtWill",
+      "Effect": "Interestingly, there's no official text for this anywhere. Scouts can't do it. You now officially have a skill that does nothing.\nUnofficially, your skill lets you disarm traps (though this is at the real-world skill level of the one using the skill)",
+      "Key": "ability.disarm-traps"
+    },
+    "ability.trap-wary-8": {
+      "Name": "Trap-Wary (8)",
+      "Type": "Static",
+      "Effect": "May use a Jump innate that requires no verbal to leap out of the area of an area-effect attack, if the Jump has sufficient range to leave the area of effect. If the effect was damaging, only half damage is taken – if non-damaging, it does not affect the user.\nand may choose Tomb Robber as a tendency for 0 points rather than normal cost, if the character enters the scout bracket as a second class, they may acquire Tomb Robber tendency on table 9 for 80 points \nUnofficially, you gain this at first level. Levels in it don't change anything.",
+      "Key": "ability.trap-wary-8"
+    },
+    "ability.immunity-to-blindness": {
+      "Name": "Immunity to Blindness",
+      "Type": "Immunity",
+      "Effect": "Grants complete immunity to Blindness",
+      "Key": "ability.immunity-to-blindness"
+    },
+    "ability.see-through-darkness": {
+      "Name": "See through Darkness",
+      "Type": "Immunity",
+      "Effect": "See through all forms of supernatural darkness",
+      "Key": "ability.see-through-darkness"
+    },
+    "ability.spiritual-discern-insanity": {
+      "Name": "Spiritual Discern Insanity",
+      "Type": "AtWill",
+      "Effect": "Touch Range will reveal if the target with a spirit is Insane YES / NO",
+      "Key": "ability.spiritual-discern-insanity"
+    },
+    "ability.detect-lie": {
+      "Name": "Detect Lie",
+      "Type": "Innate",
+      "Effect": "For the next 5 minutes, the user is aware whether any statements he hears the target make are lies.",
+      "Count": 2,
+      "Key": "ability.detect-lie"
+    },
+    "ability.ward-pact-undead": {
+      "Name": "Ward Pact (Undead)",
+      "Type": "Replace",
+      "Effect": "An Ancient Folk gains certain ‘pacts’ with other-worldly creatures as they gain levels. These pacts are gained at second, fourth, six and eighth level. They are gained at no cost, and once a player has chosen a level’s pact it may never be changed.\nFor a pact to work against a specific creature the Ancient Folk must announce their pact clearly within hearing of that creature. They must loudly state their name, ancestry, and what they have a pact with.\nIf an Ancient Folk betrays a pact, by announcing it and then attacking that creature (except in purest self-defence), that pact is lost forever. The exact effect of a ward pact depends on the relative levels of the Ancient Folk and the creature. Pacts only fully affect creatures of the same or lower level than the user.\nCreatures fully affected by an Ancient Folk’s ward pact may not choose to attack the Ancient Folk, except in purest self-defence. They may be forced to do so if controlled by another, such as a controlled undead or elemental, but will be reluctant and attempt to choose other targets where possible. In the situation where an affected creature strikes the Ancient Folk by mistake, it should be considered that at the last minute the creature realised the nature of his target, due to supernatural forces, and pulled back so inflicting no damage.\nCreatures of too high a level to be fully affected by a pact will still be aware of the nature of the pact, and will generally act in a friendlier manner towards the Ancient Folk - the exact actions taken dependent on the creature in question. This is only a ‘role-play’ effect, but should usually make a noticeable difference in attitude.\nThe ward pacts standardly available to Ancient Folk are listed below. It is possible for individuals to seek to forge other pacts, though these are individual and handled with points requests. The exception to this is the Pact with Glass as detailed in the post 8th tables later on. \n\n• Undead- This works on all forms of undead. \n• Elemental - There are six different pacts, Salamanders, Shades, Sprites, Sylphs, Gnomes, and Undines. Each pact only affects elementals of that element. \n• Supernatural Power - The Ancient Folk may select a specific deity. The pact works against supernatural minions of that deity. If a pact is taken with a Magical Dragon or Drake this does not grant a pact with elves or elementals of that colour. For example, a pact with the Lady of the Stars would not influence priests of the Lady of the Stars, but would affect her angels.\n• Elvenkind - May be any one of fire, air, earth, water, light, dark, drowe, winter, twilight or wood elves. \n• Faeries may not be pacted, nor may Seasonal, Onyx or Jade Elves",
+      "Key": "ability.ward-pact-undead"
+    },
+    "ability.ward-pact-wyvern": {
+      "Name": "Ward Pact (Wyvern)",
+      "Type": "Replace",
+      "Effect": "An Ancient Folk gains certain ‘pacts’ with other-worldly creatures as they gain levels. These pacts are gained at second, fourth, six and eighth level. They are gained at no cost, and once a player has chosen a level’s pact it may never be changed.\nFor a pact to work against a specific creature the Ancient Folk must announce their pact clearly within hearing of that creature. They must loudly state their name, ancestry, and what they have a pact with.\nIf an Ancient Folk betrays a pact, by announcing it and then attacking that creature (except in purest self-defence), that pact is lost forever. The exact effect of a ward pact depends on the relative levels of the Ancient Folk and the creature. Pacts only fully affect creatures of the same or lower level than the user.\nCreatures fully affected by an Ancient Folk’s ward pact may not choose to attack the Ancient Folk, except in purest self-defence. They may be forced to do so if controlled by another, such as a controlled undead or elemental, but will be reluctant and attempt to choose other targets where possible. In the situation where an affected creature strikes the Ancient Folk by mistake, it should be considered that at the last minute the creature realised the nature of his target, due to supernatural forces, and pulled back so inflicting no damage.\nCreatures of too high a level to be fully affected by a pact will still be aware of the nature of the pact, and will generally act in a friendlier manner towards the Ancient Folk - the exact actions taken dependent on the creature in question. This is only a ‘role-play’ effect, but should usually make a noticeable difference in attitude.\nThe ward pacts standardly available to Ancient Folk are listed below. It is possible for individuals to seek to forge other pacts, though these are individual and handled with points requests. The exception to this is the Pact with Glass as detailed in the post 8th tables later on. \n\n• Undead- This works on all forms of undead. \n• Elemental - There are six different pacts, Salamanders, Shades, Sprites, Sylphs, Gnomes, and Undines. Each pact only affects elementals of that element. \n• Supernatural Power - The Ancient Folk may select a specific deity. The pact works against supernatural minions of that deity. If a pact is taken with a Magical Dragon or Drake this does not grant a pact with elves or elementals of that colour. For example, a pact with the Lady of the Stars would not influence priests of the Lady of the Stars, but would affect her angels.\n• Elvenkind - May be any one of fire, air, earth, water, light, dark, drowe, winter, twilight or wood elves. \n• Faeries may not be pacted, nor may Seasonal, Onyx or Jade Elves",
+      "Key": "ability.ward-pact-wyvern"
+    },
+    "ability.ward-pact-dwarf": {
+      "Name": "Ward Pact (Dwarf)",
+      "Type": "Replace",
+      "Effect": "An Ancient Folk gains certain ‘pacts’ with other-worldly creatures as they gain levels. These pacts are gained at second, fourth, six and eighth level. They are gained at no cost, and once a player has chosen a level’s pact it may never be changed.\nFor a pact to work against a specific creature the Ancient Folk must announce their pact clearly within hearing of that creature. They must loudly state their name, ancestry, and what they have a pact with.\nIf an Ancient Folk betrays a pact, by announcing it and then attacking that creature (except in purest self-defence), that pact is lost forever. The exact effect of a ward pact depends on the relative levels of the Ancient Folk and the creature. Pacts only fully affect creatures of the same or lower level than the user.\nCreatures fully affected by an Ancient Folk’s ward pact may not choose to attack the Ancient Folk, except in purest self-defence. They may be forced to do so if controlled by another, such as a controlled undead or elemental, but will be reluctant and attempt to choose other targets where possible. In the situation where an affected creature strikes the Ancient Folk by mistake, it should be considered that at the last minute the creature realised the nature of his target, due to supernatural forces, and pulled back so inflicting no damage.\nCreatures of too high a level to be fully affected by a pact will still be aware of the nature of the pact, and will generally act in a friendlier manner towards the Ancient Folk - the exact actions taken dependent on the creature in question. This is only a ‘role-play’ effect, but should usually make a noticeable difference in attitude.\nThe ward pacts standardly available to Ancient Folk are listed below. It is possible for individuals to seek to forge other pacts, though these are individual and handled with points requests. The exception to this is the Pact with Glass as detailed in the post 8th tables later on. \n\n• Undead- This works on all forms of undead. \n• Elemental - There are six different pacts, Salamanders, Shades, Sprites, Sylphs, Gnomes, and Undines. Each pact only affects elementals of that element. \n• Supernatural Power - The Ancient Folk may select a specific deity. The pact works against supernatural minions of that deity. If a pact is taken with a Magical Dragon or Drake this does not grant a pact with elves or elementals of that colour. For example, a pact with the Lady of the Stars would not influence priests of the Lady of the Stars, but would affect her angels.\n• Elvenkind - May be any one of fire, air, earth, water, light, dark, drowe, winter, twilight or wood elves. \n• Faeries may not be pacted, nor may Seasonal, Onyx or Jade Elves",
+      "Key": "ability.ward-pact-dwarf"
+    },
+    "ability.ward-pact-glass": {
+      "Name": "Ward Pact (Glass)",
+      "Type": "Replace",
+      "Effect": "An Ancient Folk gains certain ‘pacts’ with other-worldly creatures as they gain levels. These pacts are gained at second, fourth, six and eighth level. They are gained at no cost, and once a player has chosen a level’s pact it may never be changed.\nFor a pact to work against a specific creature the Ancient Folk must announce their pact clearly within hearing of that creature. They must loudly state their name, ancestry, and what they have a pact with.\nIf an Ancient Folk betrays a pact, by announcing it and then attacking that creature (except in purest self-defence), that pact is lost forever. The exact effect of a ward pact depends on the relative levels of the Ancient Folk and the creature. Pacts only fully affect creatures of the same or lower level than the user.\nCreatures fully affected by an Ancient Folk’s ward pact may not choose to attack the Ancient Folk, except in purest self-defence. They may be forced to do so if controlled by another, such as a controlled undead or elemental, but will be reluctant and attempt to choose other targets where possible. In the situation where an affected creature strikes the Ancient Folk by mistake, it should be considered that at the last minute the creature realised the nature of his target, due to supernatural forces, and pulled back so inflicting no damage.\nCreatures of too high a level to be fully affected by a pact will still be aware of the nature of the pact, and will generally act in a friendlier manner towards the Ancient Folk - the exact actions taken dependent on the creature in question. This is only a ‘role-play’ effect, but should usually make a noticeable difference in attitude.\nThe ward pacts standardly available to Ancient Folk are listed below. It is possible for individuals to seek to forge other pacts, though these are individual and handled with points requests. The exception to this is the Pact with Glass as detailed in the post 8th tables later on. \n\n• Undead- This works on all forms of undead. \n• Elemental - There are six different pacts, Salamanders, Shades, Sprites, Sylphs, Gnomes, and Undines. Each pact only affects elementals of that element. \n• Supernatural Power - The Ancient Folk may select a specific deity. The pact works against supernatural minions of that deity. If a pact is taken with a Magical Dragon or Drake this does not grant a pact with elves or elementals of that colour. For example, a pact with the Lady of the Stars would not influence priests of the Lady of the Stars, but would affect her angels.\n• Elvenkind - May be any one of fire, air, earth, water, light, dark, drowe, winter, twilight or wood elves. \n• Faeries may not be pacted, nor may Seasonal, Onyx or Jade Elves",
+      "Key": "ability.ward-pact-glass"
+    },
+    "ability.acute-hearing": {
+      "Name": "Acute Hearing",
+      "Type": "AtWill",
+      "Effect": "Allows the user to hear the movements of any creature within 60’. Effectively this means that when the character uses the ability by declaring ‘Acute Hearing’ all creatures within hearing should indicate their broad race category (e.g. elven) and location. At ref’s discretion some creatures may not make sounds, and things walking within walls are generally silent as the walls muffle their noises.",
+      "Key": "ability.acute-hearing"
+    },
+    "ability.1-caster-level-dominion": {
+      "Name": "+1 caster level (dominion)",
+      "Type": "Static",
+      "Key": "ability.1-caster-level-dominion"
+    },
+    "ability.perfect-human-disguise": {
+      "Name": "Perfect Human disguise",
+      "Type": "Static",
+      "Effect": "May assume a human like appearance as a disguise which may not be penetrated by either physical or mystical means. Once this form is assumed (and the choice to do so must be done at the beginning of the adventure) they look and smell human in all ways, and no method will disprove this concealment. This mystical protection also extends to their choice of name for the adventure, their alignment and their profession. e.g. Hillis the Altunhust Horstval Druid of neutral good alignment takes a human form at the beginning of the adventure. To all means of detection he chooses to be Trewin, the Human Warrior and to appear to be Lawful Neutral in alignment. All spells, miracles and other powers as well as physical training will indicate this is the case. At the start of another adventure he could be completely different.",
+      "Key": "ability.perfect-human-disguise"
+    },
+    "ability.1-pac": {
+      "Name": "1 PAC",
+      "Type": "PAC",
+      "Count": 1,
+      "Key": "ability.1-pac"
+    },
+    "ability.3-pac": {
+      "Name": "3 PAC",
+      "Type": "PAC",
+      "Count": 3,
+      "Key": "ability.3-pac"
+    },
+    "ability.lvl-2-spell": {
+      "Name": "Lvl 2 Spell",
+      "Type": "Innate",
+      "Effect": "From third level, they can cast any one standard 2nd level spell once per two levels. At sixth level they may cast a standard 3rd level spell once per 2 levels. These spells cannot be of the same colour, nor may they be of opposite colours.",
+      "Count": 4,
+      "Customisation": {
+        "OptionEnum": "SpellUpTo:2",
+        "CustomValuesPermitted": false
+      },
+      "Key": "ability.lvl-2-spell"
+    },
+    "ability.lvl-3-spell": {
+      "Name": "Lvl 3 Spell",
+      "Type": "Innate",
+      "Effect": "From third level, they can cast any one standard 2nd level spell once per two levels. At sixth level they may cast a standard 3rd level spell once per 2 levels. These spells cannot be of the same colour, nor may they be of opposite colours.",
+      "Count": 4,
+      "Customisation": {
+        "OptionEnum": "SpellUpTo:3",
+        "CustomValuesPermitted": false
+      },
+      "Key": "ability.lvl-3-spell"
+    }
+  },
+  "aliases": {
+    "-2 DAC in sunlight": "ability.2-dac-in-sunlight",
+    "+1 caster level (dominion)": "ability.1-caster-level-dominion",
+    "+1 Casting level chosen colour": "ability.1-casting-level-chosen-colour",
+    "+6/2 Stamina": "ability.6-2-stamina",
+    "1 DAC": "ability.1-dac",
+    "1 PAC": "ability.1-pac",
+    "1st Enhanced Reflexes": "ability.1st-enhanced-reflexes",
+    "1st Extra Level of Life": "ability.1st-extra-level-of-life",
+    "1st Weapon Mastery": "ability.1st-weapon-mastery",
+    "1st Weapon Mastery (H)": "ability.1st-weapon-mastery-h",
+    "1st Weapon Mastery (O)": "ability.1st-weapon-mastery-o",
+    "2 PAC": "ability.2-pac",
+    "2nd Weapon Mastery": "ability.2nd-weapon-mastery",
+    "3 PAC": "ability.3-pac",
+    "3rd Weapon Mastery (Bows)": "ability.3rd-weapon-mastery-bows",
+    "4 PAC": "ability.4-pac",
+    "Accuracy": "ability.accuracy",
+    "Acid Potions": "ability.acid-potions",
+    "Acute Hearing": "ability.acute-hearing",
+    "Air-Elves": "ability.air-elves",
+    "Aquatic-Elves": "ability.aquatic-elves",
+    "Assassin's Eye": "ability.assassin-s-eye",
+    "Athlete": "ability.athlete",
+    "Athletic Training": "ability.athletic-training",
+    "Auric Colour": "ability.auric-colour",
+    "Bandaging": "ability.bandaging",
+    "Bask": "ability.bask",
+    "Black": "ability.black",
+    "Black Blade": "ability.black-blade",
+    "Blade Sharpening": "ability.blade-sharpening",
+    "Blindness": "ability.blindness",
+    "Blue": "ability.blue",
+    "Body of Air": "ability.body-of-air",
+    "Body of Autumn": "ability.body-of-autumn",
+    "Body of Darkness": "ability.body-of-darkness",
+    "Body of Fire": "ability.body-of-fire",
+    "Body of Ice": "ability.body-of-ice",
+    "Body of light": "ability.body-of-light",
+    "Body of Spring": "ability.body-of-spring",
+    "Body of Stone": "ability.body-of-stone",
+    "Body of Summer": "ability.body-of-summer",
+    "Body of Twilight": "ability.body-of-twilight",
+    "Body of Water": "ability.body-of-water",
+    "Body of Wood": "ability.body-of-wood",
+    "Boleq Manufacture": "ability.boleq-manufacture",
+    "Bronze": "ability.bronze",
+    "Bronze Jewellery": "ability.bronze-jewellery",
+    "Brown": "ability.brown",
+    "Chameleon": "ability.chameleon",
+    "Chosen of the Dragon": "ability.chosen-of-the-dragon",
+    "Chosen of the Faithful": "ability.chosen-of-the-faithful",
+    "Circle Membership": "ability.circle-membership",
+    "Climber": "ability.climber",
+    "Cold Rage": "ability.cold-rage",
+    "Combat-Wary": "ability.combat-wary",
+    "Conditioned Heartstop": "ability.conditioned-heartstop",
+    "Confusion": "ability.confusion",
+    "Dark-Elves": "ability.dark-elves",
+    "Darkness (Ranged)": "ability.darkness-ranged",
+    "Darkness (Self)": "ability.darkness-self",
+    "Darkness Ranged": "ability.darkness-ranged-2",
+    "Detect fluid": "ability.detect-fluid",
+    "Detect Lie": "ability.detect-lie",
+    "Detect Magic": "ability.detect-magic",
+    "Detect Possible Neuronic Activity": "ability.detect-possible-neuronic-activity",
+    "Disarm Traps": "ability.disarm-traps",
+    "Discern General Potion": "ability.discern-general-potion",
+    "Discern Healing Potion": "ability.discern-healing-potion",
+    "Discern Poison": "ability.discern-poison",
+    "Discern Smell (Sniff)": "ability.discern-smell-sniff",
+    "Disguise": "ability.disguise",
+    "Distillation": "ability.distillation",
+    "Draw Venom": "ability.draw-venom",
+    "Drowe": "ability.drowe",
+    "Earth-Elves": "ability.earth-elves",
+    "Ebony": "ability.ebony",
+    "Elementalist": "ability.elementalist",
+    "Empower Armour": "ability.empower-armour",
+    "Empower Chosen Weapon": "ability.empower-chosen-weapon",
+    "Entangle": "ability.entangle",
+    "Evaluate": "ability.evaluate",
+    "Examine Construct": "ability.examine-construct",
+    "Extinguish (Range)": "ability.extinguish-range",
+    "Extinguish Ranged": "ability.extinguish-ranged",
+    "Fire-Elves": "ability.fire-elves",
+    "Flash": "ability.flash",
+    "Flesh Mending": "ability.flesh-mending",
+    "ForeArm Parry": "ability.forearm-parry",
+    "Gains Ivory Code Restriction": "ability.gains-ivory-code-restriction",
+    "Gnomes": "ability.gnomes",
+    "Gold": "ability.gold",
+    "Green": "ability.green",
+    "Grey": "ability.grey",
+    "Healing Facility": "ability.healing-facility",
+    "Hedge Wizardry": "ability.hedge-wizardry",
+    "Hollow Tooth": "ability.hollow-tooth",
+    "Immunity to Acid": "ability.immunity-to-acid",
+    "Immunity to Blindness": "ability.immunity-to-blindness",
+    "Immunity to cold": "ability.immunity-to-cold",
+    "Immunity to Disease": "ability.immunity-to-disease",
+    "Immunity to Poison": "ability.immunity-to-poison",
+    "Inquiry": "ability.inquiry",
+    "Insensitive Skin": "ability.insensitive-skin",
+    "Invoke Ancestor (Eva)": "ability.invoke-ancestor-eva",
+    "Invoke Ancestor (Issalania)": "ability.invoke-ancestor-issalania",
+    "Invoke Ancestor (Rhagrimm)": "ability.invoke-ancestor-rhagrimm",
+    "Invoke Ancestor (Ulio)": "ability.invoke-ancestor-ulio",
+    "Ivory": "ability.ivory",
+    "Ivory Warrior": "ability.ivory-warrior",
+    "Jade": "ability.jade",
+    "Javelin of Ice": "ability.javelin-of-ice",
+    "Judge Profession": "ability.judge-profession",
+    "Judge Strength": "ability.judge-strength",
+    "Jump self": "ability.jump-self",
+    "Laminar Armour": "ability.laminar-armour",
+    "Large lung capacity": "ability.large-lung-capacity",
+    "Leg Sweep": "ability.leg-sweep",
+    "Light Ranged": "ability.light-ranged",
+    "Light Self": "ability.light-self",
+    "Light-Elves": "ability.light-elves",
+    "Limb Thrall (8)": "ability.limb-thrall-8",
+    "Lock-Picking": "ability.lock-picking",
+    "Lvl 2 Spell": "ability.lvl-2-spell",
+    "Lvl 3 Spell": "ability.lvl-3-spell",
+    "Make and Arm Snap Trap": "ability.make-and-arm-snap-trap",
+    "Make Artefacts": "ability.make-artefacts",
+    "Make Concealable Weapon": "ability.make-concealable-weapon",
+    "Make General Potion": "ability.make-general-potion",
+    "Make healing balm": "ability.make-healing-balm",
+    "Make Healing Potion": "ability.make-healing-potion",
+    "Make Magical Armour": "ability.make-magical-armour",
+    "Make Magical Weapons": "ability.make-magical-weapons",
+    "Make Poison": "ability.make-poison",
+    "Make Poisons Potion": "ability.make-poisons-potion",
+    "Make Teaching Scrolls": "ability.make-teaching-scrolls",
+    "Mark Ally": "ability.mark-ally",
+    "Metal Resistance": "ability.metal-resistance",
+    "Mind Block": "ability.mind-block",
+    "Mobility": "ability.mobility",
+    "Monk Locational Curing": "ability.monk-locational-curing",
+    "Mystical Tattoos": "ability.mystical-tattoos",
+    "Onyx": "ability.onyx",
+    "Pain": "ability.pain",
+    "Pass Unknown": "ability.pass-unknown",
+    "Perception": "ability.perception",
+    "Perfect Human disguise": "ability.perfect-human-disguise",
+    "Permanent Walk through fire": "ability.permanent-walk-through-fire",
+    "Poison Facility": "ability.poison-facility",
+    "Potent Blood": "ability.potent-blood",
+    "Potion Facility": "ability.potion-facility",
+    "Potion Preserving": "ability.potion-preserving",
+    "Proficiency": "ability.proficiency",
+    "Psi-Scan": "ability.psi-scan",
+    "Read Glyphs": "ability.read-glyphs",
+    "Read Languages": "ability.read-languages",
+    "Read Spirit Runes and Utilise Evil Scrolls": "ability.read-spirit-runes-and-utilise-evil-scrolls",
+    "Read Spirit Runes and Utilise Goodly Item": "ability.read-spirit-runes-and-utilise-goodly-item",
+    "Read Spirit Runes and Utilise Goodly Scrolls": "ability.read-spirit-runes-and-utilise-goodly-scrolls",
+    "Read Spirit Runes and Utilise Neutral Scrolls": "ability.read-spirit-runes-and-utilise-neutral-scrolls",
+    "Recognise Earthpower": "ability.recognise-earthpower",
+    "Recognise Mana": "ability.recognise-mana",
+    "Recognise Neuronics": "ability.recognise-neuronics",
+    "Recognise Spirit": "ability.recognise-spirit",
+    "Red": "ability.red",
+    "Relaxed Fall": "ability.relaxed-fall",
+    "Returner": "ability.returner",
+    "Rust (Ranged)": "ability.rust-ranged",
+    "Sabre of Light & Truth": "ability.sabre-of-light-truth",
+    "Salamanders": "ability.salamanders",
+    "Salmon Leap": "ability.salmon-leap",
+    "Scorching Heat": "ability.scorching-heat",
+    "Sealing": "ability.sealing",
+    "See through Darkness": "ability.see-through-darkness",
+    "See through Magical Darkness Self": "ability.see-through-magical-darkness-self",
+    "See Through Magical Darkness Self": "ability.see-through-magical-darkness-self",
+    "Self Heal": "ability.self-heal",
+    "Self-Awareness": "ability.self-awareness",
+    "Shades": "ability.shades",
+    "Shadow Shift": "ability.shadow-shift",
+    "Shadowing": "ability.shadowing",
+    "Shed Skin": "ability.shed-skin",
+    "Shield Self": "ability.shield-self",
+    "Shock": "ability.shock",
+    "Shudder": "ability.shudder",
+    "Silence": "ability.silence",
+    "Silver": "ability.silver",
+    "Skinning": "ability.skinning",
+    "Smithing": "ability.smithing",
+    "Spell Shield": "ability.spell-shield",
+    "Spiritual Discern Insanity": "ability.spiritual-discern-insanity",
+    "Sprites": "ability.sprites",
+    "Stability": "ability.stability",
+    "Stealth": "ability.stealth",
+    "Stop Bleeding": "ability.stop-bleeding",
+    "Strengthen Self": "ability.strengthen-self",
+    "Summer's Warmth": "ability.summer-s-warmth",
+    "Sun's healing": "ability.sun-s-healing",
+    "Supernatural Power (add in your notes)": "ability.supernatural-power-add-in-your-notes",
+    "Survival": "ability.survival",
+    "Sylphs": "ability.sylphs",
+    "Talk to Earth": "ability.talk-to-earth",
+    "Talk to Plant": "ability.talk-to-plant",
+    "Tell Strength": "ability.tell-strength",
+    "Tell Time and Direction": "ability.tell-time-and-direction",
+    "Tell Wounds": "ability.tell-wounds",
+    "Tolerance": "ability.tolerance",
+    "Toughened Feet": "ability.toughened-feet",
+    "Tracking": "ability.tracking",
+    "Traitor's Shield": "ability.traitor-s-shield",
+    "Trap-Wary": "ability.trap-wary",
+    "Trap-Wary (8)": "ability.trap-wary-8",
+    "Twilight Self": "ability.twilight-self",
+    "Twilight-Elves": "ability.twilight-elves",
+    "Unarmed Combat": "ability.unarmed-combat",
+    "Undead": "ability.undead",
+    "Undines": "ability.undines",
+    "Unimpeded by water": "ability.unimpeded-by-water",
+    "User of Avalorash": "ability.user-of-avalorash",
+    "Utilise Evil Spirit Item": "ability.utilise-evil-spirit-item",
+    "Utilise Neutral Spirit Item": "ability.utilise-neutral-spirit-item",
+    "Vanish": "ability.vanish",
+    "Walk on air self": "ability.walk-on-air-self",
+    "Walk on Light Self": "ability.walk-on-light-self",
+    "Walk on/through water self": "ability.walk-on-through-water-self",
+    "War Cry": "ability.war-cry",
+    "Ward Pact (Dwarf)": "ability.ward-pact-dwarf",
+    "Ward Pact (Glass)": "ability.ward-pact-glass",
+    "Ward Pact (Undead)": "ability.ward-pact-undead",
+    "Ward Pact (Wyvern)": "ability.ward-pact-wyvern",
+    "Warp Ranged": "ability.warp-ranged",
+    "Well Equipped": "ability.well-equipped",
+    "Well-Made Daggers": "ability.well-made-daggers",
+    "White": "ability.white",
+    "Winter-Elves": "ability.winter-elves",
+    "Wither touch": "ability.wither-touch",
+    "Wood-Elves": "ability.wood-elves"
+  }
+}

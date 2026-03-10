@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Calculator.CalcNav.MoreNav"
+    x:Name="RootPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    Title="More">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="16"
+                                 Spacing="12">
+                <Label Text="Status"
+                       FontAttributes="Bold"/>
+                <controls:ChipGroup Items="{Binding StatusOptions}"
+                                    SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"/>
+
+                <Label Text="Modifiers"
+                       FontAttributes="Bold"/>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding IsAnimate, Mode=TwoWay}"/>
+                    <Label Text="Item is Animate"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding IsBeneficiallyInseparable, Mode=TwoWay}"/>
+                    <Label Text="Item is beneficially inseparable"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding ActivatesOnSpecifiedCondition, Mode=TwoWay}"/>
+                    <Label Text="Activates on specified condition"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+                <Entry Placeholder="Condition"
+                       Text="{Binding ActivationCondition, Mode=TwoWay}"
+                       IsVisible="{Binding ShowActivationConditionField}"/>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding CanActivateOutOfCharacter, Mode=TwoWay}"/>
+                    <Label Text="Item can be activated OOC"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding DoesNotBlowUpOnFirstDeath, Mode=TwoWay}"/>
+                    <Label Text="Item does not blow up on first death"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding DoesNotBlowUpOnDeath, Mode=TwoWay}"/>
+                    <Label Text="Item does not blow up on death"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <controls:PlusMinusControl LabelText="Additional blow-up date (+3 months each)"
+                                           AllowMultiple="True"
+                                           Count="{Binding AdditionalBlowUpDateSteps, Mode=TwoWay}"/>
+                <Label Text="{Binding AdditionalBlowUpDateSummary}"
+                       FontSize="12"
+                       Opacity="0.75"/>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding IsUseOnceEver, Mode=TwoWay}"/>
+                    <Label Text="Item is use once ever"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding IsClosedGuildAllMembersPersonalised, Mode=TwoWay}"/>
+                    <Label Text="Personalised to all members of a specific closed guild (needs 4 on dungeon)"
+                           LineBreakMode="WordWrap"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding IsGuildAnyMemberPersonalised, Mode=TwoWay}"/>
+                    <Label Text="Personalised to all members of a specific guild, usable by any one member (needs 4 on dungeon)"
+                           LineBreakMode="WordWrap"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding IsGuildAllMembersPersonalised, Mode=TwoWay}"/>
+                    <Label Text="Personalised to all members of a specific guild, grants benefits to all (needs 4 on dungeon)"
+                           LineBreakMode="WordWrap"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding CanBeUsedByChosenPersonForFiveMinutes, Mode=TwoWay}"/>
+                    <Label Text="Usable by one person chosen at time of use for 5 mins, 1/day"
+                           LineBreakMode="WordWrap"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding CanBeUsedByAlignmentOrBracket, Mode=TwoWay}"/>
+                    <Label Text="Usable by specific alignment or bracket at GSM discretion"
+                           LineBreakMode="WordWrap"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+
+                <controls:PlusMinusControl LabelText="Calls to hand x/day"
+                                           AllowMultiple="True"
+                                           Count="{Binding CallsToHandPerDay, Mode=TwoWay}"/>
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox IsChecked="{Binding GrantsUtiliseSpecificType, Mode=TwoWay}"/>
+                    <Label Text="Grants utilise of one specific type for this item only"
+                           LineBreakMode="WordWrap"
+                           VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <controls:StickyFooterControl Grid.Row="1"
+                                      ButtonText="Return to Form"
+                                      ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
+                                      ReturnCommandParameter="{x:Reference RootPage}"
+                                      Total="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.Total}"
+                                      BreakdownItems="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.BreakdownItems}"
+                                      RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" />
+    </Grid>
+</ContentPage>
