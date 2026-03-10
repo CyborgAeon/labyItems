@@ -54,19 +54,23 @@ public sealed class PlainPickerSource : IOptionSource
 
 public sealed class WardPactSource : IOptionSource
 {
+    private static readonly IReadOnlyList<string> _wardPactOptions = WardPactOptions.Standard.Keys
+        .OrderBy(k => k, StringComparer.OrdinalIgnoreCase)
+        .ToList();
+
     public SlotOptionMode Mode => SlotOptionMode.WardPactEnum;
     public Type? EnumType => typeof(StandardWardPacts);
     public ILookupService? LookupService => null;
-    public IReadOnlyList<string> GetOptionNames() => Array.Empty<string>();
+    public IReadOnlyList<string> GetOptionNames() => _wardPactOptions;
     public void ApplyToSlot(SpecialisationSlotVm slot, string? preselected)
     {
+        slot.SetOptionsSource(() => _wardPactOptions);
+
         if (!string.IsNullOrWhiteSpace(preselected))
         {
-            var match = WardPactOptions.Standard
-                .FirstOrDefault(k => string.Equals(k.Key, preselected, StringComparison.OrdinalIgnoreCase));
-
-            if (!string.IsNullOrWhiteSpace(match.Key))
-                slot.SelectedWardPact = match.Value;
+            var label = _wardPactOptions.FirstOrDefault(k => string.Equals(k, preselected, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrWhiteSpace(label))
+                slot.SelectedOption = label;
         }
     }
 }

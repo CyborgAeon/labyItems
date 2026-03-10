@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Input;
 using labyItems.Helpers;
+using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Characters;
 
@@ -56,7 +57,12 @@ public partial class ClassCardView : ContentView
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(ClassCardVm.IsSelected))
-            Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
+        {
+            if (MainThread.IsMainThread)
+                _ = AnimateSelectionAsync();
+            else
+                Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
+        }
 
 
         if (e.PropertyName == nameof(ClassCardVm.IsExpanded))
@@ -85,7 +91,6 @@ public partial class ClassCardView : ContentView
         {
             if (vm.IsExpanded)
             {
-                await ScrollIntoViewAsync(vm, token);
                 await AnimateExpandedContentAsync(expand: true, token);
             }
             else
@@ -101,18 +106,6 @@ public partial class ClassCardView : ContentView
         {
             // Ignore rapid expand/collapse interactions.
         }
-    }
-
-    private async Task ScrollIntoViewAsync(ClassCardVm vm, CancellationToken token)
-    {
-        await Task.Delay(40, token);
-        if (token.IsCancellationRequested) return;
-
-        var cv = FindParentCollectionView();
-        if (cv == null) return;
-
-        cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
-        await Task.Delay(120, token);
     }
 
     private async Task AnimateExpandedContentAsync(bool expand, CancellationToken token)
@@ -192,14 +185,5 @@ public partial class ClassCardView : ContentView
         ExpandedContent.HeightRequest = -1;
         ExpandedContent.Opacity = 1;
     }
-
-    private CollectionView? FindParentCollectionView()
-    {
-        Element? parent = this;
-        while (parent != null && parent is not CollectionView)
-            parent = parent.Parent;
-        return parent as CollectionView;
-    }
-
 
 }

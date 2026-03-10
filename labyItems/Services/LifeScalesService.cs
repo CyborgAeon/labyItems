@@ -111,29 +111,45 @@ public static class LifeScalesService
     {
         var all = await GetAllAsync();
 
-        var resolvedRaceName = string.IsNullOrWhiteSpace(raceName) ? "Human" : raceName;
+        var requestedClass = (className ?? string.Empty).Trim();
+        if (requestedClass.Length == 0)
+            return Array.Empty<LifeScalePoint>();
 
-        var raceKey = FindBestKey(all.Keys, resolvedRaceName) ?? FindBestKey(all.Keys, "Human");
-        if (raceKey == null) return Array.Empty<LifeScalePoint>();
+        string? resolvedRaceKey = null;
+        string? resolvedClassKey = null;
 
-        var classKey = FindBestKey(all[raceKey].Keys, className);
-        if (classKey == null)
+        var preferredRaceNames = new List<string>();
+        if (!string.IsNullOrWhiteSpace(raceName))
+            preferredRaceNames.Add(raceName);
+        preferredRaceNames.Add("Human");
+
+        var seenRaces = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var preferredRace in preferredRaceNames)
         {
-            var humanKey = FindBestKey(all.Keys, "Human");
-            if (humanKey != null)
-            {
-                var humanClassKey = FindBestKey(all[humanKey].Keys, className);
-                if (humanClassKey != null)
-                {
-                    raceKey = humanKey;
-                    classKey = humanClassKey;
-                }
-            }
+            var raceKey = FindBestKey(all.Keys, preferredRace);
+            if (raceKey == null || !seenRaces.Add(raceKey))
+                continue;
+
+            var classKey = FindBestKey(all[raceKey].Keys, requestedClass);
+            if (classKey == null)
+                continue;
+
+            resolvedRaceKey = raceKey;
+            resolvedClassKey = classKey;
+            break;
         }
 
-        if (classKey == null) return Array.Empty<LifeScalePoint>();
+        if (resolvedRaceKey == null || resolvedClassKey == null)
+        {
+            var fallback = FindFirstRaceClassMatch(all, requestedClass);
+            resolvedRaceKey = fallback.RaceKey;
+            resolvedClassKey = fallback.ClassKey;
+        }
 
-        var rows = all[raceKey][classKey];
+        if (resolvedRaceKey == null || resolvedClassKey == null)
+            return Array.Empty<LifeScalePoint>();
+
+        var rows = all[resolvedRaceKey][resolvedClassKey];
 
         var result = new List<LifeScalePoint>(rows.Count);
         foreach (var pair in rows)
@@ -143,6 +159,20 @@ public static class LifeScalesService
         }
 
         return result;
+    }
+
+    private static (string? RaceKey, string? ClassKey) FindFirstRaceClassMatch(
+        IReadOnlyDictionary<string, Dictionary<string, List<int[]>>> all,
+        string className)
+    {
+        foreach (var raceKey in all.Keys.OrderBy(k => k, StringComparer.OrdinalIgnoreCase))
+        {
+            var classKey = FindBestKey(all[raceKey].Keys, className);
+            if (classKey != null)
+                return (raceKey, classKey);
+        }
+
+        return (null, null);
     }
 
     public static string NormalizeKey(string s)

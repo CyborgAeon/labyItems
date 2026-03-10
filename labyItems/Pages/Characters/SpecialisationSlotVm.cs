@@ -153,7 +153,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         get
         {
             if (UseMagicColourEnum || UseVivomancerColourEnum || UseWardPactEnum)
-                return string.Empty;
+                return UseWardPactEnum ? "Ward pact" : string.Empty;
 
             if (IsLocked)
                 return ((ForcedAbilityDefinition?.Name ?? _lockedDisplayText) ?? string.Empty).Trim();
@@ -163,7 +163,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     }
 
     public bool HasSelectedAbilityForDetails
-        => !string.IsNullOrWhiteSpace(SelectedAbilityNameForDetails);
+        => UseWardPactEnum || !string.IsNullOrWhiteSpace(SelectedAbilityNameForDetails);
 
     public string SpecialisationKeyForDetails => _specialisationKeyForDetails;
 
@@ -205,6 +205,10 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
                 else if (UseVivomancerColourEnum)
                 {
                     SelectedVivomancerColour = FindVivomancerColour(normalized);
+                }
+                else if (UseWardPactEnum)
+                {
+                    SelectedWardPact = FindWardPact(normalized);
                 }
                 _suppressSelectionSync = false;
             }
@@ -277,6 +281,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
 
         if (!string.IsNullOrWhiteSpace(SelectedOption) && !MagicColourOptions.ContainsKey(SelectedOption))
             SelectedOption = null;
+
+        RaiseFilteredOptionsChanged();
     }
 
     public void ConfigureVivomancerColours(IEnumerable<VivomancerColours> allowed)
@@ -296,6 +302,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
 
         if (!string.IsNullOrWhiteSpace(SelectedOption) && !VivomancerColourOptions.ContainsKey(SelectedOption))
             SelectedOption = null;
+
+        RaiseFilteredOptionsChanged();
     }
 
     public void RaiseFilteredOptionsChanged()
@@ -415,6 +423,22 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
             .FirstOrDefault(kvp => string.Equals(kvp.Key, label, StringComparison.OrdinalIgnoreCase));
 
         return !EqualityComparer<KeyValuePair<string, VivomancerColours>>.Default.Equals(fallback, default)
+            ? fallback.Value
+            : null;
+    }
+
+    private StandardWardPacts? FindWardPact(string label)
+    {
+        if (string.IsNullOrWhiteSpace(label))
+            return null;
+
+        if (WardPactOptions.Standard.TryGetValue(label, out var match))
+            return match;
+
+        var fallback = WardPactOptions.Standard
+            .FirstOrDefault(kvp => string.Equals(kvp.Key, label, StringComparison.OrdinalIgnoreCase));
+
+        return !EqualityComparer<KeyValuePair<string, StandardWardPacts>>.Default.Equals(fallback, default)
             ? fallback.Value
             : null;
     }

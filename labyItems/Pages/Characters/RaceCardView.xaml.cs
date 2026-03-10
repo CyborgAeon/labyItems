@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Input;
 using labyItems.Helpers;
+using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Characters;
 
@@ -57,7 +58,12 @@ public partial class RaceCardView : ContentView
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(RaceCardVm.IsSelected))
-            Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
+        {
+            if (MainThread.IsMainThread)
+                _ = AnimateSelectionAsync();
+            else
+                Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
+        }
 
 
         if (e.PropertyName == nameof(RaceCardVm.IsExpanded))
@@ -76,7 +82,6 @@ public partial class RaceCardView : ContentView
         {
             if (vm.IsExpanded)
             {
-                await ScrollIntoViewAsync(vm, token);
                 await AnimateExpandedContentAsync(expand: true, token);
             }
             else
@@ -92,18 +97,6 @@ public partial class RaceCardView : ContentView
         {
             // Ignore rapid expand/collapse interactions.
         }
-    }
-
-    private async Task ScrollIntoViewAsync(RaceCardVm vm, CancellationToken token)
-    {
-        await Task.Delay(40, token);
-        if (token.IsCancellationRequested) return;
-
-        var cv = FindParentCollectionView();
-        if (cv == null) return;
-
-        cv.ScrollTo(vm, position: ScrollToPosition.Start, animate: true);
-        await Task.Delay(120, token);
     }
 
     private async Task AnimateExpandedContentAsync(bool expand, CancellationToken token)
@@ -193,13 +186,5 @@ public partial class RaceCardView : ContentView
             await CardFrame.ScaleTo(1.02, 110, Easing.CubicOut);
             await CardFrame.ScaleTo(1.0, 110, Easing.CubicOut);
         }
-    }
-
-    private CollectionView? FindParentCollectionView()
-    {
-        Element? parent = this;
-        while (parent != null && parent is not CollectionView)
-            parent = parent.Parent;
-        return parent as CollectionView;
     }
 }

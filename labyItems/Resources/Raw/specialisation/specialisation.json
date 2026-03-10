@@ -514,13 +514,12 @@
       }
     ]
   },
-  "Power-Master Specialist": {
+  "Power Master Specialist": {
     "Abilities": [
       {
         "Name": "+6/2 Stamina",
         "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character.",
         "Type": "Life",
-
         "Source": "Tables"
       },
       {
@@ -553,53 +552,6 @@
         "Name": "Empower Chosen Weapon",
         "Description": "This skill allows the Power Master to inflict magic damage with their chosen weapon, at will.",
         "Type": "Static"
-      }
-    ]
-  },
-  "Power-Warrior Specialist": {
-    "Abilities": [
-      {
-        "Name": "+6/2 Stamina",
-        "Description": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character.",
-        "Type": "Life",
-
-        "Source": "Tables"
-      },
-      {
-        "Name": "1st Weapon Mastery",
-        "Type": "Static",
-        "Description": "By means of training and practice the Warrior may become more skilled with one specific weapon e.g. Dagger, Broadsword, Hand Mace, Battle Axe, Bastard Sword, Spear etc. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Any weapon usable by the Warrior may be chosen, including ‘B’ class weapons.",
-        "Customisation": {
-          "OptionEnum": "WeaponType",
-          "CustomValuesPermitted": true
-        }
-      },
-      {
-        "Name": "2nd Weapon Mastery",
-        "Description": "By means of training and practice the Archer has become more skilled with one specific weapon: the Bow. This Mastery means that one extra grade of damage is added to the normal base damage done by a weapon of this type. Meaning the damage would be by weapon type (single), + 2 masteries (becoming triple).",
-        "Type": "Static"
-      },
-      {
-        "Name": "1st Enhanced Reflexes",
-        "Description": "By means of rigorous training, the warrior may learn greater agility in combat, thus giving him a bonus of +1 Dexterity Armour Class. This replaces the first point of dexterity armour class available post eighth on table one and may only be taken once. Note: If you are a class which naturally gains innate DAC this extra DAC will stack with the DAC that you already have",
-        "Type": "DAC",
-        "Effect": "+1 DAC",
-        "Count": 1
-      },
-      {
-        "Name": "Cold Rage",
-        "Description": "This ability allows the Warrior to enter a Rage – such that for the next 5 minutes, the Warrior takes 25% less from any damage suffered – bar that suffered from purely magic weapons and magical spells. In a Cold Rage the Warrior is able to distinguish friend from foe and as such is not required to attack them. In a Cold Rage you may use ‘offensive powers’ such as Knock Back, but not other powers like Monk Locational Healing or using your magical ring to Blink away. This ability is usable 1/day.",
-        "Type": "Innate",
-        "Count": 1
-      },
-      {
-        "Name": "Empower Chosen Weapon",
-        "Type": "Static"
-      },
-      {
-        "Name": "War Cry",
-        "Type": "Innate",
-        "Count": 1
       }
     ]
   },
@@ -2229,7 +2181,8 @@
     "Baronial": {
       "PeopleType": ["Baronial"],
       "GuildOverrides": ["po:Type-Baronial"],
-      "HedgeOrCircle": ["🌳 Hedge", "Ⓞ Circle"]
+      "HedgeOrCircle": ["🌳 Hedge", "Ⓞ Circle"],
+      "Description": "Because of their history the use of power in the southern Baronies is carefully monitored and controlled by a group called The Circle. Fearful of the bad old days when power used frivolously or maliciously smashed its way around the Baronies, the Circle recognises that such regulating of use is very important.\nIn addition the Circle offers an excellent range of tuition and political support within the Baronies, and as such the following modifiers are accrued by a character who is a Circle Wizard or a Circle Hermit Priest or similar.\nCircle Unholy Champions are not outlawed as they normally would be. \nIf a Circle member casts a magical spell, the casting damage for that spell is reduced by1pt if the spell consumes at least one power point and is normally one point of TBLP damage. This does not help in the casting of cantrips or innate spells which cause casting damage as no power points are consumed.\nIf a Circle member uses a Neuronic power, they are assumed to have two more Neural Foci than normal, and take no life points at all when casting neuronics that would otherwise cost only l life point.\nIf a Circle member casts a miracle which is level based, then by doubling the casting damage taken in its casting, the miracle affects targets of l level higher than normal. If no damage is normally taken then normal casting damage is taken (if no damage casting was owned twice then this could be reduced to 0).\nCensure.\nShould a member of the Circle perform a mystic event which is in breach of the ethos of the Circle, then the above benefits are reversed until the end of the adventure. For example level based miracles have one less level of effect unless double casting damage is taken. Such acts would include acting against the Circle, drawing power from a God.\nInquisidore.\nA Circle member should attempt to capture any Baronies Human who is a Hedge Wizard as detailed below. Only Barony Humans can qualify as this as Labyrinthian Humans, even those who are travelling through the Southern Baronies, are normally granted honorary Circle membership by default. Once captured they should be taken to a Commissionaire of the Circle, one of these centres of the Circle exists in Takalia.\nCircle members are expected to give absolute loyalty to the Circle - they are not permitted to be members of any other professional organisation, be it a guild, church or similar.\nMembers of the Circle vary dramatically in moral and political outlook but all, when it comes down to it, support the basic political principles of the Southern Baronies.\nCircle members often find it simple to gain appointments as advisors to lords of manors both north in the Empire or south in the Baronies, but sometimes feel the need not to identify their nature to a Labyrinthian lord, too many years of bad feelings have left them concerned over what kinds of treatment they may receive, what bias or bigotry might be unleashed upon them.\nMembers of the Circle in full regalia, when displaying their post in the order of things publicly, often wear the symbol of the Circle (rather unsurprisingly a Circle) upon their garb. Often the colouration, size and pattern of the circle says a lot about the wearer a loud and boisterous magician might wear a gold scaled circle proudly upon his tabard, whilst a quieter Mystic might have a simple ivory badge an inch across over his breast."
     },
     "Ishmaic": {
       "PeopleType": ["Ishmaic"],

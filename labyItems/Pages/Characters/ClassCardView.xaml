@@ -108,27 +108,9 @@
                            LineBreakMode="TailTruncation"
                            MaxLines="2"/>
 
-                    <FlexLayout Grid.Row="2"
-                                Wrap="Wrap"
-                                Direction="Row"
-                                AlignItems="Start"
-                                JustifyContent="Start"
-                                Margin="0,2,0,0">
-                        <Frame Style="{StaticResource TagPillFrameStyle}">
-                            <Label Text="{Binding Tag1}"
-                                   FontSize="12"/>
-                        </Frame>
-
-                        <Frame Style="{StaticResource TagPillFrameStyle}">
-                            <Label Text="{Binding Tag2}"
-                                   FontSize="12"/>
-                        </Frame>
-
-                        <Frame Style="{StaticResource TagPillFrameStyle}">
-                            <Label Text="{Binding Tag3}"
-                                   FontSize="12"/>
-                        </Frame>
-                    </FlexLayout>
+                    <controls:ChipGroup Grid.Row="2"
+                                        Items="{Binding TagChips}"
+                                        InputTransparent="True"/>
                 </Grid>
 
                 <Grid x:Name="ExpandedContent"
@@ -138,13 +120,9 @@
                     <Grid Padding="16"
                           BackgroundColor="Transparent">
                         <VerticalStackLayout Spacing="6">
-                            <Grid RowDefinitions="Auto,Auto"
+                            <Grid RowDefinitions="Auto"
                                   RowSpacing="6">
-                                <Label Grid.Row="0"
-                                       Text="Level Progression"
-                                       FontSize="13"
-                                       FontAttributes="Bold"/>
-                                <Grid Grid.Row="1"
+                                <Grid Grid.Row="0"
                                       Grid.ColumnDefinitions="50,60,*,*"
                                       ColumnSpacing="8"
                                       Opacity="0.7">

@@ -388,15 +388,19 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         if (item == null) return;
 
         var wasSelected = item.IsSelected;
+        var shouldSelect = !wasSelected;
 
+        item.IsSelected = shouldSelect;
         foreach (var c in AllClasses)
-            c.IsSelected = ReferenceEquals(c, item);
+        {
+            if (ReferenceEquals(c, item))
+                continue;
+
+            c.IsSelected = false;
+        }
 
         if (wasSelected)
         {
-            foreach (var c in AllClasses)
-                c.IsSelected = false;
-
             _draft.Class = string.Empty;
             _draft.TBLP = 0;
             _draft.Loc = 0;
@@ -415,6 +419,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
+            await Task.Yield();
             await CaptureHumanLifeForSelectedClassAsync();
             await RefreshAllowedRacesForSelectedClassAsync();
             RefilterRaces();
@@ -431,15 +436,20 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         if (item == null) return;
 
         var wasSelected = item.IsSelected;
+        var shouldSelect = !wasSelected;
 
+        // Apply selection state to the tapped card first so visual selection updates immediately.
+        item.IsSelected = shouldSelect;
         foreach (var r in AllRaces)
-            r.IsSelected = ReferenceEquals(r, item);
+        {
+            if (ReferenceEquals(r, item))
+                continue;
+
+            r.IsSelected = false;
+        }
 
         if (wasSelected)
         {
-            foreach (var r in AllRaces)
-                r.IsSelected = false;
-
             _draft.Race = string.Empty;
             _draft.RaceSubtype = null;
             _draft.RaceSubtypeKey = string.Empty;
@@ -462,6 +472,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
+            await Task.Yield();
             await RefreshAllowedClassesForSelectedRaceAsync();
             RefilterClasses();
 
@@ -608,14 +619,18 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         var race = string.IsNullOrWhiteSpace(raceName) ? "" : raceName;
 
-        var tasks = new List<Task>(AllClasses.Count);
+        var tasks = new List<Task>();
         foreach (var c in AllClasses)
         {
             c.RaceName = race;
-            tasks.Add(c.ReloadProgressionAsync());
+            c.MarkProgressionDirty();
+
+            if (c.IsExpanded)
+                tasks.Add(c.EnsureProgressionLoadedAsync());
         }
 
-        await Task.WhenAll(tasks);
+        if (tasks.Count > 0)
+            await Task.WhenAll(tasks);
     }
 
     private async Task CaptureHumanLifeForSelectedClassAsync()
@@ -627,7 +642,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             return;
         }
 
-        _humanLifeForSelectedClass = await GetLifePointAsync("Human", className);
+        _humanLifeForSelectedClass = await GetLifePointAsync("Human", className)
+                                     ?? await GetLifePointAsync(string.Empty, className);
         if (_humanLifeForSelectedClass is LifeScalePoint humanLife)
         {
             _draft.TBLP = humanLife.Body;
@@ -648,7 +664,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var className = (_draft.Class ?? string.Empty).Trim();
         if (className.Length == 0) return;
 
-        _humanLifeForSelectedClass = await GetLifePointAsync("Human", className);
+        _humanLifeForSelectedClass = await GetLifePointAsync("Human", className)
+                                     ?? await GetLifePointAsync(string.Empty, className);
     }
 
     private string GetEffectiveLifeScaleRaceKey()
@@ -2062,7 +2079,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 (q.Length == 0 ||
                  (c.Name ?? "").ToLowerInvariant().Contains(q) ||
                  (c.Summary ?? "").ToLowerInvariant().Contains(q)))
-            .OrderByDescending(c => c.IsSelected)
             .ToList();
 
         ReplaceItems(FilteredClasses, list);
@@ -2105,7 +2121,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                  r.Name.ToLowerInvariant().Contains(q) ||
                  (r.Description ?? "").ToLowerInvariant().Contains(q) ||
                  (r.SearchText ?? string.Empty).Contains(q)))
-            .OrderByDescending(r => r.IsSelected)
             .ToList();
 
         ReplaceItems(FilteredRaces, list);

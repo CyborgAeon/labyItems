@@ -4,9 +4,7 @@
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:labyItems.Controls"
-    xmlns:pickers="clr-namespace:labyItems.Controls.Pickers"
-    xmlns:enums="clr-namespace:labyItems.Models.Enums">
+    xmlns:controls="clr-namespace:labyItems.Controls">
 
     <ContentView.Resources>
         <Color x:Key="CardBorderNeutralLight">#E0E0E0</Color>
@@ -95,7 +93,7 @@
                     <VerticalStackLayout Spacing="0">
 
                         <Grid Padding="12"
-                              ColumnDefinitions="*,Auto,Auto"
+                              ColumnDefinitions="*,Auto"
                               RowDefinitions="Auto,Auto">
                             <Label Grid.Row="0"
                                    Grid.Column="0"
@@ -108,27 +106,9 @@
                                    Text="{Binding RaceSubtypeStatusText}"
                                    Opacity="0.75"/>
 
-                            <Button Grid.Row="0"
-                                    Grid.RowSpan="2"
-                                    Grid.Column="2"
-                                    Text="&#xF05A;"
-                                    FontFamily="FASolid"
-                                    FontSize="12"
-                                    Padding="0"
-                                    BackgroundColor="Transparent"
-                                    TextColor="{StaticResource SubtleTextColor}"
-                                    HeightRequest="18"
-                                    WidthRequest="18"
-                                    MinimumHeightRequest="0"
-                                    MinimumWidthRequest="0"
-                                    VerticalOptions="Center"
-                                    IsVisible="{Binding HasRaceSubtypeDetail}"
-                                    Command="{Binding Source={x:Reference Root}, Path=ViewSpecialisationDetailsCommand}"
-                                    CommandParameter="{Binding .}"/>
-
                             <Label Grid.Row="1"
                                    Grid.Column="0"
-                                   Grid.ColumnSpan="3"
+                                   Grid.ColumnSpan="2"
                                    Text="{Binding RaceSubtypeSubtitle}"
                                    Opacity="0.75"
                                    LineBreakMode="WordWrap"/>
@@ -154,13 +134,18 @@
                                            Text="Ability"/>
                                 </Grid>
 
-                                <CollectionView ItemsSource="{Binding RaceSubtypeAbilityRows}"
-                                                SelectionMode="None">
-                                    <CollectionView.EmptyView>
-                                        <Label Text="No abilities available for this subtype and class."
-                                               Opacity="0.75"/>
-                                    </CollectionView.EmptyView>
-                                    <CollectionView.ItemTemplate>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding RaceSubtypeAbilityRows}"
+                                                     IsVisible="False"
+                                                     Spacing="2">
+                                    <VerticalStackLayout.Triggers>
+                                        <DataTrigger TargetType="VerticalStackLayout"
+                                                     Binding="{Binding RaceSubtypeAbilityRows.Count, Converter={StaticResource GreaterThanZeroConverter}}"
+                                                     Value="True">
+                                            <Setter Property="IsVisible"
+                                                    Value="True"/>
+                                        </DataTrigger>
+                                    </VerticalStackLayout.Triggers>
+                                    <BindableLayout.ItemTemplate>
                                         <DataTemplate>
                                             <Grid ColumnDefinitions="72,*,24"
                                                   ColumnSpacing="8"
@@ -188,8 +173,20 @@
                                                         CommandParameter="{Binding .}"/>
                                             </Grid>
                                         </DataTemplate>
-                                    </CollectionView.ItemTemplate>
-                                </CollectionView>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+
+                                <Label Text="No abilities available for this subtype and class."
+                                       Opacity="0.75">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding RaceSubtypeAbilityRows.Count, Converter={StaticResource GreaterThanZeroConverter}}"
+                                                     Value="True">
+                                            <Setter Property="IsVisible"
+                                                    Value="False"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
 
                             </VerticalStackLayout>
 
@@ -248,7 +245,7 @@
                                 <VerticalStackLayout Spacing="0">
 
                                     <Grid Padding="12"
-                                          ColumnDefinitions="*,Auto,Auto"
+                                          ColumnDefinitions="*,Auto"
                                           RowDefinitions="Auto,Auto">
                                         <Label Grid.Row="0"
                                                Grid.Column="0"
@@ -261,26 +258,9 @@
                                                Text="{Binding StatusText}"
                                                Opacity="0.75"/>
 
-                                        <Button Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Grid.Column="2"
-                                                Text="&#xF05A;"
-                                                FontFamily="FASolid"
-                                                FontSize="12"
-                                                Padding="0"
-                                                BackgroundColor="Transparent"
-                                                TextColor="{StaticResource SubtleTextColor}"
-                                                HeightRequest="18"
-                                                WidthRequest="18"
-                                                MinimumHeightRequest="0"
-                                                MinimumWidthRequest="0"
-                                                VerticalOptions="Center"
-                                                Command="{Binding Source={x:Reference Root}, Path=ViewSpecialisationDetailsCommand}"
-                                                CommandParameter="{Binding .}"/>
-
                                         <Label Grid.Row="1"
                                                Grid.Column="0"
-                                               Grid.ColumnSpan="3"
+                                               Grid.ColumnSpan="2"
                                                Text="{Binding DisplaySubtitle}"
                                                Opacity="0.75"
                                                LineBreakMode="WordWrap"/>
@@ -306,13 +286,18 @@
                                                        Text="Ability"/>
                                             </Grid>
 
-                                            <CollectionView ItemsSource="{Binding AbilityRows}"
-                                                            SelectionMode="None">
-                                                <CollectionView.EmptyView>
-                                                    <Label Text="No abilities available for this selection."
-                                                           Opacity="0.75"/>
-                                                </CollectionView.EmptyView>
-                                                <CollectionView.ItemTemplate>
+                                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding AbilityRows}"
+                                                                 IsVisible="False"
+                                                                 Spacing="2">
+                                                <VerticalStackLayout.Triggers>
+                                                    <DataTrigger TargetType="VerticalStackLayout"
+                                                                 Binding="{Binding AbilityRows.Count, Converter={StaticResource GreaterThanZeroConverter}}"
+                                                                 Value="True">
+                                                        <Setter Property="IsVisible"
+                                                                Value="True"/>
+                                                    </DataTrigger>
+                                                </VerticalStackLayout.Triggers>
+                                                <BindableLayout.ItemTemplate>
                                                     <DataTemplate>
                                                         <Grid ColumnDefinitions="72,*,24"
                                                               ColumnSpacing="8"
@@ -340,8 +325,20 @@
                                                                     CommandParameter="{Binding .}"/>
                                                         </Grid>
                                                     </DataTemplate>
-                                                </CollectionView.ItemTemplate>
-                                            </CollectionView>
+                                                </BindableLayout.ItemTemplate>
+                                            </VerticalStackLayout>
+
+                                            <Label Text="No abilities available for this selection."
+                                                   Opacity="0.75">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label"
+                                                                 Binding="{Binding AbilityRows.Count, Converter={StaticResource GreaterThanZeroConverter}}"
+                                                                 Value="True">
+                                                        <Setter Property="IsVisible"
+                                                                Value="False"/>
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
 
                                         </VerticalStackLayout>
 
@@ -578,10 +575,10 @@
                                                                                                   IsVisible="{Binding ShowCustomisationPicker}"/>
                                                                 </VerticalStackLayout>
 
-                                                                <controls:DictionarySearchBar x:TypeArguments="enums:MagicColours"
-                                                                                              ItemsSource="{Binding MagicColourOptions}"
-                                                                                              SelectedValue="{Binding SelectedMagicColour, Mode=TwoWay}"
-                                                                                              PlaceholderText="Select a wizard colour"
+                                                                <controls:DictionarySearchBar x:TypeArguments="x:String"
+                                                                                              ItemsSource="{Binding SearchOptions}"
+                                                                                              SelectedText="{Binding SelectedOption, Mode=TwoWay}"
+                                                                                              PlaceholderText="choose a colour of magic"
                                                                                               AllowCustomOptions="False"
                                                                                               HorizontalOptions="FillAndExpand"
                                                                                               IsVisible="{Binding UseMagicColourEnum}"/>
@@ -603,10 +600,10 @@
                                                                     </controls:DictionarySearchBar.Triggers>
                                                                 </controls:DictionarySearchBar>
 
-                                                                <controls:DictionarySearchBar x:TypeArguments="enums:StandardWardPacts"
-                                                                                              ItemsSource="{x:Static pickers:WardPactOptions.Standard}"
-                                                                                              SelectedValue="{Binding SelectedWardPact, Mode=TwoWay}"
-                                                                                              PlaceholderText="Select a ward pact"
+                                                                <controls:DictionarySearchBar x:TypeArguments="x:String"
+                                                                                              ItemsSource="{Binding SearchOptions}"
+                                                                                              SelectedText="{Binding SelectedOption, Mode=TwoWay}"
+                                                                                              PlaceholderText="choose a ward pact"
                                                                                               AllowCustomOptions="False"
                                                                                               HorizontalOptions="FillAndExpand"
                                                                                               IsVisible="{Binding UseWardPactEnum}"/>

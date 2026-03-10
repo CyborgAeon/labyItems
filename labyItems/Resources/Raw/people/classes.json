@@ -590,16 +590,16 @@
       ],
       "7": [
         {
-          "Name": "Power-Warrior Specialist",
+          "Name": "Power Warrior Specialist",
           "Type": "Overwrite",
-          "OverwriteKey": "Power-Warrior Specialist"
+          "OverwriteKey": "Power Warrior Specialist"
         }
       ],
       "8": [
         {
-          "Name": "Power-Warrior Specialist",
+          "Name": "Power Warrior Specialist",
           "Type": "Overwrite",
-          "OverwriteKey": "Power-Warrior Specialist"
+          "OverwriteKey": "Power Warrior Specialist"
         }
       ]
     },
@@ -690,9 +690,9 @@
           "Type": "Static"
         },
         {
-          "Name": "Power-Master Specialist",
+          "Name": "Power Master Specialist",
           "Type": "Overwrite",
-          "OverwriteKey": "Power-Master Specialist"
+          "OverwriteKey": "Power Master Specialist"
         }
       ],
       "8": [
@@ -702,9 +702,9 @@
           "Count": 4
         },
         {
-          "Name": "Power-Master Specialist",
+          "Name": "Power Master Specialist",
           "Type": "Overwrite",
-          "OverwriteKey": "Power-Master Specialist"
+          "OverwriteKey": "Power Master Specialist"
         }
       ]
     },

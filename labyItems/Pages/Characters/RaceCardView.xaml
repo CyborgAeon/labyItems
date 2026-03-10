@@ -3,7 +3,8 @@
     x:Class="labyItems.Pages.Characters.RaceCardView"
     x:Name="Self"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls">
 
     <Grid Margin="0,0,0,5">
         <Frame
@@ -93,13 +94,9 @@
                             <CollectionView ItemsSource="{Binding LevelRows}"
                                             SelectionMode="None">
                                 <CollectionView.Header>
-                                    <Grid RowDefinitions="Auto,Auto"
+                                    <Grid RowDefinitions="Auto"
                                           RowSpacing="6">
-                                        <Label Grid.Row="0"
-                                               Text="Level Progression"
-                                               FontSize="13"
-                                               FontAttributes="Bold"/>
-                                        <Grid Grid.Row="1"
+                                        <Grid Grid.Row="0"
                                               Grid.ColumnDefinitions="50,*"
                                               ColumnSpacing="8"
                                               Opacity="0.7">
@@ -139,51 +136,8 @@
                                 <Label Text="Buy as"
                                        FontSize="13"
                                        FontAttributes="Bold"/>
-                                <!-- <FlexLayout Wrap="Wrap"
-                                            Direction="Row"
-                                            AlignItems="Start"
-                                            JustifyContent="Start">
-                                    <BindableLayout.ItemsSource>
-                                        <x:Reference Name="Self"/>
-                                    </BindableLayout.ItemsSource>
-                                </FlexLayout> -->
-
-                                <FlexLayout Wrap="Wrap"
-                                            Direction="Row"
-                                            AlignItems="Start"
-                                            JustifyContent="Start"
-                                            BindableLayout.ItemsSource="{Binding BuyAsChips}">
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate>
-                                            <Frame Style="{StaticResource TagPillFrameStyle}">
-                                                <Label Text="{Binding .}"
-                                                       FontSize="12"/>
-                                            </Frame>
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                    <Grid Grid.Row="2"
-                                          IsVisible="{Binding BuyAsChips.Count, Converter={StaticResource GreaterThanZeroConverter}}">
-                                        <VerticalStackLayout Spacing="8">
-                                            <Label Text="Buy as"
-                                                   FontSize="13"
-                                                   FontAttributes="Bold"/>
-                                            <FlexLayout Wrap="Wrap"
-                                                        Direction="Row"
-                                                        AlignItems="Start"
-                                                        JustifyContent="Start"
-                                                        BindableLayout.ItemsSource="{Binding BuyAsChips}">
-                                                <BindableLayout.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Frame Style="{StaticResource TagPillFrameStyle}">
-                                                            <Label Text="{Binding .}"
-                                                                   FontSize="12"/>
-                                                        </Frame>
-                                                    </DataTemplate>
-                                                </BindableLayout.ItemTemplate>
-                                            </FlexLayout>
-                                        </VerticalStackLayout>
-                                    </Grid>
-                                </FlexLayout>
+                                <controls:ChipGroup Items="{Binding BuyAsChips}"
+                                                    InputTransparent="True"/>
                             </VerticalStackLayout>
                         </Grid>
 

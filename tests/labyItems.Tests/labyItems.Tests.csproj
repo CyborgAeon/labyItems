@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="ClosedXML" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../../labyItems/Helpers/WizardSpellRules.cs" Link="Source/WizardSpellRules.cs" />
+    <Compile Include="../../labyItems/Services/ILookupService.cs" Link="Source/ILookupService.cs" />
+    <Compile Include="../../labyItems/Services/SpellService.cs" Link="Source/SpellService.cs" />
+    <Compile Include="../../labyItems/Services/MiracleService.cs" Link="Source/MiracleService.cs" />
+    <Compile Include="../../labyItems/Services/DruidEvocationService.cs" Link="Source/DruidEvocationService.cs" />
+    <Compile Include="../../labyItems/Services/EvolutionService.cs" Link="Source/EvolutionService.cs" />
+    <Compile Include="../../labyItems/Services/AbilityDetailsLookupService.cs" Link="Source/AbilityDetailsLookupService.cs" />
+    <Compile Include="../../labyItems/Services/ClassService.cs" Link="Source/ClassService.cs" />
+    <Compile Include="../../labyItems/Services/GuildsService.cs" Link="Source/GuildsService.cs" />
+    <Compile Include="../../labyItems/Services/PeopleService.cs" Link="Source/PeopleService.cs" />
+    <Compile Include="../../labyItems/Services/LifeScalesService.cs" Link="Source/LifeScalesService.cs" />
+    <Compile Include="../../labyItems/Services/SpecialisationService.cs" Link="Source/SpecialisationService.cs" />
+    <Compile Include="../../labyItems/Services/BattleboardService.cs" Link="Source/BattleboardService.cs" />
+    <Compile Include="../../labyItems/Models/Characters/Ability.cs" Link="Source/Ability.cs" />
+    <Compile Include="../../labyItems/Models/Characters/AbilityDefinition.cs" Link="Source/AbilityDefinition.cs" />
+    <Compile Include="../../labyItems/Models/Characters/Alignment.cs" Link="Source/Alignment.cs" />
+    <Compile Include="../../labyItems/Models/Characters/CharacterDraft.cs" Link="Source/CharacterDraft.cs" />
+    <Compile Include="../../labyItems/Models/Characters/GuildOverrideRules.cs" Link="Source/GuildOverrideRules.cs" />
+    <Compile Include="../../labyItems/Models/Characters/MagicListDrafts.cs" Link="Source/MagicListDrafts.cs" />
+    <Compile Include="../../labyItems/Models/Enums/ArmourType.cs" Link="Source/ArmourType.cs" />
+    <Compile Include="../../labyItems/Models/Enums/DamType.cs" Link="Source/DamType.cs" />
+    <Compile Include="../../labyItems/Models/Enums/MagicColours.cs" Link="Source/MagicColours.cs" />
+  </ItemGroup>
+</Project>

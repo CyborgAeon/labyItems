@@ -129,7 +129,7 @@ public partial class ChipGroup : ContentView
         var tap = new TapGestureRecognizer();
         tap.Tapped += (_, __) =>
         {
-            if (SelectedItem == text)
+            if (string.Equals(SelectedItem, text, System.StringComparison.OrdinalIgnoreCase))
                 SelectedItem = null;
             else
                 SelectedItem = text;
@@ -148,7 +148,7 @@ public partial class ChipGroup : ContentView
             if (child.BindingContext is not string text)
                 continue;
 
-            var isSelected = string.Equals(text, SelectedItem, System.StringComparison.Ordinal);
+            var isSelected = string.Equals(text, SelectedItem, System.StringComparison.OrdinalIgnoreCase);
             var background = isSelected ? palette.SelectedBackground : palette.UnselectedBackground;
             var textColor = isSelected ? palette.SelectedText : palette.UnselectedText;
             var border = isSelected ? palette.SelectedBorder : palette.UnselectedBorder;

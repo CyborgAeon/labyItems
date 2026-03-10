@@ -111,7 +111,7 @@ public static class DruidEvocationService
 
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
-        PropertyNameCaseInsensitive = true
+        PropertyNameCaseInsensitive = false
     };
 
     private static List<EvocRaw>? _cache;

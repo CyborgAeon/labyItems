@@ -1341,7 +1341,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             var required = !IsIshmaicClanOptionalForClass();
             AddDynamicMappedSpecialisation(
                 key: "Ishmaic Clan",
-                subtitle: "Human • clan choice",
                 optionMap: CloneOptionMap(ishmaicDef.ColourAbilities),
                 required: required);
         }
@@ -1352,7 +1351,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         {
             AddDynamicMappedSpecialisation(
                 key: "Amlesian Caste",
-                subtitle: "Amlesian caste (required)",
                 optionMap: CloneOptionMap(amlesianDef.ColourAbilities),
                 required: true);
         }
@@ -1363,7 +1361,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         {
             AddDynamicMappedSpecialisation(
                 key: "Ratfolk Clan",
-                subtitle: "Ratfolk clan (optional)",
                 optionMap: CloneOptionMap(ratClanDef.ColourAbilities),
                 required: false);
         }
@@ -1377,7 +1374,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             {
                 AddDynamicMappedSpecialisation(
                     key: BaronialAncestryKey,
-                    subtitle: "Baronial ancestry (required)",
                     optionMap: optionMap,
                     required: true);
             }
@@ -1390,7 +1386,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         if (group == null)
             return;
 
-        var overrides = BuildWardPactOverrides();
+        // Keep ward pacts user-selectable; do not force selections by subtype.
+        var overrides = new Dictionary<int, AbilityDefinition>();
         group.ApplyForcedSelections(overrides, def => def.Name ?? string.Empty);
     }
 
@@ -1863,7 +1860,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     private void AddDynamicMappedSpecialisation(
         string key,
-        string subtitle,
         Dictionary<string, ColourAbilityDefinition> optionMap,
         bool required)
     {
@@ -1872,7 +1868,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         var mapped = new MappedSpecialisationVm(
             key: key,
-            subtitle: subtitle,
             levels: new[] { 1 },
             optionMap: optionMap,
             initialSelection: GetSavedSpecialisationSelection(key),
@@ -2823,7 +2818,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         public MappedSpecialisationVm(
             string key,
-            string subtitle,
             IEnumerable<int> levels,
             Dictionary<string, ColourAbilityDefinition> optionMap,
             string? initialSelection,
@@ -2834,9 +2828,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             Key = key;
             Title = key;
             var levelList = levels?.Distinct().OrderBy(x => x).ToList() ?? new List<int>();
-            Subtitle = string.IsNullOrWhiteSpace(subtitle)
-                ? (levelList.Count > 0 ? $"Lv {string.Join(", ", levelList)}" : "Class specialisation")
-                : subtitle;
             _onChanged = onSelectionChanged;
             _required = required;
             _selectionIssueResolver = selectionIssueResolver;

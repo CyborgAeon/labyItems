@@ -48,6 +48,7 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     public string Tag1 => $"AC {MaxAc}";
     public string Tag2 => ResolveTags().Tag2;
     public string Tag3 => ResolveTags().Tag3;
+    public IReadOnlyList<string> TagChips => BuildTagChips();
 
     public ObservableCollection<LevelRowVm> LevelRows { get; init; } = new();
 
@@ -250,6 +251,11 @@ public sealed class ClassCardVm : INotifyPropertyChanged
         return EnsureProgressionLoadedAsync();
     }
 
+    public void MarkProgressionDirty()
+    {
+        _progressionLoaded = false;
+    }
+
     private async Task<Dictionary<int, string>> GetAbilitiesByLevelAsync()
     {
         var result = new Dictionary<int, string>();
@@ -341,5 +347,14 @@ public sealed class ClassCardVm : INotifyPropertyChanged
             tag3 = tags[idx++];
 
         return (tag2, tag3);
+    }
+
+    private IReadOnlyList<string> BuildTagChips()
+    {
+        return new[] { Tag1, Tag2, Tag3 }
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .Select(t => t.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 }
