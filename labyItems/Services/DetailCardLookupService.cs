@@ -43,6 +43,55 @@ public static class DetailCardLookupService
             return (entry.Key, entry.Value);
         }
 
+        var normalizedRequested = NormalizeLookupKey(requested);
+        if (normalizedRequested.Length == 0)
+            return (string.Empty, null);
+
+        foreach (var entry in all)
+        {
+            if (NormalizeLookupKey(entry.Key).Equals(normalizedRequested, StringComparison.OrdinalIgnoreCase))
+                return (entry.Key, entry.Value);
+        }
+
+        var singularRequested = TrimPluralToken(normalizedRequested);
+        foreach (var entry in all)
+        {
+            var normalizedKey = NormalizeLookupKey(entry.Key);
+            if (normalizedKey.Equals(singularRequested, StringComparison.OrdinalIgnoreCase)
+                || TrimPluralToken(normalizedKey).Equals(singularRequested, StringComparison.OrdinalIgnoreCase))
+            {
+                return (entry.Key, entry.Value);
+            }
+        }
+
         return (string.Empty, null);
+    }
+
+    private static string NormalizeLookupKey(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        var chars = (value ?? string.Empty)
+            .Trim()
+            .Where(char.IsLetterOrDigit)
+            .Select(char.ToLowerInvariant)
+            .ToArray();
+
+        return new string(chars);
+    }
+
+    private static string TrimPluralToken(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            return string.Empty;
+
+        if (token.EndsWith("ies", StringComparison.OrdinalIgnoreCase) && token.Length > 3)
+            return $"{token[..^3]}y";
+
+        if (token.EndsWith('s') && !token.EndsWith("ss", StringComparison.OrdinalIgnoreCase) && token.Length > 1)
+            return token[..^1];
+
+        return token;
     }
 }

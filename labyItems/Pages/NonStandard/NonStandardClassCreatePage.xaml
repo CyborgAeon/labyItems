@@ -176,17 +176,32 @@
                     <Label Text="Weapon Skills"
                            Style="{StaticResource SectionHeaderLabelStyle}"/>
                     <CollectionView ItemsSource="{Binding WeaponSkillLevels}"
-                                    SelectionMode="None">
+                                    SelectionMode="None"
+                                    HeightRequest="360">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <VerticalStackLayout Spacing="6"
-                                                     Margin="0,0,0,8">
-                                    <Label Text="{Binding Level, StringFormat='Level {0}'}"
+                                <Grid ColumnDefinitions="34,*,Auto"
+                                      ColumnSpacing="8"
+                                      Padding="8,10"
+                                      BackgroundColor="{Binding RowBackgroundHex}">
+                                    <Label Text="{Binding Level}"
                                            FontAttributes="Bold"
-                                           FontSize="12"/>
-                                    <controls:MultiChipGroup Items="{Binding Source={x:Reference Root}, Path=BindingContext.WeaponSkillOptions}"
-                                                             SelectedItems="{Binding SelectedSkills, Mode=TwoWay}"/>
-                                </VerticalStackLayout>
+                                           VerticalTextAlignment="Center"/>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding SelectedSummary}"
+                                           VerticalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Button Grid.Column="2"
+                                            Text="&#xF303;"
+                                            FontFamily="FASolid"
+                                            WidthRequest="34"
+                                            HeightRequest="34"
+                                            Padding="0"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource AccentMaroonColor}"
+                                            Clicked="OnEditWeaponSkillLevelClicked"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -232,68 +247,36 @@
 
             <Frame Style="{StaticResource SectionCardFrameStyle}">
                 <VerticalStackLayout Spacing="8">
-                    <Grid ColumnDefinitions="*,Auto"
-                          ColumnSpacing="8">
-                        <Label Text="Abilities"
-                               Style="{StaticResource SectionHeaderLabelStyle}"
-                               VerticalTextAlignment="Center"/>
-                        <Button Grid.Column="1"
-                                Text="Add"
-                                Clicked="OnAddAbilityRowClicked"/>
-                    </Grid>
+                    <Label Text="Abilities"
+                           Style="{StaticResource SectionHeaderLabelStyle}"/>
 
-                    <CollectionView ItemsSource="{Binding AbilityRows}"
-                                    SelectionMode="None">
+                    <CollectionView ItemsSource="{Binding AbilityLevels}"
+                                    SelectionMode="None"
+                                    HeightRequest="360">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Frame Style="{StaticResource SectionCardFrameStyle}"
-                                       Padding="8"
-                                       Margin="0,0,0,8">
-                                    <VerticalStackLayout Spacing="8">
-                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto"
-                                              ColumnSpacing="8">
-                                            <Picker Grid.Column="0"
-                                                    WidthRequest="78"
-                                                    ItemsSource="{Binding Source={x:Reference Root}, Path=BindingContext.LevelOptions}"
-                                                    SelectedItem="{Binding Level, Mode=TwoWay}"/>
-                                            <Entry Grid.Column="1"
-                                                   Text="{Binding AbilityName, Mode=TwoWay}"
-                                                   Placeholder="Ability"/>
-                                            <Button Grid.Column="2"
-                                                    Text="&#xF002;"
-                                                    FontFamily="FASolid"
-                                                    WidthRequest="36"
-                                                    HeightRequest="36"
-                                                    Padding="0"
-                                                    Clicked="OnSearchAbilityClicked"
-                                                    CommandParameter="{Binding .}"/>
-                                            <Button Grid.Column="3"
-                                                    Text="&#xF1F8;"
-                                                    FontFamily="FASolid"
-                                                    WidthRequest="36"
-                                                    HeightRequest="36"
-                                                    Padding="0"
-                                                    Clicked="OnRemoveAbilityRowClicked"
-                                                    CommandParameter="{Binding .}"/>
-                                        </Grid>
-
-                                        <Label Text="{Binding AbilityType}"
-                                               FontSize="12"
-                                               Opacity="0.75"
-                                               IsVisible="{Binding HasAbilityType}"/>
-
-                                        <Grid ColumnDefinitions="Auto,*"
-                                              ColumnSpacing="8"
-                                              IsVisible="{Binding IsInnate}">
-                                            <Label Grid.Column="0"
-                                                   Text="Innate count at 8th"
-                                                   VerticalTextAlignment="Center"/>
-                                            <Entry Grid.Column="1"
-                                                   Keyboard="Numeric"
-                                                   Text="{Binding CountText, Mode=TwoWay}"/>
-                                        </Grid>
-                                    </VerticalStackLayout>
-                                </Frame>
+                                <Grid ColumnDefinitions="34,*,Auto"
+                                      ColumnSpacing="8"
+                                      Padding="8,10"
+                                      BackgroundColor="{Binding RowBackgroundHex}">
+                                    <Label Text="{Binding Level}"
+                                           FontAttributes="Bold"
+                                           VerticalTextAlignment="Center"/>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding SummaryText}"
+                                           VerticalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Button Grid.Column="2"
+                                            Text="&#xF303;"
+                                            FontFamily="FASolid"
+                                            WidthRequest="34"
+                                            HeightRequest="34"
+                                            Padding="0"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource AccentMaroonColor}"
+                                            Clicked="OnEditAbilityLevelClicked"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
@@ -355,7 +338,7 @@
                 <VerticalStackLayout Spacing="8">
                     <Grid ColumnDefinitions="*,Auto"
                           ColumnSpacing="8">
-                        <Label Text="CasterLevel"
+                        <Label Text="Magic caster level"
                                Style="{StaticResource SectionHeaderLabelStyle}"/>
                         <Button Grid.Column="1"
                                 Text="Add"
@@ -369,20 +352,15 @@
                                 <Grid ColumnDefinitions="Auto,*,Auto"
                                       ColumnSpacing="8"
                                       Padding="0,2">
+                                    <Label Grid.Column="0"
+                                           Text="for all"
+                                           VerticalTextAlignment="Center"
+                                           IsVisible="{Binding IsAll}"/>
                                     <Picker Grid.Column="0"
                                             WidthRequest="170"
-                                            IsEnabled="{Binding CanRemove}"
+                                            IsVisible="{Binding CanRemove}"
                                             ItemsSource="{Binding Source={x:Reference Root}, Path=BindingContext.CasterColourOptions}"
-                                            SelectedItem="{Binding Colour, Mode=TwoWay}">
-                                        <Picker.Triggers>
-                                            <DataTrigger TargetType="Picker"
-                                                         Binding="{Binding Colour}"
-                                                         Value="All">
-                                                <Setter Property="IsEnabled"
-                                                        Value="False"/>
-                                            </DataTrigger>
-                                        </Picker.Triggers>
-                                    </Picker>
+                                            SelectedItem="{Binding Colour, Mode=TwoWay}"/>
                                     <Entry Grid.Column="1"
                                            Keyboard="Numeric"
                                            Placeholder="="

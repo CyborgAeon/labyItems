@@ -1,6 +1,7 @@
 // Services/LiteDbService.cs
 using System.Linq;
 using System.Text.Json;
+using System.Diagnostics;
 using labyItems.Models;
 using labyItems.Models.Characters;
 using LiteDB;
@@ -10,18 +11,65 @@ namespace labyItems.Services;
 public static class LiteDbService
 {
     private static LiteDatabase? _db;
+    private static readonly object DbSync = new();
 
     private static LiteDatabase GetDb()
     {
         if (_db != null)
             return _db;
-        var path = Path.Combine(FileSystem.AppDataDirectory, "items.db");
-        _db = new LiteDatabase($"Filename={path};Connection=shared");
 
+        lock (DbSync)
+        {
+            if (_db != null)
+                return _db;
+
+            var path = Path.Combine(FileSystem.AppDataDirectory, "items.db");
+            _db = OpenDatabaseWithRecovery(path);
+            EnsureIndexes(_db);
+            return _db;
+        }
+    }
+
+    private static LiteDatabase OpenDatabaseWithRecovery(string path)
+    {
+        try
+        {
+            return new LiteDatabase($"Filename={path};Connection=shared");
+        }
+        catch (Exception firstOpenEx)
+        {
+            Debug.WriteLine($"[LiteDbService] Failed opening items.db at '{path}': {firstOpenEx}");
+            TryQuarantineBrokenDatabase(path);
+
+            return new LiteDatabase($"Filename={path};Connection=shared");
+        }
+    }
+
+    private static void EnsureIndexes(LiteDatabase db)
+    {
         // AOT-safe index creation for iOS Release builds.
-        _db.GetCollection<Item>("items").EnsureIndex(nameof(Item.CreatedDate));
-        _db.GetCollection<Character>("characters").EnsureIndex(nameof(Character.Name));
-        return _db;
+        db.GetCollection<Item>("items").EnsureIndex(nameof(Item.CreatedDate));
+        db.GetCollection<Character>("characters").EnsureIndex(nameof(Character.Name));
+    }
+
+    private static void TryQuarantineBrokenDatabase(string path)
+    {
+        try
+        {
+            if (!File.Exists(path))
+                return;
+
+            var backupPath = Path.Combine(
+                Path.GetDirectoryName(path) ?? FileSystem.AppDataDirectory,
+                $"items.corrupt.{DateTime.UtcNow:yyyyMMddHHmmss}.db");
+
+            File.Move(path, backupPath, overwrite: true);
+            Debug.WriteLine($"[LiteDbService] Moved unreadable items.db to '{backupPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[LiteDbService] Could not quarantine unreadable items.db: {ex}");
+        }
     }
 
     public static void InsertItem(Item item) => GetDb().GetCollection<Item>("items").Insert(item);

@@ -22,6 +22,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     private CharacterDraft Draft => _builder.Draft;
     private readonly ReloadGate _reloadGate = new();
     private readonly SemaphoreSlim _selectionRecalcLock = new(1, 1);
+    private CancellationTokenSource? _selectionRecalcCts;
+    private int _selectionRecalcVersion;
 
     private SpecialisationIndex _specialisationIndex = new();
     private IReadOnlyDictionary<string, CharacterClassRecord> _allClasses = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
@@ -97,16 +99,21 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     }
 
     public void CancelReloads()
-        => _reloadGate.Cancel();
+    {
+        _reloadGate.Cancel();
+        CancelPendingSelectionRecalculation();
+    }
 
     public void Dispose()
     {
         _reloadGate.Dispose();
+        CancelPendingSelectionRecalculation();
         _selectionRecalcLock.Dispose();
     }
 
     public async Task ReloadAsync(CancellationToken cancellationToken = default)
     {
+        CancelPendingSelectionRecalculation();
         var reload = _reloadGate.Begin(cancellationToken);
 
         try
@@ -444,14 +451,107 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         return "Class requirements conflict with the current character.";
     }
 
-    private async void OnSectionSelectionChanged()
+    private void OnSectionSelectionChanged()
     {
         if (_isApplyingState)
             return;
 
+        QueueSelectionRecalculation();
+    }
+
+    private void QueueSelectionRecalculation()
+    {
+        var cts = new CancellationTokenSource();
+        var previous = Interlocked.Exchange(ref _selectionRecalcCts, cts);
+        previous?.Cancel();
+        previous?.Dispose();
+
+        var version = Interlocked.Increment(ref _selectionRecalcVersion);
+        _ = RecalculateFromCurrentSelectionsAsync(version, cts.Token);
+    }
+
+    private void CancelPendingSelectionRecalculation()
+    {
+        var cts = Interlocked.Exchange(ref _selectionRecalcCts, null);
+        cts?.Cancel();
+        cts?.Dispose();
+    }
+
+    private bool IsLatestSelectionRecalc(int version)
+        => version == Volatile.Read(ref _selectionRecalcVersion);
+
+    private async Task RecalculateFromCurrentSelectionsAsync(int version, CancellationToken cancellationToken)
+    {
         try
         {
-            await RecalculateFromCurrentSelectionsAsync();
+            await Task.Yield();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await _selectionRecalcLock.WaitAsync(cancellationToken);
+            try
+            {
+                if (!IsLatestSelectionRecalc(version))
+                    return;
+
+                if (_specialisationIndex.Definitions.Count == 0)
+                    return;
+
+                var selectionState = BuildSelectionStateFromSections();
+                var context = CharacterSpecialisationScreenCalculator.LoadContext(
+                    Draft,
+                    _allClasses,
+                    _allRaces,
+                    _specialisationIndex.Definitions,
+                    _specialisationIndex.InjectionRules);
+
+                context = new CharacterSpecialisationContext
+                {
+                    Draft = context.Draft,
+                    Race = context.Race,
+                    Class = context.Class,
+                    ClassRecord = context.ClassRecord,
+                    RaceRecord = context.RaceRecord,
+                    Definitions = context.Definitions,
+                    InjectionRules = context.InjectionRules,
+                    CurrentRaceSubtype = selectionState.RaceSubtype
+                };
+
+                _context = context;
+                _requiredChoices = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+                _sectionSpecs = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, _requiredChoices);
+
+                var raceSubtypeSpec = _sectionSpecs.FirstOrDefault(spec => spec.Kind == SpecialisationSectionKind.RaceSubtype);
+                var raceSubtypeKey = raceSubtypeSpec?.Metadata.TryGetValue("raceSubtypeKey", out var subtypeKey) == true ? subtypeKey : string.Empty;
+                var raceSubtypeMapKey = raceSubtypeSpec?.Metadata.TryGetValue("abilityMapKey", out var mapKey) == true ? mapKey : string.Empty;
+
+                var recalculated = CharacterSpecialisationScreenCalculator.Recalculate(
+                    context,
+                    _sectionSpecs,
+                    selectionState,
+                    raceSubtypeKey,
+                    raceSubtypeMapKey);
+
+                ApplyScreenState(recalculated, preserveExpanded: true);
+                UpdateSpellCustomisationVisibility();
+            }
+            finally
+            {
+                _selectionRecalcLock.Release();
+            }
+
+            if (cancellationToken.IsCancellationRequested || !IsLatestSelectionRecalc(version))
+                return;
+
+            await RefreshSpellCustomisationOptionsAsync();
+            if (cancellationToken.IsCancellationRequested || !IsLatestSelectionRecalc(version))
+                return;
+
+            await RefreshPrereqOptionsAsync();
+            if (cancellationToken.IsCancellationRequested || !IsLatestSelectionRecalc(version))
+                return;
+
+            _builder.NotifyGatingChanged();
+            _ = _builder.RefreshDraftAbilitiesAsync();
         }
         catch (OperationCanceledException)
         {
@@ -459,63 +559,6 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Specialisation recalculation failed: {ex}");
-        }
-    }
-
-    private async Task RecalculateFromCurrentSelectionsAsync()
-    {
-        await _selectionRecalcLock.WaitAsync();
-        try
-        {
-            if (_specialisationIndex.Definitions.Count == 0)
-                return;
-
-            var selectionState = BuildSelectionStateFromSections();
-            var context = CharacterSpecialisationScreenCalculator.LoadContext(
-                Draft,
-                _allClasses,
-                _allRaces,
-                _specialisationIndex.Definitions,
-                _specialisationIndex.InjectionRules);
-
-            context = new CharacterSpecialisationContext
-            {
-                Draft = context.Draft,
-                Race = context.Race,
-                Class = context.Class,
-                ClassRecord = context.ClassRecord,
-                RaceRecord = context.RaceRecord,
-                Definitions = context.Definitions,
-                InjectionRules = context.InjectionRules,
-                CurrentRaceSubtype = selectionState.RaceSubtype
-            };
-
-            _context = context;
-            _requiredChoices = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
-            _sectionSpecs = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, _requiredChoices);
-
-            var raceSubtypeSpec = _sectionSpecs.FirstOrDefault(spec => spec.Kind == SpecialisationSectionKind.RaceSubtype);
-            var raceSubtypeKey = raceSubtypeSpec?.Metadata.TryGetValue("raceSubtypeKey", out var subtypeKey) == true ? subtypeKey : string.Empty;
-            var raceSubtypeMapKey = raceSubtypeSpec?.Metadata.TryGetValue("abilityMapKey", out var mapKey) == true ? mapKey : string.Empty;
-
-            var recalculated = CharacterSpecialisationScreenCalculator.Recalculate(
-                context,
-                _sectionSpecs,
-                selectionState,
-                raceSubtypeKey,
-                raceSubtypeMapKey);
-
-            ApplyScreenState(recalculated, preserveExpanded: true);
-            UpdateSpellCustomisationVisibility();
-            await RefreshSpellCustomisationOptionsAsync();
-            await RefreshPrereqOptionsAsync();
-
-            _builder.NotifyGatingChanged();
-            _ = _builder.RefreshDraftAbilitiesAsync();
-        }
-        finally
-        {
-            _selectionRecalcLock.Release();
         }
     }
 
@@ -940,7 +983,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         try
         {
-            _spellCache = await SpellService.GetAllAsync();
+            // SpellService performs synchronous DB loading/deserialization; keep it off the UI thread.
+            _spellCache = await Task.Run(async () => await SpellService.GetAllAsync());
         }
         catch
         {

@@ -135,11 +135,24 @@ public partial class AlignmentToggleGridPicker : ContentView
         var wrapper = new Grid();
         wrapper.Children.Add(border);
 
+        var lockWatermark = new Label
+        {
+            Text = "\uf023",
+            FontFamily = "FASolid",
+            FontSize = 22,
+            HorizontalTextAlignment = TextAlignment.Center,
+            VerticalTextAlignment = TextAlignment.Center,
+            TextColor = Color.FromArgb("#475569"),
+            Opacity = 0.22,
+            InputTransparent = true
+        };
+        wrapper.Children.Add(lockWatermark);
+
         var tap = new TapGestureRecognizer();
         tap.Tapped += (_, _) => OnAlignmentTapped(alignment);
         wrapper.GestureRecognizers.Add(tap);
 
-        _cells[alignment] = new CellVisual(border, title, shortLabel);
+        _cells[alignment] = new CellVisual(border, title, shortLabel, lockWatermark);
         return wrapper;
     }
 
@@ -184,6 +197,8 @@ public partial class AlignmentToggleGridPicker : ContentView
             visual.ShortLabel.TextColor = isSelected ? accent : Color.FromArgb("#4B5563");
             visual.Border.Opacity = IsEnabled ? 1.0 : 0.45;
             visual.Border.InputTransparent = !IsEnabled;
+            visual.LockWatermark.IsVisible = !isSelected;
+            visual.LockWatermark.Opacity = IsEnabled ? 0.22 : 0.14;
         }
 
         SelectedLabel.Text = selected.Count == 0
@@ -214,5 +229,5 @@ public partial class AlignmentToggleGridPicker : ContentView
     private static readonly Color BaseBackground = Color.FromArgb("#F8FAFC");
     private static readonly Color EnabledStroke = Color.FromArgb("#CBD5E1");
 
-    private sealed record CellVisual(Border Border, Label Title, Label ShortLabel);
+    private sealed record CellVisual(Border Border, Label Title, Label ShortLabel, Label LockWatermark);
 }

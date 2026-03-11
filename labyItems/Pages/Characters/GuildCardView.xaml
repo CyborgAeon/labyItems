@@ -40,7 +40,7 @@
 
             <!-- Header -->
             <Grid Grid.Row="0"
-                  ColumnDefinitions="Auto,10,*,Auto,10,Auto"
+                  ColumnDefinitions="Auto,10,*,Auto"
                   VerticalOptions="Center">
 
                 <Label Grid.Column="0"
@@ -64,20 +64,6 @@
                 </VerticalStackLayout>
 
                 <Button Grid.Column="3"
-                        Text="{Binding SelectionActionGlyph}"
-                        FontFamily="FASolid"
-                        FontSize="13"
-                        Padding="0"
-                        WidthRequest="30"
-                        HeightRequest="30"
-                        MinimumHeightRequest="0"
-                        MinimumWidthRequest="0"
-                        VerticalOptions="Center"
-                        IsEnabled="{Binding CanToggleSelection}"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=SelectCommand}"
-                        CommandParameter="{Binding .}"/>
-
-                <Button Grid.Column="5"
                         Text="⌄"
                         FontSize="18"
                         Rotation="{Binding ChevronRotation}"
@@ -264,7 +250,7 @@
         </Grid>
         <Frame.GestureRecognizers>
             <TapGestureRecognizer
-                Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=ToggleExpandedCommand}"
+                Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=SelectCommand}"
                 CommandParameter="{Binding .}"/>
         </Frame.GestureRecognizers>
     </Frame>

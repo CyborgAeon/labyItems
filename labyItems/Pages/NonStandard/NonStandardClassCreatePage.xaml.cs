@@ -78,31 +78,38 @@ public partial class NonStandardClassCreatePage : ContentPage
     private void OnDeleteWeaponSkillRestrictionClicked(object sender, EventArgs e)
         => _vm.RemoveWeaponSkillRestriction((sender as Button)?.CommandParameter?.ToString());
 
-    private void OnAddAbilityRowClicked(object sender, EventArgs e)
-        => _vm.AddAbilityRow();
-
-    private async void OnSearchAbilityClicked(object sender, EventArgs e)
+    private async void OnEditWeaponSkillLevelClicked(object sender, EventArgs e)
     {
-        var row = (sender as Button)?.CommandParameter as ClassAbilityRowVm
-            ?? (sender as BindableObject)?.BindingContext as ClassAbilityRowVm;
+        var row = (sender as Button)?.CommandParameter as WeaponSkillLevelVm
+            ?? (sender as BindableObject)?.BindingContext as WeaponSkillLevelVm;
         if (row == null)
             return;
 
         try
         {
-            await _vm.SearchAbilityAsync(Navigation, row);
+            await Navigation.PushModalAsync(new NonStandardWeaponSkillsLevelEditorPage(_vm, row));
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Search failed", ex.Message, "OK");
+            await DisplayAlert("Edit failed", ex.Message, "OK");
         }
     }
 
-    private void OnRemoveAbilityRowClicked(object sender, EventArgs e)
+    private async void OnEditAbilityLevelClicked(object sender, EventArgs e)
     {
-        var row = (sender as Button)?.CommandParameter as ClassAbilityRowVm
-            ?? (sender as BindableObject)?.BindingContext as ClassAbilityRowVm;
-        _vm.RemoveAbilityRow(row);
+        var row = (sender as Button)?.CommandParameter as AbilityLevelVm
+            ?? (sender as BindableObject)?.BindingContext as AbilityLevelVm;
+        if (row == null)
+            return;
+
+        try
+        {
+            await Navigation.PushModalAsync(new NonStandardAbilityLevelEditorPage(_vm, row));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Edit failed", ex.Message, "OK");
+        }
     }
 
     private void OnAddCasterColourClicked(object sender, EventArgs e)

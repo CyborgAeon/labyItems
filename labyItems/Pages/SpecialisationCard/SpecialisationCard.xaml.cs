@@ -16,10 +16,14 @@ public partial class SpecialisationCard : ContentPage
         SpecialisationDetails.Specialisation = specialisation;
         SpecialisationDetails.SelectedOption = selectedOption ?? string.Empty;
 
-        var cardTitle = (selectedOption ?? string.Empty).Trim();
-        if (cardTitle.Length == 0)
-            cardTitle = specialisationName?.Trim() ?? string.Empty;
+        var baseTitle = (specialisationName ?? string.Empty).Trim();
+        var selected = (selectedOption ?? string.Empty).Trim();
 
-        Title = cardTitle.Length == 0 ? "Specialisation" : cardTitle;
+        if (baseTitle.Length == 0)
+            baseTitle = "Specialisation";
+
+        Title = selected.Length == 0
+            ? baseTitle
+            : $"{baseTitle} ({selected})";
     }
 }

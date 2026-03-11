@@ -98,7 +98,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
     public ObservableCollection<WeaponSkillLevelVm> WeaponSkillLevels { get; } = new();
     public ObservableCollection<string> WeaponSkillRestrictions { get; } = new();
 
-    public ObservableCollection<ClassAbilityRowVm> AbilityRows { get; } = new();
+    public ObservableCollection<AbilityLevelVm> AbilityLevels { get; } = new();
     public ObservableCollection<int> LevelOptions { get; } = [1, 2, 3, 4, 5, 6, 7, 8];
 
     public ObservableCollection<string> PowerbaseOptions { get; } =
@@ -331,15 +331,13 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         InitializeAlignmentSelection();
         BuildCasterColourOptions();
         BuildLifeScaleOptions(await LifeScalesService.GetAllAsync());
+        EnsureAbilityLevels();
 
         await BuildAbilityLookupAsync();
 
         var defaultBase = _allClasses.Keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).FirstOrDefault();
         if (!string.IsNullOrWhiteSpace(defaultBase))
             await SetBaseClassAsync(defaultBase);
-
-        if (AbilityRows.Count == 0)
-            AbilityRows.Add(new ClassAbilityRowVm { Level = 1 });
 
         RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
     }
@@ -385,9 +383,9 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             ReplaceCollection(ArmourRestrictions, Array.Empty<string>());
             ReplaceCollection(WeaponSkillRestrictions, Array.Empty<string>());
             WeaponSkillLevels.Clear();
-            AbilityRows.Clear();
             for (var level = 1; level <= 8; level++)
                 WeaponSkillLevels.Add(new WeaponSkillLevelVm { Level = level });
+            ClearAbilityLevels();
         }
 
         Name = requestedName;
@@ -471,22 +469,9 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             WeaponSkillRestrictions.Remove(existing);
     }
 
-    public void AddAbilityRow()
-        => AbilityRows.Add(new ClassAbilityRowVm { Level = 1 });
-
-    public void RemoveAbilityRow(ClassAbilityRowVm? row)
+    public async Task AddAbilityToLevelAsync(INavigation navigation, AbilityLevelVm? levelRow)
     {
-        if (row == null)
-            return;
-
-        AbilityRows.Remove(row);
-        if (AbilityRows.Count == 0)
-            AbilityRows.Add(new ClassAbilityRowVm { Level = 1 });
-    }
-
-    public async Task SearchAbilityAsync(INavigation navigation, ClassAbilityRowVm? row)
-    {
-        if (navigation == null || row == null)
+        if (navigation == null || levelRow == null)
             return;
 
         var options = _abilityLookup
@@ -502,19 +487,16 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         if (selected == null)
             return;
 
-        row.AbilityName = selected.Value;
-        if (_abilityLookup.TryGetValue(selected.Value, out var definition))
-        {
-            row.AbilityType = definition.Type ?? string.Empty;
-            row.IsInnate = (definition.Type ?? string.Empty).Equals("Innate", StringComparison.OrdinalIgnoreCase);
-            if (row.IsInnate && string.IsNullOrWhiteSpace(row.CountText))
-                row.CountText = "1";
-        }
-        else
-        {
-            row.AbilityType = string.Empty;
-            row.IsInnate = false;
-        }
+        var row = CreateAbilityRow(levelRow.Level, selected.Value);
+        levelRow.Abilities.Insert(0, row);
+    }
+
+    public void RemoveAbilityFromLevel(AbilityLevelVm? levelRow, ClassAbilityRowVm? row)
+    {
+        if (levelRow == null || row == null)
+            return;
+
+        levelRow.Abilities.Remove(row);
     }
 
     public void AddCasterColourRow()
@@ -853,7 +835,8 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 
     private void BuildAbilityRows(CharacterClassRecord record)
     {
-        AbilityRows.Clear();
+        EnsureAbilityLevels();
+        ClearAbilityLevels();
 
         foreach (var levelEntry in record.Levels)
         {
@@ -869,21 +852,64 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
                 if (string.Equals((ability?.Type ?? string.Empty).Trim(), "WeaponSkill", StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                var row = new ClassAbilityRowVm
-                {
-                    Level = level,
-                    AbilityName = ability?.Name ?? string.Empty,
-                    AbilityType = ability?.Type ?? string.Empty,
-                    IsInnate = string.Equals((ability?.Type ?? string.Empty).Trim(), "Innate", StringComparison.OrdinalIgnoreCase),
-                    CountText = ability?.Count?.ToString() ?? string.Empty
-                };
+                var row = CreateAbilityRow(
+                    level,
+                    ability?.Name ?? string.Empty,
+                    ability?.Type ?? string.Empty,
+                    ability?.Count);
 
-                AbilityRows.Add(row);
+                if (AbilityLevels.FirstOrDefault(entry => entry.Level == level) is { } levelRow)
+                {
+                    levelRow.Abilities.Add(row);
+                }
             }
         }
+    }
 
-        if (AbilityRows.Count == 0)
-            AbilityRows.Add(new ClassAbilityRowVm { Level = 1 });
+    private ClassAbilityRowVm CreateAbilityRow(
+        int level,
+        string abilityName,
+        string? abilityType = null,
+        int? innateCount = null)
+    {
+        var resolvedType = abilityType ?? string.Empty;
+        if (resolvedType.Length == 0
+            && _abilityLookup.TryGetValue(abilityName, out var lookupDef))
+        {
+            resolvedType = lookupDef.Type ?? string.Empty;
+        }
+
+        var isInnate = string.Equals(resolvedType.Trim(), "Innate", StringComparison.OrdinalIgnoreCase);
+        var countText = innateCount?.ToString() ?? string.Empty;
+
+        if (isInnate && countText.Length == 0)
+            countText = "1";
+
+        return new ClassAbilityRowVm
+        {
+            Level = level,
+            AbilityName = abilityName,
+            AbilityType = resolvedType,
+            IsInnate = isInnate,
+            CountText = countText
+        };
+    }
+
+    private void EnsureAbilityLevels()
+    {
+        if (AbilityLevels.Count == 8)
+            return;
+
+        AbilityLevels.Clear();
+        for (var level = 1; level <= 8; level++)
+            AbilityLevels.Add(new AbilityLevelVm(level));
+    }
+
+    private void ClearAbilityLevels()
+    {
+        EnsureAbilityLevels();
+        foreach (var levelRow in AbilityLevels)
+            levelRow.Abilities.Clear();
     }
 
     private async Task ApplyLifeScaleForClassAsync(string className)
@@ -1218,34 +1244,34 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             }
         }
 
-        foreach (var row in AbilityRows)
+        foreach (var levelRow in AbilityLevels)
         {
-            if (row.Level < 1 || row.Level > 8)
+            if (!levels.TryGetValue(levelRow.Level.ToString(), out var list))
                 continue;
 
-            if (!levels.TryGetValue(row.Level.ToString(), out var list))
-                continue;
+            foreach (var row in levelRow.Abilities)
+            {
+                var abilityName = (row.AbilityName ?? string.Empty).Trim();
+                if (abilityName.Length == 0)
+                    continue;
 
-            var abilityName = (row.AbilityName ?? string.Empty).Trim();
-            if (abilityName.Length == 0)
-                continue;
+                var ability = _abilityLookup.TryGetValue(abilityName, out var definition)
+                    ? CloneAbility(definition)
+                    : new AbilityDefinition
+                    {
+                        Name = abilityName,
+                        Type = string.IsNullOrWhiteSpace(row.AbilityType) ? "Static" : row.AbilityType
+                    };
 
-            var ability = _abilityLookup.TryGetValue(abilityName, out var definition)
-                ? CloneAbility(definition)
-                : new AbilityDefinition
-                {
-                    Name = abilityName,
-                    Type = string.IsNullOrWhiteSpace(row.AbilityType) ? "Static" : row.AbilityType
-                };
+                ability.Name = abilityName;
+                if (!string.IsNullOrWhiteSpace(row.AbilityType))
+                    ability.Type = row.AbilityType;
 
-            ability.Name = abilityName;
-            if (!string.IsNullOrWhiteSpace(row.AbilityType))
-                ability.Type = row.AbilityType;
+                if (row.IsInnate)
+                    ability.Count = ParseNullableInt(row.CountText) ?? 1;
 
-            if (row.IsInnate)
-                ability.Count = ParseNullableInt(row.CountText) ?? 1;
-
-            list.Add(ability);
+                list.Add(ability);
+            }
         }
 
         return levels;
@@ -1660,10 +1686,110 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
 
-public sealed class WeaponSkillLevelVm
+public sealed class WeaponSkillLevelVm : INotifyPropertyChanged
 {
-    public int Level { get; init; }
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private int _level;
+
+    public WeaponSkillLevelVm()
+    {
+        SelectedSkills.CollectionChanged += (_, _) => Raise(nameof(SelectedSummary));
+    }
+
+    public int Level
+    {
+        get => _level;
+        init
+        {
+            _level = value;
+            Raise(nameof(RowBackgroundHex));
+        }
+    }
+
     public ObservableCollection<string> SelectedSkills { get; } = new();
+
+    public string SelectedSummary
+        => SelectedSkills.Count == 0
+            ? "-"
+            : string.Join("  ", SelectedSkills.Select(ToSkillCode));
+
+    public string RowBackgroundHex => Level % 2 == 0 ? "#F8FAFC" : "#FFFFFF";
+
+    private static string ToSkillCode(string? display)
+    {
+        var text = (display ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return string.Empty;
+
+        var firstSpace = text.IndexOf(' ');
+        if (firstSpace > 0)
+            return text[..firstSpace].Trim();
+
+        return text;
+    }
+
+    private void Raise([CallerMemberName] string? propertyName = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+}
+
+public sealed class AbilityLevelVm : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public AbilityLevelVm(int level)
+    {
+        Level = level;
+        Abilities.CollectionChanged += OnAbilitiesChanged;
+    }
+
+    public int Level { get; }
+    public ObservableCollection<ClassAbilityRowVm> Abilities { get; } = new();
+    public string RowBackgroundHex => Level % 2 == 0 ? "#F8FAFC" : "#FFFFFF";
+
+    public string SummaryText
+        => Abilities.Count == 0
+            ? "-"
+            : string.Join("  |  ", Abilities.Select(FormatAbilitySummary));
+
+    private void OnAbilitiesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+        {
+            foreach (var item in e.OldItems.OfType<ClassAbilityRowVm>())
+                item.PropertyChanged -= OnAbilityRowChanged;
+        }
+
+        if (e.NewItems != null)
+        {
+            foreach (var item in e.NewItems.OfType<ClassAbilityRowVm>())
+                item.PropertyChanged += OnAbilityRowChanged;
+        }
+
+        Raise(nameof(SummaryText));
+    }
+
+    private void OnAbilityRowChanged(object? sender, PropertyChangedEventArgs e)
+        => Raise(nameof(SummaryText));
+
+    private static string FormatAbilitySummary(ClassAbilityRowVm row)
+    {
+        var name = (row.AbilityName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = "(unnamed ability)";
+
+        if (!row.IsInnate)
+            return name;
+
+        var count = row.CountText;
+        if (string.IsNullOrWhiteSpace((count ?? string.Empty).Trim()))
+            count = "1";
+
+        return $"{name} x{count}";
+    }
+
+    private void Raise([CallerMemberName] string? propertyName = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
 
 public sealed class ClassAbilityRowVm : INotifyPropertyChanged

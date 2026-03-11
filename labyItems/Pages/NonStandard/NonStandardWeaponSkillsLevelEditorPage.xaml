@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.NonStandard.NonStandardWeaponSkillsLevelEditorPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    Shell.NavBarIsVisible="False"
+    Title="">
+
+    <Grid RowDefinitions="Auto,*,Auto"
+          Padding="16"
+          RowSpacing="12">
+        <Grid ColumnDefinitions="*,Auto">
+            <Label Text="{Binding HeaderText}"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="Center"/>
+            <Button Grid.Column="1"
+                    Text="&#xF00D;"
+                    FontFamily="FASolid"
+                    WidthRequest="36"
+                    HeightRequest="36"
+                    Padding="0"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource AccentMaroonColor}"
+                    Clicked="OnCloseClicked"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="12">
+                <Label Text="Select or deselect shorthand weapon skills for this level."
+                       FontSize="12"
+                       Opacity="0.75"/>
+                <controls:MultiChipGroup Items="{Binding WeaponSkillOptions}"
+                                         SelectedItems="{Binding LevelRow.SelectedSkills, Mode=TwoWay}"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Button Grid.Row="2"
+                Text="Done"
+                Clicked="OnDoneClicked"/>
+    </Grid>
+</ContentPage>

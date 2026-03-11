@@ -174,7 +174,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         StepClickCommand = new Command<int>(async i => await TryGoToStepAsync(i));
         ExportToBattleboardCommand = new Command(async () => await ExportBattleboardAsync(), () => Draft.IsRaceAndClassSelected);
         ExportToExcelCommand = new Command(async () => await ExportBattleboardToExcelAsync(), () => Draft.IsRaceAndClassSelected);
-        SaveToWalletCommand = new Command(SaveToWallet, () => Draft.IsRaceAndClassSelected);
+        SaveToWalletCommand = new Command(() => _ = SaveToWallet(), () => Draft.IsRaceAndClassSelected);
         ContinueToAdvancementCommand = new Command(async () => await ContinueToAdvancementAsync());
         ToggleAdvancementExpandedCommand = new Command(() => IsAdvancementExpanded = !IsAdvancementExpanded);
         CharacterBuilderVm = new CharacterBuilderVm(Draft, NotifyGatingChanged, _creationDataService);
@@ -472,7 +472,10 @@ public sealed class WizardVm : INotifyPropertyChanged
         if (CurrentStep == StepSteps.Count - 1)
         {
             await SyncDraftStateAsync();
-            SaveToWallet();
+            var saved = SaveToWallet();
+            if (!saved)
+                return;
+
             if (_onFinished != null)
                 await _onFinished();
             return;
@@ -519,7 +522,10 @@ public sealed class WizardVm : INotifyPropertyChanged
             return;
 
         await SyncDraftStateAsync();
-        SaveToWallet();
+        var saved = SaveToWallet();
+        if (!saved)
+            return;
+
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             var nav = Application.Current?.MainPage?.Navigation;
@@ -1007,10 +1013,25 @@ public sealed class WizardVm : INotifyPropertyChanged
         await _exportService.OpenFileAsync(path);
     }
 
-    private void SaveToWallet()
+    private bool SaveToWallet()
     {
-        _draftStore.Save();
-        RaiseReviewProperties();
+        try
+        {
+            _draftStore.Save();
+            RaiseReviewProperties();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[WizardVm] Failed to save character draft: {ex}");
+            _ = MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                var page = Application.Current?.MainPage;
+                if (page != null)
+                    await page.DisplayAlert("Save failed", ex.Message, "OK");
+            });
+            return false;
+        }
     }
 
     private async Task EnsureAbilityCostIndexAsync()

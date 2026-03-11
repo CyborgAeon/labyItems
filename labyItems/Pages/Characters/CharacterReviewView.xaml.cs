@@ -196,9 +196,21 @@ public partial class CharacterReviewView : ContentView
         if (nav == null)
             return;
 
-        if (!string.IsNullOrWhiteSpace(line.SpecialisationKey))
+        var keysToTry = new List<string>();
+        var directKey = (line.SpecialisationKey ?? string.Empty).Trim();
+        if (directKey.Length > 0)
+            keysToTry.Add(directKey);
+
+        var parsedFromSummary = ExtractSpecialisationTitleFromSummary(line.Text);
+        if (parsedFromSummary.Length > 0
+            && !keysToTry.Contains(parsedFromSummary, StringComparer.OrdinalIgnoreCase))
         {
-            var match = await DetailCardLookupService.FindSpecialisationAsync(line.SpecialisationKey);
+            keysToTry.Add(parsedFromSummary);
+        }
+
+        foreach (var key in keysToTry)
+        {
+            var match = await DetailCardLookupService.FindSpecialisationAsync(key);
             if (!string.IsNullOrWhiteSpace(match.Key) && match.Record != null)
             {
                 await nav.PushAsync(new SpecialisationCardPage(match.Key, match.Record, line.SelectedOption));
@@ -208,6 +220,23 @@ public partial class CharacterReviewView : ContentView
 
         if (line.Ability != null)
             await nav.PushAsync(new AbilityCardPage(line.Ability));
+    }
+
+    private static string ExtractSpecialisationTitleFromSummary(string? summaryText)
+    {
+        var text = (summaryText ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return string.Empty;
+
+        var colonIndex = text.IndexOf(':');
+        if (colonIndex > 0)
+            text = text[..colonIndex].Trim();
+
+        var levelSuffixIndex = text.IndexOf(" (Lvl", StringComparison.OrdinalIgnoreCase);
+        if (levelSuffixIndex > 0)
+            text = text[..levelSuffixIndex].Trim();
+
+        return text;
     }
 
     private INavigation? ResolveNavigation()

@@ -5,8 +5,15 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:labyItems.Pages.NonStandard"
-    Shell.NavBarIsVisible="True"
-    Title="Create Non-standard">
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    Shell.NavBarIsVisible="False"
+    Title="">
+
+    <ContentPage x:Name="BackTab"
+                 Title="←">
+        <Grid />
+    </ContentPage>
 
     <pages:NonStandardClassCreatePage x:Name="ClassTab"
                                       Title="Class" />
