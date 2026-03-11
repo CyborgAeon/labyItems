@@ -23,6 +23,7 @@ public partial class MpCrewPage : MpCalculatorPageBase
     private const int IspApprenticeStatusCost = 10;
     private const int IspApprenticeBagCost = 10;
     private const int IspJourneymanBagCost = 15;
+    private static readonly string[] WeaponPowerChipOptions = { SupernaturalTypes.Magic, SupernaturalTypes.Spirit };
     private static readonly string[] BagChipOptions = { "🎒 Apprentice", "🛡️ Journeyman" };
 
     public MpCrewPage()
@@ -62,7 +63,7 @@ public partial class MpCrewPage : MpCalculatorPageBase
     }
     private bool _sac2Checked;
 
-    public IEnumerable<string> WeaponPowerOptions => new[] { SupernaturalTypes.Magic, SupernaturalTypes.Spirit };
+    public IEnumerable<string> WeaponPowerOptions => WeaponPowerChipOptions;
 
     public string? SelectedWeaponPowerType
     {
@@ -185,7 +186,7 @@ public partial class MpCrewPage : MpCalculatorPageBase
         if (WeaponApprenticeStatus)
             AddContribution(items, ref running, "weapon-apprentice", "Weapon apprentice status", ApprenticeCost);
 
-        if (!string.IsNullOrWhiteSpace(SelectedWeaponPowerType) && SelectedWeaponType.HasValue)
+        if (!string.IsNullOrWhiteSpace(SelectedWeaponPowerType))
         {
             var trimmed = TrimChipLabel(SelectedWeaponPowerType) ?? SelectedWeaponPowerType;
             var unit = GetWeaponUnitCost(trimmed);
@@ -196,7 +197,9 @@ public partial class MpCrewPage : MpCalculatorPageBase
                 if (IsWeaponAlignmentVisible && !SelectedWeaponAlignment.HasValue)
                     goto AfterWeapon;
 
-                var parts = new List<string> { EnumDisplayFormatter.FormatName(SelectedWeaponType.Value.ToString()) };
+                var parts = new List<string>();
+                if (SelectedWeaponType.HasValue)
+                    parts.Add(EnumDisplayFormatter.FormatName(SelectedWeaponType.Value.ToString()));
                 if (IsWeaponColourVisible && SelectedWeaponColour.HasValue)
                     parts.Add(EnumDisplayFormatter.FormatName(SelectedWeaponColour.Value.ToString()));
                 if (IsWeaponAlignmentVisible && SelectedWeaponAlignment.HasValue)
@@ -228,7 +231,7 @@ AfterWeapon:
         if (WeaponApprenticeStatus)
             AddIspContribution(items, ref running, "weapon-apprentice", "Weapon apprentice status", IspApprenticeStatusCost);
 
-        if (!string.IsNullOrWhiteSpace(SelectedWeaponPowerType) && SelectedWeaponType.HasValue)
+        if (!string.IsNullOrWhiteSpace(SelectedWeaponPowerType))
         {
             var trimmed = TrimChipLabel(SelectedWeaponPowerType) ?? SelectedWeaponPowerType;
             var unit = GetWeaponIspCost(trimmed);
@@ -239,7 +242,9 @@ AfterWeapon:
                 if (IsWeaponAlignmentVisible && !SelectedWeaponAlignment.HasValue)
                     goto AfterWeapon;
 
-                var parts = new List<string> { EnumDisplayFormatter.FormatName(SelectedWeaponType.Value.ToString()) };
+                var parts = new List<string>();
+                if (SelectedWeaponType.HasValue)
+                    parts.Add(EnumDisplayFormatter.FormatName(SelectedWeaponType.Value.ToString()));
                 if (IsWeaponColourVisible && SelectedWeaponColour.HasValue)
                     parts.Add(EnumDisplayFormatter.FormatName(SelectedWeaponColour.Value.ToString()));
                 if (IsWeaponAlignmentVisible && SelectedWeaponAlignment.HasValue)

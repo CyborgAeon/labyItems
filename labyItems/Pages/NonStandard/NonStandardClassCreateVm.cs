@@ -65,7 +65,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
     private string _buyAsText = string.Empty;
     private string _armourRestrictionInput = string.Empty;
     private string _weaponSkillRestrictionInput = string.Empty;
-    private string _lifescaleSummary = string.Empty;
+    private string _lifeScaleAssignmentRaceName = string.Empty;
     private bool _isLifescaleExpanded;
     private bool _useCustomLifeScale;
 
@@ -119,6 +119,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
 
     public ObservableCollection<LifeScalePointVm> ExpandedLifeScaleRows { get; } = new();
     public ObservableCollection<CustomLifeScalePointVm> CustomLifeScaleRows { get; } = new();
+    public ObservableCollection<LifeScaleAssignmentVm> LifeScaleAssignments { get; } = new();
     public ObservableCollection<string> RaceWhitelist { get; } = new();
     public ObservableCollection<string> RaceBlacklist { get; } = new();
 
@@ -168,6 +169,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             if (!Set(ref _name, value ?? string.Empty))
                 return;
 
+            RefreshLifeScaleAssignmentClassName();
             Raise(nameof(PowerbaseExplanation));
             Raise(nameof(CanSave));
         }
@@ -256,13 +258,26 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         }
     }
 
-    public string LifescaleSummary
+    public string LifescaleSummary => BuildCurrentLifeScaleSummary();
+
+    public bool HasLifeScaleSelection => LifescaleSummary.Length > 0;
+
+    public string LifeScaleAssignmentRaceName
     {
-        get => _lifescaleSummary;
-        private set => Set(ref _lifescaleSummary, value ?? string.Empty);
+        get => _lifeScaleAssignmentRaceName;
+        private set
+        {
+            if (!Set(ref _lifeScaleAssignmentRaceName, value ?? string.Empty))
+                return;
+
+            Raise(nameof(CanAddLifeScaleAssignment));
+        }
     }
 
-    public bool HasLifeScaleSelection => _selectedLifeScaleOption != null;
+    public bool CanAddLifeScaleAssignment
+        => HasLifeScaleSelection
+        && !string.IsNullOrWhiteSpace((LifeScaleAssignmentRaceName ?? string.Empty).Trim())
+        && GetEffectiveLifeScalePoints().Count >= 8;
 
     public bool IsLifescaleExpanded
     {
@@ -284,6 +299,9 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
                 EnsureCustomLifeScaleRows(GetDefaultLifeScalePointsForCustom());
 
             RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
+            Raise(nameof(LifescaleSummary));
+            Raise(nameof(HasLifeScaleSelection));
+            Raise(nameof(CanAddLifeScaleAssignment));
             Raise(nameof(CanSave));
         }
     }
@@ -301,7 +319,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             if (SelectedBrackets.Count == 0)
                 return false;
 
-            if (!TryGetLifeScaleForSave(out _, out _))
+            if (LifeScaleAssignments.Count == 0)
                 return false;
 
             return true;
@@ -546,13 +564,75 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             return;
 
         _selectedLifeScaleOption = match;
-        LifescaleSummary = match.DisplayTitle;
+        Raise(nameof(LifescaleSummary));
         Raise(nameof(HasLifeScaleSelection));
+        Raise(nameof(CanAddLifeScaleAssignment));
         Raise(nameof(CanSave));
 
         EnsureCustomLifeScaleRows(match.Points);
 
         RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
+    }
+
+    public async Task SearchLifeScaleRaceAsync(INavigation navigation)
+    {
+        if (navigation == null || _allRaceNames.Count == 0)
+            return;
+
+        var usedRaces = LifeScaleAssignments
+            .Select(item => item.RaceName)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var options = _allRaceNames
+            .Where(race => !usedRaces.Contains(race))
+            .Select(race => new NonStandardSearchOption(race, "Race", race))
+            .ToList();
+
+        if (options.Count == 0)
+            return;
+
+        var selected = await NonStandardSearchPage.PickAsync(navigation, "Assign Lifescale Race", options);
+        if (selected == null)
+            return;
+
+        var raceName = (selected.Value ?? string.Empty).Trim();
+        if (raceName.Length == 0)
+            return;
+
+        LifeScaleAssignmentRaceName = raceName;
+    }
+
+    public void AddLifeScaleAssignment()
+    {
+        if (!TryCreateCurrentLifeScaleAssignment(out var assignment))
+            return;
+
+        var existing = LifeScaleAssignments
+            .FirstOrDefault(item => item.RaceName.Equals(assignment.RaceName, StringComparison.OrdinalIgnoreCase));
+        if (existing != null)
+            LifeScaleAssignments.Remove(existing);
+
+        LifeScaleAssignments.Add(assignment);
+        ReindexLifeScaleAssignments();
+        LifeScaleAssignmentRaceName = string.Empty;
+        Raise(nameof(CanSave));
+    }
+
+    public void RemoveLifeScaleAssignment(string? raceName)
+    {
+        var race = (raceName ?? string.Empty).Trim();
+        if (race.Length == 0)
+            return;
+
+        var existing = LifeScaleAssignments
+            .FirstOrDefault(item => item.RaceName.Equals(race, StringComparison.OrdinalIgnoreCase));
+        if (existing == null)
+            return;
+
+        LifeScaleAssignments.Remove(existing);
+        ReindexLifeScaleAssignments();
+        Raise(nameof(CanSave));
     }
 
     public void ToggleLifeScaleExpanded()
@@ -609,8 +689,9 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         if (!CanSave)
             throw new InvalidOperationException("Please complete required fields before saving.");
 
-        if (!TryGetLifeScaleForSave(out var lifeScaleRace, out var lifeScalePoints))
-            throw new InvalidOperationException("A lifescale selection is required.");
+        var lifeScaleAssignments = BuildLifeScaleAssignmentsForSave();
+        if (lifeScaleAssignments.Count == 0)
+            throw new InvalidOperationException("Add at least one race lifescale assignment before saving.");
 
         IsBusy = true;
         SaveStatus = string.Empty;
@@ -622,8 +703,7 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
                 EntityType = NonStandardEntityType.CharacterClass,
                 Name = (Name ?? string.Empty).Trim(),
                 DataJson = payload.ToJsonString(PrettyJson),
-                LifeScaleRaceName = lifeScaleRace,
-                LifeScalePoints = lifeScalePoints
+                LifeScaleAssignments = lifeScaleAssignments
             };
 
             await NonStandardContentService.SaveAsync(request);
@@ -702,14 +782,14 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         {
             _selectedLifeScaleOption = _lifeScaleOptions.FirstOrDefault(option =>
                 option.ClassName.Equals(BaseClassName, StringComparison.OrdinalIgnoreCase));
-
-            if (_selectedLifeScaleOption != null)
-                LifescaleSummary = _selectedLifeScaleOption.DisplayTitle;
         }
 
         EnsureCustomLifeScaleRows(GetDefaultLifeScalePointsForCustom());
 
         RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
+        Raise(nameof(LifescaleSummary));
+        Raise(nameof(HasLifeScaleSelection));
+        Raise(nameof(CanAddLifeScaleAssignment));
     }
 
     private void ApplyPayloadOverrides(JsonObject payload)
@@ -915,24 +995,39 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
     private async Task ApplyLifeScaleForClassAsync(string className)
     {
         UseCustomLifeScale = false;
-        _selectedLifeScaleOption = _lifeScaleOptions.FirstOrDefault(option =>
-            option.ClassName.Equals(className, StringComparison.OrdinalIgnoreCase));
+        LifeScaleAssignments.Clear();
 
-        if (_selectedLifeScaleOption == null)
+        var classMappings = _lifeScaleOptions
+            .Where(option => option.ClassName.Equals(className, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(option => option.RaceName, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(option => option.DisplayTitle, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var mapping in classMappings)
         {
-            LifescaleSummary = string.Empty;
-            Raise(nameof(HasLifeScaleSelection));
-            Raise(nameof(CanSave));
-            RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
-            return;
+            LifeScaleAssignments.Add(new LifeScaleAssignmentVm
+            {
+                RaceName = mapping.RaceName,
+                ClassName = ResolveClassNameForAssignment(className),
+                SourceSummary = $"as per: {mapping.DisplayTitle}",
+                Points = mapping.Points.ToList()
+            });
         }
 
-        LifescaleSummary = _selectedLifeScaleOption.DisplayTitle;
-        Raise(nameof(HasLifeScaleSelection));
-        Raise(nameof(CanSave));
-        EnsureCustomLifeScaleRows(_selectedLifeScaleOption.Points);
+        ReindexLifeScaleAssignments();
+        LifeScaleAssignmentRaceName = string.Empty;
+        _selectedLifeScaleOption = classMappings.FirstOrDefault();
+
+        if (_selectedLifeScaleOption != null)
+            EnsureCustomLifeScaleRows(_selectedLifeScaleOption.Points);
+        else
+            EnsureCustomLifeScaleRows(GetDefaultLifeScalePointsForCustom());
 
         RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
+        Raise(nameof(LifescaleSummary));
+        Raise(nameof(HasLifeScaleSelection));
+        Raise(nameof(CanAddLifeScaleAssignment));
+        Raise(nameof(CanSave));
         await Task.CompletedTask;
     }
 
@@ -1152,6 +1247,8 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
             return;
 
         RebuildExpandedLifeScaleRows(GetEffectiveLifeScalePoints());
+        Raise(nameof(LifescaleSummary));
+        Raise(nameof(CanAddLifeScaleAssignment));
         Raise(nameof(CanSave));
     }
 
@@ -1163,21 +1260,90 @@ public sealed class NonStandardClassCreateVm : INotifyPropertyChanged
         return _selectedLifeScaleOption?.Points ?? Array.Empty<LifeScalePoint>();
     }
 
-    private bool TryGetLifeScaleForSave(out string raceName, out IReadOnlyList<LifeScalePoint> points)
+    private IReadOnlyList<NonStandardLifeScaleAssignment> BuildLifeScaleAssignmentsForSave()
     {
-        raceName = string.Empty;
-        points = Array.Empty<LifeScalePoint>();
+        return LifeScaleAssignments
+            .Where(item => !string.IsNullOrWhiteSpace((item.RaceName ?? string.Empty).Trim()) && item.Points.Count >= 8)
+            .Select(item => new NonStandardLifeScaleAssignment
+            {
+                RaceName = item.RaceName,
+                ClassName = (Name ?? string.Empty).Trim(),
+                Points = item.Points.ToList()
+            })
+            .ToList();
+    }
+
+    private bool TryCreateCurrentLifeScaleAssignment(out LifeScaleAssignmentVm assignment)
+    {
+        assignment = new LifeScaleAssignmentVm();
+
+        var raceName = (LifeScaleAssignmentRaceName ?? string.Empty).Trim();
+        if (raceName.Length == 0)
+            return false;
 
         var effective = GetEffectiveLifeScalePoints();
         if (effective.Count < 8)
             return false;
 
-        if (_selectedLifeScaleOption == null)
+        if (!HasLifeScaleSelection)
             return false;
 
-        raceName = _selectedLifeScaleOption.RaceName;
-        points = effective;
+        assignment = new LifeScaleAssignmentVm
+        {
+            RaceName = raceName,
+            ClassName = ResolveClassNameForAssignment(),
+            SourceSummary = BuildCurrentLifeScaleSummary(),
+            Points = effective.ToList()
+        };
         return true;
+    }
+
+    private void ReindexLifeScaleAssignments()
+    {
+        for (var index = 0; index < LifeScaleAssignments.Count; index++)
+            LifeScaleAssignments[index].RowBackgroundHex = index % 2 == 0 ? "#FFFFFF" : "#F8FAFC";
+
+        Raise(nameof(CanAddLifeScaleAssignment));
+    }
+
+    private void RefreshLifeScaleAssignmentClassName()
+    {
+        if (LifeScaleAssignments.Count == 0)
+            return;
+
+        var resolvedClassName = ResolveClassNameForAssignment();
+        for (var index = 0; index < LifeScaleAssignments.Count; index++)
+        {
+            var current = LifeScaleAssignments[index];
+            if (string.Equals(current.ClassName, resolvedClassName, StringComparison.Ordinal))
+                continue;
+
+            LifeScaleAssignments[index] = current with { ClassName = resolvedClassName };
+        }
+    }
+
+    private string ResolveClassNameForAssignment(string? fallbackClassName = null)
+    {
+        var explicitName = (Name ?? string.Empty).Trim();
+        if (explicitName.Length > 0)
+            return explicitName;
+
+        var fallback = (fallbackClassName ?? string.Empty).Trim();
+        if (fallback.Length > 0)
+            return fallback;
+
+        return (BaseClassName ?? string.Empty).Trim();
+    }
+
+    private string BuildCurrentLifeScaleSummary()
+    {
+        if (_selectedLifeScaleOption == null)
+            return UseCustomLifeScale ? "From: custom values - Customised" : string.Empty;
+
+        if (UseCustomLifeScale)
+            return $"From: {_selectedLifeScaleOption.DisplayTitle} - Customised";
+
+        return $"as per: {_selectedLifeScaleOption.DisplayTitle}";
     }
 
     private JsonObject BuildClassPayload()
@@ -1924,6 +2090,7 @@ public sealed class CustomLifeScalePointVm : INotifyPropertyChanged
     private string _locText = string.Empty;
 
     public int Level { get; init; }
+    public string RowBackgroundHex => Level % 2 == 0 ? "#F8FAFC" : "#FFFFFF";
 
     public string BodyText
     {
@@ -1948,6 +2115,27 @@ public sealed class CustomLifeScalePointVm : INotifyPropertyChanged
 
             _locText = value ?? string.Empty;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LocText)));
+        }
+    }
+}
+
+public sealed record class LifeScaleAssignmentVm
+{
+    public string RaceName { get; init; } = string.Empty;
+    public string ClassName { get; init; } = string.Empty;
+    public string SourceSummary { get; init; } = string.Empty;
+    public IReadOnlyList<LifeScalePoint> Points { get; init; } = Array.Empty<LifeScalePoint>();
+    public string RowBackgroundHex { get; set; } = "#FFFFFF";
+    public string RaceClassSummary => $"{RaceName} {ClassName}".Trim();
+    public string LevelEightSummary
+    {
+        get
+        {
+            if (Points.Count == 0)
+                return string.Empty;
+
+            var last = Points[^1];
+            return $"Level 8: {last.Body},{last.Loc}";
         }
     }
 }

@@ -137,6 +137,8 @@ public static class SpecialisationService
         return new ColourAbilityRecord
         {
             Description = (option.Description ?? string.Empty).Trim(),
+            Roleplay = ReadOptionMetadata(option, "Roleplay"),
+            Lore = ReadOptionMetadata(option, "Lore"),
             Levels = BuildLevelledAbilityMap(option.Grants),
             LifeScaleOverride = option.Effects?.LifeScaleOverride ?? string.Empty,
             ArmourAvailabilityOverride = option.Effects?.ArmourAvailabilityOverride ?? string.Empty,
@@ -195,6 +197,7 @@ public static class SpecialisationService
             Name = source.Name,
             Type = source.Type,
             Effect = source.Effect,
+            Lore = source.Lore,
             BattleboardNameOverride = source.BattleboardNameOverride,
             UpdateKey = source.UpdateKey,
             Source = source.Source,
@@ -216,6 +219,18 @@ public static class SpecialisationService
 
     private static bool IsNotBlank(string? value)
         => !string.IsNullOrWhiteSpace(value);
+
+    private static string ReadOptionMetadata(ChoiceOption option, string key)
+    {
+        if (option.Metadata != null
+            && option.Metadata.TryGetValue(key, out var value)
+            && !string.IsNullOrWhiteSpace(value))
+        {
+            return value.Trim();
+        }
+
+        return string.Empty;
+    }
 }
 
 public sealed class SpecialisationRecord
@@ -232,6 +247,8 @@ public sealed class SpecialisationRecord
 public sealed class ColourAbilityRecord
 {
     public string Description { get; set; } = string.Empty;
+    public string Roleplay { get; set; } = string.Empty;
+    public string Lore { get; set; } = string.Empty;
     public Dictionary<string, List<AbilityDefinition>>? Levels { get; set; }
     public string LifeScaleOverride { get; set; } = string.Empty;
     public string ArmourAvailabilityOverride { get; set; } = string.Empty;

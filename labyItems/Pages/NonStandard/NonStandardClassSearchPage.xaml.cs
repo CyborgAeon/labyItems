@@ -13,6 +13,7 @@ public partial class NonStandardClassSearchPage : ContentPage
 {
     private readonly TaskCompletionSource<string?> _completion = new();
     private readonly NonStandardClassSearchVm _vm;
+    private bool _presentedModally;
 
     public ICommand SelectClassCommand { get; }
     public ICommand ToggleExpandedCommand { get; }
@@ -37,8 +38,28 @@ public partial class NonStandardClassSearchPage : ContentPage
 
         var page = new NonStandardClassSearchPage(currentValue);
         await page._vm.LoadAsync();
-        await navigation.PushAsync(page);
+        if (ShouldPresentModally(navigation))
+        {
+            page._presentedModally = true;
+            await navigation.PushModalAsync(page);
+        }
+        else
+        {
+            await navigation.PushAsync(page);
+        }
+
         return await page._completion.Task;
+    }
+
+    private static bool ShouldPresentModally(INavigation navigation)
+    {
+        if (navigation.ModalStack.Count > 0)
+            return true;
+
+        if (navigation.NavigationStack.Count == 0)
+            return true;
+
+        return false;
     }
 
     protected override bool OnBackButtonPressed()
@@ -61,7 +82,9 @@ public partial class NonStandardClassSearchPage : ContentPage
         _vm.SetSelected(card.Key);
         _completion.TrySetResult(card.Key);
 
-        if (Navigation.NavigationStack.LastOrDefault() == this)
+        if (_presentedModally && Navigation.ModalStack.LastOrDefault() == this)
+            await Navigation.PopModalAsync();
+        else if (Navigation.NavigationStack.LastOrDefault() == this)
             await Navigation.PopAsync();
     }
 

@@ -139,8 +139,8 @@
         </Grid>
         <VerticalStackLayout Spacing="6" IsVisible="{Binding IsWeaponSelectionVisible}">
           <controls:DictionarySearchBar x:Name="WeaponTypeSearch" x:TypeArguments="enums:WeaponType" ItemsSource="{controls:EnumDictionary Type={x:Type enums:WeaponType}}" PlaceholderText="Pick weapon type" SelectedValue="{Binding SelectedWeaponType, Mode=TwoWay}" />
-          <controls:DictionarySearchBar x:Name="WeaponColourSearch" x:TypeArguments="enums:MagicColours" IsVisible="{Binding IsWeaponColourVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}}" PlaceholderText="Pick colour" SelectedValue="{Binding SelectedWeaponColour, Mode=TwoWay}" />
-          <controls:DictionarySearchBar x:Name="WeaponAlignmentSearch" x:TypeArguments="enums:Alignments" IsVisible="{Binding IsWeaponAlignmentVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:Alignments}}" PlaceholderText="Pick alignment" SelectedValue="{Binding SelectedWeaponAlignment, Mode=TwoWay}" />
+          <controls:DictionarySearchBar x:Name="WeaponColourSearch" x:TypeArguments="enums:MagicColours" IsVisible="{Binding IsWeaponColourVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:MagicColours}}" PlaceholderText="type a colour" SelectedValue="{Binding SelectedWeaponColour, Mode=TwoWay}" />
+          <controls:DictionarySearchBar x:Name="WeaponAlignmentSearch" x:TypeArguments="enums:Alignments" IsVisible="{Binding IsWeaponAlignmentVisible}" ItemsSource="{controls:EnumDictionary Type={x:Type enums:Alignments}}" PlaceholderText="good, neutral, or evil" SelectedValue="{Binding SelectedWeaponAlignment, Mode=TwoWay}" />
         </VerticalStackLayout>
 
         <!-- Shield -->

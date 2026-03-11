@@ -92,6 +92,12 @@ public static class LiteDbService
             .ThenBy(x => NormalizeKey(x.Description));
     }
 
+    public static IEnumerable<Item> GetItems() =>
+        GetDb()
+            .GetCollection<Item>("items")
+            .FindAll()
+            .OrderByDescending(item => item.CreatedDate);
+
     public static IEnumerable<Character> GetCharacters() =>
         GetDb().GetCollection<Character>("characters").FindAll().OrderBy(c => c.Name);
 

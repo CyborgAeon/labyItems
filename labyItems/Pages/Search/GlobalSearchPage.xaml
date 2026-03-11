@@ -51,19 +51,22 @@
         </CollectionView>
         <Grid Grid.Row="2">
             <CollectionView ItemsSource="{Binding FilteredResults}"
+                            ItemSizingStrategy="MeasureAllItems"
+                            ItemsLayout="VerticalList"
                             SelectionMode="None"
                             Margin="0,2,0,0">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Padding="12"
-                               CornerRadius="12"
-                               BorderColor="{StaticResource SubtleTextColor}"
-                               HasShadow="False"
-                               Margin="0,0,0,8">
-                            <Frame.GestureRecognizers>
+                        <Border Padding="12"
+                                Stroke="{StaticResource SubtleTextColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{StaticResource White}"
+                                Margin="0,0,0,8">
+                            <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnResultTapped"
                                                       CommandParameter="{Binding .}"/>
-                            </Frame.GestureRecognizers>
+                            </Border.GestureRecognizers>
 
                             <Grid ColumnDefinitions="Auto,*"
                                   ColumnSpacing="10">
@@ -101,7 +104,7 @@
                                            IsVisible="{Binding HasDescription}"/>
                                 </VerticalStackLayout>
                             </Grid>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

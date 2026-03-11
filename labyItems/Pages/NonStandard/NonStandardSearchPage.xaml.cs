@@ -14,6 +14,7 @@ public partial class NonStandardSearchPage : ContentPage
 {
     private readonly List<NonStandardSearchOption> _allOptions;
     private readonly TaskCompletionSource<NonStandardSearchOption?> _completion = new();
+    private bool _presentedModally;
 
     public ObservableCollection<NonStandardSearchOption> FilteredOptions { get; } = new();
 
@@ -33,9 +34,32 @@ public partial class NonStandardSearchPage : ContentPage
         string title,
         IReadOnlyList<NonStandardSearchOption> options)
     {
+        if (navigation == null)
+            return null;
+
         var page = new NonStandardSearchPage(title, options);
-        await navigation.PushAsync(page);
+        if (ShouldPresentModally(navigation))
+        {
+            page._presentedModally = true;
+            await navigation.PushModalAsync(page);
+        }
+        else
+        {
+            await navigation.PushAsync(page);
+        }
+
         return await page._completion.Task;
+    }
+
+    private static bool ShouldPresentModally(INavigation navigation)
+    {
+        if (navigation.ModalStack.Count > 0)
+            return true;
+
+        if (navigation.NavigationStack.Count == 0)
+            return true;
+
+        return false;
     }
 
     protected override bool OnBackButtonPressed()
@@ -63,7 +87,9 @@ public partial class NonStandardSearchPage : ContentPage
             return;
 
         _completion.TrySetResult(selected);
-        if (Navigation.NavigationStack.LastOrDefault() == this)
+        if (_presentedModally && Navigation.ModalStack.LastOrDefault() == this)
+            await Navigation.PopModalAsync();
+        else if (Navigation.NavigationStack.LastOrDefault() == this)
             await Navigation.PopAsync();
     }
 

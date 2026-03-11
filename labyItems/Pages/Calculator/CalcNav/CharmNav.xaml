@@ -17,13 +17,13 @@
 				<Button IsEnabled="False" Text="Neuronic" />
 			</VerticalStackLayout>
 		</ScrollView>
-		<controls:StickyFooterControl
-			Grid.Row="1"
-			BreakdownItems="{Binding Source={x:Reference RootPage}, Path=BindingContext.BreakdownItems}"
-			ButtonText="Return to Form"
-			RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=BindingContext.RemoveContributionCommand}"
-			ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
-			ReturnCommandParameter="{x:Reference RootPage}"
+			<controls:StickyFooterControl
+				Grid.Row="1"
+				BreakdownItems="{Binding Source={x:Reference RootPage}, Path=BindingContext.BreakdownItems}"
+				ButtonText="Save"
+				RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=BindingContext.RemoveContributionCommand}"
+				ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
+				ReturnCommandParameter="{x:Reference RootPage}"
 			Total="{Binding Source={x:Reference RootPage}, Path=BindingContext.Total}" />
 	</Grid>
 </ContentPage>

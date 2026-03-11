@@ -203,7 +203,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             if (!alignmentOk) reason = "Conflicts with current alignment restrictions.";
             else if (!slotCheck.Allowed) reason = slotCheck.Reason;
             else if (!availability.Allowed) reason = availability.Reason;
-            var cardSelectable = _allowGuildSelection && (selectable || isSelected);
+            var cardSelectable = !_allowGuildSelection || (selectable || isSelected);
 
             var vm = new GuildCardVm
             {
@@ -805,7 +805,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             var selectable = alignmentOk && slotsResult.Allowed && availability.Allowed;
 
             // Allow already-selected guilds to stay selectable so the user can deselect them
-            card.IsSelectable = _allowGuildSelection && (selectable || card.IsSelected);
+            card.IsSelectable = !_allowGuildSelection || (selectable || card.IsSelected);
 
             if (!alignmentOk)
                 card.NotSelectableReason = "Conflicts with current alignment restrictions.";
@@ -943,7 +943,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private void ToggleSelected(GuildCardVm? item)
     {
         if (!_allowGuildSelection)
+        {
+            ToggleExpanded(item);
             return;
+        }
 
         if (item is null || item.IsLocked || (!item.IsSelectable && !item.IsSelected))
             return;

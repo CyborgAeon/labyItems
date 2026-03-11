@@ -8,7 +8,6 @@ namespace labyItems.Pages.Search;
 public partial class GlobalSearchPage : ContentPage
 {
     private readonly GlobalSearchVm _vm = new();
-    private bool _isAnimatingFilters;
     private bool _isNavigatingBack;
 
     public GlobalSearchPage()
@@ -46,35 +45,14 @@ public partial class GlobalSearchPage : ContentPage
         }
     }
 
-    private async void OnFilterChipTapped(object? sender, TappedEventArgs e)
+    private void OnFilterChipTapped(object? sender, TappedEventArgs e)
     {
-        if (_isAnimatingFilters)
-            return;
-
         var chip = e.Parameter as GlobalSearchFilterChipVm
             ?? (sender as BindableObject)?.BindingContext as GlobalSearchFilterChipVm;
         if (chip == null)
             return;
 
-        var transition = _vm.PreviewFilterTransition(chip);
-        if (transition == GlobalSearchFilterTransition.None)
-        {
-            _vm.ApplyFilterChip(chip);
-            return;
-        }
-
-        _isAnimatingFilters = true;
-        try
-        {
-            await FilterChipView.FadeTo(0, 180, Easing.CubicOut);
-            _vm.ApplyFilterChip(chip);
-            FilterChipView.Opacity = 0;
-            await FilterChipView.FadeTo(1, 220, Easing.CubicIn);
-        }
-        finally
-        {
-            _isAnimatingFilters = false;
-        }
+        _vm.ApplyFilterChip(chip);
     }
 
     private async void OnResultTapped(object? sender, TappedEventArgs e)

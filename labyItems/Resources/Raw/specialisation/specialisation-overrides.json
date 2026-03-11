@@ -94,6 +94,87 @@
           "EffectListField": "HedgeOrCircle"
         }
       }
+    },
+    {
+      "Id": "crol-yashtar-talents",
+      "Conditions": {
+        "Race": "Crol",
+        "Subtype": "Yashtar"
+      },
+      "Section": {
+        "SectionType": "Choice",
+        "DefinitionKey": "Crol Talents (Yashtar)",
+        "Title": "Crol Talents",
+        "Subtitle": "Choose one caste talent at levels 2, 5 and 8. Higher-tier talents unlock at later levels.",
+        "DetailKey": "Crol Talents (Yashtar)",
+        "SectionId": "choice:Crol Talents:Yashtar",
+        "Required": true,
+        "Levels": [
+          2,
+          5,
+          8
+        ]
+      }
+    },
+    {
+      "Id": "crol-kaerssor-talents",
+      "Conditions": {
+        "Race": "Crol",
+        "Subtype": "Kaerssor"
+      },
+      "Section": {
+        "SectionType": "Choice",
+        "DefinitionKey": "Crol Talents (Kaerssor)",
+        "Title": "Crol Talents",
+        "Subtitle": "Choose one caste talent at levels 2, 5 and 8. Higher-tier talents unlock at later levels.",
+        "DetailKey": "Crol Talents (Kaerssor)",
+        "SectionId": "choice:Crol Talents:Kaerssor",
+        "Required": true,
+        "Levels": [
+          2,
+          5,
+          8
+        ]
+      }
+    },
+    {
+      "Id": "crol-jaerseen-talents",
+      "Conditions": {
+        "Race": "Crol",
+        "Subtype": "Jaerseen"
+      },
+      "Section": {
+        "SectionType": "Choice",
+        "DefinitionKey": "Crol Talents (Jaerseen)",
+        "Title": "Crol Talents",
+        "Subtitle": "Choose one caste talent at levels 2, 5 and 8. Higher-tier talents unlock at later levels.",
+        "DetailKey": "Crol Talents (Jaerseen)",
+        "SectionId": "choice:Crol Talents:Jaerseen",
+        "Required": true,
+        "Levels": [
+          2,
+          5,
+          8
+        ]
+      }
+    },
+    {
+      "Id": "power-master-wizard-colour",
+      "Conditions": {
+        "Class": "Power Master"
+      },
+      "Section": {
+        "SectionType": "Choice",
+        "DefinitionKey": "Power Master Colour",
+        "Title": "Wizard Colour",
+        "Subtitle": "Select your elemental magic colour.",
+        "DetailKey": "Power Master Colour",
+        "SectionId": "choice:Wizard Colour:PowerMaster",
+        "Required": true,
+        "Levels": [
+          1
+        ]
+      }
     }
   ]
 }

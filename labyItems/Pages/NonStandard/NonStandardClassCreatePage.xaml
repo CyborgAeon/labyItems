@@ -38,15 +38,15 @@
             </Frame>
 
             <Frame Style="{StaticResource SectionCardFrameStyle}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Name"
-                           Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <Grid ColumnDefinitions="Auto,*"
+                      ColumnSpacing="12">
                     <Label Text="class name"
-                           FontSize="12"
-                           Opacity="0.7"/>
-                    <Entry Text="{Binding Name, Mode=TwoWay}"
+                           Style="{StaticResource SectionHeaderLabelStyle}"
+                           VerticalTextAlignment="Center"/>
+                    <Entry Grid.Column="1"
+                           Text="{Binding Name, Mode=TwoWay}"
                            Placeholder="Enter class name"/>
-                </VerticalStackLayout>
+                </Grid>
             </Frame>
 
             <Frame Style="{StaticResource SectionCardFrameStyle}">
@@ -313,23 +313,25 @@
                            Opacity="0.8"
                            LineBreakMode="WordWrap"/>
 
-                    <CollectionView ItemsSource="{Binding PowerCalculations}"
-                                    SelectionMode="None">
-                        <CollectionView.ItemTemplate>
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding PowerCalculations}"
+                                         Spacing="4">
+                        <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Grid ColumnDefinitions="Auto,*"
+                                <Grid ColumnDefinitions="*,*"
                                       ColumnSpacing="8"
                                       Padding="0,2">
                                     <Label Grid.Column="0"
                                            Text="{Binding PowerBaseDisplay}"
-                                           VerticalTextAlignment="Center"/>
+                                           VerticalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="1"/>
                                     <Entry Grid.Column="1"
                                            Placeholder="e.g. CL^2+CL"
                                            Text="{Binding Calculation, Mode=TwoWay}"/>
                                 </Grid>
                             </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </Frame>
 
@@ -415,7 +417,8 @@
                             <DataTemplate>
                                 <Grid ColumnDefinitions="60,*,*"
                                       ColumnSpacing="8"
-                                      Padding="0,2">
+                                      Padding="8,6"
+                                      BackgroundColor="{Binding RowBackgroundHex}">
                                     <Label Text="{Binding Level, StringFormat='Lv {0}'}"
                                            VerticalTextAlignment="Center"/>
                                     <Entry Grid.Column="1"
@@ -462,6 +465,64 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
+                    <Label Text="Assign to race"
+                           Style="{StaticResource SectionHeaderLabelStyle}"/>
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="8">
+                        <Entry Grid.Column="0"
+                               Text="{Binding LifeScaleAssignmentRaceName, Mode=OneWay}"
+                               IsReadOnly="True"
+                               Placeholder="Pick race for this lifescale"/>
+                        <Button Grid.Column="1"
+                                Text="&#xF002;"
+                                FontFamily="FASolid"
+                                WidthRequest="42"
+                                HeightRequest="42"
+                                Padding="0"
+                                Clicked="OnSearchLifescaleRaceClicked"/>
+                    </Grid>
+
+                    <Button Text="Add lifescale for race"
+                            IsEnabled="{Binding CanAddLifeScaleAssignment}"
+                            Clicked="OnAddLifescaleAssignmentClicked"/>
+
+                    <CollectionView ItemsSource="{Binding LifeScaleAssignments}"
+                                    SelectionMode="None"
+                                    HeightRequest="170">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8"
+                                      Padding="8,6"
+                                      BackgroundColor="{Binding RowBackgroundHex}">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="{Binding RaceClassSummary}"
+                                               FontAttributes="Bold"
+                                               VerticalTextAlignment="Center"/>
+                                        <Label Text="{Binding SourceSummary}"
+                                               FontSize="12"
+                                               Opacity="0.8"/>
+                                        <Label Text="{Binding LevelEightSummary}"
+                                               FontSize="12"
+                                               Opacity="0.75"/>
+                                    </VerticalStackLayout>
+                                    <Button Grid.Column="1"
+                                            Text="&#xF1F8;"
+                                            FontFamily="FASolid"
+                                            WidthRequest="34"
+                                            HeightRequest="34"
+                                            Padding="0"
+                                            Clicked="OnDeleteLifescaleAssignmentClicked"
+                                            CommandParameter="{Binding RaceName}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Style="{StaticResource SectionCardFrameStyle}">
+                <VerticalStackLayout Spacing="8">
                     <Label Text="Whitelist races"
                            Style="{StaticResource SectionHeaderLabelStyle}"/>
                     <Button Text="Add to whitelist"

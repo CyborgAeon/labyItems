@@ -14,6 +14,8 @@ public readonly record struct LocationOption(string Name);
 
 public partial class MpThemedayPage : MpCalculatorPageBase
 {
+    private const int MagicWeaponCost = 150;
+    private const int SpiritWeaponCost = 200;
     private const int ManticWeaponCost = 500;
     private const int PureMagicWeaponCost = 400;
     private const int PureSpiritWeaponCost = 500;
@@ -26,6 +28,8 @@ public partial class MpThemedayPage : MpCalculatorPageBase
     private const int CpBenefitCost = 250;
     private const int PowerStoreUnitCost = 30;
     private const int PowerStoreMax = 5;
+    private const int IspMagicWeaponCost = 20;
+    private const int IspSpiritWeaponCost = 25;
     private const int IspManticWeaponCost = 50;
     private const int IspPureMagicWeaponCost = 40;
     private const int IspPureSpiritWeaponCost = 45;
@@ -68,7 +72,7 @@ public partial class MpThemedayPage : MpCalculatorPageBase
     };
 
     private readonly Dictionary<string, LocationOption> _locationOptions;
-    private static readonly string[] WeaponKindChipOptions = { SupernaturalTypes.PureMagic, SupernaturalTypes.PureSpirit, SupernaturalTypes.Mantic };
+    private static readonly string[] WeaponKindChipOptions = { SupernaturalTypes.Magic, SupernaturalTypes.Spirit, SupernaturalTypes.PureMagic, SupernaturalTypes.PureSpirit, SupernaturalTypes.Mantic };
     private static readonly string[] ShieldChipOptions = { SupernaturalTypes.Magic, SupernaturalTypes.Spirit };
     private static readonly string[] BagChipOptions = { "🎒 Apprentice", "🛡️ Journeyman" };
 
@@ -119,8 +123,8 @@ public partial class MpThemedayPage : MpCalculatorPageBase
     private bool _weaponApprenticeStatus;
 
     public bool IsWeaponSelectionVisible => !string.IsNullOrWhiteSpace(SelectedWeaponKind);
-    public bool IsWeaponColourVisible => IsKind("Pure Magic") || IsKind("Mantic");
-    public bool IsWeaponAlignmentVisible => IsKind("Pure Spirit") || IsKind("Mantic");
+    public bool IsWeaponColourVisible => IsKind("Magic") || IsKind("Pure Magic") || IsKind("Mantic");
+    public bool IsWeaponAlignmentVisible => IsKind("Spirit") || IsKind("Pure Spirit") || IsKind("Mantic");
 
     public string? SelectedShieldType
     {
@@ -320,7 +324,7 @@ public partial class MpThemedayPage : MpCalculatorPageBase
         if (WeaponApprenticeStatus)
             AddContribution(items, ref running, "weapon-apprentice", "Weapon apprentice status", ApprenticeCost);
 
-        if (string.IsNullOrWhiteSpace(SelectedWeaponKind) || !SelectedWeaponType.HasValue)
+        if (string.IsNullOrWhiteSpace(SelectedWeaponKind))
             return;
 
         var trimmed = TrimChipLabel(SelectedWeaponKind) ?? SelectedWeaponKind;
@@ -333,7 +337,9 @@ public partial class MpThemedayPage : MpCalculatorPageBase
         if (IsWeaponAlignmentVisible && !SelectedWeaponAlignment.HasValue)
             return;
 
-        var parts = new List<string> { FormatWeapon(SelectedWeaponType.Value) };
+        var parts = new List<string>();
+        if (SelectedWeaponType.HasValue)
+            parts.Add(FormatWeapon(SelectedWeaponType.Value));
         if (IsWeaponColourVisible && SelectedWeaponColour.HasValue)
             parts.Add(FormatColour(SelectedWeaponColour.Value));
         if (IsWeaponAlignmentVisible && SelectedWeaponAlignment.HasValue)
@@ -428,7 +434,7 @@ public partial class MpThemedayPage : MpCalculatorPageBase
         if (WeaponApprenticeStatus)
             AddIspContribution(items, ref running, "weapon-apprentice", "Weapon apprentice status", IspApprenticeStatusCost);
 
-        if (string.IsNullOrWhiteSpace(SelectedWeaponKind) || !SelectedWeaponType.HasValue)
+        if (string.IsNullOrWhiteSpace(SelectedWeaponKind))
             return;
 
         var trimmed = TrimChipLabel(SelectedWeaponKind) ?? SelectedWeaponKind;
@@ -441,7 +447,9 @@ public partial class MpThemedayPage : MpCalculatorPageBase
         if (IsWeaponAlignmentVisible && !SelectedWeaponAlignment.HasValue)
             return;
 
-        var parts = new List<string> { FormatWeapon(SelectedWeaponType.Value) };
+        var parts = new List<string>();
+        if (SelectedWeaponType.HasValue)
+            parts.Add(FormatWeapon(SelectedWeaponType.Value));
         if (IsWeaponColourVisible && SelectedWeaponColour.HasValue)
             parts.Add(FormatColour(SelectedWeaponColour.Value));
         if (IsWeaponAlignmentVisible && SelectedWeaponAlignment.HasValue)
@@ -530,6 +538,10 @@ public partial class MpThemedayPage : MpCalculatorPageBase
 
     private static int GetWeaponCost(string? kind)
     {
+        if (string.Equals(kind, "Magic", StringComparison.OrdinalIgnoreCase))
+            return MagicWeaponCost;
+        if (string.Equals(kind, "Spirit", StringComparison.OrdinalIgnoreCase))
+            return SpiritWeaponCost;
         if (string.Equals(kind, "Pure Magic", StringComparison.OrdinalIgnoreCase))
             return PureMagicWeaponCost;
         if (string.Equals(kind, "Pure Spirit", StringComparison.OrdinalIgnoreCase))
@@ -550,6 +562,10 @@ public partial class MpThemedayPage : MpCalculatorPageBase
 
     private static int GetWeaponIspCost(string? kind)
     {
+        if (string.Equals(kind, "Magic", StringComparison.OrdinalIgnoreCase))
+            return IspMagicWeaponCost;
+        if (string.Equals(kind, "Spirit", StringComparison.OrdinalIgnoreCase))
+            return IspSpiritWeaponCost;
         if (string.Equals(kind, "Pure Magic", StringComparison.OrdinalIgnoreCase))
             return IspPureMagicWeaponCost;
         if (string.Equals(kind, "Pure Spirit", StringComparison.OrdinalIgnoreCase))

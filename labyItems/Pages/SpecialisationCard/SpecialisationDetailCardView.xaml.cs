@@ -59,6 +59,10 @@ public partial class SpecialisationDetailCardView : ContentView
     public string DescriptionText => ResolveDescriptionText();
     public string HintText => ResolveHintText();
     public bool HasHint => !string.IsNullOrWhiteSpace(HintText);
+    public string RoleplayText => ResolveRoleplayText();
+    public bool HasRoleplay => !string.IsNullOrWhiteSpace(RoleplayText);
+    public string LoreText => ResolveLoreText();
+    public bool HasLore => !string.IsNullOrWhiteSpace(LoreText);
 
     public ObservableCollection<string> MetadataChips { get; } = new();
     public bool HasMetadataChips => MetadataChips.Count > 0;
@@ -228,6 +232,25 @@ public partial class SpecialisationDetailCardView : ContentView
         return hint;
     }
 
+    private string ResolveRoleplayText()
+    {
+        if (_resolvedColourAbility == null)
+            return string.Empty;
+
+        return ReadOrFallback(_resolvedColourAbility.Roleplay, string.Empty);
+    }
+
+    private string ResolveLoreText()
+    {
+        if (_resolvedAbility != null)
+            return ReadOrFallback(_resolvedAbility.Lore, string.Empty);
+
+        if (_resolvedColourAbility != null)
+            return ReadOrFallback(_resolvedColourAbility.Lore, string.Empty);
+
+        return string.Empty;
+    }
+
     private static string ResolveDescriptionFromAbility(AbilityDefinition ability)
     {
         var effect = ReadOrFallback(ability.Effect, string.Empty);
@@ -347,6 +370,10 @@ public partial class SpecialisationDetailCardView : ContentView
         OnPropertyChanged(nameof(DescriptionText));
         OnPropertyChanged(nameof(HintText));
         OnPropertyChanged(nameof(HasHint));
+        OnPropertyChanged(nameof(RoleplayText));
+        OnPropertyChanged(nameof(HasRoleplay));
+        OnPropertyChanged(nameof(LoreText));
+        OnPropertyChanged(nameof(HasLore));
         OnPropertyChanged(nameof(DescriptionChevronText));
         OnPropertyChanged(nameof(ShowDescriptionSeeMore));
         OnPropertyChanged(nameof(HasMetadataChips));

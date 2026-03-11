@@ -6,9 +6,7 @@
       "Title": "1st Weapon Mastery",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "1st Weapon Mastery",
@@ -31,9 +29,7 @@
       "Title": "1st Weapon Mastery (O)",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "1st Weapon Mastery",
@@ -63,9 +59,7 @@
       "Title": "Warrior Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "1st Weapon Mastery",
@@ -158,9 +152,7 @@
       "Title": "Battle-Priest Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -223,9 +215,7 @@
       "Title": "Crusading-Priest Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -288,9 +278,7 @@
       "Title": "Ranger Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "1st Weapon Mastery",
@@ -353,9 +341,7 @@
       "Title": "Archer Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "3rd Weapon Mastery (Bows)",
@@ -404,9 +390,7 @@
       "Title": "Monk Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "Mind Block",
@@ -480,9 +464,7 @@
       "Title": "Duellist Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -582,9 +564,7 @@
       "Title": "Cavalier Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -657,9 +637,7 @@
       "Title": "Paladin Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -729,9 +707,7 @@
       "Title": "Unholy Champion Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "Utilise Evil Spirit Item",
@@ -791,9 +767,7 @@
       "Title": "Grey Knight",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "Utilise Neutral Spirit Item",
@@ -854,9 +828,7 @@
       "Title": "Budoka Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -936,9 +908,7 @@
       "Title": "Power Master Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -1011,9 +981,7 @@
       "Title": "Power Warrior",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped"
-      ],
+      "StrategyIds": ["section:mapped"],
       "Options": [
         {
           "Key": "Gem",
@@ -1066,9 +1034,7 @@
       "Title": "Power Warrior Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "Empower Armour",
@@ -1131,9 +1097,7 @@
       "Title": "Valdstayn Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -1205,9 +1169,7 @@
       "Title": "Rovfuger Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -1289,9 +1251,7 @@
       "Title": "Wind dancer Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -1367,10 +1327,7 @@
       "Title": "Standard Scout skill",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice",
-        "lookup:scout-skill"
-      ],
+      "StrategyIds": ["section:choice", "lookup:scout-skill"],
       "Options": [
         {
           "Key": "Athlete",
@@ -1696,10 +1653,7 @@
       "Title": "Specialist Scout skill",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice",
-        "lookup:scout-skill"
-      ],
+      "StrategyIds": ["section:choice", "lookup:scout-skill"],
       "Options": [
         {
           "Key": "Assassin's Eye",
@@ -1932,9 +1886,7 @@
       "Title": "Warrior-Priest specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -1997,10 +1949,7 @@
       "Title": "Ward pact",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice",
-        "lookup:ward-pact"
-      ],
+      "StrategyIds": ["section:choice", "lookup:ward-pact"],
       "Options": [
         {
           "Key": "Undead",
@@ -2171,9 +2120,7 @@
       "Title": "ElfColourAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped"
-      ],
+      "StrategyIds": ["section:mapped"],
       "Options": [
         {
           "Key": "Light",
@@ -2575,56 +2522,38 @@
       "Title": "CrolSubtypeAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped"
-      ],
+      "StrategyIds": ["section:mapped"],
       "Options": [
         {
           "Key": "Yashtar",
           "Label": "Yashtar",
+          "Description": "Slave caste Crol bred under Athfanal domination; physically resilient but tightly controlled.",
+          "Metadata": {
+            "Roleplay": "Yashtar are enslaved Crol conditioned to obey. Most never realise they are enslaved, and open resistance is rare.",
+            "Lore": "The third caste of Crol is the Slaves, called the Yashtar, born and bred in slavery to the Athfanal. They are treated brutally and dominated by potent spells that enforce subservience. They undertake manual labour, guard duty, and raiding tasks. The magical control is so strong that most Yashtar do not realise they are enslaved or that any other life is possible."
+          },
           "Effects": {
-            "ArmourAvailabilityOverride": "Light"
+            "ArmourAvailabilityOverride": "Light",
+            "LifeScaleOverride": "Ogre"
           },
           "Restrictions": {
-            "ClassRestriction": [
-              "Warrior"
-            ]
+            "ClassRestriction": ["Warrior"]
           },
           "Grants": [
             {
+              "AbilityRef": "ability.1-pac",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.2-pac",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.3-pac",
+              "Level": 7
+            },
+            {
               "AbilityRef": "ability.4-pac",
-              "Level": 1
-            },
-            {
-              "AbilityRef": "ability.toughened-feet",
-              "Level": 2
-            },
-            {
-              "AbilityRef": "ability.large-lung-capacity",
-              "Level": 2
-            },
-            {
-              "AbilityRef": "ability.insensitive-skin",
-              "Level": 5
-            },
-            {
-              "AbilityRef": "ability.leg-sweep",
-              "Level": 5
-            },
-            {
-              "AbilityRef": "ability.stability",
-              "Level": 8
-            },
-            {
-              "AbilityRef": "ability.immunity-to-poison",
-              "Level": 8
-            },
-            {
-              "AbilityRef": "ability.immunity-to-disease",
-              "Level": 8
-            },
-            {
-              "AbilityRef": "ability.immunity-to-acid",
               "Level": 8
             }
           ]
@@ -2632,46 +2561,25 @@
         {
           "Key": "Kaerssor",
           "Label": "Kaerssor",
+          "Description": "Warrior caste Crol, rigidly martial and led by strength-tested hierarchy.",
+          "Metadata": {
+            "Roleplay": "Kaerssor are raised to fight from early childhood and define status through strength, honour-duel challenge, and survival.",
+            "Lore": "There are three castes of Crol, led by the warrior caste Kaerssor. Their hierarchy is strict and challenge-based, with regular lethal leadership challenges for the title of Karak. Children are trained from age two and sent into the desert as a coming-of-age trial at age four. Survivors receive tattoos and join hunting groups. With Athfanal pressure increasing, many young now undergo this rite in pairs to improve survival."
+          },
           "Effects": {
-            "ArmourAvailabilityOverride": "Light"
+            "ArmourAvailabilityOverride": "Light",
+            "LifeScaleOverride": "Human"
           },
           "Restrictions": {
-            "ClassRestriction": [
-              "Ranger",
-              "Monk",
-              "Warrior"
-            ]
+            "ClassRestriction": ["Ranger", "Monk", "Warrior"]
           },
           "Grants": [
             {
+              "AbilityRef": "ability.1-pac",
+              "Level": 5
+            },
+            {
               "AbilityRef": "ability.2-pac",
-              "Level": 1
-            },
-            {
-              "AbilityRef": "ability.discern-smell-sniff",
-              "Level": 2,
-              "Overrides": {
-                "Effect": "Most monsters have their own distinctive smell. By the use of this skill the Crol `sniffs` for smells he has met before, thus he is able to put a smell to a monster and have some idea of what is coming up. Only broad categories of information are given by the use of this skill – ‘goblin-kind’ for example, not ‘four goblins and a hobgoblin’. Numbers cannot be distinguished, nor may exact race type necessarily be discerned. At ref’s discretion, unusual or peculiar creatures may be described as an unknown or unfamiliar scent."
-              }
-            },
-            {
-              "AbilityRef": "ability.large-lung-capacity",
-              "Level": 2
-            },
-            {
-              "AbilityRef": "ability.shed-skin",
-              "Level": 5
-            },
-            {
-              "AbilityRef": "ability.acid-potions",
-              "Level": 5
-            },
-            {
-              "AbilityRef": "ability.bask",
-              "Level": 8
-            },
-            {
-              "AbilityRef": "ability.potent-blood",
               "Level": 8
             }
           ]
@@ -2679,50 +2587,299 @@
         {
           "Key": "Jaerseen",
           "Label": "Jaerseen",
+          "Description": "Scholar caste Crol focused on controlled mystical practice, ritual knowledge, and advisory roles.",
+          "Metadata": {
+            "Roleplay": "Jaerseen are wise advisers and practitioners expected to wield magic responsibly; reckless use is a capital crime.",
+            "Lore": "The Jaerseen are the scholar caste: wizards, ritualists, and advisers. Though regarded as secondary to Kaerssor warriors, they remain essential to Crol society. They still receive combat training, but dedicate greater effort to arcane practice, customs, and disciplined study. Having seen Athfanal abuses of magic, the Crol demand rigor from Jaerseen casters, and foolish magical use can be punished by death. Skilled Jaerseen ritualists also create potent tattoo magics for elite warriors."
+          },
           "Effects": {
             "ArmourAvailabilityOverride": "Light",
-            "ColourChoiceOverride": [
-              "Red",
-              "Green",
-              "Brown",
-              "Blue"
-            ]
+            "LifeScaleOverride": "Crol (Jaerseen)",
+            "ColourChoiceOverride": ["Red", "Green", "Brown", "Blue"]
           },
           "Restrictions": {
-            "ClassRestriction": [
-              "Wizard",
-              "Warlock",
-              "Power Master"
-            ]
+            "ClassRestriction": ["Wizard", "Warlock", "Power Master"]
           },
           "Grants": [
             {
               "AbilityRef": "ability.1-casting-level-chosen-colour",
               "Level": 1
-            },
+            }
+          ]
+        }
+      ]
+    },
+    "choice.crol.yashtar.talents": {
+      "Key": "choice.crol.yashtar.talents",
+      "Title": "Crol Talents (Yashtar)",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice",
+        "validation:min-level-by-option-metadata"
+      ],
+      "Options": [
+        {
+          "Key": "Toughened Feet",
+          "Label": "Toughened Feet",
+          "Metadata": {
+            "MinLevel": "2"
+          },
+          "Grants": [
             {
-              "AbilityRef": "ability.bronze-jewellery",
-              "Level": 2
-            },
+              "AbilityRef": "ability.toughened-feet"
+            }
+          ]
+        },
+        {
+          "Key": "Large lung capacity",
+          "Label": "Large lung capacity",
+          "Metadata": {
+            "MinLevel": "2"
+          },
+          "Grants": [
             {
-              "AbilityRef": "ability.large-lung-capacity",
-              "Level": 2
-            },
+              "AbilityRef": "ability.large-lung-capacity"
+            }
+          ]
+        },
+        {
+          "Key": "Insensitive Skin",
+          "Label": "Insensitive Skin",
+          "Metadata": {
+            "MinLevel": "5"
+          },
+          "Grants": [
             {
-              "AbilityRef": "ability.self-heal",
-              "Level": 5
-            },
+              "AbilityRef": "ability.insensitive-skin"
+            }
+          ]
+        },
+        {
+          "Key": "Leg Sweep",
+          "Label": "Leg Sweep",
+          "Metadata": {
+            "MinLevel": "5"
+          },
+          "Grants": [
             {
-              "AbilityRef": "ability.mystical-tattoos",
-              "Level": 5
-            },
+              "AbilityRef": "ability.leg-sweep"
+            }
+          ]
+        },
+        {
+          "Key": "Stability",
+          "Label": "Stability",
+          "Metadata": {
+            "MinLevel": "8"
+          },
+          "Grants": [
             {
-              "AbilityRef": "ability.bask",
-              "Level": 8
-            },
+              "AbilityRef": "ability.stability"
+            }
+          ]
+        },
+        {
+          "Key": "Immunity to Poison",
+          "Label": "Immunity to Poison",
+          "Metadata": {
+            "MinLevel": "8"
+          },
+          "Grants": [
             {
-              "AbilityRef": "ability.elementalist",
-              "Level": 8
+              "AbilityRef": "ability.immunity-to-poison"
+            }
+          ]
+        },
+        {
+          "Key": "Immunity to Disease",
+          "Label": "Immunity to Disease",
+          "Metadata": {
+            "MinLevel": "8"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.immunity-to-disease"
+            }
+          ]
+        },
+        {
+          "Key": "Immunity to Acid",
+          "Label": "Immunity to Acid",
+          "Metadata": {
+            "MinLevel": "8"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.immunity-to-acid"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.crol.kaerssor.talents": {
+      "Key": "choice.crol.kaerssor.talents",
+      "Title": "Crol Talents (Kaerssor)",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice",
+        "validation:min-level-by-option-metadata"
+      ],
+      "Options": [
+        {
+          "Key": "Discern Smell (Sniff)",
+          "Label": "Discern Smell (Sniff)",
+          "Metadata": {
+            "MinLevel": "2"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.discern-smell-sniff"
+            }
+          ]
+        },
+        {
+          "Key": "Large lung capacity",
+          "Label": "Large lung capacity",
+          "Metadata": {
+            "MinLevel": "2"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.large-lung-capacity"
+            }
+          ]
+        },
+        {
+          "Key": "Shed Skin",
+          "Label": "Shed Skin",
+          "Metadata": {
+            "MinLevel": "5"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.shed-skin"
+            }
+          ]
+        },
+        {
+          "Key": "Acid Potions",
+          "Label": "Acid Potions",
+          "Metadata": {
+            "MinLevel": "5"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.acid-potions"
+            }
+          ]
+        },
+        {
+          "Key": "Bask",
+          "Label": "Bask",
+          "Metadata": {
+            "MinLevel": "8"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.bask"
+            }
+          ]
+        },
+        {
+          "Key": "Potent Blood",
+          "Label": "Potent Blood",
+          "Metadata": {
+            "MinLevel": "8"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.potent-blood"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.crol.jaerseen.talents": {
+      "Key": "choice.crol.jaerseen.talents",
+      "Title": "Crol Talents (Jaerseen)",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice",
+        "validation:min-level-by-option-metadata"
+      ],
+      "Options": [
+        {
+          "Key": "Bronze Jewellery",
+          "Label": "Bronze Jewellery",
+          "Metadata": {
+            "MinLevel": "2"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.bronze-jewellery"
+            }
+          ]
+        },
+        {
+          "Key": "Large lung capacity",
+          "Label": "Large lung capacity",
+          "Metadata": {
+            "MinLevel": "2"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.large-lung-capacity"
+            }
+          ]
+        },
+        {
+          "Key": "Self Heal",
+          "Label": "Self Heal",
+          "Metadata": {
+            "MinLevel": "5"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.self-heal"
+            }
+          ]
+        },
+        {
+          "Key": "Mystical Tattoos",
+          "Label": "Mystical Tattoos",
+          "Metadata": {
+            "MinLevel": "5"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.mystical-tattoos"
+            }
+          ]
+        },
+        {
+          "Key": "Bask",
+          "Label": "Bask",
+          "Metadata": {
+            "MinLevel": "8"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.bask"
+            }
+          ]
+        },
+        {
+          "Key": "Elementalist",
+          "Label": "Elementalist",
+          "Metadata": {
+            "MinLevel": "8"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.elementalist"
             }
           ]
         }
@@ -2733,9 +2890,7 @@
       "Title": "Warlock Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -2807,9 +2962,7 @@
       "Title": "Wizard Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "Make Teaching Scrolls",
@@ -2818,7 +2971,8 @@
             {
               "AbilityRef": "ability.make-teaching-scrolls"
             }
-          ]
+          ],
+          "Description": "Crafted using the advanced making system. These can be read by Wizards, and other magical classes, to learn spells.\nTo use a teaching scroll the reader must have the Read Glyphs ability and be able to suffer double the casting damage to cast the spell. A mana user is limited in the number of advanced teaching scrolls they may use, they may use 1.5 teaching scrolls per table post 8th they have reached (rounded up). E.g. on Table 5 they may use 5 x 1.5 = 7.5 teaching scrolls, rounded up to 8.\nThis number is increased by 2 for High Wizards, and reduced by 2 for Second Class Wizards.\nWhere a teaching scroll is of a stackable rune spell, up to 5 teaching scrolls may fill one ’slot’.\nTeaching scrolls of standard spells that fill specialist slots do not apply to the limit of the number that may be used."
         },
         {
           "Key": "Make Magical Armour",
@@ -2827,7 +2981,8 @@
             {
               "AbilityRef": "ability.make-magical-armour"
             }
-          ]
+          ],
+          "Description": "This skill enchants Magical armour, it applies equally against a purely magical weapon attack and a mundane attack. It does not protect against magical blast attacks and similar unless it also contains MAC. It is assumed that the item is grey magic unless coloured."
         },
         {
           "Key": "Make Magical Weapons",
@@ -2836,7 +2991,8 @@
             {
               "AbilityRef": "ability.make-magical-weapons"
             }
-          ]
+          ],
+          "Description": "This skill allows the wizard to enchant a weapon such that it becomes magical. Magical weapons have certain intrinsic values in addition to letting the owner inflict magic damage, they do not count against a wizards metal allowance, and are not affected by spells such as Shatter and Melt [see the individual spells for further details]. They are automatically assumed to be Grey mana in colour unless ‘coloured’ – obviously they can only be coloured to a colour the wizard possesses, though if the wizard possesses more than one colour this may be applied multiple times as appropriate. Should the wizard be unable to use grey mana, then they must colour the item appropriately."
         },
         {
           "Key": "Make Artefacts",
@@ -2845,7 +3001,8 @@
             {
               "AbilityRef": "ability.make-artefacts"
             }
-          ]
+          ],
+          "Description": "This skill covers the manufacturing of magical spell innates into objects. If the innates are to be bound intomagical armour or magical weapons then the percentages are calculated separately from that facet of the manufacture though innates can only be bound into weapons or armour of the same magical colour[s]. Innates may be bound into any non-system relevant appropriate object [except weapons and armour above], typically rings, amulets and wands are deemed appropriate. It is not possible to colour items of innates they are automatically solely their own colour. The modifier from binding innates into items is fully cumulative with itself"
         }
       ]
     },
@@ -2854,9 +3011,7 @@
       "Title": "Vochstelen Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -2929,9 +3084,7 @@
       "Title": "Awakener Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "Auric Colour",
@@ -3114,6 +3267,78 @@
         }
       ]
     },
+    "choice.power-master-colour.primary": {
+      "Key": "choice.power-master-colour.primary",
+      "Title": "Wizard Colour",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": ["section:choice", "selection:multi-delimited"],
+      "Options": [
+        {
+          "Key": "Red",
+          "Label": "Red",
+          "Grants": [
+            {
+              "AbilityRef": "ability.red"
+            }
+          ]
+        },
+        {
+          "Key": "Blue",
+          "Label": "Blue",
+          "Grants": [
+            {
+              "AbilityRef": "ability.blue"
+            }
+          ]
+        },
+        {
+          "Key": "Brown",
+          "Label": "Brown",
+          "Grants": [
+            {
+              "AbilityRef": "ability.brown"
+            }
+          ]
+        },
+        {
+          "Key": "Green",
+          "Label": "Green",
+          "Grants": [
+            {
+              "AbilityRef": "ability.green"
+            }
+          ]
+        },
+        {
+          "Key": "White",
+          "Label": "White",
+          "Grants": [
+            {
+              "AbilityRef": "ability.white"
+            }
+          ]
+        },
+        {
+          "Key": "Black",
+          "Label": "Black",
+          "Grants": [
+            {
+              "AbilityRef": "ability.black"
+            }
+          ]
+        },
+        {
+          "Key": "Grey",
+          "Label": "Grey",
+          "Grants": [
+            {
+              "AbilityRef": "ability.grey"
+            }
+          ]
+        }
+      ]
+    },
     "choice.vivomancer-colour.primary": {
       "Key": "choice.vivomancer-colour.primary",
       "Title": "Vivomancer Colour",
@@ -3159,9 +3384,7 @@
       "Title": "Baronial Tradition",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "Hedge Wizardry",
@@ -3190,42 +3413,28 @@
       "Title": "HumanSubtypeAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped",
-        "subtype:human-map"
-      ],
+      "StrategyIds": ["section:mapped", "subtype:human-map"],
       "Options": [
         {
           "Key": "Baronial",
           "Label": "Baronial",
           "Description": "Because of their history the use of power in the southern Baronies is carefully monitored and controlled by a group called The Circle. Fearful of the bad old days when power used frivolously or maliciously smashed its way around the Baronies, the Circle recognises that such regulating of use is very important.\nIn addition the Circle offers an excellent range of tuition and political support within the Baronies, and as such the following modifiers are accrued by a character who is a Circle Wizard or a Circle Hermit Priest or similar.\nCircle Unholy Champions are not outlawed as they normally would be. \nIf a Circle member casts a magical spell, the casting damage for that spell is reduced by1pt if the spell consumes at least one power point and is normally one point of TBLP damage. This does not help in the casting of cantrips or innate spells which cause casting damage as no power points are consumed.\nIf a Circle member uses a Neuronic power, they are assumed to have two more Neural Foci than normal, and take no life points at all when casting neuronics that would otherwise cost only l life point.\nIf a Circle member casts a miracle which is level based, then by doubling the casting damage taken in its casting, the miracle affects targets of l level higher than normal. If no damage is normally taken then normal casting damage is taken (if no damage casting was owned twice then this could be reduced to 0).\nCensure.\nShould a member of the Circle perform a mystic event which is in breach of the ethos of the Circle, then the above benefits are reversed until the end of the adventure. For example level based miracles have one less level of effect unless double casting damage is taken. Such acts would include acting against the Circle, drawing power from a God.\nInquisidore.\nA Circle member should attempt to capture any Baronies Human who is a Hedge Wizard as detailed below. Only Barony Humans can qualify as this as Labyrinthian Humans, even those who are travelling through the Southern Baronies, are normally granted honorary Circle membership by default. Once captured they should be taken to a Commissionaire of the Circle, one of these centres of the Circle exists in Takalia.\nCircle members are expected to give absolute loyalty to the Circle - they are not permitted to be members of any other professional organisation, be it a guild, church or similar.\nMembers of the Circle vary dramatically in moral and political outlook but all, when it comes down to it, support the basic political principles of the Southern Baronies.\nCircle members often find it simple to gain appointments as advisors to lords of manors both north in the Empire or south in the Baronies, but sometimes feel the need not to identify their nature to a Labyrinthian lord, too many years of bad feelings have left them concerned over what kinds of treatment they may receive, what bias or bigotry might be unleashed upon them.\nMembers of the Circle in full regalia, when displaying their post in the order of things publicly, often wear the symbol of the Circle (rather unsurprisingly a Circle) upon their garb. Often the colouration, size and pattern of the circle says a lot about the wearer a loud and boisterous magician might wear a gold scaled circle proudly upon his tabard, whilst a quieter Mystic might have a simple ivory badge an inch across over his breast.",
           "Effects": {
-            "GuildOverrides": [
-              "po:Type-Baronial"
-            ],
-            "HedgeOrCircle": [
-              "Hedge Wizardry",
-              "Circle Membership"
-            ]
+            "GuildOverrides": ["po:Type-Baronial"],
+            "HedgeOrCircle": ["Hedge Wizardry", "Circle Membership"]
           },
           "Restrictions": {
-            "PeopleType": [
-              "Baronial"
-            ]
+            "PeopleType": ["Baronial"]
           }
         },
         {
           "Key": "Ishmaic",
           "Label": "Ishmaic",
           "Effects": {
-            "GuildOverrides": [
-              "po:Wahadamune"
-            ]
+            "GuildOverrides": ["po:Wahadamune"]
           },
           "Restrictions": {
-            "PeopleType": [
-              "Ishmaic"
-            ]
+            "PeopleType": ["Ishmaic"]
           },
           "Grants": [
             {
@@ -3251,9 +3460,7 @@
               "Druid",
               "Pathfinder"
             ],
-            "PeopleType": [
-              "Tribal"
-            ]
+            "PeopleType": ["Tribal"]
           },
           "Grants": [
             {
@@ -3271,9 +3478,7 @@
           "Label": "Amlesian",
           "Description": "Select an Amlesian caste to define your standing.",
           "Restrictions": {
-            "PeopleType": [
-              "Amlesian"
-            ]
+            "PeopleType": ["Amlesian"]
           }
         }
       ]
@@ -3283,10 +3488,7 @@
       "Title": "AmlesianCasteAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped",
-        "dynamic:amlesian-caste"
-      ],
+      "StrategyIds": ["section:mapped", "dynamic:amlesian-caste"],
       "Options": [
         {
           "Key": "Eta",
@@ -3340,10 +3542,7 @@
       "Title": "BaronialAncestry",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped",
-        "dynamic:baronial-ancestry"
-      ],
+      "StrategyIds": ["section:mapped", "dynamic:baronial-ancestry"],
       "Options": [
         {
           "Key": "Rhagrimm",
@@ -3392,10 +3591,7 @@
       "Title": "IshmaicClanAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped",
-        "dynamic:ishmaic-clan"
-      ],
+      "StrategyIds": ["section:mapped", "dynamic:ishmaic-clan"],
       "Options": [
         {
           "Key": "Galahbad",
@@ -3564,9 +3760,7 @@
       "Title": "AncientFolkSubtypeAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped"
-      ],
+      "StrategyIds": ["section:mapped"],
       "Options": [
         {
           "Key": "The cloud way",
@@ -3603,44 +3797,34 @@
       "Title": "AlfarSubtypeAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped"
-      ],
+      "StrategyIds": ["section:mapped"],
       "Options": [
         {
           "Key": "Löss light (white)",
           "Label": "Löss light (white)",
           "Effects": {
-            "ColourChoiceOverride": [
-              "White"
-            ]
+            "ColourChoiceOverride": ["White"]
           }
         },
         {
           "Key": "Svart dark (black)",
           "Label": "Svart dark (black)",
           "Effects": {
-            "ColourChoiceOverride": [
-              "Black"
-            ]
+            "ColourChoiceOverride": ["Black"]
           }
         },
         {
           "Key": "Alfamir seas (green)",
           "Label": "Alfamir seas (green)",
           "Effects": {
-            "ColourChoiceOverride": [
-              "Green"
-            ]
+            "ColourChoiceOverride": ["Green"]
           }
         },
         {
           "Key": "Fjell mountain (brown)",
           "Label": "Fjell mountain (brown)",
           "Effects": {
-            "ColourChoiceOverride": [
-              "Brown"
-            ]
+            "ColourChoiceOverride": ["Brown"]
           }
         }
       ]
@@ -3650,52 +3834,34 @@
       "Title": "RatfolkBreedAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped"
-      ],
+      "StrategyIds": ["section:mapped"],
       "Options": [
         {
           "Key": "Ourstlav",
           "Label": "Ourstlav",
           "Restrictions": {
-            "ClassRestriction": [
-              "Pathfinder",
-              "Archer",
-              "Leywalker"
-            ]
+            "ClassRestriction": ["Pathfinder", "Archer", "Leywalker"]
           }
         },
         {
           "Key": "Rachatat",
           "Label": "Rachatat",
           "Restrictions": {
-            "ClassRestriction": [
-              "Warrior",
-              "Forest Guardian",
-              "Thug"
-            ]
+            "ClassRestriction": ["Warrior", "Forest Guardian", "Thug"]
           }
         },
         {
           "Key": "Horstval",
           "Label": "Horstval",
           "Restrictions": {
-            "ClassRestriction": [
-              "Druid",
-              "Wizard",
-              "Warrior Priest"
-            ]
+            "ClassRestriction": ["Druid", "Wizard", "Warrior Priest"]
           }
         },
         {
           "Key": "Slav",
           "Label": "Slav",
           "Restrictions": {
-            "ClassRestriction": [
-              "Psi Master",
-              "Spy",
-              "Assassin"
-            ]
+            "ClassRestriction": ["Psi Master", "Spy", "Assassin"]
           }
         }
       ]
@@ -3705,27 +3871,20 @@
       "Title": "RatfolkClanAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": [
-        "section:mapped",
-        "dynamic:ratfolk-clan"
-      ],
+      "StrategyIds": ["section:mapped", "dynamic:ratfolk-clan"],
       "Options": [
         {
           "Key": "Caslevasp (long hairs)",
           "Label": "Caslevasp (long hairs)",
           "Effects": {
-            "GuildOverrides": [
-              "po:Thimon"
-            ]
+            "GuildOverrides": ["po:Thimon"]
           }
         },
         {
           "Key": "Hislehasp (tatterpelts)",
           "Label": "Hislehasp (tatterpelts)",
           "Effects": {
-            "GuildOverrides": [
-              "so:The Swarm"
-            ]
+            "GuildOverrides": ["so:The Swarm"]
           },
           "Grants": [
             {
@@ -3745,9 +3904,7 @@
           "Key": "Crepultaval (needlefangs)",
           "Label": "Crepultaval (needlefangs)",
           "Effects": {
-            "GuildOverrides": [
-              "po:"
-            ]
+            "GuildOverrides": ["po:"]
           },
           "Grants": [
             {
@@ -3803,9 +3960,7 @@
       "Title": "Lvl 2 Spell",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "Lvl 2 Spell",
@@ -3828,9 +3983,7 @@
       "Title": "Lvl 3 Spell",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": [
-        "section:choice"
-      ],
+      "StrategyIds": ["section:choice"],
       "Options": [
         {
           "Key": "Lvl 3 Spell",

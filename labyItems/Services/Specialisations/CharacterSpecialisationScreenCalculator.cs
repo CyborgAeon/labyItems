@@ -60,6 +60,9 @@ public sealed class ChoiceSelectionState
 {
     public IReadOnlyDictionary<int, string> SelectedByLevel { get; init; } =
         new ReadOnlyDictionary<int, string>(new Dictionary<int, string>());
+
+    public IReadOnlyDictionary<int, string> CustomisationByLevel { get; init; } =
+        new ReadOnlyDictionary<int, string>(new Dictionary<int, string>());
 }
 
 public sealed class SpecialisationSelectionState
@@ -75,6 +78,8 @@ public sealed class SpecialisationSectionState
 {
     public SpecialisationSectionSpec Spec { get; init; } = new();
     public IReadOnlyDictionary<int, string> SelectedByLevel { get; init; } =
+        new ReadOnlyDictionary<int, string>(new Dictionary<int, string>());
+    public IReadOnlyDictionary<int, string> CustomisationByLevel { get; init; } =
         new ReadOnlyDictionary<int, string>(new Dictionary<int, string>());
     public string SelectedOption { get; init; } = string.Empty;
     public IReadOnlyList<SpecialisationAbilityRowState> AbilityRows { get; init; } = Array.Empty<SpecialisationAbilityRowState>();
@@ -370,6 +375,7 @@ public static class CharacterSpecialisationScreenCalculator
             }
 
             var selectedByLevel = new Dictionary<int, string>();
+            var customisationByLevel = new Dictionary<int, string>();
             var orderedLevels = section.Levels.OrderBy(x => x).ToList();
 
             if (section.StrategyIds.Any(s => s.Equals("selection:multi-delimited", StringComparison.OrdinalIgnoreCase)))
@@ -378,18 +384,31 @@ public static class CharacterSpecialisationScreenCalculator
                 var max = Math.Min(tokens.Count, orderedLevels.Count);
                 for (var i = 0; i < max; i++)
                 {
-                    if (orderedLevels[i] > 0)
-                        selectedByLevel[orderedLevels[i]] = tokens[i];
+                    if (orderedLevels[i] <= 0)
+                        continue;
+
+                    var (selection, customisation) = ParseSelectionToken(tokens[i]);
+                    if (selection.Length == 0)
+                        continue;
+
+                    selectedByLevel[orderedLevels[i]] = selection;
+                    if (customisation.Length > 0)
+                        customisationByLevel[orderedLevels[i]] = customisation;
                 }
             }
             else if (saved.Length > 0 && orderedLevels.Count == 1)
             {
-                selectedByLevel[orderedLevels[0]] = saved;
+                var (selection, customisation) = ParseSelectionToken(saved);
+                if (selection.Length > 0)
+                    selectedByLevel[orderedLevels[0]] = selection;
+                if (customisation.Length > 0)
+                    customisationByLevel[orderedLevels[0]] = customisation;
             }
 
             choiceSelections[section.SectionId] = new ChoiceSelectionState
             {
-                SelectedByLevel = new ReadOnlyDictionary<int, string>(selectedByLevel)
+                SelectedByLevel = new ReadOnlyDictionary<int, string>(selectedByLevel),
+                CustomisationByLevel = new ReadOnlyDictionary<int, string>(customisationByLevel)
             };
         }
 
@@ -446,8 +465,15 @@ public static class CharacterSpecialisationScreenCalculator
                     selectionState.ChoiceSelections.TryGetValue(spec.SectionId, out var choiceSelection);
                     var selectedByLevel = choiceSelection?.SelectedByLevel?.ToDictionary(k => k.Key, v => v.Value)
                                           ?? new Dictionary<int, string>();
+                    var customisationByLevel = choiceSelection?.CustomisationByLevel?.ToDictionary(k => k.Key, v => v.Value)
+                                              ?? new Dictionary<int, string>();
 
                     var validation = ValidateChoiceSection(spec, selectedByLevel);
+                    if (string.IsNullOrWhiteSpace(validation)
+                        && spec.StrategyIds.Any(id => id.Equals("validation:option-restrictions", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        validation = ValidateSelectedChoiceRestrictions(spec, selectedByLevel, context);
+                    }
                     var selectedCount = selectedByLevel.Values.Count(value => !string.IsNullOrWhiteSpace(value));
                     var requiredCount = spec.Required ? spec.Levels.Count : 0;
 
@@ -460,7 +486,16 @@ public static class CharacterSpecialisationScreenCalculator
                     {
                         var stored = spec.Levels
                             .OrderBy(x => x)
-                            .Select(level => selectedByLevel.TryGetValue(level, out var picked) ? (picked ?? string.Empty).Trim() : string.Empty)
+                            .Select(level =>
+                            {
+                                var picked = selectedByLevel.TryGetValue(level, out var selectedToken)
+                                    ? (selectedToken ?? string.Empty).Trim()
+                                    : string.Empty;
+                                var custom = customisationByLevel.TryGetValue(level, out var customToken)
+                                    ? (customToken ?? string.Empty).Trim()
+                                    : string.Empty;
+                                return ComposeSelectionToken(picked, custom);
+                            })
                             .Where(value => value.Length > 0)
                             .ToList();
 
@@ -471,13 +506,18 @@ public static class CharacterSpecialisationScreenCalculator
                              && selectedByLevel.TryGetValue(spec.Levels[0], out var single)
                              && !string.IsNullOrWhiteSpace(single))
                     {
-                        persistedSelections[spec.Title] = single.Trim();
+                        var level = spec.Levels[0];
+                        var custom = customisationByLevel.TryGetValue(level, out var customToken)
+                            ? (customToken ?? string.Empty).Trim()
+                            : string.Empty;
+                        persistedSelections[spec.Title] = ComposeSelectionToken(single, custom);
                     }
 
                     sections.Add(new SpecialisationSectionState
                     {
                         Spec = spec,
                         SelectedByLevel = new ReadOnlyDictionary<int, string>(selectedByLevel),
+                        CustomisationByLevel = new ReadOnlyDictionary<int, string>(customisationByLevel),
                         IsComplete = complete,
                         ValidationMessage = validation,
                         StatusText = spec.Required
@@ -564,6 +604,7 @@ public static class CharacterSpecialisationScreenCalculator
             }
         }
 
+        sections = ApplyCrossSectionChoiceValidation(sections);
         var isComplete = sections.All(section => section.IsComplete);
 
         return new SpecialisationScreenState
@@ -637,7 +678,141 @@ public static class CharacterSpecialisationScreenCalculator
                 return "Faerie colours cannot be opposite pairs.";
         }
 
+        if (spec.StrategyIds.Any(s => s.Equals("validation:min-level-by-option-metadata", StringComparison.OrdinalIgnoreCase)))
+        {
+            foreach (var pick in selectedByLevel.OrderBy(entry => entry.Key))
+            {
+                var selected = (pick.Value ?? string.Empty).Trim();
+                if (selected.Length == 0)
+                    continue;
+
+                var option = ResolveSelectedOption(spec.Options, selected);
+                if (option == null)
+                    continue;
+
+                if (!option.Metadata.TryGetValue("MinLevel", out var minLevelText)
+                    || !int.TryParse(minLevelText, out var minLevel))
+                {
+                    continue;
+                }
+
+                if (pick.Key < minLevel)
+                    return $"{option.Label} is only available from level {minLevel}.";
+            }
+        }
+
         return string.Empty;
+    }
+
+    private static string ValidateSelectedChoiceRestrictions(
+        SpecialisationSectionSpec spec,
+        IDictionary<int, string> selectedByLevel,
+        CharacterSpecialisationContext context)
+    {
+        foreach (var selected in selectedByLevel
+                     .OrderBy(entry => entry.Key)
+                     .Select(entry => (entry.Value ?? string.Empty).Trim())
+                     .Where(value => value.Length > 0))
+        {
+            var option = ResolveSelectedOption(spec.Options, selected);
+            var issue = ResolveRestrictionIssue(option, context);
+            if (!string.IsNullOrWhiteSpace(issue))
+                return issue;
+        }
+
+        return string.Empty;
+    }
+
+    private static ChoiceOption? ResolveSelectedOption(IReadOnlyList<ChoiceOption> options, string selected)
+    {
+        if (selected.Length == 0 || options.Count == 0)
+            return null;
+
+        return options.FirstOrDefault(option =>
+                   option.Key.Equals(selected, StringComparison.OrdinalIgnoreCase))
+               ?? options.FirstOrDefault(option =>
+                   option.Label.Equals(selected, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static List<SpecialisationSectionState> ApplyCrossSectionChoiceValidation(List<SpecialisationSectionState> sections)
+    {
+        if (sections.Count == 0)
+            return sections;
+
+        var issuesBySection = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        const string duplicateMessage = "Duplicate selections detected across linked choice groups.";
+
+        var groupedSections = sections
+            .Where(section => section.Spec.Kind == SpecialisationSectionKind.Choice)
+            .Select(section => new
+            {
+                Section = section,
+                Group = ResolveUniqueSelectionGroup(section.Spec)
+            })
+            .Where(entry => entry.Group.Length > 0)
+            .GroupBy(entry => entry.Group, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var group in groupedSections)
+        {
+            var seenBySelection = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var entry in group)
+            {
+                var sectionId = entry.Section.Spec.SectionId;
+                var picks = entry.Section.SelectedByLevel.Values
+                    .Where(value => !string.IsNullOrWhiteSpace(value))
+                    .Select(value => value.Trim())
+                    .Distinct(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var pick in picks)
+                {
+                    if (!seenBySelection.TryAdd(pick, sectionId))
+                    {
+                        issuesBySection[sectionId] = duplicateMessage;
+                        issuesBySection[seenBySelection[pick]] = duplicateMessage;
+                    }
+                }
+            }
+        }
+
+        if (issuesBySection.Count == 0)
+            return sections;
+
+        return sections
+            .Select(section =>
+            {
+                if (!issuesBySection.TryGetValue(section.Spec.SectionId, out var duplicateIssue)
+                    || !string.IsNullOrWhiteSpace(section.ValidationMessage))
+                {
+                    return section;
+                }
+
+                return new SpecialisationSectionState
+                {
+                    Spec = section.Spec,
+                    SelectedByLevel = section.SelectedByLevel,
+                    CustomisationByLevel = section.CustomisationByLevel,
+                    SelectedOption = section.SelectedOption,
+                    AbilityRows = section.AbilityRows,
+                    ValidationMessage = duplicateIssue,
+                    IsComplete = false,
+                    StatusText = "Issue",
+                    CardState = "Issue"
+                };
+            })
+            .ToList();
+    }
+
+    private static string ResolveUniqueSelectionGroup(SpecialisationSectionSpec spec)
+    {
+        if (!spec.StrategyIds.Any(id => id.Equals("validation:unique-across-group", StringComparison.OrdinalIgnoreCase)))
+            return string.Empty;
+
+        var groupStrategy = spec.StrategyIds.FirstOrDefault(id =>
+            id.StartsWith("selection-group:", StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrWhiteSpace(groupStrategy))
+            return string.Empty;
+
+        return groupStrategy["selection-group:".Length..].Trim();
     }
 
     private static bool AllowsDuplicateSlots(SpecialisationSectionSpec spec)
@@ -1210,6 +1385,33 @@ public static class CharacterSpecialisationScreenCalculator
             .Where(x => x.Length > 0)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
+    }
+
+    private static (string Selection, string Customisation) ParseSelectionToken(string? token)
+    {
+        var normalized = (token ?? string.Empty).Trim();
+        if (normalized.Length == 0)
+            return (string.Empty, string.Empty);
+
+        var parts = normalized.Split(new[] { "::" }, 2, StringSplitOptions.None);
+        var selection = (parts[0] ?? string.Empty).Trim();
+        var customisation = parts.Length > 1
+            ? (parts[1] ?? string.Empty).Trim()
+            : string.Empty;
+
+        return (selection, customisation);
+    }
+
+    private static string ComposeSelectionToken(string? selection, string? customisation)
+    {
+        var baseSelection = (selection ?? string.Empty).Trim();
+        if (baseSelection.Length == 0)
+            return string.Empty;
+
+        var custom = (customisation ?? string.Empty).Trim();
+        return custom.Length == 0
+            ? baseSelection
+            : $"{baseSelection}::{custom}";
     }
 
     private static List<string> ResolveSubtypeOptions(string? optionsSource)

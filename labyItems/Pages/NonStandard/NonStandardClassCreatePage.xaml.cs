@@ -137,6 +137,24 @@ public partial class NonStandardClassCreatePage : ContentPage
     private void OnToggleLifescaleExpandedClicked(object sender, EventArgs e)
         => _vm.ToggleLifeScaleExpanded();
 
+    private async void OnSearchLifescaleRaceClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            await _vm.SearchLifeScaleRaceAsync(Navigation);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Search failed", ex.Message, "OK");
+        }
+    }
+
+    private void OnAddLifescaleAssignmentClicked(object sender, EventArgs e)
+        => _vm.AddLifeScaleAssignment();
+
+    private void OnDeleteLifescaleAssignmentClicked(object sender, EventArgs e)
+        => _vm.RemoveLifeScaleAssignment((sender as Button)?.CommandParameter?.ToString());
+
     private async void OnAddWhitelistRaceClicked(object sender, EventArgs e)
     {
         try

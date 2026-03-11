@@ -1339,6 +1339,13 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (selectedColours == null || selectedColours.Count == 0)
             return false;
 
+        if (_draft.ColourChoiceOverride.Count > 0
+            && !_draft.ColourChoiceOverride.Any(s =>
+                WizardSpellRules.TryParseMagicColour(s, out var parsedOverride) && parsedOverride == MagicColours.Grey))
+        {
+            return false;
+        }
+
         var classRecord = ResolveClassRecord();
         if (IsVivomancerClass() || IsWarlockClass() || !IsWizardTrackClass(classRecord))
             return false;
@@ -3712,7 +3719,7 @@ public sealed class MiracleListVm : INotifyPropertyChanged
                 if (tooManyAdvancedSpheres)
                     messages.Add("Advanced miracles must be from a single Sphere.");
                 if (hasNeutralMismatch)
-                    messages.Add("Pick Light or Darkness alignment for this neutral list.");
+                    messages.Add("Pick Good or Evil alignment for this neutral list.");
                 if (neutralChoiceMismatch)
                     messages.Add("Neutral alignment choice must match selected aligned miracles.");
             }

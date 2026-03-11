@@ -9,6 +9,264 @@ namespace labyItems.Tests;
 public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBase
 {
     [Fact]
+    public async Task BuildScreenSections_CrolSubtypeAppliesTalentInjectionRules()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+
+        var classes = await ClassService.GetAllAsync();
+        var races = await PeopleService.GetAllAsync();
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
+        var draft = new CharacterDraft
+        {
+            Race = "Crol",
+            Class = "Wizard",
+            RaceSubtypeValue = "Jaerseen"
+        };
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            classes,
+            races,
+            index.Definitions,
+            index.InjectionRules);
+
+        var required = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+        var sections = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+
+        var crolTalentSection = Assert.Single(sections.Where(section => section.Title == "Crol Talents"));
+        Assert.Equal(new[] { 2, 5, 8 }, crolTalentSection.Levels);
+        Assert.Contains(crolTalentSection.Options, option => option.Label.Equals("Elementalist", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(crolTalentSection.Options, option => option.Label.Equals("Toughened Feet", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void Recalculate_RejectsDuplicateSelectionsAcrossLinkedChoiceGroup()
+    {
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            new CharacterDraft
+            {
+                Race = "Crol",
+                Class = "Wizard",
+                RaceSubtypeValue = "Jaerseen"
+            },
+            new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, SpecialisationDefinition>(StringComparer.OrdinalIgnoreCase));
+
+        var strategyIds = new[] { "validation:unique-across-group", "selection-group:crol-talents" };
+        var specs = new List<SpecialisationSectionSpec>
+        {
+            new()
+            {
+                SectionId = "choice:crol-minor",
+                DefinitionKey = "Crol Minor Talent (Jaerseen)",
+                DetailKey = "Crol Minor Talent (Jaerseen)",
+                Title = "Crol Minor Talent",
+                Kind = SpecialisationSectionKind.Choice,
+                Required = true,
+                Levels = [2],
+                StrategyIds = strategyIds
+            },
+            new()
+            {
+                SectionId = "choice:crol-medium",
+                DefinitionKey = "Crol Medium Talent (Jaerseen)",
+                DetailKey = "Crol Medium Talent (Jaerseen)",
+                Title = "Crol Medium Talent",
+                Kind = SpecialisationSectionKind.Choice,
+                Required = true,
+                Levels = [5],
+                StrategyIds = strategyIds
+            }
+        };
+
+        var choiceSelections = new Dictionary<string, ChoiceSelectionState>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["choice:crol-minor"] = new ChoiceSelectionState
+            {
+                SelectedByLevel = new ReadOnlyDictionary<int, string>(new Dictionary<int, string> { [2] = "Large lung capacity" })
+            },
+            ["choice:crol-medium"] = new ChoiceSelectionState
+            {
+                SelectedByLevel = new ReadOnlyDictionary<int, string>(new Dictionary<int, string> { [5] = "Large lung capacity" })
+            }
+        };
+
+        var screen = CharacterSpecialisationScreenCalculator.Recalculate(
+            context,
+            specs,
+            new SpecialisationSelectionState
+            {
+                RaceSubtype = "Jaerseen",
+                ChoiceSelections = new ReadOnlyDictionary<string, ChoiceSelectionState>(choiceSelections),
+                MappedSelections = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>())
+            });
+
+        Assert.False(screen.IsComplete);
+        var issues = screen.Sections.Where(section => !string.IsNullOrWhiteSpace(section.ValidationMessage)).ToList();
+        Assert.Equal(2, issues.Count);
+        Assert.All(issues, section =>
+            Assert.Contains("Duplicate selections detected across linked choice groups.", section.ValidationMessage));
+    }
+
+    [Fact]
+    public void Recalculate_RejectsSelectionBeforeOptionMinLevel()
+    {
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            new CharacterDraft
+            {
+                Race = "Crol",
+                Class = "Wizard",
+                RaceSubtypeValue = "Jaerseen"
+            },
+            new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, SpecialisationDefinition>(StringComparer.OrdinalIgnoreCase));
+
+        var options = new List<ChoiceOption>
+        {
+            new()
+            {
+                Key = "Large lung capacity",
+                Label = "Large lung capacity",
+                Metadata = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["MinLevel"] = "2"
+                })
+            },
+            new()
+            {
+                Key = "Self Heal",
+                Label = "Self Heal",
+                Metadata = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["MinLevel"] = "5"
+                })
+            }
+        };
+
+        var specs = new List<SpecialisationSectionSpec>
+        {
+            new()
+            {
+                SectionId = "choice:crol-talents",
+                DefinitionKey = "Crol Talents (Jaerseen)",
+                DetailKey = "Crol Talents (Jaerseen)",
+                Title = "Crol Talents",
+                Kind = SpecialisationSectionKind.Choice,
+                Required = true,
+                Levels = [2, 5, 8],
+                StrategyIds = ["validation:min-level-by-option-metadata"],
+                Options = options
+            }
+        };
+
+        var choiceSelections = new Dictionary<string, ChoiceSelectionState>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["choice:crol-talents"] = new ChoiceSelectionState
+            {
+                SelectedByLevel = new ReadOnlyDictionary<int, string>(new Dictionary<int, string>
+                {
+                    [2] = "Self Heal",
+                    [5] = "Large lung capacity"
+                })
+            }
+        };
+
+        var screen = CharacterSpecialisationScreenCalculator.Recalculate(
+            context,
+            specs,
+            new SpecialisationSelectionState
+            {
+                RaceSubtype = "Jaerseen",
+                ChoiceSelections = new ReadOnlyDictionary<string, ChoiceSelectionState>(choiceSelections),
+                MappedSelections = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>())
+            });
+
+        Assert.False(screen.IsComplete);
+        var issueSection = Assert.Single(screen.Sections.Where(section => !string.IsNullOrWhiteSpace(section.ValidationMessage)));
+        Assert.Contains("Self Heal is only available from level 5.", issueSection.ValidationMessage);
+    }
+
+    [Fact]
+    public void Recalculate_ChoiceSectionEnforcesOptionAlignmentRestrictionsWhenStrategyEnabled()
+    {
+        var draft = new CharacterDraft
+        {
+            Race = "Human",
+            Class = "Wizard",
+            Alignment = new Alignment(OrderAxis.Lawful, MoralAxis.Good)
+        };
+        draft.SetAvailableAlignmentsFromRules(new AlignmentRule?[]
+        {
+            new AlignmentRule
+            {
+                Mode = "set",
+                AllowedPairs = ["Lawful Good"]
+            }
+        });
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, SpecialisationDefinition>(StringComparer.OrdinalIgnoreCase));
+
+        var specs = new List<SpecialisationSectionSpec>
+        {
+            new()
+            {
+                SectionId = "choice:wizard-colour",
+                DefinitionKey = "Wizard Colour",
+                DetailKey = "Wizard Colour",
+                Title = "Wizard Colour",
+                Kind = SpecialisationSectionKind.Choice,
+                Required = true,
+                Levels = [1],
+                StrategyIds = ["validation:option-restrictions"],
+                Options =
+                [
+                    new ChoiceOption
+                    {
+                        Key = "Red",
+                        Label = "Red",
+                        Restrictions = new Restrictions
+                        {
+                            AlignmentRestriction = ["Chaotic", "Neutral"]
+                        }
+                    }
+                ]
+            }
+        };
+
+        var choiceSelections = new Dictionary<string, ChoiceSelectionState>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["choice:wizard-colour"] = new ChoiceSelectionState
+            {
+                SelectedByLevel = new ReadOnlyDictionary<int, string>(new Dictionary<int, string>
+                {
+                    [1] = "Red"
+                })
+            }
+        };
+
+        var screen = CharacterSpecialisationScreenCalculator.Recalculate(
+            context,
+            specs,
+            new SpecialisationSelectionState
+            {
+                ChoiceSelections = new ReadOnlyDictionary<string, ChoiceSelectionState>(choiceSelections),
+                MappedSelections = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>())
+            });
+
+        Assert.False(screen.IsComplete);
+        var issueSection = Assert.Single(screen.Sections.Where(section => !string.IsNullOrWhiteSpace(section.ValidationMessage)));
+        Assert.Contains("Alignment requirements conflict with the current character.", issueSection.ValidationMessage);
+    }
+
+    [Fact]
     public void ResolveRequiredChoices_MapsClassAndRaceAbilitiesToSpecialisationKeys()
     {
         var draft = new CharacterDraft
@@ -202,6 +460,76 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
         var section = Assert.Single(screen.Sections.Where(s => s.Spec.Title == "Wizard Colour"));
         Assert.Equal("Red", section.SelectedByLevel[1]);
         Assert.Equal("Blue", section.SelectedByLevel[2]);
+    }
+
+    [Fact]
+    public void ApplySavedSelections_PreservesSingleChoiceCustomisationToken()
+    {
+        var draft = new CharacterDraft
+        {
+            Race = "Human",
+            Class = "Warlock"
+        };
+        draft.SpecialisationSelections["1st Weapon Mastery"] = "1st Weapon Mastery::Sword";
+
+        var definitions = new Dictionary<string, SpecialisationDefinition>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["1st Weapon Mastery"] = new SpecialisationDefinition
+            {
+                Key = "1st Weapon Mastery",
+                ChoiceSets =
+                [
+                    new SpecialisationChoiceSet
+                    {
+                        Id = "1st Weapon Mastery:primary",
+                        DefinitionKey = "1st Weapon Mastery",
+                        Title = "1st Weapon Mastery",
+                        Mode = ChoiceMode.Single,
+                        Required = true,
+                        Options =
+                        [
+                            new ChoiceOption
+                            {
+                                Key = "1st Weapon Mastery",
+                                Label = "1st Weapon Mastery",
+                                Customisation = new OptionCustomisation
+                                {
+                                    OptionEnum = "WeaponType",
+                                    CustomValuesPermitted = false
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Warlock"] = new CharacterClassRecord
+                {
+                    Levels = new Dictionary<string, List<AbilityDefinition>>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        ["1"] = [new AbilityDefinition { Name = "1st Weapon Mastery" }]
+                    }
+                }
+            },
+            new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Human"] = new PeopleRecord()
+            },
+            definitions);
+
+        var required = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+        var specs = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+        var screen = CharacterSpecialisationScreenCalculator.ApplySavedSelections(context, specs);
+
+        var section = Assert.Single(screen.Sections.Where(s => s.Spec.Title == "1st Weapon Mastery"));
+        Assert.Equal("1st Weapon Mastery", section.SelectedByLevel[1]);
+        Assert.Equal("Sword", section.CustomisationByLevel[1]);
+        Assert.Equal("1st Weapon Mastery::Sword", screen.PersistedSelections["1st Weapon Mastery"]);
     }
 
     [Fact]

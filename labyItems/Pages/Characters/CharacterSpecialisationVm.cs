@@ -250,6 +250,15 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         group.ConfigureSectionMetadata(spec.SectionId, spec.DetailKey, spec.StrategyIds, SpecialisationSectionType.Choice);
         group.IsExpanded = true;
 
+        foreach (var slot in group.Slots)
+        {
+            if (state.CustomisationByLevel.TryGetValue(slot.Level, out var customisation)
+                && !string.IsNullOrWhiteSpace(customisation))
+            {
+                slot.CustomisationValue = customisation;
+            }
+        }
+
         if (hasSpellCustomisation || hasSingleOptionWithCustomisation)
             ApplySingleOptionDefault(group);
 
@@ -576,12 +585,19 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 case SpecialisationGroupVm group:
                 {
                     var selectedByLevel = new Dictionary<int, string>();
+                    var customisationByLevel = new Dictionary<int, string>();
                     foreach (var slot in group.Slots.Where(slot => slot != null))
+                    {
                         selectedByLevel[slot.Level] = (slot.SelectedOption ?? string.Empty).Trim();
+                        var custom = (slot.CustomisationValue ?? string.Empty).Trim();
+                        if (custom.Length > 0)
+                            customisationByLevel[slot.Level] = custom;
+                    }
 
                     choiceSelections[group.SectionId] = new ChoiceSelectionState
                     {
-                        SelectedByLevel = new ReadOnlyDictionary<int, string>(selectedByLevel)
+                        SelectedByLevel = new ReadOnlyDictionary<int, string>(selectedByLevel),
+                        CustomisationByLevel = new ReadOnlyDictionary<int, string>(customisationByLevel)
                     };
 
                     break;

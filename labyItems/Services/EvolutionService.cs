@@ -14,6 +14,8 @@ public static class AbilityHelper
 
 public static class EvolutionService
 {
+    private const string LegacyResistanceName = "9th Level Resistance to Spirits and Magic";
+    private const string CanonicalResistanceName = "9th Level Resistance to Magic and Spirits";
     private static IReadOnlyList<EvolutionResult>? _cache;
     private static IReadOnlyList<AbilityResult>? _abilityCache;
     private const int NGRAM_N = 3;
@@ -35,14 +37,9 @@ public static class EvolutionService
         {
             using var conn = ServiceHelper.OpenReadOnlyConnection();
             var rows = conn.Query<EvoRow>("SELECT idx, description, cost, table_id FROM evolution ORDER BY table_id, idx;");
-            var list = rows.Select(r => new EvolutionResult
-            {
-                Index = r.idx,
-                Description = r.description ?? string.Empty,
-                Cost = r.cost,
-                Table = r.table_id,
-                IsImmunity = r.idx.IsImmunity()
-            }).ToList();
+            var list = rows
+                .Select(ToEvolutionResult)
+                .ToList();
 
             _cache = list;
             return _cache;
@@ -86,19 +83,7 @@ public static class EvolutionService
             var list = new List<AbilityResult>();
             foreach (var r in rows)
             {
-                var preReqs = ParsePreReqs(r.prereqs_json);
-                list.Add(new AbilityResult
-                {
-                    Index = r.idx,
-                    Description = r.description ?? string.Empty,
-                    Cost = r.cost,
-                    Table = r.table_id,
-                    Available = r.available ?? string.Empty,
-                    CanBuyMultiple = r.can_buy_multiple != 0,
-                    PreReqs = preReqs,
-                    MaxAvailable = ParseMaxAvailable(r.data_json),
-                    IsNonStandard = ParseNonStandard(r.data_json)
-                });
+                list.Add(ToAbilityResult(r));
             }
 
             _abilityCache = list;
@@ -117,8 +102,15 @@ public static class EvolutionService
             return await GetAllAsync();
 
         var q = query.Trim();
-        var normalized = ServiceHelper.NormalizeForNgrams(q.ToLowerInvariant());
-        var tokens = ServiceHelper.GenerateNGrams(normalized, NGRAM_N).Distinct().ToList();
+        var expandedQueries = ExpandAbilityQueryAliases(q).ToList();
+        var tokens = expandedQueries
+            .SelectMany(term =>
+            {
+                var normalized = ServiceHelper.NormalizeForNgrams(term.ToLowerInvariant());
+                return ServiceHelper.GenerateNGrams(normalized, NGRAM_N);
+            })
+            .Distinct()
+            .ToList();
         if (tokens.Count == 0) return new List<EvolutionResult>();
 
         try
@@ -138,17 +130,20 @@ public static class EvolutionService
         var sql = $"SELECT e.idx, e.description, e.cost, e.table_id FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
 
             var rows = conn.Query<EvoRow>(sql, args.ToArray());
-            var list = rows.Select(r => new EvolutionResult
-            {
-                Index = r.idx,
-                Description = r.description ?? string.Empty,
-                Cost = r.cost,
-                Table = r.table_id,
-                IsImmunity = r.idx.IsImmunity()
-            }).Take(20).ToList();
+            var list = rows
+                .Select(ToEvolutionResult)
+                .Take(20)
+                .ToList();
 
             if (table is { } t && t >= 1)
                 list = list.Where(l => l.Table == t).ToList();
+
+            if (list.Count == 0)
+            {
+                var fallback = MergeEvolutionSearchResults(
+                    expandedQueries.Select(term => SearchByIndexLike(conn, term, table)));
+                return fallback;
+            }
 
             return list;
         }
@@ -165,17 +160,24 @@ public static class EvolutionService
             return await GetAllAbilitiesAsync();
 
         var q = query.Trim();
-        var normalized = ServiceHelper.NormalizeForNgrams(q.ToLowerInvariant());
-        var tokens = ServiceHelper.GenerateNGrams(normalized, NGRAM_N).Distinct().ToList();
+        var expandedQueries = ExpandAbilityQueryAliases(q).ToList();
+        var tokens = expandedQueries
+            .SelectMany(term =>
+            {
+                var normalized = ServiceHelper.NormalizeForNgrams(term.ToLowerInvariant());
+                return ServiceHelper.GenerateNGrams(normalized, NGRAM_N);
+            })
+            .Distinct()
+            .ToList();
         if (tokens.Count == 0) return new List<AbilityResult>();
 
         try
         {
             using var conn = ServiceHelper.OpenReadOnlyConnection();
 
-            if (q.Length < NGRAM_N)
+            if (expandedQueries.All(x => x.Length < NGRAM_N))
             {
-                return SearchAbilitiesByLike(conn, q, table);
+                return MergeAbilitySearchResults(expandedQueries.Select(term => SearchAbilitiesByLike(conn, term, table)));
             }
 
             var paramNames = new List<string>();
@@ -191,18 +193,8 @@ public static class EvolutionService
             var sql = $"SELECT e.idx, e.description, e.cost, e.available, e.table_id, e.can_buy_multiple, e.prereqs_json, e.data_json FROM evolution e JOIN (SELECT evolution_id, COUNT(*) as ct FROM evolution_ngrams WHERE token IN ({inClause}) GROUP BY evolution_id ORDER BY ct DESC LIMIT 50) g ON e.id = g.evolution_id;";
 
             var rows = conn.Query<AbilityRow>(sql, args.ToArray());
-            var list = rows.Select(r => new AbilityResult
-            {
-                Index = r.idx,
-                Description = r.description ?? string.Empty,
-                Cost = r.cost,
-                Table = r.table_id,
-                Available = r.available ?? string.Empty,
-                CanBuyMultiple = r.can_buy_multiple != 0,
-                PreReqs = ParsePreReqs(r.prereqs_json),
-                MaxAvailable = ParseMaxAvailable(r.data_json),
-                IsNonStandard = ParseNonStandard(r.data_json)
-            })
+            var list = rows
+                .Select(ToAbilityResult)
                 .Take(20)
                 .ToList();
 
@@ -210,7 +202,7 @@ public static class EvolutionService
                 list = list.Where(l => l.Table == t).ToList();
 
             if (list.Count == 0)
-                return SearchAbilitiesByLike(conn, q, table);
+                return MergeAbilitySearchResults(expandedQueries.Select(term => SearchAbilitiesByLike(conn, term, table)));
 
             return list;
         }
@@ -236,7 +228,9 @@ public static class EvolutionService
         try
         {
             var list = JsonSerializer.Deserialize<List<string>>(raw);
-            return list ?? new List<string>();
+            return (list ?? new List<string>())
+                .Select(NormalizeAbilityDisplayText)
+                .ToList();
         }
         catch
         {
@@ -248,23 +242,142 @@ public static class EvolutionService
     {
         var sql = "SELECT idx, description, cost, available, table_id, can_buy_multiple, prereqs_json, data_json FROM evolution WHERE idx LIKE ? ORDER BY table_id, idx LIMIT 50;";
         var rows = conn.Query<AbilityRow>(sql, $"%{query}%");
-        var list = rows.Select(r => new AbilityResult
-        {
-            Index = r.idx,
-            Description = r.description ?? string.Empty,
-            Cost = r.cost,
-            Table = r.table_id,
-            Available = r.available ?? string.Empty,
-            CanBuyMultiple = r.can_buy_multiple != 0,
-            PreReqs = ParsePreReqs(r.prereqs_json),
-            MaxAvailable = ParseMaxAvailable(r.data_json),
-            IsNonStandard = ParseNonStandard(r.data_json)
-        }).ToList();
+        var list = rows.Select(ToAbilityResult).ToList();
 
         if (table is { } t && t >= 1)
             list = list.Where(l => l.Table == t).ToList();
 
         return list.Take(20).ToList();
+    }
+
+    private static IReadOnlyList<EvolutionResult> SearchByIndexLike(SQLite.SQLiteConnection conn, string query, int? table)
+    {
+        var sql = "SELECT idx, description, cost, table_id FROM evolution WHERE idx LIKE ? ORDER BY table_id, idx LIMIT 50;";
+        var rows = conn.Query<EvoRow>(sql, $"%{query}%");
+        var list = rows.Select(ToEvolutionResult).ToList();
+
+        if (table is { } t && t >= 1)
+            list = list.Where(l => l.Table == t).ToList();
+
+        return list.Take(20).ToList();
+    }
+
+    private static AbilityResult ToAbilityResult(AbilityRow row)
+    {
+        return new AbilityResult
+        {
+            Index = NormalizeAbilityDisplayText(row.idx),
+            Description = NormalizeAbilityDisplayText(row.description),
+            Cost = row.cost,
+            Table = row.table_id,
+            Available = row.available ?? string.Empty,
+            CanBuyMultiple = row.can_buy_multiple != 0,
+            PreReqs = ParsePreReqs(row.prereqs_json),
+            MaxAvailable = ParseMaxAvailable(row.data_json),
+            IsNonStandard = ParseNonStandard(row.data_json)
+        };
+    }
+
+    private static EvolutionResult ToEvolutionResult(EvoRow row)
+    {
+        var index = NormalizeAbilityDisplayText(row.idx);
+        return new EvolutionResult
+        {
+            Index = index,
+            Description = NormalizeAbilityDisplayText(row.description),
+            Cost = row.cost,
+            Table = row.table_id,
+            IsImmunity = index.IsImmunity()
+        };
+    }
+
+    private static IReadOnlyList<AbilityResult> MergeAbilitySearchResults(IEnumerable<IReadOnlyList<AbilityResult>> lists)
+    {
+        var merged = new List<AbilityResult>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var list in lists)
+        {
+            foreach (var item in list)
+            {
+                var key = $"{item.Table}|{item.Index}";
+                if (!seen.Add(key))
+                    continue;
+
+                merged.Add(item);
+                if (merged.Count >= 20)
+                    return merged;
+            }
+        }
+
+        return merged;
+    }
+
+    private static IReadOnlyList<EvolutionResult> MergeEvolutionSearchResults(IEnumerable<IReadOnlyList<EvolutionResult>> lists)
+    {
+        var merged = new List<EvolutionResult>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var list in lists)
+        {
+            foreach (var item in list)
+            {
+                var key = $"{item.Table}|{item.Index}";
+                if (!seen.Add(key))
+                    continue;
+
+                merged.Add(item);
+                if (merged.Count >= 20)
+                    return merged;
+            }
+        }
+
+        return merged;
+    }
+
+    public static string NormalizeAbilityDisplayText(string? value)
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return string.Empty;
+
+        if (string.Equals(text, LegacyResistanceName, StringComparison.OrdinalIgnoreCase))
+            return CanonicalResistanceName;
+
+        return text;
+    }
+
+    public static IReadOnlyList<string> GetEquivalentAbilityNames(string? value)
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return Array.Empty<string>();
+
+        if (string.Equals(text, LegacyResistanceName, StringComparison.OrdinalIgnoreCase))
+            return new[] { CanonicalResistanceName, LegacyResistanceName };
+
+        if (string.Equals(text, CanonicalResistanceName, StringComparison.OrdinalIgnoreCase))
+            return new[] { CanonicalResistanceName, LegacyResistanceName };
+
+        return new[] { text };
+    }
+
+    private static IEnumerable<string> ExpandAbilityQueryAliases(string query)
+    {
+        var values = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var trimmed = (query ?? string.Empty).Trim();
+        if (trimmed.Length == 0)
+            return values;
+
+        values.Add(trimmed);
+        foreach (var equivalent in GetEquivalentAbilityNames(trimmed))
+            values.Add(equivalent);
+
+        if (trimmed.Contains(LegacyResistanceName, StringComparison.OrdinalIgnoreCase))
+            values.Add(trimmed.Replace(LegacyResistanceName, CanonicalResistanceName, StringComparison.OrdinalIgnoreCase));
+
+        if (trimmed.Contains(CanonicalResistanceName, StringComparison.OrdinalIgnoreCase))
+            values.Add(trimmed.Replace(CanonicalResistanceName, LegacyResistanceName, StringComparison.OrdinalIgnoreCase));
+
+        return values;
     }
 
     private static int? ParseMaxAvailable(string? dataJson)

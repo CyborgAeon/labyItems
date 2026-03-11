@@ -120,7 +120,16 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public Dictionary<string, string> CustomisationOptions => _customisationOptions;
     public bool ShowCustomisationPicker => HasCustomisation && (CustomisationAllowsCustom || _customisationOptions.Count > 0);
     public bool IsWeaponMasterySelection
-        => string.Equals((_selectedOption ?? string.Empty).Trim(), "Weapon Mastery", StringComparison.OrdinalIgnoreCase);
+    {
+        get
+        {
+            var selected = (_selectedOption ?? string.Empty).Trim();
+            if (selected.Length == 0)
+                return false;
+
+            return selected.Contains("Weapon Mastery", StringComparison.OrdinalIgnoreCase);
+        }
+    }
     public bool ShowCustomisationInline => ShowCustomisationPicker && IsWeaponMasterySelection && !UseDictionarySearch;
     public bool ShowCustomisationBelow => ShowCustomisationPicker && !ShowCustomisationInline && !UseDictionarySearch;
 

@@ -30,6 +30,13 @@ public sealed record NonStandardWalletEntry(
     string DataJson,
     string Subtitle);
 
+public sealed class NonStandardLifeScaleAssignment
+{
+    public string RaceName { get; set; } = string.Empty;
+    public string? ClassName { get; set; }
+    public IReadOnlyList<LifeScalePoint>? Points { get; set; }
+}
+
 public sealed class NonStandardSaveRequest
 {
     public NonStandardEntityType EntityType { get; set; }
@@ -38,6 +45,7 @@ public sealed class NonStandardSaveRequest
     public string? LifeScaleRaceName { get; set; }
     public string? LifeScaleClassName { get; set; }
     public IReadOnlyList<LifeScalePoint>? LifeScalePoints { get; set; }
+    public IReadOnlyList<NonStandardLifeScaleAssignment>? LifeScaleAssignments { get; set; }
 }
 
 public static class NonStandardContentService
@@ -521,12 +529,16 @@ public static class NonStandardContentService
 
     private static void SaveLifeScaleForClass(SqliteConnection conn, string className, NonStandardSaveRequest request)
     {
-        var race = (request.LifeScaleRaceName ?? string.Empty).Trim();
-        if (race.Length == 0)
+        var assignments = NormalizeClassLifeScaleAssignments(request);
+        if (assignments.Count == 0)
             throw new InvalidOperationException("A race must be selected for class life-scale mapping.");
 
-        var points = NormalizeLifeScalePoints(request.LifeScalePoints);
-        UpsertLifeScale(conn, race, className, points);
+        Execute(conn,
+            "DELETE FROM lifescales WHERE lower(\"class\")=lower($class);",
+            ("$class", className));
+
+        foreach (var assignment in assignments)
+            UpsertLifeScale(conn, assignment.RaceName, className, assignment.Points);
     }
 
     private static void SaveLifeScaleForRace(SqliteConnection conn, string raceName, NonStandardSaveRequest request)
@@ -549,6 +561,43 @@ public static class NonStandardContentService
             throw new InvalidOperationException("Life-scale must include 8 levels.");
 
         return normalized;
+    }
+
+    private static List<(string RaceName, IReadOnlyList<LifeScalePoint> Points)> NormalizeClassLifeScaleAssignments(
+        NonStandardSaveRequest request)
+    {
+        var normalized = new Dictionary<string, IReadOnlyList<LifeScalePoint>>(StringComparer.OrdinalIgnoreCase);
+        var requestedAssignments = request.LifeScaleAssignments ?? Array.Empty<NonStandardLifeScaleAssignment>();
+
+        foreach (var assignment in requestedAssignments)
+        {
+            if (assignment == null)
+                continue;
+
+            var raceName = (assignment.RaceName ?? string.Empty).Trim();
+            if (raceName.Length == 0)
+                continue;
+
+            var points = NormalizeLifeScalePoints(assignment.Points);
+            normalized[raceName] = points;
+        }
+
+        if (normalized.Count > 0)
+        {
+            return normalized
+                .OrderBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase)
+                .Select(entry => (entry.Key, entry.Value))
+                .ToList();
+        }
+
+        var fallbackRace = (request.LifeScaleRaceName ?? string.Empty).Trim();
+        if (fallbackRace.Length > 0)
+            normalized[fallbackRace] = NormalizeLifeScalePoints(request.LifeScalePoints);
+
+        return normalized
+            .OrderBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase)
+            .Select(entry => (entry.Key, entry.Value))
+            .ToList();
     }
 
     private static void UpsertLifeScale(SqliteConnection conn, string raceName, string className, IReadOnlyList<LifeScalePoint> points)

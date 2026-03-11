@@ -23,11 +23,14 @@ public static class AbilityDetailsLookupService
             var map = new Dictionary<string, EvolutionService.AbilityResult>(StringComparer.OrdinalIgnoreCase);
             foreach (var ability in abilities)
             {
-                var key = NormalizeKey(ability.Index);
-                if (key.Length == 0 || map.ContainsKey(key))
-                    continue;
+                foreach (var equivalent in EvolutionService.GetEquivalentAbilityNames(ability.Index))
+                {
+                    var key = NormalizeKey(equivalent);
+                    if (key.Length == 0 || map.ContainsKey(key))
+                        continue;
 
-                map[key] = ability;
+                    map[key] = ability;
+                }
             }
 
             _lookup = map;
@@ -55,9 +58,12 @@ public static class AbilityDetailsLookupService
 
         while (current.Length > 0)
         {
-            var key = NormalizeKey(current);
-            if (key.Length > 0 && lookup.TryGetValue(key, out var ability))
-                return ability;
+            foreach (var equivalent in EvolutionService.GetEquivalentAbilityNames(current))
+            {
+                var key = NormalizeKey(equivalent);
+                if (key.Length > 0 && lookup.TryGetValue(key, out var ability))
+                    return ability;
+            }
 
             var stripped = StripTrailingParenthetical(current);
             if (stripped.Length == current.Length)

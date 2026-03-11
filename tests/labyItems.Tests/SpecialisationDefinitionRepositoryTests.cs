@@ -410,6 +410,104 @@ public sealed class SpecialisationDefinitionRepositoryTests : ServiceTestBase
         Assert.Equal("HumanSubtypeAbilities", rule.Section.DefinitionKey);
     }
 
+    [Fact]
+    public async Task GetIndexAsync_FragmentedChoiceMetadataAndAbilityLoreArePreserved()
+    {
+        ResetPackageOverrides();
+        SetFragmented(
+            abilitiesJson: """
+            {
+              "abilities": {
+                "ability.crol-memory": {
+                  "Key": "ability.crol-memory",
+                  "Name": "Crol Memory",
+                  "Type": "Static",
+                  "Effect": "Base effect",
+                  "Lore": "Memory carried through tattoo rites."
+                }
+              }
+            }
+            """,
+            choiceSetsJson: """
+            {
+              "choiceSets": {
+                "choice.crol.mapped": {
+                  "Key": "choice.crol.mapped",
+                  "Title": "CrolSubtypeAbilities",
+                  "Mode": "MappedSingle",
+                  "Required": true,
+                  "Options": [
+                    {
+                      "Key": "Kaerssor",
+                      "Label": "Kaerssor",
+                      "Metadata": {
+                        "Roleplay": "Warrior caste roleplay",
+                        "Lore": "Warrior caste lore"
+                      },
+                      "Grants": [
+                        {
+                          "AbilityRef": "ability.crol-memory",
+                          "Level": 1
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+            """,
+            classDefinitionsJson: """
+            {
+              "definitions": {}
+            }
+            """,
+            raceDefinitionsJson: """
+            {
+              "definitions": {
+                "CrolSubtypeAbilities": {
+                  "ChoiceSetRefs": ["choice.crol.mapped"]
+                }
+              }
+            }
+            """,
+            overridesJson: """
+            {
+              "injectionRules": []
+            }
+            """);
+
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+        var definition = index.Definitions["CrolSubtypeAbilities"];
+        var mappedSet = Assert.Single(definition.ChoiceSets);
+        var option = Assert.Single(mappedSet.Options);
+
+        Assert.Equal("Warrior caste roleplay", option.Metadata["Roleplay"]);
+        Assert.Equal("Warrior caste lore", option.Metadata["Lore"]);
+
+        var grant = Assert.Single(option.Grants);
+        Assert.Equal("Memory carried through tattoo rites.", grant.Ability.Lore);
+    }
+
+    [Fact]
+    public async Task GetIndexAsync_DefaultFragmentsIncludeCrolTalentDefinitionsAndInjectionRules()
+    {
+        ResetPackageOverrides();
+
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
+        Assert.Contains("Crol Talents (Yashtar)", index.Definitions.Keys);
+        Assert.Contains("Crol Talents (Kaerssor)", index.Definitions.Keys);
+        Assert.Contains("Crol Talents (Jaerseen)", index.Definitions.Keys);
+
+        var crolRules = index.InjectionRules
+            .Where(rule =>
+                rule.Conditions.Race.Equals("Crol", StringComparison.OrdinalIgnoreCase)
+                && rule.Id.EndsWith("-talents", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        Assert.Equal(3, crolRules.Count);
+    }
+
     private static void ResetPackageOverrides()
     {
         FileSystem.ClearPackageOverrides();

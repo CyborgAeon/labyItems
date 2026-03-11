@@ -12,6 +12,7 @@ public sealed class AbilityDefinition
     public string? UpdateKey { get; set; }
     public string Type { get; set; } = string.Empty;
     public string? Effect { get; set; }
+    public string? Lore { get; set; }
     public string? Source { get; set; }
     public int? Count { get; set; }
     public List<int>? Amount { get; set; }
@@ -54,6 +55,7 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
                     : null,
                 Type = el.TryGetProperty("Type", out var typeEl) ? typeEl.GetString() ?? string.Empty : string.Empty,
                 Effect = ReadEffectOrDescription(el),
+                Lore = ReadLore(el),
                 Source = el.TryGetProperty("Source", out var sourceEl) ? sourceEl.GetString() : null,
                 Frequency = ReadFrequency(el),
                 OverwriteKey = el.TryGetProperty("OverwriteKey", out var overwriteEl) ? overwriteEl.GetString() : null,
@@ -165,6 +167,7 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             writer.WriteString("UpdateKey", value.UpdateKey);
         if (!string.IsNullOrWhiteSpace(value.Type)) writer.WriteString("Type", value.Type);
         if (!string.IsNullOrWhiteSpace(value.Effect)) writer.WriteString("Effect", value.Effect);
+        if (!string.IsNullOrWhiteSpace(value.Lore)) writer.WriteString("Lore", value.Lore);
         if (!string.IsNullOrWhiteSpace(value.Source)) writer.WriteString("Source", value.Source);
         if (value.Count.HasValue) writer.WriteNumber("Count", value.Count.Value);
         if (value.Amount is { Count: > 0 })
@@ -222,6 +225,17 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             return descEl.GetString();
 
         return effect;
+    }
+
+    private static string? ReadLore(JsonElement el)
+    {
+        if (el.TryGetProperty("Lore", out var loreEl) && loreEl.ValueKind == JsonValueKind.String)
+            return loreEl.GetString();
+
+        if (el.TryGetProperty("lore", out var loreLowerEl) && loreLowerEl.ValueKind == JsonValueKind.String)
+            return loreLowerEl.GetString();
+
+        return null;
     }
 
     private static List<int>? ReadAmount(JsonElement el)

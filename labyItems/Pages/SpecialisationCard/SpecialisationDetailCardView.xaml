@@ -75,6 +75,22 @@
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>
+
+            <VerticalStackLayout Spacing="6"
+                                 IsVisible="{Binding HasRoleplay, Source={x:Reference Root}}">
+                <Label Text="ROLEPLAY"
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <Label Text="{Binding RoleplayText, Source={x:Reference Root}}"
+                       LineBreakMode="WordWrap"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="6"
+                                 IsVisible="{Binding HasLore, Source={x:Reference Root}}">
+                <Label Text="LORE"
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <Label Text="{Binding LoreText, Source={x:Reference Root}}"
+                       LineBreakMode="WordWrap"/>
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </Frame>
 </ContentView>

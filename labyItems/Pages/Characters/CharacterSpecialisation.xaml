@@ -306,7 +306,7 @@
                                                     </Picker.Triggers>
                                                 </Picker>
 
-                                                <Grid ColumnDefinitions="*,*"
+                                                <Grid ColumnDefinitions="0.46*,0.54*"
                                                       ColumnSpacing="8"
                                                       IsVisible="{Binding ShowCustomisationInline}">
                                                     <Picker Grid.Column="0"

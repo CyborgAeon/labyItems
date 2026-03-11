@@ -31,13 +31,14 @@ public class DictionarySearchBar<TValue> : ContentView
 {
     private readonly Action _selfDismisser;
     private const double DefaultDropdownMaxHeight = 320;
+    private const double MinimumEntryHeight = 44;
     private const double DropdownEdgeGap = 0;
     private const double KeyboardGuardRatioFallback = 0.35;
     private const double KeyboardGuardMinFallback = 200;
     private const double KeyboardGuardMaxFallback = 360;
-    private string Exclude = string.Empty;
     private readonly Entry _searchBar;
     private readonly CollectionView _resultsView;
+    private readonly Border _inlineResultsContainer;
     private List<SearchResult> _filteredResults = new();
     private Dictionary<string, TValue> _defaultOptions;
     private bool _suppressTextChanged;
@@ -46,7 +47,6 @@ public class DictionarySearchBar<TValue> : ContentView
     private bool _suppressNextUnfocus;
     private int _remoteRequestId;
     private bool _isUserEditing;
-    private bool Enabled = false;
     private ScrollView? _keyboardAvoidanceScrollView;
     private Thickness _keyboardAvoidanceOriginalPadding;
     private bool _hasKeyboardAvoidancePadding;
@@ -70,6 +70,8 @@ public class DictionarySearchBar<TValue> : ContentView
             HorizontalOptions = LayoutOptions.FillAndExpand,
             Margin = new Thickness(0),
             ClearButtonVisibility = ClearButtonVisibility.Never,
+            IsTextPredictionEnabled = false,
+            IsSpellCheckEnabled = false,
             IsEnabled = IsEnabled,
             InputTransparent = !IsEnabled
         };
@@ -80,6 +82,7 @@ public class DictionarySearchBar<TValue> : ContentView
         _searchBar.Completed += OnSearchCompleted;
 
         _resultsView = BuildResultsView();
+        _inlineResultsContainer = BuildInlineResultsContainer(_resultsView);
         this.HorizontalOptions = LayoutOptions.FillAndExpand;
 
         var container = new AbsoluteLayout
@@ -90,25 +93,26 @@ public class DictionarySearchBar<TValue> : ContentView
 
         _searchBar.SizeChanged += (s, e) =>
         {
-            container.HeightRequest = _searchBar.Height;
-            _resultsView.TranslationY = _searchBar.Height;
+            var measuredEntryHeight = _searchBar.Height > 0 ? _searchBar.Height : MinimumEntryHeight;
+            container.HeightRequest = measuredEntryHeight;
+            _inlineResultsContainer.TranslationY = measuredEntryHeight;
 
-            AbsoluteLayout.SetLayoutBounds(_searchBar, new Rect(0, 0, 1, _searchBar.Height));
+            AbsoluteLayout.SetLayoutBounds(_searchBar, new Rect(0, 0, 1, measuredEntryHeight));
             AbsoluteLayout.SetLayoutFlags(_searchBar, AbsoluteLayoutFlags.WidthProportional);
 
-            AbsoluteLayout.SetLayoutBounds(_resultsView, new Rect(0, _searchBar.Height, 1, 0));
-            AbsoluteLayout.SetLayoutFlags(_resultsView, AbsoluteLayoutFlags.WidthProportional);
+            AbsoluteLayout.SetLayoutBounds(_inlineResultsContainer, new Rect(0, measuredEntryHeight, 1, 0));
+            AbsoluteLayout.SetLayoutFlags(_inlineResultsContainer, AbsoluteLayoutFlags.WidthProportional);
         };
 
 
         // Add the entry and results view to the overlay container. Results will be shown translated below the entry.
         container.Add(_searchBar);
-        container.Add(_resultsView);
+        container.Add(_inlineResultsContainer);
         AbsoluteLayout.SetLayoutBounds(_searchBar, new Rect(0, 0, 1, AbsoluteLayout.AutoSize));
         AbsoluteLayout.SetLayoutFlags(_searchBar, AbsoluteLayoutFlags.WidthProportional);
 
-        AbsoluteLayout.SetLayoutBounds(_resultsView, new Rect(0, 0, 1, AbsoluteLayout.AutoSize));
-        AbsoluteLayout.SetLayoutFlags(_resultsView, AbsoluteLayoutFlags.WidthProportional);
+        AbsoluteLayout.SetLayoutBounds(_inlineResultsContainer, new Rect(0, 0, 1, AbsoluteLayout.AutoSize));
+        AbsoluteLayout.SetLayoutFlags(_inlineResultsContainer, AbsoluteLayoutFlags.WidthProportional);
 
         Content = container;
         UpdatePlaceholder();
@@ -118,8 +122,11 @@ public class DictionarySearchBar<TValue> : ContentView
     protected override void OnParentSet()
     {
         base.OnParentSet();
-        // Build the overlay host early so first focus doesn't re-parent and steal focus
-        InitializeOverlayHostIfNeeded();
+        if (UsePageOverlay)
+        {
+            // Build the overlay host early so first focus doesn't re-parent and steal focus.
+            InitializeOverlayHostIfNeeded();
+        }
     }
 
     protected override void OnHandlerChanging(HandlerChangingEventArgs args)
@@ -248,17 +255,39 @@ public class DictionarySearchBar<TValue> : ContentView
 
     public static readonly BindableProperty SelectedValueProperty = BindableProperty.Create(
         nameof(SelectedValue),
-        typeof(TValue?),
+        typeof(object),
         typeof(DictionarySearchBar<TValue>),
-        defaultValue: default(TValue?),
+        defaultValue: null,
         BindingMode.TwoWay,
         propertyChanged: OnSelectedValueChanged
     );
 
     public TValue? SelectedValue
     {
-        get => (TValue?)GetValue(SelectedValueProperty);
-        set => SetValue(SelectedValueProperty, value);
+        get => TryGetSelectedValue(out var value) ? value : default;
+        set
+        {
+            if (value is TValue typedValue)
+                SetValue(SelectedValueProperty, typedValue);
+            else
+                SetValue(SelectedValueProperty, null);
+        }
+    }
+
+    public static readonly BindableProperty UsePageOverlayProperty = BindableProperty.Create(
+        nameof(UsePageOverlay),
+        typeof(bool),
+        typeof(DictionarySearchBar<TValue>),
+        defaultValue: true,
+        propertyChanged: OnUsePageOverlayChanged);
+
+    /// <summary>
+    /// When true, renders results in a page-level overlay; otherwise uses the inline dropdown.
+    /// </summary>
+    public bool UsePageOverlay
+    {
+        get => (bool)GetValue(UsePageOverlayProperty);
+        set => SetValue(UsePageOverlayProperty, value);
     }
 
     public static readonly BindableProperty ResultSelectedCommandProperty = BindableProperty.Create(
@@ -337,7 +366,7 @@ public class DictionarySearchBar<TValue> : ContentView
         // Only sync text when we have a selection to reflect and the user is not actively editing.
         if (!control._isUserEditing && !control._searchBar.IsFocused)
         {
-            if (control.SelectedValue is TValue)
+            if (control.TryGetSelectedValue(out _))
             {
                 control.SyncTextToSelection();
             }
@@ -368,6 +397,20 @@ public class DictionarySearchBar<TValue> : ContentView
         control.SyncEntryToSelectedText(newValue as string);
     }
 
+    private static void OnUsePageOverlayChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (DictionarySearchBar<TValue>)bindable;
+        if (newValue is bool useOverlay && useOverlay)
+        {
+            control.InitializeOverlayHostIfNeeded();
+            control._inlineResultsContainer.IsVisible = false;
+            return;
+        }
+
+        control.DismissLocalOverlay();
+        control.UpdateResultsVisibility();
+    }
+
     private async void OnSearchFocused(object? sender, FocusEventArgs e)
     {
         if (!IsEnabled)
@@ -384,8 +427,8 @@ public class DictionarySearchBar<TValue> : ContentView
             await EnsureAnchorVisibleAsync(GetDesiredDropdownHeight());
         }
 
-        // When focused, show the full list then present inline overlay
-        await ShowOverlayAsync();
+        // When focused, show the full list and present dropdown.
+        await ShowResultsAsync();
 
         if (KeyboardAvoidanceEnabled)
         {
@@ -394,7 +437,7 @@ public class DictionarySearchBar<TValue> : ContentView
                 await Task.Delay(180);
                 ApplyKeyboardAvoidancePadding();
                 await EnsureAnchorVisibleAsync(GetDesiredDropdownHeight());
-                await RepositionLocalOverlayAsync();
+                await RepositionLocalOverlaySafeAsync();
             });
         }
     }
@@ -404,16 +447,35 @@ public class DictionarySearchBar<TValue> : ContentView
         if (!IsEnabled)
             return;
 
-        // Always clear any dropdown overlay so it doesn't block other taps
-        DismissLocalOverlay();
-        _resultsView.IsVisible = false;
-
         if (_suppressNextUnfocus)
         {
             _suppressNextUnfocus = false;
             _ = Device.InvokeOnMainThreadAsync(() => _searchBar.Focus());
             return;
         }
+
+        // Give result taps a moment to complete before dismissing the overlay.
+        if (_overlay != null)
+        {
+            _ = Device.InvokeOnMainThreadAsync(async () =>
+            {
+                await Task.Delay(120);
+                if (_searchBar.IsFocused)
+                    return;
+
+                DismissLocalOverlay();
+                _inlineResultsContainer.IsVisible = false;
+
+                if (KeyboardAvoidanceEnabled)
+                    RestoreKeyboardAvoidancePadding();
+
+                CommitTextSelection(_searchBar.Text);
+            });
+            return;
+        }
+
+        DismissLocalOverlay();
+        _inlineResultsContainer.IsVisible = false;
 
         if (KeyboardAvoidanceEnabled)
             RestoreKeyboardAvoidancePadding();
@@ -439,7 +501,7 @@ public class DictionarySearchBar<TValue> : ContentView
                 if (_overlay != null)
                     UpdateOverlayItems();
                 else
-                    _ = ShowOverlayAsync();
+                    _ = ShowResultsAsync();
                 return;
             }
 
@@ -449,7 +511,7 @@ public class DictionarySearchBar<TValue> : ContentView
             if (_overlay != null)
                 UpdateOverlayItems();
             else
-                _ = ShowOverlayAsync();
+                _ = ShowResultsAsync();
         }
         finally
         {
@@ -465,7 +527,7 @@ public class DictionarySearchBar<TValue> : ContentView
         if (_filteredResults == null || _filteredResults.Count == 0)
         {
             DismissLocalOverlay();
-            _resultsView.IsVisible = false;
+            _inlineResultsContainer.IsVisible = false;
             _searchBar.Unfocus();
             return;
         }
@@ -493,10 +555,10 @@ public class DictionarySearchBar<TValue> : ContentView
 
     private void UpdateResultsVisibility()
     {
-        // Kept for backwards compatibility; we now prefer the page-level overlay to ensure
-        // results appear above other page content. Keep internal results view hidden.
-        _resultsView.IsVisible = false;
         _resultsView.ItemsSource = _filteredResults;
+        _inlineResultsContainer.IsVisible = !UsePageOverlay
+                                            && _searchBar.IsFocused
+                                            && _filteredResults is { Count: > 0 };
     }
 
     private void UpdatePlaceholder()
@@ -508,7 +570,7 @@ public class DictionarySearchBar<TValue> : ContentView
     {
         _suppressTextChanged = true;
 
-        if (SelectedValue is TValue v)
+        if (TryGetSelectedValue(out var v))
         {
             if (TryFindLabelForValue(v, out var label))
             {
@@ -566,7 +628,7 @@ public class DictionarySearchBar<TValue> : ContentView
         if (string.IsNullOrWhiteSpace(text))
         {
             SetSelectedTextInternal(string.Empty);
-            SelectedValue = default;
+            ClearSelectedValueInternal();
             _searchBar.Text = string.Empty;
             _suppressTextChanged = false;
             return;
@@ -583,7 +645,7 @@ public class DictionarySearchBar<TValue> : ContentView
         else
         {
             SetSelectedTextInternal(text);
-            SelectedValue = default;
+            ClearSelectedValueInternal();
             _searchBar.Text = text;
         }
 
@@ -617,6 +679,22 @@ public class DictionarySearchBar<TValue> : ContentView
             _suppressSelectedTextChanged = false;
         }
     }
+
+    private bool TryGetSelectedValue(out TValue value)
+    {
+        var raw = GetValue(SelectedValueProperty);
+        if (raw is TValue typed)
+        {
+            value = typed;
+            return true;
+        }
+
+        value = default!;
+        return false;
+    }
+
+    private void ClearSelectedValueInternal()
+        => SetValue(SelectedValueProperty, null);
 
     private bool TryFindLabelForValue(TValue value, out string label)
     {
@@ -686,6 +764,20 @@ public class DictionarySearchBar<TValue> : ContentView
         return resultsView;
     }
 
+    private static Border BuildInlineResultsContainer(CollectionView resultsView)
+    {
+        return new Border
+        {
+            Background = new SolidColorBrush(Colors.White),
+            StrokeThickness = 1,
+            Stroke = new SolidColorBrush(Color.FromArgb("#ECECEC")),
+            Padding = new Thickness(0),
+            StrokeShape = new RoundRectangle { CornerRadius = 6 },
+            IsVisible = false,
+            Content = resultsView
+        };
+    }
+
     private void OnResultSelected(object? sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection.FirstOrDefault() is SearchResult result)
@@ -698,7 +790,7 @@ public class DictionarySearchBar<TValue> : ContentView
             cv.SelectedItem = null;
         }
 
-        _resultsView.IsVisible = false;
+        _inlineResultsContainer.IsVisible = false;
     }
 
     private void ApplySelection(SearchResult result)
@@ -708,7 +800,7 @@ public class DictionarySearchBar<TValue> : ContentView
         if (result.IsCustom)
         {
             SetSelectedTextInternal(result.DisplayText);
-            SelectedValue = default;
+            ClearSelectedValueInternal();
             _searchBar.Text = result.DisplayText;
         }
         else
@@ -742,7 +834,7 @@ public class DictionarySearchBar<TValue> : ContentView
     private void ClearSelectionForNextSearch()
     {
         _suppressTextChanged = true;
-        SelectedValue = default;
+        ClearSelectedValueInternal();
         SetSelectedTextInternal(string.Empty);
         _searchBar.Text = string.Empty;
         _suppressTextChanged = false;
@@ -814,6 +906,7 @@ public class DictionarySearchBar<TValue> : ContentView
 
     // Local overlay state
     private AbsoluteLayout? _overlay;
+    private BoxView? _overlayBackdrop;
     private Grid? _overlayHost;
     private Border? _overlayContainer;
     private CollectionView? _overlayCollection;
@@ -821,30 +914,105 @@ public class DictionarySearchBar<TValue> : ContentView
     private EventHandler? _pageSizeChanged;
     private EventHandler<ScrolledEventArgs>? _scrollHandler;
 
+    private async Task ShowResultsAsync()
+    {
+        try
+        {
+            await ShowOverlayAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[DictionarySearchBar] dropdown fallback to inline: {ex}");
+            DismissLocalOverlay();
+            ShowInlineResults();
+        }
+    }
+
+    private async Task RepositionLocalOverlaySafeAsync()
+    {
+        try
+        {
+            await RepositionLocalOverlayAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[DictionarySearchBar] overlay reposition failed: {ex}");
+            DismissLocalOverlay();
+            ShowInlineResults();
+        }
+    }
+
     private async Task ShowOverlayAsync()
     {
         DismissLocalOverlay();
 
         if (_filteredResults == null || !_filteredResults.Any())
+        {
+            ShowInlineResults();
             return;
+        }
+
+        if (!UsePageOverlay)
+        {
+            ShowInlineResults();
+            return;
+        }
 
         var page = GetOwningPage();
         if (page == null)
+        {
+            ShowInlineResults();
             return;
+        }
 
-        var host = EnsureOverlayHost(page, out var createdHost);
+        Grid? host;
+        bool createdHost;
+        try
+        {
+            host = EnsureOverlayHost(page, out createdHost);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[DictionarySearchBar] overlay host setup failed: {ex}");
+            ShowInlineResults();
+            return;
+        }
+
         if (host == null)
+        {
+            ShowInlineResults();
             return;
+        }
 
+        _resultsView.IsVisible = false;
+        _inlineResultsContainer.IsVisible = false;
         if (createdHost)
             _suppressNextUnfocus = true;
 
         _overlay = new AbsoluteLayout
         {
             BackgroundColor = Colors.Transparent,
-            InputTransparent = true,
+            HorizontalOptions = LayoutOptions.Fill,
+            VerticalOptions = LayoutOptions.Fill,
+            InputTransparent = false,
             CascadeInputTransparent = false
         };
+
+        _overlayBackdrop = new BoxView
+        {
+            BackgroundColor = Color.FromRgba(0, 0, 0, 0.08f),
+            InputTransparent = false
+        };
+        var dismissTap = new TapGestureRecognizer();
+        dismissTap.Tapped += (s, e) =>
+        {
+            DismissLocalOverlay();
+            _searchBar.Unfocus();
+        };
+        _overlayBackdrop.GestureRecognizers.Add(dismissTap);
+        AbsoluteLayout.SetLayoutBounds(_overlayBackdrop, new Rect(0, 0, 1, 1));
+        AbsoluteLayout.SetLayoutFlags(_overlayBackdrop, AbsoluteLayoutFlags.All);
+        _overlay.Children.Add(_overlayBackdrop);
 
         // container
         _overlayContainer = new Border
@@ -886,6 +1054,7 @@ public class DictionarySearchBar<TValue> : ContentView
         });
 
         _overlayContainer.Content = _overlayCollection;
+        _overlayContainer.ZIndex = 1;
 
         _overlay.Children.Add(_overlayContainer);
 
@@ -896,7 +1065,7 @@ public class DictionarySearchBar<TValue> : ContentView
         _overlayPage = page;
 
         // position
-        await RepositionLocalOverlayAsync();
+        await RepositionLocalOverlaySafeAsync();
 
         // hooks for repositioning
         _pageSizeChanged = async (s, e) =>
@@ -907,14 +1076,14 @@ public class DictionarySearchBar<TValue> : ContentView
                 await EnsureAnchorVisibleAsync(GetDesiredDropdownHeight());
             }
 
-            await RepositionLocalOverlayAsync();
+            await RepositionLocalOverlaySafeAsync();
         };
         page.SizeChanged += _pageSizeChanged;
 
         var scrollParent = FindAncestorOfType<ScrollView>(_searchBar);
         if (scrollParent != null)
         {
-            _scrollHandler = async (s, e) => await RepositionLocalOverlayAsync();
+            _scrollHandler = async (s, e) => await RepositionLocalOverlaySafeAsync();
             scrollParent.Scrolled += _scrollHandler;
         }
     }
@@ -922,12 +1091,15 @@ public class DictionarySearchBar<TValue> : ContentView
     private void UpdateOverlayItems()
     {
         if (_overlayCollection == null)
+        {
+            ShowInlineResults();
             return;
+        }
 
         _overlayCollection.ItemsSource = _filteredResults;
 
         // adjust height if visible
-        _ = RepositionLocalOverlayAsync();
+        _ = RepositionLocalOverlaySafeAsync();
     }
 
     private async Task RepositionLocalOverlayAsync()
@@ -1018,6 +1190,7 @@ public class DictionarySearchBar<TValue> : ContentView
         }
 
         _overlay = null;
+        _overlayBackdrop = null;
         _overlayHost = null;
         _overlayCollection = null;
         _overlayContainer = null;
@@ -1252,10 +1425,16 @@ public class DictionarySearchBar<TValue> : ContentView
             return g;
 
         var original = page.Content;
-        var root = new Grid { ColumnDefinitions = { new ColumnDefinition(GridLength.Star) }, RowDefinitions = { new RowDefinition(GridLength.Star) } };
+        var root = new Grid
+        {
+            ColumnDefinitions = { new ColumnDefinition(GridLength.Star) },
+            RowDefinitions = { new RowDefinition(GridLength.Star) },
+            StyleId = "__overlay_host__"
+        };
+
+        // Re-parent safely: detach content from page before adding to new host.
+        page.Content = null;
         root.Children.Add(original);
-        // Mark the grid so we don't re-wrap repeatedly
-        root.StyleId = "__overlay_host__";
         page.Content = root;
         createdHost = true;
         return root;
@@ -1275,10 +1454,28 @@ public class DictionarySearchBar<TValue> : ContentView
             if (_overlayHostInitialized)
                 return;
 
-            var host = EnsureOverlayHost(page, out _);
-            if (host != null)
-                _overlayHostInitialized = true;
+            try
+            {
+                var host = EnsureOverlayHost(page, out _);
+                if (host != null)
+                    _overlayHostInitialized = true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DictionarySearchBar] overlay host init skipped: {ex}");
+            }
         });
+    }
+
+    private void ShowInlineResults()
+    {
+        var dropdownHeight = GetDesiredDropdownHeight();
+        var entryHeight = _searchBar.Height > 0 ? _searchBar.Height : MinimumEntryHeight;
+        _resultsView.ItemsSource = _filteredResults;
+        _resultsView.HeightRequest = dropdownHeight;
+        _inlineResultsContainer.HeightRequest = dropdownHeight;
+        _inlineResultsContainer.IsVisible = _filteredResults is { Count: > 0 };
+        _inlineResultsContainer.TranslationY = entryHeight;
     }
 
     private static T? FindAncestorOfType<T>(Element? start) where T : VisualElement

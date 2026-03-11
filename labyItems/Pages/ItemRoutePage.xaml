@@ -6,30 +6,102 @@
   Title="Create Item"
   NavigationPage.HasNavigationBar="False"
   Shell.NavBarIsVisible="False">
-  <VerticalStackLayout Padding="20"
-      Spacing="12">
-    <Button
-      Clicked="OnMakeCharacterClicked"
-      Text="Create a Character"/>
-    <Button
-      x:Name="CharacterWalletButton"
-      Clicked="OnCharacterWalletClicked"
-      Text="Character Wallet"
-      IsEnabled="False"/>
-    <Button
-      Clicked="OnSearchClicked"
-      Text="Search"/>
-    <Button
-      Clicked="OnGuildSearchClicked"
-      Text="Guild Search"/>
-    <Button
-      Clicked="OnCreateNonStandardClicked"
-      Text="Create New Non-Standard"/>
-    <Button
-      Clicked="OnCalculateIspClicked"
-      Text="Calculate Item ISP"/>
-    <Button
-      Clicked="OnCreateMpClicked"
-      Text="Create MP Item"/>
-  </VerticalStackLayout>
+  <Grid Padding="20"
+        RowDefinitions="Auto,Auto,*"
+        RowSpacing="12">
+    <VerticalStackLayout Grid.Row="0"
+                         Spacing="12">
+      <Button
+        Clicked="OnMakeCharacterClicked"
+        Text="Create a Character"/>
+      <Button
+        x:Name="CharacterWalletButton"
+        Clicked="OnCharacterWalletClicked"
+        Text="Character Wallet"
+        IsEnabled="False"/>
+      <Button
+        Clicked="OnSearchClicked"
+        Text="Search"/>
+      <Button
+        Clicked="OnGuildSearchClicked"
+        Text="Guild Search"/>
+      <Button
+        Clicked="OnCreateNonStandardClicked"
+        Text="Create New Non-Standard"/>
+      <Button
+        Clicked="OnCalculateIspClicked"
+        Text="Calculate Item ISP"/>
+      <Button
+        Clicked="OnCreateMpClicked"
+        Text="Create MP Item"/>
+    </VerticalStackLayout>
+
+    <Label Grid.Row="1"
+           Text="Item wallet"
+           FontSize="18"
+           FontAttributes="Bold"/>
+
+    <Grid Grid.Row="2"
+          RowDefinitions="Auto,*"
+          RowSpacing="8">
+      <Label x:Name="EmptyItemWalletLabel"
+             Grid.Row="0"
+             Text="No saved items yet."
+             Opacity="0.7"
+             IsVisible="False"/>
+
+      <CollectionView x:Name="ItemWalletView"
+                      Grid.Row="1"
+                      SelectionMode="None"
+                      ItemsSource="{Binding ItemWalletRows}">
+        <CollectionView.ItemTemplate>
+          <DataTemplate>
+            <Frame Margin="0,0,0,10"
+                   Padding="12"
+                   CornerRadius="12"
+                   HasShadow="False"
+                   BorderColor="{StaticResource SurfaceBorderColor}">
+              <Frame.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnItemWalletCardTapped"/>
+              </Frame.GestureRecognizers>
+              <VerticalStackLayout Spacing="8">
+                <Grid ColumnDefinitions="*,Auto"
+                      ColumnSpacing="8">
+                  <VerticalStackLayout Grid.Column="0"
+                                       Spacing="2">
+                    <Label Text="{Binding Title}"
+                           FontAttributes="Bold"
+                           FontSize="16"/>
+                    <Label Text="{Binding Subtitle}"
+                           FontSize="12"
+                           Opacity="0.75"/>
+                  </VerticalStackLayout>
+                  <Label Grid.Column="1"
+                         Text="{Binding ExpandGlyph}"
+                         VerticalTextAlignment="Center"
+                         HorizontalTextAlignment="End"
+                         FontSize="20"/>
+                </Grid>
+
+                <VerticalStackLayout IsVisible="{Binding IsExpanded}"
+                                     Spacing="0"
+                                     BindableLayout.ItemsSource="{Binding DetailRows}">
+                  <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                      <Border Padding="10,8"
+                              BackgroundColor="{Binding BackgroundColor}"
+                              StrokeThickness="0">
+                        <Label Text="{Binding Text}"
+                               LineBreakMode="WordWrap"/>
+                      </Border>
+                    </DataTemplate>
+                  </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+              </VerticalStackLayout>
+            </Frame>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+    </Grid>
+  </Grid>
 </ContentPage>

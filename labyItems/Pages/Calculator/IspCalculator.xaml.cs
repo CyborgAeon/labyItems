@@ -7,6 +7,7 @@ using labyItems.Categories;
 using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models;
+using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Devices;
 
@@ -70,7 +71,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         LifeCategoryPage.ContributionAdded += AddContribution;
         MoreCategoryPage.ContributionAdded += AddContribution;
 
-        ReturnToFormCommand = new Command(async () => await ExecuteReturnAsync());
+        ReturnToFormCommand = new Command(async () => await ExecuteSaveAsync());
         ArmourCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
         CharmCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
         // WeaponCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
@@ -127,7 +128,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         }
     }
 
-    private async Task ExecuteReturnAsync()
+    private async Task ExecuteSaveAsync()
     {
         var result = new IspCalculationResult
         {
@@ -136,8 +137,38 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
             SummaryText = BuildSummary(),
         };
 
-        _tcsCalc?.TrySetResult(result);
-        await Navigation.PopAsync();
+        // Legacy flow: calculator opened from ItemForm and expecting a callback result.
+        if (_tcsCalc != null)
+        {
+            _tcsCalc.TrySetResult(result);
+            await Navigation.PopAsync();
+            return;
+        }
+
+        try
+        {
+            var walletLines = BuildWalletSummaryLines(result);
+            var item = new Item
+            {
+                ItemType = ResolveWalletItemType(result.Abilities),
+                Maker = new Character
+                {
+                    Name = "Quick ISP",
+                    PlayerName = string.Empty
+                },
+                Description = string.Join("\n", walletLines),
+                Isp = result.TotalIsp,
+                CreatedDate = DateTime.Now
+            };
+
+            LiteDbService.InsertItem(item);
+            await DisplayAlert("Saved", "Item saved to wallet.", "OK");
+            await Navigation.PopAsync();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Save failed", ex.Message, "OK");
+        }
     }
 
     private void OnLoaded(object? sender, EventArgs e) => UpdateTabFontSize();
@@ -221,6 +252,57 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
             );
         }
         return list;
+    }
+
+    private List<string> BuildWalletSummaryLines(IspCalculationResult result)
+    {
+        var lines = new List<string>
+        {
+            $"ISP total: {result.TotalIsp}"
+        };
+
+        if (BreakdownItems.Count > 0)
+        {
+            lines.Add("ISP breakdown:");
+            lines.AddRange(BreakdownItems
+                .Select(row => (row.Text ?? string.Empty).Trim())
+                .Where(text => text.Length > 0));
+        }
+        else if (!string.IsNullOrWhiteSpace(result.SummaryText))
+        {
+            lines.AddRange(result.SummaryText
+                .Split('\n')
+                .Select(line => line.Trim())
+                .Where(line => !string.IsNullOrWhiteSpace(line)));
+        }
+
+        return lines;
+    }
+
+    private static ItemTypeEnum ResolveWalletItemType(IEnumerable<CalcResult>? abilities)
+    {
+        if (abilities == null)
+            return ItemTypeEnum.None;
+
+        bool hasMagic = abilities.Any(a =>
+            string.Equals(a.AbilityType, "Spell", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(a.AbilityType, "Magic", StringComparison.OrdinalIgnoreCase));
+        if (hasMagic)
+            return ItemTypeEnum.Magic;
+
+        bool hasSpirit = abilities.Any(a =>
+            string.Equals(a.AbilityType, "Miracle", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(a.AbilityType, "Spirit", StringComparison.OrdinalIgnoreCase));
+        if (hasSpirit)
+            return ItemTypeEnum.Spirit;
+
+        bool hasEarthpower = abilities.Any(a =>
+            string.Equals(a.AbilityType, "Evocation", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(a.AbilityType, "Earthpower", StringComparison.OrdinalIgnoreCase));
+        if (hasEarthpower)
+            return ItemTypeEnum.EarthPower;
+
+        return ItemTypeEnum.Other;
     }
 
     private void RefreshBreakdown()

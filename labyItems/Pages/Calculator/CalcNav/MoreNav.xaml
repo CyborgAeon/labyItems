@@ -120,7 +120,7 @@
         </ScrollView>
 
         <controls:StickyFooterControl Grid.Row="1"
-                                      ButtonText="Return to Form"
+                                      ButtonText="Save"
                                       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnToFormCommand}"
                                       ReturnCommandParameter="{x:Reference RootPage}"
                                       Total="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.Total}"

@@ -1261,6 +1261,7 @@ public static class SpecialisationDefinitionRepository
             Name = string.IsNullOrWhiteSpace(overrides.Name) ? baseline.Name : overrides.Name,
             Type = string.IsNullOrWhiteSpace(overrides.Type) ? baseline.Type : overrides.Type,
             Effect = string.IsNullOrWhiteSpace(overrides.Effect) ? baseline.Effect : overrides.Effect,
+            Lore = string.IsNullOrWhiteSpace(overrides.Lore) ? baseline.Lore : overrides.Lore,
             BattleboardNameOverride = string.IsNullOrWhiteSpace(overrides.BattleboardNameOverride)
                 ? baseline.BattleboardNameOverride
                 : overrides.BattleboardNameOverride,
@@ -1286,6 +1287,7 @@ public static class SpecialisationDefinitionRepository
             Name = source.Name,
             Type = source.Type,
             Effect = source.Effect,
+            Lore = source.Lore,
             BattleboardNameOverride = source.BattleboardNameOverride,
             UpdateKey = source.UpdateKey,
             Source = source.Source,

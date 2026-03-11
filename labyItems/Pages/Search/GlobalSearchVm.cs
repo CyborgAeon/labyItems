@@ -68,7 +68,19 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     private SearchSecondaryFilterMode _secondaryFilterMode = SearchSecondaryFilterMode.None;
 
     public ObservableCollection<GlobalSearchFilterChipVm> ActiveFilterChips { get; } = new();
-    public ObservableCollection<GlobalSearchResultVm> FilteredResults { get; } = new();
+
+    private IReadOnlyList<GlobalSearchResultVm> _filteredResults = Array.Empty<GlobalSearchResultVm>();
+    public IReadOnlyList<GlobalSearchResultVm> FilteredResults
+    {
+        get => _filteredResults;
+        private set
+        {
+            _filteredResults = value ?? Array.Empty<GlobalSearchResultVm>();
+            Raise();
+            Raise(nameof(HasNoResults));
+            Raise(nameof(EmptyStateText));
+        }
+    }
 
     private string _searchText = string.Empty;
     public string SearchText
@@ -118,12 +130,6 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
     public GlobalSearchVm()
     {
         RebuildActiveFilterChips();
-
-        FilteredResults.CollectionChanged += (_, __) =>
-        {
-            Raise(nameof(HasNoResults));
-            Raise(nameof(EmptyStateText));
-        };
     }
 
     public GlobalSearchFilterTransition PreviewFilterTransition(GlobalSearchFilterChipVm? chip)
@@ -299,9 +305,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
                 .ToList();
         }
 
-        FilteredResults.Clear();
-        foreach (var item in ordered)
-            FilteredResults.Add(item);
+        FilteredResults = ordered;
     }
 
     private bool PassesSpellSubFilters(SpellService.SpellRaw spell)
@@ -521,62 +525,97 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
 
     private void RebuildActiveFilterChips()
     {
+        var desired = BuildDesiredFilterChips();
+        if (CanPatchActiveFilterChips(desired))
+        {
+            for (var i = 0; i < desired.Count; i++)
+                ActiveFilterChips[i].UpdateFrom(desired[i]);
+            return;
+        }
+
         ActiveFilterChips.Clear();
+        foreach (var chip in desired)
+            ActiveFilterChips.Add(chip);
+    }
+
+    private bool CanPatchActiveFilterChips(IReadOnlyList<GlobalSearchFilterChipVm> desired)
+    {
+        if (ActiveFilterChips.Count != desired.Count)
+            return false;
+
+        for (var i = 0; i < desired.Count; i++)
+        {
+            if (!string.Equals(ActiveFilterChips[i].Key, desired[i].Key, StringComparison.Ordinal))
+                return false;
+        }
+
+        return true;
+    }
+
+    private List<GlobalSearchFilterChipVm> BuildDesiredFilterChips()
+    {
+        var chips = new List<GlobalSearchFilterChipVm>();
 
         if (_secondaryFilterMode == SearchSecondaryFilterMode.None)
         {
             foreach (var filter in PrimaryFilterOrder)
             {
-                ActiveFilterChips.Add(new GlobalSearchFilterChipVm(
-                    Key: filter,
-                    Label: filter,
-                    IsSelected: string.Equals(_selectedPrimaryFilter, filter, StringComparison.OrdinalIgnoreCase),
-                    IsBack: false));
+                chips.Add(new GlobalSearchFilterChipVm(
+                    key: filter,
+                    label: filter,
+                    isSelected: string.Equals(_selectedPrimaryFilter, filter, StringComparison.OrdinalIgnoreCase),
+                    isBack: false));
             }
 
-            return;
+            return chips;
         }
 
-        ActiveFilterChips.Add(new GlobalSearchFilterChipVm(BackChipKey, "◀", false, true));
+        chips.Add(new GlobalSearchFilterChipVm(BackChipKey, "◀", false, true));
 
         switch (_secondaryFilterMode)
         {
             case SearchSecondaryFilterMode.Spell:
-                AddTierChips("spell-tier:", _selectedSpellTierTokens);
-                AddOptionChips("spell-colour:", SpellColourOptions, _selectedSpellColourTokens);
+                AddTierChips(chips, "spell-tier:", _selectedSpellTierTokens);
+                AddOptionChips(chips, "spell-colour:", SpellColourOptions, _selectedSpellColourTokens);
                 break;
             case SearchSecondaryFilterMode.Ability:
-                AddOptionChips("ability-table:", AbilityTableOptions, _selectedAbilityTableTokens);
+                AddOptionChips(chips, "ability-table:", AbilityTableOptions, _selectedAbilityTableTokens);
                 break;
             case SearchSecondaryFilterMode.Miracle:
-                AddTierChips("miracle-tier:", _selectedMiracleTierTokens);
-                AddOptionChips("miracle-sphere:", MiracleSphereOptions, _selectedMiracleSphereTokens);
+                AddTierChips(chips, "miracle-tier:", _selectedMiracleTierTokens);
+                AddOptionChips(chips, "miracle-sphere:", MiracleSphereOptions, _selectedMiracleSphereTokens);
                 break;
             case SearchSecondaryFilterMode.Evocation:
-                AddTierChips("evocation-tier:", _selectedEvocationTierTokens);
-                AddOptionChips("evocation-field:", EvocationFieldOptions, _selectedEvocationFieldTokens);
+                AddTierChips(chips, "evocation-tier:", _selectedEvocationTierTokens);
+                AddOptionChips(chips, "evocation-field:", EvocationFieldOptions, _selectedEvocationFieldTokens);
                 break;
         }
+
+        return chips;
     }
 
-    private void AddTierChips(string prefix, HashSet<string> selectedTokens)
+    private static void AddTierChips(List<GlobalSearchFilterChipVm> chips, string prefix, HashSet<string> selectedTokens)
     {
         var handbookToken = NormalizeToken(TierHandbook);
         var advancedToken = NormalizeToken(TierAdvanced);
 
-        ActiveFilterChips.Add(new GlobalSearchFilterChipVm($"{prefix}{handbookToken}", TierHandbook, selectedTokens.Contains(handbookToken), false));
-        ActiveFilterChips.Add(new GlobalSearchFilterChipVm($"{prefix}{advancedToken}", TierAdvanced, selectedTokens.Contains(advancedToken), false));
+        chips.Add(new GlobalSearchFilterChipVm($"{prefix}{handbookToken}", TierHandbook, selectedTokens.Contains(handbookToken), false));
+        chips.Add(new GlobalSearchFilterChipVm($"{prefix}{advancedToken}", TierAdvanced, selectedTokens.Contains(advancedToken), false));
     }
 
-    private void AddOptionChips(string prefix, IReadOnlyList<FilterOption> options, HashSet<string> selectedTokens)
+    private static void AddOptionChips(
+        List<GlobalSearchFilterChipVm> chips,
+        string prefix,
+        IReadOnlyList<FilterOption> options,
+        HashSet<string> selectedTokens)
     {
         foreach (var option in options)
         {
-            ActiveFilterChips.Add(new GlobalSearchFilterChipVm(
-                Key: $"{prefix}{option.Token}",
-                Label: option.Label,
-                IsSelected: selectedTokens.Contains(option.Token),
-                IsBack: false));
+            chips.Add(new GlobalSearchFilterChipVm(
+                key: $"{prefix}{option.Token}",
+                label: option.Label,
+                isSelected: selectedTokens.Contains(option.Token),
+                isBack: false));
         }
     }
 
@@ -889,11 +928,73 @@ public enum GlobalSearchFilterTransition
     ToPrimary
 }
 
-public sealed record GlobalSearchFilterChipVm(
-    string Key,
-    string Label,
-    bool IsSelected,
-    bool IsBack);
+public sealed class GlobalSearchFilterChipVm : INotifyPropertyChanged
+{
+    private string _label;
+    private bool _isSelected;
+    private bool _isBack;
+
+    public GlobalSearchFilterChipVm(string key, string label, bool isSelected, bool isBack)
+    {
+        Key = key ?? string.Empty;
+        _label = label ?? string.Empty;
+        _isSelected = isSelected;
+        _isBack = isBack;
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public string Key { get; }
+
+    public string Label
+    {
+        get => _label;
+        private set
+        {
+            if (_label == value)
+                return;
+
+            _label = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Label)));
+        }
+    }
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        private set
+        {
+            if (_isSelected == value)
+                return;
+
+            _isSelected = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+        }
+    }
+
+    public bool IsBack
+    {
+        get => _isBack;
+        private set
+        {
+            if (_isBack == value)
+                return;
+
+            _isBack = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsBack)));
+        }
+    }
+
+    public void UpdateFrom(GlobalSearchFilterChipVm source)
+    {
+        if (source == null)
+            return;
+
+        Label = source.Label;
+        IsSelected = source.IsSelected;
+        IsBack = source.IsBack;
+    }
+}
 
 public sealed record GlobalSearchResultVm(
     GlobalSearchKind Kind,

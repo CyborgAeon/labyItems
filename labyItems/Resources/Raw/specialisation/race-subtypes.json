@@ -13,6 +13,30 @@
       "DisplayName": "CrolSubtypeAbilities",
       "ChoiceSetRefs": [
         "choice.crolsubtypeabilities.mapped"
+      ],
+      "Notes": [
+        "Choose your Crol caste to unlock caste-specific traits at levels 1, 2, 5 and 8."
+      ]
+    },
+    "Crol Talents (Yashtar)": {
+      "Key": "definition.crol-talents-yashtar",
+      "DisplayName": "Crol Talents (Yashtar)",
+      "ChoiceSetRefs": [
+        "choice.crol.yashtar.talents"
+      ]
+    },
+    "Crol Talents (Kaerssor)": {
+      "Key": "definition.crol-talents-kaerssor",
+      "DisplayName": "Crol Talents (Kaerssor)",
+      "ChoiceSetRefs": [
+        "choice.crol.kaerssor.talents"
+      ]
+    },
+    "Crol Talents (Jaerseen)": {
+      "Key": "definition.crol-talents-jaerseen",
+      "DisplayName": "Crol Talents (Jaerseen)",
+      "ChoiceSetRefs": [
+        "choice.crol.jaerseen.talents"
       ]
     },
     "Baronial Tradition": {

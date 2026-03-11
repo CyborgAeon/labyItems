@@ -778,8 +778,14 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         if (string.IsNullOrWhiteSpace(value))
             return value;
 
-        var parts = value.Split(' ', 2, StringSplitOptions.TrimEntries);
-        return parts.Length == 2 ? parts[1] : value.Trim();
+        var trimmed = value.Trim();
+        var firstSpace = trimmed.IndexOf(' ');
+        if (firstSpace <= 0 || firstSpace >= trimmed.Length - 1)
+            return trimmed;
+
+        var firstToken = trimmed[..firstSpace];
+        var hasDecorativePrefix = firstToken.Any(ch => !char.IsLetterOrDigit(ch));
+        return hasDecorativePrefix ? trimmed[(firstSpace + 1)..].Trim() : trimmed;
     }
 
     #region INotifyPropertyChanged
