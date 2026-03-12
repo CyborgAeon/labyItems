@@ -13,8 +13,8 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
 
     public EvocationConfigPage()
     {
-        InitializeComponent();
         AddSelectedEvocationCommand = new Command<object?>(OnEvocationResultSelected);
+        InitializeComponent();
     }
 
     public ICommand AddSelectedEvocationCommand { get; }

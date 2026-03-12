@@ -24,7 +24,6 @@ public enum WeaponType
     ThrowingMace,
     ThrowingHammer,
     Dagger,
-    Cudgel,
     Bow,
     Blowpipe,
     Crossbow,
@@ -43,6 +42,5 @@ public enum WeaponTypeO
     WarMace,
     HandHammer,
     WarHammer,
-    Dagger,
-    Cudgel
+    Dagger
 }

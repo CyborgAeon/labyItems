@@ -2316,7 +2316,7 @@
         "Hannot Beggar",
         "Kallah Beggar",
         "Archer",
-        "Pure Priest",
+        "Pure-Priest",
         "Warrior Priest",
         "Spiritual Warrior"
       ],
@@ -2417,7 +2417,7 @@
     "Harazaen": {
       "ClassRestriction": [
         "Witch",
-        "Pure Priest",
+        "Pure-Priest",
         "Spiritual Warrior",
         "Wayfinder",
         "Leywalker",
@@ -2693,7 +2693,12 @@
         "DetailKey": "IshmaicClanAbilities",
         "SectionId": "mapped:Ishmaic Clan",
         "Required": true,
-        "OptionalClassIn": ["Kallah Beggar", "Kallah", "Hanot Beggar", "Hannot Beggar"],
+        "OptionalClassIn": [
+          "Kallah Beggar",
+          "Kallah",
+          "Hanot Beggar",
+          "Hannot Beggar"
+        ],
         "Subtitle": "Select an option to unlock its benefits."
       }
     },

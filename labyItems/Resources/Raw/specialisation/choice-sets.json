@@ -3650,7 +3650,7 @@
               "Hannot Beggar",
               "Kallah Beggar",
               "Archer",
-              "Pure Priest",
+              "Pure-Priest",
               "Warrior Priest",
               "Spiritual Warrior"
             ]
@@ -3763,7 +3763,7 @@
           "Restrictions": {
             "ClassRestriction": [
               "Witch",
-              "Pure Priest",
+              "Pure-Priest",
               "Spiritual Warrior",
               "Wayfinder",
               "Leywalker",
@@ -3834,11 +3834,7 @@
           "Key": "The cloud way",
           "Label": "The cloud way",
           "Effects": {
-            "Notes": [
-              "Undead",
-              "Wyvern",
-              "Dwarf"
-            ]
+            "Notes": ["Undead", "Wyvern", "Dwarf"]
           },
           "Grants": [
             {
@@ -3859,9 +3855,7 @@
           "Key": "House D'trael",
           "Label": "House D'trael",
           "Effects": {
-            "Notes": [
-              "Glass"
-            ]
+            "Notes": ["Glass"]
           },
           "Grants": [
             {

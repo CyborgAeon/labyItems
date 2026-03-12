@@ -58,9 +58,6 @@ public static class GuildsService
         if (record == null)
             return null;
 
-        if (record.AlignmentRule != null)
-            return record.AlignmentRule;
-
         return BuildAlignmentRuleFromAvailability(record.Availability?.Whitelist?.Alignments);
     }
 
@@ -111,6 +108,7 @@ public static class GuildsService
 public sealed class GuildRecord
 {
     public string Type { get; set; } = "";
+    public string Logo { get; set; } = "";
     public string PreRequisites { get; set; } = "";
     public string Restrictions { get; set; } = "";
     public string Ethos { get; set; } = "";
@@ -122,8 +120,17 @@ public sealed class GuildRecord
     public AlignmentRule? AlignmentRule { get; set; }
 
     public Dictionary<string, List<string>> MiracleList { get; set; } = new();
+    public GuildMiracleReference? DenominationalMiracle { get; set; }
+    public string DenominationalMiracleNote { get; set; } = string.Empty;
 
     public GuildAvailability Availability { get; set; } = new();
+}
+
+[JsonConverter(typeof(GuildMiracleReferenceConverter))]
+public sealed class GuildMiracleReference
+{
+    [JsonPropertyName("$ref")]
+    public string Ref { get; set; } = string.Empty;
 }
 
 public sealed class GuildBenefits
@@ -295,6 +302,38 @@ public sealed class GuildAvailabilityRaceConverter : JsonConverter<GuildAvailabi
         writer.WriteString("Name", value?.Name ?? string.Empty);
         if (!string.IsNullOrWhiteSpace(value?.Subtype))
             writer.WriteString("Subtype", value!.Subtype);
+        writer.WriteEndObject();
+    }
+}
+
+public sealed class GuildMiracleReferenceConverter : JsonConverter<GuildMiracleReference>
+{
+    public override GuildMiracleReference Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.String)
+            return new GuildMiracleReference { Ref = reader.GetString() ?? string.Empty };
+
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException($"Unexpected token {reader.TokenType} when parsing guild miracle reference.");
+
+        using var doc = JsonDocument.ParseValue(ref reader);
+        var root = doc.RootElement;
+        var reference = new GuildMiracleReference();
+
+        if (root.TryGetProperty("$ref", out var refEl))
+            reference.Ref = refEl.GetString() ?? string.Empty;
+        else if (root.TryGetProperty("ref", out var compatRef))
+            reference.Ref = compatRef.GetString() ?? string.Empty;
+        else if (root.TryGetProperty("Name", out var nameEl))
+            reference.Ref = nameEl.GetString() ?? string.Empty;
+
+        return reference;
+    }
+
+    public override void Write(Utf8JsonWriter writer, GuildMiracleReference value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+        writer.WriteString("$ref", value?.Ref ?? string.Empty);
         writer.WriteEndObject();
     }
 }

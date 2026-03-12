@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using labyItems.Controls;
 using labyItems.Models;
 using labyItems.Pages.Calculator;
 using labyItems.Services;
@@ -14,15 +16,34 @@ public partial class RecipientPage : ContentPage
 {
     private readonly TaskCompletionSource<RecipientInfo> _tcs = new();
     private readonly MpSubmissionPayload? _submission;
+    private bool _hasSubmissionSummary;
+    private string _summaryEmptyText = StickyFooterContentBuilder.DefaultEmptyMessage;
 
-    public ObservableCollection<string> SubmissionSummaryLines { get; } = new();
-    public bool HasSubmissionSummary => SubmissionSummaryLines.Count > 0;
+    public ObservableCollection<ContributionRow> SubmissionSummaryRows { get; } = new();
+    public bool HasSubmissionSummary
+    {
+        get => _hasSubmissionSummary;
+        private set
+        {
+            if (_hasSubmissionSummary == value)
+                return;
+
+            _hasSubmissionSummary = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsSummaryEmptyStateVisible));
+        }
+    }
+
+    public bool HasSubmissionSummaryRows => SubmissionSummaryRows.Count > 0;
+    public bool IsSummaryEmptyStateVisible => HasSubmissionSummary && !HasSubmissionSummaryRows;
+    public string SummaryEmptyText => _summaryEmptyText;
 
     public RecipientPage(RecipientInfo? existing = null, MpSubmissionPayload? submission = null)
     {
         InitializeComponent();
         _submission = submission;
-        BuildSummaryLines(submission);
+        SubmissionSummaryRows.CollectionChanged += OnSummaryRowsChanged;
+        BuildSummaryRows(submission);
         if (existing != null)
         {
             RecipientPlayerNameEntry.Text = existing.PlayerName;
@@ -70,33 +91,57 @@ public partial class RecipientPage : ContentPage
         }
     }
 
-    private void BuildSummaryLines(MpSubmissionPayload? payload)
+    private void BuildSummaryRows(MpSubmissionPayload? payload)
     {
-        SubmissionSummaryLines.Clear();
+        SubmissionSummaryRows.Clear();
+        HasSubmissionSummary = payload != null;
+
         if (payload == null)
         {
-            OnPropertyChanged(nameof(HasSubmissionSummary));
+            _summaryEmptyText = StickyFooterContentBuilder.DefaultEmptyMessage;
+            OnPropertyChanged(nameof(SummaryEmptyText));
             return;
         }
 
-        if (payload.TotalMp > 0)
-            SubmissionSummaryLines.Add($"MP total: {payload.TotalMp}");
-        if (payload.Breakdown?.Count > 0)
-        {
-            SubmissionSummaryLines.Add("MP breakdown:");
-            foreach (var line in payload.Breakdown.Select(b => b.Text))
-                SubmissionSummaryLines.Add(line);
-        }
+        var sourceRows = new List<ContributionRow>();
 
-        if (payload.TotalIsp > 0)
-            SubmissionSummaryLines.Add($"ISP total: {payload.TotalIsp}");
+        if (payload.Breakdown?.Count > 0)
+            sourceRows.AddRange(payload.Breakdown);
+
         if (payload.IspBreakdown?.Count > 0)
         {
-            SubmissionSummaryLines.Add("ISP breakdown:");
-            foreach (var line in payload.IspBreakdown.Select(b => b.Text))
-                SubmissionSummaryLines.Add(line);
+            sourceRows.Add(new ContributionRow
+            {
+                Id = "isp-breakdown-header",
+                Text = "ISP breakdown",
+                RunningTotal = payload.TotalIsp
+            });
+            sourceRows.AddRange(payload.IspBreakdown);
         }
 
-        OnPropertyChanged(nameof(HasSubmissionSummary));
+        if (sourceRows.Count == 0 && payload.TotalMp > 0)
+        {
+            sourceRows.Add(new ContributionRow
+            {
+                Id = "mp-total-only",
+                Text = "MP total",
+                RunningTotal = payload.TotalMp
+            });
+        }
+
+        var content = StickyFooterContentBuilder.Build(sourceRows, StickyFooterContentBuilder.DefaultEmptyMessage);
+        foreach (var row in content.Rows)
+            SubmissionSummaryRows.Add(row);
+
+        _summaryEmptyText = content.EmptyMessage;
+        OnPropertyChanged(nameof(SummaryEmptyText));
+        OnPropertyChanged(nameof(HasSubmissionSummaryRows));
+        OnPropertyChanged(nameof(IsSummaryEmptyStateVisible));
+    }
+
+    private void OnSummaryRowsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(HasSubmissionSummaryRows));
+        OnPropertyChanged(nameof(IsSummaryEmptyStateVisible));
     }
 }

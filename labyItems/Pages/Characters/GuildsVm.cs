@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using labyItems.Models.Characters;
@@ -12,6 +13,15 @@ namespace labyItems.Pages.Characters;
 public sealed class GuildsVm : INotifyPropertyChanged
 {
     private const string AllTypeFilterValue = "All";
+    private static readonly Regex MiracleListLoreBlockRegex = new(
+        @"(?is)(?:^|\n\s*\n)[^\n]*?\b(?:[A-Z]+\s+)*MIRACLE LIST\b.*?(?=(\n\s*\n|$))",
+        RegexOptions.Compiled);
+    private static readonly Regex DenominationalMiracleLoreBlockRegex = new(
+        @"(?is)(?:^|\n\s*\n)[^\n]*?\bDENOMINATIONAL MIRACLE\b.*?(?=(\n\s*\n|$))",
+        RegexOptions.Compiled);
+    private static readonly Regex MiracleStatLoreBlockRegex = new(
+        @"(?is)(?:^|\n\s*\n)[^\n]*?\bLevel:\b[^\n]*\bAlignment:\b[^\n]*\bDuration:\b[^\n]*\bRange:\b.*?(?=(\n\s*\n|$))",
+        RegexOptions.Compiled);
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -19,7 +29,6 @@ public sealed class GuildsVm : INotifyPropertyChanged
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     private Dictionary<string, GuildRecord> _guildRecords =
         new(StringComparer.OrdinalIgnoreCase);
-    private GuildSlotRules _slotRules = GuildSlotRules.Default();
     private string _currentClassName = "";
     private HashSet<string> _currentClassBrackets = new(StringComparer.OrdinalIgnoreCase);
     private string _currentRaceName = "";
@@ -133,16 +142,11 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     public async Task ReloadAsync()
     {
-        _slotRules = GuildSlotRules.FromDraft(_draft);
-
         _guildRecords = await _creationDataService.GetGuildsAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
-        if (ShouldForceKhaniabadCity())
-            _slotRules.ForceCity("Khaniabad");
-        _slotRules.ResolvePeopleTypeOverrides(_guildRecords);
+        var miracleLookup = await LoadMiracleLookupAsync();
 
         await RefreshContextAsync();
 
-        _slotRules.ApplyToCurrentSelection(_draft, _guildRecords);
         ApplyAvailabilityToCurrentSelection();
 
         var (hasCityBound, cityName) = GetCityBoundInfo();
@@ -173,21 +177,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
             TypeFilterChips.Clear();
 
         var ordered = _guildRecords
-        .Where(kv =>
-        {
-            var type = (kv.Value?.Type ?? "").Trim();
-
-            if (_allowGuildSelection && !_slotRules.ShouldShowGuild(type, kv.Key, _draft.Guilds))
-                return false;
-
-            var availability = EvaluateAvailabilityForCurrentContext(kv.Value, kv.Key);
-            if (!availability.Allowed)
-                return false;
-
-            return true;
-        })
-        .OrderBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
-        .ToList();
+            .OrderBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
+            .ToList();
         AllGuilds.Clear();
         for (var i = 0; i < ordered.Count; i++)
         {
@@ -195,14 +186,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
             var rec = ordered[i].Value ?? new GuildRecord();
 
             var isSelected = _draft.Guilds.Contains(name, StringComparer.OrdinalIgnoreCase);
-            var alignmentOk = WouldStillHaveAnyAlignmentIfSelected(name);
-            var slotCheck = _slotRules.CanSelect(rec.Type ?? string.Empty, name, _draft.Guilds, _guildRecords);
             var availability = EvaluateAvailabilityForCurrentContext(rec, name);
-            var selectable = alignmentOk && slotCheck.Allowed && availability.Allowed;
-            var reason = "";
-            if (!alignmentOk) reason = "Conflicts with current alignment restrictions.";
-            else if (!slotCheck.Allowed) reason = slotCheck.Reason;
-            else if (!availability.Allowed) reason = availability.Reason;
+            var selectable = availability.Allowed;
+            var reason = availability.Reason;
             var cardSelectable = !_allowGuildSelection || (selectable || isSelected);
 
             var vm = new GuildCardVm
@@ -210,6 +196,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 Id = i + 1,
                 Name = name,
                 Type = rec.Type ?? "",
+                Logo = NormalizeLogoPath(rec.Logo),
                 PreRequisites = rec.PreRequisites ?? "",
                 Restrictions = rec.Restrictions ?? "",
                 Ethos = rec.Ethos ?? "",
@@ -222,11 +209,12 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 IntermediateOptionGroups = BuildBenefitOptionGroups(name, "Intermediate", rec.Benefits?.Intermediate),
                 AdvancedOptionGroups = BuildBenefitOptionGroups(name, "Advanced", rec.Benefits?.Advanced),
                 MiracleRows = BuildMiracleRows(rec.MiracleList),
+                DenominationalMiracle = BuildDenominationalMiracle(rec, miracleLookup),
                 IsSelected = isSelected,
                 IsExpanded = false,
                 IsSelectable = cardSelectable,
                 NotSelectableReason = cardSelectable ? "" : (_allowGuildSelection ? reason : ""),
-                IsLocked = _slotRules.IsGuildLocked(type: rec.Type ?? string.Empty, guildName: name),
+                IsLocked = false,
             };
 
             vm.Icon = IconForType(vm.Type);
@@ -236,31 +224,6 @@ public sealed class GuildsVm : INotifyPropertyChanged
         Refilter();
         RecomputeDraftAlignments();
         _notifyWizardGatingChanged();
-    }
-
-    private bool ShouldForceKhaniabadCity()
-    {
-        var race = (_draft.Race ?? string.Empty).Trim();
-        if (!string.Equals(race, "Human", StringComparison.OrdinalIgnoreCase))
-            return false;
-
-        var subtype = (_draft.RaceSubtypeValue ?? _draft.RaceSubtype ?? string.Empty).Trim();
-        if (!string.Equals(subtype, "Ishmaic", StringComparison.OrdinalIgnoreCase))
-            return false;
-
-        var cls = (_draft.Class ?? string.Empty).Trim();
-        var isKallah = string.Equals(cls, "Kallah Beggar", StringComparison.OrdinalIgnoreCase)
-                       || string.Equals(cls, "Kallah", StringComparison.OrdinalIgnoreCase);
-        var isHanot = string.Equals(cls, "Hanot Beggar", StringComparison.OrdinalIgnoreCase)
-                      || string.Equals(cls, "Hannot Beggar", StringComparison.OrdinalIgnoreCase);
-        if (!isKallah && !isHanot)
-            return false;
-
-        if (_draft.SpecialisationSelections.TryGetValue("Ishmaic Clan", out var clan)
-            && !string.IsNullOrWhiteSpace(clan))
-            return false;
-
-        return true;
     }
 
     private (bool HasCityBound, string? CityName) GetCityBoundInfo()
@@ -300,8 +263,15 @@ public sealed class GuildsVm : INotifyPropertyChanged
             var classMap = await _creationDataService.GetClassesAsync();
             if (_creationDataService.TryGetByName(classMap, _currentClassName, out var rec) && rec != null)
             {
-                foreach (var b in rec.Brackets ?? Enumerable.Empty<string>())
-                    _currentClassBrackets.Add((b ?? string.Empty).Trim());
+                AddBrackets(rec.Brackets);
+
+                foreach (var pathClassName in ExtractPathClassNames(rec))
+                {
+                    if (!_creationDataService.TryGetByName(classMap, pathClassName, out var pathRecord) || pathRecord == null)
+                        continue;
+
+                    AddBrackets(pathRecord.Brackets);
+                }
             }
         }
 
@@ -328,6 +298,16 @@ public sealed class GuildsVm : INotifyPropertyChanged
             if (s.Length > 0)
                 _currentRaceSelections.Add(s);
         }
+
+        void AddBrackets(IEnumerable<string>? brackets)
+        {
+            foreach (var b in brackets ?? Enumerable.Empty<string>())
+            {
+                var normalized = NormalizeLookupKey(b);
+                if (normalized.Length > 0)
+                    _currentClassBrackets.Add(normalized);
+            }
+        }
     }
 
     private void ApplyAvailabilityToCurrentSelection()
@@ -347,27 +327,6 @@ public sealed class GuildsVm : INotifyPropertyChanged
         foreach (var g in kept.Distinct(StringComparer.OrdinalIgnoreCase))
             _draft.Guilds.Add(g);
     }
-
-
-    private bool WouldStillHaveAnyAlignmentIfSelected(string guildName)
-    {
-        var rules = new List<AlignmentRule?>();
-
-        // non-guild rules (race/class/subtype/specs)
-        rules.AddRange(_getNonGuildRules());
-
-        // currently selected guild rules
-        foreach (var g in _draft.Guilds)
-            rules.Add(GetGuildRule(g));
-
-        // plus this guild if not already selected
-        if (!_draft.Guilds.Any(x => string.Equals(x, guildName, StringComparison.OrdinalIgnoreCase)))
-            rules.Add(GetGuildRule(guildName));
-
-        var available = CharacterDraft.ComputeAvailableAlignments(rules);
-        return available.Count > 0;
-    }
-
     private AvailabilityResult EvaluateAvailability(string guildName)
     {
         if (string.IsNullOrWhiteSpace(guildName))
@@ -428,7 +387,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             return true;
         }
 
-        if (rules.Brackets?.Any(b => _currentClassBrackets.Contains(b ?? string.Empty)) == true)
+        if (rules.Brackets?.Any(b => _currentClassBrackets.Contains(NormalizeLookupKey(b))) == true)
         {
             reason = "Bracket not permitted.";
             return true;
@@ -461,7 +420,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             return false;
         }
 
-        if (rules.Brackets is { Count: > 0 } && !_currentClassBrackets.Any(b => rules.Brackets.Contains(b, StringComparer.OrdinalIgnoreCase)))
+        if (rules.Brackets is { Count: > 0 } && !_currentClassBrackets.Any(b => rules.Brackets.Any(r => NormalizeLookupKey(r) == b)))
         {
             reason = $"Requires bracket(s): {string.Join(", ", rules.Brackets)}";
             return false;
@@ -505,7 +464,11 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (allowedOrders.Count == 0 && allowedMorals.Count == 0)
             return true;
 
-        foreach (var a in _draft.AvailableAlignments ?? Enumerable.Empty<Alignment>())
+        var availableAlignments = CharacterDraft.ComputeAvailableAlignments(_getNonGuildRules());
+        if (availableAlignments.Count == 0 && _draft.Alignment is Alignment selectedAlignment)
+            availableAlignments.Add(selectedAlignment);
+
+        foreach (var a in availableAlignments)
         {
             var orderOk = allowedOrders.Count == 0 || allowedOrders.Contains(a.Order);
             var moralOk = allowedMorals.Count == 0 || allowedMorals.Contains(a.Moral);
@@ -529,6 +492,37 @@ public sealed class GuildsVm : INotifyPropertyChanged
         }
 
         return false;
+    }
+
+    private static IEnumerable<string> ExtractPathClassNames(CharacterClassRecord classRecord)
+    {
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        AddName(classRecord.Path);
+
+        foreach (var buyAs in classRecord.BuyAs ?? Enumerable.Empty<string>())
+            AddName(ParsePathClassFromBuyAs(buyAs));
+
+        return names;
+
+        void AddName(string? value)
+        {
+            var trimmed = (value ?? string.Empty).Trim();
+            if (trimmed.Length > 0)
+                names.Add(trimmed);
+        }
+    }
+
+    private static string ParsePathClassFromBuyAs(string? buyAs)
+    {
+        var raw = (buyAs ?? string.Empty).Trim();
+        if (raw.Length == 0)
+            return string.Empty;
+
+        var match = Regex.Match(raw, @"\bclass\s+(.+)$", RegexOptions.IgnoreCase);
+        if (match.Success)
+            return match.Groups[1].Value.Trim();
+
+        return raw;
     }
 
     private static string NormalizeLookupKey(string? value)
@@ -614,6 +608,28 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return "📜";
     }
 
+    private static string NormalizeLogoPath(string? rawPath)
+    {
+        var value = (rawPath ?? string.Empty).Trim();
+        if (value.Length == 0)
+            return string.Empty;
+
+        value = value.Replace('\\', '/');
+
+        if (value.StartsWith("~/", StringComparison.Ordinal))
+            value = value[2..];
+
+        const string imagesPrefix = "Resources/Images/";
+        if (value.StartsWith(imagesPrefix, StringComparison.OrdinalIgnoreCase))
+            value = value[imagesPrefix.Length..];
+
+        var lastSlash = value.LastIndexOf('/');
+        if (lastSlash >= 0 && lastSlash < value.Length - 1)
+            value = value[(lastSlash + 1)..];
+
+        return value.Trim();
+    }
+
     private static List<GuildMiracleRowVm> BuildMiracleRows(Dictionary<string, List<string>>? miracleList)
     {
         if (miracleList == null || miracleList.Count == 0)
@@ -637,19 +653,96 @@ public sealed class GuildsVm : INotifyPropertyChanged
         {
             var names = entry.Miracles
                 .Where(m => !string.IsNullOrWhiteSpace(m))
+                .Select(m => m.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(m => m, StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
             if (names.Count == 0)
                 continue;
 
-            rows.Add(new GuildMiracleRowVm
+            foreach (var name in names)
             {
-                Level = entry.Level?.ToString() ?? entry.Key,
-                Miracles = string.Join(", ", names)
-            });
+                rows.Add(new GuildMiracleRowVm
+                {
+                    LevelText = entry.Level?.ToString() ?? entry.Key,
+                    Name = name
+                });
+            }
         }
 
+        for (var i = 0; i < rows.Count; i++)
+            rows[i].RowBackgroundColor = i % 2 == 0 ? "#FFFFFF" : "#F9FAFB";
+
         return rows;
+    }
+
+    private static async Task<IReadOnlyDictionary<string, GuildMiracleDefinition>> LoadMiracleLookupAsync()
+    {
+        try
+        {
+            var json = await ServiceHelper.ReadPackageTextAsync("words_from_above/miracles.json");
+            var list = JsonSerializer.Deserialize<List<GuildMiracleDefinition>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new List<GuildMiracleDefinition>();
+
+            return list
+                .Where(m => !string.IsNullOrWhiteSpace(m.name))
+                .GroupBy(m => m.name.Trim(), StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return new Dictionary<string, GuildMiracleDefinition>(StringComparer.OrdinalIgnoreCase);
+        }
+    }
+
+    private static GuildDenominationalMiracleVm? BuildDenominationalMiracle(
+        GuildRecord record,
+        IReadOnlyDictionary<string, GuildMiracleDefinition> miracleLookup)
+    {
+        var reference = (record.DenominationalMiracle?.Ref ?? string.Empty).Trim();
+        if (reference.Length == 0)
+            return null;
+
+        var note = (record.DenominationalMiracleNote ?? string.Empty).Trim();
+        if (!miracleLookup.TryGetValue(reference, out var miracle))
+        {
+            return new GuildDenominationalMiracleVm
+            {
+                Name = reference,
+                Cost = "todo",
+                Alignment = "todo",
+                Duration = "todo",
+                Range = "todo",
+                Description = "todo",
+                Verbal = "todo",
+                Sphere = "todo",
+                Gesture = "todo",
+                IsAdvancedText = "todo",
+                Note = note
+            };
+        }
+
+        var cost = (miracle.level ?? string.Empty).Trim();
+        if (cost.Length == 0 && miracle.power > 0)
+            cost = $"{miracle.power}sp";
+
+        return new GuildDenominationalMiracleVm
+        {
+            Name = (miracle.name ?? string.Empty).Trim(),
+            Cost = cost,
+            Alignment = (miracle.alignment ?? string.Empty).Trim(),
+            Duration = (miracle.duration ?? string.Empty).Trim(),
+            Range = (miracle.range ?? string.Empty).Trim(),
+            Description = (miracle.description ?? string.Empty).Trim(),
+            Verbal = (miracle.verbal ?? string.Empty).Trim(),
+            Sphere = (miracle.sphere ?? string.Empty).Trim(),
+            Gesture = (miracle.gesture ?? string.Empty).Trim(),
+            IsAdvancedText = miracle.isAdvanced ? "Yes" : "No",
+            Note = note
+        };
     }
 
     private static List<string> FormatBenefitList(IEnumerable<GuildBenefitEntry>? benefits)
@@ -758,6 +851,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
                    || (g.Restrictions?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
                    || (g.Ethos?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
                    || (g.Background?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
+                   || g.MiracleRows.Any(m =>
+                       (m.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
+                       || (m.LevelText?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false))
+                   || (g.DenominationalMiracle?.Contains(text) ?? false)
                    || g.BasicBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
                    || g.IntermediateBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
                    || g.AdvancedBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
@@ -776,49 +873,23 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         Raise(nameof(SelectedCount));
     }
-    private AlignmentRule? GetGuildRule(string guildName)
-    {
-        if (string.IsNullOrWhiteSpace(guildName))
-            return null;
-
-        if (!_guildRecords.TryGetValue(guildName, out var rec) || rec == null)
-            return null;
-
-        return _creationDataService.GetGuildAlignmentRule(rec);
-    }
-
     public int SelectedCount => _draft.Guilds.Count;
 
     private void RecomputeDraftAlignments()
     {
-        var rules = new List<AlignmentRule?>();
-
-        // Non-guild rules
-        rules.AddRange(_getNonGuildRules());
-
-        // Selected guild rules
-        foreach (var g in _draft.Guilds)
-            rules.Add(GetGuildRule(g));
-
-        _draft.SetAvailableAlignmentsFromRules(rules);
+        _draft.SetAvailableAlignmentsFromRules(_getNonGuildRules());
 
         // Refresh selectability now that the world changed
         foreach (var card in AllGuilds)
         {
             card.IsSelected = _draft.Guilds.Contains(card.Name, StringComparer.OrdinalIgnoreCase);
-            var alignmentOk = WouldStillHaveAnyAlignmentIfSelected(card.Name);
-            var slotsResult = _slotRules.CanSelect(card.Type, card.Name, _draft.Guilds, _guildRecords);
             var availability = EvaluateAvailabilityForCurrentContext(card.Name);
-            var selectable = alignmentOk && slotsResult.Allowed && availability.Allowed;
+            var selectable = availability.Allowed;
 
             // Allow already-selected guilds to stay selectable so the user can deselect them
             card.IsSelectable = !_allowGuildSelection || (selectable || card.IsSelected);
 
-            if (!alignmentOk)
-                card.NotSelectableReason = "Conflicts with current alignment restrictions.";
-            else if (!slotsResult.Allowed)
-                card.NotSelectableReason = slotsResult.Reason;
-            else if (!availability.Allowed)
+            if (!availability.Allowed)
                 card.NotSelectableReason = availability.Reason;
             else
                 card.NotSelectableReason = "";
@@ -943,12 +1014,25 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         void AddIfPresent(string header, string? text)
         {
-            var value = (text ?? string.Empty).Trim();
+            var value = CleanLoreText(text);
             if (value.Length == 0)
                 return;
 
             sections.Add(new GuildLoreSectionVm(header, value));
         }
+    }
+
+    private static string CleanLoreText(string? text)
+    {
+        var value = (text ?? string.Empty).Replace("\r\n", "\n").Trim();
+        if (value.Length == 0)
+            return string.Empty;
+
+        value = MiracleListLoreBlockRegex.Replace(value, "\n");
+        value = DenominationalMiracleLoreBlockRegex.Replace(value, "\n");
+        value = MiracleStatLoreBlockRegex.Replace(value, "\n");
+        value = Regex.Replace(value, @"\n{3,}", "\n\n");
+        return value.Trim();
     }
 
     private void OnBenefitOptionSelectionChanged(GuildBenefitOptionGroupVm group)
@@ -976,27 +1060,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
             return;
         }
 
-        if (item is null || item.IsLocked || (!item.IsSelectable && !item.IsSelected))
+        if (item is null || (!item.IsSelectable && !item.IsSelected))
             return;
-
-        var slotCheck = _slotRules.CanSelect(item.Type, item.Name, _draft.Guilds, _guildRecords);
-        if (!item.IsSelected && !slotCheck.Allowed)
-        {
-            item.NotSelectableReason = slotCheck.Reason;
-            return;
-        }
 
         var availability = EvaluateAvailabilityForCurrentContext(item.Name);
         if (!item.IsSelected && !availability.Allowed)
         {
             item.NotSelectableReason = availability.Reason;
-            return;
-        }
-
-        var alignmentOk = WouldStillHaveAnyAlignmentIfSelected(item.Name);
-        if (!item.IsSelected && !alignmentOk)
-        {
-            item.NotSelectableReason = "Conflicts with current alignment restrictions.";
             return;
         }
 
@@ -1052,6 +1122,13 @@ public sealed class GuildTypeFilterChipVm : INotifyPropertyChanged
 
 public sealed class GuildCardVm : INotifyPropertyChanged
 {
+    public GuildCardVm()
+    {
+        ToggleMiracleListCommand = new Command(() => IsMiracleListExpanded = !IsMiracleListExpanded);
+        ToggleBenefitsCommand = new Command(() => IsBenefitsExpanded = !IsBenefitsExpanded);
+        ToggleDenominationalMiracleCommand = new Command(() => IsDenominationalMiracleExpanded = !IsDenominationalMiracleExpanded);
+    }
+
     private bool _isLocked;
     public bool IsLocked
     {
@@ -1112,6 +1189,8 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public bool HasNotSelectableReason => !CanToggleSelection && !string.IsNullOrWhiteSpace(NotSelectableReason);
     public string Type { get; set; } = "";
     public string Icon { get; set; } = "📜";
+    public string Logo { get; set; } = "";
+    public bool HasLogo => !string.IsNullOrWhiteSpace(Logo);
 
     public string PreRequisites { get; set; } = "";
     public string Restrictions { get; set; } = "";
@@ -1125,6 +1204,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public List<GuildBenefitOptionGroupVm> IntermediateOptionGroups { get; set; } = new();
     public List<GuildBenefitOptionGroupVm> AdvancedOptionGroups { get; set; } = new();
     public List<GuildMiracleRowVm> MiracleRows { get; set; } = new();
+    public GuildDenominationalMiracleVm? DenominationalMiracle { get; set; }
 
     public bool HasLore => LoreSections.Count > 0;
     public bool HasRestrictions => !string.IsNullOrWhiteSpace(Restrictions);
@@ -1133,6 +1213,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public bool HasIntermediate => IntermediateBenefits.Count > 0 || IntermediateOptionGroups.Count > 0;
     public bool HasAdvanced => AdvancedBenefits.Count > 0 || AdvancedOptionGroups.Count > 0;
     public bool HasMiracles => MiracleRows.Count > 0;
+    public bool HasDenominationalMiracle => DenominationalMiracle != null;
 
     public bool HasAnyBenefits => HasBasic || HasIntermediate || HasAdvanced;
     public bool HasBasicOptions => BasicOptionGroups.Count > 0;
@@ -1144,6 +1225,13 @@ public sealed class GuildCardVm : INotifyPropertyChanged
         && AdvancedOptionGroups.All(g => g.HasSelection);
 
     public double ChevronRotation => IsExpanded ? 180 : 0;
+    public double MiracleListChevronRotation => IsMiracleListExpanded ? 180 : 0;
+    public double BenefitsChevronRotation => IsBenefitsExpanded ? 180 : 0;
+    public double DenominationalMiracleChevronRotation => IsDenominationalMiracleExpanded ? 180 : 0;
+
+    public ICommand ToggleMiracleListCommand { get; }
+    public ICommand ToggleBenefitsCommand { get; }
+    public ICommand ToggleDenominationalMiracleCommand { get; }
 
     private bool _isExpanded;
     public bool IsExpanded
@@ -1155,6 +1243,45 @@ public sealed class GuildCardVm : INotifyPropertyChanged
             _isExpanded = value;
             Raise();
             Raise(nameof(ChevronRotation));
+        }
+    }
+
+    private bool _isMiracleListExpanded = true;
+    public bool IsMiracleListExpanded
+    {
+        get => _isMiracleListExpanded;
+        set
+        {
+            if (_isMiracleListExpanded == value) return;
+            _isMiracleListExpanded = value;
+            Raise();
+            Raise(nameof(MiracleListChevronRotation));
+        }
+    }
+
+    private bool _isBenefitsExpanded = true;
+    public bool IsBenefitsExpanded
+    {
+        get => _isBenefitsExpanded;
+        set
+        {
+            if (_isBenefitsExpanded == value) return;
+            _isBenefitsExpanded = value;
+            Raise();
+            Raise(nameof(BenefitsChevronRotation));
+        }
+    }
+
+    private bool _isDenominationalMiracleExpanded = true;
+    public bool IsDenominationalMiracleExpanded
+    {
+        get => _isDenominationalMiracleExpanded;
+        set
+        {
+            if (_isDenominationalMiracleExpanded == value) return;
+            _isDenominationalMiracleExpanded = value;
+            Raise();
+            Raise(nameof(DenominationalMiracleChevronRotation));
         }
     }
 
@@ -1289,8 +1416,58 @@ public sealed class GuildBenefitOptionVm
 
 public sealed class GuildMiracleRowVm
 {
-    public string Level { get; init; } = string.Empty;
-    public string Miracles { get; init; } = string.Empty;
+    public string LevelText { get; init; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
+    public string RowBackgroundColor { get; set; } = "#FFFFFF";
+}
+
+public sealed class GuildDenominationalMiracleVm
+{
+    public string Name { get; init; } = string.Empty;
+    public string Cost { get; init; } = string.Empty;
+    public string Alignment { get; init; } = string.Empty;
+    public string Duration { get; init; } = string.Empty;
+    public string Range { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
+    public string Verbal { get; init; } = string.Empty;
+    public string Sphere { get; init; } = string.Empty;
+    public string Gesture { get; init; } = string.Empty;
+    public string IsAdvancedText { get; init; } = string.Empty;
+    public string Note { get; init; } = string.Empty;
+    public bool HasNote => !string.IsNullOrWhiteSpace(Note);
+
+    public bool Contains(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+
+        return Name.Contains(text, StringComparison.OrdinalIgnoreCase)
+               || Cost.Contains(text, StringComparison.OrdinalIgnoreCase)
+               || Alignment.Contains(text, StringComparison.OrdinalIgnoreCase)
+               || Duration.Contains(text, StringComparison.OrdinalIgnoreCase)
+               || Range.Contains(text, StringComparison.OrdinalIgnoreCase)
+               || Description.Contains(text, StringComparison.OrdinalIgnoreCase)
+               || Verbal.Contains(text, StringComparison.OrdinalIgnoreCase)
+               || Sphere.Contains(text, StringComparison.OrdinalIgnoreCase)
+               || Gesture.Contains(text, StringComparison.OrdinalIgnoreCase)
+               || IsAdvancedText.Contains(text, StringComparison.OrdinalIgnoreCase)
+               || Note.Contains(text, StringComparison.OrdinalIgnoreCase);
+    }
+}
+
+public sealed class GuildMiracleDefinition
+{
+    public int power { get; set; }
+    public string name { get; set; } = string.Empty;
+    public string description { get; set; } = string.Empty;
+    public string verbal { get; set; } = string.Empty;
+    public string range { get; set; } = string.Empty;
+    public string duration { get; set; } = string.Empty;
+    public string gesture { get; set; } = string.Empty;
+    public string level { get; set; } = string.Empty;
+    public string sphere { get; set; } = string.Empty;
+    public bool isAdvanced { get; set; }
+    public string alignment { get; set; } = string.Empty;
 }
 
 public sealed class GuildLoreSectionVm : INotifyPropertyChanged

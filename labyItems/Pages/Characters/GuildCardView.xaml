@@ -43,10 +43,19 @@
                   ColumnDefinitions="Auto,10,*,Auto"
                   VerticalOptions="Center">
 
-                <Label Grid.Column="0"
-                       Text="{Binding Icon}"
-                       FontSize="18"
-                       VerticalOptions="Center"/>
+                <Grid Grid.Column="0"
+                      WidthRequest="28"
+                      HeightRequest="28">
+                    <Label Text="{Binding Icon}"
+                           FontSize="18"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                    <Image Source="{Binding Logo}"
+                           Aspect="AspectFill"
+                           WidthRequest="28"
+                           HeightRequest="28"
+                           IsVisible="{Binding HasLogo}"/>
+                </Grid>
 
                 <VerticalStackLayout Grid.Column="2"
                                      Spacing="2">
@@ -112,160 +121,353 @@
                     </VerticalStackLayout>
                 </VerticalStackLayout>
 
+                <!-- Miracle list -->
+                <VerticalStackLayout Spacing="6"
+                                     IsVisible="{Binding HasMiracles}">
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="8">
+                        <Label Text="MIRACLE LIST"
+                               FontAttributes="Bold"
+                               FontSize="12"
+                               Opacity="0.85"
+                               VerticalOptions="Center"/>
+                        <Button Grid.Column="1"
+                                Text="⌄"
+                                FontSize="18"
+                                Rotation="{Binding MiracleListChevronRotation}"
+                                Style="{StaticResource ChevronButtonStyle}"
+                                Padding="0"
+                                WidthRequest="28"
+                                HeightRequest="28"
+                                Command="{Binding ToggleMiracleListCommand}"/>
+                    </Grid>
+                    <controls:AnimatedExpandView IsExpanded="{Binding IsMiracleListExpanded}"
+                                                 AnimationName="GuildMiracleListExpand">
+                        <Border Stroke="{StaticResource SoftStrokeColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 8"
+                                BackgroundColor="#F9FAFB"
+                                Padding="8">
+                            <Grid RowDefinitions="Auto,*"
+                                  RowSpacing="6">
+                                <Grid ColumnDefinitions="44,*"
+                                      ColumnSpacing="8"
+                                      Padding="6,2">
+                                    <Label Text="Lvl"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+                                    <Label Grid.Column="1"
+                                           Text="Name"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+                                </Grid>
+                                <ScrollView Grid.Row="1"
+                                            HeightRequest="200">
+                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding MiracleRows}"
+                                                         Spacing="4">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border StrokeThickness="0"
+                                                        StrokeShape="RoundRectangle 8"
+                                                        BackgroundColor="{Binding RowBackgroundColor}">
+                                                    <Grid Padding="8,6"
+                                                          ColumnDefinitions="44,*"
+                                                          ColumnSpacing="8">
+                                                        <Label Text="{Binding LevelText}"
+                                                               FontSize="13"
+                                                               Opacity="0.85"
+                                                               VerticalTextAlignment="Center"/>
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding Name}"
+                                                               FontSize="13"
+                                                               VerticalTextAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
+                                </ScrollView>
+                            </Grid>
+                        </Border>
+                    </controls:AnimatedExpandView>
+                </VerticalStackLayout>
+
+                <!-- Denominational miracle -->
+                <VerticalStackLayout Spacing="6"
+                                     IsVisible="{Binding HasDenominationalMiracle}">
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="8">
+                        <Label Text="DENOMINATIONAL MIRACLE"
+                               FontAttributes="Bold"
+                               FontSize="12"
+                               Opacity="0.85"
+                               VerticalOptions="Center"/>
+                        <Button Grid.Column="1"
+                                Text="⌄"
+                                FontSize="18"
+                                Rotation="{Binding DenominationalMiracleChevronRotation}"
+                                Style="{StaticResource ChevronButtonStyle}"
+                                Padding="0"
+                                WidthRequest="28"
+                                HeightRequest="28"
+                                Command="{Binding ToggleDenominationalMiracleCommand}"/>
+                    </Grid>
+                    <controls:AnimatedExpandView IsExpanded="{Binding IsDenominationalMiracleExpanded}"
+                                                 AnimationName="GuildDenominationalMiracleExpand">
+                        <Border Stroke="{StaticResource SoftStrokeColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 8"
+                                BackgroundColor="#F9FAFB"
+                                Padding="10">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="{Binding DenominationalMiracle.Note}"
+                                       IsVisible="{Binding DenominationalMiracle.HasNote}"
+                                       FontSize="13"
+                                       Opacity="0.85"/>
+
+                                <Grid ColumnDefinitions="2*,Auto,Auto,Auto,Auto"
+                                      ColumnSpacing="8">
+                                    <Label Text="Name"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+                                    <Label Grid.Column="1"
+                                           Text="Cost"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+                                    <Label Grid.Column="2"
+                                           Text="Alignment"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+                                    <Label Grid.Column="3"
+                                           Text="Duration"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+                                    <Label Grid.Column="4"
+                                           Text="Range"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="2*,Auto,Auto,Auto,Auto"
+                                      ColumnSpacing="8">
+                                    <Label Text="{Binding DenominationalMiracle.Name}"
+                                           FontSize="13"/>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding DenominationalMiracle.Cost}"
+                                           FontSize="13"/>
+                                    <Label Grid.Column="2"
+                                           Text="{Binding DenominationalMiracle.Alignment}"
+                                           FontSize="13"/>
+                                    <Label Grid.Column="3"
+                                           Text="{Binding DenominationalMiracle.Duration}"
+                                           FontSize="13"/>
+                                    <Label Grid.Column="4"
+                                           Text="{Binding DenominationalMiracle.Range}"
+                                           FontSize="13"/>
+                                </Grid>
+
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Description"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+                                    <Label Text="{Binding DenominationalMiracle.Description}"
+                                           FontSize="13"
+                                           Opacity="0.85"/>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="Verbal"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.75"/>
+                                    <Label Text="{Binding DenominationalMiracle.Verbal}"
+                                           FontSize="13"
+                                           Opacity="0.85"/>
+                                </VerticalStackLayout>
+
+                                <Grid ColumnDefinitions="*,*,Auto"
+                                      ColumnSpacing="8">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="Sphere"
+                                               FontAttributes="Bold"
+                                               FontSize="12"
+                                               Opacity="0.75"/>
+                                        <Label Text="{Binding DenominationalMiracle.Sphere}"
+                                               FontSize="13"
+                                               Opacity="0.85"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Spacing="2">
+                                        <Label Text="Gesture"
+                                               FontAttributes="Bold"
+                                               FontSize="12"
+                                               Opacity="0.75"/>
+                                        <Label Text="{Binding DenominationalMiracle.Gesture}"
+                                               FontSize="13"
+                                               Opacity="0.85"/>
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2"
+                                                         Spacing="2">
+                                        <Label Text="IsAdvanced"
+                                               FontAttributes="Bold"
+                                               FontSize="12"
+                                               Opacity="0.75"/>
+                                        <Label Text="{Binding DenominationalMiracle.IsAdvancedText}"
+                                               FontSize="13"
+                                               Opacity="0.85"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                    </controls:AnimatedExpandView>
+                </VerticalStackLayout>
+
                 <!-- Benefits -->
                 <VerticalStackLayout Spacing="6"
                                      IsVisible="{Binding HasAnyBenefits}">
-                    <Label Text="Benefits"
-                           FontAttributes="Bold"/>
-
-                    <VerticalStackLayout Spacing="4"
-                                         IsVisible="{Binding HasBasic}">
-                        <Label Text="Basic"
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="8">
+                        <Label Text="BENEFITS"
                                FontAttributes="Bold"
-                               Opacity="0.85"/>
-                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding BasicBenefits}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Label Text="{Binding ., StringFormat='• {0}'}"
-                                           FontSize="13"
-                                           Opacity="0.9"/>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Spacing="6"
-                                             IsVisible="{Binding HasBasicOptions}"
-                                             BindableLayout.ItemsSource="{Binding BasicOptionGroups}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <VerticalStackLayout Spacing="4">
-                                        <controls:ChipGroup Items="{Binding OptionLabels}"
-                                                            SelectedItem="{Binding SelectedOption, Mode=TwoWay}"/>
-                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedLines}"
-                                                             IsVisible="{Binding HasSelection}">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Label Text="{Binding ., StringFormat='• {0}'}"
-                                                           FontSize="13"
-                                                           Opacity="0.8"/>
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
-                                        </VerticalStackLayout>
-                                    </VerticalStackLayout>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </VerticalStackLayout>
-                    </VerticalStackLayout>
+                               FontSize="12"
+                               Opacity="0.85"
+                               VerticalOptions="Center"/>
+                        <Button Grid.Column="1"
+                                Text="⌄"
+                                FontSize="18"
+                                Rotation="{Binding BenefitsChevronRotation}"
+                                Style="{StaticResource ChevronButtonStyle}"
+                                Padding="0"
+                                WidthRequest="28"
+                                HeightRequest="28"
+                                Command="{Binding ToggleBenefitsCommand}"/>
+                    </Grid>
+                    <controls:AnimatedExpandView IsExpanded="{Binding IsBenefitsExpanded}"
+                                                 AnimationName="GuildBenefitsExpand">
+                        <VerticalStackLayout Spacing="6">
+                            <VerticalStackLayout Spacing="4"
+                                                 IsVisible="{Binding HasBasic}">
+                                <Label Text="Basic"
+                                       FontAttributes="Bold"
+                                       Opacity="0.85"/>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding BasicBenefits}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label Text="{Binding ., StringFormat='• {0}'}"
+                                                   FontSize="13"
+                                                   Opacity="0.9"/>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Spacing="6"
+                                                     IsVisible="{Binding HasBasicOptions}"
+                                                     BindableLayout.ItemsSource="{Binding BasicOptionGroups}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <VerticalStackLayout Spacing="4">
+                                                <controls:ChipGroup Items="{Binding OptionLabels}"
+                                                                    SelectedItem="{Binding SelectedOption, Mode=TwoWay}"/>
+                                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedLines}"
+                                                                     IsVisible="{Binding HasSelection}">
+                                                    <BindableLayout.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Text="{Binding ., StringFormat='• {0}'}"
+                                                                   FontSize="13"
+                                                                   Opacity="0.8"/>
+                                                        </DataTemplate>
+                                                    </BindableLayout.ItemTemplate>
+                                                </VerticalStackLayout>
+                                            </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
 
-                    <VerticalStackLayout Spacing="4"
-                                         IsVisible="{Binding HasIntermediate}">
-                        <Label Text="Intermediate"
-                               FontAttributes="Bold"
-                               Opacity="0.85"/>
-                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding IntermediateBenefits}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Label Text="{Binding ., StringFormat='• {0}'}"
-                                           FontSize="13"
-                                           Opacity="0.9"/>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </VerticalStackLayout>
-                        <VerticalStackLayout Spacing="6"
-                                             IsVisible="{Binding HasIntermediateOptions}"
-                                             BindableLayout.ItemsSource="{Binding IntermediateOptionGroups}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <VerticalStackLayout Spacing="4">
-                                        <controls:ChipGroup Items="{Binding OptionLabels}"
-                                                            SelectedItem="{Binding SelectedOption, Mode=TwoWay}"/>
-                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedLines}"
-                                                             IsVisible="{Binding HasSelection}">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Label Text="{Binding ., StringFormat='• {0}'}"
-                                                           FontSize="13"
-                                                           Opacity="0.8"/>
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
-                                        </VerticalStackLayout>
-                                    </VerticalStackLayout>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </VerticalStackLayout>
-                    </VerticalStackLayout>
+                            <VerticalStackLayout Spacing="4"
+                                                 IsVisible="{Binding HasIntermediate}">
+                                <Label Text="Intermediate"
+                                       FontAttributes="Bold"
+                                       Opacity="0.85"/>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding IntermediateBenefits}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label Text="{Binding ., StringFormat='• {0}'}"
+                                                   FontSize="13"
+                                                   Opacity="0.9"/>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Spacing="6"
+                                                     IsVisible="{Binding HasIntermediateOptions}"
+                                                     BindableLayout.ItemsSource="{Binding IntermediateOptionGroups}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <VerticalStackLayout Spacing="4">
+                                                <controls:ChipGroup Items="{Binding OptionLabels}"
+                                                                    SelectedItem="{Binding SelectedOption, Mode=TwoWay}"/>
+                                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedLines}"
+                                                                     IsVisible="{Binding HasSelection}">
+                                                    <BindableLayout.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Text="{Binding ., StringFormat='• {0}'}"
+                                                                   FontSize="13"
+                                                                   Opacity="0.8"/>
+                                                        </DataTemplate>
+                                                    </BindableLayout.ItemTemplate>
+                                                </VerticalStackLayout>
+                                            </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
 
-                    <VerticalStackLayout Spacing="4"
-                                         IsVisible="{Binding HasAdvanced}">
-                        <Label Text="Advanced"
-                               FontAttributes="Bold"
-                               Opacity="0.85"/>
-                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancedBenefits}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Label Text="{Binding ., StringFormat='• {0}'}"
-                                           FontSize="13"
-                                           Opacity="0.9"/>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
+                            <VerticalStackLayout Spacing="4"
+                                                 IsVisible="{Binding HasAdvanced}">
+                                <Label Text="Advanced"
+                                       FontAttributes="Bold"
+                                       Opacity="0.85"/>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancedBenefits}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label Text="{Binding ., StringFormat='• {0}'}"
+                                                   FontSize="13"
+                                                   Opacity="0.9"/>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Spacing="6"
+                                                     IsVisible="{Binding HasAdvancedOptions}"
+                                                     BindableLayout.ItemsSource="{Binding AdvancedOptionGroups}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <VerticalStackLayout Spacing="4">
+                                                <controls:ChipGroup Items="{Binding OptionLabels}"
+                                                                    SelectedItem="{Binding SelectedOption, Mode=TwoWay}"/>
+                                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedLines}"
+                                                                     IsVisible="{Binding HasSelection}">
+                                                    <BindableLayout.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label Text="{Binding ., StringFormat='• {0}'}"
+                                                                   FontSize="13"
+                                                                   Opacity="0.8"/>
+                                                        </DataTemplate>
+                                                    </BindableLayout.ItemTemplate>
+                                                </VerticalStackLayout>
+                                            </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Spacing="6"
-                                             IsVisible="{Binding HasAdvancedOptions}"
-                                             BindableLayout.ItemsSource="{Binding AdvancedOptionGroups}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <VerticalStackLayout Spacing="4">
-                                        <controls:ChipGroup Items="{Binding OptionLabels}"
-                                                            SelectedItem="{Binding SelectedOption, Mode=TwoWay}"/>
-                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedLines}"
-                                                             IsVisible="{Binding HasSelection}">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Label Text="{Binding ., StringFormat='• {0}'}"
-                                                           FontSize="13"
-                                                           Opacity="0.8"/>
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
-                                        </VerticalStackLayout>
-                                    </VerticalStackLayout>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </VerticalStackLayout>
-                    </VerticalStackLayout>
+                    </controls:AnimatedExpandView>
                 </VerticalStackLayout>
-
-                <!-- Miracle list -->
-                <CollectionView
-                    IsVisible="{Binding HasMiracles}"
-                    ItemsSource="{Binding MiracleRows}"
-                    SelectionMode="None">
-                    <CollectionView.Header>
-                        <Grid RowDefinitions="Auto,Auto"
-                              RowSpacing="6">
-                            <Label Text="Miracle List"
-                                   FontAttributes="Bold"/>
-                            <Grid Grid.Row="1"
-                                  ColumnDefinitions="50,*"
-                                  ColumnSpacing="8"
-                                  Opacity="0.7">
-                                <Label Text="Lvl"/>
-                                <Label Grid.Column="1"
-                                       Text="Miracles"/>
-                            </Grid>
-                        </Grid>
-                    </CollectionView.Header>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid ColumnDefinitions="50,*"
-                                  ColumnSpacing="8"
-                                  Padding="0,2">
-                                <Label Text="{Binding Level}"/>
-                                <Label Grid.Column="1"
-                                       Text="{Binding Miracles}"
-                                       Opacity="0.8"/>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
             </VerticalStackLayout>
         </Grid>
         <Frame.GestureRecognizers>

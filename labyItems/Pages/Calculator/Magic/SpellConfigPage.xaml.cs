@@ -13,8 +13,8 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
 
     public SpellConfigPage()
     {
-        InitializeComponent();
         AddSelectedSpellCommand = new Command<object?>(OnSpellResultSelected);
+        InitializeComponent();
     }
 
     public ICommand AddSelectedSpellCommand { get; }

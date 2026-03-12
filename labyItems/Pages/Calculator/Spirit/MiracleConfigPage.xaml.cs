@@ -14,9 +14,9 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
 
     public MiracleConfigPage()
     {
-        InitializeComponent();
         AddSelectedMiracleCommand = new Command<object?>(OnMiracleResultSelected);
         AddTrueBelieverGuildCommand = new Command<object?>(OnTrueBelieverGuildResultSelected);
+        InitializeComponent();
     }
 
     public ICommand AddSelectedMiracleCommand { get; }

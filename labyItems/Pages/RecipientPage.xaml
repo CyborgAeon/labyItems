@@ -5,27 +5,54 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Add Recipient">
 
-  <VerticalStackLayout Padding="20" Spacing="10">
-    <Label Text="Recipient Player Name" FontAttributes="Bold" />
-    <Entry x:Name="RecipientPlayerNameEntry" Placeholder="Player name" />
+  <ScrollView>
+    <VerticalStackLayout Padding="20" Spacing="10">
+      <Label Text="Recipient Player Name" FontAttributes="Bold" />
+      <Entry x:Name="RecipientPlayerNameEntry" Placeholder="Player name" />
 
-    <Label Text="Recipient Character Name" FontAttributes="Bold" />
-    <Entry x:Name="RecipientCharacterNameEntry" Placeholder="Character name" />
+      <Label Text="Recipient Character Name" FontAttributes="Bold" />
+      <Entry x:Name="RecipientCharacterNameEntry" Placeholder="Character name" />
 
-    <Label Text="Recipient Character Class" FontAttributes="Bold" />
-    <Entry x:Name="RecipientCharacterClassEntry" Placeholder="Character class" />
+      <Label Text="Recipient Character Class" FontAttributes="Bold" />
+      <Entry x:Name="RecipientCharacterClassEntry" Placeholder="Character class" />
 
-    <Label Text="Item Summary" FontAttributes="Bold" IsVisible="{Binding HasSubmissionSummary}" />
-    <VerticalStackLayout BindableLayout.ItemsSource="{Binding SubmissionSummaryLines}" IsVisible="{Binding HasSubmissionSummary}" Spacing="8">
-      <BindableLayout.ItemTemplate>
-        <DataTemplate>
-          <Frame BorderColor="#DDD" CornerRadius="8" HasShadow="False" Padding="10">
-            <Label LineBreakMode="WordWrap" Text="{Binding .}" />
-          </Frame>
-        </DataTemplate>
-      </BindableLayout.ItemTemplate>
+      <Label Text="Item Summary" FontAttributes="Bold" IsVisible="{Binding HasSubmissionSummary}" />
+      <Border IsVisible="{Binding HasSubmissionSummary}"
+              Padding="8"
+              BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
+              Stroke="{StaticResource DividerShadowColor}"
+              StrokeThickness="1">
+        <Grid HeightRequest="220">
+          <CollectionView IsVisible="{Binding HasSubmissionSummaryRows}"
+                          ItemsSource="{Binding SubmissionSummaryRows}"
+                          SelectionMode="None">
+            <CollectionView.ItemTemplate>
+              <DataTemplate>
+                <Label>
+                  <Label.FormattedText>
+                    <FormattedString>
+                      <Span Text="{Binding Text}" />
+                      <Span Text=" (" TextColor="Gray" />
+                      <Span Text="{Binding RunningTotal}" TextColor="Gray" />
+                      <Span Text=")" TextColor="Gray" />
+                    </FormattedString>
+                  </Label.FormattedText>
+                </Label>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+          </CollectionView>
+
+          <VerticalStackLayout IsVisible="{Binding IsSummaryEmptyStateVisible}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center">
+            <Label Text="{Binding SummaryEmptyText}"
+                   TextColor="{StaticResource MutedTextColor}"
+                   HorizontalTextAlignment="Center" />
+          </VerticalStackLayout>
+        </Grid>
+      </Border>
+
+      <Button Text="Submit" Clicked="OnSubmit" />
     </VerticalStackLayout>
-
-    <Button Text="Submit" Clicked="OnSubmit" />
-  </VerticalStackLayout>
+  </ScrollView>
 </ContentPage>
