@@ -1,4 +1,5 @@
 using System.Text.Json;
+using labyItems.Models.Rules;
 using SQLite;
 
 namespace labyItems.Services;
@@ -58,6 +59,8 @@ public static class EvolutionService
         public int Cost { get; init; }
         public int Table { get; init; }
         public string Available { get; init; } = string.Empty;
+        public string AvailabilityDisplay { get; init; } = string.Empty;
+        public IReadOnlyList<RuleClause> AvailabilityRules { get; init; } = Array.Empty<RuleClause>();
         public bool CanBuyMultiple { get; init; }
         public IReadOnlyList<string> PreReqs { get; init; } = Array.Empty<string>();
         public int? MaxAvailable { get; init; }
@@ -264,6 +267,8 @@ public static class EvolutionService
 
     private static AbilityResult ToAbilityResult(AbilityRow row)
     {
+        var availability = ParseAvailability(row.available);
+
         return new AbilityResult
         {
             Index = NormalizeAbilityDisplayText(row.idx),
@@ -271,6 +276,8 @@ public static class EvolutionService
             Cost = row.cost,
             Table = row.table_id,
             Available = row.available ?? string.Empty,
+            AvailabilityDisplay = availability.DisplayText,
+            AvailabilityRules = availability.Rules,
             CanBuyMultiple = row.can_buy_multiple != 0,
             PreReqs = ParsePreReqs(row.prereqs_json),
             MaxAvailable = ParseMaxAvailable(row.data_json),
@@ -378,6 +385,189 @@ public static class EvolutionService
             values.Add(trimmed.Replace(CanonicalResistanceName, LegacyResistanceName, StringComparison.OrdinalIgnoreCase));
 
         return values;
+    }
+
+    private static (string DisplayText, IReadOnlyList<RuleClause> Rules) ParseAvailability(string? rawAvailability)
+    {
+        var text = (rawAvailability ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return (string.Empty, Array.Empty<RuleClause>());
+
+        try
+        {
+            using var doc = JsonDocument.Parse(text);
+            var root = doc.RootElement;
+            if (root.ValueKind == JsonValueKind.String)
+                return ((root.GetString() ?? string.Empty).Trim(), Array.Empty<RuleClause>());
+
+            if (root.ValueKind == JsonValueKind.Array)
+                return (JoinStringArray(root), Array.Empty<RuleClause>());
+
+            if (root.ValueKind != JsonValueKind.Object)
+                return (text, Array.Empty<RuleClause>());
+
+            var rules = ParseAvailabilityRules(root);
+            var displayText = ParseAvailabilityDisplay(root);
+            if (displayText.Length == 0 && rules.Count > 0)
+                displayText = BuildAvailabilityRuleSummary(rules);
+
+            return (displayText, rules);
+        }
+        catch
+        {
+            return (text, Array.Empty<RuleClause>());
+        }
+    }
+
+    private static IReadOnlyList<RuleClause> ParseAvailabilityRules(JsonElement root)
+    {
+        if (!TryGetProperty(root, "Rules", out var rulesElement)
+            || rulesElement.ValueKind != JsonValueKind.Array)
+        {
+            return Array.Empty<RuleClause>();
+        }
+
+        var clauses = new List<RuleClause>();
+        foreach (var ruleElement in rulesElement.EnumerateArray())
+        {
+            if (ruleElement.ValueKind != JsonValueKind.Object)
+                continue;
+
+            var field = ReadStringProperty(ruleElement, "Field");
+            if (field.Length == 0)
+                continue;
+
+            var opToken = ReadStringProperty(ruleElement, "Operator");
+            var comparisonOp = ParseComparisonOp(opToken);
+            var values = ParseRuleValues(ruleElement);
+            clauses.Add(new RuleClause
+            {
+                Field = field,
+                Operator = comparisonOp,
+                Value = values
+            });
+        }
+
+        return clauses;
+    }
+
+    private static string ParseAvailabilityDisplay(JsonElement root)
+    {
+        if (TryGetProperty(root, "Display", out var displayElement))
+            return ParseAvailabilityDisplayValue(displayElement);
+
+        if (TryGetProperty(root, "Label", out var labelElement))
+            return ParseAvailabilityDisplayValue(labelElement);
+
+        if (TryGetProperty(root, "Value", out var valueElement))
+            return ParseAvailabilityDisplayValue(valueElement);
+
+        return string.Empty;
+    }
+
+    private static string ParseAvailabilityDisplayValue(JsonElement element)
+    {
+        return element.ValueKind switch
+        {
+            JsonValueKind.String => (element.GetString() ?? string.Empty).Trim(),
+            JsonValueKind.Array => JoinStringArray(element),
+            _ => string.Empty
+        };
+    }
+
+    private static List<string> ParseRuleValues(JsonElement ruleElement)
+    {
+        if (!TryGetProperty(ruleElement, "Value", out var valueElement))
+            return new List<string>();
+
+        if (valueElement.ValueKind == JsonValueKind.Array)
+        {
+            return valueElement
+                .EnumerateArray()
+                .Where(v => v.ValueKind == JsonValueKind.String)
+                .Select(v => (v.GetString() ?? string.Empty).Trim())
+                .Where(v => v.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        if (valueElement.ValueKind == JsonValueKind.String)
+        {
+            var token = (valueElement.GetString() ?? string.Empty).Trim();
+            return token.Length == 0 ? new List<string>() : new List<string> { token };
+        }
+
+        return new List<string>();
+    }
+
+    private static RuleComparisonOp ParseComparisonOp(string token)
+    {
+        if (token.Equals("NotIn", StringComparison.OrdinalIgnoreCase))
+            return RuleComparisonOp.NotIn;
+
+        return RuleComparisonOp.In;
+    }
+
+    private static bool TryGetProperty(JsonElement element, string propertyName, out JsonElement value)
+    {
+        value = default;
+        if (element.ValueKind != JsonValueKind.Object)
+            return false;
+
+        foreach (var property in element.EnumerateObject())
+        {
+            if (!property.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            value = property.Value;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static string ReadStringProperty(JsonElement element, string propertyName)
+    {
+        if (!TryGetProperty(element, propertyName, out var value) || value.ValueKind != JsonValueKind.String)
+            return string.Empty;
+
+        return (value.GetString() ?? string.Empty).Trim();
+    }
+
+    private static string JoinStringArray(JsonElement arrayElement)
+    {
+        if (arrayElement.ValueKind != JsonValueKind.Array)
+            return string.Empty;
+
+        var values = arrayElement
+            .EnumerateArray()
+            .Where(x => x.ValueKind == JsonValueKind.String)
+            .Select(x => (x.GetString() ?? string.Empty).Trim())
+            .Where(x => x.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return values.Count == 0 ? string.Empty : string.Join(", ", values);
+    }
+
+    private static string BuildAvailabilityRuleSummary(IReadOnlyList<RuleClause> rules)
+    {
+        if (rules.Count == 0)
+            return string.Empty;
+
+        var parts = new List<string>();
+        foreach (var rule in rules)
+        {
+            var values = rule.Value
+                .Where(v => !string.IsNullOrWhiteSpace(v))
+                .Select(v => v.Trim())
+                .ToList();
+            var valuesText = values.Count == 0 ? "any" : string.Join("/", values);
+            var opText = rule.Operator == RuleComparisonOp.NotIn ? "not in" : "in";
+            parts.Add($"{rule.Field} {opText} {valuesText}");
+        }
+
+        return string.Join("; ", parts);
     }
 
     private static int? ParseMaxAvailable(string? dataJson)

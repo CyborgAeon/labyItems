@@ -11,6 +11,7 @@ public interface ICharacterCreationDataService
     Task<Dictionary<string, PeopleRecord>> GetPeopleAsync();
     Task<Dictionary<string, ServiceCharacterClassRecord>> GetClassesAsync();
     Task<Dictionary<string, GuildRecord>> GetGuildsAsync();
+    Task<Dictionary<string, GuildRecord>> GetGuildsForMiracleSearchAsync();
     Task<IReadOnlyList<string>> GetGuildTypesAsync();
     Task<IReadOnlyList<LifeScalePoint>> GetLifeScaleAsync(string raceName, string className);
     Task<IReadOnlyList<string>> GetClassesForRaceAsync(string raceName);

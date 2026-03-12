@@ -291,10 +291,7 @@ public partial class AbilityDetailCardView : ContentView
         if (entries.Count == 0)
             return "Available: unspecified";
 
-        var lowered = entries
-            .Select(e => e.ToLowerInvariant())
-            .ToList();
-        return $"Available: {string.Join(", ", lowered)}";
+        return $"Available: {string.Join(", ", entries)}";
     }
 
     private static List<string> ParseAvailabilityEntries(string? rawAvailability)
@@ -326,6 +323,17 @@ public partial class AbilityDetailCardView : ContentView
                 return true;
             }
 
+            if (doc.RootElement.ValueKind == JsonValueKind.Object)
+            {
+                if (TryReadDisplayFromAvailabilityObject(doc.RootElement, out var objectDisplay))
+                {
+                    entries = objectDisplay;
+                    return true;
+                }
+
+                return false;
+            }
+
             if (doc.RootElement.ValueKind != JsonValueKind.Array)
                 return false;
 
@@ -346,6 +354,42 @@ public partial class AbilityDetailCardView : ContentView
         {
             return false;
         }
+    }
+
+    private static bool TryReadDisplayFromAvailabilityObject(JsonElement root, out List<string> entries)
+    {
+        entries = new List<string>();
+
+        foreach (var property in root.EnumerateObject())
+        {
+            if (!property.Name.Equals("Display", StringComparison.OrdinalIgnoreCase)
+                && !property.Name.Equals("Label", StringComparison.OrdinalIgnoreCase)
+                && !property.Name.Equals("Value", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (property.Value.ValueKind == JsonValueKind.String)
+            {
+                var text = (property.Value.GetString() ?? string.Empty).Trim();
+                if (text.Length > 0)
+                    entries.Add(text);
+            }
+            else if (property.Value.ValueKind == JsonValueKind.Array)
+            {
+                entries = property.Value
+                    .EnumerateArray()
+                    .Where(e => e.ValueKind == JsonValueKind.String)
+                    .Select(e => (e.GetString() ?? string.Empty).Trim())
+                    .Where(e => e.Length > 0)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+            }
+
+            return entries.Count > 0;
+        }
+
+        return false;
     }
 
     private async Task RebuildPreReqEntriesAsync()

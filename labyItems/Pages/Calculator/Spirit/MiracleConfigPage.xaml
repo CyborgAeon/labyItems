@@ -98,14 +98,8 @@
         <Label FontAttributes="Bold"
                Text="True believer guilds" />
 
-        <controls:DictionarySearchBar x:Name="TrueBelieverGuildSearch"
-                                      x:TypeArguments="x:String"
-                                      ItemsSource="{Binding Source={x:Reference RootPage}, Path=TrueBelieverGuildLookup}"
-                                      SelectedValue="{Binding Source={x:Reference RootPage}, Path=SelectedTrueBelieverGuild, Mode=TwoWay}"
-                                      PlaceholderText="Search guilds for true believer"
-                                      ResultSelectedCommand="{Binding Source={x:Reference RootPage}, Path=AddTrueBelieverGuildCommand}"
-                                      ClearAfterResultSelection="True"
-                                      KeyboardAvoidanceEnabled="True" />
+        <Button Text="Search and Select Guilds"
+                Clicked="OnSearchTrueBelieverGuildsClicked" />
 
         <Label Text="No true-believer guilds added yet."
                Opacity="0.7"

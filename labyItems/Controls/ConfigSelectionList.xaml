@@ -36,6 +36,7 @@
                                 WidthRequest="24"
                                 MinimumHeightRequest="0"
                                 MinimumWidthRequest="0"
+                                IsVisible="{Binding Source={x:Reference Root}, Path=ShowEditButton}"
                                 Command="{Binding Source={x:Reference Root}, Path=EditCommand}"
                                 CommandParameter="{Binding .}" />
 

@@ -3,7 +3,6 @@ using labyItems.Models.Characters;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
 using System.Linq;
-using System.Diagnostics;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls.PlatformConfiguration;
@@ -42,15 +41,19 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         this.On<AndroidConfig>().SetIsSwipePagingEnabled(false);
         this.On<AndroidConfig>().SetToolbarPlacement(AndroidToolbarPlacement.Top);
         Title = string.Empty;
-        var serviceProvider = Microsoft.Maui.Controls.Application.Current?.Handler?.MauiContext?.Services;
+        var serviceProvider = Microsoft.Maui.Controls.Application.Current?.Handler?.MauiContext?.Services
+            ?? throw new InvalidOperationException("Service provider is not available.");
         _vm = new AdvanceCharacterVm(
             draft,
             draftStore: new CharacterDraftStore(draft),
-            domainService: serviceProvider?.GetService<ICharacterAdvancementDomainService>(),
-            tabVisibilityService: serviceProvider?.GetService<IAdvancementTabVisibilityService>(),
-            validationService: serviceProvider?.GetService<IAdvancementValidationService>(),
-            exportService: serviceProvider?.GetService<IExportService>(),
-            fileService: serviceProvider?.GetService<IFileService>());
+            domainService: serviceProvider.GetRequiredService<ICharacterAdvancementDomainService>(),
+            tabVisibilityService: serviceProvider.GetRequiredService<IAdvancementTabVisibilityService>(),
+            validationService: serviceProvider.GetRequiredService<IAdvancementValidationService>(),
+            exportService: serviceProvider.GetRequiredService<IExportService>(),
+            fileService: serviceProvider.GetRequiredService<IFileService>(),
+            dataProvider: serviceProvider.GetRequiredService<IAdvanceCharacterDataProvider>(),
+            abilityLookupService: serviceProvider.GetRequiredService<IAdvanceAbilityLookupService>(),
+            abilityAvailabilityService: serviceProvider.GetRequiredService<IAbilityAvailabilityService>());
 
         _detailsTabVm = new AdvanceCharacterDetailsTabVm(_vm);
         _spellsTabVm = new AdvanceCharacterSpellsTabVm(_vm);
@@ -72,18 +75,8 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            try
-            {
-                await _vm.InitializeAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[ADVANCE][INIT] InitializeAsync failed: {ex}");
-            }
-            finally
-            {
-                ApplyTabVisibility();
-            }
+            await _vm.InitializeAsync();
+            ApplyTabVisibility();
         });
     }
 

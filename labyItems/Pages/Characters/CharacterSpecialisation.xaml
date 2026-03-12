@@ -63,10 +63,6 @@
                     <Grid Padding="12"
                           ColumnDefinitions="*,Auto"
                           RowDefinitions="Auto,Auto">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}"/>
-                        </Grid.GestureRecognizers>
-
                         <Label Grid.Row="0"
                                Grid.Column="0"
                                Text="{Binding Title}"
@@ -111,7 +107,7 @@
 
                         <controls:ChipGroup
                             Items="{Binding Options}"
-                            SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
+                            SelectedItem="{Binding SelectedOptionDisplay, Mode=TwoWay}">
                             <controls:ChipGroup.Triggers>
                                 <DataTrigger TargetType="controls:ChipGroup"
                                              Binding="{Binding UseSingleOptionToggle}"
@@ -239,10 +235,6 @@
                     <Grid Padding="12"
                           ColumnDefinitions="*,Auto"
                           RowDefinitions="Auto">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}"/>
-                        </Grid.GestureRecognizers>
-
                         <Label Grid.Row="0"
                                Grid.Column="0"
                                Text="{Binding Title}"

@@ -137,7 +137,7 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
         }
     }
 
-    private async void OnSpellResultSelected(object? parameter)
+    private void OnSpellResultSelected(object? parameter)
     {
         var option = parameter as SpellSearchOption ?? SelectedSearchSpell;
         if (option == null)
@@ -146,18 +146,9 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
         if (BindingContext is not SpellConfig cfg)
             return;
 
-        var added = cfg.TryAddSpell(option.Spell);
-        var entry = cfg.SelectedSpells.FirstOrDefault(spell =>
-            string.Equals(spell.SpellName, option.Name, StringComparison.OrdinalIgnoreCase)
-            && spell.Power == option.Power
-            && spell.IsAdvanced == option.IsAdvanced);
-        if (entry == null && added)
-            entry = cfg.SelectedSpells.LastOrDefault();
+        cfg.TryAddSpell(option.Spell);
 
         SelectedSearchSpell = null;
-
-        if (entry != null)
-            await Navigation.PushModalAsync(new SpellEntryConfigModalPage(entry));
     }
 
     private async void OnEditSpellRequested(object? parameter)

@@ -24,6 +24,8 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
 
     private readonly Action _onChanged;
     private readonly Dictionary<string, ChoiceOption> _optionMap;
+    private readonly Dictionary<string, string> _optionDisplayByKey = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _optionKeyByDisplay = new(StringComparer.OrdinalIgnoreCase);
     private readonly bool _required;
     private readonly Func<ChoiceOption?, string>? _selectionIssueResolver;
     private bool _suppressNotify;
@@ -44,8 +46,12 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
         get => _selectedOption;
         set
         {
-            var normalized = (value ?? string.Empty).Trim();
-            if (!Set(ref _selectedOption, normalized)) return;
+            var resolvedKey = ResolveOptionKey(value);
+            if (resolvedKey.Length > 0 && !_optionMap.ContainsKey(resolvedKey))
+                resolvedKey = string.Empty;
+
+            if (!Set(ref _selectedOption, resolvedKey))
+                return;
 
             UpdatePreview();
             RefreshIssue();
@@ -54,6 +60,12 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
             if (!_suppressNotify)
                 _onChanged();
         }
+    }
+
+    public string? SelectedOptionDisplay
+    {
+        get => ResolveDisplayLabel(_selectedOption);
+        set => SelectedOption = value;
     }
 
     private bool _isVisible = true;
@@ -87,9 +99,13 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
         get => HasSelection;
         set
         {
+            if (!UseSingleOptionToggle)
+                return;
+
             var target = value ? SingleOptionLabel : string.Empty;
             if (string.IsNullOrWhiteSpace(target))
                 target = string.Empty;
+
             SelectedOption = target;
         }
     }
@@ -130,26 +146,35 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
         _selectionIssueResolver = selectionIssueResolver;
         SectionType = sectionType;
 
-        _optionMap = (options ?? Array.Empty<ChoiceOption>())
-            .Where(o => o != null && !string.IsNullOrWhiteSpace(o.Key))
-            .ToDictionary(o => o.Key, o => o, StringComparer.OrdinalIgnoreCase);
+        _optionMap = new Dictionary<string, ChoiceOption>(StringComparer.OrdinalIgnoreCase);
+        foreach (var option in options ?? Array.Empty<ChoiceOption>())
+        {
+            if (option == null)
+                continue;
+
+            var optionKey = ResolveCanonicalKey(option.Key, option.Label);
+            if (optionKey.Length == 0 || _optionMap.ContainsKey(optionKey))
+                continue;
+
+            _optionMap[optionKey] = option;
+
+            var label = (option.Label ?? string.Empty).Trim();
+            if (label.Length == 0)
+                label = optionKey;
+
+            _optionDisplayByKey[optionKey] = label;
+            if (!_optionKeyByDisplay.ContainsKey(label))
+                _optionKeyByDisplay[label] = optionKey;
+        }
 
         ToggleExpandedCommand = new Command(() => IsExpanded = !IsExpanded);
 
-        foreach (var name in _optionMap.Keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
-            Options.Add(name);
+        foreach (var label in _optionDisplayByKey.Values.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
+            Options.Add(label);
 
         _suppressNotify = true;
-        var initial = (initialSelection ?? string.Empty).Trim();
-        if (initial.Length > 0)
-        {
-            var match = Options.FirstOrDefault(o => string.Equals(o, initial, StringComparison.OrdinalIgnoreCase));
-            SelectedOption = match ?? null;
-        }
-        else
-        {
-            SelectedOption = null;
-        }
+        var initialKey = ResolveOptionKey(initialSelection);
+        SelectedOption = initialKey.Length > 0 ? initialKey : null;
         _suppressNotify = false;
 
         UpdatePreview();
@@ -210,7 +235,7 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
                 Ability = grant.Ability.Name,
                 AbilityKey = grant.Ability.Key ?? string.Empty,
                 SpecialisationKey = DetailKey,
-                SelectedOption = _selectedOption ?? string.Empty,
+                SelectedOption = ResolveDisplayLabel(_selectedOption),
                 SelectedAbility = grant.Ability.Name
             });
         }
@@ -221,6 +246,7 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
     private void RaiseComputed()
     {
         Raise(nameof(HasSelection));
+        Raise(nameof(SelectedOptionDisplay));
         Raise(nameof(UseSingleOptionToggle));
         Raise(nameof(SingleOptionLabel));
         Raise(nameof(SingleOptionEnabled));
@@ -231,6 +257,49 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
         Raise(nameof(CardState));
         Raise(nameof(CardStateText));
         Raise(nameof(DisplaySubtitle));
+    }
+
+    private static string ResolveCanonicalKey(string? key, string? label)
+    {
+        var canonical = (key ?? string.Empty).Trim();
+        if (canonical.Length > 0)
+            return canonical;
+
+        return (label ?? string.Empty).Trim();
+    }
+
+    private string ResolveOptionKey(string? selectedToken)
+    {
+        var token = (selectedToken ?? string.Empty).Trim();
+        if (token.Length == 0)
+            return string.Empty;
+
+        if (_optionMap.ContainsKey(token))
+            return token;
+
+        if (_optionKeyByDisplay.TryGetValue(token, out var displayMatch))
+            return displayMatch;
+
+        var keyMatch = _optionMap.Keys.FirstOrDefault(key =>
+            string.Equals(key, token, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(keyMatch))
+            return keyMatch;
+
+        var labelMatch = _optionDisplayByKey.FirstOrDefault(pair =>
+            string.Equals(pair.Value, token, StringComparison.OrdinalIgnoreCase));
+        return !string.IsNullOrWhiteSpace(labelMatch.Key) ? labelMatch.Key : token;
+    }
+
+    private string ResolveDisplayLabel(string? key)
+    {
+        var token = (key ?? string.Empty).Trim();
+        if (token.Length == 0)
+            return string.Empty;
+
+        if (_optionDisplayByKey.TryGetValue(token, out var label))
+            return label;
+
+        return token;
     }
 }
 

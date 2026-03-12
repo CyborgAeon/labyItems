@@ -8,13 +8,19 @@ using labyItems.Models;
 using labyItems.Models.Enums;
 using labyItems.Pages.Configs;
 using Microsoft.Maui.Controls;
+using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 
 namespace labyItems.Pages.Calculator;
 
 public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
 {
+    public Command<object?> ViewGeneralAbilityInfoCommand { get; }
+    public Command<object?> DeleteGeneralAbilityCommand { get; }
+
     public GeneralConfigPage()
     {
+        ViewGeneralAbilityInfoCommand = new Command<object?>(OnViewGeneralAbilityInfoRequested);
+        DeleteGeneralAbilityCommand = new Command<object?>(OnDeleteGeneralAbilityRequested);
         InitializeComponent();
     }
 
@@ -23,6 +29,10 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         var s = new List<string>();
 
         AddResistanceLevels(s, c);
+        if (c.SelectedGeneralAbilityEntries.Count > 0)
+        {
+            s.Add($"Selected abilities: {ListSummaryHelper.JoinWithAnd(c.SelectedGeneralAbilityEntries.Select(entry => entry.Name))}");
+        }
         s.AddToSummaryIf(
             c.CastingLevelsCount,
             $"+{c.CastingLevelsCount} Casting levels {(c.CastingLevelsColour?.ToString() ?? "None")}"
@@ -111,12 +121,47 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
 
     private async void OnSearchGeneral(object sender, EventArgs e)
     {
-        var picked = await new General().PickAsync(Navigation);
-        if (picked == null)
+        if (BindingContext is not GeneralConfig cfg)
             return;
 
-        if (BindingContext is GeneralConfig cfg)
-            cfg.ApplyGeneral(picked);
+        var existingKeys = cfg.SelectedGeneralAbilityEntries
+            .Select(BuildAbilityKey)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var picked = await new General().PickAsync(
+            Navigation,
+            cfg.SelectedGeneralAbilityEntries.Select(entry => entry.Name));
+        cfg.ApplyGeneralAbilities(picked);
+
+        foreach (var entry in cfg.SelectedGeneralAbilityEntries
+                     .Where(entry => entry.SupportsFirstTimeDiscount)
+                     .Where(entry => !existingKeys.Contains(BuildAbilityKey(entry))))
+        {
+            await Navigation.PushModalAsync(new GeneralAbilityImmunityModalPage(entry));
+        }
+    }
+
+    private async void OnViewGeneralAbilityInfoRequested(object? parameter)
+    {
+        if (parameter is not GeneralAbilitySelectionEntry entry || entry.Ability == null)
+            return;
+
+        await Navigation.PushModalAsync(new NavigationPage(new AbilityCardPage(entry.Ability)));
+    }
+
+    private void OnDeleteGeneralAbilityRequested(object? parameter)
+    {
+        if (BindingContext is not GeneralConfig cfg)
+            return;
+
+        if (parameter is GeneralAbilitySelectionEntry entry)
+        {
+            cfg.RemoveSelectedGeneralAbility(entry);
+            return;
+        }
+
+        if (parameter is string abilityName)
+            cfg.RemoveSelectedGeneralAbility(abilityName);
     }
 
     // private readonly TaskCompletionSource<CalcResult?> _tcs = new();
@@ -178,6 +223,19 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         if (!string.IsNullOrWhiteSpace(notes))
             details["notes"] = notes;
 
+        if (cfg.SelectedGeneralAbilityEntries.Count > 0)
+        {
+            details["selectedGeneralAbilities"] = cfg.SelectedGeneralAbilityEntries.Select(entry => new
+            {
+                name = entry.Name,
+                table = entry.Table,
+                cost = entry.Cost,
+                isImmunity = entry.IsImmunity,
+                firstTimeOnly = entry.ImmunityOnlyFirstTimeNeeded,
+                isp = entry.IspCost
+            }).ToList();
+        }
+
         if (cfg.EmpowerWeaponSpiritCount > 0) details["empowerWeaponSpirit"] = cfg.EmpowerWeaponSpiritCount;
         if (cfg.EmpowerWeaponManticCount > 0) details["empowerWeaponMantic"] = cfg.EmpowerWeaponManticCount;
         if (cfg.UndeadTouchEffect.HasValue && cfg.UndeadTouchEffectCount > 0)
@@ -191,15 +249,22 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
             details["prayerTimesPerDay"] = cfg.PrayerTimesPerDay;
         }
 
-        var summaryHeader = $"{cfg.Title} ({cfg.Total})";
+        var summaryHeader = $"General ({cfg.Total})";
         var summary = string.IsNullOrWhiteSpace(notes)
             ? summaryHeader
             : $"{summaryHeader}\n{notes}";
 
+        var abilityName = cfg.SelectedGeneralAbilityEntries.Count switch
+        {
+            0 => "General Ability",
+            1 => cfg.SelectedGeneralAbilityEntries[0].Name,
+            _ => $"General abilities ({cfg.SelectedGeneralAbilityEntries.Count})"
+        };
+
         return new CalcResult
         {
             AbilityType = "General",
-            AbilityName = string.IsNullOrWhiteSpace(cfg.Name) ? "General Charm" : cfg.Name,
+            AbilityName = abilityName,
             TotalIsp = cfg.Total,
             Summary = summary,
             Details = details
@@ -213,4 +278,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
             $"{c.ResistanceLevels} Levels of Resistance vs {c.ResistanceType}"
         );
     }
+
+    private static string BuildAbilityKey(GeneralAbilitySelectionEntry entry)
+        => $"{entry.Name}|{entry.Table}";
 }

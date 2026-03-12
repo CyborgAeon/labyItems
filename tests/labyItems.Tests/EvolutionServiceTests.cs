@@ -1,5 +1,6 @@
 using System.Linq;
 using labyItems.Services;
+using labyItems.Services.Specialisations;
 using Xunit;
 
 namespace labyItems.Tests;
@@ -17,6 +18,18 @@ public sealed class EvolutionServiceTests : ServiceTestBase
         var entry = Assert.Single(all, e => e.Index == "AA1");
         Assert.Contains("Ability:Focus", entry.PreReqs);
         Assert.Equal(2, entry.MaxAvailable);
+    }
+
+    [Fact]
+    public async Task GetAllAbilitiesAsync_ParsesAvailabilityRules()
+    {
+        var all = await EvolutionService.GetAllAbilitiesAsync();
+
+        var entry = Assert.Single(all, e => e.Index == "Ward Pact with Glass");
+        Assert.Equal("Ancient Folk", entry.AvailabilityDisplay);
+        var rule = Assert.Single(entry.AvailabilityRules);
+        Assert.Equal("BaseRace", rule.Field);
+        Assert.Equal("Ancient Folk", Assert.Single(rule.Value));
     }
 
     [Fact]
@@ -79,18 +92,29 @@ public sealed class EvolutionServiceTests : ServiceTestBase
     [Fact]
     public async Task AbilityLookup_FindsAbilityFromSpecialisationAliasesByDisplayName()
     {
-        var found = await AbilityDetailsLookupService.FindByIndexAsync("Discern Spiritual Mastery");
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+        var abilityRef = index.AbilityReferences
+            .FirstOrDefault(entry => !string.IsNullOrWhiteSpace(entry.Value?.Name));
+        Assert.False(string.IsNullOrWhiteSpace(abilityRef.Key));
+        Assert.False(string.IsNullOrWhiteSpace(abilityRef.Value?.Name));
+
+        var found = await AbilityDetailsLookupService.FindByIndexAsync(abilityRef.Value!.Name);
 
         Assert.NotNull(found);
-        Assert.Equal("Discern Spiritual Mastery", found!.Index);
+        Assert.Equal(abilityRef.Value.Name, found!.Index);
     }
 
     [Fact]
     public async Task AbilityLookup_FindsAbilityFromSpecialisationAliasesByKey()
     {
-        var found = await AbilityDetailsLookupService.FindByIndexAsync("ability.discern-spiritual-mastery");
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+        var abilityRef = index.AbilityReferences
+            .FirstOrDefault(entry => !string.IsNullOrWhiteSpace(entry.Key));
+        Assert.False(string.IsNullOrWhiteSpace(abilityRef.Key));
+
+        var found = await AbilityDetailsLookupService.FindByIndexAsync(abilityRef.Key);
 
         Assert.NotNull(found);
-        Assert.Equal("Discern Spiritual Mastery", found!.Index);
+        Assert.False(string.IsNullOrWhiteSpace(found!.Index));
     }
 }

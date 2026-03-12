@@ -1761,6 +1761,9 @@
   },
   "Church of Iron & Empire": {
     "Logo": "~/guilds/logos/iron_and_empire.png",
+    "DenominationalMiracle": {
+      "$ref": "Heart of Iron"
+    },
     "PreRequisites": "Be a Pro Empire, un-outlawed Evil Priest or be an Unholy Champion.",
     "Ethos": "In no way conventionally deific, this is an Imperial Church that typifies the dark, unyielding side of the Empire (but certainly does not see itself as being opposite or contrary to any other Imperial and Empress cults). It is an uncompromising faith that is preached here but offers simple answers to complex questions.\nUnlike most churches Iron and Empire understands that the influence of the gods is bad for mortals, fanatic followers of goodly gods driven into battle by their lords and the bitter and twisted evil worshippers of the dark gods performing their foul tasks.\nThe church does not follow a Deity, although sometimes outsiders may view the church as worshipers of the Empress. The Church draws power from the dark hearts of the people, the belief in the nature of The Empire and from the Primal power of the Felldraken Isle.",
     "Restrictions": "• Should a member become Outlawed or Ostracised by the Empire they are automatically excommunicated until the matter is resolved. In game terms they cannot cast any miracle from the Church list, nor miracles learnt whilst a member. However this does not trigger Dedicated Power restrictions unless the individual refuses to hand themselves in for trial.\n• Note: The Lord of Feldraken Isle can remove the High Priest from their role if they are not acting in the best interest of the Church, or simply fails to fulfil their duties.",

@@ -22,9 +22,19 @@
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="10">
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-          <Label FontAttributes="Bold" FontSize="20" Text="{Binding Title}"/>
+          <Label FontAttributes="Bold" FontSize="20" Text="Add Tables Ability"/>
           <Button Grid.Column="2" Clicked="OnSearchGeneral" Text="Search"/>
         </Grid>
+        <VerticalStackLayout Spacing="6"
+                             IsVisible="{Binding HasSelectedGeneralAbilities}">
+          <Label FontAttributes="Bold"
+                 FontSize="14"
+                 Text="Selected abilities"/>
+          <controls:ConfigSelectionList ItemsSource="{Binding SelectedGeneralAbilityEntries}"
+                                        ShowEditButton="False"
+                                        InfoCommand="{Binding Source={x:Reference RootPage}, Path=ViewGeneralAbilityInfoCommand}"
+                                        DeleteCommand="{Binding Source={x:Reference RootPage}, Path=DeleteGeneralAbilityCommand}" />
+        </VerticalStackLayout>
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
           <controls:ResistanceTypePicker LabelText="Additional levels of resistance for..." PlaceholderText="Select a type" SelectedValue="{Binding ResistanceType, Mode=TwoWay}"/>
           <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding ResistanceLevels, Mode=TwoWay}" LabelText="" Max="3"/>

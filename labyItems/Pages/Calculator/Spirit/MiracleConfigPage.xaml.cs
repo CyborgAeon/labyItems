@@ -10,12 +10,10 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
 {
     private bool _miracleLookupLoaded;
     private MiracleSearchOption? _selectedSearchMiracle;
-    private string? _selectedTrueBelieverGuild;
 
     public MiracleConfigPage()
     {
         AddSelectedMiracleCommand = new Command<object?>(OnMiracleResultSelected);
-        AddTrueBelieverGuildCommand = new Command<object?>(OnTrueBelieverGuildResultSelected);
         EditMiracleCommand = new Command<object?>(OnEditMiracleRequested);
         ViewMiracleInfoCommand = new Command<object?>(OnMiracleInfoRequested);
         DeleteMiracleCommand = new Command<object?>(OnDeleteMiracleRequested);
@@ -23,14 +21,11 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
     }
 
     public ICommand AddSelectedMiracleCommand { get; }
-    public ICommand AddTrueBelieverGuildCommand { get; }
     public ICommand EditMiracleCommand { get; }
     public ICommand ViewMiracleInfoCommand { get; }
     public ICommand DeleteMiracleCommand { get; }
 
     public Dictionary<string, MiracleSearchOption> MiracleLookup { get; private set; } =
-        new(StringComparer.OrdinalIgnoreCase);
-    public Dictionary<string, string> TrueBelieverGuildLookup { get; private set; } =
         new(StringComparer.OrdinalIgnoreCase);
 
     public MiracleSearchOption? SelectedSearchMiracle
@@ -46,19 +41,6 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
         }
     }
 
-    public string? SelectedTrueBelieverGuild
-    {
-        get => _selectedTrueBelieverGuild;
-        set
-        {
-            if (string.Equals(_selectedTrueBelieverGuild, value, StringComparison.Ordinal))
-                return;
-
-            _selectedTrueBelieverGuild = value;
-            OnPropertyChanged(nameof(SelectedTrueBelieverGuild));
-        }
-    }
-
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -67,7 +49,6 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
 
         _miracleLookupLoaded = true;
         await LoadMiracleLookupAsync();
-        await LoadTrueBelieverGuildLookupAsync();
     }
 
     protected override CalcResult BuildResult(MiracleConfig cfg)
@@ -167,31 +148,7 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
         }
     }
 
-    private async Task LoadTrueBelieverGuildLookupAsync()
-    {
-        try
-        {
-            var guildNames = await GuildsService.GetGuildNamesAsync();
-            TrueBelieverGuildLookup = guildNames
-                .Where(name => !string.IsNullOrWhiteSpace(name))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(name =>
-                    name.TrimStart().StartsWith("church", StringComparison.OrdinalIgnoreCase)
-                        ? 0
-                        : 1)
-                .ThenBy(name => name, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(name => name, name => name, StringComparer.OrdinalIgnoreCase);
-
-            OnPropertyChanged(nameof(TrueBelieverGuildLookup));
-            TrueBelieverGuildSearch.ItemsSource = TrueBelieverGuildLookup;
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Guild load failed", ex.Message, "OK");
-        }
-    }
-
-    private async void OnMiracleResultSelected(object? parameter)
+    private void OnMiracleResultSelected(object? parameter)
     {
         var option = parameter as MiracleSearchOption ?? SelectedSearchMiracle;
         if (option == null)
@@ -200,31 +157,9 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
         if (BindingContext is not MiracleConfig cfg)
             return;
 
-        var added = cfg.TryAddMiracle(option.Miracle);
-        var entry = cfg.SelectedMiracles.FirstOrDefault(miracle =>
-            string.Equals(miracle.MiracleName, option.Name, StringComparison.OrdinalIgnoreCase)
-            && miracle.Power == option.Power
-            && miracle.IsAdvanced == option.IsAdvanced);
-        if (entry == null && added)
-            entry = cfg.SelectedMiracles.LastOrDefault();
+        cfg.TryAddMiracle(option.Miracle);
 
         SelectedSearchMiracle = null;
-
-        if (entry != null)
-            await Navigation.PushModalAsync(new MiracleEntryConfigModalPage(entry));
-    }
-
-    private void OnTrueBelieverGuildResultSelected(object? parameter)
-    {
-        var guildName = parameter as string ?? SelectedTrueBelieverGuild;
-        if (string.IsNullOrWhiteSpace(guildName))
-            return;
-
-        if (BindingContext is not MiracleConfig cfg)
-            return;
-
-        cfg.TryAddTrueBelieverGuild(guildName);
-        SelectedTrueBelieverGuild = null;
     }
 
     private async void OnEditMiracleRequested(object? parameter)
@@ -267,5 +202,50 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
             return;
 
         cfg.RemoveTrueBelieverGuild(entry);
+    }
+
+    private async void OnSearchTrueBelieverGuildsClicked(object sender, EventArgs e)
+    {
+        if (BindingContext is not MiracleConfig cfg)
+            return;
+
+        var existingCounts = cfg.TrueBelieverGuilds
+            .Where(entry => !string.IsNullOrWhiteSpace(entry.GuildName))
+            .ToDictionary(
+                entry => entry.GuildName.Trim(),
+                entry => entry.Count,
+                StringComparer.OrdinalIgnoreCase);
+
+        var picker = new MiracleGuildSearchPage(existingCounts.Keys);
+        var selectedGuilds = await picker.PickAsync(Navigation);
+        var normalizedSelection = (selectedGuilds ?? Array.Empty<string>())
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var selectedSet = new HashSet<string>(normalizedSelection, StringComparer.OrdinalIgnoreCase);
+        var toRemove = cfg.TrueBelieverGuilds
+            .Where(entry => !selectedSet.Contains(entry.GuildName))
+            .ToList();
+        foreach (var entry in toRemove)
+            cfg.RemoveTrueBelieverGuild(entry);
+
+        foreach (var guildName in normalizedSelection)
+        {
+            var existing = cfg.TrueBelieverGuilds.FirstOrDefault(entry =>
+                string.Equals(entry.GuildName, guildName, StringComparison.OrdinalIgnoreCase));
+            if (existing != null)
+                continue;
+
+            var count = existingCounts.TryGetValue(guildName, out var previousCount)
+                ? Math.Max(1, previousCount)
+                : 1;
+
+            cfg.TrueBelieverGuilds.Add(new TrueBelieverGuildEntry(guildName)
+            {
+                Count = count
+            });
+        }
     }
 }

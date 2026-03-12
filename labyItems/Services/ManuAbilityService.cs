@@ -1,3 +1,5 @@
+using labyItems.Models.Rules;
+
 namespace labyItems.Services;
 
 public static class ManuAbilityService
@@ -5,6 +7,7 @@ public static class ManuAbilityService
     public record ManuAbilityEntry(
         string name,
         string availability,
+        IReadOnlyList<RuleClause> availabilityRules,
         int cost,
         int table,
         string description,
@@ -23,6 +26,7 @@ public static class ManuAbilityService
                 .Select(e => new ManuAbilityEntry(
                     e.Index,
                     e.Available,
+                    e.AvailabilityRules,
                     e.Cost,
                     e.Table,
                     e.Description,
@@ -50,6 +54,7 @@ public static class ManuAbilityService
                 .Select(e => new ManuAbilityEntry(
                     e.Index,
                     e.Available,
+                    e.AvailabilityRules,
                     e.Cost,
                     e.Table,
                     e.Description,

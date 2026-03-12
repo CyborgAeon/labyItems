@@ -800,6 +800,35 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
 
                 return parts.Count == 0 ? string.Empty : string.Join(", ", parts);
             }
+
+            if (doc.RootElement.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var property in doc.RootElement.EnumerateObject())
+                {
+                    if (!property.Name.Equals("Display", StringComparison.OrdinalIgnoreCase)
+                        && !property.Name.Equals("Label", StringComparison.OrdinalIgnoreCase)
+                        && !property.Name.Equals("Value", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    if (property.Value.ValueKind == JsonValueKind.String)
+                        return (property.Value.GetString() ?? string.Empty).Trim();
+
+                    if (property.Value.ValueKind == JsonValueKind.Array)
+                    {
+                        var parts = property.Value
+                            .EnumerateArray()
+                            .Where(e => e.ValueKind == JsonValueKind.String)
+                            .Select(e => (e.GetString() ?? string.Empty).Trim())
+                            .Where(e => e.Length > 0)
+                            .Distinct(StringComparer.OrdinalIgnoreCase)
+                            .ToList();
+
+                        return parts.Count == 0 ? string.Empty : string.Join(", ", parts);
+                    }
+                }
+            }
         }
         catch
         {

@@ -18,6 +18,9 @@ public sealed class CharacterCreationDataService : ICharacterCreationDataService
     public Task<Dictionary<string, GuildRecord>> GetGuildsAsync()
         => GuildsService.GetAllAsync();
 
+    public Task<Dictionary<string, GuildRecord>> GetGuildsForMiracleSearchAsync()
+        => GuildsService.GetMiracleSearchAsync();
+
     public Task<IReadOnlyList<string>> GetGuildTypesAsync()
         => GuildsService.GetTypesAsync();
 

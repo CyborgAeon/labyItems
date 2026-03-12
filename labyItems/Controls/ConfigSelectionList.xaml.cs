@@ -19,6 +19,13 @@ public partial class ConfigSelectionList : ContentView
             typeof(ConfigSelectionList),
             default(ICommand));
 
+    public static readonly BindableProperty ShowEditButtonProperty =
+        BindableProperty.Create(
+            nameof(ShowEditButton),
+            typeof(bool),
+            typeof(ConfigSelectionList),
+            true);
+
     public static readonly BindableProperty InfoCommandProperty =
         BindableProperty.Create(
             nameof(InfoCommand),
@@ -55,6 +62,12 @@ public partial class ConfigSelectionList : ContentView
     {
         get => (ICommand?)GetValue(EditCommandProperty);
         set => SetValue(EditCommandProperty, value);
+    }
+
+    public bool ShowEditButton
+    {
+        get => (bool)GetValue(ShowEditButtonProperty);
+        set => SetValue(ShowEditButtonProperty, value);
     }
 
     public ICommand? InfoCommand

@@ -20,15 +20,8 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [
-        [
-          6,
-          6
-        ]
-      ],
-      "type": [
-        "Missile"
-      ]
+      "amount": [[6, 6]],
+      "type": ["Missile"]
     },
     "verbal": "“Spirits aid me, I abjure thee to staunch this wound.”",
     "gesture": "Touch injured part with open palm",
@@ -161,21 +154,9 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          18,
-          0
-        ]
-      ],
-      "type": [
-        "Body"
-      ],
-      "ArmourApplies": [
-        [
-          1,
-          1
-        ]
-      ],
+      "amount": [[18, 0]],
+      "type": ["Body"],
+      "ArmourApplies": [[1, 1]],
       "ArmourType": "SAC"
     },
     "verbal": "\"By all my powers, let thy spirit be smitten ......... Spirit Bolt!\"",
@@ -283,21 +264,9 @@
     "sphere": "Minor Force",
     "isAdvanced": true,
     "Damage": {
-      "amount": [
-        [
-          6,
-          0
-        ]
-      ],
-      "type": [
-        "Body"
-      ],
-      "ArmourApplies": [
-        [
-          1,
-          0
-        ]
-      ],
+      "amount": [[6, 0]],
+      "type": ["Body"],
+      "ArmourApplies": [[1, 0]],
       "ArmourType": "SAC"
     },
     "verbal": "“Spirits, smite that spirit…”",
@@ -731,15 +700,8 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [
-        [
-          12,
-          12
-        ]
-      ],
-      "type": [
-        "Missile"
-      ]
+      "amount": [[12, 12]],
+      "type": ["Missile"]
     },
     "verbal": "\"Spirits aid me, I abjure thee to staunch these wounds \"",
     "gesture": "Touch target with both empty hands",
@@ -806,15 +768,8 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [
-        [
-          36,
-          36
-        ]
-      ],
-      "type": [
-        "Missile"
-      ]
+      "amount": [[36, 36]],
+      "type": ["Missile"]
     },
     "verbal": "\"Spirits, staunch these mortal wounds and let this person be healed!\"",
     "gesture": "Touch head with both hands",
@@ -920,15 +875,8 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          60,
-          0
-        ]
-      ],
-      "type": [
-        "Body"
-      ]
+      "amount": [[60, 0]],
+      "type": ["Body"]
     },
     "verbal": "\"Great spirits, whose powers are mighty! I bind thee by the rune I now inscribe! Protect all within its\nboundaries from all who seek to gain entrance!\"",
     "gesture": "Draw required shape and inscribe runes",
@@ -943,21 +891,9 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          4,
-          4
-        ]
-      ],
-      "type": [
-        "Missile"
-      ],
-      "ArmourApplies": [
-        [
-          1,
-          1
-        ]
-      ],
+      "amount": [[4, 4]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
       "ArmourType": "SAC"
     },
     "verbal": "\"Spirit of Evil I call upon thee to inflict this minor wound\"",
@@ -974,21 +910,9 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          6,
-          6
-        ]
-      ],
-      "type": [
-        "Missile"
-      ],
-      "ArmourApplies": [
-        [
-          1,
-          1
-        ]
-      ],
+      "amount": [[6, 6]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
       "ArmourType": "SAC"
     },
     "verbal": "\"Spirit of evil I call upon thee to inflict this wound\"",
@@ -1005,21 +929,9 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          12,
-          12
-        ]
-      ],
-      "type": [
-        "Missile"
-      ],
-      "ArmourApplies": [
-        [
-          1,
-          1
-        ]
-      ],
+      "amount": [[12, 12]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
       "ArmourType": "SAC"
     },
     "verbal": "\"Spirits of evil, I call upon thee to inflict these wounds!\"",
@@ -1127,21 +1039,9 @@
     "sphere": "Causing",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          36,
-          6
-        ]
-      ],
-      "type": [
-        "Missile"
-      ],
-      "ArmourApplies": [
-        [
-          6,
-          1
-        ]
-      ],
+      "amount": [[36, 6]],
+      "type": ["Missile"],
+      "ArmourApplies": [[6, 1]],
       "ArmourType": "SAC"
     },
     "verbal": "“Spirits of evil I call upon thee to inflict these mortal wounds and let this person die”",
@@ -1209,15 +1109,8 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [
-        [
-          72,
-          72
-        ]
-      ],
-      "type": [
-        "Worst"
-      ]
+      "amount": [[72, 72]],
+      "type": ["Worst"]
     },
     "verbal": "\"By the power of the spirits of light, I bid that thy life shall be as new ...\"",
     "gesture": "Touch target's head with both hands",
@@ -1622,6 +1515,19 @@
   },
   {
     "power": 4,
+    "name": "Heart of Iron",
+    "description": "One nominated target within 20’ range suffers a Cause Serious Miracle targeted to their chest.\nShould the target also be an Outlaw, Ostracised by the Empire, or a clear enemy of the Empire then they also suffer a non-level based Halt.",
+    "alignment": "Evil",
+    "sphere": "Minor",
+    "isAdvanced": false,
+    "verbal": "The willing dark spirits of the Empire strike thee…Heart of Iron",
+    "gesture": "Point at Target",
+    "duration": "Instant / 10 seconds",
+    "range": "20'",
+    "level": "4sp"
+  },
+  {
+    "power": 4,
     "name": "Blessing of the Aspects of Hope I",
     "description": "todo",
     "alignment": "Good",
@@ -1774,21 +1680,9 @@
     "sphere": "Major Causing",
     "isAdvanced": true,
     "Damage": {
-      "amount": [
-        [
-          60,
-          10
-        ]
-      ],
-      "type": [
-        "Blast"
-      ],
-      "ArmourApplies": [
-        [
-          6,
-          1
-        ]
-      ],
+      "amount": [[60, 10]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
       "ArmourType": "SAC"
     },
     "verbal": "“Spirits of evil I call upon thee to inflict these critical wounds, such that this spirit may suffer great torment\nand depart its mortal form...!”",
@@ -1802,27 +1696,13 @@
     "name": "Cause Mortal Wounds",
     "description": "Must be table 11 to learn. inflicts 120/20 life (40 hits).",
     "alignment": "Evil",
-    "preReqs": [
-      "Cause Critical Wounds"
-    ],
+    "preReqs": ["Cause Critical Wounds"],
     "sphere": "Major Causing",
     "isAdvanced": true,
     "Damage": {
-      "amount": [
-        [
-          120,
-          20
-        ]
-      ],
-      "type": [
-        "Missile"
-      ],
-      "ArmourApplies": [
-        [
-          6,
-          1
-        ]
-      ],
+      "amount": [[120, 20]],
+      "type": ["Missile"],
+      "ArmourApplies": [[6, 1]],
       "ArmourType": "SAC"
     },
     "verbal": "“Spirits of Evil I call upon thee to inflict these Mortal wounds so the spirit may suffer and break. Let its life\nbe extinguished by my touch.”",
@@ -1895,10 +1775,7 @@
     "name": "Communication with the Gods",
     "description": "Ask three yes/no questions of knowledgeable spirits within five minutes; silence if unknown. but answers are short phrases/sentences (≈7 relevant words); three questions in five minutes. but no limit to the number of questions asked and the spirits may respond to an individual question with more than just seven words. Questions must be asked in a measured and respectful manner, or no response will be gained. The caster may choose to have all questions be only regarding one specific area, in which case the divination lasts 5 minutes, or simply answering any questions they desire, in which case the duration is only two minutes but the miracle becomes far more versatile.",
     "alignment": "Neutral",
-    "preReqs": [
-      "Communication",
-      "Greater Communication"
-    ],
+    "preReqs": ["Communication", "Greater Communication"],
     "sphere": "Major Communication",
     "isAdvanced": true,
     "verbal": "“All Seeing All K\nnowing Spirits, guardians of the unknown, knowers of knowledge, keepers of secrets, you whose vision and hearing\nare mighty grant me thy wisdom and understanding. Listen to me and converse for I have need of thy insight.”",
@@ -1927,12 +1804,7 @@
     "sphere": "Minor Healing",
     "isAdvanced": true,
     "Heal": {
-      "amount": [
-        [
-          60,
-          60
-        ]
-      ]
+      "amount": [[60, 60]]
     },
     "verbal": "“I call upon the spirits of light to staunch these mortal wounds and reforge this shattered body... Cure\nCritical Wounds!”",
     "gesture": "Palms on target head",
@@ -2223,15 +2095,8 @@
     "sphere": "Major Forces",
     "isAdvanced": true,
     "Damage": {
-      "amount": [
-        [
-          18,
-          18
-        ]
-      ],
-      "type": [
-        "Missile"
-      ]
+      "amount": [[18, 18]],
+      "type": ["Missile"]
     },
     "verbal": "“By all my power let thy [location] be smitten, Focussed spirit bolt”",
     "gesture": "Indicate target",
@@ -2587,15 +2452,8 @@
     "sphere": "Minor Healing",
     "isAdvanced": true,
     "Heal": {
-      "amount": [
-        [
-          36,
-          36
-        ]
-      ],
-      "type": [
-        "Worst"
-      ]
+      "amount": [[36, 36]],
+      "type": ["Worst"]
     },
     "verbal": "“Spirits of Light I beseech thee, remain with this spirit until thy aid is needed!”",
     "gesture": "Palms on target head",
@@ -2838,70 +2696,23 @@
     "isAdvanced": true,
     "Heal": {
       "amount": [
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ]
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6]
       ],
-      "type": [
-        "Worst"
-      ]
+      "type": ["Worst"]
     },
     "verbal": "\"Shaehan's touch shall soothe your suffering.\"",
     "gesture": "Hug recipient warmly",
@@ -2966,15 +2777,8 @@
     "sphere": "Minor Healing",
     "isAdvanced": true,
     "Heal": {
-      "amount": [
-        [
-          24,
-          4
-        ]
-      ],
-      "type": [
-        "Body"
-      ]
+      "amount": [[24, 4]],
+      "type": ["Body"]
     },
     "verbal": "“Spirits of light, I bid thee soothe this one's suffering”",
     "gesture": "Touch targets head",
@@ -2991,9 +2795,7 @@
     "sphere": "Major Causing",
     "isAdvanced": true,
     "Damage": {
-      "type": [
-        "Body"
-      ]
+      "type": ["Body"]
     },
     "verbal": "\"Let the powers of evil sear your soul, and let your own strength be your undoing… Soul Lance!\"",
     "gesture": "Point both empty hands at target",
@@ -3623,6 +3425,19 @@
     "gesture": "Palms out and facing upwards",
     "duration": "1 minute",
     "range": "Self",
-    "level": "8sp"
+    "level": "8th"
+  },
+  {
+    "power": 5,
+    "name": "Pact of the Guardian",
+    "description": " The caster must spend at least 2 minutes scribing the pact immediately before casting.\nThis miracle grants the caster a temporary wardpact as per the ancient folk racial ability (see Evolution – Races). This pact cannot be vs Elements, Elves or Supernatural minions of Dragons/Drakes. While active the caster cannot attack those he has the pact with except in purest self-defence, even if it has not been announced, doing so is considered breaking the pact.\nIf the priest breaks the pact they may never cast this miracle again, nor may they ever benefit from any form of Ward Pact.\nThis miracle may be cast for 10 spirits without the need to spend 2 minutes to scribe the pact.",
+    "alignment": "Neutral",
+    "sphere": "todo",
+    "isAdvanced": false,
+    "verbal": "By the power vested in me I invoke the watchful one, protect me from all (insert name of targets here eg. Undead) you are compelled to negotiate!",
+    "gesture": "Scribe the pact",
+    "duration": "15 minutes",
+    "range": "Self",
+    "level": "5th"
   }
 ]

@@ -114,6 +114,16 @@ internal static class ServiceTestEnvironment
             preReqsJson: "[]",
             dataJson: "{}");
 
+        InsertEvolution(
+            idx: "Ward Pact with Glass",
+            description: "Ancient folk only",
+            cost: 25,
+            tableId: 1,
+            available: "{\"Display\":\"Ancient Folk\",\"Rules\":[{\"Field\":\"BaseRace\",\"Operator\":\"In\",\"Value\":[\"Ancient Folk\"]}]}",
+            canBuyMultiple: false,
+            preReqsJson: "[]",
+            dataJson: "{}");
+
         SQLiteTestStore.AddLifeScale("Human", "Wizard", 1, 10, 5);
     }
 

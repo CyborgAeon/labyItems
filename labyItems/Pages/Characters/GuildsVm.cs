@@ -12,6 +12,12 @@ using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Characters;
 
+public enum GuildCardDetailMode
+{
+    Full = 0,
+    MiracleOnly = 1
+}
+
 public sealed class GuildsVm : INotifyPropertyChanged
 {
     private const string AllTypeFilterValue = "All";
@@ -50,6 +56,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private readonly bool _allowGuildSelection;
     private readonly bool _searchByNameOnly;
     private readonly bool _useMultiTypeFilters;
+    private readonly bool _enforceAvailabilityForSelection;
+    private readonly GuildCardDetailMode _detailMode;
     private readonly HashSet<string> _selectedTypeFilters = new(StringComparer.OrdinalIgnoreCase);
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
     {
@@ -80,6 +88,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
         bool allowGuildSelection = true,
         bool searchByNameOnly = false,
         bool useMultiTypeFilters = false,
+        bool enforceAvailabilityForSelection = true,
+        GuildCardDetailMode detailMode = GuildCardDetailMode.Full,
         bool autoReload = true)
     {
         _draft = draft;
@@ -90,6 +100,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
         _allowGuildSelection = allowGuildSelection;
         _searchByNameOnly = searchByNameOnly;
         _useMultiTypeFilters = useMultiTypeFilters;
+        _enforceAvailabilityForSelection = enforceAvailabilityForSelection;
+        _detailMode = detailMode;
         _creationDataService = creationDataService
             ?? ServiceHelper.ResolveService<ICharacterCreationDataService>()
             ?? new CharacterCreationDataService();
@@ -153,7 +165,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     public async Task ReloadAsync()
     {
-        _guildRecords = await _creationDataService.GetGuildsAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
+        _guildRecords = _detailMode == GuildCardDetailMode.MiracleOnly
+            ? await _creationDataService.GetGuildsForMiracleSearchAsync()
+            : await _creationDataService.GetGuildsAsync();
+        _guildRecords ??= new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
         lock (_detailLoadGate)
             _detailLoadTasks.Clear();
 
@@ -174,7 +189,14 @@ public sealed class GuildsVm : INotifyPropertyChanged
             }
         }
         ApplyAvailabilityToCurrentSelection();
-        var types = await _creationDataService.GetGuildTypesAsync();
+        var types = _detailMode == GuildCardDetailMode.MiracleOnly
+            ? _guildRecords.Values
+                .Select(record => (record?.Type ?? string.Empty).Trim())
+                .Where(type => !string.IsNullOrWhiteSpace(type))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(type => type, StringComparer.OrdinalIgnoreCase)
+                .ToList()
+            : await _creationDataService.GetGuildTypesAsync();
         TypeFilters.Clear();
         TypeFilters.Add(AllTypeFilterValue);
         foreach (var t in types)
@@ -202,7 +224,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
             var availability = EvaluateAvailabilityForCurrentContext(rec, name);
             var selectable = availability.Allowed;
             var reason = availability.Reason;
-            var cardSelectable = !_allowGuildSelection || (selectable || isSelected);
+            var cardSelectable = !_allowGuildSelection
+                || (!_enforceAvailabilityForSelection)
+                || (selectable || isSelected);
 
             var vm = new GuildCardVm
             {
@@ -213,7 +237,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 IsSelected = isSelected,
                 IsExpanded = false,
                 IsSelectable = cardSelectable,
-                NotSelectableReason = cardSelectable ? "" : (_allowGuildSelection ? reason : ""),
+                NotSelectableReason = cardSelectable
+                    ? ""
+                    : (_allowGuildSelection && _enforceAvailabilityForSelection ? reason : ""),
                 IsLocked = false,
             };
 
@@ -286,6 +312,15 @@ public sealed class GuildsVm : INotifyPropertyChanged
         var miracleLookup = denominatorRef.Length > 0
             ? await GetMiracleLookupAsync()
             : EmptyMiracleLookup;
+
+        if (_detailMode == GuildCardDetailMode.MiracleOnly)
+        {
+            return new GuildCardDetailsVm
+            {
+                MiracleRows = BuildMiracleRows(rec.MiracleList),
+                DenominationalMiracle = BuildDenominationalMiracle(rec, miracleLookup)
+            };
+        }
 
         return new GuildCardDetailsVm
         {
@@ -377,6 +412,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
             }
         }
 
+        if (HasBarbarianPeopleType(_draft))
+            _currentPeopleTypes.Add("Tribal");
+
         var subtype = (_draft.RaceSubtypeValue ?? _draft.RaceSubtype ?? string.Empty).Trim();
         if (subtype.Length > 0)
             _currentRaceSelections.Add(subtype);
@@ -397,6 +435,21 @@ public sealed class GuildsVm : INotifyPropertyChanged
                     _currentClassBrackets.Add(normalized);
             }
         }
+    }
+
+    private static bool HasBarbarianPeopleType(CharacterDraft? draft)
+    {
+        if (draft?.SpecialisationSelections == null || draft.SpecialisationSelections.Count == 0)
+            return false;
+
+        if (draft.SpecialisationSelections.TryGetValue("Barbarian", out var directSelection)
+            && string.Equals((directSelection ?? string.Empty).Trim(), "Barbarian", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return draft.SpecialisationSelections.Values.Any(selection =>
+            string.Equals((selection ?? string.Empty).Trim(), "Barbarian", StringComparison.OrdinalIgnoreCase));
     }
 
     private void ApplyAvailabilityToCurrentSelection()
@@ -864,9 +917,11 @@ public sealed class GuildsVm : INotifyPropertyChanged
             var selectable = availability.Allowed;
 
             // Allow already-selected guilds to stay selectable so the user can deselect them
-            card.IsSelectable = !_allowGuildSelection || (selectable || card.IsSelected);
+            card.IsSelectable = !_allowGuildSelection
+                || !_enforceAvailabilityForSelection
+                || (selectable || card.IsSelected);
 
-            if (!availability.Allowed)
+            if (_enforceAvailabilityForSelection && !availability.Allowed)
                 card.NotSelectableReason = availability.Reason;
             else
                 card.NotSelectableReason = "";
@@ -1135,7 +1190,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             return;
 
         var availability = EvaluateAvailabilityForCurrentContext(item.Name);
-        if (!item.IsSelected && !availability.Allowed)
+        if (_enforceAvailabilityForSelection && !item.IsSelected && !availability.Allowed)
         {
             item.NotSelectableReason = availability.Reason;
             return;

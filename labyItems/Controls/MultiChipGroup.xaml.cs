@@ -140,6 +140,7 @@ public partial class MultiChipGroup : ContentView
             VerticalTextAlignment = TextAlignment.Center,
             HorizontalTextAlignment = TextAlignment.Center,
             LineBreakMode = LineBreakMode.NoWrap,
+            InputTransparent = true,
         };
 
         var border = new Border
@@ -153,6 +154,8 @@ public partial class MultiChipGroup : ContentView
             Margin = new Thickness(4),
             MinimumHeightRequest = 34,
             MinimumWidthRequest = 0,
+            IsEnabled = true,
+            InputTransparent = false,
             BindingContext = text,
         };
 
@@ -202,11 +205,12 @@ public partial class MultiChipGroup : ContentView
         }
     }
 
-    private static void ApplyPalette(Border border, Color background, Color strokeColor, Color textColor)
+    private static void ApplyPalette(Border border, Color background, Color borderColor, Color textColor)
     {
         border.Background = new SolidColorBrush(background);
         border.BackgroundColor = background;
-        border.Stroke = new SolidColorBrush(strokeColor);
+        border.Stroke = new SolidColorBrush(borderColor);
+
         if (border.Content is Label label)
             label.TextColor = textColor;
     }

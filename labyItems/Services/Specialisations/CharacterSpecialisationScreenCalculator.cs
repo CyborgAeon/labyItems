@@ -224,6 +224,7 @@ public static class CharacterSpecialisationScreenCalculator
         {
             var options = ResolveSubtypeOptions(subtype.OptionsSource);
             var abilityMapKey = (subtype.AbilityMapKey ?? string.Empty).Trim();
+            var isHumanRace = string.Equals(context.Race, "Human", StringComparison.OrdinalIgnoreCase);
 
             var mappedOptions = context.Definitions.TryGetValue(abilityMapKey, out var subtypeDefinition)
                 ? subtypeDefinition.ChoiceSets.FirstOrDefault(x => x.Mode == ChoiceMode.MappedSingle)?.Options
@@ -235,6 +236,9 @@ public static class CharacterSpecialisationScreenCalculator
             {
                 var key = (rawKey ?? string.Empty).Trim();
                 if (key.Length == 0)
+                    return;
+
+                if (isHumanRace && key.Equals("Barbarian", StringComparison.OrdinalIgnoreCase))
                     return;
 
                 if (sectionOptions.Any(existing => string.Equals(existing.Key, key, StringComparison.OrdinalIgnoreCase)))
@@ -387,11 +391,14 @@ public static class CharacterSpecialisationScreenCalculator
                     ? mapKey
                     : string.Empty;
 
+                resolvedSubtype = NormalizeMappedSelection(section.Options, resolvedSubtype);
+
                 if (string.IsNullOrWhiteSpace(resolvedSubtype)
                     && string.Equals(context.Race, "Human", StringComparison.OrdinalIgnoreCase)
                     && section.Options.Any(o => string.Equals(o.Key, "Standard", StringComparison.OrdinalIgnoreCase)))
                 {
-                    resolvedSubtype = section.Options.First(o => string.Equals(o.Key, "Standard", StringComparison.OrdinalIgnoreCase)).Key;
+                    resolvedSubtype = ResolveChoiceSelectionToken(
+                        section.Options.First(o => string.Equals(o.Key, "Standard", StringComparison.OrdinalIgnoreCase)));
                 }
 
                 if (!string.IsNullOrWhiteSpace(resolvedSubtype))
@@ -568,11 +575,12 @@ public static class CharacterSpecialisationScreenCalculator
 
                 case SpecialisationSectionKind.Mapped:
                 {
-                    var selected = selectionState.MappedSelections.TryGetValue(spec.SectionId, out var mapped)
+                    var selectedToken = selectionState.MappedSelections.TryGetValue(spec.SectionId, out var mapped)
                         ? (mapped ?? string.Empty).Trim()
                         : string.Empty;
 
-                    var option = spec.Options.FirstOrDefault(o => string.Equals(o.Key, selected, StringComparison.OrdinalIgnoreCase));
+                    var option = ResolveSelectedOption(spec.Options, selectedToken);
+                    var selected = (option?.Key ?? string.Empty).Trim();
                     var issue = ResolveRestrictionIssue(option, context);
                     var rows = BuildAbilityRows(spec.DetailKey, selected, option);
                     var complete = (!spec.Required || selected.Length > 0) && issue.Length == 0;
@@ -606,9 +614,18 @@ public static class CharacterSpecialisationScreenCalculator
                             : string.Empty;
                     }
 
-                    var option = spec.Options.FirstOrDefault(o => string.Equals(o.Key, selectedSubtype, StringComparison.OrdinalIgnoreCase));
-                    if (option == null && selectedSubtype.Length > 0)
-                        option = new ChoiceOption { Key = selectedSubtype, Label = selectedSubtype };
+                    if (selectedSubtype.Length == 0
+                        && string.Equals(context.Race, "Human", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var standard = spec.Options.FirstOrDefault(option =>
+                            string.Equals((option.Key ?? string.Empty).Trim(), "Standard", StringComparison.OrdinalIgnoreCase)
+                            || string.Equals((option.Label ?? string.Empty).Trim(), "Standard", StringComparison.OrdinalIgnoreCase));
+                        if (standard != null)
+                            selectedSubtype = ResolveChoiceSelectionToken(standard);
+                    }
+
+                    var option = ResolveSelectedOption(spec.Options, selectedSubtype);
+                    selectedSubtype = (option?.Key ?? string.Empty).Trim();
 
                     var mappedOption = ResolveMappedOptionFromDefinition(spec.DefinitionKey, selectedSubtype, context.Definitions);
                     var issue = ResolveRestrictionIssue(mappedOption, context);
@@ -788,6 +805,28 @@ public static class CharacterSpecialisationScreenCalculator
                    option.Key.Equals(selected, StringComparison.OrdinalIgnoreCase))
                ?? options.FirstOrDefault(option =>
                    option.Label.Equals(selected, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string ResolveChoiceSelectionToken(ChoiceOption? option)
+    {
+        if (option == null)
+            return string.Empty;
+
+        var key = (option.Key ?? string.Empty).Trim();
+        if (key.Length > 0)
+            return key;
+
+        return (option.Label ?? string.Empty).Trim();
+    }
+
+    private static string NormalizeMappedSelection(IReadOnlyList<ChoiceOption> options, string? selectedToken)
+    {
+        var selected = (selectedToken ?? string.Empty).Trim();
+        if (selected.Length == 0)
+            return string.Empty;
+
+        var option = ResolveSelectedOption(options, selected);
+        return (option?.Key ?? string.Empty).Trim();
     }
 
     private static bool TryGetOptionMetadataLevel(ChoiceOption option, out int level)
@@ -1282,7 +1321,7 @@ public static class CharacterSpecialisationScreenCalculator
 
         if (conditions.PeopleTypeIn.Count > 0)
         {
-            var peopleTypes = context.RaceRecord?.PeopleType ?? new List<string>();
+            var peopleTypes = ResolveContextPeopleTypes(context);
             var peopleTypeAllowed = peopleTypes.Any(type =>
                 conditions.PeopleTypeIn.Any(candidate => candidate.Equals(type, StringComparison.OrdinalIgnoreCase)));
 
@@ -1291,6 +1330,37 @@ public static class CharacterSpecialisationScreenCalculator
         }
 
         return true;
+    }
+
+    private static IReadOnlyList<string> ResolveContextPeopleTypes(CharacterSpecialisationContext context)
+    {
+        var peopleTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var type in context.RaceRecord?.PeopleType ?? new List<string>())
+        {
+            var token = (type ?? string.Empty).Trim();
+            if (token.Length > 0)
+                peopleTypes.Add(token);
+        }
+
+        if (HasBarbarianPeopleType(context.Draft))
+            peopleTypes.Add("Tribal");
+
+        return peopleTypes.ToList();
+    }
+
+    private static bool HasBarbarianPeopleType(CharacterDraft? draft)
+    {
+        if (draft?.SpecialisationSelections == null || draft.SpecialisationSelections.Count == 0)
+            return false;
+
+        if (draft.SpecialisationSelections.TryGetValue("Barbarian", out var directSelection)
+            && string.Equals((directSelection ?? string.Empty).Trim(), "Barbarian", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return draft.SpecialisationSelections.Values.Any(selection =>
+            string.Equals((selection ?? string.Empty).Trim(), "Barbarian", StringComparison.OrdinalIgnoreCase));
     }
 
     private static SpecialisationSectionSpec? BuildSectionFromRule(
@@ -1600,6 +1670,23 @@ public static class CharacterSpecialisationScreenCalculator
             var enumName = source["Enum:".Length..].Trim();
             if (enumName.Length == 0)
                 return new List<string>();
+
+            if (enumName.Equals("ElfColours", StringComparison.OrdinalIgnoreCase))
+            {
+                return
+                [
+                    "Fire", "Air", "Earth", "Aquatic", "Light", "Dark", "Twilight", "Bronze", "Ebony", "Gold",
+                    "Ivory", "Silver", "Jade", "Onyx", "Winter", "Spring", "Summer", "Autumn"
+                ];
+            }
+
+            if (enumName.Equals("AthfanalColours", StringComparison.OrdinalIgnoreCase))
+            {
+                return
+                [
+                    "Fire", "Aquatic", "Earth", "Air", "Twilight", "Light", "Dark"
+                ];
+            }
 
             var enumType = ReflectionHelper.FindEnumTypeByName(enumName);
             if (enumType == null)

@@ -18,7 +18,7 @@ internal class EvocRaw
 
 internal sealed class TableRaw
 {
-    public List<string> Available { get; set; } = new();
+    public JsonElement Available { get; set; }
     public string Index { get; set; } = string.Empty;
     public string? Desc { get; set; }
     public string? Cost { get; set; }
@@ -26,7 +26,7 @@ internal sealed class TableRaw
 
 internal sealed class AbilityRaw
 {
-    public List<string> Available { get; set; } = new();
+    public JsonElement Available { get; set; }
     public string Index { get; set; } = string.Empty;
     public string? Desc { get; set; }
     public string? Cost { get; set; }
@@ -228,7 +228,7 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                 var canBuyMultiple = costRaw.Contains('*');
                 var hasPlus = costRaw.Contains('+');
                 var cost = TryParseCostForTool(costRaw);
-                var available = JsonSerializer.Serialize(r.Available);
+                var available = SerializeAvailability(r.Available);
                 List<string>? preReqs = hasPlus ? new List<string>() : null;
                 var id = DeterministicGuid($"evo|{tableNum}|{idx}").ToString();
 
@@ -301,7 +301,7 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
                 var hasPlus = costRaw.Contains('+');
                 var cost = TryParseCostForTool(costRaw);
                 var table = r.Table;
-                var available = JsonSerializer.Serialize(r.Available);
+                var available = SerializeAvailability(r.Available);
                 List<string>? preReqs = null;
                 if (hasPlus)
                     preReqs = (r.PreReqs is { Count: > 0 } ? r.PreReqs : new List<string>());
@@ -426,5 +426,13 @@ VALUES (@id, @name, @name_lower, @power, @range, @duration, @verbal, @fields_jso
         if (string.IsNullOrWhiteSpace(input)) return 0;
         var digitsOnly = System.Text.RegularExpressions.Regex.Replace(input, "[^0-9]", "");
         return int.TryParse(digitsOnly, out var value) ? value : 0;
+    }
+
+    private static string SerializeAvailability(JsonElement available)
+    {
+        if (available.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
+            return "[]";
+
+        return available.GetRawText();
     }
 }

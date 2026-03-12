@@ -2216,27 +2216,6 @@
         ]
       }
     },
-    "Barbarian": {
-      "PeopleType": ["Tribal"],
-      "ClassRestriction": [
-        "Warriors",
-        "Archers",
-        "Rangers",
-        "Witchdoctor",
-        "Shaman",
-        "Druid",
-        "Pathfinder"
-      ],
-      "Levels": {
-        "1": [
-          {
-            "Name": "Skinning",
-            "Description": "Skinning has no official text at this time.",
-            "Type": "Craft"
-          }
-        ]
-      }
-    },
     "Amlesian": {
       "PeopleType": ["Amlesian"],
       "Description": "Select an Amlesian caste to define your standing."

@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using labyItems.Controls;
-using labyItems.Helpers;
 using labyItems.Infrastructure;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
@@ -318,6 +317,18 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             ? SpecialisationSectionType.RaceSubtype
             : SpecialisationSectionType.Mapped;
 
+        var initialSelection = (state.SelectedOption ?? string.Empty).Trim();
+        if (sectionType == SpecialisationSectionType.RaceSubtype
+            && initialSelection.Length == 0
+            && string.Equals((Draft.Race ?? string.Empty).Trim(), "Human", StringComparison.OrdinalIgnoreCase))
+        {
+            var standard = spec.Options.FirstOrDefault(option =>
+                string.Equals((option.Key ?? string.Empty).Trim(), "Standard", StringComparison.OrdinalIgnoreCase)
+                || string.Equals((option.Label ?? string.Empty).Trim(), "Standard", StringComparison.OrdinalIgnoreCase));
+            if (standard != null)
+                initialSelection = ResolveChoiceSelectionToken(standard);
+        }
+
         var mapped = new MappedSpecialisationSectionVm(
             sectionId: spec.SectionId,
             key: spec.DefinitionKey,
@@ -325,7 +336,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             title: spec.Title,
             subtitle: spec.Subtitle,
             options: spec.Options,
-            initialSelection: state.SelectedOption,
+            initialSelection: initialSelection,
             required: spec.Required,
             onSelectionChanged: OnSectionSelectionChanged,
             sectionType: sectionType,
@@ -383,6 +394,18 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     private static bool HasStrategy(SpecialisationSectionSpec spec, string strategyId)
         => spec.StrategyIds.Any(id => id.Equals(strategyId, StringComparison.OrdinalIgnoreCase));
+
+    private static string ResolveChoiceSelectionToken(ChoiceOption? option)
+    {
+        if (option == null)
+            return string.Empty;
+
+        var key = (option.Key ?? string.Empty).Trim();
+        if (key.Length > 0)
+            return key;
+
+        return (option.Label ?? string.Empty).Trim();
+    }
 
     private static int DecodeSelectionLevel(int encodedLevel)
         => encodedLevel > 99 ? encodedLevel / 100 : encodedLevel;
@@ -719,7 +742,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
                 case MappedSpecialisationSectionVm mapped:
                 {
-                    var selected = (mapped.SelectedOption ?? string.Empty).Trim();
+                    var selected = NormalizeMappedSelectionToken(
+                        mapped.SectionId,
+                        (mapped.SelectedOption ?? string.Empty).Trim());
                     if (selected.Length > 0)
                         mappedSelections[mapped.SectionId] = selected;
 
@@ -737,6 +762,22 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             ChoiceSelections = new ReadOnlyDictionary<string, ChoiceSelectionState>(choiceSelections),
             MappedSelections = new ReadOnlyDictionary<string, string>(mappedSelections)
         };
+    }
+
+    private string NormalizeMappedSelectionToken(string sectionId, string selectedToken)
+    {
+        var selected = (selectedToken ?? string.Empty).Trim();
+        if (selected.Length == 0)
+            return string.Empty;
+
+        if (!_specBySectionId.TryGetValue(sectionId, out var spec))
+            return selected;
+
+        var option = spec.Options.FirstOrDefault(o =>
+            string.Equals(o.Key, selected, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(o.Label, selected, StringComparison.OrdinalIgnoreCase));
+
+        return (option?.Key ?? selected).Trim();
     }
 
     private void ApplyDraftState(SpecialisationScreenState screenState)
@@ -976,7 +1017,25 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 set.Add(normalized);
         }
 
+        if (HasBarbarianPeopleType(Draft))
+            set.Add(NormalizePrereqToken("Tribal"));
+
         return set;
+    }
+
+    private static bool HasBarbarianPeopleType(CharacterDraft? draft)
+    {
+        if (draft?.SpecialisationSelections == null || draft.SpecialisationSelections.Count == 0)
+            return false;
+
+        if (draft.SpecialisationSelections.TryGetValue("Barbarian", out var directSelection)
+            && string.Equals((directSelection ?? string.Empty).Trim(), "Barbarian", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return draft.SpecialisationSelections.Values.Any(selection =>
+            string.Equals((selection ?? string.Empty).Trim(), "Barbarian", StringComparison.OrdinalIgnoreCase));
     }
 
     private static List<string> GetUnmetPrerequisites(
@@ -1695,4 +1754,5 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             ability.Source = source;
         }
     }
+
 }

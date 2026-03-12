@@ -1,62 +1,149 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-  x:Class="labyItems.Pages.Calculator.General"
-  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-  Title="General">
+    x:Class="labyItems.Pages.Calculator.General"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.NavBarIsVisible="False"
+    NavigationPage.HasNavigationBar="False"
+    Title="Select Abilities">
 
-  <VerticalStackLayout Padding="16" Spacing="12">
-    <SearchBar
-      x:Name="Search"
-      Placeholder="Search by name or table"
-      TextChanged="OnSearchChanged" />
+    <Grid RowDefinitions="Auto,Auto,*,Auto"
+          RowSpacing="10"
+          Padding="16">
+        <Grid Grid.Row="0"
+              ColumnDefinitions="Auto,*"
+              ColumnSpacing="8">
+            <ImageButton Grid.Column="0"
+                         AutomationProperties.Name="Back"
+                         Style="{StaticResource BackArrowImageButtonStyle}"
+                         Clicked="OnBackClicked">
+                <ImageButton.Source>
+                    <FontImageSource FontFamily="FASolid"
+                                     Glyph="&#xf060;"
+                                     Size="24"
+                                     Color="{StaticResource Gray300}"/>
+                </ImageButton.Source>
+            </ImageButton>
+            <Entry Grid.Column="1"
+                   ClearButtonVisibility="WhileEditing"
+                   Placeholder="Search abilities..."
+                   Text="{Binding SearchText, Mode=TwoWay}"/>
+        </Grid>
 
-    <CollectionView
-      x:Name="Results"
-      SelectionChanged="OnPick"
-      SelectionMode="Single">
-      <CollectionView.ItemTemplate>
-        <DataTemplate>
-          <Border
-            Margin="12"
-            Padding="16"
-            BackgroundColor="{StaticResource GlassOverlayColor}"
-            StrokeShape="RoundRectangle 14">
-            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-              <!--  Top row  -->
-              <Label
-                Grid.Row="0"
-                Grid.Column="0"
-                FontSize="12"
-                Text="{Binding TableText}"
-                TextColor="Black"
-                Opacity="0.8"
-                VerticalOptions="Start" />
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding TableFilterChips}"
+                        SelectionMode="None"
+                        ItemsLayout="HorizontalList"
+                        HeightRequest="38">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
+                            Margin="0,0,8,0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnFilterChipTapped"
+                                                  CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="{Binding Label}"
+                               Style="{StaticResource FilterPillLabelStyle}"/>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-              <Label
-                Grid.Row="0"
-                Grid.Column="1"
-                FontSize="12"
-                HorizontalOptions="End"
-                Text="{Binding CostText}"
-                TextColor="Black"
-                Opacity="0.8"
-                VerticalOptions="Start" />
-              <Label
-                Grid.Row="1"
-                Grid.ColumnSpan="2"
-                FontAttributes="Bold"
-                FontSize="14"
-                HorizontalOptions="StartAndExpand"
-                LineBreakMode="TailTruncation"
-                MaxLines="2"
-                Text="{Binding Description}"
-                TextColor="Black"
-                VerticalOptions="Center" />
-            </Grid>
-          </Border>
-        </DataTemplate>
-      </CollectionView.ItemTemplate>
-    </CollectionView>
-  </VerticalStackLayout>
+        <Grid Grid.Row="2">
+            <CollectionView ItemsSource="{Binding FilteredResults}"
+                            ItemSizingStrategy="MeasureAllItems"
+                            ItemsLayout="VerticalList"
+                            SelectionMode="None"
+                            Margin="0,2,0,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="12"
+                                Stroke="{StaticResource SubtleTextColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{StaticResource White}"
+                                Margin="0,0,0,8">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnResultTapped"
+                                                      CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  ColumnSpacing="10">
+                                <Border Stroke="{Binding SelectionBorderColor}"
+                                        BackgroundColor="{Binding SelectionBackgroundColor}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 999"
+                                        WidthRequest="24"
+                                        HeightRequest="24"
+                                        VerticalOptions="Start"
+                                        Margin="0,2,0,0">
+                                    <Label Text="{Binding SelectionGlyph}"
+                                           FontFamily="FASolid"
+                                           FontSize="11"
+                                           TextColor="{Binding SelectionGlyphColor}"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center"/>
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Spacing="2">
+                                    <Label Text="{Binding Name}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="WordWrap"/>
+                                    <Label Text="{Binding MetaText}"
+                                           FontSize="12"
+                                           Opacity="0.75"
+                                           LineBreakMode="WordWrap"/>
+                                    <Label Text="{Binding DescriptionText}"
+                                           FontSize="12"
+                                           Opacity="0.8"
+                                           LineBreakMode="WordWrap"
+                                           MaxLines="2"
+                                           IsVisible="{Binding HasDescription}"/>
+                                </VerticalStackLayout>
+
+                                <Button Grid.Column="2"
+                                        Text="&#xF05A;"
+                                        FontFamily="FASolid"
+                                        FontSize="12"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource SubtleTextColor}"
+                                        HeightRequest="24"
+                                        WidthRequest="24"
+                                        MinimumHeightRequest="0"
+                                        MinimumWidthRequest="0"
+                                        VerticalOptions="Start"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnInfoTapped"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <VerticalStackLayout IsVisible="{Binding HasNoResults}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="8">
+                <Label Text="No matching abilities found."
+                       FontSize="13"
+                       Opacity="0.75"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+
+            <ActivityIndicator IsVisible="{Binding IsLoading}"
+                               IsRunning="{Binding IsLoading}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+        </Grid>
+
+        <Button Grid.Row="3"
+                Text="{Binding DoneButtonText}"
+                Style="{StaticResource ExpandedActionButtonStyle}"
+                Clicked="OnDoneClicked"/>
+    </Grid>
 </ContentPage>

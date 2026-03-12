@@ -94,7 +94,7 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
                     continue;
 
                 var desc = (a.desc ?? string.Empty).Trim();
-                var available = JsonSerializer.Serialize(a.available);
+                var available = SerializeAvailability(a.available);
                 var costRaw = (a.cost ?? string.Empty).Trim();
                 var canBuyMultiple = costRaw.Contains('*');
                 var hasPlus = costRaw.Contains('+');
@@ -381,6 +381,14 @@ VALUES (@id, @name, @name_lower, @data_json, @created_at, @updated_at);";
         return int.TryParse(digits, out var value) ? value : 0;
     }
 
+    private static string SerializeAvailability(JsonElement available)
+    {
+        if (available.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
+            return "[]";
+
+        return available.GetRawText();
+    }
+
     private static string NormalizeForNgrams(string s)
     {
         var b = new StringBuilder();
@@ -410,7 +418,7 @@ VALUES (@id, @name, @name_lower, @data_json, @created_at, @updated_at);";
 
     private sealed class AbilityRaw
     {
-        public List<string> available { get; set; } = new();
+        public JsonElement available { get; set; }
         public string index { get; set; } = string.Empty;
         public string? desc { get; set; }
         public string? cost { get; set; }

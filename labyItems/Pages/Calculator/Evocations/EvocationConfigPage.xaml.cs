@@ -125,7 +125,7 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
         }
     }
 
-    private async void OnEvocationResultSelected(object? parameter)
+    private void OnEvocationResultSelected(object? parameter)
     {
         var option = parameter as EvocationSearchOption ?? SelectedSearchEvocation;
         if (option == null)
@@ -134,18 +134,9 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
         if (BindingContext is not EvocationConfig cfg)
             return;
 
-        var added = cfg.TryAddEvocation(option.Evocation);
-        var entry = cfg.SelectedEvocations.FirstOrDefault(evocation =>
-            string.Equals(evocation.EvocationName, option.Name, StringComparison.OrdinalIgnoreCase)
-            && evocation.Power == option.Power
-            && evocation.IsAdvanced == option.IsAdvanced);
-        if (entry == null && added)
-            entry = cfg.SelectedEvocations.LastOrDefault();
+        cfg.TryAddEvocation(option.Evocation);
 
         SelectedSearchEvocation = null;
-
-        if (entry != null)
-            await Navigation.PushModalAsync(new EvocationEntryConfigModalPage(entry));
     }
 
     private async void OnEditEvocationRequested(object? parameter)

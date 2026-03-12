@@ -1,18 +1,159 @@
 using System;
 using System.Collections.ObjectModel;
-// using System.Collections.Specialized; // Seems unused in this file
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Services;
 using labyItems.Pages.Calculator;
 using labyItems.Models;
-// using labyItems.Pages.Configs; // Redundant: same namespace as this file
+using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Configs
 {
+    public sealed class GeneralAbilitySelectionEntry : INotifyPropertyChanged, IConfigSelectionListItem
+    {
+        private bool _immunityOnlyFirstTimeNeeded;
+        private Color _rowBackgroundColor = Colors.White;
+
+        public GeneralAbilitySelectionEntry(EvolutionService.AbilityResult ability)
+        {
+            Ability = ability ?? new EvolutionService.AbilityResult();
+            Name = (Ability.Index ?? string.Empty).Trim();
+            Cost = Math.Max(0, Ability.Cost);
+            Table = Math.Max(0, Ability.Table);
+            IsImmunity = ResolveIsImmunity(Ability);
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public EvolutionService.AbilityResult Ability { get; }
+        public string Name { get; }
+        public int Cost { get; }
+        public int Table { get; }
+        public bool IsImmunity { get; }
+
+        public bool SupportsFirstTimeDiscount => IsImmunity && Table is >= 1 and <= 9;
+
+        public bool ImmunityOnlyFirstTimeNeeded
+        {
+            get => _immunityOnlyFirstTimeNeeded;
+            set
+            {
+                var next = SupportsFirstTimeDiscount && value;
+                if (_immunityOnlyFirstTimeNeeded == next)
+                    return;
+
+                _immunityOnlyFirstTimeNeeded = next;
+                Raise();
+                Raise(nameof(IspCost));
+                Raise(nameof(InlineSummary));
+            }
+        }
+
+        public int IspCost => ComputeIspCost(Cost, Table, IsImmunity, ImmunityOnlyFirstTimeNeeded);
+
+        public string DisplayName => $"{Name} (T{Table}, {Cost} CP)";
+
+        public string InlineSummary
+        {
+            get
+            {
+                var parts = new List<string> { $"ISP {IspCost}" };
+                if (IsImmunity)
+                    parts.Add("Immunity");
+                if (ImmunityOnlyFirstTimeNeeded)
+                    parts.Add("first time only");
+                return string.Join(" • ", parts);
+            }
+        }
+
+        public Color RowBackgroundColor
+        {
+            get => _rowBackgroundColor;
+            set
+            {
+                if (_rowBackgroundColor == value)
+                    return;
+                _rowBackgroundColor = value;
+                Raise();
+            }
+        }
+
+        public static int ComputeIspCost(int cost, int table, bool isImmunity, bool firstTimeOnly)
+        {
+            var cp = Math.Max(0, cost);
+            if (cp == 0 || table <= 0)
+                return 0;
+
+            int numerator;
+            int denominator;
+
+            if (isImmunity && table is >= 10 and <= 12)
+            {
+                numerator = 4;
+                denominator = 5;
+            }
+            else if (isImmunity && table is >= 1 and <= 9)
+            {
+                if (firstTimeOnly)
+                {
+                    numerator = 3; // 1.5 ISP per 5 CP
+                    denominator = 10;
+                }
+                else
+                {
+                    numerator = 2; // 2 ISP per 5 CP
+                    denominator = 5;
+                }
+            }
+            else
+            {
+                (numerator, denominator) = table switch
+                {
+                    >= 1 and <= 9 => (1, 5),
+                    10 => (3, 10), // 1.5 ISP per 5 CP
+                    11 => (2, 5),
+                    12 => (3, 5),
+                    _ => (1, 5)
+                };
+            }
+
+            var raw = (decimal)cp * numerator / denominator;
+            return (int)Math.Round(raw, MidpointRounding.AwayFromZero);
+        }
+
+        private static bool ResolveIsImmunity(EvolutionService.AbilityResult ability)
+        {
+            var name = (ability.Index ?? string.Empty).Trim();
+            return name.Contains("immunity", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private void Raise([CallerMemberName] string? propertyName = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
     public class GeneralConfig : ConfigBase
     {
         protected override string NoneSelectedText => "Ability (none selected)";
+        private static readonly Color RowEvenColor = Colors.White;
+        private static readonly Color RowOddColor = Color.FromArgb("#F6F6F6");
+
+        public GeneralConfig()
+        {
+            SelectedGeneralAbilityEntries.CollectionChanged += OnSelectedGeneralAbilitiesChanged;
+        }
+
+        public ObservableCollection<GeneralAbilitySelectionEntry> SelectedGeneralAbilityEntries { get; } = new();
+        public bool HasSelectedGeneralAbilities => SelectedGeneralAbilityEntries.Count > 0;
+        public string SelectedGeneralAbilitiesSummary =>
+            SelectedGeneralAbilityEntries.Count == 0
+                ? "No abilities selected."
+                : ListSummaryHelper.JoinWithAnd(SelectedGeneralAbilityEntries
+                    .Select(item => item.Name)
+                    .Where(item => !string.IsNullOrWhiteSpace(item)));
 
         // -------------------- Ability Calculation Core --------------------
         public int AbilityTable
@@ -778,7 +919,7 @@ namespace labyItems.Pages.Configs
         protected override int ExtraTotal()
         {
             int t = 0;
-            t += ((Power / 10) * GetRate());
+            t += SelectedGeneralAbilityEntries.Sum(entry => entry.IspCost);
             t += AddCastingLevels();
             t += AddResistanceLevels();
             t += CalculatePermRage();
@@ -821,10 +962,157 @@ namespace labyItems.Pages.Configs
 
         public void ApplyGeneral(EvolutionService.EvolutionResult picked)
         {
-            Power = picked.Cost;
-            IsImmune = picked.IsImmunity;
-            AbilityTable = picked.Table;
-            Name = picked.Index;
+            var ability = new EvolutionService.AbilityResult
+            {
+                Index = picked.Index,
+                Description = picked.Description,
+                Cost = picked.Cost,
+                Table = picked.Table
+            };
+
+            ApplyGeneralAbilities([ability]);
         }
+
+        public void ApplyGeneralAbilities(IReadOnlyList<EvolutionService.AbilityResult> picked)
+        {
+            var existingByKey = SelectedGeneralAbilityEntries
+                .Where(entry => !string.IsNullOrWhiteSpace(entry.Name))
+                .ToDictionary(
+                    entry => BuildAbilityKey(entry.Name, entry.Table),
+                    entry => entry,
+                    StringComparer.OrdinalIgnoreCase);
+
+            var ordered = (picked ?? Array.Empty<EvolutionService.AbilityResult>())
+                .Where(item => !string.IsNullOrWhiteSpace(item?.Index))
+                .Where(item => item.Cost > 0)
+                .Select(item => item)
+                .ToList();
+
+            var deduped = new List<EvolutionService.AbilityResult>();
+            foreach (var item in ordered)
+            {
+                var name = (item.Index ?? string.Empty).Trim();
+                if (name.Length == 0)
+                    continue;
+
+                var key = BuildAbilityKey(name, item.Table);
+                if (deduped.Any(existing => string.Equals(BuildAbilityKey(existing.Index, existing.Table), key, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
+                deduped.Add(item);
+            }
+
+            SelectedGeneralAbilityEntries.Clear();
+            foreach (var item in deduped)
+            {
+                var entry = new GeneralAbilitySelectionEntry(item);
+                var key = BuildAbilityKey(entry.Name, entry.Table);
+                if (existingByKey.TryGetValue(key, out var existing))
+                    entry.ImmunityOnlyFirstTimeNeeded = existing.ImmunityOnlyFirstTimeNeeded;
+
+                SelectedGeneralAbilityEntries.Add(entry);
+            }
+
+            var primary = SelectedGeneralAbilityEntries.FirstOrDefault();
+            if (primary == null)
+            {
+                Power = 0;
+                IsImmune = false;
+                AbilityTable = 0;
+                Name = string.Empty;
+                return;
+            }
+
+            Power = primary.Cost;
+            IsImmune = primary.IsImmunity;
+            AbilityTable = primary.Table;
+        }
+
+        public void RemoveSelectedGeneralAbility(string? abilityName)
+        {
+            var name = (abilityName ?? string.Empty).Trim();
+            if (name.Length == 0)
+                return;
+
+            var existing = SelectedGeneralAbilityEntries.FirstOrDefault(item =>
+                string.Equals(item.Name, name, StringComparison.OrdinalIgnoreCase));
+            if (existing == null)
+                return;
+
+            SelectedGeneralAbilityEntries.Remove(existing);
+
+            if (string.Equals(Name, existing.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                var next = SelectedGeneralAbilityEntries.FirstOrDefault();
+                if (next == null)
+                {
+                    Power = 0;
+                    IsImmune = false;
+                    AbilityTable = 0;
+                    Name = string.Empty;
+                }
+                else
+                {
+                    Power = next.Cost;
+                    IsImmune = next.IsImmunity;
+                    AbilityTable = next.Table;
+                }
+            }
+        }
+
+        public void RemoveSelectedGeneralAbility(GeneralAbilitySelectionEntry? entry)
+            => RemoveSelectedGeneralAbility(entry?.Name);
+
+        private void OnSelectedGeneralAbilitiesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+            {
+                foreach (var item in e.OldItems.OfType<GeneralAbilitySelectionEntry>())
+                    item.PropertyChanged -= OnSelectedGeneralAbilityEntryChanged;
+            }
+
+            if (e.NewItems != null)
+            {
+                foreach (var item in e.NewItems.OfType<GeneralAbilitySelectionEntry>())
+                    item.PropertyChanged += OnSelectedGeneralAbilityEntryChanged;
+            }
+
+            RefreshSelectedGeneralAbilityRows();
+            RaiseSelectedGeneralAbilitySummary();
+            RaiseGeneralAbilityTotals();
+        }
+
+        private void OnSelectedGeneralAbilityEntryChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is nameof(GeneralAbilitySelectionEntry.ImmunityOnlyFirstTimeNeeded)
+                or nameof(GeneralAbilitySelectionEntry.IspCost)
+                or nameof(GeneralAbilitySelectionEntry.InlineSummary))
+            {
+                RaiseGeneralAbilityTotals();
+            }
+        }
+
+        private void RefreshSelectedGeneralAbilityRows()
+        {
+            for (var i = 0; i < SelectedGeneralAbilityEntries.Count; i++)
+            {
+                SelectedGeneralAbilityEntries[i].RowBackgroundColor = i % 2 == 0 ? RowEvenColor : RowOddColor;
+            }
+        }
+
+        private void RaiseSelectedGeneralAbilitySummary()
+        {
+            OnPropertyChanged(nameof(HasSelectedGeneralAbilities));
+            OnPropertyChanged(nameof(SelectedGeneralAbilitiesSummary));
+        }
+
+        private void RaiseGeneralAbilityTotals()
+        {
+            OnPropertyChanged(nameof(Total));
+            OnPropertyChanged(nameof(TotalWithBase));
+        }
+
+        private static string BuildAbilityKey(string? name, int table)
+            => $"{(name ?? string.Empty).Trim()}|{table}";
     }
 }
