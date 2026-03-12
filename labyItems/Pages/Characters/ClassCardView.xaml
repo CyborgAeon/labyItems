@@ -119,44 +119,9 @@
                       BackgroundColor="Transparent">
                     <Grid Padding="16"
                           BackgroundColor="Transparent">
-                        <VerticalStackLayout Spacing="6">
-                            <Grid RowDefinitions="Auto"
-                                  RowSpacing="6">
-                                <Grid Grid.Row="0"
-                                      Grid.ColumnDefinitions="35,35,35,*"
-                                      ColumnSpacing="8"
-                                      Opacity="0.7">
-                                    <Label Text="Lvl"/>
-                                    <Label Grid.Column="1"
-                                           Text="Body"/>
-                                    <Label Grid.Column="2"
-                                           Text="Loc"/>
-                                    <Label Grid.Column="3"
-                                           Text="Skills/Abilities"/>
-                                </Grid>
-                            </Grid>
-
-                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding LevelRows}"
-                                                 Spacing="2">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid RowDefinitions="Auto"
-                                              ColumnDefinitions="35,35,35,*"
-                                              ColumnSpacing="8"
-                                              Padding="0,2">
-                                            <Label Text="{Binding Level}"/>
-                                            <Label Grid.Column="1"
-                                                   Text="{Binding Body}"/>
-                                            <Label Grid.Column="2"
-                                                   Text="{Binding Loc}"/>
-                                            <Label Grid.Column="3"
-                                                   Text="{Binding Skills}"
-                                                   Opacity="0.8"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </VerticalStackLayout>
-                        </VerticalStackLayout>
+                        <controls:LevelAbilityTableView ItemsSource="{Binding LevelRows}"
+                                                        ShowBodyAndLoc="True"
+                                                        AbilitiesHeaderText="Skills/Abilities"/>
                     </Grid>
                 </Grid>
 

@@ -93,9 +93,34 @@
                     <VerticalStackLayout Padding="12"
                                          Spacing="10"
                                          IsVisible="{Binding IsExpanded}">
+                        <HorizontalStackLayout Spacing="10"
+                                               VerticalOptions="Center">
+                            <HorizontalStackLayout.Triggers>
+                                <DataTrigger TargetType="HorizontalStackLayout"
+                                             Binding="{Binding UseSingleOptionToggle}"
+                                             Value="False">
+                                    <Setter Property="IsVisible"
+                                            Value="False"/>
+                                </DataTrigger>
+                            </HorizontalStackLayout.Triggers>
+                            <CheckBox IsChecked="{Binding SingleOptionEnabled, Mode=TwoWay}"
+                                      VerticalOptions="Center"/>
+                            <Label Text="{Binding SingleOptionLabel}"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
                         <controls:ChipGroup
                             Items="{Binding Options}"
-                            SelectedItem="{Binding SelectedOption, Mode=TwoWay}"/>
+                            SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
+                            <controls:ChipGroup.Triggers>
+                                <DataTrigger TargetType="controls:ChipGroup"
+                                             Binding="{Binding UseSingleOptionToggle}"
+                                             Value="True">
+                                    <Setter Property="IsVisible"
+                                            Value="False"/>
+                                </DataTrigger>
+                            </controls:ChipGroup.Triggers>
+                        </controls:ChipGroup>
 
                         <VerticalStackLayout Spacing="8"
                                              IsVisible="{Binding HasSelection}">
@@ -433,6 +458,47 @@
                                     </Grid>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="8"
+                                             IsVisible="{Binding HasSelectedOptionAbilityRows}">
+                            <Grid ColumnDefinitions="*,24"
+                                  ColumnSpacing="8"
+                                  Opacity="0.7">
+                                <Label Text="Ability"/>
+                                <Label Grid.Column="1"
+                                       Text="Info"
+                                       HorizontalTextAlignment="Center"/>
+                            </Grid>
+
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedOptionAbilityRows}"
+                                                 Spacing="2">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="*,24"
+                                              ColumnSpacing="8"
+                                              Padding="0,2">
+                                            <Label Text="{Binding Ability}"
+                                                   Opacity="0.85"
+                                                   LineBreakMode="WordWrap"/>
+                                            <Button Grid.Column="1"
+                                                    Text="&#xF05A;"
+                                                    FontFamily="FASolid"
+                                                    FontSize="12"
+                                                    Padding="0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                    HeightRequest="18"
+                                                    WidthRequest="18"
+                                                    MinimumHeightRequest="0"
+                                                    MinimumWidthRequest="0"
+                                                    VerticalOptions="Center"
+                                                    Command="{Binding Source={x:Reference Root}, Path=ViewSpecialisationRowDetailsCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </VerticalStackLayout>

@@ -40,6 +40,22 @@
       }
     },
     {
+      "Id": "human-barbarian-upbringing",
+      "Conditions": {
+        "Race": "Human"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "HumanBarbarianUpbringing",
+        "Title": "Barbarian",
+        "DetailKey": "HumanBarbarianUpbringing",
+        "SectionId": "mapped:Human Barbarian Upbringing",
+        "Required": false,
+        "InsertIndex": 1,
+        "Subtitle": "Optional: select if this human was raised as a barbarian."
+      }
+    },
+    {
       "Id": "ratfolk-clan",
       "Conditions": {
         "Race": "Ratfolk"

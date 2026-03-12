@@ -6,18 +6,11 @@ using System.Linq;
 using System.Windows.Input;
 using System.Text.RegularExpressions;
 using labyItems.Models.Characters;
+using labyItems.Models.ViewModels;
 using labyItems.Services;
 using labyItems.Models.Enums;
 
 namespace labyItems.Pages.Characters;
-
-public sealed class LevelRowVm
-{
-    public int Level { get; init; }
-    public string Body { get; set; } = "";
-    public string Loc { get; set; } = "";
-    public string Skills { get; set; } = "";
-}
 
 public sealed class ClassCardVm : INotifyPropertyChanged
 {
@@ -51,7 +44,7 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     public string Tag3 => ResolveTags().Tag3;
     public IReadOnlyList<string> TagChips => BuildTagChips();
 
-    public ObservableCollection<LevelRowVm> LevelRows { get; init; } = new();
+    public ObservableCollection<LevelAbilityRowVm> LevelRows { get; init; } = new();
 
     public string RaceName { get; set; } = "";
 
@@ -234,15 +227,15 @@ public sealed class ClassCardVm : INotifyPropertyChanged
         for (var level = 1; level <= 8; level++)
         {
             var hasLife = lifeByLevel.TryGetValue(level, out var p);
-            var skills = abilitiesByLevel.TryGetValue(level, out var s) ? s : "";
+            var abilities = abilitiesByLevel.TryGetValue(level, out var defs)
+                ? defs
+                : Array.Empty<AbilityDefinition>();
 
-            LevelRows.Add(new LevelRowVm
-            {
-                Level = level,
-                Body = hasLife ? p.Body.ToString() : "",
-                Loc = hasLife ? p.Loc.ToString() : "",
-                Skills = skills
-            });
+            LevelRows.Add(LevelAbilityRowBuilder.Build(
+                level: level,
+                abilityDefinitions: abilities,
+                body: hasLife ? p.Body.ToString() : string.Empty,
+                loc: hasLife ? p.Loc.ToString() : string.Empty));
         }
     }
 
@@ -257,9 +250,9 @@ public sealed class ClassCardVm : INotifyPropertyChanged
         _progressionLoaded = false;
     }
 
-    private async Task<Dictionary<int, string>> GetAbilitiesByLevelAsync()
+    private async Task<Dictionary<int, IReadOnlyList<AbilityDefinition>>> GetAbilitiesByLevelAsync()
     {
-        var result = new Dictionary<int, string>();
+        var result = new Dictionary<int, IReadOnlyList<AbilityDefinition>>();
         var all = await ClassService.GetAllAsync();
         var wanted = LifeScalesService.NormalizeKey(string.IsNullOrWhiteSpace(Key) ? Name : Key);
 
@@ -274,11 +267,12 @@ public sealed class ClassCardVm : INotifyPropertyChanged
             var level = ExtractLevel(kvp.Key);
             if (level is < 1 or > 8) continue;
 
-            var text = kvp.Value == null
-                ? ""
-                : string.Join(", ", kvp.Value.Select(ToDisplayName).Where(x => !string.IsNullOrWhiteSpace(x)));
-            if (text.Length > 0)
-                result[level.Value] = text;
+            var abilities = kvp.Value?
+                .Where(def => def != null)
+                .ToList()
+                ?? new List<AbilityDefinition>();
+
+            result[level.Value] = abilities;
         }
 
         return result;
@@ -303,15 +297,7 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     }
 
     public static string ToDisplayName(AbilityDefinition def)
-    {
-        if (def == null)
-            return string.Empty;
-
-        if (!string.IsNullOrWhiteSpace(def.Name))
-            return def.Name.Trim();
-
-        return (def.Effect ?? string.Empty).Trim();
-    }
+        => LevelAbilityRowBuilder.ToDisplayName(def);
 
     private bool _isExpanded;
     public bool IsExpanded

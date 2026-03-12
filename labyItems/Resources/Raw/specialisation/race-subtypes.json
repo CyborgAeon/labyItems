@@ -56,6 +56,13 @@
         "choice.humansubtypeabilities.mapped"
       ]
     },
+    "HumanBarbarianUpbringing": {
+      "Key": "definition.humanbarbarianupbringing",
+      "DisplayName": "HumanBarbarianUpbringing",
+      "ChoiceSetRefs": [
+        "choice.humanbarbarianupbringing.mapped"
+      ]
+    },
     "AmlesianCasteAbilities": {
       "Key": "definition.amlesiancasteabilities",
       "DisplayName": "AmlesianCasteAbilities",

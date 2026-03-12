@@ -1690,7 +1690,7 @@
       ],
       "5": [
         {
-          "Name": "Weapon Mastery",
+          "Name": "1st Weapon Mastery",
           "Type": "Static",
           "Customisation": {
             "OptionEnum": "WeaponType",

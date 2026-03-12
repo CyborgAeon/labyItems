@@ -50,6 +50,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         ["Fjell mountain (brown)"] = MagicColours.Brown
     };
 
+    private const string HedgeInfoImmunityByClassPowerbaseKey = "ability.hedge-informational-immunity-by-class-powerbase";
+    private const string HedgeResistanceByClassPowerbaseKey = "ability.hedge-plus1-resistance-by-class-powerbase";
+
     public ObservableCollection<ISpecialisationSectionVm> Sections { get; } = new();
     public IReadOnlyList<SpecialisationGroupVm> Groups => Sections.OfType<SpecialisationGroupVm>().ToList();
     public IReadOnlyList<MappedSpecialisationSectionVm> MappedSpecialisations =>
@@ -234,6 +237,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         var hasSingleOptionWithCustomisation = optionNames.Count == 1 && optionCustomisations.ContainsKey(optionNames[0]);
 
         var optionSource = ResolveOptionSource(spec, optionNames);
+        var optionPreviewRows = HasStrategy(spec, "preview:option-grants")
+            ? BuildOptionPreviewRows(spec)
+            : null;
         var config = new SpecialisationGroupConfig(
             spec.Title,
             spec.Levels,
@@ -243,7 +249,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             IsOptional: !spec.Required,
             OptionCustomisations: optionCustomisations,
             CustomisationOptionsProvider: ResolveCustomisationOptions,
-            HideAbilityPickerWhenSingleOption: hasSpellCustomisation || hasSingleOptionWithCustomisation);
+            HideAbilityPickerWhenSingleOption: hasSpellCustomisation || hasSingleOptionWithCustomisation,
+            OptionPreviewRows: optionPreviewRows);
 
         var initialByLevel = state.SelectedByLevel.ToDictionary(k => k.Key, v => v.Value);
         var group = new SpecialisationGroupVm(config, initialByLevel);
@@ -267,6 +274,42 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             group.SetIssueMessage(state.ValidationMessage);
 
         return group;
+    }
+
+    private Dictionary<string, IReadOnlyList<SpecialisationAbilityRow>> BuildOptionPreviewRows(SpecialisationSectionSpec spec)
+    {
+        var rowsByOption = new Dictionary<string, IReadOnlyList<SpecialisationAbilityRow>>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var option in spec.Options ?? Array.Empty<ChoiceOption>())
+        {
+            var optionKey = (option?.Label ?? option?.Key ?? string.Empty).Trim();
+            if (optionKey.Length == 0)
+                continue;
+
+            var rows = (option?.Grants ?? Array.Empty<AbilityGrant>())
+                .Select(grant => new
+                {
+                    Grant = grant,
+                    Ability = ResolveGrantAbilityForCurrentDraft(grant?.Ability)
+                })
+                .Where(item => item.Grant != null && !string.IsNullOrWhiteSpace(item.Ability.Name))
+                .OrderBy(item => item.Grant!.Level ?? int.MaxValue)
+                .ThenBy(item => item.Ability.Name, StringComparer.OrdinalIgnoreCase)
+                .Select(item => new SpecialisationAbilityRow
+                {
+                    Level = item.Grant!.Level,
+                    Ability = item.Ability.Name,
+                    AbilityKey = (item.Ability.Key ?? string.Empty).Trim(),
+                    SpecialisationKey = spec.DetailKey,
+                    SelectedOption = optionKey,
+                    SelectedAbility = item.Ability.Name
+                })
+                .ToList();
+
+            rowsByOption[optionKey] = rows;
+        }
+
+        return rowsByOption;
     }
 
     private MappedSpecialisationSectionVm BuildMappedSection(SpecialisationSectionSpec spec, SpecialisationSectionState state)
@@ -509,15 +552,26 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
         var classAllowed = IsClassAllowed(option.Restrictions.ClassRestriction);
         var alignmentAllowed = IsAlignmentAllowed(option.Restrictions.AlignmentRestriction);
+        var raceAllowed = IsRaceAllowed(option.Restrictions.RaceRestriction);
 
-        if (classAllowed && alignmentAllowed)
+        if (classAllowed && alignmentAllowed && raceAllowed)
             return string.Empty;
 
-        if (!classAllowed && !alignmentAllowed)
-            return "Class and alignment requirements conflict with the current character.";
+        var failures = new List<string>();
+        if (!classAllowed)
+            failures.Add("Class");
         if (!alignmentAllowed)
-            return "Alignment requirements conflict with the current character.";
-        return "Class requirements conflict with the current character.";
+            failures.Add("Alignment");
+        if (!raceAllowed)
+            failures.Add("Race");
+
+        return failures.Count switch
+        {
+            <= 0 => string.Empty,
+            1 => $"{failures[0]} requirements conflict with the current character.",
+            2 => $"{failures[0]} and {failures[1]} requirements conflict with the current character.",
+            _ => $"{string.Join(", ", failures.Take(failures.Count - 1))}, and {failures[^1]} requirements conflict with the current character."
+        };
     }
 
     private void OnSectionSelectionChanged()
@@ -779,7 +833,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     if (grant?.Ability == null || string.IsNullOrWhiteSpace(grant.Ability.Name))
                         continue;
 
-                    var definition = ApplyCustomisation(grant.Ability, slot.CustomisationValue);
+                    var resolvedAbility = ResolveGrantAbilityForCurrentDraft(grant.Ability);
+                    var definition = ApplyCustomisation(resolvedAbility, slot.CustomisationValue);
                     if (definition.GuildOverrides != null)
                     {
                         selectedGuildOverrides = GuildOverrideRules.Merge(
@@ -1326,6 +1381,48 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             && (allowedOrders.Count == 0 || allowedOrders.Contains(alignment.Order)));
     }
 
+    private bool IsRaceAllowed(IReadOnlyList<string>? restrictions)
+    {
+        var raceName = (Draft.Race ?? string.Empty).Trim();
+        if (raceName.Length == 0)
+            return true;
+
+        var list = restrictions?
+            .Select(r => (r ?? string.Empty).Trim())
+            .Where(r => r.Length > 0)
+            .ToList() ?? new List<string>();
+
+        if (list.Count == 0)
+            return true;
+
+        var raceToken = NormalizeRaceToken(raceName);
+        if (raceToken.Length == 0)
+            return true;
+
+        var singularRace = TrimPluralToken(raceToken);
+        foreach (var restriction in list)
+        {
+            var normalized = NormalizeRaceToken(restriction);
+            if (normalized.Length == 0)
+                continue;
+
+            var singularRestriction = TrimPluralToken(normalized);
+            if (raceToken.Equals(normalized, StringComparison.OrdinalIgnoreCase)
+                || singularRace.Equals(normalized, StringComparison.OrdinalIgnoreCase)
+                || raceToken.Equals(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || singularRace.Equals(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || raceToken.Contains(normalized, StringComparison.OrdinalIgnoreCase)
+                || normalized.Contains(raceToken, StringComparison.OrdinalIgnoreCase)
+                || raceToken.Contains(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || singularRestriction.Contains(raceToken, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static void AddClassToken(HashSet<string> sink, string? raw)
     {
         var token = NormalizeClassToken(raw);
@@ -1334,6 +1431,18 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     }
 
     private static string NormalizeClassToken(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return string.Empty;
+
+        return new string(raw
+            .Trim()
+            .Where(char.IsLetterOrDigit)
+            .Select(char.ToLowerInvariant)
+            .ToArray());
+    }
+
+    private static string NormalizeRaceToken(string? raw)
     {
         if (string.IsNullOrWhiteSpace(raw))
             return string.Empty;
@@ -1390,6 +1499,128 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             .Where(char.IsLetterOrDigit)
             .ToArray())
             .ToLowerInvariant();
+
+    private AbilityDefinition ResolveGrantAbilityForCurrentDraft(AbilityDefinition? ability)
+    {
+        if (ability == null)
+            return new AbilityDefinition();
+
+        var key = (ability.Key ?? string.Empty).Trim();
+        if (key.Length == 0)
+            return ability;
+
+        if (key.Equals(HedgeInfoImmunityByClassPowerbaseKey, StringComparison.OrdinalIgnoreCase))
+            return ResolveMappedAbilityDefinition(
+                ResolveHedgeInformationalImmunityKey(),
+                ability);
+
+        if (key.Equals(HedgeResistanceByClassPowerbaseKey, StringComparison.OrdinalIgnoreCase))
+            return ResolveMappedAbilityDefinition(
+                ResolveHedgeResistanceKey(),
+                ability);
+
+        return ability;
+    }
+
+    private AbilityDefinition ResolveMappedAbilityDefinition(string resolvedKey, AbilityDefinition fallback)
+    {
+        var key = (resolvedKey ?? string.Empty).Trim();
+        if (key.Length > 0
+            && _specialisationIndex.AbilityReferences.TryGetValue(key, out var resolved)
+            && !string.IsNullOrWhiteSpace(resolved.Name))
+        {
+            return CloneAbilityDefinition(resolved);
+        }
+
+        return CloneAbilityDefinition(fallback);
+    }
+
+    private string ResolveHedgeInformationalImmunityKey()
+        => ResolveCurrentHedgePowerbaseCategory() switch
+        {
+            HedgePowerbaseCategory.Magical => "ability.hedge-immunity-to-magical-informational-effects",
+            HedgePowerbaseCategory.Spiritual => "ability.hedge-immunity-to-spiritual-informational-effects",
+            HedgePowerbaseCategory.Neuronic => "ability.hedge-immunity-to-neuronic-informational-effects",
+            _ => "ability.hedge-immunity-to-physical-informational-effects"
+        };
+
+    private string ResolveHedgeResistanceKey()
+        => ResolveCurrentHedgePowerbaseCategory() switch
+        {
+            HedgePowerbaseCategory.Magical => "ability.hedge-1-level-resistance-magical",
+            HedgePowerbaseCategory.Spiritual => "ability.hedge-1-level-resistance-spiritual",
+            HedgePowerbaseCategory.Neuronic => "ability.hedge-1-level-resistance-neuronic",
+            _ => "ability.hedge-1-level-resistance-physical"
+        };
+
+    private HedgePowerbaseCategory ResolveCurrentHedgePowerbaseCategory()
+    {
+        var className = (Draft.Class ?? string.Empty).Trim();
+        if (className.Length == 0)
+            return HedgePowerbaseCategory.Physical;
+
+        if (!_allClasses.TryGetValue(className, out var classRecord))
+        {
+            classRecord = _allClasses
+                .FirstOrDefault(pair => string.Equals(pair.Key, className, StringComparison.OrdinalIgnoreCase))
+                .Value;
+        }
+
+        var powerBase = ResolvePrimaryClassPowerbase(classRecord);
+        if (powerBase.Contains("magic", StringComparison.OrdinalIgnoreCase))
+            return HedgePowerbaseCategory.Magical;
+        if (powerBase.Contains("spirit", StringComparison.OrdinalIgnoreCase))
+            return HedgePowerbaseCategory.Spiritual;
+        if (powerBase.Contains("neuro", StringComparison.OrdinalIgnoreCase))
+            return HedgePowerbaseCategory.Neuronic;
+
+        return HedgePowerbaseCategory.Physical;
+    }
+
+    private static string ResolvePrimaryClassPowerbase(CharacterClassRecord? classRecord)
+    {
+        if (classRecord == null)
+            return string.Empty;
+
+        var direct = classRecord.Powerbase?.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
+        if (!string.IsNullOrWhiteSpace(direct))
+            return direct.Trim();
+
+        var calculated = classRecord.PowerCalculations?
+            .Select(calc => calc?.PowerBase)
+            .FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
+        return (calculated ?? string.Empty).Trim();
+    }
+
+    private static AbilityDefinition CloneAbilityDefinition(AbilityDefinition source)
+    {
+        return new AbilityDefinition
+        {
+            Name = source.Name,
+            Type = source.Type,
+            BattleboardNameOverride = source.BattleboardNameOverride,
+            UpdateKey = source.UpdateKey,
+            Effect = source.Effect,
+            Lore = source.Lore,
+            Source = source.Source,
+            Count = source.Count,
+            Amount = source.Amount?.ToList(),
+            Frequency = source.Frequency,
+            OverwriteKey = source.OverwriteKey,
+            PreReqs = source.PreReqs?.ToList(),
+            GuildOverrides = source.GuildOverrides?.ToList(),
+            Customisation = source.Customisation,
+            Key = source.Key
+        };
+    }
+
+    private enum HedgePowerbaseCategory
+    {
+        Physical,
+        Magical,
+        Spiritual,
+        Neuronic
+    }
 
     private static AbilityDefinition ApplyCustomisation(AbilityDefinition definition, string? customValue)
     {

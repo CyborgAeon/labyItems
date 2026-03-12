@@ -963,15 +963,26 @@ public static class CharacterSpecialisationScreenCalculator
 
         var classAllowed = IsClassAllowed(option.Restrictions.ClassRestriction, context);
         var alignmentAllowed = IsAlignmentAllowed(option.Restrictions.AlignmentRestriction, context.Draft);
+        var raceAllowed = IsRaceAllowed(option.Restrictions.RaceRestriction, context);
 
-        if (classAllowed && alignmentAllowed)
+        if (classAllowed && alignmentAllowed && raceAllowed)
             return string.Empty;
 
-        if (!classAllowed && !alignmentAllowed)
-            return "Class and alignment requirements conflict with the current character.";
+        var failures = new List<string>();
+        if (!classAllowed)
+            failures.Add("Class");
         if (!alignmentAllowed)
-            return "Alignment requirements conflict with the current character.";
-        return "Class requirements conflict with the current character.";
+            failures.Add("Alignment");
+        if (!raceAllowed)
+            failures.Add("Race");
+
+        return failures.Count switch
+        {
+            <= 0 => string.Empty,
+            1 => $"{failures[0]} requirements conflict with the current character.",
+            2 => $"{failures[0]} and {failures[1]} requirements conflict with the current character.",
+            _ => $"{string.Join(", ", failures.Take(failures.Count - 1))}, and {failures[^1]} requirements conflict with the current character."
+        };
     }
 
     private static bool IsClassAllowed(IReadOnlyList<string>? restrictions, CharacterSpecialisationContext context)
@@ -1021,6 +1032,48 @@ public static class CharacterSpecialisationScreenCalculator
         return false;
     }
 
+    private static bool IsRaceAllowed(IReadOnlyList<string>? restrictions, CharacterSpecialisationContext context)
+    {
+        var raceName = (context.Race ?? string.Empty).Trim();
+        if (raceName.Length == 0)
+            return true;
+
+        var tokens = restrictions?
+            .Select(x => (x ?? string.Empty).Trim())
+            .Where(x => x.Length > 0)
+            .ToList() ?? new List<string>();
+
+        if (tokens.Count == 0)
+            return true;
+
+        var raceToken = NormalizeRaceToken(raceName);
+        if (raceToken.Length == 0)
+            return true;
+
+        var singularRace = TrimPluralToken(raceToken);
+        foreach (var token in tokens)
+        {
+            var normalized = NormalizeRaceToken(token);
+            if (normalized.Length == 0)
+                continue;
+
+            var singularRestriction = TrimPluralToken(normalized);
+            if (raceToken.Equals(normalized, StringComparison.OrdinalIgnoreCase)
+                || singularRace.Equals(normalized, StringComparison.OrdinalIgnoreCase)
+                || raceToken.Equals(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || singularRace.Equals(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || raceToken.Contains(normalized, StringComparison.OrdinalIgnoreCase)
+                || normalized.Contains(raceToken, StringComparison.OrdinalIgnoreCase)
+                || raceToken.Contains(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || singularRestriction.Contains(raceToken, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static void AddClassToken(HashSet<string> sink, string? value)
     {
         var token = NormalizeClassToken(value);
@@ -1029,6 +1082,18 @@ public static class CharacterSpecialisationScreenCalculator
     }
 
     private static string NormalizeClassToken(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return new string(value
+            .Trim()
+            .Where(char.IsLetterOrDigit)
+            .Select(char.ToLowerInvariant)
+            .ToArray());
+    }
+
+    private static string NormalizeRaceToken(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return string.Empty;

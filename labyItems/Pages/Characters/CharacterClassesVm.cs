@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Windows.Input;
 using labyItems.Models.Characters;
+using labyItems.Models.ViewModels;
 using labyItems.Services;
 
 namespace labyItems.Pages.Characters;
@@ -77,25 +78,12 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
                 _ => 0
             };
 
-            var levelRows = new ObservableCollection<LevelRowVm>(
+            var levelRows = new ObservableCollection<LevelAbilityRowVm>(
                 Enumerable.Range(1, 8).Select(lvl =>
                 {
                     rec.Levels.TryGetValue(lvl.ToString(), out var arr);
                     arr ??= new List<AbilityDefinition>();
-
-                    var names = arr.Select(ClassCardVm.ToDisplayName).ToList();
-
-                    var body = names.Count >= 1 ? ExtractNumberToken(names[0]) : "";
-                    var loc = names.Count >= 2 ? ExtractNumberToken(names[1]) : "";
-                    var skills = names.Count <= 2 ? "" : string.Join(", ", names.Skip(2));
-
-                    return new LevelRowVm
-                    {
-                        Level = lvl,
-                        Body = body,
-                        Loc = loc,
-                        Skills = skills
-                    };
+                    return LevelAbilityRowBuilder.Build(lvl, arr);
                 })
             );
 
@@ -166,9 +154,4 @@ public sealed class CharacterClassesVm : INotifyPropertyChanged
             FilteredClasses.Add(m);
     }
 
-    private static string ExtractNumberToken(string s)
-    {
-        var digits = new string(s.Where(char.IsDigit).ToArray());
-        return digits;
-    }
 }

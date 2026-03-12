@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models.Characters;
+using labyItems.Models.ViewModels;
 using labyItems.Pages.Characters;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
@@ -124,6 +126,9 @@ public sealed class WizardVm : INotifyPropertyChanged
         new Dictionary<string, EvolutionService.AbilityResult>(StringComparer.OrdinalIgnoreCase);
     private bool _isLoadingSpecialisationAbilityLookup;
     private IReadOnlyList<SpecialisationSummaryLineVm> _specialisationSummaryLines = Array.Empty<SpecialisationSummaryLineVm>();
+    private IReadOnlyList<LevelAbilityRowVm> _classLevelAbilityRows = Array.Empty<LevelAbilityRowVm>();
+    private IReadOnlyList<LevelAbilityRowVm> _raceLevelAbilityRows = Array.Empty<LevelAbilityRowVm>();
+    private static readonly Regex LevelNumberRegex = new("\\d+", RegexOptions.Compiled);
 
     public ObservableCollection<AbilitySpendLine> AdvancementAbilityLines { get; } = new();
 
@@ -186,6 +191,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             CharacterBuilderVm.RefreshDraftAbilitiesAsync,
             _creationDataService,
             useMultiTypeFilters: true,
+            searchByNameOnly: true,
             autoReload: false);
 
         _flow = new WizardFlowStateMachine(BuildSteps());
@@ -322,6 +328,18 @@ public sealed class WizardVm : INotifyPropertyChanged
     public string ClassSummary => string.IsNullOrWhiteSpace(Draft.Class)
         ? "Class: not selected"
         : $"Class: {Draft.Class}";
+
+    public IReadOnlyList<LevelAbilityRowVm> ClassLevelAbilityRows => _classLevelAbilityRows;
+    public bool HasClassLevelAbilityRows => ClassLevelAbilityRows.Count > 0;
+    public string ClassLevelAbilityHeader => string.IsNullOrWhiteSpace((Draft.Class ?? string.Empty).Trim())
+        ? "Class progression"
+        : $"{Draft.Class} progression";
+
+    public IReadOnlyList<LevelAbilityRowVm> RaceLevelAbilityRows => _raceLevelAbilityRows;
+    public bool HasRaceLevelAbilityRows => RaceLevelAbilityRows.Count > 0;
+    public string RaceLevelAbilityHeader => string.IsNullOrWhiteSpace((Draft.Race ?? string.Empty).Trim())
+        ? "Race progression"
+        : $"{Draft.Race} progression";
 
     public string GuildSummary => Draft.Guilds.Count == 0
         ? "Guilds: none selected"
@@ -542,24 +560,202 @@ public sealed class WizardVm : INotifyPropertyChanged
 
         if (allowBackground)
         {
+            (IReadOnlyList<LevelAbilityRowVm> classRows, IReadOnlyList<LevelAbilityRowVm> raceRows) =
+                (Array.Empty<LevelAbilityRowVm>(), Array.Empty<LevelAbilityRowVm>());
+
             await Task.Run(async () =>
             {
                 await CharacterBuilderVm.SyncDraftLifeAsync().ConfigureAwait(false);
                 await CharacterBuilderVm.RefreshDraftAbilitiesAsync().ConfigureAwait(false);
                 await EnsureAbilityCostIndexAsync().ConfigureAwait(false);
+                (classRows, raceRows) = await BuildReviewLevelAbilityRowsAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
 
-            await MainThread.InvokeOnMainThreadAsync(ApplyAdvancementSummary);
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                ApplyReviewLevelAbilityRows(classRows, raceRows);
+                ApplyAdvancementSummary();
+            });
             return;
         }
 
         await CharacterBuilderVm.SyncDraftLifeAsync();
         await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
         await EnsureAbilityCostIndexAsync();
+        var (freshClassRows, freshRaceRows) = await BuildReviewLevelAbilityRowsAsync();
         if (MainThread.IsMainThread)
+        {
+            ApplyReviewLevelAbilityRows(freshClassRows, freshRaceRows);
             ApplyAdvancementSummary();
+        }
         else
-            await MainThread.InvokeOnMainThreadAsync(ApplyAdvancementSummary);
+        {
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                ApplyReviewLevelAbilityRows(freshClassRows, freshRaceRows);
+                ApplyAdvancementSummary();
+            });
+        }
+    }
+
+    private async Task<(IReadOnlyList<LevelAbilityRowVm> ClassRows, IReadOnlyList<LevelAbilityRowVm> RaceRows)>
+        BuildReviewLevelAbilityRowsAsync()
+    {
+        var classRows = await BuildClassLevelAbilityRowsAsync();
+        var raceRows = await BuildRaceLevelAbilityRowsAsync();
+        return (classRows, raceRows);
+    }
+
+    private async Task<IReadOnlyList<LevelAbilityRowVm>> BuildClassLevelAbilityRowsAsync()
+    {
+        var className = (Draft.Class ?? string.Empty).Trim();
+        if (className.Length == 0)
+            return Array.Empty<LevelAbilityRowVm>();
+
+        var classes = await _creationDataService.GetClassesAsync();
+        var classKey = ResolveRecordKey(classes, className);
+        if (string.IsNullOrWhiteSpace(classKey))
+            return Array.Empty<LevelAbilityRowVm>();
+
+        if (!classes.TryGetValue(classKey, out var classRecord) || classRecord?.Levels == null)
+            return Array.Empty<LevelAbilityRowVm>();
+
+        var raceKey = ResolveRaceKeyForLifeScale(Draft);
+        var lifeByLevel = await _creationDataService.GetLifeScaleAsync(raceKey, classKey);
+
+        var rows = new List<LevelAbilityRowVm>(capacity: 8);
+        for (var level = 1; level <= 8; level++)
+        {
+            var abilities = GetAbilitiesForLevel(classRecord.Levels, level);
+            var body = lifeByLevel.Count >= level ? lifeByLevel[level - 1].Body.ToString() : string.Empty;
+            var loc = lifeByLevel.Count >= level ? lifeByLevel[level - 1].Loc.ToString() : string.Empty;
+            rows.Add(LevelAbilityRowBuilder.Build(level, abilities, body, loc));
+        }
+
+        return rows;
+    }
+
+    private async Task<IReadOnlyList<LevelAbilityRowVm>> BuildRaceLevelAbilityRowsAsync()
+    {
+        var raceName = (Draft.Race ?? string.Empty).Trim();
+        if (raceName.Length == 0)
+            return Array.Empty<LevelAbilityRowVm>();
+
+        var races = await _creationDataService.GetPeopleAsync();
+        var raceKey = ResolveRecordKey(races, raceName);
+        if (string.IsNullOrWhiteSpace(raceKey))
+            return Array.Empty<LevelAbilityRowVm>();
+
+        if (!races.TryGetValue(raceKey, out var raceRecord) || raceRecord?.LevelledAbilities == null)
+            return Array.Empty<LevelAbilityRowVm>();
+
+        var rows = new List<LevelAbilityRowVm>();
+        for (var level = 1; level <= 8; level++)
+        {
+            var abilities = GetAbilitiesForLevel(raceRecord.LevelledAbilities, level);
+            if (abilities.Count == 0)
+                continue;
+
+            rows.Add(LevelAbilityRowBuilder.Build(level, abilities));
+        }
+
+        return rows;
+    }
+
+    private void ApplyReviewLevelAbilityRows(
+        IReadOnlyList<LevelAbilityRowVm> classRows,
+        IReadOnlyList<LevelAbilityRowVm> raceRows)
+    {
+        _classLevelAbilityRows = classRows ?? Array.Empty<LevelAbilityRowVm>();
+        _raceLevelAbilityRows = raceRows ?? Array.Empty<LevelAbilityRowVm>();
+
+        Raise(nameof(ClassLevelAbilityRows));
+        Raise(nameof(HasClassLevelAbilityRows));
+        Raise(nameof(ClassLevelAbilityHeader));
+        Raise(nameof(RaceLevelAbilityRows));
+        Raise(nameof(HasRaceLevelAbilityRows));
+        Raise(nameof(RaceLevelAbilityHeader));
+    }
+
+    private static IReadOnlyList<AbilityDefinition> GetAbilitiesForLevel(
+        Dictionary<string, List<AbilityDefinition>> levels,
+        int level)
+    {
+        if (levels == null || levels.Count == 0)
+            return Array.Empty<AbilityDefinition>();
+
+        foreach (var kvp in levels)
+        {
+            var parsedLevel = ExtractLevel(kvp.Key);
+            if (parsedLevel != level)
+                continue;
+
+            var abilities = kvp.Value?
+                .Where(def => def != null)
+                .ToList();
+
+            return abilities ?? new List<AbilityDefinition>();
+        }
+
+        return Array.Empty<AbilityDefinition>();
+    }
+
+    private string? ResolveRecordKey<T>(IReadOnlyDictionary<string, T> records, string rawName)
+    {
+        var trimmed = (rawName ?? string.Empty).Trim();
+        if (trimmed.Length == 0 || records == null || records.Count == 0)
+            return null;
+
+        var direct = records.Keys.FirstOrDefault(key => key.Equals(trimmed, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(direct))
+            return direct;
+
+        var normalized = _creationDataService.NormalizeLifeScaleKey(trimmed);
+        if (normalized.Length == 0)
+            return null;
+
+        var normalizedMatch = records.Keys.FirstOrDefault(key =>
+            _creationDataService.NormalizeLifeScaleKey(key).Equals(normalized, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(normalizedMatch))
+            return normalizedMatch;
+
+        return records.Keys.FirstOrDefault(key =>
+        {
+            var normalizedKey = _creationDataService.NormalizeLifeScaleKey(key);
+            return normalizedKey.Length > 0 &&
+                   (normalizedKey.Contains(normalized, StringComparison.OrdinalIgnoreCase)
+                    || normalized.Contains(normalizedKey, StringComparison.OrdinalIgnoreCase));
+        });
+    }
+
+    private static int? ExtractLevel(string? key)
+    {
+        if (int.TryParse(key, out var numericLevel))
+            return numericLevel;
+
+        var match = LevelNumberRegex.Match(key ?? string.Empty);
+        if (!match.Success)
+            return null;
+
+        return int.TryParse(match.Value, out numericLevel)
+            ? numericLevel
+            : null;
+    }
+
+    private static string ResolveRaceKeyForLifeScale(CharacterDraft draft)
+    {
+        var race = (draft.Race ?? string.Empty).Trim();
+        if (!race.Equals("Elf", StringComparison.OrdinalIgnoreCase))
+            return race;
+
+        var subtype = (draft.RaceSubtype ?? string.Empty).Trim();
+        if (subtype.Equals("Winter", StringComparison.OrdinalIgnoreCase))
+            return "Winter Elf";
+
+        if (subtype.Equals("Summer", StringComparison.OrdinalIgnoreCase))
+            return "Drowe";
+
+        return "Elf";
     }
 
     private async Task TryGoToStepAsync(int targetIndex)
@@ -950,6 +1146,12 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(RaceSummary));
         Raise(nameof(RaceSubtypeSummary));
         Raise(nameof(ClassSummary));
+        Raise(nameof(ClassLevelAbilityRows));
+        Raise(nameof(HasClassLevelAbilityRows));
+        Raise(nameof(ClassLevelAbilityHeader));
+        Raise(nameof(RaceLevelAbilityRows));
+        Raise(nameof(HasRaceLevelAbilityRows));
+        Raise(nameof(RaceLevelAbilityHeader));
         Raise(nameof(GuildSummary));
         RefreshSpecialisationSummaryLines();
         _ = EnsureSpecialisationAbilityLookupLoadedAsync();

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Controls.LevelAbilityTableView"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:labyItems.Models.ViewModels">
+
+    <VerticalStackLayout Spacing="2">
+        <Grid ColumnSpacing="8"
+              Opacity="0.7">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="28"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="{Binding Source={x:Reference Root}, Path=WeaponSkillColumnWidth}"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Text="Lvl"/>
+            <Label Grid.Column="1"
+                   Text="Body"
+                   IsVisible="{Binding Source={x:Reference Root}, Path=ShowBodyAndLoc}"
+                   WidthRequest="36"/>
+            <Label Grid.Column="2"
+                   Text="Loc"
+                   IsVisible="{Binding Source={x:Reference Root}, Path=ShowBodyAndLoc}"
+                   WidthRequest="36"/>
+            <Label Grid.Column="3"
+                   Text="WS"
+                   IsVisible="{Binding Source={x:Reference Root}, Path=ShowWeaponSkillsColumn}"/>
+            <Label Grid.Column="4"
+                   Text="{Binding Source={x:Reference Root}, Path=AbilitiesHeaderText}"/>
+            <Label Grid.Column="5"
+                   Text="Info"
+                   HorizontalTextAlignment="Center"/>
+        </Grid>
+
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Source={x:Reference Root}, Path=ItemsSource}"
+                             Spacing="2">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:LevelAbilityRowVm">
+                    <Grid ColumnSpacing="8"
+                          Padding="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="28"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="{Binding Source={x:Reference Root}, Path=WeaponSkillColumnWidth}"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="{Binding Level}"/>
+                        <Label Grid.Column="1"
+                               Text="{Binding Body}"
+                               IsVisible="{Binding Source={x:Reference Root}, Path=ShowBodyAndLoc}"
+                               WidthRequest="36"/>
+                        <Label Grid.Column="2"
+                               Text="{Binding Loc}"
+                               IsVisible="{Binding Source={x:Reference Root}, Path=ShowBodyAndLoc}"
+                               WidthRequest="36"/>
+                        <Label Grid.Column="3"
+                               Text="{Binding WeaponSkills}"
+                               Opacity="0.8"
+                               IsVisible="{Binding Source={x:Reference Root}, Path=ShowWeaponSkillsColumn}"/>
+                        <Label Grid.Column="4"
+                               Text="{Binding AbilitiesText}"
+                               Opacity="0.8"
+                               LineBreakMode="WordWrap"/>
+                        <Button Grid.Column="5"
+                                Text="&#xF05A;"
+                                FontFamily="FASolid"
+                                FontSize="12"
+                                Padding="0"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource SubtleTextColor}"
+                                HeightRequest="18"
+                                WidthRequest="18"
+                                MinimumHeightRequest="0"
+                                MinimumWidthRequest="0"
+                                VerticalOptions="Center"
+                                IsVisible="{Binding HasAbilityDetails}"
+                                Clicked="OnInfoClicked"
+                                CommandParameter="{Binding .}"/>
+                    </Grid>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentView>

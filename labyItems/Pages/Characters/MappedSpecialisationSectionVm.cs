@@ -80,6 +80,19 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
     public ICommand ToggleExpandedCommand { get; }
 
     public bool HasSelection => !string.IsNullOrWhiteSpace(_selectedOption);
+    public bool UseSingleOptionToggle => !_required && Options.Count == 1;
+    public string SingleOptionLabel => Options.Count == 1 ? Options[0] : string.Empty;
+    public bool SingleOptionEnabled
+    {
+        get => HasSelection;
+        set
+        {
+            var target = value ? SingleOptionLabel : string.Empty;
+            if (string.IsNullOrWhiteSpace(target))
+                target = string.Empty;
+            SelectedOption = target;
+        }
+    }
     public bool HasIssue => !string.IsNullOrWhiteSpace(IssueMessage);
     public bool IsComplete => (!_required || HasSelection) && !HasIssue;
     public string StatusText => HasIssue ? "Issue" : (HasSelection ? "Selected" : (_required ? "Required" : "Optional"));
@@ -208,6 +221,9 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
     private void RaiseComputed()
     {
         Raise(nameof(HasSelection));
+        Raise(nameof(UseSingleOptionToggle));
+        Raise(nameof(SingleOptionLabel));
+        Raise(nameof(SingleOptionEnabled));
         Raise(nameof(HasIssue));
         Raise(nameof(IssueMessage));
         Raise(nameof(IsComplete));

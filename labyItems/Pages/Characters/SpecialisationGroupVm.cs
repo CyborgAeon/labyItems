@@ -22,7 +22,8 @@ public sealed record SpecialisationGroupConfig(
     bool IsOptional = false,
     Dictionary<string, AbilityCustomisation>? OptionCustomisations = null,
     Func<AbilityCustomisation?, Dictionary<string, string>?>? CustomisationOptionsProvider = null,
-    bool HideAbilityPickerWhenSingleOption = true);
+    bool HideAbilityPickerWhenSingleOption = true,
+    Dictionary<string, IReadOnlyList<SpecialisationAbilityRow>>? OptionPreviewRows = null);
 
 public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisationSectionVm
 {
@@ -46,6 +47,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
     private readonly Dictionary<string, AbilityCustomisation> _optionCustomisations;
     private readonly Func<AbilityCustomisation?, Dictionary<string, string>?>? _customisationOptionsProvider;
     private readonly IOptionSource _optionSource;
+    private readonly Dictionary<string, IReadOnlyList<SpecialisationAbilityRow>> _optionPreviewRows;
     private bool _isOptional;
     private bool _isVisible = true;
     private string _sectionId = string.Empty;
@@ -60,6 +62,8 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
     public int RequiredCount => Slots.Count;
 
     public ObservableCollection<SpecialisationSlotVm> Slots { get; } = new();
+    public ObservableCollection<SpecialisationAbilityRow> SelectedOptionAbilityRows { get; } = new();
+    public bool HasSelectedOptionAbilityRows => SelectedOptionAbilityRows.Count > 0;
 
     private List<string> _allOptionNames;
     public IReadOnlyList<string> OptionNames => _allOptionNames;
@@ -207,6 +211,9 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
             : new Dictionary<string, AbilityCustomisation>(StringComparer.OrdinalIgnoreCase);
 
         _optionSource = cfg.OptionSource;
+        _optionPreviewRows = cfg.OptionPreviewRows != null
+            ? new Dictionary<string, IReadOnlyList<SpecialisationAbilityRow>>(cfg.OptionPreviewRows, StringComparer.OrdinalIgnoreCase)
+            : new Dictionary<string, IReadOnlyList<SpecialisationAbilityRow>>(StringComparer.OrdinalIgnoreCase);
         _useMagicColourEnum = _optionSource.EnumType == typeof(MagicColours);
         _useVivomancerColourEnum = _optionSource.EnumType == typeof(VivomancerColours);
         UseWardPactEnum = _optionSource.Mode == SlotOptionMode.WardPactEnum;
@@ -233,7 +240,13 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
             Slots.Add(slot);
         }
 
+        SelectedOptionAbilityRows.CollectionChanged += (_, _) =>
+        {
+            Raise(nameof(HasSelectedOptionAbilityRows));
+        };
+
         UpdateValidation();
+        RefreshSelectedOptionAbilityRows();
         RaiseComputed();
     }
 
@@ -255,6 +268,8 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
         var resolvedDetailKey = DetailKey;
         foreach (var slot in Slots)
             slot.SetSpecialisationKeyForDetails(resolvedDetailKey);
+
+        RefreshSelectedOptionAbilityRows();
 
         Raise(nameof(SectionId));
         Raise(nameof(DetailKey));
@@ -379,6 +394,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
     private void OnSlotChanged()
     {
         UpdateValidation();
+        RefreshSelectedOptionAbilityRows();
         RaiseComputed();
         _onAnySelectionChanged();
     }
@@ -440,5 +456,44 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
             .ToList();
 
         ValidationMessage = _selectionValidator.Invoke(picked) ?? string.Empty;
+    }
+
+    private void RefreshSelectedOptionAbilityRows()
+    {
+        SelectedOptionAbilityRows.Clear();
+        if (_optionPreviewRows.Count == 0)
+            return;
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var slot in Slots)
+        {
+            var selected = (slot.SelectedOption ?? string.Empty).Trim();
+            if (selected.Length == 0)
+                continue;
+
+            if (!_optionPreviewRows.TryGetValue(selected, out var previewRows))
+                continue;
+
+            foreach (var row in previewRows ?? Array.Empty<SpecialisationAbilityRow>())
+            {
+                var abilityName = (row?.Ability ?? string.Empty).Trim();
+                if (abilityName.Length == 0)
+                    continue;
+
+                var dedupeKey = $"{(row?.AbilityKey ?? string.Empty).Trim()}|{abilityName}";
+                if (!seen.Add(dedupeKey))
+                    continue;
+
+                SelectedOptionAbilityRows.Add(new SpecialisationAbilityRow
+                {
+                    Level = row?.Level,
+                    Ability = abilityName,
+                    AbilityKey = (row?.AbilityKey ?? string.Empty).Trim(),
+                    SpecialisationKey = DetailKey,
+                    SelectedOption = selected,
+                    SelectedAbility = (row?.SelectedAbility ?? abilityName).Trim()
+                });
+            }
+        }
     }
 }

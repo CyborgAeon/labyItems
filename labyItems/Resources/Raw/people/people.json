@@ -17,7 +17,7 @@
       "DisplayName": "Human origin",
       "Description": "Select a lineage for your character.",
       "SelectionMode": "SingleRequired",
-      "OptionsSource": "Standard,Baronial,Ishmaic,Barbarian,Amlesian",
+      "OptionsSource": "Standard,Baronial,Ishmaic,Amlesian",
       "AbilityMapKey": "HumanSubtypeAbilities"
     },
     "AdditionalInfo": "",
@@ -224,6 +224,10 @@
           "Type": "AtWill"
         },
         {
+          "Name": "Illiterate",
+          "Type": "Static"
+        },
+        {
           "Name": "Skinning",
           "Type": "AtWill"
         }
@@ -254,6 +258,10 @@
       "1": [
         {
           "Name": "Regeneration",
+          "Type": "Static"
+        },
+        {
+          "Name": "Illiterate",
           "Type": "Static"
         }
       ],
@@ -301,6 +309,10 @@
       "1": [
         {
           "Name": "1 DAC in Darkness",
+          "Type": "Static"
+        },
+        {
+          "Name": "Illiterate",
           "Type": "Static"
         }
       ],
@@ -358,6 +370,10 @@
         {
           "Name": "1 DAC in Darkness",
           "Type": "Static"
+        },
+        {
+          "Name": "Illiterate",
+          "Type": "Static"
         }
       ],
       "2": [
@@ -378,6 +394,10 @@
         {
           "Name": "True Kin With Reed",
           "Type": "AtWill"
+        },
+        {
+          "Name": "Illiterate",
+          "Type": "Static"
         }
       ],
       "3": [

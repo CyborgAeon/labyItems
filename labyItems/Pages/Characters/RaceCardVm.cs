@@ -5,14 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Text.RegularExpressions;
 using labyItems.Models.Characters;
+using labyItems.Models.ViewModels;
 
 namespace labyItems.Pages.Characters;
-
-public sealed class RaceLevelRowVm
-{
-    public int Level { get; init; }
-    public string Abilities { get; init; } = "";
-}
 
 public sealed class RaceCardVm : INotifyPropertyChanged
 {
@@ -47,7 +42,7 @@ public sealed class RaceCardVm : INotifyPropertyChanged
         ? string.IsNullOrWhiteSpace(PeopleType) ? "Non-standard" : $"{PeopleType} • Non-standard"
         : PeopleType;
 
-    public ObservableCollection<RaceLevelRowVm> LevelRows { get; } = new();
+    public ObservableCollection<LevelAbilityRowVm> LevelRows { get; } = new();
     public ObservableCollection<string> BuyAsChips { get; } = new();
 
     public bool HasAnyAbilities { get; private set; }
@@ -71,10 +66,10 @@ public sealed class RaceCardVm : INotifyPropertyChanged
         for (var level = 1; level <= 8; level++)
         {
             var abilities = FindAbilitiesForLevel(levelledAbilities, level);
-            if (string.IsNullOrWhiteSpace(abilities))
+            if (abilities.Count == 0)
                 continue;
 
-            LevelRows.Add(new RaceLevelRowVm { Level = level, Abilities = abilities });
+            LevelRows.Add(LevelAbilityRowBuilder.Build(level, abilities));
         }
 
         HasAnyAbilities = LevelRows.Count > 0;
@@ -88,19 +83,23 @@ public sealed class RaceCardVm : INotifyPropertyChanged
         Raise(nameof(BuyAsChips));
     }
 
-    private static string FindAbilitiesForLevel(Dictionary<string, List<AbilityDefinition>> dict, int level)
+    private static IReadOnlyList<AbilityDefinition> FindAbilitiesForLevel(
+        Dictionary<string, List<AbilityDefinition>> dict,
+        int level)
     {
         foreach (var kvp in dict)
         {
             var lvl = ExtractLevel(kvp.Key);
             if (lvl != level) continue;
 
-            var list = kvp.Value ?? new List<AbilityDefinition>();
-            var text = string.Join(", ", list.Select(ToDisplayName).Where(x => !string.IsNullOrWhiteSpace(x)));
-            return text;
+            var abilities = kvp.Value?
+                .Where(def => def != null)
+                .ToList();
+
+            return abilities ?? new List<AbilityDefinition>();
         }
 
-        return "";
+        return Array.Empty<AbilityDefinition>();
     }
 
     private static int? ExtractLevel(string key)
@@ -128,16 +127,5 @@ public sealed class RaceCardVm : INotifyPropertyChanged
 
         foreach (var p in parts)
             yield return p;
-    }
-
-    private static string ToDisplayName(AbilityDefinition def)
-    {
-        if (def == null) return string.Empty;
-
-        var name = def.Name ?? string.Empty;
-        if (!string.IsNullOrWhiteSpace(def.Effect))
-            return $"{name} ({def.Effect})";
-
-        return name;
     }
 }

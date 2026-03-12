@@ -3,7 +3,8 @@
        x:Class="labyItems.Pages.Characters.CharacterReviewView"
        x:Name="Root"
        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:controls="clr-namespace:labyItems.Controls">
 
        <ScrollView>
               <VerticalStackLayout Padding="16"
@@ -31,6 +32,34 @@
                                    <Label Text="{Binding RaceSubtypeSummary}"/>
                                    <Label Text="{Binding ClassSummary}"/>
                                    <Label Text="{Binding AlignmentSummary}"/>
+                            </VerticalStackLayout>
+                     </Frame>
+
+                     <Frame HasShadow="False"
+                            CornerRadius="12"
+                            Padding="12"
+                            IsVisible="{Binding HasClassLevelAbilityRows}"
+                            BorderColor="{StaticResource SurfaceBorderColor}">
+                            <VerticalStackLayout Spacing="8">
+                                   <Label Text="{Binding ClassLevelAbilityHeader}"
+                                          FontAttributes="Bold"/>
+                                   <controls:LevelAbilityTableView ItemsSource="{Binding ClassLevelAbilityRows}"
+                                                                   ShowBodyAndLoc="True"
+                                                                   AbilitiesHeaderText="Skills/Abilities"/>
+                            </VerticalStackLayout>
+                     </Frame>
+
+                     <Frame HasShadow="False"
+                            CornerRadius="12"
+                            Padding="12"
+                            IsVisible="{Binding HasRaceLevelAbilityRows}"
+                            BorderColor="{StaticResource SurfaceBorderColor}">
+                            <VerticalStackLayout Spacing="8">
+                                   <Label Text="{Binding RaceLevelAbilityHeader}"
+                                          FontAttributes="Bold"/>
+                                   <controls:LevelAbilityTableView ItemsSource="{Binding RaceLevelAbilityRows}"
+                                                                   ShowBodyAndLoc="False"
+                                                                   AbilitiesHeaderText="Abilities"/>
                             </VerticalStackLayout>
                      </Frame>
 

@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Windows.Input;
+using labyItems.Models.Characters;
 using labyItems.Services;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 using SpecialisationCardPage = labyItems.Pages.SpecialisationCard.SpecialisationCard;
@@ -129,6 +131,40 @@ public partial class CharacterSpecialisation : ContentView
         if (parameter is not SpecialisationAbilityRow row)
             return;
 
+        var nav = ResolveNavigation();
+        if (nav == null)
+            return;
+
+        var detailCandidates = new[]
+        {
+            (row.AbilityKey ?? string.Empty).Trim(),
+            (row.SelectedAbility ?? string.Empty).Trim(),
+            (row.Ability ?? string.Empty).Trim()
+        }
+        .Where(x => x.Length > 0)
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .ToList();
+
+        foreach (var candidate in detailCandidates)
+        {
+            var ability = await AbilityDetailsLookupService.FindByIndexAsync(candidate);
+            if (ability == null)
+                continue;
+
+            await nav.PushAsync(new AbilityCardPage(ability));
+            return;
+        }
+
+        foreach (var candidate in detailCandidates)
+        {
+            var abilityMatch = await DetailCardLookupService.FindSpecialisationAbilityAsync(candidate);
+            if (abilityMatch.Ability == null)
+                continue;
+
+            await nav.PushAsync(new AbilityCardPage(ToAbilityResult(abilityMatch.Ability, abilityMatch.Key, candidate)));
+            return;
+        }
+
         var key = (row.SpecialisationKey ?? string.Empty).Trim();
         if (key.Length == 0)
             return;
@@ -136,22 +172,6 @@ public partial class CharacterSpecialisation : ContentView
         var selectedOption = (row.SelectedAbility ?? row.Ability ?? row.SelectedOption ?? string.Empty).Trim();
         if (selectedOption.Length == 0)
             selectedOption = (row.SelectedOption ?? string.Empty).Trim();
-
-        var abilityLookupKey = (row.AbilityKey ?? row.SelectedAbility ?? row.Ability ?? string.Empty).Trim();
-        if (abilityLookupKey.Length > 0)
-        {
-            var abilityMatch = await DetailCardLookupService.FindSpecialisationAbilityAsync(abilityLookupKey);
-            if (!string.IsNullOrWhiteSpace(abilityMatch.Key) && abilityMatch.Ability != null)
-            {
-                var resolvedSelection = (abilityMatch.Ability.Key ?? abilityMatch.Ability.Name ?? string.Empty).Trim();
-                if (resolvedSelection.Length > 0)
-                    selectedOption = resolvedSelection;
-            }
-        }
-
-        var nav = ResolveNavigation();
-        if (nav == null)
-            return;
 
         var match = await DetailCardLookupService.FindSpecialisationAsync(key);
         if (string.IsNullOrWhiteSpace(match.Key) || match.Record == null)
@@ -169,5 +189,33 @@ public partial class CharacterSpecialisation : ContentView
             return shellNav;
 
         return Application.Current?.MainPage?.Navigation;
+    }
+
+    private static EvolutionService.AbilityResult ToAbilityResult(
+        AbilityDefinition source,
+        string resolvedKey,
+        string requestedKey)
+    {
+        var name = (source.Name ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = (resolvedKey ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = (requestedKey ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = "Ability";
+
+        return new EvolutionService.AbilityResult
+        {
+            Index = name,
+            Description = source.Effect ?? string.Empty,
+            Cost = 0,
+            Table = 0,
+            Available = source.Source ?? "ALL",
+            CanBuyMultiple = false,
+            PreReqs = source.PreReqs is { Count: > 0 } preReqs
+                ? preReqs
+                : Array.Empty<string>(),
+            MaxAvailable = source.Count
+        };
     }
 }

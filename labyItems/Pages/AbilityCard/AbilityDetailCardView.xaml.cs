@@ -203,13 +203,22 @@ public partial class AbilityDetailCardView : ContentView
         if (label == null || string.IsNullOrWhiteSpace(text))
             return false;
 
+        var normalizedText = text.Replace("\r\n", "\n");
+        var explicitLineCount = normalizedText.Split('\n').Length;
+        if (explicitLineCount > collapsedLines)
+            return true;
+
         var width = ResolveMeasureWidth(label);
         if (width <= 0)
-            return false;
+            return normalizedText.Length > 240;
 
         var fullHeight = MeasureHeight(label, text, width, maxLines: -1);
         var collapsedHeight = MeasureHeight(label, text, width, maxLines: collapsedLines);
-        return fullHeight > (collapsedHeight + ExpanderOverflowTolerance);
+        if (fullHeight > (collapsedHeight + ExpanderOverflowTolerance))
+            return true;
+
+        // Fallback for measure edge-cases where long text can still report similar heights.
+        return normalizedText.Length > 320;
     }
 
     private static double MeasureHeight(Label template, string text, double width, int maxLines)

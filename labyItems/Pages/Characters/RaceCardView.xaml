@@ -91,34 +91,9 @@
                           BackgroundColor="Transparent">
 
                         <Grid IsVisible="{Binding HasAnyAbilities}">
-                            <CollectionView ItemsSource="{Binding LevelRows}"
-                                            SelectionMode="None">
-                                <CollectionView.Header>
-                                    <Grid RowDefinitions="Auto"
-                                          RowSpacing="6">
-                                        <Grid Grid.Row="0"
-                                              Grid.ColumnDefinitions="50,*"
-                                              ColumnSpacing="8"
-                                              Opacity="0.7">
-                                            <Label Text="Lvl"/>
-                                            <Label Grid.Column="1"
-                                                   Text="Abilities"/>
-                                        </Grid>
-                                    </Grid>
-                                </CollectionView.Header>
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid ColumnDefinitions="50,*"
-                                              ColumnSpacing="8"
-                                              Padding="0,2">
-                                            <Label Text="{Binding Level}"/>
-                                            <Label Grid.Column="1"
-                                                   Text="{Binding Abilities}"
-                                                   Opacity="0.8"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
+                            <controls:LevelAbilityTableView ItemsSource="{Binding LevelRows}"
+                                                            ShowBodyAndLoc="False"
+                                                            AbilitiesHeaderText="Abilities"/>
                         </Grid>
 
                         <Grid Grid.Row="1"

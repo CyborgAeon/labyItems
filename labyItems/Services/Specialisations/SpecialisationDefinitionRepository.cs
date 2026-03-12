@@ -49,6 +49,9 @@ public static class SpecialisationDefinitionRepository
         "ClassRestriction",
         "AlignmentRestriction",
         "AlignmentRestrictions",
+        "RaceRestriction",
+        "RaceRestrictions",
+        "Races",
         "PeopleType",
         "Abilities",
         "Options",
@@ -494,6 +497,7 @@ public static class SpecialisationDefinitionRepository
             {
                 ClassRestriction = source.Restrictions.ClassRestriction.ToList(),
                 AlignmentRestriction = source.Restrictions.AlignmentRestriction.ToList(),
+                RaceRestriction = source.Restrictions.RaceRestriction.ToList(),
                 PeopleType = source.Restrictions.PeopleType.ToList()
             },
             StrategyIds = source.StrategyIds.ToList(),
@@ -615,11 +619,18 @@ public static class SpecialisationDefinitionRepository
         if (alignmentRestriction.Count == 0)
             alignmentRestriction = ReadStringArrayProperty(source, "AlignmentRestrictions");
 
+        var raceRestriction = ReadStringArrayProperty(source, "RaceRestriction");
+        if (raceRestriction.Count == 0)
+            raceRestriction = ReadStringArrayProperty(source, "RaceRestrictions");
+        if (raceRestriction.Count == 0)
+            raceRestriction = ReadStringArrayProperty(source, "Races");
+
         var peopleType = ReadStringArrayProperty(source, "PeopleType");
         return new Restrictions
         {
             ClassRestriction = classRestriction,
             AlignmentRestriction = alignmentRestriction,
+            RaceRestriction = raceRestriction,
             PeopleType = peopleType
         };
     }
@@ -996,6 +1007,7 @@ public static class SpecialisationDefinitionRepository
         var hedgeOrCircle = new List<string>();
         var classRestriction = new List<string>();
         var alignmentRestriction = new List<string>();
+        var raceRestriction = new List<string>();
         var peopleType = new List<string>();
         IReadOnlyList<string> optionStrategyIds = Array.Empty<string>();
 
@@ -1065,6 +1077,22 @@ public static class SpecialisationDefinitionRepository
                     peopleType = ParseStringArray(peopleTypeElement);
                 }
 
+                if (element.TryGetProperty("RaceRestriction", out var raceRestrictionElement)
+                    && raceRestrictionElement.ValueKind == JsonValueKind.Array)
+                {
+                    raceRestriction = ParseStringArray(raceRestrictionElement);
+                }
+                else if (element.TryGetProperty("RaceRestrictions", out var raceRestrictionsElement)
+                         && raceRestrictionsElement.ValueKind == JsonValueKind.Array)
+                {
+                    raceRestriction = ParseStringArray(raceRestrictionsElement);
+                }
+                else if (element.TryGetProperty("Races", out var racesElement)
+                         && racesElement.ValueKind == JsonValueKind.Array)
+                {
+                    raceRestriction = ParseStringArray(racesElement);
+                }
+
                 if (element.TryGetProperty("Levels", out var levelsElement)
                     && levelsElement.ValueKind == JsonValueKind.Object)
                 {
@@ -1087,6 +1115,7 @@ public static class SpecialisationDefinitionRepository
             && hedgeOrCircle.Count == 0
             && classRestriction.Count == 0
             && alignmentRestriction.Count == 0
+            && raceRestriction.Count == 0
             && peopleType.Count == 0
             && guildOverrides == null)
         {
@@ -1111,6 +1140,7 @@ public static class SpecialisationDefinitionRepository
             {
                 ClassRestriction = classRestriction,
                 AlignmentRestriction = alignmentRestriction,
+                RaceRestriction = raceRestriction,
                 PeopleType = peopleType
             },
             StrategyIds = optionStrategyIds

@@ -75,4 +75,22 @@ public sealed class EvolutionServiceTests : ServiceTestBase
         Assert.NotNull(found);
         Assert.Equal(CanonicalResistanceName, found!.Index);
     }
+
+    [Fact]
+    public async Task AbilityLookup_FindsAbilityFromSpecialisationAliasesByDisplayName()
+    {
+        var found = await AbilityDetailsLookupService.FindByIndexAsync("Discern Spiritual Mastery");
+
+        Assert.NotNull(found);
+        Assert.Equal("Discern Spiritual Mastery", found!.Index);
+    }
+
+    [Fact]
+    public async Task AbilityLookup_FindsAbilityFromSpecialisationAliasesByKey()
+    {
+        var found = await AbilityDetailsLookupService.FindByIndexAsync("ability.discern-spiritual-mastery");
+
+        Assert.NotNull(found);
+        Assert.Equal("Discern Spiritual Mastery", found!.Index);
+    }
 }

@@ -92,7 +92,11 @@
             <Label Text="... see more"
                    TextColor="{StaticResource MutedTextColor}"
                    FontSize="12"
-                   IsVisible="{Binding ShowDescriptionSeeMore, Source={x:Reference Root}}"/>
+                   IsVisible="{Binding ShowDescriptionSeeMore, Source={x:Reference Root}}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDescriptionSectionTapped"/>
+                </Label.GestureRecognizers>
+            </Label>
 
             <VerticalStackLayout Spacing="8"
                                  IsVisible="{Binding HasNotesSection, Source={x:Reference Root}}">

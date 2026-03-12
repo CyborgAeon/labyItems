@@ -32,7 +32,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private CancellationTokenSource? _selectionPipelineCts;
     private LifeScalePoint? _humanLifeForSelectedClass;
     private ArmourTier _armourTier = ArmourTier.None;
-    private const string BaronialTraditionKey = "BaronialTradition";
     private AlignmentRule? _raceAlignmentRule;
     private AlignmentRule? _classAlignmentRule;
 
@@ -382,7 +381,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await item.EnsureProgressionLoadedAsync();
 
         item.IsExpanded = shouldExpand;
-        RefilterClasses();
     }
 
     private void SelectClass(ClassCardVm? item)
@@ -908,13 +906,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             var (classAbilities, classRecord, classGuildRules) = await BuildClassAbilitiesAsync();
             var (specAbilities, specGuildRules) = SpecialisationVm.BuildSelectedAbilityDraftsWithRules();
             var guildAbilities = await BuildGuildAbilitiesAsync();
-            var baronialAbilities = BuildBaronialTraditionAbilities(classRecord);
 
             abilities.AddRange(raceAbilities);
             abilities.AddRange(classAbilities);
             abilities.AddRange(specAbilities);
             abilities.AddRange(guildAbilities);
-            abilities.AddRange(baronialAbilities);
 
             abilities = ConsolidateAbilities(abilities);
 
@@ -1716,112 +1712,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         yield return _raceAlignmentRule;
         yield return _classAlignmentRule;
-    }
-
-    private List<AbilityDraft> BuildBaronialTraditionAbilities(ServiceCharacterClassRecord? classRecord)
-    {
-        var list = new List<AbilityDraft>();
-
-        var race = (Draft.Race ?? string.Empty).Trim();
-        if (!string.Equals(race, "Human", StringComparison.OrdinalIgnoreCase))
-            return list;
-
-        if (!string.Equals(Draft.RaceSubtype?.Trim(), "Baronial", StringComparison.OrdinalIgnoreCase))
-            return list;
-
-        if (!Draft.SpecialisationSelections.TryGetValue(BaronialTraditionKey, out var selection) || string.IsNullOrWhiteSpace(selection))
-            return list;
-
-        var choice = NormalizeBaronialChoice(selection);
-        var powerBase = (classRecord?.Powerbase?.FirstOrDefault() ?? string.Empty).Trim();
-        var powerBaseLower = powerBase.ToLowerInvariant();
-        var isWizard = classRecord?.Brackets?.Any(b => b.Contains("wizard", StringComparison.OrdinalIgnoreCase)) == true;
-
-        if (choice.Equals("circle", StringComparison.OrdinalIgnoreCase))
-        {
-            list.Add(new AbilityDraft
-            {
-                Name = "Circle Membership",
-                AbilityType = AbilityType.Static
-            });
-
-            if (powerBaseLower.Contains("magic"))
-            {
-                list.Add(new AbilityDraft
-                {
-                    Name = "Reduce casting damage by 1",
-                    AbilityType = AbilityType.Static,
-                    ShortStringValue = "-1 casting damage"
-                });
-            }
-
-            if (powerBaseLower.Contains("spirit"))
-            {
-                list.Add(new AbilityDraft
-                {
-                    Name = "May increase a miracle's level of effect by 1",
-                    AbilityType = AbilityType.Static,
-                    ShortStringValue = "+1 miracle effect level"
-                });
-            }
-        }
-        else if (choice.Equals("hedge", StringComparison.OrdinalIgnoreCase))
-        {
-            list.Add(new AbilityDraft
-            {
-                Name = "Hedge Wizardry",
-                AbilityType = AbilityType.Static
-            });
-
-            if (isWizard)
-            {
-                list.Add(new AbilityDraft { Name = "Disguise skill", AbilityType = AbilityType.Static });
-                list.Add(new AbilityDraft
-                {
-                    Name = $"Immunity to informational effects ({powerBase})",
-                    AbilityType = AbilityType.Immunity,
-                    ShortStringValue = $"Immunity to informational effects ({powerBase})"
-                });
-                list.Add(new AbilityDraft
-                {
-                    Name = $"+1 resistance ({powerBase})",
-                    AbilityType = AbilityType.Resistance,
-                    ShortStringValue = $"+1 {powerBase} resistance"
-                });
-                list.Add(new AbilityDraft
-                {
-                    Name = "+1 level of life (race)",
-                    AbilityType = AbilityType.Static,
-                    ShortStringValue = "+1 life (race)"
-                });
-            }
-
-            var ov = new AbilityDraft
-            {
-                Name = "Guild override: Hedge",
-                AbilityType = AbilityType.GuildOverride,
-                ShortStringValue = "pr:"
-            };
-            ov.GuildOverrides.Add("pr:");
-            list.Add(ov);
-        }
-
-        ApplyAbilitySource(list, "Baronial");
-        return list;
-    }
-
-    private static string NormalizeBaronialChoice(string raw)
-    {
-        var normalized = (raw ?? string.Empty).Trim().ToLowerInvariant();
-        if (normalized.Contains("hedge"))
-            return "hedge";
-        if (normalized.Contains("circle"))
-            return "circle";
-
-        return normalized
-            .Replace("Ⓞ", string.Empty)
-            .Replace("🌳", string.Empty)
-            .Trim();
     }
 
     private void UpdateArmourStats(
