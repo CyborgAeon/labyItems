@@ -14,10 +14,16 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
     public SpellConfigPage()
     {
         AddSelectedSpellCommand = new Command<object?>(OnSpellResultSelected);
+        EditSpellCommand = new Command<object?>(OnEditSpellRequested);
+        ViewSpellInfoCommand = new Command<object?>(OnSpellInfoRequested);
+        DeleteSpellCommand = new Command<object?>(OnDeleteSpellRequested);
         InitializeComponent();
     }
 
     public ICommand AddSelectedSpellCommand { get; }
+    public ICommand EditSpellCommand { get; }
+    public ICommand ViewSpellInfoCommand { get; }
+    public ICommand DeleteSpellCommand { get; }
 
     public Dictionary<string, SpellSearchOption> SpellLookup { get; private set; } =
         new(StringComparer.OrdinalIgnoreCase);
@@ -154,18 +160,18 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
             await Navigation.PushModalAsync(new SpellEntryConfigModalPage(entry));
     }
 
-    private async void OnEditSpellClicked(object sender, EventArgs e)
+    private async void OnEditSpellRequested(object? parameter)
     {
-        if (sender is not BindableObject bindable || bindable.BindingContext is not SpellSelectionEntry entry)
+        if (parameter is not SpellSelectionEntry entry)
             return;
 
         var modal = new SpellEntryConfigModalPage(entry);
         await Navigation.PushModalAsync(modal);
     }
 
-    private async void OnSpellInfoClicked(object sender, EventArgs e)
+    private async void OnSpellInfoRequested(object? parameter)
     {
-        if (sender is not BindableObject bindable || bindable.BindingContext is not SpellSelectionEntry entry)
+        if (parameter is not SpellSelectionEntry entry)
             return;
 
         var spell = entry.Spell;
@@ -175,9 +181,9 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
         await Navigation.PushModalAsync(new NavigationPage(new SpellCardPage(spell)));
     }
 
-    private void OnDeleteSpellClicked(object sender, EventArgs e)
+    private void OnDeleteSpellRequested(object? parameter)
     {
-        if (sender is not BindableObject bindable || bindable.BindingContext is not SpellSelectionEntry entry)
+        if (parameter is not SpellSelectionEntry entry)
             return;
 
         if (BindingContext is not SpellConfig cfg)

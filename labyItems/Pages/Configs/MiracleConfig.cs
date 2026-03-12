@@ -10,7 +10,7 @@ using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Configs;
 
-public sealed class MiracleSelectionEntry : INotifyPropertyChanged
+public sealed class MiracleSelectionEntry : INotifyPropertyChanged, IConfigSelectionListItem
 {
     private int _basicPerDay;
     private int _advancedPerDay;

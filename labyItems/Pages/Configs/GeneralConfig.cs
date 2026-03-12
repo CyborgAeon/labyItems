@@ -599,8 +599,8 @@ namespace labyItems.Pages.Configs
         public string LtmSummary =>
             $"{LtmValue} Additional {LtmType ?? string.Empty}{(LtmType == null ? string.Empty : " ")}Live-to-minus";
         // ---------- Ki / Primal strike ----------
-public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
-            new() { "🐉 Ki", "🧸 Primal" };
+        public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
+            new() { "Ki", "Primal" };
 
         private string _kiOrPrimalStrike;
         public string KiOrPrimalStrike
@@ -625,7 +625,7 @@ public ObservableCollection<string> KiOrPrimalStrikeItems { get; } =
         }
         private int _kiOrPrimalStrikePerDayCount;
         public string KiStrikeSummary =>
-            $"{(string.IsNullOrWhiteSpace(KiOrPrimalStrike) ? "🐉 Ki/🧸 Primal" : KiOrPrimalStrike)} strike ({KiOrPrimalStrikePerDayCount}/day)";
+            $"{(string.IsNullOrWhiteSpace(KiOrPrimalStrike) ? "Primal / Ki" : KiOrPrimalStrike)} Strike ({KiOrPrimalStrikePerDayCount}/day)";
 
 
         public bool ReadLanguages

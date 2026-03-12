@@ -36,17 +36,17 @@ public static class ConfigSummaryService
         if (cfg.SpiritTurnsPureDailyCount > 0)
         {
             details["spiritTurnsPureDaily"] = true;
-            lines.Add($"Spirit turns pure per day: {cfg.SpiritTurnsPureDailyCount}");
+            lines.Add($"Spirit weapon turns pure ({cfg.SpiritTurnsPureDailyCount}/day)");
         }
         if (cfg.MagicTurnsPureDailyCount > 0)
         {
             details["magicTurnsPureDaily"] = true;
-            lines.Add($"Magic turns pure per day: {cfg.MagicTurnsPureDailyCount}");
+            lines.Add($"Magic weapon turns pure ({cfg.MagicTurnsPureDailyCount}/day)");
         }
         if (cfg.ManticTurnsPureDailyCount > 0)
         {
             details["manticTurnsPureDaily"] = true;
-            lines.Add($"Mantic turns pure per day: {cfg.ManticTurnsPureDailyCount}");
+            lines.Add($"Mantic weapon turns pure ({cfg.ManticTurnsPureDailyCount}/day)");
         }
         if (cfg.AdventurePermDamageDailyCount > 0)
         {
@@ -56,7 +56,7 @@ public static class ConfigSummaryService
         if (cfg.ThruPacAlways)
         {
             details["thruPacAlways"] = true;
-            lines.Add("Inflicts damage thru PAC (always)");
+            lines.Add("Inflicts 'through'");
         }
         if (cfg.BladeSharpenTooGreat)
         {

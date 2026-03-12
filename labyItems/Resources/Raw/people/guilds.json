@@ -51,26 +51,24 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good"]
+      "Rules": [
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good"
+          ]
+        }
+      ]
     }
   },
   "The Brood": {
@@ -178,26 +176,25 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good", "Neutral"]
+      "Rules": [
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
+        }
+      ]
     }
   },
   "Claws of the Circle": {
@@ -265,16 +262,15 @@
     "Ethos": "The Claws of Circle is a subsection of The Circle, which is sustained by The Circle, rather than the Volksraad. The guild is one formed to support the political ideals of The Circle and is mainly comprised of militant Circle members with direct approaches to dealing with problems. Members of this guild tend to be on the move most of the time, travelling about the lands covertly performing the will of The Circle.",
     "Restrictions": "• If it is within their means then guild members should attempt to capture or kill any Baronial hedge wizard they encounter in the Baronies.\n• Must support the basic political principles of the Southern Baronies.",
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": ["Baronial"]
-      }
+      "Rules": [
+        {
+          "Field": "PeopleType",
+          "Operator": "In",
+          "Value": [
+            "Baronial"
+          ]
+        }
+      ]
     }
   },
   "The Deci Gentlemen's Club": {
@@ -288,7 +284,10 @@
           "Name": "Hard Upbringing",
           "Type": "Life",
           "Source": "Guild",
-          "Amount": [3, 1]
+          "Amount": [
+            3,
+            1
+          ]
         },
         {
           "Name": "Agile: gains +1 DAC",
@@ -306,7 +305,10 @@
         {
           "Name": "Hard Upbringing",
           "Type": "Update",
-          "Amount": [6, 2]
+          "Amount": [
+            6,
+            2
+          ]
         },
         {
           "Name": "Shrouded",
@@ -322,7 +324,9 @@
       ],
       "Advanced": []
     },
-    "Availability": {}
+    "Availability": {
+      "Rules": []
+    }
   },
   "Department of Recoveries and Collections": {
     "Type": "political",
@@ -388,26 +392,7 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": []
     },
     "PreRequisites": "Open to anyone able to understand and work for the Empire. Outlaws and individuals Ostracised by the Empire cannot join, or remain members.",
     "Ethos": "The Department of Recoveries and Collections are a small department in the inquisition that are responsible for finding, securing and making safe artefacts of power. Their mandate covers Primus but their primary work is done in the Empire of Glass via requests from other Imperial departments or private requests.",
@@ -531,10 +516,21 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Races": ["Faerie", "Elf", "Athfanal"],
-        "Classes": ["Warlock", "Wizard", "High-Wizard", "Power Master"]
-      }
+      "Rules": [
+        {
+          "Field": "Race|Class",
+          "Operator": "In",
+          "Value": [
+            "Faerie",
+            "Elf",
+            "Athfanal",
+            "Warlock",
+            "Wizard",
+            "High-Wizard",
+            "Power Master"
+          ]
+        }
+      ]
     }
   },
   "Hell Company": {
@@ -601,22 +597,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good"]
+      "Rules": [
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good"
+          ]
         }
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      ]
     }
   },
   "In Purity": {
@@ -695,26 +684,7 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": []
     }
   },
   "Knights of Legend": {
@@ -770,27 +740,15 @@
       ]
     },
     "Availability": {
-      "RequiredGuild": "Knights of the Land",
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Guild",
+          "Operator": "In",
+          "Value": [
+            "Knights of the Land"
+          ]
+        }
+      ]
     }
   },
   "Knights of the Risen Phoenix": {
@@ -862,26 +820,25 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good", "Neutral"]
+      "Rules": [
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
+        }
+      ]
     }
   },
   "Obsidian Cabal": {
@@ -937,26 +894,24 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Evil"]
+      "Rules": [
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Evil"
+          ]
+        }
+      ]
     }
   },
   "Of the North": {
@@ -1016,32 +971,16 @@
         {
           "Name": "The Brutal North",
           "Type": "Life",
-          "Amount": [6, 2],
+          "Amount": [
+            6,
+            2
+          ],
           "Source": "Guild"
         }
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": []
     }
   },
   "Sakura": {
@@ -1108,26 +1047,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": ["Amlesian"]
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "PeopleType",
+          "Operator": "In",
+          "Value": [
+            "Amlesian"
+          ]
+        }
+      ]
     }
   },
   "The White Lotus Society": {
@@ -1160,7 +1088,10 @@
             "Name": "Heart of the Lotus",
             "Type": "Life",
             "Description": "+3/1 guild life",
-            "Amount": [3, 1],
+            "Amount": [
+              3,
+              1
+            ],
             "Source": "Guild"
           }
         ],
@@ -1186,7 +1117,10 @@
         {
           "Name": "Heart of the Lotus",
           "Type": "Update",
-          "Amount": [6, 2]
+          "Amount": [
+            6,
+            2
+          ]
         },
         {
           "Name": "To defend with honour",
@@ -1214,7 +1148,10 @@
         {
           "Name": "Heart of the lotus",
           "Type": "Update",
-          "Amount": [9, 3]
+          "Amount": [
+            9,
+            3
+          ]
         },
         {
           "Name": "The Fates decide",
@@ -1234,26 +1171,7 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": []
     }
   },
   "Totemic Guardians": {
@@ -1375,26 +1293,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": ["Tribal"]
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "PeopleType",
+          "Operator": "In",
+          "Value": [
+            "Tribal"
+          ]
+        }
+      ]
     }
   },
   "Wahadamune": {
@@ -1427,26 +1334,15 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": ["Ishmaic"]
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "PeopleType",
+          "Operator": "In",
+          "Value": [
+            "Ishmaic"
+          ]
+        }
+      ]
     }
   },
   "Yeomen of the Empire": {
@@ -1464,7 +1360,10 @@
         {
           "Name": "Strength of the yeoman",
           "Type": "Life",
-          "Amount": [3, 1],
+          "Amount": [
+            3,
+            1
+          ],
           "Description": "Gain +3/1 life per yeoman on dungeon, to a max of +6/2."
         },
         {
@@ -1478,26 +1377,7 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": []
     }
   },
   "Church of Certizal, Shadow of the First Evil": {
@@ -1505,8 +1385,14 @@
     "Ethos": "The guild follows the Shadow of the First Evil, a powerful Demon of Corruption ascended to Divine Power by the actions of his chosen one Lomo, and others. The duty of the church is to foster Evil in the hearts of men. It is more powerful to cause another to carry out an act of evil than do it yourself. Working from the shadows until a place is claimed the Church seek to spread across the Empire and beyond.",
     "Restrictions": "The Guild is a full black guild (as per WFA rules). If a member ever ceases to be Evil they are instantly Excommunicated. Note - If slain a member of the church, or a character with Pact to Certizal, claiming Kallah benefits linked to Certizal or if they are Demon Touched by Certizal, can choose to Word of Recall to Lomo who can cast a Mantic (Ebony/Evil Spirit) Command Life on the individual. This costs 20% (10% if fated hero is owned). For reference: Command Life is as animate life except the individual does not become Undead. Instead they discern as spiritually mastered, and if removed they die. It does not function on those immune to spiritual mastery. This should be written on the individuals card.",
     "MiracleList": {
-      "1": ["Halt", "Lesser Wings of Darkness"],
-      "2": ["Cause Wound", "Animate Zombie"],
+      "1": [
+        "Halt",
+        "Lesser Wings of Darkness"
+      ],
+      "2": [
+        "Cause Wound",
+        "Animate Zombie"
+      ],
       "3": [
         "Cause Serious Wounds",
         "Curse",
@@ -1520,9 +1406,17 @@
         "Beguile Spirit",
         "Control Ghoul"
       ],
-      "5": ["Voice of Power", "Cause Grievous Wounds"],
-      "6": ["Walk Through Walls", "Spiritual Mastery"],
-      "7": ["Suspend Life"]
+      "5": [
+        "Voice of Power",
+        "Cause Grievous Wounds"
+      ],
+      "6": [
+        "Walk Through Walls",
+        "Spiritual Mastery"
+      ],
+      "7": [
+        "Suspend Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -1582,26 +1476,29 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Chaotic"],
-          "Moral": ["Evil"]
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Evil"
+          ]
+        }
+      ]
     },
     "DenominationalMiracle": {
       "$ref": "The Evil Within"
@@ -1711,26 +1608,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
+        }
+      ]
     }
   },
   "Church of the Empress Goddess": {
@@ -1738,8 +1624,14 @@
     "PreRequisites": "Open to any Goodly priest. Only Goodly individuals may join without the permission of the High Priest or 2 Custodians",
     "Ethos": "Members of this Church worship Truic Amora-Badrass, the Grand Duchess of Halgar, Empress of Labyrinthia and Realm Spirit of Glass as a Goddess in her own right. They recognise the fact that the current Empress has become the first Master or Mistress of Primus to truly master the Nagrech. Furthermore, members of this faith venerate the choice that the Empress made in sacrificing her own humanity and mortality to ascend to the position of Realm Spirit of Glass in order to combat the rise of The Spiter in the Sunless Lands. This act is held up as an example of the devotion to the duty of protecting the Empire, its borders and the people who reside within it that all members of the church should aspire to. This church is a goodly faith and represents the Empresses’ moral outlook as a goodly, constructive and peace loving being – violence should genuinely not be the first option. However, it is clearly not pacifistic in that its members are free (and often encouraged) to resort to martial means if necessary in the protection of the Empire and its people or in order to uphold Imperial Law. This faith is currently most commonly followed by those outside the mercenary community, though its influence there is starting to grow. It is also particularly popular within some of the most fervent of the legions within the Bastion.\n\nMIRACLE LIST 1st Halt (N) Dismiss Zombie (G) 2nd Halt Undead (G), Cure Serious (G) 3rd Protection from Spirits (N), Spirit Shield (N) Talk to Spirit, (N) Bless, (G) Dismiss Ghoul, (G) 4th Heal (G) 5th VoP (N) Spirit Invis (N) Dismiss Wraith (G) 6th Total Heal (G) Dismiss Vampire (G) 7th Pure Force (N)",
     "MiracleList": {
-      "1": ["Halt", "Dismiss Zombie"],
-      "2": ["Halt Undead", "Cure Serious Wounds"],
+      "1": [
+        "Halt",
+        "Dismiss Zombie"
+      ],
+      "2": [
+        "Halt Undead",
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Bless",
         "Spirit Shield",
@@ -1747,10 +1639,21 @@
         "Talk to Spirit",
         "Dismiss Ghoul"
       ],
-      "4": ["Heal"],
-      "5": ["Voice of Power", "Spiritual Invisibility", "Dismiss Wraith"],
-      "6": ["Total Heal", "Dismiss Vampire"],
-      "7": ["Pure Force"]
+      "4": [
+        "Heal"
+      ],
+      "5": [
+        "Voice of Power",
+        "Spiritual Invisibility",
+        "Dismiss Wraith"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "7": [
+        "Pure Force"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -1815,26 +1718,31 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good"]
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good"
+          ]
+        }
+      ]
     }
   },
   "Church of Knowledge": {
@@ -1849,22 +1757,33 @@
         "Milly's Detect Spirits",
         "Spirit of Seeing"
       ],
-      "2": ["Spirit of Seeing and Hearing"],
+      "2": [
+        "Spirit of Seeing and Hearing"
+      ],
       "3": [
         "Detect Lie",
         "Spirit Shield",
         "Protection from Spirits",
         "Talk to Spirit"
       ],
-      "4": ["Major Prayer", "Rune of Power", "Spirit Bolt", "Communication"],
+      "4": [
+        "Major Prayer",
+        "Rune of Power",
+        "Spirit Bolt",
+        "Communication"
+      ],
       "5": [
         "Identify Spirit",
         "Spiritual Invisibility",
         "Voice of Power",
         "Remove Voice of Power"
       ],
-      "6": ["Control Wraith"],
-      "8": ["Greater Communication"]
+      "6": [
+        "Control Wraith"
+      ],
+      "8": [
+        "Greater Communication"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -1937,26 +1856,31 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Neutral"]
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Neutral"
+          ]
+        }
+      ]
     }
   },
   "Church of Iron & Empire": {
@@ -1966,8 +1890,16 @@
     "Restrictions": "• Should a member become Outlawed or Ostracised by the Empire they are automatically excommunicated until the matter is resolved. In game terms they cannot cast any miracle from the Church list, nor miracles learnt whilst a member. However this does not trigger Dedicated Power restrictions unless the individual refuses to hand themselves in for trial.\n• Note: The Lord of Feldraken Isle can remove the High Priest from their role if they are not acting in the best interest of the Church, or simply fails to fulfil their duties.",
     "Type": "professional",
     "MiracleList": {
-      "1": ["Soul's Hunger", "Halt", "Lesser Wings Of Darkness"],
-      "2": ["Cause Wound", "Animate Zombie", "Halt Undead"],
+      "1": [
+        "Soul's Hunger",
+        "Halt",
+        "Lesser Wings Of Darkness"
+      ],
+      "2": [
+        "Cause Wound",
+        "Animate Zombie",
+        "Halt Undead"
+      ],
       "3": [
         "Curse",
         "Spirit Shield",
@@ -1976,10 +1908,22 @@
         "Cause Serious Wounds",
         "Animate skeleton"
       ],
-      "4": ["Cause Disease", "Create Ghoul", "Cause Fear", "Control Ghoul"],
-      "5": ["Cause Grievous Wounds"],
-      "6": ["Summon Wraith", "Cause Critical wounds"],
-      "7": ["Suspend Life"]
+      "4": [
+        "Cause Disease",
+        "Create Ghoul",
+        "Cause Fear",
+        "Control Ghoul"
+      ],
+      "5": [
+        "Cause Grievous Wounds"
+      ],
+      "6": [
+        "Summon Wraith",
+        "Cause Critical wounds"
+      ],
+      "7": [
+        "Suspend Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2048,26 +1992,32 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Unholy Champion"],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Evil"]
+      "Rules": [
+        {
+          "Field": "Class|Bracket",
+          "Operator": "In",
+          "Value": [
+            "Unholy Champion",
+            "🙏 Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Evil"
+          ]
+        }
+      ]
     }
   },
   "Church of the Lady of The Stars": {
@@ -2082,7 +2032,9 @@
         "Power Meld",
         "Spirit of Seeing"
       ],
-      "2": ["Cure Serious"],
+      "2": [
+        "Cure Serious"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2091,10 +2043,22 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": ["Heal", "Spirit Bolt"],
-      "5": ["Dismiss Wraith", "Voice of Power", "Spiritual Invisibility"],
-      "6": ["Total Heal", "Dismiss Vampire"],
-      "8": ["Restore Life"]
+      "4": [
+        "Heal",
+        "Spirit Bolt"
+      ],
+      "5": [
+        "Dismiss Wraith",
+        "Voice of Power",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2148,26 +2112,31 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good"]
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good"
+          ]
+        }
+      ]
     }
   },
   "Church of Mortai": {
@@ -2175,8 +2144,15 @@
     "PreRequisites": "Be a goodly weapons-wielding priest (not pure priest, hospitaller, armoured priest), or a paladin",
     "Ethos": "Mortai is the brother god of Shaehan, and her defender. He strongly believes in the sanctity of life, and is the overseer of Undead across the planes. His role is to ensure that they do not stray outside the restrictions to which they are bound, by invading the dead bodies of mortals or otherwise seeking to take revenge on living spirits. His priests are expected to harm no living thing except where it is essential to defend a life, although those who raise Undead are an exception to this rule and may be acted against as the priest sees fit. Undead must be returned to their own plane, by force if necessary, and trapped mortal bodies freed from their corruption. Antagonistic daemonkind should also be destroyed or banished, as their spirits are also perversions of lost souls and they are drawn to harm the living.\n\nMIRACLE LIST 1st Dismiss Zombie, Cure Wound 2nd Dismiss Skeleton, Halt Undead, Cure Serious Wounds 3rd Dismiss Ghoul, Protection from Spirits, Talk to Spirits, Spirit Shield, Cure Disease, Bless 4th Spirit Bolt, Heal, Dismiss Mummy 5th Spiritual Invisibility, Dismiss Wraith 6th Total Heal, Dismiss Vampire 7th Dismiss Level 7 Undead",
     "MiracleList": {
-      "1": ["Dismiss Zombie", "Cure Wound"],
-      "2": ["Dismiss Skeleton", "Halt Undead", "Cure Serious Wounds"],
+      "1": [
+        "Dismiss Zombie",
+        "Cure Wound"
+      ],
+      "2": [
+        "Dismiss Skeleton",
+        "Halt Undead",
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2185,10 +2161,22 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": ["Heal", "Spirit Bolt", "Dismiss Mummy"],
-      "5": ["Dismiss Wraith", "Spiritual Invisibility"],
-      "6": ["Total Heal", "Dismiss Vampire"],
-      "8": ["Dismiss Level 7 Undead"]
+      "4": [
+        "Heal",
+        "Spirit Bolt",
+        "Dismiss Mummy"
+      ],
+      "5": [
+        "Dismiss Wraith",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Dismiss Level 7 Undead"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2249,26 +2237,41 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Paladin"],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good"]
+      "Rules": [
+        {
+          "Field": "Class|Bracket",
+          "Operator": "In",
+          "Value": [
+            "Paladin",
+            "🙏 Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": ["Pure-Priest", "Hospitaller", "Armoured Priest"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good"
+          ]
+        },
+        {
+          "Field": "Class",
+          "Operator": "NotIn",
+          "Value": [
+            "Pure-Priest",
+            "Hospitaller",
+            "Armoured Priest"
+          ]
+        }
+      ]
     }
   },
   "Church of Shaehan": {
@@ -2277,8 +2280,14 @@
     "Restrictions": "They must never kill, or they will be instantly excommunicated by the goddess (referee), unless it is against Undead or evil supernatural creatures which are antagonistic. May never manufacture anything supernatural except spiritual scrolls.\n\nMESSAGE FROM THE HIGH PRIEST Faithful, please find me to receive the blessings of our lady, so that I can ensure that you are protected. The church and our Ladies power has much to provide. Keep safe whilst travelling the lands of Primus and beyond. And above all, embrace Her light wherever you walk. Miracle List\n\n1st Cure Wound, Detect Spirit’s Nature, Halt 2nd Cure Serious Wounds 3rd Cure Disease, Talk to Spirit, Dismiss Ghoul, Protection from Spirits, Spirit Shield, Bless 4th Heal 5th Dismiss Wraith, Remove Fear and Paralysis, Spiritual Invisibility 6th Total Heal, Dismiss Vampire, Spiritual Freedom 8th Restore Life",
     "Type": "professional",
     "MiracleList": {
-      "1": ["Cure Wound", "Detect Spirit's Nature", "Halt"],
-      "2": ["Cure Serious Wounds"],
+      "1": [
+        "Cure Wound",
+        "Detect Spirit's Nature",
+        "Halt"
+      ],
+      "2": [
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2287,14 +2296,22 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": ["Heal"],
+      "4": [
+        "Heal"
+      ],
       "5": [
         "Dismiss Wraith",
         "Spiritual Invisibility",
         "Remove Fear and Paralysis"
       ],
-      "6": ["Total Heal", "Dismiss Vampire", "Spiritual Freedom"],
-      "8": ["Restore Life"]
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire",
+        "Spiritual Freedom"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2329,7 +2346,10 @@
         {
           "Name": "Strengthened",
           "Type": "Life",
-          "Amount": [4, 2],
+          "Amount": [
+            4,
+            2
+          ],
           "Source": "Guild"
         }
       ],
@@ -2352,33 +2372,46 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hospitaller", "Pure-Priest", "Shaman", "Armoured Priest"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good"]
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hospitaller",
+            "Pure-Priest",
+            "Shaman",
+            "Armoured Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [
-          "Warrior Priest",
-          "Crusading Priest",
-          "Friar",
-          "Paladin",
-          "Battle Priest",
-          "Spiritual Warrior"
-        ],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good"
+          ]
+        },
+        {
+          "Field": "Class",
+          "Operator": "NotIn",
+          "Value": [
+            "Warrior Priest",
+            "Crusading Priest",
+            "Friar",
+            "Paladin",
+            "Battle Priest",
+            "Spiritual Warrior"
+          ]
+        }
+      ]
     }
   },
   "Church of Saint Michael": {
@@ -2393,7 +2426,9 @@
         "Power Meld",
         "Spirit of Seeing"
       ],
-      "2": ["Cure Serious Wounds"],
+      "2": [
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2402,17 +2437,32 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": ["Heal", "Spirit Bolt"],
-      "5": ["Dismiss Wraith", "Voice of Power", "Spiritual Invisibility"],
-      "6": ["Total Heal", "Dismiss Vampire"],
-      "8": ["Restore Life"]
+      "4": [
+        "Heal",
+        "Spirit Bolt"
+      ],
+      "5": [
+        "Dismiss Wraith",
+        "Voice of Power",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Benefits": {
       "Basic": [
         {
           "Name": "Stamina Blessing of St Michael",
           "Type": "Life",
-          "Amount": [3, 1],
+          "Amount": [
+            3,
+            1
+          ],
           "Source": "Guild"
         },
         {
@@ -2440,7 +2490,10 @@
         {
           "Name": "Stamina Blessing of St Michael",
           "Type": "Update",
-          "Amount": [6, 2],
+          "Amount": [
+            6,
+            2
+          ],
           "Source": "Guild"
         },
         {
@@ -2458,26 +2511,31 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good"]
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good"
+          ]
+        }
+      ]
     }
   },
   "Church of the Soul Forger": {
@@ -2485,8 +2543,14 @@
     "PreRequisites": "Goodly Humans and Dwarven Priests. Other races may be accepted at the discretion of the High Priest on an individual basis.",
     "Ethos": "The Soul forger forged the dwarven race from iron and mithril, and then breathed life into them as they cooled upon his forge. Priests of the Soul Forger are charged with upholding the dwarven virtues of law and light, and with guiding their people in the arts the dwarves hold dear. The dwarves have always revered the Master of the Forge, attempting to emulate his masterful work with metals and stone. Honesty and hard work pay off just as often in the mines and the forges, as they do on the battlefield, or so the dwarves claim. As such all priests of the Soul Forger are encouraged to spend at least some of their time at a forge learning and honing their skills.",
     "MiracleList": {
-      "1": ["Cure Wound", "Detect Spirit's Nature"],
-      "2": ["Cure Serious Wounds", "Spirit of Seeing and Hearing"],
+      "1": [
+        "Cure Wound",
+        "Detect Spirit's Nature"
+      ],
+      "2": [
+        "Cure Serious Wounds",
+        "Spirit of Seeing and Hearing"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2496,10 +2560,22 @@
         "Dismiss Ghoul",
         "Healing Hand"
       ],
-      "4": ["Heal", "Spirit Bolt", "Passive Heal", "Communication"],
-      "5": ["Spiritual Invisibility"],
-      "6": ["Total Heal", "Dismiss Vampire"],
-      "8": ["Restore Life"]
+      "4": [
+        "Heal",
+        "Spirit Bolt",
+        "Passive Heal",
+        "Communication"
+      ],
+      "5": [
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2524,33 +2600,39 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good"]
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
         },
-        "Races": [
-          {
-            "Name": "Human"
-          },
-          {
-            "Name": "Dwarf"
-          }
-        ],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Race",
+          "Operator": "In",
+          "Value": [
+            "Human",
+            "Dwarf"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
+        },
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good"
+          ]
+        }
+      ]
     },
     "DenominationalMiracle": {
       "$ref": "Armour of the Forge"
@@ -2563,8 +2645,13 @@
     "Restrictions": "Guild Members must choose to align themselves to one of the seven aspects of Talthar, which must be recorded on their character card. They may only battleboard the guild benefits of that ring. Miracle List\n\n1st Cure Wound, Halt 2nd Cure Serious Wounds 3rd Cure Disease, Protection from Spirits, Talk to Spirits, Spirit Shield, Bless 4th Spirit Bolt, Heal 5th Voice of Power, Remove Voice of Power, Spiritual Invisibility 6th Total Heal, Dismiss Vampire, Regeneration 8th Restore Life",
     "Type": "professional",
     "MiracleList": {
-      "1": ["Cure Wound", "Halt"],
-      "2": ["Cure Serious Wounds"],
+      "1": [
+        "Cure Wound",
+        "Halt"
+      ],
+      "2": [
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2572,14 +2659,23 @@
         "Protection from Spirits",
         "Bless"
       ],
-      "4": ["Heal", "Spirit Bolt"],
+      "4": [
+        "Heal",
+        "Spirit Bolt"
+      ],
       "5": [
         "Spiritual Invisibility",
         "Voice of Power",
         "Remove Voice of Power"
       ],
-      "6": ["Total Heal", "Dismiss Vampire", "Regeneration"],
-      "8": ["Restore Life"]
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire",
+        "Regeneration"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2740,38 +2836,41 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [
-          "Paladin",
-          "Pure-Priest",
-          "Armoured Priest",
-          "Crusading Priest",
-          "Warrior Priest",
-          "Spiritual Warrior",
-          "Wayfinder",
-          "Friar",
-          "Hospitaller",
-          "Shaman",
-          "Battle Priest"
-        ],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Good"]
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Paladin",
+            "Pure-Priest",
+            "Armoured Priest",
+            "Crusading Priest",
+            "Warrior Priest",
+            "Spiritual Warrior",
+            "Wayfinder",
+            "Friar",
+            "Hospitaller",
+            "Shaman",
+            "Battle Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good"
+          ]
+        }
+      ]
     }
   },
   "Church of the Tryst": {
@@ -2779,8 +2878,14 @@
     "PreRequisites": "Any Evil Priest can join this guild.\n\nMIRACLE LIST 1st Halt, Power Meld, 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Curse, Talk to Spirits, Spirit Shield, Cause Serious Wounds, Protection From Spirits 4th Spirit Shift, Spirit Bolt, Cause Disease, Create Ghoul 5th Spiritual Invisibility, Cause Grievous Wounds 6th Control Wraith, Serin’s Bound Spirit of Undeath, Walk Through Walls 7th Suspend Life",
     "Ethos": "The Tryst is a church that takes spiritual power from the Imbaiu demons. It is important to understand that the church do not serve the Imbaiu, but binds, dominates and commands them. References to the Imbaiu Masters refer to those Imbaiu with mastery over lesser demons. The Imbaiu Masters that accept the bindings of the church do so because this link to Primus gives them strength upon their own worlds that they use to remain at the top of their demonic hierarchy.\n\nPRE-REQUISITES Any Evil Priest can join this guild.\n\nMIRACLE LIST 1st Halt, Power Meld, 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Curse, Talk to Spirits, Spirit Shield, Cause Serious Wounds, Protection From Spirits 4th Spirit Shift, Spirit Bolt, Cause Disease, Create Ghoul 5th Spiritual Invisibility, Cause Grievous Wounds 6th Control Wraith, Serin’s Bound Spirit of Undeath, Walk Through Walls 7th Suspend Life",
     "MiracleList": {
-      "1": ["Halt", "Power Meld"],
-      "2": ["Cause Wound", "Spirit of Seeing and Hearing"],
+      "1": [
+        "Halt",
+        "Power Meld"
+      ],
+      "2": [
+        "Cause Wound",
+        "Spirit of Seeing and Hearing"
+      ],
       "3": [
         "Curse",
         "Talk to Spirit",
@@ -2788,14 +2893,24 @@
         "Cause Serious Wounds",
         "Protection From Spirits"
       ],
-      "4": ["Spirit Bolt", "Spirit Shift", "Cause Disease", "Create Ghoul"],
-      "5": ["Spiritual Invisibility", "Cause Grievous Wounds"],
+      "4": [
+        "Spirit Bolt",
+        "Spirit Shift",
+        "Cause Disease",
+        "Create Ghoul"
+      ],
+      "5": [
+        "Spiritual Invisibility",
+        "Cause Grievous Wounds"
+      ],
       "6": [
         "Control Wraith",
         "Serin's Bound Spirit of Undeath",
         "Walk Through Walls"
       ],
-      "7": ["Suspend Life"]
+      "7": [
+        "Suspend Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2829,26 +2944,31 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Evil"]
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Evil"
+          ]
+        }
+      ]
     }
   },
   "Church of Condesecration": {
@@ -2856,8 +2976,13 @@
     "PreRequisites": "• Any Evil Priest Subclass, Hermits and the alike may choose to keep their own lists, Unholy Champions may also join.\n• Any member that worships a God of their own free will, will be excommunicated.",
     "Ethos": "A Dark faith built upon the darkest whispers of the world, this church worships the malevolence woven into the fabric of existence itself.\nCore Belief: The world is a tainted and imperfect place, not because of chance, but because darkness is intrinsic to its nature. Evil spirits are not aberration - they are the world’s architects, unseen but ever-present.\nThe hearts of men, with greed, hatred and ambition, are merely conduits for this eternal corruption. To resist is folly, to embrace is power.\nIt was through Treare The Ghoul Lord's teachings that when Lord Waste left, it was him that swore never to follow a god again and find the true path to power, strength through the darkness that lives in all souls and this is what followers draw upon.\nCorruption Is Truth: Purity is a myth fed to the weak. All things decay, and the strong must harness the inevitable rot.\nThe Will of Shadows: Evil spirits, lurking beyond mortal sight, whisper their desires into the ears of men, the faithful must listen and act.\nLast words of the High Priest: Darkness is everywhere, bind it and learn control. Killing randomly and without thinking is disliked by the current leadership and harming peons is such a waste as they are a source of our strength.",
     "MiracleList": {
-      "1": ["Halt", "Spirit of Seeing"],
-      "2": ["Cause Wound"],
+      "1": [
+        "Halt",
+        "Spirit of Seeing"
+      ],
+      "2": [
+        "Cause Wound"
+      ],
       "3": [
         "Cause Serious Wounds",
         "Talk to Spirit",
@@ -2865,15 +2990,25 @@
         "Protection From Spirits",
         "Curse"
       ],
-      "4": ["Spirit Shift", "Cause Disease", "Control Ghoul"],
+      "4": [
+        "Spirit Shift",
+        "Cause Disease",
+        "Control Ghoul"
+      ],
       "5": [
         "Spiritual Invisibility",
         "Cause Grievous Wounds",
         "Voice of Power"
       ],
-      "6": ["Control Wraith"],
-      "7": ["Suspend Life"],
-      "8": ["Touch of Death"]
+      "6": [
+        "Control Wraith"
+      ],
+      "7": [
+        "Suspend Life"
+      ],
+      "8": [
+        "Touch of Death"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2930,26 +3065,32 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Unholy Champion"],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Chaotic", "Neutral", "Lawful"],
-          "Moral": ["Evil"]
+      "Rules": [
+        {
+          "Field": "Class|Bracket",
+          "Operator": "In",
+          "Value": [
+            "Unholy Champion",
+            "🙏 Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Evil"
+          ]
+        }
+      ]
     }
   },
   "Church of the Destroyer": {
@@ -2964,7 +3105,10 @@
         "Soul's Hunger",
         "Milly's Detect Spirits"
       ],
-      "2": ["Cause Wound", "Spirit of Seeing and Hearing"],
+      "2": [
+        "Cause Wound",
+        "Spirit of Seeing and Hearing"
+      ],
       "3": [
         "Spirit Shield",
         "Cause Serious Wounds",
@@ -2972,15 +3116,24 @@
         "Writhe",
         "Force of Will"
       ],
-      "4": ["Spirit Bolt", "Cause Disease"],
+      "4": [
+        "Spirit Bolt",
+        "Cause Disease"
+      ],
       "5": [
         "Voice of Power",
         "Spiritual Invisibility",
         "Cause Grievous Wounds"
       ],
-      "6": ["Spiritual Mastery"],
-      "7": ["Suspend Life"],
-      "8": ["Touch of Death"]
+      "6": [
+        "Spiritual Mastery"
+      ],
+      "7": [
+        "Suspend Life"
+      ],
+      "8": [
+        "Touch of Death"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -3014,26 +3167,31 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": ["Lawful", "Neutral", "Chaotic"],
-          "Moral": ["Evil"]
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Evil"
+          ]
+        }
+      ]
     },
     "DenominationalMiracle": {
       "$ref": "Fated Destruction"
@@ -3099,26 +3257,16 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Wizard", "High-Wizard"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Wizard",
+            "High-Wizard"
+          ]
+        }
+      ]
     }
   },
   "Earthen Conclave": {
@@ -3197,26 +3345,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🪄 Wizard"],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🪄 Wizard"
+          ]
+        }
+      ]
     }
   },
   "Frontline": {
@@ -3234,7 +3371,10 @@
         {
           "Name": "Combat Hardened",
           "Type": "Life",
-          "Amount": [3, 1],
+          "Amount": [
+            3,
+            1
+          ],
           "Source": "Guild"
         },
         {
@@ -3247,7 +3387,10 @@
         {
           "Name": "Combat Hardened",
           "Type": "Update",
-          "Amount": [9, 3],
+          "Amount": [
+            9,
+            3
+          ],
           "Source": "Guild"
         },
         {
@@ -3267,7 +3410,10 @@
         {
           "Name": "Combat Hardened",
           "Type": "Update",
-          "Amount": [12, 4],
+          "Amount": [
+            12,
+            4
+          ],
           "Source": "Guild"
         },
         {
@@ -3284,26 +3430,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🛡️ Warrior"],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🛡️ Warrior"
+          ]
+        }
+      ]
     }
   },
   "The Hovel": {
@@ -3355,26 +3490,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
+        }
+      ]
     }
   },
   "The Inward Eye": {
@@ -3423,26 +3547,15 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🧠 Neuro"],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🧠 Neuro"
+          ]
+        }
+      ]
     }
   },
   "Natural Trust": {
@@ -3487,26 +3600,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🌿 Druid"],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🌿 Druid"
+          ]
+        }
+      ]
     }
   },
   "Shadow Legion": {
@@ -3577,26 +3679,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🛡️ Warrior"],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🛡️ Warrior"
+          ]
+        }
+      ]
     }
   },
   "Sons and Daughters of Sirac": {
@@ -3633,26 +3724,22 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🪄 Wizard"],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🪄 Wizard"
+          ]
         },
-        "Races": [],
-        "PeopleType": ["Magic Kin"]
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "PeopleType",
+          "Operator": "In",
+          "Value": [
+            "Magic Kin"
+          ]
+        }
+      ]
     }
   },
   "Top Secret": {
@@ -3700,26 +3787,15 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["⚔ Scout"],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "⚔ Scout"
+          ]
+        }
+      ]
     }
   },
   "18th Imperial Legion": {
@@ -3739,26 +3815,15 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": ["Tribal"]
-      }
+      "Rules": [
+        {
+          "Field": "PeopleType",
+          "Operator": "NotIn",
+          "Value": [
+            "Tribal"
+          ]
+        }
+      ]
     }
   },
   "Buggledexters": {
@@ -3815,26 +3880,7 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": []
     }
   },
   "Children of the Dusk": {
@@ -3874,26 +3920,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": ["Magic Kin"]
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "PeopleType",
+          "Operator": "In",
+          "Value": [
+            "Magic Kin"
+          ]
+        }
+      ]
     }
   },
   "Council of Jade": {
@@ -3902,31 +3937,22 @@
     "Restrictions": "Modern Laws- No member of the Council of Jade may be outlawed, if they become so they no longer gain any benefits until the crime is resolved at which time they may appeal to the Council for full membership again (only by the Guild Sire’s approval).\n\nUnified Council - No member may attack or bring purposeful harm to another member, should this come to be they lose all benefits until the incident is resolved at which time they may appeal to the Council for full membership again (only by the Guild Sire’s approval). Any disagreements will be civilly dealt with by the Leaders of the Council; their decision is final in every case. The only exception in this rule will be cases of Seppuku. All cases of this restriction can be judged and dealt with by the Council Leaders in the same fashion as the outlaw restriction\n\nOnce Clan always Clan - Once you have joined the Council you may never leave unless expelled by a unified vote of the council (rebirthing releases you also).",
     "Type": "social",
     "Benefits": {
-      "Basic": ["Clan chosen on creation"],
+      "Basic": [
+        "Clan chosen on creation"
+      ],
       "Intermediate": [],
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": ["Amlesian"]
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "PeopleType",
+          "Operator": "In",
+          "Value": [
+            "Amlesian"
+          ]
+        }
+      ]
     }
   },
   "Earthsunder": {
@@ -3981,30 +4007,32 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Lawful", "Neutral", "Chaotic"],
-          "Moral": ["Good", "Neutral"]
+      "Rules": [
+        {
+          "Field": "Race",
+          "Operator": "In",
+          "Value": [
+            "Dwarf"
+          ]
         },
-        "Races": [
-          {
-            "Name": "Dwarf"
-          }
-        ],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
+        }
+      ]
     }
   },
   "The Highborn Assembly": {
@@ -4043,26 +4071,25 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Lawful", "Neutral", "Chaotic"],
-          "Moral": ["Good", "Neutral"]
+      "Rules": [
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
+        }
+      ]
     }
   },
   "House D'treal": {
@@ -4093,26 +4120,7 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": []
     }
   },
   "Khaniabad Archaeologist and Cartographers Association": {
@@ -4163,26 +4171,32 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Lawful", "Neutral", "Chaotic"],
-          "Moral": ["Evil", "Neutral"]
+      "Rules": [
+        {
+          "Field": "PeopleType",
+          "Operator": "In",
+          "Value": [
+            "Ishmaic"
+          ]
         },
-        "Races": [],
-        "PeopleType": ["Ishmaic"]
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Evil",
+            "Neutral"
+          ]
+        }
+      ]
     }
   },
   "Knights Errant": {
@@ -4227,26 +4241,25 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Lawful", "Neutral", "Chaotic"],
-          "Moral": ["Good", "Neutral"]
+      "Rules": [
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
+        }
+      ]
     }
   },
   "Knights of The Land": {
@@ -4307,26 +4320,7 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": []
     }
   },
   "Lo'Thi": {
@@ -4356,31 +4350,39 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Lawful", "Neutral", "Chaotic"],
-          "Moral": ["Good", "Neutral"]
+      "Rules": [
+        {
+          "Field": "Race",
+          "Operator": "In",
+          "Value": [
+            "Human"
+          ]
         },
-        "Races": [
-          {
-            "Name": "Human",
-            "Subtype": "Barbarian"
-          }
-        ],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "RaceSubtype",
+          "Operator": "In",
+          "Value": [
+            "Barbarian"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
+        },
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
+        }
+      ]
     }
   },
   "The Marauders": {
@@ -4410,26 +4412,15 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": ["Tribal"]
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "PeopleType",
+          "Operator": "In",
+          "Value": [
+            "Tribal"
+          ]
+        }
+      ]
     }
   },
   "The Order of Mercenaries": {
@@ -4489,26 +4480,7 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": []
     }
   },
   "Panama Clan": {
@@ -4602,26 +4574,31 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Lawful"],
-          "Moral": ["Good", "Neutral", "Evil"]
+      "Rules": [
+        {
+          "Field": "PeopleType",
+          "Operator": "In",
+          "Value": [
+            "Amlesian"
+          ]
         },
-        "Races": [],
-        "PeopleType": ["Amlesian"]
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Lawful"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good",
+            "Neutral",
+            "Evil"
+          ]
+        }
+      ]
     }
   },
   "Spider Tribe": {
@@ -4686,30 +4663,15 @@
       ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [
-          {
-            "Name": "Goblin"
-          }
-        ],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Race",
+          "Operator": "In",
+          "Value": [
+            "Goblin"
+          ]
+        }
+      ]
     }
   },
   "The Swarm": {
@@ -4741,30 +4703,15 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [
-          {
-            "Name": "Ratfolk"
-          }
-        ],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Race",
+          "Operator": "In",
+          "Value": [
+            "Ratfolk"
+          ]
+        }
+      ]
     }
   },
   "The White Wind": {
@@ -4791,26 +4738,24 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": ["Lawful", "Neutral", "Chaotic"],
-          "Moral": ["Good"]
+      "Rules": [
+        {
+          "Field": "Alignment.Order",
+          "Operator": "In",
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": [
+            "Good"
+          ]
+        }
+      ]
     }
   },
   "Church of Tsu-Ling": {
@@ -4823,29 +4768,15 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": [],
-        "Brackets": ["🙏 Priest"],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
       "MiracleList": {
-        "1": ["Cure Wound", "Summon Spiritual Candles", "Halt"],
-        "2": ["Cure Serious Wounds"],
+        "1": [
+          "Cure Wound",
+          "Summon Spiritual Candles",
+          "Halt"
+        ],
+        "2": [
+          "Cure Serious Wounds"
+        ],
         "3": [
           "Cure Disease",
           "Talk to Spirit",
@@ -4854,15 +4785,32 @@
           "Healing Hand",
           "Bless"
         ],
-        "4": ["Heal"],
+        "4": [
+          "Heal"
+        ],
         "5": [
           "Remove Voice of Power",
           "Remove Fear and Paralysis",
           "Spiritual Invisibility"
         ],
-        "6": ["Total Heal", "Spiritual Freedom", "Stronghold of Goodness"],
-        "8": ["Restore Life"]
-      }
+        "6": [
+          "Total Heal",
+          "Spiritual Freedom",
+          "Stronghold of Goodness"
+        ],
+        "8": [
+          "Restore Life"
+        ]
+      },
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": [
+            "🙏 Priest"
+          ]
+        }
+      ]
     }
   },
   "Alguz": {
@@ -4873,26 +4821,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Bildteve": {
@@ -4904,30 +4842,27 @@
         "Discern Demonkind",
         "Discern Undead Dismiss Name"
       ],
-      "Intermediate": ["Hand Of Purity", "Shield Of Purity"],
-      "Advanced": ["Hand Of Purity", "Traitor's Shield", "Immunity To Insanity"]
+      "Intermediate": [
+        "Hand Of Purity",
+        "Shield Of Purity"
+      ],
+      "Advanced": [
+        "Hand Of Purity",
+        "Traitor's Shield",
+        "Immunity To Insanity"
+      ]
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Deci": {
@@ -4938,26 +4873,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Eartholme": {
@@ -4968,26 +4893,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Gothiel": {
@@ -4998,26 +4913,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Halgar": {
@@ -5028,26 +4933,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Port Miere": {
@@ -5058,26 +4953,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Rodanne": {
@@ -5088,26 +4973,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Scarlene": {
@@ -5119,26 +4994,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Sellaville": {
@@ -5150,26 +5015,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Thimon": {
@@ -5180,31 +5035,30 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         },
-        "Races": [
-          {
-            "Name": "Ratfolk",
-            "Subtype": "Caslevasp (long hairs)"
-          }
-        ],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
+        {
+          "Field": "Race",
+          "Operator": "In",
+          "Value": [
+            "Ratfolk"
+          ]
         },
-        "Races": [],
-        "PeopleType": []
-      }
+        {
+          "Field": "RaceSubtype",
+          "Operator": "In",
+          "Value": [
+            "Caslevasp (long hairs)"
+          ]
+        }
+      ]
     }
   },
   "Bulaslavia": {
@@ -5215,26 +5069,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Ghalabhad": {
@@ -5245,26 +5089,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Khaniabad": {
@@ -5276,26 +5110,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Amles": {
@@ -5306,26 +5130,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   },
   "Mordred's Rest": {
@@ -5336,26 +5150,16 @@
       "Advanced": []
     },
     "Availability": {
-      "Whitelist": {
-        "Classes": ["Hanot Beggar", "Kallah Beggar"],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      },
-      "Blacklist": {
-        "Classes": [],
-        "Brackets": [],
-        "Alignments": {
-          "Order": [],
-          "Moral": []
-        },
-        "Races": [],
-        "PeopleType": []
-      }
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
     }
   }
 }

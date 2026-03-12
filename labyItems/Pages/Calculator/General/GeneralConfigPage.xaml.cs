@@ -29,14 +29,14 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         );
 
         s.AddToSummaryIf(c.StrengthEnchantCost, c.StrengthEnchantDescription);
-        s.AddToSummaryIf(c.ColdRage25PerDayCount, $"25% Cold Rage ({c.ColdRage25PerDayCount}/day)");
+        s.AddToSummaryIf(c.ColdRage25PerDayCount, $"Cold Rage ({c.ColdRage25PerDayCount}/day)");
         s.AddToSummaryIf(
             c.BerserkRage50PerDayCount,
-            $"50% Berserk Rage ({c.BerserkRage50PerDayCount}/day)"
+            $"Berserk Rage (50%) ({c.BerserkRage50PerDayCount}/day)"
         );
         s.AddToSummaryIf(
             c.RageCategoriesCount,
-            $"Perm 25% rage vs {ListSummaryHelper.JoinWithAnd(c.PermRageCategoryItems)}"
+            $"Perm Cold Rage vs {ListSummaryHelper.JoinWithAnd(c.PermRageCategoryItems)}"
         );
         s.AddToSummaryIf(c.RepelAttractTypeCount, c.RepelAttractGroupLabel);
         s.AddToSummaryIf(c.RepelAttractGroupCount, c.RepelAttractTypeLabel);
@@ -48,7 +48,7 @@ public partial class GeneralConfigPage : ConfigPageBase<GeneralConfig>
         );
         s.AddToSummaryIf(
             c.KiOrPrimalStrikePerDayCount,
-            $"{c.KiOrPrimalStrike} Strike ({c.KiOrPrimalStrikePerDayCount}/day)"
+            $"{(string.IsNullOrWhiteSpace(c.KiOrPrimalStrike) ? "Primal / Ki" : c.KiOrPrimalStrike)} Strike ({c.KiOrPrimalStrikePerDayCount}/day)"
         );
         s.AddToSummaryIf(
             c.EmpowerWeaponMagicCount,

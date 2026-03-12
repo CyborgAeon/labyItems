@@ -34,6 +34,7 @@
     <Compile Include="../../labyItems/Services/AbilityDetailsLookupService.cs" Link="Source/AbilityDetailsLookupService.cs" />
     <Compile Include="../../labyItems/Services/ClassService.cs" Link="Source/ClassService.cs" />
     <Compile Include="../../labyItems/Services/GuildsService.cs" Link="Source/GuildsService.cs" />
+    <Compile Include="../../labyItems/Services/RuleTreeEvaluator.cs" Link="Source/RuleTreeEvaluator.cs" />
     <Compile Include="../../labyItems/Services/PeopleService.cs" Link="Source/PeopleService.cs" />
     <Compile Include="../../labyItems/Services/LifeScalesService.cs" Link="Source/LifeScalesService.cs" />
     <Compile Include="../../labyItems/Services/SpecialisationService.cs" Link="Source/SpecialisationService.cs" />
@@ -50,6 +51,7 @@
     <Compile Include="../../labyItems/Models/Characters/CharacterDraft.cs" Link="Source/CharacterDraft.cs" />
     <Compile Include="../../labyItems/Models/Characters/GuildOverrideRules.cs" Link="Source/GuildOverrideRules.cs" />
     <Compile Include="../../labyItems/Models/Characters/MagicListDrafts.cs" Link="Source/MagicListDrafts.cs" />
+    <Compile Include="../../labyItems/Models/Rules/RuleTree.cs" Link="Source/RuleTree.cs" />
     <Compile Include="../../labyItems/Models/Enums/ArmourType.cs" Link="Source/ArmourType.cs" />
     <Compile Include="../../labyItems/Models/Enums/DamType.cs" Link="Source/DamType.cs" />
     <Compile Include="../../labyItems/Models/Enums/MagicColours.cs" Link="Source/MagicColours.cs" />

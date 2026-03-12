@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using labyItems.Models.Characters;
+using labyItems.Models.Rules;
 
 namespace labyItems.Services;
 
@@ -12,7 +13,7 @@ public static class GuildsService
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter(), new GuildAvailabilityRaceConverter() }
+        Converters = { new JsonStringEnumConverter() }
     };
 
     private static Dictionary<string, GuildRecord>? _cache;
@@ -58,16 +59,51 @@ public static class GuildsService
         if (record == null)
             return null;
 
-        return BuildAlignmentRuleFromAvailability(record.Availability?.Whitelist?.Alignments);
+        var availability = record.Availability;
+        if (availability?.Rules is { Count: > 0 })
+        {
+            var fromRules = BuildAlignmentRuleFromRules(availability.Rules);
+            if (fromRules != null)
+                return fromRules;
+        }
+
+        return null;
     }
 
-    private static AlignmentRule? BuildAlignmentRuleFromAvailability(GuildAvailabilityAlignments? align)
+    private static AlignmentRule? BuildAlignmentRuleFromRules(
+        IEnumerable<RuleClause> rules)
     {
-        if (align == null)
+        var items = (rules ?? Array.Empty<RuleClause>())
+            .Where(r => r != null && r.IsValid)
+            .ToList();
+
+        if (items.Count == 0)
             return null;
 
-        var orders = ParseOrders(align.Order);
-        var morals = ParseMorals(align.Moral);
+        HashSet<OrderAxis>? orderConstraint = null;
+        HashSet<MoralAxis>? moralConstraint = null;
+
+        foreach (var rule in items)
+        {
+            var normalizedField = NormalizeRuleField(rule.Field);
+            if (normalizedField != "alignmentorder" && normalizedField != "alignmentmoral")
+                continue;
+
+            if (rule.Operator != RuleComparisonOp.In)
+                return null;
+
+            if (normalizedField == "alignmentorder")
+            {
+                MergeConstraint(ref orderConstraint, ParseOrders(rule.Value));
+            }
+            else
+            {
+                MergeConstraint(ref moralConstraint, ParseMorals(rule.Value));
+            }
+        }
+
+        var orders = orderConstraint ?? new HashSet<OrderAxis>();
+        var morals = moralConstraint ?? new HashSet<MoralAxis>();
         if (orders.Count == 0 && morals.Count == 0)
             return null;
 
@@ -80,6 +116,33 @@ public static class GuildsService
                 Moral = morals.ToList()
             }
         };
+    }
+
+    private static string NormalizeRuleField(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return new string(value
+            .Trim()
+            .ToLowerInvariant()
+            .Where(char.IsLetterOrDigit)
+            .ToArray());
+    }
+
+    private static void MergeConstraint<TEnum>(ref HashSet<TEnum>? existing, HashSet<TEnum> incoming)
+        where TEnum : struct, Enum
+    {
+        if (incoming.Count == 0)
+            return;
+
+        if (existing == null)
+        {
+            existing = incoming;
+            return;
+        }
+
+        existing.IntersectWith(incoming);
     }
 
     private static HashSet<OrderAxis> ParseOrders(IEnumerable<string>? values)
@@ -245,65 +308,8 @@ public sealed class GuildBenefitEntryConverter : JsonConverter<GuildBenefitEntry
 
 public sealed class GuildAvailability
 {
-    public GuildAvailabilityRules Whitelist { get; set; } = new();
-    public GuildAvailabilityRules Blacklist { get; set; } = new();
+    public List<RuleClause> Rules { get; set; } = new();
     public string? RequiredGuild { get; set; }
-}
-
-public sealed class GuildAvailabilityRules
-{
-    public List<string> Classes { get; set; } = new();
-    public List<string> Brackets { get; set; } = new();
-    public GuildAvailabilityAlignments Alignments { get; set; } = new();
-    public List<GuildAvailabilityRace> Races { get; set; } = new();
-    public List<string> PeopleType { get; set; } = new();
-}
-
-public sealed class GuildAvailabilityAlignments
-{
-    public List<string> Order { get; set; } = new();
-    public List<string> Moral { get; set; } = new();
-}
-
-public sealed class GuildAvailabilityRace
-{
-    public string Name { get; set; } = "";
-    public string? Subtype { get; set; }
-}
-
-public sealed class GuildAvailabilityRaceConverter : JsonConverter<GuildAvailabilityRace>
-{
-    public override GuildAvailabilityRace Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        if (reader.TokenType == JsonTokenType.String)
-            return new GuildAvailabilityRace { Name = reader.GetString() ?? string.Empty };
-
-        if (reader.TokenType != JsonTokenType.StartObject)
-            throw new JsonException($"Unexpected token {reader.TokenType} when parsing guild race.");
-
-        using var doc = JsonDocument.ParseValue(ref reader);
-        var root = doc.RootElement;
-        var race = new GuildAvailabilityRace
-        {
-            Name = root.TryGetProperty("Name", out var nameEl) ? (nameEl.GetString() ?? string.Empty) : string.Empty
-        };
-
-        if (root.TryGetProperty("Subtype", out var subtypeEl))
-            race.Subtype = subtypeEl.GetString();
-        else if (root.TryGetProperty("Clan", out var clanEl))
-            race.Subtype = clanEl.GetString();
-
-        return race;
-    }
-
-    public override void Write(Utf8JsonWriter writer, GuildAvailabilityRace value, JsonSerializerOptions options)
-    {
-        writer.WriteStartObject();
-        writer.WriteString("Name", value?.Name ?? string.Empty);
-        if (!string.IsNullOrWhiteSpace(value?.Subtype))
-            writer.WriteString("Subtype", value!.Subtype);
-        writer.WriteEndObject();
-    }
 }
 
 public sealed class GuildMiracleReferenceConverter : JsonConverter<GuildMiracleReference>

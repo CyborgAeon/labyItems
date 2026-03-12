@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentView
+    x:Class="labyItems.Controls.ConfigSelectionList"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Root">
+    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Source={x:Reference Root}, Path=ItemsSource}"
+                         Spacing="8">
+        <BindableLayout.ItemTemplate>
+            <DataTemplate>
+                <Border Padding="10,8"
+                        BackgroundColor="{Binding RowBackgroundColor}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 8">
+                    <Grid ColumnDefinitions="*,Auto,Auto,Auto"
+                          ColumnSpacing="8">
+                        <VerticalStackLayout Grid.Column="0"
+                                             Spacing="2">
+                            <Label Text="{Binding DisplayName}"
+                                   FontAttributes="Bold"
+                                   LineBreakMode="TailTruncation" />
+                            <Label Text="{Binding InlineSummary}"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+
+                        <Button Grid.Column="1"
+                                Text="&#xF1FC;"
+                                FontFamily="FASolid"
+                                FontSize="14"
+                                Padding="0"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource SubtleTextColor}"
+                                HeightRequest="24"
+                                WidthRequest="24"
+                                MinimumHeightRequest="0"
+                                MinimumWidthRequest="0"
+                                Command="{Binding Source={x:Reference Root}, Path=EditCommand}"
+                                CommandParameter="{Binding .}" />
+
+                        <Button Grid.Column="2"
+                                Text="&#xF05A;"
+                                FontFamily="FASolid"
+                                FontSize="14"
+                                Padding="0"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource SubtleTextColor}"
+                                HeightRequest="24"
+                                WidthRequest="24"
+                                MinimumHeightRequest="0"
+                                MinimumWidthRequest="0"
+                                IsVisible="{Binding Source={x:Reference Root}, Path=ShowInfoButton}"
+                                Command="{Binding Source={x:Reference Root}, Path=InfoCommand}"
+                                CommandParameter="{Binding .}" />
+
+                        <Button Grid.Column="3"
+                                Text="&#xF2ED;"
+                                FontFamily="FASolid"
+                                FontSize="14"
+                                Padding="0"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource SubtleTextColor}"
+                                HeightRequest="24"
+                                WidthRequest="24"
+                                MinimumHeightRequest="0"
+                                MinimumWidthRequest="0"
+                                Command="{Binding Source={x:Reference Root}, Path=DeleteCommand}"
+                                CommandParameter="{Binding .}" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
+        </BindableLayout.ItemTemplate>
+    </VerticalStackLayout>
+</ContentView>

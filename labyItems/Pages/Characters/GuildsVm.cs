@@ -1,10 +1,12 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using labyItems.Models.Characters;
+using labyItems.Models.Rules;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
 
@@ -13,6 +15,8 @@ namespace labyItems.Pages.Characters;
 public sealed class GuildsVm : INotifyPropertyChanged
 {
     private const string AllTypeFilterValue = "All";
+    private static readonly IReadOnlyDictionary<string, GuildMiracleDefinition> EmptyMiracleLookup =
+        new Dictionary<string, GuildMiracleDefinition>(StringComparer.OrdinalIgnoreCase);
     private static readonly Regex MiracleListLoreBlockRegex = new(
         @"(?is)(?:^|\n\s*\n)[^\n]*?\b(?:[A-Z]+\s+)*MIRACLE LIST\b.*?(?=(\n\s*\n|$))",
         RegexOptions.Compiled);
@@ -22,6 +26,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private static readonly Regex MiracleStatLoreBlockRegex = new(
         @"(?is)(?:^|\n\s*\n)[^\n]*?\bLevel:\b[^\n]*\bAlignment:\b[^\n]*\bDuration:\b[^\n]*\bRange:\b.*?(?=(\n\s*\n|$))",
         RegexOptions.Compiled);
+    private static readonly Regex ListPrefixRegex = new(
+        @"^(?:[•\-\*]|(?:\d+[\.\)]\s)|(?:\d+(?:st|nd|rd|th)\b))",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -34,6 +41,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private string _currentRaceName = "";
     private HashSet<string> _currentPeopleTypes = new(StringComparer.OrdinalIgnoreCase);
     private HashSet<string> _currentRaceSelections = new(StringComparer.OrdinalIgnoreCase);
+    private IReadOnlyDictionary<string, GuildMiracleDefinition>? _miracleLookupCache;
+    private Task<IReadOnlyDictionary<string, GuildMiracleDefinition>>? _miracleLookupTask;
+    private readonly Dictionary<string, Task> _detailLoadTasks = new(StringComparer.OrdinalIgnoreCase);
+    private readonly object _detailLoadGate = new();
     private readonly Func<Task>? _refreshDraftAbilitiesAsync;
     private readonly bool _applyCharacterAvailabilityFilters;
     private readonly bool _allowGuildSelection;
@@ -90,8 +101,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
         FilteredGuilds = new ObservableCollection<GuildCardVm>();
         TypeFilterChips = new ObservableCollection<GuildTypeFilterChipVm>();
 
-        ToggleExpandedCommand = new Command<GuildCardVm>(ToggleExpanded);
-        ToggleSelectedCommand = new Command<GuildCardVm>(ToggleSelected);
+        ToggleExpandedCommand = new Command<GuildCardVm>(item => _ = ToggleExpandedAsync(item));
+        ToggleSelectedCommand = new Command<GuildCardVm>(item => _ = ToggleSelectedAsync(item));
         ToggleTypeFilterChipCommand = new Command<GuildTypeFilterChipVm>(ToggleTypeFilterChip);
 
         SelectTypeFilterCommand = new Command<string>(s =>
@@ -143,7 +154,8 @@ public sealed class GuildsVm : INotifyPropertyChanged
     public async Task ReloadAsync()
     {
         _guildRecords = await _creationDataService.GetGuildsAsync() ?? new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
-        var miracleLookup = await LoadMiracleLookupAsync();
+        lock (_detailLoadGate)
+            _detailLoadTasks.Clear();
 
         await RefreshContextAsync();
 
@@ -180,6 +192,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             .OrderBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
             .ToList();
         AllGuilds.Clear();
+        var preloadDetails = new List<Task>();
         for (var i = 0; i < ordered.Count; i++)
         {
             var name = ordered[i].Key;
@@ -197,19 +210,6 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 Name = name,
                 Type = rec.Type ?? "",
                 Logo = NormalizeLogoPath(rec.Logo),
-                PreRequisites = rec.PreRequisites ?? "",
-                Restrictions = rec.Restrictions ?? "",
-                Ethos = rec.Ethos ?? "",
-                Background = rec.Background ?? "",
-                LoreSections = BuildLoreSections(rec),
-                BasicBenefits = FormatBenefitList(rec.Benefits?.Basic),
-                IntermediateBenefits = FormatBenefitList(rec.Benefits?.Intermediate),
-                AdvancedBenefits = FormatBenefitList(rec.Benefits?.Advanced),
-                BasicOptionGroups = BuildBenefitOptionGroups(name, "Basic", rec.Benefits?.Basic),
-                IntermediateOptionGroups = BuildBenefitOptionGroups(name, "Intermediate", rec.Benefits?.Intermediate),
-                AdvancedOptionGroups = BuildBenefitOptionGroups(name, "Advanced", rec.Benefits?.Advanced),
-                MiracleRows = BuildMiracleRows(rec.MiracleList),
-                DenominationalMiracle = BuildDenominationalMiracle(rec, miracleLookup),
                 IsSelected = isSelected,
                 IsExpanded = false,
                 IsSelectable = cardSelectable,
@@ -219,11 +219,100 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
             vm.Icon = IconForType(vm.Type);
             AllGuilds.Add(vm);
+
+            if (isSelected)
+                preloadDetails.Add(EnsureCardDetailsLoadedAsync(vm, rec));
         }
+
+        if (preloadDetails.Count > 0)
+            await Task.WhenAll(preloadDetails);
 
         Refilter();
         RecomputeDraftAlignments();
         _notifyWizardGatingChanged();
+    }
+
+    private async Task EnsureCardDetailsLoadedAsync(GuildCardVm card, GuildRecord? record = null)
+    {
+        if (card.DetailsLoaded)
+            return;
+
+        Task pendingTask;
+        lock (_detailLoadGate)
+        {
+            if (card.DetailsLoaded)
+                return;
+
+            if (_detailLoadTasks.TryGetValue(card.Name, out var existingTask))
+            {
+                pendingTask = existingTask;
+            }
+            else
+            {
+                pendingTask = EnsureCardDetailsLoadedCoreAsync(card, record);
+                _detailLoadTasks[card.Name] = pendingTask;
+            }
+        }
+
+        await pendingTask;
+    }
+
+    private async Task EnsureCardDetailsLoadedCoreAsync(GuildCardVm card, GuildRecord? record)
+    {
+        card.IsDetailsLoading = true;
+        try
+        {
+            var rec = record;
+            if (rec == null && !_guildRecords.TryGetValue(card.Name, out rec))
+                rec = new GuildRecord();
+
+            var details = await BuildCardDetailsAsync(card.Name, rec ?? new GuildRecord());
+            card.ApplyDetails(details);
+        }
+        finally
+        {
+            card.IsDetailsLoading = false;
+            lock (_detailLoadGate)
+                _detailLoadTasks.Remove(card.Name);
+        }
+    }
+
+    private async Task<GuildCardDetailsVm> BuildCardDetailsAsync(string guildName, GuildRecord record)
+    {
+        var rec = record ?? new GuildRecord();
+        var benefits = rec.Benefits ?? new GuildBenefits();
+
+        var denominatorRef = (rec.DenominationalMiracle?.Ref ?? string.Empty).Trim();
+        var miracleLookup = denominatorRef.Length > 0
+            ? await GetMiracleLookupAsync()
+            : EmptyMiracleLookup;
+
+        return new GuildCardDetailsVm
+        {
+            PreRequisites = rec.PreRequisites ?? string.Empty,
+            Restrictions = rec.Restrictions ?? string.Empty,
+            Ethos = rec.Ethos ?? string.Empty,
+            Background = rec.Background ?? string.Empty,
+            LoreSections = BuildLoreSections(rec),
+            BasicBenefits = FormatBenefitList(benefits.Basic),
+            IntermediateBenefits = FormatBenefitList(benefits.Intermediate),
+            AdvancedBenefits = FormatBenefitList(benefits.Advanced),
+            BasicOptionGroups = BuildBenefitOptionGroups(guildName, "Basic", benefits.Basic),
+            IntermediateOptionGroups = BuildBenefitOptionGroups(guildName, "Intermediate", benefits.Intermediate),
+            AdvancedOptionGroups = BuildBenefitOptionGroups(guildName, "Advanced", benefits.Advanced),
+            MiracleRows = BuildMiracleRows(rec.MiracleList),
+            DenominationalMiracle = BuildDenominationalMiracle(rec, miracleLookup)
+        };
+    }
+
+    private async Task<IReadOnlyDictionary<string, GuildMiracleDefinition>> GetMiracleLookupAsync()
+    {
+        if (_miracleLookupCache != null)
+            return _miracleLookupCache;
+
+        _miracleLookupTask ??= LoadMiracleLookupAsync();
+        _miracleLookupCache = await _miracleLookupTask;
+        return _miracleLookupCache;
     }
 
     private (bool HasCityBound, string? CityName) GetCityBoundInfo()
@@ -341,8 +430,6 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private AvailabilityResult EvaluateAvailability(GuildRecord rec, string guildName)
     {
         var availability = rec.Availability ?? new GuildAvailability();
-        var whitelist = availability.Whitelist ?? new GuildAvailabilityRules();
-        var blacklist = availability.Blacklist ?? new GuildAvailabilityRules();
 
         if (!string.IsNullOrWhiteSpace(availability.RequiredGuild)
             && !_draft.Guilds.Contains(availability.RequiredGuild, StringComparer.OrdinalIgnoreCase))
@@ -350,11 +437,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
             return new AvailabilityResult(false, $"Requires {availability.RequiredGuild}.");
         }
 
-        if (MatchesBlacklist(blacklist, out var blackReason))
-            return new AvailabilityResult(false, blackReason);
+        if (availability.Rules is { Count: > 0 })
+        {
+            if (!MeetsAvailabilityRules(availability.Rules))
+                return new AvailabilityResult(false, "Does not meet availability rule.");
 
-        if (!MeetsWhitelist(whitelist, out var whiteReason))
-            return new AvailabilityResult(false, whiteReason);
+            return AvailabilityResult.Ok();
+        }
 
         return AvailabilityResult.Ok();
     }
@@ -375,123 +464,64 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return EvaluateAvailability(guildName);
     }
 
-    private bool MatchesBlacklist(GuildAvailabilityRules? rules, out string reason)
+    private bool MeetsAvailabilityRules(IEnumerable<RuleClause> rules)
     {
-        reason = "";
-        if (rules == null)
-            return false;
-
-        if (ContainsClassName(rules.Classes, _currentClassName))
-        {
-            reason = "Class not permitted.";
-            return true;
-        }
-
-        if (rules.Brackets?.Any(b => _currentClassBrackets.Contains(NormalizeLookupKey(b))) == true)
-        {
-            reason = "Bracket not permitted.";
-            return true;
-        }
-
-        if (rules.PeopleType?.Any(t => _currentPeopleTypes.Contains(t ?? string.Empty)) == true)
-        {
-            reason = "People type not permitted.";
-            return true;
-        }
-
-        if (rules.Races?.Any(RaceMatches) == true)
-        {
-            reason = "Race not permitted.";
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool MeetsWhitelist(GuildAvailabilityRules? rules, out string reason)
-    {
-        reason = "";
-        if (rules == null)
-            return true;
-
-        if (rules.Classes is { Count: > 0 } && !ContainsClassName(rules.Classes, _currentClassName))
-        {
-            reason = $"Only: {string.Join(", ", rules.Classes)}";
-            return false;
-        }
-
-        if (rules.Brackets is { Count: > 0 } && !_currentClassBrackets.Any(b => rules.Brackets.Any(r => NormalizeLookupKey(r) == b)))
-        {
-            reason = $"Requires bracket(s): {string.Join(", ", rules.Brackets)}";
-            return false;
-        }
-
-        if (rules.PeopleType is { Count: > 0 })
-        {
-            if (!rules.PeopleType.Any(t => _currentPeopleTypes.Contains(t ?? string.Empty)))
-            {
-                reason = $"Limited to: {string.Join(", ", rules.PeopleType)}";
-                return false;
-            }
-        }
-
-        if (rules.Races is { Count: > 0 })
-        {
-            if (!rules.Races.Any(RaceMatches))
-            {
-                var names = rules.Races.Select(r => r?.Name).Where(n => !string.IsNullOrWhiteSpace(n));
-                reason = $"Limited to races: {string.Join(", ", names)}";
-                return false;
-            }
-        }
-
-        if (!AlignmentsSatisfied(rules.Alignments))
-        {
-            reason = "No compatible alignment available.";
-            return false;
-        }
-
-        return true;
-    }
-
-    private bool AlignmentsSatisfied(GuildAvailabilityAlignments? alignments)
-    {
-        if (alignments == null)
-            return true;
-
-        var allowedOrders = ParseOrders(alignments.Order);
-        var allowedMorals = ParseMorals(alignments.Moral);
-        if (allowedOrders.Count == 0 && allowedMorals.Count == 0)
-            return true;
-
         var availableAlignments = CharacterDraft.ComputeAvailableAlignments(_getNonGuildRules());
         if (availableAlignments.Count == 0 && _draft.Alignment is Alignment selectedAlignment)
             availableAlignments.Add(selectedAlignment);
 
-        foreach (var a in availableAlignments)
+        IEnumerable<string> ResolveValues(string field)
         {
-            var orderOk = allowedOrders.Count == 0 || allowedOrders.Contains(a.Order);
-            var moralOk = allowedMorals.Count == 0 || allowedMorals.Contains(a.Moral);
-            if (orderOk && moralOk)
-                return true;
+            var tokens = SplitRuleFieldTokens(field);
+            if (tokens.Count == 0)
+                return Array.Empty<string>();
+
+            if (tokens.Count == 1)
+                return ResolveSingleField(tokens[0]);
+
+            var merged = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var token in tokens)
+            {
+                foreach (var value in ResolveSingleField(token))
+                {
+                    if (!string.IsNullOrWhiteSpace(value))
+                        merged.Add(value);
+                }
+            }
+
+            return merged;
+
+            IEnumerable<string> ResolveSingleField(string normalizedField)
+                => normalizedField switch
+                {
+                    "class" or "classes" => ToSingleValue(_currentClassName),
+                    "bracket" or "brackets" => _currentClassBrackets,
+                    "race" or "races" => ToSingleValue(_currentRaceName),
+                    "racesubtype" or "subtype" => _currentRaceSelections,
+                    "peopletype" or "peopletypes" => _currentPeopleTypes,
+                    "alignmentorder" => availableAlignments.Select(a => a.Order.ToString()),
+                    "alignmentmoral" => availableAlignments.Select(a => a.Moral.ToString()),
+                    "status" or "statuses" => Array.Empty<string>(),
+                    "guild" or "guilds" => _draft.Guilds ?? new List<string>(),
+                    _ => Array.Empty<string>()
+                };
         }
 
-        return false;
+        return RuleTreeEvaluator.Evaluate(rules, ResolveValues, NormalizeLookupKey);
     }
 
-    private static bool ContainsClassName(IEnumerable<string>? classNames, string className)
+    private static List<string> SplitRuleFieldTokens(string? field)
     {
-        var wanted = NormalizeLookupKey(className);
-        if (wanted.Length == 0)
-            return false;
+        var raw = (field ?? string.Empty).Trim();
+        if (raw.Length == 0)
+            return new List<string>();
 
-        foreach (var candidate in classNames ?? Enumerable.Empty<string>())
-        {
-            if (NormalizeLookupKey(candidate) == wanted)
-                return true;
-        }
-
-        return false;
+        return raw
+            .Split(new[] { '|', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(NormalizeRuleField)
+            .Where(token => token.Length > 0)
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
     }
 
     private static IEnumerable<string> ExtractPathClassNames(CharacterClassRecord classRecord)
@@ -537,66 +567,24 @@ public sealed class GuildsVm : INotifyPropertyChanged
             .ToArray());
     }
 
-    private static HashSet<OrderAxis> ParseOrders(IEnumerable<string>? values)
+    private static string NormalizeRuleField(string? value)
     {
-        var set = new HashSet<OrderAxis>();
-        foreach (var v in values ?? Array.Empty<string>())
-        {
-            if (Enum.TryParse<OrderAxis>(v, true, out var parsed))
-                set.Add(parsed);
-        }
-        return set;
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return new string(value
+            .Trim()
+            .ToLowerInvariant()
+            .Where(char.IsLetterOrDigit)
+            .ToArray());
     }
 
-    private static HashSet<MoralAxis> ParseMorals(IEnumerable<string>? values)
+    private static IEnumerable<string> ToSingleValue(string? value)
     {
-        var set = new HashSet<MoralAxis>();
-        foreach (var v in values ?? Array.Empty<string>())
-        {
-            if (Enum.TryParse<MoralAxis>(v, true, out var parsed))
-                set.Add(parsed);
-        }
-        return set;
-    }
-
-    private bool RaceMatches(GuildAvailabilityRace? rule)
-    {
-        if (rule == null)
-            return false;
-
-        var name = (rule.Name ?? string.Empty).Trim();
-        if (name.Length == 0)
-            return false;
-
-        if (!string.Equals(name, _currentRaceName, StringComparison.OrdinalIgnoreCase))
-            return false;
-
-        var subtype = (rule.Subtype ?? string.Empty).Trim();
-        if (subtype.Length == 0)
-            return true;
-
-        return _currentRaceSelections.Contains(subtype);
-    }
-
-    private static AlignmentRule? BuildAlignmentRuleFromAvailability(GuildAvailabilityAlignments? align)
-    {
-        if (align == null)
-            return null;
-
-        var orders = ParseOrders(align.Order);
-        var morals = ParseMorals(align.Moral);
-        if (orders.Count == 0 && morals.Count == 0)
-            return null;
-
-        return new AlignmentRule
-        {
-            Mode = "restrict",
-            Allowed = new AllowedAxes
-            {
-                Order = orders.ToList(),
-                Moral = morals.ToList()
-            }
-        };
+        var trimmed = (value ?? string.Empty).Trim();
+        return trimmed.Length == 0
+            ? Array.Empty<string>()
+            : new[] { trimmed };
     }
 
     private static string IconForType(string type)
@@ -846,21 +834,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
             if (_searchByNameOnly)
                 return g.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false;
 
-            return (g.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
-                   || (g.PreRequisites?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
-                   || (g.Restrictions?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
-                   || (g.Ethos?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
-                   || (g.Background?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
-                   || g.MiracleRows.Any(m =>
-                       (m.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
-                       || (m.LevelText?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false))
-                   || (g.DenominationalMiracle?.Contains(text) ?? false)
-                   || g.BasicBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
-                   || g.IntermediateBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
-                   || g.AdvancedBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
-                   || MatchesOptionGroups(g.BasicOptionGroups, text)
-                   || MatchesOptionGroups(g.IntermediateOptionGroups, text)
-                   || MatchesOptionGroups(g.AdvancedOptionGroups, text);
+            if (_guildRecords.TryGetValue(g.Name, out var rec) && rec != null)
+                return RecordMatchesSearch(g.Name, rec, text);
+
+            return g.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false;
         }
 
         var list = AllGuilds.Where(Matches)
@@ -901,7 +878,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         RaiseSelectedGuildsChanged();
     }
 
-    private void ToggleExpanded(GuildCardVm? item)
+    private async Task ToggleExpandedAsync(GuildCardVm? item)
     {
         if (item == null || !item.CanToggleSelection)
             return;
@@ -912,18 +889,79 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 g.IsExpanded = false;
         }
 
+        if (!item.IsExpanded)
+            await EnsureCardDetailsLoadedAsync(item);
+
         item.IsExpanded = !item.IsExpanded;
     }
 
-    private static bool MatchesOptionGroups(IEnumerable<GuildBenefitOptionGroupVm> groups, string text)
+    private static bool RecordMatchesSearch(string guildName, GuildRecord record, string text)
     {
-        foreach (var group in groups ?? Enumerable.Empty<GuildBenefitOptionGroupVm>())
+        if (guildName.Contains(text, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        var rec = record ?? new GuildRecord();
+        if ((rec.PreRequisites ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((rec.Restrictions ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((rec.Ethos ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((rec.Background ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((rec.DenominationalMiracle?.Ref ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ((rec.DenominationalMiracleNote ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (MiracleListContainsText(rec.MiracleList, text))
+            return true;
+
+        var benefits = rec.Benefits ?? new GuildBenefits();
+        return BenefitEntriesContainText(benefits.Basic, text)
+               || BenefitEntriesContainText(benefits.Intermediate, text)
+               || BenefitEntriesContainText(benefits.Advanced, text);
+    }
+
+    private static bool MiracleListContainsText(Dictionary<string, List<string>>? miracleList, string text)
+    {
+        foreach (var pair in miracleList ?? new Dictionary<string, List<string>>())
         {
-            if (group.OptionLabels.Any(o => o.Contains(text, StringComparison.OrdinalIgnoreCase)))
+            if ((pair.Key ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            if (group.SelectedLines.Any(l => l.Contains(text, StringComparison.OrdinalIgnoreCase)))
+            foreach (var name in pair.Value ?? new List<string>())
+            {
+                if ((name ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool BenefitEntriesContainText(IEnumerable<GuildBenefitEntry>? entries, string text)
+    {
+        foreach (var entry in entries ?? Enumerable.Empty<GuildBenefitEntry>())
+        {
+            var direct = FormatBenefit(entry?.Ability);
+            if (direct.Contains(text, StringComparison.OrdinalIgnoreCase))
                 return true;
+
+            foreach (var option in entry?.Options ?? new List<GuildBenefitOption>())
+            {
+                foreach (var ability in option.Abilities ?? new List<AbilityDefinition>())
+                {
+                    var optionLine = FormatBenefit(ability);
+                    if (optionLine.Contains(text, StringComparison.OrdinalIgnoreCase))
+                        return true;
+                }
+            }
         }
 
         return false;
@@ -1032,7 +1070,40 @@ public sealed class GuildsVm : INotifyPropertyChanged
         value = DenominationalMiracleLoreBlockRegex.Replace(value, "\n");
         value = MiracleStatLoreBlockRegex.Replace(value, "\n");
         value = Regex.Replace(value, @"\n{3,}", "\n\n");
+        value = ExpandParagraphSpacing(value);
         return value.Trim();
+    }
+
+    private static string ExpandParagraphSpacing(string value)
+    {
+        var lines = value.Split('\n');
+        if (lines.Length < 2)
+            return value;
+
+        var sb = new StringBuilder(value.Length + 64);
+        for (var i = 0; i < lines.Length; i++)
+        {
+            var current = lines[i];
+            sb.Append(current);
+
+            if (i >= lines.Length - 1)
+                continue;
+
+            var currentTrimmed = current.Trim();
+            var nextTrimmed = lines[i + 1].Trim();
+
+            if (currentTrimmed.Length == 0 || nextTrimmed.Length == 0)
+            {
+                sb.Append('\n');
+                continue;
+            }
+
+            var currentIsList = ListPrefixRegex.IsMatch(currentTrimmed);
+            var nextIsList = ListPrefixRegex.IsMatch(nextTrimmed);
+            sb.Append(currentIsList || nextIsList ? '\n' : "\n\n");
+        }
+
+        return Regex.Replace(sb.ToString(), @"\n{3,}", "\n\n");
     }
 
     private void OnBenefitOptionSelectionChanged(GuildBenefitOptionGroupVm group)
@@ -1052,11 +1123,11 @@ public sealed class GuildsVm : INotifyPropertyChanged
             MainThread.BeginInvokeOnMainThread(async () => await _refreshDraftAbilitiesAsync());
     }
 
-    private void ToggleSelected(GuildCardVm? item)
+    private async Task ToggleSelectedAsync(GuildCardVm? item)
     {
         if (!_allowGuildSelection)
         {
-            ToggleExpanded(item);
+            await ToggleExpandedAsync(item);
             return;
         }
 
@@ -1073,10 +1144,20 @@ public sealed class GuildsVm : INotifyPropertyChanged
         var idx = _draft.Guilds.FindIndex(g => string.Equals(g, item.Name, StringComparison.OrdinalIgnoreCase));
         var nowSelected = idx < 0;
 
-        if (nowSelected) _draft.Guilds.Add(item.Name);
-        else _draft.Guilds.RemoveAt(idx);
-
-        item.IsSelected = nowSelected;
+        if (nowSelected)
+        {
+            _draft.Guilds.Add(item.Name);
+            item.IsSelected = true;
+            if (_guildRecords.TryGetValue(item.Name, out var rec) && rec != null)
+                await EnsureCardDetailsLoadedAsync(item, rec);
+            else
+                await EnsureCardDetailsLoadedAsync(item);
+        }
+        else
+        {
+            _draft.Guilds.RemoveAt(idx);
+            item.IsSelected = false;
+        }
 
         ApplyAvailabilityToCurrentSelection();
 
@@ -1085,9 +1166,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         _notifyWizardGatingChanged();
 
         if (_refreshDraftAbilitiesAsync != null)
-        {
-            MainThread.BeginInvokeOnMainThread(async () => await _refreshDraftAbilitiesAsync());
-        }
+            await _refreshDraftAbilitiesAsync();
     }
 }
 
@@ -1118,6 +1197,23 @@ public sealed class GuildTypeFilterChipVm : INotifyPropertyChanged
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
         }
     }
+}
+
+public sealed class GuildCardDetailsVm
+{
+    public string PreRequisites { get; init; } = string.Empty;
+    public string Restrictions { get; init; } = string.Empty;
+    public string Ethos { get; init; } = string.Empty;
+    public string Background { get; init; } = string.Empty;
+    public List<GuildLoreSectionVm> LoreSections { get; init; } = new();
+    public List<string> BasicBenefits { get; init; } = new();
+    public List<string> IntermediateBenefits { get; init; } = new();
+    public List<string> AdvancedBenefits { get; init; } = new();
+    public List<GuildBenefitOptionGroupVm> BasicOptionGroups { get; init; } = new();
+    public List<GuildBenefitOptionGroupVm> IntermediateOptionGroups { get; init; } = new();
+    public List<GuildBenefitOptionGroupVm> AdvancedOptionGroups { get; init; } = new();
+    public List<GuildMiracleRowVm> MiracleRows { get; init; } = new();
+    public GuildDenominationalMiracleVm? DenominationalMiracle { get; init; }
 }
 
 public sealed class GuildCardVm : INotifyPropertyChanged
@@ -1192,6 +1288,34 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public string Logo { get; set; } = "";
     public bool HasLogo => !string.IsNullOrWhiteSpace(Logo);
 
+    private bool _detailsLoaded;
+    public bool DetailsLoaded
+    {
+        get => _detailsLoaded;
+        private set
+        {
+            if (_detailsLoaded == value)
+                return;
+
+            _detailsLoaded = value;
+            Raise();
+        }
+    }
+
+    private bool _isDetailsLoading;
+    public bool IsDetailsLoading
+    {
+        get => _isDetailsLoading;
+        set
+        {
+            if (_isDetailsLoading == value)
+                return;
+
+            _isDetailsLoading = value;
+            Raise();
+        }
+    }
+
     public string PreRequisites { get; set; } = "";
     public string Restrictions { get; set; } = "";
     public string Ethos { get; set; } = "";
@@ -1205,6 +1329,53 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public List<GuildBenefitOptionGroupVm> AdvancedOptionGroups { get; set; } = new();
     public List<GuildMiracleRowVm> MiracleRows { get; set; } = new();
     public GuildDenominationalMiracleVm? DenominationalMiracle { get; set; }
+
+    public void ApplyDetails(GuildCardDetailsVm? details)
+    {
+        var source = details ?? new GuildCardDetailsVm();
+
+        PreRequisites = source.PreRequisites ?? string.Empty;
+        Restrictions = source.Restrictions ?? string.Empty;
+        Ethos = source.Ethos ?? string.Empty;
+        Background = source.Background ?? string.Empty;
+        LoreSections = source.LoreSections ?? new List<GuildLoreSectionVm>();
+        BasicBenefits = source.BasicBenefits ?? new List<string>();
+        IntermediateBenefits = source.IntermediateBenefits ?? new List<string>();
+        AdvancedBenefits = source.AdvancedBenefits ?? new List<string>();
+        BasicOptionGroups = source.BasicOptionGroups ?? new List<GuildBenefitOptionGroupVm>();
+        IntermediateOptionGroups = source.IntermediateOptionGroups ?? new List<GuildBenefitOptionGroupVm>();
+        AdvancedOptionGroups = source.AdvancedOptionGroups ?? new List<GuildBenefitOptionGroupVm>();
+        MiracleRows = source.MiracleRows ?? new List<GuildMiracleRowVm>();
+        DenominationalMiracle = source.DenominationalMiracle;
+
+        DetailsLoaded = true;
+
+        Raise(nameof(PreRequisites));
+        Raise(nameof(Restrictions));
+        Raise(nameof(Ethos));
+        Raise(nameof(Background));
+        Raise(nameof(LoreSections));
+        Raise(nameof(BasicBenefits));
+        Raise(nameof(IntermediateBenefits));
+        Raise(nameof(AdvancedBenefits));
+        Raise(nameof(BasicOptionGroups));
+        Raise(nameof(IntermediateOptionGroups));
+        Raise(nameof(AdvancedOptionGroups));
+        Raise(nameof(MiracleRows));
+        Raise(nameof(DenominationalMiracle));
+        Raise(nameof(HasLore));
+        Raise(nameof(HasRestrictions));
+        Raise(nameof(HasBasic));
+        Raise(nameof(HasIntermediate));
+        Raise(nameof(HasAdvanced));
+        Raise(nameof(HasMiracles));
+        Raise(nameof(HasDenominationalMiracle));
+        Raise(nameof(HasAnyBenefits));
+        Raise(nameof(HasBasicOptions));
+        Raise(nameof(HasIntermediateOptions));
+        Raise(nameof(HasAdvancedOptions));
+        Raise(nameof(AreBenefitOptionsComplete));
+    }
 
     public bool HasLore => LoreSections.Count > 0;
     public bool HasRestrictions => !string.IsNullOrWhiteSpace(Restrictions);
@@ -1246,7 +1417,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
         }
     }
 
-    private bool _isMiracleListExpanded = true;
+    private bool _isMiracleListExpanded;
     public bool IsMiracleListExpanded
     {
         get => _isMiracleListExpanded;
@@ -1958,14 +2129,15 @@ public sealed class GuildSlotRules
             if (!string.Equals(guildType, typeNorm, StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            var whitelist = guild.Availability?.Whitelist?.PeopleType ?? new List<string>();
-            foreach (var entry in whitelist)
+            var availability = guild.Availability ?? new GuildAvailability();
+            if (RuleTreeEvaluator.ContainsPositiveInValue(
+                    availability.Rules,
+                    field: "PeopleType",
+                    value: normalizedToken,
+                    normalizeField: NormalizePeopleTypeToken,
+                    normalizeValue: NormalizePeopleTypeToken))
             {
-                if (NormalizePeopleTypeToken(entry) == normalizedToken)
-                {
-                    allowed.Add(rec.Key);
-                    break;
-                }
+                allowed.Add(rec.Key);
             }
         }
 

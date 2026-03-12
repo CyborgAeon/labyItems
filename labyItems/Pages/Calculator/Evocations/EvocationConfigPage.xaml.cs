@@ -14,10 +14,16 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
     public EvocationConfigPage()
     {
         AddSelectedEvocationCommand = new Command<object?>(OnEvocationResultSelected);
+        EditEvocationCommand = new Command<object?>(OnEditEvocationRequested);
+        ViewEvocationInfoCommand = new Command<object?>(OnEvocationInfoRequested);
+        DeleteEvocationCommand = new Command<object?>(OnDeleteEvocationRequested);
         InitializeComponent();
     }
 
     public ICommand AddSelectedEvocationCommand { get; }
+    public ICommand EditEvocationCommand { get; }
+    public ICommand ViewEvocationInfoCommand { get; }
+    public ICommand DeleteEvocationCommand { get; }
 
     public Dictionary<string, EvocationSearchOption> EvocationLookup { get; private set; } =
         new(StringComparer.OrdinalIgnoreCase);
@@ -142,18 +148,18 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
             await Navigation.PushModalAsync(new EvocationEntryConfigModalPage(entry));
     }
 
-    private async void OnEditEvocationClicked(object sender, EventArgs e)
+    private async void OnEditEvocationRequested(object? parameter)
     {
-        if (sender is not BindableObject bindable || bindable.BindingContext is not EvocationSelectionEntry entry)
+        if (parameter is not EvocationSelectionEntry entry)
             return;
 
         var modal = new EvocationEntryConfigModalPage(entry);
         await Navigation.PushModalAsync(modal);
     }
 
-    private async void OnEvocationInfoClicked(object sender, EventArgs e)
+    private async void OnEvocationInfoRequested(object? parameter)
     {
-        if (sender is not BindableObject bindable || bindable.BindingContext is not EvocationSelectionEntry entry)
+        if (parameter is not EvocationSelectionEntry entry)
             return;
 
         if (string.IsNullOrWhiteSpace(entry.EvocationName))
@@ -162,9 +168,9 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
         await Navigation.PushModalAsync(new NavigationPage(new EvocationCardPage(entry.Evocation)));
     }
 
-    private void OnDeleteEvocationClicked(object sender, EventArgs e)
+    private void OnDeleteEvocationRequested(object? parameter)
     {
-        if (sender is not BindableObject bindable || bindable.BindingContext is not EvocationSelectionEntry entry)
+        if (parameter is not EvocationSelectionEntry entry)
             return;
 
         if (BindingContext is not EvocationConfig cfg)

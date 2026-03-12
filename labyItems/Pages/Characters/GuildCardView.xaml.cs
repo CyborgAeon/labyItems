@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Windows.Input;
 using labyItems.Helpers;
+using labyItems.Services;
+using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
 
 namespace labyItems.Pages.Characters;
 
@@ -186,5 +188,28 @@ public partial class GuildCardView : ContentView
         ExpandedContent.IsVisible = false;
         ExpandedContent.HeightRequest = -1;
         ExpandedContent.Opacity = 1;
+    }
+
+    private async void OnGuildMiracleInfoClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button || button.CommandParameter is not GuildMiracleRowVm row)
+            return;
+
+        var miracleName = (row.Name ?? string.Empty).Trim();
+        if (miracleName.Length == 0)
+            return;
+
+        var miracles = await MiracleService.GetAllAsync();
+        var miracle = miracles.FirstOrDefault(m =>
+            string.Equals(m?.name ?? string.Empty, miracleName, StringComparison.OrdinalIgnoreCase));
+
+        if (miracle == null)
+            return;
+
+        var navigation = Navigation;
+        if (navigation == null)
+            return;
+
+        await navigation.PushModalAsync(new NavigationPage(new MiracleCardPage(miracle)));
     }
 }

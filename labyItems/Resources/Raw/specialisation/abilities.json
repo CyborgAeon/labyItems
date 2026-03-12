@@ -44,6 +44,36 @@
       "Count": 1,
       "Key": "ability.cold-rage"
     },
+    "ability.50-percent-berserk-rage": {
+      "Name": "50% Berserk Rage",
+      "Type": "Innate",
+      "Count": 1,
+      "Effect": "For 5 minutes the user gains the benefits of a 50% Berserk Rage.",
+      "Key": "ability.50-percent-berserk-rage"
+    },
+    "ability.perm-cold-rage": {
+      "Name": "Perm Cold Rage",
+      "Type": "Static",
+      "Effect": "Permanent Cold Rage variant versus the configured target group.",
+      "Customisation": {
+        "OptionEnum": "Group",
+        "CustomValuesPermitted": true
+      },
+      "Key": "ability.perm-cold-rage"
+    },
+    "ability.magic-weapon-turns-pure": {
+      "Name": "Magic weapon turns pure",
+      "Type": "Innate",
+      "Count": 1,
+      "Effect": "PURE weapons pass through armour, doing more damage, and cannot be blocked because they pass through shields or weapons used to parry. If you parry or block a PURE weapon, you still take the blow. PAC does not apply, but DAC and MAC/SAC apply depending on the powerbase. Elves and other creatures without a spirit take no damage from a PURE SPIRIT weapon because it passes through them. Duration: 5 minutes.",
+      "Key": "ability.magic-weapon-turns-pure"
+    },
+    "ability.inflicts-through": {
+      "Name": "Inflicts 'through'",
+      "Type": "Static",
+      "Effect": "THROUGH damage passes through armour, doing more damage. PAC does not apply, but DAC still applies.",
+      "Key": "ability.inflicts-through"
+    },
     "ability.war-cry": {
       "Name": "War Cry",
       "Type": "Innate",
@@ -2480,6 +2510,11 @@
     "Circle Membership": "ability.circle-membership",
     "Climber": "ability.climber",
     "Cold Rage": "ability.cold-rage",
+    "cold rage": "ability.cold-rage",
+    "50% Berserk Rage": "ability.50-percent-berserk-rage",
+    "Berserk Rage (50%)": "ability.50-percent-berserk-rage",
+    "Perm Cold Rage": "ability.perm-cold-rage",
+    "Perm 25% Cold Rage": "ability.cold-rage",
     "Combat-Wary": "ability.combat-wary",
     "Conditioned Heartstop": "ability.conditioned-heartstop",
     "Confusion": "ability.confusion",
@@ -2746,6 +2781,9 @@
     "Improved Message": "ability.improved-message",
     "Irremovable Paladinic Bless": "ability.irremovable-paladinic-bless",
     "Ki Strike": "ability.ki-strike",
+    "Primal / Ki Strike": "ability.ki-strike",
+    "Primal / ki strike": "ability.ki-strike",
+    "Primal Strike": "ability.ki-strike",
     "Lay on hands": "ability.lay-on-hands",
     "Live to Minus": "ability.live-to-minus",
     "Local Detect Possible Neuronic Activity": "ability.local-detect-possible-neuronic-activity",
@@ -2806,6 +2844,13 @@
     "Discern Edible": "ability.discern-edible",
     "Double DAC while Fleeing": "ability.double-dac-while-fleeing",
     "Draw on Earthpower": "ability.draw-on-earthpower",
+    "Draw on EP": "ability.draw-on-earthpower",
+    "Magic weapon turns pure": "ability.magic-weapon-turns-pure",
+    "Spirit weapon turns pure": "ability.magic-weapon-turns-pure",
+    "Mantic weapon turns pure": "ability.magic-weapon-turns-pure",
+    "Inflicts 'through'": "ability.inflicts-through",
+    "Inflicts through": "ability.inflicts-through",
+    "Through": "ability.inflicts-through",
     "Earthshift": "ability.earthshift",
     "Evaluate (metal, stone, jewels only)": "ability.evaluate-metal-stone-jewels",
     "Immunity to Acute Hearing": "ability.immunity-to-acute-hearing",

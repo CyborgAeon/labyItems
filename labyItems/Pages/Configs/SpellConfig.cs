@@ -10,7 +10,7 @@ using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Configs;
 
-public sealed class SpellSelectionEntry : INotifyPropertyChanged
+public sealed class SpellSelectionEntry : INotifyPropertyChanged, IConfigSelectionListItem
 {
     private int _basicPerDay;
     private int _advancedPerDay;

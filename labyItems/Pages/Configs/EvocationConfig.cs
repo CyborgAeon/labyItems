@@ -10,7 +10,7 @@ using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Configs;
 
-public sealed class EvocationSelectionEntry : INotifyPropertyChanged
+public sealed class EvocationSelectionEntry : INotifyPropertyChanged, IConfigSelectionListItem
 {
     private int _basicPerDay;
     private int _advancedPerDay;
@@ -473,7 +473,7 @@ public class EvocationConfig : ConfigBase
         if (DrawOnEpPerDay > 0)
         {
             var drawCost = DrawOnEpPerDay * 16;
-            builder.Add($"Draw on EP x{DrawOnEpPerDay} @16 = {drawCost}", drawCost);
+            builder.Add($"Draw on Earthpower x{DrawOnEpPerDay} @16 = {drawCost}", drawCost);
         }
 
         foreach (var row in builder.Rows)

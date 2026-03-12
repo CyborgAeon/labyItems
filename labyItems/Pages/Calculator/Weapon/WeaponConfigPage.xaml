@@ -58,11 +58,11 @@
         <Label IsVisible="{Binding ShowExtraAlignments}" Text="{Binding ExtraAlignmentsCountLabel}"/>
         <controls:ListAlignmentPickerControl CountLabelFormat="{}{0} Extra alignments (non-opposite) chosen" CountLabelText="{Binding ExtraAlignmentsCountLabel, Mode=OneWayToSource}" IsVisible="{Binding ShowExtraAlignments}" Items="{Binding ExtraAlignments, Mode=TwoWay}" SummaryText="{Binding ExtraAlignmentsSummary, Mode=OneWayToSource}" ValueCount="{Binding ExtraAlignmentsCount, Mode=OneWayToSource}"/>
 
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding MagicTurnsPureDailyCount, Mode=TwoWay}" IsVisible="{Binding IsMagicBase}" LabelText="Magic weapon turns pure for 5 minutes"/>
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding SpiritTurnsPureDailyCount, Mode=TwoWay}" IsVisible="{Binding IsSpiritBase}" LabelText="Spirit weapon turns pure for 5 minutes"/>
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding ManticTurnsPureDailyCount, Mode=TwoWay}" IsVisible="{Binding IsManticBase}" LabelText="Mantic weapon turns pure for 5 minutes"/>
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding MagicTurnsPureDailyCount, Mode=TwoWay}" IsVisible="{Binding IsMagicBase}" LabelText="Magic weapon turns pure (5 minutes)"/>
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding SpiritTurnsPureDailyCount, Mode=TwoWay}" IsVisible="{Binding IsSpiritBase}" LabelText="Spirit weapon turns pure (5 minutes)"/>
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding ManticTurnsPureDailyCount, Mode=TwoWay}" IsVisible="{Binding IsManticBase}" LabelText="Mantic weapon turns pure (5 minutes)"/>
 
-        <controls:CheckboxControl IsChecked="{Binding ThruPacAlways}" LabelText="Inflicts damage 'thru' PAC at all times"/>
+        <controls:CheckboxControl IsChecked="{Binding ThruPacAlways}" LabelText="Inflicts 'through'"/>
 
         <controls:CheckboxControl IsChecked="{Binding BladeSharpenTooGreat}" LabelText="Oversized Weapon can be sharpened"/>
 

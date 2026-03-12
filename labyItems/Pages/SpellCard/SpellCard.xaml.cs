@@ -15,4 +15,16 @@ public partial class SpellCard : ContentPage
         SpellDetails.Spell = spell;
         Title = string.IsNullOrWhiteSpace(spell?.name) ? "Spell" : spell.name;
     }
+
+    private async void OnCloseClicked(object sender, EventArgs e)
+    {
+        if (Navigation?.ModalStack?.Count > 0)
+        {
+            await Navigation.PopModalAsync();
+            return;
+        }
+
+        if (Navigation?.NavigationStack?.Count > 1)
+            await Navigation.PopAsync();
+    }
 }

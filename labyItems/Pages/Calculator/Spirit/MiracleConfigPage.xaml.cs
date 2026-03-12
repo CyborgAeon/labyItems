@@ -16,11 +16,17 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
     {
         AddSelectedMiracleCommand = new Command<object?>(OnMiracleResultSelected);
         AddTrueBelieverGuildCommand = new Command<object?>(OnTrueBelieverGuildResultSelected);
+        EditMiracleCommand = new Command<object?>(OnEditMiracleRequested);
+        ViewMiracleInfoCommand = new Command<object?>(OnMiracleInfoRequested);
+        DeleteMiracleCommand = new Command<object?>(OnDeleteMiracleRequested);
         InitializeComponent();
     }
 
     public ICommand AddSelectedMiracleCommand { get; }
     public ICommand AddTrueBelieverGuildCommand { get; }
+    public ICommand EditMiracleCommand { get; }
+    public ICommand ViewMiracleInfoCommand { get; }
+    public ICommand DeleteMiracleCommand { get; }
 
     public Dictionary<string, MiracleSearchOption> MiracleLookup { get; private set; } =
         new(StringComparer.OrdinalIgnoreCase);
@@ -221,18 +227,18 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
         SelectedTrueBelieverGuild = null;
     }
 
-    private async void OnEditMiracleClicked(object sender, EventArgs e)
+    private async void OnEditMiracleRequested(object? parameter)
     {
-        if (sender is not BindableObject bindable || bindable.BindingContext is not MiracleSelectionEntry entry)
+        if (parameter is not MiracleSelectionEntry entry)
             return;
 
         var modal = new MiracleEntryConfigModalPage(entry);
         await Navigation.PushModalAsync(modal);
     }
 
-    private async void OnMiracleInfoClicked(object sender, EventArgs e)
+    private async void OnMiracleInfoRequested(object? parameter)
     {
-        if (sender is not BindableObject bindable || bindable.BindingContext is not MiracleSelectionEntry entry)
+        if (parameter is not MiracleSelectionEntry entry)
             return;
 
         if (string.IsNullOrWhiteSpace(entry.MiracleName))
@@ -241,9 +247,9 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
         await Navigation.PushModalAsync(new NavigationPage(new MiracleCardPage(entry.Miracle)));
     }
 
-    private void OnDeleteMiracleClicked(object sender, EventArgs e)
+    private void OnDeleteMiracleRequested(object? parameter)
     {
-        if (sender is not BindableObject bindable || bindable.BindingContext is not MiracleSelectionEntry entry)
+        if (parameter is not MiracleSelectionEntry entry)
             return;
 
         if (BindingContext is not MiracleConfig cfg)

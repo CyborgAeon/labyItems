@@ -4,10 +4,24 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:evocationCard="clr-namespace:labyItems.Pages.EvocationCard"
+    x:Name="Root"
     Title="Evocation">
-    <ScrollView>
-        <VerticalStackLayout Padding="16">
-            <evocationCard:EvocationDetailCardView x:Name="EvocationDetails"/>
-        </VerticalStackLayout>
-    </ScrollView>
+    <Grid RowDefinitions="Auto,*"
+          Padding="12,8,12,12">
+        <Grid ColumnDefinitions="Auto,*"
+              ColumnSpacing="8">
+            <Button Text="Close"
+                    Clicked="OnCloseClicked"
+                    HeightRequest="32"
+                    MinimumHeightRequest="0"
+                    Padding="10,0"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource SubtleTextColor}" />
+        </Grid>
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="4">
+                <evocationCard:EvocationDetailCardView x:Name="EvocationDetails" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

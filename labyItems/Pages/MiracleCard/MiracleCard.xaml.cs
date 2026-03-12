@@ -15,4 +15,16 @@ public partial class MiracleCard : ContentPage
         MiracleDetails.Miracle = miracle;
         Title = string.IsNullOrWhiteSpace(miracle?.name) ? "Miracle" : miracle.name;
     }
+
+    private async void OnCloseClicked(object sender, EventArgs e)
+    {
+        if (Navigation?.ModalStack?.Count > 0)
+        {
+            await Navigation.PopModalAsync();
+            return;
+        }
+
+        if (Navigation?.NavigationStack?.Count > 1)
+            await Navigation.PopAsync();
+    }
 }

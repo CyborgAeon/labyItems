@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Text.Json;
 using labyItems.Models.Characters;
+using labyItems.Models.Rules;
 using labyItems.Services;
 using Xunit;
 
@@ -70,18 +71,25 @@ public sealed class GuildsServiceTests : ServiceTestBase
     }
 
     [Fact]
-    public void GetAlignmentRule_BuildsFallbackFromAvailability()
+    public void GetAlignmentRule_BuildsFromAvailabilityRules()
     {
         var record = new GuildRecord
         {
             Availability = new GuildAvailability
             {
-                Whitelist = new GuildAvailabilityRules
+                Rules = new List<RuleClause>
                 {
-                    Alignments = new GuildAvailabilityAlignments
+                    new()
                     {
-                        Order = new() { "Lawful" },
-                        Moral = new() { "Good" }
+                        Field = "Alignment.Order",
+                        Operator = RuleComparisonOp.In,
+                        Value = new() { "Lawful" }
+                    },
+                    new()
+                    {
+                        Field = "Alignment.Moral",
+                        Operator = RuleComparisonOp.In,
+                        Value = new() { "Good" }
                     }
                 }
             }
@@ -111,12 +119,19 @@ public sealed class GuildsServiceTests : ServiceTestBase
             },
             Availability = new GuildAvailability
             {
-                Whitelist = new GuildAvailabilityRules
+                Rules = new List<RuleClause>
                 {
-                    Alignments = new GuildAvailabilityAlignments
+                    new()
                     {
-                        Order = new() { "Chaotic" },
-                        Moral = new() { "Good" }
+                        Field = "Alignment.Order",
+                        Operator = RuleComparisonOp.In,
+                        Value = new() { "Chaotic" }
+                    },
+                    new()
+                    {
+                        Field = "Alignment.Moral",
+                        Operator = RuleComparisonOp.In,
+                        Value = new() { "Good" }
                     }
                 }
             }
@@ -128,6 +143,67 @@ public sealed class GuildsServiceTests : ServiceTestBase
         Assert.Contains(OrderAxis.Chaotic, rule!.Allowed!.Order!);
         Assert.Contains(MoralAxis.Good, rule.Allowed!.Moral!);
         Assert.DoesNotContain(MoralAxis.Evil, rule.Allowed!.Moral!);
+    }
+
+    [Fact]
+    public void GetAlignmentRule_BuildsFallbackFromAvailabilityRules_WhenRepresentable()
+    {
+        var record = new GuildRecord
+        {
+            Availability = new GuildAvailability
+            {
+                Rules = new List<RuleClause>
+                {
+                    new()
+                    {
+                        Field = "Alignment.Moral",
+                        Operator = RuleComparisonOp.In,
+                        Value = new List<string> { "Good" }
+                    },
+                    new()
+                    {
+                        Field = "Status",
+                        Operator = RuleComparisonOp.NotIn,
+                        Value = new List<string> { "Outlawed" }
+                    }
+                }
+            }
+        };
+
+        var rule = GuildsService.GetAlignmentRule(record);
+
+        Assert.NotNull(rule);
+        Assert.Contains(MoralAxis.Good, rule!.Allowed!.Moral!);
+    }
+
+    [Fact]
+    public void GetAlignmentRule_ReturnsNullForConflictingAlignmentRules()
+    {
+        var record = new GuildRecord
+        {
+            Availability = new GuildAvailability
+            {
+                Rules = new List<RuleClause>
+                {
+                    new()
+                    {
+                        Field = "Alignment.Moral",
+                        Operator = RuleComparisonOp.In,
+                        Value = new List<string> { "Good" }
+                    },
+                    new()
+                    {
+                        Field = "Alignment.Moral",
+                        Operator = RuleComparisonOp.In,
+                        Value = new List<string> { "Neutral" }
+                    }
+                }
+            }
+        };
+
+        var rule = GuildsService.GetAlignmentRule(record);
+
+        Assert.Null(rule);
     }
 
     private static bool ContainsAlignmentRuleKey(JsonElement element)

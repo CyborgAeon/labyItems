@@ -70,6 +70,52 @@ public static class ItemAbilityLinkService
             displayContext = label;
         }
 
+        if (ContainsToken(label, "perm")
+            && (ContainsToken(label, "cold rage") || ContainsToken(label, "rage")))
+        {
+            candidates.Add("Cold Rage");
+            candidates.Add("Perm Cold Rage");
+            if (displayContext.Length == 0)
+                displayContext = label;
+        }
+
+        if (ContainsToken(label, "berserk rage"))
+        {
+            candidates.Add("50% Berserk Rage");
+            if (displayContext.Length == 0)
+                displayContext = label;
+        }
+
+        if (ContainsToken(label, "draw on ep") || ContainsToken(label, "draw on earthpower"))
+        {
+            candidates.Add("Draw on Earthpower");
+            if (displayContext.Length == 0)
+                displayContext = "Draw on Earthpower";
+        }
+
+        if (ContainsToken(label, "turns pure"))
+        {
+            if (ContainsToken(label, "mantic"))
+                candidates.Add("Mantic weapon turns pure");
+            else if (ContainsToken(label, "spirit"))
+                candidates.Add("Spirit weapon turns pure");
+            else
+                candidates.Add("Magic weapon turns pure");
+
+            if (displayContext.Length == 0)
+                displayContext = label;
+        }
+
+        if (ContainsToken(label, "inflicts 'through'")
+            || ContainsToken(label, "inflicts through")
+            || ContainsToken(label, "through pac")
+            || ContainsToken(label, "thru pac"))
+        {
+            candidates.Add("Inflicts 'through'");
+            if (displayContext.Length == 0)
+                displayContext = label;
+        }
+
         var strengthMatch = StrengthTokenRegex.Match(label);
         if (strengthMatch.Success)
         {
@@ -82,6 +128,12 @@ public static class ItemAbilityLinkService
             candidates.Add("Ki Strike");
             if (displayContext.Length == 0)
                 displayContext = "Primal Strike";
+        }
+        else if (ContainsToken(label, "primal") && ContainsToken(label, "ki"))
+        {
+            candidates.Add("Ki Strike");
+            if (displayContext.Length == 0)
+                displayContext = "Primal / Ki Strike";
         }
         else if (ContainsToken(label, "ki strike"))
         {

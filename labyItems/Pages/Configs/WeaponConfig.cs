@@ -431,17 +431,17 @@ public class WeaponConfig : ConfigBase
         if (ManticTurnsPureDailyCount > 0)
         {
             total += ManticTurnsPureDailyCount * 10;
-            sb.AppendLine($"+ Mantic turns Pure {ManticTurnsPureDailyCount}/day (10)");
+            sb.AppendLine($"+ Mantic weapon turns pure ({ManticTurnsPureDailyCount}/day) (10)");
         }
         if (MagicTurnsPureDailyCount > 0)
         {
             total += MagicTurnsPureDailyCount * 5;
-            sb.AppendLine($"+ Magic turns Pure {MagicTurnsPureDailyCount}/day (5)");
+            sb.AppendLine($"+ Magic weapon turns pure ({MagicTurnsPureDailyCount}/day) (5)");
         }
         if (SpiritTurnsPureDailyCount > 0)
         {
             total += SpiritTurnsPureDailyCount * 5;
-            sb.AppendLine($"+ Spirit turns Pure {SpiritTurnsPureDailyCount}/day (5)");
+            sb.AppendLine($"+ Spirit weapon turns pure ({SpiritTurnsPureDailyCount}/day) (5)");
         }
         if (AdventurePermDamageDailyCount > 0)
         {
@@ -451,7 +451,7 @@ public class WeaponConfig : ConfigBase
         if (ThruPacAlways)
         {
             total += 30;
-            sb.AppendLine("+ Thru PAC at all times (30)");
+            sb.AppendLine("+ Inflicts 'through' (30)");
         }
         if (BladeSharpenTooGreat)
         {

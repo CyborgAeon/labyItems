@@ -36,73 +36,10 @@
                Opacity="0.7"
                IsVisible="{Binding HasSelectedEvocations, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" />
 
-        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedEvocations}"
-                             Spacing="8">
-          <BindableLayout.ItemTemplate>
-            <DataTemplate>
-              <Border Padding="10,8"
-                      BackgroundColor="{Binding RowBackgroundColor}"
-                      StrokeThickness="0"
-                      StrokeShape="RoundRectangle 8">
-                <Grid ColumnDefinitions="*,Auto,Auto,Auto"
-                      ColumnSpacing="8">
-                  <VerticalStackLayout Grid.Column="0"
-                                       Spacing="2">
-                    <Label Text="{Binding DisplayName}"
-                           FontAttributes="Bold"
-                           LineBreakMode="TailTruncation" />
-                    <Label Text="{Binding InlineSummary}"
-                           FontSize="12"
-                           Opacity="0.75"
-                           LineBreakMode="WordWrap" />
-                  </VerticalStackLayout>
-
-                  <Button Grid.Column="1"
-                          Text="&#xF1FC;"
-                          FontFamily="FASolid"
-                          FontSize="14"
-                          Padding="0"
-                          BackgroundColor="Transparent"
-                          TextColor="{StaticResource SubtleTextColor}"
-                          HeightRequest="24"
-                          WidthRequest="24"
-                          MinimumHeightRequest="0"
-                          MinimumWidthRequest="0"
-                          Clicked="OnEditEvocationClicked"
-                          CommandParameter="{Binding .}" />
-
-                  <Button Grid.Column="2"
-                          Text="&#xF05A;"
-                          FontFamily="FASolid"
-                          FontSize="14"
-                          Padding="0"
-                          BackgroundColor="Transparent"
-                          TextColor="{StaticResource SubtleTextColor}"
-                          HeightRequest="24"
-                          WidthRequest="24"
-                          MinimumHeightRequest="0"
-                          MinimumWidthRequest="0"
-                          Clicked="OnEvocationInfoClicked"
-                          CommandParameter="{Binding .}" />
-
-                  <Button Grid.Column="3"
-                          Text="&#xF2ED;"
-                          FontFamily="FASolid"
-                          FontSize="14"
-                          Padding="0"
-                          BackgroundColor="Transparent"
-                          TextColor="{StaticResource SubtleTextColor}"
-                          HeightRequest="24"
-                          WidthRequest="24"
-                          MinimumHeightRequest="0"
-                          MinimumWidthRequest="0"
-                          Clicked="OnDeleteEvocationClicked"
-                          CommandParameter="{Binding .}" />
-                </Grid>
-              </Border>
-            </DataTemplate>
-          </BindableLayout.ItemTemplate>
-        </VerticalStackLayout>
+        <controls:ConfigSelectionList ItemsSource="{Binding SelectedEvocations}"
+                                      EditCommand="{Binding Source={x:Reference RootPage}, Path=EditEvocationCommand}"
+                                      InfoCommand="{Binding Source={x:Reference RootPage}, Path=ViewEvocationInfoCommand}"
+                                      DeleteCommand="{Binding Source={x:Reference RootPage}, Path=DeleteEvocationCommand}" />
 
         <Label FontAttributes="Bold"
                Text="Global evocation item modifiers" />
@@ -141,7 +78,7 @@
 
         <controls:PlusMinusControl AllowMultiple="True"
                                    Count="{Binding DrawOnEpPerDay, Mode=TwoWay}"
-                                   LabelText="Draw on EP per day" />
+                                   LabelText="Draw on Earthpower per day" />
       </VerticalStackLayout>
     </ScrollView>
     <controls:StickyFooterControl Grid.Row="1"

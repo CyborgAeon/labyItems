@@ -39,10 +39,10 @@
         </Grid>
         <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference StrengthSlider}}" ValueText="{Binding ValueText, Source={x:Reference StrengthSlider}}" />
         <controls:DictionarySlider x:Name="StrengthSlider" Labels="{Binding StrengthLabels}" MaxCount="3" MinCount="0" Multiplier="1" SelectedCount="{Binding StrengthEnchantIndex, Mode=TwoWay}"/>
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}" LabelText="25% Cold Rage"/>
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}" LabelText="50% Berserk Rage"/>
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding ColdRage25PerDayCount, Mode=TwoWay}" LabelText="Cold Rage"/>
+        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BerserkRage50PerDayCount, Mode=TwoWay}" LabelText="Berserk Rage (50%)"/>
         <Label Text="{Binding RageCategoriesCountLabel}"/>
-        <controls:RepeatingEntryList CountLabelFormat="Perm 25% rage vs {0} groups" CountLabelText="{Binding RageCategoriesCountLabel, Mode=OneWayToSource}" Items="{Binding PermRageCategoryItems, Mode=TwoWay}" MaxItems="5" SummaryText="{Binding PermRageCategoriesSummary, Mode=OneWayToSource}" ValueCount="{Binding RageCategoriesCount, Mode=OneWayToSource}"/>
+        <controls:RepeatingEntryList CountLabelFormat="Perm Cold Rage vs {0} groups" CountLabelText="{Binding RageCategoriesCountLabel, Mode=OneWayToSource}" Items="{Binding PermRageCategoryItems, Mode=TwoWay}" MaxItems="5" SummaryText="{Binding PermRageCategoriesSummary, Mode=OneWayToSource}" ValueCount="{Binding RageCategoriesCount, Mode=OneWayToSource}"/>
         <Label FontAttributes="Bold" FontSize="16" HorizontalOptions="Start" HorizontalTextAlignment="Start" Text="{Binding RepelAttractGroupLabel}" VerticalOptions="Center" VerticalTextAlignment="Center"/>
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
           <controls:TwoOptionSwitch Grid.Column="0" LeftValue="Repel" RightValue="Attract" SelectedValue="{Binding RepelAttractGroup, Mode=TwoWay}"/>
