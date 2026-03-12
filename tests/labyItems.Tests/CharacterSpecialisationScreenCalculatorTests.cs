@@ -42,6 +42,186 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
     }
 
     [Fact]
+    public async Task BuildScreenSections_AncientFolkCloudWay_ReplacesWardPactOptions()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
+        var draft = new CharacterDraft
+        {
+            Race = "Ancient Folk",
+            Class = "Warrior",
+            RaceSubtypeValue = "The cloud way"
+        };
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase),
+            index.Definitions,
+            index.InjectionRules);
+
+        var required = new List<RequiredChoice>
+        {
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 2 },
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 4 },
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 6 },
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 8 }
+        };
+
+        var sections = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+        var wardPactSection = Assert.Single(sections.Where(section => section.SectionId.Equals("choice:Ward pact", StringComparison.OrdinalIgnoreCase)));
+
+        var optionLabels = wardPactSection.Options
+            .Select(option => option.Label)
+            .Where(label => !string.IsNullOrWhiteSpace(label))
+            .ToList();
+
+        Assert.Equal(3, optionLabels.Count);
+        Assert.Contains("Undead", optionLabels, StringComparer.OrdinalIgnoreCase);
+        Assert.Contains("Wyvern", optionLabels, StringComparer.OrdinalIgnoreCase);
+        Assert.Contains("Dwarf", optionLabels, StringComparer.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Salamanders", optionLabels, StringComparer.OrdinalIgnoreCase);
+        Assert.Contains("selection:multi-delimited", wardPactSection.StrategyIds, StringComparer.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ApplySavedSelections_WardPactSelectionsLoadFromDelimitedRows()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
+        var draft = new CharacterDraft
+        {
+            Race = "Ancient Folk",
+            Class = "Warrior"
+        };
+        draft.SpecialisationSelections["Ward pact"] = "Undead | Salamanders | Shades | Sprites";
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase),
+            index.Definitions,
+            index.InjectionRules);
+
+        var required = new List<RequiredChoice>
+        {
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 2 },
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 4 },
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 6 },
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 8 }
+        };
+
+        var specs = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+        var screen = CharacterSpecialisationScreenCalculator.ApplySavedSelections(context, specs);
+        var wardPactSection = Assert.Single(screen.Sections.Where(section => section.Spec.SectionId.Equals("choice:Ward pact", StringComparison.OrdinalIgnoreCase)));
+
+        Assert.Equal("Undead", wardPactSection.SelectedByLevel[2]);
+        Assert.Equal("Salamanders", wardPactSection.SelectedByLevel[4]);
+        Assert.Equal("Shades", wardPactSection.SelectedByLevel[6]);
+        Assert.Equal("Sprites", wardPactSection.SelectedByLevel[8]);
+    }
+
+    [Fact]
+    public async Task ApplySavedSelections_WardPactDuplicateGrantLevelsKeepSeparateSlots()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
+        var draft = new CharacterDraft
+        {
+            Race = "Ancient Folk",
+            Class = "Warrior"
+        };
+        draft.SpecialisationSelections["Ward pact"] = "Undead | Salamanders | Shades";
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase),
+            index.Definitions,
+            index.InjectionRules);
+
+        var required = new List<RequiredChoice>
+        {
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 2 },
+            new() { Source = RequiredChoiceSource.Race, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 2 },
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Ancient Folk", SpecialisationKey = "Ward pact", Level = 4 }
+        };
+
+        var specs = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+        var screen = CharacterSpecialisationScreenCalculator.ApplySavedSelections(context, specs);
+        var wardPactSection = Assert.Single(screen.Sections.Where(section => section.Spec.SectionId.Equals("choice:Ward pact", StringComparison.OrdinalIgnoreCase)));
+
+        Assert.Equal(3, wardPactSection.Spec.Levels.Count);
+        Assert.Equal(3, wardPactSection.SelectedByLevel.Count);
+
+        var orderedLevelKeys = wardPactSection.Spec.Levels.OrderBy(level => level).ToList();
+        Assert.Equal("Undead", wardPactSection.SelectedByLevel[orderedLevelKeys[0]]);
+        Assert.Equal("Salamanders", wardPactSection.SelectedByLevel[orderedLevelKeys[1]]);
+        Assert.Equal("Shades", wardPactSection.SelectedByLevel[orderedLevelKeys[2]]);
+    }
+
+    [Fact]
+    public async Task Recalculate_HumanIshmaicSubtypeShowsBaselineAbilityRows()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+
+        var classes = await ClassService.GetAllAsync();
+        var races = await PeopleService.GetAllAsync();
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
+        var draft = new CharacterDraft
+        {
+            Race = "Human",
+            Class = "Warrior",
+            RaceSubtypeValue = "Ishmaic"
+        };
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            classes,
+            races,
+            index.Definitions,
+            index.InjectionRules);
+
+        var required = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+        var specs = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+        var subtypeSpec = Assert.Single(specs.Where(section => section.Kind == SpecialisationSectionKind.RaceSubtype));
+
+        var mappedSelections = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            [subtypeSpec.SectionId] = "Ishmaic"
+        };
+
+        var screen = CharacterSpecialisationScreenCalculator.Recalculate(
+            context,
+            specs,
+            new SpecialisationSelectionState
+            {
+                RaceSubtype = "Ishmaic",
+                MappedSelections = new ReadOnlyDictionary<string, string>(mappedSelections)
+            });
+
+        var subtypeSection = Assert.Single(screen.Sections.Where(section => section.Spec.Kind == SpecialisationSectionKind.RaceSubtype));
+        var abilityNames = subtypeSection.AbilityRows
+            .Select(row => row.Ability)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToList();
+
+        Assert.Contains("Survival", abilityNames, StringComparer.OrdinalIgnoreCase);
+        Assert.Contains("1st Extra Level of Life", abilityNames, StringComparer.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void Recalculate_RejectsDuplicateSelectionsAcrossLinkedChoiceGroup()
     {
         var context = CharacterSpecialisationScreenCalculator.LoadContext(
@@ -188,6 +368,84 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
         Assert.False(screen.IsComplete);
         var issueSection = Assert.Single(screen.Sections.Where(section => !string.IsNullOrWhiteSpace(section.ValidationMessage)));
         Assert.Contains("Self Heal is only available from level 5.", issueSection.ValidationMessage);
+    }
+
+    [Fact]
+    public void Recalculate_RejectsSelectionOutsideOptionExactLevel()
+    {
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            new CharacterDraft
+            {
+                Race = "Crol",
+                Class = "Warrior",
+                RaceSubtypeValue = "Yashtar"
+            },
+            new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, SpecialisationDefinition>(StringComparer.OrdinalIgnoreCase));
+
+        var options = new List<ChoiceOption>
+        {
+            new()
+            {
+                Key = "Large lung capacity",
+                Label = "Large Lung Capacity",
+                Metadata = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["Level"] = "2"
+                })
+            },
+            new()
+            {
+                Key = "Leg Sweep",
+                Label = "Leg Sweep",
+                Metadata = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["Level"] = "5"
+                })
+            }
+        };
+
+        var specs = new List<SpecialisationSectionSpec>
+        {
+            new()
+            {
+                SectionId = "choice:crol-talents",
+                DefinitionKey = "Crol Talents (Yashtar)",
+                DetailKey = "Crol Talents (Yashtar)",
+                Title = "Crol Talents",
+                Kind = SpecialisationSectionKind.Choice,
+                Required = true,
+                Levels = [2, 5, 8],
+                StrategyIds = ["validation:exact-level-by-option-metadata"],
+                Options = options
+            }
+        };
+
+        var choiceSelections = new Dictionary<string, ChoiceSelectionState>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["choice:crol-talents"] = new ChoiceSelectionState
+            {
+                SelectedByLevel = new ReadOnlyDictionary<int, string>(new Dictionary<int, string>
+                {
+                    [5] = "Large lung capacity"
+                })
+            }
+        };
+
+        var screen = CharacterSpecialisationScreenCalculator.Recalculate(
+            context,
+            specs,
+            new SpecialisationSelectionState
+            {
+                RaceSubtype = "Yashtar",
+                ChoiceSelections = new ReadOnlyDictionary<string, ChoiceSelectionState>(choiceSelections),
+                MappedSelections = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>())
+            });
+
+        Assert.False(screen.IsComplete);
+        var issueSection = Assert.Single(screen.Sections.Where(section => !string.IsNullOrWhiteSpace(section.ValidationMessage)));
+        Assert.Contains("Large Lung Capacity is only available at level 2.", issueSection.ValidationMessage);
     }
 
     [Fact]

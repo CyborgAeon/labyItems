@@ -12,6 +12,7 @@ public sealed class CharacterDraft
     }
     public string? Race { get; set; }
     public string? Class { get; set; }
+    public string CharacterRecordId { get; set; } = "";
     public string Name { get; set; } = "";
     public string PlayerName { get; set; } = "";
     public string Notes { get; set; } = "";

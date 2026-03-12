@@ -61,9 +61,11 @@ public sealed class AdvanceCharacterSpellsTabVm : AdvanceCharacterTabVmBase
 
     public ObservableCollection<SpellListVm> SpellLists => Root.SpellLists;
     public IReadOnlyList<SpecialistSlotSegmentVm> SpecialistSlotSegments => Root.SpecialistSlotSegments;
+    public IReadOnlyList<SpecialistSlotLegendVm> SpecialistSlotLegendItems => Root.SpecialistSlotLegendItems;
     public string SpecialistSlotsSummary => Root.SpecialistSlotsSummary;
     public Color SpecialistSlotsSummaryColor => Root.SpecialistSlotsSummaryColor;
     public bool ShowSpecialistSlotsBar => Root.ShowSpecialistSlotsBar;
+    public bool ShowSpecialistSlotsLegend => Root.ShowSpecialistSlotsLegend;
     public ICommand ExportSpellsToExcelCommand => Root.ExportSpellsToExcelCommand;
     public ICommand CopySpellsCommand => Root.CopySpellsCommand;
     public ICommand SaveSpellsTextCommand => Root.SaveSpellsTextCommand;

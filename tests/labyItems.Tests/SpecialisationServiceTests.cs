@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using labyItems.Services;
 using Xunit;
@@ -40,5 +41,17 @@ public sealed class SpecialisationServiceTests : ServiceTestBase
         var jaerseen = Assert.Contains("Jaerseen", mapped);
         Assert.Equal("Crol (Jaerseen)", jaerseen.LifeScaleOverride);
         Assert.DoesNotContain("Grey", jaerseen.ColourChoiceOverride ?? new List<string>(), StringComparer.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ElfColourAbilities_UsesOverviewDescription()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+        var all = await SpecialisationService.GetAllAsync();
+
+        var elfColour = Assert.Contains("ElfColourAbilities", all);
+        Assert.Contains("immune to spiritual effects", elfColour.Description, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Elven Abilities", elfColour.Description, StringComparison.Ordinal);
     }
 }

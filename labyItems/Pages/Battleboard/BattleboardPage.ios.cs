@@ -7,7 +7,7 @@ public partial class BattleboardPage
 {
     partial void ApplyPlatformTabLayoutTweaks()
     {
-        IosTabBarPlacementHelper.EnsurePinnedToTop(this);
+        IosTabBarHelper.EnsurePinnedToTop(this);
     }
 }
 #endif

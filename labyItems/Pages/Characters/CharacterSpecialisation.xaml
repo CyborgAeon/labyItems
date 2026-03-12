@@ -241,11 +241,10 @@
                                Opacity="0.75"
                                LineBreakMode="WordWrap"/>
 
-                        <CollectionView ItemsSource="{Binding Slots}"
-                                        SelectionMode="None"
-                                        ItemSizingStrategy="MeasureAllItems"
-                                        HorizontalOptions="FillAndExpand">
-                            <CollectionView.ItemTemplate>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Slots}"
+                                             Spacing="0"
+                                             HorizontalOptions="FillAndExpand">
+                            <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <Grid ColumnDefinitions="Auto,*,Auto"
                                           ColumnSpacing="10"
@@ -433,8 +432,8 @@
                                                 CommandParameter="{Binding .}"/>
                                     </Grid>
                                 </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
             </Frame>

@@ -304,13 +304,13 @@ public sealed class ClassCardVm : INotifyPropertyChanged
 
     public static string ToDisplayName(AbilityDefinition def)
     {
-        if (def == null) return string.Empty;
+        if (def == null)
+            return string.Empty;
 
-        var name = def.Name ?? string.Empty;
-        if (!string.IsNullOrWhiteSpace(def.Effect))
-            return $"{name} ({def.Effect})";
+        if (!string.IsNullOrWhiteSpace(def.Name))
+            return def.Name.Trim();
 
-        return name;
+        return (def.Effect ?? string.Empty).Trim();
     }
 
     private bool _isExpanded;

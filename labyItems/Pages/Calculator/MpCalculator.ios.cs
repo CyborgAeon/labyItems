@@ -7,7 +7,7 @@ public partial class MpCalculator
 {
     partial void ApplyPlatformTabLayoutTweaks()
     {
-        IosTabBarPlacementHelper.EnsurePinnedToTop(this);
+        IosTabBarHelper.EnsurePinnedToTop(this);
     }
 }
 #endif

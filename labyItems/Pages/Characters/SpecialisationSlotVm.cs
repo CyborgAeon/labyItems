@@ -13,6 +13,8 @@ namespace labyItems.Pages.Characters;
 
 public sealed class SpecialisationSlotVm : INotifyPropertyChanged
 {
+    private const string DisallowedWeaponTypeWarning = "Cudgel and Pure are not allowed weapon types";
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void Raise([CallerMemberName] string? name = null)
@@ -33,7 +35,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     private string _specialisationKeyForDetails = string.Empty;
 
     public int Level { get; }
-    public string LevelLabel => $"Lvl {Level}";
+    public string LevelLabel => $"Lvl {DisplayLevel(Level)}";
 
     public bool UseWardPactEnum => Mode == SlotOptionMode.WardPactEnum;
     public bool UseDictionarySearch => Mode == SlotOptionMode.DictionarySearch;
@@ -49,21 +51,6 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     public bool IsLocked => _forcedAbilityDefinition != null;
     public bool IsSelectable => !IsLocked;
     public string LockedDisplayText => _lockedDisplayText;
-
-    private StandardWardPacts? _selectedWardPact;
-    public StandardWardPacts? SelectedWardPact
-    {
-        get => _selectedWardPact;
-        set
-        {
-            if (!Set(ref _selectedWardPact, value)) return;
-
-            if (value is StandardWardPacts v)
-                SelectedOption = WardPactOptions.LabelFor(v);
-            else
-                SelectedOption = null;
-        }
-    }
 
     private MagicColours? _selectedMagicColour;
     public MagicColours? SelectedMagicColour
@@ -109,6 +96,7 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
 
     private AbilityCustomisation? _customisation;
     private string? _customisationValue;
+    private string _customisationWarningMessage = string.Empty;
     private Dictionary<string, string> _customisationOptions = new(StringComparer.OrdinalIgnoreCase);
     private bool _customisationAllowsCustom;
     private string _customisationPlaceholder = "Enter value";
@@ -132,6 +120,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
     }
     public bool ShowCustomisationInline => ShowCustomisationPicker && IsWeaponMasterySelection && !UseDictionarySearch;
     public bool ShowCustomisationBelow => ShowCustomisationPicker && !ShowCustomisationInline && !UseDictionarySearch;
+    public string CustomisationWarningMessage => _customisationWarningMessage;
+    public bool HasCustomisationWarning => !string.IsNullOrWhiteSpace(_customisationWarningMessage);
 
     public string? CustomisationValue
     {
@@ -140,6 +130,10 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         {
             var normalized = (value ?? string.Empty).Trim();
             normalized = normalized.Length == 0 ? null : normalized;
+            normalized = NormalizeWeaponMasteryCustomisationValue(normalized, out var warning);
+
+            SetCustomisationWarning(warning);
+
             if (!Set(ref _customisationValue, normalized)) return;
             Raise(nameof(IsCustomisationComplete));
             Raise(nameof(HasSelection));
@@ -215,14 +209,11 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
                 {
                     SelectedVivomancerColour = FindVivomancerColour(normalized);
                 }
-                else if (UseWardPactEnum)
-                {
-                    SelectedWardPact = FindWardPact(normalized);
-                }
                 _suppressSelectionSync = false;
             }
 
             ApplyCustomisation(_customisationResolver?.Invoke(normalized));
+            SetCustomisationWarning(string.Empty);
             Raise(nameof(IsWeaponMasterySelection));
             Raise(nameof(ShowCustomisationInline));
             Raise(nameof(ShowCustomisationBelow));
@@ -259,6 +250,9 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
 
     public SlotOptionMode Mode { get; }
     public Type? EnumType { get; }
+
+    private static int DisplayLevel(int encodedLevel)
+        => encodedLevel > 99 ? encodedLevel / 100 : encodedLevel;
 
     public void SetOptionsSource(Func<IReadOnlyList<string>> getFilteredOptions)
     {
@@ -338,8 +332,6 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         if (!string.IsNullOrWhiteSpace(_selectedOption))
             _selectedOption = null;
 
-        if (_selectedWardPact.HasValue)
-            _selectedWardPact = null;
         if (_selectedMagicColour.HasValue)
             _selectedMagicColour = null;
         if (_selectedVivomancerColour.HasValue)
@@ -353,10 +345,10 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
             _customisationAllowsCustom = false;
             _customisationEnumName = string.Empty;
             _customisationPlaceholder = "Enter value";
+            _customisationWarningMessage = string.Empty;
         }
 
         Raise(nameof(SelectedOption));
-        Raise(nameof(SelectedWardPact));
         Raise(nameof(SelectedMagicColour));
         Raise(nameof(SelectedVivomancerColour));
         Raise(nameof(HasSelection));
@@ -369,6 +361,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(CustomisationAllowsCustom));
         Raise(nameof(CustomisationPlaceholder));
         Raise(nameof(CustomisationValue));
+        Raise(nameof(CustomisationWarningMessage));
+        Raise(nameof(HasCustomisationWarning));
         Raise(nameof(ShowCustomisationPicker));
         Raise(nameof(ShowCustomisationInline));
         Raise(nameof(ShowCustomisationBelow));
@@ -436,22 +430,6 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
             : null;
     }
 
-    private StandardWardPacts? FindWardPact(string label)
-    {
-        if (string.IsNullOrWhiteSpace(label))
-            return null;
-
-        if (WardPactOptions.Standard.TryGetValue(label, out var match))
-            return match;
-
-        var fallback = WardPactOptions.Standard
-            .FirstOrDefault(kvp => string.Equals(kvp.Key, label, StringComparison.OrdinalIgnoreCase));
-
-        return !EqualityComparer<KeyValuePair<string, StandardWardPacts>>.Default.Equals(fallback, default)
-            ? fallback.Value
-            : null;
-    }
-
     private static string LabelForMagicColour(MagicColours c)
         => EnumDisplayFormatter.FormatName(c.ToString());
 
@@ -487,6 +465,8 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
         Raise(nameof(CustomisationAllowsCustom));
         Raise(nameof(CustomisationPlaceholder));
         Raise(nameof(CustomisationValue));
+        Raise(nameof(CustomisationWarningMessage));
+        Raise(nameof(HasCustomisationWarning));
         Raise(nameof(IsCustomisationComplete));
         Raise(nameof(HasSelection));
         Raise(nameof(SelectionKey));
@@ -542,6 +522,38 @@ public sealed class SpecialisationSlotVm : INotifyPropertyChanged
 
         if (!string.Equals(previousValue, _customisationValue, StringComparison.Ordinal))
             _onChanged();
+    }
+
+    private bool SetCustomisationWarning(string message)
+    {
+        var normalized = (message ?? string.Empty).Trim();
+        if (string.Equals(_customisationWarningMessage, normalized, StringComparison.Ordinal))
+            return false;
+
+        _customisationWarningMessage = normalized;
+        Raise(nameof(CustomisationWarningMessage));
+        Raise(nameof(HasCustomisationWarning));
+        return true;
+    }
+
+    private string? NormalizeWeaponMasteryCustomisationValue(string? value, out string warning)
+    {
+        warning = string.Empty;
+        var trimmed = (value ?? string.Empty).Trim();
+        if (trimmed.Length == 0)
+            return null;
+
+        if (!IsWeaponMasterySelection)
+            return trimmed;
+
+        if (trimmed.Contains("cudgel", StringComparison.OrdinalIgnoreCase)
+            || trimmed.Contains("pure", StringComparison.OrdinalIgnoreCase))
+        {
+            warning = DisallowedWeaponTypeWarning;
+            return null;
+        }
+
+        return trimmed;
     }
 
     private static bool IsSpellCustomisation(string enumName)

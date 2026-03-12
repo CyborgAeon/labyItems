@@ -265,6 +265,7 @@
       "Name": "Discern Smell (Sniff)",
       "Type": "AtWill",
       "Effect": "Most monsters have their own distinctive smell. By the use of this skill the Pathfinder `sniffs` for smells he has met before, thus he is able to put a smell to a monster and have some idea of what is coming up. Only broad categories of information are given by the use of this skill \u2013 \u2018goblin-kind\u2019 for example, not \u2018four goblins and a hobgoblin\u2019. Numbers cannot be distinguished, nor may exact race type necessarily be discerned. At ref\u2019s discretion, unusual or peculiar creatures may be described as an unknown or unfamiliar scent.",
+      "Source": "Crol talents",
       "Key": "ability.discern-smell-sniff"
     },
     "ability.disguise": {
@@ -1076,18 +1077,21 @@
       "Name": "Toughened Feet",
       "Type": "Immunity",
       "Effect": "No longer effected by any instance of bind.",
+      "Source": "Crol talents",
       "Key": "ability.toughened-feet"
     },
     "ability.large-lung-capacity": {
       "Name": "Large lung capacity",
       "Type": "Static",
       "Effect": "Character can hold their breath for up to 5 minutes.",
+      "Source": "Crol talents",
       "Key": "ability.large-lung-capacity"
     },
     "ability.insensitive-skin": {
       "Name": "Insensitive Skin",
       "Type": "Static",
       "Effect": "Touch/contact poisons and potions have no effect",
+      "Source": "Crol talents",
       "Key": "ability.insensitive-skin"
     },
     "ability.leg-sweep": {
@@ -1095,30 +1099,35 @@
       "Type": "Innate",
       "Effect": "With a phys repped blow to the legs (not a martial arts-style leg sweep!) one two-legged opponent is knocked to the ground. Immunity to Trip applies.",
       "Count": 2,
+      "Source": "Crol talents",
       "Key": "ability.leg-sweep"
     },
     "ability.stability": {
       "Name": "Stability",
       "Type": "Immunity",
       "Effect": "You don't fall over due to Earth Tremor type effects",
+      "Source": "Crol talents",
       "Key": "ability.stability"
     },
     "ability.immunity-to-poison": {
       "Name": "Immunity to Poison",
       "Type": "Immunity",
       "Effect": "Grants complete immunity to poison",
+      "Source": "Crol talents",
       "Key": "ability.immunity-to-poison"
     },
     "ability.immunity-to-disease": {
       "Name": "Immunity to Disease",
       "Type": "Immunity",
       "Effect": "Grants complete immunity to disease",
+      "Source": "Crol talents",
       "Key": "ability.immunity-to-disease"
     },
     "ability.immunity-to-acid": {
       "Name": "Immunity to Acid",
       "Type": "Immunity",
       "Effect": "Grants complete immunity to acid",
+      "Source": "Crol talents",
       "Key": "ability.immunity-to-acid"
     },
     "ability.2-pac": {
@@ -1132,6 +1141,7 @@
       "Type": "Innate",
       "Effect": "12/2 cure which cures permanent and normal damage, but takes 10 seconds (e.g. may cure 12/2 damage which would otherwise be permanent as they lose the part of their body which is damaged)",
       "Count": 2,
+      "Source": "Crol talents",
       "Key": "ability.shed-skin"
     },
     "ability.acid-potions": {
@@ -1139,12 +1149,14 @@
       "Type": "Innate",
       "Effect": "May cut palm for 1 loc and 6 TBLP that is then useable as an acid potion.",
       "Count": 2,
+      "Source": "Crol talents",
       "Key": "ability.acid-potions"
     },
     "ability.bask": {
       "Name": "Bask",
       "Type": "Static",
       "Effect": "Gains regen as a troll whilst they are resting in sunlight",
+      "Source": "Crol talents",
       "Key": "ability.bask"
     },
     "ability.potent-blood": {
@@ -1152,6 +1164,7 @@
       "Type": "Innate",
       "Effect": "the Crol may spit CV 6 at one target within 20' or when they have been struck, after the character takes the damage, the weapon they are struck with dissolves because of the acid (as disintegrate touch). The 'spit' must not be phys repped, it is deemed to automatically hit.",
       "Count": 2,
+      "Source": "Crol talents",
       "Key": "ability.potent-blood"
     },
     "ability.1-casting-level-chosen-colour": {
@@ -1162,6 +1175,7 @@
       "Name": "Bronze Jewellery",
       "Type": "Static",
       "Effect": "Each piece of Bronze jewellery counts as a magical focus for a single spell, there must be one piece of jewellery per spell ",
+      "Source": "Crol talents",
       "Key": "ability.bronze-jewellery"
     },
     "ability.self-heal": {
@@ -1169,18 +1183,21 @@
       "Type": "Innate",
       "Effect": "This ability may only be used whilst in contact with the appropriate element, which means underground for earth, in a strong breeze for air, up to the waist in water for water, and within or near a bonfire-size blaze for fire. \nThis effect magically heals all normal damage to tblp and locations, and negates diseases and potions or poisons on the master.\nThe phrase \u201cLet the power of [element] come onto me\u201d must be repeatedly chanted for two minutes to achieve the effect. During this time the master cannot fight, cast spells, move etc or the process is interrupted and the innate is wasted. Diseases, potions and poisons do not progress further during this time.",
       "Count": 1,
+      "Source": "Crol talents",
       "Key": "ability.self-heal"
     },
     "ability.mystical-tattoos": {
       "Name": "Mystical Tattoos",
       "Type": "Static",
       "Effect": "grants the character 2 MAC vs Elemental",
+      "Source": "Crol talents",
       "Key": "ability.mystical-tattoos"
     },
     "ability.elementalist": {
       "Name": "Elementalist",
       "Type": "Static",
       "Effect": "Power Masters now calculate their mana as if they were a Warlock, Warlocks as if they were a Sorcerer and Wizards as if they were a High Wizard",
+      "Source": "Crol talents",
       "Key": "ability.elementalist"
     },
     "ability.proficiency": {
@@ -1305,6 +1322,24 @@
       "Effect": "Can find food, water and shelter in the wilderness. In practical terms this means that on extended length adventures the player may supply their own provisions, which may be kept in an Out-Of-Character location until foraged for",
       "Key": "ability.survival"
     },
+    "ability.ishmaic-clan-support": {
+      "Name": "Ishmaic Clan Support",
+      "Type": "Static",
+      "Effect": "Ishmaic Human characters (bar Rainfinders) may carry a Glaive (a short sword-like weapon) and, if they are allowed sharp weapon use by their class restrictions, this may be used as a weapon. Even Wizards may carry such a weapon, though this counts as their whole metal allowance.\nAll Ishmaic characters are well supported by their Clan. To this end they are supplied with normal weapons and armour as appropriate to their class. Ishmaic humans will normally be at least cordial to any Rainfinder.",
+      "Key": "ability.ishmaic-clan-support"
+    },
+    "ability.ishmaic-political-guild-restriction": {
+      "Name": "Ishmaic Political Guild Restriction",
+      "Type": "Static",
+      "Effect": "Ishmaic humans may freely join professional and social guilds but they may not belong to political guilds unless they are specifically for Ishmaics.",
+      "Key": "ability.ishmaic-political-guild-restriction"
+    },
+    "ability.seven-winds-adept": {
+      "Name": "Seven Winds Adept",
+      "Type": "Static",
+      "Effect": "The Rain are adepts of the Seven Winds. To this end they always count as being two levels higher than they actually are for the calculation of damage taken from using magic.",
+      "Key": "ability.seven-winds-adept"
+    },
     "ability.invoke-ancestor-rhagrimm": {
       "Name": "Invoke Ancestor (Rhagrimm)",
       "Type": "Innate",
@@ -1340,6 +1375,12 @@
       "Count": 1,
       "Key": "ability.laminar-armour"
     },
+    "ability.galahbhad-political-guild-allowance": {
+      "Name": "Galahbhad Political Guild Allowance",
+      "Type": "Static",
+      "Effect": "Galahbhad characters are able to reach the Empire and have regular contact with that nation. To this end they are able to join a single political guild so long as that guild is in no way hostile to the Ishmaic Confederacy or demands loyalty to the Empire (for example, they could not be a member of Department of Recoveries and Collections).",
+      "Key": "ability.galahbhad-political-guild-allowance"
+    },
     "ability.conditioned-heartstop": {
       "Name": "Conditioned Heartstop",
       "Type": "Static",
@@ -1365,6 +1406,24 @@
       "Effect": "May use a Jump innate that requires no verbal to leap out of the area of an area-effect attack, if the Jump has sufficient range to leave the area of effect. If the effect was damaging, only half damage is taken \u2013 if non-damaging, it does not affect the user.\nand may choose Tomb Robber as a tendency for 0 points rather than normal cost, if the character enters the scout bracket as a second class, they may acquire Tomb Robber tendency on table 9 for 80 points \nUnofficially, you gain this at first level. Levels in it don't change anything.",
       "Key": "ability.trap-wary-8"
     },
+    "ability.benhai-scout-aptitude": {
+      "Name": "Benhai Scout Aptitude",
+      "Type": "Static",
+      "Effect": "If the character is a scout class they gain the standard scout skill Trap Wary at 1st level and may choose Tomb Robber as a tendency for 0 points rather than normal cost. If the character enters the scout bracket as a second class, they may acquire Tomb Robber tendency on table 9 for 80 points.",
+      "Key": "ability.benhai-scout-aptitude"
+    },
+    "ability.buladajn-change-appearance": {
+      "Name": "Buladajn Change Appearance",
+      "Type": "Static",
+      "Effect": "If the character is a Spy then their first-level Disguise gains Change Appearance: when used on self, a disguise worn cannot be penetrated by Penetrate Disguise.",
+      "Key": "ability.buladajn-change-appearance"
+    },
+    "ability.buladajn-pathfinder-post-8th-stealth": {
+      "Name": "Buladajn Pathfinder Post 8th",
+      "Type": "Static",
+      "Effect": "At 8th level, Buladajn Pathfinder post-8th abilities that enable the character to pass more easily unseen are available 4 tables lower (for example, stealth).",
+      "Key": "ability.buladajn-pathfinder-post-8th-stealth"
+    },
     "ability.immunity-to-blindness": {
       "Name": "Immunity to Blindness",
       "Type": "Immunity",
@@ -1376,6 +1435,18 @@
       "Type": "Immunity",
       "Effect": "See through all forms of supernatural darkness",
       "Key": "ability.see-through-darkness"
+    },
+    "ability.salahmen-post-8th-immunity-discount": {
+      "Name": "Salahmen Post 8th Immunity Discount",
+      "Type": "Static",
+      "Effect": "Post 8th immunities that act against effects that are normally stackable magical runes (such as Sleep/Catalepsy) are half normal price.",
+      "Key": "ability.salahmen-post-8th-immunity-discount"
+    },
+    "ability.harazaen-spirit-affinity": {
+      "Name": "Harazaen Spirit Affinity",
+      "Type": "Static",
+      "Effect": "Harazaen are well adapted to the Land of the Seven Winds and the transfer of supernatural power through them is easily achieved. To represent this, spirit-using classes do not have to pay the increased cost for spiritual immunities that others of their nation do.",
+      "Key": "ability.harazaen-spirit-affinity"
     },
     "ability.spiritual-discern-insanity": {
       "Name": "Spiritual Discern Insanity",
@@ -2378,6 +2449,7 @@
     "Auric Colour": "ability.auric-colour",
     "Bandaging": "ability.bandaging",
     "Bask": "ability.bask",
+    "Benhai Scout Aptitude": "ability.benhai-scout-aptitude",
     "Black": "ability.black",
     "Black Blade": "ability.black-blade",
     "Blade Sharpening": "ability.blade-sharpening",
@@ -2398,6 +2470,9 @@
     "Boleq Manufacture": "ability.boleq-manufacture",
     "Bronze": "ability.bronze",
     "Bronze Jewellery": "ability.bronze-jewellery",
+    "Buladajn Change Appearance": "ability.buladajn-change-appearance",
+    "Buladajn Pathfinder Post 8th": "ability.buladajn-pathfinder-post-8th-stealth",
+    "Baladajn Change Appearance": "ability.buladajn-change-appearance",
     "Brown": "ability.brown",
     "Chameleon": "ability.chameleon",
     "Chosen of the Dragon": "ability.chosen-of-the-dragon",
@@ -2421,6 +2496,7 @@
     "Discern Healing Potion": "ability.discern-healing-potion",
     "Discern Poison": "ability.discern-poison",
     "Discern Smell (Sniff)": "ability.discern-smell-sniff",
+    "Discern Smell": "ability.discern-smell-sniff",
     "Disguise": "ability.disguise",
     "Distillation": "ability.distillation",
     "Draw Venom": "ability.draw-venom",
@@ -2439,12 +2515,14 @@
     "Flash": "ability.flash",
     "Flesh Mending": "ability.flesh-mending",
     "ForeArm Parry": "ability.forearm-parry",
+    "Galahbhad Political Guild Allowance": "ability.galahbhad-political-guild-allowance",
     "Gains Ivory Code Restriction": "ability.gains-ivory-code-restriction",
     "Gnomes": "ability.gnomes",
     "Gold": "ability.gold",
     "Green": "ability.green",
     "Grey": "ability.grey",
     "Healing Facility": "ability.healing-facility",
+    "Harazaen Spirit Affinity": "ability.harazaen-spirit-affinity",
     "Hedge Wizardry": "ability.hedge-wizardry",
     "Hollow Tooth": "ability.hollow-tooth",
     "Immunity to Acid": "ability.immunity-to-acid",
@@ -2454,6 +2532,8 @@
     "Immunity to Poison": "ability.immunity-to-poison",
     "Inquiry": "ability.inquiry",
     "Insensitive Skin": "ability.insensitive-skin",
+    "Ishmaic Clan Support": "ability.ishmaic-clan-support",
+    "Ishmaic Political Guild Restriction": "ability.ishmaic-political-guild-restriction",
     "Invoke Ancestor (Eva)": "ability.invoke-ancestor-eva",
     "Invoke Ancestor (Issalania)": "ability.invoke-ancestor-issalania",
     "Invoke Ancestor (Rhagrimm)": "ability.invoke-ancestor-rhagrimm",
@@ -2467,6 +2547,7 @@
     "Jump self": "ability.jump-self",
     "Laminar Armour": "ability.laminar-armour",
     "Large lung capacity": "ability.large-lung-capacity",
+    "Large Lung Capacity": "ability.large-lung-capacity",
     "Leg Sweep": "ability.leg-sweep",
     "Light Ranged": "ability.light-ranged",
     "Light Self": "ability.light-self",
@@ -2519,6 +2600,7 @@
     "Returner": "ability.returner",
     "Rust (Ranged)": "ability.rust-ranged",
     "Sabre of Light & Truth": "ability.sabre-of-light-truth",
+    "Salahmen Post 8th Immunity Discount": "ability.salahmen-post-8th-immunity-discount",
     "Salamanders": "ability.salamanders",
     "Salmon Leap": "ability.salmon-leap",
     "Scorching Heat": "ability.scorching-heat",
@@ -2550,6 +2632,7 @@
     "Sun's healing": "ability.sun-s-healing",
     "Supernatural Power (add in your notes)": "ability.supernatural-power-add-in-your-notes",
     "Survival": "ability.survival",
+    "Seven Winds Adept": "ability.seven-winds-adept",
     "Sylphs": "ability.sylphs",
     "Talk to Earth": "ability.talk-to-earth",
     "Talk to Plant": "ability.talk-to-plant",

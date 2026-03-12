@@ -1617,7 +1617,10 @@ public static class SpecialisationDefinitionRepository
             ids.Add("lookup:spell");
 
         if (definitionKey.Equals("Ward pact", StringComparison.OrdinalIgnoreCase))
+        {
             ids.Add("lookup:ward-pact");
+            ids.Add("selection:multi-delimited");
+        }
 
         if (definitionKey.Equals("HumanSubtypeAbilities", StringComparison.OrdinalIgnoreCase))
             ids.Add("subtype:human-map");

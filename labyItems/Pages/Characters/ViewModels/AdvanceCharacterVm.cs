@@ -12,6 +12,7 @@ using System.Text;
 using ClosedXML.Excel;
 using labyItems.Controls;
 using labyItems.Helpers;
+using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
@@ -751,6 +752,13 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             Items.Add(line);
         }
 
+        foreach (var assigned in LiteDbService.GetItemsAssignedToCharacter(_draft.Name, _draft.PlayerName))
+        {
+            var line = new ItemLineVm(FormatAssignedItemLine(assigned), isReadOnly: true);
+            line.PropertyChanged += OnItemChanged;
+            Items.Add(line);
+        }
+
         if (Items.Count == 0)
             AddItem();
     }
@@ -766,6 +774,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private void RemoveItem(ItemLineVm? item)
     {
         if (item == null) return;
+        if (item.IsReadOnly)
+            return;
         item.PropertyChanged -= OnItemChanged;
         Items.Remove(item);
         SyncItemsToDraft();
@@ -777,9 +787,19 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private void SyncItemsToDraft()
     {
         _draft.AdvancementItems = Items
+            .Where(i => !i.IsReadOnly)
             .Select(i => (i.Text ?? string.Empty).Trim())
             .Where(t => t.Length > 0)
             .ToList();
+    }
+
+    private static string FormatAssignedItemLine(Item item)
+    {
+        var type = item.ItemType.ToString();
+        if (type.Length == 0)
+            type = "Item";
+
+        return $"{type} item · ISP {item.Isp} · {item.CreatedDate:dd MMM yyyy}";
     }
 
     private int GetDraftCasterLevel()
@@ -1167,7 +1187,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (selections.Count == 0)
             AddNormalizedWizardSelections(selections, seen, TryInferWizardColourFromClassName());
 
-        if (selections.Count == 0 && IsSorcorialClass())
+        if (IsSorcorialClass() && !selections.Any(s => s.Equals("Sorcorial", StringComparison.OrdinalIgnoreCase)))
             selections.Add("Sorcorial");
 
         return selections;
@@ -2022,19 +2042,27 @@ public sealed class ItemLineVm : INotifyPropertyChanged
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
     private string _text;
+    private readonly bool _isReadOnly;
+
+    public bool IsReadOnly => _isReadOnly;
+    public bool ShowDeleteButton => !_isReadOnly;
+
     public string Text
     {
         get => _text;
         set
         {
+            if (_isReadOnly)
+                return;
             if (_text == value) return;
             _text = value ?? string.Empty;
             Raise();
         }
     }
 
-    public ItemLineVm(string text)
+    public ItemLineVm(string text, bool isReadOnly = false)
     {
+        _isReadOnly = isReadOnly;
         _text = text ?? string.Empty;
     }
 }
@@ -2080,6 +2108,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
     public bool IsReadOnly => IsBaseList;
 
     public bool CanEdit => !IsReadOnly;
+    public string CenterColumnHeader => IsSpecialistList ? "Colour" : "Level";
 
     public bool ShowNameEditor => false;
 
@@ -2191,7 +2220,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
 
         foreach (var entry in entries)
         {
-            var vm = new SpellEntryVm(entry, OnEntryChanged, _getCasterLevel);
+            var vm = new SpellEntryVm(entry, OnEntryChanged, _getCasterLevel, IsSpecialistList);
             if (!IsReadOnly && !string.IsNullOrWhiteSpace(entry.Name))
                 vm.SelectedSpell = new SpellOption(entry.Name, entry.Level, entry.Colour ?? string.Empty, entry.IsAdvanced);
             Entries.Add(vm);
@@ -2220,7 +2249,7 @@ public sealed class SpellListVm : INotifyPropertyChanged
 
             var draft = new SpellListEntryDraft();
             Draft.Entries.Add(draft);
-            var vm = new SpellEntryVm(draft, OnEntryChanged, _getCasterLevel);
+            var vm = new SpellEntryVm(draft, OnEntryChanged, _getCasterLevel, IsSpecialistList);
             vm.SelectedSpell = selectedOption;
             Entries.Add(vm);
             ReindexEntries();
@@ -2361,6 +2390,7 @@ public sealed class SpellEntryVm : INotifyPropertyChanged
     }
 
     private readonly Action _onChanged;
+    private readonly bool _showColourInCenterColumn;
 
     public SpellListEntryDraft Draft { get; }
 
@@ -2391,6 +2421,7 @@ public sealed class SpellEntryVm : INotifyPropertyChanged
             Raise(nameof(DisplayText));
             Raise(nameof(NameText));
             Raise(nameof(LevelText));
+            Raise(nameof(CenterColumnText));
             Raise(nameof(HasSpell));
             _onChanged();
         }
@@ -2400,6 +2431,9 @@ public sealed class SpellEntryVm : INotifyPropertyChanged
         => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : $"{Draft.Name} (Lvl {Draft.Level})";
     public string NameText => Draft.Name ?? string.Empty;
     public string LevelText => string.IsNullOrWhiteSpace(Draft.Name) ? string.Empty : Draft.Level.ToString();
+    public string CenterColumnText => _showColourInCenterColumn
+        ? ResolveCenterColourText()
+        : LevelText;
 
     private int _rowIndex;
     public Color RowBackgroundColor => (_rowIndex % 2) == 0 ? Colors.White : Color.FromArgb("#FAF8F3");
@@ -2457,12 +2491,22 @@ public sealed class SpellEntryVm : INotifyPropertyChanged
     private string _learningWarningText = string.Empty;
     public string LearningWarningText { get => _learningWarningText; private set => Set(ref _learningWarningText, value); }
 
-    public SpellEntryVm(SpellListEntryDraft draft, Action onChanged, Func<int> getCasterLevel)
+    public SpellEntryVm(SpellListEntryDraft draft, Action onChanged, Func<int> getCasterLevel, bool showColourInCenterColumn = false)
     {
         Draft = draft;
         _onChanged = onChanged;
         _getCasterLevel = getCasterLevel ?? (() => 0);
+        _showColourInCenterColumn = showColourInCenterColumn;
         RefreshLearningWarning();
+    }
+
+    private string ResolveCenterColourText()
+    {
+        var colour = (Draft.Colour ?? string.Empty).Trim();
+        if (colour.Length > 0)
+            return colour;
+
+        return LevelText;
     }
 
     public void SetRowIndex(int rowIndex)

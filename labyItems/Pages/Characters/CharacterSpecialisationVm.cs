@@ -248,6 +248,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         var initialByLevel = state.SelectedByLevel.ToDictionary(k => k.Key, v => v.Value);
         var group = new SpecialisationGroupVm(config, initialByLevel);
         group.ConfigureSectionMetadata(spec.SectionId, spec.DetailKey, spec.StrategyIds, SpecialisationSectionType.Choice);
+        ApplyLevelScopedOptionsIfNeeded(spec, group);
         group.IsExpanded = true;
 
         foreach (var slot in group.Slots)
@@ -294,7 +295,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
     private IOptionSource ResolveOptionSource(SpecialisationSectionSpec spec, List<string> optionNames)
     {
         if (HasStrategy(spec, "lookup:ward-pact"))
-            return new WardPactSource();
+            return new WardPactSource(optionNames);
 
         if (HasStrategy(spec, "options:magic-colour"))
             return new EnumPickerSource<MagicColours>(GetWizardColourOptions());
@@ -339,6 +340,65 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     private static bool HasStrategy(SpecialisationSectionSpec spec, string strategyId)
         => spec.StrategyIds.Any(id => id.Equals(strategyId, StringComparison.OrdinalIgnoreCase));
+
+    private static int DecodeSelectionLevel(int encodedLevel)
+        => encodedLevel > 99 ? encodedLevel / 100 : encodedLevel;
+
+    private static void ApplyLevelScopedOptionsIfNeeded(SpecialisationSectionSpec spec, SpecialisationGroupVm group)
+    {
+        if (!HasStrategy(spec, "options:exact-level-by-option-metadata"))
+            return;
+
+        foreach (var slot in group.Slots)
+        {
+            var level = DecodeSelectionLevel(slot.Level);
+            slot.SetOptionsSource(() => GetOptionNamesForLevel(spec.Options, level, requireExactLevel: true));
+            slot.RaiseFilteredOptionsChanged();
+        }
+    }
+
+    private static IReadOnlyList<string> GetOptionNamesForLevel(
+        IReadOnlyList<ChoiceOption> options,
+        int level,
+        bool requireExactLevel)
+        => options
+            .Where(option => IsOptionAvailableForLevel(option, level, requireExactLevel))
+            .Select(option => option.Label)
+            .Where(label => !string.IsNullOrWhiteSpace(label))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(label => label, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+    private static bool IsOptionAvailableForLevel(ChoiceOption option, int level, bool requireExactLevel)
+    {
+        if (!TryGetOptionMetadataLevel(option, out var optionLevel))
+            return true;
+
+        return requireExactLevel
+            ? level == optionLevel
+            : level >= optionLevel;
+    }
+
+    private static bool TryGetOptionMetadataLevel(ChoiceOption option, out int level)
+    {
+        level = 0;
+        if (option?.Metadata == null || option.Metadata.Count == 0)
+            return false;
+
+        if (option.Metadata.TryGetValue("Level", out var levelText)
+            && int.TryParse(levelText, out level))
+        {
+            return true;
+        }
+
+        if (option.Metadata.TryGetValue("MinLevel", out levelText)
+            && int.TryParse(levelText, out level))
+        {
+            return true;
+        }
+
+        return false;
+    }
 
     private static void ApplySingleOptionDefault(SpecialisationGroupVm group)
     {
@@ -716,6 +776,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             {
                 foreach (var grant in option.Grants)
                 {
+                    if (grant?.Ability == null || string.IsNullOrWhiteSpace(grant.Ability.Name))
+                        continue;
+
                     var definition = ApplyCustomisation(grant.Ability, slot.CustomisationValue);
                     if (definition.GuildOverrides != null)
                     {
@@ -724,7 +787,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                             GuildOverrideRules.FromLegacyStrings(definition.GuildOverrides));
                     }
 
-                    var parsed = AbilityDraftBuilder.ParseAbility(definition, grant.Level ?? slot.Level);
+                    var parsed = AbilityDraftBuilder.ParseAbility(definition, grant.Level ?? DecodeSelectionLevel(slot.Level));
                     ApplyAbilitySource(parsed, $"Specialisation:{group.Title}");
                     output.AddRange(parsed);
                 }
@@ -733,7 +796,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             }
 
             var name = AppendCustomisation(selected, slot.CustomisationValue);
-            var fallback = AbilityDraftBuilder.ParseAbility(name, slot.Level);
+            var fallback = AbilityDraftBuilder.ParseAbility(name, DecodeSelectionLevel(slot.Level));
             ApplyAbilitySource(fallback, $"Specialisation:{group.Title}");
             output.AddRange(fallback);
         }
@@ -790,7 +853,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         _isRefreshingPrereqs = true;
         try
         {
-            var abilityNames = Draft.Abilities
+            var abilityNames = (Draft.Abilities ?? new List<AbilityDraft>())
                 .Select(ability => (ability?.Name ?? string.Empty).Trim())
                 .Where(name => name.Length > 0)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);

@@ -58,4 +58,19 @@ public sealed class WizardSpellRulesTests
         Assert.Equal("Palewise's Reforge The Fallen Child", entry.Name);
         Assert.Equal(MagicColours.Green.ToString(), entry.Colour);
     }
+
+    [Fact]
+    public void BuildBaseSpellEntries_Includes_Sorcery_When_Sorcorial_Selected()
+    {
+        var spells = new List<SpellService.SpellRaw>
+        {
+            new() { name = "Sorcery Bolt", level = 2, colour = "Sorcery", isAdvanced = false },
+            new() { name = "Elemental Bolt", level = 2, colour = "Red", isAdvanced = false }
+        };
+
+        var result = WizardSpellRules.BuildBaseSpellEntries(spells, new[] { "Sorcorial" }, includeGreyBonus: false);
+
+        Assert.Single(result);
+        Assert.Equal("Sorcery Bolt", result[0].Name);
+    }
 }

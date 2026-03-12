@@ -82,14 +82,34 @@
                                  IsVisible="False"
                                  Spacing="10">
 
-                <!-- Restrictions -->
-                <VerticalStackLayout Spacing="4"
-                                     IsVisible="{Binding HasRestrictions}">
-                    <Label Text="Restrictions"
-                           FontAttributes="Bold"/>
-                    <Label Text="{Binding Restrictions}"
-                           FontSize="13"
-                           Opacity="0.85"/>
+                <!-- Lore -->
+                <VerticalStackLayout Spacing="8"
+                                     IsVisible="{Binding HasLore}">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding LoreSections}"
+                                         Spacing="8">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <VerticalStackLayout Spacing="3">
+                                    <Label Text="{Binding Header}"
+                                           FontAttributes="Bold"
+                                           FontSize="12"
+                                           Opacity="0.85"/>
+                                    <Label Text="{Binding Text}"
+                                           FontSize="13"
+                                           Opacity="0.85"
+                                           MaxLines="{Binding MaxLines}"/>
+                                    <Label Text="{Binding ToggleLabel}"
+                                           FontSize="12"
+                                           Opacity="0.75"
+                                           IsVisible="{Binding ShowToggle}">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding ToggleCommand}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
 
                 <!-- Benefits -->

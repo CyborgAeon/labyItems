@@ -62,7 +62,7 @@
         <Label FontAttributes="Bold" FontSize="16" HorizontalOptions="Start" HorizontalTextAlignment="Start" Text="{Binding KiStrikeSummary}" VerticalOptions="Center" VerticalTextAlignment="Center"/>
         <Grid ColumnDefinitions="*, Auto">
           <controls:ChipGroup Grid.Column="0" Items="{Binding KiOrPrimalStrikeItems}" SelectedItem="{Binding KiOrPrimalStrike, Mode=TwoWay}" VerticalOptions="Center"/>
-          <controls:PlusMinusControl AllowMultiple="True" Count="{Binding KiOrPrimalStrikePerDayCount, Mode=TwoWay}"/>
+          <controls:PlusMinusControl Grid.Column="1" AllowMultiple="True" Count="{Binding KiOrPrimalStrikePerDayCount, Mode=TwoWay}"/>
         </Grid>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding EmpowerWeaponMagicCount, Mode=TwoWay}" LabelText="+0 Magic dmg (5 mins)"/>
         <controls:PlusMinusControl AllowMultiple="True" Count="{Binding EmpowerWeaponSpiritCount, Mode=TwoWay}" LabelText="+0 spirit dmg (5 mins)"/>

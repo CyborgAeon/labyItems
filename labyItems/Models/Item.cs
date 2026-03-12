@@ -35,9 +35,13 @@ public class Item
     public string RecipientCharacterName { get; set; } = string.Empty;
     public string RecipientCharacterClass { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public string PayloadJson { get; set; } = string.Empty;
     public int Isp { get; set; }
     public DateTime CreatedDate { get; set; } = DateTime.Now;
     public bool DoesNotBlowUpOnDeath { get; set; }
+    public string AssignedCharacterId { get; set; } = string.Empty;
+    public string AssignedCharacterName { get; set; } = string.Empty;
+    public string AssignedCharacterPlayerName { get; set; } = string.Empty;
 }
 
 public class ItemForm {

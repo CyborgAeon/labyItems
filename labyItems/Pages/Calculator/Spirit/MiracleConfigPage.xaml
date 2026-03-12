@@ -4,57 +4,218 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
-  xmlns:conv="clr-namespace:labyItems.Converters" x:Name="RootPage" Title="Miracle Config" x:TypeArguments="cfg:MiracleConfig"
-  xmlns:enums="clr-namespace:labyItems.Models.Enums">
+  xmlns:conv="clr-namespace:labyItems.Converters"
+  xmlns:enums="clr-namespace:labyItems.Models.Enums"
+  xmlns:calc="clr-namespace:labyItems.Pages.Calculator"
+  x:Name="RootPage"
+  Title="Configure Miracles"
+  x:TypeArguments="cfg:MiracleConfig">
   <ContentPage.Resources>
     <ResourceDictionary>
       <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-      <conv:BoolIsTrueConverter x:Key="BoolIsTrueConverter" />
-      <conv:BoolIsFalseConverter x:Key="BoolIsFalseConverter" />
     </ResourceDictionary>
   </ContentPage.Resources>
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
-      <VerticalStackLayout Padding="16" Spacing="12">
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-          <Label FontAttributes="Bold" FontSize="20" Text="{Binding Title}" />
-          <Button Grid.Column="1" Clicked="OnSearchMiracle" Text="Search" />
-        </Grid>
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BasicPerDay, Mode=TwoWay}" IsVisible="{Binding ShowBasicPerDay}" LabelText="Cast basic miracle" />
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding AdvancedPerDay, Mode=TwoWay}" IsVisible="{Binding ShowAdvancedPerDay}" LabelText="Cast advanced miracle x/day" />
-        <controls:CheckboxControl IsChecked="{Binding InnateIsMantic}" IsVisible="{Binding HasInnates, Converter={StaticResource BoolIsTrueConverter}}" LabelText="Innate is mantic" />
-        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference GeneralSpiritSlider}}" ValueText="{Binding ValueText, Source={x:Reference GeneralSpiritSlider}}" />
-        <controls:DictionarySlider x:Name="GeneralSpiritSlider" KeyFormat="{}{0} Additional spirit store" MaxCount="12" MinCount="0" Multiplier="4" SelectedCount="{Binding GeneralSpiritStore, Mode=TwoWay}" VerticalOptions="Center" />
-        <Grid ColumnDefinitions="0.3*,*">
-          <controls:DictionarySearchBar x:Name="SphereSel" Grid.Column="0" x:TypeArguments="enums:SpiritualSpheres" AllowCustomOptions="False" PlaceholderText="Pick a sphere" ItemsSource="{controls:EnumDictionary Type={x:Type enums:SpiritualSpheres}}" SelectedText="{Binding AdditionalSphereSelected, Mode=TwoWay}"/>
+      <VerticalStackLayout Padding="20" Spacing="14">
+        <Label FontAttributes="Bold"
+               FontSize="20"
+               Text="Miracles" />
 
-          <!-- <controls:SpherePicker x:Name="SphereSel" Grid.Column="0" SelectedValue="{Binding AdditionalSphereSelected, Mode=TwoWay}" VerticalOptions="Center" /> -->
-          <VerticalStackLayout Grid.Column="1" Spacing="4">
-            <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference SphereSpiritSlider}}" ValueText="{Binding ValueText, Source={x:Reference SphereSpiritSlider}}" />
-            <controls:DictionarySlider x:Name="SphereSpiritSlider" FormatArg1="{Binding SelectedValue, Source={x:Reference SphereSel}}" KeyFormat="{}{0} Additional {1} spirits" MaxCount="12" MinCount="0" Multiplier="3" SelectedCount="{Binding SphereSpiritStore, Mode=TwoWay}" VerticalOptions="Center" />
+        <controls:DictionarySearchBar x:Name="MiracleSearch"
+                                      x:TypeArguments="calc:MiracleSearchOption"
+                                      ItemsSource="{Binding Source={x:Reference RootPage}, Path=MiracleLookup}"
+                                      SelectedValue="{Binding Source={x:Reference RootPage}, Path=SelectedSearchMiracle, Mode=TwoWay}"
+                                      PlaceholderText="Search basic and advanced miracles"
+                                      SelectionDisplayMemberPath="Name"
+                                      ResultSelectedCommand="{Binding Source={x:Reference RootPage}, Path=AddSelectedMiracleCommand}"
+                                      ClearAfterResultSelection="True"
+                                      KeyboardAvoidanceEnabled="True" />
+
+        <Label Text="No miracles selected yet."
+               Opacity="0.7"
+               IsVisible="{Binding HasSelectedMiracles, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" />
+
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedMiracles}"
+                             Spacing="8">
+          <BindableLayout.ItemTemplate>
+            <DataTemplate>
+              <Border Padding="10,8"
+                      BackgroundColor="{Binding RowBackgroundColor}"
+                      StrokeThickness="0"
+                      StrokeShape="RoundRectangle 8">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto"
+                      ColumnSpacing="8">
+                  <VerticalStackLayout Grid.Column="0"
+                                       Spacing="2">
+                    <Label Text="{Binding DisplayName}"
+                           FontAttributes="Bold"
+                           LineBreakMode="TailTruncation" />
+                    <Label Text="{Binding InlineSummary}"
+                           FontSize="12"
+                           Opacity="0.75"
+                           LineBreakMode="WordWrap" />
+                  </VerticalStackLayout>
+
+                  <Button Grid.Column="1"
+                          Text="&#xF1FC;"
+                          FontFamily="FASolid"
+                          FontSize="14"
+                          Padding="0"
+                          BackgroundColor="Transparent"
+                          TextColor="{StaticResource SubtleTextColor}"
+                          HeightRequest="24"
+                          WidthRequest="24"
+                          MinimumHeightRequest="0"
+                          MinimumWidthRequest="0"
+                          Clicked="OnEditMiracleClicked"
+                          CommandParameter="{Binding .}" />
+
+                  <Button Grid.Column="2"
+                          Text="&#xF05A;"
+                          FontFamily="FASolid"
+                          FontSize="14"
+                          Padding="0"
+                          BackgroundColor="Transparent"
+                          TextColor="{StaticResource SubtleTextColor}"
+                          HeightRequest="24"
+                          WidthRequest="24"
+                          MinimumHeightRequest="0"
+                          MinimumWidthRequest="0"
+                          Clicked="OnMiracleInfoClicked"
+                          CommandParameter="{Binding .}" />
+
+                  <Button Grid.Column="3"
+                          Text="&#xF2ED;"
+                          FontFamily="FASolid"
+                          FontSize="14"
+                          Padding="0"
+                          BackgroundColor="Transparent"
+                          TextColor="{StaticResource SubtleTextColor}"
+                          HeightRequest="24"
+                          WidthRequest="24"
+                          MinimumHeightRequest="0"
+                          MinimumWidthRequest="0"
+                          Clicked="OnDeleteMiracleClicked"
+                          CommandParameter="{Binding .}" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+
+        <Label FontAttributes="Bold"
+               Text="Global miracle item modifiers" />
+
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference GeneralSpiritSlider}}"
+                                         ValueText="{Binding ValueText, Source={x:Reference GeneralSpiritSlider}}" />
+        <controls:DictionarySlider x:Name="GeneralSpiritSlider"
+                                   KeyFormat="{}{0} Additional spirit store"
+                                   MaxCount="12"
+                                   MinCount="0"
+                                   Multiplier="4"
+                                   SelectedCount="{Binding GeneralSpiritStore, Mode=TwoWay}"
+                                   VerticalOptions="Center" />
+
+        <Grid ColumnDefinitions="0.3*,*">
+          <controls:DictionarySearchBar x:Name="SphereSel"
+                                        Grid.Column="0"
+                                        x:TypeArguments="enums:SpiritualSpheres"
+                                        AllowCustomOptions="False"
+                                        PlaceholderText="Pick a sphere"
+                                        ItemsSource="{controls:EnumDictionary Type={x:Type enums:SpiritualSpheres}}"
+                                        SelectedValue="{Binding AdditionalSphereSelected, Mode=TwoWay}" />
+
+          <VerticalStackLayout Grid.Column="1"
+                               Spacing="4">
+            <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference SphereSpiritSlider}}"
+                                             ValueText="{Binding ValueText, Source={x:Reference SphereSpiritSlider}}" />
+            <controls:DictionarySlider x:Name="SphereSpiritSlider"
+                                       FormatArg1="{Binding SelectedValue, Source={x:Reference SphereSel}}"
+                                       KeyFormat="{}{0} Additional {1} spirits"
+                                       MaxCount="12"
+                                       MinCount="0"
+                                       Multiplier="3"
+                                       SelectedCount="{Binding SphereSpiritStore, Mode=TwoWay}"
+                                       VerticalOptions="Center" />
           </VerticalStackLayout>
         </Grid>
 
+        <controls:CheckboxControl IsChecked="{Binding SpiritStoreRegenerates}"
+                                  IsVisible="{Binding AnySpiritStore, Converter={StaticResource BoolToVisibilityConverter}}"
+                                  LabelText="Spirit store regenerates" />
 
+        <controls:PlusMinusControl AllowMultiple="True"
+                                   Count="{Binding TurnBasicUpTo5thMantic, Mode=TwoWay}"
+                                   LabelText="Turn basic miracle up to 5th mantic" />
+        <controls:PlusMinusControl AllowMultiple="True"
+                                   Count="{Binding TurnBasicMantic, Mode=TwoWay}"
+                                   LabelText="Turn basic miracle mantic" />
+        <controls:PlusMinusControl AllowMultiple="True"
+                                   Count="{Binding TurnAdvancedUpTo6thMantic, Mode=TwoWay}"
+                                   LabelText="Turn advanced up to 6th miracle mantic" />
+        <controls:PlusMinusControl AllowMultiple="True"
+                                   Count="{Binding TurnAdvancedAbove6thMantic, Mode=TwoWay}"
+                                   LabelText="Turn advanced miracle mantic" />
 
-        <controls:CheckboxControl IsChecked="{Binding SpiritStoreRegenerates}" IsVisible="{Binding AnySpiritStore, Converter={StaticResource BoolToVisibilityConverter}}" LabelText="Spirit store regenerates" />
+        <Label FontAttributes="Bold"
+               Text="True believer guilds" />
 
-        <controls:CheckboxControl IsChecked="{Binding AddBasicToList}" IsVisible="{Binding ShowBasicPerDay}" LabelText="Add basic miracle to base list" />
+        <controls:DictionarySearchBar x:Name="TrueBelieverGuildSearch"
+                                      x:TypeArguments="x:String"
+                                      ItemsSource="{Binding Source={x:Reference RootPage}, Path=TrueBelieverGuildLookup}"
+                                      SelectedValue="{Binding Source={x:Reference RootPage}, Path=SelectedTrueBelieverGuild, Mode=TwoWay}"
+                                      PlaceholderText="Search guilds for true believer"
+                                      ResultSelectedCommand="{Binding Source={x:Reference RootPage}, Path=AddTrueBelieverGuildCommand}"
+                                      ClearAfterResultSelection="True"
+                                      KeyboardAvoidanceEnabled="True" />
 
-        <controls:CheckboxControl IsChecked="{Binding AddAdvancedToList}" IsVisible="{Binding ShowAdvancedPerDay}" LabelText="Add advanced miracle to base list" />
+        <Label Text="No true-believer guilds added yet."
+               Opacity="0.7"
+               IsVisible="{Binding HasTrueBelieverGuilds, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" />
 
-        <controls:CheckboxControl IsChecked="{Binding AddWithPrep30}" LabelText="Add miracle to list with 30 secs prep" />
-
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding TurnBasicUpTo5thMantic, Mode=TwoWay}" LabelText="Turn basic miracle up to 5th mantic" />
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding TurnBasicMantic, Mode=TwoWay}" LabelText="Turn basic miracle mantic" />
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding TurnAdvancedUpTo6thMantic, Mode=TwoWay}" LabelText="Turn advanced up to 6th miracle mantic" />
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding TurnAdvancedAbove6thMantic, Mode=TwoWay}" LabelText="Turn advanced miracle mantic" />
-
-        <controls:CheckboxControl IsChecked="{Binding IsTeachingScroll}" LabelText="Is scripture of faith" />
-
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding TrueBeliever, Mode=TwoWay}" LabelText="True believer" />
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding TrueBelieverGuilds}"
+                             Spacing="8">
+          <BindableLayout.ItemTemplate>
+            <DataTemplate>
+              <Border Padding="8,6"
+                      BackgroundColor="{Binding RowBackgroundColor}"
+                      StrokeThickness="0"
+                      StrokeShape="RoundRectangle 8">
+                <Grid ColumnDefinitions="*,Auto"
+                      ColumnSpacing="8">
+                  <controls:PlusMinusControl Grid.Column="0"
+                                             LabelText="{Binding GuildName}"
+                                             AllowMultiple="True"
+                                             Min="0"
+                                             Count="{Binding Count, Mode=TwoWay}" />
+                  <Button Grid.Column="1"
+                          Text="&#xF2ED;"
+                          FontFamily="FASolid"
+                          FontSize="14"
+                          Padding="0"
+                          BackgroundColor="Transparent"
+                          TextColor="{StaticResource SubtleTextColor}"
+                          HeightRequest="24"
+                          WidthRequest="24"
+                          MinimumHeightRequest="0"
+                          MinimumWidthRequest="0"
+                          VerticalOptions="Center"
+                          Clicked="OnDeleteTrueBelieverGuildClicked"
+                          CommandParameter="{Binding .}" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
       </VerticalStackLayout>
     </ScrollView>
-    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}" ButtonText="Return to Calculator" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding TotalWithBase}" />
+    <controls:StickyFooterControl Grid.Row="1"
+                                  BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}"
+                                  ButtonText="Return to Calculator"
+                                  RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}"
+                                  ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
+                                  ReturnCommandParameter="{x:Reference RootPage}"
+                                  Total="{Binding TotalWithBase}" />
   </Grid>
 </cfg:ConfigPageBase>

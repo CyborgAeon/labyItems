@@ -13,12 +13,12 @@
           BackgroundColor="{StaticResource White}"
           Stroke="{StaticResource DividerShadowColor}"
           StrokeThickness="1">
-    <Border.GestureRecognizers>
-      <TapGestureRecognizer Tapped="OnToggleExpanded"/>
-    </Border.GestureRecognizers>
     <VerticalStackLayout Spacing="8">
       <Grid ColumnDefinitions="18,*,Auto"
             ColumnSpacing="8">
+        <Grid.GestureRecognizers>
+          <TapGestureRecognizer Tapped="OnToggleExpanded"/>
+        </Grid.GestureRecognizers>
         <Grid Grid.Column="0"
               Grid.ColumnSpan="2"
               ColumnDefinitions="18,*"
@@ -45,26 +45,43 @@
                 Text="{Binding Source={x:Reference Root}, Path=ButtonText}"/>
       </Grid>
 
-      <CollectionView IsVisible="{Binding Source={x:Reference Root}, Path=IsExpanded}"
-                      ItemsSource="{Binding Source={x:Reference Root}, Path=BreakdownItems}">
-        <CollectionView.ItemTemplate>
-          <DataTemplate>
-            <Label>
-              <Label.FormattedText>
-                <FormattedString>
-                  <Span Text="{Binding Text}"/>
-                  <Span Text=" ("
-                        TextColor="Gray"/>
-                  <Span Text="{Binding RunningTotal}"
-                        TextColor="Gray"/>
-                  <Span Text=")"
-                        TextColor="Gray"/>
-                </FormattedString>
-              </Label.FormattedText>
-            </Label>
-          </DataTemplate>
-        </CollectionView.ItemTemplate>
-      </CollectionView>
+      <Border IsVisible="{Binding Source={x:Reference Root}, Path=IsExpanded}"
+              Padding="8"
+              BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
+              Stroke="{StaticResource DividerShadowColor}"
+              StrokeThickness="1">
+        <Grid HeightRequest="220">
+          <CollectionView IsVisible="{Binding Source={x:Reference Root}, Path=HasVisibleBreakdownItems}"
+                          ItemsSource="{Binding Source={x:Reference Root}, Path=VisibleBreakdownItems}"
+                          SelectionMode="None">
+            <CollectionView.ItemTemplate>
+              <DataTemplate>
+                <Label>
+                  <Label.FormattedText>
+                    <FormattedString>
+                      <Span Text="{Binding Text}"/>
+                      <Span Text=" ("
+                            TextColor="Gray"/>
+                      <Span Text="{Binding RunningTotal}"
+                            TextColor="Gray"/>
+                      <Span Text=")"
+                            TextColor="Gray"/>
+                    </FormattedString>
+                  </Label.FormattedText>
+                </Label>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+          </CollectionView>
+
+          <VerticalStackLayout IsVisible="{Binding Source={x:Reference Root}, Path=IsBreakdownEmptyStateVisible}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center">
+            <Label Text="{Binding Source={x:Reference Root}, Path=ResolvedEmptyBreakdownText}"
+                   TextColor="{StaticResource MutedTextColor}"
+                   HorizontalTextAlignment="Center"/>
+          </VerticalStackLayout>
+        </Grid>
+      </Border>
     </VerticalStackLayout>
   </Border>
 </ContentView>

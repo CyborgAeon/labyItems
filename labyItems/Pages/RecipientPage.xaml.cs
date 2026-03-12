@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using labyItems.Controls;
 using labyItems.Models;
 using labyItems.Pages.Calculator;
+using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages;
@@ -60,56 +58,11 @@ public partial class RecipientPage : ContentPage
 
     private async Task SendSubmissionEmailAsync(RecipientInfo recipient, MpSubmissionPayload payload)
     {
-        var playerName = string.IsNullOrWhiteSpace(recipient.PlayerName) ? "unknown" : recipient.PlayerName;
-        var subject = $"monster point item for {playerName}";
-
-        int isp = payload.TotalIsp;
-        var mpBreakdownLines = payload.Breakdown?.Select(b => b.Text).ToList() ?? new List<string>();
-        var ispBreakdownLines = payload.IspBreakdown?.Select(b => b.Text).ToList() ?? new List<string>();
-
-        var summaryBuilder = new StringBuilder();
-        summaryBuilder.AppendLine($"ISP total: {isp}");
-        summaryBuilder.AppendLine($"MP cost: {payload.TotalMp}");
-        summaryBuilder.AppendLine($"Recipient player: {recipient.PlayerName}");
-        summaryBuilder.AppendLine($"Recipient character: {recipient.CharacterName}");
-        summaryBuilder.AppendLine($"Recipient class: {recipient.CharacterClass}");
-        if (mpBreakdownLines.Count > 0)
-        {
-            summaryBuilder.AppendLine();
-            summaryBuilder.AppendLine("MP breakdown:");
-            summaryBuilder.AppendLine(string.Join("\n", mpBreakdownLines));
-        }
-        if (ispBreakdownLines.Count > 0)
-        {
-            summaryBuilder.AppendLine();
-            summaryBuilder.AppendLine("ISP breakdown:");
-            summaryBuilder.AppendLine(string.Join("\n", ispBreakdownLines));
-        }
-
-        var config = new
-        {
-            ispTotal = isp,
-            mpTotal = payload.TotalMp,
-            breakdown = payload.Breakdown?.Select(b => new { b.Id, b.Text, b.RunningTotal }).ToList(),
-            ispBreakdown = payload.IspBreakdown?.Select(b => new { b.Id, b.Text, b.RunningTotal }).ToList(),
-            recipient = recipient
-        };
-
-        var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-        var token = JsonTokenCompressor.CompressToBase64(json);
-
-        summaryBuilder.AppendLine();
-        summaryBuilder.AppendLine("Encrypted token:");
-        summaryBuilder.AppendLine(token);
-
-        var mailto =
-            $"mailto:items@labyrinthe.com"
-            + $"?subject={Uri.EscapeDataString(subject)}"
-            + $"&body={Uri.EscapeDataString(summaryBuilder.ToString())}";
+        var emailDraft = ItemEmailService.BuildMpSubmissionEmailDraft(recipient, payload);
 
         try
         {
-            await Launcher.OpenAsync(mailto);
+            await Launcher.OpenAsync(emailDraft.MailtoUri);
         }
         catch (Exception ex)
         {

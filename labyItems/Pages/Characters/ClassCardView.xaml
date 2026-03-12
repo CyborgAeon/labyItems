@@ -123,7 +123,7 @@
                             <Grid RowDefinitions="Auto"
                                   RowSpacing="6">
                                 <Grid Grid.Row="0"
-                                      Grid.ColumnDefinitions="50,60,*,*"
+                                      Grid.ColumnDefinitions="44,44,44,*"
                                       ColumnSpacing="8"
                                       Opacity="0.7">
                                     <Label Text="Lvl"/>
@@ -141,7 +141,7 @@
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
                                         <Grid RowDefinitions="Auto"
-                                              ColumnDefinitions="50,60,*,*"
+                                              ColumnDefinitions="44,44,44,*"
                                               ColumnSpacing="8"
                                               Padding="0,2">
                                             <Label Text="{Binding Level}"/>

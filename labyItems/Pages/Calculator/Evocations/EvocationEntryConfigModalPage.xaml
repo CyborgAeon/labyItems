@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Calculator.EvocationEntryConfigModalPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    Title="Edit evocation settings">
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20"
+                                 Spacing="12">
+                <Label Text="{Binding DisplayName}"
+                       FontAttributes="Bold"
+                       FontSize="18" />
+                <Label Text="{Binding FieldsSummary}"
+                       FontSize="12"
+                       Opacity="0.75"
+                       IsVisible="{Binding HasFieldsSummary}" />
+
+                <controls:PlusMinusControl AllowMultiple="True"
+                                           Count="{Binding BasicPerDay, Mode=TwoWay}"
+                                           IsVisible="{Binding ShowBasicConfig}"
+                                           LabelText="Cast basic times per day" />
+
+                <controls:PlusMinusControl AllowMultiple="True"
+                                           Count="{Binding AdvancedPerDay, Mode=TwoWay}"
+                                           IsVisible="{Binding ShowAdvancedConfig}"
+                                           LabelText="Cast advanced times per day" />
+
+                <controls:CheckboxControl IsChecked="{Binding AddBasicToBaseList, Mode=TwoWay}"
+                                          IsVisible="{Binding ShowAddBasic}"
+                                          LabelText="Add basic evocation to base list" />
+
+                <controls:CheckboxControl IsChecked="{Binding AddAdvancedToBaseList, Mode=TwoWay}"
+                                          IsVisible="{Binding ShowAddAdvanced}"
+                                          LabelText="Add advanced evocation to base list" />
+
+                <controls:CheckboxControl IsChecked="{Binding AddWithPrep30, Mode=TwoWay}"
+                                          LabelText="Add to base list with 30s prep" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="1"
+              Padding="16"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="8">
+            <Button Grid.Column="0"
+                    Text="Cancel"
+                    Clicked="OnCancelClicked" />
+            <Button Grid.Column="1"
+                    Text="Save"
+                    Clicked="OnSaveClicked" />
+        </Grid>
+    </Grid>
+</ContentPage>

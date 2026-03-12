@@ -25,6 +25,20 @@ public sealed class GuildsServiceTests : ServiceTestBase
     }
 
     [Fact]
+    public async Task GetAllAsync_LoadsOptionalLoreFieldsWhenPresent()
+    {
+        var all = await GuildsService.GetAllAsync();
+
+        var withLore = all.Values.FirstOrDefault(record =>
+            !string.IsNullOrWhiteSpace(record.PreRequisites)
+            || !string.IsNullOrWhiteSpace(record.Restrictions)
+            || !string.IsNullOrWhiteSpace(record.Ethos)
+            || !string.IsNullOrWhiteSpace(record.Background));
+
+        Assert.NotNull(withLore);
+    }
+
+    [Fact]
     public void GetAlignmentRule_BuildsFallbackFromAvailability()
     {
         var record = new GuildRecord

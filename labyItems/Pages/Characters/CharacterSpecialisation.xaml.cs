@@ -105,7 +105,7 @@ public partial class CharacterSpecialisation : ContentView
                 break;
 
             case SpecialisationGroupVm group:
-                key = (group.Title ?? string.Empty).Trim();
+                key = (group.DetailKey ?? group.Title ?? string.Empty).Trim();
                 break;
 
             case string keyText:

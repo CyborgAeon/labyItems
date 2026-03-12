@@ -5,39 +5,151 @@
   xmlns:cfg="clr-namespace:labyItems.Pages.Configs"
   xmlns:controls="clr-namespace:labyItems.Controls"
   xmlns:conv="clr-namespace:labyItems.Converters"
-  xmlns:enums="clr-namespace:labyItems.Models.Enums" x:Name="RootPage" Title="Evocation Config" x:TypeArguments="cfg:EvocationConfig">
+  xmlns:enums="clr-namespace:labyItems.Models.Enums"
+  xmlns:calc="clr-namespace:labyItems.Pages.Calculator"
+  x:Name="RootPage"
+  Title="Configure Evocations"
+  x:TypeArguments="cfg:EvocationConfig">
   <ContentPage.Resources>
     <ResourceDictionary>
-      <conv:IntConverter x:Key="IntConverter" />
       <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </ResourceDictionary>
   </ContentPage.Resources>
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="14">
-        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-          <Label Grid.Column="0" FontAttributes="Bold" FontSize="20" Text="{Binding Title}" />
-          <Button Grid.Column="1" Clicked="OnSearchEvocation" Text="Search" />
-        </Grid>
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding BasicPerDay, Mode=TwoWay}" IsVisible="{Binding ShowBasicPerDay}" LabelText="Cast basic times per day" />
+        <Label FontAttributes="Bold"
+               FontSize="20"
+               Text="Evocations" />
 
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding AdvancedPerDay, Mode=TwoWay}" IsVisible="{Binding ShowAdvancedPerDay}" LabelText="Cast advanced times per day" />
+        <controls:DictionarySearchBar x:Name="EvocationSearch"
+                                      x:TypeArguments="calc:EvocationSearchOption"
+                                      ItemsSource="{Binding Source={x:Reference RootPage}, Path=EvocationLookup}"
+                                      SelectedValue="{Binding Source={x:Reference RootPage}, Path=SelectedSearchEvocation, Mode=TwoWay}"
+                                      PlaceholderText="Search basic and advanced evocations"
+                                      SelectionDisplayMemberPath="Name"
+                                      ResultSelectedCommand="{Binding Source={x:Reference RootPage}, Path=AddSelectedEvocationCommand}"
+                                      ClearAfterResultSelection="True"
+                                      KeyboardAvoidanceEnabled="True" />
 
-        <controls:CheckboxControl IsChecked="{Binding AddBasic}" IsVisible="{Binding ShowBasicPerDay}" LabelText="Add basic evocation to base list" />
+        <Label Text="No evocations selected yet."
+               Opacity="0.7"
+               IsVisible="{Binding HasSelectedEvocations, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" />
 
-        <controls:CheckboxControl IsChecked="{Binding AddAdvanced}" IsVisible="{Binding ShowAdvancedPerDay}" LabelText="Add advanced evocation to base list" />
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedEvocations}"
+                             Spacing="8">
+          <BindableLayout.ItemTemplate>
+            <DataTemplate>
+              <Border Padding="10,8"
+                      BackgroundColor="{Binding RowBackgroundColor}"
+                      StrokeThickness="0"
+                      StrokeShape="RoundRectangle 8">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto"
+                      ColumnSpacing="8">
+                  <VerticalStackLayout Grid.Column="0"
+                                       Spacing="2">
+                    <Label Text="{Binding DisplayName}"
+                           FontAttributes="Bold"
+                           LineBreakMode="TailTruncation" />
+                    <Label Text="{Binding InlineSummary}"
+                           FontSize="12"
+                           Opacity="0.75"
+                           LineBreakMode="WordWrap" />
+                  </VerticalStackLayout>
 
-        <controls:CheckboxControl IsChecked="{Binding AddPrep}" LabelText="Add to base list with 30s prep" />
-        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference GeneralEpSlider}}" ValueText="{Binding ValueText, Source={x:Reference GeneralEpSlider}}" />
-        <controls:DictionarySlider x:Name="GeneralEpSlider" KeyFormat="Additional {0} EP store" MaxCount="12" MinCount="0" Multiplier="4" SelectedCount="{Binding GeneralEpStore, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center" />
-        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference FieldEpSlider}}" ValueText="{Binding ValueText, Source={x:Reference FieldEpSlider}}" />
+                  <Button Grid.Column="1"
+                          Text="&#xF1FC;"
+                          FontFamily="FASolid"
+                          FontSize="14"
+                          Padding="0"
+                          BackgroundColor="Transparent"
+                          TextColor="{StaticResource SubtleTextColor}"
+                          HeightRequest="24"
+                          WidthRequest="24"
+                          MinimumHeightRequest="0"
+                          MinimumWidthRequest="0"
+                          Clicked="OnEditEvocationClicked"
+                          CommandParameter="{Binding .}" />
+
+                  <Button Grid.Column="2"
+                          Text="&#xF05A;"
+                          FontFamily="FASolid"
+                          FontSize="14"
+                          Padding="0"
+                          BackgroundColor="Transparent"
+                          TextColor="{StaticResource SubtleTextColor}"
+                          HeightRequest="24"
+                          WidthRequest="24"
+                          MinimumHeightRequest="0"
+                          MinimumWidthRequest="0"
+                          Clicked="OnEvocationInfoClicked"
+                          CommandParameter="{Binding .}" />
+
+                  <Button Grid.Column="3"
+                          Text="&#xF2ED;"
+                          FontFamily="FASolid"
+                          FontSize="14"
+                          Padding="0"
+                          BackgroundColor="Transparent"
+                          TextColor="{StaticResource SubtleTextColor}"
+                          HeightRequest="24"
+                          WidthRequest="24"
+                          MinimumHeightRequest="0"
+                          MinimumWidthRequest="0"
+                          Clicked="OnDeleteEvocationClicked"
+                          CommandParameter="{Binding .}" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+
+        <Label FontAttributes="Bold"
+               Text="Global evocation item modifiers" />
+
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference GeneralEpSlider}}"
+                                         ValueText="{Binding ValueText, Source={x:Reference GeneralEpSlider}}" />
+        <controls:DictionarySlider x:Name="GeneralEpSlider"
+                                   KeyFormat="Additional {0} EP store"
+                                   MaxCount="12"
+                                   MinCount="0"
+                                   Multiplier="4"
+                                   SelectedCount="{Binding GeneralEpStore, Mode=TwoWay}"
+                                   ValueFormat=""
+                                   VerticalOptions="Center" />
+
+        <controls:DictionarySliderHeader KeyText="{Binding KeyText, Source={x:Reference FieldEpSlider}}"
+                                         ValueText="{Binding ValueText, Source={x:Reference FieldEpSlider}}" />
         <Grid ColumnDefinitions="0.4*,*">
-          <controls:DictionarySearchBar Grid.Column="0" x:Name="FieldSearch" x:TypeArguments="enums:EvocationFields" PlaceholderText="Pick a field" ItemsSource="{controls:EnumDictionary Type={x:Type enums:EvocationFields}}" SelectedValue="{Binding SelectedField, Mode=TwoWay}"/>
-          <controls:DictionarySlider Grid.Column="1" x:Name="FieldEpSlider" FormatArg1="{Binding SelectedValue, Source={x:Reference FieldSearch}}" KeyFormat="Additional {0} {1} EP store" MaxCount="12" MinCount="0" Multiplier="3" SelectedCount="{Binding FieldEpStore, Mode=TwoWay}" ValueFormat="" VerticalOptions="Center" />
+          <controls:DictionarySearchBar Grid.Column="0"
+                                        x:Name="FieldSearch"
+                                        x:TypeArguments="enums:EvocationFields"
+                                        PlaceholderText="Pick a field"
+                                        ItemsSource="{controls:EnumDictionary Type={x:Type enums:EvocationFields}}"
+                                        SelectedValue="{Binding SelectedField, Mode=TwoWay}" />
+          <controls:DictionarySlider Grid.Column="1"
+                                     x:Name="FieldEpSlider"
+                                     FormatArg1="{Binding SelectedValue, Source={x:Reference FieldSearch}}"
+                                     KeyFormat="Additional {0} {1} EP store"
+                                     MaxCount="12"
+                                     MinCount="0"
+                                     Multiplier="3"
+                                     SelectedCount="{Binding FieldEpStore, Mode=TwoWay}"
+                                     ValueFormat=""
+                                     VerticalOptions="Center" />
         </Grid>
-        <controls:PlusMinusControl AllowMultiple="True" Count="{Binding DrawOnEpPerDay, Mode=TwoWay}" LabelText="Draw on EP per day" />
+
+        <controls:PlusMinusControl AllowMultiple="True"
+                                   Count="{Binding DrawOnEpPerDay, Mode=TwoWay}"
+                                   LabelText="Draw on EP per day" />
       </VerticalStackLayout>
     </ScrollView>
-    <controls:StickyFooterControl Grid.Row="1" BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}" ButtonText="Return to Calculator" RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}" ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}" ReturnCommandParameter="{x:Reference RootPage}" Total="{Binding TotalWithBase}" />
+    <controls:StickyFooterControl Grid.Row="1"
+                                  BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}"
+                                  ButtonText="Return to Calculator"
+                                  RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}"
+                                  ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
+                                  ReturnCommandParameter="{x:Reference RootPage}"
+                                  Total="{Binding TotalWithBase}" />
   </Grid>
 </cfg:ConfigPageBase>

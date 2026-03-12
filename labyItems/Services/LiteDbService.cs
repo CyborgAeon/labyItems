@@ -47,9 +47,36 @@ public static class LiteDbService
 
     private static void EnsureIndexes(LiteDatabase db)
     {
-        // AOT-safe index creation for iOS Release builds.
-        db.GetCollection<Item>("items").EnsureIndex(nameof(Item.CreatedDate));
-        db.GetCollection<Character>("characters").EnsureIndex(nameof(Character.Name));
+        if (ShouldSkipIndexesForAot())
+        {
+            Debug.WriteLine("[LiteDbService] Skipping index creation on AOT platform.");
+            return;
+        }
+
+        try
+        {
+            db.GetCollection<Item>("items").EnsureIndex(nameof(Item.CreatedDate));
+            db.GetCollection<Item>("items").EnsureIndex(nameof(Item.AssignedCharacterName));
+            db.GetCollection<Item>("items").EnsureIndex(nameof(Item.AssignedCharacterPlayerName));
+            db.GetCollection<Character>("characters").EnsureIndex(nameof(Character.Name));
+        }
+        catch (TypeInitializationException ex) when ((ex.TypeName ?? string.Empty).Contains("LiteDB.BsonExpression", StringComparison.OrdinalIgnoreCase))
+        {
+            // LiteDB expression initialization can require JIT; iOS full-AOT cannot support that.
+            Debug.WriteLine($"[LiteDbService] Skipping indexes due to AOT-incompatible LiteDB expression init: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[LiteDbService] Failed creating indexes: {ex.Message}");
+        }
+    }
+
+    private static bool ShouldSkipIndexesForAot()
+    {
+        if (OperatingSystem.IsIOS())
+            return true;
+
+        return false;
     }
 
     private static void TryQuarantineBrokenDatabase(string path)
@@ -73,6 +100,10 @@ public static class LiteDbService
     }
 
     public static void InsertItem(Item item) => GetDb().GetCollection<Item>("items").Insert(item);
+    public static bool UpdateItem(Item item) => GetDb().GetCollection<Item>("items").Update(item);
+    public static bool DeleteItem(ObjectId id) =>
+        GetDb().GetCollection<Item>("items").Delete(id);
+
     public static void DeleteChar(ObjectId id) =>
         GetDb().GetCollection<Character>("characters").Delete(id);
 
@@ -98,8 +129,36 @@ public static class LiteDbService
             .FindAll()
             .OrderByDescending(item => item.CreatedDate);
 
+    public static IEnumerable<Item> GetItemsAssignedToCharacter(string? characterName, string? playerName)
+    {
+        var name = NormalizeKey(characterName ?? string.Empty);
+        var player = NormalizeKey(playerName ?? string.Empty);
+        if (name.Length == 0)
+            return Enumerable.Empty<Item>();
+
+        return GetDb()
+            .GetCollection<Item>("items")
+            .FindAll()
+            .Where(item =>
+            {
+                var assignedName = NormalizeKey(item.AssignedCharacterName ?? string.Empty);
+                if (!string.Equals(assignedName, name, StringComparison.Ordinal))
+                    return false;
+
+                if (player.Length == 0)
+                    return true;
+
+                var assignedPlayer = NormalizeKey(item.AssignedCharacterPlayerName ?? string.Empty);
+                return string.Equals(assignedPlayer, player, StringComparison.Ordinal);
+            })
+            .OrderByDescending(item => item.CreatedDate);
+    }
+
     public static IEnumerable<Character> GetCharacters() =>
         GetDb().GetCollection<Character>("characters").FindAll().OrderBy(c => c.Name);
+
+    public static Character? GetCharacterById(ObjectId id) =>
+        GetDb().GetCollection<Character>("characters").FindById(id);
 
     public static void UpsertCharacter(Character c)
     {
@@ -112,15 +171,18 @@ public static class LiteDbService
     public static Character UpsertDraft(CharacterDraft draft)
     {
         var col = GetDb().GetCollection<Character>("characters");
-        var normalizedName = NormalizeKey(draft.Name);
-        var normalizedPlayer = NormalizeKey(draft.PlayerName);
-        var existing = col.FindAll()
-            .FirstOrDefault(c =>
-                NormalizeKey(c.Name) == normalizedName &&
-                NormalizeKey(c.PlayerName) == normalizedPlayer);
+        ObjectId? idOverride = null;
+        var rawId = (draft.CharacterRecordId ?? string.Empty).Trim();
+        if (rawId.Length > 0 && TryParseObjectId(rawId, out var parsedId))
+        {
+            var existing = col.FindById(parsedId);
+            if (existing != null)
+                idOverride = parsedId;
+        }
 
-        var entity = MapFromDraft(draft, existing?.Id);
+        var entity = MapFromDraft(draft, idOverride);
         col.Upsert(entity);
+        draft.CharacterRecordId = entity.Id.ToString();
         return entity;
     }
 
@@ -147,6 +209,20 @@ public static class LiteDbService
     private static ObjectId EnsureId(ObjectId id)
         => id == ObjectId.Empty ? ObjectId.NewObjectId() : id;
 
+    private static bool TryParseObjectId(string rawId, out ObjectId value)
+    {
+        try
+        {
+            value = new ObjectId(rawId);
+            return value != ObjectId.Empty;
+        }
+        catch
+        {
+            value = ObjectId.Empty;
+            return false;
+        }
+    }
+
     public static CharacterDraft? ToDraft(Character character)
     {
         if (character == null)
@@ -159,6 +235,7 @@ public static class LiteDbService
                 var _draft = System.Text.Json.JsonSerializer.Deserialize<CharacterDraft>(character.DraftSnapshot);
                 if (_draft != null)
                 {
+                    _draft.CharacterRecordId = character.Id.ToString();
                     foreach (var kvp in character.Specialisations ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase))
                         _draft.SpecialisationSelections[kvp.Key] = kvp.Value;
                     return _draft;
@@ -169,6 +246,7 @@ public static class LiteDbService
 
         var draft = new CharacterDraft
         {
+            CharacterRecordId = character.Id.ToString(),
             Name = character.Name ?? string.Empty,
             PlayerName = character.PlayerName ?? string.Empty,
             Class = character.Class ?? string.Empty,
@@ -185,4 +263,5 @@ public static class LiteDbService
 
         return draft;
     }
+
 }

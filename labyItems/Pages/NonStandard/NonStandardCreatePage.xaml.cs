@@ -1,6 +1,7 @@
 using System.Linq;
 using labyItems.Helpers;
 using labyItems.Services;
+using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.NonStandard;
 
@@ -21,6 +22,11 @@ public partial class NonStandardCreatePage : TabbedPage
         _lastNonBackTab = ClassTab;
 
         WalletTab.EditRequested += OnWalletEditRequested;
+
+        CurrentPageChanged += (_, _) => QueuePlatformTabLayoutRefresh();
+        SizeChanged += (_, _) => QueuePlatformTabLayoutRefresh();
+        HandlerChanged += (_, _) => QueuePlatformTabLayoutRefresh();
+        QueuePlatformTabLayoutRefresh();
     }
 
     protected override void OnAppearing()
@@ -29,6 +35,8 @@ public partial class NonStandardCreatePage : TabbedPage
         TabbedPageChromeHelper.ApplyHiddenNavigation(this);
         foreach (var page in Children)
             TabbedPageChromeHelper.ConfigureTabPageChrome(page);
+
+        QueuePlatformTabLayoutRefresh();
     }
 
     private async void OnWalletEditRequested(NonStandardWalletEntry entry)
@@ -69,4 +77,17 @@ public partial class NonStandardCreatePage : TabbedPage
 
         _lastNonBackTab = CurrentPage;
     }
+
+    private void QueuePlatformTabLayoutRefresh()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Task.Delay(10);
+            ApplyPlatformTabLayoutTweaks();
+            await Task.Delay(60);
+            ApplyPlatformTabLayoutTweaks();
+        });
+    }
+
+    partial void ApplyPlatformTabLayoutTweaks();
 }

@@ -6,6 +6,9 @@
       "DisplayName": "ElfColourAbilities",
       "ChoiceSetRefs": [
         "choice.elfcolourabilities.mapped"
+      ],
+      "Notes": [
+        "Elves are creatures magically constructed from an element, and are immune to spiritual effects as they have no spirit.\nTheir immunity to spirits means they do not benefit from priestly healing. This coupled with the low life points makes for a precarious existence.\n\nElven Abilities\nElves, because of their magical nature, have the ability to perform various magical feats. These often duplicate wizard's spells with the corresponding effect and dispel level. If they do not, then their dispel level is equal to the level at which the Elf first acquired the ability. Using an elvish ability does not incur any life point cost. The number of uses given is per day. Innates are recovered after a good night's sleep."
       ]
     },
     "CrolSubtypeAbilities": {

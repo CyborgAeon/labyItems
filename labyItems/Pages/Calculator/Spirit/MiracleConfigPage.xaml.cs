@@ -1,100 +1,265 @@
+using System.Windows.Input;
 using labyItems.Models;
-using labyItems.Pages.Configs;
-using labyItems.Models.DTOs;
-using Microsoft.Maui.Controls;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
-using labyItems.Controls;
+using labyItems.Pages.Calculator;
+using labyItems.Services;
+using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
 
 namespace labyItems.Pages.Configs;
+
 public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
 {
+    private bool _miracleLookupLoaded;
+    private MiracleSearchOption? _selectedSearchMiracle;
+    private string? _selectedTrueBelieverGuild;
+
     public MiracleConfigPage()
     {
         InitializeComponent();
+        AddSelectedMiracleCommand = new Command<object?>(OnMiracleResultSelected);
+        AddTrueBelieverGuildCommand = new Command<object?>(OnTrueBelieverGuildResultSelected);
     }
 
-    private async void OnFooterReturnClicked(object sender, EventArgs e)
+    public ICommand AddSelectedMiracleCommand { get; }
+    public ICommand AddTrueBelieverGuildCommand { get; }
+
+    public Dictionary<string, MiracleSearchOption> MiracleLookup { get; private set; } =
+        new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, string> TrueBelieverGuildLookup { get; private set; } =
+        new(StringComparer.OrdinalIgnoreCase);
+
+    public MiracleSearchOption? SelectedSearchMiracle
     {
-        if (BindingContext is not MiracleConfig cfg) return;
-
-        var result = new CalcResult
+        get => _selectedSearchMiracle;
+        set
         {
-            TotalIsp = cfg.Total,
-            AbilityType = "Miracle",
-            AbilityName = string.IsNullOrWhiteSpace(cfg.Name) ? "Miracle" : cfg.Name,
-            Summary = cfg.Breakdown,
-            Details = BuildDetails(cfg)
-        };
+            if (ReferenceEquals(_selectedSearchMiracle, value))
+                return;
 
-        if (Navigation?.NavigationStack?.Count > 1)
-        {
-            Complete(result);
-            await Navigation.PopAsync();
-            return;
+            _selectedSearchMiracle = value;
+            OnPropertyChanged(nameof(SelectedSearchMiracle));
         }
+    }
 
-        if (Shell.Current is not null)
+    public string? SelectedTrueBelieverGuild
+    {
+        get => _selectedTrueBelieverGuild;
+        set
         {
-            await Shell.Current.GoToAsync("..");
-            return;
+            if (string.Equals(_selectedTrueBelieverGuild, value, StringComparison.Ordinal))
+                return;
+
+            _selectedTrueBelieverGuild = value;
+            OnPropertyChanged(nameof(SelectedTrueBelieverGuild));
         }
-
-        Complete(result);
-        await Navigation.PopAsync();
     }
 
-
-    protected override CalcResult BuildResult(MiracleConfig cfg) =>
-        new()
-        {
-            AbilityType = "Miracle",
-            AbilityName = string.IsNullOrWhiteSpace(cfg.Name) ? "Miracle" : cfg.Name,
-            TotalIsp = cfg.Total,
-            Summary = cfg.Breakdown,
-            Details = BuildDetails(cfg)
-        };
-    
-    private async void OnSearchMiracle(object sender, EventArgs e)
+    protected override async void OnAppearing()
     {
-        var picked = await new Miracle().PickAsync(Navigation);
-        if (picked is null) return;
+        base.OnAppearing();
+        if (_miracleLookupLoaded)
+            return;
 
-        if (BindingContext is MiracleConfig cfg)
-            cfg.ApplyMiracle(picked);
+        _miracleLookupLoaded = true;
+        await LoadMiracleLookupAsync();
+        await LoadTrueBelieverGuildLookupAsync();
     }
 
-    private async void OnReturn(object sender, EventArgs e)
-    {
-        if (BindingContext is not MiracleConfig cfg) return;
-
-        var res = BuildResult(cfg);
-        Complete(res);
-        await Navigation.PopAsync();
-    }
-
-    private Dictionary<string, object?> BuildDetails(MiracleConfig cfg)
+    protected override CalcResult BuildResult(MiracleConfig cfg)
     {
         var details = new Dictionary<string, object?>();
+        var selectedMiracles = cfg.SelectedMiracles
+            .Select(miracle => new
+            {
+                miracleName = miracle.MiracleName,
+                power = miracle.Power,
+                alignment = miracle.Alignment,
+                isAdvanced = miracle.IsAdvanced,
+                basicPerDay = miracle.BasicPerDay,
+                advancedPerDay = miracle.AdvancedPerDay,
+                innateIsMantic = miracle.InnateIsMantic,
+                addBasicToBaseList = miracle.AddBasicToBaseList,
+                addAdvancedToBaseList = miracle.AddAdvancedToBaseList,
+                addWithPrep30 = miracle.AddWithPrep30,
+                isTeachingScroll = miracle.IsTeachingScroll
+            })
+            .ToList();
 
-        if (cfg.BasicPerDay > 0) details["basicPerDay"] = cfg.BasicPerDay;
-        if (cfg.AdvancedPerDay > 0) details["advancedPerDay"] = cfg.AdvancedPerDay;
-        if (cfg.InnateIsMantic) details["innateIsMantic"] = true;
-        if (cfg.GeneralSpiritStore > 0) details["generalSpiritStore"] = cfg.GeneralSpiritStore;
-        if (cfg.SphereSpiritStore > 0) details["sphereSpiritStore"] = cfg.SphereSpiritStore;
-        if (cfg.SpiritStoreRegenerates) details["spiritStoreRegenerates"] = cfg.SpiritStoreRegenerates;
-        if (cfg.AddBasicToList) details["addBasicToList"] = true;
-        if (cfg.AddAdvancedToList) details["addAdvancedToList"] = true;
-        if (cfg.AddWithPrep30) details["addWithPrep30"] = true;
-        if (cfg.TurnBasicUpTo5thMantic > 0) details["turnBasicUpTo5thMantic"] = cfg.TurnBasicUpTo5thMantic;
-        if (cfg.TurnBasicMantic > 0) details["turnBasicMantic"] = cfg.TurnBasicMantic;
-        if (cfg.TurnAdvancedUpTo6thMantic > 0) details["turnAdvancedUpTo6thMantic"] = cfg.TurnAdvancedUpTo6thMantic;
-        if (cfg.TurnAdvancedAbove6thMantic > 0) details["turnAdvancedAbove6thMantic"] = cfg.TurnAdvancedAbove6thMantic;
-        if (cfg.IsTeachingScroll) details["isTeachingScroll"] = true;
-        if (cfg.TrueBeliever > 0) details["trueBeliever"] = cfg.TrueBeliever;
+        if (selectedMiracles.Count > 0)
+            details["miracles"] = selectedMiracles;
 
-        return details;
+        if (cfg.GeneralSpiritStore > 0)
+            details["generalSpiritStore"] = cfg.GeneralSpiritStore;
+        if (cfg.SphereSpiritStore > 0 && cfg.AdditionalSphereSelected.HasValue)
+            details["sphereSpiritStore"] = new
+            {
+                sphere = cfg.AdditionalSphereSelected.Value.ToString(),
+                amount = cfg.SphereSpiritStore
+            };
+        if (cfg.SpiritStoreRegenerates)
+            details["spiritStoreRegenerates"] = true;
+        if (cfg.TurnBasicUpTo5thMantic > 0)
+            details["turnBasicUpTo5thMantic"] = cfg.TurnBasicUpTo5thMantic;
+        if (cfg.TurnBasicMantic > 0)
+            details["turnBasicMantic"] = cfg.TurnBasicMantic;
+        if (cfg.TurnAdvancedUpTo6thMantic > 0)
+            details["turnAdvancedUpTo6thMantic"] = cfg.TurnAdvancedUpTo6thMantic;
+        if (cfg.TurnAdvancedAbove6thMantic > 0)
+            details["turnAdvancedAbove6thMantic"] = cfg.TurnAdvancedAbove6thMantic;
+        if (cfg.TrueBeliever > 0)
+            details["trueBeliever"] = cfg.TrueBeliever;
+        if (cfg.TrueBelieverGuilds.Count > 0)
+        {
+            details["trueBelieverGuilds"] = cfg.TrueBelieverGuilds
+                .Where(x => x.Count > 0)
+                .Select(x => new { guild = x.GuildName, count = x.Count })
+                .ToList();
+        }
+
+        var abilityName = cfg.SelectedMiracles.Count switch
+        {
+            0 => "Miracle",
+            1 => cfg.SelectedMiracles[0].MiracleName,
+            _ => $"Miracle list ({cfg.SelectedMiracles.Count})"
+        };
+
+        return new CalcResult
+        {
+            AbilityType = "Miracle",
+            AbilityName = abilityName,
+            TotalIsp = cfg.Total,
+            Summary = cfg.Breakdown,
+            Details = details
+        };
+    }
+
+    private async Task LoadMiracleLookupAsync()
+    {
+        try
+        {
+            var miracles = await MiracleService.GetAllAsync();
+            MiracleLookup = miracles
+                .Where(miracle => !string.IsNullOrWhiteSpace(miracle.name))
+                .OrderBy(miracle => miracle.power)
+                .ThenBy(miracle => miracle.name, StringComparer.OrdinalIgnoreCase)
+                .Select(miracle =>
+                {
+                    var option = new MiracleSearchOption(miracle);
+                    var advancedToken = option.IsAdvanced ? "advanced" : "basic";
+                    var alignmentToken = string.IsNullOrWhiteSpace(option.Alignment) ? "ALL" : option.Alignment;
+                    var display = $"{option.Name} (P{option.Power} · {advancedToken} · {alignmentToken})";
+                    return new KeyValuePair<string, MiracleSearchOption>(display, option);
+                })
+                .GroupBy(x => x.Key, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(x => x.Key, x => x.First().Value, StringComparer.OrdinalIgnoreCase);
+
+            OnPropertyChanged(nameof(MiracleLookup));
+            MiracleSearch.ItemsSource = MiracleLookup;
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Miracle load failed", ex.Message, "OK");
+        }
+    }
+
+    private async Task LoadTrueBelieverGuildLookupAsync()
+    {
+        try
+        {
+            var guildNames = await GuildsService.GetGuildNamesAsync();
+            TrueBelieverGuildLookup = guildNames
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(name =>
+                    name.TrimStart().StartsWith("church", StringComparison.OrdinalIgnoreCase)
+                        ? 0
+                        : 1)
+                .ThenBy(name => name, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(name => name, name => name, StringComparer.OrdinalIgnoreCase);
+
+            OnPropertyChanged(nameof(TrueBelieverGuildLookup));
+            TrueBelieverGuildSearch.ItemsSource = TrueBelieverGuildLookup;
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Guild load failed", ex.Message, "OK");
+        }
+    }
+
+    private async void OnMiracleResultSelected(object? parameter)
+    {
+        var option = parameter as MiracleSearchOption ?? SelectedSearchMiracle;
+        if (option == null)
+            return;
+
+        if (BindingContext is not MiracleConfig cfg)
+            return;
+
+        var added = cfg.TryAddMiracle(option.Miracle);
+        var entry = cfg.SelectedMiracles.FirstOrDefault(miracle =>
+            string.Equals(miracle.MiracleName, option.Name, StringComparison.OrdinalIgnoreCase)
+            && miracle.Power == option.Power
+            && miracle.IsAdvanced == option.IsAdvanced);
+        if (entry == null && added)
+            entry = cfg.SelectedMiracles.LastOrDefault();
+
+        SelectedSearchMiracle = null;
+
+        if (entry != null)
+            await Navigation.PushModalAsync(new MiracleEntryConfigModalPage(entry));
+    }
+
+    private void OnTrueBelieverGuildResultSelected(object? parameter)
+    {
+        var guildName = parameter as string ?? SelectedTrueBelieverGuild;
+        if (string.IsNullOrWhiteSpace(guildName))
+            return;
+
+        if (BindingContext is not MiracleConfig cfg)
+            return;
+
+        cfg.TryAddTrueBelieverGuild(guildName);
+        SelectedTrueBelieverGuild = null;
+    }
+
+    private async void OnEditMiracleClicked(object sender, EventArgs e)
+    {
+        if (sender is not BindableObject bindable || bindable.BindingContext is not MiracleSelectionEntry entry)
+            return;
+
+        var modal = new MiracleEntryConfigModalPage(entry);
+        await Navigation.PushModalAsync(modal);
+    }
+
+    private async void OnMiracleInfoClicked(object sender, EventArgs e)
+    {
+        if (sender is not BindableObject bindable || bindable.BindingContext is not MiracleSelectionEntry entry)
+            return;
+
+        if (string.IsNullOrWhiteSpace(entry.MiracleName))
+            return;
+
+        await Navigation.PushModalAsync(new NavigationPage(new MiracleCardPage(entry.Miracle)));
+    }
+
+    private void OnDeleteMiracleClicked(object sender, EventArgs e)
+    {
+        if (sender is not BindableObject bindable || bindable.BindingContext is not MiracleSelectionEntry entry)
+            return;
+
+        if (BindingContext is not MiracleConfig cfg)
+            return;
+
+        cfg.RemoveMiracle(entry);
+    }
+
+    private void OnDeleteTrueBelieverGuildClicked(object sender, EventArgs e)
+    {
+        if (sender is not BindableObject bindable || bindable.BindingContext is not TrueBelieverGuildEntry entry)
+            return;
+
+        if (BindingContext is not MiracleConfig cfg)
+            return;
+
+        cfg.RemoveTrueBelieverGuild(entry);
     }
 }

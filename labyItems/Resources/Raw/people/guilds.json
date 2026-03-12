@@ -1,6 +1,8 @@
 {
   "The Brightest Light": {
     "Type": "political",
+    "PreRequisites": "Any goodly being shall be allowed in. Any neutral beings must have a signature from the guild head written on their card. No evil beings allowed at all.",
+    "Ethos": "\"The light will guide us\" - We act on those doing and harbouring evil: bringing light and hope into the darkest places. Defeating evil in all its forms in different ways. \"Our strength is our Mercy and War\" - We show mercy to every 'living' person even if evil. We show kindness in asking them to redeem and repent their ways but if they reject the light and intend to do harm then they shall die out with the darkness. \"Free will is to be celebrated\" - Evil clouds people's minds forcing or tricking them into a life of darkness leading people into being hated. Enjoy freedom as you have it. \"Brother and sisterhood keeps us strong\" - All who are members are expected to strengthen the guild, to recruit new members to our ranks, and to be shining examples for others to follow.",
     "Restrictions": "No guild member is allowed to hurt another except in purest self defence or in a duel.",
     "alignmentRule": {
       "allowed": {
@@ -79,6 +81,9 @@
   },
   "The Brood": {
     "Type": "political",
+    "PreRequisites": "Evil characters may only join with guildmasters permission. Outlaws may only join/remain a member with guildmasters permission.",
+    "Ethos": "When Sirac was first created he was commanded to be sure he left the world a better place than he found it. A mission he has found challenging on his own, especially given his low tolerance for politics.\n\nAs such he seeks to share the load with those closest to him, be they friends or family. This is a sister guild to the Sons and Daughters of Sirac, but open to any and all who share Sirac’s desire to work within the laws of each land to improve life for the people of those lands.\n\nWe seek to improve the life of most who reside within the lands of Primus, and all othersuch lands we come to know. Working within the current political structures and legal systems, but not averse to seeking to improve them where possible. It is very much in keeping with membership of this guild to seek positions of political power, but such should be sought for the benefits you can bring to the land, not yourself.\n\nPrincipal ethos is “To leave all worlds a better place than you found them”",
+    "Restrictions": "Anyone found to have knowingly placed their own self interest or other such selfish motives above the welfare of the land and its people will be cast out. It is acceptable to favour your own homeland, but when it would not cause conflict to your oaths and loyalties, you should endeavour to improve the lives of the people of all lands across the cosmos. Equally you must never be found to have deliberately, of your own volition, sought to bring harm to any other member of The Brood or Sons and Daughters of Sirac.\n\nInvariably complex situations arise, Sirac is more than familiar with those, and will judge each case accordingly. The expectation is simply for members of The Brood to do their best for all lands and their peoples, and to treat each other as family, do that and there will be no problem.\n\nCastings out will be at the guild heads discretion entirely, but can have significant ramifications if the guild head feels such is truly deserved.",
     "alignmentRule": {
       "allowed": {
         "moral": ["Good", "Neutral"],
@@ -260,6 +265,9 @@
         }
       ]
     },
+    "PreRequisites": "Must be a Baronial native, this does include Baronial Demonkind and members of the Ritter orders who are loyal to the Circle.",
+    "Ethos": "The Claws of Circle is a subsection of The Circle, which is sustained by The Circle, rather than the Volksraad. The guild is one formed to support the political ideals of The Circle and is mainly comprised of militant Circle members with direct approaches to dealing with problems. Members of this guild tend to be on the move most of the time, travelling about the lands covertly performing the will of The Circle.",
+    "Restrictions": "• If it is within their means then guild members should attempt to capture or kill any Baronial hedge wizard they encounter in the Baronies.\n• Must support the basic political principles of the Southern Baronies.",
     "Availability": {
       "Whitelist": {
         "Classes": [],
@@ -272,6 +280,9 @@
   },
   "The Deci Gentlemen's Club": {
     "Type": "political",
+    "PreRequisites": "Guild member must be a person who was born or is resident within the jurisdiction of the City of Deci.",
+    "Ethos": "The basis of the guild is for the future of Deci. Members have banded together to form Political and Military support for the city and nearby villages. This guild believes in using all the citizens of Deci for the defence and the improvement of the city and has no worries if the members use the powers of good or evil so long as all strive for one thing; the future of the lives of the people of Deci and the Empire.",
+    "Restrictions": "Guild Members are required to act in the best interests of the city of Deci. Those failing to do so may be cast from the guild, and while within the City of Deci are at -1 level of resistance.",
     "Benefits": {
       "Basic": [
         {
@@ -388,7 +399,10 @@
         "Races": [],
         "PeopleType": []
       }
-    }
+    },
+    "PreRequisites": "Open to anyone able to understand and work for the Empire. Outlaws and individuals Ostracised by the Empire cannot join, or remain members.",
+    "Ethos": "The Department of Recoveries and Collections are a small department in the inquisition that are responsible for finding, securing and making safe artefacts of power. Their mandate covers Primus but their primary work is done in the Empire of Glass via requests from other Imperial departments or private requests.",
+    "Restrictions": "Characters cannot be outlawed and cannot gain any benefits while they are outlawed. They must never fail to hand in a dangerous artefact to their employer or if not to an Inquisition office (desk)."
   },
   "The Duke's Head Society": {
     "Type": "political",
@@ -428,10 +442,16 @@
           "Description": "Guild members only"
         }
       ]
-    }
+    },
+    "PreRequisites": "Characters from Sweethaven can join freely.\nAnyone else interested in furthering the cause of Sweethaven can join & battleboard the guild, but after 3 outings they must have their candidacy agreed upon (typically by guild vote or otherwise joining Sweethaven) and cannot battleboard the guild further until this is done.\nThose with any formal position outside of Sweethaven, including military positions like Legionaries and Samurai, must have both their prospective membership and their candidacy agreed by the guild publicly, which will be announced to those overseeing their position",
+    "Ethos": "Support the Free Republic of Sweethaven in blazing the trail for a better world.\nDefend the rights of peons across the world.\nStand up against the tyranny of the Great Freedom and any feudal system.\nShare Sweethaven's way of life with anyone who'll listen.\nHone your beliefs through debate, discussion and collective decision-making.",
+    "Restrictions": "Characters from Sweethaven can join freely.\nAnyone else interested in furthering the cause of Sweethaven can join & battleboard the guild, but after 3 outings they must have their candidacy agreed upon (typically by guild vote or otherwise joining Sweethaven) and cannot battleboard the guild further until this is done.\nThose with any formal position outside of Sweethaven, including military positions like Legionaries and Samurai, must have both their prospective membership and their candidacy agreed by the guild publicly, which will be announced to those overseeing their position"
   },
   "Enclave": {
     "Type": "political",
+    "PreRequisites": "Must be a mana-using class or have innate mana due to race or class, not from an item.",
+    "Ethos": "The Enclave was created to act as a voice for the needs of Wizards and their lesser brethren, and to gain power, respect and influence for all mana users.",
+    "Restrictions": "As the Enclave seeks to curry favour with the Imperium, Outlawed characters may join only on a guild special. Nobody who is outlawed for party killing may join or remain a member of the Enclave without the direct permission of the guild master.",
     "Benefits": {
       "Basic": [
         {
@@ -509,6 +529,9 @@
     }
   },
   "Hell Company": {
+    "PreRequisites": "All members of Hell Company must be goodly aligned.",
+    "Ethos": "Hell Company was formed to combat the minions of the Lords of Hell. Whenever Demonkind are summoned or sent into the exostance they are to be driven back to the hells. This is not to say that if a Demon is seeking redemption that they should not be helped but… they rarely are…",
+    "Restrictions": "Members of Hell Company must be willing to fight the denizens of the hells wherever they raise their heads. If a member leaves an adventure where any evil Demonkind that they are aware of and were able to affect remain alive, and not on their own plane, then the member gains no points or levels for the adventure. This does not apply if the Demon has fled beyond reach.",
     "Type": "political",
     "Benefits": {
       "Basic": [
@@ -588,8 +611,10 @@
     }
   },
   "In Purity": {
+    "PreRequisites": "Membership is open to those who believe Primus is for the living, not the Undead!! Those capable of summoning Undead and, of course, Undead themselves are unwelcome.",
+    "Ethos": "The Guild is here to gather a group of individuals that share a common interest and will work together to achieve their aim.",
+    "Restrictions": "Membership is open to those who believe Primus is for the living, not the Undead!! Those capable of summoning Undead and, of course, Undead themselves are unwelcome.",
     "Type": "political",
-    "Restrictions": "",
     "Benefits": {
       "Basic": [
         {
@@ -685,6 +710,9 @@
   },
   "Knights of Legend": {
     "Type": "political",
+    "PreRequisites": "Be a Knight of the Land. To claim the Advance Tier a member must either complete an adventure in The Land of Legend or be invited by The Lord Knight. Membership of this guild needs to be signed onto the character card by the current Lord Knight, or Robert as Lord of Legend (if you complete an adventure in The Land of Legend please see Martin Witts – forum name Mart07 who plays Robert to have your membership signed on).",
+    "Ethos": "This organisation is a guild formed within the Land of Legend for those Knights that support the ideals of the Knights in action, word and deed. It is expected that its members attend Knight of the Land gatherings whenever possible. The power of the guild stems from the ancient Banner of the Land, Resolution – Its power is now unfettered and is able to influence those Knights that have travelled with him over any distance.",
+
     "Benefits": {
       "Basic": [
         {
@@ -759,6 +787,10 @@
   },
   "Knights of the Risen Phoenix": {
     "Type": "political",
+    "PreRequisites": "Members of the Knights of the Risen Phoenix may not attack peons and other weak or defenseless creatures except in defense of self or the party and will actively seek to protect non-aggressive peons/defenseless creatures against the un-warranted aggressive actions of others, including those of the party.",
+    "Ethos": "The order follows the Mother Phoenix, a kind and nurturing creature who seeks to protect the weak and bring peace to the world. Our order judges people by their actions, not by the colour of their soul. The light-hearted fascist who smites the helpless due to the colour of their soul and the dark-hearted bringer of chaos who revels in destruction are both to be equally thwarted. We seek to protect, through strength of arms, intelligence and guile, those who do not have the ability to protect themselves and to try and bring peace and harmony where we tread.",
+    "Restrictions": "Members of the Knights of the Risen Phoenix may not attack peons and other weak or defenseless creatures except in defense of self or the party and will actively seek to protect non-aggressive peons/defenseless creatures against the un-warranted aggressive actions of others, including those of the party.",
+
     "alignmentRule": {
       "allowed": {
         "moral": ["Good", "Neutral"],
@@ -853,6 +885,9 @@
   },
   "Obsidian Cabal": {
     "Type": "political",
+    "PreRequisites": "All members must be evil or have guild heads permission to join.",
+    "Ethos": "The Obsidian Cabal are a collection of dark hearted mercenaries who put politics aside to get the less than pleasant jobs done. The Cabal know that through working together they can achieve more than those who let morals weigh them down.",
+    "Restrictions": "Any guild member who kills another member of the Cabal is kicked out. This can be over ridden by the guild head.",
     "alignmentRule": {
       "allowed": {
         "moral": ["Evil"],
@@ -932,6 +967,10 @@
   },
   "Of the North": {
     "Type": "political",
+    "Background": "Men, dwarves, their friends and allies gather around hearth and home in the Breakan mountains to the north of the Empire of Glass. The mountains are both a harsh and unforgiving place that borders on the edge of the world between the lands beyond the rainbow bridge to the far north and Empire to the south. It breeds its people strong and tough. Weathered to most kinds of adversity and able to adapt to anything that is unknown.\nAlmost tribal in nature are the bonds that draw the hearths and homes together. An enemy here is one not to be ignored. Deal with it yourself, draw your friends and allies to your side and wait not for betrayal and poison in your ale, your gold to be stolen or a knife in your back!\nWe may ally with the Empire and others as a need arises but we will not be beholden to anyone.",
+    "PreRequisites": "Anyone with a position of power within the Empire (e.g. a Title) or anyone seeking to bring the North under the Empire’s control may not join.",
+    "Ethos": "To remain free of the bonds of Empire or of any other that may seek to tame the wilds of the Far North and its people",
+    "Restrictions": "No kind of non violence pact between the ‘men’ of the North will ever be put in place. The place is wild and so are its people, sometimes they will disagree!\n\nENTRY REQUIREMENTS: Anyone with a position of power within the Empire (e.g. a Title) or anyone seeking to bring the North under the Empire’s control may not join.\n\nNOTE Following extensive work in establishing a grand guild hall – a focal place for those hardy folk of the north to gather, meet, feast and remember those who have fallen, telling tales of their exploits and “quaffing” – guild members now gain the benefits of a Crypt.",
     "Benefits": {
       "Basic": [
         {
@@ -1012,6 +1051,9 @@
     }
   },
   "Sakura": {
+    "PreRequisites": "Any Amlesian who supports the Jade Emperor may join. This includes those of the clans, tribes, Fortunes, Kami etc.",
+    "Ethos": "Members should be seeking to encourage their clans/tribes or others to join the Accord/treaty and ensure the stability of the treaty under the guidance and advice of the Kotei.",
+    "Restrictions": "Action against the emperor or outlawing results in immediate expulsion from guild and you cannot re-join unless you have cleared your honour by Seppuku or with the Kotei",
     "Type": "political",
     "Benefits": {
       "Basic": [
@@ -1096,6 +1138,9 @@
   },
   "The White Lotus Society": {
     "Type": "political",
+    "PreRequisites": "Any who hold Loyalty to the Jade Emperor or his Empire, and are willing to sacrifice their lives to protect them (does not need to be Oriental).",
+    "Ethos": "In service to the Jade Emperor, The White Lotus Society will dedicate ourselves to two causes, first and foremost, our loyalty to the Jade Emperor and his Empire; we will protect these with our lives, without question. Second is the improvement of relations with our Empire and all others in this world we share.",
+    "Restrictions": "Guild members must be loyal to the Jade Emperor or his Empire; should a member show extreme disloyalty to either of these things they are instantly removed from the guild and may only rejoin the guild should an adequate show of loyalty be given. This will be judged by either the guild master or the Jade Emperor. No member of The White Lotus Society will leave another behind on a mission; should this occur no points for the day will be gained.",
     "Benefits": {
       "Basic": [
         {
@@ -1219,6 +1264,9 @@
   },
   "Totemic Guardians": {
     "Type": "political",
+    "PreRequisites": "Be tribal.",
+    "Ethos": "We stand together to answer the call of the tribes and totems of the lands. Holding moots and tribal gatherings throughout the wilds the Totemic Guardians seek to gather tribal heroes together so we can aid and strengthen our tribes and clans....UG!!! Muttley, Grand High Shamanic Magi of Thunder and Storms (who many thought was dead) has a spirit link to all guild members and can summon dead bodies. As such individuals are free to inform him OOC of their death and he can decide if they are worthy of being saved or left to rot like a goblin.",
+    "Restrictions": "If asked must always lend aid in any form or help other tribals, unless you’re fighting against them...then kill them and eat them!! Any guild member who attacks and kills a fellow tribal guild member will be cast out of the guild\n\nThe Totemic guardians understand that your tribe always comes first, but you must always seek to aid and stand by your fellow Guild members. Outlaws must ask permission from guild heads before joining.",
     "Benefits": {
       "Basic": [
         {
@@ -1349,6 +1397,9 @@
   },
   "Wahadamune": {
     "Type": "political",
+    "PreRequisites": "Any Ishmaic Human that is loyal to the confederacy may join. Non-human Ishmaics require the guild masters permission to join.",
+    "Ethos": "Wahadamune is a political guild for all Ishmaics. The outlook of Wahadamune is one of unity, it’s members seek to defend the clans and people of Ishma, and the larger world as a whole.\n\nWahadamune is a collective, peoples from all clans come to join and remain members of their mother clan upon joining. Wahadamune also allows membership of any Ishmaic race, so long as they abide by the restrictions. Long have the roaming people of the Ishmaic Confederacy been separate, banded into smaller tribes. Strong family but weaker as individuals. A new power has risen, grown over years uniting those of the confederacy under a single banner, promoting unity against the threats that the world holds against their lands and people; the whole making up more than the sum of their parts",
+    "Restrictions": "Wahadamune is a collective from all clans, you may be a member of Wahadamune and your original clan chosen at creation, or just Wahadamune.\n\nMust be Ishmaic to join, you may not join if you are Outlawed or Ostracised within Ishma (however those Outlawed or Ostracised by the Imperial Seers rather than Rainfinders may appeal this decision to the Guild Head). Becoming Outlawed or Orstracised in Ishma may cause you to be cast out, potentially immediately at ref discretion if the crime should be severe enough.",
     "Benefits": {
       "Basic": [
         {
@@ -1398,6 +1449,9 @@
   },
   "Yeomen of the Empire": {
     "Type": "political",
+    "PreRequisites": "To be a Yeoman as listed in Realm of Glass and to have purchased at least 1 rank of abilities. Pre 8th level Yeomen may join but do not gain benefits until the first status has been purchased.",
+    "Ethos": "The Yeomen of the Empire are the defenders and protectors of Primus. They fight for the greater good of peace within the land, and many a time a lone Yeoman has stood as the last line of defence, falling so that others may live. They are the protectors of the Nobility and will fight for their causes as well as protecting the Land that those Nobles own. This order rose with the Republic, only to fall away at the hands of the Magiarchs. They then rallied to Amora’s call, only to again melt away with the emergence of the Mercenary Caste. Now their Land needs them again… Who will answer the call?",
+    "Restrictions": "Any Member who is outlawed ceases to be a member of this guild from the moment they are outlawed. They may re enter upon being cleared of any charges with the permission of the Guild Head or his deputy.\n\nA Yeoman must always think of Primus first. Peons are to be helped, not looked on as an inconvenience and members have purest self-defence restrictions against Peons.\n\nThe Nobility should be respected and protected as well as the common folk of the Land. It is, after all, those Nobles whose blood is linked to the Land.\n\nReferees should be MOST harsh on any member of this guild who openly encourages attacks on, or is dismissive of, the folk of Primus.",
     "Benefits": {
       "Basic": [
         {
@@ -1446,6 +1500,8 @@
   },
   "Church of Certizal, Shadow of the First Evil": {
     "Type": "professional",
+    "Ethos": "The guild follows the Shadow of the First Evil, a powerful Demon of Corruption ascended to Divine Power by the actions of his chosen one Lomo, and others. The duty of the church is to foster Evil in the hearts of men. It is more powerful to cause another to carry out an act of evil than do it yourself. Working from the shadows until a place is claimed the Church seek to spread across the Empire and beyond.",
+    "Restrictions": "The Guild is a full black guild (as per WFA rules). If a member ever ceases to be Evil they are instantly Excommunicated. Note - If slain a member of the church, or a character with Pact to Certizal, claiming Kallah benefits linked to Certizal or if they are Demon Touched by Certizal, can choose to Word of Recall to Lomo who can cast a Mantic (Ebony/Evil Spirit) Command Life on the individual. This costs 20% (10% if fated hero is owned). For reference: Command Life is as animate life except the individual does not become Undead. Instead they discern as spiritually mastered, and if removed they die. It does not function on those immune to spiritual mastery. This should be written on the individuals card.\n\nCHAOTIC EVIL MIRACLE LIST 1st Halt, Lesser Wings of Darkness 2nd Cause Wound, Animate Zombie 3rd Cause Serious Wounds, Curse, Protection from Spirits, Writhe 4th Cause Disease, Conceal Lie, Create Ghoul, Beguile, Control Ghoul 5th Voice of Power, Cause Grievous Wounds. 6th Walk Through Walls, Spiritual Mastery. 7th Suspend Life\n\nDENOMINATIONAL MIRACLE This miracle may be learnt as normal by priests of Certizal post 8th.\n\nThe Evil Within Level: 6sp Alignment: Evil Duration: 5 minutes Range: 20ft Verbal: “Let the touch of the Shadow be upon thee.” Description: The target counts as evil for the duration. Immunity to alignment change applies. Willingly accepting this miracle is an Evil act and causes the person to gain a black mark.",
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -1556,6 +1612,8 @@
   },
   "Church of Dead Heroes": {
     "Type": "professional",
+    "PreRequisites": "Priests or Lay Believers of Dead Heroes may be any alignment. Outlaws may not join without the high priest’s permission, and members who are Outlawed may not remain without his permission. No member of the church may act against the Empire of Glass as it is the current belief of the Church that this Empire is essential and central to existence. All members must be from Primus and people from outside the Empire may only join with permission of the High Priest. People belonging to other churches or who worship other deities may not join.",
+    "Ethos": "In our past hundreds and thousands have died defending both the Empire and Primus from threats and conflict. Some have died willingly, many of the vitae infused heroes, and others less willingly, the soldiers of the armies of the Empire. As such these people, these Heroes, responsible for our existence today should be remembered and their names and stories passed from generation to generation. However we should remember that one man’s hero may be another’s villain. While we venerate Heroes and remember them, they are not our gods. It may be required for us to stand against them, and even kill them. The faith’s duty is in inspiring – remembering the deeds of a Hero and inspiring others with it, not bending knee to them. Kurten D’treal has spirit link to all dead guild members, and can choose to Word of Recall them to him. As such members are free to inform him OOC of their death and he can choose to rescue them, or leave them to ascend to being a Dead Hero as he wishes.",
     "Restrictions": "",
     "Benefits": {
       "Basic": [
@@ -1679,6 +1737,9 @@
   },
   "Church of the Empress Goddess": {
     "Type": "professional",
+    "PreRequisites": "Open to any Goodly priest. Only Goodly individuals may join without the permission of the High Priest or 2 Custodians",
+    "Ethos": "Members of this Church worship Truic Amora-Badrass, the Grand Duchess of Halgar, Empress of Labyrinthia and Realm Spirit of Glass as a Goddess in her own right. They recognise the fact that the current Empress has become the first Master or Mistress of Primus to truly master the Nagrech. Furthermore, members of this faith venerate the choice that the Empress made in sacrificing her own humanity and mortality to ascend to the position of Realm Spirit of Glass in order to combat the rise of The Spiter in the Sunless Lands. This act is held up as an example of the devotion to the duty of protecting the Empire, its borders and the people who reside within it that all members of the church should aspire to. This church is a goodly faith and represents the Empresses’ moral outlook as a goodly, constructive and peace loving being – violence should genuinely not be the first option. However, it is clearly not pacifistic in that its members are free (and often encouraged) to resort to martial means if necessary in the protection of the Empire and its people or in order to uphold Imperial Law. This faith is currently most commonly followed by those outside the mercenary community, though its influence there is starting to grow. It is also particularly popular within some of the most fervent of the legions within the Bastion.\n\nMIRACLE LIST 1st Halt (N) Dismiss Zombie (G) 2nd Halt Undead (G), Cure Serious (G) 3rd Protection from Spirits (N), Spirit Shield (N) Talk to Spirit, (N) Bless, (G) Dismiss Ghoul, (G) 4th Heal (G) 5th VoP (N) Spirit Invis (N) Dismiss Wraith (G) 6th Total Heal (G) Dismiss Vampire (G) 7th Pure Force (N)",
+
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -1788,6 +1849,9 @@
     }
   },
   "Church of Knowledge": {
+    "PreRequisites": "Be a Good Priest",
+    "Ethos": "The Church of Knowledge places a high value on the pursuit of knowledge and understanding. It believes that knowledge is the key to personal growth, societal progress, and a deeper connection to the universe.\nThe Church of Knowledge does not require its worshippers to follow blind faith or dogma. Instead joining the church is an invitation to embark on a lifelong journey of learning, exploration, and self-discovery. It is a path to enlightenment through the power of knowledge and understanding.\nThe Church also encourages the study of a wide range of subjects, including history, philosophy, and art. It promotes the use of reason and logic in making decisions. Worshippers of the Church should be open to new discoveries and theories, even if they contradict existing beliefs.\nBelievers should encourage people to think for themselves and come to their own conclusions.\nEmbrace the Pursuit of Knowledge: Never stop seeking knowledge and understanding. Question everything, explore diverse perspectives, and engage with new ideas.\nValue Critical Thinking: Approach all knowledge with a critical eye. Evaluate evidence, consider different interpretations, and challenge assumptions.\nShare Knowledge Freely: Share most knowledge with others, fostering collaboration and collective enlightenment.\nForbidden Knowledge: Some knowledge is too dangerous to be shared freely. This should not be destroyed but instead should be kept safely and securely in case it is needed. No knowledge should be destroyed.",
+    "Restrictions": "!!todo!!",
     "Type": "professional",
     "alignmentRule": {
       "mode": "restrict",
@@ -1915,6 +1979,9 @@
     }
   },
   "Church of Iron & Empire": {
+    "PreRequisites": "Be a Pro Empire, un-outlawed Evil Priest or be an Unholy Champion.",
+    "Ethos": "In no way conventionally deific, this is an Imperial Church that typifies the dark, unyielding side of the Empire (but certainly does not see itself as being opposite or contrary to any other Imperial and Empress cults). It is an uncompromising faith that is preached here but offers simple answers to complex questions.\nUnlike most churches Iron and Empire understands that the influence of the gods is bad for mortals, fanatic followers of goodly gods driven into battle by their lords and the bitter and twisted evil worshippers of the dark gods performing their foul tasks.\nThe church does not follow a Deity, although sometimes outsiders may view the church as worshipers of the Empress. The Church draws power from the dark hearts of the people, the belief in the nature of The Empire and from the Primal power of the Felldraken Isle.",
+    "Restrictions": "• Should a member become Outlawed or Ostracised by the Empire they are automatically excommunicated until the matter is resolved. In game terms they cannot cast any miracle from the Church list, nor miracles learnt whilst a member. However this does not trigger Dedicated Power restrictions unless the individual refuses to hand themselves in for trial.\n• Note: The Lord of Feldraken Isle can remove the High Priest from their role if they are not acting in the best interest of the Church, or simply fails to fulfil their duties.",
     "Type": "professional",
     "alignmentRule": {
       "mode": "restrict",
@@ -2031,6 +2098,8 @@
   },
   "Church of the Lady of The Stars": {
     "Type": "professional",
+    "PreRequisites": "Goodly aligned priests",
+    "Ethos": "The Lady of the Stars, is the Goddess of Light, Beauty and Joy, \"those things that make life worth enjoying, not merely enduring\". Historically, the church in Labyrinthia directed much of its energy towards the destruction of the Void God, but now that that end has been achieved, they have had a chance to step back and return the faith to its earlier roots. Since followers of the Lady of the Stars offer their whole-hearted love and devotion to the Lady, no individual who draws spiritual power from any other source or patron may claim membership of the Church of The Lady of the Stars. Any priest of the church who in some way acquires another spiritual patron must either reject that patron and their power *utterly*, or else leave the church (refusal to leave is an excommunicable offence). The only exception to this rule is followers of the other Valar, since the Lady is the representative of that pantheon upon this plane.\n\nDARIG OF ELBERETH It is worth noting that Darig has a Spirit Link, as per the tables ability, with all Guild members. Miracle List\n\n1st Halt, Cure Wound, Detect Spirit’s Nature, Power Meld, Spirit of Seeing 2nd Cure Serious 3rd Cure Disease, Talk to Spirits, Spirit Shield, Protection from Spirits, Bless, Dismiss Ghoul\n\n4th Heal, Spirit Bolt 5th Dismiss Wraith, Voice of Power, Spiritual Invisibility 6th Total Heal, Dismiss Vampire 8th Restore Life",
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -2117,6 +2186,8 @@
   },
   "Church of Mortai": {
     "Type": "professional",
+    "PreRequisites": "Be a goodly weapons-wielding priest (not pure priest, hospitaller, armoured priest), or a paladin",
+    "Ethos": "Mortai is the brother god of Shaehan, and her defender. He strongly believes in the sanctity of life, and is the overseer of Undead across the planes. His role is to ensure that they do not stray outside the restrictions to which they are bound, by invading the dead bodies of mortals or otherwise seeking to take revenge on living spirits. His priests are expected to harm no living thing except where it is essential to defend a life, although those who raise Undead are an exception to this rule and may be acted against as the priest sees fit. Undead must be returned to their own plane, by force if necessary, and trapped mortal bodies freed from their corruption. Antagonistic daemonkind should also be destroyed or banished, as their spirits are also perversions of lost souls and they are drawn to harm the living.\n\nMIRACLE LIST 1st Dismiss Zombie, Cure Wound 2nd Dismiss Skeleton, Halt Undead, Cure Serious Wounds 3rd Dismiss Ghoul, Protection from Spirits, Talk to Spirits, Spirit Shield, Cure Disease, Bless 4th Spirit Bolt, Heal, Dismiss Mummy 5th Spiritual Invisibility, Dismiss Wraith 6th Total Heal, Dismiss Vampire 7th Dismiss Level 7 Undead",
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -2232,6 +2303,9 @@
     }
   },
   "Church of Shaehan": {
+    "PreRequisites": "Goodly non weapon using priest.",
+    "Ethos": "Shaehan is the Goddess of Healing, Mercy and Charity. Shaehan priests will cure all who ask for it, though may ask those of evil alignment to repent before doing so. The priests have a similar outlook to Hospitallers but realise that fighting is a way of life and thus will not always try to stop a fight, although they will advise against it and will tidy up afterwards. They must never kill, or they will be instantly excommunicated by the goddess, unless it is against Undead or evil supernatural creatures which are antagonistic. Above all Shaehan priests believe in healing, mercy and the right of life regardless of alignment.",
+    "Restrictions": "They must never kill, or they will be instantly excommunicated by the goddess (referee), unless it is against Undead or evil supernatural creatures which are antagonistic. May never manufacture anything supernatural except spiritual scrolls.\n\nMESSAGE FROM THE HIGH PRIEST Faithful, please find me to receive the blessings of our lady, so that I can ensure that you are protected. The church and our Ladies power has much to provide. Keep safe whilst travelling the lands of Primus and beyond. And above all, embrace Her light wherever you walk. Miracle List\n\n1st Cure Wound, Detect Spirit’s Nature, Halt 2nd Cure Serious Wounds 3rd Cure Disease, Talk to Spirit, Dismiss Ghoul, Protection from Spirits, Spirit Shield, Bless 4th Heal 5th Dismiss Wraith, Remove Fear and Paralysis, Spiritual Invisibility 6th Total Heal, Dismiss Vampire, Spiritual Freedom 8th Restore Life",
     "Type": "professional",
     "alignmentRule": {
       "mode": "restrict",
@@ -2348,7 +2422,8 @@
   },
   "Church of Saint Michael": {
     "Type": "professional",
-    "Restrictions": "",
+    "PreRequisites": "Be a goodly aligned priest",
+    "Ethos": "Priests of Saint Michael follow the Creator of all things and on the whole try to reason with most problems; a guild for reasonable characters. However, many of the longer-standing members of the Church tend to interpret St Michael’s teachings in more ‘extreme’ ways, and this has led to some discussion about the possible division of the guild. The High Priest is at pains to point out, however, that the scriptures can be read in more than one way. Robert - It is worth noting that Robert, Cardinal of Saint Michael (Forum name - Mart07), has a Spirit Link, as per the tables ability, with all Guild members. Miracle List\n\n1st Cure Wound, Detect Spirit’s Nature, Halt, Power Meld, Spirit of Seeing 2nd Cure Serious Wounds 3rd Cure Disease, Talk to Spirit, Dismiss Ghoul, Protection from Spirits, Spirit Shield, Bless 4th Heal, Spirit Bolt 5th Dismiss Wraith, Voice of Power, Spiritual Invisibility 6th Total Heal, Dismiss Vampire 8th Restore Life",
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -2454,6 +2529,8 @@
   },
   "Church of the Soul Forger": {
     "Type": "professional",
+    "PreRequisites": "Goodly Humans and Dwarven Priests. Other races may be accepted at the discretion of the High Priest on an individual basis.",
+    "Ethos": "The Soul forger forged the dwarven race from iron and mithril, and then breathed life into them as they cooled upon his forge. Priests of the Soul Forger are charged with upholding the dwarven virtues of law and light, and with guiding their people in the arts the dwarves hold dear. The dwarves have always revered the Master of the Forge, attempting to emulate his masterful work with metals and stone. Honesty and hard work pay off just as often in the mines and the forges, as they do on the battlefield, or so the dwarves claim. As such all priests of the Soul Forger are encouraged to spend at least some of their time at a forge learning and honing their skills.\n\nNEUTRAL GOOD MIRACLE LIST 1st Cure Wound, Detect Spirits Nature nd 2 Cure Serious Wounds, Spirit of Seeing and Hearing 3rd Cure Disease, Bless, Healing Hand, Talk to Spirit, Spirit Shield, Protection from Spirits, Dismiss Ghoul 4th Heal, Spirit Bolt, Passive Heal, Communication I 5th Spiritual Invisibility 6th Total Heal, Dismiss Vampire 8th Restore Life\n\nDENOMINATIONAL MIRACLE This miracle may be learnt by priests of the Church post 8th.\n\nArmour of the Forge Level: 8th level (10sp) Alignment: Goodly Duration: 5 minutes Range: Self Gesture: Fist over heart Verbal: Great Soul forger I ask you infuse my armour with the blessings of thy most Holy Forge. Allow me to enter the fray and don thy most Holy armour. Description: Empowers one spiritual suit of metal armour worn by caster so that it grants a “Rockskin” style reduction (EG 1 point per damage grade) vs weapon blows the armour applies against.",
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -2532,6 +2609,9 @@
     }
   },
   "The Rings of Talthar": {
+    "PreRequisites": "Be a goodly aligned priest or Paladin",
+    "Ethos": "Talthar is the Lord of Hope, a burning beacon of inspiration to his followers. Whilst the vast majority of Talthar's priests spend their time ministering to their congregations within the Church of Talthar works a dedicated core of worshipers; these are known as The Rings of Talthar. The Rings of Talthar are some of the most fervent worshipers of the Lord of Hope, those of the faith imbued with Vitae.\n\nTHE RINGS OF TALTHAR In some ways Talthar is a pantheon to itself in that it has seven aspects, represented by the seven interwoven rings that is its symbol. Whilst the most actively represented aspect in the mercenary community is that of Elbrime, Hope in adversity, there are others.",
+    "Restrictions": "Guild Members must choose to align themselves to one of the seven aspects of Talthar, which must be recorded on their character card. They may only battleboard the guild benefits of that ring. Miracle List\n\n1st Cure Wound, Halt 2nd Cure Serious Wounds 3rd Cure Disease, Protection from Spirits, Talk to Spirits, Spirit Shield, Bless 4th Spirit Bolt, Heal 5th Voice of Power, Remove Voice of Power, Spiritual Invisibility 6th Total Heal, Dismiss Vampire, Regeneration 8th Restore Life",
     "Type": "professional",
     "alignmentRule": {
       "mode": "restrict",
@@ -2755,6 +2835,8 @@
   },
   "Church of the Tryst": {
     "Type": "professional",
+    "PreRequisites": "Any Evil Priest can join this guild.\n\nMIRACLE LIST 1st Halt, Power Meld, 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Curse, Talk to Spirits, Spirit Shield, Cause Serious Wounds, Protection From Spirits 4th Spirit Shift, Spirit Bolt, Cause Disease, Create Ghoul 5th Spiritual Invisibility, Cause Grievous Wounds 6th Control Wraith, Serin’s Bound Spirit of Undeath, Walk Through Walls 7th Suspend Life",
+    "Ethos": "The Tryst is a church that takes spiritual power from the Imbaiu demons. It is important to understand that the church do not serve the Imbaiu, but binds, dominates and commands them. References to the Imbaiu Masters refer to those Imbaiu with mastery over lesser demons. The Imbaiu Masters that accept the bindings of the church do so because this link to Primus gives them strength upon their own worlds that they use to remain at the top of their demonic hierarchy.\n\nPRE-REQUISITES Any Evil Priest can join this guild.\n\nMIRACLE LIST 1st Halt, Power Meld, 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Curse, Talk to Spirits, Spirit Shield, Cause Serious Wounds, Protection From Spirits 4th Spirit Shift, Spirit Bolt, Cause Disease, Create Ghoul 5th Spiritual Invisibility, Cause Grievous Wounds 6th Control Wraith, Serin’s Bound Spirit of Undeath, Walk Through Walls 7th Suspend Life",
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -2838,6 +2920,8 @@
   },
   "Church of Condesecration": {
     "Type": "professional",
+    "PreRequisites": "• Any Evil Priest Subclass, Hermits and the alike may choose to keep their own lists, Unholy Champions may also join.\n• Any member that worships a God of their own free will, will be excommunicated.",
+    "Ethos": "A Dark faith built upon the darkest whispers of the world, this church worships the malevolence woven into the fabric of existence itself.\nCore Belief: The world is a tainted and imperfect place, not because of chance, but because darkness is intrinsic to its nature. Evil spirits are not aberration - they are the world’s architects, unseen but ever-present.\nThe hearts of men, with greed, hatred and ambition, are merely conduits for this eternal corruption. To resist is folly, to embrace is power.\nIt was through Treare The Ghoul Lord's teachings that when Lord Waste left, it was him that swore never to follow a god again and find the true path to power, strength through the darkness that lives in all souls and this is what followers draw upon.\nCorruption Is Truth: Purity is a myth fed to the weak. All things decay, and the strong must harness the inevitable rot.\nThe Will of Shadows: Evil spirits, lurking beyond mortal sight, whisper their desires into the ears of men, the faithful must listen and act.\nLast words of the High Priest: Darkness is everywhere, bind it and learn control. Killing randomly and without thinking is disliked by the current leadership and harming peons is such a waste as they are a source of our strength.",
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -2944,6 +3028,9 @@
     }
   },
   "Church of the Destroyer": {
+    "PreRequisites": "Be a priest or ley-believer of the Destroyer. Hermit priests may join and become full members and may choose to retain their own miracle lists.",
+    "Ethos": "In the beginning was The Creator. The first word he spoke was the Word of Creation, forming The Goddess of Creation. She created the universe and created all of the angels. However, everything created by the Goddess is imperfect. The Creator saw that this was wrong, with only the force of Creation there could be no change, everything was in stasis so there could be no life. So, the Creator spoke the second word, the Word of Destruction, and The Destroyer was formed. Only through Destruction can impurity be cleansed. Destruction drives change and perfection. Many of the Angels decided to follow the force of Destruction, and they became Abashai. The forces of Creation and Destruction are forever locked in battle. We serve a higher purpose; we are not just mindless killers (well not all of the time) and there must be a balance. Many groups, such as the St Michael's Church, mercenaries, goodly faiths and the Knights of the Land have upset this balance. It has been pushed too far towards the forces of Creation and we need to strike back.\n\nPRE-REQUISITES Be a priest or ley-believer of the Destroyer. Hermit priests may join and become full members and may choose to retain their own miracle lists.",
+    "Restrictions": "The Guild is a full black guild (as per WFA rules).\n\nMIRACLE LIST 1st Halt, Lesser Wings of Darkness, Soul’s Hunger, Millie’s Detect Spirits 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Cure Serious Wounds, Protection from Spirits, Spirit Shield, Writhe, Force of Will 4th Cause Disease, Spirit Bolt 5th Voice of Power, Cause Grievous Wounds, Spiritual Invisibility 6th Spiritual Mastery 7th Suspend Life 8th Touch of Death\n\nDENOMINATIONAL MIRACLE This miracle may be learnt by priests of the Church post 8th.\n\nFated Destruction Level: 7th level (8sp) Alignment: Evil Duration: 1 minute Range: Self Gesture: Palms out and facing upwards Verbal: Spirits of destruction cluster around my form to lay the souls of the weak to rest. Description: Grants the caster + 1 destiny maker for the next touch of death cast and discharged within the duration. This can stack to three destiny makers, however if used to gain a 3rd destiny maker the caster cannot reduce the level loss from the Touch of Death. The effects of the third destiny maker are that the minimum effect of the Touch of Death is a suspend life. Despite this miracle being published secondary resistance can be applied to this. Undecided Destiny still grants immunity.",
     "Type": "professional",
     "alignmentRule": {
       "mode": "restrict",
@@ -3034,6 +3121,8 @@
   },
   "Arcanum": {
     "Type": "professional",
+    "PreRequisites": "1st Class Wizards and High Wizards may join freely. All other 1 st or 2nd class wizard subclasses (including 2nd class Wizard, Warlock, Rogue, Power Master, Sorcerer, Vivomancer / Necromancer) may join with the Principal's (Guild Sire's) permission. This must be signed onto their character card.\n\nNo one who is outlawed for party killing may join or remain a member of the Arcanum without the direct permission of the guild master.",
+    "Ethos": "The Arcanum is an independent college teaching the magical arts, closely linked to the Enclave. It is devoted to encouraging study in all aspects of magic, and seeks to produce mages who are well-rounded in their knowledge of the art in all its forms.",
     "Benefits": {
       "Basic": [
         {
@@ -3113,6 +3202,8 @@
   },
   "Earthen Conclave": {
     "Type": "professional",
+    "PreRequisites": "Must be a first or second colour brown wizard or wizard-subclass.",
+    "Ethos": "The Earthen Conclave firmly believes that earthen magics are the bedrock of magical power, and that more can be achieved in an organisation where the members can spend more of their time devoted to sharing their knowledge of earthen magics rather than in diplomacy.",
     "Benefits": {
       "Basic": [
         {
@@ -3208,6 +3299,8 @@
     }
   },
   "Frontline": {
+    "PreRequisites": "Must be a first class Warrior Subclass. Second class Warrior Subclasses may join with the guild master’s permission",
+    "Ethos": "The Frontline is intended to be just that. A band of warriors who stand foremost in battle, unyielding and unafraid so that fellow mercenaries can have faith in their sword arms. The guild was formed by Jessiah Blackheart and Kaldon to face the threats of the day with the best training that money and time could buy. However, when they lost interest as their status rose above such things, Azriel Panama took on the mantle and revived the Frontline. We welcome fighters from all walks of life, from those that enjoy the thrill of battle to the quiet yet stalwart defenders. The finesse of the duellist to the brutality of the berserker. If you fight, join us. Find your home.",
     "Type": "professional",
     "Benefits": {
       "Basic": [
@@ -3294,6 +3387,8 @@
   },
   "The Hovel": {
     "Type": "professional",
+    "PreRequisites": "Be a hermit, witch, or other priest subclass that does not belong to a church.",
+    "Ethos": "The Hovel is a guild made up of hermits, witches and anyone who draws power not from the gods or other patrons, instead choosing to draw power as it flows freely in the world and through personal prayer. Gathering so as to seek, to learn and teach each other. Growing more powerful together than apart. This was the concept of a strange little fellow called Raymond, who, still guides us all in the journey of life. So, feel free to join, feel free to worship as you wish... all who have no church or doctrine are welcome here.",
     "Benefits": {
       "Basic": [
         {
@@ -3363,6 +3458,8 @@
   },
   "The Inward Eye": {
     "Type": "professional",
+    "PreRequisites": "Must be a 1st Class Neuronic Class. 2nd Class Neuronicists must seek the guild masters permission to join. Outlaws/those Ostracised by the Empire of Glass (or with other legal issues with the Empire) may not join unless these issues are resolved.",
+    "Ethos": "A place for further learning and expansion of the mind within the mercenary community. A haven for those blessed with the talent of focus.\n\nOur guild home is a space whale. Don't ask too much about it, but it's all fine. No fixed location.\n\nThose with legal challenges with the Empire of Glass are not welcome.",
     "Benefits": {
       "Basic": [
         {
@@ -3429,6 +3526,8 @@
   },
   "Natural Trust": {
     "Type": "professional",
+    "PreRequisites": "Must be a first class or multiclassed druid sub-class. Rangers may join and benefit as full members for 40 points on table 1. Druidic classes of any race or nationality may join, but if unable to normally do so only benefit from the Basic Tier abilities.",
+    "Ethos": "While members of this guild recognise that blossoming meadows and fetid fungal forests are both aspects of the natural world, they are united in opposing its wanton corruption or destruction. They will also stand shoulder to shoulder against those from other realms who would coerce or subdue the natural power of Primus for their own ends. Any member willingly breaking these broad guidelines (such as by aiding a demon seeking to sieze control of natural power on Primus) is rejected by the World Tree and may no longer use EP or EP innates whilst on Primus.",
     "Benefits": {
       "Basic": [
         {
@@ -3491,6 +3590,9 @@
   },
   "Shadow Legion": {
     "Type": "professional",
+    "PreRequisites": "Be a 1st class/multi-classed Warrior or 1st class/multi-classed published Warrior Subclass.",
+    "Ethos": "Whether fighting for your own beliefs or the beliefs of others there is a common bond that unites you. Through strength and honour you not only ensure your own survival but the survival of others.",
+    "Restrictions": "Must follow the Warriors code:\n• Respect each other – the strength of the company aids the strength of the individual. Obey your senior officers and never leave a fallen brother on the battlefield.\n• Never compromise your dignity, your pride or your beliefs.\n• Always strive for a fair deal, and when one is made honour it.\n• Taking any life is done with honour and dignity.",
     "Benefits": {
       "Basic": [
         {
@@ -3578,6 +3680,9 @@
   },
   "Sons and Daughters of Sirac": {
     "Type": "political",
+    "PreRequisites": "Must be a gold and / or ivory mana user or creature to join, must be in the wizard bracket, but could be a gold drave brown wizard for example.",
+    "Ethos": "Not all are actual children of Sirac, though many in the guild are. When Sirac was first created he was commanded to go forth and spread his parents magic far and wide. He took this instruction quite…literally. But the guild is open to all who feel friendship or a family bond to Sirac, all his apprentices, and all those who are willing to serve and protect the interests of both the ivory and gold dragons, and indeed protect magic across Primus.\n\nThe guild ethos is to protect and empower the gold and/or ivory dragon and spread their magic far and wide. To generally respect and not deliberately seek to harm any mana dragon. Mocking your opposite, and even fighting their followers with sufficient cause is fine, but deliberately seeking out and trying to harm any mana drake/dragon without very good cause can be grounds to be cast out.",
+
     "Benefits": {
       "Basic": [
         {
@@ -3632,6 +3737,8 @@
   },
   "Top Secret": {
     "Type": "professional",
+    "Ethos": "This is a professional guild for scouts – any type will do. Desperate to gather as many active members as they can they open their doors far and wide. This leads to a group of sly fellows and lasses, with a variety of talents and probably too many daggers between them. Despite the variety of guildies this attracts, the guild is primarily one offering mutual support amongst its members.",
+    "PreRequisites": "Members must seek to support the guild and fellow guild members.\n\nAnyone killing a fellow guild member whilst under their own free will is immediately expelled from the guild, and if on a guild special may do nothing except to seek to leave the adventure. The guild head may chose to override this.",
     "Benefits": {
       "Basic": [
         {
@@ -3692,6 +3799,8 @@
     }
   },
   "18th Imperial Legion": {
+    "Ethos": "Everyone, regardless of their racial or professional background is entitled to support and security. However, the creators of Undead and daemonkind, responsible for so much of the unnecessary suffering in Labyrinthia, and known for their use of unwilling sacrifices, should be re-educated. Undead, especially the mindless creations, and daemonkind themselves should be pitied rather than reviled, and every effort spent to release them from their bondage thus allowing them to either continue their journey in peace or return to their rightful plane. Controlling of these creatures is viewed as acceptable only if it is the most efficient method of removing them.",
+    "Restrictions": "It is expected that the spirit of the guild restrictions are adhered to, not just the letter: The 'wilful' killing of living creatures from this world or any other should be regarded as a last resort and to attack a truly defenceless creature, unless that creature is Undead or similarly irrevocably evil, without due compassion is to be avoided. Similarly, members are discouraged from 'wilfully' striking any helpless target unless that creature is Undead or similarly irrevocably evil or still posing a threat. Any member that does so of their own volition without due cause will suffer a perm -2 pt curse of conscience to which Immunity to Curses does not apply. Guild members will be ready to lend aid and assistance to their fellow members. Any disagreements should be resolved as peaceably as possible and never with bloodshed. To wilfully attack another fully sworn guild member will result in the offender being struck from the roles and a perm -2pt curse of conscience to which Immunity to Curses does not apply (These curses will stack with each other should multiple offences be committed by the same guild member).",
     "Type": "social",
     "Benefits": {
       "Basic": [
@@ -3805,6 +3914,9 @@
     }
   },
   "Children of the Dusk": {
+    "PreRequisites": "Elves, Half elves, faeries, draves, half draves, drowe and half drowe may all join freely. Any other spiritless creature may join with the guild heads permission.",
+    "Ethos": "The Children of the Dusk are a gathering of peoples and creatures who primarily originate from the magical world, however all share the lack of a spirit. We have all come together to aid one another, whether it be through having\n\nan item made, having a friend on a mercenary mission or simply to share a mutual goal of gaining power and strengthening our magical sources.",
+    "Restrictions": "Generally speaking members must try to strengthen the guild and hold up to its ethos. Working to weaken magic/the dragons/sources of power will have you cast out of the guild. Depending on the severity of your actions this may happen immediately at the refs discretion.",
     "Type": "social",
     "Benefits": {
       "Basic": [
@@ -3861,6 +3973,9 @@
     }
   },
   "Council of Jade": {
+    "PreRequisites": "Must be an Amlesian race/class. Upon entry the character must decide upon their clan (Dragon, Crane, or other clan that is a member). This must be written on card upon entry. Members cannot belong to a Clan that is not part of the council (e.g. Panama or Snake)",
+    "Ethos": "Having tired of the almost lawless squabbling of the Clans, both Great and Low, the Dragon, Crane and Snake Clans came together with joint effort to form the Council of Jade, a coalition that is now a force for Law and Order in the Jade Empire. The Council acts as a place for the clans meet and train together and share techniques for the betterment of all. The Council works for the betterment of life in the Jade Empire for all that live there and fights tirelessly to keep the lands safe for its inhabitants. After recent events the Ox and Lion clans have joined and the Snake Clan has departed the council.",
+    "Restrictions": "Modern Laws- No member of the Council of Jade may be outlawed, if they become so they no longer gain any benefits until the crime is resolved at which time they may appeal to the Council for full membership again (only by the Guild Sire’s approval).\n\nUnified Council - No member may attack or bring purposeful harm to another member, should this come to be they lose all benefits until the incident is resolved at which time they may appeal to the Council for full membership again (only by the Guild Sire’s approval). Any disagreements will be civilly dealt with by the Leaders of the Council; their decision is final in every case. The only exception in this rule will be cases of Seppuku. All cases of this restriction can be judged and dealt with by the Council Leaders in the same fashion as the outlaw restriction\n\nOnce Clan always Clan - Once you have joined the Council you may never leave unless expelled by a unified vote of the council (rebirthing releases you also).",
     "Type": "social",
     "Benefits": {
       "Basic": ["Clan chosen on creation"],
@@ -3892,6 +4007,9 @@
   },
   "Earthsunder": {
     "Type": "social",
+    "PreRequisites": "Be a non-evil dwarf, not outlawed or ostracised - evil dwarfs may join with the Thane’s permission provided this is discussed first, and they are not chaotic in alignment. Duregars cannot under any circumstances join this guild (no exceptions). Werewolves regardless of race may be considered for lay membership due to the history between these races and the support, understanding and pacts which have been formed in the past. (As an OOC note – Werewolves DO NOT gain guild benefits).",
+    "Ethos": "To defend the Clan and its members and allies. We protect our home, families and each other. The Clan comes first, by working as one, we bring prosperity to all.",
+    "Restrictions": "For the people: The people come first, we are the guardians and protectors above all. To bring destruction or wilful harm to the people will result in immediate and unequivocal exile from the clan, resulting in being ostracised when dealing with dwarves only.\n\nFor the clan: The clan home is always important and second only to the people. Wilful betrayal of the clan will result in exile as above.\n\nA guild member that has been outlawed by the seers for party killing may remain with the Thane's permission.",
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -3982,6 +4100,9 @@
   },
   "The Highborn Assembly": {
     "Type": "social",
+    "PreRequisites": "Must be a non-outlawed character prepared to work towards the greater good of all planes of existence and those in need. The greater good relates to the continuance of our existence, accepting that Primus does not exist in isolation, and that the bearing of other worlds impacts our own for good or ill, and often requires our intervention. A member of the Highborn Assembly should be prepared to lay down their lives in order to achieve the safety of all.\n\nNo evil characters, Undead or demons - Whilst this guild does not specifically discriminate against such individuals, so long as they continue to act in ways such that they defend Primus, its people and beyond, it is less likely that such individuals are able to adhere to the self-sacrificing and heroic nature of this organisation. Exceptions surely exist, but in the interests of keeping the Highborn Assembly as one that stands apart from others this restriction is now in place.",
+    "Ethos": "Primus sits at the centre of a tumultuous universe, with the power flowing through the Throne of Glass drawing the attention of multiple planes of existence for good and ill. History has shown many races seeking refuge here, and many other creatures seeking to control or destroy us. For our own part, we have ventured beyond our world to help others or defeat our enemies with strength and purpose for generations.\n\nThe Highborn Assembly seek to protect those that need it, regardless of place or even plane of origin. We do not exist in isolation; the death of another world impacts upon our own.",
+
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -4052,6 +4173,9 @@
     }
   },
   "House D'treal": {
+    "PreRequisites": "Must be a member of, or retainer to House D’treal. Other individuals can join by completing a guild special (or other relevant dungeon) to the satisfaction of the Guild head or Head of House.",
+    "Ethos": "The Guild is dedicated to the strengthening of the Empire of Glass, and through it House D’treal itself. Members are expected to respect the ancient pacts and patrons the House has amassed over time, while embracing the modern world and the House’s place within the Empire.",
+    "Restrictions": "Those individuals with legal issues with the Empire (Outlaw, Wolfshead, Ostracised etc.) can only remain a member with the Guild Heads permission. Individuals found to be acting against House D’treal or the Empire may be cast out of the guild by the Guild Head, and cannot re-join without the guild heads permission.",
     "Type": "social",
     "Benefits": {
       "Basic": [
@@ -4100,6 +4224,9 @@
   },
   "Khaniabad Archaeologist and Cartographers Association": {
     "Type": "social",
+    "PreRequisites": "Have some skeletons in your closet! No fascist goodly types except Reast. We know your type and you’ll be turned away. If in doubt, turn up, be judged. Goodly people must be signed in to join.",
+    "Ethos": "The charismatic face of a bunch of lowdown, scum of the earth types with a penchant for robbing tombs, breaking skulls and casual murder. Whereas more upstanding guilds are in it for clan or country, or “defending the land”, or similar weak, easily subverted ideals, there’s none of that nonsense in the Society. People are in the Society because they want power or riches or a place to hide from whatever dirt is in their past. And frankly it’s much easier to be the one giving out the beats if you have a bunch of other nasty pieces of work at your back. Sometimes the Society works for other people but mostly it works for itself, capitalising on opportunities members might find.",
+    "Restrictions": "Only available to people interested in the myth of Khaniabhad, sharing tales of the city if they have briefly managed to see it, hopeful of meeting a Khazak or just wanting to emulate a notorious Denizen!\n\nNo middlers. Contribute or get kicked out.\n\nBeing part of this Society is a criminal offence in the eyes of the Confederecy. This doesn’t result in outlawhood or ostracism, but it does come up on relevant criminal discerns.",
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -4182,6 +4309,9 @@
   },
   "Knights Errant": {
     "Type": "social",
+    "PreRequisites": "Open to any non-evil individual. Evil individuals must complete a guild special to the satisfaction of the guild master before being allowed to join.",
+    "Ethos": "Formed in Farrels Fall the Knights began their quest following in the footsteps of a ghostly wandering knight. He lead them on a great quest that revealed the hidden secrets of an ancient order of knights attuned to the spirits of light and the elements. The Knight Errants have taken up the quest of ensuring the Demonic masters called the Dark remain imprisoned and that the deeds of the four champions are not forgotten.",
+    "Restrictions": "Never Act without reason – All things should be done with purpose and intention. Everything has a value, but not always a price – All things hold value to someone, and this should be considered when acting. However just because something holds value does not mean it can be traded or have a price set to it.\n\nIf there has been a wrong, there can be no peace – The core of the heroisim for the order. Where they find wrongs have been done they will not rest until they have been righted, or those responsible dealt with.",
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
@@ -4259,7 +4389,9 @@
   },
   "Knights of The Land": {
     "Type": "social",
-    "Restrictions": "• You must not harm knights directly or indirectly and are required to help each other to the extent of",
+    "PreRequisites": "In joining the knights you swear a vow never to attack another member of the guild. Should you break this vow, accidentally or otherwise, the Lord Knight or a majority vote of Lords of Orders can cast you out of the guild for treachery – thus it can be very important to be sure who you are hitting in the dark! It is rare that Tribal creatures can join as they normally cannot understand / keep to the vow. If they are able to and are willing to then they may join the Knights of the Land.",
+    "Ethos": "The Knights exist to protect the Land, now commonly referred to as Primus, and its people. In order to better function as an order, the Knights treat one another as brothers, seeking at all times to protect and nurture our fellows. This, however, does not hold more importance than the fundamental reason for our existence – the\n\nprotection of the Land and its people. No cause, whether religious or political, can take precedence over this. Thus, whilst anyone is welcome to join the Knights, there will always be those whose views and (more importantly) activities are not compatible. It is not, for example, fitting behaviour for a Knight of the Land to sacrifice innocent peasants to dark gods. Furthermore, the Knight’s brotherhood is not a hiding place for those who seek only safety for themselves.",
+    "Restrictions": "• You must not harm knights directly or indirectly and are required to help each other to the extent of sharing all equipment during an adventure, acting honourably and without treachery at any time.\n• A knight will never hide his membership as it is a thing to be proud of.\n• Anyone ostracised, outlawed or Wolfshead in any place (Empire, Amles, Ishma, Baronies etc) must have the current Lord Knight’s permission to join – or remain a knight (must be signed on to character card).\n• Any individual who is completely immune to comms/info effects must be signed in/have their membership of the Order’s countersigned by the current Lord Knight, Lord Unity, or Lord Seeker.\n• Members are no longer cast out for striking a Knight, only willing killing them.\n• Treachery is defined as working against another Knight, or the oath.\n• No level or points are earned from an adventure if a fellow knight is left behind on an adventure, dead or alive. If this does happen then the Lord Knight and the GSM must be notified by the referee. They will then discuss if this warrants casting out or not.\n• It should be clear that once a Knight of the Land has been ‘cast out’ for whatever reason they may not rejoin the guild.\n• At the beginning of each adventure each knight must announce their presence by clearly and audibly affirming their oath: “Shield on arm, sword in hand, Brothers together, we defend the land” Failure to perform as above may result in the knight being ~ cast out ~ as detailed below:\n• They may never again be Immune to Fear.\n• All previous Knight of the Land abilities are applied in reverse.\n• Any knight cast out for cowardice will never be able to use a sword or shield again. Cowardice involves leaving another Knight of the Land behind on an adventure (alive or dead)\n• Any Knight who refused aid to another Knight or is cast out for for acts of treason will never again be able to use strength in combat.\n• Any Knight cast out for acts of treason also suffers -6 max. AC to attacks to their back, from surprise or from range. The Lord Knight has decreed that those outlawed for party-killing may not remain members of the guild. The only circumstances in which there may be clemency are if the killing occurred in defence of a Knight of the Land, even self. If you believe this to be the case for you, speak to the Lord Knight quickly, as unless your guild membership is countersigned by the Lord Knight or the Game System Manager you may not adventure while a party-killing outlaw and a Knight. When an individual is cast out for whatever reason, the Lord Knight may choose to apply none, any or all of the “punishments” as he/she deems fit. The Lord Knight can be removed by a majority decision of the Lords of Orders, if they deem him/her unfit. This does not mean the Lord Knight is cast out, just that they are not fit for the job. The Lord Unity will act as Lord Knight until a new Lord Knight is elected. The Lord Unity/Voice must begin the election process again.",
     "Benefits": {
       "Basic": [
         {
@@ -4336,6 +4468,8 @@
     }
   },
   "Lo'Thi": {
+    "PreRequisites": "• Be a Non-Evil Barbarian. This is a tribe.",
+    "Ethos": "The Lo-Thi have many traditions and codes they follow closely and are thus almost always Lawful in their nature, rarely chaotic and never fickle.\nTheir dislike of the Empire however means they have little respect for its laws.\nApart from the one \"Stalker\" or Tribal Assassin the tribe have never been dark of heart.",
     "Type": "social",
     "alignmentRule": {
       "mode": "restrict",
@@ -4404,6 +4538,9 @@
   },
   "The Marauders": {
     "Type": "social",
+    "PreRequisites": "Must be a tribal creature, those that have buy as tribal somehow but are not tribal must get one of the guild heads permission to join.",
+    "Ethos": "We are here to give all the tribes a place to be safe and grow, May also be a member of established tribes and still join, and work to regain lands to the north as our own homelands away from Imperial rule.",
+    "Restrictions": "May not be a member of a pro Imperial guild. We are tribal’s – that’s enough.",
     "Benefits": {
       "Basic": [
         {
@@ -4450,6 +4587,9 @@
   },
   "The Order of Mercenaries": {
     "Type": "social",
+    "PreRequisites": "While open to all mercenaries, those with legal problems (Ostracised/Outlawed/Wolfshead) must have guild masters permission to join/remain a member. This open membership does not affect or apply to classes/races etc who are not permitted to join social guilds (or limited to those they can belong to).",
+    "Ethos": "While some gather to further a great cause, others to serve the Empire, and the most famous to protect the land, The Order of Mercenaries is formed to aid its members when conducting their daily business; adventuring. Members are expected to help each other out while on adventure together. This doesn’t have to mean giving equipment away but in general they should work together as a unified mercenary company.",
+    "Restrictions": "If a member kills another member the guild master may cast the individual from the guild, resulting in them being unable to join/benefit from a social guild for a year.",
     "Benefits": {
       "Basic": [
         {
@@ -4526,6 +4666,8 @@
     }
   },
   "Panama Clan": {
+    "PreRequisites": "Must be a Lawful Amlesian character class, or character with Amlesian background. Non-humans may join if intelligent (able to follow law). May not belong to another Amlesian Clan. Oni are not permitted to join, or be associated with this clan, and must leave if somehow a member.",
+    "Restrictions": "• Must always be Lawful of alignment.\n• No insult which the offending person refuses to apologise for will ever go unavenged.\n• Anyone who breaks one of these codes must report to the clan head for execution.\n• No member may refuse to report to the clan head, by any means whatsoever.\n• Must follow the code of the family's honour. If on adventure with guild Master failing to do so to their satisfaction means they may require execution as above. If not on adventure, character may refuse to report for execution on these grounds, in which case they are cast from the Clan as a Ronin, and may never use Forearm Parry, nor more than one mastery in a weapon. All members of Panama immediately recognise such a Ronin on sight unless the Ronin is immune to physical, magical and spiritual informational effects, and disguised.\n• No contracts may be sought by any member of the clan without the authorisation of the guildmaster.\n• May not become immune to the guilds disbenefits (as is true for any guild disbenefits – if you choose to join a guild you accept their disadvantages).\n• In order to leave the guild in ANY fashion must have guild leaders permission to do so which must be signed on character card. If this is not done then becomes a Ronin as above. Note: Woodrow Panama has Spirit Link to all Panama members, and others loyal to the Jade Empire. If you die you are free to contact him and inform him.",
     "Type": "social",
     "alignmentRule": {
       "mode": "restrict",
@@ -4645,6 +4787,9 @@
     }
   },
   "Spider Tribe": {
+    "PreRequisites": "Be a Goblin or Hobgoblin.",
+    "Ethos": "Spider tribe goblins were once renowned for cowardice, however the prevailing side of their goblin instinct has switched. They are now nasty, stabby, sneaky lovers of ambushes (and cowards....).",
+    "Restrictions": "May only ever attack from a position of perceived strength; in most cases this will mean a helpless opponent, attacking from behind, or outnumbering the enemy.\n\nMay not leave the tribe without the permission of the chieftain.",
     "Type": "social",
     "Benefits": {
       "Basic": [
@@ -4730,6 +4875,8 @@
     }
   },
   "The Swarm": {
+    "PreRequisites": "Be a Ratfolk.",
+    "Ethos": "The Swarm is a group of rats from all clans and breeds who for one reason or another have gathered together under the banner of Slavik, treating its nine tails and teachings as a totem to be respected and worshipped in their many rat ways - trying to make their mark in the world of humankind.\n\nThe tribe (for that’s what it undoubtedly is) is made up of rural nomadic rats, a mix of those pro-Thimon, and also those who do not find or accept the sewers of Thimon as the fitting \"city\" that they were promised.\n\nThey roam Labyrinthia gathering strength and numbers from pockets of isolated rats. Offering them protection and the feeling of the swarm - for every child of Slavik knows safety is best found in numbers.\n\nIt is through this understanding, and network of contacts, rather than gathering in the open under a large banner, or other such shows of force that these few become the many, the powerless the powerful - this is the strength and power of the Swarm.",
     "Type": "social",
     "Benefits": {
       "Basic": [
@@ -4783,6 +4930,9 @@
     }
   },
   "The White Wind": {
+    "PreRequisites": "Be goodly aligned and not an Undead or Demonkind. Guild membership must be signed on by the guild head. May not be an existing member of an imperial organisation/guild such as the Department of Collections & Recoveries or an Imperial Legion, nor join one without the express permission of the guild head.",
+    "Ethos": "The White Wind is a small and select group of mercenaries dedicated to the furtherment of good as and where they are needed. Willing to go bravely into the darkness and seek to triumph for the forces of light. Many members possess faith or wield powers of light but not being dedicated to a power or wielding such does not preclude one from joining their ranks.\n\nMembers of The White Wind are expected to support each other and work together to vanquish evil and strengthen to power of the Heavens.",
+    "Restrictions": "All members are expected to carry their guild marker with them on all mercenary missions.\n\nNo guild member may return or aid in the return of an evil being to life, the only exception being those who are redeemed at the point of their resurrection (OOC definition: No to anyone who remains evilly aligned).\n\nA member of The White Wind that knowingly leaves behind another member be they unconscious or dead where they or their body was retrievable receives no points for the adventure.\n\nNo guild member is able to deceive or interfere with communications by guild members although being protected from communications is not an issue.\n\nAny member that is “Black Marked” by their own actions has their membership immediately suspended and cannot claim guild benefits until the Guild Sire has reviewed the situation and countersigned their membership once more.\n\nThe Guild Sire may de-list any member he believes has not acted or does not act in the true spirit of The White Wind and need not be on adventure to do so.",
     "Type": "social",
     "alignmentRule": {
       "mode": "restrict",
@@ -4835,6 +4985,8 @@
   },
   "Church of Tsu-Ling": {
     "Type": "Professional",
+    "Ethos": "The Lingists follow the Ling Chan the teachings of Tsu-Ling, Oceanic god of Peace and Tranquillity. They believe in promoting the cause of peace and aiding the lives of the common folk of Primus, protecting them from the ravages of war.",
+    "Restrictions": "• May never use rages.\n• May only attack in self defence.\n• Suffers Item restrictions as Paladin.\n• May only kill living creatures as a last resort.",
     "Benefits": {
       "Basic": [],
       "Intermediate": [],

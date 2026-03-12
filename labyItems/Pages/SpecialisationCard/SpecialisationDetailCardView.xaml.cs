@@ -211,7 +211,17 @@ public partial class SpecialisationDetailCardView : ContentView
             return ResolveDescriptionFromAbility(_resolvedAbility);
 
         if (_resolvedColourAbility != null)
+        {
+            var fromColour = ReadOrFallback(_resolvedColourAbility.Description, string.Empty);
+            if (fromColour.Length > 0)
+                return fromColour;
+
+            var fromSpecialisation = ReadOrFallback(Specialisation?.Description, string.Empty);
+            if (fromSpecialisation.Length > 0)
+                return fromSpecialisation;
+
             return ResolveDescriptionFromColourAbility(_resolvedColourAbility);
+        }
 
         var fromRecord = ReadOrFallback(Specialisation?.Description, string.Empty);
         if (fromRecord.Length > 0)
@@ -274,6 +284,12 @@ public partial class SpecialisationDetailCardView : ContentView
         var targetName = (SelectedOption ?? string.Empty).Trim();
         if (targetName.Length == 0 || Specialisation == null)
             return null;
+
+        if (Specialisation.ColourAbilities != null
+            && Specialisation.ColourAbilities.ContainsKey(targetName))
+        {
+            return null;
+        }
 
         var fromAbilities = FindByName(Specialisation.Abilities, targetName);
         if (fromAbilities != null)

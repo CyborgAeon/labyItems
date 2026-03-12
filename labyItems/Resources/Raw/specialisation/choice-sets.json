@@ -1949,7 +1949,11 @@
       "Title": "Ward pact",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice", "lookup:ward-pact"],
+      "StrategyIds": [
+        "section:choice",
+        "lookup:ward-pact",
+        "selection:multi-delimited"
+      ],
       "Options": [
         {
           "Key": "Undead",
@@ -2110,6 +2114,33 @@
           "Grants": [
             {
               "AbilityRef": "ability.wood-elves"
+            }
+          ]
+        },
+        {
+          "Key": "Wyvern",
+          "Label": "Wyvern",
+          "Grants": [
+            {
+              "AbilityRef": "ability.ward-pact-wyvern"
+            }
+          ]
+        },
+        {
+          "Key": "Dwarf",
+          "Label": "Dwarf",
+          "Grants": [
+            {
+              "AbilityRef": "ability.ward-pact-dwarf"
+            }
+          ]
+        },
+        {
+          "Key": "Glass",
+          "Label": "Glass",
+          "Grants": [
+            {
+              "AbilityRef": "ability.ward-pact-glass"
             }
           ]
         }
@@ -2616,14 +2647,15 @@
       "Mode": "Single",
       "StrategyIds": [
         "section:choice",
-        "validation:min-level-by-option-metadata"
+        "options:exact-level-by-option-metadata",
+        "validation:exact-level-by-option-metadata"
       ],
       "Options": [
         {
           "Key": "Toughened Feet",
           "Label": "Toughened Feet",
           "Metadata": {
-            "MinLevel": "2"
+            "Level": "2"
           },
           "Grants": [
             {
@@ -2633,9 +2665,9 @@
         },
         {
           "Key": "Large lung capacity",
-          "Label": "Large lung capacity",
+          "Label": "Large Lung Capacity",
           "Metadata": {
-            "MinLevel": "2"
+            "Level": "2"
           },
           "Grants": [
             {
@@ -2647,7 +2679,7 @@
           "Key": "Insensitive Skin",
           "Label": "Insensitive Skin",
           "Metadata": {
-            "MinLevel": "5"
+            "Level": "5"
           },
           "Grants": [
             {
@@ -2659,7 +2691,7 @@
           "Key": "Leg Sweep",
           "Label": "Leg Sweep",
           "Metadata": {
-            "MinLevel": "5"
+            "Level": "5"
           },
           "Grants": [
             {
@@ -2671,7 +2703,7 @@
           "Key": "Stability",
           "Label": "Stability",
           "Metadata": {
-            "MinLevel": "8"
+            "Level": "8"
           },
           "Grants": [
             {
@@ -2683,7 +2715,7 @@
           "Key": "Immunity to Poison",
           "Label": "Immunity to Poison",
           "Metadata": {
-            "MinLevel": "8"
+            "Level": "8"
           },
           "Grants": [
             {
@@ -2695,7 +2727,7 @@
           "Key": "Immunity to Disease",
           "Label": "Immunity to Disease",
           "Metadata": {
-            "MinLevel": "8"
+            "Level": "8"
           },
           "Grants": [
             {
@@ -2707,7 +2739,7 @@
           "Key": "Immunity to Acid",
           "Label": "Immunity to Acid",
           "Metadata": {
-            "MinLevel": "8"
+            "Level": "8"
           },
           "Grants": [
             {
@@ -2724,26 +2756,15 @@
       "Mode": "Single",
       "StrategyIds": [
         "section:choice",
-        "validation:min-level-by-option-metadata"
+        "options:exact-level-by-option-metadata",
+        "validation:exact-level-by-option-metadata"
       ],
       "Options": [
         {
-          "Key": "Discern Smell (Sniff)",
-          "Label": "Discern Smell (Sniff)",
-          "Metadata": {
-            "MinLevel": "2"
-          },
-          "Grants": [
-            {
-              "AbilityRef": "ability.discern-smell-sniff"
-            }
-          ]
-        },
-        {
           "Key": "Large lung capacity",
-          "Label": "Large lung capacity",
+          "Label": "Large Lung Capacity",
           "Metadata": {
-            "MinLevel": "2"
+            "Level": "2"
           },
           "Grants": [
             {
@@ -2752,10 +2773,22 @@
           ]
         },
         {
+          "Key": "Discern Smell (Sniff)",
+          "Label": "Discern Smell",
+          "Metadata": {
+            "Level": "2"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.discern-smell-sniff"
+            }
+          ]
+        },
+        {
           "Key": "Shed Skin",
           "Label": "Shed Skin",
           "Metadata": {
-            "MinLevel": "5"
+            "Level": "5"
           },
           "Grants": [
             {
@@ -2767,7 +2800,7 @@
           "Key": "Acid Potions",
           "Label": "Acid Potions",
           "Metadata": {
-            "MinLevel": "5"
+            "Level": "5"
           },
           "Grants": [
             {
@@ -2779,7 +2812,7 @@
           "Key": "Bask",
           "Label": "Bask",
           "Metadata": {
-            "MinLevel": "8"
+            "Level": "8"
           },
           "Grants": [
             {
@@ -2791,7 +2824,7 @@
           "Key": "Potent Blood",
           "Label": "Potent Blood",
           "Metadata": {
-            "MinLevel": "8"
+            "Level": "8"
           },
           "Grants": [
             {
@@ -2808,26 +2841,15 @@
       "Mode": "Single",
       "StrategyIds": [
         "section:choice",
-        "validation:min-level-by-option-metadata"
+        "options:exact-level-by-option-metadata",
+        "validation:exact-level-by-option-metadata"
       ],
       "Options": [
         {
-          "Key": "Bronze Jewellery",
-          "Label": "Bronze Jewellery",
-          "Metadata": {
-            "MinLevel": "2"
-          },
-          "Grants": [
-            {
-              "AbilityRef": "ability.bronze-jewellery"
-            }
-          ]
-        },
-        {
           "Key": "Large lung capacity",
-          "Label": "Large lung capacity",
+          "Label": "Large Lung Capacity",
           "Metadata": {
-            "MinLevel": "2"
+            "Level": "2"
           },
           "Grants": [
             {
@@ -2836,10 +2858,22 @@
           ]
         },
         {
+          "Key": "Bronze Jewellery",
+          "Label": "Bronze Jewellery",
+          "Metadata": {
+            "Level": "2"
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.bronze-jewellery"
+            }
+          ]
+        },
+        {
           "Key": "Self Heal",
           "Label": "Self Heal",
           "Metadata": {
-            "MinLevel": "5"
+            "Level": "5"
           },
           "Grants": [
             {
@@ -2851,7 +2885,7 @@
           "Key": "Mystical Tattoos",
           "Label": "Mystical Tattoos",
           "Metadata": {
-            "MinLevel": "5"
+            "Level": "5"
           },
           "Grants": [
             {
@@ -2863,7 +2897,7 @@
           "Key": "Bask",
           "Label": "Bask",
           "Metadata": {
-            "MinLevel": "8"
+            "Level": "8"
           },
           "Grants": [
             {
@@ -2875,7 +2909,7 @@
           "Key": "Elementalist",
           "Label": "Elementalist",
           "Metadata": {
-            "MinLevel": "8"
+            "Level": "8"
           },
           "Grants": [
             {
@@ -3394,7 +3428,7 @@
               "AbilityRef": "ability.hedge-wizardry"
             }
           ],
-          "Description": "Hedge Wizards are those Barony Humans who practise their magicks outside the protection of the Circle, and are actively hunted by Circle members when found. Hedge Wizards are normally followers of Earthpower, as the Circle does not regard such close tampering with the structure of Primus as a good thing, but can include many other professions as well. These renegades are normally self-taught and often quite well meaning in their actions, simply independent of the Circle.\nHedge Wizards are well advised to keep either their nationality or profession quiet depending on where they are adventuring, as members of the Circle are duty bound to bring them in to their masters. Such captured Hedge Wizards are never seen again, though there are strange and unfounded rumours that some Hedge Wizards are not simply burnt at the stake or hanged.\nA Baronies Human who is not a member of the circle and uses mystical powers has the word \"Hedge\" prefixed to their class name. e.g. Hedge Mystic, Hedge Rogue etc. Hedge Wizards are a little different to their Labyrinthian counterparts due to their self-taught nature.\nHedge gain power as a normal character (this is a change from previous rules).\nA Hedge Wizard gains the scout standard skill of Disguise.\n44\nA Hedge Wizard gains Immunity to Informational Effects of their own primary power-base (not their own), and a cumulative resistance level to their own primary power-base, except when cast by themselves. This natural survival trait meant that the Vochstelen never found them when young to take to the Circle.\nDue to the Hedge Wizard’s hazardous life style, a Hedge Wizard gains an extra level of life, cumulative with other levels of life. Before 8th level, this means that their life is calculated as if they were one level higher.\nA Hedge Wizard cannot join any organisation which specifically requires them to be a Barony Human, as they would be apprehended as a matter of course, and they may not join professional guilds. However they may freely join political guilds unlike other Baronial characters.\nHedge Wizards, rather surprisingly, are not bitter people driven by the fear of capture into slaying those of the Circle, but quiet revolutionaries, seeking alliances, and trying to draw members of the Circle into their own secret cults.\nMatters in the south are seldom clear-cut, black and white, and few Hedge Wizards wish the attention of a hunt for the killer of a member of the Circle by the massed might of the local Waldgraf, or a determined band of Vochstelen.\nHedge characters are Ostracised within the Baronies, so may be killed freely."
+          "Description": "Hedge Wizards are those Barony Humans who practise their magicks outside the protection of the Circle, and are actively hunted by Circle members when found. Hedge Wizards are normally followers of Earthpower, as the Circle does not regard such close tampering with the structure of Primus as a good thing, but can include many other professions as well. These renegades are normally self-taught and often quite well meaning in their actions, simply independent of the Circle.\nHedge Wizards are well advised to keep either their nationality or profession quiet depending on where they are adventuring, as members of the Circle are duty bound to bring them in to their masters. Such captured Hedge Wizards are never seen again, though there are strange and unfounded rumours that some Hedge Wizards are not simply burnt at the stake or hanged.\nA Baronies Human who is not a member of the circle and uses mystical powers has the word \"Hedge\" prefixed to their class name. e.g. Hedge Mystic, Hedge Rogue etc. Hedge Wizards are a little different to their Labyrinthian counterparts due to their self-taught nature.\nHedge gain power as a normal character (this is a change from previous rules).\nA Hedge Wizard gains the scout standard skill of Disguise.\nA Hedge Wizard gains Immunity to Informational Effects of their own primary power-base (not their own), and a cumulative resistance level to their own primary power-base, except when cast by themselves. This natural survival trait meant that the Vochstelen never found them when young to take to the Circle.\nDue to the Hedge Wizard’s hazardous life style, a Hedge Wizard gains an extra level of life, cumulative with other levels of life. Before 8th level, this means that their life is calculated as if they were one level higher.\nA Hedge Wizard cannot join any organisation which specifically requires them to be a Barony Human, as they would be apprehended as a matter of course, and they may not join professional guilds. However they may freely join political guilds unlike other Baronial characters.\nHedge Wizards, rather surprisingly, are not bitter people driven by the fear of capture into slaying those of the Circle, but quiet revolutionaries, seeking alliances, and trying to draw members of the Circle into their own secret cults.\nMatters in the south are seldom clear-cut, black and white, and few Hedge Wizards wish the attention of a hunt for the killer of a member of the Circle by the massed might of the local Waldgraf, or a determined band of Vochstelen.\nHedge characters are Ostracised within the Baronies, so may be killed freely."
         },
         {
           "Key": "Circle Membership",
@@ -3443,6 +3477,14 @@
             },
             {
               "AbilityRef": "ability.1st-extra-level-of-life",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.ishmaic-clan-support",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.ishmaic-political-guild-restriction",
               "Level": 1
             }
           ]
@@ -3595,7 +3637,7 @@
       "Options": [
         {
           "Key": "Galahbad",
-          "Label": "Galahbad",
+          "Label": "Galahbhad",
           "Effects": {
             "GuildOverrides": []
           },
@@ -3616,6 +3658,10 @@
           "Grants": [
             {
               "AbilityRef": "ability.laminar-armour",
+              "Level": 1
+            },
+            {
+              "AbilityRef": "ability.galahbhad-political-guild-allowance",
               "Level": 1
             }
           ]
@@ -3638,11 +3684,19 @@
               "Level": 1
             },
             {
+              "AbilityRef": "ability.buladajn-change-appearance",
+              "Level": 1
+            },
+            {
               "AbilityRef": "ability.conditioned-heartstop",
               "Level": 5
             },
             {
               "AbilityRef": "ability.psi-scan",
+              "Level": 8
+            },
+            {
+              "AbilityRef": "ability.buladajn-pathfinder-post-8th-stealth",
               "Level": 8
             }
           ]
@@ -3666,7 +3720,7 @@
               "Level": 1
             },
             {
-              "AbilityRef": "ability.trap-wary-8",
+              "AbilityRef": "ability.benhai-scout-aptitude",
               "Level": 1
             },
             {
@@ -3696,6 +3750,10 @@
             {
               "AbilityRef": "ability.see-through-darkness",
               "Level": 1
+            },
+            {
+              "AbilityRef": "ability.salahmen-post-8th-immunity-discount",
+              "Level": 8
             }
           ]
         },
@@ -3717,6 +3775,10 @@
           },
           "Grants": [
             {
+              "AbilityRef": "ability.harazaen-spirit-affinity",
+              "Level": 1
+            },
+            {
               "AbilityRef": "ability.spiritual-discern-insanity",
               "Level": 6
             }
@@ -3733,7 +3795,13 @@
               "Rogue",
               "Power Master"
             ]
-          }
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.seven-winds-adept",
+              "Level": 1
+            }
+          ]
         },
         {
           "Key": "Rainfinder",
@@ -3765,6 +3833,13 @@
         {
           "Key": "The cloud way",
           "Label": "The cloud way",
+          "Effects": {
+            "Notes": [
+              "Undead",
+              "Wyvern",
+              "Dwarf"
+            ]
+          },
           "Grants": [
             {
               "AbilityRef": "ability.ward-pact-undead",
@@ -3783,6 +3858,11 @@
         {
           "Key": "House D'trael",
           "Label": "House D'trael",
+          "Effects": {
+            "Notes": [
+              "Glass"
+            ]
+          },
           "Grants": [
             {
               "AbilityRef": "ability.ward-pact-glass",

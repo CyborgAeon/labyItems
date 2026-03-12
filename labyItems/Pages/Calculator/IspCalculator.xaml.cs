@@ -160,6 +160,8 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
                 Isp = result.TotalIsp,
                 CreatedDate = DateTime.Now
             };
+            var payload = ItemEmailService.BuildItemPayload(item, result.Abilities);
+            item.PayloadJson = ItemEmailService.SerializeItemPayload(payload);
 
             LiteDbService.InsertItem(item);
             await DisplayAlert("Saved", "Item saved to wallet.", "OK");

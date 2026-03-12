@@ -111,7 +111,10 @@ public static class GuildsService
 public sealed class GuildRecord
 {
     public string Type { get; set; } = "";
+    public string PreRequisites { get; set; } = "";
     public string Restrictions { get; set; } = "";
+    public string Ethos { get; set; } = "";
+    public string Background { get; set; } = "";
 
     public GuildBenefits Benefits { get; set; } = new();
 

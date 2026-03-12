@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Configs.MiracleEntryConfigModalPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    Title="Edit miracle settings">
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20"
+                                 Spacing="12">
+                <Label Text="{Binding DisplayName}"
+                       FontAttributes="Bold"
+                       FontSize="18" />
+                <Label Text="{Binding AlignmentSummary}"
+                       FontSize="12"
+                       Opacity="0.75"
+                       IsVisible="{Binding HasAlignmentSummary}" />
+
+                <controls:PlusMinusControl AllowMultiple="True"
+                                           Count="{Binding BasicPerDay, Mode=TwoWay}"
+                                           IsVisible="{Binding ShowBasicConfig}"
+                                           LabelText="Cast basic miracle x/day" />
+
+                <controls:PlusMinusControl AllowMultiple="True"
+                                           Count="{Binding AdvancedPerDay, Mode=TwoWay}"
+                                           IsVisible="{Binding ShowAdvancedConfig}"
+                                           LabelText="Cast advanced miracle x/day" />
+
+                <controls:CheckboxControl IsChecked="{Binding InnateIsMantic, Mode=TwoWay}"
+                                          IsVisible="{Binding HasInnates}"
+                                          LabelText="Innate is mantic" />
+
+                <controls:CheckboxControl IsChecked="{Binding AddBasicToBaseList, Mode=TwoWay}"
+                                          IsVisible="{Binding ShowAddBasic}"
+                                          LabelText="Add basic miracle to base list" />
+
+                <controls:CheckboxControl IsChecked="{Binding AddAdvancedToBaseList, Mode=TwoWay}"
+                                          IsVisible="{Binding ShowAddAdvanced}"
+                                          LabelText="Add advanced miracle to base list" />
+
+                <controls:CheckboxControl IsChecked="{Binding AddWithPrep30, Mode=TwoWay}"
+                                          LabelText="Add miracle with 30s prep" />
+
+                <controls:CheckboxControl IsChecked="{Binding IsTeachingScroll, Mode=TwoWay}"
+                                          LabelText="Is scripture of faith" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="1"
+              Padding="16"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="8">
+            <Button Grid.Column="0"
+                    Text="Cancel"
+                    Clicked="OnCancelClicked" />
+            <Button Grid.Column="1"
+                    Text="Save"
+                    Clicked="OnSaveClicked" />
+        </Grid>
+    </Grid>
+</ContentPage>

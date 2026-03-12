@@ -229,6 +229,42 @@ public static class CharacterSpecialisationScreenCalculator
                 ? subtypeDefinition.ChoiceSets.FirstOrDefault(x => x.Mode == ChoiceMode.MappedSingle)?.Options
                 : null;
 
+            var sectionOptions = new List<ChoiceOption>();
+
+            void AddSubtypeOption(string rawKey)
+            {
+                var key = (rawKey ?? string.Empty).Trim();
+                if (key.Length == 0)
+                    return;
+
+                if (sectionOptions.Any(existing => string.Equals(existing.Key, key, StringComparison.OrdinalIgnoreCase)))
+                    return;
+
+                var mapped = mappedOptions?.FirstOrDefault(option =>
+                    string.Equals(option.Key, key, StringComparison.OrdinalIgnoreCase));
+
+                if (mapped != null)
+                {
+                    sectionOptions.Add(string.IsNullOrWhiteSpace(mapped.Label)
+                        ? new ChoiceOption
+                        {
+                            Key = mapped.Key,
+                            Label = key,
+                            Description = mapped.Description,
+                            Grants = mapped.Grants,
+                            Customisation = mapped.Customisation,
+                            Effects = mapped.Effects,
+                            Restrictions = mapped.Restrictions,
+                            StrategyIds = mapped.StrategyIds,
+                            Metadata = mapped.Metadata
+                        }
+                        : mapped);
+                    return;
+                }
+
+                sectionOptions.Add(new ChoiceOption { Key = key, Label = key });
+            }
+
             if (mappedOptions != null && mappedOptions.Count > 0)
             {
                 var mappedKeys = mappedOptions
@@ -251,6 +287,9 @@ public static class CharacterSpecialisationScreenCalculator
                 }
             }
 
+            foreach (var option in options)
+                AddSubtypeOption(option);
+
             var title = string.IsNullOrWhiteSpace(subtype.DisplayName)
                 ? $"{context.Race} subtype"
                 : subtype.DisplayName.Trim();
@@ -264,9 +303,7 @@ public static class CharacterSpecialisationScreenCalculator
                 Subtitle = subtype.Description ?? string.Empty,
                 Kind = SpecialisationSectionKind.RaceSubtype,
                 Required = (subtype.SelectionMode ?? string.Empty).Contains("Required", StringComparison.OrdinalIgnoreCase),
-                Options = options
-                    .Select(o => new ChoiceOption { Key = o, Label = o })
-                    .ToList(),
+                Options = sectionOptions,
                 StrategyIds = ["section:race-subtype"],
                 Metadata = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>
                 {
@@ -690,14 +727,33 @@ public static class CharacterSpecialisationScreenCalculator
                 if (option == null)
                     continue;
 
-                if (!option.Metadata.TryGetValue("MinLevel", out var minLevelText)
-                    || !int.TryParse(minLevelText, out var minLevel))
+                if (!TryGetOptionMetadataLevel(option, out var minLevel))
                 {
                     continue;
                 }
 
-                if (pick.Key < minLevel)
+                if (DecodeBaseLevel(pick.Key) < minLevel)
                     return $"{option.Label} is only available from level {minLevel}.";
+            }
+        }
+
+        if (spec.StrategyIds.Any(s => s.Equals("validation:exact-level-by-option-metadata", StringComparison.OrdinalIgnoreCase)))
+        {
+            foreach (var pick in selectedByLevel.OrderBy(entry => entry.Key))
+            {
+                var selected = (pick.Value ?? string.Empty).Trim();
+                if (selected.Length == 0)
+                    continue;
+
+                var option = ResolveSelectedOption(spec.Options, selected);
+                if (option == null)
+                    continue;
+
+                if (!TryGetOptionMetadataLevel(option, out var exactLevel))
+                    continue;
+
+                if (DecodeBaseLevel(pick.Key) != exactLevel)
+                    return $"{option.Label} is only available at level {exactLevel}.";
             }
         }
 
@@ -732,6 +788,27 @@ public static class CharacterSpecialisationScreenCalculator
                    option.Key.Equals(selected, StringComparison.OrdinalIgnoreCase))
                ?? options.FirstOrDefault(option =>
                    option.Label.Equals(selected, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool TryGetOptionMetadataLevel(ChoiceOption option, out int level)
+    {
+        level = 0;
+        if (option.Metadata == null || option.Metadata.Count == 0)
+            return false;
+
+        if (option.Metadata.TryGetValue("Level", out var levelText)
+            && int.TryParse(levelText, out level))
+        {
+            return true;
+        }
+
+        if (option.Metadata.TryGetValue("MinLevel", out levelText)
+            && int.TryParse(levelText, out level))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private static List<SpecialisationSectionState> ApplyCrossSectionChoiceValidation(List<SpecialisationSectionState> sections)
@@ -1085,10 +1162,17 @@ public static class CharacterSpecialisationScreenCalculator
             if (spec == null)
                 continue;
 
-            if (sections.Any(existing =>
-                    (!string.IsNullOrWhiteSpace(spec.SectionId)
-                     && existing.SectionId.Equals(spec.SectionId, StringComparison.OrdinalIgnoreCase))
-                    || existing.Title.Equals(spec.Title, StringComparison.OrdinalIgnoreCase)))
+            var existingByIdIndex = !string.IsNullOrWhiteSpace(spec.SectionId)
+                ? sections.FindIndex(existing => existing.SectionId.Equals(spec.SectionId, StringComparison.OrdinalIgnoreCase))
+                : -1;
+
+            if (existingByIdIndex >= 0)
+            {
+                sections[existingByIdIndex] = spec;
+                continue;
+            }
+
+            if (sections.Any(existing => existing.Title.Equals(spec.Title, StringComparison.OrdinalIgnoreCase)))
             {
                 continue;
             }
@@ -1332,12 +1416,38 @@ public static class CharacterSpecialisationScreenCalculator
 
     private static IReadOnlyList<int> BuildLevelsForGroup(string key, IEnumerable<RequiredChoice> grouped)
     {
-        var levels = grouped.Select(x => x.Level).ToList();
-        if (string.Equals(key.Trim(), "Faerie Colour", StringComparison.OrdinalIgnoreCase))
-            return levels.OrderBy(x => x).ToList();
+        var orderedLevels = grouped
+            .Select(x => x.Level)
+            .OrderBy(x => x)
+            .ToList();
 
-        return levels.Distinct().OrderBy(x => x).ToList();
+        if (SupportsGrantMultiplicity(key))
+        {
+            var perLevelCount = new Dictionary<int, int>();
+            var expanded = new List<int>(orderedLevels.Count);
+            foreach (var level in orderedLevels)
+            {
+                var duplicateIndex = perLevelCount.TryGetValue(level, out var count) ? count : 0;
+                perLevelCount[level] = duplicateIndex + 1;
+                expanded.Add(duplicateIndex == 0 ? level : EncodeDuplicateLevel(level, duplicateIndex));
+            }
+
+            return expanded;
+        }
+
+        return orderedLevels.Distinct().ToList();
     }
+
+    private static bool SupportsGrantMultiplicity(string key)
+        => key.Equals("Ward pact", StringComparison.OrdinalIgnoreCase)
+           || key.Equals("Wizard Colour", StringComparison.OrdinalIgnoreCase)
+           || key.Equals("Faerie Colour", StringComparison.OrdinalIgnoreCase);
+
+    private static int EncodeDuplicateLevel(int baseLevel, int duplicateIndex)
+        => baseLevel * 100 + duplicateIndex;
+
+    private static int DecodeBaseLevel(int encodedLevel)
+        => encodedLevel > 99 ? encodedLevel / 100 : encodedLevel;
 
     private static string BuildSubtitle(IEnumerable<RequiredChoice> grouped)
     {

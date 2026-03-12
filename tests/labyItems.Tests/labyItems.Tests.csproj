@@ -24,6 +24,8 @@
   <ItemGroup>
     <Compile Include="../../labyItems/Helpers/WizardSpellRules.cs" Link="Source/WizardSpellRules.cs" />
     <Compile Include="../../labyItems/Controls/Pickers/EnumDisplayFormatter.cs" Link="Source/EnumDisplayFormatter.cs" />
+    <Compile Include="../../labyItems/Controls/ContributionRow.cs" Link="Source/ContributionRow.cs" />
+    <Compile Include="../../labyItems/Controls/StickyFooterContentBuilder.cs" Link="Source/StickyFooterContentBuilder.cs" />
     <Compile Include="../../labyItems/Services/ILookupService.cs" Link="Source/ILookupService.cs" />
     <Compile Include="../../labyItems/Services/SpellService.cs" Link="Source/SpellService.cs" />
     <Compile Include="../../labyItems/Services/MiracleService.cs" Link="Source/MiracleService.cs" />

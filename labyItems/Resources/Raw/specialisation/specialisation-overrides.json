@@ -175,6 +175,60 @@
           1
         ]
       }
+    },
+    {
+      "Id": "ancient-folk-cloud-way-ward-pacts",
+      "Conditions": {
+        "Race": "Ancient Folk",
+        "Subtype": "The cloud way"
+      },
+      "Section": {
+        "SectionType": "Choice",
+        "DefinitionKey": "Ward pact",
+        "Title": "Ward pact",
+        "Subtitle": "Choose your ward pact at each level from your subtype list.",
+        "DetailKey": "Ward pact",
+        "SectionId": "choice:Ward pact",
+        "Required": true,
+        "Levels": [
+          2,
+          4,
+          6,
+          8
+        ],
+        "OptionFilter": {
+          "SourceDefinitionKey": "AncientFolkSubtypeAbilities",
+          "SourceOption": "The cloud way",
+          "EffectListField": "Notes"
+        }
+      }
+    },
+    {
+      "Id": "ancient-folk-house-dtrael-ward-pacts",
+      "Conditions": {
+        "Race": "Ancient Folk",
+        "Subtype": "House D'trael"
+      },
+      "Section": {
+        "SectionType": "Choice",
+        "DefinitionKey": "Ward pact",
+        "Title": "Ward pact",
+        "Subtitle": "Choose your ward pact at each level from your subtype list.",
+        "DetailKey": "Ward pact",
+        "SectionId": "choice:Ward pact",
+        "Required": true,
+        "Levels": [
+          2,
+          4,
+          6,
+          8
+        ],
+        "OptionFilter": {
+          "SourceDefinitionKey": "AncientFolkSubtypeAbilities",
+          "SourceOption": "House D'trael",
+          "EffectListField": "Notes"
+        }
+      }
     }
   ]
 }

@@ -1,62 +1,269 @@
-using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models.Enums;
-using labyItems.Pages.Calculator;
-using labyItems.Pages.Configs;
+using labyItems.Services;
+using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Configs;
 
+public sealed class SpellSelectionEntry : INotifyPropertyChanged
+{
+    private int _basicPerDay;
+    private int _advancedPerDay;
+    private bool _innateIsMantic;
+    private bool _isTeachingScroll;
+    private bool _addBasicToBaseList;
+    private bool _addAdvancedToBaseList;
+    private Color _rowBackgroundColor = Colors.White;
+
+    public SpellSelectionEntry(SpellService.SpellRaw spell)
+    {
+        Spell = spell ?? new SpellService.SpellRaw();
+        SpellName = Spell.name ?? string.Empty;
+        Power = Math.Max(1, Spell.level);
+        Colour = Spell.colour ?? string.Empty;
+        IsAdvanced = Spell.isAdvanced ?? false;
+
+        if (IsAdvanced)
+            _advancedPerDay = 1;
+        else
+            _basicPerDay = 1;
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public string Id { get; } = Guid.NewGuid().ToString("N");
+    public SpellService.SpellRaw Spell { get; }
+    public string SpellName { get; }
+    public int Power { get; }
+    public string Colour { get; }
+    public bool IsAdvanced { get; }
+
+    public string DisplayName =>
+        IsAdvanced
+            ? $"{SpellName} (lvl {Power}, advanced)"
+            : $"{SpellName} (lvl {Power})";
+
+    public string ColourSummary =>
+        string.IsNullOrWhiteSpace(Colour)
+            ? string.Empty
+            : $"Colour: {Colour}";
+
+    public bool HasColourSummary => !string.IsNullOrWhiteSpace(ColourSummary);
+
+    public int BasicPerDay
+    {
+        get => _basicPerDay;
+        set
+        {
+            var next = Math.Max(0, value);
+            if (_basicPerDay == next)
+                return;
+
+            _basicPerDay = next;
+            Raise(nameof(BasicPerDay));
+            Raise(nameof(InlineSummary));
+        }
+    }
+
+    public int AdvancedPerDay
+    {
+        get => _advancedPerDay;
+        set
+        {
+            var next = Math.Max(0, value);
+            if (_advancedPerDay == next)
+                return;
+
+            _advancedPerDay = next;
+            Raise(nameof(AdvancedPerDay));
+            Raise(nameof(InlineSummary));
+        }
+    }
+
+    public bool InnateIsMantic
+    {
+        get => _innateIsMantic;
+        set
+        {
+            if (_innateIsMantic == value)
+                return;
+
+            _innateIsMantic = value;
+            Raise(nameof(InnateIsMantic));
+            Raise(nameof(InlineSummary));
+        }
+    }
+
+    public bool IsTeachingScroll
+    {
+        get => _isTeachingScroll;
+        set
+        {
+            if (_isTeachingScroll == value)
+                return;
+
+            _isTeachingScroll = value;
+            Raise(nameof(IsTeachingScroll));
+            Raise(nameof(InlineSummary));
+        }
+    }
+
+    public bool AddBasicToBaseList
+    {
+        get => _addBasicToBaseList;
+        set
+        {
+            if (_addBasicToBaseList == value)
+                return;
+
+            _addBasicToBaseList = value;
+            if (value)
+                _addAdvancedToBaseList = false;
+
+            Raise(nameof(AddBasicToBaseList));
+            Raise(nameof(AddAdvancedToBaseList));
+            Raise(nameof(InlineSummary));
+        }
+    }
+
+    public bool AddAdvancedToBaseList
+    {
+        get => _addAdvancedToBaseList;
+        set
+        {
+            if (_addAdvancedToBaseList == value)
+                return;
+
+            _addAdvancedToBaseList = value;
+            if (value)
+                _addBasicToBaseList = false;
+
+            Raise(nameof(AddAdvancedToBaseList));
+            Raise(nameof(AddBasicToBaseList));
+            Raise(nameof(InlineSummary));
+        }
+    }
+
+    public bool ShowBasicConfig => !IsAdvanced;
+    public bool ShowAdvancedConfig => IsAdvanced;
+    public bool ShowAddBasic => !IsAdvanced;
+    public bool ShowAddAdvanced => IsAdvanced;
+
+    public Color RowBackgroundColor
+    {
+        get => _rowBackgroundColor;
+        set
+        {
+            if (_rowBackgroundColor == value)
+                return;
+
+            _rowBackgroundColor = value;
+            Raise(nameof(RowBackgroundColor));
+        }
+    }
+
+    public string InlineSummary
+    {
+        get
+        {
+            var parts = new List<string>();
+            if (ShowBasicConfig && BasicPerDay > 0)
+                parts.Add($"basic x{BasicPerDay}/day");
+            if (ShowAdvancedConfig && AdvancedPerDay > 0)
+                parts.Add($"advanced x{AdvancedPerDay}/day");
+            if (InnateIsMantic)
+                parts.Add("innate(s) mantic");
+            if (IsTeachingScroll)
+                parts.Add("teaching scroll");
+            if (AddBasicToBaseList)
+                parts.Add("+basic list");
+            if (AddAdvancedToBaseList)
+                parts.Add("+advanced list");
+
+            if (parts.Count == 0)
+                return "No per-spell modifiers selected.";
+
+            return string.Join(" • ", parts);
+        }
+    }
+
+    public SpellSelectionEntry Clone()
+    {
+        return new SpellSelectionEntry(Spell)
+        {
+            BasicPerDay = BasicPerDay,
+            AdvancedPerDay = AdvancedPerDay,
+            InnateIsMantic = InnateIsMantic,
+            IsTeachingScroll = IsTeachingScroll,
+            AddBasicToBaseList = AddBasicToBaseList,
+            AddAdvancedToBaseList = AddAdvancedToBaseList
+        };
+    }
+
+    public void ApplyFrom(SpellSelectionEntry source)
+    {
+        if (source == null)
+            return;
+
+        BasicPerDay = source.BasicPerDay;
+        AdvancedPerDay = source.AdvancedPerDay;
+        InnateIsMantic = source.InnateIsMantic;
+        IsTeachingScroll = source.IsTeachingScroll;
+        AddBasicToBaseList = source.AddBasicToBaseList;
+        AddAdvancedToBaseList = source.AddAdvancedToBaseList;
+        NormalizeForSpellType();
+    }
+
+    public void NormalizeForSpellType()
+    {
+        if (IsAdvanced)
+        {
+            if (BasicPerDay != 0)
+                BasicPerDay = 0;
+            if (AddBasicToBaseList)
+                AddBasicToBaseList = false;
+        }
+        else
+        {
+            if (AdvancedPerDay != 0)
+                AdvancedPerDay = 0;
+            if (AddAdvancedToBaseList)
+                AddAdvancedToBaseList = false;
+        }
+    }
+
+    private void Raise([CallerMemberName] string? propertyName = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+}
+
 public class SpellConfig : ConfigBase
 {
+    private static readonly Color RowEvenColor = Colors.White;
+    private static readonly Color RowOddColor = Color.FromArgb("#F6F6F6");
+
     public SpellConfig()
     {
+        Name = "Spells";
         PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(Breakdown) || e.PropertyName == nameof(BreakdownItems))
                 return;
-
             RecalculateBreakdown();
         };
 
+        SelectedSpells.CollectionChanged += OnSelectedSpellsChanged;
         RecalculateBreakdown();
     }
 
-    protected override string NoneSelectedText => "Spell (none selected)";
+    protected override string NoneSelectedText => "Spells (none selected)";
 
-    private string _spellName;
-    public string SpellName
-    {
-        get => _spellName;
-        set
-        {
-            if (
-                SetProperty(
-                    ref _spellName,
-                    value,
-                    affectsTotal: false,
-                    nameof(ShowAddBasic),
-                    nameof(ShowAddAdvanced)
-                )
-            )
-                Name = value;
-        }
-    }
-
-    private string _colour = "";
-    public string Colour
-    {
-        get => _colour;
-        set => SetProperty(ref _colour, value, affectsTotal: false);
-    }
-
-    private bool _innateIsMantic;
-    public bool InnateIsMantic
-    {
-        get => _innateIsMantic;
-        set => SetProperty(ref _innateIsMantic, value, affectsTotal: true);
-    }
+    public ObservableCollection<SpellSelectionEntry> SelectedSpells { get; } = new();
+    public bool HasSelectedSpells => SelectedSpells.Count > 0;
 
     private int _additionalGenericMana;
     public int AdditionalGenericMana
@@ -67,8 +274,7 @@ public class SpellConfig : ConfigBase
                 ref _additionalGenericMana,
                 Math.Clamp(value, 0, 12),
                 affectsTotal: true,
-                nameof(IsPowerStore)
-            );
+                nameof(IsPowerStore));
     }
 
     private int _additionalManaOfColour;
@@ -80,11 +286,10 @@ public class SpellConfig : ConfigBase
                 ref _additionalManaOfColour,
                 Math.Clamp(value, 0, 12),
                 affectsTotal: true,
-                nameof(IsPowerStore)
-            );
+                nameof(IsPowerStore));
     }
 
-    private MagicColours? _additionalManaColour = null;
+    private MagicColours? _additionalManaColour;
     public MagicColours? AdditionalManaColour
     {
         get => _additionalManaColour;
@@ -93,17 +298,12 @@ public class SpellConfig : ConfigBase
                 ref _additionalManaColour,
                 value,
                 affectsTotal: false,
-                nameof(IsPowerStore)
-            );
+                nameof(IsPowerStore));
     }
 
     public bool IsPowerStore =>
-        (
-            AdditionalGenericMana > 0
-            || (AdditionalManaOfColour > 0 && AdditionalManaColour.HasValue)
-        );
-    public bool ShowAddBasic => IsAdvanced == false;
-    public bool ShowAddAdvanced => IsAdvanced == true;
+        AdditionalGenericMana > 0
+        || (AdditionalManaOfColour > 0 && AdditionalManaColour.HasValue);
 
     private bool _powerStoreRegenerates;
     public bool PowerStoreRegenerates
@@ -141,31 +341,6 @@ public class SpellConfig : ConfigBase
         set => SetProperty(ref _turnAnyPublishedMantic, Math.Max(0, value), affectsTotal: true);
     }
 
-    private bool _isTeachingScroll;
-    public bool IsTeachingScroll
-    {
-        get => _isTeachingScroll;
-        set => SetProperty(ref _isTeachingScroll, value, affectsTotal: true);
-    }
-
-    public int PublishedPerDay
-    {
-        get => AdvancedPerDay;
-        set => AdvancedPerDay = value;
-    }
-
-    public bool AddBasicToBaseList
-    {
-        get => AddBasic;
-        set => AddBasic = value;
-    }
-
-    public bool AddAdvancedToBaseList
-    {
-        get => AddAdvanced;
-        set => AddAdvanced = value;
-    }
-
     public ObservableCollection<ContributionRow> BreakdownItems { get; } = new();
 
     private string _breakdown = string.Empty;
@@ -174,29 +349,45 @@ public class SpellConfig : ConfigBase
         get => _breakdown;
         private set
         {
-            if (_breakdown != value)
-            {
-                _breakdown = value;
-                OnPropertyChanged();
-            }
+            if (_breakdown == value)
+                return;
+            _breakdown = value;
+            OnPropertyChanged();
         }
+    }
+
+    public bool TryAddSpell(SpellService.SpellRaw spell)
+    {
+        if (spell == null || string.IsNullOrWhiteSpace(spell.name))
+            return false;
+
+        var existing = SelectedSpells.FirstOrDefault(x =>
+            string.Equals(x.SpellName, spell.name, StringComparison.OrdinalIgnoreCase)
+            && x.Power == Math.Max(1, spell.level)
+            && x.IsAdvanced == (spell.isAdvanced ?? false));
+
+        if (existing != null)
+            return false;
+
+        var entry = new SpellSelectionEntry(spell);
+        entry.NormalizeForSpellType();
+        SelectedSpells.Add(entry);
+        return true;
+    }
+
+    public void RemoveSpell(SpellSelectionEntry entry)
+    {
+        if (entry == null)
+            return;
+        SelectedSpells.Remove(entry);
     }
 
     protected override int BaseTotal()
     {
-        int innates =
-            (2 * Power * Math.Max(0, BasicPerDay)) + (3 * Power * Math.Max(0, AdvancedPerDay));
-        if (InnateIsMantic)
-            innates *= 4;
-
-        int t = innates;
-        if (AddBasic)
-            t += 15;
-        if (AddAdvanced)
-            t += 18;
-        if (AddPrep)
-            t += (int)Math.Round(Power / 2.0, MidpointRounding.AwayFromZero);
-        return t;
+        var total = 0;
+        foreach (var entry in SelectedSpells)
+            total += CalculateSpellEntryTotal(entry);
+        return total;
     }
 
     protected override int ExtraTotal()
@@ -220,36 +411,72 @@ public class SpellConfig : ConfigBase
         if (TurnAnyPublishedMantic > 0)
             t += 80 * TurnAnyPublishedMantic;
 
-        if (IsTeachingScroll)
-            t += 2 * Power;
-
         return t;
     }
 
-    private bool? ShowIsAdvanced()
+    private void OnSelectedSpellsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (string.IsNullOrEmpty(SpellName))
+        if (e.OldItems != null)
         {
-            return null;
+            foreach (var item in e.OldItems.OfType<SpellSelectionEntry>())
+                item.PropertyChanged -= OnSpellEntryPropertyChanged;
         }
-        return IsAdvanced;
+
+        if (e.NewItems != null)
+        {
+            foreach (var item in e.NewItems.OfType<SpellSelectionEntry>())
+                item.PropertyChanged += OnSpellEntryPropertyChanged;
+        }
+
+        RefreshSpellRowStyles();
+        OnPropertyChanged(nameof(HasSelectedSpells));
+        OnPropertyChanged(nameof(Total));
+        OnPropertyChanged(nameof(TotalWithBase));
+        RecalculateBreakdown();
     }
 
-    public bool SpellPicked { get; set; } = false;
-    public bool? IsAdvancedToggled => ShowIsAdvanced();
-
-    public void ApplySpell(Spell.Result picked)
+    private void OnSpellEntryPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        SpellName = string.IsNullOrWhiteSpace(picked.Name)
-            ? "Configure Spell"
-            : $"{picked.Name} ({picked.Power} Mana)";
-        SpellPicked = true;
-        Colour = picked.Colour;
-        IsAdvanced = picked.IsAdvanced;
-        Power = Math.Max(1, picked.Power);
-        OnPropertyChanged(nameof(ShowAddBasic));
-        OnPropertyChanged(nameof(ShowAddAdvanced));
-        OnPropertyChanged(nameof(SpellPicked));
+        if (sender is SpellSelectionEntry entry)
+            entry.NormalizeForSpellType();
+
+        if (e.PropertyName == nameof(SpellSelectionEntry.RowBackgroundColor))
+            return;
+
+        OnPropertyChanged(nameof(Total));
+        OnPropertyChanged(nameof(TotalWithBase));
+        RecalculateBreakdown();
+    }
+
+    private void RefreshSpellRowStyles()
+    {
+        for (int i = 0; i < SelectedSpells.Count; i++)
+            SelectedSpells[i].RowBackgroundColor = i % 2 == 0 ? RowEvenColor : RowOddColor;
+    }
+
+    private static int CalculateSpellEntryTotal(SpellSelectionEntry entry)
+    {
+        var baseCost = CalculateSpellEntryBaseCastCost(entry);
+        var total = baseCost;
+
+        if (entry.InnateIsMantic && baseCost > 0)
+            total += baseCost * 3;
+
+        if (entry.AddBasicToBaseList)
+            total += 15;
+        if (entry.AddAdvancedToBaseList)
+            total += 18;
+        if (entry.IsTeachingScroll)
+            total += 2 * entry.Power;
+
+        return total;
+    }
+
+    private static int CalculateSpellEntryBaseCastCost(SpellSelectionEntry entry)
+    {
+        var basic = 2 * entry.Power * Math.Max(0, entry.BasicPerDay);
+        var advanced = 3 * entry.Power * Math.Max(0, entry.AdvancedPerDay);
+        return basic + advanced;
     }
 
     private void RecalculateBreakdown()
@@ -257,34 +484,36 @@ public class SpellConfig : ConfigBase
         var builder = new BreakdownBuilder();
         BreakdownItems.Clear();
 
-        int basicCost = 2 * Power * Math.Max(0, BasicPerDay);
-        if (basicCost > 0)
-            builder.Add($"Basic casts x{BasicPerDay} @2×Power {Power} = {basicCost}", basicCost);
+        foreach (var entry in SelectedSpells)
+        {
+            var prefix = entry.DisplayName;
 
-        int advancedCost = 3 * Power * Math.Max(0, AdvancedPerDay);
-        if (advancedCost > 0)
-            builder.Add($"Advanced casts x{AdvancedPerDay} @3×Power {Power} = {advancedCost}", advancedCost);
+            var basicCost = 2 * entry.Power * Math.Max(0, entry.BasicPerDay);
+            if (basicCost > 0)
+                builder.Add($"{prefix} basic casts x{entry.BasicPerDay} @2×Power {entry.Power} = {basicCost}", basicCost);
 
-        int innateCost = basicCost + advancedCost;
-        if (InnateIsMantic && innateCost > 0)
-        {
-            int manticExtra = innateCost * 3;
-            builder.Add($"Innates are mantic ×4 = {manticExtra}", manticExtra);
-            innateCost += manticExtra;
-        }
+            var advancedCost = 3 * entry.Power * Math.Max(0, entry.AdvancedPerDay);
+            if (advancedCost > 0)
+                builder.Add($"{prefix} advanced casts x{entry.AdvancedPerDay} @3×Power {entry.Power} = {advancedCost}", advancedCost);
 
-        if (AddBasic)
-        {
-            builder.Add("Add basic spell to base list = 15", 15, includeWhenZero: true);
-        }
-        else if (AddAdvanced)
-        {
-            builder.Add("Add advanced spell to base list = 18", 18, includeWhenZero: true);
-        }
-        else if (AddPrep)
-        {
-            int prepCost = innateCost / 2;
-            builder.Add($"Add to base list with 30s prep (50%) = {prepCost}", prepCost, includeWhenZero: innateCost > 0);
+            var castCost = basicCost + advancedCost;
+            if (entry.InnateIsMantic && castCost > 0)
+            {
+                var manticExtra = castCost * 3;
+                builder.Add($"{prefix} Innate(s) are mantic ×4 = {manticExtra}", manticExtra);
+            }
+
+            if (entry.AddBasicToBaseList)
+                builder.Add($"{prefix} add basic spell to base list = 15", 15, includeWhenZero: true);
+
+            if (entry.AddAdvancedToBaseList)
+                builder.Add($"{prefix} add advanced spell to base list = 18", 18, includeWhenZero: true);
+
+            if (entry.IsTeachingScroll)
+            {
+                var teachingCost = 2 * entry.Power;
+                builder.Add($"{prefix} teaching scroll (2×Power) = {teachingCost}", teachingCost);
+            }
         }
 
         if (AdditionalGenericMana > 0)
@@ -326,16 +555,16 @@ public class SpellConfig : ConfigBase
             builder.Add($"Turn any published spell mantic x{TurnAnyPublishedMantic} = {cost}", cost);
         }
 
-        if (IsTeachingScroll)
-        {
-            int teachingCost = 2 * Power;
-            builder.Add($"Teaching scroll (2×Power) = {teachingCost}", teachingCost);
-        }
-
         foreach (var row in builder.Rows)
             BreakdownItems.Add(row);
 
-        var header = string.IsNullOrWhiteSpace(SpellName) ? "Spell" : SpellName;
+        var header = SelectedSpells.Count switch
+        {
+            0 => "Spells",
+            1 => SelectedSpells[0].DisplayName,
+            _ => $"{SelectedSpells.Count} spells"
+        };
+
         Breakdown = builder.BuildSummary(header, Total);
     }
 }

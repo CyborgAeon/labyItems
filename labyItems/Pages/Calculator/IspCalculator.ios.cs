@@ -26,7 +26,7 @@ public partial class IspCalculator
             item.SetTitleTextAttributes(attributes, UIControlState.Selected);
         }
 
-        IosTabBarPlacementHelper.EnsurePinnedToTop(this);
+        IosTabBarHelper.EnsurePinnedToTop(this);
     }
 }
 #endif

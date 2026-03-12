@@ -210,7 +210,11 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 Id = i + 1,
                 Name = name,
                 Type = rec.Type ?? "",
+                PreRequisites = rec.PreRequisites ?? "",
                 Restrictions = rec.Restrictions ?? "",
+                Ethos = rec.Ethos ?? "",
+                Background = rec.Background ?? "",
+                LoreSections = BuildLoreSections(rec),
                 BasicBenefits = FormatBenefitList(rec.Benefits?.Basic),
                 IntermediateBenefits = FormatBenefitList(rec.Benefits?.Intermediate),
                 AdvancedBenefits = FormatBenefitList(rec.Benefits?.Advanced),
@@ -750,7 +754,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 return g.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false;
 
             return (g.Name?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
+                   || (g.PreRequisites?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
                    || (g.Restrictions?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
+                   || (g.Ethos?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
+                   || (g.Background?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false)
                    || g.BasicBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
                    || g.IntermediateBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
                    || g.AdvancedBenefits.Any(x => x.Contains(text, StringComparison.OrdinalIgnoreCase))
@@ -923,6 +930,27 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return $"{names[0]} +{names.Count - 1}";
     }
 
+    private static List<GuildLoreSectionVm> BuildLoreSections(GuildRecord rec)
+    {
+        var sections = new List<GuildLoreSectionVm>();
+
+        AddIfPresent("PRE-REQUISITES", rec.PreRequisites);
+        AddIfPresent("RESTRICTIONS", rec.Restrictions);
+        AddIfPresent("ETHOS", rec.Ethos);
+        AddIfPresent("BACKGROUND", rec.Background);
+
+        return sections;
+
+        void AddIfPresent(string header, string? text)
+        {
+            var value = (text ?? string.Empty).Trim();
+            if (value.Length == 0)
+                return;
+
+            sections.Add(new GuildLoreSectionVm(header, value));
+        }
+    }
+
     private void OnBenefitOptionSelectionChanged(GuildBenefitOptionGroupVm group)
     {
         if (group == null)
@@ -1085,7 +1113,11 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public string Type { get; set; } = "";
     public string Icon { get; set; } = "📜";
 
+    public string PreRequisites { get; set; } = "";
     public string Restrictions { get; set; } = "";
+    public string Ethos { get; set; } = "";
+    public string Background { get; set; } = "";
+    public List<GuildLoreSectionVm> LoreSections { get; set; } = new();
     public List<string> BasicBenefits { get; set; } = new();
     public List<string> IntermediateBenefits { get; set; } = new();
     public List<string> AdvancedBenefits { get; set; } = new();
@@ -1094,6 +1126,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public List<GuildBenefitOptionGroupVm> AdvancedOptionGroups { get; set; } = new();
     public List<GuildMiracleRowVm> MiracleRows { get; set; } = new();
 
+    public bool HasLore => LoreSections.Count > 0;
     public bool HasRestrictions => !string.IsNullOrWhiteSpace(Restrictions);
 
     public bool HasBasic => BasicBenefits.Count > 0 || BasicOptionGroups.Count > 0;
@@ -1258,6 +1291,62 @@ public sealed class GuildMiracleRowVm
 {
     public string Level { get; init; } = string.Empty;
     public string Miracles { get; init; } = string.Empty;
+}
+
+public sealed class GuildLoreSectionVm : INotifyPropertyChanged
+{
+    private const int CollapsedLines = 4;
+
+    private bool _isExpanded;
+
+    public GuildLoreSectionVm(string header, string text)
+    {
+        Header = (header ?? string.Empty).Trim();
+        Text = (text ?? string.Empty).Trim();
+        ToggleCommand = new Command(ToggleExpanded);
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public string Header { get; }
+    public string Text { get; }
+    public ICommand ToggleCommand { get; }
+
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set
+        {
+            if (_isExpanded == value)
+                return;
+
+            _isExpanded = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsExpanded)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MaxLines)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ToggleLabel)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShowToggle)));
+        }
+    }
+
+    public int MaxLines => IsExpanded ? -1 : CollapsedLines;
+
+    public bool ShowToggle => CanExpand || IsExpanded;
+    public string ToggleLabel => IsExpanded ? "... see less" : "... see more";
+
+    private bool CanExpand
+    {
+        get
+        {
+            if (Text.Length > 260)
+                return true;
+
+            var lineCount = Text.Count(c => c == '\n') + 1;
+            return lineCount > CollapsedLines;
+        }
+    }
+
+    private void ToggleExpanded()
+        => IsExpanded = !IsExpanded;
 }
 
 public sealed record GuildSelectability(bool Allowed, string Reason);

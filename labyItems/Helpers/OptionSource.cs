@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using labyItems.Controls;
-using labyItems.Controls.Pickers;
 using labyItems.Models.Enums;
 using labyItems.Services;
 
@@ -54,12 +53,21 @@ public sealed class PlainPickerSource : IOptionSource
 
 public sealed class WardPactSource : IOptionSource
 {
-    private static readonly IReadOnlyList<string> _wardPactOptions = WardPactOptions.Standard.Keys
-        .OrderBy(k => k, StringComparer.OrdinalIgnoreCase)
-        .ToList();
+    private readonly IReadOnlyList<string> _wardPactOptions;
+
+    public WardPactSource(IEnumerable<string>? allowedOptions = null)
+    {
+        var preferred = allowedOptions?
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => x.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList() ?? new List<string>();
+
+        _wardPactOptions = preferred;
+    }
 
     public SlotOptionMode Mode => SlotOptionMode.WardPactEnum;
-    public Type? EnumType => typeof(StandardWardPacts);
+    public Type? EnumType => null;
     public ILookupService? LookupService => null;
     public IReadOnlyList<string> GetOptionNames() => _wardPactOptions;
     public void ApplyToSlot(SpecialisationSlotVm slot, string? preselected)

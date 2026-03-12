@@ -251,6 +251,11 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList() ?? new List<string>();
         SectionType = sectionType;
+
+        var resolvedDetailKey = DetailKey;
+        foreach (var slot in Slots)
+            slot.SetSpecialisationKeyForDetails(resolvedDetailKey);
+
         Raise(nameof(SectionId));
         Raise(nameof(DetailKey));
         Raise(nameof(StrategyIds));
@@ -407,6 +412,16 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
 
     private void UpdateValidation()
     {
+        var customisationWarning = Slots
+            .Select(slot => (slot.CustomisationWarningMessage ?? string.Empty).Trim())
+            .FirstOrDefault(message => message.Length > 0);
+
+        if (!string.IsNullOrWhiteSpace(customisationWarning))
+        {
+            ValidationMessage = customisationWarning;
+            return;
+        }
+
         if (Slots.Any(s => s.HasBaseSelection && !s.IsCustomisationComplete))
         {
             ValidationMessage = "Select a custom value for each chosen ability.";

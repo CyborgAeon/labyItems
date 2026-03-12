@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.Json;
 using labyItems.Helpers;
 using labyItems.Models;
 using labyItems.Pages;
@@ -162,35 +161,17 @@ public partial class ItemFormPage : ContentPage
             );
 
             string subject = $"{item.Maker.Name} item for {item.RecipientCharacterName}";
-            var payload = BuildJsonPayload(item);
-            var jsonOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            };
-            jsonOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
-            var json = JsonSerializer.Serialize(payload, jsonOptions);
-            var compressedJson = JsonTokenCompressor.CompressToBase64(json);
-
-            string body =
-                $"\nType: {item.ItemType}"
-                + $"\nMaker: {item.Maker.PlayerName}"
-                + $"\nWitness name: {item.WitnessName}"
-                + recipientText
-                + $"\nDescription: {item.Description}"
-                + $"\nISP: {item.Isp}"
-                + $"\nDnbuod: {item.DoesNotBlowUpOnDeath}"
-                + $"\nCreated: {item.CreatedDate:d}"
-                + "\n\n Token:\n"
-                + compressedJson;
-
-            string mailto =
-                $"mailto:items@labyrinthe.com"
-                + $"?subject={Uri.EscapeDataString(subject)}"
-                + $"&body={Uri.EscapeDataString(body)}";
+            var payload = ItemEmailService.BuildItemPayload(item, _abilities);
+            item.PayloadJson = ItemEmailService.SerializeItemPayload(payload);
+            var emailDraft = ItemEmailService.BuildItemEmailDraft(
+                item,
+                payload,
+                to: "items@labyrinthe.com",
+                subject: subject);
 
             try
             {
-                await Launcher.OpenAsync(mailto);
+                await Launcher.OpenAsync(emailDraft.MailtoUri);
                 LiteDbService.InsertItem(item);
                 RemoveItemFromPage();
                 await Navigation.PopToRootAsync();
@@ -242,126 +223,4 @@ public partial class ItemFormPage : ContentPage
     }
 
     private string GetDescriptionText() => string.Join("\n", DescriptionLines);
-
-    private ItemJsonPayload BuildJsonPayload(Item item)
-    {
-        var derivedTypes = DeriveItemTypes();
-        var abilities = _abilities?.ToList() ?? new List<CalcResult>();
-        if (abilities.Count == 0 && item.Isp > 0)
-        {
-            abilities.Add(new CalcResult
-            {
-                AbilityType = "Base",
-                AbilityName = "Manual ISP entry",
-                TotalIsp = item.Isp,
-                Details = new() { ["source"] = "ItemForm" }
-            });
-        }
-
-        var payload = new ItemJsonPayload
-        {
-            WitnessName = item.WitnessName,
-            Recipient = string.IsNullOrWhiteSpace(_recipientPlayerName)
-                        && string.IsNullOrWhiteSpace(_recipientName)
-                        && string.IsNullOrWhiteSpace(_recipientClass)
-                        ? null
-                        : new RecipientPayload
-                        {
-                            PlayerName = _recipientPlayerName,
-                            CharacterName = _recipientName,
-                            CharacterClass = _recipientClass
-                        },
-            Description = item.Description,
-            Isp = item.Isp,
-            CreatedDate = item.CreatedDate,
-            Item = new ItemJsonDetail
-            {
-                Types = derivedTypes.Where(t => t != ItemTypeEnum.None).DefaultIfEmpty(ItemTypeEnum.None).ToList(),
-                Abilities = abilities,
-                Status = "TODO",
-                Modifiers = new List<object>() // TODO: flesh out modifiers model when available.
-            }
-        };
-
-        return payload;
-    }
-
-    private List<ItemTypeEnum> DeriveItemTypes()
-    {
-        bool isSpiritual = _abilities.Any(IsSpiritualAbility);
-        bool isEarthpower = _abilities.Any(IsEarthpowerAbility);
-
-        var types = new List<ItemTypeEnum>();
-        if (isEarthpower) types.Add(ItemTypeEnum.EarthPower);
-        if (isSpiritual) types.Add(ItemTypeEnum.Spirit);
-        if (types.Count == 0) types.Add(ItemTypeEnum.None);
-        return types;
-    }
-
-    private static bool IsSpiritualAbility(CalcResult result)
-    {
-        if (result.AbilityType.Equals("Miracle", StringComparison.OrdinalIgnoreCase))
-        {
-            return HasPositive(result, "basicPerDay", "advancedPerDay", "generalSpiritStore", "sphereSpiritStore",
-                               "turnBasicUpTo5thMantic", "turnBasicMantic", "turnAdvancedUpTo6thMantic", "turnAdvancedAbove6thMantic", "trueBeliever")
-                   || HasTrue(result, "addBasicToList", "addAdvancedToList", "addWithPrep30", "isTeachingScroll");
-        }
-
-        if (result.AbilityType.Equals("General", StringComparison.OrdinalIgnoreCase))
-        {
-            var spiritPrayer = GetString(result, "prayerPowerbase")?.Equals("Spirit", StringComparison.OrdinalIgnoreCase) == true
-                               && GetInt(result, "prayerTimesPerDay") > 0;
-
-            return HasTrue(result, "empowerWeaponSpirit", "empowerWeaponMantic", "undeadTouchEffect", "gaseousForm", "walkThroughWalls", "planeShift")
-                   || spiritPrayer;
-        }
-
-        return false;
-    }
-
-    private static bool IsEarthpowerAbility(CalcResult result)
-    {
-        if (result.AbilityType.Equals("Evocation", StringComparison.OrdinalIgnoreCase))
-        {
-            return HasPositive(result, "basicPerDay", "advancedPerDay", "drawOnEpPerDay")
-                   || HasTrue(result, "addBasicToList", "addAdvancedToList", "addWithPrep30");
-        }
-
-        return false;
-    }
-
-    private static bool HasPositive(CalcResult res, params string[] keys) =>
-        keys.Any(k => GetInt(res, k) > 0);
-
-    private static bool HasTrue(CalcResult res, params string[] keys) =>
-        keys.Any(k => GetBool(res, k));
-
-    private static int GetInt(CalcResult res, string key)
-    {
-        if (res.Details.TryGetValue(key, out var v))
-        {
-            if (v is int i) return i;
-            if (v is long l) return (int)l;
-        }
-        return 0;
-    }
-
-    private static bool GetBool(CalcResult res, string key)
-    {
-        if (res.Details.TryGetValue(key, out var v))
-        {
-            if (v is bool b) return b;
-            if (v is int i) return i > 0;
-            if (v is long l) return l > 0;
-            if (v is string s && bool.TryParse(s, out var parsed)) return parsed;
-        }
-        return false;
-    }
-
-    private static string? GetString(CalcResult res, string key)
-    {
-        if (res.Details.TryGetValue(key, out var v))
-            return v?.ToString();
-        return null;
-    }
 }

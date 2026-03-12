@@ -1,5 +1,7 @@
 using Microsoft.Maui.Controls;
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,10 +11,14 @@ namespace labyItems.Controls
 {
     public partial class StickyFooterControl : ContentView
     {
+        private INotifyCollectionChanged? _breakdownCollectionChangedSource;
+        public ObservableCollection<ContributionRow> VisibleBreakdownItems { get; } = new();
+
         public StickyFooterControl()
         {
             InitializeComponent();
             UpdateFormattedTotal();
+            RefreshVisibleBreakdownItems();
         }
 
         // Total (int)
@@ -36,7 +42,12 @@ namespace labyItems.Controls
         public string FormattedTotal { get => (string)GetValue(FormattedTotalProperty); private set => SetValue(FormattedTotalProperty, value); }
 
         public static readonly BindableProperty BreakdownItemsProperty =
-            BindableProperty.Create(nameof(BreakdownItems), typeof(IEnumerable<ContributionRow>), typeof(StickyFooterControl), Enumerable.Empty<ContributionRow>());
+            BindableProperty.Create(
+                nameof(BreakdownItems),
+                typeof(IEnumerable<ContributionRow>),
+                typeof(StickyFooterControl),
+                Enumerable.Empty<ContributionRow>(),
+                propertyChanged: OnBreakdownItemsChanged);
         public IEnumerable<ContributionRow> BreakdownItems { get => (IEnumerable<ContributionRow>)GetValue(BreakdownItemsProperty); set => SetValue(BreakdownItemsProperty, value); }
 
         public static readonly BindableProperty RemoveContributionCommandProperty =
@@ -44,8 +55,52 @@ namespace labyItems.Controls
         public ICommand? RemoveContributionCommand { get => (ICommand?)GetValue(RemoveContributionCommandProperty); set => SetValue(RemoveContributionCommandProperty, value); }
 
         public static readonly BindableProperty IsExpandedProperty =
-            BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(StickyFooterControl), false);
+            BindableProperty.Create(
+                nameof(IsExpanded),
+                typeof(bool),
+                typeof(StickyFooterControl),
+                false,
+                propertyChanged: (bindable, _, _) =>
+                {
+                    if (bindable is StickyFooterControl control)
+                        control.OnPropertyChanged(nameof(IsBreakdownEmptyStateVisible));
+                });
         public bool IsExpanded { get => (bool)GetValue(IsExpandedProperty); set => SetValue(IsExpandedProperty, value); }
+
+        public static readonly BindableProperty EmptyBreakdownTextProperty =
+            BindableProperty.Create(
+                nameof(EmptyBreakdownText),
+                typeof(string),
+                typeof(StickyFooterControl),
+                StickyFooterContentBuilder.DefaultEmptyMessage,
+                propertyChanged: (bindable, _, _) =>
+                {
+                    if (bindable is StickyFooterControl control)
+                        control.OnPropertyChanged(nameof(ResolvedEmptyBreakdownText));
+                });
+        public string EmptyBreakdownText { get => (string)GetValue(EmptyBreakdownTextProperty); set => SetValue(EmptyBreakdownTextProperty, value); }
+
+        public string ResolvedEmptyBreakdownText =>
+            string.IsNullOrWhiteSpace(EmptyBreakdownText)
+                ? StickyFooterContentBuilder.DefaultEmptyMessage
+                : EmptyBreakdownText.Trim();
+
+        private bool _hasVisibleBreakdownItems;
+        public bool HasVisibleBreakdownItems
+        {
+            get => _hasVisibleBreakdownItems;
+            private set
+            {
+                if (_hasVisibleBreakdownItems == value)
+                    return;
+
+                _hasVisibleBreakdownItems = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsBreakdownEmptyStateVisible));
+            }
+        }
+
+        public bool IsBreakdownEmptyStateVisible => IsExpanded && !HasVisibleBreakdownItems;
 
         void UpdateFormattedTotal()
         {
@@ -100,6 +155,48 @@ namespace labyItems.Controls
         {
             DictionaryOverlayRegistry.DismissAll();
             IsExpanded = !IsExpanded;
+        }
+
+        private static void OnBreakdownItemsChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (bindable is not StickyFooterControl control)
+                return;
+
+            control.DetachBreakdownCollectionChanged(oldValue);
+            control.AttachBreakdownCollectionChanged(newValue);
+            control.RefreshVisibleBreakdownItems();
+        }
+
+        private void AttachBreakdownCollectionChanged(object source)
+        {
+            if (source is not INotifyCollectionChanged collection)
+                return;
+
+            _breakdownCollectionChangedSource = collection;
+            _breakdownCollectionChangedSource.CollectionChanged += OnBreakdownCollectionChanged;
+        }
+
+        private void DetachBreakdownCollectionChanged(object source)
+        {
+            if (_breakdownCollectionChangedSource != null)
+            {
+                _breakdownCollectionChangedSource.CollectionChanged -= OnBreakdownCollectionChanged;
+                _breakdownCollectionChangedSource = null;
+            }
+        }
+
+        private void OnBreakdownCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+            => RefreshVisibleBreakdownItems();
+
+        private void RefreshVisibleBreakdownItems()
+        {
+            var content = StickyFooterContentBuilder.Build(BreakdownItems, EmptyBreakdownText);
+
+            VisibleBreakdownItems.Clear();
+            foreach (var row in content.Rows)
+                VisibleBreakdownItems.Add(row);
+
+            HasVisibleBreakdownItems = content.HasRows;
         }
 
 

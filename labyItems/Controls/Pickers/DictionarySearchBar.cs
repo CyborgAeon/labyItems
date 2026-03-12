@@ -3,20 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Layouts;
 using Microsoft.Maui.Graphics;
 using labyItems.Controls.Pickers;
-#if ANDROID
-using Android.OS;
-using Android.Views;
-using Microsoft.Maui.ApplicationModel;
-#endif
-#if IOS || MACCATALYST
-using Foundation;
-using UIKit;
-#endif
 
 namespace labyItems.Controls;
 
@@ -27,7 +19,7 @@ namespace labyItems.Controls;
 /// ItemsSource="{controls:EnumDictionary x:TypeArguments='enums:MagicColours' Exclude='Grey'}"
 /// SelectedValue="{Binding MagicColour}"/>
 /// </summary>
-public class DictionarySearchBar<TValue> : ContentView
+public partial class DictionarySearchBar<TValue> : ContentView
 {
     private readonly Action _selfDismisser;
     private const double DefaultDropdownMaxHeight = 320;
@@ -47,16 +39,6 @@ public class DictionarySearchBar<TValue> : ContentView
     private bool _suppressNextUnfocus;
     private int _remoteRequestId;
     private bool _isUserEditing;
-    private ScrollView? _keyboardAvoidanceScrollView;
-    private Thickness _keyboardAvoidanceOriginalPadding;
-    private bool _hasKeyboardAvoidancePadding;
-#if IOS || MACCATALYST
-    private static bool _iosKeyboardObserversInitialized;
-    private static NSObject? _iosKeyboardWillShowObserver;
-    private static NSObject? _iosKeyboardWillHideObserver;
-    private static NSObject? _iosKeyboardWillChangeFrameObserver;
-    private static double _iosKeyboardHeight;
-#endif
 
     public DictionarySearchBar()
     {
@@ -748,18 +730,7 @@ public class DictionarySearchBar<TValue> : ContentView
         };
 
         resultsView.SelectionChanged += OnResultSelected;
-        resultsView.ItemTemplate = new DataTemplate(() =>
-        {
-            var grid = new Grid
-            {
-                Padding = new Thickness(12, 10),
-                ColumnDefinitions = { new ColumnDefinition(GridLength.Star) }
-            };
-            var label = new Label { VerticalOptions = LayoutOptions.Center };
-            label.SetBinding(Label.TextProperty, nameof(SearchResult.DisplayText));
-            grid.Add(label);
-            return grid;
-        });
+        resultsView.ItemTemplate = BuildResultTemplate();
 
         return resultsView;
     }
@@ -778,19 +749,30 @@ public class DictionarySearchBar<TValue> : ContentView
         };
     }
 
+    private DataTemplate BuildResultTemplate()
+    {
+        return new DataTemplate(() =>
+        {
+            var grid = new Grid
+            {
+                Padding = new Thickness(12, 10),
+                ColumnDefinitions = { new ColumnDefinition(GridLength.Star) }
+            };
+
+            var label = new Label { VerticalOptions = LayoutOptions.Center };
+            label.SetBinding(Label.TextProperty, nameof(SearchResult.DisplayText));
+            grid.Add(label);
+            return grid;
+        });
+    }
+
     private void OnResultSelected(object? sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection.FirstOrDefault() is SearchResult result)
-        {
             ApplySelection(result);
-        }
 
-        if (sender is CollectionView cv)
-        {
-            cv.SelectedItem = null;
-        }
-
-        _inlineResultsContainer.IsVisible = false;
+        if (sender is CollectionView collectionView)
+            collectionView.SelectedItem = null;
     }
 
     private void ApplySelection(SearchResult result)
@@ -904,597 +886,7 @@ public class DictionarySearchBar<TValue> : ContentView
         public static SearchResult Custom(string displayText) => new(displayText, default, true);
     }
 
-    // Local overlay state
-    private AbsoluteLayout? _overlay;
-    private BoxView? _overlayBackdrop;
-    private Grid? _overlayHost;
-    private Border? _overlayContainer;
-    private CollectionView? _overlayCollection;
-    private ContentPage? _overlayPage;
-    private EventHandler? _pageSizeChanged;
-    private EventHandler<ScrolledEventArgs>? _scrollHandler;
-
-    private async Task ShowResultsAsync()
-    {
-        try
-        {
-            await ShowOverlayAsync();
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"[DictionarySearchBar] dropdown fallback to inline: {ex}");
-            DismissLocalOverlay();
-            ShowInlineResults();
-        }
-    }
-
-    private async Task RepositionLocalOverlaySafeAsync()
-    {
-        try
-        {
-            await RepositionLocalOverlayAsync();
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"[DictionarySearchBar] overlay reposition failed: {ex}");
-            DismissLocalOverlay();
-            ShowInlineResults();
-        }
-    }
-
-    private async Task ShowOverlayAsync()
-    {
-        DismissLocalOverlay();
-
-        if (_filteredResults == null || !_filteredResults.Any())
-        {
-            ShowInlineResults();
-            return;
-        }
-
-        if (!UsePageOverlay)
-        {
-            ShowInlineResults();
-            return;
-        }
-
-        var page = GetOwningPage();
-        if (page == null)
-        {
-            ShowInlineResults();
-            return;
-        }
-
-        Grid? host;
-        bool createdHost;
-        try
-        {
-            host = EnsureOverlayHost(page, out createdHost);
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"[DictionarySearchBar] overlay host setup failed: {ex}");
-            ShowInlineResults();
-            return;
-        }
-
-        if (host == null)
-        {
-            ShowInlineResults();
-            return;
-        }
-
-        _resultsView.IsVisible = false;
-        _inlineResultsContainer.IsVisible = false;
-        if (createdHost)
-            _suppressNextUnfocus = true;
-
-        _overlay = new AbsoluteLayout
-        {
-            BackgroundColor = Colors.Transparent,
-            HorizontalOptions = LayoutOptions.Fill,
-            VerticalOptions = LayoutOptions.Fill,
-            InputTransparent = false,
-            CascadeInputTransparent = false
-        };
-
-        _overlayBackdrop = new BoxView
-        {
-            BackgroundColor = Color.FromRgba(0, 0, 0, 0.08f),
-            InputTransparent = false
-        };
-        var dismissTap = new TapGestureRecognizer();
-        dismissTap.Tapped += (s, e) =>
-        {
-            DismissLocalOverlay();
-            _searchBar.Unfocus();
-        };
-        _overlayBackdrop.GestureRecognizers.Add(dismissTap);
-        AbsoluteLayout.SetLayoutBounds(_overlayBackdrop, new Rect(0, 0, 1, 1));
-        AbsoluteLayout.SetLayoutFlags(_overlayBackdrop, AbsoluteLayoutFlags.All);
-        _overlay.Children.Add(_overlayBackdrop);
-
-        // container
-        _overlayContainer = new Border
-        {
-            Background = new SolidColorBrush(Colors.White),
-            StrokeThickness = 1,
-            Stroke = new SolidColorBrush(Color.FromArgb("#ECECEC")),
-            Padding = new Thickness(0),
-            StrokeShape = new RoundRectangle { CornerRadius = 6 },
-            IsVisible = true
-        };
-
-        _overlayCollection = new CollectionView
-        {
-            ItemsLayout = new LinearItemsLayout(ItemsLayoutOrientation.Vertical) { ItemSpacing = 0 },
-            SelectionMode = SelectionMode.Single,
-            BackgroundColor = Colors.Transparent
-        };
-
-        _overlayCollection.ItemsSource = _filteredResults;
-        _overlayCollection.ItemTemplate = new DataTemplate(() =>
-        {
-            var grid = new Grid { Padding = new Thickness(12, 10), ColumnDefinitions = { new ColumnDefinition(GridLength.Star) } };
-            var label = new Label { VerticalOptions = LayoutOptions.Center };
-            label.SetBinding(Label.TextProperty, nameof(SearchResult.DisplayText));
-            grid.Add(label);
-
-            var tap = new TapGestureRecognizer();
-            tap.Tapped += (s, e) =>
-            {
-                if (s is VisualElement ve && ve.BindingContext is SearchResult sr)
-                {
-                    ApplySelection(sr);
-                }
-            };
-            grid.GestureRecognizers.Add(tap);
-
-            return grid;
-        });
-
-        _overlayContainer.Content = _overlayCollection;
-        _overlayContainer.ZIndex = 1;
-
-        _overlay.Children.Add(_overlayContainer);
-
-        host.Children.Add(_overlay);
-        _overlay.ZIndex = 1000;
-
-        _overlayHost = host;
-        _overlayPage = page;
-
-        // position
-        await RepositionLocalOverlaySafeAsync();
-
-        // hooks for repositioning
-        _pageSizeChanged = async (s, e) =>
-        {
-            if (KeyboardAvoidanceEnabled)
-            {
-                ApplyKeyboardAvoidancePadding();
-                await EnsureAnchorVisibleAsync(GetDesiredDropdownHeight());
-            }
-
-            await RepositionLocalOverlaySafeAsync();
-        };
-        page.SizeChanged += _pageSizeChanged;
-
-        var scrollParent = FindAncestorOfType<ScrollView>(_searchBar);
-        if (scrollParent != null)
-        {
-            _scrollHandler = async (s, e) => await RepositionLocalOverlaySafeAsync();
-            scrollParent.Scrolled += _scrollHandler;
-        }
-    }
-
-    private void UpdateOverlayItems()
-    {
-        if (_overlayCollection == null)
-        {
-            ShowInlineResults();
-            return;
-        }
-
-        _overlayCollection.ItemsSource = _filteredResults;
-
-        // adjust height if visible
-        _ = RepositionLocalOverlaySafeAsync();
-    }
-
-    private async Task RepositionLocalOverlayAsync()
-    {
-        if (_overlayHost == null || _overlay == null || _overlayContainer == null || _searchBar == null)
-            return;
-
-        var hostPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(_overlayHost);
-        var anchorPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(_searchBar);
-        var anchorHeight = _searchBar.Height;
-
-        var localX = Math.Max(8, anchorPos.X - hostPos.X);
-        var localY = anchorPos.Y - hostPos.Y + anchorHeight + DropdownEdgeGap;
-
-        var pageHeight = _overlayHost.Height > 0 ? _overlayHost.Height : (Application.Current?.MainPage?.Height ?? 0);
-        var availableBelow = Math.Max(0, pageHeight - localY - 8);
-        var availableAbove = Math.Max(0, anchorPos.Y - hostPos.Y - 8);
-        var keyboardGuard = ResolveKeyboardAvoidanceBottom();
-        var effectiveBelow = Math.Max(0, availableBelow - keyboardGuard);
-        var effectiveAbove = availableAbove;
-
-        var visibleItems = Math.Min(4, Math.Max(1, _filteredResults.Count));
-        var desiredHeight = Math.Min(DefaultDropdownMaxHeight, visibleItems * 48);
-        double finalHeight = desiredHeight;
-
-        if (effectiveBelow < desiredHeight && effectiveAbove >= desiredHeight)
-        {
-            localY = Math.Max(8, anchorPos.Y - hostPos.Y - desiredHeight - DropdownEdgeGap);
-        }
-        else if (effectiveBelow < desiredHeight && effectiveAbove < desiredHeight)
-        {
-            if (effectiveBelow >= effectiveAbove)
-            {
-                finalHeight = Math.Max(48, effectiveBelow);
-            }
-            else
-            {
-                finalHeight = Math.Max(48, effectiveAbove);
-                localY = Math.Max(8, anchorPos.Y - hostPos.Y - finalHeight - DropdownEdgeGap);
-            }
-        }
-
-        var pageWidth = _overlayHost.Width > 0 ? _overlayHost.Width : (Application.Current?.MainPage?.Width ?? 0);
-
-        // Determine dropdown width with this priority:
-        // 1) explicit DropdownWidth (if > 0)
-        // 2) measured entry width (reactive to layout)
-        // 3) page width fallback (pageWidth - padding)
-        double width;
-        if (DropdownWidth > 0)
-            width = DropdownWidth;
-        else if (_searchBar.Width > 0)
-            width = _searchBar.Width;
-        else
-            width = Math.Max(120, pageWidth - 16); // fallback when measurements aren't ready
-
-        // Clamp to page width with small margins
-        width = Math.Min(width, Math.Max(0, pageWidth - 16));
-
-        if (localX + width + 8 > pageWidth)
-            localX = Math.Max(8, pageWidth - width - 8);
-
-        AbsoluteLayout.SetLayoutBounds(_overlayContainer, new Rect(localX, localY, width, finalHeight));
-        AbsoluteLayout.SetLayoutFlags(_overlayContainer, AbsoluteLayoutFlags.None);
-
-        if (_overlayContainer?.Content is CollectionView cv)
-        {
-            cv.HeightRequest = finalHeight;
-        }
-    }
-
-    private void DismissLocalOverlay()
-    {
-        if (_overlayHost != null && _overlay != null && _overlayHost.Children.Contains(_overlay))
-        {
-            _overlayHost.Children.Remove(_overlay);
-        }
-
-        if (_overlayPage != null && _pageSizeChanged != null)
-        {
-            _overlayPage.SizeChanged -= _pageSizeChanged;
-        }
-        if (_overlayPage != null && _scrollHandler != null)
-        {
-            var sc = FindAncestorOfType<ScrollView>(_searchBar);
-            if (sc != null)
-                sc.Scrolled -= _scrollHandler;
-        }
-
-        _overlay = null;
-        _overlayBackdrop = null;
-        _overlayHost = null;
-        _overlayCollection = null;
-        _overlayContainer = null;
-        _overlayPage = null;
-        _pageSizeChanged = null;
-        _scrollHandler = null;
-    }
-
-    private double GetDesiredDropdownHeight()
-    {
-        var visibleItems = Math.Min(4, Math.Max(1, _filteredResults.Count));
-        return Math.Min(DefaultDropdownMaxHeight, visibleItems * 48);
-    }
-
-    private async Task EnsureAnchorVisibleAsync(double desiredDropdownHeight)
-    {
-        var scroll = FindAncestorOfType<ScrollView>(_searchBar);
-        if (scroll == null)
-            return;
-
-        var anchorPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(_searchBar);
-        var scrollPos = await NativeCoordinateHelper.GetAbsolutePositionAsync(scroll);
-
-        var anchorTop = anchorPos.Y - scrollPos.Y;
-        var keyboardGuard = ResolveKeyboardAvoidanceBottom();
-        var availableBelow = scroll.Height - (anchorTop + _searchBar.Height) - keyboardGuard;
-        var requiredSpace = Math.Max(0, desiredDropdownHeight + DropdownEdgeGap);
-
-        if (availableBelow >= requiredSpace)
-            return;
-
-        var deficit = requiredSpace - availableBelow;
-        var target = Math.Max(0, scroll.ScrollY + deficit + (_searchBar.Height * 0.25));
-        await scroll.ScrollToAsync(scroll.ScrollX, target, true);
-    }
-
-    private void ApplyKeyboardAvoidancePadding()
-    {
-        if (!KeyboardAvoidanceEnabled)
-            return;
-
-        var scroll = FindAncestorOfType<ScrollView>(_searchBar);
-        if (scroll == null)
-            return;
-
-        if (!_hasKeyboardAvoidancePadding || _keyboardAvoidanceScrollView != scroll)
-        {
-            _keyboardAvoidanceScrollView = scroll;
-            _keyboardAvoidanceOriginalPadding = scroll.Padding;
-            _hasKeyboardAvoidancePadding = true;
-        }
-
-        var keyboardGuard = ResolveKeyboardAvoidanceBottom();
-        if (keyboardGuard <= 0)
-        {
-            RestoreKeyboardAvoidancePadding();
-            return;
-        }
-
-        var targetBottom = Math.Max(_keyboardAvoidanceOriginalPadding.Bottom, keyboardGuard + 12);
-
-        scroll.Padding = new Thickness(
-            _keyboardAvoidanceOriginalPadding.Left,
-            _keyboardAvoidanceOriginalPadding.Top,
-            _keyboardAvoidanceOriginalPadding.Right,
-            targetBottom);
-    }
-
-    private void RestoreKeyboardAvoidancePadding()
-    {
-        if (!_hasKeyboardAvoidancePadding || _keyboardAvoidanceScrollView == null)
-            return;
-
-        _keyboardAvoidanceScrollView.Padding = _keyboardAvoidanceOriginalPadding;
-        _keyboardAvoidanceScrollView = null;
-        _hasKeyboardAvoidancePadding = false;
-    }
-
-    private double ResolveKeyboardAvoidanceBottom()
-    {
-        var dynamicKeyboardHeight = GetSystemKeyboardHeight();
-        if (dynamicKeyboardHeight > 0)
-            return dynamicKeyboardHeight;
-        if (dynamicKeyboardHeight == 0)
-            return 0;
-
-        var page = GetOwningPage();
-        var pageHeight = page?.Height > 0 ? page.Height : (Application.Current?.MainPage?.Height ?? 0);
-        if (pageHeight <= 0)
-            return 0;
-
-        return Math.Clamp(
-            pageHeight * KeyboardGuardRatioFallback,
-            KeyboardGuardMinFallback,
-            KeyboardGuardMaxFallback);
-    }
-
-    private static double GetSystemKeyboardHeight()
-    {
-#if ANDROID
-        try
-        {
-            var activity = Platform.CurrentActivity;
-            var decor = activity?.Window?.DecorView;
-            if (decor == null)
-                return -1;
-
-            var density = activity?.Resources?.DisplayMetrics?.Density ?? 1f;
-            if (density <= 0)
-                density = 1f;
-
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
-            {
-                var insets = decor.RootWindowInsets;
-                if (insets == null)
-                    return -1;
-
-                var imeBottom = insets.GetInsets(WindowInsets.Type.Ime()).Bottom;
-                var navBottom = insets.GetInsets(WindowInsets.Type.NavigationBars()).Bottom;
-                var keyboardPx = Math.Max(0, imeBottom - navBottom);
-                return keyboardPx / density;
-            }
-
-            var visibleRect = new Android.Graphics.Rect();
-            decor.GetWindowVisibleDisplayFrame(visibleRect);
-            var keyboardPxLegacy = Math.Max(0, decor.Height - visibleRect.Bottom);
-            return keyboardPxLegacy / density;
-        }
-        catch
-        {
-            return -1;
-        }
-#elif IOS || MACCATALYST
-        return _iosKeyboardHeight;
-#else
-        return 0;
-#endif
-    }
-
-    private static void EnsureKeyboardObserversInitialized()
-    {
-#if IOS || MACCATALYST
-        if (_iosKeyboardObserversInitialized)
-            return;
-
-        _iosKeyboardObserversInitialized = true;
-        _iosKeyboardWillShowObserver = UIKeyboard.Notifications.ObserveWillShow((_, args) =>
-        {
-            _iosKeyboardHeight = ResolveIosKeyboardHeight(args);
-        });
-        _iosKeyboardWillChangeFrameObserver = UIKeyboard.Notifications.ObserveWillChangeFrame((_, args) =>
-        {
-            _iosKeyboardHeight = ResolveIosKeyboardHeight(args);
-        });
-        _iosKeyboardWillHideObserver = UIKeyboard.Notifications.ObserveWillHide((_, __) =>
-        {
-            _iosKeyboardHeight = 0;
-        });
-#endif
-    }
-
-#if IOS || MACCATALYST
-    private static double ResolveIosKeyboardHeight(UIKeyboardEventArgs args)
-    {
-        var window = GetKeyWindow();
-        if (window == null)
-            return Math.Max(0, args.FrameEnd.Height);
-
-        var frameInWindow = window.ConvertRectFromWindow(args.FrameEnd, null);
-        var overlap = Math.Max(0, window.Bounds.Bottom - frameInWindow.Top - window.SafeAreaInsets.Bottom);
-        return overlap;
-    }
-
-    private static UIWindow? GetKeyWindow()
-    {
-        var app = UIApplication.SharedApplication;
-        foreach (var scene in app.ConnectedScenes)
-        {
-            if (scene is not UIWindowScene windowScene)
-                continue;
-
-            foreach (var window in windowScene.Windows)
-            {
-                if (window.IsKeyWindow)
-                    return window;
-            }
-        }
-
-#pragma warning disable CS0618
-        return app.Windows.FirstOrDefault(w => w.IsKeyWindow);
-#pragma warning restore CS0618
-    }
-#endif
-
-    private async Task RefreshFromRemoteAsync(string? query)
-    {
-        if (RemoteSearchProvider == null)
-            return;
-
-        var requestId = ++_remoteRequestId;
-        var results = await RemoteSearchProvider(query ?? string.Empty);
-
-        if (_remoteRequestId != requestId)
-            return;
-
-        ItemsSource = results ?? new Dictionary<string, TValue>();
-    }
-
-    private ContentPage? GetTopPage()
-    {
-        return ResolveContentPage(Application.Current?.MainPage);
-
-        static ContentPage? ResolveContentPage(Page? page) =>
-            page switch
-            {
-                NavigationPage nav => ResolveContentPage(nav.CurrentPage),
-                TabbedPage tab => ResolveContentPage(tab.CurrentPage),
-                FlyoutPage flyout => ResolveContentPage(flyout.Detail),
-                Shell shell => ResolveContentPage(shell.CurrentPage),
-                ContentPage cp => cp,
-                _ => null
-            };
-    }
-
-    private Grid? EnsureOverlayHost(ContentPage page, out bool createdHost)
-    {
-        createdHost = false;
-        if (page.Content == null)
-            return null;
-
-        if (page.Content is Grid g && g.StyleId == "__overlay_host__")
-            return g;
-
-        var original = page.Content;
-        var root = new Grid
-        {
-            ColumnDefinitions = { new ColumnDefinition(GridLength.Star) },
-            RowDefinitions = { new RowDefinition(GridLength.Star) },
-            StyleId = "__overlay_host__"
-        };
-
-        // Re-parent safely: detach content from page before adding to new host.
-        page.Content = null;
-        root.Children.Add(original);
-        page.Content = root;
-        createdHost = true;
-        return root;
-    }
-
-    private void InitializeOverlayHostIfNeeded()
-    {
-        if (_overlayHostInitialized)
-            return;
-
-        var page = GetOwningPage();
-        if (page == null)
-            return;
-
-        _ = Device.InvokeOnMainThreadAsync(() =>
-        {
-            if (_overlayHostInitialized)
-                return;
-
-            try
-            {
-                var host = EnsureOverlayHost(page, out _);
-                if (host != null)
-                    _overlayHostInitialized = true;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[DictionarySearchBar] overlay host init skipped: {ex}");
-            }
-        });
-    }
-
-    private void ShowInlineResults()
-    {
-        var dropdownHeight = GetDesiredDropdownHeight();
-        var entryHeight = _searchBar.Height > 0 ? _searchBar.Height : MinimumEntryHeight;
-        _resultsView.ItemsSource = _filteredResults;
-        _resultsView.HeightRequest = dropdownHeight;
-        _inlineResultsContainer.HeightRequest = dropdownHeight;
-        _inlineResultsContainer.IsVisible = _filteredResults is { Count: > 0 };
-        _inlineResultsContainer.TranslationY = entryHeight;
-    }
-
-    private static T? FindAncestorOfType<T>(Element? start) where T : VisualElement
-    {
-        var current = start?.Parent;
-        while (current != null)
-        {
-            if (current is T t)
-                return t;
-            current = current.Parent;
-        }
-
-        return null;
-    }
-
-    private ContentPage? GetOwningPage()
-        => FindAncestorOfType<ContentPage>(this)
-           ?? FindAncestorOfType<ContentPage>(_searchBar)
-           ?? GetTopPage();
+    // Overlay and keyboard logic are split into partial files to keep responsibilities focused.
 }
 
 internal static class DictionaryOverlayRegistry
@@ -1531,7 +923,14 @@ internal static class DictionaryOverlayRegistry
 
         foreach (var dismiss in snapshot)
         {
-            try { dismiss(); } catch { /* best effort */ }
+            try
+            {
+                dismiss();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DictionarySearchBar] dismiss failed: {ex}");
+            }
         }
     }
 }
