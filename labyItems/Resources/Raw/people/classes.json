@@ -216,7 +216,7 @@
         }
       ],
       "2": [
-        { "Name": "1 DAC", "Type": "DAC", "Count": 1 },
+        { "Name": "DAC", "Type": "DAC", "Count": 1 },
         {
           "Name": "H",
           "Type": "WeaponSkill"
@@ -239,17 +239,17 @@
           "Name": "1st Weapon Mastery (O)",
           "Type": "WeaponSkill"
         },
-        { "Name": "2 DAC", "Type": "DAC", "Count": 2 }
+        { "Name": "DAC", "Type": "DAC", "Count": 2 }
       ],
       "5": [
-        { "Name": "3 DAC", "Type": "DAC", "Count": 3 },
+        { "Name": "DAC", "Type": "DAC", "Count": 3 },
         {
           "Name": "UAC",
           "Type": "WeaponSkill"
         }
       ],
       "6": [
-        { "Name": "4 DAC", "Type": "DAC", "Count": 4 },
+        { "Name": "DAC", "Type": "DAC", "Count": 4 },
         {
           "Name": "1st Weapon Mastery (H)",
           "Type": "WeaponSkill"
@@ -259,7 +259,7 @@
         { "Name": "Immunity to Spiritual Mastery", "Type": "Immunity" }
       ],
       "7": [
-        { "Name": "5 DAC", "Type": "DAC", "Count": 5 },
+        { "Name": "DAC", "Type": "DAC", "Count": 5 },
         {
           "Name": "1st Weapon Mastery (B)",
           "Type": "WeaponSkill"
@@ -272,7 +272,7 @@
         }
       ],
       "8": [
-        { "Name": "6 DAC", "Type": "DAC", "Count": 6 },
+        { "Name": "DAC", "Type": "DAC", "Count": 6 },
         { "Name": "Immunity to Poison", "Type": "Immunity" },
         { "Name": "Immunity to Bless/Curse", "Type": "Immunity" },
         {
@@ -310,7 +310,7 @@
         }
       ],
       "3": [
-        { "Name": "1 DAC", "Type": "DAC", "Count": 1 },
+        { "Name": "DAC", "Type": "DAC", "Count": 1 },
         {
           "Name": "H (Dagger only)",
           "Type": "WeaponSkill"
@@ -323,7 +323,7 @@
         }
       ],
       "5": [
-        { "Name": "2 DAC", "Type": "DAC", "Count": 2 },
+        { "Name": "DAC", "Type": "DAC", "Count": 2 },
 
         {
           "Name": "UAC",
@@ -336,7 +336,7 @@
       ],
       "6": [],
       "7": [
-        { "Name": "3 DAC", "Type": "DAC", "Count": 3 },
+        { "Name": "DAC", "Type": "DAC", "Count": 3 },
         {
           "Name": "Duellist Specialist",
           "Type": "Overwrite",
@@ -356,7 +356,7 @@
   },
   "Cavalier": {
     "Brackets": ["🛡️ Warrior"],
-    "Tags": ["MaxAC 9", "Kung fu", "Simple"],
+    "Tags": ["MaxAC 9", "Cavalier Code"],
     "Armour": {
       "Wearable": ["medium", "heavy"],
       "Restrictions": []
@@ -633,7 +633,7 @@
       ],
       "2": [
         {
-          "Name": "1 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 1
         }
@@ -650,7 +650,7 @@
       ],
       "4": [
         {
-          "Name": "2 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 2
         }
@@ -679,7 +679,13 @@
           "Type": "Immunity"
         },
         {
-          "Name": "3 DAC",
+          "Name": "Self Heal",
+          "Key": "ability.self-heal-power-master",
+          "Type": "Innate",
+          "Count": 1
+        },
+        {
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 3
         }
@@ -697,7 +703,7 @@
       ],
       "8": [
         {
-          "Name": "4 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 4
         },
@@ -753,7 +759,7 @@
       ],
       "3": [
         {
-          "Name": "1 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 1
         }
@@ -765,7 +771,11 @@
         },
         {
           "Name": "Salmon Leap",
-          "Type": "Static"
+          "Type": "Innate",
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 2
+          }
         }
       ],
       "5": [],
@@ -773,17 +783,20 @@
         {
           "Name": "Contra Mastery",
           "Type": "Innate",
-          "Count": "2"
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 4
+          }
         },
         {
-          "Name": "2 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 2
         }
       ],
       "7": [
         {
-          "Name": "3 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 3
         }
@@ -830,12 +843,16 @@
         },
         {
           "Name": "Defend the Master",
-          "Type": "Static"
+          "Type": "Innate",
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 2
+          }
         }
       ],
       "4": [
         {
-          "Name": "1 MAC",
+          "Name": "MAC",
           "Type": "MAC",
           "Count": 1
         }
@@ -860,10 +877,13 @@
         {
           "Name": "Stand by the Master ",
           "Type": "Innate",
-          "Count": 2
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 4
+          }
         },
         {
-          "Name": "2 MAC",
+          "Name": "MAC",
           "Type": "MAC",
           "Count": 2
         }
@@ -898,7 +918,7 @@
           "Type": "WeaponSkill"
         },
         {
-          "Name": "1 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 1
         }
@@ -920,12 +940,16 @@
         },
         {
           "Name": "War Cry",
-          "Type": "Static"
+          "Type": "Innate",
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 4
+          }
         }
       ],
       "5": [
         {
-          "Name": "2 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 2
         }
@@ -940,10 +964,13 @@
         {
           "Name": "Burst of Strength",
           "Type": "Innate",
-          "Count": 2
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 4
+          }
         },
         {
-          "Name": "3 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 3
         }
@@ -955,7 +982,7 @@
           "OverwriteKey": "Rovfuger Specialist"
         },
         {
-          "Name": "4 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 4
         }
@@ -987,7 +1014,7 @@
           "Type": "WeaponSkill"
         },
         {
-          "Name": "1 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 1
         }
@@ -1002,7 +1029,7 @@
           }
         },
         {
-          "Name": "2 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 2
         }
@@ -1011,7 +1038,7 @@
       "5": [],
       "6": [
         {
-          "Name": "3 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 3
         }
@@ -1019,7 +1046,11 @@
       "7": [
         {
           "Name": "Ki Strike",
-          "Type": "Static"
+          "Type": "Innate",
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 4
+          }
         }
       ],
       "8": [
@@ -1032,7 +1063,7 @@
           }
         },
         {
-          "Name": "4 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 4
         }
@@ -1177,7 +1208,7 @@
       ],
       "3": [
         {
-          "Name": "1 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 1
         },
@@ -1200,7 +1231,7 @@
       ],
       "5": [
         {
-          "Name": "2 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 2
         },
@@ -1218,7 +1249,7 @@
       ],
       "7": [
         {
-          "Name": "3 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 3
         },
@@ -1262,7 +1293,7 @@
           "Type": "WeaponSkill"
         },
         {
-          "Name": "3 PAC",
+          "Name": "PAC",
           "Type": "PAC",
           "Count": 3
         },
@@ -1289,7 +1320,7 @@
           "OverwriteKey": "Standard Scout skill"
         },
         {
-          "Name": "4 PAC",
+          "Name": "PAC",
           "Type": "PAC",
           "Count": 4
         }
@@ -1313,7 +1344,7 @@
           "OverwriteKey": "Warrior Specialist"
         },
         {
-          "Name": "5 PAC",
+          "Name": "PAC",
           "Type": "PAC",
           "Count": 5
         }
@@ -1384,14 +1415,20 @@
         {
           "Name": "Lay on hands",
           "Type": "Innate",
-          "Count": 24
+          "Progression": {
+            "Amount": 3,
+            "PerLevels": 1
+          }
         }
       ],
       "4": [
         {
           "Name": "Bless Other",
           "Type": "Innate",
-          "Count": 4
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 2
+          }
         }
       ],
       "5": [
@@ -1402,7 +1439,10 @@
         {
           "Name": "Cure disease",
           "Type": "Innate",
-          "Count": 2
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 3
+          }
         }
       ],
       "6": [
@@ -1418,7 +1458,10 @@
         {
           "Name": "Repel Undead",
           "Type": "Innate",
-          "Count": 4
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 4
+          }
         }
       ],
       "7": [
@@ -1441,7 +1484,10 @@
         {
           "Name": "Repel Evil",
           "Type": "Innate",
-          "Count": 2
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 4
+          }
         }
       ]
     },
@@ -1493,6 +1539,14 @@
         {
           "Name": "E",
           "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Repel Good",
+          "Type": "Innate",
+          "Progression": {
+            "Amount": 1,
+            "PerLevels": 2
+          }
         }
       ],
       "3": [
@@ -1503,11 +1557,6 @@
         {
           "Name": "MP",
           "Type": "WeaponSkill"
-        },
-        {
-          "Name": "Repel Good",
-          "Type": "Innate",
-          "Count": 4
         }
       ],
       "4": [
@@ -1666,7 +1715,7 @@
           "Type": "WeaponSkill"
         },
         {
-          "Name": "1 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 1
         }
@@ -1683,7 +1732,7 @@
           "Type": "WeaponSkill"
         },
         {
-          "Name": "2 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 2
         }
@@ -1700,7 +1749,7 @@
       ],
       "6": [
         {
-          "Name": "3 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 3
         }
@@ -1719,7 +1768,7 @@
           "OverwriteKey": "Budoka Specialist skill"
         },
         {
-          "Name": "4 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 4
         }
@@ -2409,7 +2458,7 @@
     }
   },
   "Rogue": {
-    "Brackets": ["⚔ Scout", "🪄 Wizard"],
+    "Brackets": ["⚔ Scout", "🧙 Wizard"],
     "Tags": ["Magical Caster", "Soft-Combatant", "Versatile"],
     "Max AC": 7,
     "Armour": {
@@ -2832,7 +2881,7 @@
           "OverwriteKey": "Standard Scout skill"
         },
         {
-          "Name": "1 PAC",
+          "Name": "PAC",
           "Type": "PAC",
           "Count": 1
         }
@@ -2854,7 +2903,7 @@
           "OverwriteKey": "Standard Scout skill"
         },
         {
-          "Name": "2 PAC",
+          "Name": "PAC",
           "Type": "PAC",
           "Count": 2
         }
@@ -2873,7 +2922,7 @@
           "OverwriteKey": "Specialist Scout skill"
         },
         {
-          "Name": "3 PAC",
+          "Name": "PAC",
           "Type": "PAC",
           "Count": 3
         }
@@ -3935,7 +3984,7 @@
           "Type": "Immunity"
         },
         {
-          "Name": "1 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 1
         }
@@ -3956,7 +4005,7 @@
           "Type": "Static"
         },
         {
-          "Name": "2 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 2
         }
@@ -3982,7 +4031,7 @@
           "Type": "Static"
         },
         {
-          "Name": "3 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 3
         }
@@ -3993,7 +4042,7 @@
           "Type": "Static"
         },
         {
-          "Name": "4 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 4
         }
@@ -4700,7 +4749,7 @@
           "Count": 4
         },
         {
-          "Name": "1 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 1
         }
@@ -4718,7 +4767,7 @@
           "Count": 4
         },
         {
-          "Name": "2 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 2
         }
@@ -4741,7 +4790,7 @@
           "OverwriteKey": "Warrior Specialist"
         },
         {
-          "Name": "3 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 3
         }

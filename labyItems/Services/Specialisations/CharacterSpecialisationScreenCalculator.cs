@@ -1576,7 +1576,9 @@ public static class CharacterSpecialisationScreenCalculator
     private static bool SupportsGrantMultiplicity(string key)
         => key.Equals("Ward pact", StringComparison.OrdinalIgnoreCase)
            || key.Equals("Wizard Colour", StringComparison.OrdinalIgnoreCase)
-           || key.Equals("Faerie Colour", StringComparison.OrdinalIgnoreCase);
+           || key.Equals("Faerie Colour", StringComparison.OrdinalIgnoreCase)
+           || key.Equals("Standard Scout skill", StringComparison.OrdinalIgnoreCase)
+           || key.Equals("Specialist Scout skill", StringComparison.OrdinalIgnoreCase);
 
     private static int EncodeDuplicateLevel(int baseLevel, int duplicateIndex)
         => baseLevel * 100 + duplicateIndex;

@@ -338,9 +338,8 @@ public sealed class EvocationListVm : INotifyPropertyChanged
             if (fields.Count == 0)
                 continue;
 
-            var splitPower = power / (double)fields.Count;
             foreach (var field in fields)
-                totals[field.Key] = totals.GetValueOrDefault(field.Key, 0d) + splitPower;
+                totals[field.Key] = totals.GetValueOrDefault(field.Key, 0d) + power;
         }
 
         FieldBreakdownSegments.Clear();

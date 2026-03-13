@@ -29,6 +29,8 @@
     <Compile Include="../../labyItems/Services/ILookupService.cs" Link="Source/ILookupService.cs" />
     <Compile Include="../../labyItems/Services/SpellService.cs" Link="Source/SpellService.cs" />
     <Compile Include="../../labyItems/Services/MiracleService.cs" Link="Source/MiracleService.cs" />
+    <Compile Include="../../labyItems/Services/AbilityDraftBuilder.cs" Link="Source/AbilityDraftBuilder.cs" />
+    <Compile Include="../../labyItems/Services/ArmourBonusResolver.cs" Link="Source/ArmourBonusResolver.cs" />
     <Compile Include="../../labyItems/Services/DruidEvocationService.cs" Link="Source/DruidEvocationService.cs" />
     <Compile Include="../../labyItems/Services/EvolutionService.cs" Link="Source/EvolutionService.cs" />
     <Compile Include="../../labyItems/Services/AbilityDetailsLookupService.cs" Link="Source/AbilityDetailsLookupService.cs" />

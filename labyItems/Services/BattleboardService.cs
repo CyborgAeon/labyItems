@@ -195,124 +195,8 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
     private static (int Pac, int Dac, int Mac, int Sac) ExtractArmourBonuses(IEnumerable<AbilityDraft> abilities)
     {
-        int pac = 0, dac = 0, mac = 0, sac = 0;
-
-        foreach (var ability in abilities ?? Enumerable.Empty<AbilityDraft>())
-        {
-            if (ability == null)
-                continue;
-
-            if (TryApplyArmourType(ability, ref pac, ref dac, ref mac, ref sac))
-                continue;
-
-            var effect = ability.Effect ?? string.Empty;
-            if (TryApplyArmourTokens(effect, ref pac, ref dac, ref mac, ref sac))
-                continue;
-
-            var name = ability.Name ?? string.Empty;
-            if (!string.IsNullOrWhiteSpace(name))
-                TryApplyArmourTokens(name, ref pac, ref dac, ref mac, ref sac);
-        }
-
-        return (pac, dac, mac, sac);
-    }
-
-    private static bool TryApplyArmourType(AbilityDraft ability, ref int pac, ref int dac, ref int mac, ref int sac)
-    {
-        if (ability == null)
-            return false;
-
-        string? stat = ability.AbilityType switch
-        {
-            AbilityType.Pac => "PAC",
-            AbilityType.Dac => "DAC",
-            AbilityType.Mac => "MAC",
-            AbilityType.Sac => "SAC",
-            _ => null
-        };
-
-        if (stat == null)
-            return false;
-
-        var value = ability.Count ?? 0;
-        if (value == 0)
-        {
-            var parsed = ParseArmourTokenValue(ability.Effect, stat);
-            if (parsed == 0)
-                parsed = ParseArmourTokenValue(ability.Name, stat);
-            value = parsed;
-        }
-
-        if (value == 0)
-            return false;
-
-        switch (stat)
-        {
-            case "PAC":
-                pac += value;
-                break;
-            case "DAC":
-                dac += value;
-                break;
-            case "MAC":
-                mac += value;
-                break;
-            case "SAC":
-                sac += value;
-                break;
-        }
-
-        return true;
-    }
-
-    private static int ParseArmourTokenValue(string? text, string stat)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-            return 0;
-
-        foreach (Match m in ArmourTokenRegex.Matches(text))
-        {
-            if (!int.TryParse(m.Groups[1].Value, out var value))
-                continue;
-
-            var key = m.Groups[2].Value.ToUpperInvariant();
-            if (!string.Equals(key, stat, StringComparison.OrdinalIgnoreCase))
-                continue;
-
-            return value;
-        }
-
-        return 0;
-    }
-
-    private static bool TryApplyArmourTokens(string text, ref int pac, ref int dac, ref int mac, ref int sac)
-    {
-        var matched = false;
-        foreach (Match m in ArmourTokenRegex.Matches(text))
-        {
-            if (!int.TryParse(m.Groups[1].Value, out var value))
-                continue;
-
-            var key = m.Groups[2].Value.ToUpperInvariant();
-            matched = true;
-            switch (key)
-            {
-                case "PAC":
-                    pac += value;
-                    break;
-                case "DAC":
-                    dac += value;
-                    break;
-                case "MAC":
-                    mac += value;
-                    break;
-                case "SAC":
-                    sac += value;
-                    break;
-            }
-        }
-
-        return matched;
+        var totals = ArmourBonusResolver.ResolveMaxPerSourceTotals(abilities);
+        return (totals.Pac, totals.Dac, totals.Mac, totals.Sac);
     }
 
     private static bool IsPureArmourToken(AbilityDraft ability)
@@ -418,25 +302,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
     private static bool TryComputeFrequencyRank(AbilityDraft ability, out int rank)
     {
-        rank = 0;
-        if (ability == null || !ability.LevelGained.HasValue)
-            return false;
-
-        if (!TryParseFrequency(ability.Frequency, out var freq) || freq <= 0)
-            return false;
-
-        var remaining = Math.Max(0, 8 - ability.LevelGained.Value);
-        rank = remaining / freq;
-        return rank > 0;
-    }
-
-    private static bool TryParseFrequency(string? raw, out int value)
-    {
-        value = 0;
-        if (string.IsNullOrWhiteSpace(raw))
-            return false;
-
-        return int.TryParse(raw.Trim(), out value);
+        return AbilityDraftBuilder.TryResolveFrequencySkillRank(ability, out rank, achievedLevel: 8);
     }
 
     private static string FormatAbilityText(AbilityDraft ability)

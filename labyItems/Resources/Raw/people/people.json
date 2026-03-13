@@ -32,7 +32,7 @@
         { "Name": "3/4 effect paralysis", "Type": "Resistance" },
         { "Name": "3/4 effect poison", "Type": "Resistance" },
         {
-          "Name": "1 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 1
         }
@@ -40,7 +40,7 @@
       "2": [],
       "3": [
         {
-          "Name": "2 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 2
         }
@@ -146,7 +146,7 @@
       ],
       "4": [],
       "5": [],
-      "6": [{ "Name": "1 DAC", "Type": "DAC", "Count": 1 }],
+      "6": [{ "Name": "DAC", "Type": "DAC", "Count": 1 }],
       "7": [],
       "8": [{ "Name": "Draw on Earthpower", "Type": "Innate", "Count": 1 }]
     },
@@ -267,7 +267,7 @@
       ],
       "3": [
         {
-          "Name": "1 PAC",
+          "Name": "PAC",
           "Type": "PAC",
           "Count": 1
         },
@@ -278,7 +278,7 @@
       ],
       "5": [
         {
-          "Name": "2 PAC",
+          "Name": "PAC",
           "Type": "PAC",
           "Count": 2
         }
@@ -291,7 +291,7 @@
       ],
       "8": [
         {
-          "Name": "3 PAC",
+          "Name": "PAC",
           "Type": "PAC",
           "Count": 3
         }
@@ -324,14 +324,14 @@
       ],
       "3": [
         {
-          "Name": "1 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 1
         }
       ],
       "5": [
         {
-          "Name": "2 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 2
         }
@@ -344,14 +344,14 @@
       ],
       "7": [
         {
-          "Name": "3 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 3
         }
       ],
       "8": [
         {
-          "Name": "4 DAC",
+          "Name": "DAC",
           "Type": "DAC",
           "Count": 4
         }

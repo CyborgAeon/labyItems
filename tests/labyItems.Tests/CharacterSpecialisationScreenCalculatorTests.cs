@@ -223,6 +223,54 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
     }
 
     [Fact]
+    public void BuildScreenSections_StandardScoutSkillDuplicateLevelsKeepSeparateSlots()
+    {
+        var definitions = new Dictionary<string, SpecialisationDefinition>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Standard Scout skill"] = new SpecialisationDefinition
+            {
+                Key = "definition.standard-scout-skill",
+                ChoiceSets =
+                [
+                    new SpecialisationChoiceSet
+                    {
+                        Id = "choice.standard-scout-skill.primary",
+                        Title = "Standard Scout skill",
+                        Mode = ChoiceMode.Single,
+                        Options =
+                        [
+                            new ChoiceOption
+                            {
+                                Key = "Athlete",
+                                Label = "Athlete"
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            new CharacterDraft { Class = "Pathfinder", Race = "Human" },
+            new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase),
+            new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase),
+            new ReadOnlyDictionary<string, SpecialisationDefinition>(definitions));
+
+        var required = new List<RequiredChoice>
+        {
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Pathfinder", SpecialisationKey = "Standard Scout skill", Level = 2 },
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Pathfinder", SpecialisationKey = "Standard Scout skill", Level = 2 },
+            new() { Source = RequiredChoiceSource.Class, SourceName = "Pathfinder", SpecialisationKey = "Standard Scout skill", Level = 3 }
+        };
+
+        var sections = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+        var scoutSection = Assert.Single(sections.Where(section => section.SectionId.Equals("choice:Standard Scout skill", StringComparison.OrdinalIgnoreCase)));
+
+        Assert.Equal(3, scoutSection.Levels.Count);
+        Assert.Equal(2, scoutSection.Levels.Count(level => (level > 99 ? level / 100 : level) == 2));
+    }
+
+    [Fact]
     public async Task Recalculate_HumanIshmaicSubtypeShowsBaselineAbilityRows()
     {
         FileSystem.ClearPackageOverrides();

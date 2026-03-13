@@ -917,7 +917,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await UpdateDraftLifeAsync(expandIfChanged: false);
             ApplyLifeBonuses(abilities);
 
-            UpdateArmourStats(classRecord, classAbilities, raceAbilities, specAbilities);
+            UpdateArmourStats(classRecord, classAbilities, raceAbilities, specAbilities, abilities);
             UpdatePowerPools(classRecord, abilities);
             UpdateResistanceLevels(abilities, classRecord);
             _draft.GuildOverrideRules = GuildOverrideRules.Merge(
@@ -1416,20 +1416,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private static int ComputeInnateRank(AbilityDraft ability)
     {
-        if (ability == null)
-            return 0;
-
-        var baseCount = Math.Max(ability.Count ?? 1, 0);
-        var total = baseCount;
-
-        if (TryParseFrequency(ability.Frequency, out var freq) && freq > 0 && ability.LevelGained.HasValue)
-        {
-            var remaining = Math.Max(0, 8 - ability.LevelGained.Value);
-            var additional = remaining / freq;
-            total = baseCount + additional;
-        }
-
-        return Math.Clamp(total, 0, 8);
+        return AbilityDraftBuilder.ResolveInnateRank(ability, achievedLevel: 8);
     }
 
     private static InnateAbilityDraft? BuildInnateDraft(AbilityDraft ability)
@@ -1508,16 +1495,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         return true;
     }
 
-    private static bool TryParseFrequency(string? raw, out int value)
-    {
-        value = 0;
-        if (string.IsNullOrWhiteSpace(raw))
-            return false;
-
-        var text = raw.Trim();
-        return int.TryParse(text, out value);
-    }
-
     private static void ApplyAbilitySource(IEnumerable<AbilityDraft> abilities, string source)
     {
         if (string.IsNullOrWhiteSpace(source))
@@ -1528,7 +1505,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             if (ability == null)
                 continue;
 
-            ability.Source = source;
+            if (string.IsNullOrWhiteSpace(ability.Source))
+                ability.Source = source;
         }
     }
 
@@ -1718,11 +1696,13 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         ServiceCharacterClassRecord? classRecord,
         List<AbilityDraft> classAbilities,
         List<AbilityDraft> raceAbilities,
-        List<AbilityDraft> specAbilities)
+        List<AbilityDraft> specAbilities,
+        List<AbilityDraft> allAbilities)
     {
         var classValues = ExtractArmourValues(classAbilities);
         var raceValues = ExtractArmourValues(raceAbilities);
         var specValues = ExtractArmourValues(specAbilities);
+        var totalValues = ArmourBonusResolver.ResolveMaxPerSourceTotals(allAbilities);
 
         var hasClassArmour = classRecord?.Armour?.Wearable is { Count: > 0 };
         var hasNoArmour = !hasClassArmour || classValues.DisallowArmour || raceValues.DisallowArmour || specValues.DisallowArmour;
@@ -1750,11 +1730,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         if (_draft.WornArmour > maxPac)
             _draft.WornArmour = maxPac;
 
-        _draft.ClassRaceArmour = classValues.Pac + raceValues.Pac + specValues.Pac;
-        _draft.DAC = classValues.Dac + raceValues.Dac + specValues.Dac;
+        _draft.ClassRaceArmour = totalValues.Pac;
+        _draft.DAC = totalValues.Dac;
 
-        var macTotal = classValues.Mac + raceValues.Mac + specValues.Mac;
-        var sacTotal = classValues.Sac + raceValues.Sac + specValues.Sac;
+        var macTotal = totalValues.Mac;
+        var sacTotal = totalValues.Sac;
         _draft.MAC = macTotal > 0 ? macTotal : null;
         _draft.SAC = sacTotal > 0 ? sacTotal : null;
 

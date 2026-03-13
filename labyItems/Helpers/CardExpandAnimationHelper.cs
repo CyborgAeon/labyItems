@@ -7,6 +7,9 @@ public static class CardExpandAnimationHelper
     public const uint UnifiedDurationMs = 200;
     public static readonly Easing UnifiedEasing = Easing.CubicInOut;
 
+    public static bool IsFinite(double value)
+        => !double.IsNaN(value) && !double.IsInfinity(value);
+
     public static double ResolveMeasureWidth(VisualElement primary, params VisualElement[] fallbacks)
     {
         var resolved = ResolveWidthFromVisualTree(primary);
@@ -24,14 +27,20 @@ public static class CardExpandAnimationHelper
     }
 
     public static double MeasureContentHeight(VisualElement content, double width)
-        => content.Measure(width, double.PositiveInfinity).Height;
+    {
+        if (!IsFinite(width) || width <= 0)
+            return -1;
+
+        var measured = content.Measure(width, double.PositiveInfinity).Height;
+        return IsFinite(measured) && measured > 0 ? measured : -1;
+    }
 
     private static double ResolveWidthFromVisualTree(VisualElement? start)
     {
         var current = start;
         while (current != null)
         {
-            if (current.Width > 0)
+            if (IsFinite(current.Width) && current.Width > 0)
                 return current.Width;
 
             current = current.Parent as VisualElement;
@@ -45,7 +54,7 @@ public static class CardExpandAnimationHelper
         var current = element.Parent;
         while (current != null)
         {
-            if (current is Page page && page.Width > 0)
+            if (current is Page page && IsFinite(page.Width) && page.Width > 0)
                 return page.Width;
 
             current = current.Parent;
@@ -67,6 +76,16 @@ public static class CardExpandAnimationHelper
     {
         if (cancellationToken.IsCancellationRequested)
             return;
+
+        if (!IsFinite(from) || !IsFinite(to))
+            return;
+
+        if (Math.Abs(from - to) < 0.5)
+        {
+            target.HeightRequest = to;
+            onStep?.Invoke(to);
+            return;
+        }
 
         target.AbortAnimation(animationName);
 

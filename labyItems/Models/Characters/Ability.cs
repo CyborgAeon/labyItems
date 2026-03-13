@@ -9,6 +9,7 @@ public sealed class AbilityDraft
     public string? Effect { get; set; }
     public string? Source { get; set; }
     public int? Count { get; set; }
+    public AbilityCountProgression? Progression { get; set; }
     public List<int>? Amount { get; set; }
     public string? Frequency { get; set; }
     public string? OverwriteKey { get; set; }

@@ -1429,6 +1429,9 @@
   },
   "Church of Dead Heroes": {
     "Type": "professional",
+    "DenominationalMiracle": {
+      "$ref": "Death Rites"
+    },
     "PreRequisites": "Priests or Lay Believers of Dead Heroes may be any alignment. Outlaws may not join without the high priest’s permission, and members who are Outlawed may not remain without his permission. No member of the church may act against the Empire of Glass as it is the current belief of the Church that this Empire is essential and central to existence. All members must be from Primus and people from outside the Empire may only join with permission of the High Priest. People belonging to other churches or who worship other deities may not join.",
     "Ethos": "In our past hundreds and thousands have died defending both the Empire and Primus from threats and conflict. Some have died willingly, many of the vitae infused heroes, and others less willingly, the soldiers of the armies of the Empire. As such these people, these Heroes, responsible for our existence today should be remembered and their names and stories passed from generation to generation. However we should remember that one man’s hero may be another’s villain. While we venerate Heroes and remember them, they are not our gods. It may be required for us to stand against them, and even kill them. The faith’s duty is in inspiring – remembering the deeds of a Hero and inspiring others with it, not bending knee to them. Kurten D’treal has spirit link to all dead guild members, and can choose to Word of Recall them to him. As such members are free to inform him OOC of their death and he can choose to rescue them, or leave them to ascend to being a Dead Hero as he wishes.",
     "Restrictions": "",
@@ -1540,6 +1543,9 @@
     }
   },
   "Church of the Empress Goddess": {
+    "DenominationalMiracle": {
+      "$ref": "The Empress' Sacrifice"
+    },
     "Type": "professional",
     "PreRequisites": "Open to any Goodly priest. Only Goodly individuals may join without the permission of the High Priest or 2 Custodians",
     "Ethos": "Members of this Church worship Truic Amora-Badrass, the Grand Duchess of Halgar, Empress of Labyrinthia and Realm Spirit of Glass as a Goddess in her own right. They recognise the fact that the current Empress has become the first Master or Mistress of Primus to truly master the Nagrech. Furthermore, members of this faith venerate the choice that the Empress made in sacrificing her own humanity and mortality to ascend to the position of Realm Spirit of Glass in order to combat the rise of The Spiter in the Sunless Lands. This act is held up as an example of the devotion to the duty of protecting the Empire, its borders and the people who reside within it that all members of the church should aspire to. This church is a goodly faith and represents the Empresses’ moral outlook as a goodly, constructive and peace loving being – violence should genuinely not be the first option. However, it is clearly not pacifistic in that its members are free (and often encouraged) to resort to martial means if necessary in the protection of the Empire and its people or in order to uphold Imperial Law. This faith is currently most commonly followed by those outside the mercenary community, though its influence there is starting to grow. It is also particularly popular within some of the most fervent of the legions within the Bastion.\n\nMIRACLE LIST 1st Halt (N) Dismiss Zombie (G) 2nd Halt Undead (G), Cure Serious (G) 3rd Protection from Spirits (N), Spirit Shield (N) Talk to Spirit, (N) Bless, (G) Dismiss Ghoul, (G) 4th Heal (G) 5th VoP (N) Spirit Invis (N) Dismiss Wraith (G) 6th Total Heal (G) Dismiss Vampire (G) 7th Pure Force (N)",
@@ -1643,7 +1649,6 @@
   "Church of Knowledge": {
     "PreRequisites": "Be a Good Priest",
     "Ethos": "The Church of Knowledge places a high value on the pursuit of knowledge and understanding. It believes that knowledge is the key to personal growth, societal progress, and a deeper connection to the universe.\nThe Church of Knowledge does not require its worshippers to follow blind faith or dogma. Instead joining the church is an invitation to embark on a lifelong journey of learning, exploration, and self-discovery. It is a path to enlightenment through the power of knowledge and understanding.\nThe Church also encourages the study of a wide range of subjects, including history, philosophy, and art. It promotes the use of reason and logic in making decisions. Worshippers of the Church should be open to new discoveries and theories, even if they contradict existing beliefs.\nBelievers should encourage people to think for themselves and come to their own conclusions.\nEmbrace the Pursuit of Knowledge: Never stop seeking knowledge and understanding. Question everything, explore diverse perspectives, and engage with new ideas.\nValue Critical Thinking: Approach all knowledge with a critical eye. Evaluate evidence, consider different interpretations, and challenge assumptions.\nShare Knowledge Freely: Share most knowledge with others, fostering collaboration and collective enlightenment.\nForbidden Knowledge: Some knowledge is too dangerous to be shared freely. This should not be destroyed but instead should be kept safely and securely in case it is needed. No knowledge should be destroyed.",
-    "Restrictions": "!!todo!!",
     "Type": "professional",
     "MiracleList": {
       "1": [
@@ -1874,6 +1879,9 @@
     "Type": "professional",
     "PreRequisites": "Goodly aligned priests",
     "Ethos": "The Lady of the Stars, is the Goddess of Light, Beauty and Joy, \"those things that make life worth enjoying, not merely enduring\". Historically, the church in Labyrinthia directed much of its energy towards the destruction of the Void God, but now that that end has been achieved, they have had a chance to step back and return the faith to its earlier roots. Since followers of the Lady of the Stars offer their whole-hearted love and devotion to the Lady, no individual who draws spiritual power from any other source or patron may claim membership of the Church of The Lady of the Stars. Any priest of the church who in some way acquires another spiritual patron must either reject that patron and their power *utterly*, or else leave the church (refusal to leave is an excommunicable offence). The only exception to this rule is followers of the other Valar, since the Lady is the representative of that pantheon upon this plane.\n\nDARIG OF ELBERETH It is worth noting that Darig has a Spirit Link, as per the tables ability, with all Guild members. Miracle List\n\n1st Halt, Cure Wound, Detect Spirit’s Nature, Power Meld, Spirit of Seeing 2nd Cure Serious 3rd Cure Disease, Talk to Spirits, Spirit Shield, Protection from Spirits, Bless, Dismiss Ghoul\n\n4th Heal, Spirit Bolt 5th Dismiss Wraith, Voice of Power, Spiritual Invisibility 6th Total Heal, Dismiss Vampire 8th Restore Life",
+    "DenominationalMiracle": {
+      "$ref": "Soul Sharing"
+    },
     "MiracleList": {
       "1": [
         "Halt",
@@ -1968,6 +1976,9 @@
     }
   },
   "Church of Mortai": {
+    "DenominationalMiracle": {
+      "$ref": "Righteous Aura"
+    },
     "Logo": "~/guilds/logos/mortai.png",
     "Type": "professional",
     "PreRequisites": "Be a goodly weapons-wielding priest (not pure priest, hospitaller, armoured priest), or a paladin",
@@ -2075,6 +2086,9 @@
     "PreRequisites": "Goodly non weapon using priest.",
     "Ethos": "Shaehan is the Goddess of Healing, Mercy and Charity. Shaehan priests will cure all who ask for it, though may ask those of evil alignment to repent before doing so. The priests have a similar outlook to Hospitallers but realise that fighting is a way of life and thus will not always try to stop a fight, although they will advise against it and will tidy up afterwards. They must never kill, or they will be instantly excommunicated by the goddess, unless it is against Undead or evil supernatural creatures which are antagonistic. Above all Shaehan priests believe in healing, mercy and the right of life regardless of alignment.",
     "Restrictions": "They must never kill, or they will be instantly excommunicated by the goddess (referee), unless it is against Undead or evil supernatural creatures which are antagonistic. May never manufacture anything supernatural except spiritual scrolls.\n\nMESSAGE FROM THE HIGH PRIEST Faithful, please find me to receive the blessings of our lady, so that I can ensure that you are protected. The church and our Ladies power has much to provide. Keep safe whilst travelling the lands of Primus and beyond. And above all, embrace Her light wherever you walk. Miracle List\n\n1st Cure Wound, Detect Spirit’s Nature, Halt 2nd Cure Serious Wounds 3rd Cure Disease, Talk to Spirit, Dismiss Ghoul, Protection from Spirits, Spirit Shield, Bless 4th Heal 5th Dismiss Wraith, Remove Fear and Paralysis, Spiritual Invisibility 6th Total Heal, Dismiss Vampire, Spiritual Freedom 8th Restore Life",
+    "DenominationalMiracle": {
+      "$ref": "Shaehan's Mercy"
+    },
     "Type": "professional",
     "MiracleList": {
       "1": ["Cure Wound", "Detect Spirit's Nature", "Halt"],
@@ -2185,6 +2199,9 @@
   },
   "Church of Saint Michael": {
     "Type": "professional",
+    "DenominationalMiracle": {
+      "$ref": "Sight of the Blind"
+    },
     "PreRequisites": "Be a goodly aligned priest",
     "Ethos": "Priests of Saint Michael follow the Creator of all things and on the whole try to reason with most problems; a guild for reasonable characters. However, many of the longer-standing members of the Church tend to interpret St Michael’s teachings in more ‘extreme’ ways, and this has led to some discussion about the possible division of the guild. The High Priest is at pains to point out, however, that the scriptures can be read in more than one way. Robert - It is worth noting that Robert, Cardinal of Saint Michael (Forum name - Mart07), has a Spirit Link, as per the tables ability, with all Guild members. Miracle List\n\n1st Cure Wound, Detect Spirit’s Nature, Halt, Power Meld, Spirit of Seeing 2nd Cure Serious Wounds 3rd Cure Disease, Talk to Spirit, Dismiss Ghoul, Protection from Spirits, Spirit Shield, Bless 4th Heal, Spirit Bolt 5th Dismiss Wraith, Voice of Power, Spiritual Invisibility 6th Total Heal, Dismiss Vampire 8th Restore Life",
     "MiracleList": {
@@ -2356,6 +2373,9 @@
     "Ethos": "Talthar is the Lord of Hope, a burning beacon of inspiration to his followers. Whilst the vast majority of Talthar's priests spend their time ministering to their congregations within the Church of Talthar works a dedicated core of worshipers; these are known as The Rings of Talthar. The Rings of Talthar are some of the most fervent worshipers of the Lord of Hope, those of the faith imbued with Vitae.\n\nTHE RINGS OF TALTHAR In some ways Talthar is a pantheon to itself in that it has seven aspects, represented by the seven interwoven rings that is its symbol. Whilst the most actively represented aspect in the mercenary community is that of Elbrime, Hope in adversity, there are others.",
     "Restrictions": "Guild Members must choose to align themselves to one of the seven aspects of Talthar, which must be recorded on their character card. They may only battleboard the guild benefits of that ring. Miracle List\n\n1st Cure Wound, Halt 2nd Cure Serious Wounds 3rd Cure Disease, Protection from Spirits, Talk to Spirits, Spirit Shield, Bless 4th Spirit Bolt, Heal 5th Voice of Power, Remove Voice of Power, Spiritual Invisibility 6th Total Heal, Dismiss Vampire, Regeneration 8th Restore Life",
     "Type": "professional",
+    "DenominationalMiracle": {
+      "$ref": "Blessing of the Aspects of Hope"
+    },
     "MiracleList": {
       "1": ["Cure Wound", "Halt"],
       "2": ["Cure Serious Wounds"],
@@ -2567,6 +2587,9 @@
   },
   "Church of the Tryst": {
     "Type": "professional",
+    "DenominationalMiracle": {
+      "$ref": "Claws of the Imbaiu"
+    },
     "PreRequisites": "Any Evil Priest can join this guild.\n\nMIRACLE LIST 1st Halt, Power Meld, 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Curse, Talk to Spirits, Spirit Shield, Cause Serious Wounds, Protection From Spirits 4th Spirit Shift, Spirit Bolt, Cause Disease, Create Ghoul 5th Spiritual Invisibility, Cause Grievous Wounds 6th Control Wraith, Serin’s Bound Spirit of Undeath, Walk Through Walls 7th Suspend Life",
     "Ethos": "The Tryst is a church that takes spiritual power from the Imbaiu demons. It is important to understand that the church do not serve the Imbaiu, but binds, dominates and commands them. References to the Imbaiu Masters refer to those Imbaiu with mastery over lesser demons. The Imbaiu Masters that accept the bindings of the church do so because this link to Primus gives them strength upon their own worlds that they use to remain at the top of their demonic hierarchy.\n\nPRE-REQUISITES Any Evil Priest can join this guild.\n\nMIRACLE LIST 1st Halt, Power Meld, 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Curse, Talk to Spirits, Spirit Shield, Cause Serious Wounds, Protection From Spirits 4th Spirit Shift, Spirit Bolt, Cause Disease, Create Ghoul 5th Spiritual Invisibility, Cause Grievous Wounds 6th Control Wraith, Serin’s Bound Spirit of Undeath, Walk Through Walls 7th Suspend Life",
     "MiracleList": {
@@ -2640,6 +2663,9 @@
     }
   },
   "Church of Condesecration": {
+    "DenominationalMiracle": {
+      "$ref": "Lakh"
+    },
     "Type": "professional",
     "PreRequisites": "• Any Evil Priest Subclass, Hermits and the alike may choose to keep their own lists, Unholy Champions may also join.\n• Any member that worships a God of their own free will, will be excommunicated.",
     "Ethos": "A Dark faith built upon the darkest whispers of the world, this church worships the malevolence woven into the fabric of existence itself.\nCore Belief: The world is a tainted and imperfect place, not because of chance, but because darkness is intrinsic to its nature. Evil spirits are not aberration - they are the world’s architects, unseen but ever-present.\nThe hearts of men, with greed, hatred and ambition, are merely conduits for this eternal corruption. To resist is folly, to embrace is power.\nIt was through Treare The Ghoul Lord's teachings that when Lord Waste left, it was him that swore never to follow a god again and find the true path to power, strength through the darkness that lives in all souls and this is what followers draw upon.\nCorruption Is Truth: Purity is a myth fed to the weak. All things decay, and the strong must harness the inevitable rot.\nThe Will of Shadows: Evil spirits, lurking beyond mortal sight, whisper their desires into the ears of men, the faithful must listen and act.\nLast words of the High Priest: Darkness is everywhere, bind it and learn control. Killing randomly and without thinking is disliked by the current leadership and harming peons is such a waste as they are a source of our strength.",
@@ -2970,7 +2996,7 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🪄 Wizard"]
+          "Value": ["🧙 Wizard"]
         }
       ]
     }
@@ -3328,7 +3354,7 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🪄 Wizard"]
+          "Value": ["🧙 Wizard"]
         },
         {
           "Field": "PeopleType",
@@ -4318,6 +4344,9 @@
           "Value": ["🙏 Priest"]
         }
       ]
+    },
+    "DenominationalMiracle": {
+      "$ref": "The Tranquil Seas"
     }
   },
   "Alguz": {

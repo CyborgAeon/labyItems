@@ -1208,10 +1208,18 @@
       "Source": "Crol talents",
       "Key": "ability.bronze-jewellery"
     },
+    "ability.self-heal-power-master": {
+      "Name": "Self Heal",
+      "Type": "Innate",
+      "Effect": "This ability may only be used whilst in contact with the appropriate element, which means underground for earth, in a strong breeze for air, up to the waist in water for water, and within or near a bonfire-size blaze for fire. \nThis effect magically heals all normal damage to tblp and locations, and negates diseases and potions or poisons.\nThe phrase 'Let the power of [element] come onto me' must be repeatedly chanted for two minutes to achieve the effect. During this time the character cannot fight, cast spells, move etc or the process is interrupted and the innate is wasted. Diseases, potions and poisons do not progress further during this time.",
+      "Count": 1,
+      "Source": "Power Master",
+      "Key": "ability.self-heal-power-master"
+    },
     "ability.self-heal": {
       "Name": "Self Heal",
       "Type": "Innate",
-      "Effect": "This ability may only be used whilst in contact with the appropriate element, which means underground for earth, in a strong breeze for air, up to the waist in water for water, and within or near a bonfire-size blaze for fire. \nThis effect magically heals all normal damage to tblp and locations, and negates diseases and potions or poisons on the master.\nThe phrase \u201cLet the power of [element] come onto me\u201d must be repeatedly chanted for two minutes to achieve the effect. During this time the master cannot fight, cast spells, move etc or the process is interrupted and the innate is wasted. Diseases, potions and poisons do not progress further during this time.",
+      "Effect": "This ability may only be used whilst in contact with the appropriate element, which means underground for earth, in a strong breeze for air, up to the waist in water for water, and within or near a bonfire-size blaze for fire. \nThis effect magically heals all normal damage to tblp and locations, and negates diseases and potions or poisons.\nThe phrase 'Let the power of [element] come onto me' must be repeatedly chanted for two minutes to achieve the effect. During this time the character cannot fight, cast spells, move etc or the process is interrupted and the innate is wasted. Diseases, potions and poisons do not progress further during this time.",
       "Count": 1,
       "Source": "Crol talents",
       "Key": "ability.self-heal"
@@ -2760,7 +2768,9 @@
     "See through Darkness": "ability.see-through-darkness",
     "See through Magical Darkness Self": "ability.see-through-magical-darkness-self",
     "See Through Magical Darkness Self": "ability.see-through-magical-darkness-self",
-    "Self Heal": "ability.self-heal",
+    "Self Heal": "ability.self-heal-power-master",
+    "Self Heal (Crol Talents)": "ability.self-heal",
+    "Self Heal (Power Master)": "ability.self-heal-power-master",
     "Self-Awareness": "ability.self-awareness",
     "Shades": "ability.shades",
     "Shadow Shift": "ability.shadow-shift",

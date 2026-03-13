@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -15,6 +16,7 @@ public sealed class AbilityDefinition
     public string? Lore { get; set; }
     public string? Source { get; set; }
     public int? Count { get; set; }
+    public AbilityCountProgression? Progression { get; set; }
     public List<int>? Amount { get; set; }
     public string? Frequency { get; set; }
     public string? OverwriteKey { get; set; }
@@ -27,6 +29,29 @@ public sealed class AbilityCustomisation
 {
     public string? OptionEnum { get; set; }
     public bool CustomValuesPermitted { get; set; }
+}
+
+public sealed class AbilityCountProgression
+{
+    public int Amount { get; set; } = 1;
+    public int PerLevels { get; set; } = 1;
+    public int? Minimum { get; set; }
+    public int? Maximum { get; set; }
+
+    public int ResolveCount(int achievedLevel)
+    {
+        var levels = Math.Max(0, achievedLevel);
+        var amount = Math.Max(0, Amount);
+        var perLevels = Math.Max(1, PerLevels);
+
+        var resolved = (int)Math.Floor((double)(levels * amount) / perLevels);
+        if (Minimum.HasValue)
+            resolved = Math.Max(resolved, Minimum.Value);
+        if (Maximum.HasValue)
+            resolved = Math.Min(resolved, Maximum.Value);
+
+        return Math.Max(0, resolved);
+    }
 }
 
 public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition>
@@ -60,6 +85,7 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
                 Frequency = ReadFrequency(el),
                 OverwriteKey = el.TryGetProperty("OverwriteKey", out var overwriteEl) ? overwriteEl.GetString() : null,
                 Customisation = ReadCustomisation(el),
+                Progression = ReadProgression(el),
                 Amount = ReadAmount(el)
             };
 
@@ -170,6 +196,11 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
         if (!string.IsNullOrWhiteSpace(value.Lore)) writer.WriteString("Lore", value.Lore);
         if (!string.IsNullOrWhiteSpace(value.Source)) writer.WriteString("Source", value.Source);
         if (value.Count.HasValue) writer.WriteNumber("Count", value.Count.Value);
+        if (value.Progression != null)
+        {
+            writer.WritePropertyName("Progression");
+            JsonSerializer.Serialize(writer, value.Progression, options);
+        }
         if (value.Amount is { Count: > 0 })
         {
             writer.WritePropertyName("Amount");
@@ -253,5 +284,47 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
         }
 
         return list.Count > 0 ? list : null;
+    }
+
+    private static AbilityCountProgression? ReadProgression(JsonElement el)
+    {
+        if (!el.TryGetProperty("Progression", out var progressionEl)
+            || progressionEl.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        var amount = TryReadInt(progressionEl, "Amount") ?? 1;
+        var perLevels = TryReadInt(progressionEl, "PerLevels") ?? 1;
+        var minimum = TryReadInt(progressionEl, "Minimum");
+        var maximum = TryReadInt(progressionEl, "Maximum");
+
+        if (amount <= 0 || perLevels <= 0)
+            return null;
+
+        return new AbilityCountProgression
+        {
+            Amount = amount,
+            PerLevels = perLevels,
+            Minimum = minimum,
+            Maximum = maximum
+        };
+    }
+
+    private static int? TryReadInt(JsonElement source, string propertyName)
+    {
+        if (!source.TryGetProperty(propertyName, out var value))
+            return null;
+
+        if (value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out var number))
+            return number;
+
+        if (value.ValueKind == JsonValueKind.String
+            && int.TryParse(value.GetString(), out number))
+        {
+            return number;
+        }
+
+        return null;
     }
 }
