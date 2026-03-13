@@ -1,6 +1,5 @@
 // Services/LiteDbService.cs
 using System.Linq;
-using System.Text.Json;
 using System.Diagnostics;
 using labyItems.Models;
 using labyItems.Models.Characters;
@@ -12,6 +11,7 @@ public static class LiteDbService
 {
     private static LiteDatabase? _db;
     private static readonly object DbSync = new();
+    private const string CharactersCollectionName = "characters";
 
     private static LiteDatabase GetDb()
     {
@@ -58,7 +58,7 @@ public static class LiteDbService
             db.GetCollection<Item>("items").EnsureIndex(nameof(Item.CreatedDate));
             db.GetCollection<Item>("items").EnsureIndex(nameof(Item.AssignedCharacterName));
             db.GetCollection<Item>("items").EnsureIndex(nameof(Item.AssignedCharacterPlayerName));
-            db.GetCollection<Character>("characters").EnsureIndex(nameof(Character.Name));
+            db.GetCollection(CharactersCollectionName).EnsureIndex(nameof(Character.Name));
         }
         catch (TypeInitializationException ex) when ((ex.TypeName ?? string.Empty).Contains("LiteDB.BsonExpression", StringComparison.OrdinalIgnoreCase))
         {
@@ -105,7 +105,7 @@ public static class LiteDbService
         GetDb().GetCollection<Item>("items").Delete(id);
 
     public static void DeleteChar(ObjectId id) =>
-        GetDb().GetCollection<Character>("characters").Delete(id);
+        GetCharacterCollection().Delete(id);
 
     private static string NormalizeKey(string s) => (s ?? string.Empty).Trim().ToLowerInvariant();
 
@@ -155,22 +155,25 @@ public static class LiteDbService
     }
 
     public static IEnumerable<Character> GetCharacters() =>
-        GetDb().GetCollection<Character>("characters").FindAll().OrderBy(c => c.Name);
+        GetCharacterCollection()
+            .FindAll()
+            .Select(ToCharacter)
+            .OrderBy(c => c.Name);
 
     public static Character? GetCharacterById(ObjectId id) =>
-        GetDb().GetCollection<Character>("characters").FindById(id);
+        ToCharacterOrNull(GetCharacterCollection().FindById(id));
 
     public static void UpsertCharacter(Character c)
     {
-        var col = GetDb().GetCollection<Character>("characters");
+        var col = GetCharacterCollection();
         c.Id = EnsureId(c.Id);
         c.UpdatedUtc = DateTime.UtcNow;
-        col.Upsert(c);
+        col.Upsert(ToDocument(c));
     }
 
     public static Character UpsertDraft(CharacterDraft draft)
     {
-        var col = GetDb().GetCollection<Character>("characters");
+        var col = GetCharacterCollection();
         ObjectId? idOverride = null;
         var rawId = (draft.CharacterRecordId ?? string.Empty).Trim();
         if (rawId.Length > 0 && TryParseObjectId(rawId, out var parsedId))
@@ -181,7 +184,7 @@ public static class LiteDbService
         }
 
         var entity = MapFromDraft(draft, idOverride);
-        col.Upsert(entity);
+        col.Upsert(ToDocument(entity));
         draft.CharacterRecordId = entity.Id.ToString();
         return entity;
     }
@@ -264,4 +267,187 @@ public static class LiteDbService
         return draft;
     }
 
+    private static ILiteCollection<BsonDocument> GetCharacterCollection()
+        => GetDb().GetCollection(CharactersCollectionName);
+
+    private static BsonDocument ToDocument(Character character)
+    {
+        var id = EnsureId(character.Id);
+        var updatedUtc = character.UpdatedUtc == default ? DateTime.UtcNow : character.UpdatedUtc;
+        var doc = new BsonDocument
+        {
+            ["_id"] = id,
+            [nameof(Character.Name)] = character.Name ?? string.Empty,
+            [nameof(Character.Race)] = character.Race ?? string.Empty,
+            [nameof(Character.RaceSubtype)] = character.RaceSubtype ?? string.Empty,
+            [nameof(Character.RaceSubtypeKey)] = character.RaceSubtypeKey ?? string.Empty,
+            [nameof(Character.Class)] = character.Class ?? string.Empty,
+            [nameof(Character.PlayerName)] = character.PlayerName ?? string.Empty,
+            [nameof(Character.Notes)] = character.Notes ?? string.Empty,
+            [nameof(Character.DraftSnapshot)] = character.DraftSnapshot ?? string.Empty,
+            [nameof(Character.UpdatedUtc)] = updatedUtc,
+            [nameof(Character.Points)] = character.Points,
+            [nameof(Character.Guilds)] = ToStringArray(character.Guilds),
+            [nameof(Character.PointsApps)] = ToStringArray(character.PointsApps),
+            [nameof(Character.Specialisations)] = ToStringDocument(character.Specialisations)
+        };
+
+        character.Id = id;
+        character.UpdatedUtc = updatedUtc;
+        return doc;
+    }
+
+    private static Character? ToCharacterOrNull(BsonDocument? doc)
+        => doc == null ? null : ToCharacter(doc);
+
+    private static Character ToCharacter(BsonDocument doc)
+    {
+        return new Character
+        {
+            Id = ReadObjectId(doc, "_id"),
+            Name = ReadString(doc, nameof(Character.Name)),
+            Race = ReadString(doc, nameof(Character.Race)),
+            RaceSubtype = ReadString(doc, nameof(Character.RaceSubtype)),
+            RaceSubtypeKey = ReadString(doc, nameof(Character.RaceSubtypeKey)),
+            Class = ReadString(doc, nameof(Character.Class)),
+            PlayerName = ReadString(doc, nameof(Character.PlayerName)),
+            Notes = ReadString(doc, nameof(Character.Notes)),
+            DraftSnapshot = ReadString(doc, nameof(Character.DraftSnapshot)),
+            UpdatedUtc = ReadDateTime(doc, nameof(Character.UpdatedUtc)),
+            Points = ReadInt64(doc, nameof(Character.Points)),
+            Guilds = ReadStringList(doc, nameof(Character.Guilds)),
+            PointsApps = ReadStringList(doc, nameof(Character.PointsApps)),
+            Specialisations = ReadStringDictionary(doc, nameof(Character.Specialisations))
+        };
+    }
+
+    private static BsonArray ToStringArray(IEnumerable<string>? values)
+    {
+        var array = new BsonArray();
+        if (values == null)
+            return array;
+
+        foreach (var value in values)
+            array.Add(value ?? string.Empty);
+
+        return array;
+    }
+
+    private static BsonDocument ToStringDocument(IDictionary<string, string>? values)
+    {
+        var doc = new BsonDocument();
+        if (values == null)
+            return doc;
+
+        foreach (var kvp in values)
+        {
+            var key = (kvp.Key ?? string.Empty).Trim();
+            if (key.Length == 0)
+                continue;
+
+            doc[key] = kvp.Value ?? string.Empty;
+        }
+
+        return doc;
+    }
+
+    private static Dictionary<string, string> ReadStringDictionary(BsonDocument doc, string fieldName)
+    {
+        var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (!TryGetValueIgnoreCase(doc, fieldName, out var value) || !value.IsDocument)
+            return dictionary;
+
+        foreach (var kvp in value.AsDocument)
+        {
+            var key = (kvp.Key ?? string.Empty).Trim();
+            if (key.Length == 0)
+                continue;
+
+            dictionary[key] = kvp.Value.IsString
+                ? kvp.Value.AsString
+                : (kvp.Value.IsNull ? string.Empty : kvp.Value.ToString());
+        }
+
+        return dictionary;
+    }
+
+    private static List<string> ReadStringList(BsonDocument doc, string fieldName)
+    {
+        var list = new List<string>();
+        if (!TryGetValueIgnoreCase(doc, fieldName, out var value) || !value.IsArray)
+            return list;
+
+        foreach (var item in value.AsArray)
+        {
+            if (item.IsNull)
+                continue;
+
+            list.Add(item.IsString ? item.AsString : item.ToString());
+        }
+
+        return list;
+    }
+
+    private static long ReadInt64(BsonDocument doc, string fieldName)
+    {
+        if (!TryGetValueIgnoreCase(doc, fieldName, out var value) || value.IsNull)
+            return 0;
+
+        if (value.IsInt64)
+            return value.AsInt64;
+        if (value.IsInt32)
+            return value.AsInt32;
+
+        return long.TryParse(value.ToString(), out var parsed) ? parsed : 0;
+    }
+
+    private static DateTime ReadDateTime(BsonDocument doc, string fieldName)
+    {
+        if (!TryGetValueIgnoreCase(doc, fieldName, out var value) || value.IsNull)
+            return DateTime.UtcNow;
+
+        if (value.IsDateTime)
+            return value.AsDateTime;
+
+        return DateTime.TryParse(value.ToString(), out var parsed)
+            ? parsed
+            : DateTime.UtcNow;
+    }
+
+    private static ObjectId ReadObjectId(BsonDocument doc, string fieldName)
+    {
+        if (TryGetValueIgnoreCase(doc, fieldName, out var value) && value.IsObjectId)
+            return value.AsObjectId;
+
+        return ObjectId.NewObjectId();
+    }
+
+    private static string ReadString(BsonDocument doc, string fieldName)
+    {
+        if (!TryGetValueIgnoreCase(doc, fieldName, out var value) || value.IsNull)
+            return string.Empty;
+
+        if (value.IsString)
+            return value.AsString ?? string.Empty;
+
+        return value.ToString();
+    }
+
+    private static bool TryGetValueIgnoreCase(BsonDocument doc, string fieldName, out BsonValue value)
+    {
+        if (doc.TryGetValue(fieldName, out value))
+            return true;
+
+        foreach (var kvp in doc)
+        {
+            if (!string.Equals(kvp.Key, fieldName, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            value = kvp.Value;
+            return true;
+        }
+
+        value = BsonValue.Null;
+        return false;
+    }
 }
