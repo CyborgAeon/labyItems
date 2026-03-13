@@ -103,7 +103,7 @@
     "level": 1,
     "colour": "Grey",
     "verbal": "By the power of the elements I shatter this...",
-    "description": "The spell will shatter one normal object (non-magical or non- spiritual) up to a volume of 27 cubic feet.",
+    "description": "The spell will shatter one normal object (non-magical or non-spiritual) up to a volume of 27 cubic feet.",
     "IsAdvanced": false,
     "sourcePage": 10
   },
