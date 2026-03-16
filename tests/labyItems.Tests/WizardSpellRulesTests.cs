@@ -73,4 +73,19 @@ public sealed class WizardSpellRulesTests
         Assert.Single(result);
         Assert.Equal("Sorcery Bolt", result[0].Name);
     }
+
+    [Fact]
+    public void BuildBaseSpellEntries_GreyBonus_Includes_UpTo_Level8_Only()
+    {
+        var spells = new List<SpellService.SpellRaw>
+        {
+            new() { name = "Grey Eight", level = 8, colour = "Grey", isAdvanced = false },
+            new() { name = "Grey Nine", level = 9, colour = "Grey", isAdvanced = false }
+        };
+
+        var result = WizardSpellRules.BuildBaseSpellEntries(spells, new[] { "Green" }, includeGreyBonus: true);
+
+        Assert.Contains(result, entry => entry.Name == "Grey Eight");
+        Assert.DoesNotContain(result, entry => entry.Name == "Grey Nine");
+    }
 }

@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Characters.MultiClassWizardPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:characters="clr-namespace:labyItems.Pages.Characters"
+    xmlns:viewModels="clr-namespace:labyItems.Pages.Characters.ViewModels"
+    Title="Multi-Class Wizard"
+    BackgroundColor="{StaticResource White}"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="ClassCardTemplate"
+                          x:DataType="characters:ClassCardVm">
+                <characters:ClassCardView
+                    SelectCommand="{Binding SelectClassCommand, Source={x:Reference Root}}"
+                    ToggleExpandedCommand="{Binding ToggleExpandedCommand, Source={x:Reference Root}}"/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto"
+          RowSpacing="0">
+
+        <Border Grid.Row="0"
+                Padding="16,12"
+                Stroke="{StaticResource SurfaceBorderColor}"
+                StrokeThickness="1"
+                BackgroundColor="{StaticResource White}">
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="8">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Multi-Class Wizard"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+                    <Label Text="{Binding StepDescription}"
+                           FontSize="12"
+                           Opacity="0.75"/>
+                </VerticalStackLayout>
+                <Label Grid.Column="1"
+                       Text="{Binding StepCounterText}"
+                       VerticalOptions="Center"
+                       FontSize="12"
+                       Opacity="0.7"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1"
+              Padding="16"
+              RowDefinitions="*">
+
+            <ContentView IsVisible="{Binding IsSearchStep}">
+                <Grid RowDefinitions="Auto,Auto,*"
+                      RowSpacing="8">
+                    <Entry Grid.Row="0"
+                           Placeholder="Search multi-classes..."
+                           ClearButtonVisibility="WhileEditing"
+                           Text="{Binding SearchText, Mode=TwoWay}"/>
+
+                    <CollectionView Grid.Row="1"
+                                    ItemsSource="{Binding FilterChips}"
+                                    SelectionMode="None"
+                                    ItemsLayout="HorizontalList"
+                                    HeightRequest="38">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
+                                        Margin="0,0,8,0">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ToggleFilterChipCommand, Source={x:Reference Root}}"
+                                                              CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{Binding Label}"
+                                           Style="{StaticResource FilterPillLabelStyle}"/>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Grid Grid.Row="2">
+                        <CollectionView ItemsSource="{Binding FilteredClasses}"
+                                        ItemTemplate="{StaticResource ClassCardTemplate}"
+                                        SelectionMode="None"
+                                        IsVisible="{Binding HasAvailableClasses}"/>
+                        <Label Text="No multiclasses are currently available for this character."
+                               IsVisible="{Binding HasAvailableClasses, Converter={StaticResource InverseBoolConverter}}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Opacity="0.7"
+                               HorizontalTextAlignment="Center"/>
+                    </Grid>
+                </Grid>
+            </ContentView>
+
+            <ContentView IsVisible="{Binding IsDetailStep}">
+                <Grid RowDefinitions="Auto,*"
+                      RowSpacing="10">
+                    <VerticalStackLayout Grid.Row="0"
+                                         Spacing="2">
+                        <Label Text="{Binding SelectedCardName}"
+                               FontAttributes="Bold"
+                               FontSize="18"/>
+                        <Label Text="{Binding SelectedAvailabilityText}"
+                               FontSize="12"
+                               Opacity="0.7"/>
+                    </VerticalStackLayout>
+
+                    <ScrollView Grid.Row="1"
+                                IsVisible="{Binding HasSelectedCard}">
+                        <VerticalStackLayout Spacing="10"
+                                             Padding="0,0,0,2">
+                            <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{StaticResource White}">
+                                <VerticalStackLayout Spacing="1"
+                                                     BackgroundColor="{StaticResource SoftStrokeColor}">
+                                    <Grid ColumnSpacing="8"
+                                          Padding="8,8,8,6"
+                                          Opacity="0.75"
+                                          BackgroundColor="{StaticResource White}"
+                                          IsVisible="{Binding ShowSelectedLifeScaleColumns, Converter={StaticResource InverseBoolConverter}}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="24"/>
+                                            <ColumnDefinition Width="40"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="Lvl"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="1"
+                                               Text="Cost"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="2"
+                                               Text="Abilities"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="3"
+                                               Text="Info"
+                                               HorizontalTextAlignment="Center"/>
+                                    </Grid>
+
+                                    <Grid ColumnSpacing="8"
+                                          Padding="8,8,8,6"
+                                          Opacity="0.75"
+                                          BackgroundColor="{StaticResource White}"
+                                          IsVisible="{Binding ShowSelectedLifeScaleColumns}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="24"/>
+                                            <ColumnDefinition Width="36"/>
+                                            <ColumnDefinition Width="36"/>
+                                            <ColumnDefinition Width="40"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="Lvl"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="1"
+                                               Text="TBLP"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="2"
+                                               Text="LOC"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="3"
+                                               Text="Cost"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="4"
+                                               Text="Abilities"
+                                               HorizontalTextAlignment="Center"/>
+                                        <Label Grid.Column="5"
+                                               Text="Info"
+                                               HorizontalTextAlignment="Center"/>
+                                    </Grid>
+
+                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding SelectedLevelRows}"
+                                                         Spacing="1">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="viewModels:MultiClassLevelRowVm">
+                                                <Grid BackgroundColor="{Binding RowBackgroundColor}">
+                                                    <Grid ColumnSpacing="8"
+                                                          Padding="8,6"
+                                                          IsVisible="{Binding Source={x:Reference Root}, Path=BindingContext.ShowSelectedLifeScaleColumns, Converter={StaticResource InverseBoolConverter}}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="24"/>
+                                                            <ColumnDefinition Width="40"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Label Text="{Binding Level}"
+                                                               HorizontalTextAlignment="Center"
+                                                               VerticalTextAlignment="Center"/>
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding CostText}"
+                                                               HorizontalTextAlignment="Center"
+                                                               VerticalTextAlignment="Center"/>
+                                                        <Label Grid.Column="2"
+                                                               Text="{Binding AbilityEffectsText}"
+                                                               LineBreakMode="WordWrap"
+                                                               VerticalTextAlignment="Center"/>
+                                                        <Button Grid.Column="3"
+                                                                Text="&#xF05A;"
+                                                                FontFamily="FASolid"
+                                                                FontSize="12"
+                                                                Padding="0"
+                                                                BackgroundColor="Transparent"
+                                                                TextColor="{StaticResource SubtleTextColor}"
+                                                                HeightRequest="18"
+                                                                WidthRequest="18"
+                                                                MinimumHeightRequest="0"
+                                                                MinimumWidthRequest="0"
+                                                                HorizontalOptions="Center"
+                                                                VerticalOptions="Center"
+                                                                IsVisible="{Binding HasAbilityDetails}"
+                                                                Clicked="OnLevelInfoClicked"
+                                                                CommandParameter="{Binding .}"/>
+                                                    </Grid>
+
+                                                    <Grid ColumnSpacing="8"
+                                                          Padding="8,6"
+                                                          IsVisible="{Binding Source={x:Reference Root}, Path=BindingContext.ShowSelectedLifeScaleColumns}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="24"/>
+                                                            <ColumnDefinition Width="36"/>
+                                                            <ColumnDefinition Width="36"/>
+                                                            <ColumnDefinition Width="40"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Label Text="{Binding Level}"
+                                                               HorizontalTextAlignment="Center"
+                                                               VerticalTextAlignment="Center"/>
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding BodyText}"
+                                                               VerticalTextAlignment="Center"/>
+                                                        <Label Grid.Column="2"
+                                                               Text="{Binding LocText}"
+                                                               VerticalTextAlignment="Center"/>
+                                                        <Label Grid.Column="3"
+                                                               Text="{Binding CostText}"
+                                                               HorizontalTextAlignment="Center"
+                                                               VerticalTextAlignment="Center"/>
+                                                        <Label Grid.Column="4"
+                                                               Text="{Binding AbilityEffectsText}"
+                                                               LineBreakMode="WordWrap"
+                                                               VerticalTextAlignment="Center"/>
+                                                        <Button Grid.Column="5"
+                                                                Text="&#xF05A;"
+                                                                FontFamily="FASolid"
+                                                                FontSize="12"
+                                                                Padding="0"
+                                                                BackgroundColor="Transparent"
+                                                                TextColor="{StaticResource SubtleTextColor}"
+                                                                HeightRequest="18"
+                                                                WidthRequest="18"
+                                                                MinimumHeightRequest="0"
+                                                                MinimumWidthRequest="0"
+                                                                HorizontalOptions="Center"
+                                                                VerticalOptions="Center"
+                                                                IsVisible="{Binding HasAbilityDetails}"
+                                                                Clicked="OnLevelInfoClicked"
+                                                                CommandParameter="{Binding .}"/>
+                                                    </Grid>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="{StaticResource White}"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*"
+                                          ColumnSpacing="8">
+                                        <Label Text="Levels"
+                                               FontAttributes="Bold"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding SelectedLevelsText}"
+                                               HorizontalTextAlignment="End"
+                                               FontAttributes="Bold"/>
+                                    </Grid>
+                                    <Slider Minimum="0"
+                                            Maximum="{Binding SelectedMaxLevelDouble}"
+                                            Value="{Binding SelectedLevelsDouble, Mode=TwoWay}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </Grid>
+            </ContentView>
+        </Grid>
+
+        <Grid Grid.Row="2"
+              RowDefinitions="1,Auto">
+            <BoxView Grid.Row="0"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource SurfaceBorderColor}"/>
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="10"
+                  Padding="16,10,16,18"
+                  BackgroundColor="{StaticResource White}">
+                <Button Grid.Column="0"
+                        Text="Back"
+                        Command="{Binding BackCommand}"/>
+                <Button Grid.Column="2"
+                        Text="{Binding NextButtonText}"
+                        Command="{Binding NextCommand}"
+                        IsEnabled="{Binding CanGoNext}"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

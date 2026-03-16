@@ -167,6 +167,11 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
             ConfigureTabPageChrome(page);
 
         QueuePlatformTabLayoutRefresh();
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await _vm.RefreshMultiClassesAsync();
+            await _vm.RefreshMultiRaceAsync();
+        });
     }
 
     private Page? ResolveFallbackPage(Page? currentBeforeUpdate, IReadOnlyCollection<Page> desiredTabs)
@@ -290,6 +295,207 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
             return;
 
         await Navigation.PushAsync(new AbilityCardPage(ability));
+    }
+
+    private async void OnOpenMultiClassWizardClicked(object sender, EventArgs e)
+        => await Navigation.PushAsync(new MultiClassWizardPage(_vm.Draft));
+
+    private async void OnOpenMultiRaceWizardClicked(object sender, EventArgs e)
+        => await Navigation.PushAsync(new MultiRaceWizardPage(_vm.Draft));
+
+    private async void OnEditMultiRaceClicked(object sender, EventArgs e)
+    {
+        if (sender is not Microsoft.Maui.Controls.Button button
+            || button.CommandParameter is not MultiRaceEntryVm entry)
+        {
+            return;
+        }
+
+        await Navigation.PushAsync(new MultiRaceWizardPage(
+            _vm.Draft,
+            preselectedMultiRaceKey: entry.Key,
+            openDetailStep: true));
+    }
+
+    private async void OnRemoveMultiRaceClicked(object sender, EventArgs e)
+    {
+        if (sender is not Microsoft.Maui.Controls.Button button
+            || button.CommandParameter is not MultiRaceEntryVm entry)
+        {
+            return;
+        }
+
+        await _vm.RemoveMultiRaceAsync(entry);
+    }
+
+    private async void OnViewMultiRaceInfoClicked(object sender, EventArgs e)
+    {
+        if (sender is not Microsoft.Maui.Controls.Button button
+            || button.CommandParameter is not MultiRaceEntryVm entry)
+        {
+            return;
+        }
+
+        var options = _vm.GetMultiRaceAbilityDetails(entry)
+            .Where(option => option.IsValid)
+            .ToList();
+        if (options.Count == 0)
+            return;
+
+        MultiClassAbilityLinkVm? selected = null;
+        if (options.Count == 1)
+        {
+            selected = options[0];
+        }
+        else
+        {
+            var labels = options.Select(option => option.DisplayName).ToArray();
+            var picked = await DisplayActionSheet(entry.Name, "Cancel", null, labels);
+            if (string.IsNullOrWhiteSpace(picked) || picked.Equals("Cancel", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            selected = options.FirstOrDefault(option =>
+                option.DisplayName.Equals(picked, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (selected == null)
+            return;
+
+        var ability = await ResolveAbilityAsync(selected.LookupKey);
+        if (ability == null
+            && !string.Equals(selected.LookupKey, selected.DisplayName, StringComparison.OrdinalIgnoreCase))
+        {
+            ability = await ResolveAbilityAsync(selected.DisplayName);
+        }
+
+        if (ability == null)
+        {
+            await DisplayAlert("No Ability Card", $"Could not find a detail card for \"{selected.DisplayName}\".", "OK");
+            return;
+        }
+
+        await Navigation.PushAsync(new AbilityCardPage(ability));
+    }
+
+    private async void OnOpenMultiRaceSpecialisationClicked(object sender, EventArgs e)
+        => await Navigation.PushAsync(new MultiRaceSpecialisationPage(_vm.Draft));
+
+    private async void OnOpenMultiClassSpecialisationClicked(object sender, EventArgs e)
+        => await Navigation.PushAsync(new MultiClassSpecialisationPage(_vm.Draft));
+
+    private async void OnEditMultiClassClicked(object sender, EventArgs e)
+    {
+        if (sender is not Microsoft.Maui.Controls.Button button
+            || button.CommandParameter is not MultiClassEntryVm entry)
+        {
+            return;
+        }
+
+        await Navigation.PushAsync(new MultiClassWizardPage(
+            _vm.Draft,
+            preselectedMultiClassKey: entry.Key,
+            openDetailStep: true));
+    }
+
+    private async void OnRemoveMultiClassClicked(object sender, EventArgs e)
+    {
+        if (sender is not Microsoft.Maui.Controls.Button button
+            || button.CommandParameter is not MultiClassEntryVm entry)
+        {
+            return;
+        }
+
+        await _vm.RemoveMultiClassAsync(entry);
+    }
+
+    private async void OnViewMultiClassInfoClicked(object sender, EventArgs e)
+    {
+        if (sender is not Microsoft.Maui.Controls.Button button
+            || button.CommandParameter is not MultiClassEntryVm entry)
+        {
+            return;
+        }
+
+        var options = _vm.GetMultiClassAbilityDetails(entry)
+            .Where(option => option.IsValid)
+            .ToList();
+        if (options.Count == 0)
+            return;
+
+        MultiClassAbilityLinkVm? selected = null;
+        if (options.Count == 1)
+        {
+            selected = options[0];
+        }
+        else
+        {
+            var labels = options.Select(option => option.DisplayName).ToArray();
+            var picked = await DisplayActionSheet(entry.Name, "Cancel", null, labels);
+            if (string.IsNullOrWhiteSpace(picked) || picked.Equals("Cancel", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            selected = options.FirstOrDefault(option =>
+                option.DisplayName.Equals(picked, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (selected == null)
+            return;
+
+        var ability = await ResolveAbilityAsync(selected.LookupKey);
+        if (ability == null
+            && !string.Equals(selected.LookupKey, selected.DisplayName, StringComparison.OrdinalIgnoreCase))
+        {
+            ability = await ResolveAbilityAsync(selected.DisplayName);
+        }
+
+        if (ability == null)
+        {
+            await DisplayAlert("No Ability Card", $"Could not find a detail card for \"{selected.DisplayName}\".", "OK");
+            return;
+        }
+
+        await Navigation.PushAsync(new AbilityCardPage(ability));
+    }
+
+    private static async Task<EvolutionService.AbilityResult?> ResolveAbilityAsync(string key)
+    {
+        var byIndex = await AbilityDetailsLookupService.FindByIndexAsync(key);
+        if (byIndex != null)
+            return byIndex;
+
+        var fromSpecialisation = await DetailCardLookupService.FindSpecialisationAbilityAsync(key);
+        if (fromSpecialisation.Ability == null)
+            return null;
+
+        return ToAbilityResult(fromSpecialisation.Ability, fromSpecialisation.Key, key);
+    }
+
+    private static EvolutionService.AbilityResult ToAbilityResult(
+        AbilityDefinition source,
+        string resolvedKey,
+        string requestedKey)
+    {
+        var name = (source.Name ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = (resolvedKey ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = (requestedKey ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = "Ability";
+
+        return new EvolutionService.AbilityResult
+        {
+            Index = name,
+            Description = source.Effect ?? string.Empty,
+            Cost = 0,
+            Table = 0,
+            Available = source.Source ?? "ALL",
+            CanBuyMultiple = false,
+            PreReqs = source.PreReqs is { Count: > 0 } preReqs
+                ? preReqs
+                : Array.Empty<string>(),
+            MaxAvailable = source.Count
+        };
     }
 
     private static void ConfigureTabPageChrome(Page page)

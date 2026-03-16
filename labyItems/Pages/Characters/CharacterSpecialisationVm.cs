@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using labyItems.Controls;
+using labyItems.Helpers;
 using labyItems.Infrastructure;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
@@ -494,24 +495,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             if (first == null || second == null)
                 return null;
 
-            var conflict = (first, second) switch
-            {
-                (MagicColours.Red, MagicColours.Green) => true,
-                (MagicColours.Green, MagicColours.Red) => true,
-                (MagicColours.Brown, MagicColours.Blue) => true,
-                (MagicColours.Blue, MagicColours.Brown) => true,
-                (MagicColours.White, MagicColours.Black) => true,
-                (MagicColours.Black, MagicColours.White) => true,
-                (MagicColours.Gold, MagicColours.Bronze) => true,
-                (MagicColours.Bronze, MagicColours.Gold) => true,
-                (MagicColours.Ivory, MagicColours.Ebony) => true,
-                (MagicColours.Ebony, MagicColours.Ivory) => true,
-                (MagicColours.Jade, MagicColours.Onyx) => true,
-                (MagicColours.Onyx, MagicColours.Jade) => true,
-                _ => false
-            };
-
-            return conflict ? "Faerie colours cannot be opposite pairs." : null;
+            return MagicColourOppositionRules.AreOpposites(first.Value, second.Value)
+                ? "Faerie colours cannot be opposite pairs."
+                : null;
         };
     }
 

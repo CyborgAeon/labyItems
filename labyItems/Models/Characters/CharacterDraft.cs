@@ -24,6 +24,14 @@ public sealed class CharacterDraft
     public List<string> Guilds { get; set; } = new();
     public Dictionary<string, string> SpecialisationSelections { get; } =
         new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, int> MultiClassLevels { get; set; } =
+        new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, string> MultiClassChoiceSelections { get; set; } =
+        new(StringComparer.OrdinalIgnoreCase);
+    public string MultiRaceKey { get; set; } = string.Empty;
+    public int MultiRaceLevel { get; set; }
+    public Dictionary<string, string> MultiRaceChoiceSelections { get; set; } =
+        new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, int> GuildBenefitSelections { get; set; } =
         new(StringComparer.OrdinalIgnoreCase);
     public List<string> AdvancementAbilities { get; set; } = new();

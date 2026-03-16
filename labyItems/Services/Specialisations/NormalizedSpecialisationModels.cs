@@ -93,6 +93,9 @@ public sealed class SpecialisationIndex
     public IReadOnlyDictionary<string, AbilityDefinition> AbilityReferences { get; init; } =
         new ReadOnlyDictionary<string, AbilityDefinition>(new Dictionary<string, AbilityDefinition>(StringComparer.OrdinalIgnoreCase));
 
+    public IReadOnlyDictionary<string, SpecialisationChoiceSet> ChoiceSetTemplates { get; init; } =
+        new ReadOnlyDictionary<string, SpecialisationChoiceSet>(new Dictionary<string, SpecialisationChoiceSet>(StringComparer.OrdinalIgnoreCase));
+
     public IReadOnlyList<SpecialisationInjectionRule> InjectionRules { get; init; } = Array.Empty<SpecialisationInjectionRule>();
 }
 

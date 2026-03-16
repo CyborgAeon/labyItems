@@ -1,0 +1,1387 @@
+
+
+===== PAGE 80 =====
+
+79 
+ 
+Multi-Race Options 
+Aligned Elf 
+While the Elves were all formed differently they all, to a greater or lesser degree, contain most elements within them. 
+Sometimes these powers flow to the surface and the elf’s very nature is changed. The result is they end up becoming attuned 
+to a second magical power. Effectively this race allows an Elf (or Drave) to multi-race to another type of Elf (or Drave). It 
+may not be their opposite, and they must be of the appropriate alignment to be the new elven type. 
+Post-6th, may buy apply x2 and x3 Elf innates if bought to both elf-types for the same cost (i.e. if has bought x2 elven 
+innates, both original and new innates are doubled). 
+ 
+ 
+LEVEL ABILITIES 
+  1 All abilities by level as the new chosen elf type of multi-race level.  Must wear makeup of both elf 
+types, with new colour predominant. 
+  2 As above. 
+  3 As above. 
+  4 As above. 
+  5 As above. 
+  6 As above, but now calculates innates as if 8th level. 
+ 
+ 
+Angel of Mercy 
+Although many Goodly Churches and religions are warlike, there are often individuals who are not willing or able to fight 
+alongside their brethren. For these an accepted role is that of the healing priest who try their best to keep the life-force of 
+their allies strong against all opposition. When such an individual is chosen for the honour of ascension to the ranks of the 
+Angels, the powers granted them differ subtly from those given to their warlike comrades.   
+This race is available to any Goodly aligned Priest.   
+Characters with half a spirit pay double for this race. 
+ 
+ 
+LEVEL ABILITIES 
+  1 Now fully Immune to Flesh and Blood Effects of all sorts (inc. all potions, pain etc.).  Counts fully 
+as Angelkind.  
+Their skin is often marked with lines of goodly power, white and gold being the most frequent. 
+  2 May Walk on Light(s) spiritually x1/2 levels, otherwise as per wizard spell (40,). 
+  3 May shed Spiritual Light in a 10' radius for five minutes, x1/3 levels (40,). 
+  4 May cast a Shield of the Angels x1/3 levels - in all ways as Spirit Shield, except that it only stops 
+evil spiritual damage, and instead stops the first 36 points of such damage (45, 4). 
+  5 May Walk through Walls for five minutes x1/3 levels, as per miracle (80, 2). 
+  6 Touch removes Fear from non-Evil targets with a spirit, for 3 TBLP, at will. 
+ 
+  
+
+
+===== PAGE 81 =====
+
+80 
+ 
+ 
+Angel of War 
+Many are the Goodly Gods who preach that the only way for peace to prevail is with the death of evil.  Their followers tend 
+to be of a martial nature and those who earn themselves the greatest favour of their deity are sometimes chosen to join the 
+ranks of the heavenly Host of Angels that do their god's bidding.  These favoured mortals naturally tend to be priests, but it 
+is not unknown for an especially devout lay believer to be chosen for this honour.  This race is available to all goodly, non-
+elf/drave/faerie classes.  Characters with half a spirit pay double cost to purchase it.  Tribal characters of a tribe with an evil 
+Shaman may not purchase this race.  Characters who are neither Priests nor Paladins must purchase the Devout Believer 
+multi-class to level six before they can purchase beyond level one in this race. 
+ 
+LEVEL ABILITIES 
+  1 Now fully Immune to Flesh and Blood Effects of all sorts (inc. all potions, pain etc.).  Counts as 
+Angelkind. 
+Their skin is often marked with lines of goodly power, white and gold being the most frequent.  
+  2 May Fear all Evil of 6th level (18 hits) and below for five minutes, x1/2 levels (50, 3).  This affects 
+undead creatures. 
+  3 May shed Spiritual Light in a 10' radius for five minutes, x1/3 levels (40, 6). 
+  4 Hand of Purity as per tables ability x1/day (70, 2). 
+  5 May Walk through Walls for five minutes x1/3 levels, as per miracle (80, 2). 
+  6 May summon a purely Spiritual weapon of their choice which only they may wield x1/day.  This 
+weapon is +0/+2 vs. Evil and cannot harm the Good aligned, lasts 15 minutes (60, 2). 
+ 
+Angel Touched 
+It is not uncommon for the Gods of Light to watch over those that serve them, or for people to be born to both Human and 
+Angel. Or even to be infused with the spirits of light. Whatever the reason, some are touched with the powers of Angels. 
+ 
+LEVEL ABILITIES 
+  1 Now suffers ½ effect from all Flesh and Blood Effects (Includes potions, poisons, and pain). 
+  2 May select a Minor Power from the list below. 
+  3 Gains Immunity to Ageing. 
+  4 May select a Medium Power from the list below. 
+  5 Divine Insight 1/day – Acts as a Mantic Major Prayer but can only be used to find out how to help 
+others/defeat evil. 
+  6 Gains a Major Power from the below list. 
+ 
+ 
+Minor – 
+ Gains complete Immunity to Flesh and Blood Effects. 
+ Spiritual Light Range 1/2 levels – As per a Minor Angel. 
+ Halo of Light 1/2 levels - Fear Evil 3 levels and below, lasts 5 minutes. This specifically affects undead based on 
+their dismiss level. 
+ Angelic Shield 1/2 Levels – Grants the user ¼ off all damage from an evil source (this includes effects cast by an 
+evil individual). Lasts 5 minutes. 
+ 
+Medium – 
+ Walk through Walls (As Wayfinder ability) 1/3 levels 
+ Halo of Heaven 1/3 levels - Fear Evil 6 levels and below, lasts 5 minutes. This specifically effects undead based on 
+their dismiss level. 
+ Angelic Armour 1/3 Levels – Grants 1/3rd off all damage from an evil source (this includes effects cast by an evil 
+individual). Lasts 5 minutes. 
+ Summon Angelic Blade 1/3 Levels – Summons a +2 pure spirit weapon that can only harm evil. Lasts 15 minutes. 
+ 
+  
+
+
+===== PAGE 82 =====
+
+81 
+ 
+Major – May choose one from: 
+ Angelic Halo 1/day - Fear Evil 8 levels and below, lasts 5 minutes.  
+ Gains 12 goodly spirits usable on handbook goodly miracles. These are separate to other spirits and can only be 
+regained by a good night’s sleep. 
+ Angelic Warding 1/day – Grants the user ½ effect all damage from an evil source (including effects cast by an evil 
+individual). Lasts 5 minutes. 
+ Gain a permanent Enhance Spirit. 
+  
+Post-6th: May buy one additional Minor Power for 100pts, one additional Medium Power for 150pts and one additional 
+Major Power for 200pt. 
+Can buy Spirit Sight innates as per a Paladin. 
+The Angel Touched may also buy Utilise Good Spirit Item for 100 points. 
+ 
+Child of the Pines 
+It is known that some who call themselves human are not wholly so; all know of the half-elven, who cannot often hide their 
+heritage thanks to the physical marks they carry from their forebears.  However, not so many are aware that in the veins of 
+some human lines runs the blood of fey creatures.  The fey are so many and varied that it has been suggested that they are, 
+in fact, many different races themselves - one of the most well-known types of fey is that known as dryads, or People of the 
+Trees, or other names given them by superstitious wood-cutters and village-folk.  They are very beautiful to look upon, and 
+when one should have a child by some human lost in the woods, if that child should show too many human features it is left 
+to be found by villagers.  Still, it is not unknown for the offspring of such unions to begin to show signs of their parentage in 
+early adulthood... 
+This race is available to Human, Half-Elf, Half-Drave, Alfar or Halfling who has an aspect of Neutral in their alignment 
+(NG,NE,NN,LN,CN only). 
+ 
+LEVEL ABILITIES 
+  1 Must wear appropriate brown/green tree-like makeup.  Immune to all Flesh and Blood Effects, 
+including potions and poisons, except that they still bleed sap and are affected by Earthpower Flesh 
+and Blood Effects where appropriate.  May never use or benefit from red mana. 
+  2 Now has a permanent Barkskin granting +1 PAC (stacking with other Barkskins).  May spend 5 
+minutes in unmoving contact with ‘fertile soil’ (entirely at ref’s discretion, a place where plants 
+could grow) to be healed 1 tblp and 1 to worst loc.  It is permissible to talk, cast and even fight 
+during this period as long as contact with the earth is not broken, even for a split second. 
+  3 Now takes x2 damage from fire after all other calculations.  If Immunity to Fire is possessed still 
+takes ½ damage from normal fires.  May never acquire complete immunity.   
+May Meld with Trees x1/2 levels, as per Meld with Stone.  However, takes 1pt per grade of damage 
+inflicted on the tree, and should tree be destroyed completely is left on 6/1 life.  May end 
+prematurely if desired (50,). 
+  4 Permanent Barkskin now grants +2 PAC from +1.  Now takes x2 damage from axe-blows after all 
+other calculations.  Healing Sap - if deliberately cuts self to draw forth 3 tblp of sap (and 1 pt to the 
+cut location), a flesh-and-blood drinker is cured 6 tblp and 2 to each loc.  If applied as a balm to a 
+Wood Elf or a Child of the Pines (including self) will be cured 6 tblp and 3 to that location.  This can 
+be done x1/level (10, ) 
+  5 Forest-Shift x1/3 levels, as druidic evocation but no verbal required (75, 4).  May be used with no 
+tree present but takes 30 seconds to ‘plant themselves’ on appropriately earthen ground. 
+  6 Now takes 1/3rd less damage from blunt weapon-blows, due to woody consistency. 
+ 
+ 
+ 
+ 
+ 
+  
+
+
+===== PAGE 83 =====
+
+82 
+ 
+Demon Bound 
+With the mystical nature of Primus many are touched with Demonic Power. Some are born that way, or as a result of 
+Demonic pacts. Whatever the case the powers they exhibit are all infernal and evil. To take this race a character must 
+have a spirit and be evil. 
+ 
+LEVEL ABILITIES 
+  1 Now suffers ½ effect from all Flesh and Blood Effects (Includes potions, poisons, and pain). 
+  2 May select a Minor Power from the list below. 
+  3 Gains Immunity to Ageing 
+  4 May select a Medium Power from the list below. 
+  5 Feed the Soul 1/day – Takes 30 seconds over a recently (this day) dead body with a spirit. Acts as 
+per the ability Slayer on the body, but also cures the user 12/12 via evil spiritual means. 
+  6 Gains a Major Power from the below list. 
+ 
+ 
+Minor – 
+ Gains complete Immunity to Flesh and Blood Effects. 
+ Infernal Armour 1/2 Levels – Grants ¼ off weapon blows for 5 Minutes. 
+ Honeyed Words 1/2 levels – Allows the users to Mantically (Evil Spirits/Black Mana) Beguile others by gaze at 
+will for 5 minutes. This beguile effects those with 4 level resistances or less. 
+ Demonic Deception 1/2 Levels – Allows the user to answer one informational effect used about them as they wish. 
+The answer must be plausible and the user must be aware the effect has been used about them. 
+ 
+Medium – 
+ Body of War 1/3 levels – Grants the Demon 6 points off weapon blows that have a physical component. Lasts 5 
+minutes. 
+ Infernal Shield 1/3 levels – Grants the user 1/3rd off weapon blows for 5 minutes. 
+ Mantic Beguile effecting 8 levels and below 1/2 levels. 
+ Hidden Form – Allow the Demon to alter their form to pass through the world. This acts as per the Altunhurst 
+shape shifting ability but allows them to transform themselves into any standard race. 
+ 
+Major – 
+ Feeding the Soul now becomes usable 1/30 minutes. 
+ Infernal Body 1/day – Grants the user 1/2 effect weapon blows for 5 minutes. 
+ Cloak of the Unholy 1/3 levels – Grants the user Demonic Deception (as per the basic talent) at will for 5 minutes. 
+ Dark Compact – May write an agreement between the writer and one individual. The agreement must be 
+understood by both parties. If signed, it acts as per a Demonic (Black/Red/Evil spirit in colour) Oath (as per the 
+Ivory spell) with 6 additional mana in it. This may be used at will, but each use costs the writer a level (as per a 
+level drain, but immunity to level drain does not apply). 
+  
+Post-6th: May buy one additional Minor Power for 100pts, one additional Medium Power for 150pts and one additional 
+Major Power for 200pt. 
+Demonic Infusion – Allows the user to either inflict Demonic (Black/Red/Evil spirit) damage with one weapon for 5 
+minutes, or allows them to cast a single evil handbook miracle mantically (Black/Red/Evil spirit). These cost 60 points 
+each, and 3 may be purchased. 
+ 
+The Demon Bound may also buy Utilise Evil Spirit Item for 100 points. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 84 =====
+
+83 
+ 
+Elder Fey 
+It is hard to think of the Elder Fey as a composite race, and indeed they may not be one.  The members of the Fey vary as 
+much from individual to individual as do members of quite different races of the modern world, and it may be that what we 
+call the Elder Fey are in fact a number of different remnants of ancient races who have grown together over the millennia.  
+Extremely rare, not least because they cannot always be identified, the only things that unite this group as a race are the 
+great age of their ancestry, their possession of half a spirit (by today's standards), and the wild and unpredictable powers 
+they evince.   
+This race is available to any character, following the strictures outlined below. 
+Elves/Fairies may choose to purchase this race and not gain any benefits from level two. In this case it is purchased at the 
+same cost as a Half-Elf. 
+ 
+LEVEL ABILITIES 
+  1 Must wear (non-standard) impressive makeup and costume at all times as appropriate to the powers 
+gained.  
++1 DAC. 
+  2 Character now has half a spirit as per Half-Elf in all ways, Eves are no longer harmed by Dispels and 
+leave a body on death (but retain their ‘non flesh-and-blood’ nature). 
+  3 Gains one Minor Talent as below - to be written on card at time of purchase. 
+  4 Now Immune to Ageing effects. 
+  5 +2 DAC (total). 
+  6 Gains one Major Talent as below - to be written on card at time of purchase. 
+ 
+Each Elder Fey has one Minor and one Major Talent, which must be selected from the options below.  The Minor and 
+Major Talents may not be selected from the same category.  Mana-users and characters who were originally Elves may not 
+select Spiritual Talents unless they have Pathed then they may choose talents of the appropriate alignment.  Priests may not 
+select Magical Talents unless they have Pathed, and then only of the colour of their Path.  Characters prohibited from 
+acquiring Neuronics may not select Neuronic Talents.   
+ 
+Post-6th, the Elder Fey may acquire a second Minor Talent, which may not be in the same category as his original Minor 
+Talent, for 50 points.  Once this is bought, they may acquire a second Major Talent, which may not be in the same category 
+as the original Major Talent, for 100 points. 
+One Elder Fey might have Acute Hearing and Probe three times a day, and elect to make themselves up with large 
+pointy ears and a pale skin, while another may have six innate Control Animals and PAC 5, painting their skin in heavy 
+brown, green and black colours - both are acceptable.   
+ 
+Minor Talents: 
+Magical 
+ Any 1st level standard spell innate x1/level (10, ). 
+ Any 2nd level standard spell innate x1/2 levels (20, ). 
+ Any 3rd level standard spell innate x1/3 levels (30, ). 
+ Any standard 0 mana cantrip at will for 1 TBLP per use. 
+ Enhanced Recognise Mana at will, 1" range - as Recognise Mana but also tells colour of any mana present. 
+ Affirm x1/level, grants +1 MAC and +1 DAC, verbal "I affirm the power of my blood".  Otherwise as Elf Affirm in all 
+ways (15,). 
+Spiritual 
+ Any 1st level handbook miracle of own alignment innate x1/level (15,). 
+ Any 2nd level handbook miracle of own alignment innate x1/2 levels (25,). 
+ Any 3rd level handbook miracle of own alignment innate x1/3 levels (35,). 
+ Gauge Spirit at will as tables ability. 
+ Discern as handbook Undead type of choice. 
+ Discern Nature of Wounds by sight at will. 
+  
+
+
+===== PAGE 85 =====
+
+84 
+ 
+Earthpower 
+ Any 1st level basic evocation innate x1/level (10,). 
+ Any 2nd level basic evocation innate x1/2 levels (20,). 
+ Any 3rd level basic evocation innate x1/3 levels (30,). 
+ Recognise Earthpower to 20' range. 
+ Double effect Druidic Heal evocation only (now cures 24/24) with 30 seconds concentration. In the case of elves taking 
+this talent, they now take normal (12/12) effect from Druidic Heal, and ½ effect from other druidic healing which 
+would otherwise not affect them. 
+ Neutrality to Plants of all forms. 
+Neuronic 
+ Auric Colour x2/level (to at will for 20 points). 
+ Neuronic Penetration x1/level (15, 8). 
+ Neuronic Blast x1/2 levels (35, 6). 
+ Detect Inanimate x1/2 levels (35, 6). 
+ Forget x1/3 levels (50, 4). 
+ Recognise Neuronics as tables ability. 
+Physical 
+ Acute Hearing. 
+ Locational Sniff. 
+ Salmon Leap x1/level (15,). 
+ +2 innate PAC. 
+ +3 DAC for five minutes x1/2 levels (30, 8). 
+ Perception as per Ranger. 
+ Mindblock at all times. 
+Major Talents: 
+Magical 
+ Any 4th level standard spell innate x1/2 levels (40,). 
+ Any 5th level standard spell innate x1/2 levels (50,). 
+ Any 6th level standard spell innate x1/3 levels (60, 6). 
+ Any 10th level standard spell innate x1/day (100, 6). 
+ 1/3 effect neutral purely spiritual damage (not cumulative with having half a spirit). 
+Spiritual 
+ Any 4th level handbook miracle of own alignment innate x1/3 levels (60,). 
+ Any 5th level handbook miracle of own alignment innate x1/3 levels (75, 6). 
+ Any 6th level handbook miracle of own alignment innate x1/day (90, 6). 
+ Fear creatures of opposite alignment (select Good/Evil if Neutral) of 6th level resistance and below at will. 
+ 25% off purely 'mantic damage only, at all times. 
+Earthpower 
+ Any 4th level basic evocation innate x1/2 levels (40,). 
+ Any 5th level basic evocation innate x1/2 levels (50,). 
+ Any 6th level basic evocation innate x1/3 levels (60, 6). 
+ Neutrality to Plants and Animals (including Giant varieties). 
+ 6pt damage reduction vs. non-supernatural wooden weapons at all times. 
+Neuronic 
+ Neuronic Bolt x1/3 levels (75, 2). 
+ Displacement x1/3 levels (75, 2). 
+ Psychic Crush x4/day (30, 6 for single uses). 
+ Neuro Sight x1/2 levels (40, 3). 
+ Psionic Probe x1/2 levels (50, 4). 
+
+
+===== PAGE 86 =====
+
+85 
+ 
+Physical 
+ 50% Rage x1/day (100, 2), 25% rage x1/day (50, 2). 
+ Assisted Climb at will. 
+ 3pt damage reduction vs. purely magical or spiritual weapons at all times. 
+ Enhanced Mind Block. 
+ +5 innate PAC. 
+ 
+Elements Bound 
+Some Wizards use the arts of embodying an elemental, but some bind elemental power closer to their form. Often used 
+in Ishma, the practice has begun to spread to the Empire and beyond. 
+This class is available to anyone in the wizard bracket. 
+ 
+LEVEL ABILITIES 
+  1 Gains Immunity to Flesh and Blood Effects as Elf (Elves gain full Immunity to Flesh and Blood 
+Effects). 
+May select an Elemental Colour (not grey) that may not be the opposite of any owned. 
+Now has faint mystical lines of power of their chosen colour. 
+  2 Gains a Minor Talent below. 
+Gains Elemental Resistance (as Power Master) vs. own colour. 
+  3 Elemental Sight (as per Wizards Grimoire advanced spell) 1/3 levels. 
+  4 Now gains a Medium Talent 
+  5 Destroy Elemental by touch 1/3 levels. Effects up to Elemental Champions. 
+  6 Gains a Major Talent from below. 
+ 
+ 
+Minor –  
+ Gains Full Immunity to Flesh and Blood Effects (Including potions, poisons, and pain). 
+ Gains a standard innate (chosen when selected) of own colour up to 5th level 1/2 Levels (50, ∞) 
+ If casting Embody Elemental for own colour then no longer needs to summon an elemental to embody it. 
+ May cast own colour cantrip at will for 1 TBLP. 
+ Empower Weapon (as advanced spell) of own colour 1/2 levels (40, ∞). 
+ 
+Medium –  
+ Gains a standard innate (chosen when selected) of own colour 1/3 levels. (100, ∞) 
+ Elemental Shift of own colour 1/2 levels. (60, 6) 
+ Gains Elemental Resistance (as Power Master) to opposite Element. 
+ Neutrality to Elementals of own colour. 
+ 
+Major – 
+ Embody Elemental (As spell, for own colour only) 1/3 levels (100, ∞). 
+ 1st time it is needed each day gains Magical live to minus 6 TBLP stacking with other live to minus. 
+ Gains complete Immunity to baneful effects of own element. 
+ Invoke the Magic Within 1/day gains the ability to cast a published spell of chosen colour. The spell still costs 
+mana as normal. 
+  
+Post 6th: May now learn Embody Elemental, Bind Elemental and Arm Elemental as spells of own racial colour, even if 
+not a wizard of that colour. 
+May buy an extra Minor, Medium and Major Talent for 50, 100 and 150 points respectively. 
+Warding against the Elements 60 points – May cast Bind Elemental (of racial colour) on self, gaining full benefits 
+from it as if an elemental. This may be used while embodied despite normal restrictions. 
+ 
+ 
+ 
+  
+
+
+===== PAGE 87 =====
+
+86 
+ 
+Fire Daimon 
+Many are the dark powers that bide their time in the nether planes, waiting for some foolish mortal to call upon them.  It is 
+easy for the foolhardy, desperate or simply power-hungry to make pacts with these forces - but the price is high...  Although 
+the friends and colleagues of the unfortunate mortal may suspect something is wrong, it is usually not until the body bursts 
+irrevocably into flames that never consume it that the truth is finally realised.  Nevertheless, it remains the mind and 
+thoughts of the supplicant which direct this fearsome combination of mortal man and denizen of the underworld.  This race 
+is available to any Evil non-Elven character. Half-Elves and Half-Draves need pay only normal cost to purchase this race. 
+ 
+LEVEL ABILITIES 
+  1 Must now wear red/black, 'flaming' makeup at all times.  May Ignite by touch at will as per the Red 
+cantrip.  Now gains ½ Effect Supernatural Fire, and Immunity to Natural Fire.  Counts fully as 
+Daemonkind in all ways. 
+  2 Mantic Shock x1/2 levels, inflicts both magical and evil spirit damage (30,). 
+Now gains complete Immunity to Fire of all forms. 
+Must have bought the tables ability “Immunity to Natural Fire” before buying this level but this is 
+upgraded to Complete Immunity to Fire. 
+  3 Mantic Fire Blast x1/3 levels, inflicts both magical and evil spirit damage (40, 6). 
+  4 May invoke the fires of evil to surround their body such that all non-supernatural weapons striking 
+them are burnt or melted entirely as per an aura of melt.  Unarmed damage is reduced by one grade 
+unless the user is immune to normal fire.  This lasts five minutes, and is usable once per day (80, 2). 
+  5 Mantic Fire Bolt x1/day, inflicts both magical and evil spirit damage (70, 4). 'Mantic Sword of 
+Power x1/3 levels,   (90, 2). 
+  6 Mantic Disruption x1/day, inflicts both magical and evil spirit damage (95, 3). 
+ 
+Post-6th: May buy Immolation x1/day, for 100 points.  All creatures within 20' receive 24/4 mantic flaming damage, and 
+the Daimon is healed 36pts of damage to TBLP and loc. (cf. Heal). 
+ 
+ 
+Frost Giant (Northmen) 
+Far to the north of the Empire, beyond the desolate plains of ice, lies the old homestead of the Northmen and Frost 
+Giants. Tall men and women, often six foot or more in height, their physical prowess sent tales into the south making 
+them out to be even taller than they are in reality. Their cities and civilisations crumbled at the end of the Second Age 
+of Primus however knowledge of their nature has led a number of ‘large’ individuals in the south to trace this heritage 
+in their blood line. This multi-race can be purchased by any race which is at least in part human, typically Humans and 
+Half Elves. Whilst most native Frost Giants are of a darker moral path, those raised away from their Queen in the north 
+can in fact be of any alignment path. 
+A mana user who selects this option loses half their mana after all calculations have taken place, due to the naturally 
+magic resistant nature of the Frost Giant Folk.  
+LEVEL ABILITIES 
+  1 The Northmen as descendants of the Frost Giants are all large individuals often appearing over 6’ or 
+20st in size. They must incorporate white or ‘frost’ motifs into their makeup.  
+Base life now calculated as if one level higher for all purposes, i.e. increased by one level of life.  
+  2 Can see through all forms of supernatural darkness at all times. Resistance level to level-based 
+magical spells is doubled.   
+  3 May only wear armour forged by a character with the appropriate skill, and this costs twice the 
+normal amount. 
+A Frost Giant’s locational hits are calculated as ½ the amount of their permanent TBLP allowance.   
+However should a location suffer damage as to cause it to be severed, then the Frost Giant dies.  
+  4 Suffers only half damage from purely magical damaging blows or effects. 
+  5 Gains Immunity to Cold as per the post eighth tables ability, if the tables ability is owned then now 
+gains complete Immunity to Cold. 
+Also gains +1 stacking strength, to max +3. 
+  6 From level 1 & 4 abilities, now takes only half-effect magic in all ways, as per a Dwarf. 
+ 
+  
+
+
+===== PAGE 88 =====
+
+87 
+ 
+Full Elf 
+Many Half-Elves (and Half-Draves), dissatisfied with their mixed heritage, spend their lives struggling to take after their 
+elven parents.   
+Those that succeed in fully emulating their elven forebears usually benefit greatly, as they maintain the more naturally hardy 
+nature of their Human blood.  This race is available to any Half-Elf.   
+Obviously, a Half-Elf may multi-race only to the type of Elf that matches their elven half. 
+ 
+LEVEL ABILITIES 
+  1 Now suffers full make-up requirements appropriate to the type of elf. 
+  2 Gains innates and immunities specific to the type of elf, of level equal to multi-race level. 
+  3 As above. 
+  4 As above. 
+  5 As above. 
+  6 Loses spirit and all spiritual abilities - is now treated as an Elf for purposes of all abilities and 
+restrictions - however retains human base TBLP and loc. as before.  Is now injured by Dispels, etc. 
+ 
+Post-6th: Buys as elf.   
+If Full Elf innates were bought previously, they are not cumulative with the innates and abilities granted by this multi-race 
+until 6th level is reached, at which point they replace the tables Elf ability Double Elven Innates entirely (which ability may 
+not then be bought). 
+ 
+ 
+Golem 
+There are many ways of using supernatural power and artifice to enhance and even replace the body of a willing 
+creature.  The changes to the form tend to strengthen it in similar ways, although the power used can vary.  In all cases 
+the character is assumed to have undergone a voluntary process, probably with outside assistance, to transform 
+themselves.   
+Characters who choose this race become similar to the more common golems encountered while adventuring but retain 
+their own intelligence, and therefore are not quite identical. 
+This race is available to any character with magical power, either from their class or from their race.  Unlike normal 
+multi-classes and races, magical power acquired from multi-classing is sufficient to meet the prerequisites – so a 
+warrior multi-classed to warlock would be eligible for this class. 
+ 
+LEVEL ABILITIES 
+  1 Must select one of the below ‘construct types’.  Immunity to all Flesh and Blood Effects, including 
+potions, poisons, and pain.  Must wear makeup of the appropriate style/colour. 
+Life-points by level are calculated as on the below chart, dependent on original class’s life scale. 
+May not have more than DAC 6, ever.  May not use Sniff or Locational Sniff skills. 
+  2 +1 PAC innate due to dense form.  May not travel at greater than ¾ speed, should be role-played in a 
+lumbering heavy way.  Combat and weapon blows are not affected, but clearly this would prevent 
+use of forearm parry. 
+Minor Power as below – though to gain it must possess the listed prerequisite.  
+  3 Medium Power as below. 
+  4 +2 PAC total. 
+  5 Now completely Immune to Aging. 
+Major Power as below. 
+  6 +3 PAC total.  Now requires 5 grades of strength to move physically if dead, unconscious or 
+helpless.  May not use physical Jump abilities. 
+ 
+ 
+ 
+ 
+ 
+  
+
+
+===== PAGE 89 =====
+
+88 
+ 
+Life-Scales 
+ 
+ORIGINAL LIFE  (@8TH LEVEL) NEW LIFESCALE BY LEVEL OF GOLEM 
+32 tblp or less at 8th As Battle-Priest (41/14 @ 6th) 
+39 tblp or less at 8th  As Thug (48/17 @ 6th) 
+47 tblp or less at 8th As Spirit Warrior (53/18 @ 6th) 
+56 tblp or less at 8th As Warrior (60/20 @ 6th) 
+Higher than 56 tblp at 8th As Ogre (68/23 @ 6th) 
+ 
+Construct type options 
+Iron – prerequisite ‘MAC 1’: 
+ Minor: May bond a metal weapon to them so that it becomes ‘part of them’ for the purposes of spells and effects.  
+This means that the weapon cannot be removed from their grip by any means whatsoever, and is immune to effects 
+which would destroy it, even Grand Shattering Blow or similar.  To use this ability requires the weapon to be held 
+and concentrated on for 30 seconds.  To remove the weapon from the character’s grip similarly requires 30 seconds 
+of concentration. 
+ Medium: +1 stacking Strength, max +3. 
+ Major: 66% Berserk Rage x1/3 levels only usable when in the presence of magic cast by someone other than 
+themselves.  In this state the caster of the magic is the first choice of target, and any others who act in a hostile or 
+threatening fashion must be attacked. 
+ 
+Stone – prerequisite ‘Stability’ – may not be a blue mana user: 
+ Minor: Statue x1/day.  May instantly enter a ‘statue’ form in which is invulnerable to all effects and damage, but 
+may not take any action whatsoever in this form bar observe surroundings.  May be ended prematurely, otherwise 
+lasts 15 minutes. 
+ Medium: Now takes 1/4 less effect from sharp weapons of all sorts (not purely supernatural weapons). 
+ Major: May inflict Knockback by weapon blow at will, costing 6 tblp for each such blow struck if +2 or greater 
+strength is possessed, 9 tblp per blow struck otherwise however. 
+ 
+Ice – prerequisite ‘Immunity to Cold’ – may not be a red mana user: 
+ Minor:  Refract Light x1/2 levels – one light-based attack (such as a Laser Bolt, or a single blow from a Sabre of 
+Light and Truth) has no effect. 
+ Medium: Complete Immunity to Cold, as Winter Elf. 
+ Major: May inflict damage as per Snowball, 12/12 magical cold damage, by touch at will for 6 TBLP per touch.  
+This damage is not cumulative with unarmed combat damage however. 
+ 
+Bronze – prerequisite ‘Stockiness’: 
+ Minor: +0/3 locational life per 2 levels (i.e. +0/9 total at 6th) 
+ Medium: Now takes 1/4 less effect from all solely physical damage. 
+ Major: Immunity to Bruising and may round fractions down rather than up when calculating damage suffered. 
+ 
+Greater Ogre 
+Many Half-Ogres take more after one parent than the other - and Ogre nature being what it is it is commonly the ogre side 
+that dominates.  Greater Ogres are, if possible, even bigger, greedier and stupider than their half-breed children.  This race is 
+available to any Half-Ogre. 
+ 
+CLASS ABILITIES 
+  1 Ogres will always perceive any who give them existing food as friends, unless they or their tribe-
+members are attacked by them.  +6/2 life.  This life is stacking with all other published life-points 
+abilities unless they specify otherwise, but not with non-standard abilities which do not specifically 
+mention this life.  
+  2 +1 PAC (total). 
+  3 Immunity to all Domination effects.  +12/4 life (total). 
+  4 +2 PAC (total). 
+  5 +18/6 life (total). 
+  6 +3 PAC (total).  +1 Strength, stacking to +3 maximum. 
+
+
+===== PAGE 90 =====
+
+89 
+ 
+High Elf 
+Although it is generally accepted that elves are created by the mana dragons, there is some confusion as to their origin.  
+Further confusing the issue are the High Elves - rarely seen, these creatures are often confused with half-breeds, but instead 
+seem to be elves who have somehow achieved a different, more spiritual state, usually by some form of religious devotion 
+(though not always).  The Lady of the Stars in particular is known for granting elves who dedicate themselves to her High 
+Elf status.  This race may be purchased by any Half or Full Elf or Drave, including Drowe and Faeries. 
+Note: Faeries pay the same cost as Drowe, Ivory Draves as Winter Elves.  
+ 
+LEVEL ABILITIES 
+  1 Now has a half-spirit, as Half-Elf.  Is no longer injured by Dispels.  Still Immune to Flesh and Blood 
+effects to which an Elf is immune. 
+Half Elves taking this option are now Immune to Flesh and Blood effects to the extent of an elf.  
+  2 +1 DAC. 
+  3 Gains Rebirth at 8th level (must have already bought Rebirth). 
+  4 +2 DAC (total). 
+  5 May now Rebirth at 8th keeping 1/3 of original points - must purchase High Elf first on rebirthing. 
+  6 Those that were full Elves now have human life of same base class.   
+Those that were Half Elves may now buy as full elf of their type. 
+All elven handbook innates become mantic, so that affirms grant SAC additionally, etc.  
+ 
+It should be noted that High Elven Drowe returners stay solely magical.  However for 40 points post-6th level they may be 
+enhanced to be mantic, inflicting both spiritual and magical damage by purchasing Enhanced Returner. 
+ 
+ 
+Hob-Goblin 
+The biggest, most powerful Goblins naturally lord it over the smaller members of their race - Goblins have never been 
+known for their compassion, and bullying comes naturally to them.   
+The biggest and most belligerent of Goblins are suspected by those who study such matters to be an entirely different breed, 
+cousin not brother to the normal Goblin that most people know.  These larger, nastier Goblins are called Hob-Goblins.  This 
+race is available only to Goblins. 
+ 
+LEVEL ABILITIES 
+  1 Base life gained from this race is equal to that of a Half-Orc of equal level to multi-race level. 
+(e.g. 6th level Half-Orc life at 6th). If the life from the Goblin’s base class now exceeds 48 as a result 
+of this then it does increase their base life for life capping calculations. 
+  2 May now wear any armour permitted for a Human of same class  
+(No change for Shaman/Witch Doctor). 
+  3 +1 PAC, gains ‘B’ skill and loses Goblin weapon restrictions, and E-skill if acquired may be used 
+with any weapon the Hob-Goblin may use. 
+  4 Loses Goblin racial Backstab skill - now inflicts +6 pts of base damage on blows where Backstab 
+would normally be usable (may still acquire Backstab in other ways). 
+  5 +2 PAC (total).   
+Now has Insensitive Skin as tables ability. 
+  6 Taunt x1/day - after spending 30 seconds verbally taunting and not fighting a target who 
+understands their language, while continuing to do so the Hob-Goblin takes only 1pt of damage per 
+grade inflicted by blows from the target, regardless of all other reductions including AC (cf. 
+Rockskin), for a maximum of 5 minutes, or until taunting is stopped, whichever is shorter (50, 3). 
+ 
+Post-6th: May buy Immunity to Poison and Immunity to Disease at half cost.  May buy ½ Orc racial abilities as a ½ Orc 
+can (except Human Heritage), and may buy Strength ignoring Goblin restrictions. 
+ 
+ 
+ 
+
+
+===== PAGE 91 =====
+
+90 
+ 
+Immortal 
+Some individuals are just powerful and filled with mystical energies. The Mortal World is beneath them and they are 
+touched by the mystical. 
+ 
+LEVEL ABILITIES 
+  1 Suffers 1/6 th less damage from physical attacks per level of this race (e.g. at 6th level is Immune to 
+Physical Damage). 
+Immunity to Flesh and Blood Effects (Including Potions, Poisons, and Pain). 
+  2 Immortal Defence 1/2 Levels - Gains ¼ off all damage with a physical component. (75, 3) 
+  3 Immunity to Ageing. Now only receives half effect from beneficial physical effects. 
+  4 Empowered Defence 1/3 levels – Upgrades an Immortal Defence so that it grants 1/3 off damage. 
+(25, 2) 
+  5 Form of the Immortal 1/day – Grants complete Immunity to Physical Effects. Lasts 5 minutes. 
+  6 Immortal Armour 1/day – Upgrades an Empowered Defence so that it grants a “Rockskin” style 
+reduction vs. all damage with a physical component. (25,1) 
+ 
+Post-6th: True Immortal – Gains complete Immunity to Physical at all times. 100 points. 
+ 
+Mind Over Reality 
+ 
+Those capable of controlling the powers of the mind to manipulate themselves sometimes advance so they can truly adjust 
+how reality functions for them, twisting and changing their bodies to become impervious to the world. 
+To buy this class must have Neuro-Mastery at will. 
+ 
+LEVEL ABILITIES 
+  1 Gains 1/6 th off all bar Physical and Neuronic per level. 
+May never leave/buy as outside the neuronic bracket. 
+May never Mind-Bar/become Immune to Neuronics. 
+Must have at least 2 permanent (not items or focussing crystals) Neural Foci per level of this 
+race purchased. 
+  2 Reality Controlled 1/2 levels – Gains complete Immunity to Magic or Spirit for 5 minutes. 
+  3 Can only be killed/have a location severed by Physical or Neuronic means. 
+Now requires at least 3 permanent Neural Foci per level of this race. 
+Gains immunity to beneficial effects that are not Neuronic or Physical in nature. 
+  4 Disperse Mind 1/3 levels – Allows the target to enter a diffuse state. This acts as per a gaseous 
+form except the user is only harmed by neuronics rather than miracles. 
+  5 Forced Reality 1/day – 1st time it is need each day gains a stacking live to minus 6 that is 
+neuronic only.  
+  6 Alter Reality 1day – Counts as being in a Purity of Mind vs. one effect that just targeted them. 
+Costs a level to use and must be declared within 2 seconds of suffering the effect. 
+Must now have 4 permanent Neural Foci per level of this race (i.e. 24 to buy this level). 
+ 
+Post 6th may buy resistances as a spiritless creature. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 92 =====
+
+91 
+ 
+Ogre Magi 
+Although Ogres are regarded as incredibly stupid and this is generally true, a rare few specimens naturally inherit genes of a 
+magical nature, from a time in the distant past. Thought to be the product of some magical accident or ritual, Ogre-Magi are 
+born with an innate natural, feral cunning far greater than that of their brothers, and an aptitude for magic that cannot be 
+explained.   
+It is assumed that whoever was responsible for the creation of the race was a blue wizard, as their talents lie mainly in the 
+blue mana area.  It is actually true, however, that there are other versions of the Ogre Magi in the world aligned to the other 
+elements. Those tied to blue mana are more commonly encountered though since they can use their talents to travel far and 
+wide. 
+This race is available to any Half-Ogre who has not entered the priest bracket (e.g. any shaman).  There is no alignment 
+requirement. 
+ 
+LEVEL ABILITIES 
+  1 Has greater cunning than previously possessed, in general intelligence is now roughly equal to that 
+of a Half-Orc warrior.   
+Gains Recognise Mana at will.  May adapt verbals for spells in the same manner as a shaman or 
+witch-doctor, as appropriate. 
+Must now incorporate blue woad like markings into their makeup. 
+  2 Puff of Air at will for 1 TBLP per use, Detect Magic x2/level innate (5,). 
+  3 Shatter(r) x1/level innate (20,). 
+  4 Storm Blast x1/level innate (30, 12). 
+  5 Walk on Air(s) x1/2 levels innate (30, 12) 
+  6 Lightning Bolt x1/3 levels innate (55, 6).  Now completely Immune to all Electrical Attacks. 
+ 
+Post-6th: Ogre-Magi can additionally buy innates of other standard blue spells of 6th level or below at a cost of 10 points 
+per mana point (e.g. 20 points for an innate Mend(r)), to a maximum of 3 of any one spell.  May acquire a second colour 
+from red, green, grey, black or white (alignment not relevant) for 50 points, may then buy innates of standard spells of that 
+colour in the same way as blue above. 
+ 
+ 
+Primal Soul 
+A surprisingly common phenomenon throughout Labyrinthia and Primus is the creature which shares aspects of its own 
+race and those of another, typically animal in nature.  Sometimes whole settlements or tribes of these beings develop, 
+but just as often they are individuals who grew up normally in their own society before realising there was something 
+unusual about them.  Sometimes mistaken for were-creatures, in fact these people are simply touched by the soul or 
+essence of a natural race.  This race is available to any race native to Primus (not Blauz, Ggrutuck, Duidoin, Elysians, 
+Silverfolk – at this time none of these are fully accepted as part of Primus).   
+ 
+LEVEL ABILITIES 
+  1 Must select a creature which matches one of the below race types to represent the character’s primal 
+soul.  For any choice other than Primal Bound, makeup/costume reminiscent of an appropriate 
+creature of this type must now be worn. Primal creatures should be excellent examples of their race.   
++1 Dexterity AC. 
+  2 Minor Power as listed below for type. 
+  3 +2 Dexterity AC total. 
+  4 Medium Power as listed below for type. 
+  5 Discern Own Kind – at will by sight may recognise creatures of the race (not race type) chosen.  So 
+a Primal Soul Wolf could identify all wolves, and so on.  This is a physical discern, and gives a 
+Yes/No answer, and additional information about the target’s race at ref’s discretion – e.g. dire wolf, 
+winter wolf, only part wolf, etc. 
+  6 Major Power as listed below for type. 
+ 
+Race choice (where there is more than one ability listed in a category, the character must select one of the abilities, 
+recorded on card at time of purchase of the correct level): 
+ 
+  
+
+
+===== PAGE 93 =====
+
+92 
+ 
+Primal Bound: [Initial Race] 
+ 
+In this case the character is in some way a ‘superior’ creature of their race, quicker of thought and act than a normal 
+person. 
+ 
+Minor – 
+ +1 Dexterity AC cumulative with the racial DAC above 
+ Lucky Idea x1/day 
+ 
+Medium – 
+ Lucky Idea x1/3 levels 
+ Lightning Reactions 
+ Physical Light-Step (as glyph but no verbal) x1/3 levels 
+ Regeneration: Character heals at 1tblp and 1pt to the worst location per 5minutes whilst on Primus 
+ 
+Major – 
+ Max damage Quin with B class weapon wielded in two hands, if previously had max damage Quad. 
+ Domination effects of all sorts last at most 30 seconds on character, or half previous duration if less. 
+ Gains Immunity to Poison and Disease 
+ 
+Predator 
+ 
+This option covers most predatory animals in style, such as wolf, bear, or even shark.  Innates chosen should be 
+appropriate to the specific creature chosen – for example a hawk soul might well fly, while a wolf soul would not. 
+ 
+Minor – 
+ Acute Hearing 
+ Sniff and Locational Sniff 
+ Tracking as Ranger 
+ Flight – x1/3 levels for 5 minutes, may fly as per Walk on Air if on Primus, borne aloft by their primal nature 
+rather than actual wings. (40, 3) 
+ Gains Unarmed Combat with claws 
+ Jump x1/2 levels (20, 3) 
+ 
+Medium – 
+ Perception and Supernatural Perception 
+ Snarl x1/3 levels – acts as a physical Cause Fear to one target, and additionally causes fear in all normal animals 
+within ear-shot.  (50, 3) 
+ +1 max damage first blow of combat, no preparation required, stacking with other first-blow abilities such as tables 
+30 second concentration ability 
+ Regeneration: Character heals at 1tblp and 1pt to the worst location per 5minutes whilst on Primus 
+ 
+Major – 
+ Lightning Strike x1/3 levels – may call Time Freeze to strike one blow on a target within reach, to which they are 
+immune if they have Lightning Reactions.  (80, 1) 
+ Sense Motion as pathfinder, must have all prerequisite abilities to use. 
+ Now inflicts ‘through PAC’ damage with unarmed combat at all times 
+ 
+Prey 
+ 
+This option covers most animals hunted as prey in style, such as deer, rats and bats.  Innates chosen should be 
+appropriate to creature selected, as above. 
+ 
+Minor –  
+ Acute Hearing 
+ Sniff and Locational Sniff 
+ +1 Dexterity AC in addition to the race DAC above 
+ Flight – x1/3 levels for 5 minutes may fly as per Walk on Air if on Primus, borne aloft by their primal nature rather 
+than actual wings. (40, 3) 
+ Jump x1/2 levels (20, 3) 
+
+
+===== PAGE 94 =====
+
+93 
+ 
+ 
+Medium –  
+ 6th Sense. 
+ +2 Dexterity AC in addition to the race DAC above, but non-cumulative with Minor Power. 
+ Perception and Supernatural Perception 
+ Physical Chameleon(s) x1/2 levels (40, 3) 
+ Lightning Reactions 
+ Regeneration: Character heals at 1tblp and 1pt to the worst location per 5minutes whilst on Primus 
+ 
+Major – 
+ No max AC and x2 Dexterity AC when doing nothing but flee (non-cumulative with Goblin racial ability) 
+ +4 Dexterity AC in addition to the race DAC above, but non-cumulative with Minor or Medium Power. 
+ Physical Light-Step (as glyph but no verbal required) x1/level, which may not be used to approach an enemy. 
+  
+Post-6th: May buy one additional Minor Power for 50pts, one additional Medium Power for 100pts and one additional 
+Major Power for 150pt. That must be chosen from the same grouping as previous choices. 
+ 
+ 
+Rock Troll 
+Those Half-Trolls who are descended from the hardier Rock Troll branch of the troll families are prone to their trollish 
+nature being dominant over their human side.  Rock Trolls are well-known for their slow, simple nature - almost as well 
+known as for their incredible durability.   
+This race is available to any Troll. 
+ 
+LEVEL ABILITIES 
+  1 Now immune to Flesh and Blood Effects, including ingestion (no longer affected by any form of 
+potion).   
+Must now incorporate stone and rocky complexion in to makeup worn. 
+  2 +1 PAC (total).  
+Gains an additional 3 points of live to minus, cumulative with all other live to minuses, per level of 
+this multi-race (so at 6th level the troll gains an additional live to -18). 
+Regeneration now heals a base of 1 TBLP and 1 to every injured loc, per 5 minutes. 
+  3 +2 PAC (total).   
+  4 +3 PAC (total).  Regeneration now heals a base of 2 TBLP and 2 to each injured loc, per 5 minutes. 
+[note this is a +1x rate increase thus if triple rate was owned the total would be x4 rate not x6 
+rate].  
+  5 +4 PAC (total).   
+All stone weapons striking the troll inflict damage as if the troll were benefiting from a Rockskin 
+spell, at all times (i.e. 1pt per damage grade ignoring AC and all other reductions).  Innate PAC may 
+always be applied to all weapon-blows with a physical component. 
+  6 +5 PAC (total).  Regeneration is now enhanced as follows:  for warriors, permanent damage can be 
+healed by natural regen only, except for that from fire or spirit; 
+for shaman, spirit damage can be healed as normal by regen; 
+for Witch Doctors, fire damage can be healed as normal by regen. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+
+===== PAGE 95 =====
+
+94 
+ 
+Servants of the Spirits (Previously Balance) 
+The Gods of Neutrality have as much need for loyal minions as any other, and the majority of these are, naturally enough, 
+their priests.    
+Those high in their God's favour are sometimes transformed to better enable them to act out their deity's will.   
+This class is available to any neutrally-aligned Priest who has bought the ability Passive Spirit Sight from the tables. 
+ 
+LEVEL ABILITIES 
+  1 Is now Immune to all Flesh and Blood effects (inc. potions, pain, etc.).  
+Counts in all ways as a Supernatural Neutral Creature From Another Plane. 
+Requires silvery /grey swirls and/or runic markings over exposed skin. 
+  2 Touch reads surface thoughts, as spiritual Psi-Scan, at will for 1 TBLP. 
+Detect Spirits Nature at will, using full verbals as normal.   
+  3 Detect Lie at will, for 3 TBLP (full handbook verbals). 
+  4 Insight of the Spirits 1/day – With 30 seconds concentration can gain the ability to cast any one 
+published neutral miracle for the remainder of the dungeon. The miracle must be one that could 
+normally be learnt (sphere wise etc.) (75, 2). 
+  5 Commune with the Gods x1/day (140, 2) 
+  6 Gains permanent fully active Spirit Sight, revealing the spirits’ size and alignment. 
+ 
+Shadow Daimon 
+While the Lords of the Hells are well known for their use of the destructive power of fire, many prefer to use more subtle 
+powers to bring woe to their enemies.  The users of shadow and stealth are less flamboyant than Fire Daimons, but their 
+might is as great nonetheless - and the pacts they swear to gain their power are just as damaging to their souls.  This race is 
+available to any evil non-elven, non-tribal character. Half-Elves and Half-Draves may purchase this race at normal cost. 
+ 
+LEVEL ABILITIES 
+  1 Must wear dark/black makeup at all times covering at least ½ of exposed skin.  May Extinguish 
+lights within 10' at will, with full verbal as per the cantrip.  Now has a permanent mantic Ally 
+Darkness (see Wizard's Grimoire) except it does not grant the ability to see through darkness.  
+Counts as Daemonkind in all ways. 
+  2 May Shadowmeld x1/level when not within 5' of a light-source or in direct daylight or supernatural 
+light, as per Chameleon(s).  Once used is broken by the presence of supernatural light, but not 
+natural light-sources (25,). 
+Must purchase the ability “See Through Supernatural Darkness at all times” before buying this level. 
+  3 Mantic Darkness(s) x1/2 levels (40, 6). 
+  4 Mantic Shadowblade (see Wizard's Grimoire) x1/3 levels - blade inflicts magical and evil spiritual 
+damage when used by the Daimon or any person able to use Evil spirit weapons, otherwise inflicting 
+magic mantic damage only (75, 4). 
+  5 Cloak of Darkness x1/3 levels.  As Invisibility, with the additional restriction that it cannot be used 
+under the conditions listed for Shadowmeld above - immediately goes down if within 5' of any light-
+source (80, 2). 
+  6 Shadowshift x1/day as Wizard's Grimoire spell (60, 3). 
+ 
+Post-6th: may buy: 
+Magical Shadows: Whilst using Cloak of Darkness or Shadowmeld, becomes Immune to Mana and Elemental Sight if has 
+Immunity to Informational Spells.  Cost: 80 pts. 
+Spiritual Shadows: Whilst using Cloak of Darkness or Shadowmeld becomes Immune to Spirit Sight if has Immunity to 
+Informational Miracles.  Cost: 90 pts. 
+ 
+ 
+ 
+ 
+  
+
+
+===== PAGE 96 =====
+
+95 
+ 
+Snaga Hai 
+These are those Orcs who have hearkened back to their dark roots, following in the footsteps of their ancestors who lived 
+deep in dark tunnels, emerging only at night to steal livestock, slaying from behind without ever being seen.   
+This race is available only to Half-Orc scouts and assassins. 
+ 
+LEVEL ABILITIES 
+  1 Now always counts as if benefiting from the black Ally Darkness spell - Darkness(r) spells targeted 
+on the Half-Orc move with them.  May now see through all forms of supernatural darkness. 
+Must now incorporate black shadows/woad into make-up worn. 
+  2 Now gains +2 DAC (total) in darkness. 
+  3 Unassisted Climb - all Assisted Climbs used now need only two points of contact, last as long as the 
+character keeps climbing, and may be at full speed (no running or fighting however).   
++1 stacking Backstab skill, stacking only with published Backstab. 
+  4 Now gains +3 DAC (total) in darkness. 
+  5 Bladelick x1/day - after licking the blade of a physical edged weapon, the next blow struck with that 
+weapon within the next 5 minutes will inflict a physical Disease, otherwise as the Cause Disease 
+miracle (50, 3). 
+  6 Now has Sense Motion skill except in direct daylight or magical light. 
+Must possess Perception and Supernatural Perception to use this ability. 
+ 
+Post 6th: Snaga Hai can purchase Backstabs as a 1st Class Assassin. If already a 1st Class Assassin they can buy them 1 
+table earlier. 
+Spiritual Vessel 
+The priest begins to embrace the spirits within them, strengthening the power they have over them, and abandoning the 
+physical world. 
+ 
+LEVEL ABILITIES 
+  1 1/6 th off all bar Spirit per level. 
+Immunity to Flesh and Blood Effects (including Potions, Poison). 
+May never leave the priest bracket. 
+  2 Immunity to Ageing 
+  3 Can only be killed/have a location severed by spiritual means. 
+Gains immunity to beneficial effects that are not spiritual in nature. 
+May no longer cast Spiritual Invisibility or otherwise become Immune to Spirit. 
+  4 Immunity to non-damaging effects which are not spiritual in nature. 
+  5 Can only be knocked unconscious/have a location stop working through spiritual means 
+  6 Is now completely immune to all bar spirits. 
+ 
+Post 6th: Spiritual Nature- Gains ½ effect all magic based mantics (e.g. a mantic disruption). Cost 200 points 
+Formless Being – No longer suffers damage to locations. Effects that inflict damage based on locational life (e.g. 
+Sever) are calculated as if a person’s locations were 1/3rd of their TBLP. Now has a maximum permanent TBLP ever of 
+48 with any above this becoming live to minus. Cost: 250 points, table 10. 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+
+
+===== PAGE 97 =====
+
+96 
+ 
+Titan 
+The Champions of Combat. Bound to battle the Titans stand head and shoulders above most men. They walk the line 
+between Mortal and Immortal on the battlefield. 
+ 
+LEVEL ABILITIES 
+  1 Immunity to Pain in all forms. 
++ 1 Stacking Strength (Max +3) 
+  2 +3/1 Base life. 
+Form of the Titan 1/2 Levels – Grants +36/12 temp life for 5 minutes, does not stack with 
+supernatural temp life but does with physical temp life. (65, 2) 
+  3 1/6 th off Weapon Blows. This will stack with the Battle-Master abilities. Greater Blade Fury to 
+1/4 off and with Eye for an Opponent 1/3 off weapon blows. 
+  4 +6/2 (from 3/1) Base life. 
+Titan’s Strength 1/day – May remain conscious while in live to minus (providing some is 
+owned) while in combat. Lasts 5 minutes. (50,1) 
+  5 Immunity to Supernatural Ageing effects. 
+1/4 off weapon blows (from 1/6th). Greater Blade fury now grants 1/3rd off and Eye for an 
+Opponent 1/2 effect. 
+  6 +9/3 (from 6/2) base life. 
+Titan’s Endurance 1/day – Locations will continue to function until severed while in combat. 
+Lasts 5 minutes. (75,1) 
+Post 6th:  Titan’s Stamina – From Sleep off Perm. Permanent/incurable wounds can now be healed normally. Cost: 
+100 points, table 11. 
+Titans Body – Now gains 1/3 off weapon blows. Greater Blade Fury will stack with this to 1/2 effect weapon blows 
+and Eye for an Opponent grants a Rockskin style defence vs. the chosen opponent. Cost: 250, table 10.  
+ 
+ 
+Undead 
+There are many reasons why adventurers turn to the power of undeath, but the problems they experience and the advantages 
+they gain are generally the same. Voluntarily selling one's soul to dark powers for the sake of undeath is generally a gradual 
+process, as the body slowly decays with the tainting of the spirit.  This race is available to any evilly aligned non-Elf/Drave 
+or Faerie.  
+Post-6th, buys as a full Undead, and see below. 
+ 
+LEVEL ABILITIES 
+  1 Now discerns as (and is, for all purposes) a Level 1 'Type Unknown' undead, dismiss name 'Lesser 
+XXX'. (Must select Undead type from Ghoul/ Mummy/Wraith/Wight/Vampire).  Is now immune to: 
+Repel and Attract Life, Restore and Animate Life, Discern Nature of Wounds.   
+Requires appropriate make up to the type of undead chosen, e.g. rotten and fleshy for Ghouls, pale 
+and ethereal for Wraiths.  
+  2 Is now a Level 2 'Minor XXX' as above.  Now Immune to: Ebony spell Pain, Words of Pain and 
+other effects which duplicate or are similar to it in effect (it is still possible however for undead to 
+feel pain from weapon blows and similar), all forms of Disease, Adrenal Surge.  May buy 1st innate 
+from chosen tree, and the appropriate ‘curing’ ability (each as many times as desired). 
+  3 Is now a Level 3 'Minor XXX' as above.  Now immune to: Stunning Blow, Vicious Strike, Aging, 
+Flesh and Blood effects. May buy 2nd innate from chosen tree. 
+  4 Is now a Level 4 'XXX' as above.  Now immune to: Repel and Attract Edible, Empathic Healing.  
+May buy 3rd innate from chosen tree. 
+  5 Is now a Level 5 'XXX' as above.  Now immune to: Neuronics, physical Sleep.  May buy 4th innate 
+from chosen tree (if appropriate). 
+  6 Is now a Level 6 'Greater XXX' as above.  Now immune to: 
+all miracles not listed as affecting the undead.   
+May Increase Dismiss Level to 7 for 80 points. May buy Immunity to Dismiss miracles for 150 points. May buy 
+Immunity to Undead Destruction effects (not Hand of Purity or Dismiss miracle), for 80 points. 
+All (t) abilities are undead touch effects, and the effect of that single touch lasts 5 minutes unless this would be inappropriate 
+(e.g. Level Drain is permanent until regained, Disease duration is as Cause Disease) 
+
+
+===== PAGE 98 =====
+
+97 
+ 
+ 
+Ghoul Ability Cost 
+1 - Paralysis(t) x1/day as Ghoul 40* 
+2 - Blindness(t)x1/day 50* 
+3 - Petrification(t) x1/day (the target is turned to stone temporarily, taking no harm from solely physical 
+weapons) 
+50* 
+Cured 12/12 by use of one above ability per day 30* 
+Mummy Ability Cost 
+1 - Disease(t) x1/day as Mummy 40* 
+2 - Contagion x1/day - for 5 minutes touch causes Disease at all times 100* 
+3 - Contagious Disease x1/day - a Disease(t) where the target additionally Diseases everything they 
+touch until the Disease is cured. Target may not be Immune to Disease, nor the user of the ability 
+100* 
+Healing Putrescence x1/day - one Disease ability from above used cures user 1/1 every minute the 
+primary target is suffering from it (to a max of 1 hour) 
+40* 
+Wight Ability Cost 
+1 - Freeze(t) x1/day as Wight 50* 
+2 - Numbing Cold x1/day - 2pt Dex drain lasting 5 minutes unless target has Total Immunity to Cold.  
+(4 hits to monsters).  If target reduced below 0 Dex AC, is unable to wield weapons/run. 
+50* 
+3 - Planeshift x1/day - as Wight. 100* 
+Cured 12/12 by the use of one Freeze(t) or Numbing Cold per day 30* 
+Wraith Ability Cost 
+1 - Fear(t) x1/day as Wraith 30* 
+2 - Level Drain(t) x1/day as Wraith 60* 
+3 - Strength Drain(t) x1/day - drains target of one grade of strength (minimum 0) for five minutes.  If 
+target falls below 0, unable to move or speak for duration 
+75* 
+4 - Walk through Walls x1/day for 5 minutes as Wraith 80* 
+Cured 12/12 by use of one Level Drain(t) or Strength Drain(t) per day 30* 
+Vampire Ability Cost 
+1 - Beguile Spirit x1/day 35* 
+2 - Double Level Drain(t) x1/day - drains 2 levels at once 90* 
+3 - Gaseous Form x1/day for five minutes as Vampire 80* 
+Cured 24/24 by drinking blood from one living target once per day (inflicts 24 TBLP/8 hits to target).  
+Takes 5 seconds to perform. 
+40* 
+ 
+ 
+Uruk-Hai 
+This is the race of Black Orcs, those Orcs tougher and meaner than others in a fight. They are naturally feisty, substantially 
+more aggressive than their weaker cousins.   
+Uruk-Hai require 'dirty’ makeup, an exaggerated version of the normal Half-Orc make-up requirements.  This multi-race is 
+available only to Half-Orc warriors and thugs. 
+LEVEL LIFE ABILITIES 
+  1 33/11 May now see through all forms of supernatural darkness at all times. 
+  2 40/13 +1 PAC.  Detrimental effects whose penalties are incurred over a duration, such as 
+Disease or Words of Pain, take twice as long to affect. 
+  3 47/16 No longer suffers DAC penalties in light. 
+  4 54/18 +2 PAC (total). 
+  5 61/20 May never be reduced below +1 strength (must have at least +1 strength to benefit from 
+this ability). 
+  6 68/23 +3 PAC (total). 
+Black Fury - 50% berserk rage which also grants immunity to listed stopping effects for 
+the duration of 5 minutes x1/day (100,2). 
+ 
+  
+
+
+===== PAGE 99 =====
+
+98 
+ 
+Vessel of the Dead 
+ 
+A few poor souls are naturally tied to the Netherworld. While not undead themselves perhaps in a past life they were, 
+or their bodies have once been tainted and the darkness never faded. Whatever the case they can oddly become undead 
+while still alive. 
+ 
+LEVEL ABILITIES 
+  1 Is not tainted if raised as undead. If raised as undead then retains own personality. 
+  2 Twist the Form 1/2 levels – May have a published raise undead miracle cast on self (by self or 
+another) that requires a body. This allows the user to become that undead (hits, powers, undead 
+nature etc. effectively they are that undead’s stats rather than their own) for 15 minutes or until 
+the undead is slain. They are controlled by the individual that raised the undead as normal. If the 
+undead is slain in that time then the person is halted regardless of resistances and effectively 
+“appears” where they are. If the Undead is dismissed (or similar, including being controlled to 
+return to their own place) then the user dies. (60,3) 
+  3 Death’s Form 1/3 Levels – Acts as per an Incarna Mortis, but on self only. Does not suffer the 
+normal “Kick out” (80,3) 
+  4 Undead raised into the Vessel may now benefit from the physical armour and any grades of 
+strength owned by it. 
+  5 Death’s Form may now be used in response to an attack (Declared within 2 seconds) but it only 
+applies to that single attack if used in this way. 
+  6 Can now be animated as a zombie (as per Twist the Form) while alive once per hour. 
+ 
+Post-6th: May upgrade level six ability so that it can be used 1/ 30 minutes on table 9 for 100 points and to 1/15 
+minutes on table 10 for a further 100 points. 
+ 
+ 
+Vessel of the Dragons 
+As Wizards begin to master the elements of the world some seek to devoid themselves of their physical forms and instead 
+become a thing of pure magic. 
+ 
+LEVEL ABILITIES 
+  1 1/6 th off all bar Magic per level. 
+Immunity to Flesh and Blood Effects (including Potions, Poison, and Pain). 
+  2 Immunity to Ageing. 
+  3 Can only be killed/have a location severed by magical means. 
+Is now harmed by Dispels as an Elf and as such may no longer cast Mana Shield or otherwise 
+become immune to magic, doing so results in death. 
+Gains Immunity to beneficial effects that are not magical in nature. 
+  4 Immunity to non-damaging effects that are not magical in nature. 
+  5 Can only be knocked unconscious/have a location stop working through magical means. 
+  6 Is now completely immune to all bar Magic. 
+ 
+Post 6th: May buy Resistance to Dispels as an Elf/Mantic Effects as an Elf. 
+Formless Being – No longer suffers damage to locations. Effects that inflict damage based on locational life (e.g. 
+Sever) are calculated as if the character’s locations were 1/3rd of their TBLP. Now has a maximum permanent TBLP 
+ever of 48 with any above this becoming live to minus. Cost: 250 points, table 10. 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 100 =====
+
+99 
+ 
+Winter Barbarian 
+Winter elves, unlike most other elven races, spent the childhood years of their race isolated from the rest of the world, living 
+alone in the icy wastes which best suit their nature.  As any who have encountered one will know, they have still not entirely 
+overcome their barbaric nature, but some groups still function entirely as barbarian tribes, to as great an extent as any other 
+tribal community.  Individuals who favour this view of life are called Winter Barbarians.  Wizards who buy this multi-race 
+become Witch Doctors of level equal to their base wizard level immediately on buying 1st level Winter Barbarian, as 
+explained below.  This race is available to any Winter Elf. 
+ 
+LEVEL ABILITIES 
+  1 Counts in all ways as a Tribal character from this point; may join a Winter Barbarian tribe only.  Life 
+now as Human of same base class by level, so at 6th would have 6th level Human life. 
+  2 Gains Survival as Ranger in cold environments only. 
+  3 Gains one innate Slip x1/2 levels (30,). 
+  4 Gains one innate Wall of Ice x1/3 levels (40, 6). 
+  5 Gains Perception skill as Ranger in ice/snow surroundings only. 
+  6 Gains innate Freeze (t) x1/day as per non-level based version of the Freeze glyph at touch range (50, 
+3). 
+ 
+Post-6th: Winter Barbarians now buy as tribal creatures. May gain life as 8th level Human for 100pts. 
+ 
+Witch Doctor Winter Barbarians are able to draw mana from all non-Drowe & Dark Elves (not Draves or Faeries), on 
+adventure with them, at a rate of 2 mana per wizard level. This is enhanced to 4 mana per wizard level if the Elf in question 
+is a Winter Barbarian in their tribe.   
+Winter Barbarian Witch Doctors may buy Fetches for mana, each granting 2 mana per wizard level, in the same way as 
+other Witch Doctors.  
+ 
+ 
+
+
+===== PAGE 101 =====
+
+100 
+ 
+Multi-Race-Tables of Costs 
+See notes at beginning of book for further clarification.  In this section of Evolution the option listed in the Header is 
+the Multi-race being taken with the various starting options available listed beneath. 
+ 
+Aligned Elf Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Elf or Drave 10 20 140 150 160 200  
+ 
+Angel of Mercy Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Priest (Goodly) 75 140 180 260 340 610  
+ 
+Angel of War  Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Devout Believer (Goodly) 75 150 190 330 430 700  
+Paladin 75 140 170 290 360 590  
+Priest (Goodly) 75 140 170 290 360 590  
+ 
+Angel Touched Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+All 50 100 160 250 300 500  
+ 
+Child of the Pines Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Any Neutral 75 220 240 290 380 650  
+Any Druid Class 75 170 190 240 280 580  
+Ranger 75 190 220 270 315 610  
+ 
+Demon Bound Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+All 50 100 160 250 300 500  
+ 
+Elder Fey Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Any 50 230 290 350 400 550  
+Alfar 50 60 120 180 230 380  
+Drave 50 130 190 240 290 440  
+Elf 50 130 190 240 290 440  
+Faerie 50 130 190 240 290 440  
+Half Elf 50 60 120 180 230 380  
+ 
+Elements Bound Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+1st Class Wizard/High Wizard 50 300 350 500 550 800  
+All within the Wizard bracket 50 300 360 520 580 850  
+ 
+Fire Daimon Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Red Mana User 80 105 150 250 410 690  
+Any Evil 120 150 200 310 480 780  
+ 
+Frost Giant [North Men] Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Any 70 200 350 650 800 950  
+ 
+Full Drowe Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Half Drowe 10 125 160 200 215 320  
+ 
+Full Elf Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Half Elf 10 120 150 185 195 290  
+ 
+Golem  Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Mana User 75 210 340 380 690 810  
+ 
+ 
+  
+
+
+===== PAGE 102 =====
+
+101 
+ 
+Great Ogre Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Ogre 50 80 280 310 360 480  
+ 
+High Elf Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Drowe Archer 60 100 120 160 420 670  
+Drowe Scout Subclass 60 100 120 160 420 530  
+Drowe Warrior 60 100 120 160 420 800  
+Drowe Wizard 75 170 190 240 420 500  
+Elven Archer 60 100 120 160 420 620 Not Drowe 
+Elven Scout Subclass 60 100 120 160 420 480 Not Drowe 
+Elven Warrior 60 100 120 160 420 730 Not Drowe / Winter 
+Elven Wizard 75 170 190 240 420 480 Not Drowe 
+Half Elf Priest Subclass 60 100 120 160 420 600  
+Half Elf Scout Subclass 60 100 120 160 420 550  
+Half Elf Warrior Subclass 60 100 120 160 420 570  
+Half Elf Wizard Subclass 60 100 120 160 420 560  
+Winter Elf Warrior 60 100 120 160 420 640  
+ 
+Hobgoblin Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Goblin Assassin 10 40 70 120 210 290  
+Goblin Pathfinder 10 40 70 120 210 290  
+Goblin Shaman 10 20 60 110 210 290  
+Goblin Warrior 10 50 80 140 300 410  
+Goblin Witch Doctor 10 20 60 110 210 260  
+ 
+Immortal Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Any 75 300 400 500 675 900  
+ 
+Mind over Reality Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Any 75 200 500 750 1000 1400  
+  
+ 
+Ogre Magi Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Ogre 50 80 95 180 355 500  
+ 
+Primal Soul Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Any Native to Primus  40 90 150 250 280 460  
+ 
+Rock Troll Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Troll 75 260 320 480 600 750  
+ 
+Servant of the Spirits Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Neutral Priest 75 240 340 440 600 840  
+ 
+Shadow Daimon Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Any Evil 75 150 210 350 435 710  
+Black Mana User 75 115 165 300 380 650  
+ 
+Snaga Hai Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Orc Assassin 75 105 190 220 270 375  
+Orc Pathfinder 75 105 190 220 270 375  
+ 
+Spiritual Vessel Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Weapon Using Priest 75 600 800 1000 1200 1400  
+Non-Weapon using Priest 75 500 650 800 950 1100  
+ 
+ 
+  
+
+
+===== PAGE 103 =====
+
+102 
+ 
+Titan Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+1st Class Warrior Subclass 75 290 400 530 700 900  
+2nd Class Warrior Subclass 75 330 450 620 800 1050  
+Spirit Warrior 75 390 510 680 860 1130  
+ 
+Undead Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Any Evil 50 170 270 350 500 560  
+Priest (Evil) 40 140 230 300 450 500  
+Unholy Champion 40 140 230 300 450 500  
+ 
+Uruk Hai Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Orc Thug 40 120 160 200 230 440  
+Orc Warrior 40 120 160 200 230 440  
+ 
+Vessel of the Dead Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+All 40 100 200 300 400 550  
+ 
+ 
+Vessel of the Dragons Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Elf/Spiritless 1st Class 
+Wizard/High Wizard 
+75 250 350 500 650 800  
+Other Spiritless 75 250 400 600 800 1000  
+½ elf 1st Class Wizard/High 
+Wizard 
+75 250 400 600 800 1000  
+½ elf in the Wizard Bracket 75 250 450 650 900 1100  
+1st Class Wizard/High Wizard 75 250 450 650 900 1100  
+Within the Wizard Bracket 75 250 500 700 1000 1250  
+ 
+ 
+Winter Barbarian Lvl 1 Lvl 2 Lvl 3 Lvl 4 Lvl 5 Lvl 6 Notes 
+Winter Elf Archer 50 70 100 170 190 350  
+Winter Elf Pathfinder 50 70 100 170 220 370  
+Winter Elf Rogue 50 70 100 170 220 370  
+Winter Elf Warrior 50 70 100 170 220 390  
+Winter Elf Wizard 75 100 130 200 225 355  
+ 
+ 
+ 

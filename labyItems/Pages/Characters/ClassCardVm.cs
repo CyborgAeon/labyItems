@@ -39,12 +39,13 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     public bool IsNonStandard { get; init; }
 
     public Dictionary<int, string> CardTags { get; set; }
-    public string Tag1 => $"AC {MaxAc}";
+    public string Tag1 => MaxAc > 0 ? $"AC {MaxAc}" : string.Empty;
     public string Tag2 => ResolveTags().Tag2;
     public string Tag3 => ResolveTags().Tag3;
     public IReadOnlyList<string> TagChips => BuildTagChips();
 
     public ObservableCollection<LevelAbilityRowVm> LevelRows { get; init; } = new();
+    public bool ShowBodyAndLoc { get; set; } = true;
 
     public string RaceName { get; set; } = "";
 

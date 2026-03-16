@@ -57,6 +57,10 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private Dictionary<string, ManuAbilityOption> _abilityOptions = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, ManuAbilityOption> _abilityOptionsByName = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, EvolutionService.AbilityResult> _abilityDetailsByKey = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, MultiClassDefinition> _multiClassDefinitionsByKey = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, MultiRaceDefinition> _multiRaceDefinitionsByKey = new(StringComparer.OrdinalIgnoreCase);
+    private bool _hasLoadedReferenceData;
+    private bool _suppressAbilityReactions;
 
     private bool _showSpellsTab;
     public bool ShowSpellsTab { get => _showSpellsTab; private set => Set(ref _showSpellsTab, value); }
@@ -142,11 +146,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         _exportService = exportService ?? throw new ArgumentNullException(nameof(exportService));
 
         Items.CollectionChanged += (_, __) => SyncItemsToDraft();
-        Abilities.CollectionChanged += (_, __) =>
-        {
-            SyncAbilitiesToDraft();
-            UpdateAbilityPoints();
-        };
+        Abilities.CollectionChanged += (_, __) => OnAdvancementAbilityCollectionChanged();
+        MultiClasses.CollectionChanged += (_, __) => OnMultiClassCollectionChanged();
 
         if (!_draft.HasSetCurrentVitae)
         {
@@ -157,6 +158,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         AddAbilityCommand = new Command(AddAbility);
         RemoveAbilityCommand = new Command<AbilityEntryVm>(RemoveAbility);
+        RemoveMultiClassCommand = new Command<MultiClassEntryVm>(entry => _ = RemoveMultiClassAsync(entry));
+        RemoveMultiRaceCommand = new Command<MultiRaceEntryVm>(entry => _ = RemoveMultiRaceAsync(entry));
 
         AddItemCommand = new Command(AddItem);
         RemoveItemCommand = new Command<ItemLineVm>(RemoveItem);
@@ -239,11 +242,34 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public bool CanAddAbility => !string.IsNullOrWhiteSpace(SelectedAbilityOption?.Name);
 
     public ObservableCollection<AbilityEntryVm> Abilities { get; } = new();
+    public ObservableCollection<MultiClassEntryVm> MultiClasses { get; } = new();
+    private MultiRaceEntryVm? _multiRaceSelection;
+    public MultiRaceEntryVm? MultiRaceSelection
+    {
+        get => _multiRaceSelection;
+        private set
+        {
+            if (!Set(ref _multiRaceSelection, value))
+                return;
+
+            Raise(nameof(HasMultiRace));
+            Raise(nameof(HasMultiRaceChoiceSets));
+        }
+    }
+
     public ICommand AddAbilityCommand { get; }
     public ICommand RemoveAbilityCommand { get; }
+    public ICommand RemoveMultiClassCommand { get; }
+    public ICommand RemoveMultiRaceCommand { get; }
 
-    public int AbilityPointsSpent => Abilities.Sum(a => a.Cost);
+    public int MultiClassPointsSpent => MultiClasses.Sum(entry => entry.Cost);
+    public int MultiRacePointsSpent => MultiRaceSelection?.Cost ?? 0;
+    public int AbilityPointsSpent => Abilities.Sum(a => a.Cost) + MultiClassPointsSpent + MultiRacePointsSpent;
     public string AbilityPointsSummary => $"Spent: {AbilityPointsSpent} / {Points} Pts";
+    public bool HasMultiClasses => MultiClasses.Count > 0;
+    public bool HasMultiClassChoiceSets => MultiClasses.Any(entry => entry.HasChoiceSets);
+    public bool HasMultiRace => MultiRaceSelection != null;
+    public bool HasMultiRaceChoiceSets => MultiRaceSelection?.HasChoiceSets == true;
 
     public ObservableCollection<ItemLineVm> Items { get; } = new();
     public ICommand AddItemCommand { get; }
@@ -307,6 +333,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     {
         LoadAbilitiesFromDraft();
         LoadItemsFromDraft();
+        await RefreshMultiClassesAsync();
+        await RefreshMultiRaceAsync();
         UpdateTabVisibility();
         if (ShowSpellsTab)
             EnsureWizardSpellListImported();
@@ -343,6 +371,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         var abilityEntries = referenceData.Abilities ?? Array.Empty<ManuAbilityService.ManuAbilityEntry>();
         _abilityOptionsByName = BuildAbilityOptionsByName(abilityEntries);
         AbilityOptions = BuildAbilityOptionsWithLabels(_abilityOptionsByName.Values);
+        _hasLoadedReferenceData = true;
     }
 
     private async Task<bool> EnsureSpellCatalogueLoadedAsync(bool forceReload = false)
@@ -395,6 +424,11 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         MagicColours.Blue, MagicColours.Black, MagicColours.White,
         MagicColours.Green, MagicColours.Red, MagicColours.Brown
     };
+    private const string SecondColourAbilityName = "Second Colour";
+    private const string SecondColorAbilityName = "Second Color";
+    private const string CompetenceAbilityName = "Competence";
+    private const string FaerieColourSelectionKey = "Faerie Colour";
+    private const string ElfColourAbilitiesSelectionKey = "ElfColourAbilities";
 
     private ServiceCharacterClassRecord? ResolveClassRecord()
     {
@@ -470,7 +504,15 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         }
 
         if (!IsWizardTrackClass(classRecord))
+        {
+            if (HasAdvancementAbilityByName(CompetenceAbilityName))
+            {
+                foreach (var c in GreyWizardColours)
+                    result[c] = 3;
+            }
+
             return result;
+        }
 
         if (primaryColour.HasValue && primaryColour.Value == MagicColours.Grey)
         {
@@ -574,12 +616,22 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     private void LoadAbilitiesFromDraft()
     {
-        Abilities.Clear();
-        foreach (var ability in _draft.AdvancementAbilities ?? new List<string>())
+        _suppressAbilityReactions = true;
+        try
         {
-            var line = BuildAbilityEntry(ability);
-            Abilities.Add(line);
+            Abilities.Clear();
+            foreach (var ability in _draft.AdvancementAbilities ?? new List<string>())
+            {
+                var line = BuildAbilityEntry(ability);
+                Abilities.Add(line);
+            }
         }
+        finally
+        {
+            _suppressAbilityReactions = false;
+        }
+
+        SyncAbilitiesToDraft();
         UpdateAbilityPoints();
     }
 
@@ -592,17 +644,51 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (string.IsNullOrWhiteSpace(name))
             return;
 
-        var line = new AbilityEntryVm(name, SelectedAbilityOption.Value.Cost, SyncAbilitiesToDraft);
+        var line = new AbilityEntryVm(name, SelectedAbilityOption.Value.Cost, OnAdvancementAbilityEntryChanged);
         Abilities.Add(line);
         SelectedAbilityOption = null;
-        SyncAbilitiesToDraft();
     }
 
     private void RemoveAbility(AbilityEntryVm? ability)
     {
         if (ability == null) return;
         Abilities.Remove(ability);
+    }
+
+    private void OnAdvancementAbilityCollectionChanged()
+    {
+        if (_suppressAbilityReactions)
+            return;
+
         SyncAbilitiesToDraft();
+        UpdateAbilityPoints();
+        RefreshWizardSpellAccessFromAdvancementAbilities();
+    }
+
+    private void OnAdvancementAbilityEntryChanged()
+    {
+        if (_suppressAbilityReactions)
+            return;
+
+        SyncAbilitiesToDraft();
+        UpdateAbilityPoints();
+        RefreshWizardSpellAccessFromAdvancementAbilities();
+    }
+
+    private void OnMultiClassCollectionChanged()
+    {
+        Raise(nameof(HasMultiClasses));
+        Raise(nameof(HasMultiClassChoiceSets));
+        UpdateAbilityPoints();
+    }
+
+    private void RefreshWizardSpellAccessFromAdvancementAbilities()
+    {
+        if (!ShowSpellsTab)
+            return;
+
+        EnsureWizardSpellListImported();
+        LoadSpellListsFromDraft();
     }
 
     private void SyncAbilitiesToDraft()
@@ -617,9 +703,9 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     {
         var trimmed = (name ?? string.Empty).Trim();
         if (_abilityOptionsByName.TryGetValue(trimmed, out var option))
-            return new AbilityEntryVm(trimmed, option.Cost, SyncAbilitiesToDraft);
+            return new AbilityEntryVm(trimmed, option.Cost, OnAdvancementAbilityEntryChanged);
 
-        return new AbilityEntryVm(trimmed, 0, SyncAbilitiesToDraft);
+        return new AbilityEntryVm(trimmed, 0, OnAdvancementAbilityEntryChanged);
     }
 
     private void UpdateAbilityPoints()
@@ -630,6 +716,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             running += entry.Cost;
             entry.SetRunningTotal(running);
         }
+        Raise(nameof(MultiClassPointsSpent));
+        Raise(nameof(MultiRacePointsSpent));
         Raise(nameof(AbilityPointsSpent));
         Raise(nameof(AbilityPointsSummary));
     }
@@ -757,6 +845,542 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (Items.Count == 0)
             AddItem();
     }
+
+    public async Task RefreshMultiClassesAsync()
+    {
+        if (!_hasLoadedReferenceData)
+            return;
+
+        _draft.MultiClassLevels ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        _draft.MultiClassChoiceSelections ??= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        var catalog = await MultiClassService.GetCatalogAsync();
+        _multiClassDefinitionsByKey.Clear();
+        foreach (var pair in catalog.MultiClasses)
+        {
+            var key = (pair.Key ?? string.Empty).Trim();
+            if (key.Length == 0)
+                continue;
+
+            _multiClassDefinitionsByKey[key] = pair.Value;
+        }
+
+        var normalizedSelections = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach (var selection in _draft.MultiClassLevels)
+        {
+            var rawKey = (selection.Key ?? string.Empty).Trim();
+            if (rawKey.Length == 0 || selection.Value <= 0)
+                continue;
+
+            if (!TryResolveMultiClassDefinition(rawKey, out var resolvedKey, out var definition))
+                continue;
+
+            var maxLevel = ResolveMultiClassMaxLevel(definition);
+            var resolvedLevel = Math.Clamp(selection.Value, 0, maxLevel);
+            if (resolvedLevel <= 0)
+                continue;
+
+            if (normalizedSelections.TryGetValue(resolvedKey, out var existingLevel) && existingLevel >= resolvedLevel)
+                continue;
+
+            normalizedSelections[resolvedKey] = resolvedLevel;
+        }
+
+        if (!AreMultiClassSelectionsEqual(_draft.MultiClassLevels, normalizedSelections))
+            _draft.MultiClassLevels = normalizedSelections;
+
+        var nextEntries = new List<MultiClassEntryVm>();
+        var validChoiceSelectionKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var selection in normalizedSelections.OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase))
+        {
+            if (!TryResolveMultiClassDefinition(selection.Key, out var resolvedKey, out var definition))
+                continue;
+
+            var selectedLevel = selection.Value;
+            var maxLevel = ResolveMultiClassMaxLevel(definition);
+            var option = FindAvailableMultiClassOption(definition.AvailabilityOptions);
+            var totalCost = CalculateMultiClassTotalCost(option, selectedLevel);
+            var abilityLinks = BuildMultiClassAbilityLinks(definition, selectedLevel);
+            var choiceSetRefs = CollectMultiClassChoiceSetRefs(definition, selectedLevel);
+            var displayName = ResolveMultiClassDisplayName(definition, resolvedKey);
+
+            foreach (var choiceSetRef in choiceSetRefs)
+                validChoiceSelectionKeys.Add(BuildMultiClassChoiceSelectionKey(resolvedKey, choiceSetRef));
+
+            nextEntries.Add(new MultiClassEntryVm(
+                key: resolvedKey,
+                name: displayName,
+                level: selectedLevel,
+                maxLevel: maxLevel,
+                cost: totalCost,
+                abilityDetails: abilityLinks,
+                choiceSetRefs: choiceSetRefs));
+        }
+
+        var staleChoiceSelectionKeys = _draft.MultiClassChoiceSelections.Keys
+            .Where(key => !validChoiceSelectionKeys.Contains(key))
+            .ToList();
+        foreach (var staleChoiceSelectionKey in staleChoiceSelectionKeys)
+            _draft.MultiClassChoiceSelections.Remove(staleChoiceSelectionKey);
+
+        MultiClasses.Clear();
+        foreach (var entry in nextEntries.OrderBy(e => e.Name, StringComparer.OrdinalIgnoreCase))
+            MultiClasses.Add(entry);
+
+        Raise(nameof(MultiClassPointsSpent));
+        Raise(nameof(AbilityPointsSpent));
+        Raise(nameof(AbilityPointsSummary));
+    }
+
+    public async Task RefreshMultiRaceAsync()
+    {
+        if (!_hasLoadedReferenceData)
+            return;
+
+        var catalog = await MultiRaceService.GetCatalogAsync();
+        _multiRaceDefinitionsByKey.Clear();
+        foreach (var pair in catalog.MultiRaces)
+        {
+            var key = (pair.Key ?? string.Empty).Trim();
+            if (key.Length == 0)
+                continue;
+
+            _multiRaceDefinitionsByKey[key] = pair.Value;
+        }
+
+        var keySelection = (_draft.MultiRaceKey ?? string.Empty).Trim();
+        if (keySelection.Length == 0 || _draft.MultiRaceLevel <= 0)
+        {
+            MultiRaceSelection = null;
+            Raise(nameof(MultiRacePointsSpent));
+            Raise(nameof(AbilityPointsSpent));
+            Raise(nameof(AbilityPointsSummary));
+            return;
+        }
+
+        if (!TryResolveMultiRaceDefinition(keySelection, out var resolvedKey, out var definition))
+        {
+            _draft.MultiRaceKey = string.Empty;
+            _draft.MultiRaceLevel = 0;
+            _draft.MultiRaceChoiceSelections ??= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            _draft.MultiRaceChoiceSelections.Clear();
+            MultiRaceSelection = null;
+            Raise(nameof(MultiRacePointsSpent));
+            Raise(nameof(AbilityPointsSpent));
+            Raise(nameof(AbilityPointsSummary));
+            return;
+        }
+
+        var maxLevel = ResolveMultiRaceMaxLevel(definition);
+        var resolvedLevel = Math.Clamp(_draft.MultiRaceLevel, 0, maxLevel);
+        if (resolvedLevel <= 0)
+        {
+            _draft.MultiRaceKey = string.Empty;
+            _draft.MultiRaceLevel = 0;
+            MultiRaceSelection = null;
+            Raise(nameof(MultiRacePointsSpent));
+            Raise(nameof(AbilityPointsSpent));
+            Raise(nameof(AbilityPointsSummary));
+            return;
+        }
+
+        _draft.MultiRaceKey = resolvedKey;
+        _draft.MultiRaceLevel = resolvedLevel;
+
+        var option = FindAvailableMultiRaceOption(definition.AvailabilityOptions);
+        var totalCost = CalculateMultiRaceTotalCost(option, resolvedLevel);
+        var abilityLinks = BuildMultiRaceAbilityLinks(definition, resolvedLevel);
+        var choiceSetRefs = CollectMultiRaceChoiceSetRefs(definition, resolvedLevel);
+        var displayName = ResolveMultiRaceDisplayName(definition, resolvedKey);
+
+        _draft.MultiRaceChoiceSelections ??= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var staleKeys = _draft.MultiRaceChoiceSelections.Keys
+            .Where(key => !choiceSetRefs.Contains(key, StringComparer.OrdinalIgnoreCase))
+            .ToList();
+        foreach (var stale in staleKeys)
+            _draft.MultiRaceChoiceSelections.Remove(stale);
+
+        MultiRaceSelection = new MultiRaceEntryVm(
+            key: resolvedKey,
+            name: displayName,
+            level: resolvedLevel,
+            maxLevel: maxLevel,
+            cost: totalCost,
+            abilityDetails: abilityLinks,
+            choiceSetRefs: choiceSetRefs);
+
+        Raise(nameof(MultiRacePointsSpent));
+        Raise(nameof(AbilityPointsSpent));
+        Raise(nameof(AbilityPointsSummary));
+    }
+
+    public async Task RemoveMultiClassAsync(MultiClassEntryVm? entry)
+    {
+        if (entry == null)
+            return;
+
+        _draft.MultiClassLevels ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        _draft.MultiClassLevels.Remove(entry.Key);
+        await RefreshMultiClassesAsync();
+    }
+
+    public async Task RemoveMultiRaceAsync(MultiRaceEntryVm? entry)
+    {
+        if (entry == null)
+            return;
+
+        _draft.MultiRaceKey = string.Empty;
+        _draft.MultiRaceLevel = 0;
+        _draft.MultiRaceChoiceSelections ??= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        _draft.MultiRaceChoiceSelections.Clear();
+        await RefreshMultiRaceAsync();
+    }
+
+    public IReadOnlyList<MultiClassAbilityLinkVm> GetMultiClassAbilityDetails(MultiClassEntryVm? entry)
+        => entry?.AbilityDetails ?? Array.Empty<MultiClassAbilityLinkVm>();
+
+    public IReadOnlyList<MultiClassAbilityLinkVm> GetMultiRaceAbilityDetails(MultiRaceEntryVm? entry)
+        => entry?.AbilityDetails ?? Array.Empty<MultiClassAbilityLinkVm>();
+
+    private bool TryResolveMultiRaceDefinition(
+        string storedKey,
+        out string resolvedKey,
+        out MultiRaceDefinition definition)
+    {
+        resolvedKey = string.Empty;
+        definition = null!;
+
+        var key = (storedKey ?? string.Empty).Trim();
+        if (key.Length == 0)
+            return false;
+
+        if (_multiRaceDefinitionsByKey.TryGetValue(key, out definition))
+        {
+            resolvedKey = key;
+            return true;
+        }
+
+        var normalized = NormalizeMultiClassToken(key);
+        foreach (var pair in _multiRaceDefinitionsByKey)
+        {
+            if (NormalizeMultiClassToken(pair.Key).Equals(normalized, StringComparison.OrdinalIgnoreCase))
+            {
+                resolvedKey = pair.Key;
+                definition = pair.Value;
+                return true;
+            }
+
+            var displayName = (pair.Value.DisplayName ?? string.Empty).Trim();
+            if (displayName.Length == 0)
+                continue;
+
+            if (NormalizeMultiClassToken(displayName).Equals(normalized, StringComparison.OrdinalIgnoreCase))
+            {
+                resolvedKey = pair.Key;
+                definition = pair.Value;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private MultiRaceAvailabilityOption? FindAvailableMultiRaceOption(IEnumerable<MultiRaceAvailabilityOption>? options)
+    {
+        foreach (var option in options ?? Enumerable.Empty<MultiRaceAvailabilityOption>())
+        {
+            var rules = option.Rules ?? new List<RuleClause>();
+            if (_abilityAvailabilityService.IsAvailable(rules, _draft, _classes, _races))
+                return option;
+        }
+
+        return options?.FirstOrDefault();
+    }
+
+    private static int ResolveMultiRaceMaxLevel(MultiRaceDefinition definition)
+    {
+        if (definition.MaxLevel > 0)
+            return definition.MaxLevel;
+
+        var parsedMax = definition.Levels.Keys
+            .Select(level => int.TryParse(level, out var parsed) ? parsed : 0)
+            .DefaultIfEmpty(0)
+            .Max();
+
+        return Math.Max(1, parsedMax);
+    }
+
+    private static int CalculateMultiRaceTotalCost(MultiRaceAvailabilityOption? option, int selectedLevel)
+    {
+        if (selectedLevel <= 0)
+            return 0;
+
+        var total = 0;
+        for (var level = 1; level <= selectedLevel; level++)
+        {
+            if (option?.CostsByLevel != null
+                && option.CostsByLevel.TryGetValue(level.ToString(), out var cost))
+            {
+                total += Math.Max(0, cost);
+            }
+        }
+
+        return total;
+    }
+
+    private static IReadOnlyList<MultiClassAbilityLinkVm> BuildMultiRaceAbilityLinks(MultiRaceDefinition definition, int selectedLevel)
+    {
+        if (selectedLevel <= 0)
+            return Array.Empty<MultiClassAbilityLinkVm>();
+
+        var links = new List<MultiClassAbilityLinkVm>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        for (var level = 1; level <= selectedLevel; level++)
+        {
+            if (!definition.Levels.TryGetValue(level.ToString(), out var levelAbilities) || levelAbilities == null)
+                continue;
+
+            foreach (var ability in levelAbilities)
+            {
+                var displayName = (ability?.Name ?? string.Empty).Trim();
+                var lookupKey = !string.IsNullOrWhiteSpace((ability?.AbilityRef ?? string.Empty).Trim())
+                    ? ability.AbilityRef.Trim()
+                    : displayName;
+
+                if (displayName.Length == 0 && lookupKey.Length == 0)
+                    continue;
+
+                if (displayName.Length == 0)
+                    displayName = lookupKey;
+                if (lookupKey.Length == 0)
+                    lookupKey = displayName;
+
+                var dedupeKey = $"{displayName}::{lookupKey}";
+                if (!seen.Add(dedupeKey))
+                    continue;
+
+                links.Add(new MultiClassAbilityLinkVm(displayName, lookupKey));
+            }
+        }
+
+        return links;
+    }
+
+    private static IReadOnlyList<string> CollectMultiRaceChoiceSetRefs(MultiRaceDefinition definition, int selectedLevel)
+    {
+        if (selectedLevel <= 0)
+            return Array.Empty<string>();
+
+        var refs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        for (var level = 1; level <= selectedLevel; level++)
+        {
+            if (!definition.Levels.TryGetValue(level.ToString(), out var levelAbilities) || levelAbilities == null)
+                continue;
+
+            foreach (var ability in levelAbilities)
+            {
+                foreach (var choiceSetRef in ability?.ChoiceSetRefs ?? new List<string>())
+                {
+                    var key = (choiceSetRef ?? string.Empty).Trim();
+                    if (key.Length > 0)
+                        refs.Add(key);
+                }
+            }
+        }
+
+        return refs.ToList();
+    }
+
+    private static string ResolveMultiRaceDisplayName(MultiRaceDefinition definition, string fallbackKey)
+    {
+        var name = (definition.DisplayName ?? string.Empty).Trim();
+        return name.Length > 0 ? name : fallbackKey;
+    }
+
+    private bool TryResolveMultiClassDefinition(
+        string storedKey,
+        out string resolvedKey,
+        out MultiClassDefinition definition)
+    {
+        resolvedKey = string.Empty;
+        definition = null!;
+
+        var key = (storedKey ?? string.Empty).Trim();
+        if (key.Length == 0)
+            return false;
+
+        if (_multiClassDefinitionsByKey.TryGetValue(key, out definition))
+        {
+            resolvedKey = key;
+            return true;
+        }
+
+        var normalized = NormalizeMultiClassToken(key);
+        foreach (var pair in _multiClassDefinitionsByKey)
+        {
+            if (NormalizeMultiClassToken(pair.Key).Equals(normalized, StringComparison.OrdinalIgnoreCase))
+            {
+                resolvedKey = pair.Key;
+                definition = pair.Value;
+                return true;
+            }
+
+            var displayName = (pair.Value.DisplayName ?? string.Empty).Trim();
+            if (displayName.Length == 0)
+                continue;
+
+            if (NormalizeMultiClassToken(displayName).Equals(normalized, StringComparison.OrdinalIgnoreCase))
+            {
+                resolvedKey = pair.Key;
+                definition = pair.Value;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private MultiClassAvailabilityOption? FindAvailableMultiClassOption(IEnumerable<MultiClassAvailabilityOption>? options)
+    {
+        foreach (var option in options ?? Enumerable.Empty<MultiClassAvailabilityOption>())
+        {
+            var rules = option.Rules ?? new List<RuleClause>();
+            if (_abilityAvailabilityService.IsAvailable(rules, _draft, _classes, _races))
+                return option;
+        }
+
+        return options?.FirstOrDefault();
+    }
+
+    private static int ResolveMultiClassMaxLevel(MultiClassDefinition definition)
+    {
+        if (definition.MaxLevel > 0)
+            return definition.MaxLevel;
+
+        var parsedMax = definition.Levels.Keys
+            .Select(level => int.TryParse(level, out var parsed) ? parsed : 0)
+            .DefaultIfEmpty(0)
+            .Max();
+
+        return Math.Max(1, parsedMax);
+    }
+
+    private static int CalculateMultiClassTotalCost(MultiClassAvailabilityOption? option, int selectedLevel)
+    {
+        if (selectedLevel <= 0)
+            return 0;
+
+        var total = 0;
+        for (var level = 1; level <= selectedLevel; level++)
+        {
+            if (option?.CostsByLevel != null
+                && option.CostsByLevel.TryGetValue(level.ToString(), out var cost))
+            {
+                total += Math.Max(0, cost);
+            }
+        }
+
+        return total;
+    }
+
+    private static IReadOnlyList<MultiClassAbilityLinkVm> BuildMultiClassAbilityLinks(MultiClassDefinition definition, int selectedLevel)
+    {
+        if (selectedLevel <= 0)
+            return Array.Empty<MultiClassAbilityLinkVm>();
+
+        var links = new List<MultiClassAbilityLinkVm>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        for (var level = 1; level <= selectedLevel; level++)
+        {
+            if (!definition.Levels.TryGetValue(level.ToString(), out var levelAbilities) || levelAbilities == null)
+                continue;
+
+            foreach (var ability in levelAbilities)
+            {
+                var displayName = (ability?.Name ?? string.Empty).Trim();
+                var lookupKey = !string.IsNullOrWhiteSpace((ability?.AbilityRef ?? string.Empty).Trim())
+                    ? ability.AbilityRef.Trim()
+                    : displayName;
+
+                if (displayName.Length == 0 && lookupKey.Length == 0)
+                    continue;
+
+                if (displayName.Length == 0)
+                    displayName = lookupKey;
+                if (lookupKey.Length == 0)
+                    lookupKey = displayName;
+
+                var dedupeKey = $"{displayName}::{lookupKey}";
+                if (!seen.Add(dedupeKey))
+                    continue;
+
+                links.Add(new MultiClassAbilityLinkVm(displayName, lookupKey));
+            }
+        }
+
+        return links;
+    }
+
+    private static IReadOnlyList<string> CollectMultiClassChoiceSetRefs(MultiClassDefinition definition, int selectedLevel)
+    {
+        if (selectedLevel <= 0)
+            return Array.Empty<string>();
+
+        var refs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        for (var level = 1; level <= selectedLevel; level++)
+        {
+            if (!definition.Levels.TryGetValue(level.ToString(), out var levelAbilities) || levelAbilities == null)
+                continue;
+
+            foreach (var ability in levelAbilities)
+            {
+                foreach (var choiceSetRef in ability?.ChoiceSetRefs ?? new List<string>())
+                {
+                    var key = (choiceSetRef ?? string.Empty).Trim();
+                    if (key.Length > 0)
+                        refs.Add(key);
+                }
+            }
+        }
+
+        return refs.ToList();
+    }
+
+    public static string BuildMultiClassChoiceSelectionKey(string multiClassKey, string choiceSetRef)
+        => $"{(multiClassKey ?? string.Empty).Trim()}::{(choiceSetRef ?? string.Empty).Trim()}";
+
+    private static string ResolveMultiClassDisplayName(MultiClassDefinition definition, string fallbackKey)
+    {
+        var name = (definition.DisplayName ?? string.Empty).Trim();
+        return name.Length > 0 ? name : fallbackKey;
+    }
+
+    private static bool AreMultiClassSelectionsEqual(
+        IReadOnlyDictionary<string, int> current,
+        IReadOnlyDictionary<string, int> next)
+    {
+        if (current.Count != next.Count)
+            return false;
+
+        foreach (var pair in current)
+        {
+            if (!next.TryGetValue(pair.Key, out var value))
+                return false;
+
+            if (pair.Value != value)
+                return false;
+        }
+
+        return true;
+    }
+
+    private static string NormalizeMultiClassToken(string value)
+        => new string((value ?? string.Empty)
+            .Where(char.IsLetterOrDigit)
+            .Select(char.ToLowerInvariant)
+            .ToArray());
 
     private void AddItem()
     {
@@ -1159,6 +1783,15 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
             if (_draft.SpecialisationSelections.TryGetValue("Vivomancer Colour", out var vivomancerColour))
                 AddNormalizedWizardSelections(selections, seen, vivomancerColour);
+
+            if (_draft.SpecialisationSelections.TryGetValue(SecondColourAbilityName, out var secondColourSelection))
+            {
+                AddSecondWizardColourSelections(selections, seen, secondColourSelection);
+            }
+            else if (_draft.SpecialisationSelections.TryGetValue(SecondColorAbilityName, out secondColourSelection))
+            {
+                AddSecondWizardColourSelections(selections, seen, secondColourSelection);
+            }
         }
 
         if (selections.Count == 0 && _draft.Abilities != null)
@@ -1182,6 +1815,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (selections.Count == 0)
             AddNormalizedWizardSelections(selections, seen, TryInferWizardColourFromClassName());
 
+        AddSecondWizardColourSelectionsFromAdvancementAbilities(selections, seen);
+
         if (IsSorcorialClass() && !selections.Any(s => s.Equals("Sorcorial", StringComparison.OrdinalIgnoreCase)))
             selections.Add("Sorcorial");
 
@@ -1195,6 +1830,192 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             if (seen.Add(selection))
                 target.Add(selection);
         }
+    }
+
+    private void AddSecondWizardColourSelectionsFromAdvancementAbilities(List<string> selections, HashSet<string> seen)
+    {
+        if (!HasSecondColourAbility())
+            return;
+
+        foreach (var selectedAbility in _draft.AdvancementAbilities ?? Enumerable.Empty<string>())
+        {
+            string expectedName;
+            if (AbilityNameMatches(selectedAbility, SecondColourAbilityName))
+            {
+                expectedName = SecondColourAbilityName;
+            }
+            else if (AbilityNameMatches(selectedAbility, SecondColorAbilityName))
+            {
+                expectedName = SecondColorAbilityName;
+            }
+            else
+            {
+                continue;
+            }
+
+            var encodedSelection = ExtractAbilityQualifier(selectedAbility, expectedName);
+            AddSecondWizardColourSelections(selections, seen, encodedSelection);
+        }
+    }
+
+    private void AddSecondWizardColourSelections(List<string> selections, HashSet<string> seen, string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return;
+
+        var primaryColour = GetPrimaryWizardColour(selections);
+        if (!primaryColour.HasValue)
+            return;
+
+        var ownedColours = selections
+            .Select(ToMagicColourFromSelection)
+            .Where(colour => colour.HasValue)
+            .Select(colour => colour!.Value)
+            .ToHashSet();
+        ownedColours.UnionWith(GetRaceMagicColours());
+
+        foreach (var parsedSelection in WizardSpellRules.ParseWizardSelections(raw))
+        {
+            if (!WizardSpellRules.TryParseMagicColour(parsedSelection, out var parsedColour))
+                continue;
+
+            if (ownedColours.Contains(parsedColour))
+                continue;
+
+            if (MagicColourOppositionRules.AreOpposites(primaryColour.Value, parsedColour))
+                continue;
+
+            if (ownedColours.Any(existing => MagicColourOppositionRules.AreOpposites(existing, parsedColour)))
+                continue;
+
+            var normalized = parsedColour.ToString();
+            if (!seen.Add(normalized))
+                continue;
+
+            selections.Add(normalized);
+            ownedColours.Add(parsedColour);
+        }
+    }
+
+    private bool HasAdvancementAbilityByName(string expectedName)
+    {
+        if (string.IsNullOrWhiteSpace(expectedName))
+            return false;
+
+        return (_draft.AdvancementAbilities ?? Enumerable.Empty<string>())
+            .Any(ability => AbilityNameMatches(ability, expectedName));
+    }
+
+    private bool HasSecondColourAbility()
+        => HasAdvancementAbilityByName(SecondColourAbilityName)
+           || HasAdvancementAbilityByName(SecondColorAbilityName);
+
+    private static bool AbilityNameMatches(string? rawAbilityName, string expectedName)
+    {
+        var trimmed = (rawAbilityName ?? string.Empty).Trim();
+        if (trimmed.Length == 0 || expectedName.Length == 0)
+            return false;
+
+        if (trimmed.Equals(expectedName, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!trimmed.StartsWith(expectedName, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        var suffix = trimmed.Substring(expectedName.Length);
+        if (suffix.Length == 0)
+            return true;
+
+        var first = suffix[0];
+        return first is ' ' or ':' or '-' or '(' or '[' or '/';
+    }
+
+    private static string ExtractAbilityQualifier(string? rawAbilityName, string expectedName)
+    {
+        var trimmed = (rawAbilityName ?? string.Empty).Trim();
+        if (!trimmed.StartsWith(expectedName, StringComparison.OrdinalIgnoreCase))
+            return string.Empty;
+
+        var suffix = trimmed.Substring(expectedName.Length).Trim();
+        if (suffix.Length == 0)
+            return string.Empty;
+
+        suffix = suffix.TrimStart(':', '-', '/').Trim();
+        if (suffix.Length >= 2 && suffix[0] == '(' && suffix[^1] == ')')
+            suffix = suffix[1..^1].Trim();
+        else if (suffix.Length >= 2 && suffix[0] == '[' && suffix[^1] == ']')
+            suffix = suffix[1..^1].Trim();
+
+        return suffix;
+    }
+
+    private static MagicColours? ToMagicColourFromSelection(string? rawSelection)
+        => WizardSpellRules.TryParseMagicColour(rawSelection, out var parsed) ? parsed : null;
+
+    private HashSet<MagicColours> GetRaceMagicColours()
+    {
+        var raceColours = new HashSet<MagicColours>();
+
+        if (_draft.SpecialisationSelections != null)
+        {
+            if (_draft.SpecialisationSelections.TryGetValue(FaerieColourSelectionKey, out var faerieSelection))
+                AddRaceMagicColoursFromRaw(raceColours, faerieSelection);
+
+            if (_draft.SpecialisationSelections.TryGetValue(ElfColourAbilitiesSelectionKey, out var elfSelection))
+                AddRaceMagicColoursFromRaw(raceColours, elfSelection);
+        }
+
+        foreach (var overrideColour in _draft.ColourChoiceOverride ?? Enumerable.Empty<string>())
+            AddRaceMagicColoursFromRaw(raceColours, overrideColour);
+
+        AddRaceMagicColoursFromRaw(raceColours, _draft.RaceSubtypeValue);
+
+        return raceColours;
+    }
+
+    private static void AddRaceMagicColoursFromRaw(HashSet<MagicColours> target, string? raw)
+    {
+        foreach (var token in WizardSpellRules.ParseWizardSelections(raw))
+        {
+            if (TryMapRaceTokenToMagicColour(token, out var mappedColour))
+                target.Add(mappedColour);
+        }
+    }
+
+    private static bool TryMapRaceTokenToMagicColour(string? token, out MagicColours colour)
+    {
+        if (WizardSpellRules.TryParseMagicColour(token, out colour))
+            return true;
+
+        var normalized = NormalizeClassKey(token);
+        colour = normalized switch
+        {
+            "light" => MagicColours.White,
+            "dark" => MagicColours.Black,
+            "air" => MagicColours.Blue,
+            "earth" => MagicColours.Brown,
+            "fire" => MagicColours.Red,
+            "water" => MagicColours.Green,
+            _ => default
+        };
+
+        return normalized is "light" or "dark" or "air" or "earth" or "fire" or "water";
+    }
+
+    private HashSet<MagicColours> GetRaceRestrictedOppositeColours()
+    {
+        var raceColours = GetRaceMagicColours();
+        var blocked = new HashSet<MagicColours>();
+        foreach (var raceColour in raceColours)
+        {
+            if (MagicColourOppositionRules.TryGetOpposite(raceColour, out var opposite)
+                && !raceColours.Contains(opposite))
+            {
+                blocked.Add(opposite);
+            }
+        }
+
+        return blocked;
     }
 
     private string? TryInferWizardColourFromSpellLists()
@@ -1263,10 +2084,74 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private Func<SpellService.SpellRaw, bool>? BuildSpecialistSpellFilter()
     {
         var baseSelections = GetWizardColourSelections();
-        if (baseSelections.Count == 0)
+        var hasCompetence = HasAdvancementAbilityByName(CompetenceAbilityName);
+
+        if (baseSelections.Count == 0 && !hasCompetence)
             return null;
 
-        return spell => !WizardSpellRules.SpellMatchesAnyWizardSelection(spell?.colour, baseSelections);
+        var blockedOppositeColours = GetBlockedSpecialistColours(baseSelections);
+
+        return spell =>
+        {
+            if (spell == null)
+                return false;
+
+            if (baseSelections.Count > 0
+                && WizardSpellRules.SpellMatchesAnyWizardSelection(spell.colour, baseSelections))
+            {
+                return false;
+            }
+
+            if (baseSelections.Count == 0 && hasCompetence)
+            {
+                var allowedByCompetence = GreyWizardColours.Any(colour =>
+                    WizardSpellRules.SpellMatchesWizardSelection(spell.colour, colour.ToString()));
+                if (!allowedByCompetence)
+                    return false;
+            }
+
+            if (blockedOppositeColours.Count > 0
+                && WizardSpellRules.TryExtractSingleMagicColour(spell.colour, out var spellColour)
+                && blockedOppositeColours.Contains(spellColour))
+            {
+                return false;
+            }
+
+            return true;
+        };
+    }
+
+    private HashSet<MagicColours> GetBlockedSpecialistColours(IReadOnlyList<string> selectedColours)
+    {
+        var blocked = GetRaceRestrictedOppositeColours();
+        if (selectedColours == null || selectedColours.Count == 0)
+            return blocked;
+
+        var classRecord = ResolveClassRecord();
+        if (IsVivomancerClass() || (!IsWizardTrackClass(classRecord) && !IsWarlockClass()))
+            return blocked;
+
+        var primary = GetPrimaryWizardColour(selectedColours);
+        if (!primary.HasValue || primary.Value == MagicColours.Grey)
+            return blocked;
+
+        var owned = selectedColours
+            .Select(ToMagicColourFromSelection)
+            .Where(colour => colour.HasValue)
+            .Select(colour => colour!.Value)
+            .ToHashSet();
+        owned.UnionWith(GetRaceMagicColours());
+
+        foreach (var colour in owned)
+        {
+            if (MagicColourOppositionRules.TryGetOpposite(colour, out var opposite)
+                && !owned.Contains(opposite))
+            {
+                blocked.Add(opposite);
+            }
+        }
+
+        return blocked;
     }
 
     private void EnsureWizardSpellListImported()

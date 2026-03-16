@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -104,3 +106,87 @@ public sealed class ItemLineVm : INotifyPropertyChanged
     }
 }
 
+public sealed class MultiClassEntryVm
+{
+    public MultiClassEntryVm(
+        string key,
+        string name,
+        int level,
+        int maxLevel,
+        int cost,
+        IReadOnlyList<MultiClassAbilityLinkVm>? abilityDetails = null,
+        IReadOnlyList<string>? choiceSetRefs = null)
+    {
+        Key = key ?? string.Empty;
+        Name = name ?? string.Empty;
+        Level = level;
+        MaxLevel = Math.Max(1, maxLevel);
+        Cost = cost;
+        AbilityDetails = (abilityDetails ?? Array.Empty<MultiClassAbilityLinkVm>())
+            .Where(detail => detail != null && detail.IsValid)
+            .ToList();
+        ChoiceSetRefs = (choiceSetRefs ?? Array.Empty<string>())
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Select(item => item.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    public string Key { get; }
+    public string Name { get; }
+    public int Level { get; }
+    public int MaxLevel { get; }
+    public int Cost { get; }
+    public IReadOnlyList<MultiClassAbilityLinkVm> AbilityDetails { get; }
+    public IReadOnlyList<string> ChoiceSetRefs { get; }
+    public bool HasInfo => AbilityDetails.Count > 0;
+    public bool HasChoiceSets => ChoiceSetRefs.Count > 0;
+    public string LevelText => $"{Level}/{MaxLevel}";
+    public string CostText => Cost.ToString();
+}
+
+public sealed class MultiRaceEntryVm
+{
+    public MultiRaceEntryVm(
+        string key,
+        string name,
+        int level,
+        int maxLevel,
+        int cost,
+        IReadOnlyList<MultiClassAbilityLinkVm>? abilityDetails = null,
+        IReadOnlyList<string>? choiceSetRefs = null)
+    {
+        Key = key ?? string.Empty;
+        Name = name ?? string.Empty;
+        Level = level;
+        MaxLevel = Math.Max(1, maxLevel);
+        Cost = cost;
+        AbilityDetails = (abilityDetails ?? Array.Empty<MultiClassAbilityLinkVm>())
+            .Where(detail => detail != null && detail.IsValid)
+            .ToList();
+        ChoiceSetRefs = (choiceSetRefs ?? Array.Empty<string>())
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Select(item => item.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    public string Key { get; }
+    public string Name { get; }
+    public int Level { get; }
+    public int MaxLevel { get; }
+    public int Cost { get; }
+    public IReadOnlyList<MultiClassAbilityLinkVm> AbilityDetails { get; }
+    public IReadOnlyList<string> ChoiceSetRefs { get; }
+    public bool HasInfo => AbilityDetails.Count > 0;
+    public bool HasChoiceSets => ChoiceSetRefs.Count > 0;
+    public string LevelText => $"{Level}/{MaxLevel}";
+    public string CostText => Cost.ToString();
+}
+
+public sealed record MultiClassAbilityLinkVm(string DisplayName, string LookupKey)
+{
+    public bool IsValid =>
+        !string.IsNullOrWhiteSpace(DisplayName)
+        || !string.IsNullOrWhiteSpace(LookupKey);
+}

@@ -117,6 +117,250 @@
                     <VerticalStackLayout Spacing="8">
                         <Grid ColumnDefinitions="*,Auto"
                               ColumnSpacing="8">
+                            <Label Text="Multi-Race"
+                                   FontAttributes="Bold"/>
+                            <Button Grid.Column="1"
+                                    Text="Open wizard"
+                                    Clicked="OnOpenMultiRaceWizardClicked"/>
+                        </Grid>
+                        <Label Text="No multi-race selected."
+                               Opacity="0.7"
+                               IsVisible="{Binding HasMultiRace, Converter={StaticResource InverseBoolConverter}}"/>
+
+                        <Grid ColumnDefinitions="*,88,72,30,30,30"
+                              ColumnSpacing="6"
+                              Padding="10,0"
+                              IsVisible="{Binding HasMultiRace}">
+                            <Label Text="Name"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"/>
+                            <Label Grid.Column="1"
+                                   Text="Level"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="2"
+                                   Text="Cost"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="3"
+                                   Grid.ColumnSpan="3"
+                                   Text="Actions"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   HorizontalTextAlignment="Center"/>
+                        </Grid>
+
+                        <Border StrokeThickness="0"
+                                StrokeShape="RoundRectangle 8"
+                                BackgroundColor="#F9FAFB"
+                                IsVisible="{Binding HasMultiRace}">
+                            <Grid Padding="10,8"
+                                  ColumnDefinitions="*,88,72,30,30,30"
+                                  ColumnSpacing="6">
+                                <Label Text="{Binding MultiRaceSelection.Name}"
+                                       VerticalTextAlignment="Center"
+                                       MaxLines="1"
+                                       LineBreakMode="TailTruncation"/>
+                                <Label Grid.Column="1"
+                                       Text="{Binding MultiRaceSelection.LevelText}"
+                                       FontAttributes="Bold"
+                                       Opacity="0.75"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding MultiRaceSelection.CostText}"
+                                       FontAttributes="Bold"
+                                       Opacity="0.75"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"/>
+                                <Button Grid.Column="3"
+                                        Text="&#xF1FC;"
+                                        FontFamily="FASolid"
+                                        FontSize="12"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource SubtleTextColor}"
+                                        HeightRequest="18"
+                                        WidthRequest="18"
+                                        MinimumHeightRequest="0"
+                                        MinimumWidthRequest="0"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        Clicked="OnEditMultiRaceClicked"
+                                        CommandParameter="{Binding MultiRaceSelection}"/>
+                                <Button Grid.Column="4"
+                                        Text="&#xF05A;"
+                                        FontFamily="FASolid"
+                                        FontSize="12"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource SubtleTextColor}"
+                                        HeightRequest="18"
+                                        WidthRequest="18"
+                                        MinimumHeightRequest="0"
+                                        MinimumWidthRequest="0"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        IsVisible="{Binding MultiRaceSelection.HasInfo}"
+                                        Clicked="OnViewMultiRaceInfoClicked"
+                                        CommandParameter="{Binding MultiRaceSelection}"/>
+                                <Button Grid.Column="5"
+                                        Text="&#xF2ED;"
+                                        FontFamily="FASolid"
+                                        FontSize="12"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource SubtleTextColor}"
+                                        HeightRequest="18"
+                                        WidthRequest="18"
+                                        MinimumHeightRequest="0"
+                                        MinimumWidthRequest="0"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        Clicked="OnRemoveMultiRaceClicked"
+                                        CommandParameter="{Binding MultiRaceSelection}"/>
+                            </Grid>
+                        </Border>
+
+                        <Button Text="Open specialisation"
+                                IsVisible="{Binding HasMultiRaceChoiceSets}"
+                                Clicked="OnOpenMultiRaceSpecialisationClicked"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto"
+                              ColumnSpacing="8">
+                            <Label Text="Multi-Class"
+                                   FontAttributes="Bold"/>
+                            <Button Grid.Column="1"
+                                    Text="Open wizard"
+                                    Clicked="OnOpenMultiClassWizardClicked"/>
+                        </Grid>
+                        <Label Text="No multiclasses selected."
+                               Opacity="0.7"
+                               IsVisible="{Binding HasMultiClasses, Converter={StaticResource InverseBoolConverter}}"/>
+
+                        <Grid ColumnDefinitions="*,88,72,30,30,30"
+                              ColumnSpacing="6"
+                              Padding="10,0"
+                              IsVisible="{Binding HasMultiClasses}">
+                            <Label Text="Name"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"/>
+                            <Label Grid.Column="1"
+                                   Text="Level"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="2"
+                                   Text="Cost"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="3"
+                                   Grid.ColumnSpan="3"
+                                   Text="Actions"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   HorizontalTextAlignment="Center"/>
+                        </Grid>
+
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding MultiClasses}"
+                                             Spacing="8">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 8"
+                                            BackgroundColor="#F9FAFB">
+                                        <Grid Padding="10,8"
+                                              ColumnDefinitions="*,88,72,30,30,30"
+                                              ColumnSpacing="6">
+                                            <Label Text="{Binding Name}"
+                                                   VerticalTextAlignment="Center"
+                                                   MaxLines="1"
+                                                   LineBreakMode="TailTruncation"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding LevelText}"
+                                                   FontAttributes="Bold"
+                                                   Opacity="0.75"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"/>
+                                            <Label Grid.Column="2"
+                                                   Text="{Binding CostText}"
+                                                   FontAttributes="Bold"
+                                                   Opacity="0.75"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"/>
+                                            <Button Grid.Column="3"
+                                                    Text="&#xF1FC;"
+                                                    FontFamily="FASolid"
+                                                    FontSize="12"
+                                                    Padding="0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                    HeightRequest="18"
+                                                    WidthRequest="18"
+                                                    MinimumHeightRequest="0"
+                                                    MinimumWidthRequest="0"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center"
+                                                    Clicked="OnEditMultiClassClicked"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="4"
+                                                    Text="&#xF05A;"
+                                                    FontFamily="FASolid"
+                                                    FontSize="12"
+                                                    Padding="0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                    HeightRequest="18"
+                                                    WidthRequest="18"
+                                                    MinimumHeightRequest="0"
+                                                    MinimumWidthRequest="0"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center"
+                                                    IsVisible="{Binding HasInfo}"
+                                                    Clicked="OnViewMultiClassInfoClicked"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="5"
+                                                    Text="&#xF2ED;"
+                                                    FontFamily="FASolid"
+                                                    FontSize="12"
+                                                    Padding="0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                    HeightRequest="18"
+                                                    WidthRequest="18"
+                                                    MinimumHeightRequest="0"
+                                                    MinimumWidthRequest="0"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center"
+                                                    Clicked="OnRemoveMultiClassClicked"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+
+                        <Button Text="Open multiclass specialisation"
+                                IsVisible="{Binding HasMultiClassChoiceSets}"
+                                Clicked="OnOpenMultiClassSpecialisationClicked"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto"
+                              ColumnSpacing="8">
                             <Label Text="Items"
                                    FontAttributes="Bold"/>
                             <Button Grid.Column="1"

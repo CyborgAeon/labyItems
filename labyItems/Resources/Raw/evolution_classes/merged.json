@@ -1359,10 +1359,7 @@
     "available": ["ALL"],
     "table": 7,
     "cost": "100",
-    "preReqs": [
-      "9th Level Resistance to Magic and Spirits",
-      "10th Level Resistance to Magic and Spirits"
-    ],
+    "preReqs": ["9th Level Resistance to Magic and Spirits", "10th Level Resistance to Magic and Spirits"],
     "index": "11th Level Resistance to Magic and Spirits",
     "desc": "11th level Resistance to Magic and Spirits",
     "sourceBook": "Evolution classes"
@@ -1379,11 +1376,7 @@
     "available": ["ALL bar Warrior Sub class"],
     "table": 7,
     "cost": "50",
-    "preReqs": [
-      "3rd Extra Level of Life",
-      "2nd Extra Level of Life",
-      "1st Extra Level of Life"
-    ],
+    "preReqs": ["3rd Extra Level of Life", "2nd Extra Level of Life", "1st Extra Level of Life"],
     "index": "4th Extra Level of Life",
     "desc": "max +5/2",
     "sourceBook": "Evolution classes"
@@ -1392,12 +1385,7 @@
     "available": ["ALL bar Warrior Sub class"],
     "table": 7,
     "cost": "60",
-    "preReqs": [
-      "4th Extra Level of Life",
-      "3rd Extra Level of Life",
-      "2nd Extra Level of Life",
-      "1st Extra Level of Life"
-    ],
+    "preReqs": ["4th Extra Level of Life", "3rd Extra Level of Life", "2nd Extra Level of Life", "1st Extra Level of Life"],
     "index": "5th Extra Level of Life",
     "desc": "max +5/2",
     "sourceBook": "Evolution classes"
@@ -1424,11 +1412,7 @@
     "available": ["ALL bar Wizard"],
     "table": 7,
     "cost": "50",
-    "preReqs": [
-      "3rd Enhanced Reflexes",
-      "2nd Enhanced Reflexes",
-      "1st Enhanced Reflexes"
-    ],
+    "preReqs": ["3rd Enhanced Reflexes", "2nd Enhanced Reflexes", "1st Enhanced Reflexes"],
     "index": "4th Enhanced Reflexes",
     "desc": "Enhanced Reflexes +4 (total)",
     "sourceBook": "Evolution classes"
@@ -1846,10 +1830,7 @@
     "available": ["ALL"],
     "table": 12,
     "cost": "30",
-    "preReqs": [
-      "2nd Resistance to Spirit Bolt",
-      "1st Resistance to Spirit Bolt"
-    ],
+    "preReqs": ["2nd Resistance to Spirit Bolt", "1st Resistance to Spirit Bolt"],
     "index": "3rd Resistance to Spirit Bolt",
     "desc": "",
     "sourceBook": "Evolution classes"
@@ -1858,10 +1839,7 @@
     "available": ["ALL"],
     "table": 12,
     "cost": "50",
-    "preReqs": [
-      "2nd Resistance to Touch of Death",
-      "1st Resistance to Touch of Death"
-    ],
+    "preReqs": ["2nd Resistance to Touch of Death", "1st Resistance to Touch of Death"],
     "index": "3rd Resistance to Touch of Death",
     "desc": "3rd Resistance to Touch of Death",
     "sourceBook": "Evolution classes"
@@ -1879,12 +1857,7 @@
     "available": ["ALL"],
     "table": 12,
     "cost": "100",
-    "preReqs": [
-      "Survival of a Hero",
-      "Survival of a Mercenary",
-      "Enhanced Rebirth",
-      "Rebirth"
-    ],
+    "preReqs": ["Survival of a Hero", "Survival of a Mercenary", "Enhanced Rebirth", "Rebirth"],
     "index": "Survival of a Legend",
     "desc": "Now return at 30% from 20% of points",
     "sourceBook": "Evolution classes"
@@ -4033,6 +4006,22 @@
     "sourceBook": "Engarde"
   },
   {
+    "available": ["1st class warrior subclass"],
+    "table": 7,
+    "cost": "80",
+    "index": "Flick of the Wrist",
+    "desc": "This skill allows the warrior to strike a non-damaging blow such that the opponent struck takes one of the following effects: Knockback, Disarm [at normal weapon masteries], or Stunning Blow [affecting 8 levels and below].\nThis blow may be on any blow of combat after 30secs preparation, or at anytime but costing 6tblp in effort to perform. This skill, although useable at will, can be used at most 1/15 minutes.",
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": ["1st class warrior subclass"],
+    "table": 7,
+    "cost": "80",
+    "index": "Daring Deed",
+    "desc": "This skill allows the warrior to perform a daring deed from the list below.\nSalmon Leap, physical Neuro Balance [1minute], Combat Wary [only against the next blow suffered at 12 levels], or Arrow Cutting [1minute] as tables ability.\nThe use of any of these skills requires either 30seconds preparation, or costs 6tblp in effort to occur.\nThis skill although, useable at will, can be used at most 1/15 minutes.",
+    "sourceBook": "Engarde"
+  },
+  {
     "available": ["Paladin"],
     "table": 3,
     "cost": "75",
@@ -4211,11 +4200,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "Anyone with 8 levels in Make Healing Potion",
-      "Anyone with 8 levels in Make General Potion",
-      "Poisoner Tendency"
-    ],
+    "available": ["Anyone with 8 levels in Make Healing Potion", "Anyone with 8 levels in Make General Potion", "Poisoner Tendency"],
     "table": 3,
     "cost": "70",
     "index": "Herbal Infusion",
@@ -4247,13 +4232,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "Pathfinder",
-      "Assassin",
-      "Thug",
-      "Spy",
-      "Anyone with Military Scout Tendency"
-    ],
+    "available": ["Pathfinder", "Assassin", "Thug", "Spy", "Anyone with Military Scout Tendency"],
     "table": 4,
     "cost": "50",
     "index": "Discern Outlaw",
@@ -4443,12 +4422,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "1st-class only Assassin",
-      "1st-class only Pathfinder",
-      "1st-class only Thug",
-      "1st-class only Beggar"
-    ],
+    "available": ["1st-class only Assassin", "1st-class only Pathfinder", "1st-class only Thug", "1st-class only Beggar"],
     "table": 7,
     "cost": "125",
     "index": "Surprise Blow",
@@ -4759,11 +4733,7 @@
     "CanAddMultiple": true
   },
   {
-    "available": [
-      "1st Class Only Assassin",
-      "1st Class Only Spy",
-      "1st Class Only Pathfinder"
-    ],
+    "available": ["1st Class Only Assassin", "1st Class Only Spy", "1st Class Only Pathfinder"],
     "table": 9,
     "cost": "+50",
     "preReqs": ["Change Appearance"],
@@ -4772,12 +4742,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "1st-class only Thug",
-      "1st-class only Assassin",
-      "1st-class only Pathfinder",
-      "1st-class only Beggar"
-    ],
+    "available": ["1st-class only Thug", "1st-class only Assassin", "1st-class only Pathfinder", "1st-class only Beggar"],
     "table": 9,
     "cost": "+75",
     "preReqs": ["Surprise Blow"],
@@ -4814,12 +4779,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "Pathfinder",
-      "Assassin",
-      "Thug",
-      "Anyone with Tinker Tendency"
-    ],
+    "available": ["Pathfinder", "Assassin", "Thug", "Anyone with Tinker Tendency"],
     "table": 9,
     "cost": "40",
     "index": "Incendiary Cache",
@@ -4828,12 +4788,7 @@
     "CanAddMultiple": true
   },
   {
-    "available": [
-      "Pathfinder",
-      "Assassin",
-      "Thug",
-      "Anyone with Tinker Tendency"
-    ],
+    "available": ["Pathfinder", "Assassin", "Thug", "Anyone with Tinker Tendency"],
     "table": 9,
     "cost": "60",
     "index": "Blinding Cache",
@@ -4858,12 +4813,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "Pathfinder",
-      "Assassin",
-      "Thug",
-      "Anyone with Tinker Tendency"
-    ],
+    "available": ["Pathfinder", "Assassin", "Thug", "Anyone with Tinker Tendency"],
     "table": 9,
     "cost": "50",
     "index": "Tampering",
@@ -4907,11 +4857,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "1st Class Pathfinder",
-      "1st Class Assassin",
-      "1st Class Kallah"
-    ],
+    "available": ["1st Class Pathfinder", "1st Class Assassin", "1st Class Kallah"],
     "table": 9,
     "cost": "50",
     "index": "An Eye to a Kill",
@@ -4920,12 +4866,7 @@
     "CanAddMultiple": true
   },
   {
-    "available": [
-      "Pathfinder",
-      "Assassin",
-      "Thug",
-      "Anyone with Tinker Tendency"
-    ],
+    "available": ["Pathfinder", "Assassin", "Thug", "Anyone with Tinker Tendency"],
     "table": 10,
     "cost": "75",
     "index": "Great Cache",
@@ -4934,11 +4875,7 @@
     "CanAddMultiple": true
   },
   {
-    "available": [
-      "1st Class Assassin",
-      "1st Class Pathfinder",
-      "1st Class Kallah Beggars"
-    ],
+    "available": ["1st Class Assassin", "1st Class Pathfinder", "1st Class Kallah Beggars"],
     "table": 10,
     "cost": "25",
     "index": "Ambush",
@@ -4946,11 +4883,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "1st Class Assassin",
-      "1st Class Pathfinder",
-      "1st Class Kallah Beggars"
-    ],
+    "available": ["1st Class Assassin", "1st Class Pathfinder", "1st Class Kallah Beggars"],
     "table": 10,
     "cost": "+50",
     "preReqs": ["Ambush"],
@@ -4975,11 +4908,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "1st Class Assassin",
-      "1st Class Kallah Caste Beggar",
-      "1st Class Any with buy as Assassin"
-    ],
+    "available": ["1st Class Assassin", "1st Class Kallah Caste Beggar", "1st Class Any with buy as Assassin"],
     "table": 10,
     "cost": "125",
     "index": "Specialist",
@@ -5007,25 +4936,13 @@
     "available": ["Any"],
     "table": 10,
     "cost": "125",
-    "preReqs": [
-      "Perception",
-      "Supernatural Perception",
-      "Locational Sniff",
-      "Acute Hearing",
-      "Sixth Sense",
-      "DAC 7 or more"
-    ],
+    "preReqs": ["Perception", "Supernatural Perception", "Locational Sniff", "Acute Hearing", "Sixth Sense", "DAC 7 or more"],
     "index": "Sense Motion",
     "desc": "Is now aware of the movement of all creatures within 20 feet in a way similar to Wanderer’s Hunch; any creature which the player can see in the real world, whether hand in the air or not, may be watched when they are moving. Does not apply to motionless creatures.",
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "1st-class only Thug",
-      "1st-class only Assassin",
-      "1st-class only Pathfinder",
-      "1st-class only Beggar"
-    ],
+    "available": ["1st-class only Thug", "1st-class only Assassin", "1st-class only Pathfinder", "1st-class only Beggar"],
     "table": 10,
     "cost": "80",
     "preReqs": ["at least 2 innate Greater Stealths"],
@@ -5043,13 +4960,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "1st-class only Pathfinder",
-      "1st-class only Thug",
-      "1st-class only Assassin",
-      "1st-class only Beggar",
-      "1st-class only Spy"
-    ],
+    "available": ["1st-class only Pathfinder", "1st-class only Thug", "1st-class only Assassin", "1st-class only Beggar", "1st-class only Spy"],
     "table": 10,
     "cost": "+75",
     "preReqs": ["Solitaire"],
@@ -5106,11 +5017,7 @@
     "CanAddMultiple": true
   },
   {
-    "available": [
-      "1st-class only Pathfinder",
-      "1st-class only Assassin",
-      "1st-class only Spy"
-    ],
+    "available": ["1st-class only Pathfinder", "1st-class only Assassin", "1st-class only Spy"],
     "table": 11,
     "cost": "+50",
     "preReqs": ["Ghost", "Immunity to Physical Informational Effects"],
@@ -5119,12 +5026,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "1st-class only Thug",
-      "1st-class only Assassin",
-      "1st-class only Pathfinder",
-      "1st-class only Beggar"
-    ],
+    "available": ["1st-class only Thug", "1st-class only Assassin", "1st-class only Pathfinder", "1st-class only Beggar"],
     "table": 11,
     "cost": "+100",
     "preReqs": ["Even Greater Stealth"],
@@ -5151,11 +5053,7 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [
-      "1st Class Assassin",
-      "1st Class Pathfinder",
-      "1st Class Kallah Beggars"
-    ],
+    "available": ["1st Class Assassin", "1st Class Pathfinder", "1st Class Kallah Beggars"],
     "table": 11,
     "cost": "+75",
     "preReqs": ["Greater Ambush"],
@@ -5274,12 +5172,23 @@
     "cost": "15pts",
     "index": "Apprentice Bonding",
     "desc": "Two wizards buy this simultaneously and name each other. The apprentice gains +3 mana of the master's colour; the master gains +1 casting level in that colour only. Both wizards must share the same primary colour.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.apprentice-bonding",
+      "rulesAbilityRefs": ["ability.merged.apprentice-bonding"],
+      "effectType": "LevelOfPower:Mana",
+      "powerRule": {
+        "PowerBase": "Mana",
+        "Mode": "AddFlat",
+        "Amount": 3,
+        "Scope": "ApprenticeOnly",
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
-    "available": [
-      "1st Class Wizard or 1st Class Warlock with Ivory as a colour"
-    ],
+    "available": ["1st Class Wizard or 1st Class Warlock with Ivory as a colour"],
     "table": 1,
     "cost": "100pts",
     "index": "Ivory Advocate",
@@ -5367,7 +5276,20 @@
     "cost": "50pts",
     "index": "Specialists I",
     "desc": "Gains +5 total non-grey, non-opposite specialist glyph slots.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.specialists-i",
+      "rulesAbilityRefs": ["ability.merged.specialists-i"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "SetTotalBonus",
+        "TotalBonus": 5,
+        "Restrictions": {
+          "Colours": "NonGreyNonOpposite"
+        }
+      }
+    }
   },
   {
     "available": ["Any"],
@@ -5399,7 +5321,18 @@
     "cost": "50pts",
     "index": "Rainbow",
     "desc": "Now gains 4 specialist slots per Elemental colour instead of 3.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.rainbow-specialist-slots",
+      "rulesAbilityRefs": ["ability.merged.rainbow-specialist-slots"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "SetPerColourBase",
+        "ColourGroup": "Elemental",
+        "SlotsPerColour": 4
+      }
+    }
   },
   {
     "available": ["Grey Wizard"],
@@ -5407,7 +5340,18 @@
     "cost": "50pts",
     "index": "A New Rainbow",
     "desc": "Now gains 1 specialist slot per New colour.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.a-new-rainbow-specialist-slots",
+      "rulesAbilityRefs": ["ability.merged.a-new-rainbow-specialist-slots"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "SetPerColourBase",
+        "ColourGroup": "New",
+        "SlotsPerColour": 1
+      }
+    }
   },
   {
     "available": ["Silver Wizard"],
@@ -5424,7 +5368,20 @@
     "index": "Specialists II",
     "preReqs": ["Specialists I"],
     "desc": "From Specialists I: gains +10 total non-opposite specialist slots.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.specialists-ii",
+      "rulesAbilityRefs": ["ability.merged.specialists-ii"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "SetTotalBonus",
+        "TotalBonus": 10,
+        "Restrictions": {
+          "Colours": "NonOpposite"
+        }
+      }
+    }
   },
   {
     "available": ["Ishmaic Mana User"],
@@ -5497,7 +5454,21 @@
     "cost": "50pts",
     "index": "Warlock Specialist I",
     "desc": "Gains +2 total non-grey, non-opposite combat spells into capacity.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.warlock-specialist-i",
+      "rulesAbilityRefs": ["ability.merged.warlock-specialist-i"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "SetTotalBonus",
+        "TotalBonus": 2,
+        "Restrictions": {
+          "Colours": "NonGreyNonOpposite",
+          "SpellCategory": "CombatOnly"
+        }
+      }
+    }
   },
   {
     "available": ["Wizard, Warlock"],
@@ -5582,7 +5553,20 @@
     "cost": "40pts",
     "index": "Elemental Squire",
     "desc": "Gains +2 mana for own-colour offensive glyphs and +3/1 life. May not hold a second colour.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.elemental-squire",
+      "rulesAbilityRefs": ["ability.merged.elemental-squire"],
+      "effectType": "LevelOfPower:Mana",
+      "powerRule": {
+        "PowerBase": "Mana",
+        "Mode": "AddFlat",
+        "Amount": 2,
+        "Scope": "OwnColourOffensiveGlyphs",
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["Wizard"],
@@ -5590,7 +5574,20 @@
     "cost": "50pts",
     "index": "Elemental Apprentice",
     "desc": "Gains +3 mana for own-colour glyphs and +1 casting level for own-colour glyphs. May not hold a second colour.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.elemental-apprentice",
+      "rulesAbilityRefs": ["ability.merged.elemental-apprentice"],
+      "effectType": "LevelOfPower:Mana",
+      "powerRule": {
+        "PowerBase": "Mana",
+        "Mode": "AddFlat",
+        "Amount": 3,
+        "Scope": "OwnColourGlyphs",
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["Wizard"],
@@ -5719,7 +5716,18 @@
     "index": "Greater Rainbow",
     "preReqs": ["Rainbow", "!Specialists II"],
     "desc": "From Rainbow: now gains 5 specialist slots per Elemental colour instead of 4. May not learn Specialists II (+10 specialist slots).",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.greater-rainbow-specialist-slots",
+      "rulesAbilityRefs": ["ability.merged.greater-rainbow-specialist-slots"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "SetPerColourBase",
+        "ColourGroup": "Elemental",
+        "SlotsPerColour": 5
+      }
+    }
   },
   {
     "available": ["Any"],
@@ -5776,7 +5784,20 @@
     "index": "Elemental Knight",
     "preReqs": ["Elemental Squire"],
     "desc": "From Elemental Squire: +4 mana for own-colour offensive glyphs, +6/2 life, and +1 MAC against spells of own colour only. May not acquire additional specialist glyph slots beyond those owned at 1st level.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.elemental-knight",
+      "rulesAbilityRefs": ["ability.merged.elemental-knight"],
+      "effectType": "LevelOfPower:Mana",
+      "powerRule": {
+        "PowerBase": "Mana",
+        "Mode": "SetFlatTotal",
+        "Amount": 4,
+        "Scope": "OwnColourOffensiveGlyphs",
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["Wizard"],
@@ -5785,7 +5806,20 @@
     "index": "Elemental Adept",
     "preReqs": ["Elemental Apprentice"],
     "desc": "From Elemental Apprentice: +6 mana for own-colour glyphs, +2 casting levels for own-colour glyphs, and +3% researching own-colour glyphs. May not acquire additional specialist glyph slots beyond those owned at 1st level.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.elemental-adept",
+      "rulesAbilityRefs": ["ability.merged.elemental-adept"],
+      "effectType": "LevelOfPower:Mana",
+      "powerRule": {
+        "PowerBase": "Mana",
+        "Mode": "SetFlatTotal",
+        "Amount": 6,
+        "Scope": "OwnColourGlyphs",
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["1st Class 1st Colour Grey Wizard"],
@@ -6062,7 +6096,19 @@
     "cost": "125pts",
     "index": "More Spirits",
     "desc": "Base spirits per level increase to 4 from 3.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.more-spirits",
+      "rulesAbilityRefs": ["ability.merged.more-spirits"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "SetBasePerLevel",
+        "Amount": 4,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["High Wizard"],
@@ -6071,7 +6117,20 @@
     "index": "Specialists III",
     "preReqs": ["Specialists II"],
     "desc": "From Specialists II: gains +15 total non-opposite spells into capacity.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.specialists-iii",
+      "rulesAbilityRefs": ["ability.merged.specialists-iii"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "SetTotalBonus",
+        "TotalBonus": 15,
+        "Restrictions": {
+          "Colours": "NonOpposite"
+        }
+      }
+    }
   },
   {
     "available": ["Rogues"],
@@ -6128,7 +6187,20 @@
     "index": "Specialists II",
     "preReqs": ["Specialists I"],
     "desc": "From Specialists I: gains +10 total non-opposite spells into capacity.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.specialists-ii",
+      "rulesAbilityRefs": ["ability.merged.specialists-ii"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "SetTotalBonus",
+        "TotalBonus": 10,
+        "Restrictions": {
+          "Colours": "NonOpposite"
+        }
+      }
+    }
   },
   {
     "available": ["1st Class Any"],
@@ -6332,7 +6404,20 @@
     "cost": "15pts",
     "index": "Apprentice Bonding",
     "desc": "As the Table 1 ability Apprentice Bonding.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.apprentice-bonding",
+      "rulesAbilityRefs": ["ability.merged.apprentice-bonding"],
+      "effectType": "LevelOfPower:Mana",
+      "powerRule": {
+        "PowerBase": "Mana",
+        "Mode": "AddFlat",
+        "Amount": 3,
+        "Scope": "ApprenticeOnly",
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["1st Class Wizard"],
@@ -6407,9 +6492,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour Black Wizard, 1st Class 1st Colour Black Warlock"
-    ],
+    "available": ["1st Class 1st Colour Black Wizard, 1st Class 1st Colour Black Warlock"],
     "table": 9,
     "cost": "200pts",
     "index": "Senseless Vision",
@@ -6417,9 +6500,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour Blue Wizard, 1st Class 1st Colour Blue Warlock"
-    ],
+    "available": ["1st Class 1st Colour Blue Wizard, 1st Class 1st Colour Blue Warlock"],
     "table": 9,
     "cost": "50pts",
     "index": "Immunity to Negation of an Embodied Sylph",
@@ -6427,9 +6508,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour Bronze Wizard, 1st Class 1st Colour Bronze Warlock"
-    ],
+    "available": ["1st Class 1st Colour Bronze Wizard, 1st Class 1st Colour Bronze Warlock"],
     "table": 9,
     "cost": "120pts",
     "index": "Puppet Master",
@@ -6445,9 +6524,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class/Colour Blue Wizard that has not left the bracket."
-    ],
+    "available": ["1st Class/Colour Blue Wizard that has not left the bracket."],
     "table": 9,
     "cost": "100pts",
     "index": "Power of Storms",
@@ -6464,9 +6541,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour Brown Wizard, 1st Class 1st Colour Brown Warlock"
-    ],
+    "available": ["1st Class 1st Colour Brown Wizard, 1st Class 1st Colour Brown Warlock"],
     "table": 9,
     "cost": "50pts",
     "index": "Rock Thrower",
@@ -6474,9 +6549,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour Ebony Wizard, 1st Class 1st Colour Ebony Warlock"
-    ],
+    "available": ["1st Class 1st Colour Ebony Wizard, 1st Class 1st Colour Ebony Warlock"],
     "table": 9,
     "cost": "30pts*",
     "index": "Liar!!",
@@ -6484,9 +6557,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour Gold Wizard, 1st Class 1st Colour Gold Warlock"
-    ],
+    "available": ["1st Class 1st Colour Gold Wizard, 1st Class 1st Colour Gold Warlock"],
     "table": 9,
     "cost": "100pts",
     "index": "Sanctity",
@@ -6494,9 +6565,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour Green Wizard, 1st Class 1st Colour Green Warlock"
-    ],
+    "available": ["1st Class 1st Colour Green Wizard, 1st Class 1st Colour Green Warlock"],
     "table": 9,
     "cost": "40pts",
     "index": "Discern Magical Illusion",
@@ -6512,9 +6581,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour Grey Wizard, 1st Class 1st Colour Grey Warlock"
-    ],
+    "available": ["1st Class 1st Colour Grey Wizard, 1st Class 1st Colour Grey Warlock"],
     "table": 9,
     "cost": "80pts",
     "index": "Strength of Magic",
@@ -6528,7 +6595,18 @@
     "index": "Elementalist",
     "preReqs": ["!Over the Rainbow"],
     "desc": "Gains one specialist slot in each Elemental colour (Red, Green, Blue, Brown, White, Black). Each may be filled by an Advanced Grimoire spell of the appropriate colour, including by learning with points at 10pts + 5pts per mana point. These spells may not be of an opposite colour if another colour is held.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.elementalist-specialist-slots",
+      "rulesAbilityRefs": ["ability.merged.elementalist-specialist-slots"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "AddPerColour",
+        "ColourGroup": "Elemental",
+        "SlotsPerColour": 1
+      }
+    }
   },
   {
     "available": ["1st Colour 1st Colour Grey Wizard"],
@@ -6537,12 +6615,21 @@
     "index": "Over the Rainbow",
     "preReqs": ["!Elementalist", "!Chromatic Wizard"],
     "desc": "Gains one specialist slot in each New Colour (Ebony, Ivory, Bronze, Gold, Silver, Jade, Onyx). Each may be filled by an Advanced Grimoire spell of the appropriate colour, including by learning with points at 10pts + 5pts per mana point. These spells may not be of an opposite colour if another colour is held, and the wizard must have the correct alignment for Jade and Onyx.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.over-the-rainbow-specialist-slots",
+      "rulesAbilityRefs": ["ability.merged.over-the-rainbow-specialist-slots"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "AddPerColour",
+        "ColourGroup": "New",
+        "SlotsPerColour": 1
+      }
+    }
   },
   {
-    "available": [
-      "1st Class 1st Colour Ivory Wizard, 1st Class 1st Colour Ivory Warlock"
-    ],
+    "available": ["1st Class 1st Colour Ivory Wizard, 1st Class 1st Colour Ivory Warlock"],
     "table": 9,
     "cost": "60pts",
     "index": "Direction and Purpose",
@@ -6550,9 +6637,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour Red Wizard, 1st Class 1st Colour Red Warlock"
-    ],
+    "available": ["1st Class 1st Colour Red Wizard, 1st Class 1st Colour Red Warlock"],
     "table": 9,
     "cost": "125pts",
     "index": "Sword of Power Master",
@@ -6560,9 +6645,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour Silver Wizard, 1st Class 1st Colour Silver Warlock"
-    ],
+    "available": ["1st Class 1st Colour Silver Wizard, 1st Class 1st Colour Silver Warlock"],
     "table": 9,
     "cost": "60pts",
     "index": "Discern Immunity to Informational Spells",
@@ -6570,9 +6653,7 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [
-      "1st Class 1st Colour White Wizard, 1st Class 1st Colour White Warlock"
-    ],
+    "available": ["1st Class 1st Colour White Wizard, 1st Class 1st Colour White Warlock"],
     "table": 9,
     "cost": "125pts",
     "index": "Sabre of Light and Truth Master",
@@ -6628,7 +6709,19 @@
     "index": "Even More Spirits",
     "preReqs": ["More Spirits"],
     "desc": "From More Spirits: base spirits now 5 per level from 4.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.even-more-spirits",
+      "rulesAbilityRefs": ["ability.merged.even-more-spirits"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "SetBasePerLevel",
+        "Amount": 5,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["Warlock"],
@@ -6646,7 +6739,20 @@
     "index": "Elemental Warlord",
     "preReqs": ["Elemental Knight"],
     "desc": "From Elemental Knight: +8 mana for own-colour offensive glyphs, +9/3 life, and the first directly offensive own-colour spell costing 3 mana or below each 15 minutes costs no mana. May not use any glyph, even by item, of another colour.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.elemental-warlord",
+      "rulesAbilityRefs": ["ability.merged.elemental-warlord"],
+      "effectType": "LevelOfPower:Mana",
+      "powerRule": {
+        "PowerBase": "Mana",
+        "Mode": "SetFlatTotal",
+        "Amount": 8,
+        "Scope": "OwnColourOffensiveGlyphs",
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["Wizard"],
@@ -6655,7 +6761,20 @@
     "index": "Elemental Master",
     "preReqs": ["Elemental Adept"],
     "desc": "From Elemental Adept: +12 mana and +3 casting levels for own-colour glyphs. May have no specialist glyphs and takes half damage from casting own-colour glyphs (minimum 1 unless no-damage abilities apply).",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.elemental-master",
+      "rulesAbilityRefs": ["ability.merged.elemental-master"],
+      "effectType": "LevelOfPower:Mana",
+      "powerRule": {
+        "PowerBase": "Mana",
+        "Mode": "SetFlatTotal",
+        "Amount": 12,
+        "Scope": "OwnColourGlyphs",
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["Any 1st Class Mana User"],
@@ -6663,7 +6782,20 @@
     "cost": "200pts",
     "index": "Additional Level of Mana and Casting",
     "desc": "Grants an additional level for mana and casting that is not cumulative with other base-level increases such as 9th level mana and casting.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.additional-level-of-mana-and-casting",
+      "rulesAbilityRefs": ["ability.merged.additional-level-of-mana-and-casting"],
+      "effectType": "LevelOfPower:Mana",
+      "powerRule": {
+        "PowerBase": "Mana",
+        "Mode": "AddCasterLevelForPowerCalc",
+        "Amount": 1,
+        "SourceCategory": "base",
+        "StacksWith": "nonCumulative",
+        "NonCumulativeWith": ["9th Level Mana & Casting", "10th Level Mana and Casting"]
+      }
+    }
   },
   {
     "available": ["1st Colour Grey Wizard"],
@@ -6672,7 +6804,18 @@
     "index": "Elementalist",
     "preReqs": ["!Over the Rainbow"],
     "desc": "Gains one specialist slot in each Elemental colour to be filled by an Advanced Grimoire spell of the appropriate colour, including by learning with points at 10pts + 5pts per mana point. These spells may not be of an opposite colour if another colour is held.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.elementalist-specialist-slots",
+      "rulesAbilityRefs": ["ability.merged.elementalist-specialist-slots"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "AddPerColour",
+        "ColourGroup": "Elemental",
+        "SlotsPerColour": 1
+      }
+    }
   },
   {
     "available": ["1st Class Wizard with Grey as a Colour"],
@@ -6681,7 +6824,18 @@
     "index": "Elementalist",
     "preReqs": ["!Over the Rainbow"],
     "desc": "Gains one specialist slot in each Elemental colour to be filled by an Advanced Grimoire spell of the appropriate colour, including by learning with points at 10pts + 5pts per mana point. These spells may not be of an opposite colour if another colour is held.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.elementalist-specialist-slots",
+      "rulesAbilityRefs": ["ability.merged.elementalist-specialist-slots"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "AddPerColour",
+        "ColourGroup": "Elemental",
+        "SlotsPerColour": 1
+      }
+    }
   },
   {
     "available": ["1st Colour Grey Wizard"],
@@ -6690,7 +6844,18 @@
     "index": "Over the Rainbow",
     "preReqs": ["!Elementalist", "!Chromatic Wizard"],
     "desc": "Gains one specialist slot in each New Colour to be filled by an Advanced Grimoire spell of the appropriate colour, including by learning with points at 10pts + 5pts per mana point. These spells may not be of an opposite colour if another colour is held; the wizard must also have the correct alignment for Jade and Onyx.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.over-the-rainbow-specialist-slots",
+      "rulesAbilityRefs": ["ability.merged.over-the-rainbow-specialist-slots"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "AddPerColour",
+        "ColourGroup": "New",
+        "SlotsPerColour": 1
+      }
+    }
   },
   {
     "available": ["1st Class Wizard with Grey as a Colour"],
@@ -6699,7 +6864,18 @@
     "index": "Over the Rainbow",
     "preReqs": ["!Elementalist", "!Chromatic Wizard"],
     "desc": "Gains one specialist slot in each New Colour to be filled by an Advanced Grimoire spell of the appropriate colour, including by learning with points at 10pts + 5pts per mana point. These spells may not be of an opposite colour if another colour is held; the wizard must also have the correct alignment for Jade and Onyx.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.over-the-rainbow-specialist-slots",
+      "rulesAbilityRefs": ["ability.merged.over-the-rainbow-specialist-slots"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "AddPerColour",
+        "ColourGroup": "New",
+        "SlotsPerColour": 1
+      }
+    }
   },
   {
     "available": ["1st Class Power Master"],
@@ -6757,7 +6933,20 @@
     "index": "Specialists III",
     "preReqs": ["Specialists II"],
     "desc": "From Specialists II: gains +15 total non-opposite spells into capacity.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.specialists-iii",
+      "rulesAbilityRefs": ["ability.merged.specialists-iii"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "SetTotalBonus",
+        "TotalBonus": 15,
+        "Restrictions": {
+          "Colours": "NonOpposite"
+        }
+      }
+    }
   },
   {
     "available": ["1st Class Wizard"],
@@ -6766,7 +6955,20 @@
     "index": "Specialists IV",
     "preReqs": ["Specialists III"],
     "desc": "From Specialists III: gains +20 total non-opposite spells into capacity.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.specialists-iv",
+      "rulesAbilityRefs": ["ability.merged.specialists-iv"],
+      "effectType": "SlotCapacity:SpecialistGlyph",
+      "slotRule": {
+        "SlotType": "SpecialistGlyph",
+        "Mode": "SetTotalBonus",
+        "TotalBonus": 20,
+        "Restrictions": {
+          "Colours": "NonOpposite"
+        }
+      }
+    }
   },
   {
     "available": ["1st Class/Colour Green Wizard"],
@@ -6958,7 +7160,20 @@
     "index": "Elemental Lord",
     "preReqs": ["Elemental Master"],
     "desc": "From Elemental Master: gains +24 own-colour mana and +4 own-colour casting levels. May Ward Pact mana users and creatures of own colour; this is non-level-based. Grants immunity to beneficial mana not of own colour.",
-    "sourceBook": "Wizard Grimoire"
+    "sourceBook": "Wizard Grimoire",
+    "data": {
+      "abilityRef": "ability.merged.elemental-lord",
+      "rulesAbilityRefs": ["ability.merged.elemental-lord"],
+      "effectType": "LevelOfPower:Mana",
+      "powerRule": {
+        "PowerBase": "Mana",
+        "Mode": "SetFlatTotal",
+        "Amount": 24,
+        "Scope": "OwnColour",
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["1st Class Wizard"],
@@ -6993,7 +7208,20 @@
     "index": "Second Extra Level of Spirits",
     "desc": "As the first extra level of spirits, requiring First Extra Level of Spirits first; grants a minimum of 8 spirits total.",
     "sourceBook": "Words From Above",
-    "preReqs": ["First Extra Level of Spirits"]
+    "preReqs": ["First Extra Level of Spirits"],
+    "data": {
+      "abilityRef": "ability.merged.second-extra-level-of-spirits",
+      "rulesAbilityRefs": ["ability.merged.second-extra-level-of-spirits"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "GrantExtraSpiritLevels",
+        "ExtraLevels": 2,
+        "MinimumTotalSpirits": 8,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["ALL"],
@@ -7033,7 +7261,19 @@
     "cost": "40",
     "index": "Witch – Spirits",
     "desc": "The Witch gains a base of 4 spirits per level but may no longer use the Cudgel and becomes a non-weapon-using priest.",
-    "sourceBook": "Words From Above"
+    "sourceBook": "Words From Above",
+    "data": {
+      "abilityRef": "ability.merged.witch-spirits",
+      "rulesAbilityRefs": ["ability.merged.witch-spirits"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "SetBasePerLevel",
+        "Amount": 4,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["Any"],
@@ -7150,7 +7390,20 @@
     "index": "Third Extra Level of Spirits",
     "desc": "As the second extra level of spirits, requiring Second Extra Level of Spirits first; grants a minimum of 12 spirits total.",
     "sourceBook": "Words From Above",
-    "preReqs": ["Second Extra Level of Spirits", "First Extra Level of Spirits"]
+    "preReqs": ["Second Extra Level of Spirits", "First Extra Level of Spirits"],
+    "data": {
+      "abilityRef": "ability.merged.third-extra-level-of-spirits",
+      "rulesAbilityRefs": ["ability.merged.third-extra-level-of-spirits"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "GrantExtraSpiritLevels",
+        "ExtraLevels": 3,
+        "MinimumTotalSpirits": 12,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["Spirit Warriors", "Wayfinders only"],
@@ -7161,9 +7414,7 @@
     "sourceBook": "Words From Above"
   },
   {
-    "available": [
-      "ALL 1st-class bar Witches, Friars, Shamans, Grey Wardens & Guardians of the Balance"
-    ],
+    "available": ["ALL 1st-class bar Witches, Friars, Shamans, Grey Wardens & Guardians of the Balance"],
     "table": 3,
     "cost": "60",
     "index": "Change Priestly Class",
@@ -7435,7 +7686,21 @@
     "cost": "40",
     "index": "Spiritual Scribe",
     "desc": "1st- to 3rd-level Scriptures of the Faith no longer count towards the scripture cap.",
-    "sourceBook": "Words From Above"
+    "sourceBook": "Words From Above",
+    "data": {
+      "abilityRef": "ability.merged.spiritual-scribe-scripture-cap",
+      "rulesAbilityRefs": ["ability.merged.spiritual-scribe-scripture-cap"],
+      "effectType": "SlotCapacity:ScriptureOfFaith",
+      "slotRule": {
+        "SlotType": "ScriptureOfFaith",
+        "Mode": "IgnoreLevelsInCap",
+        "Levels": [
+          1,
+          2,
+          3
+        ]
+      }
+    }
   },
   {
     "available": ["Minor Healing Sphere"],
@@ -7649,9 +7914,7 @@
     "sourceBook": "Words From Above"
   },
   {
-    "available": [
-      "Major Sphere Communication priests or any priest post 6th Scholar"
-    ],
+    "available": ["Major Sphere Communication priests or any priest post 6th Scholar"],
     "table": 7,
     "cost": "50",
     "index": "Assess Spirit",
@@ -8064,11 +8327,19 @@
     "index": "Fourth Extra Level of Spirits",
     "desc": "Only acquirable by priests with Devotion, in which case the spirits may only be used with the devoted sphere, or by priests who have reached Level 6 Devout Priest, in which case they are freely usable.",
     "sourceBook": "Words From Above",
-    "preReqs": [
-      "Third Extra Level of Spirits",
-      "Second Extra Level of Spirits",
-      "First Extra Level of Spirits"
-    ]
+    "preReqs": ["Third Extra Level of Spirits", "Second Extra Level of Spirits", "First Extra Level of Spirits"],
+    "data": {
+      "abilityRef": "ability.merged.fourth-extra-level-of-spirits",
+      "rulesAbilityRefs": ["ability.merged.fourth-extra-level-of-spirits"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "GrantExtraSpiritLevels",
+        "ExtraLevels": 4,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["ALL"],
@@ -8144,7 +8415,19 @@
     "cost": "125",
     "index": "Dedicated Power",
     "desc": "Base spirits per level increase by one, from 5 to 6 or 4 to 5. If the character is ever excommunicated they die permanently.",
-    "sourceBook": "Words From Above"
+    "sourceBook": "Words From Above",
+    "data": {
+      "abilityRef": "ability.merged.dedicated-power",
+      "rulesAbilityRefs": ["ability.merged.dedicated-power"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "AddPerCharacterLevel",
+        "Amount": 1,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["ALL"],
@@ -8161,7 +8444,21 @@
     "cost": "150",
     "index": "Allied Angel",
     "desc": "A constant angelic ally within the priest grants 10 additional spirits usable only on goodly miracles. The priest discerns as Angelkind; if struck by an effect that would banish or destroy Angelkind, they fall unconscious for 5 minutes and lose the additional spirits for the rest of the day.",
-    "sourceBook": "Words From Above"
+    "sourceBook": "Words From Above",
+    "data": {
+      "abilityRef": "ability.merged.allied-angel",
+      "rulesAbilityRefs": ["ability.merged.allied-angel"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "AddFlat",
+        "Amount": 10,
+        "SourceCategory": "base",
+        "Restrictions": {
+          "Alignment": "Good"
+        }
+      }
+    }
   },
   {
     "available": ["1st-Class Evil Priest"],
@@ -8169,7 +8466,21 @@
     "cost": "150",
     "index": "Abishai Minion",
     "desc": "A bound abishai grants 10 additional spirits usable only on evil miracles. The priest discerns as Daemonkind; if struck by an effect that would banish or destroy Daemonkind, they fall unconscious for 5 minutes and lose the additional spirits for the rest of the day.",
-    "sourceBook": "Words From Above"
+    "sourceBook": "Words From Above",
+    "data": {
+      "abilityRef": "ability.merged.abishai-minion",
+      "rulesAbilityRefs": ["ability.merged.abishai-minion"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "AddFlat",
+        "Amount": 10,
+        "SourceCategory": "base",
+        "Restrictions": {
+          "Alignment": "Evil"
+        }
+      }
+    }
   },
   {
     "available": ["1st-Class Neutral Priest"],
@@ -8177,7 +8488,21 @@
     "cost": "150",
     "index": "Bound Spirit",
     "desc": "Powerful bound spirits grant the priest 10 additional spirits usable only on neutral miracles, with no associated banishment penalty.",
-    "sourceBook": "Words From Above"
+    "sourceBook": "Words From Above",
+    "data": {
+      "abilityRef": "ability.merged.bound-spirit",
+      "rulesAbilityRefs": ["ability.merged.bound-spirit"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "AddFlat",
+        "Amount": 10,
+        "SourceCategory": "base",
+        "Restrictions": {
+          "Alignment": "Neutral"
+        }
+      }
+    }
   },
   {
     "available": ["ALL"],
@@ -8227,12 +8552,19 @@
     "index": "Fifth Extra Level of Spirits",
     "desc": "Only acquirable by non-weapon-using priests with Devotion, in which case the spirits are only for the devoted sphere, or by priests who have reached Level 6 Devout Priest, where they are freely usable.",
     "sourceBook": "Words From Above",
-    "preReqs": [
-      "Fourth Extra Level of Spirits",
-      "Third Extra Level of Spirits",
-      "Second Extra Level of Spirits",
-      "First Extra Level of Spirits"
-    ]
+    "preReqs": ["Fourth Extra Level of Spirits", "Third Extra Level of Spirits", "Second Extra Level of Spirits", "First Extra Level of Spirits"],
+    "data": {
+      "abilityRef": "ability.merged.fifth-extra-level-of-spirits",
+      "rulesAbilityRefs": ["ability.merged.fifth-extra-level-of-spirits"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "GrantExtraSpiritLevels",
+        "ExtraLevels": 5,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["ALL"],
@@ -8241,13 +8573,19 @@
     "index": "Sixth Extra Level of Spirits",
     "desc": "Only acquirable by non-weapon-using priests with Devotion, in which case the spirits are only for the devoted sphere, or by priests who have reached Level 6 Devout Priest, where they are freely usable.",
     "sourceBook": "Words From Above",
-    "preReqs": [
-      "Fifth Extra Level of Spirits",
-      "Fourth Extra Level of Spirits",
-      "Third Extra Level of Spirits",
-      "Second Extra Level of Spirits",
-      "First Extra Level of Spirits"
-    ]
+    "preReqs": ["Fifth Extra Level of Spirits", "Fourth Extra Level of Spirits", "Third Extra Level of Spirits", "Second Extra Level of Spirits", "First Extra Level of Spirits"],
+    "data": {
+      "abilityRef": "ability.merged.sixth-extra-level-of-spirits",
+      "rulesAbilityRefs": ["ability.merged.sixth-extra-level-of-spirits"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "GrantExtraSpiritLevels",
+        "ExtraLevels": 6,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["ALL"],
@@ -8313,7 +8651,19 @@
     "cost": "150",
     "index": "Power of Faith",
     "desc": "Gains +1 spirit per level. Stacks with Dedicated Power and Weapons Priest. The character may not leave the priest bracket.",
-    "sourceBook": "Words From Above"
+    "sourceBook": "Words From Above",
+    "data": {
+      "abilityRef": "ability.merged.power-of-faith",
+      "rulesAbilityRefs": ["ability.merged.power-of-faith"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "AddPerCharacterLevel",
+        "Amount": 1,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": ["1st-class priests"],
@@ -8395,5 +8745,1319 @@
     "index": "Servant of the Host",
     "desc": "Status. Stage One: gains +3/1 life not stacking with life from another Status, and Recognise Evil Spirit as the Paladin ability. Stage Two (Table 5, +80): gains Attract Evil 1/day drawing all evil spirits within 20 feet, and an innate Cold Rage vs Evil 1/day. Stage Three (Table 7, +70): gains +6/2 life total and Fury of the Angels, upgrading one Cold Rage vs Evil into a Holy Fury. May buy extra Cold Rages vs Evil for 60 points each, max 3, and extra Attract Evils for 40 points each, max 2.",
     "sourceBook": "Words From Above"
+  },
+  {
+    "available": ["2nd Class Acrobat"],
+    "table": 7,
+    "cost": "20",
+    "index": "Back Flip",
+    "desc": "As tables.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Acrobat:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": 6,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Acrobat",
+      "abilityRef": "ability.mc.acrobat.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(20,6)"
+    }
+  },
+  {
+    "available": ["2nd Class Acrobat"],
+    "table": 7,
+    "cost": "25",
+    "index": "Hand Spring",
+    "desc": "This allows the acrobat to spring ten feet in any direction, as per a Leap, at the end of any other Jump or Back Flip (not after a Hand Spring). Must have one hand free when this is used",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Acrobat:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": 4,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Acrobat",
+      "abilityRef": "ability.mc.acrobat.l5",
+      "rulesAbilityRefs": ["ability.salmon-leap"],
+      "sourceNotation": "(25,4)"
+    }
+  },
+  {
+    "available": ["2nd Class Acrobat"],
+    "table": 7,
+    "cost": "80",
+    "index": "Leap Strike",
+    "desc": "May strike a blow x1/2 levels  during a Leap or Back Flip (not during a Hand Spring). This blow has a maximum of 24pt Quad. Only one blow may be struck during a single Leap using this ability. Lightning Reactions grants immunity to this blow",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Acrobat:6"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Acrobat",
+      "abilityRef": "ability.mc.acrobat.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(80,2)"
+    }
+  },
+  {
+    "available": ["2nd Class Adventurer"],
+    "table": 7,
+    "cost": "40",
+    "index": "Seen it all before",
+    "desc": "Acts as a knowledge based major prayer about a ward/creature/similar that mercenaries may have chatted about in the tavern",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Adventurer:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Adventurer",
+      "abilityRef": "ability.mc.adventurer.l4",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(40,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Arch-Druid"],
+    "table": 7,
+    "cost": "50",
+    "index": "Command (Non-Arch) Druid",
+    "desc": "As per an earthpower, non-level based VOP of up to 3 words in length. This Command cannot be suicidal in nature, and must take into account the respect all Druids have for each other",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Arch-Druid:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": 6,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Arch-Druid",
+      "abilityRef": "ability.mc.arch-druid.l2",
+      "rulesAbilityRefs": ["ability.voice-of-power-non-level"],
+      "sourceNotation": "(50, 6)"
+    }
+  },
+  {
+    "available": ["2nd Class Armour Master"],
+    "table": 7,
+    "cost": "40",
+    "index": "Taking the Hit",
+    "desc": "As the Warrior Ability",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Armour Master:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Armour Master",
+      "abilityRef": "ability.mc.armour-master.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(40,2)"
+    }
+  },
+  {
+    "available": ["2nd Class Armour Master"],
+    "table": 7,
+    "cost": "100",
+    "index": "Armoured Defence",
+    "desc": "Grants a five minute Rockskin style reduction to any weapon blow that the user's armour applies vs",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Armour Master:5"],
+    "CanAddMultiple": false,
+    "maxAvailable": 1,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Armour Master",
+      "abilityRef": "ability.mc.armour-master.l5",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(100,1)"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - B Class"],
+    "table": 7,
+    "cost": "50",
+    "index": "Blade-Fury",
+    "desc": "Grants a 6pt damage reduction against all weapon blows for five minutes",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - B Class:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - B Class",
+      "abilityRef": "ability.mc.battlemaster-b.l2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(50,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - B Class"],
+    "table": 7,
+    "cost": "20",
+    "index": "Disarm",
+    "desc": "Disarm.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - B Class:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - B Class",
+      "abilityRef": "ability.mc.battlemaster-b.l4.1",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(20, )"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - B Class"],
+    "table": 7,
+    "cost": "75",
+    "index": "Opponent Study",
+    "desc": "Enhances a Blade-Fury to a 9pt reduction versus one opponent only after 30 seconds of calm observation",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - B Class:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - B Class",
+      "abilityRef": "ability.mc.battlemaster-b.l5",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(75,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - E Class"],
+    "table": 7,
+    "cost": "50",
+    "index": "Blade-Fury",
+    "desc": "Grants a 6pt damage reduction against all weapon blows for five minutes",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - E Class:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - E Class",
+      "abilityRef": "ability.mc.battlemaster-e.l2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(50,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - E Class"],
+    "table": 7,
+    "cost": "20",
+    "index": "Disarm",
+    "desc": "Disarm.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - E Class:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - E Class",
+      "abilityRef": "ability.mc.battlemaster-e.l3.1",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(20, )"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - E Class"],
+    "table": 7,
+    "cost": "30",
+    "index": "Weapon-Break",
+    "desc": "As per Shatter [t] but delivered through a weapon blow and only affects weapons, armour or shields",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - E Class:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - E Class",
+      "abilityRef": "ability.mc.battlemaster-e.l4",
+      "rulesAbilityRefs": ["ability.shatter-touch"],
+      "sourceNotation": "(30, )"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - E Class"],
+    "table": 7,
+    "cost": "75",
+    "index": "Opponent Study",
+    "desc": "Enhances a Blade-Fury to a 9pt reduction versus one opponent only after 30 seconds of calm observation",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - E Class:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - E Class",
+      "abilityRef": "ability.mc.battlemaster-e.l5",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(75,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - E Class"],
+    "table": 7,
+    "cost": "75",
+    "index": "Grand Weapon Break",
+    "desc": "May enhance one innate Weapon Break such that it works as per a Grand Breaking Blow [Grand Tanashiwara] but only against weapons, shields or armour.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - E Class:6"],
+    "CanAddMultiple": false,
+    "maxAvailable": 1,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - E Class",
+      "abilityRef": "ability.mc.battlemaster-e.l6.2",
+      "rulesAbilityRefs": ["ability.grand-tanashiwara"],
+      "sourceNotation": "(75,1)"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - O Class"],
+    "table": 7,
+    "cost": "50",
+    "index": "Blade-Fury",
+    "desc": "Grants a 6pt damage reduction against all weapon blows for five minutes",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - O Class:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - O Class",
+      "abilityRef": "ability.mc.battlemaster-o.l2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(50,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - O Class"],
+    "table": 7,
+    "cost": "75",
+    "index": "Opponent Study",
+    "desc": "Enhances a Blade-Fury to a 9pt reduction versus one opponent only after 30 seconds of calm observation",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - O Class:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - O Class",
+      "abilityRef": "ability.mc.battlemaster-o.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(75,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Battle-Master - O Class"],
+    "table": 7,
+    "cost": "20",
+    "index": "Disarm",
+    "desc": "Disarm.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Battle-Master - O Class:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Battle-Master - O Class",
+      "abilityRef": "ability.mc.battlemaster-o.l4.1",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(20, )"
+    }
+  },
+  {
+    "available": ["2nd Class Demon Slayer"],
+    "table": 7,
+    "cost": "30",
+    "index": "Slayer's Blow",
+    "desc": "May strike a single blow (or empower a single damaging spell/ miracle) such that it will harm any Demonkind which was capable of harming the Demon-Slayer, unless the Demonkind can only be harmed by a specific/unique weapon or technique - for example, the blow would inflict ranged, light-based damage, but would not inflict 'Laserbolt', nor count as 'The Runed Great Axe of King Sharmyn'",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Demon Slayer:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Demon Slayer",
+      "abilityRef": "ability.mc.demon-slayer.l2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(30, )"
+    }
+  },
+  {
+    "available": ["2nd Class Demon Slayer"],
+    "table": 7,
+    "cost": "50",
+    "index": "Righteous Fury",
+    "desc": "May enter a 33% rage against Demonkind only, in which may continue to use any offensive abilities possessed against the Demonkind",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Demon Slayer:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Demon Slayer",
+      "abilityRef": "ability.mc.demon-slayer.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(50, 3)"
+    }
+  },
+  {
+    "available": ["2nd Class Demon Slayer"],
+    "table": 7,
+    "cost": "95",
+    "index": "Banishment",
+    "desc": "Banishes one Demonkind to its original plane of existence, which it then cannot leave for 24 hours. Caster takes 8 TBLP per resistance level of the Demonkind, but if this damage kills him he is not dead perm - (the Demonkind is also not slain, and may apply Immunity to Involuntary Mystical Transportation or Immunity to Hand of Purity to be immune to the effect entirely). If the demon is not banished then the innate is used but no life is taken",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Demon Slayer:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Demon Slayer",
+      "abilityRef": "ability.mc.demon-slayer.l4",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(95, 3)"
+    }
+  },
+  {
+    "available": ["2nd Class Demon Slayer"],
+    "table": 7,
+    "cost": "75",
+    "index": "Shield of Purity",
+    "desc": "All 'demonic' damage, whether it comes from demon-bound weapons, or spells or miracles cast with demonic power, is reduced by ¼, lasts 5 minutes or the length of combat with a specific Demonkind (whichever is longer)",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Demon Slayer:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Demon Slayer",
+      "abilityRef": "ability.mc.demon-slayer.l5",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(75, 2)"
+    }
+  },
+  {
+    "available": ["2nd Class Demon Slayer"],
+    "table": 7,
+    "cost": "60",
+    "index": "Summon Weapon of Retribution",
+    "desc": "Summons a weapon of choice into the caster's hands which will inflict 'holy' (good spirit/white mana) damage versus one chosen Demonkind only; this weapon may be either pure or physical, as decided when summoned. It cannot harm creatures other than the chosen Demonkind, but against them has +1 maximum damage, and may only be wielded by the summoner",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Demon Slayer:6"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Demon Slayer",
+      "abilityRef": "ability.mc.demon-slayer.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(60, 2)"
+    }
+  },
+  {
+    "available": ["2nd Class Guardian of Nature"],
+    "table": 7,
+    "cost": "80",
+    "index": "Draw on Earthpower",
+    "desc": "By spending one minute in inactive concentration drawing upon the natural force around them for assistance - this allows the Alfar to mimic any one Earthpower Evocation which is on the standard list (As detailed in The Druids Way) of their own level or below, using the appropriate gestures but without verbals.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Guardian of Nature:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Guardian of Nature",
+      "abilityRef": "ability.draw-on-earthpower",
+      "rulesAbilityRefs": ["ability.draw-on-earthpower"],
+      "sourceNotation": "[80,2]"
+    }
+  },
+  {
+    "available": ["2nd Class Life's Avenger"],
+    "table": 7,
+    "cost": "75",
+    "index": "Life's Cry",
+    "desc": "May call the name of their god to grant immunity to any Undead touch effects for the next 5 minutes. This may be used within 2secs of suffering effect, as War Cry",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Life's Avenger:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Life's Avenger",
+      "abilityRef": "ability.mc.life-s-avenger.l2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(75,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Life's Avenger"],
+    "table": 7,
+    "cost": "40",
+    "index": "Life's Rage",
+    "desc": "Only usable against undead, applies versus all damage from undead and reduces the damage taken from using Hand of Purity, may still cast miracles on self or undead, otherwise as Cold Rage on tables",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Life's Avenger:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Life's Avenger",
+      "abilityRef": "ability.mc.life-s-avenger.l4",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(40,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Life's Avenger"],
+    "table": 7,
+    "cost": "30",
+    "index": "Attract Undead",
+    "desc": "Attract Undead.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Life's Avenger:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Life's Avenger",
+      "abilityRef": "ability.mc.life-s-avenger.l5.1",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(30,)"
+    }
+  },
+  {
+    "available": ["2nd Class Life's Avenger"],
+    "table": 7,
+    "cost": "30",
+    "index": "Repel Undead",
+    "desc": "Repel Undead.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Life's Avenger:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Life's Avenger",
+      "abilityRef": "ability.mc.life-s-avenger.l5.2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(30,)"
+    }
+  },
+  {
+    "available": ["2nd Class Master of the Dead"],
+    "table": 7,
+    "cost": "50",
+    "index": "I am the Master",
+    "desc": "One control miracle is cast as if an infinite level priest.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Master of the Dead:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Master of the Dead",
+      "abilityRef": "ability.mc.master-of-the-dead.l4.2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(50,2)"
+    }
+  },
+  {
+    "available": ["2nd Class Priest of the Runes"],
+    "table": 7,
+    "cost": "30",
+    "index": "Throwing the Runes",
+    "desc": "May throw the runes. This requires an excellent phys rep of rune- inscribed stones. The priest may specify a question for which they seek guidance, or simply ask their allied spirits for advice. The runes will reveal a message in reply in a similar manner to a single Communication II question. The spirits will never lie, but the ref may choose to be cryptic or not, as desired - it is possible at the ref's discretion to foretell the future with these replies",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Priest of the Runes:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": 4,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Priest of the Runes",
+      "abilityRef": "ability.mc.priest-of-the-runes.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(30, 4)"
+    }
+  },
+  {
+    "available": ["2nd Class Psycher"],
+    "table": 7,
+    "cost": "10",
+    "index": "Neuronic Dart x2/level",
+    "desc": "As tables.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Psycher:1"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Psycher",
+      "abilityRef": "ability.mc.psycher.l1",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(10,∞)"
+    }
+  },
+  {
+    "available": ["2nd Class Psycher"],
+    "table": 7,
+    "cost": "60",
+    "index": "Sensory Deprivation",
+    "desc": "As tables.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Psycher:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": 4,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Psycher",
+      "abilityRef": "ability.mc.psycher.l2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(60, 4)"
+    }
+  },
+  {
+    "available": ["2nd Class Psycher"],
+    "table": 7,
+    "cost": "30",
+    "index": "Neuronic Fumble",
+    "desc": "As tables.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Psycher:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": 4,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Psycher",
+      "abilityRef": "ability.mc.psycher.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(30, 4)"
+    }
+  },
+  {
+    "available": ["2nd Class Psycher"],
+    "table": 7,
+    "cost": "65",
+    "index": "Neuronic Bolt",
+    "desc": "As tables.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Psycher:5"],
+    "CanAddMultiple": false,
+    "maxAvailable": 1,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Psycher",
+      "abilityRef": "ability.mc.psycher.l5",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(65, 1)"
+    }
+  },
+  {
+    "available": ["2nd Class Scholar"],
+    "table": 7,
+    "cost": "40",
+    "index": "Knowledge of the Arcane",
+    "desc": "May receive an answer from the referee to a question regarding the details of a ritual, supernatural marking or event, or similar appropriately supernatural occurrences. This is knowledge remembered as a result of past studies, and sensible assumptions made, in the manner of a Lucky Idea. The answer can be up to 7 useful words in length, and is entirely at the ref's discretion",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Scholar:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Scholar",
+      "abilityRef": "ability.mc.scholar.l5",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(40, 3)"
+    }
+  },
+  {
+    "available": ["2nd Class Spiritual Celebrant"],
+    "table": 7,
+    "cost": "80",
+    "index": "Blessed Touch",
+    "desc": "If spends 30secs in touch contact with a living goodly spirit and then casts a Bless for 3 spirits (not reduced, nor from scrolls or innates) rather than its normal effect it will negate one on-going evil active miracle that is normally released on the caster's death. For example would apply to remove a Suspend Life or Cause Disease. In the case of non-standard miracles it operates at the ref's discretion",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Spiritual Celebrant:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Spiritual Celebrant",
+      "abilityRef": "ability.mc.spiritual-celebrant.l4",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(80,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Spiritual Dominator"],
+    "table": 7,
+    "cost": "80",
+    "index": "Skilled Dominion",
+    "desc": "One published level based Dominion Tree or Sphere miracle may be cast as if non-level based",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Spiritual Dominator:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Spiritual Dominator",
+      "abilityRef": "ability.mc.spiritual-dominator.l4",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(80,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Spiritual Exorcist"],
+    "table": 7,
+    "cost": "75",
+    "index": "Word of Banishment",
+    "desc": "May cast a handbook dismissal miracle so it affects all undead with the chosen name within 20ft. Costs triple spirits to cast and does not require them to be backed to a wall.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Spiritual Exorcist:3"],
+    "CanAddMultiple": false,
+    "maxAvailable": 1,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Spiritual Exorcist",
+      "abilityRef": "ability.mc.spiritual-exorcist.l3.2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(75,1)"
+    }
+  },
+  {
+    "available": ["2nd Class Spiritual Maelstrom"],
+    "table": 7,
+    "cost": "80",
+    "index": "word",
+    "desc": "As tables.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Spiritual Maelstrom:1"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Spiritual Maelstrom",
+      "abilityRef": "ability.mc.spiritual-maelstrom.l1",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(80,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Spiritual Summoner"],
+    "table": 7,
+    "cost": "40",
+    "index": "Focussed Command",
+    "desc": "The control on one published summoned/raised undead will now last until it is destroyed",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Spiritual Summoner:6"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Spiritual Summoner",
+      "abilityRef": "ability.mc.spiritual-summoner.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(40,2)"
+    }
+  },
+  {
+    "available": ["2nd Class Stalker"],
+    "table": 7,
+    "cost": "40",
+    "index": "one additional Stealth innate per level of this class",
+    "desc": "As tables.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Stalker:1"],
+    "CanAddMultiple": true,
+    "maxAvailable": 6,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Stalker",
+      "abilityRef": "ability.mc.stalker.l1",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(40,6)"
+    }
+  },
+  {
+    "available": ["2nd Class Stalker"],
+    "table": 7,
+    "cost": "60",
+    "index": "Greater Stealth",
+    "desc": "Allows the scout to move at slow zombie speed without breaking the effect of the Stealth innate; it is still broken if the scout breaks any other condition, such as talking or attacking.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Stalker:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Stalker",
+      "abilityRef": "ability.mc.stalker.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(60,2)"
+    }
+  },
+  {
+    "available": ["2nd Class Stalker"],
+    "table": 7,
+    "cost": "70",
+    "index": "Loiter",
+    "desc": "Enhances an innate Stealth so that it is non-durational. This may not be enhanced further by such abilities as Greater Stealth.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Stalker:5"],
+    "CanAddMultiple": false,
+    "maxAvailable": 1,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Stalker",
+      "abilityRef": "ability.mc.stalker.l5",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(70,1)"
+    }
+  },
+  {
+    "available": ["2nd Class Stalker"],
+    "table": 7,
+    "cost": "30",
+    "index": "Hidden",
+    "desc": "While under the effects of an innate Stealth, gains immunity to all supernatural sights as long as the character remains stationary. This innate must be used as the innate Stealth is used.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Stalker:6"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Stalker",
+      "abilityRef": "ability.mc.stalker.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(30,3)"
+    }
+  },
+  {
+    "available": ["2nd Class Survivor"],
+    "table": 9,
+    "cost": "100",
+    "index": "One Last Effort",
+    "desc": "May be used while unconscious due to damage. Regains consciousness and all locations begin to work. This lasts up to 10 seconds. May not engage in combat during this time, and any damage causes it to end immediately",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Survivor:6"],
+    "CanAddMultiple": false,
+    "maxAvailable": 1,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Survivor",
+      "abilityRef": "ability.mc.survivor.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "Post-6th: Recuperate becomes at will 100 points, table 9"
+    }
+  },
+  {
+    "available": ["2nd Class Telekinetic"],
+    "table": 7,
+    "cost": "45",
+    "index": "Telekinetic Flash",
+    "desc": "As tables.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Telekinetic:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": 6,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Telekinetic",
+      "abilityRef": "ability.mc.telekinetic.l2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(45, 6)"
+    }
+  },
+  {
+    "available": ["2nd Class Telekinetic"],
+    "table": 7,
+    "cost": "20",
+    "index": "Detonate",
+    "desc": "As tables.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Telekinetic:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": 12,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Telekinetic",
+      "abilityRef": "ability.mc.telekinetic.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(20, 12)"
+    }
+  },
+  {
+    "available": ["2nd Class Tribal Warlord"],
+    "table": 7,
+    "cost": "50",
+    "index": "May Command",
+    "desc": "Any member of own tribe except Druid, Shaman, Witchdoctor, Chieftain or other Warlord, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Tribal Warlord:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Tribal Warlord",
+      "abilityRef": "ability.mc.tribal-warlord.l4",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(50, )"
+    }
+  },
+  {
+    "available": ["2nd Class Tribal Warlord"],
+    "table": 7,
+    "cost": "120",
+    "index": "Warlord's Fury",
+    "desc": "Grants 50% rage, +18/6 life and +1 strength stacking to a max. of +3, lasting 5 minutes",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Tribal Warlord:6"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Tribal Warlord",
+      "abilityRef": "ability.mc.tribal-warlord.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(120, 2)"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: General"],
+    "table": 7,
+    "cost": "5",
+    "index": "Starts each adventure with one dose of any of Blindness, Dumbness",
+    "desc": "Paralysis, Deafness or Sleep II potion antidotes (as handbook) per level of multiclass, which are adventure temp only (no cards issued) . Potions from this class may be distilled if the Distilling skill is owned",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: General:1"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: General",
+      "abilityRef": "ability.mc.vwe-general.l1",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(5, )"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: General"],
+    "table": 7,
+    "cost": "5",
+    "index": "Starts each adventure with one dose of any of Blindness, Dumbness",
+    "desc": "Paralysis, Deafness or Sleep II potion (as handbook) per level of multiclass, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: General:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: General",
+      "abilityRef": "ability.mc.vwe-general.l2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(5, )"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: General"],
+    "table": 7,
+    "cost": "20",
+    "index": "Starts each adventure with two doses of any of Strength, Dexterity or",
+    "desc": "Endurance potions per level of multiclass, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: General:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: General",
+      "abilityRef": "ability.mc.vwe-general.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(20, )"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: General"],
+    "table": 7,
+    "cost": "20",
+    "index": "Starts each adventure with one dose of Assisted Climb potion which is a",
+    "desc": "Salve functioning as per a single use of the tables ability Assisted Climb per level of multiclass, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: General:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: General",
+      "abilityRef": "ability.mc.vwe-general.l5",
+      "rulesAbilityRefs": ["ability.assisted-climb"],
+      "sourceNotation": "(20, )"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: General"],
+    "table": 7,
+    "cost": "25",
+    "index": "Starts each adventure with one dose of Protection from Psionics potion",
+    "desc": "Further details on potion types and their effects please check the Scout Handbook, At the Sharp End",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: General:6"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: General",
+      "abilityRef": "ability.mc.vwe-general.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(25, 3)"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Healing"],
+    "table": 7,
+    "cost": "15",
+    "index": "Starts adventure with two doses of 2pt locational cure potions (cure no",
+    "desc": "Tblp) per level of multiclass, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Healing:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Healing",
+      "abilityRef": "ability.mc.vwe-healing.l2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(15, )"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Healing"],
+    "table": 7,
+    "cost": "30",
+    "index": "Starts adventure with three doses of 12pt tblp cure potions per level of",
+    "desc": "Multiclass, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Healing:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Healing",
+      "abilityRef": "ability.mc.vwe-healing.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(30, )"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Healing"],
+    "table": 7,
+    "cost": "10",
+    "index": "Starts adventure with one dose of Resuscitation Balm per level of",
+    "desc": "Multiclass, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Healing:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Healing",
+      "abilityRef": "ability.mc.vwe-healing.l4",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(10, )"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Healing"],
+    "table": 7,
+    "cost": "10",
+    "index": "Starts adventure with one dose of 18pt tblp cure potion per level of",
+    "desc": "Multiclass, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Healing:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Healing",
+      "abilityRef": "ability.mc.vwe-healing.l5",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(10, )"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Healing"],
+    "table": 7,
+    "cost": "20",
+    "index": "Starts adventure with one dose of Anti Venom True which negates any and",
+    "desc": "All poisons in the system of the drinker before they have kicked-in, and also removes any ongoing poison effects such as Blindness, per two levels of multiclass, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Healing:6"],
+    "CanAddMultiple": true,
+    "maxAvailable": 6,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Healing",
+      "abilityRef": "ability.mc.vwe-healing.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(20, 6)"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Poison"],
+    "table": 7,
+    "cost": "15",
+    "index": "Starts each adventure with two doses of Blade or Ingestive Venom '4' per",
+    "desc": "Level of multi-class, which are adventure temp (no cards issued) . Potions from this class may be distilled if the Distilling skill is owned",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Poison:1"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Poison",
+      "abilityRef": "ability.mc.vwe-poison.l1",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(15,)"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Poison"],
+    "table": 7,
+    "cost": "15",
+    "index": "Starts each adventure with one dose of Nerve Venom or Wooden Horse per",
+    "desc": "Level of multi-class, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Poison:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Poison",
+      "abilityRef": "ability.mc.vwe-poison.l2",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(15, )"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Poison"],
+    "table": 7,
+    "cost": "20",
+    "index": "Starts each adventure with two doses of Blade or Ingestive Venom '6' per",
+    "desc": "Level",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Poison:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Poison",
+      "abilityRef": "ability.mc.vwe-poison.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(20, )"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Poison"],
+    "table": 7,
+    "cost": "15",
+    "index": "Starts each adventure with one dose of Coating Poison '6' per level (15",
+    "desc": "6)",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Poison:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": 6,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Poison",
+      "abilityRef": "ability.mc.vwe-poison.l4",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(15, 6)"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Poison"],
+    "table": 7,
+    "cost": "25",
+    "index": "Starts each adventure with one dose of Blade or Ingestive Venom '8' per",
+    "desc": "Level",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Poison:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": 6,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Poison",
+      "abilityRef": "ability.mc.vwe-poison.l5",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(25, 6)"
+    }
+  },
+  {
+    "available": ["2nd Class VWE: Poison"],
+    "table": 7,
+    "cost": "40",
+    "index": "Starts each adventure with one dose of Ingestive Death Poison, which",
+    "desc": "Slays the drinker 30 seconds after ingestion, as above",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["VWE: Poison:6"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "VWE: Poison",
+      "abilityRef": "ability.mc.vwe-poison.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(40, 3)"
+    }
+  },
+  {
+    "available": ["2nd Class War-Dancer"],
+    "table": 7,
+    "cost": "65",
+    "index": "25% Calm Fury",
+    "desc": "As Cold Rage, however War-Dancer need not berserk and may instead act as he will - Fury lasts 5 minutes or until War-Dancer leaves combat, whichever is less",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["War-Dancer:3"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "War-Dancer",
+      "abilityRef": "ability.mc.war-dancer.l3",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(65, 2)"
+    }
+  },
+  {
+    "available": ["2nd Class War-Dancer"],
+    "table": 7,
+    "cost": "110",
+    "index": "Flurry of Blades",
+    "desc": "When using at least 2 weapons, may fight in a confusing and unorthodox manner such that any non-War-Dancer cannot apply more than 1 mastery to blows struck against the War-Dancer, lasting 5 minutes. Not a visual attack",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["War-Dancer:6"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "War-Dancer",
+      "abilityRef": "ability.mc.war-dancer.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(110, 2)"
+    }
+  },
+  {
+    "available": ["2nd Class War-Mage"],
+    "table": 7,
+    "cost": "55",
+    "index": "Mana Rage",
+    "desc": "As Cold Rage but also applies vs. purely magical damage",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["War-Mage:6"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "War-Mage",
+      "abilityRef": "ability.mc.war-mage.l6",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(55,2)"
+    }
+  },
+  {
+    "available": ["2nd Class Acrobat"],
+    "table": 7,
+    "cost": "25",
+    "index": "Salmon Leap",
+    "desc": "This spell allows the Elf to jump 20' forwards, 10' backwards or 15' upwards. It nominally takes two seconds to complete the jump, and Time Stop should generally be called. “Jumping” will generally allow those involved (bar the Jumper) to perform one simple action such as a single blow or other 'instant' abilities, for which need no verbal can be used (just one ability - not a string of Neuronic Penetrations!), including speaking a single word. Complex actions will be disallowed by the ref!",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Acrobat:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": 6,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Acrobat",
+      "abilityRef": "ability.salmon-leap",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(25,6)"
+    }
+  },
+  {
+    "available": ["2nd Class Psycher"],
+    "table": 7,
+    "cost": "30",
+    "index": "Neuronic Blast",
+    "desc": "Todo",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Psycher:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Psycher",
+      "abilityRef": "ability.neuronic-blast",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(30, 3)"
+    }
+  },
+  {
+    "available": ["2nd Class Telekinetic"],
+    "table": 7,
+    "cost": "25",
+    "index": "Telekinesis",
+    "desc": "This spell will move one object as directed by the caster. The force of the telekinesis equals the force the referee can exert with one hand. It cannot be used to wield a weapon effectively. It cannot pick up objects that contain a spirit. Only one Telekinesis may be cast upon one object or by a wizard at any one time.\nVerbal: Sylphs of air I conjure thee telekinesise that... to there",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Telekinetic:4"],
+    "CanAddMultiple": true,
+    "maxAvailable": 4,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Telekinetic",
+      "abilityRef": "ability.telekinesis",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(25, 4)"
+    }
+  },
+  {
+    "available": ["2nd Class Telekinetic"],
+    "table": 7,
+    "cost": "55",
+    "index": "Telekinesis",
+    "desc": "This spell will move one object as directed by the caster. The force of the telekinesis equals the force the referee can exert with one hand. It cannot be used to wield a weapon effectively. It cannot pick up objects that contain a spirit. Only one Telekinesis may be cast upon one object or by a wizard at any one time.\nVerbal: Sylphs of air I conjure thee telekinesise that... to there",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Telekinetic:5"],
+    "CanAddMultiple": true,
+    "maxAvailable": 2,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Telekinetic",
+      "abilityRef": "ability.telekinesis",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(55, 2)"
+    }
+  },
+  {
+    "available": ["2nd Class Tribal Warlord"],
+    "table": 7,
+    "cost": "50",
+    "index": "Cold Rage",
+    "desc": "This ability allows the Warrior to enter a Rage – such that for the next 5 minutes, the Warrior takes 25% less from any damage suffered – bar that suffered from purely magic weapons and magical spells. In a Cold Rage the Warrior is able to distinguish friend from foe and as such is not required to attack them. In a Cold Rage you may use ‘offensive powers’ such as Knock Back, but not other powers like Monk Locational Healing or using your magical ring to Blink away. This ability is usable 1/day.",
+    "sourceBook": "evolution-classes",
+    "preReqs": ["Tribal Warlord:2"],
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "data": {
+      "postSixthMultiClassOption": true,
+      "multiClass": "Tribal Warlord",
+      "abilityRef": "ability.cold-rage",
+      "rulesAbilityRefs": [],
+      "sourceNotation": "(50, 3)"
+    }
   }
 ]

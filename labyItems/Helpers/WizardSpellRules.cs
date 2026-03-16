@@ -132,7 +132,7 @@ public static class WizardSpellRules
 
     public static bool IsGreyOrAllBonusSpell(SpellService.SpellRaw? spell)
     {
-        if (spell == null || spell.level > 4)
+        if (spell == null || spell.level > 8)
             return false;
 
         if (SpellMatchesWizardSelection(spell.colour, MagicColours.Grey.ToString()))

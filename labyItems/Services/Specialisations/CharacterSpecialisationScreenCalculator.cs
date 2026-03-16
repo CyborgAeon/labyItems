@@ -936,24 +936,7 @@ public static class CharacterSpecialisationScreenCalculator
            || string.Equals(spec.Title, "Faerie Colour", StringComparison.OrdinalIgnoreCase);
 
     private static bool AreFaerieOpposites(MagicColours left, MagicColours right)
-    {
-        return (left, right) switch
-        {
-            (MagicColours.Red, MagicColours.Green) => true,
-            (MagicColours.Green, MagicColours.Red) => true,
-            (MagicColours.Brown, MagicColours.Blue) => true,
-            (MagicColours.Blue, MagicColours.Brown) => true,
-            (MagicColours.White, MagicColours.Black) => true,
-            (MagicColours.Black, MagicColours.White) => true,
-            (MagicColours.Gold, MagicColours.Bronze) => true,
-            (MagicColours.Bronze, MagicColours.Gold) => true,
-            (MagicColours.Ivory, MagicColours.Ebony) => true,
-            (MagicColours.Ebony, MagicColours.Ivory) => true,
-            (MagicColours.Jade, MagicColours.Onyx) => true,
-            (MagicColours.Onyx, MagicColours.Jade) => true,
-            _ => false
-        };
-    }
+        => MagicColourOppositionRules.AreOpposites(left, right);
 
     private static MagicColours? ToMagicColour(string? value)
     {

@@ -1,0 +1,4746 @@
+{
+  "$schemaVersion": 1,
+  "metadata": {
+    "Source": "Races.pdf pages 80-103",
+    "MultiRaceRules": [
+      "A character may only multi-race once.",
+      "A character may take their race to 8th level; 7th/8th are specialised via 'points app' processes.",
+      "A published multi-race may begin at 8th level.",
+      "A non-standard multi-race requires 1000 points post-8th before starting.",
+      "While progressing a standard multi-race, character may multi-class freely unless noted otherwise.",
+      "Some races may take a second published race as class in specific progression cases only."
+    ],
+    "StackingSourceOrder": [
+      "base",
+      "perm buff",
+      "temporary",
+      "item",
+      "guild",
+      "status",
+      "radiated"
+    ],
+    "StackingRules": {
+      "BaseLife": {
+        "Mode": "SetFromHighestOwnedBaseLife",
+        "SourceCategory": "base"
+      },
+      "LiveToMinus": {
+        "Mode": "TakeHighestPerSource",
+        "Sources": [
+          "base",
+          "perm buff",
+          "temporary",
+          "item",
+          "guild",
+          "status",
+          "radiated"
+        ]
+      }
+    }
+  },
+  "multiRaces": {
+    "Aligned Elf": {
+      "DisplayName": "Aligned Elf",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Aligned Elf Type Abilities",
+            "AbilityRef": "ability.mr.aligned-elf.l1",
+            "Type": "Static",
+            "Effect": "Gain all racial abilities by level as the new chosen elf/drave type at multi-race level."
+          },
+          {
+            "Name": "Dual Makeup Requirement",
+            "AbilityRef": "ability.mr.aligned-elf.l1.2",
+            "Type": "Static",
+            "Effect": "Must wear makeup of both elf types with the new colour predominant."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Aligned Elf Type Abilities",
+            "AbilityRef": "ability.mr.aligned-elf.l2",
+            "Type": "Static",
+            "Effect": "As level 1: gain abilities by level as the new chosen elf/drave type at this multi-race level."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Aligned Elf Type Abilities",
+            "AbilityRef": "ability.mr.aligned-elf.l3",
+            "Type": "Static",
+            "Effect": "As level 1: gain abilities by level as the new chosen elf/drave type at this multi-race level."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Aligned Elf Type Abilities",
+            "AbilityRef": "ability.mr.aligned-elf.l4",
+            "Type": "Static",
+            "Effect": "As level 1: gain abilities by level as the new chosen elf/drave type at this multi-race level."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Aligned Elf Type Abilities",
+            "AbilityRef": "ability.mr.aligned-elf.l5",
+            "Type": "Static",
+            "Effect": "As level 1: gain abilities by level as the new chosen elf/drave type at this multi-race level."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Aligned Elf Type Abilities",
+            "AbilityRef": "ability.mr.aligned-elf.l6",
+            "Type": "Static",
+            "Effect": "As above, and calculate innates as if 8th level for the chosen elf/drave type."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Elf or Drave",
+          "Display": "Elf or Drave",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Elf", "Drave"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 10,
+            "2": 20,
+            "3": 140,
+            "4": 150,
+            "5": 160,
+            "6": 200
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Post-6th: may buy x2 and x3 Elf innates for both elf types at the same cost when both are owned.",
+        "May not choose opposite elf type; must match new type alignment restrictions."
+      ]
+    },
+    "Angel of Mercy": {
+      "DisplayName": "Angel of Mercy",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Angelic Nature",
+            "AbilityRef": "ability.mr.angel-of-mercy.l1",
+            "Type": "Static",
+            "Effect": "Now fully immune to all Flesh and Blood effects (including potions and pain). Counts fully as Angelkind."
+          },
+          {
+            "Name": "Angelic Markings",
+            "AbilityRef": "ability.mr.angel-of-mercy.l1.2",
+            "Type": "Static",
+            "Effect": "Skin is marked with lines of goodly power, commonly white and gold."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Walk on Light (Spiritual)",
+            "AbilityRef": "ability.mr.angel-of-mercy.l2",
+            "Type": "Innate",
+            "Effect": "May Walk on Light(s) spiritually, otherwise as per wizard spell.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          }
+        ],
+        "3": [
+          {
+            "Name": "Spiritual Light (10ft)",
+            "AbilityRef": "ability.mr.angel-of-mercy.l3",
+            "Type": "Innate",
+            "Effect": "May shed Spiritual Light in a 10ft radius for five minutes.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "4": [
+          {
+            "Name": "Shield of the Angels",
+            "AbilityRef": "ability.mr.angel-of-mercy.l4",
+            "Type": "Innate",
+            "Effect": "As Spirit Shield but only versus evil spiritual damage, and stops the first 36 points of such damage.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "5": [
+          {
+            "Name": "Walk Through Walls",
+            "AbilityRef": "ability.mr.angel-of-mercy.l5",
+            "Type": "Innate",
+            "Effect": "May Walk through Walls for five minutes, as per miracle.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "6": [
+          {
+            "Name": "Touch Remove Fear",
+            "AbilityRef": "ability.mr.angel-of-mercy.l6",
+            "Type": "AtWill",
+            "Effect": "Touch removes Fear from non-Evil targets with a spirit for 3 TBLP, at will."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Priest (Goodly)",
+          "Display": "Priest (Goodly)",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Priest"]
+            },
+            {
+              "Field": "Alignment.Moral",
+              "Operator": "In",
+              "Value": ["Good"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 140,
+            "3": 180,
+            "4": 260,
+            "5": 340,
+            "6": 610
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": ["Characters with half a spirit pay double for this race."]
+    },
+    "Angel of War": {
+      "DisplayName": "Angel of War",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Angelic Nature",
+            "AbilityRef": "ability.mr.angel-of-war.l1",
+            "Type": "Static",
+            "Effect": "Now fully immune to all Flesh and Blood effects (including potions and pain). Counts as Angelkind."
+          },
+          {
+            "Name": "Angelic Markings",
+            "AbilityRef": "ability.mr.angel-of-war.l1.2",
+            "Type": "Static",
+            "Effect": "Skin is marked with lines of goodly power, commonly white and gold."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Fear Evil",
+            "AbilityRef": "ability.mr.angel-of-war.l2",
+            "Type": "Innate",
+            "Effect": "Fear all Evil of 6th level resistance (18 hits) and below for five minutes; affects undead.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          }
+        ],
+        "3": [
+          {
+            "Name": "Spiritual Light (10ft)",
+            "AbilityRef": "ability.mr.angel-of-war.l3",
+            "Type": "Innate",
+            "Effect": "May shed Spiritual Light in a 10ft radius for five minutes.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "4": [
+          {
+            "Name": "Hand of Purity",
+            "AbilityRef": "ability.mr.angel-of-war.l4",
+            "Type": "Innate",
+            "Effect": "Hand of Purity as per tables ability.",
+            "Count": 1
+          }
+        ],
+        "5": [
+          {
+            "Name": "Walk Through Walls",
+            "AbilityRef": "ability.mr.angel-of-war.l5",
+            "Type": "Innate",
+            "Effect": "May Walk through Walls for five minutes, as per miracle.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "6": [
+          {
+            "Name": "Summon Angelic Weapon",
+            "AbilityRef": "ability.mr.angel-of-war.l6",
+            "Type": "Innate",
+            "Effect": "May summon a purely spiritual weapon that only the user may wield, +0/+2 vs Evil, cannot harm Good aligned, lasts 15 minutes.",
+            "Count": 1
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Devout Believer (Goodly)",
+          "Display": "Devout Believer (Goodly)",
+          "Rules": [
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["Devout Believer"]
+            },
+            {
+              "Field": "Alignment.Moral",
+              "Operator": "In",
+              "Value": ["Good"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 150,
+            "3": 190,
+            "4": 330,
+            "5": 430,
+            "6": 700
+          }
+        },
+        {
+          "Source": "Paladin",
+          "Display": "Paladin",
+          "Rules": [
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Paladin"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 140,
+            "3": 170,
+            "4": 290,
+            "5": 360,
+            "6": 590
+          }
+        },
+        {
+          "Source": "Priest (Goodly)",
+          "Display": "Priest (Goodly)",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Priest"]
+            },
+            {
+              "Field": "Alignment.Moral",
+              "Operator": "In",
+              "Value": ["Good"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 140,
+            "3": 170,
+            "4": 290,
+            "5": 360,
+            "6": 590
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Characters with half a spirit pay double cost.",
+        "Non-priest and non-paladin characters must have Devout Believer 6 before buying beyond level 1."
+      ]
+    },
+    "Angel Touched": {
+      "DisplayName": "Angel Touched",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Partial Flesh and Blood Resistance",
+            "AbilityRef": "ability.mr.angel-touched.l1",
+            "Type": "Static",
+            "Effect": "Now suffers half effect from all Flesh and Blood effects (including potions, poisons, and pain)."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Select Minor Power",
+            "AbilityRef": "ability.mr.angel-touched.l2",
+            "Type": "Static",
+            "Effect": "Choose one Angel Touched Minor power.",
+            "ChoiceSetRefs": ["choice.multi-race.angel-touched.minor"]
+          }
+        ],
+        "3": [
+          {
+            "Name": "Immunity to Ageing",
+            "AbilityRef": "ability.mr.angel-touched.l3",
+            "Type": "Static",
+            "Effect": "Gains immunity to ageing."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Select Medium Power",
+            "AbilityRef": "ability.mr.angel-touched.l4",
+            "Type": "Static",
+            "Effect": "Choose one Angel Touched Medium power.",
+            "ChoiceSetRefs": ["choice.multi-race.angel-touched.medium"]
+          }
+        ],
+        "5": [
+          {
+            "Name": "Divine Insight",
+            "AbilityRef": "ability.mr.angel-touched.l5",
+            "Type": "Innate",
+            "Effect": "Acts as a Mantic Major Prayer usable only to find ways to help others or defeat evil.",
+            "Count": 1
+          }
+        ],
+        "6": [
+          {
+            "Name": "Select Major Power",
+            "AbilityRef": "ability.mr.angel-touched.l6",
+            "Type": "Static",
+            "Effect": "Choose one Angel Touched Major power.",
+            "ChoiceSetRefs": ["choice.multi-race.angel-touched.major"]
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "All",
+          "Display": "All",
+          "Rules": [],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 100,
+            "3": 160,
+            "4": 250,
+            "5": 300,
+            "6": 500
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Post-6th: may buy one additional Minor (100), Medium (150), and Major (200) power.",
+        "May buy Spirit Sight innates as per a Paladin.",
+        "May buy Utilise Good Spirit Item for 100 points."
+      ]
+    },
+    "Child of the Pines": {
+      "DisplayName": "Child of the Pines",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Tree-like Makeup",
+            "AbilityRef": "ability.mr.child-of-the-pines.l1",
+            "Type": "Static",
+            "Effect": "Must wear appropriate brown/green tree-like makeup."
+          },
+          {
+            "Name": "Treeborn Flesh and Blood Immunity",
+            "AbilityRef": "ability.mr.child-of-the-pines.l1.2",
+            "Type": "Static",
+            "Effect": "Immune to Flesh and Blood effects including potions and poisons, except Earthpower Flesh and Blood effects still apply where appropriate."
+          },
+          {
+            "Name": "No Red Mana Benefit",
+            "AbilityRef": "ability.mr.child-of-the-pines.l1.3",
+            "Type": "Static",
+            "Effect": "May never use or benefit from red mana."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Permanent Barkskin +1 PAC",
+            "AbilityRef": "ability.mr.child-of-the-pines.l2",
+            "Type": "Static",
+            "Effect": "Permanent Barkskin grants +1 PAC (stacking with other Barkskins)."
+          },
+          {
+            "Name": "Fertile Soil Healing",
+            "AbilityRef": "ability.mr.child-of-the-pines.l2.2",
+            "Type": "AtWill",
+            "Effect": "After 5 minutes in continuous contact with fertile soil, heal 1 TBLP and 1 to worst location."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Double Fire Damage",
+            "AbilityRef": "ability.mr.child-of-the-pines.l3",
+            "Type": "Static",
+            "Effect": "Now takes double damage from fire after all other calculations; if immune to fire still takes half from normal fires."
+          },
+          {
+            "Name": "Meld with Trees",
+            "AbilityRef": "ability.mr.child-of-the-pines.l3.2",
+            "Type": "Innate",
+            "Effect": "Meld with Trees as per Meld with Stone; if tree is destroyed, exit at 6/1 life.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          }
+        ],
+        "4": [
+          {
+            "Name": "Permanent Barkskin +2 PAC",
+            "AbilityRef": "ability.mr.child-of-the-pines.l4",
+            "Type": "Static",
+            "Effect": "Permanent Barkskin now grants +2 PAC total."
+          },
+          {
+            "Name": "Double Axe Damage",
+            "AbilityRef": "ability.mr.child-of-the-pines.l4.2",
+            "Type": "Static",
+            "Effect": "Now takes double damage from axe-blows after all other calculations."
+          },
+          {
+            "Name": "Healing Sap",
+            "AbilityRef": "ability.mr.child-of-the-pines.l4.3",
+            "Type": "Innate",
+            "Effect": "Draw sap by self-cutting 3 TBLP +1 loc: flesh-and-blood drinker heals 6 TBLP/2 loc; Child of Pines or Wood Elf balm heals 6 TBLP/3 to one location.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 1
+            }
+          }
+        ],
+        "5": [
+          {
+            "Name": "Forest-Shift",
+            "AbilityRef": "ability.mr.child-of-the-pines.l5",
+            "Type": "Innate",
+            "Effect": "Forest-Shift as druidic evocation with no verbal required.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "6": [
+          {
+            "Name": "Woody Consistency",
+            "AbilityRef": "ability.mr.child-of-the-pines.l6",
+            "Type": "Static",
+            "Effect": "Now takes one-third less damage from blunt weapon blows due to woody consistency."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Any Neutral",
+          "Display": "Any Neutral",
+          "Rules": [
+            {
+              "Field": "Alignment.Moral",
+              "Operator": "In",
+              "Value": ["Neutral"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 220,
+            "3": 240,
+            "4": 290,
+            "5": 380,
+            "6": 650
+          }
+        },
+        {
+          "Source": "Any Druid Class",
+          "Display": "Any Druid Class",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Druid"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 170,
+            "3": 190,
+            "4": 240,
+            "5": 280,
+            "6": 580
+          }
+        },
+        {
+          "Source": "Ranger",
+          "Display": "Ranger",
+          "Rules": [
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Ranger"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 190,
+            "3": 220,
+            "4": 270,
+            "5": 315,
+            "6": 610
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Available to Human, Half-Elf, Half-Drave, Alfar, or Halfling with a Neutral aspect (NG, NE, NN, LN, CN)."
+      ]
+    },
+    "Demon Bound": {
+      "DisplayName": "Demon Bound",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "1/2 effect Flesh and Blood",
+            "AbilityRef": "ability.mr.demon-bound.l1",
+            "Type": "Static",
+            "Effect": "Now suffers half effect from all Flesh and Blood effects (including potions, poisons, and pain)."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Select Minor Power",
+            "AbilityRef": "ability.mr.demon-bound.l2",
+            "Type": "Static",
+            "Effect": "Choose one Demon Bound Minor power.",
+            "ChoiceSetRefs": ["choice.multi-race.demon-bound.minor"]
+          }
+        ],
+        "3": [
+          {
+            "Name": "Immunity to Ageing",
+            "AbilityRef": "ability.mr.demon-bound.l3",
+            "Type": "Static",
+            "Effect": "Gains immunity to ageing."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Select Medium Power",
+            "AbilityRef": "ability.mr.demon-bound.l4",
+            "Type": "Static",
+            "Effect": "Choose one Demon Bound Medium power.",
+            "ChoiceSetRefs": ["choice.multi-race.demon-bound.medium"]
+          }
+        ],
+        "5": [
+          {
+            "Name": "Feed the Soul",
+            "AbilityRef": "ability.mr.demon-bound.l5",
+            "Type": "Innate",
+            "Effect": "Over a recently dead body with a spirit: acts as Slayer and cures the user 12/12 via evil spiritual means.",
+            "Count": 1
+          }
+        ],
+        "6": [
+          {
+            "Name": "Select Major Power",
+            "AbilityRef": "ability.mr.demon-bound.l6",
+            "Type": "Static",
+            "Effect": "Choose one Demon Bound Major power.",
+            "ChoiceSetRefs": ["choice.multi-race.demon-bound.major"]
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "All",
+          "Display": "All",
+          "Rules": [],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 100,
+            "3": 160,
+            "4": 250,
+            "5": 300,
+            "6": 500
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Character must have a spirit and be Evil.",
+        "Post-6th: may buy one additional Minor (100), Medium (150), and Major (200) power.",
+        "Demonic Infusion post-6th: 60 points per purchase, up to 3 purchases.",
+        "May buy Utilise Evil Spirit Item for 100 points."
+      ]
+    },
+    "Elder Fey": {
+      "DisplayName": "Elder Fey",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Elder Fey Presence",
+            "AbilityRef": "ability.mr.elder-fey.l1",
+            "Type": "Static",
+            "Effect": "Must wear non-standard impressive makeup/costume appropriate to powers gained."
+          },
+          {
+            "Name": "+1 DAC",
+            "AbilityRef": "ability.mr.elder-fey.l1.2",
+            "Type": "Static",
+            "Effect": "+1 DAC."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Half-Spirit Nature",
+            "AbilityRef": "ability.mr.elder-fey.l2",
+            "Type": "Static",
+            "Effect": "Character now has half a spirit as per Half-Elf; elves are no longer harmed by Dispels and leave a body on death while retaining non-flesh-and-blood nature."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Select Minor Talent",
+            "AbilityRef": "ability.mr.elder-fey.l3",
+            "Type": "Static",
+            "Effect": "Choose one Elder Fey Minor talent.",
+            "ChoiceSetRefs": ["choice.multi-race.elder-fey.minor"]
+          }
+        ],
+        "4": [
+          {
+            "Name": "Immunity to Ageing",
+            "AbilityRef": "ability.mr.elder-fey.l4",
+            "Type": "Static",
+            "Effect": "Now immune to ageing effects."
+          }
+        ],
+        "5": [
+          {
+            "Name": "+2 DAC Total",
+            "AbilityRef": "ability.mr.elder-fey.l5",
+            "Type": "Static",
+            "Effect": "Now has +2 DAC total."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Select Major Talent",
+            "AbilityRef": "ability.mr.elder-fey.l6",
+            "Type": "Static",
+            "Effect": "Choose one Elder Fey Major talent.",
+            "ChoiceSetRefs": ["choice.multi-race.elder-fey.major"]
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Any",
+          "Display": "Any",
+          "Rules": [],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 230,
+            "3": 290,
+            "4": 350,
+            "5": 400,
+            "6": 550
+          }
+        },
+        {
+          "Source": "Alfar",
+          "Display": "Alfar",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Alfar"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 60,
+            "3": 120,
+            "4": 180,
+            "5": 230,
+            "6": 380
+          }
+        },
+        {
+          "Source": "Drave",
+          "Display": "Drave",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Drave"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 130,
+            "3": 190,
+            "4": 240,
+            "5": 290,
+            "6": 440
+          }
+        },
+        {
+          "Source": "Elf",
+          "Display": "Elf",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Elf"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 130,
+            "3": 190,
+            "4": 240,
+            "5": 290,
+            "6": 440
+          }
+        },
+        {
+          "Source": "Faerie",
+          "Display": "Faerie",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Faerie"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 130,
+            "3": 190,
+            "4": 240,
+            "5": 290,
+            "6": 440
+          }
+        },
+        {
+          "Source": "Half Elf",
+          "Display": "Half Elf",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Half Elf", "Half-Elf"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 60,
+            "3": 120,
+            "4": 180,
+            "5": 230,
+            "6": 380
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Elves/Faeries may choose to purchase this race and forgo level 2 benefits, using Half-Elf cost.",
+        "Minor and Major talents may not be from the same category.",
+        "Post-6th: may buy a second Minor talent (50) and then a second Major talent (100), each from a different category than the original talent of that tier."
+      ]
+    },
+    "Elements Bound": {
+      "DisplayName": "Elements Bound",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Elemental Flesh and Blood Immunity",
+            "AbilityRef": "ability.mr.elements-bound.l1",
+            "Type": "Static",
+            "Effect": "Gains Immunity to Flesh and Blood effects as an Elf (Elves gain full immunity)."
+          },
+          {
+            "Name": "Select Elemental Colour",
+            "AbilityRef": "ability.mr.elements-bound.l1.2",
+            "Type": "Static",
+            "Effect": "Choose an elemental colour (not grey) that is not opposite any owned colour.",
+            "ChoiceSetRefs": ["choice.multi-race.elements-bound.colour"]
+          },
+          {
+            "Name": "Elemental Markings",
+            "AbilityRef": "ability.mr.elements-bound.l1.3",
+            "Type": "Static",
+            "Effect": "Now has faint mystical lines of power of the chosen colour."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Select Minor Talent",
+            "AbilityRef": "ability.mr.elements-bound.l2",
+            "Type": "Static",
+            "Effect": "Choose one Elements Bound Minor talent.",
+            "ChoiceSetRefs": ["choice.multi-race.elements-bound.minor"]
+          },
+          {
+            "Name": "Elemental Resistance (Own Colour)",
+            "AbilityRef": "ability.mr.elements-bound.l2.2",
+            "Type": "Static",
+            "Effect": "Gains Elemental Resistance (as Power Master) versus own colour."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Elemental Sight",
+            "AbilityRef": "ability.mr.elements-bound.l3",
+            "Type": "Innate",
+            "Effect": "Elemental Sight (as per Wizard’s Grimoire advanced spell).",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "4": [
+          {
+            "Name": "Select Medium Talent",
+            "AbilityRef": "ability.mr.elements-bound.l4",
+            "Type": "Static",
+            "Effect": "Choose one Elements Bound Medium talent.",
+            "ChoiceSetRefs": ["choice.multi-race.elements-bound.medium"]
+          }
+        ],
+        "5": [
+          {
+            "Name": "Destroy Elemental (Touch)",
+            "AbilityRef": "ability.mr.elements-bound.l5",
+            "Type": "Innate",
+            "Effect": "Destroy Elemental by touch, affecting up to Elemental Champions.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "6": [
+          {
+            "Name": "Select Major Talent",
+            "AbilityRef": "ability.mr.elements-bound.l6",
+            "Type": "Static",
+            "Effect": "Choose one Elements Bound Major talent.",
+            "ChoiceSetRefs": ["choice.multi-race.elements-bound.major"]
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "1st Class Wizard/High Wizard",
+          "Display": "1st Class Wizard/High Wizard",
+          "Rules": [
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Wizard", "High-Wizard"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 300,
+            "3": 350,
+            "4": 500,
+            "5": 550,
+            "6": 800
+          }
+        },
+        {
+          "Source": "All within the Wizard bracket",
+          "Display": "All within the Wizard bracket",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Wizard"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 300,
+            "3": 360,
+            "4": 520,
+            "5": 580,
+            "6": 850
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Select one elemental colour (not grey) at level 1; it may not be opposite of any owned colour.",
+        "Post-6th: may buy an extra Minor/Medium/Major talent for 50/100/150 points.",
+        "Post-6th: Warding against the Elements (60 points) and own-colour Embody/Bind/Arm Elemental access as noted."
+      ]
+    },
+    "Fire Daimon": {
+      "DisplayName": "Fire Daimon",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Flaming Makeup",
+            "AbilityRef": "ability.mr.fire-daimon.l1",
+            "Type": "Static",
+            "Effect": "Must wear red/black flaming makeup at all times."
+          },
+          {
+            "Name": "Ignite by Touch",
+            "AbilityRef": "ability.mr.fire-daimon.l1.2",
+            "Type": "AtWill",
+            "Effect": "May Ignite by touch at will as per red cantrip."
+          },
+          {
+            "Name": "Fire Nature",
+            "AbilityRef": "ability.mr.fire-daimon.l1.3",
+            "Type": "Static",
+            "Effect": "Now gains half effect from supernatural fire and immunity to natural fire. Counts fully as Daemonkind."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Mantic Shock",
+            "AbilityRef": "ability.mr.fire-daimon.l2",
+            "Type": "Innate",
+            "Effect": "Inflicts both magical and evil spirit damage.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          },
+          {
+            "Name": "Complete Immunity to Fire",
+            "AbilityRef": "ability.mr.fire-daimon.l2.2",
+            "Type": "Static",
+            "Effect": "Now gains complete immunity to fire of all forms."
+          },
+          {
+            "Name": "Fire Immunity Prerequisite",
+            "AbilityRef": "ability.mr.fire-daimon.l2.3",
+            "Type": "Static",
+            "Effect": "Must have bought tables ability Immunity to Natural Fire before buying this level; this is upgraded to Complete Immunity to Fire."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Mantic Fire Blast",
+            "AbilityRef": "ability.mr.fire-daimon.l3",
+            "Type": "Innate",
+            "Effect": "Inflicts both magical and evil spirit damage.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "4": [
+          {
+            "Name": "Aura of Melt",
+            "AbilityRef": "ability.mr.fire-daimon.l4",
+            "Type": "Innate",
+            "Effect": "Invoke evil fires around the body so non-supernatural weapons striking are burnt/melted; lasts 5 minutes.",
+            "Count": 1
+          }
+        ],
+        "5": [
+          {
+            "Name": "Mantic Fire Bolt",
+            "AbilityRef": "ability.mr.fire-daimon.l5",
+            "Type": "Innate",
+            "Effect": "Inflicts both magical and evil spirit damage.",
+            "Count": 1
+          },
+          {
+            "Name": "Mantic Sword of Power",
+            "AbilityRef": "ability.mr.fire-daimon.l5.2",
+            "Type": "Innate",
+            "Effect": "Mantic Sword of Power.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "6": [
+          {
+            "Name": "Mantic Disruption",
+            "AbilityRef": "ability.mr.fire-daimon.l6",
+            "Type": "Innate",
+            "Effect": "Inflicts both magical and evil spirit damage.",
+            "Count": 1
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Red Mana User",
+          "Display": "Red Mana User",
+          "Rules": [
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["Red Mana User"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 80,
+            "2": 105,
+            "3": 150,
+            "4": 250,
+            "5": 410,
+            "6": 690
+          }
+        },
+        {
+          "Source": "Any Evil",
+          "Display": "Any Evil",
+          "Rules": [
+            {
+              "Field": "Alignment.Moral",
+              "Operator": "In",
+              "Value": ["Evil"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 120,
+            "2": 150,
+            "3": 200,
+            "4": 310,
+            "5": 480,
+            "6": 780
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Available to Evil non-Elven characters. Half-Elves and Half-Draves pay normal cost."
+      ]
+    },
+    "Frost Giant (Northmen)": {
+      "DisplayName": "Frost Giant (Northmen)",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Frost Giant Form",
+            "AbilityRef": "ability.mr.frost-giant.l1",
+            "Type": "Static",
+            "Effect": "Must incorporate white/frost motifs in makeup and roleplay as a large Northman."
+          },
+          {
+            "Name": "Life Level Offset",
+            "AbilityRef": "ability.mr.frost-giant.l1.2",
+            "Type": "Static",
+            "Effect": "Base life is calculated as if one level higher for all purposes."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Darkness Sight",
+            "AbilityRef": "ability.mr.frost-giant.l2",
+            "Type": "Static",
+            "Effect": "Can see through all forms of supernatural darkness at all times."
+          },
+          {
+            "Name": "Double Resistance Levels",
+            "AbilityRef": "ability.mr.frost-giant.l2.2",
+            "Type": "Static",
+            "Effect": "Resistance level to level-based magical spells is doubled."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Forged Armour Requirement",
+            "AbilityRef": "ability.mr.frost-giant.l3",
+            "Type": "Static",
+            "Effect": "May only wear armour forged by a character with the appropriate skill; costs double normal amount."
+          },
+          {
+            "Name": "Locational Life from Permanent TBLP",
+            "AbilityRef": "ability.mr.frost-giant.l3.2",
+            "Type": "Static",
+            "Effect": "Locational life is half permanent TBLP allowance; if a location is severed, the Frost Giant dies."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Half Pure Magic Damage",
+            "AbilityRef": "ability.mr.frost-giant.l4",
+            "Type": "Static",
+            "Effect": "Suffers only half damage from purely magical damaging blows or effects."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Immunity to Cold Upgrade",
+            "AbilityRef": "ability.mr.frost-giant.l5",
+            "Type": "Static",
+            "Effect": "Gains Immunity to Cold as per post-8th tables; if already owned then gains complete Immunity to Cold."
+          },
+          {
+            "Name": "+1 Stacking Strength",
+            "AbilityRef": "ability.mr.frost-giant.l5.2",
+            "Type": "Static",
+            "Effect": "+1 stacking Strength (max +3)."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Half Effect Magic",
+            "AbilityRef": "ability.mr.frost-giant.l6",
+            "Type": "Static",
+            "Effect": "Now takes half-effect magic in all ways, as per a Dwarf."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Any",
+          "Display": "Any",
+          "Rules": [],
+          "CostsByLevel": {
+            "1": 70,
+            "2": 200,
+            "3": 350,
+            "4": 650,
+            "5": 800,
+            "6": 950
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [
+          {
+            "EffectType": "BaseLifeLevelOffset",
+            "Display": "Base life is calculated as if one level higher.",
+            "LevelOffset": 1,
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.frost-giant.l1.2"]
+          }
+        ],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Mana users selecting this race lose half their mana after all calculations due to giant magic-resistance."
+      ]
+    },
+    "Full Drowe": {
+      "DisplayName": "Full Drowe",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Full Drowe Makeup",
+            "AbilityRef": "ability.mr.full-drowe.l1",
+            "Type": "Static",
+            "Effect": "Now suffers full makeup requirements appropriate to Drowe."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Drowe Innates and Immunities",
+            "AbilityRef": "ability.mr.full-drowe.l2",
+            "Type": "Static",
+            "Effect": "Gains innates and immunities specific to Drowe equal to multi-race level."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Drowe Innates and Immunities",
+            "AbilityRef": "ability.mr.full-drowe.l3",
+            "Type": "Static",
+            "Effect": "As level 2."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Drowe Innates and Immunities",
+            "AbilityRef": "ability.mr.full-drowe.l4",
+            "Type": "Static",
+            "Effect": "As level 2."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Drowe Innates and Immunities",
+            "AbilityRef": "ability.mr.full-drowe.l5",
+            "Type": "Static",
+            "Effect": "As level 2."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Become Full Drowe",
+            "AbilityRef": "ability.mr.full-drowe.l6",
+            "Type": "Static",
+            "Effect": "Loses spirit and spiritual abilities; treated as a Drowe for abilities/restrictions while retaining human base life as before. Is now injured by Dispels."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Half Drowe",
+          "Display": "Half Drowe",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Half Drowe", "Half-Drowe"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 10,
+            "2": 125,
+            "3": 160,
+            "4": 200,
+            "5": 215,
+            "6": 320
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Text block for Full Drowe is not present in extractable text on pages 80-100; levels below are inferred from Full Elf pattern for Half-Drowe progression."
+      ]
+    },
+    "Full Elf": {
+      "DisplayName": "Full Elf",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Full Elf Makeup",
+            "AbilityRef": "ability.mr.full-elf.l1",
+            "Type": "Static",
+            "Effect": "Now suffers full makeup requirements appropriate to the type of Elf."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Elf Innates and Immunities",
+            "AbilityRef": "ability.mr.full-elf.l2",
+            "Type": "Static",
+            "Effect": "Gains innates and immunities specific to elf type equal to multi-race level."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Elf Innates and Immunities",
+            "AbilityRef": "ability.mr.full-elf.l3",
+            "Type": "Static",
+            "Effect": "As level 2."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Elf Innates and Immunities",
+            "AbilityRef": "ability.mr.full-elf.l4",
+            "Type": "Static",
+            "Effect": "As level 2."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Elf Innates and Immunities",
+            "AbilityRef": "ability.mr.full-elf.l5",
+            "Type": "Static",
+            "Effect": "As level 2."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Become Full Elf",
+            "AbilityRef": "ability.mr.full-elf.l6",
+            "Type": "Static",
+            "Effect": "Loses spirit and spiritual abilities; now treated as Elf for abilities/restrictions while retaining human base TBLP/loc. Is now injured by Dispels."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Half Elf",
+          "Display": "Half Elf",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Half Elf", "Half-Elf"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 10,
+            "2": 120,
+            "3": 150,
+            "4": 185,
+            "5": 195,
+            "6": 290
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Half-Elf may only multi-race to the elf type matching their elven half.",
+        "Post-6th buys as Elf. Pre-bought Full Elf innates do not stack until level 6; at level 6 they replace Double Elven Innates from tables."
+      ]
+    },
+    "Golem": {
+      "DisplayName": "Golem",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Select Construct Type",
+            "AbilityRef": "ability.mr.golem.l1",
+            "Type": "Static",
+            "Effect": "Choose one construct type (Iron, Stone, Ice, Bronze).",
+            "ChoiceSetRefs": ["choice.multi-race.golem.construct-type"]
+          },
+          {
+            "Name": "Construct Form",
+            "AbilityRef": "ability.mr.golem.l1.2",
+            "Type": "Static",
+            "Effect": "Immune to all Flesh and Blood effects (including potions, poisons, and pain). Must wear construct-appropriate makeup."
+          },
+          {
+            "Name": "Golem Restrictions",
+            "AbilityRef": "ability.mr.golem.l1.3",
+            "Type": "Static",
+            "Effect": "May not exceed DAC 6 and may not use Sniff or Locational Sniff."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Iron Minor Power",
+            "AbilityRef": "ability.mr.golem.l2",
+            "Type": "Static",
+            "Effect": "May bond a metal weapon so it cannot be removed and is immune to destruction; 30s concentration to bind/unbind.",
+            "PreReqs": ["ability.mr.golem.type.iron"]
+          },
+          {
+            "Name": "Stone Minor Power",
+            "AbilityRef": "ability.mr.golem.l2.2",
+            "Type": "Innate",
+            "Effect": "Statue x1/day: become invulnerable and inactive for up to 15 minutes.",
+            "Count": 1,
+            "PreReqs": ["ability.mr.golem.type.stone"]
+          },
+          {
+            "Name": "Ice Minor Power",
+            "AbilityRef": "ability.mr.golem.l2.3",
+            "Type": "Innate",
+            "Effect": "Refract Light x1/2 levels: negate one light-based attack.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            },
+            "PreReqs": ["ability.mr.golem.type.ice"]
+          },
+          {
+            "Name": "Bronze Minor Power",
+            "AbilityRef": "ability.mr.golem.l2.4",
+            "Type": "Static",
+            "Effect": "+0/3 locational life per 2 levels (to +0/9 at 6th).",
+            "PreReqs": ["ability.mr.golem.type.bronze"]
+          },
+          {
+            "Name": "+1 PAC",
+            "AbilityRef": "ability.mr.golem.l2.5",
+            "Type": "Static",
+            "Effect": "+1 PAC innate due to dense form."
+          },
+          {
+            "Name": "Slow Heavy Movement",
+            "AbilityRef": "ability.mr.golem.l2.6",
+            "Type": "Static",
+            "Effect": "May not travel above 3/4 speed; roleplay as lumbering/heavy."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Iron Medium Power",
+            "AbilityRef": "ability.mr.golem.l3",
+            "Type": "Static",
+            "Effect": "+1 stacking Strength (max +3).",
+            "PreReqs": ["ability.mr.golem.type.iron"]
+          },
+          {
+            "Name": "Stone Medium Power",
+            "AbilityRef": "ability.mr.golem.l3.2",
+            "Type": "Static",
+            "Effect": "Now takes one-quarter less effect from sharp weapons (not purely supernatural weapons).",
+            "PreReqs": ["ability.mr.golem.type.stone"]
+          },
+          {
+            "Name": "Ice Medium Power",
+            "AbilityRef": "ability.mr.golem.l3.3",
+            "Type": "Static",
+            "Effect": "Complete Immunity to Cold as Winter Elf.",
+            "PreReqs": ["ability.mr.golem.type.ice"]
+          },
+          {
+            "Name": "Bronze Medium Power",
+            "AbilityRef": "ability.mr.golem.l3.4",
+            "Type": "Static",
+            "Effect": "Now takes one-quarter less effect from all solely physical damage.",
+            "PreReqs": ["ability.mr.golem.type.bronze"]
+          }
+        ],
+        "4": [
+          {
+            "Name": "+2 PAC Total",
+            "AbilityRef": "ability.mr.golem.l4",
+            "Type": "Static",
+            "Effect": "+2 PAC total."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Iron Major Power",
+            "AbilityRef": "ability.mr.golem.l5",
+            "Type": "Innate",
+            "Effect": "66% Berserk Rage x1/3 levels when in presence of externally cast magic; caster is primary target.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            },
+            "PreReqs": ["ability.mr.golem.type.iron"]
+          },
+          {
+            "Name": "Stone Major Power",
+            "AbilityRef": "ability.mr.golem.l5.2",
+            "Type": "AtWill",
+            "Effect": "May inflict Knockback by weapon blow at will; costs 6 TBLP per blow if +2 Strength or greater, otherwise 9 TBLP.",
+            "PreReqs": ["ability.mr.golem.type.stone"]
+          },
+          {
+            "Name": "Ice Major Power",
+            "AbilityRef": "ability.mr.golem.l5.3",
+            "Type": "AtWill",
+            "Effect": "May inflict Snowball-equivalent touch damage (12/12 magical cold) at will for 6 TBLP per touch.",
+            "PreReqs": ["ability.mr.golem.type.ice"]
+          },
+          {
+            "Name": "Bronze Major Power",
+            "AbilityRef": "ability.mr.golem.l5.4",
+            "Type": "Static",
+            "Effect": "Immunity to Bruising and may round damage fractions down rather than up.",
+            "PreReqs": ["ability.mr.golem.type.bronze"]
+          },
+          {
+            "Name": "Immunity to Ageing",
+            "AbilityRef": "ability.mr.golem.l5.5",
+            "Type": "Static",
+            "Effect": "Now completely immune to ageing."
+          }
+        ],
+        "6": [
+          {
+            "Name": "+3 PAC Total",
+            "AbilityRef": "ability.mr.golem.l6",
+            "Type": "Static",
+            "Effect": "+3 PAC total."
+          },
+          {
+            "Name": "Extreme Mass",
+            "AbilityRef": "ability.mr.golem.l6.2",
+            "Type": "Static",
+            "Effect": "Now requires 5 grades of strength to move physically when dead, unconscious, or helpless."
+          },
+          {
+            "Name": "No Physical Jump",
+            "AbilityRef": "ability.mr.golem.l6.3",
+            "Type": "Static",
+            "Effect": "May not use physical Jump abilities."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Mana User",
+          "Display": "Mana User",
+          "Rules": [
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["Mana User"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 210,
+            "3": 340,
+            "4": 380,
+            "5": 690,
+            "6": 810
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Available to characters with magical power from class or race; magical power gained from multi-classing counts.",
+        "Life by level depends on original 8th-level life scale category (see Golem life scale table)."
+      ]
+    },
+    "Great Ogre": {
+      "DisplayName": "Great Ogre",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Food-Bound Loyalty",
+            "AbilityRef": "ability.mr.great-ogre.l1",
+            "Type": "Static",
+            "Effect": "Perceives those who provide food as friends unless they attack the Ogre or tribe members."
+          },
+          {
+            "Name": "+6/2 Life",
+            "AbilityRef": "ability.mr.great-ogre.l1.2",
+            "Type": "Static",
+            "Effect": "+6 TBLP and +2 loc life (stacking with published life abilities unless otherwise specified)."
+          }
+        ],
+        "2": [
+          {
+            "Name": "+1 PAC Total",
+            "AbilityRef": "ability.mr.great-ogre.l2",
+            "Type": "Static",
+            "Effect": "+1 PAC total."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Immunity to Domination",
+            "AbilityRef": "ability.mr.great-ogre.l3",
+            "Type": "Static",
+            "Effect": "Gains immunity to all domination effects."
+          },
+          {
+            "Name": "+12/4 Life Total",
+            "AbilityRef": "ability.mr.great-ogre.l3.2",
+            "Type": "Static",
+            "Effect": "+12 TBLP and +4 loc life total."
+          }
+        ],
+        "4": [
+          {
+            "Name": "+2 PAC Total",
+            "AbilityRef": "ability.mr.great-ogre.l4",
+            "Type": "Static",
+            "Effect": "+2 PAC total."
+          }
+        ],
+        "5": [
+          {
+            "Name": "+18/6 Life Total",
+            "AbilityRef": "ability.mr.great-ogre.l5",
+            "Type": "Static",
+            "Effect": "+18 TBLP and +6 loc life total."
+          }
+        ],
+        "6": [
+          {
+            "Name": "+3 PAC Total",
+            "AbilityRef": "ability.mr.great-ogre.l6",
+            "Type": "Static",
+            "Effect": "+3 PAC total."
+          },
+          {
+            "Name": "+1 Strength",
+            "AbilityRef": "ability.mr.great-ogre.l6.2",
+            "Type": "Static",
+            "Effect": "+1 Strength, stacking to max +3."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Ogre",
+          "Display": "Ogre",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Ogre", "Ogres", "Half-Ogre"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 80,
+            "3": 280,
+            "4": 310,
+            "5": 360,
+            "6": 480
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [
+          {
+            "EffectType": "LifeBonusTotal",
+            "Display": "+6/2 total",
+            "Value": {
+              "TBLP": 6,
+              "PerLocation": 2
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.great-ogre.l1.2"]
+          }
+        ],
+        "2": [],
+        "3": [
+          {
+            "EffectType": "LifeBonusTotal",
+            "Display": "+12/4 total",
+            "Value": {
+              "TBLP": 12,
+              "PerLocation": 4
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.great-ogre.l3.2"]
+          }
+        ],
+        "4": [],
+        "5": [
+          {
+            "EffectType": "LifeBonusTotal",
+            "Display": "+18/6 total",
+            "Value": {
+              "TBLP": 18,
+              "PerLocation": 6
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.great-ogre.l5"]
+          }
+        ],
+        "6": []
+      }
+    },
+    "High Elf": {
+      "DisplayName": "High Elf",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Half-Spirit Ascension",
+            "AbilityRef": "ability.mr.high-elf.l1",
+            "Type": "Static",
+            "Effect": "Now has a half-spirit as Half-Elf, is no longer injured by Dispels, and remains immune to Flesh and Blood effects as applicable to elves."
+          },
+          {
+            "Name": "Half-Elf Immunity Upgrade",
+            "AbilityRef": "ability.mr.high-elf.l1.2",
+            "Type": "Static",
+            "Effect": "Half Elves taking this option become immune to Flesh and Blood effects to elf extent."
+          }
+        ],
+        "2": [
+          {
+            "Name": "+1 DAC",
+            "AbilityRef": "ability.mr.high-elf.l2",
+            "Type": "Static",
+            "Effect": "+1 DAC."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Rebirth at 8th",
+            "AbilityRef": "ability.mr.high-elf.l3",
+            "Type": "Static",
+            "Effect": "Gains Rebirth at 8th level (must already have bought Rebirth)."
+          }
+        ],
+        "4": [
+          {
+            "Name": "+2 DAC Total",
+            "AbilityRef": "ability.mr.high-elf.l4",
+            "Type": "Static",
+            "Effect": "+2 DAC total."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Rebirth with One-Third Points",
+            "AbilityRef": "ability.mr.high-elf.l5",
+            "Type": "Static",
+            "Effect": "May Rebirth at 8th keeping one-third original points; must purchase High Elf first when rebirthing."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Human Life for Full Elves",
+            "AbilityRef": "ability.mr.high-elf.l6",
+            "Type": "Static",
+            "Effect": "Characters who were full elves now have human life of same base class."
+          },
+          {
+            "Name": "Half-Elf Buy-as Upgrade",
+            "AbilityRef": "ability.mr.high-elf.l6.2",
+            "Type": "Static",
+            "Effect": "Those who were Half Elves may now buy as full elf of their type."
+          },
+          {
+            "Name": "Mantic Elven Innates",
+            "AbilityRef": "ability.mr.high-elf.l6.3",
+            "Type": "Static",
+            "Effect": "All elven handbook innates become mantic (e.g. affirms grant SAC additionally)."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Drowe Archer",
+          "Display": "Drowe Archer",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Drowe"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Archer"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 670
+          }
+        },
+        {
+          "Source": "Drowe Scout Subclass",
+          "Display": "Drowe Scout Subclass",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Drowe"]
+            },
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Scout"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 530
+          }
+        },
+        {
+          "Source": "Drowe Warrior",
+          "Display": "Drowe Warrior",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Drowe"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Warrior"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 800
+          }
+        },
+        {
+          "Source": "Drowe Wizard",
+          "Display": "Drowe Wizard",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Drowe"]
+            },
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Wizard"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 170,
+            "3": 190,
+            "4": 240,
+            "5": 420,
+            "6": 500
+          }
+        },
+        {
+          "Source": "Elven Archer",
+          "Display": "Elven Archer",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Elf"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Archer"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 620
+          },
+          "Notes": ["Not Drowe"]
+        },
+        {
+          "Source": "Elven Scout Subclass",
+          "Display": "Elven Scout Subclass",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Elf"]
+            },
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Scout"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 480
+          },
+          "Notes": ["Not Drowe"]
+        },
+        {
+          "Source": "Elven Warrior",
+          "Display": "Elven Warrior",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Elf"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Warrior"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 730
+          },
+          "Notes": ["Not Drowe / Winter"]
+        },
+        {
+          "Source": "Elven Wizard",
+          "Display": "Elven Wizard",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Elf"]
+            },
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Wizard"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 170,
+            "3": 190,
+            "4": 240,
+            "5": 420,
+            "6": 480
+          },
+          "Notes": ["Not Drowe"]
+        },
+        {
+          "Source": "Half Elf Priest Subclass",
+          "Display": "Half Elf Priest Subclass",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Half Elf", "Half-Elf"]
+            },
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Priest"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 600
+          }
+        },
+        {
+          "Source": "Half Elf Scout Subclass",
+          "Display": "Half Elf Scout Subclass",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Half Elf", "Half-Elf"]
+            },
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Scout"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 550
+          }
+        },
+        {
+          "Source": "Half Elf Warrior Subclass",
+          "Display": "Half Elf Warrior Subclass",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Half Elf", "Half-Elf"]
+            },
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Warrior"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 570
+          }
+        },
+        {
+          "Source": "Half Elf Wizard Subclass",
+          "Display": "Half Elf Wizard Subclass",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Half Elf", "Half-Elf"]
+            },
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Wizard"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 560
+          }
+        },
+        {
+          "Source": "Winter Elf Warrior",
+          "Display": "Winter Elf Warrior",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Winter Elf"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Warrior"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 60,
+            "2": 100,
+            "3": 120,
+            "4": 160,
+            "5": 420,
+            "6": 640
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Faeries pay same cost as Drowe; Ivory Draves pay same as Winter Elves."
+      ]
+    },
+    "Hobgoblin": {
+      "DisplayName": "Hobgoblin",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Half-Orc Life Scale",
+            "AbilityRef": "ability.mr.hobgoblin.l1",
+            "Type": "Static",
+            "Effect": "Base life from this race equals that of a Half-Orc of equal multi-race level; if resulting base class life exceeds 48 this does increase base life for capping calculations."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Human Armour Permissions",
+            "AbilityRef": "ability.mr.hobgoblin.l2",
+            "Type": "Static",
+            "Effect": "May wear any armour permitted for a Human of same class (no change for Shaman/Witch Doctor)."
+          }
+        ],
+        "3": [
+          {
+            "Name": "+1 PAC and Weapon Access",
+            "AbilityRef": "ability.mr.hobgoblin.l3",
+            "Type": "Static",
+            "Effect": "+1 PAC, gains B skill, loses Goblin weapon restrictions; if E-skill acquired it may be used with any usable weapon."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Backstab Conversion",
+            "AbilityRef": "ability.mr.hobgoblin.l4",
+            "Type": "Static",
+            "Effect": "Loses Goblin racial Backstab skill and now inflicts +6 base damage on blows where Backstab would normally be usable."
+          }
+        ],
+        "5": [
+          {
+            "Name": "+2 PAC Total",
+            "AbilityRef": "ability.mr.hobgoblin.l5",
+            "Type": "Static",
+            "Effect": "+2 PAC total."
+          },
+          {
+            "Name": "Insensitive Skin",
+            "AbilityRef": "ability.mr.hobgoblin.l5.2",
+            "Type": "Static",
+            "Effect": "Now has Insensitive Skin as tables ability."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Taunt",
+            "AbilityRef": "ability.mr.hobgoblin.l6",
+            "Type": "Innate",
+            "Effect": "After 30s verbal taunt and while continuing to taunt, takes only 1 point per grade from target blows (Rockskin style) up to 5 minutes.",
+            "Count": 1
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Goblin Assassin",
+          "Display": "Goblin Assassin",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Goblin"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Assassin"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 10,
+            "2": 40,
+            "3": 70,
+            "4": 120,
+            "5": 210,
+            "6": 290
+          }
+        },
+        {
+          "Source": "Goblin Pathfinder",
+          "Display": "Goblin Pathfinder",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Goblin"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Pathfinder"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 10,
+            "2": 40,
+            "3": 70,
+            "4": 120,
+            "5": 210,
+            "6": 290
+          }
+        },
+        {
+          "Source": "Goblin Shaman",
+          "Display": "Goblin Shaman",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Goblin"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Shaman"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 10,
+            "2": 20,
+            "3": 60,
+            "4": 110,
+            "5": 210,
+            "6": 290
+          }
+        },
+        {
+          "Source": "Goblin Warrior",
+          "Display": "Goblin Warrior",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Goblin"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Warrior"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 10,
+            "2": 50,
+            "3": 80,
+            "4": 140,
+            "5": 300,
+            "6": 410
+          }
+        },
+        {
+          "Source": "Goblin Witch Doctor",
+          "Display": "Goblin Witch Doctor",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Goblin"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Witch"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 10,
+            "2": 20,
+            "3": 60,
+            "4": 110,
+            "5": 210,
+            "6": 260
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Post-6th: may buy Immunity to Poison and Immunity to Disease at half cost; may buy half-orc racial abilities (except Human Heritage), and Strength ignoring Goblin restrictions."
+      ]
+    },
+    "Immortal": {
+      "DisplayName": "Immortal",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Scaling Physical Reduction",
+            "AbilityRef": "ability.mr.immortal.l1",
+            "Type": "Static",
+            "Effect": "Suffers one-sixth less damage from physical attacks per level of this race (at 6th is immune to physical damage)."
+          },
+          {
+            "Name": "Flesh and Blood Immunity",
+            "AbilityRef": "ability.mr.immortal.l1.2",
+            "Type": "Static",
+            "Effect": "Immunity to Flesh and Blood effects (including potions, poisons, and pain)."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Immortal Defence",
+            "AbilityRef": "ability.mr.immortal.l2",
+            "Type": "Innate",
+            "Effect": "Gains one-quarter off all damage with a physical component for five minutes.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          }
+        ],
+        "3": [
+          {
+            "Name": "Immunity to Ageing",
+            "AbilityRef": "ability.mr.immortal.l3",
+            "Type": "Static",
+            "Effect": "Gains immunity to ageing."
+          },
+          {
+            "Name": "Half Beneficial Physical Effect",
+            "AbilityRef": "ability.mr.immortal.l3.2",
+            "Type": "Static",
+            "Effect": "Now only receives half effect from beneficial physical effects."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Empowered Defence",
+            "AbilityRef": "ability.mr.immortal.l4",
+            "Type": "Innate",
+            "Effect": "Upgrades an Immortal Defence so it grants one-third off damage.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "5": [
+          {
+            "Name": "Form of the Immortal",
+            "AbilityRef": "ability.mr.immortal.l5",
+            "Type": "Innate",
+            "Effect": "Grants complete immunity to physical effects for 5 minutes.",
+            "Count": 1
+          }
+        ],
+        "6": [
+          {
+            "Name": "Immortal Armour",
+            "AbilityRef": "ability.mr.immortal.l6",
+            "Type": "Innate",
+            "Effect": "Upgrades an Empowered Defence to a Rockskin-style reduction vs all damage with a physical component.",
+            "Count": 1
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Any",
+          "Display": "Any",
+          "Rules": [],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 300,
+            "3": 400,
+            "4": 500,
+            "5": 675,
+            "6": 900
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Post-6th: True Immortal (100 points) grants complete immunity to physical at all times."
+      ]
+    },
+    "Mind Over Reality": {
+      "DisplayName": "Mind Over Reality",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Scaling Non-Physical/Non-Neuronic Reduction",
+            "AbilityRef": "ability.mr.mind-over-reality.l1",
+            "Type": "Static",
+            "Effect": "Gains one-sixth off all damage except Physical and Neuronic per level."
+          },
+          {
+            "Name": "Neuronic Bracket Lock",
+            "AbilityRef": "ability.mr.mind-over-reality.l1.2",
+            "Type": "Static",
+            "Effect": "May never leave or buy-as outside the neuronic bracket."
+          },
+          {
+            "Name": "No Mind-Bar/Neuronic Immunity",
+            "AbilityRef": "ability.mr.mind-over-reality.l1.3",
+            "Type": "Static",
+            "Effect": "May never Mind-Bar or become immune to neuronics."
+          },
+          {
+            "Name": "Neural Foci Requirement (2 per level)",
+            "AbilityRef": "ability.mr.mind-over-reality.l1.4",
+            "Type": "Static",
+            "Effect": "Must have at least 2 permanent neural foci per level of this race."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Reality Controlled",
+            "AbilityRef": "ability.mr.mind-over-reality.l2",
+            "Type": "Innate",
+            "Effect": "Gain complete immunity to Magic or Spirit for 5 minutes.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          }
+        ],
+        "3": [
+          {
+            "Name": "Kill/Sever Restriction",
+            "AbilityRef": "ability.mr.mind-over-reality.l3",
+            "Type": "Static",
+            "Effect": "Can only be killed or have a location severed by Physical or Neuronic means."
+          },
+          {
+            "Name": "Neural Foci Requirement (3 per level)",
+            "AbilityRef": "ability.mr.mind-over-reality.l3.2",
+            "Type": "Static",
+            "Effect": "Now requires at least 3 permanent neural foci per level of this race."
+          },
+          {
+            "Name": "Beneficial Effect Immunity",
+            "AbilityRef": "ability.mr.mind-over-reality.l3.3",
+            "Type": "Static",
+            "Effect": "Gains immunity to beneficial effects that are not Neuronic or Physical in nature."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Disperse Mind",
+            "AbilityRef": "ability.mr.mind-over-reality.l4",
+            "Type": "Innate",
+            "Effect": "Acts as gaseous form except the user is only harmed by neuronics rather than miracles.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "5": [
+          {
+            "Name": "Forced Reality",
+            "AbilityRef": "ability.mr.mind-over-reality.l5",
+            "Type": "Innate",
+            "Effect": "First time needed each day gains a stacking Live to Minus 6 that is neuronic-only.",
+            "Count": 1
+          }
+        ],
+        "6": [
+          {
+            "Name": "Alter Reality",
+            "AbilityRef": "ability.mr.mind-over-reality.l6",
+            "Type": "Innate",
+            "Effect": "Counts as Purity of Mind vs one just-suffered effect (declare within 2 seconds); costs a level to use.",
+            "Count": 1
+          },
+          {
+            "Name": "Neural Foci Requirement (4 per level)",
+            "AbilityRef": "ability.mr.mind-over-reality.l6.2",
+            "Type": "Static",
+            "Effect": "Must now have 4 permanent neural foci per level of this race."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Any",
+          "Display": "Any",
+          "Rules": [],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 200,
+            "3": 500,
+            "4": 750,
+            "5": 1000,
+            "6": 1400
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Requires Neuro-Mastery at will to buy.",
+        "Post-6th: may buy resistances as a spiritless creature."
+      ]
+    },
+    "Ogre Magi": {
+      "DisplayName": "Ogre Magi",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Greater Cunning",
+            "AbilityRef": "ability.mr.ogre-magi.l1",
+            "Type": "Static",
+            "Effect": "General intelligence rises to roughly Half-Orc warrior level."
+          },
+          {
+            "Name": "Recognise Mana and Verbal Adaptation",
+            "AbilityRef": "ability.mr.ogre-magi.l1.2",
+            "Type": "AtWill",
+            "Effect": "Gains Recognise Mana at will and may adapt spell verbals like a shaman/witch-doctor as appropriate."
+          },
+          {
+            "Name": "Blue Woad Markings",
+            "AbilityRef": "ability.mr.ogre-magi.l1.3",
+            "Type": "Static",
+            "Effect": "Must incorporate blue woad-like markings in makeup."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Puff of Air",
+            "AbilityRef": "ability.mr.ogre-magi.l2",
+            "Type": "AtWill",
+            "Effect": "Puff of Air at will for 1 TBLP per use."
+          },
+          {
+            "Name": "Detect Magic",
+            "AbilityRef": "ability.mr.ogre-magi.l2.2",
+            "Type": "Innate",
+            "Effect": "Detect Magic innate.",
+            "Progression": {
+              "Amount": 2,
+              "PerLevels": 1
+            }
+          }
+        ],
+        "3": [
+          {
+            "Name": "Shatter(r)",
+            "AbilityRef": "ability.mr.ogre-magi.l3",
+            "Type": "Innate",
+            "Effect": "Shatter(r) innate.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 1
+            }
+          }
+        ],
+        "4": [
+          {
+            "Name": "Storm Blast",
+            "AbilityRef": "ability.mr.ogre-magi.l4",
+            "Type": "Innate",
+            "Effect": "Storm Blast innate.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 1
+            }
+          }
+        ],
+        "5": [
+          {
+            "Name": "Walk on Air(s)",
+            "AbilityRef": "ability.mr.ogre-magi.l5",
+            "Type": "Innate",
+            "Effect": "Walk on Air(s) innate.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          }
+        ],
+        "6": [
+          {
+            "Name": "Lightning Bolt",
+            "AbilityRef": "ability.mr.ogre-magi.l6",
+            "Type": "Innate",
+            "Effect": "Lightning Bolt innate.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          },
+          {
+            "Name": "Immunity to Electrical Attacks",
+            "AbilityRef": "ability.mr.ogre-magi.l6.2",
+            "Type": "Static",
+            "Effect": "Now completely immune to all electrical attacks."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Ogre",
+          "Display": "Ogre",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Ogre", "Ogres", "Half-Ogre"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 80,
+            "3": 95,
+            "4": 180,
+            "5": 355,
+            "6": 500
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Available to Half-Ogre who has not entered priest bracket (e.g. any shaman). No alignment requirement."
+      ]
+    },
+    "Primal Soul": {
+      "DisplayName": "Primal Soul",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Select Primal Tree",
+            "AbilityRef": "ability.mr.primal-soul.l1",
+            "Type": "Static",
+            "Effect": "Choose Primal Bound, Predator, or Prey as the character’s primal tree.",
+            "ChoiceSetRefs": ["choice.multi-race.primal-soul.tree"]
+          },
+          {
+            "Name": "Primal Markings",
+            "AbilityRef": "ability.mr.primal-soul.l1.2",
+            "Type": "Static",
+            "Effect": "For any choice other than Primal Bound, makeup/costume must be reminiscent of the chosen creature type."
+          },
+          {
+            "Name": "+1 DAC",
+            "AbilityRef": "ability.mr.primal-soul.l1.3",
+            "Type": "Static",
+            "Effect": "+1 Dexterity AC."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Primal Bound Minor Talent",
+            "AbilityRef": "ability.mr.primal-soul.l2",
+            "Type": "Static",
+            "Effect": "Choose one Minor talent from Primal Bound.",
+            "PreReqs": ["ability.mr.primal-soul.tree.primal-bound"],
+            "ChoiceSetRefs": [
+              "choice.multi-race.primal-soul.primal-bound.minor"
+            ]
+          },
+          {
+            "Name": "Predator Minor Talent",
+            "AbilityRef": "ability.mr.primal-soul.l2.2",
+            "Type": "Static",
+            "Effect": "Choose one Minor talent from Predator.",
+            "PreReqs": ["ability.mr.primal-soul.tree.predator"],
+            "ChoiceSetRefs": ["choice.multi-race.primal-soul.predator.minor"]
+          },
+          {
+            "Name": "Prey Minor Talent",
+            "AbilityRef": "ability.mr.primal-soul.l2.3",
+            "Type": "Static",
+            "Effect": "Choose one Minor talent from Prey.",
+            "PreReqs": ["ability.mr.primal-soul.tree.prey"],
+            "ChoiceSetRefs": ["choice.multi-race.primal-soul.prey.minor"]
+          }
+        ],
+        "3": [
+          {
+            "Name": "+2 DAC Total",
+            "AbilityRef": "ability.mr.primal-soul.l3",
+            "Type": "Static",
+            "Effect": "+2 Dexterity AC total."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Primal Bound Medium Talent",
+            "AbilityRef": "ability.mr.primal-soul.l4",
+            "Type": "Static",
+            "Effect": "Choose one Medium talent from Primal Bound.",
+            "PreReqs": ["ability.mr.primal-soul.tree.primal-bound"],
+            "ChoiceSetRefs": [
+              "choice.multi-race.primal-soul.primal-bound.medium"
+            ]
+          },
+          {
+            "Name": "Predator Medium Talent",
+            "AbilityRef": "ability.mr.primal-soul.l4.2",
+            "Type": "Static",
+            "Effect": "Choose one Medium talent from Predator.",
+            "PreReqs": ["ability.mr.primal-soul.tree.predator"],
+            "ChoiceSetRefs": ["choice.multi-race.primal-soul.predator.medium"]
+          },
+          {
+            "Name": "Prey Medium Talent",
+            "AbilityRef": "ability.mr.primal-soul.l4.3",
+            "Type": "Static",
+            "Effect": "Choose one Medium talent from Prey.",
+            "PreReqs": ["ability.mr.primal-soul.tree.prey"],
+            "ChoiceSetRefs": ["choice.multi-race.primal-soul.prey.medium"]
+          }
+        ],
+        "5": [
+          {
+            "Name": "Discern Own Kind",
+            "AbilityRef": "ability.mr.primal-soul.l5",
+            "Type": "AtWill",
+            "Effect": "At will by sight, physically discern creatures of the exact chosen race (yes/no with ref-discretion detail)."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Primal Bound Major Talent",
+            "AbilityRef": "ability.mr.primal-soul.l6",
+            "Type": "Static",
+            "Effect": "Choose one Major talent from Primal Bound.",
+            "PreReqs": ["ability.mr.primal-soul.tree.primal-bound"],
+            "ChoiceSetRefs": [
+              "choice.multi-race.primal-soul.primal-bound.major"
+            ]
+          },
+          {
+            "Name": "Predator Major Talent",
+            "AbilityRef": "ability.mr.primal-soul.l6.2",
+            "Type": "Static",
+            "Effect": "Choose one Major talent from Predator.",
+            "PreReqs": ["ability.mr.primal-soul.tree.predator"],
+            "ChoiceSetRefs": ["choice.multi-race.primal-soul.predator.major"]
+          },
+          {
+            "Name": "Prey Major Talent",
+            "AbilityRef": "ability.mr.primal-soul.l6.3",
+            "Type": "Static",
+            "Effect": "Choose one Major talent from Prey.",
+            "PreReqs": ["ability.mr.primal-soul.tree.prey"],
+            "ChoiceSetRefs": ["choice.multi-race.primal-soul.prey.major"]
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Any Native to Primus",
+          "Display": "Any Native to Primus",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "NotIn",
+              "Value": [
+                "Blauz",
+                "Ggrutuck",
+                "Duidoin",
+                "Elysian",
+                "Silverfolk",
+                "Silver Folk"
+              ]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 40,
+            "2": 90,
+            "3": 150,
+            "4": 250,
+            "5": 280,
+            "6": 460
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Level 1 selects the primal tree. At levels 2, 4, and 6 select one talent from the selected tree."
+      ]
+    },
+    "Rock Troll": {
+      "DisplayName": "Rock Troll",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Flesh and Blood Immunity",
+            "AbilityRef": "ability.mr.rock-troll.l1",
+            "Type": "Static",
+            "Effect": "Now immune to Flesh and Blood effects including ingestion (no potion effects)."
+          },
+          {
+            "Name": "Rocky Makeup",
+            "AbilityRef": "ability.mr.rock-troll.l1.2",
+            "Type": "Static",
+            "Effect": "Must incorporate stone and rocky complexion into makeup."
+          }
+        ],
+        "2": [
+          {
+            "Name": "+1 PAC Total",
+            "AbilityRef": "ability.mr.rock-troll.l2",
+            "Type": "Static",
+            "Effect": "+1 PAC total."
+          },
+          {
+            "Name": "Live to Minus Scaling",
+            "AbilityRef": "ability.mr.rock-troll.l2.2",
+            "Type": "Static",
+            "Effect": "Gains additional Live to Minus 3 per level of this multi-race, stacking with all other published live-to-minus."
+          },
+          {
+            "Name": "Regeneration Base Boost",
+            "AbilityRef": "ability.mr.rock-troll.l2.3",
+            "Type": "Static",
+            "Effect": "Regeneration now heals base 1 TBLP and 1 to every injured location per 5 minutes."
+          }
+        ],
+        "3": [
+          {
+            "Name": "+2 PAC Total",
+            "AbilityRef": "ability.mr.rock-troll.l3",
+            "Type": "Static",
+            "Effect": "+2 PAC total."
+          }
+        ],
+        "4": [
+          {
+            "Name": "+3 PAC Total",
+            "AbilityRef": "ability.mr.rock-troll.l4",
+            "Type": "Static",
+            "Effect": "+3 PAC total."
+          },
+          {
+            "Name": "Regeneration Rate Increase",
+            "AbilityRef": "ability.mr.rock-troll.l4.2",
+            "Type": "Static",
+            "Effect": "Regeneration now heals base 2 TBLP and 2 to each injured location per 5 minutes (a +1x rate increase)."
+          }
+        ],
+        "5": [
+          {
+            "Name": "+4 PAC Total",
+            "AbilityRef": "ability.mr.rock-troll.l5",
+            "Type": "Static",
+            "Effect": "+4 PAC total."
+          },
+          {
+            "Name": "Rockskin vs Stone Weapons",
+            "AbilityRef": "ability.mr.rock-troll.l5.2",
+            "Type": "Static",
+            "Effect": "Stone weapons inflict damage as if user were under Rockskin at all times; innate PAC may always apply to physical-component weapon blows."
+          }
+        ],
+        "6": [
+          {
+            "Name": "+5 PAC Total",
+            "AbilityRef": "ability.mr.rock-troll.l6",
+            "Type": "Static",
+            "Effect": "+5 PAC total."
+          },
+          {
+            "Name": "Regeneration Class Enhancements",
+            "AbilityRef": "ability.mr.rock-troll.l6.2",
+            "Type": "Static",
+            "Effect": "Warriors may heal permanent damage by natural regen except fire/spirit; shamans may heal spirit damage by regen; witches may heal fire damage by regen."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Troll",
+          "Display": "Troll",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Troll"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 260,
+            "3": 320,
+            "4": 480,
+            "5": 600,
+            "6": 750
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [
+          {
+            "EffectType": "LiveToMinusPerClassLevel",
+            "Display": "Additional Live to Minus 3 per level of this race.",
+            "AmountPerClassLevel": 3,
+            "DamageType": "Any",
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.rock-troll.l2.2"]
+          }
+        ],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      }
+    },
+    "Servant of the Spirits": {
+      "DisplayName": "Servant of the Spirits",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Flesh and Blood Immunity",
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l1",
+            "Type": "Static",
+            "Effect": "Now immune to all Flesh and Blood effects (including potions and pain)."
+          },
+          {
+            "Name": "Neutral Supernatural Creature",
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l1.2",
+            "Type": "Static",
+            "Effect": "Counts as a Supernatural Neutral Creature From Another Plane."
+          },
+          {
+            "Name": "Runic Markings",
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l1.3",
+            "Type": "Static",
+            "Effect": "Requires silvery/grey swirls and/or runic markings over exposed skin."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Touch Psi-Scan",
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l2",
+            "Type": "AtWill",
+            "Effect": "Touch reads surface thoughts as spiritual Psi-Scan at will for 1 TBLP."
+          },
+          {
+            "Name": "Detect Spirits Nature",
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l2.2",
+            "Type": "AtWill",
+            "Effect": "Detect Spirits Nature at will using full verbals as normal."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Detect Lie",
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l3",
+            "Type": "AtWill",
+            "Effect": "Detect Lie at will for 3 TBLP using full handbook verbals."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Insight of the Spirits",
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l4",
+            "Type": "Innate",
+            "Effect": "After 30s concentration, gain ability to cast one published neutral miracle for the rest of dungeon (must be normally learnable).",
+            "Count": 1
+          }
+        ],
+        "5": [
+          {
+            "Name": "Commune with the Gods",
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l5",
+            "Type": "Innate",
+            "Effect": "Commune with the Gods.",
+            "Count": 1
+          }
+        ],
+        "6": [
+          {
+            "Name": "Permanent Active Spirit Sight",
+            "AbilityRef": "ability.mr.servant-of-the-spirits.l6",
+            "Type": "Static",
+            "Effect": "Gains permanent fully active Spirit Sight, revealing spirit size and alignment."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Neutral Priest",
+          "Display": "Neutral Priest",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Priest"]
+            },
+            {
+              "Field": "Alignment.Moral",
+              "Operator": "In",
+              "Value": ["Neutral"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 240,
+            "3": 340,
+            "4": 440,
+            "5": 600,
+            "6": 840
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Race text heading uses “Servants of the Spirits (Previously Balance)”."
+      ]
+    },
+    "Shadow Daimon": {
+      "DisplayName": "Shadow Daimon",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Dark Makeup Requirement",
+            "AbilityRef": "ability.mr.shadow-daimon.l1",
+            "Type": "Static",
+            "Effect": "Must wear dark/black makeup covering at least half exposed skin."
+          },
+          {
+            "Name": "Extinguish (10ft)",
+            "AbilityRef": "ability.mr.shadow-daimon.l1.2",
+            "Type": "AtWill",
+            "Effect": "May Extinguish lights within 10ft at will with full cantrip verbal."
+          },
+          {
+            "Name": "Permanent Mantic Ally Darkness",
+            "AbilityRef": "ability.mr.shadow-daimon.l1.3",
+            "Type": "Static",
+            "Effect": "Permanent mantic Ally Darkness (without granting ability to see through darkness). Counts as Daemonkind."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Shadowmeld",
+            "AbilityRef": "ability.mr.shadow-daimon.l2",
+            "Type": "Innate",
+            "Effect": "Shadowmeld as per Chameleon(s) when not within 5ft of light source and not in direct daylight/supernatural light.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 1
+            }
+          },
+          {
+            "Name": "Supernatural Darkness Sight Prerequisite",
+            "AbilityRef": "ability.mr.shadow-daimon.l2.2",
+            "Type": "Static",
+            "Effect": "Must purchase “See Through Supernatural Darkness at all times” before this level."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Mantic Darkness(s)",
+            "AbilityRef": "ability.mr.shadow-daimon.l3",
+            "Type": "Innate",
+            "Effect": "Mantic Darkness(s).",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          }
+        ],
+        "4": [
+          {
+            "Name": "Mantic Shadowblade",
+            "AbilityRef": "ability.mr.shadow-daimon.l4",
+            "Type": "Innate",
+            "Effect": "Mantic Shadowblade x1/3 levels; mantic damage as specified by wielder eligibility.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "5": [
+          {
+            "Name": "Cloak of Darkness",
+            "AbilityRef": "ability.mr.shadow-daimon.l5",
+            "Type": "Innate",
+            "Effect": "As Invisibility but cannot be used under Shadowmeld-light restrictions; ends within 5ft of any light source.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "6": [
+          {
+            "Name": "Shadowshift",
+            "AbilityRef": "ability.mr.shadow-daimon.l6",
+            "Type": "Innate",
+            "Effect": "Shadowshift as Wizard’s Grimoire spell.",
+            "Count": 1
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Any Evil",
+          "Display": "Any Evil",
+          "Rules": [
+            {
+              "Field": "Alignment.Moral",
+              "Operator": "In",
+              "Value": ["Evil"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 150,
+            "3": 210,
+            "4": 350,
+            "5": 435,
+            "6": 710
+          }
+        },
+        {
+          "Source": "Black Mana User",
+          "Display": "Black Mana User",
+          "Rules": [
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["Black Mana User"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 115,
+            "3": 165,
+            "4": 300,
+            "5": 380,
+            "6": 650
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Available to evil non-elven, non-tribal characters. Half-Elves and Half-Draves pay normal cost."
+      ]
+    },
+    "Snaga Hai": {
+      "DisplayName": "Snaga Hai",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Mobile Ally Darkness",
+            "AbilityRef": "ability.mr.snaga-hai.l1",
+            "Type": "Static",
+            "Effect": "Always counts as benefiting from black Ally Darkness; Darkness(r) targeted on user moves with them."
+          },
+          {
+            "Name": "Supernatural Darkness Sight",
+            "AbilityRef": "ability.mr.snaga-hai.l1.2",
+            "Type": "Static",
+            "Effect": "May now see through all forms of supernatural darkness."
+          },
+          {
+            "Name": "Shadow Woad Makeup",
+            "AbilityRef": "ability.mr.snaga-hai.l1.3",
+            "Type": "Static",
+            "Effect": "Must incorporate black shadow/woad into makeup."
+          }
+        ],
+        "2": [
+          {
+            "Name": "+2 DAC in Darkness",
+            "AbilityRef": "ability.mr.snaga-hai.l2",
+            "Type": "Static",
+            "Effect": "+2 DAC total while in darkness."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Unassisted Climb",
+            "AbilityRef": "ability.mr.snaga-hai.l3",
+            "Type": "Static",
+            "Effect": "Assisted climbs require only two points of contact, can continue while climbing and at full climbing speed."
+          },
+          {
+            "Name": "+1 Stacking Backstab",
+            "AbilityRef": "ability.mr.snaga-hai.l3.2",
+            "Type": "Static",
+            "Effect": "+1 stacking Backstab skill (stacks only with published Backstab)."
+          }
+        ],
+        "4": [
+          {
+            "Name": "+3 DAC in Darkness",
+            "AbilityRef": "ability.mr.snaga-hai.l4",
+            "Type": "Static",
+            "Effect": "+3 DAC total while in darkness."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Bladelick",
+            "AbilityRef": "ability.mr.snaga-hai.l5",
+            "Type": "Innate",
+            "Effect": "After licking a physical edged weapon, next blow within 5 minutes inflicts physical Disease as Cause Disease.",
+            "Count": 1
+          }
+        ],
+        "6": [
+          {
+            "Name": "Sense Motion",
+            "AbilityRef": "ability.mr.snaga-hai.l6",
+            "Type": "Static",
+            "Effect": "Now has Sense Motion except in direct daylight or magical light; requires Perception and Supernatural Perception to use."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Orc Assassin",
+          "Display": "Orc Assassin",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Orc", "Half-Orc"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Assassin"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 105,
+            "3": 190,
+            "4": 220,
+            "5": 270,
+            "6": 375
+          }
+        },
+        {
+          "Source": "Orc Pathfinder",
+          "Display": "Orc Pathfinder",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Orc", "Half-Orc"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Pathfinder"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 105,
+            "3": 190,
+            "4": 220,
+            "5": 270,
+            "6": 375
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Post-6th: may purchase Backstabs as 1st Class Assassin; if already 1st Class Assassin then one table earlier."
+      ]
+    },
+    "Spiritual Vessel": {
+      "DisplayName": "Spiritual Vessel",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Scaling Non-Spirit Reduction",
+            "AbilityRef": "ability.mr.spiritual-vessel.l1",
+            "Type": "Static",
+            "Effect": "One-sixth off all damage except Spirit per level."
+          },
+          {
+            "Name": "Flesh and Blood Immunity",
+            "AbilityRef": "ability.mr.spiritual-vessel.l1.2",
+            "Type": "Static",
+            "Effect": "Immunity to Flesh and Blood effects (including potions and poison)."
+          },
+          {
+            "Name": "Priest Bracket Lock",
+            "AbilityRef": "ability.mr.spiritual-vessel.l1.3",
+            "Type": "Static",
+            "Effect": "May never leave the priest bracket."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Immunity to Ageing",
+            "AbilityRef": "ability.mr.spiritual-vessel.l2",
+            "Type": "Static",
+            "Effect": "Gains immunity to ageing."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Kill/Sever Restriction",
+            "AbilityRef": "ability.mr.spiritual-vessel.l3",
+            "Type": "Static",
+            "Effect": "Can only be killed or have a location severed by spiritual means."
+          },
+          {
+            "Name": "Beneficial Non-Spiritual Immunity",
+            "AbilityRef": "ability.mr.spiritual-vessel.l3.2",
+            "Type": "Static",
+            "Effect": "Gains immunity to beneficial effects that are not spiritual."
+          },
+          {
+            "Name": "No Spiritual Invisibility Immunity",
+            "AbilityRef": "ability.mr.spiritual-vessel.l3.3",
+            "Type": "Static",
+            "Effect": "May no longer cast Spiritual Invisibility or otherwise become immune to Spirit."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Non-Damaging Non-Spiritual Immunity",
+            "AbilityRef": "ability.mr.spiritual-vessel.l4",
+            "Type": "Static",
+            "Effect": "Immune to non-damaging effects that are not spiritual in nature."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Unconscious/Location Stop Restriction",
+            "AbilityRef": "ability.mr.spiritual-vessel.l5",
+            "Type": "Static",
+            "Effect": "Can only be knocked unconscious or have locations stop through spiritual means."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Immune to All but Spirit",
+            "AbilityRef": "ability.mr.spiritual-vessel.l6",
+            "Type": "Static",
+            "Effect": "Now completely immune to all except spirits."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Weapon Using Priest",
+          "Display": "Weapon Using Priest",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Priest"]
+            },
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["Weapon Using Priest"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 600,
+            "3": 800,
+            "4": 1000,
+            "5": 1200,
+            "6": 1400
+          }
+        },
+        {
+          "Source": "Non-Weapon using Priest",
+          "Display": "Non-Weapon using Priest",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Priest"]
+            },
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["Non-Weapon Using Priest"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 500,
+            "3": 650,
+            "4": 800,
+            "5": 950,
+            "6": 1100
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Post-6th: Spiritual Nature (200) and Formless Being (250, table 10) as listed."
+      ]
+    },
+    "Titan": {
+      "DisplayName": "Titan",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Immunity to Pain",
+            "AbilityRef": "ability.mr.titan.l1",
+            "Type": "Static",
+            "Effect": "Immunity to pain in all forms."
+          },
+          {
+            "Name": "+1 Stacking Strength",
+            "AbilityRef": "ability.mr.titan.l1.2",
+            "Type": "Static",
+            "Effect": "+1 stacking Strength (max +3)."
+          }
+        ],
+        "2": [
+          {
+            "Name": "+3/1 Base Life",
+            "AbilityRef": "ability.mr.titan.l2",
+            "Type": "Static",
+            "Effect": "+3/1 base life."
+          },
+          {
+            "Name": "Form of the Titan",
+            "AbilityRef": "ability.mr.titan.l2.2",
+            "Type": "Innate",
+            "Effect": "Grants +36/12 temporary life for 5 minutes; does not stack with supernatural temp life but does with physical temp life.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          }
+        ],
+        "3": [
+          {
+            "Name": "1/6 off Weapon Blows",
+            "AbilityRef": "ability.mr.titan.l3",
+            "Type": "Static",
+            "Effect": "One-sixth off weapon blows; stacks with Battle-Master interactions as listed."
+          }
+        ],
+        "4": [
+          {
+            "Name": "+6/2 Base Life Total",
+            "AbilityRef": "ability.mr.titan.l4",
+            "Type": "Static",
+            "Effect": "+6/2 base life total (from +3/1)."
+          },
+          {
+            "Name": "Titan’s Strength",
+            "AbilityRef": "ability.mr.titan.l4.2",
+            "Type": "Innate",
+            "Effect": "May remain conscious in live to minus while in combat for 5 minutes (if live-to-minus is owned).",
+            "Count": 1
+          }
+        ],
+        "5": [
+          {
+            "Name": "Immunity to Supernatural Ageing",
+            "AbilityRef": "ability.mr.titan.l5",
+            "Type": "Static",
+            "Effect": "Gains immunity to supernatural ageing effects."
+          },
+          {
+            "Name": "1/4 off Weapon Blows",
+            "AbilityRef": "ability.mr.titan.l5.2",
+            "Type": "Static",
+            "Effect": "Now one-quarter off weapon blows (from one-sixth), with Greater Blade Fury and Eye for an Opponent interactions as listed."
+          }
+        ],
+        "6": [
+          {
+            "Name": "+9/3 Base Life Total",
+            "AbilityRef": "ability.mr.titan.l6",
+            "Type": "Static",
+            "Effect": "+9/3 base life total (from +6/2)."
+          },
+          {
+            "Name": "Titan’s Endurance",
+            "AbilityRef": "ability.mr.titan.l6.2",
+            "Type": "Innate",
+            "Effect": "Locations continue to function until severed while in combat; lasts 5 minutes.",
+            "Count": 1
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "1st Class Warrior Subclass",
+          "Display": "1st Class Warrior Subclass",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Warrior"]
+            },
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["1st Class Warrior Subclass"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 290,
+            "3": 400,
+            "4": 530,
+            "5": 700,
+            "6": 900
+          }
+        },
+        {
+          "Source": "2nd Class Warrior Subclass",
+          "Display": "2nd Class Warrior Subclass",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Warrior"]
+            },
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["2nd Class Warrior Subclass"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 330,
+            "3": 450,
+            "4": 620,
+            "5": 800,
+            "6": 1050
+          }
+        },
+        {
+          "Source": "Spirit Warrior",
+          "Display": "Spirit Warrior",
+          "Rules": [
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Spiritual Warrior"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 390,
+            "3": 510,
+            "4": 680,
+            "5": 860,
+            "6": 1130
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [
+          {
+            "EffectType": "LifeBonusTotal",
+            "Display": "+3/1 base life",
+            "Value": {
+              "TBLP": 3,
+              "PerLocation": 1
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.titan.l2"]
+          }
+        ],
+        "3": [],
+        "4": [
+          {
+            "EffectType": "LifeBonusTotal",
+            "Display": "+6/2 total base life",
+            "Value": {
+              "TBLP": 6,
+              "PerLocation": 2
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.titan.l4"]
+          }
+        ],
+        "5": [],
+        "6": [
+          {
+            "EffectType": "LifeBonusTotal",
+            "Display": "+9/3 total base life",
+            "Value": {
+              "TBLP": 9,
+              "PerLocation": 3
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.titan.l6"]
+          }
+        ]
+      },
+      "Notes": [
+        "Post-6th: Titan’s Stamina (100, table 11) and Titan’s Body (250, table 10)."
+      ]
+    },
+    "Undead": {
+      "DisplayName": "Undead",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Select Undead Type",
+            "AbilityRef": "ability.mr.undead.l1",
+            "Type": "Static",
+            "Effect": "Select undead type: Ghoul, Mummy, Wight, Wraith, or Vampire.",
+            "ChoiceSetRefs": ["choice.multi-race.undead.type"]
+          },
+          {
+            "Name": "L1 Lesser Type Unknown",
+            "AbilityRef": "ability.mr.undead.l1.2",
+            "Type": "Static",
+            "Effect": "Discerns as level 1 Type Unknown undead (dismiss name Lesser XXX)."
+          },
+          {
+            "Name": "Undead Immunity Package (L1)",
+            "AbilityRef": "ability.mr.undead.l1.3",
+            "Type": "Static",
+            "Effect": "Immune to Repel/Attract Life, Restore/Animate Life, and Discern Nature of Wounds."
+          }
+        ],
+        "2": [
+          {
+            "Name": "L2 Minor Type",
+            "AbilityRef": "ability.mr.undead.l2",
+            "Type": "Static",
+            "Effect": "Now level 2 Minor XXX undead."
+          },
+          {
+            "Name": "Undead Immunity Package (L2)",
+            "AbilityRef": "ability.mr.undead.l2.2",
+            "Type": "Static",
+            "Effect": "Immune to Ebony Pain, Words of Pain, all forms of Disease, and Adrenal Surge."
+          },
+          {
+            "Name": "Tree Purchase Access (Tier 1)",
+            "AbilityRef": "ability.mr.undead.l2.3",
+            "Type": "Static",
+            "Effect": "May buy 1st innate from chosen undead tree and the appropriate curing ability."
+          }
+        ],
+        "3": [
+          {
+            "Name": "L3 Minor Type",
+            "AbilityRef": "ability.mr.undead.l3",
+            "Type": "Static",
+            "Effect": "Now level 3 Minor XXX undead."
+          },
+          {
+            "Name": "Undead Immunity Package (L3)",
+            "AbilityRef": "ability.mr.undead.l3.2",
+            "Type": "Static",
+            "Effect": "Immune to Stunning Blow, Vicious Strike, Ageing, and Flesh and Blood effects."
+          },
+          {
+            "Name": "Tree Purchase Access (Tier 2)",
+            "AbilityRef": "ability.mr.undead.l3.3",
+            "Type": "Static",
+            "Effect": "May buy 2nd innate from chosen undead tree."
+          }
+        ],
+        "4": [
+          {
+            "Name": "L4 Type",
+            "AbilityRef": "ability.mr.undead.l4",
+            "Type": "Static",
+            "Effect": "Now level 4 XXX undead."
+          },
+          {
+            "Name": "Undead Immunity Package (L4)",
+            "AbilityRef": "ability.mr.undead.l4.2",
+            "Type": "Static",
+            "Effect": "Immune to Repel/Attract Edible and Empathic Healing."
+          },
+          {
+            "Name": "Tree Purchase Access (Tier 3)",
+            "AbilityRef": "ability.mr.undead.l4.3",
+            "Type": "Static",
+            "Effect": "May buy 3rd innate from chosen undead tree."
+          }
+        ],
+        "5": [
+          {
+            "Name": "L5 Type",
+            "AbilityRef": "ability.mr.undead.l5",
+            "Type": "Static",
+            "Effect": "Now level 5 XXX undead."
+          },
+          {
+            "Name": "Undead Immunity Package (L5)",
+            "AbilityRef": "ability.mr.undead.l5.2",
+            "Type": "Static",
+            "Effect": "Immune to Neuronics and physical Sleep."
+          },
+          {
+            "Name": "Tree Purchase Access (Tier 4)",
+            "AbilityRef": "ability.mr.undead.l5.3",
+            "Type": "Static",
+            "Effect": "May buy 4th innate from chosen undead tree if available."
+          }
+        ],
+        "6": [
+          {
+            "Name": "L6 Greater Type",
+            "AbilityRef": "ability.mr.undead.l6",
+            "Type": "Static",
+            "Effect": "Now level 6 Greater XXX undead."
+          },
+          {
+            "Name": "Undead Immunity Package (L6)",
+            "AbilityRef": "ability.mr.undead.l6.2",
+            "Type": "Static",
+            "Effect": "Immune to all miracles not listed as affecting undead."
+          },
+          {
+            "Name": "Post-6th Undead Purchases",
+            "AbilityRef": "ability.mr.undead.l6.3",
+            "Type": "Static",
+            "Effect": "May buy: Dismiss level 7, Immunity to Dismiss miracles, and Immunity to Undead Destruction effects as listed."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Any Evil",
+          "Display": "Any Evil",
+          "Rules": [
+            {
+              "Field": "Alignment.Moral",
+              "Operator": "In",
+              "Value": ["Evil"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 170,
+            "3": 270,
+            "4": 350,
+            "5": 500,
+            "6": 560
+          }
+        },
+        {
+          "Source": "Priest (Evil)",
+          "Display": "Priest (Evil)",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Priest"]
+            },
+            {
+              "Field": "Alignment.Moral",
+              "Operator": "In",
+              "Value": ["Evil"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 40,
+            "2": 140,
+            "3": 230,
+            "4": 300,
+            "5": 450,
+            "6": 500
+          }
+        },
+        {
+          "Source": "Unholy Champion",
+          "Display": "Unholy Champion",
+          "Rules": [
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Unholy Champion"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 40,
+            "2": 140,
+            "3": 230,
+            "4": 300,
+            "5": 450,
+            "6": 500
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Post-6th buys as full Undead and may buy listed post-6th options.",
+        "At level 1 select type from Ghoul/Mummy/Wight/Wraith/Vampire."
+      ]
+    },
+    "Uruk Hai": {
+      "DisplayName": "Uruk Hai",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Base Life 33/11",
+            "AbilityRef": "ability.mr.uruk-hai.l1",
+            "Type": "Static",
+            "Effect": "Base life becomes 33/11."
+          },
+          {
+            "Name": "Supernatural Darkness Sight",
+            "AbilityRef": "ability.mr.uruk-hai.l1.2",
+            "Type": "Static",
+            "Effect": "May now see through all forms of supernatural darkness at all times."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Base Life 40/13",
+            "AbilityRef": "ability.mr.uruk-hai.l2",
+            "Type": "Static",
+            "Effect": "Base life becomes 40/13."
+          },
+          {
+            "Name": "+1 PAC",
+            "AbilityRef": "ability.mr.uruk-hai.l2.2",
+            "Type": "Static",
+            "Effect": "+1 PAC."
+          },
+          {
+            "Name": "Slow-Burn Detrimental Progression",
+            "AbilityRef": "ability.mr.uruk-hai.l2.3",
+            "Type": "Static",
+            "Effect": "Detrimental duration-based penalties (e.g. Disease, Words of Pain) take twice as long to affect."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Base Life 47/16",
+            "AbilityRef": "ability.mr.uruk-hai.l3",
+            "Type": "Static",
+            "Effect": "Base life becomes 47/16."
+          },
+          {
+            "Name": "No Light DAC Penalty",
+            "AbilityRef": "ability.mr.uruk-hai.l3.2",
+            "Type": "Static",
+            "Effect": "No longer suffers DAC penalties in light."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Base Life 54/18",
+            "AbilityRef": "ability.mr.uruk-hai.l4",
+            "Type": "Static",
+            "Effect": "Base life becomes 54/18."
+          },
+          {
+            "Name": "+2 PAC Total",
+            "AbilityRef": "ability.mr.uruk-hai.l4.2",
+            "Type": "Static",
+            "Effect": "+2 PAC total."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Base Life 61/20",
+            "AbilityRef": "ability.mr.uruk-hai.l5",
+            "Type": "Static",
+            "Effect": "Base life becomes 61/20."
+          },
+          {
+            "Name": "Strength Floor +1",
+            "AbilityRef": "ability.mr.uruk-hai.l5.2",
+            "Type": "Static",
+            "Effect": "May never be reduced below +1 strength (requires at least +1 strength to benefit)."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Base Life 68/23",
+            "AbilityRef": "ability.mr.uruk-hai.l6",
+            "Type": "Static",
+            "Effect": "Base life becomes 68/23."
+          },
+          {
+            "Name": "+3 PAC Total",
+            "AbilityRef": "ability.mr.uruk-hai.l6.2",
+            "Type": "Static",
+            "Effect": "+3 PAC total."
+          },
+          {
+            "Name": "Black Fury",
+            "AbilityRef": "ability.mr.uruk-hai.l6.3",
+            "Type": "Innate",
+            "Effect": "50% Berserk Rage that also grants immunity to listed stopping effects for 5 minutes.",
+            "Count": 1
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Orc Thug",
+          "Display": "Orc Thug",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Orc", "Half-Orc"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Thug"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 40,
+            "2": 120,
+            "3": 160,
+            "4": 200,
+            "5": 230,
+            "6": 440
+          }
+        },
+        {
+          "Source": "Orc Warrior",
+          "Display": "Orc Warrior",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Orc", "Half-Orc"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Warrior"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 40,
+            "2": 120,
+            "3": 160,
+            "4": 200,
+            "5": 230,
+            "6": 440
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [
+          {
+            "EffectType": "BaseLife",
+            "Display": "33/11",
+            "Value": {
+              "TBLP": 33,
+              "PerLocation": 11
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l1"]
+          }
+        ],
+        "2": [
+          {
+            "EffectType": "BaseLife",
+            "Display": "40/13",
+            "Value": {
+              "TBLP": 40,
+              "PerLocation": 13
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l2"]
+          }
+        ],
+        "3": [
+          {
+            "EffectType": "BaseLife",
+            "Display": "47/16",
+            "Value": {
+              "TBLP": 47,
+              "PerLocation": 16
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l3"]
+          }
+        ],
+        "4": [
+          {
+            "EffectType": "BaseLife",
+            "Display": "54/18",
+            "Value": {
+              "TBLP": 54,
+              "PerLocation": 18
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l4"]
+          }
+        ],
+        "5": [
+          {
+            "EffectType": "BaseLife",
+            "Display": "61/20",
+            "Value": {
+              "TBLP": 61,
+              "PerLocation": 20
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l5"]
+          }
+        ],
+        "6": [
+          {
+            "EffectType": "BaseLife",
+            "Display": "68/23",
+            "Value": {
+              "TBLP": 68,
+              "PerLocation": 23
+            },
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.uruk-hai.l6"]
+          }
+        ]
+      }
+    },
+    "Vessel of the Dead": {
+      "DisplayName": "Vessel of the Dead",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Untainted Raising",
+            "AbilityRef": "ability.mr.vessel-of-the-dead.l1",
+            "Type": "Static",
+            "Effect": "If raised as undead, user is not tainted and retains own personality."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Twist the Form",
+            "AbilityRef": "ability.mr.vessel-of-the-dead.l2",
+            "Type": "Innate",
+            "Effect": "May be target of published raise-undead miracle on self to become that undead for 15 minutes or until slain/dismissed, with listed consequences.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          }
+        ],
+        "3": [
+          {
+            "Name": "Death’s Form",
+            "AbilityRef": "ability.mr.vessel-of-the-dead.l3",
+            "Type": "Innate",
+            "Effect": "Acts as Incarna Mortis on self only; does not suffer normal kick-out.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "4": [
+          {
+            "Name": "Vessel Armour and Strength Transfer",
+            "AbilityRef": "ability.mr.vessel-of-the-dead.l4",
+            "Type": "Static",
+            "Effect": "Undead raised into the vessel may benefit from vessel physical armour and strength grades."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Reactive Death’s Form",
+            "AbilityRef": "ability.mr.vessel-of-the-dead.l5",
+            "Type": "Static",
+            "Effect": "Death’s Form may now be used in response to an attack (within 2 seconds), applying only to that single attack."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Animate as Zombie While Alive",
+            "AbilityRef": "ability.mr.vessel-of-the-dead.l6",
+            "Type": "Static",
+            "Effect": "Can now be animated as a zombie (as Twist the Form) while alive once per hour."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "All",
+          "Display": "All",
+          "Rules": [],
+          "CostsByLevel": {
+            "1": 40,
+            "2": 100,
+            "3": 200,
+            "4": 300,
+            "5": 400,
+            "6": 550
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Post-6th: level 6 upgrade to 1/30 minutes on table 9 (100) and 1/15 minutes on table 10 (+100)."
+      ]
+    },
+    "Vessel of the Dragons": {
+      "DisplayName": "Vessel of the Dragons",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Scaling Non-Magic Reduction",
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l1",
+            "Type": "Static",
+            "Effect": "One-sixth off all damage except Magic per level."
+          },
+          {
+            "Name": "Flesh and Blood Immunity",
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l1.2",
+            "Type": "Static",
+            "Effect": "Immunity to Flesh and Blood effects (including potions, poison, and pain)."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Immunity to Ageing",
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l2",
+            "Type": "Static",
+            "Effect": "Gains immunity to ageing."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Kill/Sever Restriction",
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l3",
+            "Type": "Static",
+            "Effect": "Can only be killed or have a location severed by magical means."
+          },
+          {
+            "Name": "Dispel Vulnerability Rule",
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l3.2",
+            "Type": "Static",
+            "Effect": "Is now harmed by Dispels as an Elf; may no longer cast Mana Shield or otherwise become immune to magic (doing so causes death)."
+          },
+          {
+            "Name": "Beneficial Non-Magical Immunity",
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l3.3",
+            "Type": "Static",
+            "Effect": "Gains immunity to beneficial effects that are not magical in nature."
+          }
+        ],
+        "4": [
+          {
+            "Name": "Non-Damaging Non-Magical Immunity",
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l4",
+            "Type": "Static",
+            "Effect": "Immune to non-damaging effects that are not magical in nature."
+          }
+        ],
+        "5": [
+          {
+            "Name": "Unconscious/Location Stop Restriction",
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l5",
+            "Type": "Static",
+            "Effect": "Can only be knocked unconscious or have locations stop through magical means."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Immune to All but Magic",
+            "AbilityRef": "ability.mr.vessel-of-the-dragons.l6",
+            "Type": "Static",
+            "Effect": "Now completely immune to all except Magic."
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Elf/Spiritless 1st Class Wizard/High Wizard",
+          "Display": "Elf/Spiritless 1st Class Wizard/High Wizard",
+          "Rules": [
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["Elf/Spiritless 1st Class Wizard/High Wizard"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 250,
+            "3": 350,
+            "4": 500,
+            "5": 650,
+            "6": 800
+          }
+        },
+        {
+          "Source": "Other Spiritless",
+          "Display": "Other Spiritless",
+          "Rules": [
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["Other Spiritless"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 250,
+            "3": 400,
+            "4": 600,
+            "5": 800,
+            "6": 1000
+          }
+        },
+        {
+          "Source": "½ elf 1st Class Wizard/High Wizard",
+          "Display": "½ elf 1st Class Wizard/High Wizard",
+          "Rules": [
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["Half-Elf 1st Class Wizard/High Wizard"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 250,
+            "3": 400,
+            "4": 600,
+            "5": 800,
+            "6": 1000
+          }
+        },
+        {
+          "Source": "½ elf in the Wizard Bracket",
+          "Display": "½ elf in the Wizard Bracket",
+          "Rules": [
+            {
+              "Field": "Status",
+              "Operator": "In",
+              "Value": ["Half-Elf Wizard Bracket"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 250,
+            "3": 450,
+            "4": 650,
+            "5": 900,
+            "6": 1100
+          }
+        },
+        {
+          "Source": "1st Class Wizard/High Wizard",
+          "Display": "1st Class Wizard/High Wizard",
+          "Rules": [
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Wizard", "High-Wizard"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 250,
+            "3": 450,
+            "4": 650,
+            "5": 900,
+            "6": 1100
+          }
+        },
+        {
+          "Source": "Within the Wizard Bracket",
+          "Display": "Within the Wizard Bracket",
+          "Rules": [
+            {
+              "Field": "Bracket",
+              "Operator": "In",
+              "Value": ["Wizard"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 250,
+            "3": 500,
+            "4": 700,
+            "5": 1000,
+            "6": 1250
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "Post-6th: may buy Resistance to Dispels as an Elf / Mantic Effects as an Elf; Formless Being as listed."
+      ]
+    },
+    "Winter Barbarian": {
+      "DisplayName": "Winter Barbarian",
+      "MaxLevel": 6,
+      "Levels": {
+        "1": [
+          {
+            "Name": "Tribal Conversion",
+            "AbilityRef": "ability.mr.winter-barbarian.l1",
+            "Type": "Static",
+            "Effect": "Counts in all ways as Tribal from this point and may join only a Winter Barbarian tribe."
+          },
+          {
+            "Name": "Human Life Scale by Class",
+            "AbilityRef": "ability.mr.winter-barbarian.l1.2",
+            "Type": "Static",
+            "Effect": "Life now as Human of same base class by level."
+          }
+        ],
+        "2": [
+          {
+            "Name": "Cold Survival",
+            "AbilityRef": "ability.mr.winter-barbarian.l2",
+            "Type": "Static",
+            "Effect": "Gains Survival as Ranger in cold environments only."
+          }
+        ],
+        "3": [
+          {
+            "Name": "Slip Innate",
+            "AbilityRef": "ability.mr.winter-barbarian.l3",
+            "Type": "Innate",
+            "Effect": "Gains one innate Slip.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 2
+            }
+          }
+        ],
+        "4": [
+          {
+            "Name": "Wall of Ice Innate",
+            "AbilityRef": "ability.mr.winter-barbarian.l4",
+            "Type": "Innate",
+            "Effect": "Gains one innate Wall of Ice.",
+            "Progression": {
+              "Amount": 1,
+              "PerLevels": 3
+            }
+          }
+        ],
+        "5": [
+          {
+            "Name": "Cold Perception",
+            "AbilityRef": "ability.mr.winter-barbarian.l5",
+            "Type": "Static",
+            "Effect": "Gains Perception skill as Ranger in ice/snow surroundings only."
+          }
+        ],
+        "6": [
+          {
+            "Name": "Freeze (Touch) Innate",
+            "AbilityRef": "ability.mr.winter-barbarian.l6",
+            "Type": "Innate",
+            "Effect": "Gains innate Freeze(t) x1/day as touch-range non-level-based Freeze glyph.",
+            "Count": 1
+          }
+        ]
+      },
+      "AvailabilityOptions": [
+        {
+          "Source": "Winter Elf Archer",
+          "Display": "Winter Elf Archer",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Winter Elf"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Archer"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 70,
+            "3": 100,
+            "4": 170,
+            "5": 190,
+            "6": 350
+          }
+        },
+        {
+          "Source": "Winter Elf Pathfinder",
+          "Display": "Winter Elf Pathfinder",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Winter Elf"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Pathfinder"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 70,
+            "3": 100,
+            "4": 170,
+            "5": 220,
+            "6": 370
+          }
+        },
+        {
+          "Source": "Winter Elf Rogue",
+          "Display": "Winter Elf Rogue",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Winter Elf"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Rogue"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 70,
+            "3": 100,
+            "4": 170,
+            "5": 220,
+            "6": 370
+          }
+        },
+        {
+          "Source": "Winter Elf Warrior",
+          "Display": "Winter Elf Warrior",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Winter Elf"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Warrior"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 50,
+            "2": 70,
+            "3": 100,
+            "4": 170,
+            "5": 220,
+            "6": 390
+          }
+        },
+        {
+          "Source": "Winter Elf Wizard",
+          "Display": "Winter Elf Wizard",
+          "Rules": [
+            {
+              "Field": "Race",
+              "Operator": "In",
+              "Value": ["Winter Elf"]
+            },
+            {
+              "Field": "Class",
+              "Operator": "In",
+              "Value": ["Wizard", "High-Wizard"]
+            }
+          ],
+          "CostsByLevel": {
+            "1": 75,
+            "2": 100,
+            "3": 130,
+            "4": 200,
+            "5": 225,
+            "6": 355
+          }
+        }
+      ],
+      "SystemEffectsByLevel": {
+        "1": [
+          {
+            "EffectType": "BaseLifeFromLifeScaleByCurrentClass",
+            "Display": "Use Human life scale for current base class by level.",
+            "Race": "Human",
+            "SourceCategory": "base",
+            "LinkedAbilityRefs": ["ability.mr.winter-barbarian.l1.2"]
+          }
+        ],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": []
+      },
+      "Notes": [
+        "At level 1 character counts as Tribal and may join Winter Barbarian tribe only.",
+        "Post-6th: buys as tribal creatures and may gain life as 8th-level Human for 100 points."
+      ]
+    }
+  }
+}

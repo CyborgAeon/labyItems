@@ -82,13 +82,8 @@ public partial class LevelAbilityTableView : ContentView
         if (sender is not Button button || button.CommandParameter is not LevelAbilityRowVm row)
             return;
 
-        var options = row.AbilityNames
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Select(name => name.Trim())
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
-
-        if (options.Length == 0)
+        var detailOptions = BuildAbilityDetailOptions(row);
+        if (detailOptions.Count == 0)
             return;
 
         var hostPage = ResolveHostPage();
@@ -99,16 +94,22 @@ public partial class LevelAbilityTableView : ContentView
             ? $"Level {row.Level} abilities"
             : "Abilities";
 
-        var picked = options.Length == 1
-            ? options[0]
-            : await hostPage.DisplayActionSheet(title, "Cancel", null, options);
-        if (string.IsNullOrWhiteSpace(picked) || picked.Equals("Cancel", StringComparison.OrdinalIgnoreCase))
+        var picked = detailOptions.Count == 1
+            ? detailOptions[0]
+            : await PickAbilityDetailOptionAsync(hostPage, title, detailOptions);
+        if (picked == null)
             return;
 
-        var ability = await ResolveAbilityAsync(picked);
+        var ability = await ResolveAbilityAsync(picked.LookupKey);
+        if (ability == null
+            && !string.Equals(picked.LookupKey, picked.DisplayName, StringComparison.OrdinalIgnoreCase))
+        {
+            ability = await ResolveAbilityAsync(picked.DisplayName);
+        }
+
         if (ability == null)
         {
-            await hostPage.DisplayAlert("No Ability Card", $"Could not find a detail card for \"{picked}\".", "OK");
+            await hostPage.DisplayAlert("No Ability Card", $"Could not find a detail card for \"{picked.DisplayName}\".", "OK");
             return;
         }
 
@@ -117,6 +118,81 @@ public partial class LevelAbilityTableView : ContentView
             return;
 
         await navigation.PushAsync(new AbilityCardPage(ability));
+    }
+
+    private static async Task<AbilityDetailOption?> PickAbilityDetailOptionAsync(
+        Page hostPage,
+        string title,
+        IReadOnlyList<AbilityDetailOption> options)
+    {
+        var labels = options
+            .Select(option => option.DisplayName)
+            .ToArray();
+
+        var picked = await hostPage.DisplayActionSheet(title, "Cancel", null, labels);
+        if (string.IsNullOrWhiteSpace(picked) || picked.Equals("Cancel", StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        foreach (var option in options)
+        {
+            if (option.DisplayName.Equals(picked, StringComparison.OrdinalIgnoreCase))
+                return option;
+        }
+
+        return null;
+    }
+
+    private static List<AbilityDetailOption> BuildAbilityDetailOptions(LevelAbilityRowVm row)
+    {
+        var names = (row.AbilityNames ?? Array.Empty<string>())
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name.Trim())
+            .ToList();
+
+        var keys = (row.AbilityDetailKeys ?? Array.Empty<string>())
+            .Where(key => !string.IsNullOrWhiteSpace(key))
+            .Select(key => key.Trim())
+            .ToList();
+
+        var options = new List<AbilityDetailOption>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        var pairedCount = Math.Min(names.Count, keys.Count);
+        for (var i = 0; i < pairedCount; i++)
+        {
+            var displayName = names[i];
+            var lookupKey = keys[i];
+            if (displayName.Length == 0 && lookupKey.Length == 0)
+                continue;
+
+            var dedupe = $"{displayName}::{lookupKey}";
+            if (!seen.Add(dedupe))
+                continue;
+
+            options.Add(new AbilityDetailOption(
+                displayName.Length > 0 ? displayName : lookupKey,
+                lookupKey.Length > 0 ? lookupKey : displayName));
+        }
+
+        foreach (var key in keys.Skip(pairedCount))
+        {
+            if (seen.Contains($"::{key}"))
+                continue;
+
+            seen.Add($"::{key}");
+            options.Add(new AbilityDetailOption(key, key));
+        }
+
+        foreach (var name in names.Skip(pairedCount))
+        {
+            if (seen.Contains($"{name}::{name}"))
+                continue;
+
+            seen.Add($"{name}::{name}");
+            options.Add(new AbilityDetailOption(name, name));
+        }
+
+        return options;
     }
 
     private static async Task<EvolutionService.AbilityResult?> ResolveAbilityAsync(string selectedAbility)
@@ -232,4 +308,6 @@ public partial class LevelAbilityTableView : ContentView
 
         return Application.Current?.MainPage?.Navigation;
     }
+
+    private sealed record AbilityDetailOption(string DisplayName, string LookupKey);
 }

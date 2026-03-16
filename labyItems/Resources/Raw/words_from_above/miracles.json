@@ -3333,7 +3333,7 @@
   {
     "power": 4,
     "name": "Wraith's Touch (Level Drain)",
-    "description": "todo",
+    "description": "This miracle grants the caster the ability to level drain a target as though the target was touched by a Wraith. This inflicts 5 hits to a monster that is not statted with levels. The miracle once incanted stays on the caster’s weapon hand for 30 seconds or until discharged. This is not considered an undead touch effect.\nShould the priest also have the Summon Vampire miracle on his list he may elect to spend an additional 2 spirits and 2 tblp at the time of casting and drain two levels at once as per a Vampire’s double level drain.",
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true,
@@ -3341,7 +3341,8 @@
     "gesture": "Touch Target",
     "duration": "Permanent",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4sp",
+    "preReqs": ["Summon Wraith / Wight"]
   },
   {
     "power": 8,

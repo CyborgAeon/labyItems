@@ -43,10 +43,18 @@ public sealed class AdvanceCharacterDetailsTabVm : AdvanceCharacterTabVmBase
     public ManuAbilityOption? SelectedAbilityOption { get => Root.SelectedAbilityOption; set => Root.SelectedAbilityOption = value; }
     public bool CanAddAbility => Root.CanAddAbility;
     public ObservableCollection<AbilityEntryVm> Abilities => Root.Abilities;
+    public ObservableCollection<MultiClassEntryVm> MultiClasses => Root.MultiClasses;
+    public MultiRaceEntryVm? MultiRaceSelection => Root.MultiRaceSelection;
     public string AbilityPointsSummary => Root.AbilityPointsSummary;
+    public bool HasMultiClasses => Root.HasMultiClasses;
+    public bool HasMultiClassChoiceSets => Root.HasMultiClassChoiceSets;
+    public bool HasMultiRace => Root.HasMultiRace;
+    public bool HasMultiRaceChoiceSets => Root.HasMultiRaceChoiceSets;
     public ObservableCollection<ItemLineVm> Items => Root.Items;
     public ICommand AddAbilityCommand => Root.AddAbilityCommand;
     public ICommand RemoveAbilityCommand => Root.RemoveAbilityCommand;
+    public ICommand RemoveMultiClassCommand => Root.RemoveMultiClassCommand;
+    public ICommand RemoveMultiRaceCommand => Root.RemoveMultiRaceCommand;
     public ICommand AddItemCommand => Root.AddItemCommand;
     public ICommand RemoveItemCommand => Root.RemoveItemCommand;
     public Task<Dictionary<string, ManuAbilityOption>> SearchAbilityOptionsAsync(string query)

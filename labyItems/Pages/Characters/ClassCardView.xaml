@@ -120,7 +120,7 @@
                     <Grid Padding="16"
                           BackgroundColor="Transparent">
                         <controls:LevelAbilityTableView ItemsSource="{Binding LevelRows}"
-                                                        ShowBodyAndLoc="True"
+                                                        ShowBodyAndLoc="{Binding ShowBodyAndLoc}"
                                                         AbilitiesHeaderText="Skills/Abilities"/>
                     </Grid>
                 </Grid>

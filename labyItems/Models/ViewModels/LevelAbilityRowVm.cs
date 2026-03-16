@@ -10,12 +10,15 @@ public sealed class LevelAbilityRowVm
     public string Loc { get; set; } = string.Empty;
     public string WeaponSkills { get; set; } = string.Empty;
     public IReadOnlyList<string> AbilityNames { get; set; } = Array.Empty<string>();
+    public IReadOnlyList<string> AbilityDetailKeys { get; set; } = Array.Empty<string>();
 
     public string AbilitiesText => string.Join(", ", AbilityNames
         .Where(name => !string.IsNullOrWhiteSpace(name))
         .Select(name => name.Trim()));
 
-    public bool HasAbilityDetails => AbilityNames.Any(name => !string.IsNullOrWhiteSpace(name));
+    public bool HasAbilityDetails =>
+        AbilityNames.Any(name => !string.IsNullOrWhiteSpace(name))
+        || AbilityDetailKeys.Any(key => !string.IsNullOrWhiteSpace(key));
 }
 
 public static class LevelAbilityRowBuilder
@@ -41,6 +44,7 @@ public static class LevelAbilityRowBuilder
     {
         var weaponSkillCodes = new List<string>();
         var abilityNames = new List<string>();
+        var abilityDetailKeys = new List<string>();
 
         foreach (var definition in abilityDefinitions ?? Enumerable.Empty<AbilityDefinition>())
         {
@@ -53,6 +57,12 @@ public static class LevelAbilityRowBuilder
             var displayName = ToDisplayName(definition);
             if (displayName.Length > 0)
                 AddUnique(abilityNames, displayName);
+
+            var detailKey = (definition?.Key ?? string.Empty).Trim();
+            if (detailKey.Length == 0)
+                detailKey = displayName;
+            if (detailKey.Length > 0)
+                AddUnique(abilityDetailKeys, detailKey);
         }
 
         return new LevelAbilityRowVm
@@ -61,7 +71,8 @@ public static class LevelAbilityRowBuilder
             Body = (body ?? string.Empty).Trim(),
             Loc = (loc ?? string.Empty).Trim(),
             WeaponSkills = string.Join(", ", weaponSkillCodes),
-            AbilityNames = abilityNames
+            AbilityNames = abilityNames,
+            AbilityDetailKeys = abilityDetailKeys
         };
     }
 

@@ -120,10 +120,24 @@ public static class SpecialisationDefinitionRepository
             }
         }
 
+        var choiceSetTemplates = new Dictionary<string, SpecialisationChoiceSet>(StringComparer.OrdinalIgnoreCase);
+        foreach (var definition in definitions.Values)
+        {
+            foreach (var set in definition.ChoiceSets)
+            {
+                var id = (set.Id ?? string.Empty).Trim();
+                if (id.Length == 0 || choiceSetTemplates.ContainsKey(id))
+                    continue;
+
+                choiceSetTemplates[id] = CloneChoiceSet(set, set.DefinitionKey);
+            }
+        }
+
         return new SpecialisationIndex
         {
             Definitions = new ReadOnlyDictionary<string, SpecialisationDefinition>(definitions),
             AbilityReferences = new ReadOnlyDictionary<string, AbilityDefinition>(references),
+            ChoiceSetTemplates = new ReadOnlyDictionary<string, SpecialisationChoiceSet>(choiceSetTemplates),
             InjectionRules = injectionRules
         };
     }
@@ -241,6 +255,11 @@ public static class SpecialisationDefinitionRepository
         {
             Definitions = new ReadOnlyDictionary<string, SpecialisationDefinition>(definitions),
             AbilityReferences = new ReadOnlyDictionary<string, AbilityDefinition>(references),
+            ChoiceSetTemplates = new ReadOnlyDictionary<string, SpecialisationChoiceSet>(
+                choiceSetTemplates.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => CloneChoiceSet(kvp.Value, kvp.Value.DefinitionKey),
+                    StringComparer.OrdinalIgnoreCase)),
             InjectionRules = injectionRules
         };
     }
@@ -758,6 +777,8 @@ public static class SpecialisationDefinitionRepository
                 new Dictionary<string, SpecialisationDefinition>(StringComparer.OrdinalIgnoreCase)),
             AbilityReferences = new ReadOnlyDictionary<string, AbilityDefinition>(
                 new Dictionary<string, AbilityDefinition>(StringComparer.OrdinalIgnoreCase)),
+            ChoiceSetTemplates = new ReadOnlyDictionary<string, SpecialisationChoiceSet>(
+                new Dictionary<string, SpecialisationChoiceSet>(StringComparer.OrdinalIgnoreCase)),
             InjectionRules = Array.Empty<SpecialisationInjectionRule>()
         };
     }

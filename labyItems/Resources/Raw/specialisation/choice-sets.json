@@ -6,7 +6,9 @@
       "Title": "1st Weapon Mastery",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "1st Weapon Mastery",
@@ -29,7 +31,9 @@
       "Title": "1st Weapon Mastery (O)",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "1st Weapon Mastery",
@@ -59,7 +63,9 @@
       "Title": "Warrior Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "1st Weapon Mastery",
@@ -152,7 +158,9 @@
       "Title": "Battle-Priest Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -210,12 +218,55 @@
         }
       ]
     },
+    "choice.multi-class.berserker.specialist.l6": {
+      "Key": "choice.multi-class.berserker.specialist.l6",
+      "Title": "Berserker Specialist",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+6/2 Stamina",
+          "Label": "+6/2 Stamina",
+          "Grants": [
+            {
+              "AbilityRef": "ability.6-2-stamina"
+            }
+          ],
+          "Description": "Gain +6 total body life and +2 life per location."
+        },
+        {
+          "Key": "Unarmed Combat",
+          "Label": "Unarmed Combat",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unarmed-combat"
+            }
+          ],
+          "Description": "Gain Unarmed Combat as per the Warrior specialist skill."
+        },
+        {
+          "Key": "Enhanced Berserker Spirit",
+          "Label": "Enhanced Berserker Spirit",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mc.berserker.specialist.enhanced-spirit"
+            }
+          ],
+          "Description": "While raging, gain immunity to Paralysis, Freeze and Fear."
+        }
+      ]
+    },
     "choice.crusading-priest-specialist.primary": {
       "Key": "choice.crusading-priest-specialist.primary",
       "Title": "Crusading-Priest Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -278,7 +329,9 @@
       "Title": "Ranger Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "1st Weapon Mastery",
@@ -341,7 +394,9 @@
       "Title": "Archer Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "3rd Weapon Mastery (Bows)",
@@ -390,7 +445,9 @@
       "Title": "Monk Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "Mind Block",
@@ -464,7 +521,9 @@
       "Title": "Duellist Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -564,7 +623,9 @@
       "Title": "Cavalier Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -637,7 +698,9 @@
       "Title": "Paladin Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -707,7 +770,9 @@
       "Title": "Unholy Champion Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "Utilise Evil Spirit Item",
@@ -767,7 +832,9 @@
       "Title": "Grey Knight",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "Utilise Neutral Spirit Item",
@@ -828,7 +895,9 @@
       "Title": "Budoka Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -908,7 +977,9 @@
       "Title": "Power Master Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -981,7 +1052,9 @@
       "Title": "Power Warrior",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped"],
+      "StrategyIds": [
+        "section:mapped"
+      ],
       "Options": [
         {
           "Key": "Gem",
@@ -1034,7 +1107,9 @@
       "Title": "Power Warrior Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "Empower Armour",
@@ -1097,7 +1172,9 @@
       "Title": "Valdstayn Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -1169,7 +1246,9 @@
       "Title": "Rovfuger Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -1251,7 +1330,9 @@
       "Title": "Wind dancer Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -1327,7 +1408,10 @@
       "Title": "Standard Scout skill",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice", "lookup:scout-skill"],
+      "StrategyIds": [
+        "section:choice",
+        "lookup:scout-skill"
+      ],
       "Options": [
         {
           "Key": "Athlete",
@@ -1653,7 +1737,10 @@
       "Title": "Specialist Scout skill",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice", "lookup:scout-skill"],
+      "StrategyIds": [
+        "section:choice",
+        "lookup:scout-skill"
+      ],
       "Options": [
         {
           "Key": "Assassin's Eye",
@@ -1886,7 +1973,9 @@
       "Title": "Warrior-Priest specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -2151,7 +2240,9 @@
       "Title": "ElfColourAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped"],
+      "StrategyIds": [
+        "section:mapped"
+      ],
       "Options": [
         {
           "Key": "Light",
@@ -2553,7 +2644,9 @@
       "Title": "CrolSubtypeAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped"],
+      "StrategyIds": [
+        "section:mapped"
+      ],
       "Options": [
         {
           "Key": "Yashtar",
@@ -2568,7 +2661,9 @@
             "LifeScaleOverride": "Ogre"
           },
           "Restrictions": {
-            "ClassRestriction": ["Warrior"]
+            "ClassRestriction": [
+              "Warrior"
+            ]
           },
           "Grants": [
             {
@@ -2602,7 +2697,11 @@
             "LifeScaleOverride": "Human"
           },
           "Restrictions": {
-            "ClassRestriction": ["Ranger", "Monk", "Warrior"]
+            "ClassRestriction": [
+              "Ranger",
+              "Monk",
+              "Warrior"
+            ]
           },
           "Grants": [
             {
@@ -2626,10 +2725,19 @@
           "Effects": {
             "ArmourAvailabilityOverride": "Light",
             "LifeScaleOverride": "Crol (Jaerseen)",
-            "ColourChoiceOverride": ["Red", "Green", "Brown", "Blue"]
+            "ColourChoiceOverride": [
+              "Red",
+              "Green",
+              "Brown",
+              "Blue"
+            ]
           },
           "Restrictions": {
-            "ClassRestriction": ["Wizard", "Warlock", "Power Master"]
+            "ClassRestriction": [
+              "Wizard",
+              "Warlock",
+              "Power Master"
+            ]
           },
           "Grants": [
             {
@@ -2924,7 +3032,9 @@
       "Title": "Warlock Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -2996,7 +3106,9 @@
       "Title": "Wizard Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "Make Teaching Scrolls",
@@ -3045,7 +3157,9 @@
       "Title": "Vochstelen Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "+6/2 Stamina",
@@ -3118,7 +3232,9 @@
       "Title": "Awakener Specialist",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "Auric Colour",
@@ -3306,7 +3422,10 @@
       "Title": "Wizard Colour",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice", "selection:multi-delimited"],
+      "StrategyIds": [
+        "section:choice",
+        "selection:multi-delimited"
+      ],
       "Options": [
         {
           "Key": "Red",
@@ -3418,7 +3537,10 @@
       "Title": "Baronial Tradition",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice", "preview:option-grants"],
+      "StrategyIds": [
+        "section:choice",
+        "preview:option-grants"
+      ],
       "Options": [
         {
           "Key": "Hedge Wizardry",
@@ -3441,7 +3563,9 @@
             }
           ],
           "Effects": {
-            "GuildOverrides": ["pr:"]
+            "GuildOverrides": [
+              "pr:"
+            ]
           },
           "Description": "Hedge Wizards are those Barony Humans who practise their magicks outside the protection of the Circle, and are actively hunted by Circle members when found. Hedge Wizards are normally followers of Earthpower, as the Circle does not regard such close tampering with the structure of Primus as a good thing, but can include many other professions as well. These renegades are normally self-taught and often quite well meaning in their actions, simply independent of the Circle.\nHedge Wizards are well advised to keep either their nationality or profession quiet depending on where they are adventuring, as members of the Circle are duty bound to bring them in to their masters. Such captured Hedge Wizards are never seen again, though there are strange and unfounded rumours that some Hedge Wizards are not simply burnt at the stake or hanged.\nA Baronies Human who is not a member of the circle and uses mystical powers has the word \"Hedge\" prefixed to their class name. e.g. Hedge Mystic, Hedge Rogue etc. Hedge Wizards are a little different to their Labyrinthian counterparts due to their self-taught nature.\nHedge gain power as a normal character (this is a change from previous rules).\nA Hedge Wizard gains the scout standard skill of Disguise.\nA Hedge Wizard gains Immunity to Informational Effects of their own primary power-base (not their own), and a cumulative resistance level to their own primary power-base, except when cast by themselves. This natural survival trait meant that the Vochstelen never found them when young to take to the Circle.\nDue to the Hedge Wizard’s hazardous life style, a Hedge Wizard gains an extra level of life, cumulative with other levels of life. Before 8th level, this means that their life is calculated as if they were one level higher.\nA Hedge Wizard cannot join any organisation which specifically requires them to be a Barony Human, as they would be apprehended as a matter of course, and they may not join professional guilds. However they may freely join political guilds unlike other Baronial characters.\nHedge Wizards, rather surprisingly, are not bitter people driven by the fear of capture into slaying those of the Circle, but quiet revolutionaries, seeking alliances, and trying to draw members of the Circle into their own secret cults.\nMatters in the south are seldom clear-cut, black and white, and few Hedge Wizards wish the attention of a hunt for the killer of a member of the Circle by the massed might of the local Waldgraf, or a determined band of Vochstelen.\nHedge characters are Ostracised within the Baronies, so may be killed freely."
         },
@@ -3463,7 +3587,10 @@
             }
           ],
           "Effects": {
-            "GuildOverrides": ["po:Type-Baronial", "pr:"]
+            "GuildOverrides": [
+              "po:Type-Baronial",
+              "pr:"
+            ]
           },
           "Description": "Because of their history the use of power in the southern Baronies is carefully monitored and controlled by a group called The Circle. Fearful of the bad old days when power used frivolously or maliciously smashed its way around the Baronies, the Circle recognises that such regulating of use is very important.\nIn addition the Circle offers an excellent range of tuition and political support within the Baronies, and as such the following modifiers are accrued by a character who is a Circle Wizard or a Circle Hermit Priest or similar.\nCircle Unholy Champions are not outlawed as they normally would be. \nIf a Circle member casts a magical spell, the casting damage for that spell is reduced by1pt if the spell consumes at least one power point and is normally one point of TBLP damage. This does not help in the casting of cantrips or innate spells which cause casting damage as no power points are consumed.\nIf a Circle member uses a Neuronic power, they are assumed to have two more Neural Foci than normal, and take no life points at all when casting neuronics that would otherwise cost only l life point.\nIf a Circle member casts a miracle which is level based, then by doubling the casting damage taken in its casting, the miracle affects targets of l level higher than normal. If no damage is normally taken then normal casting damage is taken (if no damage casting was owned twice then this could be reduced to 0).\nCensure.\nShould a member of the Circle perform a mystic event which is in breach of the ethos of the Circle, then the above benefits are reversed until the end of the adventure. For example level based miracles have one less level of effect unless double casting damage is taken. Such acts would include acting against the Circle, drawing power from a God.\nInquisidore.\nA Circle member should attempt to capture any Baronies Human who is a Hedge Wizard as detailed below. Only Barony Humans can qualify as this as Labyrinthian Humans, even those who are travelling through the Southern Baronies, are normally granted honorary Circle membership by default. Once captured they should be taken to a Commissionaire of the Circle, one of these centres of the Circle exists in Takalia.\nCircle members are expected to give absolute loyalty to the Circle - they are not permitted to be members of any other professional organisation, be it a guild, church or similar.\nMembers of the Circle vary dramatically in moral and political outlook but all, when it comes down to it, support the basic political principles of the Southern Baronies.\nCircle members often find it simple to gain appointments as advisors to lords of manors both north in the Empire or south in the Baronies, but sometimes feel the need not to identify their nature to a Labyrinthian lord, too many years of bad feelings have left them concerned over what kinds of treatment they may receive, what bias or bigotry might be unleashed upon them.\nMembers of the Circle in full regalia, when displaying their post in the order of things publicly, often wear the symbol of the Circle (rather unsurprisingly a Circle) upon their garb. Often the colouration, size and pattern of the circle says a lot about the wearer a loud and boisterous magician might wear a gold scaled circle proudly upon his tabard, whilst a quieter Mystic might have a simple ivory badge an inch across over his breast."
         }
@@ -3474,27 +3601,39 @@
       "Title": "HumanSubtypeAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped", "subtype:human-map"],
+      "StrategyIds": [
+        "section:mapped",
+        "subtype:human-map"
+      ],
       "Options": [
         {
           "Key": "Baronial",
           "Label": "Baronial",
           "Description": "Because of their history the use of power in the southern Baronies is carefully monitored and controlled by a group called The Circle. Fearful of the bad old days when power used frivolously or maliciously smashed its way around the Baronies, the Circle recognises that such regulating of use is very important.\nIn addition the Circle offers an excellent range of tuition and political support within the Baronies, and as such the following modifiers are accrued by a character who is a Circle Wizard or a Circle Hermit Priest or similar.\nCircle Unholy Champions are not outlawed as they normally would be. \nIf a Circle member casts a magical spell, the casting damage for that spell is reduced by1pt if the spell consumes at least one power point and is normally one point of TBLP damage. This does not help in the casting of cantrips or innate spells which cause casting damage as no power points are consumed.\nIf a Circle member uses a Neuronic power, they are assumed to have two more Neural Foci than normal, and take no life points at all when casting neuronics that would otherwise cost only l life point.\nIf a Circle member casts a miracle which is level based, then by doubling the casting damage taken in its casting, the miracle affects targets of l level higher than normal. If no damage is normally taken then normal casting damage is taken (if no damage casting was owned twice then this could be reduced to 0).\nCensure.\nShould a member of the Circle perform a mystic event which is in breach of the ethos of the Circle, then the above benefits are reversed until the end of the adventure. For example level based miracles have one less level of effect unless double casting damage is taken. Such acts would include acting against the Circle, drawing power from a God.\nInquisidore.\nA Circle member should attempt to capture any Baronies Human who is a Hedge Wizard as detailed below. Only Barony Humans can qualify as this as Labyrinthian Humans, even those who are travelling through the Southern Baronies, are normally granted honorary Circle membership by default. Once captured they should be taken to a Commissionaire of the Circle, one of these centres of the Circle exists in Takalia.\nCircle members are expected to give absolute loyalty to the Circle - they are not permitted to be members of any other professional organisation, be it a guild, church or similar.\nMembers of the Circle vary dramatically in moral and political outlook but all, when it comes down to it, support the basic political principles of the Southern Baronies.\nCircle members often find it simple to gain appointments as advisors to lords of manors both north in the Empire or south in the Baronies, but sometimes feel the need not to identify their nature to a Labyrinthian lord, too many years of bad feelings have left them concerned over what kinds of treatment they may receive, what bias or bigotry might be unleashed upon them.\nMembers of the Circle in full regalia, when displaying their post in the order of things publicly, often wear the symbol of the Circle (rather unsurprisingly a Circle) upon their garb. Often the colouration, size and pattern of the circle says a lot about the wearer a loud and boisterous magician might wear a gold scaled circle proudly upon his tabard, whilst a quieter Mystic might have a simple ivory badge an inch across over his breast.",
           "Effects": {
-            "HedgeOrCircle": ["Hedge Wizardry", "Circle Membership"]
+            "HedgeOrCircle": [
+              "Hedge Wizardry",
+              "Circle Membership"
+            ]
           },
           "Restrictions": {
-            "PeopleType": ["Baronial"]
+            "PeopleType": [
+              "Baronial"
+            ]
           }
         },
         {
           "Key": "Ishmaic",
           "Label": "Ishmaic",
           "Effects": {
-            "GuildOverrides": ["po:Wahadamune"]
+            "GuildOverrides": [
+              "po:Wahadamune"
+            ]
           },
           "Restrictions": {
-            "PeopleType": ["Ishmaic"]
+            "PeopleType": [
+              "Ishmaic"
+            ]
           },
           "Grants": [
             {
@@ -3520,7 +3659,9 @@
           "Label": "Amlesian",
           "Description": "Select an Amlesian caste to define your standing.",
           "Restrictions": {
-            "PeopleType": ["Amlesian"]
+            "PeopleType": [
+              "Amlesian"
+            ]
           }
         }
       ]
@@ -3530,14 +3671,26 @@
       "Title": "AmlesianCasteAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped", "dynamic:amlesian-caste"],
+      "StrategyIds": [
+        "section:mapped",
+        "dynamic:amlesian-caste"
+      ],
       "Options": [
         {
           "Key": "Eta",
           "Label": "Eta",
           "Description": "The lowest of the low. They have no position, no honour, and no regard. It is impossible for one of this caste to rise beyond their starting position. They perform the most menial of tasks.",
           "Restrictions": {
-            "RaceRestriction": ["Faerie", "Goblin", "Troll", "Ogres", "Human", "Ratfolk", "Samila", "Fairies"]
+            "RaceRestriction": [
+              "Faerie",
+              "Goblin",
+              "Troll",
+              "Ogres",
+              "Human",
+              "Ratfolk",
+              "Samila",
+              "Fairies"
+            ]
           }
         },
         {
@@ -3545,7 +3698,16 @@
           "Label": "Peasant",
           "Description": "The class of the masses. Many fall within the caste, even those with great talents. It is common, and although all but the Eta are above their station they are important within the social system.",
           "Restrictions": {
-            "RaceRestriction": ["Faerie", "Goblin", "Troll", "Ogres", "Human", "Ratfolk", "Samila", "Fairies"]
+            "RaceRestriction": [
+              "Faerie",
+              "Goblin",
+              "Troll",
+              "Ogres",
+              "Human",
+              "Ratfolk",
+              "Samila",
+              "Fairies"
+            ]
           }
         },
         {
@@ -3553,7 +3715,16 @@
           "Label": "Artisan",
           "Description": "From a family of trade or talent the family will have money and some respect. They are rarely skilled in arms or the mystical arts, but they serve a valued role.",
           "Restrictions": {
-            "RaceRestriction": ["Faerie", "Goblin", "Troll", "Ogres", "Human", "Ratfolk", "Samila", "Fairies"]
+            "RaceRestriction": [
+              "Faerie",
+              "Goblin",
+              "Troll",
+              "Ogres",
+              "Human",
+              "Ratfolk",
+              "Samila",
+              "Fairies"
+            ]
           }
         },
         {
@@ -3561,7 +3732,16 @@
           "Label": "Mystical One",
           "Description": "A Priest, Wizard or similar. They are respected for their wisdom and power, though seen as less important than warriors in a land dominated by martial talent.",
           "Restrictions": {
-            "RaceRestriction": ["Faerie", "Goblin", "Troll", "Ogres", "Human", "Ratfolk", "Samila", "Fairies"]
+            "RaceRestriction": [
+              "Faerie",
+              "Goblin",
+              "Troll",
+              "Ogres",
+              "Human",
+              "Ratfolk",
+              "Samila",
+              "Fairies"
+            ]
           }
         },
         {
@@ -3569,7 +3749,16 @@
           "Label": "Protector",
           "Description": "The warriors of the land. They serve and protect the people and clans. Their duty is to ensure the Empire remains intact and its power strong.",
           "Restrictions": {
-            "RaceRestriction": ["Faerie", "Goblin", "Troll", "Ogres", "Human", "Ratfolk", "Samila", "Fairies"]
+            "RaceRestriction": [
+              "Faerie",
+              "Goblin",
+              "Troll",
+              "Ogres",
+              "Human",
+              "Ratfolk",
+              "Samila",
+              "Fairies"
+            ]
           }
         },
         {
@@ -3577,7 +3766,16 @@
           "Label": "Samurai",
           "Description": "The highest standing an individual can start with. They sit beneath the clan heads, and are considered the most honourable within the lands. An individual of Samurai standing is bound by the Code of Jade and if they fail to fulfil it are expected to commit Seppuku. Those seeking to start at the Samurai caste must buy the Honoured One Status unless they are a warrior and have purchased the Samurai tradition. Should an individual rise in social rank they must buy their new caste ability, but any points spent on previous castes reduce the cost of this.",
           "Restrictions": {
-            "RaceRestriction": ["Faerie", "Goblin", "Troll", "Ogres", "Human", "Ratfolk", "Samila", "Fairies"]
+            "RaceRestriction": [
+              "Faerie",
+              "Goblin",
+              "Troll",
+              "Ogres",
+              "Human",
+              "Ratfolk",
+              "Samila",
+              "Fairies"
+            ]
           }
         },
         {
@@ -3585,7 +3783,16 @@
           "Label": "Dishonoured One",
           "Description": "These are people who have failed to adhere to the strict caste system of Amles and refused to submit to justice. They may be dishonoured warriors, rebel heroes, or bandits. Those choosing this route must purchase the Dishonoured One Status rather than a caste ability. Dishonoured Ones are all Ostracised within Amles.",
           "Restrictions": {
-            "RaceRestriction": ["Faerie", "Goblin", "Troll", "Ogres", "Human", "Ratfolk", "Samila", "Fairies"]
+            "RaceRestriction": [
+              "Faerie",
+              "Goblin",
+              "Troll",
+              "Ogres",
+              "Human",
+              "Ratfolk",
+              "Samila",
+              "Fairies"
+            ]
           }
         },
         {
@@ -3593,8 +3800,17 @@
           "Label": "Fortune",
           "Description": "A servant of the Celestial Realms. An individual choosing this path must purchase the Fortune Status rather than a caste. Fortunes often move through Amles keeping their identities a secret to avoid the Oni that hunt them.",
           "Restrictions": {
-            "AlignmentRestriction": ["Goodly"],
-            "RaceRestriction": ["Human", "Ogres", "Faerie", "Troll", "Goblin", "Fairies"]
+            "AlignmentRestriction": [
+              "Goodly"
+            ],
+            "RaceRestriction": [
+              "Human",
+              "Ogres",
+              "Faerie",
+              "Troll",
+              "Goblin",
+              "Fairies"
+            ]
           }
         },
         {
@@ -3602,8 +3818,16 @@
           "Label": "Oni",
           "Description": "A creature born from the Shadowlands. They purchase the Oni Status rather than a caste. It is important to note that Oni are hunted within Amles and may be killed on sight.",
           "Restrictions": {
-            "AlignmentRestriction": ["Evil"],
-            "RaceRestriction": ["Ogres", "Faerie", "Troll", "Goblin", "Fairies"]
+            "AlignmentRestriction": [
+              "Evil"
+            ],
+            "RaceRestriction": [
+              "Ogres",
+              "Faerie",
+              "Troll",
+              "Goblin",
+              "Fairies"
+            ]
           }
         }
       ]
@@ -3613,7 +3837,10 @@
       "Title": "HumanBarbarianUpbringing",
       "Required": false,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped", "dynamic:human-barbarian"],
+      "StrategyIds": [
+        "section:mapped",
+        "dynamic:human-barbarian"
+      ],
       "Options": [
         {
           "Key": "Barbarian",
@@ -3637,7 +3864,10 @@
       "Title": "BaronialAncestry",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped", "dynamic:baronial-ancestry"],
+      "StrategyIds": [
+        "section:mapped",
+        "dynamic:baronial-ancestry"
+      ],
       "Options": [
         {
           "Key": "Rhagrimm",
@@ -3686,7 +3916,10 @@
       "Title": "IshmaicClanAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped", "dynamic:ishmaic-clan"],
+      "StrategyIds": [
+        "section:mapped",
+        "dynamic:ishmaic-clan"
+      ],
       "Options": [
         {
           "Key": "Galahbad",
@@ -3881,13 +4114,19 @@
       "Title": "AncientFolkSubtypeAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped"],
+      "StrategyIds": [
+        "section:mapped"
+      ],
       "Options": [
         {
           "Key": "The cloud way",
           "Label": "The cloud way",
           "Effects": {
-            "Notes": ["Undead", "Wyvern", "Dwarf"]
+            "Notes": [
+              "Undead",
+              "Wyvern",
+              "Dwarf"
+            ]
           },
           "Grants": [
             {
@@ -3908,7 +4147,9 @@
           "Key": "House D'trael",
           "Label": "House D'trael",
           "Effects": {
-            "Notes": ["Glass"]
+            "Notes": [
+              "Glass"
+            ]
           },
           "Grants": [
             {
@@ -3924,34 +4165,44 @@
       "Title": "AlfarSubtypeAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped"],
+      "StrategyIds": [
+        "section:mapped"
+      ],
       "Options": [
         {
           "Key": "Löss light (white)",
           "Label": "Löss light (white)",
           "Effects": {
-            "ColourChoiceOverride": ["White"]
+            "ColourChoiceOverride": [
+              "White"
+            ]
           }
         },
         {
           "Key": "Svart dark (black)",
           "Label": "Svart dark (black)",
           "Effects": {
-            "ColourChoiceOverride": ["Black"]
+            "ColourChoiceOverride": [
+              "Black"
+            ]
           }
         },
         {
           "Key": "Alfamir seas (green)",
           "Label": "Alfamir seas (green)",
           "Effects": {
-            "ColourChoiceOverride": ["Green"]
+            "ColourChoiceOverride": [
+              "Green"
+            ]
           }
         },
         {
           "Key": "Fjell mountain (brown)",
           "Label": "Fjell mountain (brown)",
           "Effects": {
-            "ColourChoiceOverride": ["Brown"]
+            "ColourChoiceOverride": [
+              "Brown"
+            ]
           }
         }
       ]
@@ -3961,34 +4212,52 @@
       "Title": "RatfolkBreedAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped"],
+      "StrategyIds": [
+        "section:mapped"
+      ],
       "Options": [
         {
           "Key": "Ourstlav",
           "Label": "Ourstlav",
           "Restrictions": {
-            "ClassRestriction": ["Pathfinder", "Archer", "Leywalker"]
+            "ClassRestriction": [
+              "Pathfinder",
+              "Archer",
+              "Leywalker"
+            ]
           }
         },
         {
           "Key": "Rachatat",
           "Label": "Rachatat",
           "Restrictions": {
-            "ClassRestriction": ["Warrior", "Forest Guardian", "Thug"]
+            "ClassRestriction": [
+              "Warrior",
+              "Forest Guardian",
+              "Thug"
+            ]
           }
         },
         {
           "Key": "Horstval",
           "Label": "Horstval",
           "Restrictions": {
-            "ClassRestriction": ["Druid", "Wizard", "Warrior Priest"]
+            "ClassRestriction": [
+              "Druid",
+              "Wizard",
+              "Warrior Priest"
+            ]
           }
         },
         {
           "Key": "Slav",
           "Label": "Slav",
           "Restrictions": {
-            "ClassRestriction": ["Psi Master", "Spy", "Assassin"]
+            "ClassRestriction": [
+              "Psi Master",
+              "Spy",
+              "Assassin"
+            ]
           }
         }
       ]
@@ -3998,20 +4267,27 @@
       "Title": "RatfolkClanAbilities",
       "Required": true,
       "Mode": "MappedSingle",
-      "StrategyIds": ["section:mapped", "dynamic:ratfolk-clan"],
+      "StrategyIds": [
+        "section:mapped",
+        "dynamic:ratfolk-clan"
+      ],
       "Options": [
         {
           "Key": "Caslevasp (long hairs)",
           "Label": "Caslevasp (long hairs)",
           "Effects": {
-            "GuildOverrides": ["po:Thimon"]
+            "GuildOverrides": [
+              "po:Thimon"
+            ]
           }
         },
         {
           "Key": "Hislehasp (tatterpelts)",
           "Label": "Hislehasp (tatterpelts)",
           "Effects": {
-            "GuildOverrides": ["so:The Swarm"]
+            "GuildOverrides": [
+              "so:The Swarm"
+            ]
           },
           "Grants": [
             {
@@ -4031,7 +4307,9 @@
           "Key": "Crepultaval (needlefangs)",
           "Label": "Crepultaval (needlefangs)",
           "Effects": {
-            "GuildOverrides": ["po:"]
+            "GuildOverrides": [
+              "po:"
+            ]
           },
           "Grants": [
             {
@@ -4087,7 +4365,9 @@
       "Title": "Lvl 2 Spell",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "Lvl 2 Spell",
@@ -4110,7 +4390,9 @@
       "Title": "Lvl 3 Spell",
       "Required": true,
       "Mode": "Single",
-      "StrategyIds": ["section:choice"],
+      "StrategyIds": [
+        "section:choice"
+      ],
       "Options": [
         {
           "Key": "Lvl 3 Spell",
@@ -4264,6 +4546,1765 @@
           "Grants": [
             {
               "AbilityRef": "ability.onyx"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.angel-touched.minor": {
+      "Key": "choice.multi-race.angel-touched.minor",
+      "Title": "Angel Touched Minor Power",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Full Flesh and Blood Immunity",
+          "Label": "Full Flesh and Blood Immunity",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.minor.full-fb-immune"
+            }
+          ]
+        },
+        {
+          "Key": "Spiritual Light Range",
+          "Label": "Spiritual Light Range",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.minor.spiritual-light"
+            }
+          ]
+        },
+        {
+          "Key": "Halo of Light",
+          "Label": "Halo of Light",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.minor.halo-light"
+            }
+          ]
+        },
+        {
+          "Key": "Angelic Shield",
+          "Label": "Angelic Shield",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.minor.angelic-shield"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.angel-touched.medium": {
+      "Key": "choice.multi-race.angel-touched.medium",
+      "Title": "Angel Touched Medium Power",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Walk through Walls",
+          "Label": "Walk through Walls",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.medium.walk-through-walls"
+            }
+          ]
+        },
+        {
+          "Key": "Halo of Heaven",
+          "Label": "Halo of Heaven",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.medium.halo-heaven"
+            }
+          ]
+        },
+        {
+          "Key": "Angelic Armour",
+          "Label": "Angelic Armour",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.medium.angelic-armour"
+            }
+          ]
+        },
+        {
+          "Key": "Summon Angelic Blade",
+          "Label": "Summon Angelic Blade",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.medium.summon-blade"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.angel-touched.major": {
+      "Key": "choice.multi-race.angel-touched.major",
+      "Title": "Angel Touched Major Power",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Angelic Halo",
+          "Label": "Angelic Halo",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.major.angelic-halo"
+            }
+          ]
+        },
+        {
+          "Key": "12 Goodly Spirits",
+          "Label": "12 Goodly Spirits",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.major.goodly-spirits"
+            }
+          ]
+        },
+        {
+          "Key": "Angelic Warding",
+          "Label": "Angelic Warding",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.major.angelic-warding"
+            }
+          ]
+        },
+        {
+          "Key": "Permanent Enhance Spirit",
+          "Label": "Permanent Enhance Spirit",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.angel-touched.major.enhance-spirit"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.demon-bound.minor": {
+      "Key": "choice.multi-race.demon-bound.minor",
+      "Title": "Demon Bound Minor Power",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Full Flesh and Blood Immunity",
+          "Label": "Full Flesh and Blood Immunity",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.minor.full-fb-immune"
+            }
+          ]
+        },
+        {
+          "Key": "Infernal Armour",
+          "Label": "Infernal Armour",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.minor.infernal-armour"
+            }
+          ]
+        },
+        {
+          "Key": "Honeyed Words",
+          "Label": "Honeyed Words",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.minor.honeyed-words"
+            }
+          ]
+        },
+        {
+          "Key": "Demonic Deception",
+          "Label": "Demonic Deception",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.minor.demonic-deception"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.demon-bound.medium": {
+      "Key": "choice.multi-race.demon-bound.medium",
+      "Title": "Demon Bound Medium Power",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Body of War",
+          "Label": "Body of War",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.medium.body-of-war"
+            }
+          ]
+        },
+        {
+          "Key": "Infernal Shield",
+          "Label": "Infernal Shield",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.medium.infernal-shield"
+            }
+          ]
+        },
+        {
+          "Key": "Mantic Beguile 8",
+          "Label": "Mantic Beguile 8",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.medium.mantic-beguile-8"
+            }
+          ]
+        },
+        {
+          "Key": "Hidden Form",
+          "Label": "Hidden Form",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.medium.hidden-form"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.demon-bound.major": {
+      "Key": "choice.multi-race.demon-bound.major",
+      "Title": "Demon Bound Major Power",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Feed the Soul 1/30",
+          "Label": "Feed the Soul 1/30",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.major.feed-soul-1-30"
+            }
+          ]
+        },
+        {
+          "Key": "Infernal Body",
+          "Label": "Infernal Body",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.major.infernal-body"
+            }
+          ]
+        },
+        {
+          "Key": "Cloak of the Unholy",
+          "Label": "Cloak of the Unholy",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.major.cloak-unholy"
+            }
+          ]
+        },
+        {
+          "Key": "Dark Compact",
+          "Label": "Dark Compact",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.demon-bound.major.dark-compact"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.elements-bound.colour": {
+      "Key": "choice.multi-race.elements-bound.colour",
+      "Title": "Elements Bound Colour",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Red",
+          "Label": "Red",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.colour.red"
+            }
+          ]
+        },
+        {
+          "Key": "Blue",
+          "Label": "Blue",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.colour.blue"
+            }
+          ]
+        },
+        {
+          "Key": "Green",
+          "Label": "Green",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.colour.green"
+            }
+          ]
+        },
+        {
+          "Key": "Brown",
+          "Label": "Brown",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.colour.brown"
+            }
+          ]
+        },
+        {
+          "Key": "White",
+          "Label": "White",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.colour.white"
+            }
+          ]
+        },
+        {
+          "Key": "Black",
+          "Label": "Black",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.colour.black"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.elements-bound.minor": {
+      "Key": "choice.multi-race.elements-bound.minor",
+      "Title": "Elements Bound Minor Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Full Flesh and Blood Immunity",
+          "Label": "Full Flesh and Blood Immunity",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.minor.full-fb-immune"
+            }
+          ]
+        },
+        {
+          "Key": "Standard Innate Up To 5th",
+          "Label": "Standard Innate Up To 5th",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.minor.standard-innate-up-to-5"
+            }
+          ]
+        },
+        {
+          "Key": "Embody No Summon",
+          "Label": "Embody No Summon",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.minor.embody-no-summon"
+            }
+          ]
+        },
+        {
+          "Key": "Own Cantrip At Will",
+          "Label": "Own Cantrip At Will",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.minor.cantrip-at-will"
+            }
+          ]
+        },
+        {
+          "Key": "Empower Weapon",
+          "Label": "Empower Weapon",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.minor.empower-weapon"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.elements-bound.medium": {
+      "Key": "choice.multi-race.elements-bound.medium",
+      "Title": "Elements Bound Medium Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Standard Innate",
+          "Label": "Standard Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.medium.standard-innate"
+            }
+          ]
+        },
+        {
+          "Key": "Elemental Shift",
+          "Label": "Elemental Shift",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.medium.elemental-shift"
+            }
+          ]
+        },
+        {
+          "Key": "Opposite Element Resistance",
+          "Label": "Opposite Element Resistance",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.medium.resistance-opposite"
+            }
+          ]
+        },
+        {
+          "Key": "Neutrality to Own Elementals",
+          "Label": "Neutrality to Own Elementals",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.medium.neutrality-own-elementals"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.elements-bound.major": {
+      "Key": "choice.multi-race.elements-bound.major",
+      "Title": "Elements Bound Major Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Embody Elemental",
+          "Label": "Embody Elemental",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.major.embody-elemental"
+            }
+          ]
+        },
+        {
+          "Key": "Magical Live to Minus 6",
+          "Label": "Magical Live to Minus 6",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.major.magic-live-to-minus-6"
+            }
+          ]
+        },
+        {
+          "Key": "Complete Immunity to Own Element Bane",
+          "Label": "Complete Immunity to Own Element Bane",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.major.complete-immunity-own-element"
+            }
+          ]
+        },
+        {
+          "Key": "Invoke the Magic Within",
+          "Label": "Invoke the Magic Within",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elements-bound.major.invoke-magic-within"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.elder-fey.minor": {
+      "Key": "choice.multi-race.elder-fey.minor",
+      "Title": "Elder Fey Minor Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Any 1st Standard Spell Innate",
+          "Label": "Any 1st Standard Spell Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.any-1st-standard-spell-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 2nd Standard Spell Innate",
+          "Label": "Any 2nd Standard Spell Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.any-2nd-standard-spell-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 3rd Standard Spell Innate",
+          "Label": "Any 3rd Standard Spell Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.any-3rd-standard-spell-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 0 Mana Cantrip At Will",
+          "Label": "Any 0 Mana Cantrip At Will",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.any-0-mana-cantrip-at-will"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Enhanced Recognise Mana",
+          "Label": "Enhanced Recognise Mana",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.enhanced-recognise-mana"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Affirm x1/Level",
+          "Label": "Affirm x1/Level",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.affirm-x1-level"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 1st Miracle Innate",
+          "Label": "Any 1st Miracle Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.any-1st-miracle-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 2nd Miracle Innate",
+          "Label": "Any 2nd Miracle Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.any-2nd-miracle-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 3rd Miracle Innate",
+          "Label": "Any 3rd Miracle Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.any-3rd-miracle-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Gauge Spirit At Will",
+          "Label": "Gauge Spirit At Will",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.gauge-spirit-at-will"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Discern as Undead Type",
+          "Label": "Discern as Undead Type",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.discern-as-undead-type"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Discern Nature of Wounds by Sight",
+          "Label": "Discern Nature of Wounds by Sight",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.discern-nature-of-wounds-by-sight"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 1st Basic Evocation Innate",
+          "Label": "Any 1st Basic Evocation Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.any-1st-basic-evocation-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 2nd Basic Evocation Innate",
+          "Label": "Any 2nd Basic Evocation Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.any-2nd-basic-evocation-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 3rd Basic Evocation Innate",
+          "Label": "Any 3rd Basic Evocation Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.any-3rd-basic-evocation-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Recognise Earthpower 20ft",
+          "Label": "Recognise Earthpower 20ft",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.recognise-earthpower-20ft"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Double Druidic Heal",
+          "Label": "Double Druidic Heal",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.double-druidic-heal"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Neutrality to Plants",
+          "Label": "Neutrality to Plants",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.neutrality-to-plants"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Auric Colour x2/Level",
+          "Label": "Auric Colour x2/Level",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.auric-colour-x2-level"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Neuronic Penetration x1/Level",
+          "Label": "Neuronic Penetration x1/Level",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.neuronic-penetration-x1-level"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Neuronic Blast x1/2 Levels",
+          "Label": "Neuronic Blast x1/2 Levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.neuronic-blast-x1-2-levels"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Detect Inanimate x1/2 Levels",
+          "Label": "Detect Inanimate x1/2 Levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.detect-inanimate-x1-2-levels"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Forget x1/3 Levels",
+          "Label": "Forget x1/3 Levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.forget-x1-3-levels"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Recognise Neuronics",
+          "Label": "Recognise Neuronics",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.recognise-neuronics"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Acute Hearing",
+          "Label": "Acute Hearing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.acute-hearing"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Locational Sniff",
+          "Label": "Locational Sniff",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.locational-sniff"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Salmon Leap x1/Level",
+          "Label": "Salmon Leap x1/Level",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.salmon-leap-x1-level"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "+2 Innate PAC",
+          "Label": "+2 Innate PAC",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.plus2-innate-pac"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "+3 DAC 5 Minutes x1/2 Levels",
+          "Label": "+3 DAC 5 Minutes x1/2 Levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.plus3-dac-5-minutes-x1-2-levels"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Perception as Ranger",
+          "Label": "Perception as Ranger",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.perception-as-ranger"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Mindblock At All Times",
+          "Label": "Mindblock At All Times",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.minor.mindblock-at-all-times"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        }
+      ]
+    },
+    "choice.multi-race.elder-fey.major": {
+      "Key": "choice.multi-race.elder-fey.major",
+      "Title": "Elder Fey Major Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Any 4th Standard Spell Innate",
+          "Label": "Any 4th Standard Spell Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.any-4th-standard-spell-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 5th Standard Spell Innate",
+          "Label": "Any 5th Standard Spell Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.any-5th-standard-spell-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 6th Standard Spell Innate",
+          "Label": "Any 6th Standard Spell Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.any-6th-standard-spell-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 10th Standard Spell Innate",
+          "Label": "Any 10th Standard Spell Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.any-10th-standard-spell-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "1/3 Effect Neutral Pure Spiritual",
+          "Label": "1/3 Effect Neutral Pure Spiritual",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.1-3-effect-neutral-pure-spiritual"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 4th Miracle Innate",
+          "Label": "Any 4th Miracle Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.any-4th-miracle-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 5th Miracle Innate",
+          "Label": "Any 5th Miracle Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.any-5th-miracle-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 6th Miracle Innate",
+          "Label": "Any 6th Miracle Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.any-6th-miracle-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Fear Opposite Alignment At Will",
+          "Label": "Fear Opposite Alignment At Will",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.fear-opposite-alignment-at-will"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "25 Percent Off Mantic Damage",
+          "Label": "25 Percent Off Mantic Damage",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.25-percent-off-mantic-damage"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 4th Basic Evocation Innate",
+          "Label": "Any 4th Basic Evocation Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.any-4th-basic-evocation-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 5th Basic Evocation Innate",
+          "Label": "Any 5th Basic Evocation Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.any-5th-basic-evocation-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Any 6th Basic Evocation Innate",
+          "Label": "Any 6th Basic Evocation Innate",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.any-6th-basic-evocation-innate"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Neutrality to Plants and Animals",
+          "Label": "Neutrality to Plants and Animals",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.neutrality-to-plants-and-animals"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "6pt Reduction vs Wooden Weapons",
+          "Label": "6pt Reduction vs Wooden Weapons",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.6pt-reduction-vs-wooden-weapons"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Neuronic Bolt x1/3 Levels",
+          "Label": "Neuronic Bolt x1/3 Levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.neuronic-bolt-x1-3-levels"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Displacement x1/3 Levels",
+          "Label": "Displacement x1/3 Levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.displacement-x1-3-levels"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Psychic Crush x4/Day",
+          "Label": "Psychic Crush x4/Day",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.psychic-crush-x4-day"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Neuro Sight x1/2 Levels",
+          "Label": "Neuro Sight x1/2 Levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.neuro-sight-x1-2-levels"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Psionic Probe x1/2 Levels",
+          "Label": "Psionic Probe x1/2 Levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.psionic-probe-x1-2-levels"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "50 Percent Rage x1/Day",
+          "Label": "50 Percent Rage x1/Day",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.50-percent-rage-x1-day"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Assisted Climb At Will",
+          "Label": "Assisted Climb At Will",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.assisted-climb-at-will"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "3pt Reduction vs Pure Magic/Spirit Weapons",
+          "Label": "3pt Reduction vs Pure Magic/Spirit Weapons",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.3pt-reduction-vs-pure-magic-spirit-weapons"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "Enhanced Mind Block",
+          "Label": "Enhanced Mind Block",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.enhanced-mind-block"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        },
+        {
+          "Key": "+5 Innate PAC",
+          "Label": "+5 Innate PAC",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.elder-fey.major.plus5-innate-pac"
+            }
+          ],
+          "Metadata": {
+            "Category": "Mixed"
+          }
+        }
+      ]
+    },
+    "choice.multi-race.golem.construct-type": {
+      "Key": "choice.multi-race.golem.construct-type",
+      "Title": "Golem Construct Type",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Iron",
+          "Label": "Iron",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.golem.type.iron"
+            }
+          ],
+          "Description": "Prerequisite for powers: MAC 1."
+        },
+        {
+          "Key": "Stone",
+          "Label": "Stone",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.golem.type.stone"
+            }
+          ],
+          "Description": "Prerequisite for powers: Stability; may not be blue mana user."
+        },
+        {
+          "Key": "Ice",
+          "Label": "Ice",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.golem.type.ice"
+            }
+          ],
+          "Description": "Prerequisite for powers: Immunity to Cold; may not be red mana user."
+        },
+        {
+          "Key": "Bronze",
+          "Label": "Bronze",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.golem.type.bronze"
+            }
+          ],
+          "Description": "Prerequisite for powers: Stockiness."
+        }
+      ]
+    },
+    "choice.multi-race.primal-soul.tree": {
+      "Key": "choice.multi-race.primal-soul.tree",
+      "Title": "Primal Soul Tree",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Primal Bound",
+          "Label": "Primal Bound",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.tree.primal-bound"
+            }
+          ]
+        },
+        {
+          "Key": "Predator",
+          "Label": "Predator",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.tree.predator"
+            }
+          ]
+        },
+        {
+          "Key": "Prey",
+          "Label": "Prey",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.tree.prey"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.primal-soul.primal-bound.minor": {
+      "Key": "choice.multi-race.primal-soul.primal-bound.minor",
+      "Title": "Primal Bound Minor Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "+1 DAC",
+          "Label": "+1 DAC",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.primal-bound.minor.plus1-dac"
+            }
+          ]
+        },
+        {
+          "Key": "Lucky Idea x1/day",
+          "Label": "Lucky Idea x1/day",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.primal-bound.minor.lucky-idea-x1-day"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.primal-soul.primal-bound.medium": {
+      "Key": "choice.multi-race.primal-soul.primal-bound.medium",
+      "Title": "Primal Bound Medium Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Lucky Idea x1/3 levels",
+          "Label": "Lucky Idea x1/3 levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.primal-bound.medium.lucky-idea-x1-3-levels"
+            }
+          ]
+        },
+        {
+          "Key": "Lightning Reactions",
+          "Label": "Lightning Reactions",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.primal-bound.medium.lightning-reactions"
+            }
+          ]
+        },
+        {
+          "Key": "Physical Light-Step x1/3 levels",
+          "Label": "Physical Light-Step x1/3 levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.primal-bound.medium.physical-light-step-x1-3-levels"
+            }
+          ]
+        },
+        {
+          "Key": "Regeneration 1/1 per 5 min",
+          "Label": "Regeneration 1/1 per 5 min",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.primal-bound.medium.regeneration-1-1-per-5-min"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.primal-soul.primal-bound.major": {
+      "Key": "choice.multi-race.primal-soul.primal-bound.major",
+      "Title": "Primal Bound Major Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Max Damage Quin with Two-Hand B",
+          "Label": "Max Damage Quin with Two-Hand B",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.primal-bound.major.max-damage-quin-with-two-hand-b"
+            }
+          ]
+        },
+        {
+          "Key": "Domination Max 30 Seconds",
+          "Label": "Domination Max 30 Seconds",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.primal-bound.major.domination-max-30-seconds"
+            }
+          ]
+        },
+        {
+          "Key": "Immunity to Poison and Disease",
+          "Label": "Immunity to Poison and Disease",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.primal-bound.major.immunity-to-poison-and-disease"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.primal-soul.predator.minor": {
+      "Key": "choice.multi-race.primal-soul.predator.minor",
+      "Title": "Predator Minor Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Acute Hearing",
+          "Label": "Acute Hearing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.minor.acute-hearing"
+            }
+          ]
+        },
+        {
+          "Key": "Sniff and Locational Sniff",
+          "Label": "Sniff and Locational Sniff",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.minor.sniff-and-locational-sniff"
+            }
+          ]
+        },
+        {
+          "Key": "Tracking as Ranger",
+          "Label": "Tracking as Ranger",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.minor.tracking-as-ranger"
+            }
+          ]
+        },
+        {
+          "Key": "Flight x1/3 levels",
+          "Label": "Flight x1/3 levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.minor.flight-x1-3-levels"
+            }
+          ]
+        },
+        {
+          "Key": "Unarmed Combat with Claws",
+          "Label": "Unarmed Combat with Claws",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.minor.unarmed-combat-with-claws"
+            }
+          ]
+        },
+        {
+          "Key": "Jump x1/2 levels",
+          "Label": "Jump x1/2 levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.minor.jump-x1-2-levels"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.primal-soul.predator.medium": {
+      "Key": "choice.multi-race.primal-soul.predator.medium",
+      "Title": "Predator Medium Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Perception and Supernatural Perception",
+          "Label": "Perception and Supernatural Perception",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.medium.perception-and-supernatural-perception"
+            }
+          ]
+        },
+        {
+          "Key": "Snarl x1/3 levels",
+          "Label": "Snarl x1/3 levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.medium.snarl-x1-3-levels"
+            }
+          ]
+        },
+        {
+          "Key": "+1 Max Damage First Blow",
+          "Label": "+1 Max Damage First Blow",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.medium.plus1-max-damage-first-blow"
+            }
+          ]
+        },
+        {
+          "Key": "Regeneration 1/1 per 5 min",
+          "Label": "Regeneration 1/1 per 5 min",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.medium.regeneration-1-1-per-5-min"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.primal-soul.predator.major": {
+      "Key": "choice.multi-race.primal-soul.predator.major",
+      "Title": "Predator Major Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Lightning Strike x1/3 levels",
+          "Label": "Lightning Strike x1/3 levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.major.lightning-strike-x1-3-levels"
+            }
+          ]
+        },
+        {
+          "Key": "Sense Motion",
+          "Label": "Sense Motion",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.major.sense-motion"
+            }
+          ]
+        },
+        {
+          "Key": "Through PAC Unarmed Damage",
+          "Label": "Through PAC Unarmed Damage",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.predator.major.through-pac-unarmed-damage"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.primal-soul.prey.minor": {
+      "Key": "choice.multi-race.primal-soul.prey.minor",
+      "Title": "Prey Minor Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Acute Hearing",
+          "Label": "Acute Hearing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.minor.acute-hearing"
+            }
+          ]
+        },
+        {
+          "Key": "Sniff and Locational Sniff",
+          "Label": "Sniff and Locational Sniff",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.minor.sniff-and-locational-sniff"
+            }
+          ]
+        },
+        {
+          "Key": "+1 DAC",
+          "Label": "+1 DAC",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.minor.plus1-dac"
+            }
+          ]
+        },
+        {
+          "Key": "Flight x1/3 levels",
+          "Label": "Flight x1/3 levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.minor.flight-x1-3-levels"
+            }
+          ]
+        },
+        {
+          "Key": "Jump x1/2 levels",
+          "Label": "Jump x1/2 levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.minor.jump-x1-2-levels"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.primal-soul.prey.medium": {
+      "Key": "choice.multi-race.primal-soul.prey.medium",
+      "Title": "Prey Medium Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "6th Sense",
+          "Label": "6th Sense",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.medium.6th-sense"
+            }
+          ]
+        },
+        {
+          "Key": "+2 DAC",
+          "Label": "+2 DAC",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.medium.plus2-dac"
+            }
+          ]
+        },
+        {
+          "Key": "Perception and Supernatural Perception",
+          "Label": "Perception and Supernatural Perception",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.medium.perception-and-supernatural-perception"
+            }
+          ]
+        },
+        {
+          "Key": "Physical Chameleon x1/2 levels",
+          "Label": "Physical Chameleon x1/2 levels",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.medium.physical-chameleon-x1-2-levels"
+            }
+          ]
+        },
+        {
+          "Key": "Lightning Reactions",
+          "Label": "Lightning Reactions",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.medium.lightning-reactions"
+            }
+          ]
+        },
+        {
+          "Key": "Regeneration 1/1 per 5 min",
+          "Label": "Regeneration 1/1 per 5 min",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.medium.regeneration-1-1-per-5-min"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.primal-soul.prey.major": {
+      "Key": "choice.multi-race.primal-soul.prey.major",
+      "Title": "Prey Major Talent",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "No Max AC While Fleeing",
+          "Label": "No Max AC While Fleeing",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.major.no-max-ac-while-fleeing"
+            }
+          ]
+        },
+        {
+          "Key": "+4 DAC",
+          "Label": "+4 DAC",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.major.plus4-dac"
+            }
+          ]
+        },
+        {
+          "Key": "Physical Light-Step x1/Level",
+          "Label": "Physical Light-Step x1/Level",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.primal-soul.prey.major.physical-light-step-x1-level"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.multi-race.undead.type": {
+      "Key": "choice.multi-race.undead.type",
+      "Title": "Undead Type",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Ghoul",
+          "Label": "Ghoul",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.undead.type.ghoul"
+            }
+          ]
+        },
+        {
+          "Key": "Mummy",
+          "Label": "Mummy",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.undead.type.mummy"
+            }
+          ]
+        },
+        {
+          "Key": "Wight",
+          "Label": "Wight",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.undead.type.wight"
+            }
+          ]
+        },
+        {
+          "Key": "Wraith",
+          "Label": "Wraith",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.undead.type.wraith"
+            }
+          ]
+        },
+        {
+          "Key": "Vampire",
+          "Label": "Vampire",
+          "Grants": [
+            {
+              "AbilityRef": "ability.mr.undead.type.vampire"
             }
           ]
         }

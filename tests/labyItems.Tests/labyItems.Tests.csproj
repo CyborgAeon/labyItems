@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Compile Include="../../labyItems/Helpers/WizardSpellRules.cs" Link="Source/WizardSpellRules.cs" />
+    <Compile Include="../../labyItems/Helpers/MagicColourOppositionRules.cs" Link="Source/MagicColourOppositionRules.cs" />
     <Compile Include="../../labyItems/Controls/Pickers/EnumDisplayFormatter.cs" Link="Source/EnumDisplayFormatter.cs" />
     <Compile Include="../../labyItems/Controls/ContributionRow.cs" Link="Source/ContributionRow.cs" />
     <Compile Include="../../labyItems/Controls/StickyFooterContentBuilder.cs" Link="Source/StickyFooterContentBuilder.cs" />
