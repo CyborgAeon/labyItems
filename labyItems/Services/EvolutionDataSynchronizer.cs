@@ -126,6 +126,7 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             var sourceBook = (seed.sourceBook ?? string.Empty).Trim();
             if (sourceBook.Length == 0)
                 sourceBook = sourceBookFallback;
+            var abilityRef = (seed.abilityRef ?? string.Empty).Trim();
 
             var id = DeterministicGuid($"evo|{table}|{index}");
             var dataJson = JsonSerializer.Serialize(new
@@ -137,7 +138,8 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
                 table,
                 canBuyMultiple = parsedCost.CanBuyMultiple,
                 preReqs,
-                sourceBook
+                sourceBook,
+                abilityRef
             });
 
             list.Add(new EvolutionDefaultAbility(
@@ -492,6 +494,7 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
         public List<string>? preReqs { get; set; }
         public bool? canBuyMultiple { get; set; }
         public string? sourceBook { get; set; }
+        public string? abilityRef { get; set; }
     }
 
     private sealed record EvolutionDefaultAbility(
@@ -505,4 +508,3 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
         string? PreReqsJson,
         string DataJson);
 }
-

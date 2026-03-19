@@ -153,6 +153,66 @@
         }
       ]
     },
+    "choice.guild.shadow-legion.advanced": {
+      "Key": "choice.guild.shadow-legion.advanced",
+      "Title": "Mercenary Soldier",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "shadow-legion-extra-use",
+          "Label": "Shadow Legion!",
+          "Grants": [
+            {
+              "AbilityRef": "ability.determination",
+              "Overrides": {
+                "Name": "Shadow Legion!",
+                "Type": "Innate",
+                "Count": 1,
+                "Source": "Guild",
+                "Effect": "Additional Shadow Legion! use (5 minutes)."
+              }
+            }
+          ],
+          "Description": "Additional Shadow Legion! use."
+        },
+        {
+          "Key": "battle-fury-extra-use",
+          "Label": "Battle Fury",
+          "Grants": [
+            {
+              "AbilityRef": "ability.cold-rage",
+              "Overrides": {
+                "Name": "Battle Fury",
+                "Type": "Innate",
+                "Count": 1,
+                "Source": "Guild"
+              }
+            }
+          ],
+          "Description": "Additional Battle Fury use."
+        },
+        {
+          "Key": "medic-bandaging-upgrade",
+          "Label": "Medic",
+          "Grants": [
+            {
+              "AbilityRef": "ability.bandaging",
+              "Overrides": {
+                "Name": "Medic",
+                "Type": "Power",
+                "Source": "Guild",
+                "Effect": "Bandaging from Basic Tier increases to 36pts and may also cure TBLP."
+              }
+            }
+          ],
+          "Description": "Bandaging from Basic Tier increases to 36pts and may also cure TBLP."
+        }
+      ]
+    },
     "choice.battle-priest-specialist.primary": {
       "Key": "choice.battle-priest-specialist.primary",
       "Title": "Battle-Priest Specialist",

@@ -19,6 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="ClosedXML" />
+    <PackageReference Include="Microsoft.Data.Sqlite" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,12 +46,24 @@
     <Compile Include="../../labyItems/Services/Specialisations/SpecialisationDefinitionRepository.cs" Link="Source/SpecialisationDefinitionRepository.cs" />
     <Compile Include="../../labyItems/Services/Specialisations/CharacterSpecialisationScreenCalculator.cs" Link="Source/CharacterSpecialisationScreenCalculator.cs" />
     <Compile Include="../../labyItems/Services/BattleboardService.cs" Link="Source/BattleboardService.cs" />
+    <Compile Include="../../labyItems/Services/BattleboardAdvancementEffectResolver.cs" Link="Source/BattleboardAdvancementEffectResolver.cs" />
+    <Compile Include="../../labyItems/Services/BattleboardArmourCalculator.cs" Link="Source/BattleboardArmourCalculator.cs" />
+    <Compile Include="../../labyItems/Services/BattleboardLifeCalculator.cs" Link="Source/BattleboardLifeCalculator.cs" />
+    <Compile Include="../../labyItems/Services/BattleboardInnateCalculator.cs" Link="Source/BattleboardInnateCalculator.cs" />
+    <Compile Include="../../labyItems/Services/ItemEmailService.cs" Link="Source/ItemEmailService.cs" />
+    <Compile Include="../../labyItems/Services/LiteDbService.cs" Link="Source/LiteDbService.cs" />
     <Compile Include="../../labyItems/Helpers/ReflectionHelper.cs" Link="Source/ReflectionHelper.cs" />
     <Compile Include="../../labyItems/Helpers/RegexOptionsCompat.cs" Link="Source/RegexOptionsCompat.cs" />
     <Compile Include="../../labyItems/Helpers/LoopHelper.cs" Link="Source/LoopHelper.cs" />
+    <Compile Include="../../labyItems/Helpers/JsonTokenCompressor.cs" Link="Source/JsonTokenCompressor.cs" />
     <Compile Include="../../labyItems/Pages/Characters/ViewModels/SpecialisationSummaryDedupe.cs" Link="Source/SpecialisationSummaryDedupe.cs" />
     <Compile Include="../../labyItems/Pages/Characters/ISpecialisationSectionVm.cs" Link="Source/ISpecialisationSectionVm.cs" />
     <Compile Include="../../labyItems/Pages/Characters/MappedSpecialisationSectionVm.cs" Link="Source/MappedSpecialisationSectionVm.cs" />
+    <Compile Include="../../labyItems/Models/CalcResult.cs" Link="Source/CalcResult.cs" />
+    <Compile Include="../../labyItems/Models/Item.cs" Link="Source/Item.cs" />
+    <Compile Include="../../labyItems/Models/ItemJsonPayload.cs" Link="Source/ItemJsonPayload.cs" />
+    <Compile Include="../../labyItems/Models/ItemTypeEnum.cs" Link="Source/ItemTypeEnum.cs" />
+    <Compile Include="../../labyItems/Models/RecipientInfo.cs" Link="Source/RecipientInfo.cs" />
     <Compile Include="../../labyItems/Models/Characters/Ability.cs" Link="Source/Ability.cs" />
     <Compile Include="../../labyItems/Models/Characters/AbilityDefinition.cs" Link="Source/AbilityDefinition.cs" />
     <Compile Include="../../labyItems/Models/Characters/Alignment.cs" Link="Source/Alignment.cs" />

@@ -1309,6 +1309,16 @@ public static class SpecialisationDefinitionRepository
         return new AbilityDefinition
         {
             Key = string.IsNullOrWhiteSpace(overrides.Key) ? baseline.Key : overrides.Key,
+            AbilityRef = string.IsNullOrWhiteSpace(overrides.AbilityRef) ? baseline.AbilityRef : overrides.AbilityRef,
+            GrantId = string.IsNullOrWhiteSpace(overrides.GrantId) ? baseline.GrantId : overrides.GrantId,
+            GrantType = string.IsNullOrWhiteSpace(overrides.GrantType) ? baseline.GrantType : overrides.GrantType,
+            Duration = string.IsNullOrWhiteSpace(overrides.Duration) ? baseline.Duration : overrides.Duration,
+            Overrides = overrides.Overrides ?? baseline.Overrides,
+            UpgradeGrantRef = string.IsNullOrWhiteSpace(overrides.UpgradeGrantRef)
+                ? baseline.UpgradeGrantRef
+                : overrides.UpgradeGrantRef,
+            ReplaceWith = overrides.ReplaceWith ?? baseline.ReplaceWith,
+            Modify = overrides.Modify ?? baseline.Modify,
             Name = string.IsNullOrWhiteSpace(overrides.Name) ? baseline.Name : overrides.Name,
             Type = string.IsNullOrWhiteSpace(overrides.Type) ? baseline.Type : overrides.Type,
             Effect = string.IsNullOrWhiteSpace(overrides.Effect) ? baseline.Effect : overrides.Effect,
@@ -1326,7 +1336,14 @@ public static class SpecialisationDefinitionRepository
             GuildOverrides = overrides.GuildOverrides is { Count: > 0 }
                 ? overrides.GuildOverrides.ToList()
                 : baseline.GuildOverrides?.ToList(),
-            Customisation = overrides.Customisation ?? baseline.Customisation
+            ChoiceSetRef = string.IsNullOrWhiteSpace(overrides.ChoiceSetRef) ? baseline.ChoiceSetRef : overrides.ChoiceSetRef,
+            ChoiceSetRefs = overrides.ChoiceSetRefs is { Count: > 0 }
+                ? overrides.ChoiceSetRefs.ToList()
+                : baseline.ChoiceSetRefs?.ToList(),
+            Customisation = overrides.Customisation ?? baseline.Customisation,
+            SystemEffects = overrides.SystemEffects is { Count: > 0 }
+                ? overrides.SystemEffects.Select(CloneSystemEffect).ToList()
+                : baseline.SystemEffects?.Select(CloneSystemEffect).ToList()
         };
     }
 
@@ -1335,6 +1352,26 @@ public static class SpecialisationDefinitionRepository
         return new AbilityDefinition
         {
             Key = source.Key,
+            AbilityRef = source.AbilityRef,
+            GrantId = source.GrantId,
+            GrantType = source.GrantType,
+            Duration = source.Duration,
+            Overrides = source.Overrides == null
+                ? null
+                : new GuildGrantOverrides
+                {
+                    DisplayName = source.Overrides.DisplayName,
+                    Verbal = source.Overrides.Verbal,
+                    Effect = source.Overrides.Effect,
+                    Source = source.Overrides.Source,
+                    GrantType = source.Overrides.GrantType,
+                    Count = source.Overrides.Count,
+                    Frequency = source.Overrides.Frequency,
+                    Duration = source.Overrides.Duration
+                },
+            UpgradeGrantRef = source.UpgradeGrantRef,
+            ReplaceWith = source.ReplaceWith == null ? null : CloneAbility(source.ReplaceWith),
+            Modify = source.Modify == null ? null : new GuildGrantModify { CountDelta = source.Modify.CountDelta },
             Name = source.Name,
             Type = source.Type,
             Effect = source.Effect,
@@ -1348,13 +1385,28 @@ public static class SpecialisationDefinitionRepository
             OverwriteKey = source.OverwriteKey,
             PreReqs = source.PreReqs?.ToList(),
             GuildOverrides = source.GuildOverrides?.ToList(),
+            ChoiceSetRef = source.ChoiceSetRef,
+            ChoiceSetRefs = source.ChoiceSetRefs?.ToList(),
             Customisation = source.Customisation == null
                 ? null
                 : new AbilityCustomisation
                 {
                     OptionEnum = source.Customisation.OptionEnum,
                     CustomValuesPermitted = source.Customisation.CustomValuesPermitted
-                }
+                },
+            SystemEffects = source.SystemEffects?.Select(CloneSystemEffect).ToList()
+        };
+    }
+
+    private static AbilitySystemEffect CloneSystemEffect(AbilitySystemEffect source)
+    {
+        return new AbilitySystemEffect
+        {
+            EffectType = source.EffectType,
+            DisplayName = source.DisplayName,
+            ResistanceType = source.ResistanceType,
+            Level = source.Level,
+            ImmunityName = source.ImmunityName
         };
     }
 

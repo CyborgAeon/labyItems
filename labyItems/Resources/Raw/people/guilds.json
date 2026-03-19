@@ -74,6 +74,7 @@
       "Basic": [
         {
           "Name": "Shield Self",
+          "AbilityRef": "ability.shield-self",
           "Type": "Innate",
           "Count": 4
         },
@@ -86,6 +87,7 @@
           },
           {
             "Name": "Strength of the Ivory Dragon",
+            "AbilityRef": "ability.ivory-warrior",
             "Type": "Innate",
             "Count": 1,
             "Effect": "Acts as a single rune of Ivory warrior, but lasts for 1 hour. Additional extra runes of Ivory warrior can be cast on top of this lasting their normal duration with this counting as the 1st."
@@ -103,11 +105,13 @@
           [
             {
               "Name": "Shield Self",
+              "AbilityRef": "ability.shield-self",
               "Type": "Update",
               "Count": 8
             },
             {
               "Name": "Strengthen Self",
+              "AbilityRef": "ability.strengthen-self",
               "Type": "Innate",
               "Count": 4
             },
@@ -125,16 +129,19 @@
           [
             {
               "Name": "Ivory Warrior",
+              "AbilityRef": "ability.ivory-warrior",
               "Type": "Innate",
               "Count": 2
             },
             {
               "Name": "Mobility",
+              "AbilityRef": "ability.mobility",
               "Type": "Innate",
               "Count": 1
             },
             {
               "Name": "Ivory warrior's from The Brood last for 1 hour",
+              "AbilityRef": "ability.ivory-warrior",
               "Type": "Static",
               "Effect": "Ivory warrior's from The Brood last for 1 hour"
             }
@@ -163,6 +170,7 @@
           },
           {
             "Name": "Mobility",
+            "AbilityRef": "ability.mobility",
             "Type": "Update",
             "Effect": "Mobility from The Brood is now retroactive."
           }
@@ -382,10 +390,15 @@
     "Benefits": {
       "Basic": [
         {
-          "Name": "The People off Sweethaven have spoken",
-          "Type": "Innate",
+          "GrantId": "dukes-head.basic.the-people-of-sweethaven-have-spoken",
+          "AbilityRef": "ability.the-people-of-sweethaven-have-spoken",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "At the start of the day (in the brief) guild members can vote which threat (from the below) will be the most dangerous that day. Depending on which wins all members gain the following benefit:\ni:The Ghoul is the most dangerous – Gains a War Cry 1/day\nii: The Demons Fire will consume us - Gains + 2 Mac vs Red\niii: The Silver Folk will be our bane - Gains + 3 NAC."
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "The People of Sweethaven have spoken",
+            "Effect": "At the start of the day (in the brief) guild members can vote which threat (from the below) will be the most dangerous that day. Depending on which wins all members gain the following benefit:\ni:The Ghoul is the most dangerous - Gains a War Cry 1/day\nii: The Demons Fire will consume us - Gains + 2 MAC vs Red\niii: The Silver Folk will be our bane - Gains + 3 NAC."
+          }
         },
         {
           "Name": "+1 Level of Resistance vs Domination effects",
@@ -399,10 +412,15 @@
       ],
       "Intermediate": [
         {
-          "Name": "The People off Sweethaven have spoken",
-          "Type": "Update",
-          "Count": 2,
-          "Effect": "At the start of each section guild members may vote which threat (from the below) will be the most dangerous that day. Depending on which wins all members gain the following benefit:\ni:The Ghoul is the most dangerous – Gains a War Cry 1/day\nii: The Demons Fire will consume us - Gains + 2 Mac vs Red\niii: The Silver Folk will be our bane - Gains + 3 NAC."
+          "GrantId": "dukes-head.intermediate.the-people-of-sweethaven-have-spoken-upgrade",
+          "UpgradeGrantRef": "dukes-head.basic.the-people-of-sweethaven-have-spoken",
+          "Modify": {
+            "CountDelta": 1
+          },
+          "Overrides": {
+            "DisplayName": "The People of Sweethaven have spoken",
+            "Effect": "At the start of each section guild members may vote which threat (from the below) will be the most dangerous that day. Depending on which wins all members gain the following benefit:\ni:The Ghoul is the most dangerous - Gains a War Cry 1/day\nii: The Demons Fire will consume us - Gains + 2 MAC vs Red\niii: The Silver Folk will be our bane - Gains + 3 NAC."
+          }
         },
         {
           "Name": "Understanding of freewill",
@@ -410,9 +428,14 @@
           "Effect": "After spending 30 seconds talking to someone is aware if they are under a domination effect. With a further 30 seconds they gain a major prayers worth of information on what the broad orders are."
         },
         {
-          "Name": "Discipline Other",
-          "Type": "Innate",
-          "Effect": "Guild members only"
+          "GrantId": "dukes-head.intermediate.discipline-other",
+          "AbilityRef": "ability.discipline",
+          "GrantType": "Innate",
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "Discipline Other",
+            "Effect": "Acts as Discipline, but may target another willing guild member who is claiming guild benefits."
+          }
         }
       ]
     },
@@ -545,11 +568,13 @@
         },
         {
           "Name": "Discern Demonkind",
+          "AbilityRef": "ability.mc.demon-slayer.l1.3",
           "Type": "AtWill",
           "Effect": "20' Y/N mantic info effect."
         },
         {
           "Name": "Enhanced Discern Demonkind",
+          "AbilityRef": "ability.mc.demon-slayer.l1.3",
           "Type": "Innate",
           "Count": 1,
           "Effect": "1/day 20' Y/N mantic info effect that reveals the demonic racial name [or approx imately if a unique creature] and up to 3 useful words describing the creatures power s of an identified Demonkind . E.g. Shadow Demon – assassin fears light."
@@ -564,6 +589,7 @@
         },
         {
           "Name": "Enhanced Discern Demonkind",
+          "AbilityRef": "ability.mc.demon-slayer.l1.3",
           "Type": "Update",
           "Count": 2
         },
@@ -614,6 +640,7 @@
       "Intermediate": [
         {
           "Name": "Lifes cry",
+          "AbilityRef": "ability.war-cry",
           "Type": "Innate",
           "Count": 1,
           "Effect": "War Cry but works against all undead touch effects, gaining immunity to all of them for 5 minutes"
@@ -626,6 +653,7 @@
         },
         {
           "Name": "Repel Undead",
+          "AbilityRef": "ability.repel-undead",
           "Type": "Innate",
           "Count": 1
         },
@@ -644,6 +672,7 @@
         },
         {
           "Name": "Attract Undead",
+          "AbilityRef": "ability.mc.life-s-avenger.l5.1",
           "Type": "Innate",
           "Count": 1,
           "Effect": "1/day"
@@ -827,6 +856,7 @@
         },
         {
           "Name": "Monk Locational Curing",
+          "AbilityRef": "ability.monk-locational-curing",
           "Type": "Power"
         }
       ],
@@ -1209,10 +1239,28 @@
           "Effect": "Grants the user the next level of the “Winds”. If the 1st Wind is owned then this grants immunity to magic for 5 minutes."
         },
         {
-          "Name": "Stand with the Confederacy",
-          "Type": "Innate",
+          "GrantId": "wahadamune.basic.stand-with-the-confederacy-life",
+          "AbilityRef": "ability.6-2-stamina.1",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "Usable if a fellow member of the Ishmaic confederacy is incapacitated or killed by a foe. Grants +6/2 life and an innate War Cry. The benefits last 5 minutes even if the individual recovers."
+          "Duration": "5 minutes",
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "Stand with the Confederacy (Life)",
+            "Effect": "Usable if a fellow member of the Ishmaic Confederacy is unconscious, incapacitated, or killed by a foe. Gains +6/2 life for 5 minutes, even if the individual recovers."
+          }
+        },
+        {
+          "GrantId": "wahadamune.basic.stand-with-the-confederacy-war-cry",
+          "AbilityRef": "ability.war-cry",
+          "GrantType": "Innate",
+          "Count": 1,
+          "Duration": "5 minutes",
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "Stand with the Confederacy (War Cry)",
+            "Effect": "Usable if a fellow member of the Ishmaic Confederacy is unconscious, incapacitated, or killed by a foe. Gains an innate War Cry for 5 minutes, even if the individual recovers."
+          }
         },
         {
           "Name": "Aid of the Clan ~ At the start of the day can choose to gain the aid of one of the Ishmaic Clans as follows: o Galahbhad – Armour is tinkered by the clans armourers, granting immunity to accuracy. o Buladajn – Venoms Whisper",
@@ -1294,10 +1342,15 @@
     "Benefits": {
       "Basic": [
         {
-          "Name": "Embraced by Evil",
-          "Type": "Innate",
+          "GrantId": "church-of-certizal.basic.embraced-by-evil",
+          "AbilityRef": "ability.immunity-to-one-evil-spiritual-effect",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "Grants immunity to one evil spiritual effect; used as warcry, can't benefit from Goodly spirits for duration"
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "Embraced by Evil",
+            "Effect": "Grants immunity to one evil spiritual effect; used as warcry, cannot benefit from Goodly spirits for the duration."
+          }
         },
         {
           "Name": "Shroud of Evil",
@@ -2175,8 +2228,10 @@
       "Basic": [
         {
           "Name": "Stamina Blessing of St Michael",
+          "AbilityRef": "ability.6-2-stamina.1",
           "Type": "Life",
           "Amount": [3, 1],
+          "Effect": "Gains +3/1 life from the blessing of St Michael.",
           "Source": "Guild"
         },
         {
@@ -2203,8 +2258,10 @@
       "Advanced": [
         {
           "Name": "Stamina Blessing of St Michael",
+          "AbilityRef": "ability.6-2-stamina.1",
           "Type": "Update",
           "Amount": [6, 2],
+          "Effect": "Gains +6/2 life from the blessing of St Michael.",
           "Source": "Guild"
         },
         {
@@ -2800,9 +2857,9 @@
     "Benefits": {
       "Basic": [
         {
-          "Name": "Meta",
+          "Name": "Meta Magic:",
           "Type": "Static",
-          "Effect": "Magic: Any member who would not normally be able to do so (e.g. if pathed or cannot cast grey) is now capable of casting the Dispel 1, 2, and 3 glyphs. Members who can cast these glyphs may spend 30 seconds in calm, quiet observation before casting a Detect Magic, at which point it functions as per the advanced grey g lyph Improved Detect Magic instead."
+          "Effect": "Any member who would not normally be able to do so (e.g. if pathed or cannot cast grey) is now capable of casting the Dispel 1, 2, and 3 glyphs.\nMembers who can cast these glyphs may spend 30 seconds in calm, quiet observation before casting a Detect Magic, at which point it functions as per the advanced grey g lyph Improved Detect Magic instead."
         },
         {
           "Name": "Scholarly Interest",
@@ -2998,10 +3055,45 @@
           "Source": "Guild"
         },
         {
-          "Name": "The Battle Line",
-          "Type": "Innate",
+          "GrantId": "frontline.advanced.the-battle-line",
+          "AbilityRef": "ability.the-battle-line",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "1/day ~ Gains Immunity to Repels, Involuntary Mystical Transportation, Disarm and Supernatural Fumble effects. Lasts 5 minutes and may be used in response to an effect (CF War Cry within 2 seconds of the effect)."
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "The Battle Line",
+            "Effect": "1/day, gains the linked Battle Line immunities for 5 minutes and may be used in response to an effect (cf War Cry within 2 seconds)."
+          }
+        },
+        {
+          "GrantId": "frontline.advanced.the-battle-line.repels",
+          "AbilityRef": "ability.immunity-to-repels",
+          "GrantType": "Immunity",
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "The Battle Line: Immunity to Repels",
+            "Effect": "Granted while The Battle Line is active for 5 minutes."
+          }
+        },
+        {
+          "GrantId": "frontline.advanced.the-battle-line.imt",
+          "AbilityRef": "ability.immunity-to-involuntary-mystical-transportation",
+          "GrantType": "Immunity",
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "The Battle Line: Immunity to Involuntary Mystical Transportation",
+            "Effect": "Granted while The Battle Line is active for 5 minutes."
+          }
+        },
+        {
+          "GrantId": "frontline.advanced.the-battle-line.fumble-disarm",
+          "AbilityRef": "ability.immunity-to-supernatural-fumble-disarm",
+          "GrantType": "Immunity",
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "The Battle Line: Immunity to Supernatural Fumble/Disarm",
+            "Effect": "Granted while The Battle Line is active for 5 minutes."
+          }
         },
         {
           "Name": "Strength in Numbers",
@@ -3160,6 +3252,7 @@
       "Intermediate": [
         {
           "Name": "Draw on EP",
+          "AbilityRef": "ability.draw-on-earthpower",
           "Type": "Innate",
           "Count": 1,
           "Effect": "as Alfar ability, but functions in any natural environment)."
@@ -3192,15 +3285,27 @@
     "Benefits": {
       "Basic": [
         {
-          "Name": "War cry",
-          "Type": "Innate",
+          "GrantId": "shadow-legion.basic.war-cry",
+          "AbilityRef": "ability.war-cry",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "War cry with verbal `Shadow Legion!` 1/day"
+          "Duration": "5 minutes",
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "Shadow Legion!",
+            "Verbal": "Shadow Legion!",
+            "Effect": "War cry with verbal `Shadow Legion!` 1/day"
+          }
         },
         {
-          "Name": "First Aid",
-          "Type": "Static",
-          "Effect": "Character gains 15pts of Bandage Curing. As monk loc but requires bandaging not massage."
+          "GrantId": "shadow-legion.basic.first-aid",
+          "AbilityRef": "ability.bandaging",
+          "GrantType": "Power",
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "First Aid",
+            "Effect": "Character gains 15pts of Bandage Curing. As monk loc but requires bandaging not massage."
+          }
         },
         {
           "Name": "Improvised Weaponry",
@@ -3209,9 +3314,13 @@
           "Effect": "1/day, the character gains the first weapon mastery in a weapon after 30 secs examination of it, lasting for the rest of the day."
         },
         {
-          "Name": "Monk Locational Curing",
-          "Type": "Power",
-          "Effect": "Character gains 1/3rd of their TBLP as 'bandaging', with phys-repped bandages this cures the location 1pt per 'bandaging' spent."
+          "GrantId": "shadow-legion.basic.monk-locational-curing",
+          "AbilityRef": "ability.monk-locational-curing",
+          "GrantType": "Power",
+          "Source": "Guild",
+          "Overrides": {
+            "Effect": "Character gains 1/3rd of their TBLP as 'bandaging', with phys-repped bandages this cures the location 1pt per 'bandaging' spent."
+          }
         },
         {
           "Name": "+3/1 life",
@@ -3220,6 +3329,7 @@
         },
         {
           "Name": "Taking the hit",
+          "AbilityRef": "ability.mc.armour-master.l3",
           "Type": "Innate",
           "Count": 1,
           "Effect": "Reduces a blow's damage to the amount called (ie 'quad' = 4 points of damage).\nThis is often referred to as 'rockskin', but is applied to one blow."
@@ -3232,15 +3342,31 @@
           "Effect": "either +6/2 life or +2 PAC while wearing armour or +1 DAC."
         },
         {
-          "Name": "Battle Fury",
-          "Type": "Innate",
+          "GrantId": "shadow-legion.intermediate.battle-fury",
+          "AbilityRef": "ability.cold-rage",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "Coldrage 1/Day"
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "Battle Fury",
+            "Effect": "Coldrage 1/Day"
+          }
         },
         {
-          "Name": "Battle Cry",
-          "Type": "Static",
-          "Effect": "Whilst using the Shadow Legion War Cry above may also ignore other listed stopping effects for the duration for 6tblp/fx as per Determination."
+          "GrantId": "shadow-legion.intermediate.shadow-legion-upgrade",
+          "UpgradeGrantRef": "shadow-legion.basic.war-cry",
+          "ReplaceWith": {
+            "AbilityRef": "ability.determination",
+            "GrantType": "Innate",
+            "Count": 1,
+            "Duration": "5 minutes",
+            "Source": "Guild",
+            "Overrides": {
+              "DisplayName": "Shadow Legion!",
+              "Verbal": "Shadow Legion!",
+              "Effect": "Whilst using the Shadow Legion War Cry above may also ignore other listed stopping effects for the duration for 6tblp/fx as per Determination."
+            }
+          }
         },
         {
           "Name": "Hardened Body",
@@ -3249,9 +3375,13 @@
           "Effect": "Gains 'Hardened Body': +1 Innate PAC"
         },
         {
-          "Name": "Monk Locational Curing",
-          "Type": "Power",
-          "Effect": "Character gains 1/3rd of their TBLP as 'bandaging', with phys-repped bandages this cures the location 1pt per 'bandaging' spent."
+          "GrantId": "shadow-legion.intermediate.monk-locational-curing",
+          "AbilityRef": "ability.monk-locational-curing",
+          "GrantType": "Power",
+          "Source": "Guild",
+          "Overrides": {
+            "Effect": "Character gains 1/3rd of their TBLP as 'bandaging', with phys-repped bandages this cures the location 1pt per 'bandaging' spent."
+          }
         },
         {
           "Name": "+6/2 life",
@@ -3260,6 +3390,7 @@
         },
         {
           "Name": "Taking the hit",
+          "AbilityRef": "ability.mc.armour-master.l3",
           "Type": "Innate",
           "Count": 1,
           "Effect": "Reduces a blow's damage to the amount called (ie 'quad' = 4 points of damage).\nThis is often referred to as 'rockskin', but is applied to one blow."
@@ -3272,18 +3403,33 @@
           "Effect": "2nd choice from ‘battle training' above."
         },
         {
+          "GrantId": "shadow-legion.advanced.shadow-legion-extra-use",
+          "UpgradeGrantRef": "shadow-legion.intermediate.shadow-legion-upgrade",
+          "Modify": {
+            "CountDelta": 1
+          },
+          "Overrides": {
+            "DisplayName": "Shadow Legion!",
+            "Verbal": "Shadow Legion!"
+          }
+        },
+        {
           "Name": "Legion's Blow",
+          "AbilityRef": "ability.ki-strike",
           "Type": "Innate",
           "Count": 1,
           "Effect": "1/Day As per the Sell Sword ability ‘Primal Strike'."
         },
         {
+          "GrantId": "shadow-legion.advanced.mercenary-soldier-choice",
           "Name": "Mercenary Soldier",
           "Type": "Static",
-          "Effect": "Gains ONE of the following – chosen at the start of the day: o Additional “Shadow Legion” War Cry as basic tier – and enhanceable as per Intermediate Tier. o Additional ‘Battle Fury' as above o Medic: Bandaging from Basic Tier is now increased to 36pts of curing which may also cure TBLP."
+          "Effect": "Choose one of the following at the start of the day.",
+          "ChoiceSetRef": "choice.guild.shadow-legion.advanced"
         },
         {
           "Name": "Bandaging skill,",
+          "AbilityRef": "ability.bandaging",
           "Type": "Static",
           "Effect": "as per scout skill."
         },
@@ -3294,9 +3440,13 @@
           "Effect": "Gains 'Hardened Body': +1 Innate PAC"
         },
         {
-          "Name": "Monk Locational Curing",
-          "Type": "Power",
-          "Effect": "Character gains 1/3rd of their TBLP as 'bandaging', with phys-repped bandages this cures the location 1pt per 'bandaging' spent."
+          "GrantId": "shadow-legion.advanced.monk-locational-curing",
+          "AbilityRef": "ability.monk-locational-curing",
+          "GrantType": "Power",
+          "Source": "Guild",
+          "Overrides": {
+            "Effect": "Character gains 1/3rd of their TBLP as 'bandaging', with phys-repped bandages this cures the location 1pt per 'bandaging' spent."
+          }
         },
         {
           "Name": "+9/3 life",
@@ -3305,6 +3455,7 @@
         },
         {
           "Name": "Taking the hit",
+          "AbilityRef": "ability.mc.armour-master.l3",
           "Type": "Innate",
           "Count": 1,
           "Effect": "Reduces a blow's damage to the amount called (ie 'quad' = 4 points of damage).\nThis is often referred to as 'rockskin', but is applied to one blow."
@@ -3340,16 +3491,26 @@
       ],
       "Intermediate": [
         {
-          "Name": "Family Strength",
-          "Type": "Innate",
+          "GrantId": "sons-and-daughters-of-sirac.intermediate.family-strength",
+          "AbilityRef": "ability.family-strength",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "1/day can enhance a published Ivory or Gold spell (without any non -standard enhancements) to have + 50% effect if numerical ( e.g. Ivory Warriors) or + 50% duration if not ( e.g. Ivory armour) when cast on self or a fellow guild member."
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "Family Strength",
+            "Effect": "1/day can enhance a published Ivory or Gold spell (without any non-standard enhancements) to have +50% effect if numerical (e.g. Ivory Warriors) or +50% duration if not (e.g. Ivory Armour) when cast on self or a fellow guild member."
+          }
         },
         {
-          "Name": "Those aligned to Harmony can cast a published self only Gold spell on a fellow guild member",
-          "Type": "Innate",
+          "GrantId": "sons-and-daughters-of-sirac.intermediate-self-only-on-other",
+          "AbilityRef": "ability.use-self-only-beneficial-ability-on-other",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "1/day."
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "Those aligned to Harmony can cast a published self only Gold spell on a fellow guild member",
+            "Effect": "1/day can use a published self only beneficial Gold ability on another willing guild member."
+          }
         }
       ],
       "Advanced": []
@@ -3433,20 +3594,24 @@
           [
             {
               "Name": "+6/2 Guild Life",
-              "Type": "Static",
-              "Effect": "Gains +6/2 guild life."
+              "Type": "Life",
+              "Effect": "Gains +6/2 guild life.",
+              "Source": "Guild"
             }
           ],
           [
             {
               "Name": "1st Stamina",
-              "Type": "Static",
-              "Effect": "Can gain the 1st Stamina."
+              "AbilityRef": "ability.6-2-stamina.1",
+              "Type": "Life",
+              "Effect": "Gains the 1st warrior Stamina.",
+              "Source": "Tables"
             }
           ]
         ],
         {
           "Name": "Monk Locational Curing",
+          "AbilityRef": "ability.monk-locational-curing",
           "Type": "Static",
           "Effect": "Gains monk loc usable only on members of the 18th legion."
         },
@@ -3465,6 +3630,7 @@
         },
         {
           "Name": "Monk Locational Curing",
+          "AbilityRef": "ability.monk-locational-curing",
           "Type": "Update",
           "Effect": "Monk Loc now heals a like amount of TBLP."
         },
@@ -3486,16 +3652,34 @@
           ],
           [
             {
-              "Name": "First 2 Warrior Staminas",
-              "Type": "Static",
-              "Effect": "Now gains the first 2 Warrior Staminas."
+              "Name": "1st Stamina",
+              "AbilityRef": "ability.6-2-stamina.1",
+              "Type": "Life",
+              "Effect": "",
+              "Source": "Tables"
+            },
+            {
+              "Name": "2nd Stamina",
+              "AbilityRef": "ability.6-2-stamina.2",
+              "Type": "Life",
+              "Effect": "Now gains the first 2 Warrior Staminas.",
+              "Source": "Tables"
             }
           ],
           [
             {
-              "Name": "First 2 Extra Levels of Life",
-              "Type": "Static",
-              "Effect": "Now gains the first two extra levels of life."
+              "Name": "1st Extra Level of Life",
+              "AbilityRef": "ability.1st-extra-level-of-life",
+              "Type": "Life",
+              "Effect": "",
+              "Source": "Tables"
+            },
+            {
+              "Name": "2nd Extra Level of Life",
+              "AbilityRef": "ability.2nd-extra-level-of-life",
+              "Type": "Life",
+              "Effect": "Now gains the first two extra levels of life.",
+              "Source": "Tables"
             }
           ]
         ],
@@ -3677,10 +3861,28 @@
           "Effect": "When wearing Master crafter metal armour gains + 1 Max A/C and the armour grants an additional point of PAC."
         },
         {
-          "Name": "The Clan Defenders 1/day",
-          "Type": "Innate",
+          "GrantId": "earthsunder.advanced.the-clan-defenders-life",
+          "AbilityRef": "ability.6-2-stamina.1",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "If a member of the guild is unconscious or incapacitated the guild member gains +6/2 life and an innate war cry. This lasts 5 minutes or until the threat is resolved, even if the guild members becomes active again. Hearth Protector - Stage Two : Cost: + 90 Table 7"
+          "Duration": "5 minutes",
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "The Clan Defenders 1/day (Life)",
+            "Effect": "When a member of the guild is unconscious or incapacitated, gains +6/2 life. This lasts 5 minutes or until the threat is resolved, even if the guild member becomes active again."
+          }
+        },
+        {
+          "GrantId": "earthsunder.advanced.the-clan-defenders-war-cry",
+          "AbilityRef": "ability.war-cry",
+          "GrantType": "Innate",
+          "Count": 1,
+          "Duration": "5 minutes",
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "The Clan Defenders 1/day (War Cry)",
+            "Effect": "When a member of the guild is unconscious or incapacitated, gains an innate War Cry. This lasts 5 minutes or until the threat is resolved, even if the guild member becomes active again."
+          }
         },
         {
           "Name": "Eyes of the Deep",
@@ -3744,9 +3946,10 @@
         },
         {
           "Name": "Discipline",
+          "AbilityRef": "ability.discipline",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "1/day"
+          "Effect": "1/day as per Discipline."
         }
       ],
       "Advanced": []
@@ -3812,6 +4015,7 @@
         },
         {
           "Name": "We're in this together 1/day",
+          "AbilityRef": "ability.war-cry",
           "Type": "Innate",
           "Count": 1,
           "Effect": "Acts as per war cry but can be used on other guild members at 20ft range."
@@ -3953,6 +4157,7 @@
       "Advanced": [
         {
           "Name": "For Imrazil 1/day",
+          "AbilityRef": "ability.war-cry",
           "Type": "Innate",
           "Count": 1,
           "Effect": "Acts as a War cry but is only usable on another KotL. It can be used at any time they are under the stopping effect, not just in the first 2 seconds. (75, 1) Templar – Stage three: Cos t +120 T able 7"
@@ -4122,6 +4327,7 @@
         },
         {
           "Name": "Mercenaries Defence 1/day",
+          "AbilityRef": "ability.war-cry",
           "Type": "Innate",
           "Count": 1,
           "Effect": "Acts as per War Cry, but only applies to the effect it was used against not for 5 minutes."
@@ -4146,10 +4352,15 @@
           "Effect": "Gains Fated Hero (as table 1). If already owned gains immunity to slayer and fortified spirit."
         },
         {
-          "Name": "Mercenaries Unite!",
-          "Type": "Innate",
+          "GrantId": "order-of-mercenaries.advanced.mercenaries-unite",
+          "AbilityRef": "ability.use-self-only-beneficial-ability-on-other",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "1/day can use a published self only ability on a guild member within 5ft. This could include a war cry, a cast spell, or similar. Must be to their benefit, to benefit from this must be claiming guild benefits."
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "Mercenaries Unite!",
+            "Effect": "Can use a published self only beneficial ability on another willing guild member within 5ft. This could include a war cry, a cast spell, or similar."
+          }
         },
         {
           "Name": "Strength in Numbers",
@@ -4157,9 +4368,15 @@
           "Effect": "Gains One of the following per other guild member claiming guild benefits on dungeon. Can only take each option once: +1 DAC, + 1 PAC, + 1 MAC, + 1 SAC. The Mercenary Way – Guild Status Junior Mercenary - Stage one: Cost 50 Table 1"
         },
         {
-          "Name": "Gains a Second innate of Mercenaries Unite Jaded Mercenary",
-          "Type": "Static",
-          "Effect": "Stage three: Cost +125 Table 8"
+          "GrantId": "order-of-mercenaries.advanced.mercenaries-unite-extra-use",
+          "UpgradeGrantRef": "order-of-mercenaries.advanced.mercenaries-unite",
+          "Modify": {
+            "CountDelta": 1
+          },
+          "Overrides": {
+            "DisplayName": "Mercenaries Unite!",
+            "Effect": "Can use a published self only beneficial ability on another willing guild member within 5ft. This could include a war cry, a cast spell, or similar."
+          }
         }
       ]
     },
@@ -4181,6 +4398,7 @@
         },
         {
           "Name": "Forearm Parry",
+          "AbilityRef": "ability.forearm-parry",
           "Type": "Static",
           "Effect": "Attained at 8th level, and only if the character is a Warrior Subclass. May be learnt pre - 8th level if the teaching of Forearm Parry is done on adventure with Khyrhym personally (and signed onto the character by Khyrym and countersigned by t he desk)"
         }
@@ -4198,11 +4416,13 @@
         },
         {
           "Name": "Mind Block",
+          "AbilityRef": "ability.mind-block",
           "Type": "Static",
           "Effect": "As per Monk ability."
         },
         {
           "Name": "Coldrage",
+          "AbilityRef": "ability.cold-rage",
           "Type": "Innate",
           "Count": 1,
           "Effect": "1/ day as per published tables ability."
@@ -4214,10 +4434,15 @@
           "Effect": "1/ day asking the Panama Ancestors, same powerbase as ability above."
         },
         {
-          "Name": "Panama",
-          "Type": "Innate",
+          "GrantId": "panama-clan.intermediate.panama-war-cry",
+          "AbilityRef": "ability.war-cry",
+          "GrantType": "Innate",
           "Count": 1,
-          "Effect": "1/ day as per Warcry"
+          "Source": "Guild",
+          "Overrides": {
+            "DisplayName": "Panama",
+            "Effect": "1/day as per War Cry."
+          }
         }
       ],
       "Advanced": [
@@ -4247,13 +4472,21 @@
           "Name": "Enlightened by the Ancestors ; 1/day",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "Acts as per a Commune with the Gods, but the powerbase is as per the guild Talk to Ancestors. However cannot vocal ise the answer s to questions nor may they relay answers received until the comm is ended."
+          "Effect": "Acts as per a Commune with the Gods, but the powerbase is as per the guild Talk to Ancestors. However cannot vocalise the answers to questions nor may they relay answers received until the comm is ended."
         },
         {
-          "Name": "Panthers Surge 1/day",
-          "Type": "Innate",
-          "Count": 1,
-          "Effect": "When using the Panama War Cry benefit can choose to gain immunity to a second listed stopping effect at the time of use. Family gives Strength - Stage Three: Cost +1 50 Table 9"
+          "GrantId": "panama-clan.advanced.panthers-surge-upgrade",
+          "UpgradeGrantRef": "panama-clan.intermediate.panama-war-cry",
+          "ReplaceWith": {
+            "AbilityRef": "ability.war-cry",
+            "GrantType": "Innate",
+            "Count": 1,
+            "Source": "Guild",
+            "Overrides": {
+              "DisplayName": "Panama",
+              "Effect": "When using the Panama War Cry benefit, can choose to gain immunity to a second listed stopping effect at the time of use."
+            }
+          }
         }
       ]
     },
@@ -4395,6 +4628,7 @@
       "Basic": [
         {
           "Name": "Ward against Sin 1/day",
+          "AbilityRef": "ability.war-cry",
           "Type": "Innate",
           "Count": 1,
           "Effect": "Declared as per a war cry and lasts for 5 minutes gains + 1 M AC, + 1 SAC, and + 1 Level of Resistance vs effects from someone evil, or that by their nature are evil ( i.e. evil miracles)."

@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using labyItems.Helpers;
+using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using System.Collections.Generic;
@@ -15,6 +16,13 @@ public interface IBattleboardExportService
 
 public sealed class BattleboardExportService : IBattleboardExportService
 {
+    private readonly Func<CharacterDraft, IEnumerable<Item>>? _assignedItemsResolver;
+
+    public BattleboardExportService(Func<CharacterDraft, IEnumerable<Item>>? assignedItemsResolver = null)
+    {
+        _assignedItemsResolver = assignedItemsResolver;
+    }
+
     // public async Task<string> ExportPdfAsync(CharacterDraft draft, CancellationToken ct = default)
     // {
     //     // 1) Generate the XLSX using your current template logic
@@ -45,6 +53,17 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
     public async Task<string> ExportAsync(CharacterDraft draft, CancellationToken ct = default)
     {
+        var assignedItems = (_assignedItemsResolver?.Invoke(draft)
+                             ?? BattleboardInnateCalculator.ResolveAssignedItems(draft))
+            .ToList();
+        var lifeTotals = BattleboardLifeCalculator.Calculate(draft, assignedItems);
+        var itemArmour = BattleboardArmourCalculator.Calculate(draft, assignedItems);
+        var resolvedInnates = BattleboardInnateCalculator.Calculate(draft, assignedItems);
+        var advancementEffects = await BattleboardAdvancementEffectResolver.ResolveAsync(draft.AdvancementAbilities);
+        var effectiveResistanceLevels = BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
+            draft.ResistanceLevels,
+            advancementEffects.ResistanceOverrides);
+
         var pools = (draft.PowerPools ?? new Dictionary<string, int>())
             .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key))
             .Where(kvp => kvp.Value > 0)
@@ -65,13 +84,13 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var ws = wb.Worksheet("BBoard");
 
         var armourBonus = ExtractArmourBonuses(draft.Abilities);
-        int pac = Math.Min(draft.MaxAC, draft.WornArmour + armourBonus.Pac);
-        int dac = armourBonus.Dac;
-        int mac = armourBonus.Mac;
-        int sac = armourBonus.Sac;
+        int pac = Math.Min(draft.MaxAC, itemArmour.WornPac + armourBonus.Pac);
+        int dac = armourBonus.Dac + itemArmour.ItemDac;
+        int mac = armourBonus.Mac + itemArmour.ItemMac;
+        int sac = armourBonus.Sac + itemArmour.ItemSac;
         int acShown = Math.Min(dac + pac, draft.MaxAC);
         ws.Cell("B2").Value = draft.Name;
-        ws.Cell("C3").Value = draft.TBLP;
+        ws.Cell("C3").Value = lifeTotals.TotalTblp;
         ws.Cell("U3").Value = pac;
         ws.Cell("U4").Value = dac;
         ws.Cell("AD3").Value = draft.MaxAC;
@@ -80,7 +99,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
         if (sac > 0) ws.Cell("U6").Value = sac;
 
         foreach (var addr in new[] { "W3", "S8", "AB8", "V8", "V17", "V25", "Y25" })
-            ws.Cell(addr).Value = draft.Loc;
+            ws.Cell(addr).Value = lifeTotals.TotalLoc;
         foreach (var addr in new[] { "Z3", "T8", "U8", "AA8", "AC8", "AD8", "AA17", "AA25", "Z25", "X25", "W25" })
             ws.Cell(addr).Value = acShown;
 
@@ -137,6 +156,9 @@ public sealed class BattleboardExportService : IBattleboardExportService
             .Select(FormatAbilityText)
             .Where(v => !string.IsNullOrWhiteSpace(v))
             .ToList();
+        resistanceAbilities.AddRange((draft.AdvancementAbilities ?? new List<string>())
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Where(name => name.Contains("resistance", StringComparison.OrdinalIgnoreCase)));
 
         WriteResistancesBlock(ws, resistanceAbilities);
 
@@ -146,24 +168,29 @@ public sealed class BattleboardExportService : IBattleboardExportService
         }
 
         // Resistance levels block (physical/magic/neuronic/spirit)
-        if (draft.ResistanceLevels != null)
+        if (effectiveResistanceLevels != null)
         {
-            if (draft.ResistanceLevels.TryGetValue("Physical", out var phys))
+            if (effectiveResistanceLevels.TryGetValue("Physical", out var phys))
                 ws.Cell("AD20").Value = phys;
-            if (draft.ResistanceLevels.TryGetValue("Magic", out var magic))
+            if (effectiveResistanceLevels.TryGetValue("Magic", out var magic))
                 ws.Cell("AD21").Value = magic;
-            if (draft.ResistanceLevels.TryGetValue("Neuronic", out var neuronic))
+            if (effectiveResistanceLevels.TryGetValue("Neuronic", out var neuronic))
                 ws.Cell("AD22").Value = neuronic;
-            else if (draft.ResistanceLevels.TryGetValue("Neuro", out var neuro))
+            else if (effectiveResistanceLevels.TryGetValue("Neuro", out var neuro))
                 ws.Cell("AD22").Value = neuro;
-            if (draft.ResistanceLevels.TryGetValue("Spirit", out var spirit))
+            if (effectiveResistanceLevels.TryGetValue("Spirit", out var spirit))
                 ws.Cell("AD23").Value = spirit;
         }
 
         var immunityAbilities = draft.Abilities
-            .Where(a => a.AbilityType == AbilityType.Immunity)
+            .Where(IsImmunityAbility)
             .Select(FormatAbilityText)
             .Where(v => !string.IsNullOrWhiteSpace(v))
+            .Select(StripImmunityPrefix)
+            .Concat((advancementEffects.Immunities ?? Array.Empty<string>())
+                .Select(StripImmunityPrefix))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
             .ToList();
         WriteImmunities(ws, immunityAbilities, startRow: 26, endRow: 33);
 
@@ -183,7 +210,12 @@ public sealed class BattleboardExportService : IBattleboardExportService
         WriteStaticAbilities(ws, staticAbilities, startRow: 4, endRow: 54);
 
         var innateConfig = GetInnatePlacement(templateName, isVivomancer);
-        WriteInnates(ws, draft.Innates, nameColumn: innateConfig.NameColumn, startRow: innateConfig.StartRow, endRow: innateConfig.EndRow);
+        WriteInnates(
+            ws,
+            resolvedInnates,
+            nameColumn: innateConfig.NameColumn,
+            startRow: innateConfig.StartRow,
+            endRow: innateConfig.EndRow);
 
         WriteNotes(ws, draft.Notes, startColumn: "R", endColumn: "AD", startRow: 43, endRow: 53);
 
@@ -208,6 +240,19 @@ public sealed class BattleboardExportService : IBattleboardExportService
             return false;
 
         return IsPureArmourToken(ability.Name) || IsPureArmourToken(ability.Effect);
+    }
+
+    private static bool IsImmunityAbility(AbilityDraft ability)
+    {
+        if (ability == null)
+            return false;
+
+        if (ability.AbilityType == AbilityType.Immunity)
+            return true;
+
+        var text = (ability.Name ?? ability.ShortStringValue ?? string.Empty).Trim();
+        return text.StartsWith("Immunity to ", StringComparison.OrdinalIgnoreCase)
+               || text.StartsWith("Total Immunity to ", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsPureArmourToken(string? text)

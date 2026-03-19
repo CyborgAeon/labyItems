@@ -2068,6 +2068,10 @@
   },
   "Wizard": {
     "Brackets": ["🧙 Wizard"],
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
+    },
     "Tags": ["Magical Caster", "72 Mana", "High Versatility"],
     "Buy as": ["1st class Wizard"],
     "Levels": {

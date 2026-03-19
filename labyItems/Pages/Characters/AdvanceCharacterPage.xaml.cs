@@ -34,6 +34,15 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
     private static readonly Regex ContributionCostRegex = new(
         @"=\s*(?<cost>-?\d+)\s*$",
         RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.CultureInvariant));
+    private static readonly Regex MonsterPointCastingRegex = new(
+        @"^(?<kind>Spell|Miracle|Evocation)\s*:\s*(?<name>.+?)\s*x(?<count>\d+)\s*$",
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
+    private static readonly Regex MonsterPointLifeRegex = new(
+        @"^Life\s+(?<life>\d+\s*/\s*\d+)\b",
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
+    private static readonly Regex MonsterPointArmourTokenRegex = new(
+        @"(?<amount>[+-]?\d+)\s*(?<stat>PAC|DAC|MAC|SAC)\b",
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
 
     public AdvanceCharacterPage(Character character)
         : this(LiteDbService.ToDraft(character) ?? new CharacterDraft())
@@ -785,11 +794,11 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         var abilities = new List<CalcResult>();
         foreach (var row in payload.IspBreakdown ?? new List<ContributionRow>())
         {
-            var line = (row?.Text ?? string.Empty).Trim();
-            if (line.Length == 0)
+            var ability = BuildAbilityFromContribution(row);
+            if (ability == null)
                 continue;
 
-            abilities.Add(BuildAbilityFromContribution(line));
+            abilities.Add(ability);
         }
 
         if (abilities.Count == 0 && payload.TotalIsp > 0)
@@ -810,22 +819,28 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         return abilities;
     }
 
-    private static CalcResult BuildAbilityFromContribution(string line)
+    private static CalcResult? BuildAbilityFromContribution(ContributionRow? row)
     {
-        var summary = (line ?? string.Empty).Trim();
+        var summary = (row?.Text ?? string.Empty).Trim();
+        if (summary.Length == 0)
+            return null;
+
         var label = summary;
         var equalsIndex = summary.IndexOf('=');
         if (equalsIndex > 0)
             label = summary[..equalsIndex].Trim();
 
+        var totalIsp = ParseContributionCost(summary);
+
+        if (TryBuildMonsterPointCastingAbility(label, summary, totalIsp, out var castingAbility))
+            return castingAbility;
+
+        if (TryBuildMonsterPointLifeAbility(label, summary, totalIsp, out var lifeAbility))
+            return lifeAbility;
+
         var abilityType = "MonsterPoint";
         var abilityName = label;
-        if (label.StartsWith("Life ", StringComparison.OrdinalIgnoreCase))
-        {
-            abilityType = "Life";
-            abilityName = label[5..].Trim();
-        }
-        else if (label.Contains("shield", StringComparison.OrdinalIgnoreCase))
+        if (label.Contains("shield", StringComparison.OrdinalIgnoreCase))
         {
             abilityType = "Shield";
             abilityName = "Shield";
@@ -842,17 +857,148 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
             abilityName = "Weapon";
         }
 
+        var details = new Dictionary<string, object?>
+        {
+            ["source"] = "monster-point"
+        };
+        AddMonsterPointArmourTokenDetails(details, label);
+
         return new CalcResult
         {
             AbilityType = abilityType,
             AbilityName = abilityName,
-            TotalIsp = ParseContributionCost(summary),
+            TotalIsp = totalIsp,
+            Summary = summary,
+            Details = details
+        };
+    }
+
+    private static bool TryBuildMonsterPointCastingAbility(
+        string label,
+        string summary,
+        int totalIsp,
+        out CalcResult ability)
+    {
+        ability = new CalcResult();
+        var match = MonsterPointCastingRegex.Match(label);
+        if (!match.Success)
+            return false;
+
+        var kind = (match.Groups["kind"].Value ?? string.Empty).Trim();
+        var rawName = (match.Groups["name"].Value ?? string.Empty).Trim();
+        if (!int.TryParse(match.Groups["count"].Value, out var count))
+            count = 0;
+
+        var resolvedName = NormalizeMonsterPointAbilityName(rawName);
+        if (resolvedName.Length == 0)
+            return false;
+
+        var details = new Dictionary<string, object?>
+        {
+            ["source"] = "monster-point",
+            ["count"] = Math.Max(0, count)
+        };
+
+        var uses = Math.Max(0, count);
+        var perDayEntry = new Dictionary<string, object?>
+        {
+            ["basicPerDay"] = uses,
+            ["advancedPerDay"] = 0
+        };
+
+        if (kind.Equals("Spell", StringComparison.OrdinalIgnoreCase))
+        {
+            perDayEntry["spellName"] = resolvedName;
+            details["spells"] = new[] { perDayEntry };
+        }
+        else if (kind.Equals("Miracle", StringComparison.OrdinalIgnoreCase))
+        {
+            perDayEntry["miracleName"] = resolvedName;
+            details["miracles"] = new[] { perDayEntry };
+        }
+        else
+        {
+            perDayEntry["evocationName"] = resolvedName;
+            details["evocations"] = new[] { perDayEntry };
+        }
+
+        ability = new CalcResult
+        {
+            AbilityType = kind,
+            AbilityName = resolvedName,
+            TotalIsp = totalIsp,
+            Summary = summary,
+            Details = details
+        };
+
+        return true;
+    }
+
+    private static bool TryBuildMonsterPointLifeAbility(
+        string label,
+        string summary,
+        int totalIsp,
+        out CalcResult ability)
+    {
+        ability = new CalcResult();
+        var match = MonsterPointLifeRegex.Match(label);
+        if (!match.Success)
+            return false;
+
+        var life = (match.Groups["life"].Value ?? string.Empty).Replace(" ", string.Empty).Trim();
+        if (life.Length == 0)
+            return false;
+
+        ability = new CalcResult
+        {
+            AbilityType = "Life",
+            AbilityName = life,
+            TotalIsp = totalIsp,
             Summary = summary,
             Details = new Dictionary<string, object?>
             {
-                ["source"] = "monster-point"
+                ["source"] = "monster-point",
+                ["life"] = life
             }
         };
+
+        return true;
+    }
+
+    private static void AddMonsterPointArmourTokenDetails(Dictionary<string, object?> details, string label)
+    {
+        foreach (Match match in MonsterPointArmourTokenRegex.Matches(label ?? string.Empty))
+        {
+            if (!int.TryParse(match.Groups["amount"].Value, out var amount) || amount <= 0)
+                continue;
+
+            var key = (match.Groups["stat"].Value ?? string.Empty).Trim().ToLowerInvariant();
+            if (key.Length == 0)
+                continue;
+
+            var existing = 0;
+            if (details.TryGetValue(key, out var rawExisting)
+                && rawExisting != null
+                && int.TryParse(rawExisting.ToString(), out var parsedExisting))
+            {
+                existing = parsedExisting;
+            }
+
+            details[key] = existing + amount;
+        }
+    }
+
+    private static string NormalizeMonsterPointAbilityName(string rawName)
+    {
+        var value = (rawName ?? string.Empty).Trim();
+        if (value.Length == 0)
+            return string.Empty;
+
+        var parenIndex = value.IndexOf(" (", StringComparison.Ordinal);
+        if (parenIndex > 0)
+            value = value[..parenIndex].Trim();
+
+        return value;
     }
 
     private static int ParseContributionCost(string line)

@@ -9,6 +9,13 @@ public sealed class AbilityDefinition
 {
     public string? Key { get; set; }
     public string? AbilityRef { get; set; }
+    public string? GrantId { get; set; }
+    public string? GrantType { get; set; }
+    public string? Duration { get; set; }
+    public GuildGrantOverrides? Overrides { get; set; }
+    public string? UpgradeGrantRef { get; set; }
+    public AbilityDefinition? ReplaceWith { get; set; }
+    public GuildGrantModify? Modify { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? BattleboardNameOverride { get; set; }
     public string? UpdateKey { get; set; }
@@ -23,14 +30,42 @@ public sealed class AbilityDefinition
     public string? OverwriteKey { get; set; }
     public List<string>? PreReqs { get; set; }
     public List<string>? GuildOverrides { get; set; }
+    public string? ChoiceSetRef { get; set; }
     public List<string>? ChoiceSetRefs { get; set; }
     public AbilityCustomisation? Customisation { get; set; }
+    public List<AbilitySystemEffect>? SystemEffects { get; set; }
+}
+
+public sealed class GuildGrantOverrides
+{
+    public string? DisplayName { get; set; }
+    public string? Verbal { get; set; }
+    public string? Effect { get; set; }
+    public string? Source { get; set; }
+    public string? GrantType { get; set; }
+    public int? Count { get; set; }
+    public string? Frequency { get; set; }
+    public string? Duration { get; set; }
+}
+
+public sealed class GuildGrantModify
+{
+    public int? CountDelta { get; set; }
 }
 
 public sealed class AbilityCustomisation
 {
     public string? OptionEnum { get; set; }
     public bool CustomValuesPermitted { get; set; }
+}
+
+public sealed class AbilitySystemEffect
+{
+    public string EffectType { get; set; } = string.Empty;
+    public string DisplayName { get; set; } = string.Empty;
+    public string? ResistanceType { get; set; }
+    public int? Level { get; set; }
+    public string? ImmunityName { get; set; }
 }
 
 public sealed class AbilityCountProgression
@@ -74,6 +109,13 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             {
                 Key = el.TryGetProperty("Key", out var keyEl) ? keyEl.GetString() : null,
                 AbilityRef = ReadAbilityRef(el),
+                GrantId = ReadStringProperty(el, "GrantId"),
+                GrantType = ReadStringProperty(el, "GrantType"),
+                Duration = ReadStringProperty(el, "Duration"),
+                Overrides = ReadGrantOverrides(el),
+                UpgradeGrantRef = ReadStringProperty(el, "UpgradeGrantRef"),
+                ReplaceWith = ReadReplaceWith(el, options),
+                Modify = ReadModify(el),
                 Name = el.TryGetProperty("Name", out var nameEl) ? nameEl.GetString() ?? string.Empty : string.Empty,
                 BattleboardNameOverride = el.TryGetProperty("BattleboardNameOverride", out var battleNameEl)
                     ? battleNameEl.GetString()
@@ -90,7 +132,9 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
                 Customisation = ReadCustomisation(el),
                 Progression = ReadProgression(el),
                 Amount = ReadAmount(el),
-                ChoiceSetRefs = ReadChoiceSetRefs(el)
+                ChoiceSetRef = ReadStringProperty(el, "ChoiceSetRef"),
+                ChoiceSetRefs = ReadChoiceSetRefs(el),
+                SystemEffects = ReadSystemEffects(el)
             };
 
             if (el.TryGetProperty("Count", out var countEl))
@@ -121,6 +165,11 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
                     .Where(x => x.Length > 0)
                     .ToList();
             }
+
+            if (string.IsNullOrWhiteSpace(def.GrantType) && !string.IsNullOrWhiteSpace(def.Type))
+                def.GrantType = def.Type;
+            if (string.IsNullOrWhiteSpace(def.Type) && !string.IsNullOrWhiteSpace(def.GrantType))
+                def.Type = def.GrantType;
 
             return def;
         }
@@ -165,6 +214,74 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
         };
     }
 
+    private static string? ReadStringProperty(JsonElement el, string propertyName)
+    {
+        if (!el.TryGetProperty(propertyName, out var prop) || prop.ValueKind != JsonValueKind.String)
+            return null;
+
+        return prop.GetString();
+    }
+
+    private static GuildGrantOverrides? ReadGrantOverrides(JsonElement el)
+    {
+        if (!el.TryGetProperty("Overrides", out var overridesEl)
+            || overridesEl.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        try
+        {
+            return JsonSerializer.Deserialize<GuildGrantOverrides>(overridesEl.GetRawText());
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static AbilityDefinition? ReadReplaceWith(JsonElement el, JsonSerializerOptions options)
+    {
+        if (!el.TryGetProperty("ReplaceWith", out var replaceEl))
+            return null;
+
+        if (replaceEl.ValueKind == JsonValueKind.String)
+        {
+            var raw = (replaceEl.GetString() ?? string.Empty).Trim();
+            if (raw.Length == 0)
+                return null;
+
+            return new AbilityDefinition { AbilityRef = raw };
+        }
+
+        if (replaceEl.ValueKind != JsonValueKind.Object)
+            return null;
+
+        try
+        {
+            return JsonSerializer.Deserialize<AbilityDefinition>(replaceEl.GetRawText(), options);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static GuildGrantModify? ReadModify(JsonElement el)
+    {
+        if (!el.TryGetProperty("Modify", out var modifyEl)
+            || modifyEl.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        var countDelta = TryReadInt(modifyEl, "CountDelta");
+        if (!countDelta.HasValue)
+            return null;
+
+        return new GuildGrantModify { CountDelta = countDelta };
+    }
+
     private static string? ParsePreReq(JsonElement el)
     {
         if (el.ValueKind == JsonValueKind.String)
@@ -192,6 +309,29 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             writer.WriteString("Key", value.Key);
         if (!string.IsNullOrWhiteSpace(value.AbilityRef))
             writer.WriteString("AbilityRef", value.AbilityRef);
+        if (!string.IsNullOrWhiteSpace(value.GrantId))
+            writer.WriteString("GrantId", value.GrantId);
+        if (!string.IsNullOrWhiteSpace(value.GrantType))
+            writer.WriteString("GrantType", value.GrantType);
+        if (!string.IsNullOrWhiteSpace(value.Duration))
+            writer.WriteString("Duration", value.Duration);
+        if (value.Overrides != null)
+        {
+            writer.WritePropertyName("Overrides");
+            JsonSerializer.Serialize(writer, value.Overrides, options);
+        }
+        if (!string.IsNullOrWhiteSpace(value.UpgradeGrantRef))
+            writer.WriteString("UpgradeGrantRef", value.UpgradeGrantRef);
+        if (value.ReplaceWith != null)
+        {
+            writer.WritePropertyName("ReplaceWith");
+            JsonSerializer.Serialize(writer, value.ReplaceWith, options);
+        }
+        if (value.Modify != null)
+        {
+            writer.WritePropertyName("Modify");
+            JsonSerializer.Serialize(writer, value.Modify, options);
+        }
         writer.WriteString("Name", value.Name);
         if (!string.IsNullOrWhiteSpace(value.BattleboardNameOverride))
             writer.WriteString("BattleboardNameOverride", value.BattleboardNameOverride);
@@ -233,10 +373,17 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             writer.WritePropertyName("GuildOverrides");
             JsonSerializer.Serialize(writer, value.GuildOverrides, options);
         }
+        if (!string.IsNullOrWhiteSpace(value.ChoiceSetRef))
+            writer.WriteString("ChoiceSetRef", value.ChoiceSetRef);
         if (value.ChoiceSetRefs is { Count: > 0 })
         {
             writer.WritePropertyName("ChoiceSetRefs");
             JsonSerializer.Serialize(writer, value.ChoiceSetRefs, options);
+        }
+        if (value.SystemEffects is { Count: > 0 })
+        {
+            writer.WritePropertyName("SystemEffects");
+            JsonSerializer.Serialize(writer, value.SystemEffects, options);
         }
         writer.WriteEndObject();
     }
@@ -338,21 +485,50 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
 
     private static List<string>? ReadChoiceSetRefs(JsonElement el)
     {
-        if (!el.TryGetProperty("ChoiceSetRefs", out var refsEl) || refsEl.ValueKind != JsonValueKind.Array)
-            return null;
-
         var list = new List<string>();
-        foreach (var item in refsEl.EnumerateArray())
+        if (el.TryGetProperty("ChoiceSetRefs", out var refsEl) && refsEl.ValueKind == JsonValueKind.Array)
         {
-            if (item.ValueKind != JsonValueKind.String)
-                continue;
+            foreach (var item in refsEl.EnumerateArray())
+            {
+                if (item.ValueKind != JsonValueKind.String)
+                    continue;
 
-            var value = (item.GetString() ?? string.Empty).Trim();
-            if (value.Length > 0)
-                list.Add(value);
+                var value = (item.GetString() ?? string.Empty).Trim();
+                if (value.Length > 0)
+                    list.Add(value);
+            }
+        }
+
+        if (el.TryGetProperty("ChoiceSetRef", out var refEl) && refEl.ValueKind == JsonValueKind.String)
+        {
+            var single = (refEl.GetString() ?? string.Empty).Trim();
+            if (single.Length > 0 && !list.Contains(single, StringComparer.OrdinalIgnoreCase))
+                list.Add(single);
         }
 
         return list.Count > 0 ? list : null;
+    }
+
+    private static List<AbilitySystemEffect>? ReadSystemEffects(JsonElement el)
+    {
+        if (!el.TryGetProperty("SystemEffects", out var effectsEl)
+            && !el.TryGetProperty("systemEffects", out effectsEl))
+        {
+            return null;
+        }
+
+        if (effectsEl.ValueKind != JsonValueKind.Array)
+            return null;
+
+        try
+        {
+            var parsed = JsonSerializer.Deserialize<List<AbilitySystemEffect>>(effectsEl.GetRawText());
+            return parsed is { Count: > 0 } ? parsed : null;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     private static int? TryReadInt(JsonElement source, string propertyName)

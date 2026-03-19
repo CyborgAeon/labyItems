@@ -476,6 +476,34 @@
               </ScrollView>
        </ContentPage>
 
+       <ContentPage x:Name="ImmunitiesTab"
+                    Title="Immunities"
+                    BackgroundColor="White">
+              <ScrollView>
+                     <VerticalStackLayout Padding="16"
+                                          Spacing="12">
+                            <Label Text="No immunities yet."
+                                   Opacity="0.7"
+                                   IsVisible="{Binding HasImmunities, Converter={StaticResource InverseBoolConverter}}"/>
+
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Immunities}"
+                                                 Spacing="8"
+                                                 IsVisible="{Binding HasImmunities}">
+                                   <BindableLayout.ItemTemplate>
+                                          <DataTemplate>
+                                                 <Frame Padding="12"
+                                                        CornerRadius="12"
+                                                        HasShadow="False"
+                                                        BorderColor="{StaticResource SurfaceBorderColor}">
+                                                        <Label Text="{Binding .}"/>
+                                                 </Frame>
+                                          </DataTemplate>
+                                   </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                     </VerticalStackLayout>
+              </ScrollView>
+       </ContentPage>
+
        <ContentPage x:Name="CastingTab"
                     Title="Cast"
                     BackgroundColor="White">

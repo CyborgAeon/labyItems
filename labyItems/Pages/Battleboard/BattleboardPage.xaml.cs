@@ -29,6 +29,7 @@ public partial class BattleboardPage : TabbedPage
         ConfigureTabPageChrome(LifeTab);
         ConfigureTabPageChrome(InnatesTab);
         ConfigureTabPageChrome(ResistanceTab);
+        ConfigureTabPageChrome(ImmunitiesTab);
         ConfigureTabPageChrome(CastingTab);
         ConfigureTabPageChrome(DetailsTab);
         ApplyTabVisibility();
@@ -37,7 +38,7 @@ public partial class BattleboardPage : TabbedPage
 
     private void ApplyTabVisibility()
     {
-        var desiredTabs = new List<Page> { BackTab, LifeTab, InnatesTab, ResistanceTab };
+        var desiredTabs = new List<Page> { BackTab, LifeTab, InnatesTab, ResistanceTab, ImmunitiesTab };
         if (_vm.HasCastingTab)
             desiredTabs.Add(CastingTab);
         desiredTabs.Add(DetailsTab);

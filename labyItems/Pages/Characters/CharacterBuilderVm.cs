@@ -1578,6 +1578,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         if (Draft.Guilds.Count == 0)
             return list;
 
+        var points = Math.Max(0, Draft.Points);
+        var includeIntermediate = points >= 250;
+        var includeAdvanced = points >= 1000;
+
         var all = await _creationDataService.GetGuildsAsync();
         foreach (var guild in Draft.Guilds.Distinct(StringComparer.OrdinalIgnoreCase))
         {
@@ -1585,6 +1589,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 continue;
 
             AppendGuildBenefits(list, rec.Benefits.Basic, guild, "Basic");
+            if (includeIntermediate)
+                AppendGuildBenefits(list, rec.Benefits.Intermediate, guild, "Intermediate");
+            if (includeAdvanced)
+                AppendGuildBenefits(list, rec.Benefits.Advanced, guild, "Advanced");
         }
 
         return list;

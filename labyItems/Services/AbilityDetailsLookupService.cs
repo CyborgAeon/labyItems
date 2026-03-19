@@ -161,6 +161,7 @@ public static class AbilityDetailsLookupService
             Description = source.Effect ?? string.Empty,
             Cost = 0,
             Table = 0,
+            AbilityRef = (source.Key ?? source.AbilityRef ?? string.Empty).Trim(),
             Available = source.Source ?? "ALL",
             CanBuyMultiple = false,
             PreReqs = source.PreReqs is { Count: > 0 } preReqs

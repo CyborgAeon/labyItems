@@ -15,11 +15,13 @@ namespace labyItems.Pages.Battleboard.ViewModels;
 public sealed class BattleboardViewModel : ObservableObject
 {
     private readonly CharacterDraft _draft;
+    private readonly Dictionary<string, int> _initialResistanceLevels = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<CastingEntryVm> _allCastingEntries = new();
     private string _castingSearch = string.Empty;
     private bool _hasCastingEntries;
     private bool _hasCastingPools;
     private bool _hasCastingTab;
+    private bool _hasImmunities;
     private Alignment _alignment;
     private int _whiteMarks;
     private int _blackMarks;
@@ -33,6 +35,11 @@ public sealed class BattleboardViewModel : ObservableObject
     public BattleboardViewModel(CharacterDraft draft)
     {
         _draft = draft ?? new CharacterDraft();
+        var assignedItems = BattleboardInnateCalculator.ResolveAssignedItems(_draft);
+        var lifeTotals = BattleboardLifeCalculator.Calculate(_draft, assignedItems);
+        var itemArmour = BattleboardArmourCalculator.Calculate(_draft, assignedItems);
+        var resolvedInnates = BattleboardInnateCalculator.Calculate(_draft, assignedItems);
+        var advancementEffects = BattleboardAdvancementEffectResolver.ResolveFallback(_draft.AdvancementAbilities);
 
         CharacterName = _draft.Name ?? string.Empty;
         PlayerName = _draft.PlayerName ?? string.Empty;
@@ -59,7 +66,7 @@ public sealed class BattleboardViewModel : ObservableObject
             .Select(g => g.Trim()));
 
         Innates = new ObservableCollection<InnateRowVm>(
-            (_draft.Innates ?? new List<InnateAbilityDraft>())
+            (resolvedInnates ?? new List<InnateAbilityDraft>())
             .Where(i => !string.IsNullOrWhiteSpace(i?.Name))
             .GroupBy(i => i.Name.Trim(), StringComparer.OrdinalIgnoreCase)
             .Select(g => new InnateRowVm(g.Key, g.Sum(i => Math.Max(0, i.Rank))))
@@ -77,13 +84,13 @@ public sealed class BattleboardViewModel : ObservableObject
         HasAtWillAbilities = AtWillAbilities.Count > 0;
         HasInnates = Innates.Count > 0;
 
-        Tblp = Math.Max(0, _draft.TBLP);
-        Loc = Math.Max(0, _draft.Loc);
+        Tblp = Math.Max(0, lifeTotals.TotalTblp);
+        Loc = Math.Max(0, lifeTotals.TotalLoc);
         InnatePac = Math.Max(0, _draft.ClassRaceArmour);
-        Pac = Math.Max(0, _draft.WornArmour + _draft.ClassRaceArmour);
-        Dac = Math.Max(0, _draft.DAC);
-        Sac = Math.Max(0, _draft.SAC ?? 0);
-        Mac = Math.Max(0, _draft.MAC ?? 0);
+        Pac = Math.Max(0, itemArmour.WornPac + _draft.ClassRaceArmour);
+        Dac = Math.Max(0, _draft.DAC + itemArmour.ItemDac);
+        Sac = Math.Max(0, (_draft.SAC ?? 0) + itemArmour.ItemSac);
+        Mac = Math.Max(0, (_draft.MAC ?? 0) + itemArmour.ItemMac);
         MaxAc = Math.Max(0, _draft.MaxAC);
 
         TotalLife = new TotalLifeVm(Tblp);
@@ -99,7 +106,10 @@ public sealed class BattleboardViewModel : ObservableObject
             Head, Chest, Abdomen, LeftArm, RightArm, LeftLeg, RightLeg
         });
 
-        ResistanceLevels = new ObservableCollection<ResistanceLevelVm>(BuildResistanceLevels(_draft));
+        ResistanceLevels = new ObservableCollection<ResistanceLevelVm>(
+            BuildResistanceLevels(_draft, advancementEffects.ResistanceOverrides));
+        Immunities = new ObservableCollection<string>(BuildImmunities(_draft, advancementEffects.Immunities));
+        HasImmunities = Immunities.Count > 0;
 
         TotalLife.PropertyChanged += (_, e) =>
         {
@@ -147,6 +157,8 @@ public sealed class BattleboardViewModel : ObservableObject
 
         if (ShouldIncludeWizardBaseList())
             _ = LoadWizardBaseListAsync();
+
+        _ = LoadResolvedAdvancementEffectsAsync();
     }
 
     public string CharacterName { get; }
@@ -223,6 +235,12 @@ public sealed class BattleboardViewModel : ObservableObject
     public ReadOnlyCollection<LifeLocationVm> LifeLocations { get; }
 
     public ObservableCollection<ResistanceLevelVm> ResistanceLevels { get; }
+    public ObservableCollection<string> Immunities { get; }
+    public bool HasImmunities
+    {
+        get => _hasImmunities;
+        private set => SetProperty(ref _hasImmunities, value);
+    }
     public ICommand IncreaseResistanceCommand { get; }
     public ICommand DecreaseResistanceCommand { get; }
     public ICommand DrainAllResistanceCommand { get; }
@@ -702,10 +720,19 @@ public sealed class BattleboardViewModel : ObservableObject
             .ToList();
     }
 
-    private static List<ResistanceLevelVm> BuildResistanceLevels(CharacterDraft draft)
+    private List<ResistanceLevelVm> BuildResistanceLevels(
+        CharacterDraft draft,
+        IReadOnlyDictionary<string, int>? overrides)
     {
         var list = new List<ResistanceLevelVm>();
-        var values = draft.ResistanceLevels ?? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var values = new Dictionary<string, int>(
+            BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
+                draft.ResistanceLevels ?? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase),
+                overrides),
+            StringComparer.OrdinalIgnoreCase);
+
+        draft.ResistanceLevels = new Dictionary<string, int>(values, StringComparer.OrdinalIgnoreCase);
+
         if (values.Count == 0)
         {
             values["Physical"] = 8;
@@ -715,7 +742,7 @@ public sealed class BattleboardViewModel : ObservableObject
             draft.ResistanceLevels = values;
         }
 
-        var preferred = new[] { "Physical", "Magic", "Neuro", "Neuronic", "Spirit" };
+        var preferred = new[] { "Physical", "Magic", "Neuro", "Spirit" };
         var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var key in preferred)
@@ -726,17 +753,106 @@ public sealed class BattleboardViewModel : ObservableObject
                 level = 8;
             if (!used.Add(key))
                 continue;
-            list.Add(new ResistanceLevelVm(key, level));
+            var vm = new ResistanceLevelVm(key, level);
+            list.Add(vm);
+            _initialResistanceLevels[key] = vm.Level;
         }
 
         foreach (var kvp in values.OrderBy(k => k.Key, StringComparer.OrdinalIgnoreCase))
         {
             if (used.Contains(kvp.Key))
                 continue;
-            list.Add(new ResistanceLevelVm(kvp.Key, kvp.Value));
+            var canonical = BattleboardAdvancementEffectResolver.NormalizeResistanceType(kvp.Key);
+            var displayName = canonical.Length > 0 ? canonical : kvp.Key;
+            if (used.Contains(displayName))
+                continue;
+
+            var vm = new ResistanceLevelVm(displayName, kvp.Value);
+            list.Add(vm);
+            used.Add(displayName);
+            _initialResistanceLevels[displayName] = vm.Level;
         }
 
         return list;
+    }
+
+    private static List<string> BuildImmunities(CharacterDraft draft, IReadOnlyList<string>? advancementImmunities)
+    {
+        var fromAbilities = (draft.Abilities ?? new List<AbilityDraft>())
+            .Where(IsImmunityAbility)
+            .Select(FormatAbilityText)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(EnsureImmunityPrefix)
+            .ToList();
+
+        return fromAbilities
+            .Concat(advancementImmunities ?? Array.Empty<string>())
+            .Select(name => (name ?? string.Empty).Trim())
+            .Where(name => name.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private async Task LoadResolvedAdvancementEffectsAsync()
+    {
+        try
+        {
+            var resolved = await BattleboardAdvancementEffectResolver.ResolveAsync(_draft.AdvancementAbilities);
+            if ((resolved?.ResistanceOverrides?.Count ?? 0) > 0)
+                ApplyResolvedResistanceOverrides(resolved.ResistanceOverrides);
+
+            var nextImmunities = BuildImmunities(_draft, resolved?.Immunities);
+            Immunities.Clear();
+            foreach (var immunity in nextImmunities)
+                Immunities.Add(immunity);
+
+            HasImmunities = Immunities.Count > 0;
+        }
+        catch
+        {
+            // Keep fallback values when lookup data is unavailable.
+        }
+    }
+
+    private void ApplyResolvedResistanceOverrides(IReadOnlyDictionary<string, int> overrides)
+    {
+        foreach (var pair in overrides ?? new Dictionary<string, int>())
+        {
+            var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(pair.Key);
+            if (key.Length == 0)
+                continue;
+
+            var incoming = Math.Max(0, pair.Value);
+            if (incoming <= 0)
+                continue;
+
+            var target = ResistanceLevels.FirstOrDefault(level =>
+                BattleboardAdvancementEffectResolver.NormalizeResistanceType(level.Name)
+                    .Equals(key, StringComparison.OrdinalIgnoreCase));
+
+            if (target == null)
+            {
+                ResistanceLevels.Add(new ResistanceLevelVm(key, incoming));
+                _draft.ResistanceLevels[key] = incoming;
+                _initialResistanceLevels[key] = incoming;
+                continue;
+            }
+
+            var baseline = _initialResistanceLevels.TryGetValue(key, out var knownBaseline)
+                ? knownBaseline
+                : target.Level;
+
+            if (target.Level != baseline)
+                continue;
+
+            if (incoming <= target.Level)
+                continue;
+
+            target.Level = incoming;
+            _draft.ResistanceLevels[key] = incoming;
+            _initialResistanceLevels[key] = incoming;
+        }
     }
 
     private LifeLocationVm? FindLocation(string key)
@@ -788,6 +904,34 @@ public sealed class BattleboardViewModel : ObservableObject
             text = ability.ShortStringValue ?? string.Empty;
 
         return text;
+    }
+
+    private static bool IsImmunityAbility(AbilityDraft ability)
+    {
+        if (ability == null)
+            return false;
+
+        if (ability.AbilityType == AbilityType.Immunity)
+            return true;
+
+        var text = (ability.Name ?? ability.ShortStringValue ?? string.Empty).Trim();
+        return text.StartsWith("Immunity to ", StringComparison.OrdinalIgnoreCase)
+               || text.StartsWith("Total Immunity to ", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string EnsureImmunityPrefix(string? text)
+    {
+        var value = (text ?? string.Empty).Trim();
+        if (value.Length == 0)
+            return value;
+
+        if (value.StartsWith("Immunity to ", StringComparison.OrdinalIgnoreCase)
+            || value.StartsWith("Total Immunity to ", StringComparison.OrdinalIgnoreCase))
+        {
+            return value;
+        }
+
+        return $"Immunity to {value}";
     }
 
     private static string BuildClassDisplayName(CharacterDraft draft)

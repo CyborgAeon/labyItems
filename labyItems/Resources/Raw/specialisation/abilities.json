@@ -1,6 +1,12 @@
 {
   "$schemaVersion": 1,
   "abilities": {
+    "ability.determination": {
+      "Name": "Determination",
+      "Type": "Static",
+      "Effect": "instead of suffering a listed stopping effect, character takes 6 tblp, even if immune to the stopping effect",
+      "Key": "ability.determination"
+    },
     "ability.1st-weapon-mastery": {
       "Name": "1st Weapon Mastery",
       "Type": "Static",
@@ -30,12 +36,19 @@
       "Count": 1,
       "Key": "ability.1st-enhanced-reflexes"
     },
-    "ability.6-2-stamina": {
+    "ability.6-2-stamina.1": {
       "Name": "+6/2 Stamina",
       "Type": "Life",
       "Effect": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character.",
       "Source": "Tables",
-      "Key": "ability.6-2-stamina"
+      "Key": "ability.6-2-stamina.1"
+    },
+    "ability.6-2-stamina.2": {
+      "Name": "+6/2 Stamina",
+      "Type": "Life",
+      "Effect": "By means of rigorous exercise and training the warrior may become extremely fit. This fitness has the effect of giving him an extra 6 total body life points, and an extra 2 life points per location, it does not however increase his level for resisting magic or spirits. This skill may only be taken once by a character.",
+      "Source": "Tables",
+      "Key": "ability.6-2-stamina.2"
     },
     "ability.cold-rage": {
       "Name": "Cold Rage",
@@ -87,6 +100,94 @@
       "Effect": "This skill grants the Warrior the ability to jump a large distance. Also found listed under the spell Jump, or Salmon Leap, the distance jumped cannot be more than 20’ forwards, 10’ backwards, or 15’ upwards. Jumping past a person will enable that person to take one swing at the jumper; simple actions or other ‘instant’ abilities which need no verbal can be used (just one ability – not a string of Neuronic Penetrations!) instead of a weapon swing, including speaking a single word. This ability is usable 2/day",
       "Count": 2,
       "Key": "ability.athletic-training"
+    },
+    "ability.discipline": {
+      "Name": "Discipline",
+      "Type": "Innate",
+      "Effect": "Grants Immunity to Fear, Emotion Attacks, and Insanity for 5 minutes. Must be used within 2 seconds of the attack (cf. War Cry)",
+      "Count": 1,
+      "Key": "ability.discipline"
+    },
+    "ability.the-people-of-sweethaven-have-spoken": {
+      "Name": "The People of Sweethaven Have Spoken",
+      "Type": "Innate",
+      "Effect": "At the start of the day, guild members can vote which threat will be the most dangerous that day. Depending on the vote, all members gain: i) The Ghoul is the most dangerous - gains a War Cry 1/day, ii) The Demons Fire will consume us - gains +2 MAC vs Red, iii) The Silver Folk will be our bane - gains +3 NAC.",
+      "Count": 1,
+      "Key": "ability.the-people-of-sweethaven-have-spoken"
+    },
+    "ability.immunity-to-one-evil-spiritual-effect": {
+      "Name": "Immunity to One Evil Spiritual Effect",
+      "Type": "Innate",
+      "Effect": "Gain immunity to one evil spiritual effect. Must be used as a War Cry within 2 seconds of suffering the effect.",
+      "Count": 1,
+      "Key": "ability.immunity-to-one-evil-spiritual-effect",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to One Evil Spiritual Effect",
+          "ImmunityName": "One Evil Spiritual Effect"
+        }
+      ]
+    },
+    "ability.immunity-to-repels": {
+      "Name": "Immunity to Repels",
+      "Type": "Immunity",
+      "Effect": "Immunity to Repels (all forms).",
+      "Key": "ability.immunity-to-repels",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Repels",
+          "ImmunityName": "Repels"
+        }
+      ]
+    },
+    "ability.immunity-to-involuntary-mystical-transportation": {
+      "Name": "Immunity to Involuntary Mystical Transportation",
+      "Type": "Immunity",
+      "Effect": "Immunity to involuntary mystical transportation, e.g. Blink Other, Banishment, Void.",
+      "Key": "ability.immunity-to-involuntary-mystical-transportation",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Involuntary Mystical Transportation",
+          "ImmunityName": "Involuntary Mystical Transportation"
+        }
+      ]
+    },
+    "ability.immunity-to-supernatural-fumble-disarm": {
+      "Name": "Immunity to Supernatural Fumble/Disarm",
+      "Type": "Immunity",
+      "Effect": "Immunity to supernatural fumble/disarm effects.",
+      "Key": "ability.immunity-to-supernatural-fumble-disarm",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Supernatural Fumble/Disarm",
+          "ImmunityName": "Supernatural Fumble/Disarm"
+        }
+      ]
+    },
+    "ability.the-battle-line": {
+      "Name": "The Battle Line",
+      "Type": "Innate",
+      "Effect": "1/day, for 5 minutes gains immunity to Repels, Involuntary Mystical Transportation, and Supernatural Fumble/Disarm. May be used in response to an effect (cf. War Cry within 2 seconds of the effect).",
+      "Count": 1,
+      "Key": "ability.the-battle-line"
+    },
+    "ability.family-strength": {
+      "Name": "Family Strength",
+      "Type": "Innate",
+      "Effect": "1/day can enhance a published Ivory or Gold spell (without non-standard enhancements) cast on self or a fellow guild member to have +50% numerical effect, or +50% duration if non-numerical.",
+      "Count": 1,
+      "Key": "ability.family-strength"
+    },
+    "ability.use-self-only-beneficial-ability-on-other": {
+      "Name": "Use Self-Only Beneficial Ability on Other",
+      "Type": "Innate",
+      "Effect": "May apply a published self-only beneficial ability to another willing target.",
+      "Count": 1,
+      "Key": "ability.use-self-only-beneficial-ability-on-other"
     },
     "ability.shadowing": {
       "Name": "Shadowing",
@@ -493,10 +594,17 @@
     },
     "ability.1st-extra-level-of-life": {
       "Name": "1st Extra Level of Life",
-      "Type": "Static",
+      "Type": "Life",
       "Effect": "Gains 1st extra level of life. This replaces the post-8th tables ability",
       "Source": "Tables",
       "Key": "ability.1st-extra-level-of-life"
+    },
+    "ability.2nd-extra-level-of-life": {
+      "Name": "2nd Extra Level of Life",
+      "Type": "Life",
+      "Effect": "Gains 2nd extra level of life. This replaces the post-8th tables ability",
+      "Source": "Tables",
+      "Key": "ability.2nd-extra-level-of-life"
     },
     "ability.flesh-mending": {
       "Name": "Flesh Mending",
@@ -1034,7 +1142,14 @@
       "Name": "Immunity to cold",
       "Type": "Immunity",
       "Effect": "The Gwavysvayne has total immunity to natural cold and a 50% reduction in all damage taken from magical cold.",
-      "Key": "ability.immunity-to-cold"
+      "Key": "ability.immunity-to-cold",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to cold",
+          "ImmunityName": "cold"
+        }
+      ]
     },
     "ability.javelin-of-ice": {
       "Name": "Javelin of Ice",
@@ -1144,21 +1259,42 @@
       "Type": "Immunity",
       "Effect": "Grants complete immunity to poison",
       "Source": "Crol talents",
-      "Key": "ability.immunity-to-poison"
+      "Key": "ability.immunity-to-poison",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Poison",
+          "ImmunityName": "Poison"
+        }
+      ]
     },
     "ability.immunity-to-disease": {
       "Name": "Immunity to Disease",
       "Type": "Immunity",
       "Effect": "Grants complete immunity to disease",
       "Source": "Crol talents",
-      "Key": "ability.immunity-to-disease"
+      "Key": "ability.immunity-to-disease",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Disease",
+          "ImmunityName": "Disease"
+        }
+      ]
     },
     "ability.immunity-to-acid": {
       "Name": "Immunity to Acid",
       "Type": "Immunity",
       "Effect": "Grants complete immunity to acid",
       "Source": "Crol talents",
-      "Key": "ability.immunity-to-acid"
+      "Key": "ability.immunity-to-acid",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Acid",
+          "ImmunityName": "Acid"
+        }
+      ]
     },
     "ability.2-pac": {
       "Name": "2 PAC",
@@ -1358,7 +1494,14 @@
       "Name": "Immunity to informational effects (class powerbase)",
       "Type": "Immunity",
       "Effect": "Gain immunity to informational effects of your class powerbase. This maps to one of Neuronic, Physical, Magical, or Spiritual. If no class powerbase is present, it maps to Physical.",
-      "Key": "ability.hedge-informational-immunity-by-class-powerbase"
+      "Key": "ability.hedge-informational-immunity-by-class-powerbase",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to informational effects (class powerbase)",
+          "ImmunityName": "informational effects (class powerbase)"
+        }
+      ]
     },
     "ability.hedge-plus1-resistance-by-class-powerbase": {
       "Name": "+1 level of resistance (class powerbase)",
@@ -1371,25 +1514,53 @@
       "Name": "Immunity to Neuronic informational effects",
       "Type": "Immunity",
       "Effect": "Gain immunity to neuronic informational effects.",
-      "Key": "ability.hedge-immunity-to-neuronic-informational-effects"
+      "Key": "ability.hedge-immunity-to-neuronic-informational-effects",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Neuronic informational effects",
+          "ImmunityName": "Neuronic informational effects"
+        }
+      ]
     },
     "ability.hedge-immunity-to-physical-informational-effects": {
       "Name": "Immunity to Physical informational effects",
       "Type": "Immunity",
       "Effect": "Gain immunity to physical informational effects.",
-      "Key": "ability.hedge-immunity-to-physical-informational-effects"
+      "Key": "ability.hedge-immunity-to-physical-informational-effects",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Physical informational effects",
+          "ImmunityName": "Physical informational effects"
+        }
+      ]
     },
     "ability.hedge-immunity-to-magical-informational-effects": {
       "Name": "Immunity to Magical informational effects",
       "Type": "Immunity",
       "Effect": "Gain immunity to magical informational effects.",
-      "Key": "ability.hedge-immunity-to-magical-informational-effects"
+      "Key": "ability.hedge-immunity-to-magical-informational-effects",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Magical informational effects",
+          "ImmunityName": "Magical informational effects"
+        }
+      ]
     },
     "ability.hedge-immunity-to-spiritual-informational-effects": {
       "Name": "Immunity to Spiritual informational effects",
       "Type": "Immunity",
       "Effect": "Gain immunity to spiritual informational effects.",
-      "Key": "ability.hedge-immunity-to-spiritual-informational-effects"
+      "Key": "ability.hedge-immunity-to-spiritual-informational-effects",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Spiritual informational effects",
+          "ImmunityName": "Spiritual informational effects"
+        }
+      ]
     },
     "ability.hedge-1-level-resistance-neuronic": {
       "Name": "+1 level of resistance vs Neuronic",
@@ -1567,7 +1738,14 @@
       "Name": "Immunity to Blindness",
       "Type": "Immunity",
       "Effect": "Grants complete immunity to Blindness",
-      "Key": "ability.immunity-to-blindness"
+      "Key": "ability.immunity-to-blindness",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Blindness",
+          "ImmunityName": "Blindness"
+        }
+      ]
     },
     "ability.see-through-darkness": {
       "Name": "See through Darkness",
@@ -2006,61 +2184,131 @@
       "Name": "Immunity to Alignment Change",
       "Type": "Immunity",
       "Effect": "Todo",
-      "Key": "ability.immunity-to-alignment-change"
+      "Key": "ability.immunity-to-alignment-change",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Alignment Change",
+          "ImmunityName": "Alignment Change"
+        }
+      ]
     },
     "ability.immunity-to-befriend": {
       "Name": "Immunity to Befriend",
       "Type": "Immunity",
       "Effect": "Todo",
-      "Key": "ability.immunity-to-befriend"
+      "Key": "ability.immunity-to-befriend",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Befriend",
+          "ImmunityName": "Befriend"
+        }
+      ]
     },
     "ability.immunity-to-beguile": {
       "Name": "Immunity to Beguile",
       "Type": "Immunity",
       "Effect": "Todo",
-      "Key": "ability.immunity-to-beguile"
+      "Key": "ability.immunity-to-beguile",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Beguile",
+          "ImmunityName": "Beguile"
+        }
+      ]
     },
     "ability.immunity-to-bless": {
       "Name": "Immunity to Bless",
       "Type": "Immunity",
       "Effect": "Todo",
-      "Key": "ability.immunity-to-bless"
+      "Key": "ability.immunity-to-bless",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Bless",
+          "ImmunityName": "Bless"
+        }
+      ]
     },
     "ability.immunity-to-bless-curse": {
       "Name": "Immunity to Bless/Curse",
       "Type": "Immunity",
       "Effect": "Todo",
-      "Key": "ability.immunity-to-bless-curse"
+      "Key": "ability.immunity-to-bless-curse",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Bless/Curse",
+          "ImmunityName": "Bless/Curse"
+        }
+      ]
     },
     "ability.immunity-to-curse": {
       "Name": "Immunity to Curse",
       "Type": "Immunity",
       "Effect": "Todo",
-      "Key": "ability.immunity-to-curse"
+      "Key": "ability.immunity-to-curse",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Curse",
+          "ImmunityName": "Curse"
+        }
+      ]
     },
     "ability.immunity-to-domination": {
       "Name": "Immunity to Domination",
       "Type": "Immunity",
       "Effect": "Todo",
-      "Key": "ability.immunity-to-domination"
+      "Key": "ability.immunity-to-domination",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Domination",
+          "ImmunityName": "Domination"
+        }
+      ]
     },
     "ability.immunity-to-fear": {
       "Name": "Immunity to Fear",
       "Type": "Immunity",
       "Effect": "Todo",
-      "Key": "ability.immunity-to-fear"
+      "Key": "ability.immunity-to-fear",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Fear",
+          "ImmunityName": "Fear"
+        }
+      ]
     },
     "ability.immunity-to-halt": {
       "Name": "Immunity to Halt",
       "Type": "Immunity",
       "Effect": "Todo",
-      "Key": "ability.immunity-to-halt"
+      "Key": "ability.immunity-to-halt",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Halt",
+          "ImmunityName": "Halt"
+        }
+      ]
     },
     "ability.immunity-to-spiritual-mastery": {
       "Name": "Immunity to Spiritual Mastery",
       "Type": "Immunity",
       "Effect": "Todo",
-      "Key": "ability.immunity-to-spiritual-mastery"
+      "Key": "ability.immunity-to-spiritual-mastery",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Spiritual Mastery",
+          "ImmunityName": "Spiritual Mastery"
+        }
+      ]
     },
     "ability.improved-message": {
       "Name": "Improved Message",
@@ -2468,25 +2716,53 @@
       "Name": "Immunity to Acute Hearing",
       "Type": "Immunity",
       "Effect": "Complete immunity to acute hearing",
-      "Key": "ability.immunity-to-acute-hearing"
+      "Key": "ability.immunity-to-acute-hearing",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Acute Hearing",
+          "ImmunityName": "Acute Hearing"
+        }
+      ]
     },
     "ability.immunity-to-poisons": {
       "Name": "Immunity to Poisons",
       "Type": "Immunity",
       "Effect": "Complete immunity to poisons",
-      "Key": "ability.immunity-to-poisons"
+      "Key": "ability.immunity-to-poisons",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Poisons",
+          "ImmunityName": "Poisons"
+        }
+      ]
     },
     "ability.immunity-to-potions": {
       "Name": "Immunity to Potions",
       "Type": "Immunity",
       "Effect": "Complete immunity to potions",
-      "Key": "ability.immunity-to-potions"
+      "Key": "ability.immunity-to-potions",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Potions",
+          "ImmunityName": "Potions"
+        }
+      ]
     },
     "ability.immunity-to-tracking": {
       "Name": "Immunity to Tracking",
       "Type": "Immunity",
       "Effect": "You no longer leave tracks or make sounds when moving in your natural environment (immunity to tracking and acute hearing)",
-      "Key": "ability.immunity-to-tracking"
+      "Key": "ability.immunity-to-tracking",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Tracking",
+          "ImmunityName": "Tracking"
+        }
+      ]
     },
     "ability.light-sensitivity": {
       "Name": "Light Sensitivity",
@@ -6493,7 +6769,14 @@
       "Name": "Immunity to Ageing",
       "Type": "Static",
       "Effect": "Gains immunity to ageing.",
-      "Key": "ability.mr.angel-touched.l3"
+      "Key": "ability.mr.angel-touched.l3",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Ageing",
+          "ImmunityName": "Ageing"
+        }
+      ]
     },
     "ability.mr.angel-touched.l4": {
       "Name": "Select Medium Power",
@@ -6614,7 +6897,14 @@
       "Name": "Immunity to Ageing",
       "Type": "Static",
       "Effect": "Gains immunity to ageing.",
-      "Key": "ability.mr.demon-bound.l3"
+      "Key": "ability.mr.demon-bound.l3",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Ageing",
+          "ImmunityName": "Ageing"
+        }
+      ]
     },
     "ability.mr.demon-bound.l4": {
       "Name": "Select Medium Power",
@@ -6663,7 +6953,14 @@
       "Name": "Immunity to Ageing",
       "Type": "Static",
       "Effect": "Now immune to ageing effects.",
-      "Key": "ability.mr.elder-fey.l4"
+      "Key": "ability.mr.elder-fey.l4",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Ageing",
+          "ImmunityName": "Ageing"
+        }
+      ]
     },
     "ability.mr.elder-fey.l5": {
       "Name": "+2 DAC Total",
@@ -6866,7 +7163,14 @@
       "Name": "Immunity to Cold Upgrade",
       "Type": "Static",
       "Effect": "Gains Immunity to Cold as per post-8th tables; if already owned then gains complete Immunity to Cold.",
-      "Key": "ability.mr.frost-giant.l5"
+      "Key": "ability.mr.frost-giant.l5",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Cold Upgrade",
+          "ImmunityName": "Cold Upgrade"
+        }
+      ]
     },
     "ability.mr.frost-giant.l5.2": {
       "Name": "+1 Stacking Strength",
@@ -7073,7 +7377,14 @@
       "Name": "Immunity to Ageing",
       "Type": "Static",
       "Effect": "Now completely immune to ageing.",
-      "Key": "ability.mr.golem.l5.5"
+      "Key": "ability.mr.golem.l5.5",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Ageing",
+          "ImmunityName": "Ageing"
+        }
+      ]
     },
     "ability.mr.golem.l6": {
       "Name": "+3 PAC Total",
@@ -7115,7 +7426,14 @@
       "Name": "Immunity to Domination",
       "Type": "Static",
       "Effect": "Gains immunity to all domination effects.",
-      "Key": "ability.mr.great-ogre.l3"
+      "Key": "ability.mr.great-ogre.l3",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Domination",
+          "ImmunityName": "Domination"
+        }
+      ]
     },
     "ability.mr.great-ogre.l3.2": {
       "Name": "+12/4 Life Total",
@@ -7270,7 +7588,14 @@
       "Name": "Immunity to Ageing",
       "Type": "Static",
       "Effect": "Gains immunity to ageing.",
-      "Key": "ability.mr.immortal.l3"
+      "Key": "ability.mr.immortal.l3",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Ageing",
+          "ImmunityName": "Ageing"
+        }
+      ]
     },
     "ability.mr.immortal.l3.2": {
       "Name": "Half Beneficial Physical Effect",
@@ -7462,7 +7787,14 @@
       "Name": "Immunity to Electrical Attacks",
       "Type": "Static",
       "Effect": "Now completely immune to all electrical attacks.",
-      "Key": "ability.mr.ogre-magi.l6.2"
+      "Key": "ability.mr.ogre-magi.l6.2",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Electrical Attacks",
+          "ImmunityName": "Electrical Attacks"
+        }
+      ]
     },
     "ability.mr.primal-soul.l1": {
       "Name": "Select Primal Tree",
@@ -7824,7 +8156,14 @@
       "Name": "Immunity to Ageing",
       "Type": "Static",
       "Effect": "Gains immunity to ageing.",
-      "Key": "ability.mr.spiritual-vessel.l2"
+      "Key": "ability.mr.spiritual-vessel.l2",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Ageing",
+          "ImmunityName": "Ageing"
+        }
+      ]
     },
     "ability.mr.spiritual-vessel.l3": {
       "Name": "Kill/Sever Restriction",
@@ -7866,7 +8205,14 @@
       "Name": "Immunity to Pain",
       "Type": "Static",
       "Effect": "Immunity to pain in all forms.",
-      "Key": "ability.mr.titan.l1"
+      "Key": "ability.mr.titan.l1",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Pain",
+          "ImmunityName": "Pain"
+        }
+      ]
     },
     "ability.mr.titan.l1.2": {
       "Name": "+1 Stacking Strength",
@@ -7913,7 +8259,14 @@
       "Name": "Immunity to Supernatural Ageing",
       "Type": "Static",
       "Effect": "Gains immunity to supernatural ageing effects.",
-      "Key": "ability.mr.titan.l5"
+      "Key": "ability.mr.titan.l5",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Supernatural Ageing",
+          "ImmunityName": "Supernatural Ageing"
+        }
+      ]
     },
     "ability.mr.titan.l5.2": {
       "Name": "1/4 off Weapon Blows",
@@ -8187,7 +8540,14 @@
       "Name": "Immunity to Ageing",
       "Type": "Static",
       "Effect": "Gains immunity to ageing.",
-      "Key": "ability.mr.vessel-of-the-dragons.l2"
+      "Key": "ability.mr.vessel-of-the-dragons.l2",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Ageing",
+          "ImmunityName": "Ageing"
+        }
+      ]
     },
     "ability.mr.vessel-of-the-dragons.l3": {
       "Name": "Kill/Sever Restriction",
@@ -9049,21 +9409,1192 @@
       "Type": "Static",
       "Effect": "Physical Light-Step x1/level; may not be used to approach an enemy.",
       "Key": "ability.mr.primal-soul.prey.major.physical-light-step-x1-level"
+    },
+    "ability.merged.9th-level-resistance-to-magic-and-spirits": {
+      "Name": "9th Level Resistance to Magic and Spirits",
+      "Type": "Resistance",
+      "Effect": "9th Level Resistance to Magic and Spirits",
+      "Key": "ability.merged.9th-level-resistance-to-magic-and-spirits",
+      "SystemEffects": [
+        {
+          "EffectType": "lor:magic",
+          "DisplayName": "9th level resistance to Magic",
+          "ResistanceType": "Magic",
+          "Level": 9
+        },
+        {
+          "EffectType": "lor:spirit",
+          "DisplayName": "9th level resistance to Spirit",
+          "ResistanceType": "Spirit",
+          "Level": 9
+        }
+      ]
+    },
+    "ability.merged.immunity-to-supernatural-deafness": {
+      "Name": "Immunity to Supernatural Deafness",
+      "Type": "Immunity",
+      "Effect": "Immunity to Supernatural Deafness",
+      "Key": "ability.merged.immunity-to-supernatural-deafness",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Supernatural Deafness",
+          "ImmunityName": "Supernatural Deafness"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-call-location-shot": {
+      "Name": "Immunity to Call Location Shot",
+      "Type": "Immunity",
+      "Effect": "Immunity to Call Location Shot, and related abilities",
+      "Key": "ability.merged.immunity-to-call-location-shot",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Call Location Shot",
+          "ImmunityName": "Call Location Shot"
+        }
+      ]
+    },
+    "ability.merged.9th-level-resistance-to-all-but-neuronics": {
+      "Name": "9th Level Resistance to All but Neuronics",
+      "Type": "Resistance",
+      "Effect": "9th Level Resistance to all bar Neuronics",
+      "Key": "ability.merged.9th-level-resistance-to-all-but-neuronics",
+      "SystemEffects": [
+        {
+          "EffectType": "lor:physical",
+          "DisplayName": "9th level resistance to Physical",
+          "ResistanceType": "Physical",
+          "Level": 9
+        },
+        {
+          "EffectType": "lor:magic",
+          "DisplayName": "9th level resistance to Magic",
+          "ResistanceType": "Magic",
+          "Level": 9
+        },
+        {
+          "EffectType": "lor:spirit",
+          "DisplayName": "9th level resistance to Spirit",
+          "ResistanceType": "Spirit",
+          "Level": 9
+        }
+      ]
+    },
+    "ability.merged.immunity-to-foul-touch": {
+      "Name": "Immunity to Foul Touch",
+      "Type": "Immunity",
+      "Effect": "Immunity to Foul Touch",
+      "Key": "ability.merged.immunity-to-foul-touch",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Foul Touch",
+          "ImmunityName": "Foul Touch"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-information-spells": {
+      "Name": "Immunity to Information Spells",
+      "Type": "Immunity",
+      "Effect": "Immunity to Information spells (All forms except Detect Magic)",
+      "Key": "ability.merged.immunity-to-information-spells",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Information Spells",
+          "ImmunityName": "Information Spells"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-spiritual-freedom": {
+      "Name": "Immunity to Spiritual Freedom",
+      "Type": "Immunity",
+      "Effect": "Immunity to Spiritual Freedom",
+      "Key": "ability.merged.immunity-to-spiritual-freedom",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Spiritual Freedom",
+          "ImmunityName": "Spiritual Freedom"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-protection-from-spirits": {
+      "Name": "Immunity to Protection from Spirits",
+      "Type": "Immunity",
+      "Effect": "Immunity to Protection from Spirits",
+      "Key": "ability.merged.immunity-to-protection-from-spirits",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Protection from Spirits",
+          "ImmunityName": "Protection from Spirits"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-stronghold-hatred": {
+      "Name": "Immunity to Stronghold/Hatred",
+      "Type": "Immunity",
+      "Effect": "Immunity to Stronghold of Good/Hatred from Immunity to Protection  from Spirits",
+      "Key": "ability.merged.immunity-to-stronghold-hatred",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Stronghold/Hatred",
+          "ImmunityName": "Stronghold/Hatred"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-bar-spirit": {
+      "Name": "Immunity to Bar Spirit",
+      "Type": "Immunity",
+      "Effect": "From Immunity to Strongholds gains immunity to Bar Spirit",
+      "Key": "ability.merged.immunity-to-bar-spirit",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Bar Spirit",
+          "ImmunityName": "Bar Spirit"
+        }
+      ]
+    },
+    "ability.merged.9th-level-resistance-to-neuronics": {
+      "Name": "9th Level Resistance to Neuronics",
+      "Type": "Resistance",
+      "Effect": "9th level resistance to Neuronics",
+      "Key": "ability.merged.9th-level-resistance-to-neuronics",
+      "SystemEffects": [
+        {
+          "EffectType": "lor:neuro",
+          "DisplayName": "9th level resistance to Neuro",
+          "ResistanceType": "Neuro",
+          "Level": 9
+        }
+      ]
+    },
+    "ability.merged.immunity-to-subdue-damage": {
+      "Name": "Immunity to Subdue Damage",
+      "Type": "Immunity",
+      "Effect": "Immunity to Subdue Damage due to toughened skull",
+      "Key": "ability.merged.immunity-to-subdue-damage",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Subdue Damage",
+          "ImmunityName": "Subdue Damage"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-emotion-attacks": {
+      "Name": "Immunity to Emotion Attacks",
+      "Type": "Immunity",
+      "Effect": "Immunity to Emotion attacks (not Fear or Insanity)",
+      "Key": "ability.merged.immunity-to-emotion-attacks",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Emotion Attacks",
+          "ImmunityName": "Emotion Attacks"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-backstab": {
+      "Name": "Immunity to Backstab",
+      "Type": "Immunity",
+      "Effect": "Immunity to Backstab",
+      "Key": "ability.merged.immunity-to-backstab",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Backstab",
+          "ImmunityName": "Backstab"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-forget": {
+      "Name": "Immunity to Forget",
+      "Type": "Immunity",
+      "Effect": "Immunity to Forget (all forms)",
+      "Key": "ability.merged.immunity-to-forget",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Forget",
+          "ImmunityName": "Forget"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-natural-cold": {
+      "Name": "Immunity to Natural Cold",
+      "Type": "Immunity",
+      "Effect": "Immunity to Natural Cold (½ effect supernatural cold effects, not  resistance levels )",
+      "Key": "ability.merged.immunity-to-natural-cold",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Natural Cold",
+          "ImmunityName": "Natural Cold"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-natural-lightning": {
+      "Name": "Immunity to Natural Lightning",
+      "Type": "Immunity",
+      "Effect": "Immunity to Natural Lightning (½ effect supernatural lightning and blue   mana, not resistance levels)",
+      "Key": "ability.merged.immunity-to-natural-lightning",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Natural Lightning",
+          "ImmunityName": "Natural Lightning"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-petrifaction": {
+      "Name": "Immunity to Petrifaction",
+      "Type": "Immunity",
+      "Effect": "Immunity to Petrifaction (all forms)",
+      "Key": "ability.merged.immunity-to-petrifaction",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Petrifaction",
+          "ImmunityName": "Petrifaction"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-freeze": {
+      "Name": "Immunity to Freeze",
+      "Type": "Immunity",
+      "Effect": "Immunity to Freeze (all forms)",
+      "Key": "ability.merged.immunity-to-freeze",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Freeze",
+          "ImmunityName": "Freeze"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-strength-drain": {
+      "Name": "Immunity to Strength Drain",
+      "Type": "Immunity",
+      "Effect": "Immunity to Strength Drain (all forms)",
+      "Key": "ability.merged.immunity-to-strength-drain",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Strength Drain",
+          "ImmunityName": "Strength Drain"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-dexterity-drain": {
+      "Name": "Immunity to Dexterity Drain",
+      "Type": "Immunity",
+      "Effect": "Immunity to Dexterity Drain (all forms)",
+      "Key": "ability.merged.immunity-to-dexterity-drain",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Dexterity Drain",
+          "ImmunityName": "Dexterity Drain"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-wither": {
+      "Name": "Immunity to Wither",
+      "Type": "Immunity",
+      "Effect": "Immunity to Wither",
+      "Key": "ability.merged.immunity-to-wither",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Wither",
+          "ImmunityName": "Wither"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-bless-and-curse": {
+      "Name": "Immunity to Bless and Curse",
+      "Type": "Immunity",
+      "Effect": "Immunity to Bless and Curse",
+      "Key": "ability.merged.immunity-to-bless-and-curse",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Bless and Curse",
+          "ImmunityName": "Bless and Curse"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-shadow-plate": {
+      "Name": "Immunity to Shadow Plate",
+      "Type": "Immunity",
+      "Effect": "Immunity to Shadow Plate (6mp black)",
+      "Key": "ability.merged.immunity-to-shadow-plate",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Shadow Plate",
+          "ImmunityName": "Shadow Plate"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-linear-accelerator": {
+      "Name": "Immunity to Linear Accelerator",
+      "Type": "Immunity",
+      "Effect": "Immunity to Linear Accelerator",
+      "Key": "ability.merged.immunity-to-linear-accelerator",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Linear Accelerator",
+          "ImmunityName": "Linear Accelerator"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-rune-of-power": {
+      "Name": "Immunity to Rune of Power",
+      "Type": "Immunity",
+      "Effect": "Immunity to Rune of Power",
+      "Key": "ability.merged.immunity-to-rune-of-power",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Rune of Power",
+          "ImmunityName": "Rune of Power"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-insanity": {
+      "Name": "Immunity to Insanity",
+      "Type": "Immunity",
+      "Effect": "Immunity to Insanity (all forms)",
+      "Key": "ability.merged.immunity-to-insanity",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Insanity",
+          "ImmunityName": "Insanity"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-trip-and-slip": {
+      "Name": "Immunity to Trip and Slip",
+      "Type": "Immunity",
+      "Effect": "Immunity to Trip and Slip",
+      "Key": "ability.merged.immunity-to-trip-and-slip",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Trip and Slip",
+          "ImmunityName": "Trip and Slip"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-induce-spasm": {
+      "Name": "Immunity to Induce Spasm",
+      "Type": "Immunity",
+      "Effect": "Immunity to Induce Spasm",
+      "Key": "ability.merged.immunity-to-induce-spasm",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Induce Spasm",
+          "ImmunityName": "Induce Spasm"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-voice-of-power": {
+      "Name": "Immunity to Voice of Power",
+      "Type": "Immunity",
+      "Effect": "Immunity to Voice of Power",
+      "Key": "ability.merged.immunity-to-voice-of-power",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Voice of Power",
+          "ImmunityName": "Voice of Power"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-natural-fire": {
+      "Name": "Immunity to Natural Fire",
+      "Type": "Immunity",
+      "Effect": "Immunity to Natural Fire (½ effect supernatural fire, not resistance levels)",
+      "Key": "ability.merged.immunity-to-natural-fire",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Natural Fire",
+          "ImmunityName": "Natural Fire"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-involuntary-shape-shifting": {
+      "Name": "Immunity to Involuntary Shape Shifting",
+      "Type": "Immunity",
+      "Effect": "Immunity to Involuntary Shape Shifting",
+      "Key": "ability.merged.immunity-to-involuntary-shape-shifting",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Involuntary Shape Shifting",
+          "ImmunityName": "Involuntary Shape Shifting"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-natural-light": {
+      "Name": "Immunity to Natural Light",
+      "Type": "Immunity",
+      "Effect": "Immunity to Natural Light (½ effect supernatural light, not resistance levels)",
+      "Key": "ability.merged.immunity-to-natural-light",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Natural Light",
+          "ImmunityName": "Natural Light"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-level-drain": {
+      "Name": "Immunity to Level Drain",
+      "Type": "Immunity",
+      "Effect": "Immunity to Level Drain (except from own casting)",
+      "Key": "ability.merged.immunity-to-level-drain",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Level Drain",
+          "ImmunityName": "Level Drain"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-informational-neuronics": {
+      "Name": "Immunity to Informational Neuronics",
+      "Type": "Immunity",
+      "Effect": "Immunity to Informational Neuronics (all forms)",
+      "Key": "ability.merged.immunity-to-informational-neuronics",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Informational Neuronics",
+          "ImmunityName": "Informational Neuronics"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-beguile-befriend-spiritual-mastery": {
+      "Name": "Immunity to Beguile/Befriend/Spiritual Mastery",
+      "Type": "Immunity",
+      "Effect": "Immunity to Beguile, Befriend and Spiritual Mastery",
+      "Key": "ability.merged.immunity-to-beguile-befriend-spiritual-mastery",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Beguile/Befriend/Spiritual Mastery",
+          "ImmunityName": "Beguile/Befriend/Spiritual Mastery"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-baneful-holy-unholy-word": {
+      "Name": "Immunity to Baneful Holy/Unholy Word",
+      "Type": "Immunity",
+      "Effect": "Immunity to Baneful Holy and Unholy Word (all forms)",
+      "Key": "ability.merged.immunity-to-baneful-holy-unholy-word",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Baneful Holy/Unholy Word",
+          "ImmunityName": "Baneful Holy/Unholy Word"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-natural-acid": {
+      "Name": "Immunity to Natural Acid",
+      "Type": "Immunity",
+      "Effect": "Immunity to Natural Acid (½ effect supernatural acid)",
+      "Key": "ability.merged.immunity-to-natural-acid",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Natural Acid",
+          "ImmunityName": "Natural Acid"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-opponent-s-aura-of-defence": {
+      "Name": "Immunity to Opponent's Aura of Defence",
+      "Type": "Immunity",
+      "Effect": "Immunity to Opponents \"Aura of Defence\" Spell",
+      "Key": "ability.merged.immunity-to-opponent-s-aura-of-defence",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Opponent's Aura of Defence",
+          "ImmunityName": "Opponent's Aura of Defence"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-diminish-spirit": {
+      "Name": "Immunity to Diminish Spirit",
+      "Type": "Immunity",
+      "Effect": "Immunity to Diminish Spirit miracle",
+      "Key": "ability.merged.immunity-to-diminish-spirit",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Diminish Spirit",
+          "ImmunityName": "Diminish Spirit"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-slayer-ability": {
+      "Name": "Immunity to Slayer Ability",
+      "Type": "Immunity",
+      "Effect": "Immunity to Slayer Ability",
+      "Key": "ability.merged.immunity-to-slayer-ability",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Slayer Ability",
+          "ImmunityName": "Slayer Ability"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-earthpower-informational": {
+      "Name": "Immunity to Earthpower Informational",
+      "Type": "Immunity",
+      "Effect": "Immunity to Earthpower informational effects",
+      "Key": "ability.merged.immunity-to-earthpower-informational",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Earthpower Informational",
+          "ImmunityName": "Earthpower Informational"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-physical-informational": {
+      "Name": "Immunity to Physical Informational",
+      "Type": "Immunity",
+      "Effect": "Immunity to Physical informational effects",
+      "Key": "ability.merged.immunity-to-physical-informational",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Physical Informational",
+          "ImmunityName": "Physical Informational"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-degeneration-miracle": {
+      "Name": "Immunity to Degeneration Miracle",
+      "Type": "Immunity",
+      "Effect": "Immunity Degeneration Miracle",
+      "Key": "ability.merged.immunity-to-degeneration-miracle",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Degeneration Miracle",
+          "ImmunityName": "Degeneration Miracle"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-sleep-and-catalepsy": {
+      "Name": "Immunity to Sleep and Catalepsy",
+      "Type": "Immunity",
+      "Effect": "Immunity to Sleep and Catalepsy (all forms)",
+      "Key": "ability.merged.immunity-to-sleep-and-catalepsy",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Sleep and Catalepsy",
+          "ImmunityName": "Sleep and Catalepsy"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-information-miracles": {
+      "Name": "Immunity to Information Miracles",
+      "Type": "Immunity",
+      "Effect": "Immunity to Information miracles (all forms)",
+      "Key": "ability.merged.immunity-to-information-miracles",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Information Miracles",
+          "ImmunityName": "Information Miracles"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-paralysis": {
+      "Name": "Immunity to Paralysis",
+      "Type": "Immunity",
+      "Effect": "Immunity to Paralysis (all forms)",
+      "Key": "ability.merged.immunity-to-paralysis",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Paralysis",
+          "ImmunityName": "Paralysis"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-loss-of-weapon-masteries": {
+      "Name": "Immunity to Loss of Weapon Masteries",
+      "Type": "Immunity",
+      "Effect": "Immunity to Loss of Weapon Masteries due to visual environment",
+      "Key": "ability.merged.immunity-to-loss-of-weapon-masteries",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Loss of Weapon Masteries",
+          "ImmunityName": "Loss of Weapon Masteries"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-hurricane": {
+      "Name": "Immunity to Hurricane",
+      "Type": "Immunity",
+      "Effect": "Immunity to the 10mp blue spell Hurricane",
+      "Key": "ability.merged.immunity-to-hurricane",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Hurricane",
+          "ImmunityName": "Hurricane"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-incarna-mortis": {
+      "Name": "Immunity to Incarna Mortis",
+      "Type": "Immunity",
+      "Effect": "Immunity to \"Incarna Mortis\" Miracle",
+      "Key": "ability.merged.immunity-to-incarna-mortis",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Incarna Mortis",
+          "ImmunityName": "Incarna Mortis"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-silence-dumbness-slow": {
+      "Name": "Immunity to Silence/Dumbness/Slow",
+      "Type": "Immunity",
+      "Effect": "Immunity to Silence/Dumbness and Slow (all forms)",
+      "Key": "ability.merged.immunity-to-silence-dumbness-slow",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Silence/Dumbness/Slow",
+          "ImmunityName": "Silence/Dumbness/Slow"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-non-published-dispelling": {
+      "Name": "Immunity to Non-Published Dispelling",
+      "Type": "Immunity",
+      "Effect": "Immunity to Non Published Dispelling Effects targeted on Self or targeted on spells cast on self, or summoned things to be used by self, but not embodiments",
+      "Key": "ability.merged.immunity-to-non-published-dispelling",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Non-Published Dispelling",
+          "ImmunityName": "Non-Published Dispelling"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-sabre-blast": {
+      "Name": "Immunity to Sabre Blast",
+      "Type": "Immunity",
+      "Effect": "Immunity to the blast effect of Sabre of Darkness & Deceit or Sabre of Light & Truth",
+      "Key": "ability.merged.immunity-to-sabre-blast",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Sabre Blast",
+          "ImmunityName": "Sabre Blast"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-repel-evil": {
+      "Name": "Immunity to Repel Evil",
+      "Type": "Immunity",
+      "Effect": "Immunity to Repel Evil",
+      "Key": "ability.merged.immunity-to-repel-evil",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Repel Evil",
+          "ImmunityName": "Repel Evil"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-repel-good": {
+      "Name": "Immunity to Repel Good",
+      "Type": "Immunity",
+      "Effect": "Immunity to Repel Good",
+      "Key": "ability.merged.immunity-to-repel-good",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Repel Good",
+          "ImmunityName": "Repel Good"
+        }
+      ]
+    },
+    "ability.merged.total-immunity-to-neuronics": {
+      "Name": "Total Immunity to Neuronics",
+      "Type": "Immunity",
+      "Effect": "Character may not use and may not benefit in any manner from any use of neuronics - although it is of course possible to indirectly affect them, such as by using Neuro Mastery Air and carrying them, or using Displacement on their weapons",
+      "Key": "ability.merged.total-immunity-to-neuronics",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Neuronics",
+          "ImmunityName": "Neuronics"
+        }
+      ]
+    },
+    "ability.merged.10th-level-resistance-to-magic-and-spirits": {
+      "Name": "10th Level Resistance to Magic and Spirits",
+      "Type": "Resistance",
+      "Effect": "10th Level Resistance to Magic and Spirits",
+      "Key": "ability.merged.10th-level-resistance-to-magic-and-spirits",
+      "SystemEffects": [
+        {
+          "EffectType": "lor:magic",
+          "DisplayName": "10th level resistance to Magic",
+          "ResistanceType": "Magic",
+          "Level": 10
+        },
+        {
+          "EffectType": "lor:spirit",
+          "DisplayName": "10th level resistance to Spirit",
+          "ResistanceType": "Spirit",
+          "Level": 10
+        }
+      ]
+    },
+    "ability.merged.11th-level-resistance-to-magic-and-spirits": {
+      "Name": "11th Level Resistance to Magic and Spirits",
+      "Type": "Resistance",
+      "Effect": "11th level Resistance to Magic and Spirits",
+      "Key": "ability.merged.11th-level-resistance-to-magic-and-spirits",
+      "SystemEffects": [
+        {
+          "EffectType": "lor:magic",
+          "DisplayName": "11th level resistance to Magic",
+          "ResistanceType": "Magic",
+          "Level": 11
+        },
+        {
+          "EffectType": "lor:spirit",
+          "DisplayName": "11th level resistance to Spirit",
+          "ResistanceType": "Spirit",
+          "Level": 11
+        }
+      ]
+    },
+    "ability.merged.immunity-to-hand-of-purity-putrefaction": {
+      "Name": "Immunity to Hand of Purity/Putrefaction",
+      "Type": "Immunity",
+      "Effect": "Immunity to destruction by Hand of Purity/Putrefaction",
+      "Key": "ability.merged.immunity-to-hand-of-purity-putrefaction",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Hand of Purity/Putrefaction",
+          "ImmunityName": "Hand of Purity/Putrefaction"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-bruising-mac-dac": {
+      "Name": "Immunity to Bruising (MAC & DAC)",
+      "Type": "Immunity",
+      "Effect": "Immunity to Bruising using MAC and DAC vs. Pure Magic blows",
+      "Key": "ability.merged.immunity-to-bruising-mac-dac",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Bruising (MAC & DAC)",
+          "ImmunityName": "Bruising (MAC & DAC)"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-bruising-sac-dac": {
+      "Name": "Immunity to Bruising (SAC & DAC)",
+      "Type": "Immunity",
+      "Effect": "Immunity to Bruising using SAC and DAC vs. Pure Spirit blows",
+      "Key": "ability.merged.immunity-to-bruising-sac-dac",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Bruising (SAC & DAC)",
+          "ImmunityName": "Bruising (SAC & DAC)"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-blast-effects": {
+      "Name": "Immunity to Blast Effects",
+      "Type": "Immunity",
+      "Effect": "Immunity to Blast Effects which ignore MAC, such as Super Missile or similar spell, not Sabre Blasts.",
+      "Key": "ability.merged.immunity-to-blast-effects",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Blast Effects",
+          "ImmunityName": "Blast Effects"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-sabre-blast-effects": {
+      "Name": "Immunity to Sabre Blast Effects",
+      "Type": "Immunity",
+      "Effect": "from Immunity to Blast Effects.",
+      "Key": "ability.merged.immunity-to-sabre-blast-effects",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Sabre Blast Effects",
+          "ImmunityName": "Sabre Blast Effects"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-dying-effects": {
+      "Name": "Immunity to Dying Effects",
+      "Type": "Immunity",
+      "Effect": "Immunity to all Dying Effects. Must have Immunity to Bless/Curse and Resistance to Avenging Spirit. This means that upon taking a dying effect and becoming aware of what it is they may, instead of taking the dying effect, choose to be unconscious for 5 minutes. It should be noted the choice must be made at the point of taking the dying effect, not after working out how much damage it might do.",
+      "Key": "ability.merged.immunity-to-dying-effects",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Dying Effects",
+          "ImmunityName": "Dying Effects"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-olfactory-attacks-smelly-stuff": {
+      "Name": "Immunity to Olfactory Attacks (smelly stuff!)",
+      "Type": "Immunity",
+      "Effect": "Immunity to Olfactory Attacks (smelly stuff!)",
+      "Key": "ability.merged.immunity-to-olfactory-attacks-smelly-stuff",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Olfactory Attacks (smelly stuff!)",
+          "ImmunityName": "Olfactory Attacks (smelly stuff!)"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-bruising-using-only-dac": {
+      "Name": "Immunity to Bruising using only DAC",
+      "Type": "Immunity",
+      "Effect": "Immunity to Bruising using only DAC",
+      "Key": "ability.merged.immunity-to-bruising-using-only-dac",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Bruising using only DAC",
+          "ImmunityName": "Bruising using only DAC"
+        }
+      ]
+    },
+    "ability.merged.9th-level-resistance-to-magic-only": {
+      "Name": "9th Level resistance to magic only",
+      "Type": "Resistance",
+      "Effect": "9th Level resistance to magic only",
+      "Key": "ability.merged.9th-level-resistance-to-magic-only",
+      "SystemEffects": [
+        {
+          "EffectType": "lor:magic",
+          "DisplayName": "9th level resistance to Magic",
+          "ResistanceType": "Magic",
+          "Level": 9
+        }
+      ]
+    },
+    "ability.merged.immunity-to-informational-miracles": {
+      "Name": "Immunity to Informational Miracles",
+      "Type": "Immunity",
+      "Effect": "Immunity to Informational Miracles",
+      "Key": "ability.merged.immunity-to-informational-miracles",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Informational Miracles",
+          "ImmunityName": "Informational Miracles"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-strongholds": {
+      "Name": "Immunity to Strongholds",
+      "Type": "Immunity",
+      "Effect": "Immunity to Strongholds from Protections",
+      "Key": "ability.merged.immunity-to-strongholds",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Strongholds",
+          "ImmunityName": "Strongholds"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-voice-of-retribution": {
+      "Name": "Immunity to Voice of Retribution",
+      "Type": "Immunity",
+      "Effect": "Immunity to Voice of Retribution from above",
+      "Key": "ability.merged.immunity-to-voice-of-retribution",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Voice of Retribution",
+          "ImmunityName": "Voice of Retribution"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-incarna-mortis-miracle": {
+      "Name": "Immunity to Incarna Mortis miracle",
+      "Type": "Immunity",
+      "Effect": "Immunity to Incarna Mortis miracle",
+      "Key": "ability.merged.immunity-to-incarna-mortis-miracle",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Incarna Mortis miracle",
+          "ImmunityName": "Incarna Mortis miracle"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-diminish-spirit-miracle": {
+      "Name": "Immunity to Diminish Spirit miracle",
+      "Type": "Immunity",
+      "Effect": "Immunity to Diminish Spirit miracle",
+      "Key": "ability.merged.immunity-to-diminish-spirit-miracle",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Diminish Spirit miracle",
+          "ImmunityName": "Diminish Spirit miracle"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-petrification": {
+      "Name": "Immunity to Petrification",
+      "Type": "Immunity",
+      "Effect": "Immunity to Petrification",
+      "Key": "ability.merged.immunity-to-petrification",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Petrification",
+          "ImmunityName": "Petrification"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-informational-spells": {
+      "Name": "Immunity to Informational Spells",
+      "Type": "Immunity",
+      "Effect": "From Triple Elven Innates. Gains Immunity to Informational Spells.",
+      "Key": "ability.merged.immunity-to-informational-spells",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Informational Spells",
+          "ImmunityName": "Informational Spells"
+        }
+      ]
+    },
+    "ability.merged.10th-level-resistance-to-magic-only": {
+      "Name": "10th Level Resistance to Magic only",
+      "Type": "Resistance",
+      "Effect": "10th Level Resistance to Magic only",
+      "Key": "ability.merged.10th-level-resistance-to-magic-only",
+      "SystemEffects": [
+        {
+          "EffectType": "lor:magic",
+          "DisplayName": "10th level resistance to Magic",
+          "ResistanceType": "Magic",
+          "Level": 10
+        }
+      ]
+    },
+    "ability.merged.immunity-to-cage-of-light": {
+      "Name": "Immunity to Cage of Light",
+      "Type": "Immunity",
+      "Effect": "Immunity to Cage of Light",
+      "Key": "ability.merged.immunity-to-cage-of-light",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Cage of Light",
+          "ImmunityName": "Cage of Light"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-sniff": {
+      "Name": "Immunity to Sniff",
+      "Type": "Immunity",
+      "Effect": "Grants immunity to Discern Smell and Locational Sniff.",
+      "Key": "ability.merged.immunity-to-sniff",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Sniff",
+          "ImmunityName": "Sniff"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-perception": {
+      "Name": "Immunity to Perception",
+      "Type": "Immunity",
+      "Effect": "Is now immune to Perception abilities except Wanderer’s Hunch and Sense Motion.",
+      "Key": "ability.merged.immunity-to-perception",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Perception",
+          "ImmunityName": "Perception"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-bruising-using-mac": {
+      "Name": "Immunity to Bruising Using MAC",
+      "Type": "Immunity",
+      "Effect": "Immunity to bruising using MAC.",
+      "Key": "ability.merged.immunity-to-bruising-using-mac",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Bruising Using MAC",
+          "ImmunityName": "Bruising Using MAC"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-bruising-using-mac-sac-and-dac": {
+      "Name": "Immunity to Bruising using MAC, SAC and DAC",
+      "Type": "Immunity",
+      "Effect": "Immunity to bruising using MAC, SAC and DAC versus Pure Mantic blows.",
+      "Key": "ability.merged.immunity-to-bruising-using-mac-sac-and-dac",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Bruising using MAC, SAC and DAC",
+          "ImmunityName": "Bruising using MAC, SAC and DAC"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-all-magical-informational-effects": {
+      "Name": "Immunity to all Magical Informational Effects",
+      "Type": "Immunity",
+      "Effect": "From Immunity to Informational Spells: Recognise Mana still gives only a yes/no answer, and mana sight may see but learn nothing further about the target.",
+      "Key": "ability.merged.immunity-to-all-magical-informational-effects",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to all Magical Informational Effects",
+          "ImmunityName": "all Magical Informational Effects"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-negation-of-an-embodied-sylph": {
+      "Name": "Immunity to Negation of an Embodied Sylph",
+      "Type": "Immunity",
+      "Effect": "Elementals embodied by the wizard are no longer cancelled by contact with other elementals and do not negate them.",
+      "Key": "ability.merged.immunity-to-negation-of-an-embodied-sylph",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Negation of an Embodied Sylph",
+          "ImmunityName": "Negation of an Embodied Sylph"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-spirits-of-miracle-of-own-alignment": {
+      "Name": "Immunity to ‘Spirits of Miracle’ of Own Alignment",
+      "Type": "Immunity",
+      "Effect": "The priest is not detrimentally affected by animate Spirits of Miracle of their own alignment, such as a same-alignment Spirit of Causing; this applies only to animate spirits of miracle, not other versions of those miracles.",
+      "Key": "ability.merged.immunity-to-spirits-of-miracle-of-own-alignment",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to ‘Spirits of Miracle’ of Own Alignment",
+          "ImmunityName": "‘Spirits of Miracle’ of Own Alignment"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-bruising-using-sac": {
+      "Name": "Immunity to Bruising Using SAC",
+      "Type": "Immunity",
+      "Effect": "Grants immunity to bruising using SAC and immunity to Powercast.",
+      "Key": "ability.merged.immunity-to-bruising-using-sac",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Bruising Using SAC",
+          "ImmunityName": "Bruising Using SAC"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-all-informational-spiritual-effects": {
+      "Name": "Immunity to all Informational Spiritual Effects",
+      "Type": "Immunity",
+      "Effect": "Now immune to spiritual informational effects such as Discern Nature of Wounds. Recognise Spirit still yields a yes/no answer, and this does not grant immunity to Spiritual Sight.",
+      "Key": "ability.merged.immunity-to-all-informational-spiritual-effects",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to all Informational Spiritual Effects",
+          "ImmunityName": "all Informational Spiritual Effects"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-non-handbook-curses": {
+      "Name": "Immunity to Non-Handbook Curses",
+      "Type": "Immunity",
+      "Effect": "Grants immunity to non-handbook curses.",
+      "Key": "ability.merged.immunity-to-non-handbook-curses",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Non-Handbook Curses",
+          "ImmunityName": "Non-Handbook Curses"
+        }
+      ]
+    },
+    "ability.merged.immunity-to-non-standard-undead-touch-effects": {
+      "Name": "Immunity to Non-Standard Undead Touch Effects",
+      "Type": "Immunity",
+      "Effect": "Grants immunity to all undead touch effects except Freeze, Paralysis, Level Drain, Disease, and Fear.",
+      "Key": "ability.merged.immunity-to-non-standard-undead-touch-effects",
+      "SystemEffects": [
+        {
+          "EffectType": "immunity",
+          "DisplayName": "Immunity to Non-Standard Undead Touch Effects",
+          "ImmunityName": "Non-Standard Undead Touch Effects"
+        }
+      ]
     }
   },
   "aliases": {
     "-2 DAC in sunlight": "ability.2-dac-in-sunlight",
     "+1 caster level (dominion)": "ability.1-caster-level-dominion",
     "+1 Casting level chosen colour": "ability.1-casting-level-chosen-colour",
-    "+6/2 Stamina": "ability.6-2-stamina",
+    "+6/2 Stamina": "ability.6-2-stamina.1",
     "1 DAC": "ability.1-dac",
     "1 PAC": "ability.1-pac",
     "1st Enhanced Reflexes": "ability.1st-enhanced-reflexes",
     "1st Extra Level of Life": "ability.1st-extra-level-of-life",
+    "1st Stamina": "ability.6-2-stamina.1",
     "1st Weapon Mastery": "ability.1st-weapon-mastery",
     "1st Weapon Mastery (H)": "ability.1st-weapon-mastery-h",
     "1st Weapon Mastery (O)": "ability.1st-weapon-mastery-o",
     "2 PAC": "ability.2-pac",
+    "2nd Extra Level of Life": "ability.2nd-extra-level-of-life",
+    "2nd Stamina": "ability.6-2-stamina.2",
     "2nd Weapon Mastery": "ability.2nd-weapon-mastery",
     "3 PAC": "ability.3-pac",
     "3rd Weapon Mastery (Bows)": "ability.3rd-weapon-mastery-bows",
@@ -9137,6 +10668,8 @@
     "Discern Poison": "ability.discern-poison",
     "Discern Smell (Sniff)": "ability.discern-smell-sniff",
     "Discern Smell": "ability.discern-smell-sniff",
+    "Discipline": "ability.discipline",
+    "Discipline Other": "ability.discipline",
     "Disguise": "ability.disguise",
     "Distillation": "ability.distillation",
     "Draw Venom": "ability.draw-venom",
@@ -9151,6 +10684,7 @@
     "Examine Construct": "ability.examine-construct",
     "Extinguish (Range)": "ability.extinguish-range",
     "Extinguish Ranged": "ability.extinguish-ranged",
+    "Family Strength": "ability.family-strength",
     "Fire-Elves": "ability.fire-elves",
     "Flash": "ability.flash",
     "Flesh Mending": "ability.flesh-mending",
@@ -9219,6 +10753,7 @@
     "Make Poisons Potion": "ability.make-poisons-potion",
     "Make Teaching Scrolls": "ability.make-teaching-scrolls",
     "Mark Ally": "ability.mark-ally",
+    "Mercenaries Unite!": "ability.use-self-only-beneficial-ability-on-other",
     "Metal Resistance": "ability.metal-resistance",
     "Mind Block": "ability.mind-block",
     "Mobility": "ability.mobility",
@@ -9289,6 +10824,8 @@
     "Sylphs": "ability.sylphs",
     "Talk to Earth": "ability.talk-to-earth",
     "Talk to Plant": "ability.talk-to-plant",
+    "The Battle Line": "ability.the-battle-line",
+    "The People of Sweethaven have spoken": "ability.the-people-of-sweethaven-have-spoken",
     "Tell Strength": "ability.tell-strength",
     "Tell Time and Direction": "ability.tell-time-and-direction",
     "Tell Wounds": "ability.tell-wounds",
@@ -9473,8 +11010,12 @@
     "Earthshift": "ability.earthshift",
     "Evaluate (metal, stone, jewels only)": "ability.evaluate-metal-stone-jewels",
     "Immunity to Acute Hearing": "ability.immunity-to-acute-hearing",
+    "Immunity to Involuntary Mystical Transportation": "ability.immunity-to-involuntary-mystical-transportation",
+    "Immunity to One Evil Spiritual Effect": "ability.immunity-to-one-evil-spiritual-effect",
     "Immunity to Poisons": "ability.immunity-to-poisons",
     "Immunity to Potions": "ability.immunity-to-potions",
+    "Immunity to Repels": "ability.immunity-to-repels",
+    "Immunity to Supernatural Fumble/Disarm": "ability.immunity-to-supernatural-fumble-disarm",
     "Immunity to Tracking": "ability.immunity-to-tracking",
     "Light Sensitivity": "ability.light-sensitivity",
     "Meld with Stone": "ability.meld-with-stone",
@@ -10036,6 +11577,93 @@
     "Persistent First Spirit Shield": "ability.mc.spiritual-warden.l6.1",
     "Warding Sphere Cost Reduction Extension": "ability.mc.spiritual-warden.l6.2",
     "ability.mc.spiritual-maelstrom.l6": "ability.mc.spiritual-maelstrom.l6.1",
-    "Force Sphere Cost Reduction Extension": "ability.mc.spiritual-maelstrom.l6.2"
+    "Force Sphere Cost Reduction Extension": "ability.mc.spiritual-maelstrom.l6.2",
+    "9th Level Resistance to Magic and Spirits": "ability.merged.9th-level-resistance-to-magic-and-spirits",
+    "Immunity to Supernatural Deafness": "ability.merged.immunity-to-supernatural-deafness",
+    "Immunity to Call Location Shot": "ability.merged.immunity-to-call-location-shot",
+    "9th Level Resistance to All but Neuronics": "ability.merged.9th-level-resistance-to-all-but-neuronics",
+    "Immunity to Foul Touch": "ability.merged.immunity-to-foul-touch",
+    "Immunity to Information Spells": "ability.merged.immunity-to-information-spells",
+    "Immunity to Spiritual Freedom": "ability.merged.immunity-to-spiritual-freedom",
+    "Immunity to Protection from Spirits": "ability.merged.immunity-to-protection-from-spirits",
+    "Immunity to Stronghold/Hatred": "ability.merged.immunity-to-stronghold-hatred",
+    "Immunity to Bar Spirit": "ability.merged.immunity-to-bar-spirit",
+    "9th Level Resistance to Neuronics": "ability.merged.9th-level-resistance-to-neuronics",
+    "Immunity to Subdue Damage": "ability.merged.immunity-to-subdue-damage",
+    "Immunity to Emotion Attacks": "ability.merged.immunity-to-emotion-attacks",
+    "Immunity to Backstab": "ability.merged.immunity-to-backstab",
+    "Immunity to Forget": "ability.merged.immunity-to-forget",
+    "Immunity to Natural Cold": "ability.merged.immunity-to-natural-cold",
+    "Immunity to Natural Lightning": "ability.merged.immunity-to-natural-lightning",
+    "Immunity to Petrifaction": "ability.merged.immunity-to-petrifaction",
+    "Immunity to Freeze": "ability.merged.immunity-to-freeze",
+    "Immunity to Strength Drain": "ability.merged.immunity-to-strength-drain",
+    "Immunity to Dexterity Drain": "ability.merged.immunity-to-dexterity-drain",
+    "Immunity to Wither": "ability.merged.immunity-to-wither",
+    "Immunity to Bless and Curse": "ability.merged.immunity-to-bless-and-curse",
+    "Immunity to Shadow Plate": "ability.merged.immunity-to-shadow-plate",
+    "Immunity to Linear Accelerator": "ability.merged.immunity-to-linear-accelerator",
+    "Immunity to Rune of Power": "ability.merged.immunity-to-rune-of-power",
+    "Immunity to Insanity": "ability.merged.immunity-to-insanity",
+    "Immunity to Trip and Slip": "ability.merged.immunity-to-trip-and-slip",
+    "Immunity to Induce Spasm": "ability.merged.immunity-to-induce-spasm",
+    "Immunity to Voice of Power": "ability.merged.immunity-to-voice-of-power",
+    "Immunity to Natural Fire": "ability.merged.immunity-to-natural-fire",
+    "Immunity to Involuntary Shape Shifting": "ability.merged.immunity-to-involuntary-shape-shifting",
+    "Immunity to Natural Light": "ability.merged.immunity-to-natural-light",
+    "Immunity to Level Drain": "ability.merged.immunity-to-level-drain",
+    "Immunity to Informational Neuronics": "ability.merged.immunity-to-informational-neuronics",
+    "Immunity to Beguile/Befriend/Spiritual Mastery": "ability.merged.immunity-to-beguile-befriend-spiritual-mastery",
+    "Immunity to Baneful Holy/Unholy Word": "ability.merged.immunity-to-baneful-holy-unholy-word",
+    "Immunity to Natural Acid": "ability.merged.immunity-to-natural-acid",
+    "Immunity to Opponent's Aura of Defence": "ability.merged.immunity-to-opponent-s-aura-of-defence",
+    "Immunity to Diminish Spirit": "ability.merged.immunity-to-diminish-spirit",
+    "Immunity to Slayer Ability": "ability.merged.immunity-to-slayer-ability",
+    "Immunity to Earthpower Informational": "ability.merged.immunity-to-earthpower-informational",
+    "Immunity to Physical Informational": "ability.merged.immunity-to-physical-informational",
+    "Immunity to Degeneration Miracle": "ability.merged.immunity-to-degeneration-miracle",
+    "Immunity to Sleep and Catalepsy": "ability.merged.immunity-to-sleep-and-catalepsy",
+    "Immunity to Information Miracles": "ability.merged.immunity-to-information-miracles",
+    "Immunity to Paralysis": "ability.merged.immunity-to-paralysis",
+    "Immunity to Loss of Weapon Masteries": "ability.merged.immunity-to-loss-of-weapon-masteries",
+    "Immunity to Hurricane": "ability.merged.immunity-to-hurricane",
+    "Immunity to Incarna Mortis": "ability.merged.immunity-to-incarna-mortis",
+    "Immunity to Silence/Dumbness/Slow": "ability.merged.immunity-to-silence-dumbness-slow",
+    "Immunity to Non-Published Dispelling": "ability.merged.immunity-to-non-published-dispelling",
+    "Immunity to Sabre Blast": "ability.merged.immunity-to-sabre-blast",
+    "Immunity to Repel Evil": "ability.merged.immunity-to-repel-evil",
+    "Immunity to Repel Good": "ability.merged.immunity-to-repel-good",
+    "Total Immunity to Neuronics": "ability.merged.total-immunity-to-neuronics",
+    "10th Level Resistance to Magic and Spirits": "ability.merged.10th-level-resistance-to-magic-and-spirits",
+    "11th Level Resistance to Magic and Spirits": "ability.merged.11th-level-resistance-to-magic-and-spirits",
+    "Immunity to Hand of Purity/Putrefaction": "ability.merged.immunity-to-hand-of-purity-putrefaction",
+    "Immunity to Bruising (MAC & DAC)": "ability.merged.immunity-to-bruising-mac-dac",
+    "Immunity to Bruising (SAC & DAC)": "ability.merged.immunity-to-bruising-sac-dac",
+    "Immunity to Blast Effects": "ability.merged.immunity-to-blast-effects",
+    "Immunity to Sabre Blast Effects": "ability.merged.immunity-to-sabre-blast-effects",
+    "Immunity to Dying Effects": "ability.merged.immunity-to-dying-effects",
+    "Immunity to Olfactory Attacks (smelly stuff!)": "ability.merged.immunity-to-olfactory-attacks-smelly-stuff",
+    "Immunity to Bruising using only DAC": "ability.merged.immunity-to-bruising-using-only-dac",
+    "9th Level resistance to magic only": "ability.merged.9th-level-resistance-to-magic-only",
+    "Immunity to Informational Miracles": "ability.merged.immunity-to-informational-miracles",
+    "Immunity to Strongholds": "ability.merged.immunity-to-strongholds",
+    "Immunity to Voice of Retribution": "ability.merged.immunity-to-voice-of-retribution",
+    "Immunity to Incarna Mortis miracle": "ability.merged.immunity-to-incarna-mortis-miracle",
+    "Immunity to Diminish Spirit miracle": "ability.merged.immunity-to-diminish-spirit-miracle",
+    "Immunity to Petrification": "ability.merged.immunity-to-petrification",
+    "Immunity to Informational Spells": "ability.merged.immunity-to-informational-spells",
+    "10th Level Resistance to Magic only": "ability.merged.10th-level-resistance-to-magic-only",
+    "Immunity to Cage of Light": "ability.merged.immunity-to-cage-of-light",
+    "Immunity to Sniff": "ability.merged.immunity-to-sniff",
+    "Immunity to Perception": "ability.merged.immunity-to-perception",
+    "Immunity to Bruising Using MAC": "ability.merged.immunity-to-bruising-using-mac",
+    "Immunity to Bruising using MAC, SAC and DAC": "ability.merged.immunity-to-bruising-using-mac-sac-and-dac",
+    "Immunity to all Magical Informational Effects": "ability.merged.immunity-to-all-magical-informational-effects",
+    "Immunity to Negation of an Embodied Sylph": "ability.merged.immunity-to-negation-of-an-embodied-sylph",
+    "Immunity to ‘Spirits of Miracle’ of Own Alignment": "ability.merged.immunity-to-spirits-of-miracle-of-own-alignment",
+    "Immunity to Bruising Using SAC": "ability.merged.immunity-to-bruising-using-sac",
+    "Immunity to all Informational Spiritual Effects": "ability.merged.immunity-to-all-informational-spiritual-effects",
+    "Immunity to Non-Handbook Curses": "ability.merged.immunity-to-non-handbook-curses",
+    "Immunity to Non-Standard Undead Touch Effects": "ability.merged.immunity-to-non-standard-undead-touch-effects"
   }
 }

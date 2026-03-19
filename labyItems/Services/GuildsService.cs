@@ -67,9 +67,10 @@ public static class GuildsService
             foreach (var record in records.Values)
             {
                 record.Benefits ??= new GuildBenefits();
-                record.Benefits.Basic = NormalizeBenefitTier(record.Benefits.Basic, abilityRefs, choiceSetRefs);
-                record.Benefits.Intermediate = NormalizeBenefitTier(record.Benefits.Intermediate, abilityRefs, choiceSetRefs);
-                record.Benefits.Advanced = NormalizeBenefitTier(record.Benefits.Advanced, abilityRefs, choiceSetRefs);
+                var grantsById = new Dictionary<string, AbilityDefinition>(StringComparer.OrdinalIgnoreCase);
+                record.Benefits.Basic = NormalizeBenefitTier(record.Benefits.Basic, abilityRefs, choiceSetRefs, grantsById);
+                record.Benefits.Intermediate = NormalizeBenefitTier(record.Benefits.Intermediate, abilityRefs, choiceSetRefs, grantsById);
+                record.Benefits.Advanced = NormalizeBenefitTier(record.Benefits.Advanced, abilityRefs, choiceSetRefs, grantsById);
             }
         }
         catch (Exception ex)
@@ -81,7 +82,8 @@ public static class GuildsService
     private static List<GuildBenefitEntry> NormalizeBenefitTier(
         IEnumerable<GuildBenefitEntry>? tier,
         IReadOnlyDictionary<string, AbilityDefinition> abilityRefs,
-        IReadOnlyDictionary<string, SpecialisationChoiceSet> choiceSetRefs)
+        IReadOnlyDictionary<string, SpecialisationChoiceSet> choiceSetRefs,
+        IDictionary<string, AbilityDefinition> grantsById)
     {
         var normalized = new List<GuildBenefitEntry>();
         foreach (var entry in tier ?? Enumerable.Empty<GuildBenefitEntry>())
@@ -91,11 +93,15 @@ public static class GuildsService
 
             if (entry.Ability != null)
             {
-                var ability = NormalizeAbility(entry.Ability, abilityRefs);
+                var ability = NormalizeBenefitAbility(entry.Ability, abilityRefs, grantsById);
+                if (ability == null)
+                    continue;
+
                 if (ability.ChoiceSetRefs is { Count: > 0 })
                 {
                     var prompt = CloneAbility(ability);
                     prompt.ChoiceSetRefs = null;
+                    prompt.ChoiceSetRef = null;
                     if (!string.IsNullOrWhiteSpace(prompt.Name))
                         normalized.Add(new GuildBenefitEntry { Ability = prompt });
 
@@ -109,6 +115,8 @@ public static class GuildsService
                 if (!string.IsNullOrWhiteSpace(ability.Name))
                     normalized.Add(new GuildBenefitEntry { Ability = ability });
 
+                RegisterGrant(ability, grantsById);
+
                 continue;
             }
 
@@ -120,7 +128,9 @@ public static class GuildsService
             {
                 var abilities = (option?.Abilities ?? new List<AbilityDefinition>())
                     .Where(a => a != null)
-                    .Select(a => NormalizeAbility(a, abilityRefs))
+                    .Select(a => NormalizeBenefitAbility(a, abilityRefs, grantsById))
+                    .Where(a => a != null)
+                    .Cast<AbilityDefinition>()
                     .Where(a => !string.IsNullOrWhiteSpace(a.Name))
                     .ToList();
 
@@ -128,6 +138,8 @@ public static class GuildsService
                     continue;
 
                 options.Add(new GuildBenefitOption { Abilities = abilities });
+                foreach (var ability in abilities)
+                    RegisterGrant(ability, grantsById);
             }
 
             if (options.Count > 0)
@@ -135,6 +147,67 @@ public static class GuildsService
         }
 
         return normalized;
+    }
+
+    private static AbilityDefinition? NormalizeBenefitAbility(
+        AbilityDefinition? raw,
+        IReadOnlyDictionary<string, AbilityDefinition> abilityRefs,
+        IDictionary<string, AbilityDefinition> grantsById)
+    {
+        if (raw == null)
+            return null;
+
+        if (!string.IsNullOrWhiteSpace(raw.UpgradeGrantRef)
+            && (raw.ReplaceWith != null || raw.Modify != null))
+        {
+            return NormalizeStructuredUpgrade(raw, abilityRefs, grantsById);
+        }
+
+        return NormalizeAbility(raw, abilityRefs);
+    }
+
+    private static AbilityDefinition NormalizeStructuredUpgrade(
+        AbilityDefinition raw,
+        IReadOnlyDictionary<string, AbilityDefinition> abilityRefs,
+        IDictionary<string, AbilityDefinition> grantsById)
+    {
+        AbilityDefinition ability;
+        if (raw.ReplaceWith != null)
+        {
+            ability = NormalizeAbility(raw.ReplaceWith, abilityRefs);
+        }
+        else if (!string.IsNullOrWhiteSpace(raw.UpgradeGrantRef)
+                 && grantsById.TryGetValue(raw.UpgradeGrantRef.Trim(), out var priorGrant))
+        {
+            ability = CloneAbility(priorGrant);
+        }
+        else
+        {
+            ability = new AbilityDefinition();
+        }
+
+        ApplyGrantOverlay(ability, raw);
+
+        var countDelta = raw.Modify?.CountDelta;
+        if (countDelta.HasValue && countDelta.Value != 0)
+        {
+            var baseCount = ability.Count ?? 0;
+            ability.Count = Math.Max(0, baseCount + countDelta.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(raw.UpgradeGrantRef))
+            ability.UpgradeGrantRef = raw.UpgradeGrantRef;
+
+        return ability;
+    }
+
+    private static void RegisterGrant(AbilityDefinition? ability, IDictionary<string, AbilityDefinition> grantsById)
+    {
+        var grantId = (ability?.GrantId ?? string.Empty).Trim();
+        if (grantId.Length == 0)
+            return;
+
+        grantsById[grantId] = CloneAbility(ability!);
     }
 
     private static GuildBenefitEntry? BuildChoiceSetOptionEntry(
@@ -188,50 +261,116 @@ public static class GuildsService
 
         var resolved = TryResolveReferencedAbility(raw, abilityRefs);
         var ability = resolved != null ? CloneAbility(resolved) : new AbilityDefinition();
-
-        if (!string.IsNullOrWhiteSpace(raw.Key))
-            ability.Key = raw.Key;
-        if (!string.IsNullOrWhiteSpace(raw.AbilityRef))
-            ability.AbilityRef = raw.AbilityRef;
-        if (!string.IsNullOrWhiteSpace(raw.Name))
-            ability.Name = raw.Name;
-        if (!string.IsNullOrWhiteSpace(raw.BattleboardNameOverride))
-            ability.BattleboardNameOverride = raw.BattleboardNameOverride;
-        if (!string.IsNullOrWhiteSpace(raw.UpdateKey))
-            ability.UpdateKey = raw.UpdateKey;
-        if (!string.IsNullOrWhiteSpace(raw.Type))
-            ability.Type = raw.Type;
-        if (!string.IsNullOrWhiteSpace(raw.Effect))
-            ability.Effect = raw.Effect;
-        if (!string.IsNullOrWhiteSpace(raw.Lore))
-            ability.Lore = raw.Lore;
-        if (!string.IsNullOrWhiteSpace(raw.Source))
-            ability.Source = raw.Source;
-        if (raw.Count.HasValue)
-            ability.Count = raw.Count;
-        if (raw.Progression != null)
-            ability.Progression = CloneProgression(raw.Progression);
-        if (raw.Amount is { Count: > 0 })
-            ability.Amount = raw.Amount.ToList();
-        if (!string.IsNullOrWhiteSpace(raw.Frequency))
-            ability.Frequency = raw.Frequency;
-        if (!string.IsNullOrWhiteSpace(raw.OverwriteKey))
-            ability.OverwriteKey = raw.OverwriteKey;
-        if (raw.PreReqs is { Count: > 0 })
-            ability.PreReqs = raw.PreReqs.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-        if (raw.GuildOverrides is { Count: > 0 })
-            ability.GuildOverrides = raw.GuildOverrides.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-        if (raw.Customisation != null)
-            ability.Customisation = CloneCustomisation(raw.Customisation);
-        if (raw.ChoiceSetRefs is { Count: > 0 })
-            ability.ChoiceSetRefs = raw.ChoiceSetRefs.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+        ApplyGrantOverlay(ability, raw);
 
         if (string.IsNullOrWhiteSpace(ability.AbilityRef))
             ability.AbilityRef = resolved?.Key;
         if (string.IsNullOrWhiteSpace(ability.Key))
             ability.Key = resolved?.Key ?? ability.AbilityRef;
+        if (string.IsNullOrWhiteSpace(ability.GrantType) && !string.IsNullOrWhiteSpace(ability.Type))
+            ability.GrantType = ability.Type;
+        if (string.IsNullOrWhiteSpace(ability.Type) && !string.IsNullOrWhiteSpace(ability.GrantType))
+            ability.Type = ability.GrantType;
 
         return ability;
+    }
+
+    private static void ApplyGrantOverlay(AbilityDefinition target, AbilityDefinition source)
+    {
+        if (!string.IsNullOrWhiteSpace(source.Key))
+            target.Key = source.Key;
+        if (!string.IsNullOrWhiteSpace(source.AbilityRef))
+            target.AbilityRef = source.AbilityRef;
+        if (!string.IsNullOrWhiteSpace(source.GrantId))
+            target.GrantId = source.GrantId;
+        if (!string.IsNullOrWhiteSpace(source.GrantType))
+        {
+            target.GrantType = source.GrantType;
+            target.Type = source.GrantType;
+        }
+        if (!string.IsNullOrWhiteSpace(source.Duration))
+            target.Duration = source.Duration;
+        if (!string.IsNullOrWhiteSpace(source.UpgradeGrantRef))
+            target.UpgradeGrantRef = source.UpgradeGrantRef;
+        if (source.Modify != null)
+            target.Modify = CloneGrantModify(source.Modify);
+        if (source.ReplaceWith != null)
+            target.ReplaceWith = CloneAbility(source.ReplaceWith);
+
+        if (!string.IsNullOrWhiteSpace(source.Name))
+            target.Name = source.Name;
+        if (!string.IsNullOrWhiteSpace(source.BattleboardNameOverride))
+            target.BattleboardNameOverride = source.BattleboardNameOverride;
+        if (!string.IsNullOrWhiteSpace(source.UpdateKey))
+            target.UpdateKey = source.UpdateKey;
+        if (!string.IsNullOrWhiteSpace(source.Type) && string.IsNullOrWhiteSpace(source.GrantType))
+            target.Type = source.Type;
+        if (!string.IsNullOrWhiteSpace(source.Effect))
+            target.Effect = source.Effect;
+        if (!string.IsNullOrWhiteSpace(source.Lore))
+            target.Lore = source.Lore;
+        if (!string.IsNullOrWhiteSpace(source.Source))
+            target.Source = source.Source;
+        if (source.Count.HasValue)
+            target.Count = source.Count;
+        if (source.Progression != null)
+            target.Progression = CloneProgression(source.Progression);
+        if (source.Amount is { Count: > 0 })
+            target.Amount = source.Amount.ToList();
+        if (!string.IsNullOrWhiteSpace(source.Frequency))
+            target.Frequency = source.Frequency;
+        if (!string.IsNullOrWhiteSpace(source.OverwriteKey))
+            target.OverwriteKey = source.OverwriteKey;
+        if (source.PreReqs is { Count: > 0 })
+            target.PreReqs = source.PreReqs.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+        if (source.GuildOverrides is { Count: > 0 })
+            target.GuildOverrides = source.GuildOverrides.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+        if (source.Customisation != null)
+            target.Customisation = CloneCustomisation(source.Customisation);
+
+        var refs = new List<string>();
+        if (source.ChoiceSetRefs is { Count: > 0 })
+        {
+            refs.AddRange(source.ChoiceSetRefs
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim()));
+        }
+        if (!string.IsNullOrWhiteSpace(source.ChoiceSetRef))
+            refs.Add(source.ChoiceSetRef.Trim());
+        if (refs.Count > 0)
+        {
+            target.ChoiceSetRefs = refs
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            target.ChoiceSetRef = target.ChoiceSetRefs.FirstOrDefault();
+        }
+
+        if (source.Overrides != null)
+        {
+            target.Overrides = CloneGrantOverrides(source.Overrides);
+            ApplyGrantOverrides(target, source.Overrides);
+        }
+    }
+
+    private static void ApplyGrantOverrides(AbilityDefinition ability, GuildGrantOverrides overrides)
+    {
+        if (!string.IsNullOrWhiteSpace(overrides.DisplayName))
+            ability.Name = overrides.DisplayName;
+        if (!string.IsNullOrWhiteSpace(overrides.Effect))
+            ability.Effect = overrides.Effect;
+        if (!string.IsNullOrWhiteSpace(overrides.Source))
+            ability.Source = overrides.Source;
+        if (!string.IsNullOrWhiteSpace(overrides.GrantType))
+        {
+            ability.GrantType = overrides.GrantType;
+            ability.Type = overrides.GrantType;
+        }
+        if (overrides.Count.HasValue)
+            ability.Count = overrides.Count;
+        if (!string.IsNullOrWhiteSpace(overrides.Frequency))
+            ability.Frequency = overrides.Frequency;
+        if (!string.IsNullOrWhiteSpace(overrides.Duration))
+            ability.Duration = overrides.Duration;
     }
 
     private static AbilityDefinition? TryResolveReferencedAbility(
@@ -257,6 +396,13 @@ public static class GuildsService
         {
             Key = source.Key,
             AbilityRef = source.AbilityRef,
+            GrantId = source.GrantId,
+            GrantType = source.GrantType,
+            Duration = source.Duration,
+            Overrides = CloneGrantOverrides(source.Overrides),
+            UpgradeGrantRef = source.UpgradeGrantRef,
+            ReplaceWith = source.ReplaceWith != null ? CloneAbility(source.ReplaceWith) : null,
+            Modify = CloneGrantModify(source.Modify),
             Name = source.Name ?? string.Empty,
             BattleboardNameOverride = source.BattleboardNameOverride,
             UpdateKey = source.UpdateKey,
@@ -272,7 +418,37 @@ public static class GuildsService
             PreReqs = source.PreReqs?.ToList(),
             GuildOverrides = source.GuildOverrides?.ToList(),
             Customisation = CloneCustomisation(source.Customisation),
+            ChoiceSetRef = source.ChoiceSetRef,
             ChoiceSetRefs = source.ChoiceSetRefs?.ToList()
+        };
+    }
+
+    private static GuildGrantOverrides? CloneGrantOverrides(GuildGrantOverrides? source)
+    {
+        if (source == null)
+            return null;
+
+        return new GuildGrantOverrides
+        {
+            DisplayName = source.DisplayName,
+            Verbal = source.Verbal,
+            Effect = source.Effect,
+            Source = source.Source,
+            GrantType = source.GrantType,
+            Count = source.Count,
+            Frequency = source.Frequency,
+            Duration = source.Duration
+        };
+    }
+
+    private static GuildGrantModify? CloneGrantModify(GuildGrantModify? source)
+    {
+        if (source == null)
+            return null;
+
+        return new GuildGrantModify
+        {
+            CountDelta = source.CountDelta
         };
     }
 

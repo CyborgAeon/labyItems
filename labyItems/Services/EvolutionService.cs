@@ -58,6 +58,7 @@ public static class EvolutionService
         public string Description { get; init; } = string.Empty;
         public int Cost { get; init; }
         public int Table { get; init; }
+        public string AbilityRef { get; init; } = string.Empty;
         public string Available { get; init; } = string.Empty;
         public string SourceBook { get; init; } = string.Empty;
         public string AvailabilityDisplay { get; init; } = string.Empty;
@@ -276,6 +277,7 @@ public static class EvolutionService
             Description = NormalizeAbilityDisplayText(row.description),
             Cost = row.cost,
             Table = row.table_id,
+            AbilityRef = ParseAbilityRef(row.data_json),
             Available = row.available ?? string.Empty,
             SourceBook = ParseSourceBook(row.data_json),
             AvailabilityDisplay = availability.DisplayText,
@@ -650,6 +652,39 @@ public static class EvolutionService
         catch
         {
             // malformed data_json; treat source book as unknown
+        }
+
+        return string.Empty;
+    }
+
+    private static string ParseAbilityRef(string? dataJson)
+    {
+        if (string.IsNullOrWhiteSpace(dataJson))
+            return string.Empty;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(dataJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+                return string.Empty;
+
+            foreach (var property in doc.RootElement.EnumerateObject())
+            {
+                if (!property.Name.Equals("abilityRef", StringComparison.OrdinalIgnoreCase)
+                    && !property.Name.Equals("ability_ref", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (property.Value.ValueKind == JsonValueKind.String)
+                    return (property.Value.GetString() ?? string.Empty).Trim();
+
+                return string.Empty;
+            }
+        }
+        catch
+        {
+            // malformed data_json
         }
 
         return string.Empty;
