@@ -137,9 +137,9 @@ jobs:
 
       - name: Restore
         run: |
-          UseIosWorkload=true dotnet restore labyItems/labyItems.csproj \
+          dotnet restore labyItems/labyItems.csproj \
+            -f net10.0-ios \
             -r ios-arm64
-
       - name: Publish signed iOS IPA
         run: |
           set -euo pipefail
