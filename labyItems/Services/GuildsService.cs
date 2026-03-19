@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using labyItems.Models.Characters;
 using labyItems.Models.Rules;
+using labyItems.Services.Specialisations;
 
 namespace labyItems.Services;
 
@@ -26,8 +28,260 @@ public static class GuildsService
 
         _cache = JsonSerializer.Deserialize<Dictionary<string, GuildRecord>>(json, _jsonOptions)
                  ?? new Dictionary<string, GuildRecord>();
+        await NormalizeGuildBenefitsAsync(_cache);
 
         return _cache;
+    }
+
+    private static async Task NormalizeGuildBenefitsAsync(Dictionary<string, GuildRecord> records)
+    {
+        if (records == null || records.Count == 0)
+            return;
+
+        try
+        {
+            var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+            var abilityRefs = index?.AbilityReferences
+                              ?? new Dictionary<string, AbilityDefinition>(StringComparer.OrdinalIgnoreCase);
+            var choiceSetRefs = index?.ChoiceSetTemplates
+                               ?? new Dictionary<string, SpecialisationChoiceSet>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var record in records.Values)
+            {
+                record.Benefits ??= new GuildBenefits();
+                record.Benefits.Basic = NormalizeBenefitTier(record.Benefits.Basic, abilityRefs, choiceSetRefs);
+                record.Benefits.Intermediate = NormalizeBenefitTier(record.Benefits.Intermediate, abilityRefs, choiceSetRefs);
+                record.Benefits.Advanced = NormalizeBenefitTier(record.Benefits.Advanced, abilityRefs, choiceSetRefs);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[GuildsService] Failed to normalize guild ability references: {ex.Message}");
+        }
+    }
+
+    private static List<GuildBenefitEntry> NormalizeBenefitTier(
+        IEnumerable<GuildBenefitEntry>? tier,
+        IReadOnlyDictionary<string, AbilityDefinition> abilityRefs,
+        IReadOnlyDictionary<string, SpecialisationChoiceSet> choiceSetRefs)
+    {
+        var normalized = new List<GuildBenefitEntry>();
+        foreach (var entry in tier ?? Enumerable.Empty<GuildBenefitEntry>())
+        {
+            if (entry == null)
+                continue;
+
+            if (entry.Ability != null)
+            {
+                var ability = NormalizeAbility(entry.Ability, abilityRefs);
+                if (ability.ChoiceSetRefs is { Count: > 0 })
+                {
+                    var prompt = CloneAbility(ability);
+                    prompt.ChoiceSetRefs = null;
+                    if (!string.IsNullOrWhiteSpace(prompt.Name))
+                        normalized.Add(new GuildBenefitEntry { Ability = prompt });
+
+                    var optionsEntry = BuildChoiceSetOptionEntry(ability.ChoiceSetRefs, abilityRefs, choiceSetRefs);
+                    if (optionsEntry != null)
+                        normalized.Add(optionsEntry);
+
+                    continue;
+                }
+
+                if (!string.IsNullOrWhiteSpace(ability.Name))
+                    normalized.Add(new GuildBenefitEntry { Ability = ability });
+
+                continue;
+            }
+
+            if (entry.Options == null || entry.Options.Count == 0)
+                continue;
+
+            var options = new List<GuildBenefitOption>();
+            foreach (var option in entry.Options)
+            {
+                var abilities = (option?.Abilities ?? new List<AbilityDefinition>())
+                    .Where(a => a != null)
+                    .Select(a => NormalizeAbility(a, abilityRefs))
+                    .Where(a => !string.IsNullOrWhiteSpace(a.Name))
+                    .ToList();
+
+                if (abilities.Count == 0)
+                    continue;
+
+                options.Add(new GuildBenefitOption { Abilities = abilities });
+            }
+
+            if (options.Count > 0)
+                normalized.Add(new GuildBenefitEntry { Options = options });
+        }
+
+        return normalized;
+    }
+
+    private static GuildBenefitEntry? BuildChoiceSetOptionEntry(
+        IEnumerable<string> choiceSetRefs,
+        IReadOnlyDictionary<string, AbilityDefinition> abilityRefs,
+        IReadOnlyDictionary<string, SpecialisationChoiceSet> choiceSets)
+    {
+        var options = new List<GuildBenefitOption>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var choiceSetRefRaw in choiceSetRefs ?? Enumerable.Empty<string>())
+        {
+            var choiceSetRef = (choiceSetRefRaw ?? string.Empty).Trim();
+            if (choiceSetRef.Length == 0 || !choiceSets.TryGetValue(choiceSetRef, out var choiceSet))
+                continue;
+
+            foreach (var option in choiceSet.Options ?? Array.Empty<ChoiceOption>())
+            {
+                var abilities = new List<AbilityDefinition>();
+                foreach (var grant in option.Grants ?? Array.Empty<AbilityGrant>())
+                {
+                    var ability = NormalizeAbility(grant.Ability ?? new AbilityDefinition(), abilityRefs);
+                    if (!string.IsNullOrWhiteSpace(ability.Name))
+                        abilities.Add(ability);
+                }
+
+                if (abilities.Count == 0)
+                    continue;
+
+                var signature = string.Join("|", abilities
+                    .Select(a => !string.IsNullOrWhiteSpace(a.Key)
+                        ? a.Key!.Trim()
+                        : (a.Name ?? string.Empty).Trim().ToLowerInvariant()));
+
+                if (!seen.Add(signature))
+                    continue;
+
+                options.Add(new GuildBenefitOption { Abilities = abilities });
+            }
+        }
+
+        return options.Count == 0 ? null : new GuildBenefitEntry { Options = options };
+    }
+
+    private static AbilityDefinition NormalizeAbility(
+        AbilityDefinition? raw,
+        IReadOnlyDictionary<string, AbilityDefinition> abilityRefs)
+    {
+        if (raw == null)
+            return new AbilityDefinition();
+
+        var resolved = TryResolveReferencedAbility(raw, abilityRefs);
+        var ability = resolved != null ? CloneAbility(resolved) : new AbilityDefinition();
+
+        if (!string.IsNullOrWhiteSpace(raw.Key))
+            ability.Key = raw.Key;
+        if (!string.IsNullOrWhiteSpace(raw.AbilityRef))
+            ability.AbilityRef = raw.AbilityRef;
+        if (!string.IsNullOrWhiteSpace(raw.Name))
+            ability.Name = raw.Name;
+        if (!string.IsNullOrWhiteSpace(raw.BattleboardNameOverride))
+            ability.BattleboardNameOverride = raw.BattleboardNameOverride;
+        if (!string.IsNullOrWhiteSpace(raw.UpdateKey))
+            ability.UpdateKey = raw.UpdateKey;
+        if (!string.IsNullOrWhiteSpace(raw.Type))
+            ability.Type = raw.Type;
+        if (!string.IsNullOrWhiteSpace(raw.Effect))
+            ability.Effect = raw.Effect;
+        if (!string.IsNullOrWhiteSpace(raw.Lore))
+            ability.Lore = raw.Lore;
+        if (!string.IsNullOrWhiteSpace(raw.Source))
+            ability.Source = raw.Source;
+        if (raw.Count.HasValue)
+            ability.Count = raw.Count;
+        if (raw.Progression != null)
+            ability.Progression = CloneProgression(raw.Progression);
+        if (raw.Amount is { Count: > 0 })
+            ability.Amount = raw.Amount.ToList();
+        if (!string.IsNullOrWhiteSpace(raw.Frequency))
+            ability.Frequency = raw.Frequency;
+        if (!string.IsNullOrWhiteSpace(raw.OverwriteKey))
+            ability.OverwriteKey = raw.OverwriteKey;
+        if (raw.PreReqs is { Count: > 0 })
+            ability.PreReqs = raw.PreReqs.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+        if (raw.GuildOverrides is { Count: > 0 })
+            ability.GuildOverrides = raw.GuildOverrides.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+        if (raw.Customisation != null)
+            ability.Customisation = CloneCustomisation(raw.Customisation);
+        if (raw.ChoiceSetRefs is { Count: > 0 })
+            ability.ChoiceSetRefs = raw.ChoiceSetRefs.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+
+        if (string.IsNullOrWhiteSpace(ability.AbilityRef))
+            ability.AbilityRef = resolved?.Key;
+        if (string.IsNullOrWhiteSpace(ability.Key))
+            ability.Key = resolved?.Key ?? ability.AbilityRef;
+
+        return ability;
+    }
+
+    private static AbilityDefinition? TryResolveReferencedAbility(
+        AbilityDefinition raw,
+        IReadOnlyDictionary<string, AbilityDefinition> abilityRefs)
+    {
+        foreach (var tokenRaw in new[] { raw.AbilityRef, raw.Key })
+        {
+            var token = (tokenRaw ?? string.Empty).Trim();
+            if (token.Length == 0)
+                continue;
+
+            if (abilityRefs.TryGetValue(token, out var found))
+                return found;
+        }
+
+        return null;
+    }
+
+    private static AbilityDefinition CloneAbility(AbilityDefinition source)
+    {
+        return new AbilityDefinition
+        {
+            Key = source.Key,
+            AbilityRef = source.AbilityRef,
+            Name = source.Name ?? string.Empty,
+            BattleboardNameOverride = source.BattleboardNameOverride,
+            UpdateKey = source.UpdateKey,
+            Type = source.Type ?? string.Empty,
+            Effect = source.Effect,
+            Lore = source.Lore,
+            Source = source.Source,
+            Count = source.Count,
+            Progression = CloneProgression(source.Progression),
+            Amount = source.Amount?.ToList(),
+            Frequency = source.Frequency,
+            OverwriteKey = source.OverwriteKey,
+            PreReqs = source.PreReqs?.ToList(),
+            GuildOverrides = source.GuildOverrides?.ToList(),
+            Customisation = CloneCustomisation(source.Customisation),
+            ChoiceSetRefs = source.ChoiceSetRefs?.ToList()
+        };
+    }
+
+    private static AbilityCountProgression? CloneProgression(AbilityCountProgression? source)
+    {
+        if (source == null)
+            return null;
+
+        return new AbilityCountProgression
+        {
+            Amount = source.Amount,
+            PerLevels = source.PerLevels,
+            Minimum = source.Minimum,
+            Maximum = source.Maximum
+        };
+    }
+
+    private static AbilityCustomisation? CloneCustomisation(AbilityCustomisation? source)
+    {
+        if (source == null)
+            return null;
+
+        return new AbilityCustomisation
+        {
+            OptionEnum = source.OptionEnum,
+            CustomValuesPermitted = source.CustomValuesPermitted
+        };
     }
 
     public static async Task<IReadOnlyList<string>> GetGuildNamesAsync()

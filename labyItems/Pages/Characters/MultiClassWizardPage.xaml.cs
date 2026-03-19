@@ -28,6 +28,8 @@ public partial class MultiClassWizardPage : ContentPage
             openDetailOnLoad: openDetailStep);
         InitializeComponent();
         _vm.CloseRequested += OnCloseRequestedAsync;
+        _vm.OpenSpecialisationRequested += OnOpenSpecialisationRequestedAsync;
+        _vm.NonStandardConfirmationRequested += OnNonStandardConfirmationRequestedAsync;
         BindingContext = _vm;
     }
 
@@ -51,40 +53,45 @@ public partial class MultiClassWizardPage : ContentPage
 
     private async Task OnCloseRequestedAsync()
     {
-        var openSpecialisation = _vm.OpenSpecialisationAfterClose;
-        var savedStorageKey = _vm.SavedStorageKey;
-        var specialisationPage = openSpecialisation && !string.IsNullOrWhiteSpace(savedStorageKey)
-            ? new MultiClassSpecialisationPage(
-                _draft,
-                focusMultiClassKey: savedStorageKey)
-            : null;
         if (Navigation.NavigationStack.LastOrDefault() == this)
         {
-            if (specialisationPage != null)
-            {
-                await Navigation.PushAsync(specialisationPage);
-                Navigation.RemovePage(this);
-            }
-            else
-            {
-                await Navigation.PopAsync();
-            }
+            await Navigation.PopAsync();
             return;
         }
 
         if (Navigation.ModalStack.LastOrDefault() == this)
         {
             await Navigation.PopModalAsync();
-            if (specialisationPage != null)
-                await Navigation.PushAsync(specialisationPage);
             return;
         }
 
         if (Shell.Current != null)
             await Shell.Current.GoToAsync("..");
-        if (specialisationPage != null)
-            await (Shell.Current?.Navigation ?? Navigation).PushAsync(specialisationPage);
     }
+
+    private async Task OnOpenSpecialisationRequestedAsync(string storageKey)
+    {
+        var specialisationPage = new MultiClassSpecialisationPage(
+            _draft,
+            focusMultiClassKey: storageKey);
+        if (Navigation.ModalStack.LastOrDefault() == this)
+        {
+            await Navigation.PopModalAsync();
+            await (Shell.Current?.Navigation ?? Navigation).PushAsync(specialisationPage);
+            return;
+        }
+
+        var nav = Shell.Current?.Navigation ?? Navigation;
+        await nav.PushAsync(specialisationPage);
+
+        if (nav.NavigationStack.Contains(this))
+            nav.RemovePage(this);
+        else if (Navigation.NavigationStack.Contains(this))
+            Navigation.RemovePage(this);
+    }
+
+    private async Task<bool> OnNonStandardConfirmationRequestedAsync(string message)
+        => await DisplayAlert("Non-standard warning", message, "Yes", "No");
 
     private async void OnLevelInfoClicked(object sender, EventArgs e)
     {

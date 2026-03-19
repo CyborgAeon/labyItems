@@ -28,6 +28,7 @@ public partial class MultiRaceWizardPage : ContentPage
             openDetailOnLoad: openDetailStep);
         InitializeComponent();
         _vm.CloseRequested += OnCloseRequestedAsync;
+        _vm.OpenSpecialisationRequested += OnOpenSpecialisationRequestedAsync;
         BindingContext = _vm;
     }
 
@@ -51,36 +52,39 @@ public partial class MultiRaceWizardPage : ContentPage
 
     private async Task OnCloseRequestedAsync()
     {
-        var openSpecialisation = _vm.OpenSpecialisationAfterClose;
-        var specialisationPage = openSpecialisation
-            ? new MultiRaceSpecialisationPage(_draft)
-            : null;
         if (Navigation.NavigationStack.LastOrDefault() == this)
         {
-            if (specialisationPage != null)
-            {
-                await Navigation.PushAsync(specialisationPage);
-                Navigation.RemovePage(this);
-            }
-            else
-            {
-                await Navigation.PopAsync();
-            }
+            await Navigation.PopAsync();
             return;
         }
 
         if (Navigation.ModalStack.LastOrDefault() == this)
         {
             await Navigation.PopModalAsync();
-            if (specialisationPage != null)
-                await Navigation.PushAsync(specialisationPage);
             return;
         }
 
         if (Shell.Current != null)
             await Shell.Current.GoToAsync("..");
-        if (specialisationPage != null)
+    }
+
+    private async Task OnOpenSpecialisationRequestedAsync()
+    {
+        var specialisationPage = new MultiRaceSpecialisationPage(_draft);
+        if (Navigation.ModalStack.LastOrDefault() == this)
+        {
+            await Navigation.PopModalAsync();
             await (Shell.Current?.Navigation ?? Navigation).PushAsync(specialisationPage);
+            return;
+        }
+
+        var nav = Shell.Current?.Navigation ?? Navigation;
+        await nav.PushAsync(specialisationPage);
+
+        if (nav.NavigationStack.Contains(this))
+            nav.RemovePage(this);
+        else if (Navigation.NavigationStack.Contains(this))
+            Navigation.RemovePage(this);
     }
 
     private async void OnLevelInfoClicked(object sender, EventArgs e)

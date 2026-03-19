@@ -10,8 +10,8 @@
 	<PropertyGroup>
 		<WarningLevel>0</WarningLevel>
 		<!-- Default macOS local dev to Android to avoid requiring iOS workload for dotnet watch/build.
-		     Set -p:UseIosWorkload=true when you explicitly want to build iOS. -->
-		<TargetFramework Condition="$([MSBuild]::IsOSPlatform('osx')) and '$(UseIosWorkload)' == 'true'">net10.0-ios</TargetFramework>
+		     Set -p:UseIosWorkload=true when you explicitly want iOS enabled; we include both TFMs to keep restore assets valid when switching between iOS and Android commands. -->
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx')) and '$(UseIosWorkload)' == 'true'">net10.0-android;net10.0-ios</TargetFrameworks>
 		<TargetFramework Condition="$([MSBuild]::IsOSPlatform('osx')) and '$(UseIosWorkload)' != 'true'">net10.0-android</TargetFramework>
 		<TargetFramework Condition="!$([MSBuild]::IsOSPlatform('osx')) and !$([MSBuild]::IsOSPlatform('windows'))">net10.0-android</TargetFramework>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">net10.0-android;net10.0-windows10.0.19041.0</TargetFrameworks>
@@ -45,6 +45,22 @@
 		<MauiKeepXamlResources>true</MauiKeepXamlResources>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<!-- Opt-in flag to make iOS simulator runs behave closer to device constraints while still launching. -->
+		<IosStrictAotSimulator>false</IosStrictAotSimulator>
+		<!-- Optional fail-fast mode: force full-AOT runtime behavior on simulator (can abort at startup). -->
+		<IosFailFastFullAotSimulator>false</IosFailFastFullAotSimulator>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(IosStrictAotSimulator)' == 'true'">
+		<UseInterpreter>false</UseInterpreter>
+		<MtouchUseLlvm>true</MtouchUseLlvm>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(IosStrictAotSimulator)' == 'true' and '$(IosFailFastFullAotSimulator)' == 'true'">
+		<MtouchExtraArgs>$(MtouchExtraArgs) --setenv=MONO_ENV_OPTIONS=--full-aot --setenv=MONO_LOG_LEVEL=debug --setenv=MONO_LOG_MASK=aot</MtouchExtraArgs>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\Splash\logo.svg" Color="#FFFFFF" />
 		<MauiSplashScreen Include="Resources\Splash\logo.svg" Color="#000000" />
@@ -57,7 +73,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="LiteDB" />
 		<PackageReference Include="Microsoft.Maui.Controls" />
 		<PackageReference Include="Microsoft.Maui.Controls.Xaml" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />

@@ -18,13 +18,35 @@ public partial class IspCalculator
         if (tabLayout is null)
             return;
 
-        if (tabLayout.GetChildAt(0) is ViewGroup tabStrip)
+        tabLayout.TabMode = TabLayout.ModeFixed;
+        tabLayout.TabGravity = TabLayout.GravityFill;
+
+        if (tabLayout.GetChildAt(0) is LinearLayout tabStrip)
         {
+            var density = tabLayout.Resources?.DisplayMetrics?.Density ?? 1f;
+
             for (int i = 0; i < tabStrip.ChildCount; i++)
             {
                 if (tabStrip.GetChildAt(i) is ViewGroup tabView)
+                {
+                    tabView.SetMinimumWidth(0);
+                    tabView.LayoutParameters = i == 0
+                        ? new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WrapContent,
+                            ViewGroup.LayoutParams.MatchParent)
+                        : new LinearLayout.LayoutParams(
+                            0,
+                            ViewGroup.LayoutParams.MatchParent,
+                            1f);
+
+                    var horizontalPaddingDp = i == 0 ? 1 : 0;
+                    var horizontalPaddingPx = (int)(horizontalPaddingDp * density);
+                    tabView.SetPadding(horizontalPaddingPx, tabView.PaddingTop, horizontalPaddingPx, tabView.PaddingBottom);
                     ApplyFontSizeToChildren(tabView, fontSize);
+                }
             }
+
+            tabStrip.RequestLayout();
         }
     }
 

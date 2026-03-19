@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 
 namespace labyItems.Services;
@@ -7,27 +8,27 @@ public static class ItemAbilityLinkService
 {
     private static readonly Regex EquationRowRegex = new(
         @"^(?<label>.+?)\s*=\s*(?<cost>-?\d+)(?:\s*\(\s*-?\d+\s*\))?$",
-        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.CultureInvariant));
 
     private static readonly Regex StrengthTokenRegex = new(
         @"\+\s*(?<value>\d+)\s*(?:str|strength)\b",
-        RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase));
 
     private static readonly Regex PerDaySuffixRegex = new(
         @"\s*\(\s*\d+\s*/\s*day\s*\)\s*$",
-        RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase));
 
     private static readonly Regex TrailingParentheticalRegex = new(
         @"\s*\([^)]*\)\s*$",
-        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.CultureInvariant));
 
     private static readonly Regex LeadingPercentRegex = new(
         @"^\s*\d+\s*%\s*",
-        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.CultureInvariant));
 
     private static readonly Regex LeadingIconRegex = new(
         @"^[^\p{L}\p{N}\+\-]+",
-        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.CultureInvariant));
 
     private static readonly string[] NonAbilityTokens =
     {

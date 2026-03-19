@@ -99,6 +99,8 @@ public sealed class PeopleRecord
 
     [JsonConverter(typeof(SingleOrArrayStringListConverter))]
     public List<string> PeopleType { get; set; } = new();
+    [JsonConverter(typeof(SingleOrArrayStringListConverter))]
+    public List<string> Tags { get; set; } = new();
     public string Description { get; set; } = "";
 
     [JsonPropertyName("levelledAbilities")]

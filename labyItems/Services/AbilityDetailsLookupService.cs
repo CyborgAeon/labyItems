@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Services.Specialisations;
 
@@ -7,7 +8,9 @@ namespace labyItems.Services;
 public static class AbilityDetailsLookupService
 {
     private static readonly SemaphoreSlim LookupLock = new(1, 1);
-    private static readonly Regex TrailingParentheticalRegex = new(@"\s*\([^)]*\)\s*$", RegexOptions.Compiled);
+    private static readonly Regex TrailingParentheticalRegex = new(
+        @"\s*\([^)]*\)\s*$",
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled));
     private static IReadOnlyDictionary<string, EvolutionService.AbilityResult>? _lookup;
 
     public static async Task<IReadOnlyDictionary<string, EvolutionService.AbilityResult>> GetLookupAsync()

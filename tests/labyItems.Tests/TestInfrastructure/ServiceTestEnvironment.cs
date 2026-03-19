@@ -119,7 +119,7 @@ internal static class ServiceTestEnvironment
             description: "Ancient folk only",
             cost: 25,
             tableId: 1,
-            available: "{\"Display\":\"Ancient Folk\",\"Rules\":[{\"Field\":\"BaseRace\",\"Operator\":\"In\",\"Value\":[\"Ancient Folk\"]}]}",
+            available: "[{\"Field\":\"Race\",\"Operator\":\"In\",\"Value\":[\"Ancient Folk\"]}]",
             canBuyMultiple: false,
             preReqsJson: "[]",
             dataJson: "{}");

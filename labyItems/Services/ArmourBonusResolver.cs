@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 
 namespace labyItems.Services;
@@ -9,7 +10,7 @@ public static class ArmourBonusResolver
 {
     private static readonly Regex ArmourTokenRegex = new(
         @"([+-]?\d+)\s*(PAC|DAC|MAC|SAC|NAC)",
-        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
 
     public static ArmourBonusTotals ResolveMaxPerSourceTotals(IEnumerable<AbilityDraft>? abilities)
     {

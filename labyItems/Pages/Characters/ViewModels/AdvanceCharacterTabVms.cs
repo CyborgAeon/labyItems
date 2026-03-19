@@ -50,12 +50,12 @@ public sealed class AdvanceCharacterDetailsTabVm : AdvanceCharacterTabVmBase
     public bool HasMultiClassChoiceSets => Root.HasMultiClassChoiceSets;
     public bool HasMultiRace => Root.HasMultiRace;
     public bool HasMultiRaceChoiceSets => Root.HasMultiRaceChoiceSets;
-    public ObservableCollection<ItemLineVm> Items => Root.Items;
+    public bool HasItems => Root.HasItems;
+    public ObservableCollection<CharacterItemEntryVm> Items => Root.Items;
     public ICommand AddAbilityCommand => Root.AddAbilityCommand;
     public ICommand RemoveAbilityCommand => Root.RemoveAbilityCommand;
     public ICommand RemoveMultiClassCommand => Root.RemoveMultiClassCommand;
     public ICommand RemoveMultiRaceCommand => Root.RemoveMultiRaceCommand;
-    public ICommand AddItemCommand => Root.AddItemCommand;
     public ICommand RemoveItemCommand => Root.RemoveItemCommand;
     public Task<Dictionary<string, ManuAbilityOption>> SearchAbilityOptionsAsync(string query)
         => Root.SearchAbilityOptionsAsync(query);

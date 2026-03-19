@@ -10,6 +10,7 @@
         Margin="0,0,0,5">
         <Frame
             x:Name="CardFrame"
+            BackgroundColor="{Binding CardBackgroundColor}"
             Style="{StaticResource SelectableCardFrameStyle}">
             <Frame.Triggers>
                 <DataTrigger TargetType="Frame"
@@ -57,6 +58,7 @@
                                     </DataTrigger>
                                 </Frame.Triggers>
                                 <Label Text="{Binding SingleEmoji}"
+                                       FontFamily="{Binding SingleIconFontFamily}"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center"
                                        FontSize="18"/>

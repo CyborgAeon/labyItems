@@ -64,7 +64,7 @@ public sealed class MultiClassSpecialisationVm : INotifyPropertyChanged
         foreach (var pair in index.ChoiceSetTemplates)
         {
             var key = (pair.Key ?? string.Empty).Trim();
-            if (key.Length == 0 || !key.StartsWith("choice.multi-class.", StringComparison.OrdinalIgnoreCase))
+            if (key.Length == 0)
                 continue;
 
             var set = pair.Value;

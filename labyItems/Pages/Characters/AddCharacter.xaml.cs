@@ -1,12 +1,11 @@
 using labyItems.Models;
 using labyItems.Services;
-using LiteDB;
 
 namespace labyItems.Pages;
 
 public partial class AddCharacter : ContentPage
 {
-    private ObjectId _charId;
+    private string _charId = string.Empty;
     private readonly Character? _existingCharacter;
     public bool CanBeDeleted { get; private set; } = false;
 

@@ -26,9 +26,9 @@ public sealed class EvolutionServiceTests : ServiceTestBase
         var all = await EvolutionService.GetAllAbilitiesAsync();
 
         var entry = Assert.Single(all, e => e.Index == "Ward Pact with Glass");
-        Assert.Equal("Ancient Folk", entry.AvailabilityDisplay);
+        Assert.Equal("Race in Ancient Folk", entry.AvailabilityDisplay);
         var rule = Assert.Single(entry.AvailabilityRules);
-        Assert.Equal("BaseRace", rule.Field);
+        Assert.Equal("Race", rule.Field);
         Assert.Equal("Ancient Folk", Assert.Single(rule.Value));
     }
 

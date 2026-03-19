@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using labyItems.Helpers;
 using labyItems.Models;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
@@ -153,7 +154,7 @@ public partial class ItemWalletPage : ContentPage
             return;
 
         var chosen = characters[selectedIndex];
-        card.Item.AssignedCharacterId = chosen.Id.ToString();
+        card.Item.AssignedCharacterId = chosen.Id;
         card.Item.AssignedCharacterName = chosen.Name ?? string.Empty;
         card.Item.AssignedCharacterPlayerName = chosen.PlayerName ?? string.Empty;
 
@@ -182,7 +183,7 @@ public partial class ItemWalletPage : ContentPage
     {
         private static readonly Regex EquationRegex = new(
             @"^(?<label>.+?)\s*=\s*(?<cost>-?\d+)(?:\s*\(\s*-?\d+\s*\))?$",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+            RegexOptionsCompat.ForRuntime(RegexOptions.Compiled | RegexOptions.CultureInvariant));
 
         private static readonly Color RowEvenColor = Colors.White;
         private static readonly Color RowOddColor = Color.FromArgb("#F6F6F6");

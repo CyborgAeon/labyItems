@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Models.Rules;
 using labyItems.Services;
@@ -25,16 +26,16 @@ public sealed class GuildsVm : INotifyPropertyChanged
         new Dictionary<string, GuildMiracleDefinition>(StringComparer.OrdinalIgnoreCase);
     private static readonly Regex MiracleListLoreBlockRegex = new(
         @"(?is)(?:^|\n\s*\n)[^\n]*?\b(?:[A-Z]+\s+)*MIRACLE LIST\b.*?(?=(\n\s*\n|$))",
-        RegexOptions.Compiled);
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled));
     private static readonly Regex DenominationalMiracleLoreBlockRegex = new(
         @"(?is)(?:^|\n\s*\n)[^\n]*?\bDENOMINATIONAL MIRACLE\b.*?(?=(\n\s*\n|$))",
-        RegexOptions.Compiled);
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled));
     private static readonly Regex MiracleStatLoreBlockRegex = new(
         @"(?is)(?:^|\n\s*\n)[^\n]*?\bLevel:\b[^\n]*\bAlignment:\b[^\n]*\bDuration:\b[^\n]*\bRange:\b.*?(?=(\n\s*\n|$))",
-        RegexOptions.Compiled);
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled));
     private static readonly Regex ListPrefixRegex = new(
         @"^(?:[•\-\*]|(?:\d+[\.\)]\s)|(?:\d+(?:st|nd|rd|th)\b))",
-        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -1772,7 +1773,9 @@ public sealed class GuildSlotRules
     private readonly Dictionary<string, HashSet<string>> _forcedByType = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _peopleTypeByType = new(StringComparer.OrdinalIgnoreCase);
 
-    private static readonly Regex TradeCityRegex = new(@"trade\s+(political|social|professional)\s+for\s+city\s+(.+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex TradeCityRegex = new(
+        @"trade\s+(political|social|professional)\s+for\s+city\s+(.+)",
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
     public HashSet<string> ForcedCityNames { get; } = new(StringComparer.OrdinalIgnoreCase);
     private static readonly Dictionary<string, string[]> TypeTokenMap = new(StringComparer.OrdinalIgnoreCase)
     {

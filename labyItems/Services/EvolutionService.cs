@@ -59,6 +59,7 @@ public static class EvolutionService
         public int Cost { get; init; }
         public int Table { get; init; }
         public string Available { get; init; } = string.Empty;
+        public string SourceBook { get; init; } = string.Empty;
         public string AvailabilityDisplay { get; init; } = string.Empty;
         public IReadOnlyList<RuleClause> AvailabilityRules { get; init; } = Array.Empty<RuleClause>();
         public bool CanBuyMultiple { get; init; }
@@ -276,6 +277,7 @@ public static class EvolutionService
             Cost = row.cost,
             Table = row.table_id,
             Available = row.available ?? string.Empty,
+            SourceBook = ParseSourceBook(row.data_json),
             AvailabilityDisplay = availability.DisplayText,
             AvailabilityRules = availability.Rules,
             CanBuyMultiple = row.can_buy_multiple != 0,
@@ -401,7 +403,16 @@ public static class EvolutionService
                 return ((root.GetString() ?? string.Empty).Trim(), Array.Empty<RuleClause>());
 
             if (root.ValueKind == JsonValueKind.Array)
+            {
+                var arrayRules = ParseAvailabilityRules(root);
+                if (arrayRules.Count > 0)
+                {
+                    var summary = BuildAvailabilityRuleSummary(arrayRules);
+                    return (summary, arrayRules);
+                }
+
                 return (JoinStringArray(root), Array.Empty<RuleClause>());
+            }
 
             if (root.ValueKind != JsonValueKind.Object)
                 return (text, Array.Empty<RuleClause>());
@@ -421,11 +432,22 @@ public static class EvolutionService
 
     private static IReadOnlyList<RuleClause> ParseAvailabilityRules(JsonElement root)
     {
+        if (root.ValueKind == JsonValueKind.Array)
+            return ParseAvailabilityRuleArray(root);
+
         if (!TryGetProperty(root, "Rules", out var rulesElement)
             || rulesElement.ValueKind != JsonValueKind.Array)
         {
             return Array.Empty<RuleClause>();
         }
+
+        return ParseAvailabilityRuleArray(rulesElement);
+    }
+
+    private static IReadOnlyList<RuleClause> ParseAvailabilityRuleArray(JsonElement rulesElement)
+    {
+        if (rulesElement.ValueKind != JsonValueKind.Array)
+            return Array.Empty<RuleClause>();
 
         var clauses = new List<RuleClause>();
         foreach (var ruleElement in rulesElement.EnumerateArray())
@@ -598,6 +620,39 @@ public static class EvolutionService
         }
 
         return null;
+    }
+
+    private static string ParseSourceBook(string? dataJson)
+    {
+        if (string.IsNullOrWhiteSpace(dataJson))
+            return string.Empty;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(dataJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+                return string.Empty;
+
+            foreach (var property in doc.RootElement.EnumerateObject())
+            {
+                if (!property.Name.Equals("sourceBook", StringComparison.OrdinalIgnoreCase)
+                    && !property.Name.Equals("source_book", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                if (property.Value.ValueKind == JsonValueKind.String)
+                    return (property.Value.GetString() ?? string.Empty).Trim();
+
+                return string.Empty;
+            }
+        }
+        catch
+        {
+            // malformed data_json; treat source book as unknown
+        }
+
+        return string.Empty;
     }
 
     private static int? TryParseMaxAvailableValue(JsonElement value)

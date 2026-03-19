@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Characters.AdvanceAbilitySearchPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:labyItems.Pages.Characters.ViewModels"
+    Title="Ability Search"
+    BackgroundColor="{StaticResource White}"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto"
+          RowSpacing="0">
+
+        <Border Grid.Row="0"
+                Padding="16,12"
+                Stroke="{StaticResource SurfaceBorderColor}"
+                StrokeThickness="1"
+                BackgroundColor="{StaticResource White}">
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="8">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Abilities"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+                    <Label Text="Search merged abilities and save selections"
+                           FontSize="12"
+                           Opacity="0.75"/>
+                </VerticalStackLayout>
+                <Label Grid.Column="1"
+                       Text="{Binding SelectedSummaryText}"
+                       VerticalOptions="Center"
+                       FontSize="12"
+                       Opacity="0.7"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1"
+              Padding="16"
+              RowDefinitions="Auto,*"
+              RowSpacing="10">
+
+            <Border Grid.Row="0"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 10"
+                    BackgroundColor="#F9FAFB"
+                    Padding="8,4">
+                <Grid ColumnDefinitions="Auto,*"
+                      ColumnSpacing="6">
+                    <Button Text="&#xF0B0;"
+                            FontFamily="FASolid"
+                            FontSize="13"
+                            Padding="0"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource SubtleTextColor}"
+                            HeightRequest="24"
+                            WidthRequest="24"
+                            MinimumHeightRequest="0"
+                            MinimumWidthRequest="0"
+                            Command="{Binding OpenFiltersCommand}"/>
+                    <Entry Grid.Column="1"
+                           Placeholder="Search abilities..."
+                           ClearButtonVisibility="WhileEditing"
+                           Text="{Binding SearchText, Mode=TwoWay}"/>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <ScrollView IsVisible="{Binding HasResults}">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding FilteredAbilities}"
+                                         Spacing="8">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 10"
+                                        BackgroundColor="{StaticResource White}"
+                                        Padding="10,8">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnAbilityCardTapped"
+                                                              CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border"
+                                                     Binding="{Binding IsSelected}"
+                                                     Value="True">
+                                            <Setter Property="Stroke"
+                                                    Value="{StaticResource AccentMaroonColor}"/>
+                                            <Setter Property="BackgroundColor"
+                                                    Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+
+                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                                          ColumnDefinitions="Auto,*,Auto"
+                                          RowSpacing="6"
+                                          ColumnSpacing="8">
+                                        <Button Grid.Row="0"
+                                                Text="{Binding SelectionGlyph}"
+                                                FontFamily="FASolid"
+                                                FontSize="14"
+                                                Padding="0"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{Binding SelectionColor}"
+                                                HeightRequest="24"
+                                                WidthRequest="24"
+                                                MinimumHeightRequest="0"
+                                                MinimumWidthRequest="0"
+                                                Command="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleSelectAbilityCommand}"
+                                                CommandParameter="{Binding .}"/>
+
+                                        <Label Grid.Row="0"
+                                               Grid.Column="1"
+                                               Text="{Binding Name}"
+                                               TextColor="{StaticResource Black}"
+                                               FontAttributes="Bold"
+                                               FontSize="15"
+                                               HorizontalTextAlignment="Start"
+                                               VerticalTextAlignment="Center">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=BindingContext.ToggleSelectAbilityCommand}"
+                                                                      CommandParameter="{Binding .}"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+
+                                        <Label Grid.Row="0"
+                                               Grid.Column="2"
+                                               Text="&#xF05A;"
+                                               FontFamily="FASolid"
+                                               FontSize="13"
+                                               TextColor="{StaticResource SubtleTextColor}"
+                                               VerticalTextAlignment="Center"
+                                               HorizontalTextAlignment="Center"/>
+
+                                        <Label Grid.Row="1"
+                                               Grid.Column="0"
+                                               Grid.ColumnSpan="3"
+                                               Text="{Binding SourceBook}"
+                                               FontSize="11"
+                                               Opacity="0.6"/>
+
+                                        <Label Grid.Row="2"
+                                               Grid.Column="1"
+                                               Text="{Binding MetaText}"
+                                               FontSize="12"
+                                               Opacity="0.75"/>
+
+                                        <Label Grid.Row="2"
+                                               Grid.Column="2"
+                                               Text="{Binding AvailabilityText}"
+                                               FontSize="11"
+                                               Opacity="0.7"
+                                               HorizontalTextAlignment="End"/>
+
+                                        <Label Grid.Row="3"
+                                               Grid.Column="0"
+                                               Grid.ColumnSpan="3"
+                                               Text="{Binding Description}"
+                                               FontSize="12"
+                                               Opacity="0.85"
+                                               MaxLines="3"
+                                               LineBreakMode="TailTruncation"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <Label Text="No abilities found for the current search/filter selection."
+                       IsVisible="{Binding HasResults, Converter={StaticResource InverseBoolConverter}}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       Opacity="0.7"/>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="2"
+              RowDefinitions="1,Auto">
+            <BoxView Grid.Row="0"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource SurfaceBorderColor}"/>
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="10"
+                  Padding="16,10,16,18"
+                  BackgroundColor="{StaticResource White}">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        Clicked="OnCancelClicked"/>
+                <Button Grid.Column="2"
+                        Text="Save"
+                        Clicked="OnSaveClicked"
+                        IsEnabled="{Binding HasSelectedAbilities}"/>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.RowSpan="3"
+              IsVisible="{Binding IsFilterModalOpen}"
+              BackgroundColor="#66000000"
+              InputTransparent="False">
+            <Border HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    WidthRequest="360"
+                    MaximumWidthRequest="420"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource White}"
+                    Padding="14">
+                <Grid RowDefinitions="Auto,*,Auto"
+                      RowSpacing="10">
+                    <Label Text="Filters"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
+
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout Spacing="12">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Available"
+                                       FontAttributes="Bold"
+                                       FontSize="13"/>
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <Label Text="Show abilities available to this character"
+                                           FontSize="12"
+                                           Opacity="0.75"
+                                           VerticalTextAlignment="Center"/>
+                                    <Switch Grid.Column="1"
+                                            IsToggled="{Binding PendingAvailableOnly, Mode=TwoWay}"
+                                            HorizontalOptions="End"
+                                            VerticalOptions="Center"/>
+                                </Grid>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Source Book"
+                                       FontAttributes="Bold"
+                                       FontSize="13"/>
+                                <FlexLayout BindableLayout.ItemsSource="{Binding SourceBookFilters}"
+                                            Wrap="Wrap"
+                                            Direction="Row"
+                                            AlignItems="Start"
+                                            JustifyContent="Start">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
+                                                    Margin="0,0,8,8">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleSourceBookFilterCommand}"
+                                                                          CommandParameter="{Binding .}"/>
+                                                </Border.GestureRecognizers>
+                                                <Label Text="{Binding Label}"
+                                                       Style="{StaticResource FilterPillLabelStyle}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Table"
+                                       FontAttributes="Bold"
+                                       FontSize="13"/>
+                                <FlexLayout BindableLayout.ItemsSource="{Binding TableFilters}"
+                                            Wrap="Wrap"
+                                            Direction="Row"
+                                            AlignItems="Start"
+                                            JustifyContent="Start">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource SelectableFilterPillBorderStyle}"
+                                                    Margin="0,0,8,8">
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleTableFilterCommand}"
+                                                                          CommandParameter="{Binding .}"/>
+                                                </Border.GestureRecognizers>
+                                                <Label Text="{Binding Label}"
+                                                       Style="{StaticResource FilterPillLabelStyle}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </FlexLayout>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <Grid Grid.Row="2"
+                          ColumnDefinitions="Auto,*,Auto"
+                          ColumnSpacing="10">
+                        <Button Grid.Column="0"
+                                Text="Cancel"
+                                Command="{Binding CancelFiltersCommand}"/>
+                        <Button Grid.Column="2"
+                                Text="Search"
+                                Command="{Binding ApplyFiltersCommand}"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -52,6 +52,7 @@ public sealed class MultiRaceDefinition :
     IMultiPathDefinition<MultiRaceAvailabilityOption, MultiRaceLevelAbility, MultiRaceSystemEffect>
 {
     public string DisplayName { get; set; } = string.Empty;
+    public string IconGlyph { get; set; } = string.Empty;
     public int MaxLevel { get; set; }
     public Dictionary<string, List<MultiRaceLevelAbility>> Levels { get; set; }
         = new(StringComparer.OrdinalIgnoreCase);

@@ -40,6 +40,7 @@ public sealed class ChoiceSetGroupVm : INotifyPropertyChanged
 
             _optionsByLabel[label] = option;
             Options.Add(label);
+            SearchOptions[label] = label;
         }
 
         var initial = ResolveInitialSelectionLabel(savedSelection);
@@ -54,6 +55,7 @@ public sealed class ChoiceSetGroupVm : INotifyPropertyChanged
     public string UnlockLevelText => $"Level {UnlockLevel}";
     public string Title { get; }
     public ObservableCollection<string> Options { get; } = new();
+    public Dictionary<string, string> SearchOptions { get; } = new(StringComparer.OrdinalIgnoreCase);
     public ObservableCollection<ChoiceSetAbilityRowVm> AbilityRows { get; } = new();
     public bool HasAbilityRows => AbilityRows.Count > 0;
 

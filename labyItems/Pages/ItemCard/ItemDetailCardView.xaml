@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Pages.ItemCard.ItemDetailCardView"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Frame Style="{StaticResource DetailCardFrameStyle}">
+        <VerticalStackLayout Spacing="12">
+            <Label Text="{Binding DisplayName, Source={x:Reference Root}}"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   LineBreakMode="WordWrap"/>
+
+            <Grid ColumnDefinitions="*,Auto,Auto"
+                  ColumnSpacing="10">
+                <Label Text="{Binding TypeText, Source={x:Reference Root}}"
+                       FontAttributes="Italic"
+                       TextColor="{StaticResource MutedTextColor}"
+                       VerticalTextAlignment="Center"/>
+                <Label Grid.Column="1"
+                       Text="{Binding SourceText, Source={x:Reference Root}}"
+                       FontAttributes="Italic"
+                       TextColor="{StaticResource MutedTextColor}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"/>
+                <Label Grid.Column="2"
+                       Text="{Binding IspText, Source={x:Reference Root}}"
+                       FontAttributes="Italic"
+                       TextColor="{StaticResource MutedTextColor}"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="End"/>
+            </Grid>
+
+            <BoxView Style="{StaticResource SectionDividerBoxStyle}"/>
+
+            <Label Text="SUMMARY"
+                   Style="{StaticResource SectionHeaderLabelStyle}"/>
+            <Label Text="{Binding SummaryText, Source={x:Reference Root}}"
+                   LineBreakMode="WordWrap"/>
+
+            <Label Text="PROPERTIES"
+                   Style="{StaticResource SectionHeaderLabelStyle}"/>
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding PropertyRows, Source={x:Reference Root}}"
+                                 Spacing="8">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="Auto,*"
+                              ColumnSpacing="8">
+                            <Label Text="{Binding Key}"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   VerticalTextAlignment="Start"/>
+                            <Label Grid.Column="1"
+                                   Text="{Binding Value}"
+                                   LineBreakMode="WordWrap"
+                                   VerticalTextAlignment="Start"/>
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="8"
+                                 IsVisible="{Binding HasAbilityRows, Source={x:Reference Root}}">
+                <Label Text="ABILITY BREAKDOWN"
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AbilityRows, Source={x:Reference Root}}"
+                                     Spacing="6">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Label Text="{Binding .}"
+                                   LineBreakMode="WordWrap"/>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Frame>
+</ContentView>

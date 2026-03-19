@@ -8,6 +8,7 @@ namespace labyItems.Models.Characters;
 public sealed class AbilityDefinition
 {
     public string? Key { get; set; }
+    public string? AbilityRef { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? BattleboardNameOverride { get; set; }
     public string? UpdateKey { get; set; }
@@ -22,6 +23,7 @@ public sealed class AbilityDefinition
     public string? OverwriteKey { get; set; }
     public List<string>? PreReqs { get; set; }
     public List<string>? GuildOverrides { get; set; }
+    public List<string>? ChoiceSetRefs { get; set; }
     public AbilityCustomisation? Customisation { get; set; }
 }
 
@@ -71,6 +73,7 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             var def = new AbilityDefinition
             {
                 Key = el.TryGetProperty("Key", out var keyEl) ? keyEl.GetString() : null,
+                AbilityRef = ReadAbilityRef(el),
                 Name = el.TryGetProperty("Name", out var nameEl) ? nameEl.GetString() ?? string.Empty : string.Empty,
                 BattleboardNameOverride = el.TryGetProperty("BattleboardNameOverride", out var battleNameEl)
                     ? battleNameEl.GetString()
@@ -86,7 +89,8 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
                 OverwriteKey = el.TryGetProperty("OverwriteKey", out var overwriteEl) ? overwriteEl.GetString() : null,
                 Customisation = ReadCustomisation(el),
                 Progression = ReadProgression(el),
-                Amount = ReadAmount(el)
+                Amount = ReadAmount(el),
+                ChoiceSetRefs = ReadChoiceSetRefs(el)
             };
 
             if (el.TryGetProperty("Count", out var countEl))
@@ -186,6 +190,8 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
         writer.WriteStartObject();
         if (!string.IsNullOrWhiteSpace(value.Key))
             writer.WriteString("Key", value.Key);
+        if (!string.IsNullOrWhiteSpace(value.AbilityRef))
+            writer.WriteString("AbilityRef", value.AbilityRef);
         writer.WriteString("Name", value.Name);
         if (!string.IsNullOrWhiteSpace(value.BattleboardNameOverride))
             writer.WriteString("BattleboardNameOverride", value.BattleboardNameOverride);
@@ -227,7 +233,26 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             writer.WritePropertyName("GuildOverrides");
             JsonSerializer.Serialize(writer, value.GuildOverrides, options);
         }
+        if (value.ChoiceSetRefs is { Count: > 0 })
+        {
+            writer.WritePropertyName("ChoiceSetRefs");
+            JsonSerializer.Serialize(writer, value.ChoiceSetRefs, options);
+        }
         writer.WriteEndObject();
+    }
+
+    private static string? ReadAbilityRef(JsonElement el)
+    {
+        if (el.TryGetProperty("AbilityRef", out var abilityRefEl) && abilityRefEl.ValueKind == JsonValueKind.String)
+            return abilityRefEl.GetString();
+
+        if (el.TryGetProperty("$ref", out var refEl) && refEl.ValueKind == JsonValueKind.String)
+            return refEl.GetString();
+
+        if (el.TryGetProperty("Ref", out var compatRefEl) && compatRefEl.ValueKind == JsonValueKind.String)
+            return compatRefEl.GetString();
+
+        return null;
     }
 
     private static string? ReadFrequency(JsonElement el)
@@ -309,6 +334,25 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             Minimum = minimum,
             Maximum = maximum
         };
+    }
+
+    private static List<string>? ReadChoiceSetRefs(JsonElement el)
+    {
+        if (!el.TryGetProperty("ChoiceSetRefs", out var refsEl) || refsEl.ValueKind != JsonValueKind.Array)
+            return null;
+
+        var list = new List<string>();
+        foreach (var item in refsEl.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.String)
+                continue;
+
+            var value = (item.GetString() ?? string.Empty).Trim();
+            if (value.Length > 0)
+                list.Add(value);
+        }
+
+        return list.Count > 0 ? list : null;
     }
 
     private static int? TryReadInt(JsonElement source, string propertyName)

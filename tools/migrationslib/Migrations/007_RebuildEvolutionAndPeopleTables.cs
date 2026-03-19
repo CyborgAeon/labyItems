@@ -95,6 +95,7 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
 
                 var desc = (a.desc ?? string.Empty).Trim();
                 var available = SerializeAvailability(a.available);
+                var sourceBook = (a.sourceBook ?? string.Empty).Trim();
                 var costRaw = (a.cost ?? string.Empty).Trim();
                 var canBuyMultiple = costRaw.Contains('*');
                 var hasPlus = costRaw.Contains('+');
@@ -127,7 +128,8 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
                     cost,
                     table,
                     canBuyMultiple,
-                    preReqs
+                    preReqs,
+                    sourceBook
                 });
                 AddParam(insert, "@data_json", dataJson);
                 AddParam(insert, "@is_default", 1);
@@ -424,6 +426,7 @@ VALUES (@id, @name, @name_lower, @data_json, @created_at, @updated_at);";
         public string? cost { get; set; }
         public int table { get; set; }
         public List<string>? preReqs { get; set; }
+        public string? sourceBook { get; set; }
     }
 
     private sealed class LifeScaleRow

@@ -15,6 +15,11 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
     private const int SearchStep = 0;
     private const int DetailStep = 1;
 
+    private static readonly string[] IconPastelPalette =
+    {
+        "#FEC5BB", "#FAE1DD", "#F8EDEB", "#E8E8E4", "#D8E2DC", "#ECE4DB", "#FFE5D9", "#FFD7BA"
+    };
+
     private static readonly Color PurchasedRowColor = Color.FromArgb("#DCFCE7");
     private static readonly Color DefaultRowColor = Colors.Transparent;
 
@@ -36,10 +41,10 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
     private string _searchText = string.Empty;
     private MultiRaceSearchEntry? _selectedEntry;
     private int _selectedLevels;
-    private bool _openSpecialisationAfterClose;
 
     public event PropertyChangedEventHandler? PropertyChanged;
     public event Func<Task>? CloseRequested;
+    public event Func<Task>? OpenSpecialisationRequested;
 
     public ObservableCollection<ClassCardVm> FilteredClasses { get; } = new();
     public ObservableCollection<MultiRaceFilterChipVm> FilterChips { get; } = new();
@@ -106,7 +111,6 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
         && _selectedEntry != null
         && _selectedLevels > 0
         && HasChoiceSetRefsAtOrBelowLevel(_selectedEntry.Definition, _selectedLevels);
-    public bool OpenSpecialisationAfterClose => _openSpecialisationAfterClose;
 
     public string SelectedCardName => _selectedEntry?.Card.Name ?? "No class selected";
 
@@ -274,6 +278,8 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
             Name = displayName,
             Category = category,
             Icon = icon,
+            IconGlyph = (definition.IconGlyph ?? string.Empty).Trim(),
+            IconBackground = PickRandomIconPastel(),
             Summary = BuildSummary(detailRows),
             MaxAc = maxAc,
             TBLP = firstLife.Body,
@@ -293,6 +299,9 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
             costsByLevel: costsByLevel,
             detailRows: detailRows);
     }
+
+    private static string PickRandomIconPastel()
+        => IconPastelPalette[Random.Shared.Next(IconPastelPalette.Length)];
 
     private static string ResolvePowerBase(MultiRaceDefinition definition)
         => MultiPathWizardHelpers.ResolvePowerBase<
@@ -393,9 +402,12 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
 
         foreach (var rule in availableOption.Rules ?? new List<RuleClause>())
         {
+            if (rule.Operator != RuleComparisonOp.In)
+                continue;
+
             var field = NormalizeToken(rule.Field);
-            if (!field.Equals("bracket", StringComparison.OrdinalIgnoreCase)
-                && !field.Equals("brackets", StringComparison.OrdinalIgnoreCase))
+            if (!field.EndsWith("bracket", StringComparison.OrdinalIgnoreCase)
+                && !field.EndsWith("brackets", StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
@@ -654,7 +666,6 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
 
     private async Task OnBackAsync()
     {
-        _openSpecialisationAfterClose = false;
         if (IsDetailStep)
         {
             _stepIndex = SearchStep;
@@ -682,7 +693,6 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
         if (_selectedEntry == null)
             return;
 
-        _openSpecialisationAfterClose = false;
         if (_selectedLevels <= 0)
         {
             _draft.MultiRaceKey = string.Empty;
@@ -700,8 +710,13 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
 
             _draft.MultiRaceKey = _selectedEntry.StorageKey;
             _draft.MultiRaceLevel = _selectedLevels;
-            _openSpecialisationAfterClose =
-                HasChoiceSetRefsAtOrBelowLevel(_selectedEntry.Definition, _selectedLevels);
+            if (HasChoiceSetRefsAtOrBelowLevel(_selectedEntry.Definition, _selectedLevels))
+            {
+                if (OpenSpecialisationRequested != null)
+                    await OpenSpecialisationRequested.Invoke();
+
+                return;
+            }
         }
 
         if (CloseRequested != null)

@@ -206,6 +206,74 @@ public sealed class GuildsServiceTests : ServiceTestBase
         Assert.Null(rule);
     }
 
+    [Fact]
+    public async Task GetAllAsync_ExpandsTotemicGuardiansPrimalSoulChoiceSets()
+    {
+        var all = await GuildsService.GetAllAsync();
+
+        Assert.True(all.TryGetValue("Totemic Guardians", out var guild));
+        Assert.NotNull(guild);
+
+        var basicNames = guild!.Benefits.Basic
+            .SelectMany(entry => entry.Options ?? new List<GuildBenefitOption>())
+            .SelectMany(option => option.Abilities ?? new List<AbilityDefinition>())
+            .Select(ability => ability.Name ?? string.Empty)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToList();
+
+        Assert.Contains(basicNames, name => name.StartsWith("Predator Minor:", System.StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(basicNames, name => name.StartsWith("Prey Minor:", System.StringComparison.OrdinalIgnoreCase));
+
+        var intermediateNames = guild.Benefits.Intermediate
+            .SelectMany(entry => entry.Options ?? new List<GuildBenefitOption>())
+            .SelectMany(option => option.Abilities ?? new List<AbilityDefinition>())
+            .Select(ability => ability.Name ?? string.Empty)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToList();
+
+        Assert.Contains(intermediateNames, name => name.StartsWith("Predator Medium:", System.StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(intermediateNames, name => name.StartsWith("Prey Medium:", System.StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task GetAllAsync_LoadsLoThiUpdatesAndAdvancedTotemicMajorChoices()
+    {
+        var all = await GuildsService.GetAllAsync();
+
+        Assert.True(all.TryGetValue("Lo'Thi", out var guild));
+        Assert.NotNull(guild);
+
+        var intermediateOwlsWisdom = guild!.Benefits.Intermediate
+            .Select(entry => entry.Ability)
+            .FirstOrDefault(ability => string.Equals(ability?.Name, "Owl's Wisdom", System.StringComparison.OrdinalIgnoreCase));
+        Assert.NotNull(intermediateOwlsWisdom);
+        Assert.Equal("Update", intermediateOwlsWisdom!.Type);
+        Assert.Equal(1, intermediateOwlsWisdom.Count);
+        Assert.Contains("major prayer", intermediateOwlsWisdom.Effect ?? string.Empty, System.StringComparison.OrdinalIgnoreCase);
+
+        var advancedOwlsWisdom = guild.Benefits.Advanced
+            .Select(entry => entry.Ability)
+            .FirstOrDefault(ability => string.Equals(ability?.Name, "Owl's Wisdom", System.StringComparison.OrdinalIgnoreCase));
+        Assert.NotNull(advancedOwlsWisdom);
+        Assert.Equal(2, advancedOwlsWisdom!.Count);
+
+        var advancedTotemicMarkings = guild.Benefits.Advanced
+            .Select(entry => entry.Ability)
+            .FirstOrDefault(ability => string.Equals(ability?.Name, "Totemic Markings", System.StringComparison.OrdinalIgnoreCase));
+        Assert.NotNull(advancedTotemicMarkings);
+        Assert.Equal(new List<int> { 6, 2 }, advancedTotemicMarkings!.Amount);
+
+        var advancedChoiceNames = guild.Benefits.Advanced
+            .SelectMany(entry => entry.Options ?? new List<GuildBenefitOption>())
+            .SelectMany(option => option.Abilities ?? new List<AbilityDefinition>())
+            .Select(ability => ability.Name ?? string.Empty)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToList();
+
+        Assert.Contains(advancedChoiceNames, name => name.StartsWith("Predator Major:", System.StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(advancedChoiceNames, name => name.StartsWith("Prey Major:", System.StringComparison.OrdinalIgnoreCase));
+    }
+
     private static bool ContainsAlignmentRuleKey(JsonElement element)
     {
         switch (element.ValueKind)

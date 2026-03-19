@@ -145,7 +145,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         _abilityAvailabilityService = abilityAvailabilityService ?? throw new ArgumentNullException(nameof(abilityAvailabilityService));
         _exportService = exportService ?? throw new ArgumentNullException(nameof(exportService));
 
-        Items.CollectionChanged += (_, __) => SyncItemsToDraft();
+        Items.CollectionChanged += OnItemsCollectionChanged;
         Abilities.CollectionChanged += (_, __) => OnAdvancementAbilityCollectionChanged();
         MultiClasses.CollectionChanged += (_, __) => OnMultiClassCollectionChanged();
 
@@ -161,8 +161,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         RemoveMultiClassCommand = new Command<MultiClassEntryVm>(entry => _ = RemoveMultiClassAsync(entry));
         RemoveMultiRaceCommand = new Command<MultiRaceEntryVm>(entry => _ = RemoveMultiRaceAsync(entry));
 
-        AddItemCommand = new Command(AddItem);
-        RemoveItemCommand = new Command<ItemLineVm>(RemoveItem);
+        RemoveItemCommand = new Command<CharacterItemEntryVm>(RemoveItem);
 
         AddSpecialistListCommand = new Command(AddSpecialistList);
         RemoveSpellListCommand = new Command<SpellListVm>(RemoveSpellList);
@@ -194,6 +193,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             _draft.Points = value;
             Raise();
             Raise(nameof(AbilityPointsSummary));
+            Raise(nameof(MultiClassSlotsAvailable));
+            Raise(nameof(MultiClassEmptyStateText));
             foreach (var list in MiracleLists)
                 list.RefreshExternalLimits();
         }
@@ -254,6 +255,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
             Raise(nameof(HasMultiRace));
             Raise(nameof(HasMultiRaceChoiceSets));
+            Raise(nameof(MultiRaceEmptyStateText));
         }
     }
 
@@ -270,9 +272,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     public bool HasMultiClassChoiceSets => MultiClasses.Any(entry => entry.HasChoiceSets);
     public bool HasMultiRace => MultiRaceSelection != null;
     public bool HasMultiRaceChoiceSets => MultiRaceSelection?.HasChoiceSets == true;
+    public bool HasItems => Items.Count > 0;
+    public int MultiClassSlotsAvailable => CalculateMultiClassSlots(Points);
+    public string MultiClassEmptyStateText => $"Multi-class slots available: {MultiClassSlotsAvailable}";
+    public string MultiRaceEmptyStateText => "Multi-race slots available: 1";
 
-    public ObservableCollection<ItemLineVm> Items { get; } = new();
-    public ICommand AddItemCommand { get; }
+    public ObservableCollection<CharacterItemEntryVm> Items { get; } = new();
     public ICommand RemoveItemCommand { get; }
 
     public ObservableCollection<SpellListVm> SpellLists { get; } = new();
@@ -320,6 +325,14 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             hasMiracleAlignmentIssues: MiracleLists.Any(m => !m.IsAlignmentCompatible(_draft.Alignment)),
             showEvilStairway: ShowEvilStairway,
             hasEvilStairwayValidationError: EvilStairway?.HasValidationError == true);
+
+    private static int CalculateMultiClassSlots(int points)
+    {
+        if (points <= 449)
+            return 0;
+
+        return ((points - 450) / 1000) + 1;
+    }
 
     public async Task InitializeAsync()
     {
@@ -429,6 +442,9 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private const string CompetenceAbilityName = "Competence";
     private const string FaerieColourSelectionKey = "Faerie Colour";
     private const string ElfColourAbilitiesSelectionKey = "ElfColourAbilities";
+    private const string WizardColourChoiceSetRef = "choice.wizard-colour.primary";
+    private const string PowerMasterColourChoiceSetRef = "choice.power-master-colour.primary";
+    private const string VivomancerColourChoiceSetRef = "choice.vivomancer-colour.primary";
 
     private ServiceCharacterClassRecord? ResolveClassRecord()
     {
@@ -562,7 +578,10 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     {
         var classRecord = ResolveClassRecord();
         var state = _tabVisibilityService.Resolve(_draft.Class, classRecord);
-        ShowSpellsTab = state.ShowSpellsTab;
+        var hasWizardTrackViaMultiClass = HasWizardTrackMultiClass();
+        var hasWizardColourViaMultiClass = GetMultiClassWizardColourSelections().Count > 0;
+
+        ShowSpellsTab = state.ShowSpellsTab || hasWizardTrackViaMultiClass || hasWizardColourViaMultiClass;
         ShowMiraclesTab = state.ShowMiraclesTab;
         ShowPriestMiracleLists = state.ShowPriestMiracleLists;
         ShowEvilStairway = state.ShowEvilStairway;
@@ -649,6 +668,38 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         SelectedAbilityOption = null;
     }
 
+    public void AddAdvancementAbilities(IEnumerable<EvolutionService.AbilityResult>? abilities)
+    {
+        if (abilities == null)
+            return;
+
+        foreach (var ability in abilities)
+        {
+            var name = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
+            if (string.IsNullOrWhiteSpace(name))
+                continue;
+
+            var normalizedCost = Math.Max(0, ability.Cost);
+            var normalizedTable = Math.Max(0, ability.Table);
+
+            Abilities.Add(new AbilityEntryVm(name, normalizedCost, OnAdvancementAbilityEntryChanged));
+
+            _abilityOptionsByName[name] = new ManuAbilityOption(
+                name,
+                normalizedCost,
+                normalizedTable,
+                ability.Available ?? string.Empty,
+                ability.AvailabilityRules ?? Array.Empty<RuleClause>(),
+                ability.Description ?? string.Empty);
+
+            var key = AbilityDetailsLookupService.NormalizeKey(name);
+            if (key.Length > 0)
+                _abilityDetailsByKey[key] = ability;
+        }
+
+        SelectedAbilityOption = null;
+    }
+
     private void RemoveAbility(AbilityEntryVm? ability)
     {
         if (ability == null) return;
@@ -679,6 +730,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     {
         Raise(nameof(HasMultiClasses));
         Raise(nameof(HasMultiClassChoiceSets));
+        Raise(nameof(MultiClassEmptyStateText));
         UpdateAbilityPoints();
     }
 
@@ -825,25 +877,24 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         _draftStore.Save();
     }
 
+    public void RefreshItems()
+    {
+        LoadItemsFromDraft();
+    }
+
     private void LoadItemsFromDraft()
     {
         Items.Clear();
-        foreach (var item in _draft.AdvancementItems ?? new List<string>())
+        foreach (var assigned in LiteDbService.GetItemsAssignedToCharacter(
+                     _draft.CharacterRecordId,
+                     _draft.Name,
+                     _draft.PlayerName))
         {
-            var line = new ItemLineVm(item);
-            line.PropertyChanged += OnItemChanged;
-            Items.Add(line);
+            Items.Add(new CharacterItemEntryVm(assigned));
         }
 
-        foreach (var assigned in LiteDbService.GetItemsAssignedToCharacter(_draft.Name, _draft.PlayerName))
-        {
-            var line = new ItemLineVm(FormatAssignedItemLine(assigned), isReadOnly: true);
-            line.PropertyChanged += OnItemChanged;
-            Items.Add(line);
-        }
-
-        if (Items.Count == 0)
-            AddItem();
+        SyncItemsToDraft();
+        Raise(nameof(HasItems));
     }
 
     public async Task RefreshMultiClassesAsync()
@@ -927,6 +978,13 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         foreach (var entry in nextEntries.OrderBy(e => e.Name, StringComparer.OrdinalIgnoreCase))
             MultiClasses.Add(entry);
 
+        UpdateTabVisibility();
+        if (ShowSpellsTab)
+        {
+            EnsureWizardSpellListImported();
+            LoadSpellListsFromDraft();
+        }
+
         Raise(nameof(MultiClassPointsSpent));
         Raise(nameof(AbilityPointsSpent));
         Raise(nameof(AbilityPointsSummary));
@@ -1008,6 +1066,13 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             cost: totalCost,
             abilityDetails: abilityLinks,
             choiceSetRefs: choiceSetRefs);
+
+        UpdateTabVisibility();
+        if (ShowSpellsTab)
+        {
+            EnsureWizardSpellListImported();
+            LoadSpellListsFromDraft();
+        }
 
         Raise(nameof(MultiRacePointsSpent));
         Raise(nameof(AbilityPointsSpent));
@@ -1382,43 +1447,29 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             .Select(char.ToLowerInvariant)
             .ToArray());
 
-    private void AddItem()
+    private void RemoveItem(CharacterItemEntryVm? item)
     {
-        var line = new ItemLineVm(string.Empty);
-        line.PropertyChanged += OnItemChanged;
-        Items.Add(line);
-        SyncItemsToDraft();
-    }
-
-    private void RemoveItem(ItemLineVm? item)
-    {
-        if (item == null) return;
-        if (item.IsReadOnly)
+        if (item?.Item == null)
             return;
-        item.PropertyChanged -= OnItemChanged;
+
+        LiteDbService.DeleteItem(item.Item.Id);
         Items.Remove(item);
-        SyncItemsToDraft();
+        Raise(nameof(HasItems));
     }
 
-    private void OnItemChanged(object? sender, PropertyChangedEventArgs e)
-        => SyncItemsToDraft();
+    private void OnItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        SyncItemsToDraft();
+        Raise(nameof(HasItems));
+    }
 
     private void SyncItemsToDraft()
     {
         _draft.AdvancementItems = Items
-            .Where(i => !i.IsReadOnly)
-            .Select(i => (i.Text ?? string.Empty).Trim())
-            .Where(t => t.Length > 0)
+            .Select(i => (i.Name ?? string.Empty).Trim())
+            .Where(name => name.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
-    }
-
-    private static string FormatAssignedItemLine(Item item)
-    {
-        var type = item.ItemType.ToString();
-        if (type.Length == 0)
-            type = "Item";
-
-        return $"{type} item · ISP {item.Isp} · {item.CreatedDate:dd MMM yyyy}";
     }
 
     private int GetDraftCasterLevel()
@@ -1815,12 +1866,104 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (selections.Count == 0)
             AddNormalizedWizardSelections(selections, seen, TryInferWizardColourFromClassName());
 
+        foreach (var multiClassSelection in GetMultiClassWizardColourSelections())
+            AddNormalizedWizardSelections(selections, seen, multiClassSelection);
+
         AddSecondWizardColourSelectionsFromAdvancementAbilities(selections, seen);
 
         if (IsSorcorialClass() && !selections.Any(s => s.Equals("Sorcorial", StringComparison.OrdinalIgnoreCase)))
             selections.Add("Sorcorial");
 
         return selections;
+    }
+
+    private IReadOnlyList<string> GetMultiClassWizardColourSelections()
+    {
+        var selections = new List<string>();
+        if (_draft.MultiClassChoiceSelections == null || _draft.MultiClassChoiceSelections.Count == 0)
+            return selections;
+
+        foreach (var selection in _draft.MultiClassChoiceSelections)
+        {
+            if (!TryExtractChoiceSetRefFromStorageKey(selection.Key, out var choiceSetRef))
+                continue;
+
+            if (!choiceSetRef.Equals(WizardColourChoiceSetRef, StringComparison.OrdinalIgnoreCase)
+                && !choiceSetRef.Equals(PowerMasterColourChoiceSetRef, StringComparison.OrdinalIgnoreCase)
+                && !choiceSetRef.Equals(VivomancerColourChoiceSetRef, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var value = (selection.Value ?? string.Empty).Trim();
+            if (value.Length > 0)
+                selections.Add(value);
+        }
+
+        return selections;
+    }
+
+    private static bool TryExtractChoiceSetRefFromStorageKey(string? storageKey, out string choiceSetRef)
+    {
+        choiceSetRef = string.Empty;
+        var key = (storageKey ?? string.Empty).Trim();
+        if (key.Length == 0)
+            return false;
+
+        var separatorIndex = key.IndexOf("::", StringComparison.Ordinal);
+        if (separatorIndex < 0)
+        {
+            choiceSetRef = key;
+            return true;
+        }
+
+        var parsed = key.Substring(separatorIndex + 2).Trim();
+        if (parsed.Length == 0)
+            return false;
+
+        choiceSetRef = parsed;
+        return true;
+    }
+
+    private bool HasWizardTrackMultiClass()
+    {
+        if (_draft.MultiClassLevels == null || _draft.MultiClassLevels.Count == 0)
+            return false;
+
+        foreach (var multiClassLevel in _draft.MultiClassLevels)
+        {
+            if (multiClassLevel.Value <= 0)
+                continue;
+
+            var key = (multiClassLevel.Key ?? string.Empty).Trim();
+            if (key.Length == 0)
+                continue;
+
+            if (TryResolveMultiClassDefinition(key, out var resolvedKey, out var definition))
+            {
+                var display = ResolveMultiClassDisplayName(definition, resolvedKey);
+                if (IsWizardTrackClassName(display) || IsWizardTrackClassName(resolvedKey))
+                    return true;
+            }
+            else if (IsWizardTrackClassName(key))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsWizardTrackClassName(string? className)
+    {
+        var name = (className ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return false;
+
+        return name.Contains("Wizard", StringComparison.OrdinalIgnoreCase)
+               || name.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
+               || name.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase)
+               || name.Contains("Sorc", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void AddNormalizedWizardSelections(List<string> target, HashSet<string> seen, string? raw)

@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -13,13 +12,14 @@ using Microsoft.Maui.Devices;
 
 namespace labyItems.Pages.Calculator;
 
-public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
+public partial class IspCalculator : TabbedPage
 {
     public event Action<int>? TotalChanged;
 
     private int _baseIsp;
     private readonly List<CalcContribution> _contributions = new();
     private TaskCompletionSource<IspCalculationResult?>? _tcsCalc;
+    private readonly Func<IspCalculationResult, Task>? _onSave;
     private double _lastAppliedTabFontSize;
     private double _lastMeasuredWidth;
     private bool _isHandlingBackTabSelection;
@@ -28,7 +28,6 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
     public ICommand? ReturnToFormCommand { get; set; }
     public ICommand RemoveContributionCommand { get; }
     public ObservableCollection<ContributionRow> BreakdownItems { get; } = new();
-    public event PropertyChangedEventHandler? PropertyChanged;
     public int BaseTotal => _baseIsp;
 
     private int _total;
@@ -45,7 +44,10 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         }
     }
 
-    public IspCalculator(int baseTotal, IEnumerable<CalcResult>? existingAbilities = null)
+    public IspCalculator(
+        int baseTotal,
+        IEnumerable<CalcResult>? existingAbilities = null,
+        Func<IspCalculationResult, Task>? onSave = null)
     {
         InitializeComponent();
         TabbedPageChromeHelper.ApplyHiddenNavigation(this);
@@ -53,6 +55,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
             TabbedPageChromeHelper.ConfigureTabPageChrome(page);
 
         _baseIsp = baseTotal;
+        _onSave = onSave;
         Total = baseTotal;
 
         ArmourCategoryPage.BindingContext = this;
@@ -91,6 +94,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
             SeedExisting(existingAbilities);
 
         UpdateTotal();
+        IosTabBarHelper.EnsurePinnedToTop(this);
     }
 
     protected override void OnAppearing()
@@ -99,6 +103,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         TabbedPageChromeHelper.ApplyHiddenNavigation(this);
         foreach (var page in Children)
             TabbedPageChromeHelper.ConfigureTabPageChrome(page);
+        IosTabBarHelper.EnsurePinnedToTop(this);
     }
 
     public void UpsertContribution(CalcContribution contribution) => AddContribution(contribution);
@@ -142,6 +147,22 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         {
             _tcsCalc.TrySetResult(result);
             await Navigation.PopAsync();
+            return;
+        }
+
+        if (_onSave != null)
+        {
+            try
+            {
+                await _onSave(result);
+                await Navigation.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                RuntimeLog.Write("ISP_SAVE_CALLBACK", "Character item save callback failed.", ex);
+                await DisplayAlert("Save failed", ex.Message, "OK");
+            }
+
             return;
         }
 
@@ -200,6 +221,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         }
 
         _lastNonBackTab = CurrentPage;
+        IosTabBarHelper.EnsurePinnedToTop(this);
     }
 
     public async Task<IspCalculationResult?> GetResultAsync(INavigation nav)
@@ -207,6 +229,16 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
         _tcsCalc = new TaskCompletionSource<IspCalculationResult?>();
         await nav.PushAsync(this);
         return await _tcsCalc.Task;
+    }
+
+    public int GetTotalExcludingContribution(string? contributionId)
+    {
+        var targetId = (contributionId ?? string.Empty).Trim();
+        var sum = _baseIsp + _contributions
+            .Where(c => !string.Equals(c.Id, targetId, StringComparison.Ordinal))
+            .Sum(c => c.Result.TotalIsp);
+
+        return sum <= 0 ? 0 : sum;
     }
 
     private int ComputeTotal()
@@ -354,7 +386,7 @@ public partial class IspCalculator : TabbedPage, INotifyPropertyChanged
     }
 
     private void OnPropertyChanged([CallerMemberName] string? name = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        base.OnPropertyChanged(name);
 
     private void UpdateTabFontSize()
     {

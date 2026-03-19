@@ -1,4 +1,5 @@
 using System;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 
 namespace labyItems.Services;
@@ -13,5 +14,15 @@ public sealed class CharacterDraftStore : ICharacterDraftStore
     }
 
     public void Save()
-        => LiteDbService.UpsertDraft(Draft);
+    {
+        try
+        {
+            LiteDbService.UpsertDraft(Draft);
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("CHAR_DRAFT_SAVE", "Failed while saving character draft.", ex);
+            throw;
+        }
+    }
 }

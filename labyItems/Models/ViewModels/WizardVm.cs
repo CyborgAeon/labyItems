@@ -128,7 +128,9 @@ public sealed class WizardVm : INotifyPropertyChanged
     private IReadOnlyList<SpecialisationSummaryLineVm> _specialisationSummaryLines = Array.Empty<SpecialisationSummaryLineVm>();
     private IReadOnlyList<LevelAbilityRowVm> _classLevelAbilityRows = Array.Empty<LevelAbilityRowVm>();
     private IReadOnlyList<LevelAbilityRowVm> _raceLevelAbilityRows = Array.Empty<LevelAbilityRowVm>();
-    private static readonly Regex LevelNumberRegex = new("\\d+", RegexOptions.Compiled);
+    private static readonly Regex LevelNumberRegex = new(
+        "\\d+",
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled));
 
     public ObservableCollection<AbilitySpendLine> AdvancementAbilityLines { get; } = new();
 
@@ -1226,11 +1228,12 @@ public sealed class WizardVm : INotifyPropertyChanged
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[WizardVm] Failed to save character draft: {ex}");
+            RuntimeLog.Write("WIZARD_SAVE", "Failed to save character draft at wizard completion.", ex);
             _ = MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 var page = Application.Current?.MainPage;
                 if (page != null)
-                    await page.DisplayAlert("Save failed", ex.Message, "OK");
+                    await page.DisplayAlert("Save failed", $"{ex.Message}\n\nLog: {RuntimeLog.LogPath}", "OK");
             });
             return false;
         }

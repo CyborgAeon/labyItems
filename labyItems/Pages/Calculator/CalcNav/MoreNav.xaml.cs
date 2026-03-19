@@ -8,6 +8,27 @@ namespace labyItems.Pages.Calculator.CalcNav;
 public partial class MoreNav : ContentPage
 {
     public event Action<CalcContribution>? ContributionAdded;
+    private const string MoreContributionId = "more";
+
+    private const int ApprenticeStatusCost = 10;
+    private const int JourneymanStatusCost = 15;
+    private const int MasterStatusCost = 25;
+    private const int AnimateCost = 20;
+    private const int BeneficiallyInseparableCost = 20;
+    private const int ActivateOnConditionCost = 20;
+    private const int ActivateOocCost = 15;
+    private const int AdditionalBlowUpDateStepCost = 15;
+    private const int ChosenPersonUseCost = 10;
+    private const int AlignmentOrBracketUseCost = 100;
+    private const int CallsToHandDailyCost = 3;
+    private const int UtiliseSpecificTypeCost = 10;
+
+    private const double NoBlowUpOnFirstDeathRate = 0.25d;
+    private const double NoBlowUpOnDeathRate = 0.50d;
+    private const double UseOnceEverMultiplier = 0.50d;
+    private const int ClosedGuildAllMembersMultiplier = 4;
+    private const int GuildAnyMemberMultiplier = 3;
+    private const int GuildAllMembersMultiplier = 5;
 
     private static readonly string[] StatusChipOptions =
     [
@@ -33,6 +54,8 @@ public partial class MoreNav : ContentPage
     private bool _canBeUsedByAlignmentOrBracket;
     private int _callsToHandPerDay;
     private bool _grantsUtiliseSpecificType;
+    private int _lastPublishedTotalIsp = int.MinValue;
+    private string _lastPublishedSummary = string.Empty;
 
     public IEnumerable<string> StatusOptions => StatusChipOptions;
 
@@ -47,12 +70,12 @@ public partial class MoreNav : ContentPage
         typeof(IspCalculator),
         typeof(MoreNav),
         null,
-        propertyChanged: static (bindable, _, __) =>
+        propertyChanged: static (bindable, oldValue, newValue) =>
         {
-            if (bindable is MoreNav page)
-            {
-                page.NotifyPropertyChanged(nameof(CalculatorContext));
-            }
+            if (bindable is not MoreNav page)
+                return;
+
+            page.OnCalculatorContextChanged(oldValue as IspCalculator, newValue as IspCalculator);
         });
 
     public ICommand? ReturnToFormCommand
@@ -156,19 +179,91 @@ public partial class MoreNav : ContentPage
     public bool IsClosedGuildAllMembersPersonalised
     {
         get => _isClosedGuildAllMembersPersonalised;
-        set => SetAndPublish(ref _isClosedGuildAllMembersPersonalised, value);
+        set
+        {
+            if (_isClosedGuildAllMembersPersonalised == value)
+                return;
+
+            _isClosedGuildAllMembersPersonalised = value;
+            NotifyPropertyChanged();
+
+            if (value)
+            {
+                if (_isGuildAnyMemberPersonalised)
+                {
+                    _isGuildAnyMemberPersonalised = false;
+                    NotifyPropertyChanged(nameof(IsGuildAnyMemberPersonalised));
+                }
+
+                if (_isGuildAllMembersPersonalised)
+                {
+                    _isGuildAllMembersPersonalised = false;
+                    NotifyPropertyChanged(nameof(IsGuildAllMembersPersonalised));
+                }
+            }
+
+            PublishContribution();
+        }
     }
 
     public bool IsGuildAnyMemberPersonalised
     {
         get => _isGuildAnyMemberPersonalised;
-        set => SetAndPublish(ref _isGuildAnyMemberPersonalised, value);
+        set
+        {
+            if (_isGuildAnyMemberPersonalised == value)
+                return;
+
+            _isGuildAnyMemberPersonalised = value;
+            NotifyPropertyChanged();
+
+            if (value)
+            {
+                if (_isClosedGuildAllMembersPersonalised)
+                {
+                    _isClosedGuildAllMembersPersonalised = false;
+                    NotifyPropertyChanged(nameof(IsClosedGuildAllMembersPersonalised));
+                }
+
+                if (_isGuildAllMembersPersonalised)
+                {
+                    _isGuildAllMembersPersonalised = false;
+                    NotifyPropertyChanged(nameof(IsGuildAllMembersPersonalised));
+                }
+            }
+
+            PublishContribution();
+        }
     }
 
     public bool IsGuildAllMembersPersonalised
     {
         get => _isGuildAllMembersPersonalised;
-        set => SetAndPublish(ref _isGuildAllMembersPersonalised, value);
+        set
+        {
+            if (_isGuildAllMembersPersonalised == value)
+                return;
+
+            _isGuildAllMembersPersonalised = value;
+            NotifyPropertyChanged();
+
+            if (value)
+            {
+                if (_isClosedGuildAllMembersPersonalised)
+                {
+                    _isClosedGuildAllMembersPersonalised = false;
+                    NotifyPropertyChanged(nameof(IsClosedGuildAllMembersPersonalised));
+                }
+
+                if (_isGuildAnyMemberPersonalised)
+                {
+                    _isGuildAnyMemberPersonalised = false;
+                    NotifyPropertyChanged(nameof(IsGuildAnyMemberPersonalised));
+                }
+            }
+
+            PublishContribution();
+        }
     }
 
     public bool CanBeUsedByChosenPersonForFiveMinutes
@@ -213,84 +308,209 @@ public partial class MoreNav : ContentPage
         return true;
     }
 
+    private void OnCalculatorContextChanged(IspCalculator? oldContext, IspCalculator? newContext)
+    {
+        if (oldContext != null)
+            oldContext.TotalChanged -= OnCalculatorTotalChanged;
+
+        if (newContext != null)
+            newContext.TotalChanged += OnCalculatorTotalChanged;
+
+        _lastPublishedTotalIsp = int.MinValue;
+        _lastPublishedSummary = string.Empty;
+        NotifyPropertyChanged(nameof(CalculatorContext));
+        PublishContribution();
+    }
+
+    private void OnCalculatorTotalChanged(int _) => PublishContribution();
+
     private void PublishContribution()
     {
         var details = new Dictionary<string, object?>();
         var summaryBits = new List<string>();
+        var baseSubtotal = CalculatorContext?.GetTotalExcludingContribution(MoreContributionId) ?? 0;
+        var runningTotal = Math.Max(0, baseSubtotal);
+        details["baseSubtotal"] = runningTotal;
 
         var status = NormalizeChipLabel(SelectedStatus);
-        if (!string.IsNullOrWhiteSpace(status))
+        var statusCost = ResolveStatusCost(status);
+        if (!string.IsNullOrWhiteSpace(status) && statusCost > 0)
         {
             details["status"] = status;
-            summaryBits.Add(status);
+            details["statusCost"] = statusCost;
+            runningTotal += statusCost;
+            summaryBits.Add($"{status} +{statusCost}");
         }
 
-        AddBoolean("animate", IsAnimate, "Animate");
-        AddBoolean("beneficiallyInseparable", IsBeneficiallyInseparable, "Beneficially inseparable");
-        AddBoolean("activateOoc", CanActivateOutOfCharacter, "Activate OOC");
-        AddBoolean("noBlowUpFirstDeath", DoesNotBlowUpOnFirstDeath, "No blow-up on first death");
-        AddBoolean("noBlowUpDeath", DoesNotBlowUpOnDeath, "No blow-up on death");
-        AddBoolean("useOnceEver", IsUseOnceEver, "Use once ever");
-        AddBoolean("closedGuildAllMembers", IsClosedGuildAllMembersPersonalised, "Closed guild: all members benefit");
-        AddBoolean("guildAnyMemberUse", IsGuildAnyMemberPersonalised, "Guild: any member can use");
-        AddBoolean("guildAllMembersBenefit", IsGuildAllMembersPersonalised, "Guild: all members benefit");
-        AddBoolean("chosenPersonFiveMinutes", CanBeUsedByChosenPersonForFiveMinutes, "Chosen person can use (5 mins, 1/day)");
-        AddBoolean("alignmentOrBracketUse", CanBeUsedByAlignmentOrBracket, "Alignment or bracket use");
-        AddBoolean("grantsUtiliseSpecificType", GrantsUtiliseSpecificType, "Grants utilise (specific type)");
+        var isMasterStatus = status.Equals("Master status", StringComparison.OrdinalIgnoreCase);
+        if (IsAnimate)
+        {
+            details["animate"] = true;
+            if (isMasterStatus)
+            {
+                runningTotal += AnimateCost;
+                details["animateCost"] = AnimateCost;
+                summaryBits.Add($"Animate +{AnimateCost}");
+            }
+            else
+            {
+                details["animateRequiresMaster"] = true;
+                summaryBits.Add("Animate selected (requires Master status)");
+            }
+        }
+
+        if (IsBeneficiallyInseparable)
+        {
+            details["beneficiallyInseparable"] = true;
+            if (isMasterStatus)
+            {
+                runningTotal += BeneficiallyInseparableCost;
+                details["beneficiallyInseparableCost"] = BeneficiallyInseparableCost;
+                summaryBits.Add($"Beneficially inseparable +{BeneficiallyInseparableCost}");
+            }
+            else
+            {
+                details["beneficiallyInseparableRequiresMaster"] = true;
+                summaryBits.Add("Beneficially inseparable selected (requires Master status)");
+            }
+        }
 
         if (ActivatesOnSpecifiedCondition)
         {
             details["activatesOnCondition"] = true;
+            details["activatesOnConditionCost"] = ActivateOnConditionCost;
+            runningTotal += ActivateOnConditionCost;
             var condition = (ActivationCondition ?? string.Empty).Trim();
             if (condition.Length > 0)
             {
                 details["activationCondition"] = condition;
-                summaryBits.Add($"Condition: {condition}");
+                summaryBits.Add($"Condition activation +{ActivateOnConditionCost} ({condition})");
             }
             else
             {
-                summaryBits.Add("Condition-based activation");
+                summaryBits.Add($"Condition activation +{ActivateOnConditionCost}");
             }
+        }
+
+        if (CanActivateOutOfCharacter)
+        {
+            runningTotal += ActivateOocCost;
+            details["activateOoc"] = true;
+            details["activateOocCost"] = ActivateOocCost;
+            summaryBits.Add($"Activate OOC +{ActivateOocCost}");
         }
 
         if (AdditionalBlowUpDateSteps > 0)
         {
             var months = AdditionalBlowUpDateSteps * 3;
+            var cost = AdditionalBlowUpDateSteps * AdditionalBlowUpDateStepCost;
             details["additionalBlowUpMonths"] = months;
-            summaryBits.Add($"+{months} months blow-up date");
+            details["additionalBlowUpDateCost"] = cost;
+            runningTotal += cost;
+            summaryBits.Add($"+{months} months blow-up +{cost}");
+        }
+
+        if (CanBeUsedByChosenPersonForFiveMinutes)
+        {
+            runningTotal += ChosenPersonUseCost;
+            details["chosenPersonFiveMinutes"] = true;
+            details["chosenPersonFiveMinutesCost"] = ChosenPersonUseCost;
+            summaryBits.Add($"Chosen person use +{ChosenPersonUseCost}");
+        }
+
+        if (CanBeUsedByAlignmentOrBracket)
+        {
+            runningTotal += AlignmentOrBracketUseCost;
+            details["alignmentOrBracketUse"] = true;
+            details["alignmentOrBracketUseCost"] = AlignmentOrBracketUseCost;
+            summaryBits.Add($"Alignment/bracket use +{AlignmentOrBracketUseCost}");
         }
 
         if (CallsToHandPerDay > 0)
         {
+            var cost = CallsToHandPerDay * CallsToHandDailyCost;
             details["callsToHandPerDay"] = CallsToHandPerDay;
-            summaryBits.Add($"Calls to hand {CallsToHandPerDay}/day");
+            details["callsToHandCost"] = cost;
+            runningTotal += cost;
+            summaryBits.Add($"Calls to hand {CallsToHandPerDay}/day +{cost}");
         }
 
-        var summary = summaryBits.Count == 0
+        if (GrantsUtiliseSpecificType)
+        {
+            runningTotal += UtiliseSpecificTypeCost;
+            details["grantsUtiliseSpecificType"] = true;
+            details["grantsUtiliseSpecificTypeCost"] = UtiliseSpecificTypeCost;
+            summaryBits.Add($"Grants utilise +{UtiliseSpecificTypeCost}");
+        }
+
+        details["subtotalBeforePercentages"] = runningTotal;
+
+        if (DoesNotBlowUpOnFirstDeath)
+        {
+            var cost = CalculatePercentCost(runningTotal, NoBlowUpOnFirstDeathRate);
+            runningTotal += cost;
+            details["noBlowUpFirstDeath"] = true;
+            details["noBlowUpFirstDeathCost"] = cost;
+            summaryBits.Add($"No blow-up on 1st death +25% ({FormatSigned(cost)})");
+        }
+
+        if (DoesNotBlowUpOnDeath)
+        {
+            var cost = CalculatePercentCost(runningTotal, NoBlowUpOnDeathRate);
+            runningTotal += cost;
+            details["noBlowUpDeath"] = true;
+            details["noBlowUpDeathCost"] = cost;
+            summaryBits.Add($"No blow-up on death +50% ({FormatSigned(cost)})");
+        }
+
+        details["subtotalBeforeMultipliers"] = runningTotal;
+
+        double combinedMultiplier = 1d;
+        if (IsUseOnceEver)
+        {
+            combinedMultiplier *= UseOnceEverMultiplier;
+            details["useOnceEver"] = true;
+            details["useOnceEverMultiplier"] = UseOnceEverMultiplier;
+            summaryBits.Add("Use once ever x0.5");
+        }
+
+        var guildMultiplier = ResolveGuildMultiplier(details, summaryBits);
+        if (guildMultiplier > 1)
+            combinedMultiplier *= guildMultiplier;
+
+        details["combinedMultiplier"] = combinedMultiplier;
+
+        var finalWithMore = ApplyMultiplier(runningTotal, combinedMultiplier);
+        var totalIsp = finalWithMore - baseSubtotal;
+        details["totalWithMore"] = finalWithMore;
+        details["moreIspDelta"] = totalIsp;
+
+        var summaryCore = summaryBits.Count == 0
             ? "No additional modifiers selected."
             : string.Join(" · ", summaryBits);
+        var summary = $"{summaryCore} · Δ ISP {FormatSigned(totalIsp)}";
+
+        if (_lastPublishedTotalIsp == totalIsp
+            && string.Equals(_lastPublishedSummary, summary, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _lastPublishedTotalIsp = totalIsp;
+        _lastPublishedSummary = summary;
 
         ContributionAdded?.Invoke(new CalcContribution(
-            Id: "more",
+            Id: MoreContributionId,
             Source: "More",
             Result: new CalcResult
             {
                 AbilityType = "More",
                 AbilityName = "Additional modifiers",
-                TotalIsp = 0,
+                TotalIsp = totalIsp,
                 Details = details,
                 Summary = summary
             },
             OnRemove: ResetSelections));
-
-        void AddBoolean(string key, bool enabled, string summaryLabel)
-        {
-            if (!enabled)
-                return;
-
-            details[key] = true;
-            summaryBits.Add(summaryLabel);
-        }
     }
 
     private void ResetSelections()
@@ -326,6 +546,71 @@ public partial class MoreNav : ContentPage
 
         return token;
     }
+
+    private static int ResolveStatusCost(string statusLabel)
+    {
+        if (statusLabel.Equals("Apprentice status", StringComparison.OrdinalIgnoreCase))
+            return ApprenticeStatusCost;
+
+        if (statusLabel.Equals("Journeyman status", StringComparison.OrdinalIgnoreCase))
+            return JourneymanStatusCost;
+
+        if (statusLabel.Equals("Master status", StringComparison.OrdinalIgnoreCase))
+            return MasterStatusCost;
+
+        return 0;
+    }
+
+    private int ResolveGuildMultiplier(Dictionary<string, object?> details, List<string> summaryBits)
+    {
+        if (IsGuildAllMembersPersonalised)
+        {
+            details["guildAllMembersBenefit"] = true;
+            details["guildMultiplier"] = GuildAllMembersMultiplier;
+            summaryBits.Add($"Guild all members benefit x{GuildAllMembersMultiplier}");
+            return GuildAllMembersMultiplier;
+        }
+
+        if (IsClosedGuildAllMembersPersonalised)
+        {
+            details["closedGuildAllMembers"] = true;
+            details["guildMultiplier"] = ClosedGuildAllMembersMultiplier;
+            summaryBits.Add($"Closed guild all members benefit x{ClosedGuildAllMembersMultiplier}");
+            return ClosedGuildAllMembersMultiplier;
+        }
+
+        if (IsGuildAnyMemberPersonalised)
+        {
+            details["guildAnyMemberUse"] = true;
+            details["guildMultiplier"] = GuildAnyMemberMultiplier;
+            summaryBits.Add($"Guild any member use x{GuildAnyMemberMultiplier}");
+            return GuildAnyMemberMultiplier;
+        }
+
+        return 1;
+    }
+
+    private static int CalculatePercentCost(int amount, double rate)
+    {
+        if (amount <= 0 || rate <= 0)
+            return 0;
+
+        return (int)Math.Ceiling(amount * rate);
+    }
+
+    private static int ApplyMultiplier(int amount, double multiplier)
+    {
+        if (amount <= 0)
+            return 0;
+
+        if (Math.Abs(multiplier - 1d) < 0.0001d)
+            return amount;
+
+        return (int)Math.Round(amount * multiplier, MidpointRounding.AwayFromZero);
+    }
+
+    private static string FormatSigned(int value)
+        => value >= 0 ? $"+{value}" : value.ToString();
 
     private void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
         => base.OnPropertyChanged(propertyName);

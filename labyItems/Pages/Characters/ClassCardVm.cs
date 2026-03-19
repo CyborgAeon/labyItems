@@ -9,6 +9,7 @@ using labyItems.Models.Characters;
 using labyItems.Models.ViewModels;
 using labyItems.Services;
 using labyItems.Models.Enums;
+using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Characters;
 
@@ -32,11 +33,25 @@ public sealed class ClassCardVm : INotifyPropertyChanged
     public string Name { get; init; } = "";
     public string Category { get; init; } = "";
     public string Icon { get; init; } = "🛡️";
+    public string IconGlyph { get; init; } = "";
+    public string IconBackground { get; init; } = "";
     public string Summary { get; init; } = "";
     public int MaxAc { get; init; }
     public int TBLP { get; init; }
     public string? PowerBase { get; init; } = "";
     public bool IsNonStandard { get; init; }
+    private Color _cardBackgroundColor = Colors.White;
+
+    public Color CardBackgroundColor
+    {
+        get => _cardBackgroundColor;
+        set
+        {
+            if (_cardBackgroundColor == value) return;
+            _cardBackgroundColor = value;
+            Raise();
+        }
+    }
 
     public Dictionary<int, string> CardTags { get; set; }
     public string Tag1 => MaxAc > 0 ? $"AC {MaxAc}" : string.Empty;
@@ -68,10 +83,18 @@ public sealed class ClassCardVm : INotifyPropertyChanged
         ? Category
         : string.Join(" / ", BracketLabels);
 
-    public bool HasSplitIcon => Brackets.Count >= 2;
+    public bool HasFontIcon => !string.IsNullOrWhiteSpace(IconGlyph);
+    public bool HasSplitIcon => !HasFontIcon && Brackets.Count >= 2;
 
-    public string SingleEmoji => Brackets.Count == 0 ? Icon : GetBracketEmoji(Brackets[0]);
-    public string SingleBg => GetBracketColor(Brackets.Count == 0 ? Category : Brackets[0]);
+    public string SingleEmoji => HasFontIcon
+        ? IconGlyph
+        : Brackets.Count == 0 ? Icon : GetBracketEmoji(Brackets[0]);
+
+    public string SingleIconFontFamily => HasFontIcon ? "FASolid" : string.Empty;
+
+    public string SingleBg => !string.IsNullOrWhiteSpace(IconBackground)
+        ? IconBackground
+        : GetBracketColor(Brackets.Count == 0 ? Category : Brackets[0]);
 
     public string SplitLeftEmoji => GetBracketEmoji(GetBracketAt(0, Category));
     public string SplitRightEmoji => GetBracketEmoji(GetBracketAt(1, GetBracketAt(0, Category)));

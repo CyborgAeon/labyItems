@@ -2,6 +2,7 @@ using Microsoft.Maui.Controls;
 
 #if IOS || MACCATALYST
 using System;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Devices;
 using UIKit;
 #endif
@@ -12,7 +13,14 @@ internal static class IosTabBarHelper
 {
     public static void EnsurePinnedToTop(TabbedPage page)
     {
-        MoveToTop(page);
+#if IOS || MACCATALYST
+        if (page is null)
+            return;
+
+        MainThread.BeginInvokeOnMainThread(() => MoveToTop(page));
+#else
+        _ = page;
+#endif
     }
 
     public static void MoveToTop(TabbedPage page)
@@ -37,16 +45,51 @@ internal static class IosTabBarHelper
         if (page.Handler?.PlatformView is UITabBarController direct)
             return direct;
 
-        if (page.Handler?.PlatformView is not UIViewController viewController)
+        if (page.Handler?.PlatformView is UIViewController handlerController)
+        {
+            var found = FindTabBarController(handlerController);
+            if (found != null)
+                return found;
+        }
+
+        if (page.Window?.Handler?.PlatformView is UIWindow window)
+            return FindTabBarController(window.RootViewController);
+
+        return null;
+    }
+
+    private static UITabBarController? FindTabBarController(UIViewController? root)
+    {
+        if (root is null)
             return null;
 
-        for (var current = viewController; current != null; current = current.ParentViewController)
+        if (root is UITabBarController direct)
+            return direct;
+
+        for (var current = root; current != null; current = current.ParentViewController)
         {
             if (current is UITabBarController tabBarController)
                 return tabBarController;
         }
 
-        return viewController.TabBarController;
+        if (root.TabBarController is UITabBarController fromTabBarProperty)
+            return fromTabBarProperty;
+
+        if (root.PresentedViewController is UIViewController presented)
+        {
+            var presentedFound = FindTabBarController(presented);
+            if (presentedFound != null)
+                return presentedFound;
+        }
+
+        foreach (var child in root.ChildViewControllers ?? Array.Empty<UIViewController>())
+        {
+            var found = FindTabBarController(child);
+            if (found != null)
+                return found;
+        }
+
+        return null;
     }
 
     private static void ConfigureTabController(TabbedPage page, UITabBarController controller)
@@ -56,6 +99,7 @@ internal static class IosTabBarHelper
         var tabBar = controller.TabBar;
         tabBar.Hidden = false;
         tabBar.UserInteractionEnabled = true;
+        tabBar.Translucent = false;
         tabBar.ItemPositioning = UITabBarItemPositioning.Fill;
         tabBar.ItemWidth = 0;
         tabBar.ItemSpacing = 0;
@@ -67,6 +111,8 @@ internal static class IosTabBarHelper
             controller.MoreNavigationController.SetEditing(false, false);
 
         ApplyReadableTabTitleAppearance(page, controller);
+        controller.View.SetNeedsLayout();
+        controller.View.LayoutIfNeeded();
     }
 
     private static void ApplyReadableTabTitleAppearance(TabbedPage page, UITabBarController controller)

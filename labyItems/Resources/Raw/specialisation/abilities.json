@@ -3983,9 +3983,9 @@
       "Key": "ability.mc.master-of-the-dead.l5"
     },
     "ability.mc.master-of-the-dead.l6": {
-      "Name": "Must have the ability Remember Unknown Undead Name and Reveal Undead Name on their",
+      "Name": "Reveal undead name for 4tblp",
       "Type": "Static",
-      "Effect": "Miracle list to use this level, may now cast Reveal Undead Name for 0 spirits but costing 4 TBLP",
+      "Effect": "Must have the ability Remember Unknown Undead Name and Reveal Undead Name on their Miracle list to use this level, may now cast Reveal Undead Name for 0 spirits but costing 4 TBLP",
       "Source": "multiclass Master of the Dead",
       "Key": "ability.mc.master-of-the-dead.l6"
     },
@@ -5569,7 +5569,7 @@
     "ability.mc.berserker.l3": {
       "Name": "Berserking Strength +1 (Max 2)",
       "Type": "Static",
-      "Effect": "+1 grade of strength whilst Berserking [max 2]",
+      "Effect": "+1 grade of strength whilst Berserking",
       "Source": "multiclass Berserker",
       "Key": "ability.mc.berserker.l3"
     },

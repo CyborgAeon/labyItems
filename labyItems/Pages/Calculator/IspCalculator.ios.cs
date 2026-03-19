@@ -8,7 +8,10 @@ public partial class IspCalculator
 {
     partial void ApplyPlatformTabFontSize(double fontSize)
     {
-        if (Handler?.PlatformView is not UITabBarController controller)
+        IosTabBarHelper.EnsurePinnedToTop(this);
+
+        var controller = ResolveTabBarController();
+        if (controller is null)
             return;
 
         var items = controller.TabBar.Items;
@@ -25,8 +28,17 @@ public partial class IspCalculator
             item.SetTitleTextAttributes(attributes, UIControlState.Normal);
             item.SetTitleTextAttributes(attributes, UIControlState.Selected);
         }
+    }
 
-        IosTabBarHelper.EnsurePinnedToTop(this);
+    private UITabBarController? ResolveTabBarController()
+    {
+        if (Handler?.PlatformView is UITabBarController direct)
+            return direct;
+
+        if (Handler?.PlatformView is UIViewController viewController)
+            return viewController.TabBarController;
+
+        return null;
     }
 }
 #endif

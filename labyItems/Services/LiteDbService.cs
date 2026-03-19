@@ -1,146 +1,291 @@
-// Services/LiteDbService.cs
+using System.Globalization;
 using System.Linq;
-using System.Diagnostics;
+using System.Text.Json;
 using labyItems.Models;
 using labyItems.Models.Characters;
-using LiteDB;
+using Microsoft.Data.Sqlite;
+using Microsoft.Maui.Storage;
 
 namespace labyItems.Services;
 
 public static class LiteDbService
 {
-    private static LiteDatabase? _db;
-    private static readonly object DbSync = new();
-    private const string CharactersCollectionName = "characters";
+    private const string CharactersTableName = "wallet_characters";
+    private const string ItemsTableName = "wallet_items";
+    private static readonly object SchemaSync = new();
+    private static bool _schemaEnsured;
 
-    private static LiteDatabase GetDb()
+    public static void InsertItem(Item item)
     {
-        if (_db != null)
-            return _db;
+        ArgumentNullException.ThrowIfNull(item);
 
-        lock (DbSync)
-        {
-            if (_db != null)
-                return _db;
+        item.Id = EnsureId(item.Id);
+        item.CreatedDate = EnsureCreatedDate(item.CreatedDate);
 
-            var path = Path.Combine(FileSystem.AppDataDirectory, "items.db");
-            _db = OpenDatabaseWithRecovery(path);
-            EnsureIndexes(_db);
-            return _db;
-        }
+        using var conn = OpenConnection();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $@"
+INSERT INTO {ItemsTableName}
+(
+    id,
+    item_type,
+    maker_id,
+    maker_name,
+    maker_player_name,
+    maker_class,
+    maker_race,
+    maker_race_subtype,
+    maker_race_subtype_key,
+    maker_notes,
+    maker_points,
+    witness_name,
+    recipient_player_name,
+    recipient_character_name,
+    recipient_character_class,
+    description,
+    payload_json,
+    isp,
+    created_date,
+    does_not_blow_up_on_death,
+    assigned_character_id,
+    assigned_character_name,
+    assigned_character_player_name
+)
+VALUES
+(
+    @id,
+    @item_type,
+    @maker_id,
+    @maker_name,
+    @maker_player_name,
+    @maker_class,
+    @maker_race,
+    @maker_race_subtype,
+    @maker_race_subtype_key,
+    @maker_notes,
+    @maker_points,
+    @witness_name,
+    @recipient_player_name,
+    @recipient_character_name,
+    @recipient_character_class,
+    @description,
+    @payload_json,
+    @isp,
+    @created_date,
+    @does_not_blow_up_on_death,
+    @assigned_character_id,
+    @assigned_character_name,
+    @assigned_character_player_name
+)
+ON CONFLICT(id) DO UPDATE SET
+    item_type = excluded.item_type,
+    maker_id = excluded.maker_id,
+    maker_name = excluded.maker_name,
+    maker_player_name = excluded.maker_player_name,
+    maker_class = excluded.maker_class,
+    maker_race = excluded.maker_race,
+    maker_race_subtype = excluded.maker_race_subtype,
+    maker_race_subtype_key = excluded.maker_race_subtype_key,
+    maker_notes = excluded.maker_notes,
+    maker_points = excluded.maker_points,
+    witness_name = excluded.witness_name,
+    recipient_player_name = excluded.recipient_player_name,
+    recipient_character_name = excluded.recipient_character_name,
+    recipient_character_class = excluded.recipient_character_class,
+    description = excluded.description,
+    payload_json = excluded.payload_json,
+    isp = excluded.isp,
+    created_date = excluded.created_date,
+    does_not_blow_up_on_death = excluded.does_not_blow_up_on_death,
+    assigned_character_id = excluded.assigned_character_id,
+    assigned_character_name = excluded.assigned_character_name,
+    assigned_character_player_name = excluded.assigned_character_player_name;";
+
+        BindItemParameters(cmd, item);
+        cmd.ExecuteNonQuery();
     }
 
-    private static LiteDatabase OpenDatabaseWithRecovery(string path)
+    public static bool UpdateItem(Item item)
     {
-        try
-        {
-            return new LiteDatabase($"Filename={path};Connection=shared");
-        }
-        catch (Exception firstOpenEx)
-        {
-            Debug.WriteLine($"[LiteDbService] Failed opening items.db at '{path}': {firstOpenEx}");
-            TryQuarantineBrokenDatabase(path);
+        ArgumentNullException.ThrowIfNull(item);
 
-            return new LiteDatabase($"Filename={path};Connection=shared");
-        }
+        var id = (item.Id ?? string.Empty).Trim();
+        if (id.Length == 0)
+            return false;
+
+        item.Id = id;
+        item.CreatedDate = EnsureCreatedDate(item.CreatedDate);
+
+        using var conn = OpenConnection();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $@"
+UPDATE {ItemsTableName} SET
+    item_type = @item_type,
+    maker_id = @maker_id,
+    maker_name = @maker_name,
+    maker_player_name = @maker_player_name,
+    maker_class = @maker_class,
+    maker_race = @maker_race,
+    maker_race_subtype = @maker_race_subtype,
+    maker_race_subtype_key = @maker_race_subtype_key,
+    maker_notes = @maker_notes,
+    maker_points = @maker_points,
+    witness_name = @witness_name,
+    recipient_player_name = @recipient_player_name,
+    recipient_character_name = @recipient_character_name,
+    recipient_character_class = @recipient_character_class,
+    description = @description,
+    payload_json = @payload_json,
+    isp = @isp,
+    created_date = @created_date,
+    does_not_blow_up_on_death = @does_not_blow_up_on_death,
+    assigned_character_id = @assigned_character_id,
+    assigned_character_name = @assigned_character_name,
+    assigned_character_player_name = @assigned_character_player_name
+WHERE id = @id;";
+
+        BindItemParameters(cmd, item);
+        var affected = cmd.ExecuteNonQuery();
+        return affected > 0;
     }
 
-    private static void EnsureIndexes(LiteDatabase db)
+    public static bool DeleteItem(string id)
     {
-        if (ShouldSkipIndexesForAot())
-        {
-            Debug.WriteLine("[LiteDbService] Skipping index creation on AOT platform.");
+        var normalizedId = (id ?? string.Empty).Trim();
+        if (normalizedId.Length == 0)
+            return false;
+
+        using var conn = OpenConnection();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $"DELETE FROM {ItemsTableName} WHERE id = @id;";
+        cmd.Parameters.AddWithValue("@id", normalizedId);
+        return cmd.ExecuteNonQuery() > 0;
+    }
+
+    public static void DeleteChar(string id)
+    {
+        var normalizedId = (id ?? string.Empty).Trim();
+        if (normalizedId.Length == 0)
             return;
+
+        using var conn = OpenConnection();
+        using var tx = conn.BeginTransaction();
+
+        using (var deleteCharacter = conn.CreateCommand())
+        {
+            deleteCharacter.Transaction = tx;
+            deleteCharacter.CommandText = $"DELETE FROM {CharactersTableName} WHERE id = @id;";
+            deleteCharacter.Parameters.AddWithValue("@id", normalizedId);
+            deleteCharacter.ExecuteNonQuery();
         }
 
-        try
+        using (var clearAssignments = conn.CreateCommand())
         {
-            db.GetCollection<Item>("items").EnsureIndex(nameof(Item.CreatedDate));
-            db.GetCollection<Item>("items").EnsureIndex(nameof(Item.AssignedCharacterName));
-            db.GetCollection<Item>("items").EnsureIndex(nameof(Item.AssignedCharacterPlayerName));
-            db.GetCollection(CharactersCollectionName).EnsureIndex(nameof(Character.Name));
+            clearAssignments.Transaction = tx;
+            clearAssignments.CommandText = $@"
+UPDATE {ItemsTableName}
+SET assigned_character_id = '',
+    assigned_character_name = '',
+    assigned_character_player_name = ''
+WHERE assigned_character_id = @id;";
+            clearAssignments.Parameters.AddWithValue("@id", normalizedId);
+            clearAssignments.ExecuteNonQuery();
         }
-        catch (TypeInitializationException ex) when ((ex.TypeName ?? string.Empty).Contains("LiteDB.BsonExpression", StringComparison.OrdinalIgnoreCase))
-        {
-            // LiteDB expression initialization can require JIT; iOS full-AOT cannot support that.
-            Debug.WriteLine($"[LiteDbService] Skipping indexes due to AOT-incompatible LiteDB expression init: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[LiteDbService] Failed creating indexes: {ex.Message}");
-        }
+
+        tx.Commit();
     }
-
-    private static bool ShouldSkipIndexesForAot()
-    {
-        if (OperatingSystem.IsIOS())
-            return true;
-
-        return false;
-    }
-
-    private static void TryQuarantineBrokenDatabase(string path)
-    {
-        try
-        {
-            if (!File.Exists(path))
-                return;
-
-            var backupPath = Path.Combine(
-                Path.GetDirectoryName(path) ?? FileSystem.AppDataDirectory,
-                $"items.corrupt.{DateTime.UtcNow:yyyyMMddHHmmss}.db");
-
-            File.Move(path, backupPath, overwrite: true);
-            Debug.WriteLine($"[LiteDbService] Moved unreadable items.db to '{backupPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[LiteDbService] Could not quarantine unreadable items.db: {ex}");
-        }
-    }
-
-    public static void InsertItem(Item item) => GetDb().GetCollection<Item>("items").Insert(item);
-    public static bool UpdateItem(Item item) => GetDb().GetCollection<Item>("items").Update(item);
-    public static bool DeleteItem(ObjectId id) =>
-        GetDb().GetCollection<Item>("items").Delete(id);
-
-    public static void DeleteChar(ObjectId id) =>
-        GetCharacterCollection().Delete(id);
 
     private static string NormalizeKey(string s) => (s ?? string.Empty).Trim().ToLowerInvariant();
 
-    public static IEnumerable<Item> GetTemplatesByCharacterId(ObjectId characterId)
+    public static void RepairItemsCollection()
     {
-        var items = GetDb()
-            .GetCollection<Item>("items")
-            .FindAll()
-            .OrderByDescending(x => x.CreatedDate)
-            .ToList();
-        return items
-            .DistinctBy(x => $"{x.ItemType}::{NormalizeKey(x.Description)}")
-            .Where(w => w.Maker.Id == characterId)
-            .OrderBy(x => x.ItemType)
-            .ThenBy(x => NormalizeKey(x.Description));
+        // Legacy LiteDB corruption-recovery hook. SQLite storage no longer needs collection-level repair.
+        using var conn = OpenConnection();
+        _ = conn;
     }
 
-    public static IEnumerable<Item> GetItems() =>
-        GetDb()
-            .GetCollection<Item>("items")
-            .FindAll()
-            .OrderByDescending(item => item.CreatedDate);
-
-    public static IEnumerable<Item> GetItemsAssignedToCharacter(string? characterName, string? playerName)
+    public static IEnumerable<Item> GetTemplatesByCharacterId(string characterId)
     {
-        var name = NormalizeKey(characterName ?? string.Empty);
-        var player = NormalizeKey(playerName ?? string.Empty);
-        if (name.Length == 0)
+        var normalizedCharacterId = NormalizeKey(characterId ?? string.Empty);
+        if (normalizedCharacterId.Length == 0)
             return Enumerable.Empty<Item>();
 
-        return GetDb()
-            .GetCollection<Item>("items")
-            .FindAll()
+        var items = GetItems()
+            .Where(item => string.Equals(
+                NormalizeKey(item.Maker?.Id ?? string.Empty),
+                normalizedCharacterId,
+                StringComparison.Ordinal))
+            .OrderByDescending(item => item.CreatedDate)
+            .ToList();
+
+        return items
+            .DistinctBy(item => $"{item.ItemType}::{NormalizeKey(item.Description)}")
+            .OrderBy(item => item.ItemType)
+            .ThenBy(item => NormalizeKey(item.Description));
+    }
+
+    public static IEnumerable<Item> GetItems()
+    {
+        using var conn = OpenConnection();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $@"
+SELECT
+    id,
+    item_type,
+    maker_id,
+    maker_name,
+    maker_player_name,
+    maker_class,
+    maker_race,
+    maker_race_subtype,
+    maker_race_subtype_key,
+    maker_notes,
+    maker_points,
+    witness_name,
+    recipient_player_name,
+    recipient_character_name,
+    recipient_character_class,
+    description,
+    payload_json,
+    isp,
+    created_date,
+    does_not_blow_up_on_death,
+    assigned_character_id,
+    assigned_character_name,
+    assigned_character_player_name
+FROM {ItemsTableName}
+ORDER BY datetime(created_date) DESC, rowid DESC;";
+
+        using var reader = cmd.ExecuteReader();
+        var results = new List<Item>();
+        while (reader.Read())
+            results.Add(ReadItem(reader));
+
+        return results;
+    }
+
+    public static IEnumerable<Item> GetItemsAssignedToCharacter(
+        string? characterRecordId,
+        string? characterName,
+        string? playerName)
+    {
+        var recordId = NormalizeKey(characterRecordId ?? string.Empty);
+        var name = NormalizeKey(characterName ?? string.Empty);
+        var player = NormalizeKey(playerName ?? string.Empty);
+
+        if (recordId.Length == 0 && name.Length == 0)
+            return Enumerable.Empty<Item>();
+
+        return GetItems()
             .Where(item =>
             {
+                var assignedId = NormalizeKey(item.AssignedCharacterId ?? string.Empty);
+                if (recordId.Length > 0 && assignedId.Length > 0)
+                    return string.Equals(assignedId, recordId, StringComparison.Ordinal);
+
+                if (name.Length == 0)
+                    return false;
+
                 var assignedName = NormalizeKey(item.AssignedCharacterName ?? string.Empty);
                 if (!string.Equals(assignedName, name, StringComparison.Ordinal))
                     return false;
@@ -151,49 +296,120 @@ public static class LiteDbService
                 var assignedPlayer = NormalizeKey(item.AssignedCharacterPlayerName ?? string.Empty);
                 return string.Equals(assignedPlayer, player, StringComparison.Ordinal);
             })
-            .OrderByDescending(item => item.CreatedDate);
+            .OrderByDescending(item => item.CreatedDate)
+            .ToList();
     }
 
-    public static IEnumerable<Character> GetCharacters() =>
-        GetCharacterCollection()
-            .FindAll()
-            .Select(ToCharacter)
-            .OrderBy(c => c.Name);
+    public static IEnumerable<Character> GetCharacters()
+    {
+        using var conn = OpenConnection();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $@"
+SELECT
+    id,
+    name,
+    race,
+    race_subtype,
+    race_subtype_key,
+    class,
+    player_name,
+    notes,
+    draft_snapshot,
+    updated_utc,
+    points,
+    guilds_json,
+    points_apps_json,
+    specialisations_json
+FROM {CharactersTableName}
+ORDER BY name COLLATE NOCASE ASC, rowid ASC;";
 
-    public static Character? GetCharacterById(ObjectId id) =>
-        ToCharacterOrNull(GetCharacterCollection().FindById(id));
+        using var reader = cmd.ExecuteReader();
+        var results = new List<Character>();
+        while (reader.Read())
+            results.Add(ReadCharacter(reader));
+
+        return results;
+    }
+
+    public static Character? GetCharacterById(string id)
+    {
+        var normalizedId = (id ?? string.Empty).Trim();
+        if (normalizedId.Length == 0)
+            return null;
+
+        using var conn = OpenConnection();
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $@"
+SELECT
+    id,
+    name,
+    race,
+    race_subtype,
+    race_subtype_key,
+    class,
+    player_name,
+    notes,
+    draft_snapshot,
+    updated_utc,
+    points,
+    guilds_json,
+    points_apps_json,
+    specialisations_json
+FROM {CharactersTableName}
+WHERE id = @id
+LIMIT 1;";
+        cmd.Parameters.AddWithValue("@id", normalizedId);
+
+        using var reader = cmd.ExecuteReader();
+        return reader.Read() ? ReadCharacter(reader) : null;
+    }
 
     public static void UpsertCharacter(Character c)
     {
-        var col = GetCharacterCollection();
+        ArgumentNullException.ThrowIfNull(c);
+
         c.Id = EnsureId(c.Id);
         c.UpdatedUtc = DateTime.UtcNow;
-        col.Upsert(ToDocument(c));
+
+        using var conn = OpenConnection();
+        UpsertCharacter(conn, c);
     }
 
     public static Character UpsertDraft(CharacterDraft draft)
     {
-        var col = GetCharacterCollection();
-        ObjectId? idOverride = null;
-        var rawId = (draft.CharacterRecordId ?? string.Empty).Trim();
-        if (rawId.Length > 0 && TryParseObjectId(rawId, out var parsedId))
-        {
-            var existing = col.FindById(parsedId);
-            if (existing != null)
-                idOverride = parsedId;
-        }
+        ArgumentNullException.ThrowIfNull(draft);
+
+        using var conn = OpenConnection();
+
+        var requestedId = (draft.CharacterRecordId ?? string.Empty).Trim();
+        string? idOverride = null;
+        if (requestedId.Length > 0 && CharacterExists(conn, requestedId))
+            idOverride = requestedId;
 
         var entity = MapFromDraft(draft, idOverride);
-        col.Upsert(ToDocument(entity));
-        draft.CharacterRecordId = entity.Id.ToString();
+
+        try
+        {
+            UpsertCharacter(conn, entity);
+        }
+        catch (Exception ex)
+        {
+            Helpers.RuntimeLog.Write(
+                "SQLITE_UPSERT_DRAFT",
+                $"Failed upserting character draft. Character='{draft.Name}' Player='{draft.PlayerName}' RecordId='{draft.CharacterRecordId}'.",
+                ex);
+            throw;
+        }
+
+        draft.CharacterRecordId = entity.Id;
         return entity;
     }
 
-    private static Character MapFromDraft(CharacterDraft draft, ObjectId? idOverride)
+    private static Character MapFromDraft(CharacterDraft draft, string? idOverride)
     {
         return new Character
         {
-            Id = EnsureId(idOverride ?? ObjectId.Empty),
+            Id = EnsureId(idOverride),
             Name = draft.Name ?? string.Empty,
             PlayerName = draft.PlayerName ?? string.Empty,
             Class = draft.Class ?? string.Empty,
@@ -204,26 +420,9 @@ public static class LiteDbService
             Guilds = new List<string>(draft.Guilds ?? new List<string>()),
             Specialisations = new Dictionary<string, string>(draft.SpecialisationSelections, StringComparer.OrdinalIgnoreCase),
             Points = draft.Points,
-            DraftSnapshot = System.Text.Json.JsonSerializer.Serialize(draft),
+            DraftSnapshot = JsonSerializer.Serialize(draft),
             UpdatedUtc = DateTime.UtcNow
         };
-    }
-
-    private static ObjectId EnsureId(ObjectId id)
-        => id == ObjectId.Empty ? ObjectId.NewObjectId() : id;
-
-    private static bool TryParseObjectId(string rawId, out ObjectId value)
-    {
-        try
-        {
-            value = new ObjectId(rawId);
-            return value != ObjectId.Empty;
-        }
-        catch
-        {
-            value = ObjectId.Empty;
-            return false;
-        }
     }
 
     public static CharacterDraft? ToDraft(Character character)
@@ -235,21 +434,24 @@ public static class LiteDbService
         {
             try
             {
-                var _draft = System.Text.Json.JsonSerializer.Deserialize<CharacterDraft>(character.DraftSnapshot);
-                if (_draft != null)
+                var draft = JsonSerializer.Deserialize<CharacterDraft>(character.DraftSnapshot);
+                if (draft != null)
                 {
-                    _draft.CharacterRecordId = character.Id.ToString();
+                    draft.CharacterRecordId = character.Id;
                     foreach (var kvp in character.Specialisations ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase))
-                        _draft.SpecialisationSelections[kvp.Key] = kvp.Value;
-                    return _draft;
+                        draft.SpecialisationSelections[kvp.Key] = kvp.Value;
+                    return draft;
                 }
             }
-            catch { }
+            catch
+            {
+                // Fall back to manual draft reconstruction.
+            }
         }
 
-        var draft = new CharacterDraft
+        var reconstructed = new CharacterDraft
         {
-            CharacterRecordId = character.Id.ToString(),
+            CharacterRecordId = character.Id,
             Name = character.Name ?? string.Empty,
             PlayerName = character.PlayerName ?? string.Empty,
             Class = character.Class ?? string.Empty,
@@ -260,194 +462,523 @@ public static class LiteDbService
             Points = (int)character.Points
         };
 
-        draft.Guilds = character.Guilds?.ToList() ?? new List<string>();
+        reconstructed.Guilds = character.Guilds?.ToList() ?? new List<string>();
         foreach (var kvp in character.Specialisations ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase))
-            draft.SpecialisationSelections[kvp.Key] = kvp.Value;
+            reconstructed.SpecialisationSelections[kvp.Key] = kvp.Value;
 
-        return draft;
+        return reconstructed;
     }
 
-    private static ILiteCollection<BsonDocument> GetCharacterCollection()
-        => GetDb().GetCollection(CharactersCollectionName);
-
-    private static BsonDocument ToDocument(Character character)
+    private static void BindItemParameters(SqliteCommand cmd, Item item)
     {
-        var id = EnsureId(character.Id);
-        var updatedUtc = character.UpdatedUtc == default ? DateTime.UtcNow : character.UpdatedUtc;
-        var doc = new BsonDocument
-        {
-            ["_id"] = id,
-            [nameof(Character.Name)] = character.Name ?? string.Empty,
-            [nameof(Character.Race)] = character.Race ?? string.Empty,
-            [nameof(Character.RaceSubtype)] = character.RaceSubtype ?? string.Empty,
-            [nameof(Character.RaceSubtypeKey)] = character.RaceSubtypeKey ?? string.Empty,
-            [nameof(Character.Class)] = character.Class ?? string.Empty,
-            [nameof(Character.PlayerName)] = character.PlayerName ?? string.Empty,
-            [nameof(Character.Notes)] = character.Notes ?? string.Empty,
-            [nameof(Character.DraftSnapshot)] = character.DraftSnapshot ?? string.Empty,
-            [nameof(Character.UpdatedUtc)] = updatedUtc,
-            [nameof(Character.Points)] = character.Points,
-            [nameof(Character.Guilds)] = ToStringArray(character.Guilds),
-            [nameof(Character.PointsApps)] = ToStringArray(character.PointsApps),
-            [nameof(Character.Specialisations)] = ToStringDocument(character.Specialisations)
-        };
+        var maker = item.Maker ?? new Character();
 
-        character.Id = id;
-        character.UpdatedUtc = updatedUtc;
-        return doc;
+        cmd.Parameters.AddWithValue("@id", EnsureId(item.Id));
+        cmd.Parameters.AddWithValue("@item_type", (int)item.ItemType);
+        cmd.Parameters.AddWithValue("@maker_id", (maker.Id ?? string.Empty).Trim());
+        cmd.Parameters.AddWithValue("@maker_name", maker.Name ?? string.Empty);
+        cmd.Parameters.AddWithValue("@maker_player_name", maker.PlayerName ?? string.Empty);
+        cmd.Parameters.AddWithValue("@maker_class", maker.Class ?? string.Empty);
+        cmd.Parameters.AddWithValue("@maker_race", maker.Race ?? string.Empty);
+        cmd.Parameters.AddWithValue("@maker_race_subtype", maker.RaceSubtype ?? string.Empty);
+        cmd.Parameters.AddWithValue("@maker_race_subtype_key", maker.RaceSubtypeKey ?? string.Empty);
+        cmd.Parameters.AddWithValue("@maker_notes", maker.Notes ?? string.Empty);
+        cmd.Parameters.AddWithValue("@maker_points", maker.Points);
+        cmd.Parameters.AddWithValue("@witness_name", item.WitnessName ?? string.Empty);
+        cmd.Parameters.AddWithValue("@recipient_player_name", item.RecipientPlayerName ?? string.Empty);
+        cmd.Parameters.AddWithValue("@recipient_character_name", item.RecipientCharacterName ?? string.Empty);
+        cmd.Parameters.AddWithValue("@recipient_character_class", item.RecipientCharacterClass ?? string.Empty);
+        cmd.Parameters.AddWithValue("@description", item.Description ?? string.Empty);
+        cmd.Parameters.AddWithValue("@payload_json", item.PayloadJson ?? string.Empty);
+        cmd.Parameters.AddWithValue("@isp", item.Isp);
+        cmd.Parameters.AddWithValue("@created_date", ToStorageDate(item.CreatedDate));
+        cmd.Parameters.AddWithValue("@does_not_blow_up_on_death", item.DoesNotBlowUpOnDeath ? 1 : 0);
+        cmd.Parameters.AddWithValue("@assigned_character_id", item.AssignedCharacterId ?? string.Empty);
+        cmd.Parameters.AddWithValue("@assigned_character_name", item.AssignedCharacterName ?? string.Empty);
+        cmd.Parameters.AddWithValue("@assigned_character_player_name", item.AssignedCharacterPlayerName ?? string.Empty);
+
+        item.Maker = maker;
+        item.Id = EnsureId(item.Id);
     }
 
-    private static Character? ToCharacterOrNull(BsonDocument? doc)
-        => doc == null ? null : ToCharacter(doc);
-
-    private static Character ToCharacter(BsonDocument doc)
+    private static Character ReadCharacter(SqliteDataReader reader)
     {
         return new Character
         {
-            Id = ReadObjectId(doc, "_id"),
-            Name = ReadString(doc, nameof(Character.Name)),
-            Race = ReadString(doc, nameof(Character.Race)),
-            RaceSubtype = ReadString(doc, nameof(Character.RaceSubtype)),
-            RaceSubtypeKey = ReadString(doc, nameof(Character.RaceSubtypeKey)),
-            Class = ReadString(doc, nameof(Character.Class)),
-            PlayerName = ReadString(doc, nameof(Character.PlayerName)),
-            Notes = ReadString(doc, nameof(Character.Notes)),
-            DraftSnapshot = ReadString(doc, nameof(Character.DraftSnapshot)),
-            UpdatedUtc = ReadDateTime(doc, nameof(Character.UpdatedUtc)),
-            Points = ReadInt64(doc, nameof(Character.Points)),
-            Guilds = ReadStringList(doc, nameof(Character.Guilds)),
-            PointsApps = ReadStringList(doc, nameof(Character.PointsApps)),
-            Specialisations = ReadStringDictionary(doc, nameof(Character.Specialisations))
+            Id = ReadString(reader, "id"),
+            Name = ReadString(reader, "name"),
+            Race = ReadString(reader, "race"),
+            RaceSubtype = ReadString(reader, "race_subtype"),
+            RaceSubtypeKey = ReadString(reader, "race_subtype_key"),
+            Class = ReadString(reader, "class"),
+            PlayerName = ReadString(reader, "player_name"),
+            Notes = ReadString(reader, "notes"),
+            DraftSnapshot = ReadString(reader, "draft_snapshot"),
+            UpdatedUtc = ParseStorageDate(ReadString(reader, "updated_utc"), DateTime.UtcNow),
+            Points = ReadInt64(reader, "points"),
+            Guilds = DeserializeStringList(ReadString(reader, "guilds_json")),
+            PointsApps = DeserializeStringList(ReadString(reader, "points_apps_json")),
+            Specialisations = DeserializeStringDictionary(ReadString(reader, "specialisations_json"))
         };
     }
 
-    private static BsonArray ToStringArray(IEnumerable<string>? values)
+    private static Item ReadItem(SqliteDataReader reader)
     {
-        var array = new BsonArray();
-        if (values == null)
-            return array;
-
-        foreach (var value in values)
-            array.Add(value ?? string.Empty);
-
-        return array;
+        return new Item
+        {
+            Id = ReadString(reader, "id"),
+            ItemType = ReadItemType(ReadInt32(reader, "item_type")),
+            Maker = new Character
+            {
+                Id = ReadString(reader, "maker_id"),
+                Name = ReadString(reader, "maker_name"),
+                PlayerName = ReadString(reader, "maker_player_name"),
+                Class = ReadString(reader, "maker_class"),
+                Race = ReadString(reader, "maker_race"),
+                RaceSubtype = ReadString(reader, "maker_race_subtype"),
+                RaceSubtypeKey = ReadString(reader, "maker_race_subtype_key"),
+                Notes = ReadString(reader, "maker_notes"),
+                Points = ReadInt64(reader, "maker_points")
+            },
+            WitnessName = ReadString(reader, "witness_name"),
+            RecipientPlayerName = ReadString(reader, "recipient_player_name"),
+            RecipientCharacterName = ReadString(reader, "recipient_character_name"),
+            RecipientCharacterClass = ReadString(reader, "recipient_character_class"),
+            Description = ReadString(reader, "description"),
+            PayloadJson = ReadString(reader, "payload_json"),
+            Isp = ReadInt32(reader, "isp"),
+            CreatedDate = ParseStorageDate(ReadString(reader, "created_date"), DateTime.Now),
+            DoesNotBlowUpOnDeath = ReadInt32(reader, "does_not_blow_up_on_death") != 0,
+            AssignedCharacterId = ReadString(reader, "assigned_character_id"),
+            AssignedCharacterName = ReadString(reader, "assigned_character_name"),
+            AssignedCharacterPlayerName = ReadString(reader, "assigned_character_player_name")
+        };
     }
 
-    private static BsonDocument ToStringDocument(IDictionary<string, string>? values)
+    private static ItemTypeEnum ReadItemType(int raw)
+        => Enum.IsDefined(typeof(ItemTypeEnum), raw) ? (ItemTypeEnum)raw : ItemTypeEnum.None;
+
+    private static bool CharacterExists(SqliteConnection conn, string id)
     {
-        var doc = new BsonDocument();
-        if (values == null)
-            return doc;
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $"SELECT 1 FROM {CharactersTableName} WHERE id = @id LIMIT 1;";
+        cmd.Parameters.AddWithValue("@id", id);
+        return cmd.ExecuteScalar() != null;
+    }
 
-        foreach (var kvp in values)
+    private static void UpsertCharacter(SqliteConnection conn, Character c)
+    {
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = $@"
+INSERT INTO {CharactersTableName}
+(
+    id,
+    name,
+    race,
+    race_subtype,
+    race_subtype_key,
+    class,
+    player_name,
+    notes,
+    draft_snapshot,
+    updated_utc,
+    points,
+    guilds_json,
+    points_apps_json,
+    specialisations_json
+)
+VALUES
+(
+    @id,
+    @name,
+    @race,
+    @race_subtype,
+    @race_subtype_key,
+    @class,
+    @player_name,
+    @notes,
+    @draft_snapshot,
+    @updated_utc,
+    @points,
+    @guilds_json,
+    @points_apps_json,
+    @specialisations_json
+)
+ON CONFLICT(id) DO UPDATE SET
+    name = excluded.name,
+    race = excluded.race,
+    race_subtype = excluded.race_subtype,
+    race_subtype_key = excluded.race_subtype_key,
+    class = excluded.class,
+    player_name = excluded.player_name,
+    notes = excluded.notes,
+    draft_snapshot = excluded.draft_snapshot,
+    updated_utc = excluded.updated_utc,
+    points = excluded.points,
+    guilds_json = excluded.guilds_json,
+    points_apps_json = excluded.points_apps_json,
+    specialisations_json = excluded.specialisations_json;";
+
+        cmd.Parameters.AddWithValue("@id", c.Id);
+        cmd.Parameters.AddWithValue("@name", c.Name ?? string.Empty);
+        cmd.Parameters.AddWithValue("@race", c.Race ?? string.Empty);
+        cmd.Parameters.AddWithValue("@race_subtype", c.RaceSubtype ?? string.Empty);
+        cmd.Parameters.AddWithValue("@race_subtype_key", c.RaceSubtypeKey ?? string.Empty);
+        cmd.Parameters.AddWithValue("@class", c.Class ?? string.Empty);
+        cmd.Parameters.AddWithValue("@player_name", c.PlayerName ?? string.Empty);
+        cmd.Parameters.AddWithValue("@notes", c.Notes ?? string.Empty);
+        cmd.Parameters.AddWithValue("@draft_snapshot", c.DraftSnapshot ?? string.Empty);
+        cmd.Parameters.AddWithValue("@updated_utc", ToStorageDate(c.UpdatedUtc));
+        cmd.Parameters.AddWithValue("@points", c.Points);
+        cmd.Parameters.AddWithValue("@guilds_json", SerializeStringList(c.Guilds));
+        cmd.Parameters.AddWithValue("@points_apps_json", SerializeStringList(c.PointsApps));
+        cmd.Parameters.AddWithValue("@specialisations_json", SerializeStringDictionary(c.Specialisations));
+
+        cmd.ExecuteNonQuery();
+    }
+
+    private static SqliteConnection OpenConnection()
+    {
+        var dbPath = Path.Combine(FileSystem.AppDataDirectory, ServiceHelper.DbFileName);
+        Directory.CreateDirectory(Path.GetDirectoryName(dbPath) ?? FileSystem.AppDataDirectory);
+        EnsureWritableDatabaseFiles(dbPath);
+        try
         {
-            var key = (kvp.Key ?? string.Empty).Trim();
-            if (key.Length == 0)
-                continue;
+            return OpenConnectionInternal(dbPath);
+        }
+        catch (SqliteException ex) when (IsReadonlySqlite(ex))
+        {
+            Helpers.RuntimeLog.Write(
+                "SQLITE_RO_RECOVER",
+                $"Readonly SQLite write failure at '{dbPath}'. FileState: {DescribeFileState(dbPath)}. Retrying with writable clone.",
+                ex);
+            RecoverWritableDatabase(dbPath);
+            return OpenConnectionInternal(dbPath);
+        }
+    }
 
-            doc[key] = kvp.Value ?? string.Empty;
+    private static void EnsureWritableDatabaseFiles(string dbPath)
+    {
+        EnsureWritableFile(dbPath);
+        EnsureWritableFile(dbPath + "-wal");
+        EnsureWritableFile(dbPath + "-shm");
+    }
+
+    private static void EnsureWritableFile(string path)
+    {
+        try
+        {
+            if (!File.Exists(path))
+                return;
+
+            var attributes = File.GetAttributes(path);
+            if ((attributes & FileAttributes.ReadOnly) == 0)
+                return;
+
+            File.SetAttributes(path, attributes & ~FileAttributes.ReadOnly);
+        }
+        catch (Exception ex)
+        {
+            Helpers.RuntimeLog.Write("SQLITE_FILE_ATTR", $"Failed ensuring writable file attributes for '{path}'.", ex);
+        }
+    }
+
+    private static SqliteConnection OpenConnectionInternal(string dbPath)
+    {
+        var conn = new SqliteConnection($"Data Source={dbPath};Mode=ReadWriteCreate");
+        conn.Open();
+        EnsureSchema(conn);
+        return conn;
+    }
+
+    private static bool IsReadonlySqlite(SqliteException ex)
+        => ex.SqliteErrorCode == 8
+           || ex.SqliteExtendedErrorCode == 8
+           || ex.Message.Contains("readonly", StringComparison.OrdinalIgnoreCase);
+
+    private static void RecoverWritableDatabase(string dbPath)
+    {
+        var backupPath = dbPath + ".rwcopy";
+        try
+        {
+            EnsureWritableDatabaseFiles(dbPath);
+
+            if (File.Exists(dbPath))
+            {
+                using (var source = new FileStream(dbPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var target = new FileStream(backupPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+                {
+                    source.CopyTo(target);
+                }
+
+                EnsureWritableFile(dbPath);
+                File.Delete(dbPath);
+                File.Move(backupPath, dbPath, true);
+            }
+
+            EnsureWritableDatabaseFiles(dbPath);
+            Helpers.RuntimeLog.Write(
+                "SQLITE_RO_RECOVER",
+                $"SQLite writable recovery completed for '{dbPath}'. NewState: {DescribeFileState(dbPath)}");
+        }
+        catch (Exception ex)
+        {
+            Helpers.RuntimeLog.Write(
+                "SQLITE_RO_RECOVER",
+                $"SQLite writable recovery failed for '{dbPath}'. State: {DescribeFileState(dbPath)}",
+                ex);
+        }
+        finally
+        {
+            try
+            {
+                if (File.Exists(backupPath))
+                    File.Delete(backupPath);
+            }
+            catch
+            {
+                // best effort
+            }
+        }
+    }
+
+    private static string DescribeFileState(string dbPath)
+    {
+        try
+        {
+            var exists = File.Exists(dbPath);
+            var attributes = exists ? File.GetAttributes(dbPath).ToString() : "<missing>";
+            var length = exists ? new FileInfo(dbPath).Length : 0;
+            var dir = Path.GetDirectoryName(dbPath) ?? FileSystem.AppDataDirectory;
+            var dirWritable = CanWriteDirectory(dir);
+            return $"exists={exists}, attrs={attributes}, length={length}, dir={dir}, dirWritable={dirWritable}";
+        }
+        catch (Exception ex)
+        {
+            return $"state-error:{ex.GetType().Name}:{ex.Message}";
+        }
+    }
+
+    private static bool CanWriteDirectory(string directoryPath)
+    {
+        try
+        {
+            Directory.CreateDirectory(directoryPath);
+            var probe = Path.Combine(directoryPath, $".laby_rw_probe_{Guid.NewGuid():N}");
+            using (File.Create(probe))
+            {
+            }
+
+            File.Delete(probe);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static void EnsureSchema(SqliteConnection conn)
+    {
+        if (_schemaEnsured)
+            return;
+
+        lock (SchemaSync)
+        {
+            if (_schemaEnsured)
+                return;
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = $@"
+CREATE TABLE IF NOT EXISTS {CharactersTableName}
+(
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL DEFAULT '',
+    race TEXT NOT NULL DEFAULT '',
+    race_subtype TEXT NOT NULL DEFAULT '',
+    race_subtype_key TEXT NOT NULL DEFAULT '',
+    class TEXT NOT NULL DEFAULT '',
+    player_name TEXT NOT NULL DEFAULT '',
+    notes TEXT NOT NULL DEFAULT '',
+    draft_snapshot TEXT NOT NULL DEFAULT '',
+    updated_utc TEXT NOT NULL DEFAULT '',
+    points INTEGER NOT NULL DEFAULT 0,
+    guilds_json TEXT NOT NULL DEFAULT '[]',
+    points_apps_json TEXT NOT NULL DEFAULT '[]',
+    specialisations_json TEXT NOT NULL DEFAULT '{{}}'
+);
+
+CREATE TABLE IF NOT EXISTS {ItemsTableName}
+(
+    id TEXT PRIMARY KEY NOT NULL,
+    item_type INTEGER NOT NULL DEFAULT 0,
+    maker_id TEXT NOT NULL DEFAULT '',
+    maker_name TEXT NOT NULL DEFAULT '',
+    maker_player_name TEXT NOT NULL DEFAULT '',
+    maker_class TEXT NOT NULL DEFAULT '',
+    maker_race TEXT NOT NULL DEFAULT '',
+    maker_race_subtype TEXT NOT NULL DEFAULT '',
+    maker_race_subtype_key TEXT NOT NULL DEFAULT '',
+    maker_notes TEXT NOT NULL DEFAULT '',
+    maker_points INTEGER NOT NULL DEFAULT 0,
+    witness_name TEXT NOT NULL DEFAULT '',
+    recipient_player_name TEXT NOT NULL DEFAULT '',
+    recipient_character_name TEXT NOT NULL DEFAULT '',
+    recipient_character_class TEXT NOT NULL DEFAULT '',
+    description TEXT NOT NULL DEFAULT '',
+    payload_json TEXT NOT NULL DEFAULT '',
+    isp INTEGER NOT NULL DEFAULT 0,
+    created_date TEXT NOT NULL DEFAULT '',
+    does_not_blow_up_on_death INTEGER NOT NULL DEFAULT 0,
+    assigned_character_id TEXT NOT NULL DEFAULT '',
+    assigned_character_name TEXT NOT NULL DEFAULT '',
+    assigned_character_player_name TEXT NOT NULL DEFAULT ''
+);
+
+CREATE INDEX IF NOT EXISTS idx_wallet_characters_name
+    ON {CharactersTableName}(name COLLATE NOCASE);
+
+CREATE INDEX IF NOT EXISTS idx_wallet_items_created_date
+    ON {ItemsTableName}(created_date DESC);
+
+CREATE INDEX IF NOT EXISTS idx_wallet_items_assigned_character_id
+    ON {ItemsTableName}(assigned_character_id);
+
+CREATE INDEX IF NOT EXISTS idx_wallet_items_assigned_character_name
+    ON {ItemsTableName}(assigned_character_name COLLATE NOCASE);
+
+CREATE INDEX IF NOT EXISTS idx_wallet_items_assigned_character_player_name
+    ON {ItemsTableName}(assigned_character_player_name COLLATE NOCASE);
+
+CREATE INDEX IF NOT EXISTS idx_wallet_items_maker_id
+    ON {ItemsTableName}(maker_id);";
+
+            cmd.ExecuteNonQuery();
+            _schemaEnsured = true;
+        }
+    }
+
+    private static string EnsureId(string? raw)
+    {
+        var id = (raw ?? string.Empty).Trim();
+        return id.Length == 0 ? Guid.NewGuid().ToString("N") : id;
+    }
+
+    private static DateTime EnsureCreatedDate(DateTime value)
+        => value == default ? DateTime.Now : value;
+
+    private static string ToStorageDate(DateTime value)
+        => (value == default ? DateTime.UtcNow : value).ToString("o", CultureInfo.InvariantCulture);
+
+    private static DateTime ParseStorageDate(string? raw, DateTime fallback)
+    {
+        if (DateTime.TryParse(
+                raw,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.RoundtripKind,
+                out var parsed))
+        {
+            return parsed;
         }
 
-        return doc;
+        if (DateTime.TryParse(raw, out parsed))
+            return parsed;
+
+        return fallback;
     }
 
-    private static Dictionary<string, string> ReadStringDictionary(BsonDocument doc, string fieldName)
+    private static string ReadString(SqliteDataReader reader, string column)
     {
-        var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        if (!TryGetValueIgnoreCase(doc, fieldName, out var value) || !value.IsDocument)
-            return dictionary;
-
-        foreach (var kvp in value.AsDocument)
-        {
-            var key = (kvp.Key ?? string.Empty).Trim();
-            if (key.Length == 0)
-                continue;
-
-            dictionary[key] = kvp.Value.IsString
-                ? kvp.Value.AsString
-                : (kvp.Value.IsNull ? string.Empty : kvp.Value.ToString());
-        }
-
-        return dictionary;
-    }
-
-    private static List<string> ReadStringList(BsonDocument doc, string fieldName)
-    {
-        var list = new List<string>();
-        if (!TryGetValueIgnoreCase(doc, fieldName, out var value) || !value.IsArray)
-            return list;
-
-        foreach (var item in value.AsArray)
-        {
-            if (item.IsNull)
-                continue;
-
-            list.Add(item.IsString ? item.AsString : item.ToString());
-        }
-
-        return list;
-    }
-
-    private static long ReadInt64(BsonDocument doc, string fieldName)
-    {
-        if (!TryGetValueIgnoreCase(doc, fieldName, out var value) || value.IsNull)
-            return 0;
-
-        if (value.IsInt64)
-            return value.AsInt64;
-        if (value.IsInt32)
-            return value.AsInt32;
-
-        return long.TryParse(value.ToString(), out var parsed) ? parsed : 0;
-    }
-
-    private static DateTime ReadDateTime(BsonDocument doc, string fieldName)
-    {
-        if (!TryGetValueIgnoreCase(doc, fieldName, out var value) || value.IsNull)
-            return DateTime.UtcNow;
-
-        if (value.IsDateTime)
-            return value.AsDateTime;
-
-        return DateTime.TryParse(value.ToString(), out var parsed)
-            ? parsed
-            : DateTime.UtcNow;
-    }
-
-    private static ObjectId ReadObjectId(BsonDocument doc, string fieldName)
-    {
-        if (TryGetValueIgnoreCase(doc, fieldName, out var value) && value.IsObjectId)
-            return value.AsObjectId;
-
-        return ObjectId.NewObjectId();
-    }
-
-    private static string ReadString(BsonDocument doc, string fieldName)
-    {
-        if (!TryGetValueIgnoreCase(doc, fieldName, out var value) || value.IsNull)
+        var ordinal = reader.GetOrdinal(column);
+        if (ordinal < 0 || reader.IsDBNull(ordinal))
             return string.Empty;
 
-        if (value.IsString)
-            return value.AsString ?? string.Empty;
-
-        return value.ToString();
+        return reader.GetString(ordinal);
     }
 
-    private static bool TryGetValueIgnoreCase(BsonDocument doc, string fieldName, out BsonValue value)
+    private static int ReadInt32(SqliteDataReader reader, string column)
     {
-        if (doc.TryGetValue(fieldName, out value))
-            return true;
+        var ordinal = reader.GetOrdinal(column);
+        if (ordinal < 0 || reader.IsDBNull(ordinal))
+            return 0;
 
-        foreach (var kvp in doc)
+        var value = reader.GetValue(ordinal);
+        return value switch
         {
-            if (!string.Equals(kvp.Key, fieldName, StringComparison.OrdinalIgnoreCase))
-                continue;
+            int i => i,
+            long l when l >= int.MinValue && l <= int.MaxValue => (int)l,
+            _ => int.TryParse(value.ToString(), out var parsed) ? parsed : 0
+        };
+    }
 
-            value = kvp.Value;
-            return true;
+    private static long ReadInt64(SqliteDataReader reader, string column)
+    {
+        var ordinal = reader.GetOrdinal(column);
+        if (ordinal < 0 || reader.IsDBNull(ordinal))
+            return 0;
+
+        var value = reader.GetValue(ordinal);
+        return value switch
+        {
+            long l => l,
+            int i => i,
+            _ => long.TryParse(value.ToString(), out var parsed) ? parsed : 0
+        };
+    }
+
+    private static string SerializeStringList(IEnumerable<string>? values)
+        => JsonSerializer.Serialize((values ?? Enumerable.Empty<string>())
+            .Select(v => v ?? string.Empty)
+            .ToList());
+
+    private static List<string> DeserializeStringList(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return new List<string>();
+
+        try
+        {
+            return JsonSerializer.Deserialize<List<string>>(json)
+                   ?? new List<string>();
+        }
+        catch
+        {
+            return new List<string>();
+        }
+    }
+
+    private static string SerializeStringDictionary(IDictionary<string, string>? values)
+    {
+        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (values != null)
+        {
+            foreach (var pair in values)
+            {
+                var key = (pair.Key ?? string.Empty).Trim();
+                if (key.Length == 0)
+                    continue;
+
+                dict[key] = pair.Value ?? string.Empty;
+            }
         }
 
-        value = BsonValue.Null;
-        return false;
+        return JsonSerializer.Serialize(dict);
+    }
+
+    private static Dictionary<string, string> DeserializeStringDictionary(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        try
+        {
+            var parsed = JsonSerializer.Deserialize<Dictionary<string, string>>(json)
+                         ?? new Dictionary<string, string>();
+            return new Dictionary<string, string>(parsed, StringComparer.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        }
     }
 }

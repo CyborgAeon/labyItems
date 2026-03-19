@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using labyItems.Helpers;
+using labyItems.Models;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -104,6 +106,23 @@ public sealed class ItemLineVm : INotifyPropertyChanged
         _isReadOnly = isReadOnly;
         _text = text ?? string.Empty;
     }
+}
+
+public sealed class CharacterItemEntryVm
+{
+    public CharacterItemEntryVm(Item item)
+    {
+        Item = item ?? throw new ArgumentNullException(nameof(item));
+        Name = ItemDisplayHelper.BuildDisplayName(item);
+        Isp = item.Isp;
+        IsMonsterPointItem = ItemDisplayHelper.IsMonsterPointItem(item);
+    }
+
+    public Item Item { get; }
+    public string Name { get; }
+    public int Isp { get; }
+    public string IspText => Isp.ToString();
+    public bool IsMonsterPointItem { get; }
 }
 
 public sealed class MultiClassEntryVm

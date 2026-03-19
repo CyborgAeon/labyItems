@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using System.Collections.Generic;
@@ -191,7 +192,9 @@ public sealed class BattleboardExportService : IBattleboardExportService
         return outPath;
     }
 
-    private static readonly Regex ArmourTokenRegex = new(@"([+-]?\d+)\s*(PAC|DAC|MAC|SAC)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex ArmourTokenRegex = new(
+        @"([+-]?\d+)\s*(PAC|DAC|MAC|SAC)",
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
 
     private static (int Pac, int Dac, int Mac, int Sac) ExtractArmourBonuses(IEnumerable<AbilityDraft> abilities)
     {

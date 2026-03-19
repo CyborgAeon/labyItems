@@ -54,7 +54,7 @@
               RowDefinitions="*">
 
             <ContentView IsVisible="{Binding IsSearchStep}">
-                <Grid RowDefinitions="Auto,Auto,*"
+                <Grid RowDefinitions="Auto,Auto,Auto,*"
                       RowSpacing="8">
                     <Entry Grid.Row="0"
                            Placeholder="Search multi-classes..."
@@ -81,7 +81,20 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <Grid Grid.Row="2">
+                    <Grid Grid.Row="2"
+                          ColumnDefinitions="*,Auto"
+                          ColumnSpacing="8">
+                        <Label Text="Enforce two-bracket standard"
+                               VerticalOptions="Center"
+                               FontSize="12"
+                               Opacity="0.75"/>
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding EnforceBracketGuard, Mode=TwoWay}"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center"/>
+                    </Grid>
+
+                    <Grid Grid.Row="3">
                         <CollectionView ItemsSource="{Binding FilteredClasses}"
                                         ItemTemplate="{StaticResource ClassCardTemplate}"
                                         SelectionMode="None"

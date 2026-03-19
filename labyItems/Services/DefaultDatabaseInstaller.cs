@@ -31,6 +31,7 @@ namespace labyItems.Services
 
 			if (File.Exists(dbPath))
 			{
+				EnsureWritableFile(dbPath);
 				_logger.LogInformation("Database already exists at {Path}. Preserving existing user database.", dbPath);
 				return;
 			}
@@ -62,6 +63,7 @@ namespace labyItems.Services
 				if (hasPackaged && File.Exists(packagedTempPath))
 				{
 					File.Move(packagedTempPath, dbPath, true);
+					EnsureWritableFile(dbPath);
 					_logger.LogInformation("Copied packaged {DbFile} to {Path}", DbFileName, dbPath);
 				}
 			}
@@ -99,6 +101,59 @@ namespace labyItems.Services
 			catch
 			{
 				// best effort
+			}
+		}
+
+		private void EnsureWritableFile(string path)
+		{
+			try
+			{
+				if (!File.Exists(path))
+					return;
+
+				var attributes = File.GetAttributes(path);
+				if ((attributes & FileAttributes.ReadOnly) != 0)
+					File.SetAttributes(path, attributes & ~FileAttributes.ReadOnly);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogWarning(ex, "Failed to clear readonly attribute for database file {Path}", path);
+			}
+
+			try
+			{
+				using var _ = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogWarning(ex, "Database file {Path} is not writable after attribute check. Rewriting file.", path);
+				RewriteWritable(path);
+			}
+		}
+
+		private void RewriteWritable(string path)
+		{
+			var tempPath = path + ".rw";
+			try
+			{
+				if (!File.Exists(path))
+					return;
+
+				using (var source = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+				using (var target = new FileStream(tempPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+				{
+					source.CopyTo(target);
+				}
+
+				File.Move(tempPath, path, true);
+			}
+			catch
+			{
+				_logger.LogWarning("Failed to rewrite writable database copy for {Path}", path);
+			}
+			finally
+			{
+				CleanupTemp(tempPath);
 			}
 		}
 

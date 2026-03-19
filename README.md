@@ -42,6 +42,12 @@ $HOME/.dotnet/dotnet watch \
   run --configuration Debug
 ```
 
+If you just ran an iOS-only build and `dotnet watch` reports `NETSDK1005` for `net10.0-android`, refresh restore assets with:
+
+```bash
+$HOME/.dotnet/dotnet restore labyItems/labyItems.csproj -p:TargetFramework=net10.0-android
+```
+
 ## unit tests (logic-only)
 
 MAUI UI layers are hard to run in fast local unit tests, so this repo includes logic-focused tests (no device/emulator required):
@@ -50,7 +56,7 @@ MAUI UI layers are hard to run in fast local unit tests, so this repo includes l
 $HOME/.dotnet/dotnet test tests/labyItems.Tests/labyItems.Tests.csproj
 ```
 
-## iOS (build latest + push to simulator)
+## iOS (build latest + push to simulator, keep app data)
 
 Make sure a simulator is booted, then:
 
@@ -65,9 +71,15 @@ $HOME/.dotnet/dotnet build labyItems/labyItems.csproj \
   -p:RuntimeIdentifier=iossimulator-arm64
 APP_PATH="labyItems/bin/Debug/net10.0-ios/iossimulator-arm64/labyItems.app"
 xcrun simctl terminate "$SIMULATOR_UDID" "$PKG" || true
-xcrun simctl uninstall "$SIMULATOR_UDID" "$PKG" || true
 xcrun simctl install "$SIMULATOR_UDID" "$APP_PATH"
 xcrun simctl launch "$SIMULATOR_UDID" "$PKG"
+```
+
+The install command above updates the app in place and preserves simulator app data (including saved character data).
+If you explicitly want a clean reset, run:
+
+```bash
+xcrun simctl uninstall "$SIMULATOR_UDID" "$PKG"
 ```
 
 `dotnet build -t:Run` on iOS stays attached to app output/logs and can look like it is "stuck"; use `Ctrl+C` to detach.
@@ -81,8 +93,34 @@ SIMULATOR_UDID="$(xcrun simctl list devices | awk -F '[()]' '/Booted/{print $2; 
 ./tools/migrate-any-data.sh "$DB"
 APP_DATA_DIR="$(xcrun simctl get_app_container "$SIMULATOR_UDID" "$PKG" data)"
 cp "$DB" "$APP_DATA_DIR/Library/laby.db"
+chmod 666 "$APP_DATA_DIR/Library/laby.db"
+rm -f "$APP_DATA_DIR/Library/laby.db-wal" "$APP_DATA_DIR/Library/laby.db-shm"
 xcrun simctl terminate "$SIMULATOR_UDID" "$PKG" || true
 xcrun simctl launch "$SIMULATOR_UDID" "$PKG"
+```
+
+run as if you're an end IOS user (strict AOT simulator, clean rebuild)
+
+```bash
+rm -rf labyItems/bin/Debug/net10.0-ios labyItems/obj/Debug/net10.0-ios
+$HOME/.dotnet/dotnet build labyItems/labyItems.csproj \
+  -t:Rebuild \
+  -f net10.0-ios \
+  -c Debug \
+  -p:UseIosWorkload=true \
+  -p:RuntimeIdentifier=iossimulator-arm64 \
+  -p:IosStrictAotSimulator=true \
+  -p:IosFailFastFullAotSimulator=false \
+  -v minimal
+```
+
+get error logs:
+
+```bash
+DATA_DIR="$(xcrun simctl get_app_container booted bard.uk.labyitems data)"
+find "$DATA_DIR" -name runtime.log -maxdepth 5 -print
+cat "$DATA_DIR"/Library/runtime.log
+xcrun simctl spawn booted log show --style compact --last 10m --predicate 'process == "labyItems"'
 ```
 
 If you hit `NETSDK1147` (missing `ios`/`maui-android`) or similar, you’re probably running mixed dotnet installs. This repo uses `$HOME/.dotnet/dotnet`, so install workloads with that exact binary (and do not use `sudo`), e.g.:

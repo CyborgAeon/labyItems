@@ -1,6 +1,5 @@
 using labyItems.Models;
 using labyItems.Services;
-using LiteDB;
 
 namespace labyItems.Pages;
 
@@ -21,7 +20,7 @@ public partial class ItemTemplates : ContentPage
         LoadItems(_character.Id);
     }
 
-    private void LoadItems(ObjectId characterId)
+    private void LoadItems(string characterId)
     {
         var items = LiteDbService.GetTemplatesByCharacterId(characterId).ToList();
         ItemsView.ItemsSource = items;

@@ -44,20 +44,12 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="Abilities"
-                               FontAttributes="Bold"/>
-                        <Grid ColumnDefinitions="*,Auto"
-                              ColumnSpacing="8">
-                            <controls:DictionarySearchBar x:Name="AbilitySearch"
-                                                          x:TypeArguments="viewModels:ManuAbilityOption"
-                                                          SelectedValue="{Binding SelectedAbilityOption, Mode=TwoWay}"
-                                                          PlaceholderText="Type ability name"
-                                                          SelectionDisplayMemberPath="Name"/>
-                            <Button Grid.Column="1"
-                                    Text="Add"
-                                    Command="{Binding AddAbilityCommand}"
-                                    IsEnabled="{Binding CanAddAbility}"/>
-                        </Grid>
+                        <controls:AdvanceSectionActionRow x:Name="AbilitiesActionRow"
+                                                          IconGlyph="&#xF005;"
+                                                          Heading="Abilities"
+                                                          Subheading="Search and add advancement abilities."
+                                                          ActionGlyph="&#xF067;"
+                                                          ActionClicked="OnOpenAbilitySearchClicked"/>
                         <Label Text="{Binding AbilityPointsSummary}"
                                FontSize="12"
                                Opacity="0.7"/>
@@ -107,23 +99,13 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="Notes"
-                               FontAttributes="Bold"/>
-                        <Editor Text="{Binding Notes, Mode=TwoWay}"
-                                AutoSize="TextChanges"
-                                Placeholder="Add notes about advancement, downtime, or approvals."/>
-                    </VerticalStackLayout>
-
-                    <VerticalStackLayout Spacing="8">
-                        <Grid ColumnDefinitions="*,Auto"
-                              ColumnSpacing="8">
-                            <Label Text="Multi-Race"
-                                   FontAttributes="Bold"/>
-                            <Button Grid.Column="1"
-                                    Text="Open wizard"
-                                    Clicked="OnOpenMultiRaceWizardClicked"/>
-                        </Grid>
-                        <Label Text="No multi-race selected."
+                        <controls:AdvanceSectionActionRow x:Name="MultiRaceActionRow"
+                                                          IconGlyph="&#xF0C0;"
+                                                          Heading="Multi-Race"
+                                                          Subheading="Select one path and track levels."
+                                                          ActionGlyph="&#xF067;"
+                                                          ActionClicked="OnOpenMultiRaceWizardClicked"/>
+                        <Label Text="{Binding MultiRaceEmptyStateText}"
                                Opacity="0.7"
                                IsVisible="{Binding HasMultiRace, Converter={StaticResource InverseBoolConverter}}"/>
 
@@ -228,21 +210,16 @@
                             </Grid>
                         </Border>
 
-                        <Button Text="Open specialisation"
-                                IsVisible="{Binding HasMultiRaceChoiceSets}"
-                                Clicked="OnOpenMultiRaceSpecialisationClicked"/>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="8">
-                        <Grid ColumnDefinitions="*,Auto"
-                              ColumnSpacing="8">
-                            <Label Text="Multi-Class"
-                                   FontAttributes="Bold"/>
-                            <Button Grid.Column="1"
-                                    Text="Open wizard"
-                                    Clicked="OnOpenMultiClassWizardClicked"/>
-                        </Grid>
-                        <Label Text="No multiclasses selected."
+                        <controls:AdvanceSectionActionRow x:Name="MultiClassActionRow"
+                                                          IconGlyph="&#xF02D;"
+                                                          Heading="Multi-Class"
+                                                          Subheading="Choose classes and set purchased levels."
+                                                          ActionGlyph="&#xF067;"
+                                                          ActionClicked="OnOpenMultiClassWizardClicked"/>
+                        <Label Text="{Binding MultiClassEmptyStateText}"
                                Opacity="0.7"
                                IsVisible="{Binding HasMultiClasses, Converter={StaticResource InverseBoolConverter}}"/>
 
@@ -353,48 +330,126 @@
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
 
-                        <Button Text="Open multiclass specialisation"
-                                IsVisible="{Binding HasMultiClassChoiceSets}"
-                                Clicked="OnOpenMultiClassSpecialisationClicked"/>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="8">
-                        <Grid ColumnDefinitions="*,Auto"
-                              ColumnSpacing="8">
-                            <Label Text="Items"
-                                   FontAttributes="Bold"/>
-                            <Button Grid.Column="1"
-                                    Text="+ Add item"
-                                    Command="{Binding AddItemCommand}"/>
+                        <controls:AdvanceSectionActionRow x:Name="IspItemActionRow"
+                                                          IconGlyph="&#xF187;"
+                                                          Heading="Items"
+                                                          Subheading="Create and assign an ISP item."
+                                                          ActionGlyph="&#xF067;"
+                                                          ActionClicked="OnOpenIspItemCalculatorClicked"/>
+                        <controls:AdvanceSectionActionRow x:Name="MpItemActionRow"
+                                                          IconGlyph="&#xF279;"
+                                                          Heading="Add Monster Point Item"
+                                                          Subheading="Use the MP item builder and assign it to this character."
+                                                          ActionGlyph="&#xF067;"
+                                                          ActionClicked="OnOpenMonsterPointCalculatorClicked"/>
+
+                        <Label Text="No assigned items yet."
+                               Opacity="0.7"
+                               IsVisible="{Binding HasItems, Converter={StaticResource InverseBoolConverter}}"/>
+
+                        <Grid ColumnDefinitions="*,72,30,30,30"
+                              ColumnSpacing="6"
+                              Padding="10,0"
+                              IsVisible="{Binding HasItems}">
+                            <Label Text="Name"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"/>
+                            <Label Grid.Column="1"
+                                   Text="ISP"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="2"
+                                   Grid.ColumnSpan="3"
+                                   Text="Actions"
+                                   FontAttributes="Bold"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   HorizontalTextAlignment="Center"/>
                         </Grid>
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}"
                                              Spacing="8">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid ColumnDefinitions="*,Auto"
-                                          ColumnSpacing="8">
-                                        <Entry Text="{Binding Text, Mode=TwoWay}"
-                                               IsReadOnly="{Binding IsReadOnly}"
-                                               Placeholder="Item"/>
-                                        <ImageButton Grid.Column="1"
-                                                     HeightRequest="36"
-                                                     WidthRequest="36"
-                                                     Padding="6"
-                                                     BackgroundColor="Transparent"
-                                                     IsVisible="{Binding ShowDeleteButton}"
-                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveItemCommand}"
-                                                     CommandParameter="{Binding .}">
-                                            <ImageButton.Source>
-                                                <FontImageSource FontFamily="FASolid"
-                                                                 Glyph="&#xF2ED;"
-                                                                 Size="50"
-                                                                 Color="{StaticResource SubtleTextColor}"/>
-                                            </ImageButton.Source>
-                                        </ImageButton>
-                                    </Grid>
+                                    <Border StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 8"
+                                            BackgroundColor="#F9FAFB">
+                                        <Grid Padding="10,8"
+                                              ColumnDefinitions="*,72,30,30,30"
+                                              ColumnSpacing="6">
+                                            <Label Text="{Binding Name}"
+                                                   VerticalTextAlignment="Center"
+                                                   MaxLines="1"
+                                                   LineBreakMode="TailTruncation"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding IspText}"
+                                                   FontAttributes="Bold"
+                                                   Opacity="0.75"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"/>
+                                            <Button Grid.Column="2"
+                                                    Text="&#xF1FC;"
+                                                    FontFamily="FASolid"
+                                                    FontSize="12"
+                                                    Padding="0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                    HeightRequest="18"
+                                                    WidthRequest="18"
+                                                    MinimumHeightRequest="0"
+                                                    MinimumWidthRequest="0"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center"
+                                                    Clicked="OnEditItemClicked"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="3"
+                                                    Text="&#xF05A;"
+                                                    FontFamily="FASolid"
+                                                    FontSize="12"
+                                                    Padding="0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                    HeightRequest="18"
+                                                    WidthRequest="18"
+                                                    MinimumHeightRequest="0"
+                                                    MinimumWidthRequest="0"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center"
+                                                    Clicked="OnViewItemInfoClicked"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="4"
+                                                    Text="&#xF2ED;"
+                                                    FontFamily="FASolid"
+                                                    FontSize="12"
+                                                    Padding="0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                    HeightRequest="18"
+                                                    WidthRequest="18"
+                                                    MinimumHeightRequest="0"
+                                                    MinimumWidthRequest="0"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveItemCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Notes"
+                               FontAttributes="Bold"/>
+                        <Editor Text="{Binding Notes, Mode=TwoWay}"
+                                AutoSize="TextChanges"
+                                Placeholder="Add notes about advancement, downtime, or approvals."/>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>

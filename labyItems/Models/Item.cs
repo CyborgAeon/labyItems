@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 namespace labyItems.Models;
-using LiteDB;
 
-public class Character {
-    [BsonId]
-    public ObjectId Id { get; set; }
+public class Character
+{
+    public string Id { get; set; } = string.Empty;
 
     public string Name { get; set; } = string.Empty;
     public string Race { get; set; } = string.Empty;
@@ -25,8 +24,7 @@ public class Character {
 
 public class Item
 {
-    [BsonId]
-    public ObjectId Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     public ItemTypeEnum ItemType { get; set; }
     public Character Maker { get; set; } = new();

@@ -64,8 +64,12 @@
                                                Opacity="0.7"/>
                                     </Grid>
 
-                                    <controls:ChipGroup Items="{Binding Options}"
-                                                        SelectedItem="{Binding SelectedOptionDisplay, Mode=TwoWay}"/>
+                                    <controls:DictionarySearchBar x:TypeArguments="x:String"
+                                                                  ItemsSource="{Binding SearchOptions}"
+                                                                  SelectedText="{Binding SelectedOptionDisplay, Mode=TwoWay}"
+                                                                  PlaceholderText="Search talents"
+                                                                  AllowCustomOptions="False"
+                                                                  HorizontalOptions="FillAndExpand"/>
 
                                     <Label Text="No granted abilities for this option."
                                            Opacity="0.7"
@@ -85,27 +89,32 @@
                                                              Spacing="2">
                                             <BindableLayout.ItemTemplate>
                                                 <DataTemplate x:DataType="viewModels:ChoiceSetAbilityRowVm">
-                                                    <Grid ColumnDefinitions="*,Auto"
-                                                          ColumnSpacing="8"
-                                                          Padding="0,2">
-                                                        <Label Text="{Binding DisplayName}"
-                                                               LineBreakMode="WordWrap"/>
-                                                        <Button Grid.Column="1"
-                                                                Text="&#xF05A;"
-                                                                FontFamily="FASolid"
-                                                                FontSize="12"
-                                                                Padding="0"
-                                                                BackgroundColor="Transparent"
-                                                                TextColor="{StaticResource SubtleTextColor}"
-                                                                HeightRequest="18"
-                                                                WidthRequest="18"
-                                                                MinimumHeightRequest="0"
-                                                                MinimumWidthRequest="0"
-                                                                HorizontalOptions="Center"
-                                                                VerticalOptions="Center"
-                                                                Clicked="OnAbilityInfoClicked"
-                                                                CommandParameter="{Binding .}"/>
-                                                    </Grid>
+                                                    <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                                            StrokeThickness="1"
+                                                            StrokeShape="RoundRectangle 8"
+                                                            BackgroundColor="{StaticResource White}"
+                                                            Padding="10,8">
+                                                        <Grid ColumnDefinitions="*,Auto"
+                                                              ColumnSpacing="8">
+                                                            <Label Text="{Binding DisplayName}"
+                                                                   LineBreakMode="WordWrap"/>
+                                                            <Button Grid.Column="1"
+                                                                    Text="&#xF05A;"
+                                                                    FontFamily="FASolid"
+                                                                    FontSize="12"
+                                                                    Padding="0"
+                                                                    BackgroundColor="Transparent"
+                                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                                    HeightRequest="18"
+                                                                    WidthRequest="18"
+                                                                    MinimumHeightRequest="0"
+                                                                    MinimumWidthRequest="0"
+                                                                    HorizontalOptions="Center"
+                                                                    VerticalOptions="Center"
+                                                                    Clicked="OnAbilityInfoClicked"
+                                                                    CommandParameter="{Binding .}"/>
+                                                        </Grid>
+                                                    </Border>
                                                 </DataTemplate>
                                             </BindableLayout.ItemTemplate>
                                         </VerticalStackLayout>

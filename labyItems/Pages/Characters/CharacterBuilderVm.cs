@@ -35,7 +35,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private AlignmentRule? _raceAlignmentRule;
     private AlignmentRule? _classAlignmentRule;
 
-    private static readonly Regex _armourValueRegex = new(@"([+-]?\d+)\s*(PAC|DAC|MAC|SAC)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex _armourValueRegex = new(
+        @"([+-]?\d+)\s*(PAC|DAC|MAC|SAC)",
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
 
     private void Raise([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

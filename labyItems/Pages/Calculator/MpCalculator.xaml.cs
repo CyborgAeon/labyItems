@@ -9,12 +9,19 @@ public partial class MpCalculator : TabbedPage
     private bool _isHandlingBackTabSelection;
     private Page? _lastNonBackTab;
 
-    public MpCalculator()
+    public MpCalculator(Func<MpSubmissionPayload, Task>? onCharacterItemSubmit = null)
     {
         InitializeComponent();
         TabbedPageChromeHelper.ApplyHiddenNavigation(this);
         foreach (var page in Children)
             TabbedPageChromeHelper.ConfigureTabPageChrome(page);
+
+        if (onCharacterItemSubmit != null)
+        {
+            BasicTab.CharacterItemSubmitHandler = onCharacterItemSubmit;
+            CrewTab.CharacterItemSubmitHandler = onCharacterItemSubmit;
+            ThemeDayTab.CharacterItemSubmitHandler = onCharacterItemSubmit;
+        }
 
         CurrentPageChanged += OnCurrentPageChanged;
         CurrentPage = BasicTab;

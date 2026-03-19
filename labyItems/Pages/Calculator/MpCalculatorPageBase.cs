@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Controls;
+using labyItems.Helpers;
 using labyItems.Models.Enums;
 using labyItems.Pages;
 using labyItems.Services;
@@ -50,6 +51,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     public ObservableCollection<ContributionRow> Breakdown => _breakdown;
 
     public ICommand ContinueCommand => new Command(async () => await HandleSubmitAsync());
+    public Func<MpSubmissionPayload, Task>? CharacterItemSubmitHandler { get; set; }
 
     public int TotalMp
     {
@@ -244,6 +246,22 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         }
 
         var payload = BuildSubmissionPayload();
+        if (CharacterItemSubmitHandler != null)
+        {
+            try
+            {
+                await CharacterItemSubmitHandler(payload);
+                await Navigation.PopAsync();
+            }
+            catch (Exception ex)
+            {
+                RuntimeLog.Write("MP_SAVE_CALLBACK", "Character MP item save callback failed.", ex);
+                await DisplayAlert("Save failed", ex.Message, "OK");
+            }
+
+            return;
+        }
+
         await Navigation.PushAsync(new RecipientPage(null, payload));
     }
 

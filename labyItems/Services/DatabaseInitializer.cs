@@ -20,13 +20,18 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 {
 	private readonly IServiceProvider _services;
 	private readonly ILogger<DatabaseInitializer> _logger;
+    private readonly IEvolutionDataSynchronizer _evolutionDataSynchronizer;
 	private readonly SemaphoreSlim _initLock = new(1, 1);
 	private bool _initialized;
 
-	public DatabaseInitializer(IServiceProvider services, ILogger<DatabaseInitializer> logger)
+	public DatabaseInitializer(
+        IServiceProvider services,
+        ILogger<DatabaseInitializer> logger,
+        IEvolutionDataSynchronizer evolutionDataSynchronizer)
 	{
 		_services = services;
 		_logger = logger;
+        _evolutionDataSynchronizer = evolutionDataSynchronizer;
 	}
 
 	public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -97,5 +102,15 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 			}
 		}
 #endif
+
+        try
+        {
+            await _evolutionDataSynchronizer.EnsureCurrentAsync(dbPath, cancellationToken);
+            log2.LogInformation("Evolution defaults are synchronized.");
+        }
+        catch (Exception ex)
+        {
+            log2.LogError(ex, "Evolution default sync failed: {Message}", ex.Message);
+        }
 	}
 }

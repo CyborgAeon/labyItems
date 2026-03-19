@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 
 namespace labyItems.Models.ViewModels;
@@ -34,7 +35,9 @@ public static class LevelAbilityRowBuilder
         "U"
     };
 
-    private static readonly Regex WeaponSkillTokenRegex = new("[A-Za-z]+", RegexOptions.Compiled);
+    private static readonly Regex WeaponSkillTokenRegex = new(
+        "[A-Za-z]+",
+        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled));
 
     public static LevelAbilityRowVm Build(
         int level,
