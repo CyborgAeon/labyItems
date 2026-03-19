@@ -148,18 +148,18 @@ jobs:
             -p:CodesignProvision="$CODESIGN_PROVISION_UUID" \
             -p:ApplicationDisplayVersion="$APP_DISPLAY_VERSION" \
             -p:ApplicationVersion="$APP_BUILD_NUMBER"
-            - name: Find IPA
-              id: ipa
-              run: |
-                set -euo pipefail
-                IPA_PATH=$(find labyItems/bin/Release/net10.0-ios/ios-arm64/publish -name "*.ipa" | head -n1)
-                if [ -z "$IPA_PATH" ]; then
-                  echo "No IPA found." >&2
-                  find labyItems/bin/Release/net10.0-ios -maxdepth 5 -type f | sed -n '1,200p'
-                  exit 1
-                fi
-                echo "ipa_path=$IPA_PATH" >> "$GITHUB_OUTPUT"
-                echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
+      - name: Find IPA
+        id: ipa
+        run: |
+          set -euo pipefail
+          IPA_PATH=$(find labyItems/bin/Release/net10.0-ios/ios-arm64/publish -name "*.ipa" | head -n1)
+          if [ -z "$IPA_PATH" ]; then
+            echo "No IPA found." >&2
+            find labyItems/bin/Release/net10.0-ios -maxdepth 5 -type f | sed -n '1,200p'
+            exit 1
+          fi
+          echo "ipa_path=$IPA_PATH" >> "$GITHUB_OUTPUT"
+          echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
