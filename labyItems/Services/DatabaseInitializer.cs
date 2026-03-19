@@ -21,17 +21,20 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 	private readonly IServiceProvider _services;
 	private readonly ILogger<DatabaseInitializer> _logger;
     private readonly IEvolutionDataSynchronizer _evolutionDataSynchronizer;
+    private readonly IAbilityDefinitionDataSynchronizer _abilityDefinitionDataSynchronizer;
 	private readonly SemaphoreSlim _initLock = new(1, 1);
 	private bool _initialized;
 
 	public DatabaseInitializer(
         IServiceProvider services,
         ILogger<DatabaseInitializer> logger,
-        IEvolutionDataSynchronizer evolutionDataSynchronizer)
+        IEvolutionDataSynchronizer evolutionDataSynchronizer,
+        IAbilityDefinitionDataSynchronizer abilityDefinitionDataSynchronizer)
 	{
 		_services = services;
 		_logger = logger;
         _evolutionDataSynchronizer = evolutionDataSynchronizer;
+        _abilityDefinitionDataSynchronizer = abilityDefinitionDataSynchronizer;
 	}
 
 	public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -111,6 +114,16 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         catch (Exception ex)
         {
             log2.LogError(ex, "Evolution default sync failed: {Message}", ex.Message);
+        }
+
+        try
+        {
+            await _abilityDefinitionDataSynchronizer.EnsureCurrentAsync(dbPath, cancellationToken);
+            log2.LogInformation("Ability definition defaults are synchronized.");
+        }
+        catch (Exception ex)
+        {
+            log2.LogError(ex, "Ability definition sync failed: {Message}", ex.Message);
         }
 	}
 }

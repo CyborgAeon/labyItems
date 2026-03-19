@@ -66,7 +66,11 @@ public static class SpecialisationDefinitionRepository
     private static SpecialisationIndex? _cache;
 
     public static void InvalidateCache()
-        => _cache = null;
+    {
+        _cache = null;
+        labyItems.Services.AbilityDetailsLookupService.InvalidateCache();
+        labyItems.Services.AbilityDefinitionLookupService.InvalidateCache();
+    }
 
     public static async Task<SpecialisationIndex> GetIndexAsync()
     {

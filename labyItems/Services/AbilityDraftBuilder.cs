@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using labyItems.Models.Abilities;
 using labyItems.Models.Characters;
 
 namespace labyItems.Services;
@@ -80,6 +81,7 @@ public static class AbilityDraftBuilder
     {
         var draft = new AbilityDraft
         {
+            AbilityKey = AbilityKey.Build(def),
             Name = def.Name ?? string.Empty,
             BattleboardNameOverride = def.BattleboardNameOverride,
             UpdateKey = def.UpdateKey,

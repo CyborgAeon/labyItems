@@ -47,6 +47,10 @@
     <Compile Include="../../labyItems/Services/Specialisations/CharacterSpecialisationScreenCalculator.cs" Link="Source/CharacterSpecialisationScreenCalculator.cs" />
     <Compile Include="../../labyItems/Services/BattleboardService.cs" Link="Source/BattleboardService.cs" />
     <Compile Include="../../labyItems/Services/BattleboardAdvancementEffectResolver.cs" Link="Source/BattleboardAdvancementEffectResolver.cs" />
+    <Compile Include="../../labyItems/Services/BattleboardAbilityEffectResolver.cs" Link="Source/BattleboardAbilityEffectResolver.cs" />
+    <Compile Include="../../labyItems/Services/AbilityDefinitionLookupService.cs" Link="Source/AbilityDefinitionLookupService.cs" />
+    <Compile Include="../../labyItems/Services/AbilityEffects/AbilityEffectEvaluator.cs" Link="Source/AbilityEffectEvaluator.cs" />
+    <Compile Include="../../labyItems/Services/AbilityEffects/TextFallbackEffectApplier.cs" Link="Source/TextFallbackEffectApplier.cs" />
     <Compile Include="../../labyItems/Services/BattleboardArmourCalculator.cs" Link="Source/BattleboardArmourCalculator.cs" />
     <Compile Include="../../labyItems/Services/BattleboardLifeCalculator.cs" Link="Source/BattleboardLifeCalculator.cs" />
     <Compile Include="../../labyItems/Services/BattleboardInnateCalculator.cs" Link="Source/BattleboardInnateCalculator.cs" />
@@ -65,6 +69,11 @@
     <Compile Include="../../labyItems/Models/ItemTypeEnum.cs" Link="Source/ItemTypeEnum.cs" />
     <Compile Include="../../labyItems/Models/RecipientInfo.cs" Link="Source/RecipientInfo.cs" />
     <Compile Include="../../labyItems/Models/Characters/Ability.cs" Link="Source/Ability.cs" />
+    <Compile Include="../../labyItems/Models/Abilities/AbilityKey.cs" Link="Source/AbilityKey.cs" />
+    <Compile Include="../../labyItems/Models/Abilities/Effects/AbilityEffectInstruction.cs" Link="Source/AbilityEffectInstruction.cs" />
+    <Compile Include="../../labyItems/Models/Abilities/Effects/EffectCondition.cs" Link="Source/EffectCondition.cs" />
+    <Compile Include="../../labyItems/Models/Abilities/Effects/AbilityEffectInstance.cs" Link="Source/AbilityEffectInstance.cs" />
+    <Compile Include="../../labyItems/Models/Abilities/Effects/AbilityEffectEvaluationResult.cs" Link="Source/AbilityEffectEvaluationResult.cs" />
     <Compile Include="../../labyItems/Models/Characters/AbilityDefinition.cs" Link="Source/AbilityDefinition.cs" />
     <Compile Include="../../labyItems/Models/Characters/Alignment.cs" Link="Source/Alignment.cs" />
     <Compile Include="../../labyItems/Models/Characters/CharacterDraft.cs" Link="Source/CharacterDraft.cs" />

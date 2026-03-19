@@ -16,9 +16,12 @@ public sealed class AbilityEntryVm : INotifyPropertyChanged
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
     private readonly Action _onChanged;
+    private readonly string _abilityKey;
     private string _name;
     private int _cost;
     private int _runningTotal;
+
+    public string AbilityKey => _abilityKey;
 
     public string Name
     {
@@ -62,11 +65,12 @@ public sealed class AbilityEntryVm : INotifyPropertyChanged
     public string NameWithCost => $"{Name} ({Cost})";
     public string RunningTotalText => $"Total: {RunningTotal}";
 
-    public AbilityEntryVm(string name, int cost, Action onChanged)
+    public AbilityEntryVm(string name, int cost, string abilityKey, Action onChanged)
     {
         _name = name ?? string.Empty;
         _cost = cost;
         _onChanged = onChanged;
+        _abilityKey = (abilityKey ?? string.Empty).Trim();
     }
 
     public void SetRunningTotal(int total)

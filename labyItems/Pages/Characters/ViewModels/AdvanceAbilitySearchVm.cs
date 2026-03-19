@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Input;
 using labyItems.Models.Characters;
+using labyItems.Models.Abilities;
 using labyItems.Services;
 using Microsoft.Maui.Graphics;
 
@@ -364,7 +365,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
     }
 
     private static string BuildAbilityKey(EvolutionService.AbilityResult ability)
-        => $"{Math.Max(0, ability.Table)}|{(ability.Index ?? string.Empty).Trim().ToLowerInvariant()}";
+        => AbilityKey.Build(ability);
 
     private static void ReplaceItems<T>(ObservableCollection<T> target, IEnumerable<T> source)
     {

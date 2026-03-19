@@ -59,9 +59,12 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var lifeTotals = BattleboardLifeCalculator.Calculate(draft, assignedItems);
         var itemArmour = BattleboardArmourCalculator.Calculate(draft, assignedItems);
         var resolvedInnates = BattleboardInnateCalculator.Calculate(draft, assignedItems);
+        var abilityEffects = await BattleboardAbilityEffectResolver.ResolveAsync(draft.Abilities);
         var advancementEffects = await BattleboardAdvancementEffectResolver.ResolveAsync(draft.AdvancementAbilities);
         var effectiveResistanceLevels = BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
-            draft.ResistanceLevels,
+            BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
+                draft.ResistanceLevels,
+                abilityEffects.ResistanceOverrides),
             advancementEffects.ResistanceOverrides);
 
         var pools = (draft.PowerPools ?? new Dictionary<string, int>())
@@ -156,9 +159,14 @@ public sealed class BattleboardExportService : IBattleboardExportService
             .Select(FormatAbilityText)
             .Where(v => !string.IsNullOrWhiteSpace(v))
             .ToList();
+        resistanceAbilities.AddRange(FormatResistanceOverrideEntries(abilityEffects.ResistanceOverrides));
+        resistanceAbilities.AddRange(FormatResistanceOverrideEntries(advancementEffects.ResistanceOverrides));
         resistanceAbilities.AddRange((draft.AdvancementAbilities ?? new List<string>())
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Where(name => name.Contains("resistance", StringComparison.OrdinalIgnoreCase)));
+        resistanceAbilities = resistanceAbilities
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
         WriteResistancesBlock(ws, resistanceAbilities);
 
@@ -187,6 +195,8 @@ public sealed class BattleboardExportService : IBattleboardExportService
             .Select(FormatAbilityText)
             .Where(v => !string.IsNullOrWhiteSpace(v))
             .Select(StripImmunityPrefix)
+            .Concat((abilityEffects.Immunities ?? Array.Empty<string>())
+                .Select(StripImmunityPrefix))
             .Concat((advancementEffects.Immunities ?? Array.Empty<string>())
                 .Select(StripImmunityPrefix))
             .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -222,6 +232,19 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var outPath = Path.Combine(FileSystem.CacheDirectory, $"Battleboard_{Sanitize(draft.Name)}.xlsx");
         wb.SaveAs(outPath);
         return outPath;
+    }
+
+    private static IEnumerable<string> FormatResistanceOverrideEntries(IReadOnlyDictionary<string, int>? overrides)
+    {
+        foreach (var pair in overrides ?? new Dictionary<string, int>())
+        {
+            var type = BattleboardAdvancementEffectResolver.NormalizeResistanceType(pair.Key);
+            var level = Math.Max(0, pair.Value);
+            if (type.Length == 0 || level <= 0)
+                continue;
+
+            yield return $"{level}th Level Resistance to {type}";
+        }
     }
 
     private static readonly Regex ArmourTokenRegex = new(

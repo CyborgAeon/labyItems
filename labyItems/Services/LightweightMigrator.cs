@@ -119,6 +119,47 @@ CREATE INDEX IF NOT EXISTS idx_evolution_ngrams_evolution_id ON evolution_ngrams
 				cmd.ExecuteNonQuery();
 
 				cmd.CommandText = @"
+CREATE TABLE IF NOT EXISTS ability_definitions (
+  id TEXT PRIMARY KEY,
+  ability_key TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  type TEXT,
+  source TEXT,
+  lore TEXT,
+  effect_text TEXT,
+  system_effects_json TEXT,
+  raw_data_json TEXT,
+  metadata_json TEXT,
+  is_default INTEGER,
+  created_at TEXT,
+  updated_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_ability_definitions_key ON ability_definitions(ability_key);
+
+CREATE TABLE IF NOT EXISTS ability_choice_sets (
+  id TEXT PRIMARY KEY,
+  choice_set_key TEXT NOT NULL UNIQUE,
+  raw_data_json TEXT,
+  metadata_json TEXT,
+  is_default INTEGER,
+  created_at TEXT,
+  updated_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_ability_choice_sets_key ON ability_choice_sets(choice_set_key);
+
+CREATE TABLE IF NOT EXISTS ability_effect_instructions (
+  id TEXT PRIMARY KEY,
+  ability_key TEXT NOT NULL,
+  instruction_json TEXT NOT NULL,
+  is_default INTEGER,
+  created_at TEXT,
+  updated_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_ability_effect_instructions_key ON ability_effect_instructions(ability_key);
+";
+				cmd.ExecuteNonQuery();
+
+				cmd.CommandText = @"
 CREATE TABLE IF NOT EXISTS seed_metadata (
   seed_version TEXT,
   schema_version INTEGER,

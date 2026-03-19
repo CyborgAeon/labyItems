@@ -304,4 +304,52 @@ public sealed class BattleboardServiceTests : ServiceTestBase
 
         Assert.Contains("Repels", immunities);
     }
+
+    [Fact]
+    public async Task ExportAsync_AppliesAbilityKeyResistanceAndImmunityEffects()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-ability-key-effects",
+            Name = "Ability Key Effects Tester",
+            PlayerName = "Tester",
+            Class = "Wizard",
+            Race = "Human",
+            TBLP = 29,
+            Loc = 9,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral)
+        };
+
+        draft.Abilities.Add(new AbilityDraft
+        {
+            AbilityKey = "ability.merged.9th-level-resistance-to-all-but-neuronics",
+            Name = "Custom Resistance Grant",
+            AbilityType = AbilityType.Static
+        });
+        draft.Abilities.Add(new AbilityDraft
+        {
+            AbilityKey = "ability.immunity-to-repels",
+            Name = "Custom Immunity Grant",
+            AbilityType = AbilityType.Static
+        });
+
+        var service = new BattleboardExportService();
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("BBoard");
+
+        Assert.Equal(9, sheet.Cell("AD20").GetValue<int>());
+        Assert.Equal(9, sheet.Cell("AD21").GetValue<int>());
+        Assert.Equal(9, sheet.Cell("AD23").GetValue<int>());
+        Assert.Equal(8, sheet.Cell("AD22").GetValue<int>());
+
+        var immunities = Enumerable.Range(26, 8)
+            .Select(row => sheet.Cell($"AC{row}").GetString())
+            .Where(text => !string.IsNullOrWhiteSpace(text))
+            .ToList();
+
+        Assert.Contains("Repels", immunities);
+    }
 }

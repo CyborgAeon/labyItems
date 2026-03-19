@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using labyItems.Helpers;
+using labyItems.Models.Abilities;
 using labyItems.Models.Characters;
 using labyItems.Services.Specialisations;
 
@@ -29,6 +30,18 @@ public static class AbilityDetailsLookupService
             foreach (var ability in abilities)
             {
                 AddLookupEntries(map, ability, ability.Index);
+
+                // Support stable character draft storage by ability key.
+                var abilityKey = AbilityKey.Build(ability);
+                if (!string.IsNullOrWhiteSpace(abilityKey))
+                    AddLookupEntries(map, ability, abilityKey);
+
+                var legacyKey = AbilityKey.BuildEvolutionFallback(ability);
+                if (!string.IsNullOrWhiteSpace(legacyKey)
+                    && !string.Equals(legacyKey, abilityKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    AddLookupEntries(map, ability, legacyKey);
+                }
             }
 
             var specialisationIndex = await SpecialisationDefinitionRepository.GetIndexAsync();

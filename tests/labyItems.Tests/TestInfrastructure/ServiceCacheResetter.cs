@@ -21,6 +21,7 @@ internal static class ServiceCacheResetter
         ResetField(typeof(SpecialisationService), "_cache");
         ResetField(typeof(SpecialisationDefinitionRepository), "_cache");
         ResetField(typeof(AbilityDetailsLookupService), "_lookup");
+        ResetField(typeof(AbilityDefinitionLookupService), "_lookup");
     }
 
     private static void ResetField(Type type, string fieldName)

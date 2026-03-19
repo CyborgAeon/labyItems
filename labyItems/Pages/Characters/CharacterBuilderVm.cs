@@ -1085,6 +1085,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var name = $"+{amount.Tblp}/{amount.Loc} stamina";
         return new AbilityDraft
         {
+            AbilityKey = $"life.{source?.Trim().ToLowerInvariant()}.{Math.Max(0, amount.Tblp)}.{Math.Max(0, amount.Loc)}",
             Name = name,
             AbilityType = AbilityType.Life,
             Source = source,

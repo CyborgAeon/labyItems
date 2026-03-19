@@ -2,6 +2,7 @@ namespace labyItems.Models.Characters;
 
 public sealed class AbilityDraft
 {
+    public string? AbilityKey { get; set; }
     public string Name { get; set; } = "";
     public string? BattleboardNameOverride { get; set; }
     public string? UpdateKey { get; set; }

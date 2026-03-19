@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Helpers;
+using labyItems.Models.Abilities;
 using labyItems.Models.Characters;
 using labyItems.Models.ViewModels;
 using labyItems.Pages.Characters;
@@ -122,6 +123,7 @@ public sealed class WizardVm : INotifyPropertyChanged
     private int _advancementPointsSpent;
     private bool _isBackNavigationInProgress;
     private readonly Dictionary<string, int> _abilityCostIndex = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, string> _abilityDisplayIndex = new(StringComparer.OrdinalIgnoreCase);
     private IReadOnlyDictionary<string, EvolutionService.AbilityResult> _specialisationAbilityLookup =
         new Dictionary<string, EvolutionService.AbilityResult>(StringComparer.OrdinalIgnoreCase);
     private bool _isLoadingSpecialisationAbilityLookup;
@@ -1244,14 +1246,25 @@ public sealed class WizardVm : INotifyPropertyChanged
         if (_abilityCostIndex.Count > 0)
             return;
 
-        var abilities = await ManuAbilityService.GetAllAsync();
+        var abilities = await EvolutionService.GetAllAbilitiesAsync();
         foreach (var entry in abilities)
         {
-            var name = (entry.name ?? string.Empty).Trim();
+            var name = (entry.Index ?? string.Empty).Trim();
             if (name.Length == 0)
                 continue;
-            if (!_abilityCostIndex.ContainsKey(name))
-                _abilityCostIndex[name] = entry.cost;
+
+            RegisterAbilityCostEntry(name, entry.Cost, displayName: name);
+
+            var abilityKey = AbilityKey.Build(entry);
+            if (!string.IsNullOrWhiteSpace(abilityKey))
+                RegisterAbilityCostEntry(abilityKey, entry.Cost, displayName: name);
+
+            var legacyKey = AbilityKey.BuildEvolutionFallback(entry);
+            if (!string.IsNullOrWhiteSpace(legacyKey)
+                && !string.Equals(legacyKey, abilityKey, StringComparison.OrdinalIgnoreCase))
+            {
+                RegisterAbilityCostEntry(legacyKey, entry.Cost, displayName: name);
+            }
         }
     }
 
@@ -1264,7 +1277,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         foreach (var line in lines)
         {
             AdvancementAbilityLines.Add(new AbilitySpendLine(
-                line.Name,
+                ResolveAdvancementAbilityDisplayName(line.Name),
                 line.Cost,
                 line.RunningTotal));
         }
@@ -1273,6 +1286,45 @@ public sealed class WizardVm : INotifyPropertyChanged
             Draft.AdvancementAbilities ?? new List<string>(),
             _abilityCostIndex);
         RaiseReviewProperties();
+    }
+
+    private void RegisterAbilityCostEntry(string? rawKey, int cost, string displayName)
+    {
+        var key = (rawKey ?? string.Empty).Trim();
+        if (key.Length == 0)
+            return;
+
+        if (!_abilityCostIndex.ContainsKey(key))
+            _abilityCostIndex[key] = Math.Max(0, cost);
+
+        if (_abilityDisplayIndex.ContainsKey(key))
+            return;
+
+        var normalizedDisplay = EvolutionService.NormalizeAbilityDisplayText(displayName);
+        _abilityDisplayIndex[key] = string.IsNullOrWhiteSpace(normalizedDisplay)
+            ? key
+            : normalizedDisplay;
+    }
+
+    private string ResolveAdvancementAbilityDisplayName(string? rawKeyOrName)
+    {
+        var key = (rawKeyOrName ?? string.Empty).Trim();
+        if (key.Length == 0)
+            return string.Empty;
+
+        if (_abilityDisplayIndex.TryGetValue(key, out var cachedDisplay))
+            return cachedDisplay;
+
+        var ability = AbilityDetailsLookupService.FindByIndex(_specialisationAbilityLookup, key);
+        if (ability == null)
+            return key;
+
+        var displayName = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
+        if (displayName.Length == 0)
+            return key;
+
+        RegisterAbilityCostEntry(key, ability.Cost, displayName);
+        return displayName;
     }
 
     private async Task RefreshAdvancementSummaryAsync()

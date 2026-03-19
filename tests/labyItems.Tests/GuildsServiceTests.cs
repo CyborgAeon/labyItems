@@ -41,6 +41,38 @@ public sealed class GuildsServiceTests : ServiceTestBase
     }
 
     [Fact]
+    public async Task GetAllAsync_NormalizesGuildBenefitAbilitiesWithCanonicalIdentity()
+    {
+        var all = await GuildsService.GetAllAsync();
+
+        var abilities = all.Values
+            .SelectMany(record => record.Benefits.Basic
+                .Concat(record.Benefits.Intermediate)
+                .Concat(record.Benefits.Advanced))
+            .SelectMany(entry =>
+            {
+                var list = new List<AbilityDefinition>();
+                if (entry.Ability != null)
+                    list.Add(entry.Ability);
+                if (entry.Options != null)
+                {
+                    foreach (var option in entry.Options)
+                        list.AddRange(option.Abilities ?? new List<AbilityDefinition>());
+                }
+                return list;
+            })
+            .Where(ability => ability != null)
+            .ToList();
+
+        Assert.NotEmpty(abilities);
+        Assert.All(abilities, ability =>
+        {
+            Assert.False(string.IsNullOrWhiteSpace(ability.Key));
+            Assert.False(string.IsNullOrWhiteSpace(ability.AbilityRef));
+        });
+    }
+
+    [Fact]
     public async Task GetAllAsync_LoadsGuildLogoFieldWhenPresent()
     {
         var all = await GuildsService.GetAllAsync();
@@ -478,6 +510,30 @@ public sealed class GuildsServiceTests : ServiceTestBase
         Assert.True(offenders.Count == 0, $"Found unmapped exact alias guild benefits: {string.Join("; ", offenders)}");
     }
 
+    [Fact]
+    public async Task GuildsJson_BenefitAbilitiesContainKeyAndAbilityRef()
+    {
+        var guildsJson = await ServiceHelper.ReadPackageTextAsync("people/guilds.json");
+        using var guildsDoc = JsonDocument.Parse(guildsJson);
+
+        var offenders = new List<string>();
+        foreach (var guild in guildsDoc.RootElement.EnumerateObject())
+        {
+            if (!guild.Value.TryGetProperty("Benefits", out var benefits) || benefits.ValueKind != JsonValueKind.Object)
+                continue;
+
+            foreach (var tier in new[] { "Basic", "Intermediate", "Advanced" })
+            {
+                if (!benefits.TryGetProperty(tier, out var tierElement))
+                    continue;
+
+                CollectMissingIdentityEntries(guild.Name, tier, tierElement, offenders);
+            }
+        }
+
+        Assert.True(offenders.Count == 0, $"Found guild benefits missing Key/AbilityRef: {string.Join("; ", offenders)}");
+    }
+
     private static void CollectUnmappedAliasEntries(
         string guildName,
         string tier,
@@ -509,6 +565,40 @@ public sealed class GuildsServiceTests : ServiceTestBase
             return;
 
         offenders.Add($"{guildName}/{tier}:{name}");
+    }
+
+    private static void CollectMissingIdentityEntries(
+        string guildName,
+        string tier,
+        JsonElement element,
+        ICollection<string> offenders)
+    {
+        if (element.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var child in element.EnumerateArray())
+                CollectMissingIdentityEntries(guildName, tier, child, offenders);
+            return;
+        }
+
+        if (element.ValueKind != JsonValueKind.Object)
+            return;
+
+        if (!element.TryGetProperty("Name", out var nameElement) || nameElement.ValueKind != JsonValueKind.String)
+            return;
+
+        var name = (nameElement.GetString() ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return;
+
+        var hasKey = element.TryGetProperty("Key", out var keyElement)
+                     && keyElement.ValueKind == JsonValueKind.String
+                     && !string.IsNullOrWhiteSpace(keyElement.GetString());
+        var hasRef = element.TryGetProperty("AbilityRef", out var refElement)
+                     && refElement.ValueKind == JsonValueKind.String
+                     && !string.IsNullOrWhiteSpace(refElement.GetString());
+
+        if (!hasKey || !hasRef)
+            offenders.Add($"{guildName}/{tier}:{name}");
     }
 
     private static bool ContainsAlignmentRuleKey(JsonElement element)

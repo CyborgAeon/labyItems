@@ -13,6 +13,7 @@ using ClosedXML.Excel;
 using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models;
+using labyItems.Models.Abilities;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Models.Rules;
@@ -338,8 +339,42 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     {
         var referenceData = await _dataProvider.LoadReferenceDataAsync();
         ApplyReferenceData(referenceData);
+        await WarmAbilityDetailsCacheAsync();
         await LoadDraftStateAsync();
         FinalizeInitialization();
+    }
+
+    private async Task WarmAbilityDetailsCacheAsync()
+    {
+        if (_abilityDetailsByKey.Count > 0)
+            return;
+
+        try
+        {
+            var abilities = await EvolutionService.GetAllAbilitiesAsync();
+            foreach (var ability in abilities ?? Array.Empty<EvolutionService.AbilityResult>())
+            {
+                if (ability == null)
+                    continue;
+
+                var displayName = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
+                if (!string.IsNullOrWhiteSpace(displayName))
+                    _abilityDetailsByKey[AbilityDetailsLookupService.NormalizeKey(displayName)] = ability;
+
+                var abilityKey = AbilityKey.Build(ability);
+                if (!string.IsNullOrWhiteSpace(abilityKey))
+                    _abilityDetailsByKey[AbilityDetailsLookupService.NormalizeKey(abilityKey)] = ability;
+
+                var legacyKey = AbilityKey.BuildEvolutionFallback(ability);
+                if (!string.IsNullOrWhiteSpace(legacyKey)
+                    && !string.Equals(legacyKey, abilityKey, StringComparison.OrdinalIgnoreCase))
+                    _abilityDetailsByKey[AbilityDetailsLookupService.NormalizeKey(legacyKey)] = ability;
+            }
+        }
+        catch
+        {
+            // If this fails we fall back to showing raw keys/names.
+        }
     }
 
     private async Task LoadDraftStateAsync()
@@ -663,7 +698,16 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         if (string.IsNullOrWhiteSpace(name))
             return;
 
-        var line = new AbilityEntryVm(name, SelectedAbilityOption.Value.Cost, OnAdvancementAbilityEntryChanged);
+        var abilityKey = name.Trim();
+        var normalized = AbilityDetailsLookupService.NormalizeKey(name);
+        if (_abilityDetailsByKey.TryGetValue(normalized, out var resolved))
+            abilityKey = AbilityKey.Build(resolved);
+
+        var line = new AbilityEntryVm(
+            name,
+            SelectedAbilityOption.Value.Cost,
+            abilityKey,
+            OnAdvancementAbilityEntryChanged);
         Abilities.Add(line);
         SelectedAbilityOption = null;
     }
@@ -675,26 +719,40 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         foreach (var ability in abilities)
         {
-            var name = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
-            if (string.IsNullOrWhiteSpace(name))
+            var displayName = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
+            if (string.IsNullOrWhiteSpace(displayName))
                 continue;
 
             var normalizedCost = Math.Max(0, ability.Cost);
             var normalizedTable = Math.Max(0, ability.Table);
 
-            Abilities.Add(new AbilityEntryVm(name, normalizedCost, OnAdvancementAbilityEntryChanged));
+            var abilityKey = AbilityKey.Build(ability);
+            Abilities.Add(new AbilityEntryVm(displayName, normalizedCost, abilityKey, OnAdvancementAbilityEntryChanged));
 
-            _abilityOptionsByName[name] = new ManuAbilityOption(
-                name,
+            _abilityOptionsByName[displayName] = new ManuAbilityOption(
+                displayName,
                 normalizedCost,
                 normalizedTable,
                 ability.Available ?? string.Empty,
                 ability.AvailabilityRules ?? Array.Empty<RuleClause>(),
                 ability.Description ?? string.Empty);
 
-            var key = AbilityDetailsLookupService.NormalizeKey(name);
-            if (key.Length > 0)
-                _abilityDetailsByKey[key] = ability;
+            var byDisplayName = AbilityDetailsLookupService.NormalizeKey(displayName);
+            if (byDisplayName.Length > 0)
+                _abilityDetailsByKey[byDisplayName] = ability;
+
+            var byAbilityKey = AbilityDetailsLookupService.NormalizeKey(abilityKey);
+            if (byAbilityKey.Length > 0)
+                _abilityDetailsByKey[byAbilityKey] = ability;
+
+            var legacyKey = AbilityKey.BuildEvolutionFallback(ability);
+            if (!string.IsNullOrWhiteSpace(legacyKey)
+                && !string.Equals(legacyKey, abilityKey, StringComparison.OrdinalIgnoreCase))
+            {
+                var byLegacyKey = AbilityDetailsLookupService.NormalizeKey(legacyKey);
+                if (byLegacyKey.Length > 0)
+                    _abilityDetailsByKey[byLegacyKey] = ability;
+            }
         }
 
         SelectedAbilityOption = null;
@@ -746,18 +804,79 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private void SyncAbilitiesToDraft()
     {
         _draft.AdvancementAbilities = Abilities
-            .Select(a => (a.Name ?? string.Empty).Trim())
+            .Select(ResolveCanonicalAbilityKey)
             .Where(t => t.Length > 0)
             .ToList();
     }
 
-    private AbilityEntryVm BuildAbilityEntry(string name)
+    private string ResolveCanonicalAbilityKey(AbilityEntryVm? entry)
     {
-        var trimmed = (name ?? string.Empty).Trim();
-        if (_abilityOptionsByName.TryGetValue(trimmed, out var option))
-            return new AbilityEntryVm(trimmed, option.Cost, OnAdvancementAbilityEntryChanged);
+        if (entry == null)
+            return string.Empty;
 
-        return new AbilityEntryVm(trimmed, 0, OnAdvancementAbilityEntryChanged);
+        var keyCandidate = (entry.AbilityKey ?? string.Empty).Trim();
+        var nameCandidate = (entry.Name ?? string.Empty).Trim();
+
+        var resolved = TryResolveAbilityDetails(keyCandidate)
+                       ?? TryResolveAbilityDetails(nameCandidate);
+        if (resolved != null)
+            return AbilityKey.Build(resolved);
+
+        if (keyCandidate.Length > 0)
+            return keyCandidate;
+        if (nameCandidate.Length > 0)
+            return nameCandidate;
+
+        return string.Empty;
+    }
+
+    private EvolutionService.AbilityResult? TryResolveAbilityDetails(string? rawKeyOrName)
+    {
+        var normalized = AbilityDetailsLookupService.NormalizeKey(rawKeyOrName);
+        if (normalized.Length == 0)
+            return null;
+
+        return _abilityDetailsByKey.TryGetValue(normalized, out var resolved)
+            ? resolved
+            : null;
+    }
+
+    private AbilityEntryVm BuildAbilityEntry(string rawKeyOrName)
+    {
+        var trimmed = (rawKeyOrName ?? string.Empty).Trim();
+        if (trimmed.Length == 0)
+            return new AbilityEntryVm(string.Empty, 0, string.Empty, OnAdvancementAbilityEntryChanged);
+
+        var normalized = AbilityDetailsLookupService.NormalizeKey(trimmed);
+        if (_abilityDetailsByKey.TryGetValue(normalized, out var resolved))
+        {
+            var displayName = EvolutionService.NormalizeAbilityDisplayText(resolved.Index);
+            var abilityKey = AbilityKey.Build(resolved);
+            return new AbilityEntryVm(
+                displayName,
+                Math.Max(0, resolved.Cost),
+                abilityKey,
+                OnAdvancementAbilityEntryChanged);
+        }
+
+        if (_abilityOptionsByName.TryGetValue(trimmed, out var option))
+            return new AbilityEntryVm(trimmed, Math.Max(0, option.Cost), trimmed, OnAdvancementAbilityEntryChanged);
+
+        return new AbilityEntryVm(trimmed, 0, trimmed, OnAdvancementAbilityEntryChanged);
+    }
+
+    private string ResolveAbilityDisplayName(string? rawKeyOrName)
+    {
+        var trimmed = (rawKeyOrName ?? string.Empty).Trim();
+        if (trimmed.Length == 0)
+            return string.Empty;
+
+        var normalized = AbilityDetailsLookupService.NormalizeKey(trimmed);
+        if (_abilityDetailsByKey.TryGetValue(normalized, out var resolved))
+            return EvolutionService.NormalizeAbilityDisplayText(resolved.Index);
+
+        // Fallback for draft snapshots that may still store display names.
+        return trimmed;
     }
 
     private void UpdateAbilityPoints()
@@ -1982,12 +2101,13 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         foreach (var selectedAbility in _draft.AdvancementAbilities ?? Enumerable.Empty<string>())
         {
+            var displayName = ResolveAbilityDisplayName(selectedAbility);
             string expectedName;
-            if (AbilityNameMatches(selectedAbility, SecondColourAbilityName))
+            if (AbilityNameMatches(displayName, SecondColourAbilityName))
             {
                 expectedName = SecondColourAbilityName;
             }
-            else if (AbilityNameMatches(selectedAbility, SecondColorAbilityName))
+            else if (AbilityNameMatches(displayName, SecondColorAbilityName))
             {
                 expectedName = SecondColorAbilityName;
             }
@@ -1996,7 +2116,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
                 continue;
             }
 
-            var encodedSelection = ExtractAbilityQualifier(selectedAbility, expectedName);
+            var encodedSelection = ExtractAbilityQualifier(displayName, expectedName);
             AddSecondWizardColourSelections(selections, seen, encodedSelection);
         }
     }
@@ -2046,7 +2166,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return false;
 
         return (_draft.AdvancementAbilities ?? Enumerable.Empty<string>())
-            .Any(ability => AbilityNameMatches(ability, expectedName));
+            .Any(raw => AbilityNameMatches(ResolveAbilityDisplayName(raw), expectedName));
     }
 
     private bool HasSecondColourAbility()

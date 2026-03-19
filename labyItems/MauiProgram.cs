@@ -107,6 +107,7 @@ public static class MauiProgram
 		// Register default-db installer which will copy a packaged laby.db on first-run (if present)
 		builder.Services.AddSingleton<Services.IDefaultDatabaseInstaller, Services.DefaultDatabaseInstaller>();
 		builder.Services.AddSingleton<Services.IEvolutionDataSynchronizer, Services.EvolutionDataSynchronizer>();
+		builder.Services.AddSingleton<Services.IAbilityDefinitionDataSynchronizer, Services.AbilityDefinitionDataSynchronizer>();
 		builder.Services.AddSingleton<Services.IDatabaseInitializer, Services.DatabaseInitializer>();
 		builder.Services.AddSingleton<IBattleboardExportService, BattleboardExportService>();
 		builder.Services.AddSingleton<IFileService, MauiFileService>();

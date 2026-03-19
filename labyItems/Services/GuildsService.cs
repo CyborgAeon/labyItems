@@ -267,6 +267,10 @@ public static class GuildsService
             ability.AbilityRef = resolved?.Key;
         if (string.IsNullOrWhiteSpace(ability.Key))
             ability.Key = resolved?.Key ?? ability.AbilityRef;
+        if (string.IsNullOrWhiteSpace(ability.Key) && !string.IsNullOrWhiteSpace(ability.Name))
+            ability.Key = $"ability.guild.{NormalizeIdentityToken(ability.Name)}";
+        if (string.IsNullOrWhiteSpace(ability.AbilityRef))
+            ability.AbilityRef = ability.Key;
         if (string.IsNullOrWhiteSpace(ability.GrantType) && !string.IsNullOrWhiteSpace(ability.Type))
             ability.GrantType = ability.Type;
         if (string.IsNullOrWhiteSpace(ability.Type) && !string.IsNullOrWhiteSpace(ability.GrantType))
@@ -327,6 +331,8 @@ public static class GuildsService
             target.GuildOverrides = source.GuildOverrides.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
         if (source.Customisation != null)
             target.Customisation = CloneCustomisation(source.Customisation);
+        if (source.SystemEffects is { Count: > 0 })
+            target.SystemEffects = source.SystemEffects.Select(CloneSystemEffect).ToList();
 
         var refs = new List<string>();
         if (source.ChoiceSetRefs is { Count: > 0 })
@@ -387,6 +393,19 @@ public static class GuildsService
                 return found;
         }
 
+        var normalizedName = NormalizeIdentityToken(raw.Name);
+        if (normalizedName.Length == 0)
+            return null;
+
+        foreach (var candidate in abilityRefs.Values)
+        {
+            if (candidate == null)
+                continue;
+
+            if (NormalizeIdentityToken(candidate.Name) == normalizedName)
+                return candidate;
+        }
+
         return null;
     }
 
@@ -419,7 +438,8 @@ public static class GuildsService
             GuildOverrides = source.GuildOverrides?.ToList(),
             Customisation = CloneCustomisation(source.Customisation),
             ChoiceSetRef = source.ChoiceSetRef,
-            ChoiceSetRefs = source.ChoiceSetRefs?.ToList()
+            ChoiceSetRefs = source.ChoiceSetRefs?.ToList(),
+            SystemEffects = source.SystemEffects?.Select(CloneSystemEffect).ToList()
         };
     }
 
@@ -476,6 +496,30 @@ public static class GuildsService
             OptionEnum = source.OptionEnum,
             CustomValuesPermitted = source.CustomValuesPermitted
         };
+    }
+
+    private static AbilitySystemEffect CloneSystemEffect(AbilitySystemEffect source)
+    {
+        return new AbilitySystemEffect
+        {
+            EffectType = source.EffectType ?? string.Empty,
+            DisplayName = source.DisplayName ?? string.Empty,
+            ResistanceType = source.ResistanceType,
+            Level = source.Level,
+            ImmunityName = source.ImmunityName
+        };
+    }
+
+    private static string NormalizeIdentityToken(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return new string(value
+            .Trim()
+            .ToLowerInvariant()
+            .Where(char.IsLetterOrDigit)
+            .ToArray());
     }
 
     public static async Task<IReadOnlyList<string>> GetGuildNamesAsync()

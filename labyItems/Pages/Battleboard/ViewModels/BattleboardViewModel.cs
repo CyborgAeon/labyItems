@@ -39,7 +39,15 @@ public sealed class BattleboardViewModel : ObservableObject
         var lifeTotals = BattleboardLifeCalculator.Calculate(_draft, assignedItems);
         var itemArmour = BattleboardArmourCalculator.Calculate(_draft, assignedItems);
         var resolvedInnates = BattleboardInnateCalculator.Calculate(_draft, assignedItems);
+        var abilityEffects = BattleboardAbilityEffectResolver.ResolveFallback(_draft.Abilities);
         var advancementEffects = BattleboardAdvancementEffectResolver.ResolveFallback(_draft.AdvancementAbilities);
+        var fallbackResistanceOverrides = BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
+            abilityEffects.ResistanceOverrides,
+            advancementEffects.ResistanceOverrides);
+        var fallbackImmunities = (abilityEffects.Immunities ?? Array.Empty<string>())
+            .Concat(advancementEffects.Immunities ?? Array.Empty<string>())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
         CharacterName = _draft.Name ?? string.Empty;
         PlayerName = _draft.PlayerName ?? string.Empty;
@@ -107,8 +115,8 @@ public sealed class BattleboardViewModel : ObservableObject
         });
 
         ResistanceLevels = new ObservableCollection<ResistanceLevelVm>(
-            BuildResistanceLevels(_draft, advancementEffects.ResistanceOverrides));
-        Immunities = new ObservableCollection<string>(BuildImmunities(_draft, advancementEffects.Immunities));
+            BuildResistanceLevels(_draft, fallbackResistanceOverrides));
+        Immunities = new ObservableCollection<string>(BuildImmunities(_draft, fallbackImmunities));
         HasImmunities = Immunities.Count > 0;
 
         TotalLife.PropertyChanged += (_, e) =>
@@ -798,11 +806,25 @@ public sealed class BattleboardViewModel : ObservableObject
     {
         try
         {
-            var resolved = await BattleboardAdvancementEffectResolver.ResolveAsync(_draft.AdvancementAbilities);
-            if ((resolved?.ResistanceOverrides?.Count ?? 0) > 0)
-                ApplyResolvedResistanceOverrides(resolved.ResistanceOverrides);
+            var abilityEffectsTask = BattleboardAbilityEffectResolver.ResolveAsync(_draft.Abilities);
+            var advancementEffectsTask = BattleboardAdvancementEffectResolver.ResolveAsync(_draft.AdvancementAbilities);
+            await Task.WhenAll(abilityEffectsTask, advancementEffectsTask);
 
-            var nextImmunities = BuildImmunities(_draft, resolved?.Immunities);
+            var resolvedAbilityEffects = abilityEffectsTask.Result;
+            var resolvedAdvancementEffects = advancementEffectsTask.Result;
+
+            var mergedResistance = BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
+                resolvedAbilityEffects?.ResistanceOverrides,
+                resolvedAdvancementEffects?.ResistanceOverrides);
+            if ((mergedResistance?.Count ?? 0) > 0)
+                ApplyResolvedResistanceOverrides(mergedResistance);
+
+            var mergedImmunities = (resolvedAbilityEffects?.Immunities ?? Array.Empty<string>())
+                .Concat(resolvedAdvancementEffects?.Immunities ?? Array.Empty<string>())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            var nextImmunities = BuildImmunities(_draft, mergedImmunities);
             Immunities.Clear();
             foreach (var immunity in nextImmunities)
                 Immunities.Add(immunity);
