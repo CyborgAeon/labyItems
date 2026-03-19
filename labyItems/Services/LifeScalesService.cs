@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using SQLite;
 
@@ -9,87 +10,24 @@ namespace labyItems.Services;
 
 public static class LifeScalesService
 {
+    private static readonly SemaphoreSlim CacheLock = new(1, 1);
     private static Dictionary<string, Dictionary<string, List<int[]>>>? _cache;
 
     public static async Task<Dictionary<string, Dictionary<string, List<int[]>>>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        if (_cache != null)
+            return _cache;
+
+        await CacheLock.WaitAsync().ConfigureAwait(false);
         try
         {
-            static Dictionary<string, Dictionary<string, List<int[]>>> LoadFromDb()
-            {
-                using var conn = ServiceHelper.OpenReadOnlyConnection();
-                var rows = conn.Query<LifeScaleRow>("SELECT race, class, idx, body, loc FROM lifescales ORDER BY race, class, idx;");
-                var dict = new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
-
-                foreach (var row in rows)
-                {
-                    if (!dict.TryGetValue(row.race, out var classMap))
-                    {
-                        classMap = new Dictionary<string, List<int[]>>(StringComparer.OrdinalIgnoreCase);
-                        dict[row.race] = classMap;
-                    }
-
-                    if (!classMap.TryGetValue(row.@class, out var list))
-                    {
-                        list = new List<int[]>();
-                        classMap[row.@class] = list;
-                    }
-
-                    list.Add(new[] { row.body, row.loc });
-                }
-
-                return dict;
-            }
+            if (_cache != null)
+                return _cache;
 
 #if DEBUG
-            var dict = new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
-            try
-            {
-                var json = await ServiceHelper.ReadPackageTextAsync("people/lifescales.json");
-                var packaged = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<int[]>>>>(json)
-                               ?? new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
-
-                foreach (var (race, classMap) in packaged)
-                {
-                    if (!dict.TryGetValue(race, out var targetClassMap))
-                    {
-                        targetClassMap = new Dictionary<string, List<int[]>>(StringComparer.OrdinalIgnoreCase);
-                        dict[race] = targetClassMap;
-                    }
-
-                    foreach (var (className, points) in classMap)
-                        targetClassMap[className] = points ?? new List<int[]>();
-                }
-            }
-            catch (Exception ex)
-            {
-                ServiceHelper.LogDbError("Get lifescales (debug json)", ex);
-            }
-
-            try
-            {
-                var db = LoadFromDb();
-                foreach (var (race, classMap) in db)
-                {
-                    if (!dict.TryGetValue(race, out var targetClassMap))
-                    {
-                        targetClassMap = new Dictionary<string, List<int[]>>(StringComparer.OrdinalIgnoreCase);
-                        dict[race] = targetClassMap;
-                    }
-
-                    foreach (var (className, points) in classMap)
-                        targetClassMap[className] = points ?? new List<int[]>();
-                }
-            }
-            catch (Exception ex)
-            {
-                ServiceHelper.LogDbError("Get lifescales (debug db merge)", ex);
-            }
-
-            _cache = dict;
+            _cache = await LoadDebugMergedAsync().ConfigureAwait(false);
 #else
-            _cache = LoadFromDb();
+            _cache = await Task.Run(LoadFromDb).ConfigureAwait(false);
 #endif
         }
         catch (Exception ex)
@@ -97,12 +35,90 @@ public static class LifeScalesService
             ServiceHelper.LogDbError("Get lifescales", ex);
             throw;
         }
+        finally
+        {
+            CacheLock.Release();
+        }
 
         return _cache;
     }
 
     public static void InvalidateCache()
         => _cache = null;
+
+    private static Dictionary<string, Dictionary<string, List<int[]>>> LoadFromDb()
+    {
+        using var conn = ServiceHelper.OpenReadOnlyConnection();
+        var rows = conn.Query<LifeScaleRow>("SELECT race, class, idx, body, loc FROM lifescales ORDER BY race, class, idx;");
+        var dict = new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var row in rows)
+        {
+            if (!dict.TryGetValue(row.race, out var classMap))
+            {
+                classMap = new Dictionary<string, List<int[]>>(StringComparer.OrdinalIgnoreCase);
+                dict[row.race] = classMap;
+            }
+
+            if (!classMap.TryGetValue(row.@class, out var list))
+            {
+                list = new List<int[]>();
+                classMap[row.@class] = list;
+            }
+
+            list.Add(new[] { row.body, row.loc });
+        }
+
+        return dict;
+    }
+
+    private static async Task<Dictionary<string, Dictionary<string, List<int[]>>>> LoadDebugMergedAsync()
+    {
+        var dict = new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase);
+        try
+        {
+            var json = await ServiceHelper.ReadPackageTextAsync("people/lifescales.json").ConfigureAwait(false);
+            var packaged = await Task.Run(() =>
+                    JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<int[]>>>>(json)
+                    ?? new Dictionary<string, Dictionary<string, List<int[]>>>(StringComparer.OrdinalIgnoreCase))
+                .ConfigureAwait(false);
+
+            MergeLifeScaleMaps(dict, packaged);
+        }
+        catch (Exception ex)
+        {
+            ServiceHelper.LogDbError("Get lifescales (debug json)", ex);
+        }
+
+        try
+        {
+            var db = await Task.Run(LoadFromDb).ConfigureAwait(false);
+            MergeLifeScaleMaps(dict, db);
+        }
+        catch (Exception ex)
+        {
+            ServiceHelper.LogDbError("Get lifescales (debug db merge)", ex);
+        }
+
+        return dict;
+    }
+
+    private static void MergeLifeScaleMaps(
+        IDictionary<string, Dictionary<string, List<int[]>>> target,
+        IReadOnlyDictionary<string, Dictionary<string, List<int[]>>> source)
+    {
+        foreach (var (race, classMap) in source)
+        {
+            if (!target.TryGetValue(race, out var targetClassMap))
+            {
+                targetClassMap = new Dictionary<string, List<int[]>>(StringComparer.OrdinalIgnoreCase);
+                target[race] = targetClassMap;
+            }
+
+            foreach (var (className, points) in classMap)
+                targetClassMap[className] = points ?? new List<int[]>();
+        }
+    }
 
     public static async Task<IReadOnlyList<string>> GetRaceNamesAsync()
     {

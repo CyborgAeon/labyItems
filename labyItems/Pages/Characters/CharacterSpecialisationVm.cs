@@ -130,11 +130,13 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             _screenState = null;
             IsComplete = false;
 
-            _specialisationIndex = await SpecialisationDefinitionRepository.GetIndexAsync();
-            EnsureActive();
-            _allClasses = await ClassService.GetAllAsync();
-            EnsureActive();
-            _allRaces = await PeopleService.GetAllAsync();
+            var specialisationIndexTask = SpecialisationDefinitionRepository.GetIndexAsync();
+            var classesTask = ClassService.GetAllAsync();
+            var racesTask = PeopleService.GetAllAsync();
+            await Task.WhenAll(specialisationIndexTask, classesTask, racesTask);
+            _specialisationIndex = specialisationIndexTask.Result;
+            _allClasses = classesTask.Result;
+            _allRaces = racesTask.Result;
             EnsureActive();
 
             _context = CharacterSpecialisationScreenCalculator.LoadContext(

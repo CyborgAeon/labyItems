@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using labyItems.Models.Characters;
 using SQLite;
@@ -17,70 +18,24 @@ public static class ClassService
         Converters = { new JsonStringEnumConverter(), new GuildOverrideRulesConverter() }
     };
 
+    private static readonly SemaphoreSlim CacheLock = new(1, 1);
     private static Dictionary<string, CharacterClassRecord>? _cache;
 
     public static async Task<Dictionary<string, CharacterClassRecord>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
+        if (_cache != null)
+            return _cache;
 
+        await CacheLock.WaitAsync().ConfigureAwait(false);
         try
         {
-            static Dictionary<string, CharacterClassRecord> LoadFromDb()
-            {
-                using var conn = ServiceHelper.OpenReadOnlyConnection();
-                var rows = conn.Query<ClassRow>("SELECT name, data_json FROM classes ORDER BY name;");
-                var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
-                foreach (var row in rows)
-                {
-                    if (string.IsNullOrWhiteSpace(row.name))
-                        continue;
-
-                    var record = string.IsNullOrWhiteSpace(row.data_json)
-                        ? new CharacterClassRecord()
-                        : DeserializeClassRecord(row.data_json);
-
-                    dict[row.name] = record;
-                }
-
-                return dict;
-            }
+            if (_cache != null)
+                return _cache;
 
 #if DEBUG
-            var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
-            try
-            {
-                var json = await ServiceHelper.ReadPackageTextAsync("people/classes.json");
-                using var doc = JsonDocument.Parse(json);
-                if (doc.RootElement.ValueKind == JsonValueKind.Object)
-                {
-                    foreach (var cls in doc.RootElement.EnumerateObject())
-                    {
-                        if (cls.Value.ValueKind != JsonValueKind.Object)
-                            continue;
-
-                        dict[cls.Name] = DeserializeClassRecord(cls.Value);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ServiceHelper.LogDbError("Get classes (debug package)", ex);
-            }
-
-            try
-            {
-                var fromDb = LoadFromDb();
-                foreach (var kvp in fromDb)
-                    dict[kvp.Key] = kvp.Value;
-            }
-            catch (Exception ex)
-            {
-                ServiceHelper.LogDbError("Get classes (debug db merge)", ex);
-            }
-
-            _cache = dict;
+            _cache = await LoadDebugMergedAsync().ConfigureAwait(false);
 #else
-            _cache = LoadFromDb();
+            _cache = await Task.Run(LoadFromDb).ConfigureAwait(false);
 #endif
         }
         catch (Exception ex)
@@ -88,12 +43,83 @@ public static class ClassService
             ServiceHelper.LogDbError("Get classes", ex);
             throw;
         }
+        finally
+        {
+            CacheLock.Release();
+        }
 
         return _cache;
     }
 
     public static void InvalidateCache()
         => _cache = null;
+
+    private static Dictionary<string, CharacterClassRecord> LoadFromDb()
+    {
+        using var conn = ServiceHelper.OpenReadOnlyConnection();
+        var rows = conn.Query<ClassRow>("SELECT name, data_json FROM classes ORDER BY name;");
+        var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+        foreach (var row in rows)
+        {
+            if (string.IsNullOrWhiteSpace(row.name))
+                continue;
+
+            var record = string.IsNullOrWhiteSpace(row.data_json)
+                ? new CharacterClassRecord()
+                : DeserializeClassRecord(row.data_json);
+
+            dict[row.name] = record;
+        }
+
+        return dict;
+    }
+
+    private static async Task<Dictionary<string, CharacterClassRecord>> LoadDebugMergedAsync()
+    {
+        var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+        try
+        {
+            var json = await ServiceHelper.ReadPackageTextAsync("people/classes.json").ConfigureAwait(false);
+            var packaged = await Task.Run(() => ParsePackagedClassDictionary(json)).ConfigureAwait(false);
+            foreach (var kvp in packaged)
+                dict[kvp.Key] = kvp.Value;
+        }
+        catch (Exception ex)
+        {
+            ServiceHelper.LogDbError("Get classes (debug package)", ex);
+        }
+
+        try
+        {
+            var fromDb = await Task.Run(LoadFromDb).ConfigureAwait(false);
+            foreach (var kvp in fromDb)
+                dict[kvp.Key] = kvp.Value;
+        }
+        catch (Exception ex)
+        {
+            ServiceHelper.LogDbError("Get classes (debug db merge)", ex);
+        }
+
+        return dict;
+    }
+
+    private static Dictionary<string, CharacterClassRecord> ParsePackagedClassDictionary(string json)
+    {
+        var dict = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
+        using var doc = JsonDocument.Parse(json);
+        if (doc.RootElement.ValueKind != JsonValueKind.Object)
+            return dict;
+
+        foreach (var cls in doc.RootElement.EnumerateObject())
+        {
+            if (cls.Value.ValueKind != JsonValueKind.Object)
+                continue;
+
+            dict[cls.Name] = DeserializeClassRecord(cls.Value);
+        }
+
+        return dict;
+    }
 
     private static CharacterClassRecord DeserializeClassRecord(string json)
     {

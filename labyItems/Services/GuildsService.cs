@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using labyItems.Models.Characters;
 using labyItems.Models.Rules;
@@ -18,19 +19,36 @@ public static class GuildsService
         Converters = { new JsonStringEnumConverter() }
     };
 
+    private static readonly SemaphoreSlim CacheLock = new(1, 1);
+    private static readonly SemaphoreSlim MiracleSearchCacheLock = new(1, 1);
     private static Dictionary<string, GuildRecord>? _cache;
     private static Dictionary<string, GuildRecord>? _miracleSearchCache;
 
     public static async Task<Dictionary<string, GuildRecord>> GetAllAsync()
     {
-        if (_cache != null) return _cache;
-        var json = await ServiceHelper.ReadPackageTextAsync("people/guilds.json");
+        if (_cache != null)
+            return _cache;
 
-        _cache = JsonSerializer.Deserialize<Dictionary<string, GuildRecord>>(json, _jsonOptions)
-                 ?? new Dictionary<string, GuildRecord>();
-        await NormalizeGuildBenefitsAsync(_cache);
+        await CacheLock.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            if (_cache != null)
+                return _cache;
 
-        return _cache;
+            var json = await ServiceHelper.ReadPackageTextAsync("people/guilds.json").ConfigureAwait(false);
+            var records = await Task.Run(() =>
+                    JsonSerializer.Deserialize<Dictionary<string, GuildRecord>>(json, _jsonOptions)
+                    ?? new Dictionary<string, GuildRecord>())
+                .ConfigureAwait(false);
+
+            await NormalizeGuildBenefitsAsync(records).ConfigureAwait(false);
+            _cache = records;
+            return _cache;
+        }
+        finally
+        {
+            CacheLock.Release();
+        }
     }
 
     private static async Task NormalizeGuildBenefitsAsync(Dictionary<string, GuildRecord> records)
@@ -297,61 +315,20 @@ public static class GuildsService
         if (_miracleSearchCache != null)
             return _miracleSearchCache;
 
-        var json = await ServiceHelper.ReadPackageTextAsync("people/guilds.json");
-        using var doc = JsonDocument.Parse(json);
-        var map = new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
-
-        if (doc.RootElement.ValueKind != JsonValueKind.Object)
+        await MiracleSearchCacheLock.WaitAsync().ConfigureAwait(false);
+        try
         {
-            _miracleSearchCache = map;
+            if (_miracleSearchCache != null)
+                return _miracleSearchCache;
+
+            var json = await ServiceHelper.ReadPackageTextAsync("people/guilds.json").ConfigureAwait(false);
+            _miracleSearchCache = await Task.Run(() => ParseMiracleSearch(json)).ConfigureAwait(false);
             return _miracleSearchCache;
         }
-
-        foreach (var guildProperty in doc.RootElement.EnumerateObject())
+        finally
         {
-            if (guildProperty.Value.ValueKind != JsonValueKind.Object)
-                continue;
-
-            var guildObject = guildProperty.Value;
-            var record = new GuildRecord();
-
-            if (guildObject.TryGetProperty("Type", out var typeElement)
-                && typeElement.ValueKind == JsonValueKind.String)
-            {
-                record.Type = typeElement.GetString() ?? string.Empty;
-            }
-
-            if (guildObject.TryGetProperty("Logo", out var logoElement)
-                && logoElement.ValueKind == JsonValueKind.String)
-            {
-                record.Logo = logoElement.GetString() ?? string.Empty;
-            }
-
-            if (guildObject.TryGetProperty("MiracleList", out var miracleListElement))
-            {
-                record.MiracleList = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(
-                    miracleListElement.GetRawText(),
-                    _jsonOptions) ?? new Dictionary<string, List<string>>();
-            }
-
-            if (guildObject.TryGetProperty("DenominationalMiracle", out var denominationalElement))
-            {
-                record.DenominationalMiracle = JsonSerializer.Deserialize<GuildMiracleReference>(
-                    denominationalElement.GetRawText(),
-                    _jsonOptions);
-            }
-
-            if (guildObject.TryGetProperty("DenominationalMiracleNote", out var denominationalNoteElement)
-                && denominationalNoteElement.ValueKind == JsonValueKind.String)
-            {
-                record.DenominationalMiracleNote = denominationalNoteElement.GetString() ?? string.Empty;
-            }
-
-            map[guildProperty.Name] = record;
+            MiracleSearchCacheLock.Release();
         }
-
-        _miracleSearchCache = map;
-        return _miracleSearchCache;
     }
 
     public static async Task<IReadOnlyList<string>> GetTypesAsync()
@@ -433,6 +410,60 @@ public static class GuildsService
                 Moral = morals.ToList()
             }
         };
+    }
+
+    private static Dictionary<string, GuildRecord> ParseMiracleSearch(string json)
+    {
+        using var doc = JsonDocument.Parse(json);
+        var map = new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
+
+        if (doc.RootElement.ValueKind != JsonValueKind.Object)
+            return map;
+
+        foreach (var guildProperty in doc.RootElement.EnumerateObject())
+        {
+            if (guildProperty.Value.ValueKind != JsonValueKind.Object)
+                continue;
+
+            var guildObject = guildProperty.Value;
+            var record = new GuildRecord();
+
+            if (guildObject.TryGetProperty("Type", out var typeElement)
+                && typeElement.ValueKind == JsonValueKind.String)
+            {
+                record.Type = typeElement.GetString() ?? string.Empty;
+            }
+
+            if (guildObject.TryGetProperty("Logo", out var logoElement)
+                && logoElement.ValueKind == JsonValueKind.String)
+            {
+                record.Logo = logoElement.GetString() ?? string.Empty;
+            }
+
+            if (guildObject.TryGetProperty("MiracleList", out var miracleListElement))
+            {
+                record.MiracleList = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(
+                    miracleListElement.GetRawText(),
+                    _jsonOptions) ?? new Dictionary<string, List<string>>();
+            }
+
+            if (guildObject.TryGetProperty("DenominationalMiracle", out var denominationalElement))
+            {
+                record.DenominationalMiracle = JsonSerializer.Deserialize<GuildMiracleReference>(
+                    denominationalElement.GetRawText(),
+                    _jsonOptions);
+            }
+
+            if (guildObject.TryGetProperty("DenominationalMiracleNote", out var denominationalNoteElement)
+                && denominationalNoteElement.ValueKind == JsonValueKind.String)
+            {
+                record.DenominationalMiracleNote = denominationalNoteElement.GetString() ?? string.Empty;
+            }
+
+            map[guildProperty.Name] = record;
+        }
+
+        return map;
     }
 
     private static string NormalizeRuleField(string? value)

@@ -183,14 +183,19 @@ public sealed class MultiClassWizardVm : INotifyPropertyChanged
 
     public async Task LoadAsync()
     {
-        _classes = await ClassService.GetAllAsync();
-        _races = await PeopleService.GetAllAsync();
+        var classesTask = ClassService.GetAllAsync();
+        var racesTask = PeopleService.GetAllAsync();
+        var catalogTask = MultiClassService.GetCatalogAsync();
+        await Task.WhenAll(classesTask, racesTask, catalogTask);
+
+        _classes = classesTask.Result;
+        _races = racesTask.Result;
         BuildClassLookupIndex();
 
         _allEntries.Clear();
         _entriesByCardKey.Clear();
 
-        var catalog = await MultiClassService.GetCatalogAsync();
+        var catalog = catalogTask.Result;
         foreach (var pair in catalog.MultiClasses.OrderBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase))
         {
             var entry = await BuildSearchEntryAsync(pair.Key, pair.Value);
