@@ -87,6 +87,6 @@
                                   RemoveContributionCommand="{Binding Source={x:Reference RootPage}, Path=CalculatorContext.RemoveContributionCommand}"
                                   ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
                                   ReturnCommandParameter="{x:Reference RootPage}"
-                                  Total="{Binding TotalWithBase}" />
+                                  Total="{Binding Source={x:Reference RootPage}, Path=FooterRunningTotal}" />
   </Grid>
 </cfg:ConfigPageBase>

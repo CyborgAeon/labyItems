@@ -30,6 +30,7 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
     public Command ReturnFromConfigCommand { get; set; }
     private Pages.Calculator.IspCalculator? _calculatorContext;
     private bool _isUpdatingFooter;
+    private int _footerRunningTotal;
     public Pages.Calculator.IspCalculator? CalculatorContext
     {
         get => _calculatorContext;
@@ -51,6 +52,19 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
         }
     }
     private bool CompletionSet => _tcs.Task.IsCompleted;
+
+    public int FooterRunningTotal
+    {
+        get => _footerRunningTotal;
+        private set
+        {
+            if (_footerRunningTotal == value)
+                return;
+
+            _footerRunningTotal = value;
+            OnPropertyChanged();
+        }
+    }
 
     protected ConfigPageBase()
     {
@@ -153,6 +167,8 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
             var preview = BuildPreviewRow(running);
             if (preview is not null)
                 FooterBreakdownItems.Add(preview);
+
+            FooterRunningTotal = FooterBreakdownItems.LastOrDefault()?.RunningTotal ?? Config.TotalWithBase;
         }
         finally
         {

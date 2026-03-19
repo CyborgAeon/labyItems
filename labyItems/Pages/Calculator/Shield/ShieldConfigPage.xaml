@@ -81,7 +81,7 @@
     </ScrollView>
     <controls:StickyFooterControl
       Grid.Row="1"
-      Total="{Binding TotalWithBase}"
+      Total="{Binding Source={x:Reference RootPage}, Path=FooterRunningTotal}"
       ButtonText="Return to Calculator"
       ReturnCommand="{Binding Source={x:Reference RootPage}, Path=ReturnFromConfigCommand}"
       ReturnCommandParameter="{x:Reference RootPage}"

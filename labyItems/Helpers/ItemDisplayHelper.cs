@@ -61,6 +61,11 @@ public static class ItemDisplayHelper
         var rep = (physicalRep ?? string.Empty).Trim();
         if (rep.Length == 0)
             rep = GetAutoPhysicalRep(list);
+        else if (rep.Equals("armor", StringComparison.OrdinalIgnoreCase))
+            rep = "armour";
+
+        if (rep.Equals("armour", StringComparison.OrdinalIgnoreCase))
+            rep = ResolveArmourMaterialLabel(list);
 
         var parts = new List<string>();
         if (life.Length > 0)
@@ -116,6 +121,59 @@ public static class ItemDisplayHelper
 
     private static bool IsType(CalcResult ability, string type)
         => (ability.AbilityType ?? string.Empty).Trim().Equals(type, StringComparison.OrdinalIgnoreCase);
+
+    private static string ResolveArmourMaterialLabel(IEnumerable<CalcResult> abilities)
+    {
+        foreach (var ability in abilities)
+        {
+            if (!IsArmourAbility(ability))
+                continue;
+
+            var candidates = new List<string>();
+            candidates.Add((ability.AbilityName ?? string.Empty).Trim());
+            candidates.Add((ability.Summary ?? string.Empty).Trim());
+            if (ability.Details.TryGetValue("layeredSummary", out var layeredSummary))
+                candidates.Add((layeredSummary?.ToString() ?? string.Empty).Trim());
+
+            foreach (var candidate in candidates)
+            {
+                var resolved = NormalizeArmourMaterial(candidate);
+                if (resolved.Length > 0)
+                    return resolved;
+            }
+        }
+
+        return "robes";
+    }
+
+    private static string NormalizeArmourMaterial(string raw)
+    {
+        var text = (raw ?? string.Empty).Trim().ToLowerInvariant();
+        if (text.Length == 0)
+            return string.Empty;
+
+        if (text.Contains("studded leather", StringComparison.Ordinal))
+            return "studded leather";
+        if (text.Contains("stiff leather", StringComparison.Ordinal))
+            return "stiff leather";
+        if (text.Contains("fine chain", StringComparison.Ordinal))
+            return "fine chain";
+        if (text.Contains("plate", StringComparison.Ordinal))
+            return "plate";
+        if (text.Contains("chain", StringComparison.Ordinal))
+            return "chain";
+        if (text.Contains("leather", StringComparison.Ordinal))
+            return "leather";
+        if (text.Contains("no armour", StringComparison.Ordinal)
+            || text.Contains("no armor", StringComparison.Ordinal)
+            || text.Contains("none", StringComparison.Ordinal)
+            || text.Contains("robe", StringComparison.Ordinal))
+        {
+            return "robes";
+        }
+
+        return string.Empty;
+    }
 
     private static string GetFirstMeaningfulAbilityName(IEnumerable<CalcResult> abilities)
     {

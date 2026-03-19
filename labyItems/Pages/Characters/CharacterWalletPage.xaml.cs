@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using labyItems.Controls;
+using labyItems.Controls.Pickers;
 using labyItems.Helpers;
 using labyItems.Models;
 using labyItems.Models.Characters;
@@ -24,11 +26,16 @@ public partial class CharacterWalletPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        DictionaryOverlayRegistry.DismissAll();
+        InlineSuggestionsOverlay.Dismiss();
+        WalletView.InputTransparent = false;
+        WalletView.IsEnabled = true;
         LoadCharacters();
     }
 
     private void LoadCharacters()
     {
+        _animatingRows.Clear();
         CharacterRows.Clear();
 
         var list = LiteDbService.GetCharacters()
@@ -39,6 +46,10 @@ public partial class CharacterWalletPage : ContentPage
             CharacterRows.Add(new CharacterWalletRowVm(c));
 
         EmptyStateLabel.IsVisible = CharacterRows.Count == 0;
+        // Force row container recreation to avoid stale recycled visual/input state after deep navigation.
+        WalletView.ItemsSource = null;
+        WalletView.ItemsSource = CharacterRows;
+        WalletView.InvalidateMeasure();
     }
 
     private async void OnToggleExpandedClicked(object sender, EventArgs e)
