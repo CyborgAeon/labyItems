@@ -63,10 +63,9 @@ jobs:
             fi
           done
 
-      - name: Install .NET iOS workloads
+      - name: Install .NET MAUI workloads
         run: |
-          dotnet workload install ios
-          dotnet workload install maui-ios
+          dotnet workload install maui-ios maui-android
 
       - name: Build bundled database
         run: |
