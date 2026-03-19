@@ -4667,27 +4667,27 @@
       "Intermediate": [],
       "Advanced": []
     },
+    "MiracleList": {
+      "1": ["Cure Wound", "Summon Spiritual Candles", "Halt"],
+      "2": ["Cure Serious Wounds"],
+      "3": [
+        "Cure Disease",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Healing Hand",
+        "Bless"
+      ],
+      "4": ["Heal"],
+      "5": [
+        "Remove Voice of Power",
+        "Remove Fear and Paralysis",
+        "Spiritual Invisibility"
+      ],
+      "6": ["Total Heal", "Spiritual Freedom", "Stronghold of Goodness"],
+      "8": ["Restore Life"]
+    },
     "Availability": {
-      "MiracleList": {
-        "1": ["Cure Wound", "Summon Spiritual Candles", "Halt"],
-        "2": ["Cure Serious Wounds"],
-        "3": [
-          "Cure Disease",
-          "Talk to Spirit",
-          "Spirit Shield",
-          "Protection from Spirits",
-          "Healing Hand",
-          "Bless"
-        ],
-        "4": ["Heal"],
-        "5": [
-          "Remove Voice of Power",
-          "Remove Fear and Paralysis",
-          "Spiritual Invisibility"
-        ],
-        "6": ["Total Heal", "Spiritual Freedom", "Stronghold of Goodness"],
-        "8": ["Restore Life"]
-      },
       "Rules": [
         {
           "Field": "Bracket",
