@@ -134,16 +134,16 @@ jobs:
           fi
           echo "APP_DISPLAY_VERSION=$DISPLAY_VERSION" >> "$GITHUB_ENV"
           echo "APP_BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_ENV"
-
       - name: Restore
         run: |
           dotnet restore labyItems/labyItems.csproj \
-            -f net10.0-ios \
-            -r ios-arm64
+            -p:TargetFramework=net10.0-ios \
+            -p:RuntimeIdentifier=ios-arm64
+
       - name: Publish signed iOS IPA
         run: |
           set -euo pipefail
-          UseIosWorkload=true dotnet publish labyItems/labyItems.csproj \
+          dotnet publish labyItems/labyItems.csproj \
             -f net10.0-ios \
             -c Release \
             --no-restore \
@@ -156,7 +156,6 @@ jobs:
             -p:CodesignProvision="$CODESIGN_PROVISION_UUID" \
             -p:ApplicationDisplayVersion="$APP_DISPLAY_VERSION" \
             -p:ApplicationVersion="$APP_BUILD_NUMBER"
-
       - name: Find IPA
         id: ipa
         run: |
