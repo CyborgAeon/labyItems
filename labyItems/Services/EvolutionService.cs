@@ -32,6 +32,7 @@ public static class EvolutionService
 
     public static async Task<IReadOnlyList<EvolutionResult>> GetAllAsync()
     {
+        await EnsureDatabaseInitializedAsync();
         if (_cache is not null) return _cache;
 
         try
@@ -71,6 +72,7 @@ public static class EvolutionService
 
     public static async Task<IReadOnlyList<AbilityResult>> GetAllAbilitiesAsync()
     {
+        await EnsureDatabaseInitializedAsync();
         if (_abilityCache is not null) return _abilityCache;
 
         try
@@ -103,6 +105,7 @@ public static class EvolutionService
 
     public static async Task<IReadOnlyList<EvolutionResult>> SearchByIndexAsync(string? query, int? table = null)
     {
+        await EnsureDatabaseInitializedAsync();
         if (string.IsNullOrWhiteSpace(query))
             return await GetAllAsync();
 
@@ -161,6 +164,7 @@ public static class EvolutionService
 
     public static async Task<IReadOnlyList<AbilityResult>> SearchAbilitiesAsync(string? query, int? table = null)
     {
+        await EnsureDatabaseInitializedAsync();
         if (string.IsNullOrWhiteSpace(query))
             return await GetAllAbilitiesAsync();
 
@@ -223,6 +227,82 @@ public static class EvolutionService
         _cache = null;
         _abilityCache = null;
         AbilityDetailsLookupService.InvalidateCache();
+    }
+
+    private static async Task EnsureDatabaseInitializedAsync()
+    {
+        try
+        {
+            var services = ResolveMauiServiceProvider();
+            if (services == null)
+                return;
+
+            var initializerType = ResolveDatabaseInitializerType();
+            if (initializerType == null)
+                return;
+
+            var initializer = services.GetService(initializerType);
+            if (initializer == null)
+                return;
+
+            var initMethod = initializerType.GetMethod(
+                "InitializeAsync",
+                new[] { typeof(CancellationToken) });
+
+            if (initMethod?.Invoke(initializer, new object[] { CancellationToken.None }) is Task initTask)
+                await initTask.ConfigureAwait(false);
+        }
+        catch
+        {
+            // If startup initialization fails we still allow legacy DB fallback reads.
+        }
+    }
+
+    private static Type? ResolveDatabaseInitializerType()
+    {
+        const string typeName = "labyItems.Services.IDatabaseInitializer";
+
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            var resolved = assembly.GetType(typeName, throwOnError: false, ignoreCase: false);
+            if (resolved != null)
+                return resolved;
+        }
+
+        return null;
+    }
+
+    private static IServiceProvider? ResolveMauiServiceProvider()
+    {
+        var appType = ResolveType("Microsoft.Maui.Controls.Application");
+        if (appType == null)
+            return null;
+
+        var currentApp = appType.GetProperty("Current")?.GetValue(null);
+        if (currentApp == null)
+            return null;
+
+        var handler = currentApp.GetType().GetProperty("Handler")?.GetValue(currentApp);
+        if (handler == null)
+            return null;
+
+        var mauiContext = handler.GetType().GetProperty("MauiContext")?.GetValue(handler);
+        if (mauiContext == null)
+            return null;
+
+        return mauiContext.GetType().GetProperty("Services")?.GetValue(mauiContext) as IServiceProvider;
+    }
+
+    private static Type? ResolveType(string fullName)
+    {
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            var resolved = assembly.GetType(fullName, throwOnError: false, ignoreCase: false);
+            if (resolved != null)
+                return resolved;
+        }
+
+        return null;
     }
 
     private static IReadOnlyList<string> ParsePreReqs(string? raw)

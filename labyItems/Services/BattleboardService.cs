@@ -61,11 +61,32 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var resolvedInnates = BattleboardInnateCalculator.Calculate(draft, assignedItems);
         var abilityEffects = await BattleboardAbilityEffectResolver.ResolveAsync(draft.Abilities);
         var advancementEffects = await BattleboardAdvancementEffectResolver.ResolveAsync(draft.AdvancementAbilities);
-        var effectiveResistanceLevels = BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
+        var itemEffects = await BattleboardItemEffectResolver.ResolveAsync(draft, assignedItems);
+        var effectiveResistanceLevels = BattleboardResistanceLevelService.BuildBaselineRawLevels(
             BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
-                draft.ResistanceLevels,
-                abilityEffects.ResistanceOverrides),
-            advancementEffects.ResistanceOverrides);
+                BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
+                    draft.ResistanceLevels,
+                    abilityEffects.ResistanceOverrides),
+                advancementEffects.ResistanceOverrides),
+            itemEffects.ResistanceOverrides);
+
+        var resistanceMultipliers = new Dictionary<string, int>(BattleboardAdvancementEffectResolver.ApplyResistanceMultipliers(
+                BattleboardAdvancementEffectResolver.ApplyResistanceMultipliers(
+                    abilityEffects.ResistanceMultipliers,
+                    advancementEffects.ResistanceMultipliers),
+                itemEffects.ResistanceMultipliers),
+            StringComparer.OrdinalIgnoreCase);
+        var infiniteResistanceTypes = new HashSet<string>(
+            BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
+                BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
+                    abilityEffects.InfiniteResistanceTypes,
+                    advancementEffects.InfiniteResistanceTypes),
+                itemEffects.InfiniteResistanceTypes),
+            StringComparer.OrdinalIgnoreCase);
+        var displayedResistanceLevels = BattleboardResistanceLevelService.BuildDisplayedLevels(
+            effectiveResistanceLevels,
+            resistanceMultipliers,
+            infiniteResistanceTypes);
 
         var pools = (draft.PowerPools ?? new Dictionary<string, int>())
             .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key))
@@ -161,6 +182,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
             .ToList();
         resistanceAbilities.AddRange(FormatResistanceOverrideEntries(abilityEffects.ResistanceOverrides));
         resistanceAbilities.AddRange(FormatResistanceOverrideEntries(advancementEffects.ResistanceOverrides));
+        resistanceAbilities.AddRange(FormatResistanceOverrideEntries(itemEffects.ResistanceOverrides));
         resistanceAbilities.AddRange((draft.AdvancementAbilities ?? new List<string>())
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Where(name => name.Contains("resistance", StringComparison.OrdinalIgnoreCase)));
@@ -176,18 +198,18 @@ public sealed class BattleboardExportService : IBattleboardExportService
         }
 
         // Resistance levels block (physical/magic/neuronic/spirit)
-        if (effectiveResistanceLevels != null)
+        if (displayedResistanceLevels != null)
         {
-            if (effectiveResistanceLevels.TryGetValue("Physical", out var phys))
-                ws.Cell("AD20").Value = phys;
-            if (effectiveResistanceLevels.TryGetValue("Magic", out var magic))
-                ws.Cell("AD21").Value = magic;
-            if (effectiveResistanceLevels.TryGetValue("Neuronic", out var neuronic))
-                ws.Cell("AD22").Value = neuronic;
-            else if (effectiveResistanceLevels.TryGetValue("Neuro", out var neuro))
-                ws.Cell("AD22").Value = neuro;
-            if (effectiveResistanceLevels.TryGetValue("Spirit", out var spirit))
-                ws.Cell("AD23").Value = spirit;
+            if (displayedResistanceLevels.TryGetValue("Physical", out var phys))
+                ws.Cell("AD20").Value = FormatResistanceCellValue(phys);
+            if (displayedResistanceLevels.TryGetValue("Magic", out var magic))
+                ws.Cell("AD21").Value = FormatResistanceCellValue(magic);
+            if (displayedResistanceLevels.TryGetValue("Neuronic", out var neuronic))
+                ws.Cell("AD22").Value = FormatResistanceCellValue(neuronic);
+            else if (displayedResistanceLevels.TryGetValue("Neuro", out var neuro))
+                ws.Cell("AD22").Value = FormatResistanceCellValue(neuro);
+            if (displayedResistanceLevels.TryGetValue("Spirit", out var spirit))
+                ws.Cell("AD23").Value = FormatResistanceCellValue(spirit);
         }
 
         var immunityAbilities = draft.Abilities
@@ -198,6 +220,8 @@ public sealed class BattleboardExportService : IBattleboardExportService
             .Concat((abilityEffects.Immunities ?? Array.Empty<string>())
                 .Select(StripImmunityPrefix))
             .Concat((advancementEffects.Immunities ?? Array.Empty<string>())
+                .Select(StripImmunityPrefix))
+            .Concat((itemEffects.Immunities ?? Array.Empty<string>())
                 .Select(StripImmunityPrefix))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
@@ -246,6 +270,9 @@ public sealed class BattleboardExportService : IBattleboardExportService
             yield return $"{level}th Level Resistance to {type}";
         }
     }
+
+    private static XLCellValue FormatResistanceCellValue(int level)
+        => level == int.MaxValue ? "\u221E" : level;
 
     private static readonly Regex ArmourTokenRegex = new(
         @"([+-]?\d+)\s*(PAC|DAC|MAC|SAC)",

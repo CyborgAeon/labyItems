@@ -39,6 +39,16 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             _logger.LogWarning("Skipped evolution sync: could not load packaged evolution_classes/merged.json.");
             return;
         }
+        if (!TryCountSeedEntries(mergedJson, out var mergedSeedCount))
+        {
+            _logger.LogError("Skipped evolution sync: packaged evolution_classes/merged.json is invalid JSON.");
+            return;
+        }
+        if (mergedSeedCount <= 0)
+        {
+            _logger.LogError("Skipped evolution sync: packaged evolution_classes/merged.json contains no ability entries.");
+            return;
+        }
 
         var makesJson = await ReadAssetTextAsync("makes_abilities.json", cancellationToken);
         var checksum = ComputeChecksum($"{mergedJson}\n{makesJson}");
@@ -155,6 +165,42 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
         }
 
         return list;
+    }
+
+    private static bool TryCountSeedEntries(string rawJson, out int count)
+    {
+        count = 0;
+        if (string.IsNullOrWhiteSpace(rawJson))
+            return false;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(rawJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Array)
+                return false;
+
+            foreach (var entry in doc.RootElement.EnumerateArray())
+            {
+                if (entry.ValueKind != JsonValueKind.Object)
+                    continue;
+
+                if (!entry.TryGetProperty("index", out var indexElement)
+                    || indexElement.ValueKind != JsonValueKind.String)
+                {
+                    continue;
+                }
+
+                var index = (indexElement.GetString() ?? string.Empty).Trim();
+                if (index.Length > 0)
+                    count++;
+            }
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static string SerializeAvailable(JsonElement available)

@@ -6,13 +6,15 @@ using System.Windows.Input;
 using labyItems.Models.Characters;
 using labyItems.Models.Abilities;
 using labyItems.Services;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
-public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
+public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
 {
     private const int MaxVisibleResults = 100;
+    private const int SearchDebounceMs = 500;
     private static readonly SemaphoreSlim AbilityCacheLock = new(1, 1);
     private static IReadOnlyList<CachedAbilityEntry>? _cachedAbilities;
     private static IReadOnlyDictionary<string, EvolutionService.AbilityResult>? _cachedAbilityLookup;
@@ -26,8 +28,10 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
     private IReadOnlyDictionary<string, PeopleRecord> _races
         = new Dictionary<string, PeopleRecord>(StringComparer.OrdinalIgnoreCase);
 
-    private readonly Dictionary<string, bool> _availabilityByAbilityKey = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, AvailabilityCacheEntry> _availabilityByAbilityKey = new(StringComparer.OrdinalIgnoreCase);
+    private readonly object _availabilityCacheLock = new();
     private readonly HashSet<string> _selectedAbilityKeys = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _focusedAbilityKeys = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _activeSourceBookFilters = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<int> _activeTableFilters = new();
     private IReadOnlyList<CachedAbilityEntry> _abilityEntries = Array.Empty<CachedAbilityEntry>();
@@ -39,6 +43,10 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
     private bool _pendingAvailableOnly = true;
     private bool _activeAvailableOnly = true;
     private int _selectedCount;
+    private bool _showSelectedOnly;
+    private int _refilterVersion;
+    private CancellationTokenSource? _refilterCts;
+    private bool _isDisposed;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -52,6 +60,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
     public ICommand ToggleSourceBookFilterCommand { get; }
     public ICommand ToggleTableFilterCommand { get; }
     public ICommand ToggleSelectAbilityCommand { get; }
+    public ICommand ToggleSelectedOnlyCommand { get; }
 
     public AdvanceAbilitySearchVm(
         AdvanceCharacterVm root,
@@ -69,6 +78,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
         ToggleSourceBookFilterCommand = new Command<AdvanceAbilitySearchFilterOptionVm<string>>(ToggleSourceBookFilter);
         ToggleTableFilterCommand = new Command<AdvanceAbilitySearchFilterOptionVm<int>>(ToggleTableFilter);
         ToggleSelectAbilityCommand = new Command<AdvanceAbilitySearchItemVm>(ToggleSelectAbility);
+        ToggleSelectedOnlyCommand = new Command(ToggleSelectedOnly);
     }
 
     public string SearchText
@@ -79,7 +89,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
             if (!Set(ref _searchText, value ?? string.Empty))
                 return;
 
-            Refilter();
+            ScheduleRefilter(debounce: true);
         }
     }
 
@@ -113,11 +123,29 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
     public bool HasSelectedAbilities => SelectedCount > 0;
 
     public string SelectedSummaryText => HasSelectedAbilities
-        ? $"Selected: {SelectedCount}"
-        : "No abilities selected";
+        ? ShowSelectedOnly
+            ? $"Selected: {SelectedCount} (showing selected)"
+            : $"Selected: {SelectedCount}"
+        : "Selected: 0";
+
+    public bool ShowSelectedOnly
+    {
+        get => _showSelectedOnly;
+        private set
+        {
+            if (!Set(ref _showSelectedOnly, value))
+                return;
+
+            Raise(nameof(SelectedSummaryText));
+        }
+    }
 
     public async Task LoadAsync()
     {
+        var dbInitializer = ServiceHelper.ResolveService<IDatabaseInitializer>();
+        if (dbInitializer != null)
+            await dbInitializer.InitializeAsync();
+
         var classesTask = ClassService.GetAllAsync();
         var racesTask = PeopleService.GetAllAsync();
         var abilityCacheTask = EnsureAbilityCacheAsync();
@@ -131,7 +159,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
         _selectedAbilityKeys.Clear();
 
         BuildFilterOptions();
-        Refilter();
+        ScheduleRefilter(debounce: false);
         UpdateSelectedCount();
     }
 
@@ -141,11 +169,14 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
     public void ClearSelections()
     {
         _selectedAbilityKeys.Clear();
+        _focusedAbilityKeys.Clear();
+        ShowSelectedOnly = false;
 
         foreach (var ability in FilteredAbilities)
             ability.IsSelected = false;
 
         UpdateSelectedCount();
+        ScheduleRefilter(debounce: false);
     }
 
     public IReadOnlyList<EvolutionService.AbilityResult> GetSelectedAbilities()
@@ -155,6 +186,45 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
             .Cast<EvolutionService.AbilityResult>()
             .OrderBy(ability => ability.Index, StringComparer.OrdinalIgnoreCase)
             .ToList();
+
+    public AbilityPrerequisiteCheckResult GetSelectionPrerequisiteIssues()
+        => AbilityPrerequisiteService.Evaluate(
+            GetSelectedAbilities(),
+            BuildKnownAbilityTerms(),
+            _abilityEntries.Select(entry => entry.Ability));
+
+    public string BuildMissingPrerequisiteMessage(AbilityPrerequisiteCheckResult result)
+    {
+        if (!result.HasIssues)
+            return string.Empty;
+
+        var lines = result.Issues
+            .Select(issue => $"{issue.AbilityName}: {string.Join(", ", issue.MissingPrerequisites)}")
+            .ToList();
+        return string.Join(Environment.NewLine, lines);
+    }
+
+    public void FocusMissingPrerequisites(AbilityPrerequisiteCheckResult result)
+    {
+        _focusedAbilityKeys.Clear();
+        foreach (var key in result.MissingPrerequisiteKeys ?? Array.Empty<string>())
+        {
+            var normalized = (key ?? string.Empty).Trim();
+            if (normalized.Length == 0)
+                continue;
+
+            var directKey = _abilityLookupByKey.ContainsKey(normalized)
+                ? normalized
+                : AbilityKey.Build(ResolveAbilityByTerm(normalized));
+
+            if (!string.IsNullOrWhiteSpace(directKey))
+                _focusedAbilityKeys.Add(directKey);
+        }
+
+        ShowSelectedOnly = false;
+        SearchText = string.Empty;
+        ScheduleRefilter(debounce: false);
+    }
 
     private void OpenFilters()
     {
@@ -185,7 +255,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
             _activeTableFilters.Add(filter.Value);
 
         IsFilterModalOpen = false;
-        Refilter();
+        ScheduleRefilter(debounce: false);
     }
 
     private static void ToggleSourceBookFilter(AdvanceAbilitySearchFilterOptionVm<string>? filter)
@@ -212,6 +282,20 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
         ability.IsSelected = !ability.IsSelected;
     }
 
+    private void ToggleSelectedOnly()
+    {
+        _focusedAbilityKeys.Clear();
+        if (SelectedCount <= 0)
+        {
+            ShowSelectedOnly = false;
+            ScheduleRefilter(debounce: false);
+            return;
+        }
+
+        ShowSelectedOnly = !ShowSelectedOnly;
+        ScheduleRefilter(debounce: false);
+    }
+
     private void BuildFilterOptions()
     {
         SourceBookFilters.Clear();
@@ -223,48 +307,184 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
             TableFilters.Add(new AdvanceAbilitySearchFilterOptionVm<int>(table.ToString(), table));
     }
 
-    private void Refilter()
+    private IReadOnlyList<AdvanceAbilitySearchItemVm> ComputeFilteredItems(
+        string query,
+        IReadOnlySet<string> sourceBooks,
+        IReadOnlySet<int> tables,
+        bool availableOnly,
+        bool selectedOnly,
+        IReadOnlySet<string> focusedAbilityKeys,
+        IReadOnlySet<string> selectedAbilityKeys,
+        CancellationToken token)
     {
-        var query = SearchText.Trim();
+        var hasQuery = query.Length > 0;
         var filtered = new List<AdvanceAbilitySearchItemVm>(MaxVisibleResults);
         foreach (var ability in _abilityEntries)
         {
+            if (token.IsCancellationRequested)
+                break;
+
             if (query.Length > 0
                 && !ability.Name.Contains(query, StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
 
-            if (_activeSourceBookFilters.Count > 0
-                && !_activeSourceBookFilters.Contains(ability.SourceBook))
+            if (focusedAbilityKeys.Count > 0
+                && !focusedAbilityKeys.Contains(ability.Key))
             {
                 continue;
             }
 
-            if (_activeTableFilters.Count > 0
-                && !_activeTableFilters.Contains(ability.Table))
+            if (selectedOnly
+                && !selectedAbilityKeys.Contains(ability.Key))
+            {
+                continue;
+            }
+
+            var bypassCatalogFilters = focusedAbilityKeys.Count > 0 || selectedOnly;
+
+            if (!bypassCatalogFilters
+                && sourceBooks.Count > 0
+                && !sourceBooks.Contains(ability.SourceBook))
+            {
+                continue;
+            }
+
+            if (!bypassCatalogFilters
+                && tables.Count > 0
+                && !tables.Contains(ability.Table))
             {
                 continue;
             }
 
             var isAvailable = GetAvailability(ability);
-            if (isAvailable != _activeAvailableOnly)
+            if (!bypassCatalogFilters
+                && availableOnly
+                && !isAvailable)
                 continue;
 
             var item = new AdvanceAbilitySearchItemVm(
                 ability.Ability,
                 ability.SourceBook,
                 isAvailable,
-                _selectedAbilityKeys.Contains(ability.Key));
-            item.PropertyChanged += OnAbilityItemPropertyChanged;
+                selectedAbilityKeys.Contains(ability.Key));
             filtered.Add(item);
-            if (filtered.Count >= MaxVisibleResults)
+            if (!hasQuery && filtered.Count >= MaxVisibleResults)
                 break;
         }
 
-        ReplaceFilteredItems(filtered);
+        if (hasQuery && filtered.Count > MaxVisibleResults)
+        {
+            filtered = filtered
+                .OrderByDescending(item => item.Name.Equals(query, StringComparison.OrdinalIgnoreCase))
+                .ThenByDescending(item => item.Name.StartsWith(query, StringComparison.OrdinalIgnoreCase))
+                .ThenBy(item => item.Table)
+                .ThenBy(item => item.Name, StringComparer.OrdinalIgnoreCase)
+                .Take(MaxVisibleResults)
+                .ToList();
+        }
 
-        Raise(nameof(HasResults));
+        return filtered;
+    }
+
+    public void Dispose()
+    {
+        if (_isDisposed)
+            return;
+
+        _isDisposed = true;
+
+        var cts = Interlocked.Exchange(ref _refilterCts, null);
+        if (cts != null)
+        {
+            cts.Cancel();
+            cts.Dispose();
+        }
+
+        foreach (var item in FilteredAbilities)
+            item.PropertyChanged -= OnAbilityItemPropertyChanged;
+    }
+
+    private void ScheduleRefilter(bool debounce)
+    {
+        if (_isDisposed)
+            return;
+
+        Interlocked.Increment(ref _refilterVersion);
+
+        var nextCts = new CancellationTokenSource();
+        var previous = Interlocked.Exchange(ref _refilterCts, nextCts);
+        if (previous != null)
+        {
+            previous.Cancel();
+            previous.Dispose();
+        }
+
+        _ = RunScheduledRefilterAsync(_refilterVersion, debounce, nextCts.Token);
+    }
+
+    private async Task RunScheduledRefilterAsync(int version, bool debounce, CancellationToken token)
+    {
+        try
+        {
+            if (debounce)
+                await Task.Delay(SearchDebounceMs, token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        if (_isDisposed || token.IsCancellationRequested || version != _refilterVersion)
+            return;
+
+        var query = SearchText.Trim();
+        var sourceBooks = new HashSet<string>(_activeSourceBookFilters, StringComparer.OrdinalIgnoreCase);
+        var tables = new HashSet<int>(_activeTableFilters);
+        var selectedAbilityKeys = new HashSet<string>(_selectedAbilityKeys, StringComparer.OrdinalIgnoreCase);
+        var focusedAbilityKeys = new HashSet<string>(_focusedAbilityKeys, StringComparer.OrdinalIgnoreCase);
+        var availableOnly = _activeAvailableOnly;
+        var selectedOnly = ShowSelectedOnly;
+
+        IReadOnlyList<AdvanceAbilitySearchItemVm> filtered;
+        try
+        {
+            filtered = await Task.Run(
+                () => ComputeFilteredItems(
+                    query,
+                    sourceBooks,
+                    tables,
+                    availableOnly,
+                    selectedOnly,
+                    focusedAbilityKeys,
+                    selectedAbilityKeys,
+                    token),
+                token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        if (_isDisposed || token.IsCancellationRequested || version != _refilterVersion)
+            return;
+
+        if (MainThread.IsMainThread)
+        {
+            ReplaceFilteredItems(filtered);
+            Raise(nameof(HasResults));
+            return;
+        }
+
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            if (_isDisposed || token.IsCancellationRequested || version != _refilterVersion)
+                return;
+
+            ReplaceFilteredItems(filtered);
+            Raise(nameof(HasResults));
+        });
     }
 
     private void OnAbilityItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -282,10 +502,19 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
             _selectedAbilityKeys.Remove(key);
 
         UpdateSelectedCount();
+        if (ShowSelectedOnly || _focusedAbilityKeys.Count > 0)
+            ScheduleRefilter(debounce: false);
     }
 
     private void UpdateSelectedCount()
-        => SelectedCount = _selectedAbilityKeys.Count;
+    {
+        SelectedCount = _selectedAbilityKeys.Count;
+        if (SelectedCount > 0 || !ShowSelectedOnly)
+            return;
+
+        ShowSelectedOnly = false;
+        ScheduleRefilter(debounce: false);
+    }
 
     private static string NormalizeSourceBook(string? sourceBook)
     {
@@ -344,16 +573,40 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
 
     private bool GetAvailability(CachedAbilityEntry ability)
     {
-        if (_availabilityByAbilityKey.TryGetValue(ability.Key, out var cached))
-            return cached;
+        var contextSignature = BuildAvailabilityContextSignature();
+        lock (_availabilityCacheLock)
+        {
+            if (_availabilityByAbilityKey.TryGetValue(ability.Key, out var cached)
+                && string.Equals(cached.ContextSignature, contextSignature, StringComparison.Ordinal))
+            {
+                return cached.IsAvailable;
+            }
+        }
 
         var resolved = _abilityAvailabilityService.IsAvailable(
             ability.Ability.AvailabilityRules,
             _draft,
             _classes,
             _races);
-        _availabilityByAbilityKey[ability.Key] = resolved;
+
+        lock (_availabilityCacheLock)
+        {
+            _availabilityByAbilityKey[ability.Key] = new AvailabilityCacheEntry(contextSignature, resolved);
+        }
+
         return resolved;
+    }
+
+    private string BuildAvailabilityContextSignature()
+    {
+        var className = (_draft.Class ?? string.Empty).Trim();
+        var raceName = (_draft.Race ?? string.Empty).Trim();
+        var secondClasses = (_draft.MultiClassLevels ?? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase))
+            .Where(pair => pair.Value > 0 && !string.IsNullOrWhiteSpace(pair.Key))
+            .Select(pair => pair.Key.Trim())
+            .OrderBy(value => value, StringComparer.OrdinalIgnoreCase);
+
+        return $"{className}|{raceName}|{string.Join(",", secondClasses)}";
     }
 
     private void ReplaceFilteredItems(IReadOnlyList<AdvanceAbilitySearchItemVm> source)
@@ -362,6 +615,40 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged
             item.PropertyChanged -= OnAbilityItemPropertyChanged;
 
         ReplaceItems(FilteredAbilities, source);
+        foreach (var item in FilteredAbilities)
+            item.PropertyChanged += OnAbilityItemPropertyChanged;
+    }
+
+    private EvolutionService.AbilityResult? ResolveAbilityByTerm(string? rawKeyOrName)
+    {
+        var normalized = (rawKeyOrName ?? string.Empty).Trim();
+        if (normalized.Length == 0)
+            return null;
+
+        if (_abilityLookupByKey.TryGetValue(normalized, out var byKey))
+            return byKey;
+
+        return _abilityEntries
+            .Select(entry => entry.Ability)
+            .FirstOrDefault(ability =>
+                string.Equals(ability.AbilityRef, normalized, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(ability.Index, normalized, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(AbilityKey.BuildEvolutionFallback(ability), normalized, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private IEnumerable<string> BuildKnownAbilityTerms()
+    {
+        foreach (var raw in _draft.AdvancementAbilities ?? new List<string>())
+            yield return raw;
+
+        foreach (var ability in _draft.Abilities ?? new List<AbilityDraft>())
+        {
+            yield return ability?.AbilityKey ?? string.Empty;
+            yield return ability?.Name ?? string.Empty;
+            yield return ability?.BattleboardNameOverride ?? string.Empty;
+            yield return ability?.UpdateKey ?? string.Empty;
+            yield return ability?.OverwriteKey ?? string.Empty;
+        }
     }
 
     private static string BuildAbilityKey(EvolutionService.AbilityResult ability)
@@ -396,6 +683,10 @@ internal sealed record CachedAbilityEntry(
     public string Name => Ability.Index;
     public int Table => Ability.Table;
 }
+
+internal sealed record AvailabilityCacheEntry(
+    string ContextSignature,
+    bool IsAvailable);
 
 public sealed class AdvanceAbilitySearchItemVm : INotifyPropertyChanged
 {

@@ -171,7 +171,14 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
     private void ApplyManualDamage()
     {
         var locationKey = _target is TotalLifeVm ? null : SelectedLocation?.Key;
-        ApplyTypedDamage(TblpDamage, LocDamage, locationKey, applyToAllLocations: false);
+        ApplyTypedDamage(
+            TblpDamage,
+            LocDamage,
+            locationKey,
+            applyToAllLocations: false,
+            ResolveManualDamageChannel(),
+            sourceKind: "Manual",
+            isMantic: false);
     }
 
     private void ApplyPreset(DamagePresetVm? preset)
@@ -180,7 +187,7 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
 
         var grade = Math.Max(1, preset.Value);
         var locationKey = SelectedLocation?.Key ?? "Chest";
-        ApplyGradeDamage(grade, locationKey);
+        ApplyGradeDamage(grade, locationKey, ResolveManualDamageChannel());
     }
 
     private void ApplyManualHealing()
@@ -198,10 +205,10 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
             selectedKey = "Chest";
 
         foreach (var part in spellVm.Spell.Parts)
-            ApplySpellPart(part, selectedKey);
+            ApplySpellPart(part, selectedKey, spellVm.Spell);
     }
 
-    private void ApplySpellPart(DamagePart part, string selectedLocationKey)
+    private void ApplySpellPart(DamagePart part, string selectedLocationKey, DamageSpell sourceSpell)
     {
         if (TryApplyDamageOverride(part, selectedLocationKey))
             return;
@@ -209,8 +216,10 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
         var (tblp, loc) = ApplyMacReduction(part);
 
         var (targetKey, applyAll) = ResolveTarget(part.DamType, selectedLocationKey);
+        var channel = ResolveSourceDamageChannel(part, sourceSpell);
+        var isMantic = IsManticSource(part, sourceSpell);
 
-        _board.ApplyDamage(tblp, loc, targetKey, applyAll);
+        ApplyResolvedDamage(tblp, loc, targetKey, applyAll, channel, sourceSpell.Kind, isMantic);
 
         if (part.PacDam > 0)
             _board.ApplyPacDamage(part.PacDam, targetKey, applyAll);
@@ -234,7 +243,14 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
         return (tblp, loc);
     }
 
-    private void ApplyTypedDamage(int tblp, int loc, string? locationKey, bool applyToAllLocations)
+    private void ApplyTypedDamage(
+        int tblp,
+        int loc,
+        string? locationKey,
+        bool applyToAllLocations,
+        DamageChannel channel,
+        string sourceKind,
+        bool isMantic)
     {
         var reduction = GetDamageReduction();
         if (reduction > 0)
@@ -243,7 +259,7 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
             loc = Math.Max(0, loc - reduction);
         }
 
-        _board.ApplyDamage(tblp, loc, locationKey, applyToAllLocations);
+        ApplyResolvedDamage(tblp, loc, locationKey, applyToAllLocations, channel, sourceKind, isMantic);
     }
 
     private int GetDamageReduction()
@@ -260,11 +276,11 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
         };
     }
 
-    private void ApplyGradeDamage(int grade, string locationKey)
+    private void ApplyGradeDamage(int grade, string locationKey, DamageChannel channel)
     {
         var baseDamage = grade * 6;
         var final = Math.Max(1, baseDamage - GetDamageReduction());
-        _board.ApplyDamage(final, final, locationKey, applyToAllLocations: false);
+        ApplyResolvedDamage(final, final, locationKey, applyToAllLocations: false, channel, sourceKind: "Manual", isMantic: false);
     }
 
     private void ApplyHealingEntry(HealingEntryVm? entryVm)
@@ -446,6 +462,87 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
             new DamagePresetVm("Quin", 5),
             new DamagePresetVm("Six", 6),
         };
+
+    private DamageChannel ResolveManualDamageChannel()
+    {
+        var type = (SelectedDamageType ?? string.Empty).Trim();
+        if (type.Equals("Pure magic", StringComparison.OrdinalIgnoreCase))
+            return DamageChannel.Magic;
+        if (type.Equals("Pure spirit", StringComparison.OrdinalIgnoreCase))
+            return DamageChannel.Spirit;
+        if (type.Contains("neur", StringComparison.OrdinalIgnoreCase))
+            return DamageChannel.Neuro;
+        return DamageChannel.None;
+    }
+
+    private static DamageChannel ResolveSourceDamageChannel(DamagePart part, DamageSpell sourceSpell)
+    {
+        var token = (part.DamType ?? string.Empty).Trim();
+        if (token.Contains("neur", StringComparison.OrdinalIgnoreCase))
+            return DamageChannel.Neuro;
+        if (token.Contains("spirit", StringComparison.OrdinalIgnoreCase))
+            return DamageChannel.Spirit;
+        if (token.Contains("magic", StringComparison.OrdinalIgnoreCase)
+            || token.Contains("mana", StringComparison.OrdinalIgnoreCase))
+        {
+            return DamageChannel.Magic;
+        }
+
+        var kind = (sourceSpell.Kind ?? string.Empty).Trim();
+        if (kind.Equals("Spell", StringComparison.OrdinalIgnoreCase))
+            return DamageChannel.Magic;
+        if (kind.Equals("Miracle", StringComparison.OrdinalIgnoreCase))
+            return DamageChannel.Spirit;
+
+        return DamageChannel.None;
+    }
+
+    private static bool IsManticSource(DamagePart part, DamageSpell sourceSpell)
+    {
+        var token = (part.DamType ?? string.Empty).Trim();
+        if (token.Contains("mantic", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return (sourceSpell.Name ?? string.Empty).Contains("mantic", StringComparison.OrdinalIgnoreCase)
+               || (sourceSpell.Summary ?? string.Empty).Contains("mantic", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void ApplyResolvedDamage(
+        int tblp,
+        int loc,
+        string? locationKey,
+        bool applyToAllLocations,
+        DamageChannel channel,
+        string sourceKind,
+        bool isMantic)
+    {
+        var channelName = channel switch
+        {
+            DamageChannel.Magic => "Magic",
+            DamageChannel.Spirit => "Spirit",
+            DamageChannel.Neuro => "Neuro",
+            _ => string.Empty
+        };
+
+        var (resolvedTblp, resolvedLoc) = BattleboardDamageMitigationService.ApplyPostArmourMitigation(
+            tblp,
+            loc,
+            channelName,
+            _board.GetResistanceMultiplier,
+            _board.HasInfiniteResistance,
+            sourceKind.Equals("Miracle", StringComparison.OrdinalIgnoreCase),
+            isMantic);
+
+        _board.ApplyDamage(resolvedTblp, resolvedLoc, locationKey, applyToAllLocations);
+    }
+}
+
+internal enum DamageChannel
+{
+    None = 0,
+    Magic = 1,
+    Spirit = 2,
+    Neuro = 3
 }
 
 public sealed class LocationOptionVm

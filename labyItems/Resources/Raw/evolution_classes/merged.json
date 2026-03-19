@@ -617,7 +617,10 @@
     "index": "Immunity to Bar Spirit",
     "desc": "From Immunity to Strongholds gains immunity to Bar Spirit",
     "sourceBook": "Classes",
-    "preReqs": ["Immunity to Strongholds"],
+    "preReqs": [
+      "Immunity to Strongholds",
+      "Immunity to Protection from Spirits"
+    ],
     "abilityRef": "ability.merged.immunity-to-bar-spirit"
   },
   {
@@ -652,7 +655,7 @@
     "table": 3,
     "cost": 60,
     "index": "Lightning Reactions",
-    "desc": "Lightning Reactions - Grants Immunity to all Attacks that occur in a Time-Freeze situation",
+    "desc": "Grants Immunity to all Attacks that occur in a Time-Freeze situation",
     "sourceBook": "Classes"
   },
   {
@@ -669,7 +672,7 @@
     "table": 3,
     "cost": 70,
     "index": "Stability",
-    "desc": "Stability - don't fall over due to Earth Tremor type effects",
+    "desc": "Don't fall over due to Earth Tremor type effects",
     "sourceBook": "Classes"
   },
   {
@@ -695,7 +698,7 @@
     "table": 3,
     "cost": 80,
     "index": "Immunity to Natural Cold",
-    "desc": "Immunity to Natural Cold (½ effect supernatural cold effects, not  resistance levels )",
+    "desc": "Immunity to Natural Cold (½ effect supernatural cold effects, not resistance levels)",
     "sourceBook": "Classes",
     "abilityRef": "ability.merged.immunity-to-natural-cold"
   },
@@ -704,7 +707,7 @@
     "table": 3,
     "cost": 80,
     "index": "Immunity to Natural Lightning",
-    "desc": "Immunity to Natural Lightning (½ effect supernatural lightning and blue   mana, not resistance levels)",
+    "desc": "Immunity to Natural Lightning (½ effect supernatural lightning and blue mana, not resistance levels)",
     "sourceBook": "Classes",
     "abilityRef": "ability.merged.immunity-to-natural-lightning"
   },
@@ -5460,7 +5463,7 @@
     "table": 1,
     "cost": 0,
     "index": "Caste Eta",
-    "desc": "Caste Eta – The lowest of the low. Below even peasants. Members of this Caste will be avoided by most. One of this Caste can never rise above it, no matter how glorious their deeds.",
+    "desc": "The lowest of the low. Below even peasants. Members of this Caste will be avoided by most. One of this Caste can never rise above it, no matter how glorious their deeds.",
     "sourceBook": "Races"
   },
   {
@@ -5468,7 +5471,7 @@
     "table": 1,
     "cost": 10,
     "index": "Caste Peasant",
-    "desc": "Caste Peasant – Born to the most common Caste. Heroes often rise from this Caste to glory. Unlike the peasants of the Empire they are sometimes infused with vitae. A person choosing this can either retain their res chance, or gain benefits as per the “Peon” ability.",
+    "desc": "orn to the most common Caste. Heroes often rise from this Caste to glory. Unlike the peasants of the Empire they are sometimes infused with vitae. A person choosing this can either retain their res chance, or gain benefits as per the “Peon” ability.",
     "sourceBook": "Races"
   },
   {
@@ -5476,7 +5479,7 @@
     "table": 1,
     "cost": 20,
     "index": "Caste Artisan/Merchant",
-    "desc": "Caste Artisan/Merchant – Born to a family skilled in a craft or trade. While not amongst the wealthiest in the Empire, or the most influential, you are still above the simple Peasant.",
+    "desc": "Born to a family skilled in a craft or trade. While not amongst the wealthiest in the Empire, or the most influential, you are still above the simple Peasant.",
     "sourceBook": "Races"
   },
   {
@@ -5490,7 +5493,7 @@
     "table": 1,
     "cost": 30,
     "index": "Caste Mystical",
-    "desc": "Caste Mystical – The ability to manipulate Magic or Spirits sets you above the masses. While not as respected as powerful warriors, you accorded respect by many.",
+    "desc": "The ability to manipulate Magic or Spirits sets you above the masses. While not as respected as powerful warriors, you accorded respect by many.",
     "sourceBook": "Races"
   },
   {
@@ -5504,7 +5507,7 @@
     "table": 1,
     "cost": 40,
     "index": "Caste Protector",
-    "desc": "Caste Protector – Charged with serving in the Armies of the Clans and the Empire. You are bound by the Code of Jade and have a duty to protect the people of the Empire.",
+    "desc": "Charged with serving in the Armies of the Clans and the Empire. You are bound by the Code of Jade and have a duty to protect the people of the Empire.",
     "sourceBook": "Races"
   },
   {
@@ -5512,7 +5515,7 @@
     "table": 1,
     "cost": 0,
     "index": "Caste Honoured One",
-    "desc": "Caste Honoured One – A member of the Samurai or higher Caste. You are accorded great respect within the Empire. You must purchase the Honoured One Status earlier in the book or if a warrior you may purchase the Samurai Tradition instead.",
+    "desc": "A member of the Samurai or higher Caste. You are accorded great respect within the Empire. You must purchase the Honoured One Status earlier in the book or if a warrior you may purchase the Samurai Tradition instead.",
     "sourceBook": "Races"
   },
   {
@@ -5520,7 +5523,7 @@
     "table": 1,
     "cost": 0,
     "index": "Caste Dishonoured One",
-    "desc": "Caste Dishonoured One – You have taken an action against the Laws and accords or the Empire. You will be hunted and maybe even killed for your status. You must purchase the Dishonoured One Status earlier in the book.",
+    "desc": "You have taken an action against the Laws and accords or the Empire. You will be hunted and maybe even killed for your status. You must purchase the Dishonoured One Status earlier in the book.",
     "sourceBook": "Races"
   },
   {
@@ -5535,7 +5538,7 @@
     "table": 1,
     "cost": 100,
     "index": "Trained from Youth",
-    "desc": "Trained from Youth – Loses Utilise Shield Skill and may never recover it. Gains Forearm parry as Monk skill",
+    "desc": "Loses Utilise Shield Skill and may never recover it. Gains Forearm parry as Monk skill",
     "sourceBook": "Races"
   },
   {
@@ -5543,7 +5546,7 @@
     "table": 1,
     "cost": 50,
     "index": "My Code is my Honour",
-    "desc": "My Code is my Honour – Can never be dominated to break the Jade Code. If ever breaks the Jade Code then must either commit Seppuku immediately or becomes Dishonoured having to buy the appropriate status.",
+    "desc": "Can never be dominated to break the Jade Code. If ever breaks the Jade Code then must either commit Seppuku immediately or becomes Dishonoured having to buy the appropriate status.",
     "sourceBook": "Races"
   },
   {
@@ -7424,7 +7427,13 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      }
+    ],
     "table": 9,
     "cost": 75,
     "preReqs": ["+1 Weapon Mastery"],
@@ -7433,7 +7442,13 @@
     "sourceBook": "At the sharp end"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      }
+    ],
     "table": 9,
     "cost": 50,
     "index": "Chameleon",
@@ -7443,6 +7458,11 @@
   },
   {
     "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      },
       {
         "Field": "OriginalClass",
         "Operator": "In",
@@ -7459,6 +7479,11 @@
   {
     "available": [
       {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      },
+      {
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Thug", "Assassin", "Pathfinder", "Kallah Beggar"]
@@ -7473,6 +7498,11 @@
   },
   {
     "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      },
       {
         "Field": "OriginalClass",
         "Operator": "In",
@@ -7490,6 +7520,11 @@
   {
     "available": [
       {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      },
+      {
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Kallah Beggar"]
@@ -7505,6 +7540,11 @@
   {
     "available": [
       {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      },
+      {
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Pathfinder"]
@@ -7519,6 +7559,11 @@
   },
   {
     "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      },
       {
         "Field": "OriginalClass",
         "Operator": "In",
@@ -7541,6 +7586,11 @@
   {
     "available": [
       {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      },
+      {
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Pathfinder", "Assassin", "Thug"]
@@ -7562,6 +7612,11 @@
   {
     "available": [
       {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      },
+      {
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Pathfinder", "Assassin"]
@@ -7576,6 +7631,11 @@
   {
     "available": [
       {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      },
+      {
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Pathfinder"]
@@ -7589,6 +7649,11 @@
   },
   {
     "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["⚔ Scout"]
+      },
       {
         "Field": "OriginalClass",
         "Operator": "In",
@@ -8333,7 +8398,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 1,
     "cost": 40,
     "index": "1st Rank of Mana",
@@ -8341,7 +8412,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 1,
     "cost": 40,
     "index": "2nd Rank of Mana",
@@ -8350,7 +8427,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 1,
     "cost": 35,
     "index": "Casting Level I",
@@ -8358,7 +8441,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 1,
     "cost": 40,
     "index": "Casting Level II",
@@ -8367,7 +8456,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 1,
     "cost": 45,
     "index": "Casting Level III",
@@ -8403,7 +8498,13 @@
     }
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 1,
     "cost": 20,
     "index": "Discern Associated Mana",
@@ -8411,7 +8512,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 1,
     "cost": 40,
     "index": "Summoned Weapon Mastery",
@@ -8419,7 +8526,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 1,
     "cost": 0,
     "CanAddMultiple": true,
@@ -8500,6 +8613,11 @@
         "SpecialisationKey": "Wizard Colour"
       },
       {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      },
+      {
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["🧙 Wizard"]
@@ -8513,6 +8631,11 @@
   },
   {
     "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      },
       {
         "Field": "OriginalClass",
         "Operator": "In",
@@ -8569,7 +8692,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 1,
     "cost": 25,
     "index": "Personal Incantations",
@@ -8596,6 +8725,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Power Master"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
       }
     ],
     "table": 1,
@@ -8610,6 +8744,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Vivomancer"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
       }
     ],
     "table": 1,
@@ -8624,6 +8763,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Vivomancer"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
       }
     ],
     "table": 1,
@@ -8638,6 +8782,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Sorcerer"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
       }
     ],
     "table": 1,
@@ -8652,6 +8801,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Warlock"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
       }
     ],
     "table": 1,
@@ -8680,6 +8834,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Wizard", "Warlock"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
       }
     ],
     "table": 1,
@@ -8717,6 +8876,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["🧙 Wizard"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
       }
     ],
     "table": 2,
@@ -8727,7 +8891,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 2,
     "cost": 40,
     "index": "3rd Rank of Mana",
@@ -8736,7 +8906,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 2,
     "cost": 40,
     "index": "4th Rank of Mana",
@@ -8760,7 +8936,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 2,
     "cost": 50,
     "index": "Casting Level IV",
@@ -8769,7 +8951,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 2,
     "cost": 100,
     "index": "Facility I",
@@ -8796,6 +8984,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Warlock", "Power Master"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
       }
     ],
     "table": 2,
@@ -8985,7 +9178,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 4,
     "cost": 30,
     "index": "Discern Associated Magical Innates",
@@ -9099,7 +9298,13 @@
     }
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 5,
     "cost": 60,
     "index": "Aware Meditation",
@@ -9107,7 +9312,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 5,
     "cost": 25,
     "index": "Discern Demonkind",
@@ -9545,7 +9756,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 7,
     "cost": 80,
     "index": "Greater Aware Meditation",
@@ -9667,7 +9884,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 7,
     "cost": 40,
     "index": "Discern Elemental",
@@ -9675,7 +9898,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 7,
     "cost": 50,
     "index": "Double Meditation Rate",
@@ -9683,7 +9912,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 7,
     "cost": 120,
     "index": "Facility II",
@@ -9692,7 +9927,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 7,
     "cost": 80,
     "index": "Facility III",
@@ -9915,7 +10156,13 @@
     }
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 7,
     "cost": 60,
     "index": "Draw upon the Dragon’s Breath",
@@ -10300,7 +10547,13 @@
     "abilityRef": "ability.merged.immunity-to-all-magical-informational-effects"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 8,
     "cost": 150,
     "index": "Draconic Guidance",
@@ -10868,7 +11121,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 9,
     "cost": 100,
     "index": "Call Location Shot with Magic and Super Missiles",
@@ -10876,7 +11135,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 9,
     "cost": 100,
     "index": "Call Location Shot with Snowballs",
@@ -10899,7 +11164,13 @@
     "sourceBook": "Wizard Grimoire"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🧙 Wizard"]
+      }
+    ],
     "table": 9,
     "cost": 50,
     "index": "Greater Empowered Weapon",
@@ -11715,7 +11986,7 @@
       {
         "Field": "Bracket",
         "Operator": "In",
-        "Value": ["🧙 Priest"]
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 1,
@@ -11753,7 +12024,13 @@
     "sourceBook": "Words From Above"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 1,
     "cost": 50,
     "index": "Minority Spheres",
@@ -11766,6 +12043,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Witch"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 1,
@@ -11787,7 +12069,13 @@
     }
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 1,
     "cost": 40,
     "index": "Words of the Gods",
@@ -11829,6 +12117,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Silver Warden"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 2,
@@ -11857,6 +12150,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Hospitaller"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 2,
@@ -12003,6 +12301,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Spiritual Warrior", "Wayfinder"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 3,
@@ -12023,6 +12326,11 @@
           "Silver Warden",
           "Guardian of the Balance"
         ]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 3,
@@ -12066,7 +12374,13 @@
     "abilityRef": "ability.merged.immunity-to-spirits-of-miracle-of-own-alignment"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 3,
     "cost": 40,
     "index": "Resistance to Victim’s Revenge",
@@ -12211,6 +12525,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Pure-Priest"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 4,
@@ -12220,7 +12539,13 @@
     "sourceBook": "Words From Above"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 5,
     "cost": 80,
     "index": "Devotion I",
@@ -12228,7 +12553,13 @@
     "sourceBook": "Words From Above"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 5,
     "cost": 80,
     "index": "Devotion II",
@@ -12255,6 +12586,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Good"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 5,
@@ -12270,6 +12606,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Good"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 5,
@@ -12284,6 +12625,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Evil"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 5,
@@ -12299,6 +12645,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Evil"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 5,
@@ -12328,6 +12679,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Good", "Evil"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 5,
@@ -12444,6 +12800,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Evil"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 5,
@@ -12463,6 +12824,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Evil"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 5,
@@ -12505,6 +12871,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Hospitaller", "Pure-Priest", "Shaman", "Armoured-Priest"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 5,
@@ -12530,6 +12901,11 @@
         "Operator": "In",
         "Value": ["Healing"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 6,
@@ -12545,6 +12921,11 @@
         "Operator": "In",
         "Value": ["Causing"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 6,
@@ -12560,6 +12941,11 @@
         "Operator": "In",
         "Value": ["Dismissal"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 6,
@@ -12575,6 +12961,11 @@
         "Operator": "In",
         "Value": ["Necromancy"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 6,
@@ -12590,6 +12981,11 @@
         "Operator": "In",
         "Value": ["Communication"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 6,
@@ -12605,6 +13001,11 @@
         "Operator": "In",
         "Value": ["Dominion"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 6,
@@ -12620,6 +13021,11 @@
         "Operator": "In",
         "Value": ["Benediction"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 6,
@@ -12635,6 +13041,11 @@
         "Operator": "In",
         "Value": ["Force"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 6,
@@ -12650,6 +13061,11 @@
         "Operator": "In",
         "Value": ["Warding"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 6,
@@ -12678,6 +13094,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Armoured-Priest"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 7,
@@ -12687,7 +13108,13 @@
     "sourceBook": "Words From Above"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 7,
     "cost": 100,
     "index": "Spiritual Empower Armour",
@@ -12695,7 +13122,13 @@
     "sourceBook": "Words From Above"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 7,
     "cost": 80,
     "index": "Spiritual Empower Shield",
@@ -12798,6 +13231,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Evil"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 7,
@@ -12812,6 +13250,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Friar"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 7,
@@ -12826,6 +13269,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Hospitaller"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 7,
@@ -12924,6 +13372,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Shaman"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 7,
@@ -12968,6 +13421,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Evil"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -12983,6 +13441,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Good"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13050,6 +13513,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Good"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13070,6 +13538,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Good"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13080,7 +13553,13 @@
     "preReqs": ["Monk Locational Curing 2/3", "Monk Locational Curing 1/3"]
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 8,
     "cost": 40,
     "index": "Immunity to Bruising Using SAC",
@@ -13114,6 +13593,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Hospitaller"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13160,6 +13644,11 @@
         "Operator": "In",
         "Value": ["Causing"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13176,6 +13665,11 @@
         "Operator": "In",
         "Value": ["Causing"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13192,6 +13686,11 @@
         "Operator": "In",
         "Value": ["Dismissal"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13208,6 +13707,11 @@
         "Operator": "In",
         "Value": ["Dismissal"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13224,6 +13728,11 @@
         "Operator": "In",
         "Value": ["Necromancy"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13240,6 +13749,11 @@
         "Operator": "In",
         "Value": ["Necromancy"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13256,6 +13770,11 @@
         "Operator": "In",
         "Value": ["Communication"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13272,6 +13791,11 @@
         "Operator": "In",
         "Value": ["Communication"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13288,6 +13812,11 @@
         "Operator": "In",
         "Value": ["Warding"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13304,6 +13833,11 @@
         "Operator": "In",
         "Value": ["Warding"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13320,6 +13854,11 @@
         "Operator": "In",
         "Value": ["Healing"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13336,6 +13875,11 @@
         "Operator": "In",
         "Value": ["Healing"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13352,6 +13896,11 @@
         "Operator": "In",
         "Value": ["Force"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13368,6 +13917,11 @@
         "Operator": "In",
         "Value": ["Force"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13384,6 +13938,11 @@
         "Operator": "In",
         "Value": ["Benediction"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13400,6 +13959,11 @@
         "Operator": "In",
         "Value": ["Benediction"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13416,6 +13980,11 @@
         "Operator": "In",
         "Value": ["Dominion"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13432,6 +14001,11 @@
         "Operator": "In",
         "Value": ["Dominion"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 8,
@@ -13518,6 +14092,11 @@
         "Field": "Alignment.Moral",
         "Operator": "In",
         "Value": ["Good"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 9,
@@ -13555,7 +14134,13 @@
     "sourceBook": "Words From Above"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 9,
     "cost": 125,
     "index": "Word of Recall",
@@ -13568,6 +14153,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Wayfinder"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 9,
@@ -13621,6 +14211,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Hospitaller"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 9,
@@ -13676,7 +14271,13 @@
     "sourceBook": "Words From Above"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 9,
     "cost": 120,
     "index": "Focused Wisdom in the Scriptures",
@@ -13699,7 +14300,13 @@
     "sourceBook": "Words From Above"
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 10,
     "cost": 100,
     "index": "Enhanced Empower Weapon",
@@ -13714,6 +14321,11 @@
         "Operator": "In",
         "Value": ["Force"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 10,
@@ -13729,6 +14341,11 @@
         "Operator": "In",
         "Value": ["Dominion"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 10,
@@ -13773,6 +14390,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Pure-Priest", "Armoured-Priest"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 10,
@@ -13932,6 +14554,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Pure-Priest"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 10,
@@ -13942,7 +14569,13 @@
     "CanAddMultiple": true
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 10,
     "cost": 75,
     "index": "Champion Against…",
@@ -13955,6 +14588,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Pure-Priest"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 10,
@@ -13969,6 +14607,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Witch"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 10,
@@ -14092,6 +14735,11 @@
         "Operator": "In",
         "Value": ["Communication"],
         "SpecialisationKey": "Priest Sphere"
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 10,
@@ -14136,6 +14784,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Hospitaller", "Pure-Priest", "Shaman", "Armoured-Priest"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 10,
@@ -14230,7 +14883,13 @@
     "preReqs": ["Chosen of the Faithful"]
   },
   {
-    "available": [],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
     "table": 11,
     "cost": 20,
     "index": "Expertise (Major Sphere)",
@@ -14243,6 +14902,11 @@
         "Field": "OriginalClass",
         "Operator": "In",
         "Value": ["Hospitaller", "Pure-Priest", "Shaman", "Armoured-Priest"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
       }
     ],
     "table": 11,

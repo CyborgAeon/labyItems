@@ -88,6 +88,22 @@
                                    </Grid>
                             </Frame>
 
+                            <Frame Padding="12,8"
+                                   CornerRadius="12"
+                                   HasShadow="False"
+                                   BorderColor="{StaticResource SurfaceBorderColor}"
+                                   BackgroundColor="#F9FAFB">
+                                   <Grid ColumnDefinitions="*,Auto"
+                                         ColumnSpacing="8">
+                                          <Label Text="Show life missing"
+                                                 VerticalTextAlignment="Center"/>
+                                          <Switch Grid.Column="1"
+                                                  IsToggled="{Binding ShowLifeMissing}"
+                                                  HorizontalOptions="End"
+                                                  VerticalOptions="Center"/>
+                                   </Grid>
+                            </Frame>
+
                             <Frame Padding="12"
                                    CornerRadius="12"
                                    HasShadow="False"
@@ -115,7 +131,7 @@
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
                                                                              VerticalOptions="Center">
-                                                               <Label Text="{Binding CurrentLabel}"
+                                                               <Label Text="{Binding DisplayLabel}"
                                                                       FontSize="16"
                                                                       FontAttributes="Bold"
                                                                       TextColor="{Binding TextColor}"
@@ -153,7 +169,7 @@
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
                                                                              VerticalOptions="Center">
-                                                               <Label Text="{Binding CurrentLabel}"
+                                                               <Label Text="{Binding DisplayLabel}"
                                                                       FontSize="16"
                                                                       FontAttributes="Bold"
                                                                       TextColor="{Binding TextColor}"
@@ -191,7 +207,7 @@
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
                                                                              VerticalOptions="Center">
-                                                               <Label Text="{Binding CurrentLabel}"
+                                                               <Label Text="{Binding DisplayLabel}"
                                                                       FontSize="16"
                                                                       FontAttributes="Bold"
                                                                       TextColor="{Binding TextColor}"
@@ -229,7 +245,7 @@
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
                                                                              VerticalOptions="Center">
-                                                               <Label Text="{Binding CurrentLabel}"
+                                                               <Label Text="{Binding DisplayLabel}"
                                                                       FontSize="16"
                                                                       FontAttributes="Bold"
                                                                       TextColor="{Binding TextColor}"
@@ -267,7 +283,7 @@
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
                                                                              VerticalOptions="Center">
-                                                               <Label Text="{Binding CurrentLabel}"
+                                                               <Label Text="{Binding DisplayLabel}"
                                                                       FontSize="16"
                                                                       FontAttributes="Bold"
                                                                       TextColor="{Binding TextColor}"
@@ -307,7 +323,7 @@
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
                                                                              VerticalOptions="Center">
-                                                               <Label Text="{Binding CurrentLabel}"
+                                                               <Label Text="{Binding DisplayLabel}"
                                                                       FontSize="16"
                                                                       FontAttributes="Bold"
                                                                       TextColor="{Binding TextColor}"
@@ -346,7 +362,7 @@
                                                         <VerticalStackLayout Spacing="2"
                                                                              HorizontalOptions="Center"
                                                                              VerticalOptions="Center">
-                                                               <Label Text="{Binding CurrentLabel}"
+                                                               <Label Text="{Binding DisplayLabel}"
                                                                       FontSize="16"
                                                                       FontAttributes="Bold"
                                                                       TextColor="{Binding TextColor}"
@@ -454,17 +470,19 @@
                                                                       FontAttributes="Bold"
                                                                       VerticalTextAlignment="Center"/>
                                                                <Label Grid.Column="1"
-                                                                      Text="{Binding Level}"
+                                                                      Text="{Binding DisplayLevelText}"
                                                                       VerticalTextAlignment="Center"
                                                                       HorizontalTextAlignment="End"/>
                                                                <Button Grid.Column="2"
                                                                        Text="-"
                                                                        Padding="10,4"
+                                                                       IsEnabled="{Binding CanAdjust}"
                                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DecreaseResistanceCommand}"
                                                                        CommandParameter="{Binding .}"/>
                                                                <Button Grid.Column="3"
                                                                        Text="+"
                                                                        Padding="10,4"
+                                                                       IsEnabled="{Binding CanAdjust}"
                                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.IncreaseResistanceCommand}"
                                                                        CommandParameter="{Binding .}"/>
                                                         </Grid>
@@ -491,12 +509,23 @@
                                                  IsVisible="{Binding HasImmunities}">
                                    <BindableLayout.ItemTemplate>
                                           <DataTemplate>
-                                                 <Frame Padding="12"
-                                                        CornerRadius="12"
-                                                        HasShadow="False"
-                                                        BorderColor="{StaticResource SurfaceBorderColor}">
-                                                        <Label Text="{Binding .}"/>
-                                                 </Frame>
+                                                 <Border StrokeThickness="1"
+                                                         Stroke="{StaticResource SurfaceBorderColor}"
+                                                         StrokeShape="RoundRectangle 10"
+                                                         BackgroundColor="{Binding RowBackgroundColor}"
+                                                         Padding="12,10">
+                                                        <Grid ColumnDefinitions="*,Auto"
+                                                              ColumnSpacing="8">
+                                                               <Label Text="{Binding Name}"
+                                                                      VerticalTextAlignment="Center"/>
+                                                               <Label Grid.Column="1"
+                                                                      Text="IMM"
+                                                                      FontSize="11"
+                                                                      Opacity="0.55"
+                                                                      VerticalTextAlignment="Center"
+                                                                      HorizontalTextAlignment="End"/>
+                                                        </Grid>
+                                                 </Border>
                                           </DataTemplate>
                                    </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>

@@ -271,6 +271,74 @@ public sealed class BattleboardServiceTests : ServiceTestBase
     }
 
     [Fact]
+    public async Task ExportAsync_AppliesAssignedItemGeneralAbilityResistanceAndImmunity()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-item-effects",
+            Name = "Item Effects Tester",
+            PlayerName = "Tester",
+            Class = "Wizard",
+            Race = "Human",
+            TBLP = 29,
+            Loc = 9,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral)
+        };
+
+        var item = new Item
+        {
+            Id = Guid.NewGuid().ToString("N"),
+            AssignedCharacterId = draft.CharacterRecordId,
+            AssignedCharacterName = draft.Name,
+            AssignedCharacterPlayerName = draft.PlayerName,
+            CreatedDate = DateTime.UtcNow
+        };
+
+        var payload = ItemEmailService.BuildItemPayload(item, new[]
+        {
+            new CalcResult
+            {
+                AbilityType = "General",
+                AbilityName = "General abilities (2)",
+                Summary = "General abilities",
+                Details = new Dictionary<string, object?>
+                {
+                    ["selectedGeneralAbilities"] = new[]
+                    {
+                        new Dictionary<string, object?>
+                        {
+                            ["name"] = "11th Level Resistance to Magic and Spirits"
+                        },
+                        new Dictionary<string, object?>
+                        {
+                            ["name"] = "Immunity to Repels"
+                        }
+                    }
+                }
+            }
+        });
+
+        item.PayloadJson = ItemEmailService.SerializeItemPayload(payload);
+
+        var service = new BattleboardExportService(_ => new[] { item });
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("BBoard");
+
+        Assert.Equal(11, sheet.Cell("AD21").GetValue<int>());
+        Assert.Equal(11, sheet.Cell("AD23").GetValue<int>());
+
+        var immunities = Enumerable.Range(26, 8)
+            .Select(row => sheet.Cell($"AC{row}").GetString())
+            .Where(text => !string.IsNullOrWhiteSpace(text))
+            .ToList();
+
+        Assert.Contains("Repels", immunities);
+    }
+
+    [Fact]
     public async Task ExportAsync_AppliesAdvancementResistanceLevelsAndImmunities()
     {
         var draft = new CharacterDraft
@@ -303,6 +371,41 @@ public sealed class BattleboardServiceTests : ServiceTestBase
             .ToList();
 
         Assert.Contains("Repels", immunities);
+    }
+
+    [Fact]
+    public async Task ExportAsync_ResistanceLevelsDefaultToEight_WhenDraftContainsZeroes()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-resistance-defaults",
+            Name = "Resistance Defaults",
+            PlayerName = "Tester",
+            Class = "Wizard",
+            Race = "Human",
+            TBLP = 29,
+            Loc = 9,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral),
+            ResistanceLevels = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Physical"] = 0,
+                ["Magic"] = 0,
+                ["Neuro"] = 0,
+                ["Spirit"] = 0
+            }
+        };
+
+        var service = new BattleboardExportService();
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("BBoard");
+
+        Assert.Equal(8, sheet.Cell("AD20").GetValue<int>());
+        Assert.Equal(8, sheet.Cell("AD21").GetValue<int>());
+        Assert.Equal(8, sheet.Cell("AD22").GetValue<int>());
+        Assert.Equal(8, sheet.Cell("AD23").GetValue<int>());
     }
 
     [Fact]
@@ -351,5 +454,69 @@ public sealed class BattleboardServiceTests : ServiceTestBase
             .ToList();
 
         Assert.Contains("Repels", immunities);
+    }
+
+    [Fact]
+    public async Task ExportAsync_DwarfHalfEffectMagic_DoublesEffectiveMagicResistance()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-dwarf-half-effect-magic",
+            Name = "Dwarf Tester",
+            PlayerName = "Tester",
+            Class = "Warrior",
+            Race = "Dwarf",
+            TBLP = 40,
+            Loc = 5,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral)
+        };
+
+        draft.Abilities.Add(new AbilityDraft
+        {
+            Name = "1/2 effect magic",
+            AbilityType = AbilityType.Resistance
+        });
+        draft.AdvancementAbilities.Add("9th Level Resistance to Magic and Spirits");
+
+        var service = new BattleboardExportService();
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("BBoard");
+
+        Assert.Equal(18, sheet.Cell("AD21").GetValue<int>());
+        Assert.Equal(9, sheet.Cell("AD23").GetValue<int>());
+    }
+
+    [Fact]
+    public async Task ExportAsync_SpiritlessAbility_ShowsInfiniteSpiritResistance()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-spiritless-infinite",
+            Name = "Faerie Tester",
+            PlayerName = "Tester",
+            Class = "Wizard",
+            Race = "Faerie",
+            TBLP = 30,
+            Loc = 4,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral)
+        };
+        draft.Abilities.Add(new AbilityDraft
+        {
+            Name = "Spiritless",
+            AbilityKey = "ability.spiritless",
+            AbilityType = AbilityType.Resistance
+        });
+
+        var service = new BattleboardExportService();
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("BBoard");
+
+        Assert.Equal("∞", sheet.Cell("AD23").GetString());
     }
 }

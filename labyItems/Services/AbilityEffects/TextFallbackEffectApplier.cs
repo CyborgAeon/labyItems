@@ -14,13 +14,24 @@ public static class TextFallbackEffectApplier
         @"^\s*(?:total\s+)?immunity\s+to\s+(?<target>.+?)\s*$",
         RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
 
+    private static readonly Regex HalfSpiritRegex = new(
+        @"\bhalf(?:-|\s)?(?:a\s+)?spirit\b",
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
+
     public static void Apply(
         string? text,
         IDictionary<string, int> resistance,
-        ISet<string> immunities)
+        ISet<string> immunities,
+        IDictionary<string, int>? resistanceMultipliers = null,
+        ISet<string>? infiniteResistanceTypes = null)
     {
         foreach (var instruction in ExtractInstructions(text))
-            AbilityEffectEvaluator.ApplyInstructions(new[] { instruction }, resistance, immunities);
+            AbilityEffectEvaluator.ApplyInstructions(
+                new[] { instruction },
+                resistance,
+                immunities,
+                resistanceMultipliers,
+                infiniteResistanceTypes);
     }
 
     public static IEnumerable<AbilityEffectInstruction> ExtractInstructions(string? text)
@@ -48,6 +59,33 @@ public static class TextFallbackEffectApplier
                 ResistanceType: null,
                 Level: null,
                 ImmunityName: immunityName);
+        }
+
+        foreach (var resistanceType in ParseHalfEffectResistanceTypes(source))
+        {
+            yield return new AbilityEffectInstruction(
+                AbilityEffectInstructionKind.ResistanceLevelMultiplier,
+                ResistanceType: resistanceType,
+                Level: 2,
+                ImmunityName: null);
+        }
+
+        if (TryParseSpiritlessResistance(source))
+        {
+            yield return new AbilityEffectInstruction(
+                AbilityEffectInstructionKind.ResistanceInfinite,
+                ResistanceType: "Spirit",
+                Level: null,
+                ImmunityName: null);
+        }
+
+        if (TryParseMindlessResistance(source))
+        {
+            yield return new AbilityEffectInstruction(
+                AbilityEffectInstructionKind.ResistanceInfinite,
+                ResistanceType: "Neuro",
+                Level: null,
+                ImmunityName: null);
         }
     }
 
@@ -134,5 +172,76 @@ public static class TextFallbackEffectApplier
 
         immunityName = $"Immunity to {target}";
         return true;
+    }
+
+    private static IEnumerable<string> ParseHalfEffectResistanceTypes(string source)
+    {
+        var text = (source ?? string.Empty).Trim();
+        if (text.Length == 0)
+            yield break;
+
+        var normalized = text.ToLowerInvariant();
+
+        if (ContainsHalfEffectFor(normalized, "magic"))
+            yield return "Magic";
+
+        if (ContainsHalfEffectFor(normalized, "spirit")
+            || ContainsHalfEffectFor(normalized, "spiritual")
+            || HalfSpiritRegex.IsMatch(text))
+        {
+            yield return "Spirit";
+        }
+    }
+
+    private static bool ContainsHalfEffectFor(string normalized, string target)
+    {
+        if (normalized.Length == 0 || target.Length == 0)
+            return false;
+
+        return normalized.Contains($"1/2 effect {target}", StringComparison.Ordinal)
+               || normalized.Contains($"1/2-effect {target}", StringComparison.Ordinal)
+               || normalized.Contains($"1/2 off {target}", StringComparison.Ordinal)
+               || normalized.Contains($"1/2-off {target}", StringComparison.Ordinal)
+               || normalized.Contains($"half effect {target}", StringComparison.Ordinal)
+               || normalized.Contains($"half-effect {target}", StringComparison.Ordinal)
+               || normalized.Contains($"half off {target}", StringComparison.Ordinal)
+               || normalized.Contains($"half-off {target}", StringComparison.Ordinal)
+               || normalized.Contains($"half a {target}", StringComparison.Ordinal)
+               || (target.Equals("magic", StringComparison.Ordinal)
+                   && normalized.Contains("twice their level", StringComparison.Ordinal)
+                   && normalized.Contains("magic", StringComparison.Ordinal));
+    }
+
+    private static bool TryParseSpiritlessResistance(string source)
+    {
+        var text = (source ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return false;
+
+        var normalized = text.ToLowerInvariant();
+        if (normalized.Equals("spiritless", StringComparison.Ordinal)
+            || normalized.Contains("spiritless", StringComparison.Ordinal))
+            return true;
+
+        return normalized.Contains("infinite", StringComparison.Ordinal)
+               && normalized.Contains("resistance", StringComparison.Ordinal)
+               && normalized.Contains("spirit", StringComparison.Ordinal);
+    }
+
+    private static bool TryParseMindlessResistance(string source)
+    {
+        var text = (source ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return false;
+
+        var normalized = text.ToLowerInvariant();
+        if (normalized.Equals("mindless", StringComparison.Ordinal)
+            || normalized.Contains("mindless", StringComparison.Ordinal))
+            return true;
+
+        return normalized.Contains("infinite", StringComparison.Ordinal)
+               && normalized.Contains("resistance", StringComparison.Ordinal)
+               && (normalized.Contains("neuro", StringComparison.Ordinal)
+                   || normalized.Contains("neuronic", StringComparison.Ordinal));
     }
 }

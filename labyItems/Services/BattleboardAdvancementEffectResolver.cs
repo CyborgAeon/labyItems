@@ -1,17 +1,20 @@
-using labyItems.Models.Characters;
 using labyItems.Services.AbilityEffects;
 
 namespace labyItems.Services;
 
 public sealed record BattleboardAdvancementEffects(
     IReadOnlyDictionary<string, int> ResistanceOverrides,
-    IReadOnlyList<string> Immunities);
+    IReadOnlyList<string> Immunities,
+    IReadOnlyDictionary<string, int> ResistanceMultipliers,
+    IReadOnlySet<string> InfiniteResistanceTypes);
 
 public static class BattleboardAdvancementEffectResolver
 {
     public static BattleboardAdvancementEffects ResolveFallback(IEnumerable<string>? advancementAbilityKeysOrNames)
     {
         var resistance = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var multipliers = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var infiniteResistanceTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var immunities = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var raw in advancementAbilityKeysOrNames ?? Array.Empty<string>())
@@ -20,12 +23,14 @@ public static class BattleboardAdvancementEffectResolver
             if (name.Length == 0)
                 continue;
 
-            TextFallbackEffectApplier.Apply(name, resistance, immunities);
+            TextFallbackEffectApplier.Apply(name, resistance, immunities, multipliers, infiniteResistanceTypes);
         }
 
         return new BattleboardAdvancementEffects(
             resistance,
-            immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList());
+            immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList(),
+            multipliers,
+            infiniteResistanceTypes);
     }
 
     public static async Task<BattleboardAdvancementEffects> ResolveAsync(IEnumerable<string>? advancementAbilityKeysOrNames)
@@ -40,10 +45,12 @@ public static class BattleboardAdvancementEffectResolver
 
         var fallback = ResolveFallback(keysOrNames);
         var resistance = new Dictionary<string, int>(fallback.ResistanceOverrides, StringComparer.OrdinalIgnoreCase);
+        var multipliers = new Dictionary<string, int>(fallback.ResistanceMultipliers, StringComparer.OrdinalIgnoreCase);
+        var infiniteResistanceTypes = new HashSet<string>(fallback.InfiniteResistanceTypes, StringComparer.OrdinalIgnoreCase);
         var immunities = new HashSet<string>(fallback.Immunities, StringComparer.OrdinalIgnoreCase);
 
         if (keysOrNames.Count == 0)
-            return new BattleboardAdvancementEffects(resistance, immunities.ToList());
+            return new BattleboardAdvancementEffects(resistance, immunities.ToList(), multipliers, infiniteResistanceTypes);
 
         try
         {
@@ -64,12 +71,27 @@ public static class BattleboardAdvancementEffectResolver
                 if (effects is { Count: > 0 })
                 {
                     var instructions = AbilityEffectEvaluator.FromSystemEffects(effects);
-                    AbilityEffectEvaluator.ApplyInstructions(instructions, resistance, immunities);
+                    AbilityEffectEvaluator.ApplyInstructions(
+                        instructions,
+                        resistance,
+                        immunities,
+                        multipliers,
+                        infiniteResistanceTypes);
                 }
 
                 // Keep text fallback behaviour for effects that are not yet represented in `SystemEffects`.
-                TextFallbackEffectApplier.Apply(resolvedDisplayName, resistance, immunities);
-                TextFallbackEffectApplier.Apply(definition?.Effect, resistance, immunities);
+                TextFallbackEffectApplier.Apply(
+                    resolvedDisplayName,
+                    resistance,
+                    immunities,
+                    multipliers,
+                    infiniteResistanceTypes);
+                TextFallbackEffectApplier.Apply(
+                    definition?.Effect,
+                    resistance,
+                    immunities,
+                    multipliers,
+                    infiniteResistanceTypes);
             }
         }
         catch
@@ -79,7 +101,9 @@ public static class BattleboardAdvancementEffectResolver
 
         return new BattleboardAdvancementEffects(
             resistance,
-            immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList());
+            immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList(),
+            multipliers,
+            infiniteResistanceTypes);
     }
 
     public static IReadOnlyDictionary<string, int> ApplyResistanceOverrides(
@@ -111,4 +135,56 @@ public static class BattleboardAdvancementEffectResolver
 
     public static string NormalizeResistanceType(string? raw)
         => AbilityEffectEvaluator.NormalizeResistanceType(raw);
+
+    public static IReadOnlyDictionary<string, int> ApplyResistanceMultipliers(
+        IReadOnlyDictionary<string, int>? baseline,
+        IReadOnlyDictionary<string, int>? overrides)
+    {
+        var merged = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach (var pair in baseline ?? new Dictionary<string, int>())
+        {
+            var key = NormalizeResistanceType(pair.Key);
+            if (key.Length == 0)
+                continue;
+
+            var value = Math.Max(1, pair.Value);
+            merged[key] = value;
+        }
+
+        foreach (var pair in overrides ?? new Dictionary<string, int>())
+        {
+            var key = NormalizeResistanceType(pair.Key);
+            if (key.Length == 0)
+                continue;
+
+            var incoming = Math.Max(1, pair.Value);
+            if (!merged.TryGetValue(key, out var current) || incoming > current)
+                merged[key] = incoming;
+        }
+
+        return merged;
+    }
+
+    public static IReadOnlySet<string> MergeInfiniteResistanceTypes(
+        IEnumerable<string>? baseline,
+        IEnumerable<string>? incoming)
+    {
+        var merged = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var raw in baseline ?? Array.Empty<string>())
+        {
+            var key = NormalizeResistanceType(raw);
+            if (key.Length > 0)
+                merged.Add(key);
+        }
+
+        foreach (var raw in incoming ?? Array.Empty<string>())
+        {
+            var key = NormalizeResistanceType(raw);
+            if (key.Length > 0)
+                merged.Add(key);
+        }
+
+        return merged;
+    }
 }

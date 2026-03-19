@@ -2615,7 +2615,55 @@
       "Name": "1/2 effect magic",
       "Type": "Resistance",
       "Effect": "You are naturally magic resistant, so they take only half effect from all magic, resisting spells as if they were twice their level. As a result of this, any wizard loses half their mana.",
+      "SystemEffects": [
+        {
+          "EffectType": "lor-multiplier:magic",
+          "DisplayName": "Half effect magic",
+          "ResistanceType": "Magic",
+          "Level": 2
+        }
+      ],
       "Key": "ability.half-effect-magic"
+    },
+    "ability.half-spirit": {
+      "Name": "Half-Spirit",
+      "Type": "Resistance",
+      "Effect": "You have only half a spirit and take half effect from spiritual effects.",
+      "SystemEffects": [
+        {
+          "EffectType": "lor-multiplier:spirit",
+          "DisplayName": "Half spirit",
+          "ResistanceType": "Spirit",
+          "Level": 2
+        }
+      ],
+      "Key": "ability.half-spirit"
+    },
+    "ability.spiritless": {
+      "Name": "Spiritless",
+      "Type": "Resistance",
+      "Effect": "You have no spirit. You take no damage from miracles unless the source is mantic, and no damage from pure spiritual effects.",
+      "SystemEffects": [
+        {
+          "EffectType": "lor-infinite:spirit",
+          "DisplayName": "Infinite resistance to Spirit",
+          "ResistanceType": "Spirit"
+        }
+      ],
+      "Key": "ability.spiritless"
+    },
+    "ability.mindless": {
+      "Name": "Mindless",
+      "Type": "Resistance",
+      "Effect": "Mindless creatures have infinite levels of resistance to neuronics.",
+      "SystemEffects": [
+        {
+          "EffectType": "lor-infinite:neuro",
+          "DisplayName": "Infinite resistance to Neuronics",
+          "ResistanceType": "Neuro"
+        }
+      ],
+      "Key": "ability.mindless"
     },
     "ability.half-effect-paralysis": {
       "Name": "1/2 effect paralysis",
@@ -9567,9 +9615,9 @@
       "Key": "ability.merged.9th-level-resistance-to-neuronics",
       "SystemEffects": [
         {
-          "EffectType": "lor:neuro",
-          "DisplayName": "9th level resistance to Neuro",
-          "ResistanceType": "Neuro",
+          "EffectType": "lor:neuronics",
+          "DisplayName": "9th level resistance to Neuronics",
+          "ResistanceType": "Neuronics",
           "Level": 9
         }
       ]
@@ -10986,6 +11034,14 @@
     "Weapon mastery with H or MP weapon": "ability.weapon-mastery-with-h-or-mp",
     "1 DAC in Darkness": "ability.1-dac-in-darkness",
     "1/2 effect magic": "ability.half-effect-magic",
+    "1/2 off magic": "ability.half-effect-magic",
+    "Half effect magic": "ability.half-effect-magic",
+    "Half-off magic": "ability.half-effect-magic",
+    "Half-Spirit": "ability.half-spirit",
+    "Half spirit": "ability.half-spirit",
+    "half a spirit": "ability.half-spirit",
+    "Spiritless": "ability.spiritless",
+    "Mindless": "ability.mindless",
     "1/2 effect paralysis": "ability.half-effect-paralysis",
     "1/2 effect poison": "ability.half-effect-poison",
     "1st Backstab": "ability.1st-backstab",

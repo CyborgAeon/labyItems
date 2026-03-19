@@ -8,6 +8,8 @@ public static class BattleboardAbilityEffectResolver
     public static BattleboardAdvancementEffects ResolveFallback(IEnumerable<AbilityDraft>? abilities)
     {
         var resistance = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var multipliers = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var infiniteResistanceTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var immunities = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var ability in abilities ?? Array.Empty<AbilityDraft>())
@@ -16,7 +18,7 @@ public static class BattleboardAbilityEffectResolver
                 continue;
 
             foreach (var candidate in EnumerateFallbackTextCandidates(ability))
-                TextFallbackEffectApplier.Apply(candidate, resistance, immunities);
+                TextFallbackEffectApplier.Apply(candidate, resistance, immunities, multipliers, infiniteResistanceTypes);
 
             if (ability.AbilityType == AbilityType.Immunity)
             {
@@ -33,7 +35,9 @@ public static class BattleboardAbilityEffectResolver
 
         return new BattleboardAdvancementEffects(
             resistance,
-            immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList());
+            immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList(),
+            multipliers,
+            infiniteResistanceTypes);
     }
 
     public static async Task<BattleboardAdvancementEffects> ResolveAsync(IEnumerable<AbilityDraft>? abilities)
@@ -44,10 +48,12 @@ public static class BattleboardAbilityEffectResolver
 
         var fallback = ResolveFallback(abilityList);
         var resistance = new Dictionary<string, int>(fallback.ResistanceOverrides, StringComparer.OrdinalIgnoreCase);
+        var multipliers = new Dictionary<string, int>(fallback.ResistanceMultipliers, StringComparer.OrdinalIgnoreCase);
+        var infiniteResistanceTypes = new HashSet<string>(fallback.InfiniteResistanceTypes, StringComparer.OrdinalIgnoreCase);
         var immunities = new HashSet<string>(fallback.Immunities, StringComparer.OrdinalIgnoreCase);
 
         if (abilityList.Count == 0)
-            return new BattleboardAdvancementEffects(resistance, immunities.ToList());
+            return new BattleboardAdvancementEffects(resistance, immunities.ToList(), multipliers, infiniteResistanceTypes);
 
         try
         {
@@ -59,13 +65,18 @@ public static class BattleboardAbilityEffectResolver
                 if (effects is { Count: > 0 })
                 {
                     var instructions = AbilityEffectEvaluator.FromSystemEffects(effects);
-                    AbilityEffectEvaluator.ApplyInstructions(instructions, resistance, immunities);
+                    AbilityEffectEvaluator.ApplyInstructions(
+                        instructions,
+                        resistance,
+                        immunities,
+                        multipliers,
+                        infiniteResistanceTypes);
                 }
 
                 foreach (var candidate in EnumerateFallbackTextCandidates(ability))
-                    TextFallbackEffectApplier.Apply(candidate, resistance, immunities);
+                    TextFallbackEffectApplier.Apply(candidate, resistance, immunities, multipliers, infiniteResistanceTypes);
 
-                TextFallbackEffectApplier.Apply(definition?.Effect, resistance, immunities);
+                TextFallbackEffectApplier.Apply(definition?.Effect, resistance, immunities, multipliers, infiniteResistanceTypes);
             }
         }
         catch
@@ -75,7 +86,9 @@ public static class BattleboardAbilityEffectResolver
 
         return new BattleboardAdvancementEffects(
             resistance,
-            immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList());
+            immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList(),
+            multipliers,
+            infiniteResistanceTypes);
     }
 
     private static AbilityDefinition? ResolveDefinition(

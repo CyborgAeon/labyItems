@@ -91,4 +91,7 @@ public static class ServiceHelper
         for (var i = 0; i <= value.Length - n; i++)
             yield return value.Substring(i, n);
     }
+
+    public static T? ResolveService<T>() where T : class
+        => null;
 }

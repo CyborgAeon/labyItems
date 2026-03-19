@@ -4,6 +4,10 @@ public sealed class AdvanceCharacterDataProvider : IAdvanceCharacterDataProvider
 {
     public async Task<AdvanceCharacterReferenceData> LoadReferenceDataAsync()
     {
+        var dbInitializer = ServiceHelper.ResolveService<IDatabaseInitializer>();
+        if (dbInitializer != null)
+            await dbInitializer.InitializeAsync();
+
         var guildsTask = GuildsService.GetAllAsync();
         var classesTask = ClassService.GetAllAsync();
         var racesTask = PeopleService.GetAllAsync();

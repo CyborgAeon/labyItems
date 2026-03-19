@@ -100,6 +100,10 @@ public static class BattleboardArmourCalculator
                 if (!IsArmourAbility(ability))
                     continue;
 
+                var basePac = ExtractBasePac(ability);
+                if (basePac <= 0)
+                    continue;
+
                 if (!TryParseItemContribution(ability, out var contribution))
                     continue;
 
@@ -125,7 +129,10 @@ public static class BattleboardArmourCalculator
 
             foreach (var ability in abilities)
             {
-                if (ability == null || IsArmourAbility(ability))
+                if (ability == null)
+                    continue;
+
+                if (IsArmourAbility(ability) && ExtractBasePac(ability) > 0)
                     continue;
 
                 var bonus = ExtractEnhancementBonuses(ability);

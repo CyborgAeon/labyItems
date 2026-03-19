@@ -57,42 +57,47 @@
                                              Spacing="8">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto"
-                                          ColumnSpacing="8">
-                                        <Label Text="{Binding NameWithCost}"
-                                               VerticalTextAlignment="Center"/>
-                                        <Label Grid.Column="1"
-                                               Text="{Binding RunningTotalText}"
-                                               FontSize="12"
-                                               Opacity="0.7"
-                                               VerticalTextAlignment="Center"/>
-                                        <Button Grid.Column="2"
-                                                Text="&#xF05A;"
-                                                FontFamily="FASolid"
-                                                FontSize="12"
-                                                Padding="0"
-                                                BackgroundColor="Transparent"
-                                                TextColor="{StaticResource SubtleTextColor}"
-                                                HeightRequest="18"
-                                                WidthRequest="18"
-                                                MinimumHeightRequest="0"
-                                                MinimumWidthRequest="0"
-                                                Clicked="OnViewAbilityDetailsClicked"
-                                                CommandParameter="{Binding .}"/>
-                                        <Button Grid.Column="3"
-                                                Text="&#xF2ED;"
-                                                FontFamily="FASolid"
-                                                FontSize="12"
-                                                Padding="0"
-                                                BackgroundColor="Transparent"
-                                                TextColor="{StaticResource SubtleTextColor}"
-                                                HeightRequest="18"
-                                                WidthRequest="18"
-                                                MinimumHeightRequest="0"
-                                                MinimumWidthRequest="0"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveAbilityCommand}"
-                                                CommandParameter="{Binding .}"/>
-                                    </Grid>
+                                    <Border StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 8"
+                                            BackgroundColor="{Binding RowBackgroundColor}"
+                                            Padding="10,8">
+                                        <Grid ColumnDefinitions="*,Auto,Auto,Auto"
+                                              ColumnSpacing="8">
+                                            <Label Text="{Binding NameWithCost}"
+                                                   VerticalTextAlignment="Center"/>
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding RunningTotalText}"
+                                                   FontSize="12"
+                                                   Opacity="0.7"
+                                                   VerticalTextAlignment="Center"/>
+                                            <Button Grid.Column="2"
+                                                    Text="&#xF05A;"
+                                                    FontFamily="FASolid"
+                                                    FontSize="12"
+                                                    Padding="0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                    HeightRequest="18"
+                                                    WidthRequest="18"
+                                                    MinimumHeightRequest="0"
+                                                    MinimumWidthRequest="0"
+                                                    Clicked="OnViewAbilityDetailsClicked"
+                                                    CommandParameter="{Binding .}"/>
+                                            <Button Grid.Column="3"
+                                                    Text="&#xF2ED;"
+                                                    FontFamily="FASolid"
+                                                    FontSize="12"
+                                                    Padding="0"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                    HeightRequest="18"
+                                                    WidthRequest="18"
+                                                    MinimumHeightRequest="0"
+                                                    MinimumWidthRequest="0"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveAbilityCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>

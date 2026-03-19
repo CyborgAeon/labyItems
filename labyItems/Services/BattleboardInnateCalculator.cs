@@ -154,48 +154,123 @@ public static class BattleboardInnateCalculator
         string detailKey,
         string nameKey)
     {
-        if (!TryGetDetailValue(ability, detailKey, out var raw) || raw == null)
-            yield break;
+        object? raw = null;
+        if (!TryGetDetailValue(ability, detailKey, out raw) || raw == null)
+        {
+            var alternateKey = detailKey.EndsWith("s", StringComparison.OrdinalIgnoreCase)
+                ? detailKey[..^1]
+                : $"{detailKey}s";
+            if (!TryGetDetailValue(ability, alternateKey, out raw) || raw == null)
+                yield break;
+        }
 
         if (raw is JsonElement json)
         {
+            if (json.ValueKind == JsonValueKind.Object)
+            {
+                if (TryExtractInnate(json, nameKey, out var innate))
+                    yield return innate;
+                yield break;
+            }
+
+            if (json.ValueKind == JsonValueKind.String)
+            {
+                if (TryExtractInnateFromText(json.GetString(), out var innate))
+                    yield return innate;
+                yield break;
+            }
+
             if (json.ValueKind != JsonValueKind.Array)
                 yield break;
 
             foreach (var entry in json.EnumerateArray())
             {
-                if (entry.ValueKind != JsonValueKind.Object)
+                if (entry.ValueKind == JsonValueKind.String)
+                {
+                    if (TryExtractInnateFromText(entry.GetString(), out var fromText))
+                        yield return fromText;
                     continue;
+                }
 
-                var name = NormalizeInnateName(ReadJsonString(entry, nameKey) ?? ReadJsonString(entry, "name"));
-                if (name.Length == 0)
-                    continue;
-
-                var uses = ResolveInnateUses(entry);
-                if (uses <= 0)
-                    continue;
-
-                yield return new InnateAbilityDraft { Name = name, Rank = uses };
+                if (TryExtractInnate(entry, nameKey, out var innate))
+                    yield return innate;
             }
 
             yield break;
         }
 
-        if (raw is not IEnumerable<object> entries)
+        if (raw is string text)
+        {
+            if (TryExtractInnateFromText(text, out var fromText))
+                yield return fromText;
             yield break;
+        }
+
+        if (raw is not IEnumerable<object> entries)
+        {
+            if (TryExtractInnate(raw, nameKey, out var singleEntry))
+                yield return singleEntry;
+            yield break;
+        }
 
         foreach (var entry in entries)
         {
-            var name = NormalizeInnateName(ReadObjectString(entry, nameKey) ?? ReadObjectString(entry, "name"));
-            if (name.Length == 0)
+            if (entry is string stringEntry)
+            {
+                if (TryExtractInnateFromText(stringEntry, out var fromText))
+                    yield return fromText;
                 continue;
+            }
 
-            var uses = ResolveInnateUses(entry);
-            if (uses <= 0)
-                continue;
-
-            yield return new InnateAbilityDraft { Name = name, Rank = uses };
+            if (TryExtractInnate(entry, nameKey, out var innate))
+                yield return innate;
         }
+    }
+
+    private static bool TryExtractInnate(JsonElement entry, string nameKey, out InnateAbilityDraft innate)
+    {
+        innate = new InnateAbilityDraft();
+        if (entry.ValueKind != JsonValueKind.Object)
+            return false;
+
+        var name = NormalizeInnateName(ReadJsonString(entry, nameKey) ?? ReadJsonString(entry, "name"));
+        if (name.Length == 0)
+            return false;
+
+        var uses = ResolveInnateUses(entry);
+        if (uses <= 0)
+            return false;
+
+        innate = new InnateAbilityDraft { Name = name, Rank = uses };
+        return true;
+    }
+
+    private static bool TryExtractInnate(object? entry, string nameKey, out InnateAbilityDraft innate)
+    {
+        innate = new InnateAbilityDraft();
+        var name = NormalizeInnateName(ReadObjectString(entry, nameKey) ?? ReadObjectString(entry, "name"));
+        if (name.Length == 0)
+            return false;
+
+        var uses = ResolveInnateUses(entry);
+        if (uses <= 0)
+            return false;
+
+        innate = new InnateAbilityDraft { Name = name, Rank = uses };
+        return true;
+    }
+
+    private static bool TryExtractInnateFromText(string? text, out InnateAbilityDraft innate)
+    {
+        innate = new InnateAbilityDraft();
+        if (!TryExtractLegacyMpInnate(text, out var name, out var count))
+            return false;
+
+        if (name.Length == 0 || count <= 0)
+            return false;
+
+        innate = new InnateAbilityDraft { Name = name, Rank = count };
+        return true;
     }
 
     private static int ResolveInnateUses(CalcResult ability)

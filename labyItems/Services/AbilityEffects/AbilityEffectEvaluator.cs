@@ -26,7 +26,12 @@ public static class AbilityEffectEvaluator
             if (!IsConditionMet(draft, effect.Condition))
                 continue;
 
-            ApplyInstruction(effect.Instruction, result.ResistanceOverrides, immunities);
+            ApplyInstruction(
+                effect.Instruction,
+                result.ResistanceOverrides,
+                immunities,
+                result.ResistanceMultipliers,
+                result.InfiniteResistanceTypes);
         }
 
         foreach (var immunity in immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
@@ -49,16 +54,25 @@ public static class AbilityEffectEvaluator
         var evaluated = Evaluate(new CharacterDraft(), instances);
         return new BattleboardAdvancementEffects(
             evaluated.ResistanceOverrides,
-            evaluated.Immunities);
+            evaluated.Immunities,
+            evaluated.ResistanceMultipliers,
+            evaluated.InfiniteResistanceTypes);
     }
 
     public static void ApplyInstructions(
         IEnumerable<AbilityEffectInstruction> instructions,
         IDictionary<string, int> resistance,
-        ISet<string> immunities)
+        ISet<string> immunities,
+        IDictionary<string, int>? resistanceMultipliers = null,
+        ISet<string>? infiniteResistanceTypes = null)
     {
         foreach (var instruction in instructions ?? Array.Empty<AbilityEffectInstruction>())
-            ApplyInstruction(instruction, resistance, immunities);
+            ApplyInstruction(
+                instruction,
+                resistance,
+                immunities,
+                resistanceMultipliers,
+                infiniteResistanceTypes);
     }
 
     public static IEnumerable<AbilityEffectInstruction> FromSystemEffects(
@@ -90,6 +104,44 @@ public static class AbilityEffectEvaluator
                         ImmunityName: null);
                 }
 
+                continue;
+            }
+
+            if (effectType.StartsWith("lor-multiplier:", StringComparison.OrdinalIgnoreCase)
+                || effectType.StartsWith("lor-mult:", StringComparison.OrdinalIgnoreCase))
+            {
+                var token = effectType[(effectType.IndexOf(':') + 1)..].Trim();
+                var resistanceType = !string.IsNullOrWhiteSpace(effect.ResistanceType)
+                    ? effect.ResistanceType
+                    : token;
+
+                var multiplier = effect.Level ?? TryParseFirstInt(effect.DisplayName);
+                if (multiplier > 1)
+                {
+                    yield return new AbilityEffectInstruction(
+                        AbilityEffectInstructionKind.ResistanceLevelMultiplier,
+                        resistanceType,
+                        multiplier,
+                        ImmunityName: null);
+                }
+
+                continue;
+            }
+
+            if (effectType.StartsWith("lor-infinite:", StringComparison.OrdinalIgnoreCase)
+                || effectType.Equals("lor-infinite", StringComparison.OrdinalIgnoreCase)
+                || effectType.Equals("spiritless", StringComparison.OrdinalIgnoreCase)
+                || effectType.Equals("mindless", StringComparison.OrdinalIgnoreCase))
+            {
+                var infiniteType = ResolveInfiniteResistanceType(effectType, effect.ResistanceType);
+                if (infiniteType.Length == 0)
+                    continue;
+
+                yield return new AbilityEffectInstruction(
+                    AbilityEffectInstructionKind.ResistanceInfinite,
+                    ResistanceType: infiniteType,
+                    Level: null,
+                    ImmunityName: null);
                 continue;
             }
 
@@ -126,7 +178,9 @@ public static class AbilityEffectEvaluator
     private static void ApplyInstruction(
         AbilityEffectInstruction? instruction,
         IDictionary<string, int> resistance,
-        ISet<string> immunities)
+        ISet<string> immunities,
+        IDictionary<string, int>? resistanceMultipliers,
+        ISet<string>? infiniteResistanceTypes)
     {
         if (instruction == null)
             return;
@@ -141,6 +195,35 @@ public static class AbilityEffectEvaluator
 
                 var level = instruction.Level ?? 0;
                 SetResistanceLevel(resistance, resistanceType, level);
+                return;
+            }
+            case AbilityEffectInstructionKind.ResistanceLevelMultiplier:
+            {
+                var resistanceType = NormalizeResistanceType(instruction.ResistanceType);
+                if (string.IsNullOrWhiteSpace(resistanceType))
+                    return;
+
+                var multiplier = instruction.Level ?? 0;
+                if (multiplier <= 1 || resistanceMultipliers == null)
+                    return;
+
+                if (!resistanceMultipliers.TryGetValue(resistanceType, out var current)
+                    || multiplier > current)
+                {
+                    resistanceMultipliers[resistanceType] = multiplier;
+                }
+                return;
+            }
+            case AbilityEffectInstructionKind.ResistanceInfinite:
+            {
+                if (infiniteResistanceTypes == null)
+                    return;
+
+                var resistanceType = NormalizeResistanceType(instruction.ResistanceType);
+                if (string.IsNullOrWhiteSpace(resistanceType))
+                    return;
+
+                infiniteResistanceTypes.Add(resistanceType);
                 return;
             }
             case AbilityEffectInstructionKind.Immunity:
@@ -205,5 +288,29 @@ public static class AbilityEffectEvaluator
             return parsed;
 
         return 0;
+    }
+
+    private static string ResolveInfiniteResistanceType(string effectType, string? explicitResistanceType)
+    {
+        if (effectType.Equals("spiritless", StringComparison.OrdinalIgnoreCase))
+            return "Spirit";
+
+        if (effectType.Equals("mindless", StringComparison.OrdinalIgnoreCase))
+            return "Neuro";
+
+        if (effectType.StartsWith("lor-infinite:", StringComparison.OrdinalIgnoreCase))
+        {
+            var token = effectType[(effectType.IndexOf(':') + 1)..].Trim();
+            var normalized = NormalizeResistanceType(token);
+            if (normalized.Length > 0)
+                return normalized;
+        }
+
+        var fallback = NormalizeResistanceType(explicitResistanceType);
+        if (fallback.Length > 0)
+            return fallback;
+
+        // Preserve legacy behaviour where bare `lor-infinite` implies Spirit.
+        return "Spirit";
     }
 }

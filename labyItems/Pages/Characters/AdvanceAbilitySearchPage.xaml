@@ -29,11 +29,15 @@
                            FontSize="12"
                            Opacity="0.75"/>
                 </VerticalStackLayout>
-                <Label Grid.Column="1"
-                       Text="{Binding SelectedSummaryText}"
-                       VerticalOptions="Center"
-                       FontSize="12"
-                       Opacity="0.7"/>
+                <Button Grid.Column="1"
+                        Text="{Binding SelectedSummaryText}"
+                        VerticalOptions="Center"
+                        FontSize="12"
+                        Opacity="0.8"
+                        IsEnabled="{Binding HasSelectedAbilities}"
+                        BackgroundColor="Transparent"
+                        Padding="8,4"
+                        Command="{Binding ToggleSelectedOnlyCommand}"/>
             </Grid>
         </Border>
 

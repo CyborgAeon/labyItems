@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Linq;
 using labyItems.Helpers;
 using labyItems.Models;
+using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -20,6 +21,7 @@ public sealed class AbilityEntryVm : INotifyPropertyChanged
     private string _name;
     private int _cost;
     private int _runningTotal;
+    private int _rowIndex;
 
     public string AbilityKey => _abilityKey;
 
@@ -64,6 +66,9 @@ public sealed class AbilityEntryVm : INotifyPropertyChanged
 
     public string NameWithCost => $"{Name} ({Cost})";
     public string RunningTotalText => $"Total: {RunningTotal}";
+    public Color RowBackgroundColor => (_rowIndex % 2) == 0
+        ? Colors.White
+        : Color.FromArgb("#FAF8F3");
 
     public AbilityEntryVm(string name, int cost, string abilityKey, Action onChanged)
     {
@@ -71,11 +76,22 @@ public sealed class AbilityEntryVm : INotifyPropertyChanged
         _cost = cost;
         _onChanged = onChanged;
         _abilityKey = (abilityKey ?? string.Empty).Trim();
+        _rowIndex = 0;
     }
 
     public void SetRunningTotal(int total)
     {
         RunningTotal = total;
+    }
+
+    public void SetRowIndex(int rowIndex)
+    {
+        var next = Math.Max(0, rowIndex);
+        if (_rowIndex == next)
+            return;
+
+        _rowIndex = next;
+        Raise(nameof(RowBackgroundColor));
     }
 }
 

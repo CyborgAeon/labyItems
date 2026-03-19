@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 using labyItems.Services;
 using Xunit;
 
 namespace labyItems.Tests;
 
-public sealed class BattleboardAdvancementEffectResolverTests
+public sealed class BattleboardAdvancementEffectResolverTests : ServiceTestBase
 {
     [Fact]
     public void ResolveFallback_ParsesImmunityAndLevelResistanceEffects()
@@ -52,5 +53,40 @@ public sealed class BattleboardAdvancementEffectResolverTests
         Assert.Equal(9, resolved.ResistanceOverrides["Magic"]);
         Assert.Equal(9, resolved.ResistanceOverrides["Spirit"]);
         Assert.False(resolved.ResistanceOverrides.ContainsKey("Neuro"));
+    }
+
+    [Fact]
+    public void ResolveFallback_ParsesHalfEffectMagic_AsMultiplier()
+    {
+        var resolved = BattleboardAdvancementEffectResolver.ResolveFallback(new[]
+        {
+            "1/2 effect magic"
+        });
+
+        Assert.Equal(2, resolved.ResistanceMultipliers["Magic"]);
+    }
+
+    [Fact]
+    public void ResolveFallback_ParsesHalfSpirit_AsSpiritMultiplier()
+    {
+        var resolved = BattleboardAdvancementEffectResolver.ResolveFallback(new[]
+        {
+            "Alfar have only half a spirit, in the same manner as Half-Elves."
+        });
+
+        Assert.Equal(2, resolved.ResistanceMultipliers["Spirit"]);
+    }
+
+    [Fact]
+    public void ResolveFallback_ParsesSpiritlessAndMindless_AsInfiniteResistance()
+    {
+        var resolved = BattleboardAdvancementEffectResolver.ResolveFallback(new[]
+        {
+            "Spiritless",
+            "Mindless"
+        });
+
+        Assert.Contains("Spirit", resolved.InfiniteResistanceTypes);
+        Assert.Contains("Neuro", resolved.InfiniteResistanceTypes);
     }
 }

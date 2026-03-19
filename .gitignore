@@ -72,6 +72,7 @@ captures/
 *.aab
 *.keystore
 *.jks
+*.keystore.b64
 
 # =========================
 # Xcode / iOS

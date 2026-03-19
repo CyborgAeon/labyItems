@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using labyItems.Infrastructure;
+using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
@@ -15,7 +16,9 @@ namespace labyItems.Pages.Battleboard.ViewModels;
 public sealed class BattleboardViewModel : ObservableObject
 {
     private readonly CharacterDraft _draft;
-    private readonly Dictionary<string, int> _initialResistanceLevels = new(StringComparer.OrdinalIgnoreCase);
+    private readonly List<Item> _assignedItems;
+    private readonly Dictionary<string, int> _resistanceMultipliers = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _infiniteResistanceTypes = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<CastingEntryVm> _allCastingEntries = new();
     private string _castingSearch = string.Empty;
     private bool _hasCastingEntries;
@@ -29,23 +32,41 @@ public sealed class BattleboardViewModel : ObservableObject
     private BattleboardSnapshot _snapshot;
     private string _innateSearch = string.Empty;
     private bool _hasFilteredInnates;
+    private bool _showLifeMissing;
     private bool _hasFatalOvercast;
     private bool _deathAlertShown;
 
     public BattleboardViewModel(CharacterDraft draft)
     {
         _draft = draft ?? new CharacterDraft();
-        var assignedItems = BattleboardInnateCalculator.ResolveAssignedItems(_draft);
-        var lifeTotals = BattleboardLifeCalculator.Calculate(_draft, assignedItems);
-        var itemArmour = BattleboardArmourCalculator.Calculate(_draft, assignedItems);
-        var resolvedInnates = BattleboardInnateCalculator.Calculate(_draft, assignedItems);
+        _assignedItems = BattleboardInnateCalculator.ResolveAssignedItems(_draft).ToList();
+        var lifeTotals = BattleboardLifeCalculator.Calculate(_draft, _assignedItems);
+        var itemArmour = BattleboardArmourCalculator.Calculate(_draft, _assignedItems);
+        var resolvedInnates = BattleboardInnateCalculator.Calculate(_draft, _assignedItems);
         var abilityEffects = BattleboardAbilityEffectResolver.ResolveFallback(_draft.Abilities);
         var advancementEffects = BattleboardAdvancementEffectResolver.ResolveFallback(_draft.AdvancementAbilities);
+        var itemEffects = BattleboardItemEffectResolver.ResolveFallback(_draft, _assignedItems);
         var fallbackResistanceOverrides = BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
             abilityEffects.ResistanceOverrides,
             advancementEffects.ResistanceOverrides);
+        fallbackResistanceOverrides = BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
+            fallbackResistanceOverrides,
+            itemEffects.ResistanceOverrides);
+        var fallbackResistanceMultipliers = BattleboardAdvancementEffectResolver.ApplyResistanceMultipliers(
+            BattleboardAdvancementEffectResolver.ApplyResistanceMultipliers(
+                abilityEffects.ResistanceMultipliers,
+                advancementEffects.ResistanceMultipliers),
+            itemEffects.ResistanceMultipliers);
+        var fallbackInfiniteResistanceTypes = BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
+            BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
+                abilityEffects.InfiniteResistanceTypes,
+                advancementEffects.InfiniteResistanceTypes),
+            itemEffects.InfiniteResistanceTypes);
+        MergeResistanceMultipliers(fallbackResistanceMultipliers);
+        MergeInfiniteResistanceTypes(fallbackInfiniteResistanceTypes);
         var fallbackImmunities = (abilityEffects.Immunities ?? Array.Empty<string>())
             .Concat(advancementEffects.Immunities ?? Array.Empty<string>())
+            .Concat(itemEffects.Immunities ?? Array.Empty<string>())
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -113,11 +134,12 @@ public sealed class BattleboardViewModel : ObservableObject
         {
             Head, Chest, Abdomen, LeftArm, RightArm, LeftLeg, RightLeg
         });
+        ShowLifeMissing = false;
 
         ResistanceLevels = new ObservableCollection<ResistanceLevelVm>(
             BuildResistanceLevels(_draft, fallbackResistanceOverrides));
-        Immunities = new ObservableCollection<string>(BuildImmunities(_draft, fallbackImmunities));
-        HasImmunities = Immunities.Count > 0;
+        Immunities = new ObservableCollection<ImmunityRowVm>();
+        UpdateImmunityRows(BuildImmunities(_draft, fallbackImmunities));
 
         TotalLife.PropertyChanged += (_, e) =>
         {
@@ -125,14 +147,7 @@ public sealed class BattleboardViewModel : ObservableObject
                 _ = CheckDeathAndAlertAsync();
         };
 
-        foreach (var level in ResistanceLevels)
-        {
-            level.PropertyChanged += (_, e) =>
-            {
-                if (e.PropertyName == nameof(ResistanceLevelVm.Level))
-                    _ = CheckDeathAndAlertAsync();
-            };
-        }
+        HookResistanceLevelSubscriptions();
 
         IncreaseResistanceCommand = new Command<ResistanceLevelVm>(level => AdjustResistance(level, 1));
         DecreaseResistanceCommand = new Command<ResistanceLevelVm>(level => AdjustResistance(level, -1));
@@ -166,7 +181,7 @@ public sealed class BattleboardViewModel : ObservableObject
         if (ShouldIncludeWizardBaseList())
             _ = LoadWizardBaseListAsync();
 
-        _ = LoadResolvedAdvancementEffectsAsync();
+        _ = LoadResolvedBattleboardEffectsAsync();
     }
 
     public string CharacterName { get; }
@@ -219,6 +234,19 @@ public sealed class BattleboardViewModel : ObservableObject
         }
     }
 
+    public bool ShowLifeMissing
+    {
+        get => _showLifeMissing;
+        set
+        {
+            if (!SetProperty(ref _showLifeMissing, value))
+                return;
+
+            foreach (var location in LifeLocations)
+                location.SetShowLifeMissing(value);
+        }
+    }
+
     public List<string> AtWillAbilities { get; }
     public bool HasAtWillAbilities { get; }
 
@@ -243,7 +271,7 @@ public sealed class BattleboardViewModel : ObservableObject
     public ReadOnlyCollection<LifeLocationVm> LifeLocations { get; }
 
     public ObservableCollection<ResistanceLevelVm> ResistanceLevels { get; }
-    public ObservableCollection<string> Immunities { get; }
+    public ObservableCollection<ImmunityRowVm> Immunities { get; }
     public bool HasImmunities
     {
         get => _hasImmunities;
@@ -285,27 +313,47 @@ public sealed class BattleboardViewModel : ObservableObject
         }
     }
 
+    public int GetResistanceMultiplier(string resistanceType)
+    {
+        var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(resistanceType);
+        if (key.Length == 0)
+            return 1;
+
+        return _resistanceMultipliers.TryGetValue(key, out var multiplier)
+            ? Math.Max(1, multiplier)
+            : 1;
+    }
+
+    public bool HasInfiniteResistance(string resistanceType)
+    {
+        var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(resistanceType);
+        return key.Length > 0 && _infiniteResistanceTypes.Contains(key);
+    }
+
     private void AdjustResistance(ResistanceLevelVm? level, int delta)
     {
-        if (level == null)
+        if (level == null || delta == 0)
             return;
 
-        var next = Math.Max(0, level.Level + delta);
-        level.Level = next;
+        var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(level.Name);
+        if (key.Length == 0 || _infiniteResistanceTypes.Contains(key))
+            return;
 
         _draft.ResistanceLevels ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        _draft.ResistanceLevels[level.Name] = next;
+        var currentRaw = _draft.ResistanceLevels.TryGetValue(key, out var current)
+            ? Math.Max(0, current)
+            : 8;
+        var nextRaw = Math.Max(0, currentRaw + delta);
+        _draft.ResistanceLevels[key] = nextRaw;
+
+        level.IsInfinite = false;
+        level.Level = CalculateDisplayedResistanceLevel(key, nextRaw);
     }
 
     private void AdjustAllResistance(int delta)
     {
         foreach (var level in ResistanceLevels)
-        {
-            var next = Math.Max(0, level.Level + delta);
-            level.Level = next;
-            _draft.ResistanceLevels ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-            _draft.ResistanceLevels[level.Name] = next;
-        }
+            AdjustResistance(level, delta);
     }
 
     public void ApplyDamage(int tblpDamage, int locDamage, string? locationKey, bool applyToAllLocations)
@@ -430,7 +478,8 @@ public sealed class BattleboardViewModel : ObservableObject
             TotalLife = TotalLife.Current,
             LocationLife = LifeLocations.ToDictionary(l => l.Key, l => l.Current, StringComparer.OrdinalIgnoreCase),
             LocationPacPenalty = LifeLocations.ToDictionary(l => l.Key, l => l.PacPenalty, StringComparer.OrdinalIgnoreCase),
-            ResistanceLevels = ResistanceLevels.ToDictionary(l => l.Name, l => l.Level, StringComparer.OrdinalIgnoreCase),
+            ResistanceLevels = (_draft.ResistanceLevels ?? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase))
+                .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase),
             CastingPools = CastingPools.ToDictionary(p => p.Name, p => p.Current, StringComparer.OrdinalIgnoreCase),
             InnateUsed = Innates.ToDictionary(i => i.Name, i => i.Used, StringComparer.OrdinalIgnoreCase),
             Alignment = _alignment,
@@ -451,10 +500,17 @@ public sealed class BattleboardViewModel : ObservableObject
                 loc.SetPacPenalty(pen);
         }
 
+        _draft.ResistanceLevels ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         foreach (var level in ResistanceLevels)
         {
-            if (_snapshot.ResistanceLevels.TryGetValue(level.Name, out var value))
-                level.Level = value;
+            var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(level.Name);
+            if (key.Length == 0)
+                continue;
+
+            var rawLevel = _snapshot.ResistanceLevels.TryGetValue(key, out var value) ? value : 8;
+            _draft.ResistanceLevels[key] = rawLevel;
+            level.IsInfinite = _infiniteResistanceTypes.Contains(key);
+            level.Level = CalculateDisplayedResistanceLevel(key, rawLevel);
         }
 
         foreach (var pool in CastingPools)
@@ -676,8 +732,12 @@ public sealed class BattleboardViewModel : ObservableObject
         if (query.Length > 0)
             filtered = filtered.Where(i => i.Name.Contains(query, StringComparison.OrdinalIgnoreCase));
 
+        var rowIndex = 0;
         foreach (var innate in filtered)
+        {
+            innate.SetRowIndex(rowIndex++);
             FilteredInnates.Add(innate);
+        }
 
         HasFilteredInnates = FilteredInnates.Count > 0;
     }
@@ -733,22 +793,10 @@ public sealed class BattleboardViewModel : ObservableObject
         IReadOnlyDictionary<string, int>? overrides)
     {
         var list = new List<ResistanceLevelVm>();
-        var values = new Dictionary<string, int>(
-            BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
-                draft.ResistanceLevels ?? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase),
-                overrides),
-            StringComparer.OrdinalIgnoreCase);
-
+        var values = BattleboardResistanceLevelService.BuildBaselineRawLevels(
+            draft.ResistanceLevels ?? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase),
+            overrides);
         draft.ResistanceLevels = new Dictionary<string, int>(values, StringComparer.OrdinalIgnoreCase);
-
-        if (values.Count == 0)
-        {
-            values["Physical"] = 8;
-            values["Magic"] = 8;
-            values["Neuro"] = 8;
-            values["Spirit"] = 8;
-            draft.ResistanceLevels = values;
-        }
 
         var preferred = new[] { "Physical", "Magic", "Neuro", "Spirit" };
         var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -757,13 +805,13 @@ public sealed class BattleboardViewModel : ObservableObject
         {
             if (!values.TryGetValue(key, out var level))
                 level = 8;
-            if (level <= 0)
-                level = 8;
             if (!used.Add(key))
                 continue;
-            var vm = new ResistanceLevelVm(key, level);
+            var vm = new ResistanceLevelVm(
+                key,
+                CalculateDisplayedResistanceLevel(key, level),
+                _infiniteResistanceTypes.Contains(BattleboardAdvancementEffectResolver.NormalizeResistanceType(key)));
             list.Add(vm);
-            _initialResistanceLevels[key] = vm.Level;
         }
 
         foreach (var kvp in values.OrderBy(k => k.Key, StringComparer.OrdinalIgnoreCase))
@@ -775,16 +823,18 @@ public sealed class BattleboardViewModel : ObservableObject
             if (used.Contains(displayName))
                 continue;
 
-            var vm = new ResistanceLevelVm(displayName, kvp.Value);
+            var vm = new ResistanceLevelVm(
+                displayName,
+                CalculateDisplayedResistanceLevel(displayName, kvp.Value),
+                _infiniteResistanceTypes.Contains(BattleboardAdvancementEffectResolver.NormalizeResistanceType(displayName)));
             list.Add(vm);
             used.Add(displayName);
-            _initialResistanceLevels[displayName] = vm.Level;
         }
 
         return list;
     }
 
-    private static List<string> BuildImmunities(CharacterDraft draft, IReadOnlyList<string>? advancementImmunities)
+    private static List<string> BuildImmunities(CharacterDraft draft, IReadOnlyList<string>? resolvedImmunities)
     {
         var fromAbilities = (draft.Abilities ?? new List<AbilityDraft>())
             .Where(IsImmunityAbility)
@@ -794,7 +844,7 @@ public sealed class BattleboardViewModel : ObservableObject
             .ToList();
 
         return fromAbilities
-            .Concat(advancementImmunities ?? Array.Empty<string>())
+            .Concat(resolvedImmunities ?? Array.Empty<string>())
             .Select(name => (name ?? string.Empty).Trim())
             .Where(name => name.Length > 0)
             .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -802,34 +852,62 @@ public sealed class BattleboardViewModel : ObservableObject
             .ToList();
     }
 
-    private async Task LoadResolvedAdvancementEffectsAsync()
+    private void UpdateImmunityRows(IReadOnlyList<string>? names)
+    {
+        Immunities.Clear();
+        var rowIndex = 0;
+        foreach (var name in names ?? Array.Empty<string>())
+            Immunities.Add(new ImmunityRowVm(name, rowIndex++));
+
+        HasImmunities = Immunities.Count > 0;
+    }
+
+    private async Task LoadResolvedBattleboardEffectsAsync()
     {
         try
         {
             var abilityEffectsTask = BattleboardAbilityEffectResolver.ResolveAsync(_draft.Abilities);
             var advancementEffectsTask = BattleboardAdvancementEffectResolver.ResolveAsync(_draft.AdvancementAbilities);
-            await Task.WhenAll(abilityEffectsTask, advancementEffectsTask);
+            var itemEffectsTask = BattleboardItemEffectResolver.ResolveAsync(_draft, _assignedItems);
+            await Task.WhenAll(abilityEffectsTask, advancementEffectsTask, itemEffectsTask);
 
             var resolvedAbilityEffects = abilityEffectsTask.Result;
             var resolvedAdvancementEffects = advancementEffectsTask.Result;
+            var resolvedItemEffects = itemEffectsTask.Result;
 
             var mergedResistance = BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
                 resolvedAbilityEffects?.ResistanceOverrides,
                 resolvedAdvancementEffects?.ResistanceOverrides);
+            mergedResistance = BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
+                mergedResistance,
+                resolvedItemEffects?.ResistanceOverrides);
+            var mergedResistanceMultipliers = BattleboardAdvancementEffectResolver.ApplyResistanceMultipliers(
+                BattleboardAdvancementEffectResolver.ApplyResistanceMultipliers(
+                    resolvedAbilityEffects?.ResistanceMultipliers,
+                    resolvedAdvancementEffects?.ResistanceMultipliers),
+                resolvedItemEffects?.ResistanceMultipliers);
+            var mergedInfiniteResistanceTypes = BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
+                BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
+                    resolvedAbilityEffects?.InfiniteResistanceTypes,
+                    resolvedAdvancementEffects?.InfiniteResistanceTypes),
+                resolvedItemEffects?.InfiniteResistanceTypes);
+
+            MergeResistanceMultipliers(mergedResistanceMultipliers);
+            MergeInfiniteResistanceTypes(mergedInfiniteResistanceTypes);
+
             if ((mergedResistance?.Count ?? 0) > 0)
                 ApplyResolvedResistanceOverrides(mergedResistance);
+            else
+                RefreshResistanceDisplayLevels();
 
             var mergedImmunities = (resolvedAbilityEffects?.Immunities ?? Array.Empty<string>())
                 .Concat(resolvedAdvancementEffects?.Immunities ?? Array.Empty<string>())
+                .Concat(resolvedItemEffects?.Immunities ?? Array.Empty<string>())
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
             var nextImmunities = BuildImmunities(_draft, mergedImmunities);
-            Immunities.Clear();
-            foreach (var immunity in nextImmunities)
-                Immunities.Add(immunity);
-
-            HasImmunities = Immunities.Count > 0;
+            UpdateImmunityRows(nextImmunities);
         }
         catch
         {
@@ -839,6 +917,8 @@ public sealed class BattleboardViewModel : ObservableObject
 
     private void ApplyResolvedResistanceOverrides(IReadOnlyDictionary<string, int> overrides)
     {
+        _draft.ResistanceLevels ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
         foreach (var pair in overrides ?? new Dictionary<string, int>())
         {
             var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(pair.Key);
@@ -849,31 +929,104 @@ public sealed class BattleboardViewModel : ObservableObject
             if (incoming <= 0)
                 continue;
 
+            if (_draft.ResistanceLevels.TryGetValue(key, out var existing) && incoming <= Math.Max(0, existing))
+                continue;
+
+            _draft.ResistanceLevels[key] = incoming;
+
             var target = ResistanceLevels.FirstOrDefault(level =>
                 BattleboardAdvancementEffectResolver.NormalizeResistanceType(level.Name)
                     .Equals(key, StringComparison.OrdinalIgnoreCase));
 
             if (target == null)
             {
-                ResistanceLevels.Add(new ResistanceLevelVm(key, incoming));
-                _draft.ResistanceLevels[key] = incoming;
-                _initialResistanceLevels[key] = incoming;
+                var vm = new ResistanceLevelVm(
+                    key,
+                    CalculateDisplayedResistanceLevel(key, incoming),
+                    _infiniteResistanceTypes.Contains(key));
+                ResistanceLevels.Add(vm);
+                AttachResistanceLevelSubscription(vm);
                 continue;
             }
 
-            var baseline = _initialResistanceLevels.TryGetValue(key, out var knownBaseline)
-                ? knownBaseline
-                : target.Level;
+            target.IsInfinite = _infiniteResistanceTypes.Contains(key);
+            target.Level = CalculateDisplayedResistanceLevel(key, incoming);
+        }
 
-            if (target.Level != baseline)
+        RefreshResistanceDisplayLevels();
+    }
+
+    private void HookResistanceLevelSubscriptions()
+    {
+        foreach (var level in ResistanceLevels)
+            AttachResistanceLevelSubscription(level);
+    }
+
+    private void AttachResistanceLevelSubscription(ResistanceLevelVm level)
+    {
+        level.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(ResistanceLevelVm.Level))
+                _ = CheckDeathAndAlertAsync();
+        };
+    }
+
+    private int CalculateDisplayedResistanceLevel(string resistanceType, int rawLevel)
+    {
+        var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(resistanceType);
+        if (key.Length == 0)
+            return Math.Max(0, rawLevel);
+
+        if (_infiniteResistanceTypes.Contains(key))
+            return int.MaxValue;
+
+        var multiplier = _resistanceMultipliers.TryGetValue(key, out var resolvedMultiplier)
+            ? Math.Max(1, resolvedMultiplier)
+            : 1;
+
+        return Math.Max(0, rawLevel) * multiplier;
+    }
+
+    private void RefreshResistanceDisplayLevels()
+    {
+        _draft.ResistanceLevels = BattleboardResistanceLevelService.BuildBaselineRawLevels(
+            _draft.ResistanceLevels ?? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
+
+        foreach (var level in ResistanceLevels)
+        {
+            var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(level.Name);
+            if (key.Length == 0)
                 continue;
 
-            if (incoming <= target.Level)
+            var rawLevel = _draft.ResistanceLevels.TryGetValue(key, out var resolved)
+                ? Math.Max(8, resolved)
+                : 8;
+            level.IsInfinite = _infiniteResistanceTypes.Contains(key);
+            level.Level = CalculateDisplayedResistanceLevel(key, rawLevel);
+        }
+    }
+
+    private void MergeResistanceMultipliers(IReadOnlyDictionary<string, int>? multipliers)
+    {
+        foreach (var pair in multipliers ?? new Dictionary<string, int>())
+        {
+            var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(pair.Key);
+            if (key.Length == 0)
                 continue;
 
-            target.Level = incoming;
-            _draft.ResistanceLevels[key] = incoming;
-            _initialResistanceLevels[key] = incoming;
+            var incoming = Math.Max(1, pair.Value);
+            if (!_resistanceMultipliers.TryGetValue(key, out var existing) || incoming > existing)
+                _resistanceMultipliers[key] = incoming;
+        }
+    }
+
+    private void MergeInfiniteResistanceTypes(IEnumerable<string>? types)
+    {
+        foreach (var raw in types ?? Array.Empty<string>())
+        {
+            var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(raw);
+            if (key.Length > 0)
+                _infiniteResistanceTypes.Add(key);
         }
     }
 
@@ -1122,12 +1275,15 @@ internal sealed class BattleboardSnapshot
 
 public sealed class InnateRowVm : ObservableObject
 {
+    private int _rowIndex;
+
     public InnateRowVm(string name, int rank)
     {
         Name = name;
         Rank = Math.Max(0, rank);
         MaxUses = Rank;
         Used = 0;
+        _rowIndex = 0;
         UseCommand = new Command(() => Use());
     }
 
@@ -1142,6 +1298,11 @@ public sealed class InnateRowVm : ObservableObject
         get => _used;
         private set => SetProperty(ref _used, value);
     }
+
+    public Color RowBackgroundColor => (_rowIndex % 2) == 0
+        ? Colors.White
+        : Color.FromArgb("#F9FAFB");
+
     public string UsesLabel => $"{Used}/{MaxUses} used";
     public ICommand UseCommand { get; }
     public event Action<InnateRowVm>? PulseRequested;
@@ -1161,6 +1322,32 @@ public sealed class InnateRowVm : ObservableObject
         Used = Math.Clamp(value, 0, MaxUses);
         Raise(nameof(UsesLabel));
     }
+
+    public void SetRowIndex(int value)
+    {
+        var next = Math.Max(0, value);
+        if (_rowIndex == next)
+            return;
+
+        _rowIndex = next;
+        Raise(nameof(RowBackgroundColor));
+    }
+}
+
+public sealed class ImmunityRowVm : ObservableObject
+{
+    private int _rowIndex;
+
+    public ImmunityRowVm(string name, int rowIndex)
+    {
+        Name = (name ?? string.Empty).Trim();
+        _rowIndex = Math.Max(0, rowIndex);
+    }
+
+    public string Name { get; }
+    public Color RowBackgroundColor => (_rowIndex % 2) == 0
+        ? Colors.White
+        : Color.FromArgb("#F9FAFB");
 }
 
 public sealed class TotalLifeVm : ObservableObject
@@ -1253,6 +1440,7 @@ public sealed class LifeLocationVm : ObservableObject
 {
     private int _current;
     private int _pacPenalty;
+    private bool _showLifeMissing;
     private Color _backgroundColor = Colors.White;
     private Color _textColor = Colors.Black;
 
@@ -1266,6 +1454,7 @@ public sealed class LifeLocationVm : ObservableObject
         MaxAc = Math.Max(0, maxAc);
         _current = Max;
         _pacPenalty = 0;
+        _showLifeMissing = false;
         UpdateVisuals();
     }
 
@@ -1290,8 +1479,17 @@ public sealed class LifeLocationVm : ObservableObject
 
     public int ArmourShown => Math.Max(0, Math.Min(BasePac + PacPenalty + BaseDac, MaxAc));
     public string CurrentLabel => $"{Current}/{Max}";
+    public string DisplayLabel => ShowLifeMissing
+        ? $"-{Math.Max(0, Max - Current)}"
+        : Current.ToString();
     public string ArmourLabel => ArmourShown.ToString();
     public bool BoneVisible => Current <= 0 && Current > -Max;
+    public bool ShowLifeMissing
+    {
+        get => _showLifeMissing;
+        private set => SetProperty(ref _showLifeMissing, value);
+    }
+
     public Color BackgroundColor
     {
         get => _backgroundColor;
@@ -1312,6 +1510,7 @@ public sealed class LifeLocationVm : ObservableObject
         if (Current < -Max)
             Current = -Max;
         Raise(nameof(CurrentLabel));
+        Raise(nameof(DisplayLabel));
         Raise(nameof(BoneVisible));
         UpdateVisuals();
     }
@@ -1333,6 +1532,7 @@ public sealed class LifeLocationVm : ObservableObject
 
         Current = Math.Min(Max, Current + amount);
         Raise(nameof(CurrentLabel));
+        Raise(nameof(DisplayLabel));
         Raise(nameof(BoneVisible));
         UpdateVisuals();
     }
@@ -1341,6 +1541,7 @@ public sealed class LifeLocationVm : ObservableObject
     {
         Current = Max;
         Raise(nameof(CurrentLabel));
+        Raise(nameof(DisplayLabel));
         Raise(nameof(BoneVisible));
         UpdateVisuals();
     }
@@ -1349,6 +1550,7 @@ public sealed class LifeLocationVm : ObservableObject
     {
         Current = Math.Clamp(value, -Max, Max);
         Raise(nameof(CurrentLabel));
+        Raise(nameof(DisplayLabel));
         Raise(nameof(BoneVisible));
         UpdateVisuals();
     }
@@ -1358,6 +1560,15 @@ public sealed class LifeLocationVm : ObservableObject
         PacPenalty = value;
         Raise(nameof(ArmourShown));
         Raise(nameof(ArmourLabel));
+    }
+
+    public void SetShowLifeMissing(bool value)
+    {
+        if (ShowLifeMissing == value)
+            return;
+
+        ShowLifeMissing = value;
+        Raise(nameof(DisplayLabel));
     }
 
     private void UpdateVisuals()
@@ -1375,20 +1586,44 @@ public sealed class LifeLocationVm : ObservableObject
 public sealed class ResistanceLevelVm : ObservableObject
 {
     private int _level;
+    private bool _isInfinite;
 
-    public ResistanceLevelVm(string name, int level)
+    public ResistanceLevelVm(string name, int level, bool isInfinite = false)
     {
         Name = name;
         _level = level;
+        _isInfinite = isInfinite;
     }
 
     public string Name { get; }
 
+    public bool IsInfinite
+    {
+        get => _isInfinite;
+        set
+        {
+            if (!SetProperty(ref _isInfinite, value))
+                return;
+
+            Raise(nameof(DisplayLevelText));
+            Raise(nameof(CanAdjust));
+        }
+    }
+
     public int Level
     {
         get => _level;
-        set => SetProperty(ref _level, value);
+        set
+        {
+            if (!SetProperty(ref _level, value))
+                return;
+
+            Raise(nameof(DisplayLevelText));
+        }
     }
+
+    public string DisplayLevelText => IsInfinite ? "\u221E" : Level.ToString();
+    public bool CanAdjust => !IsInfinite;
 }
 
 public sealed class CastingEntryVm

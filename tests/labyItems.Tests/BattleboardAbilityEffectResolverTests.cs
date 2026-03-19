@@ -52,4 +52,41 @@ public sealed class BattleboardAbilityEffectResolverTests : ServiceTestBase
         Assert.False(resolved.ResistanceOverrides.ContainsKey("Neuro"));
         Assert.Contains("Immunity to Repels", resolved.Immunities);
     }
+
+    [Fact]
+    public async Task ResolveAsync_ResolvesMultiplierAndInfiniteResistanceEffects()
+    {
+        var resolved = await BattleboardAbilityEffectResolver.ResolveAsync(new[]
+        {
+            new AbilityDraft
+            {
+                AbilityKey = "ability.half-effect-magic",
+                Name = "1/2 effect magic",
+                AbilityType = AbilityType.Resistance
+            },
+            new AbilityDraft
+            {
+                AbilityKey = "ability.half-spirit",
+                Name = "Half-Spirit",
+                AbilityType = AbilityType.Resistance
+            },
+            new AbilityDraft
+            {
+                AbilityKey = "ability.spiritless",
+                Name = "Spiritless",
+                AbilityType = AbilityType.Resistance
+            },
+            new AbilityDraft
+            {
+                AbilityKey = "ability.mindless",
+                Name = "Mindless",
+                AbilityType = AbilityType.Resistance
+            }
+        });
+
+        Assert.Equal(2, resolved.ResistanceMultipliers["Magic"]);
+        Assert.Equal(2, resolved.ResistanceMultipliers["Spirit"]);
+        Assert.Contains("Spirit", resolved.InfiniteResistanceTypes);
+        Assert.Contains("Neuro", resolved.InfiniteResistanceTypes);
+    }
 }

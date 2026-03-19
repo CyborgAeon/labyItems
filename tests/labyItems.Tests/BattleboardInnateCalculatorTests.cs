@@ -82,6 +82,42 @@ public sealed class BattleboardInnateCalculatorTests : ServiceTestBase
         Assert.Equal(5, fireblade.Rank);
     }
 
+    [Fact]
+    public void Calculate_ReadsSingleStructuredSpellEntryObject()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "innate-calc-3",
+            Name = "Single Entry Tester",
+            PlayerName = "Tester"
+        };
+
+        var assignedItem = BuildAssignedItem(
+            draft,
+            new CalcResult
+            {
+                AbilityType = "Spell",
+                AbilityName = "Storm Blast",
+                Summary = "Spell: Storm Blast x4 = 48",
+                Details = new Dictionary<string, object?>
+                {
+                    ["source"] = "monster-point",
+                    ["spells"] = new Dictionary<string, object?>
+                    {
+                        ["spellName"] = "Storm Blast",
+                        ["basicPerDay"] = 4,
+                        ["advancedPerDay"] = 0
+                    }
+                }
+            });
+
+        var innates = BattleboardInnateCalculator.Calculate(draft, new[] { assignedItem });
+        var stormBlast = Assert.Single(innates);
+
+        Assert.Equal("Storm Blast", stormBlast.Name);
+        Assert.Equal(4, stormBlast.Rank);
+    }
+
     private static Item BuildAssignedItem(CharacterDraft draft, params CalcResult[] abilities)
     {
         var item = new Item

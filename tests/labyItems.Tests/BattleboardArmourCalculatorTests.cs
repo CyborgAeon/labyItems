@@ -101,6 +101,43 @@ public sealed class BattleboardArmourCalculatorTests : ServiceTestBase
         Assert.Equal(1, totals.ItemSac);
     }
 
+    [Fact]
+    public void Calculate_IncludesEnhancementBonuses_FromNonWearableArmourAbility()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "armour-calc-4",
+            Name = "Wizzy",
+            PlayerName = "Tester",
+            ArmourAvailability = "Heavy",
+            WornArmour = 6
+        };
+
+        var assignedItem = BuildAssignedItemFromAbilities(
+            draft,
+            new CalcResult
+            {
+                AbilityType = "Armour",
+                AbilityName = "Magical MC Armour",
+                Details = new Dictionary<string, object?>
+                {
+                    ["enhancementBonuses"] = new[]
+                    {
+                        new Dictionary<string, object> { ["type"] = "DAC", ["value"] = 3 },
+                        new Dictionary<string, object> { ["type"] = "MAC", ["value"] = 2 },
+                        new Dictionary<string, object> { ["type"] = "SAC", ["value"] = 1 }
+                    }
+                }
+            });
+
+        var totals = BattleboardArmourCalculator.Calculate(draft, new[] { assignedItem });
+
+        Assert.Equal(6, totals.WornPac);
+        Assert.Equal(3, totals.ItemDac);
+        Assert.Equal(2, totals.ItemMac);
+        Assert.Equal(1, totals.ItemSac);
+    }
+
     private static Item BuildAssignedItem(
         CharacterDraft draft,
         int baseAc,

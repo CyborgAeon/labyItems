@@ -882,10 +882,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private void UpdateAbilityPoints()
     {
         var running = 0;
+        var rowIndex = 0;
         foreach (var entry in Abilities)
         {
             running += entry.Cost;
             entry.SetRunningTotal(running);
+            entry.SetRowIndex(rowIndex++);
         }
         Raise(nameof(MultiClassPointsSpent));
         Raise(nameof(MultiRacePointsSpent));

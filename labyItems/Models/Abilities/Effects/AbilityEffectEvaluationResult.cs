@@ -5,6 +5,12 @@ public sealed class AbilityEffectEvaluationResult
     public Dictionary<string, int> ResistanceOverrides { get; } =
         new(StringComparer.OrdinalIgnoreCase);
 
+    public Dictionary<string, int> ResistanceMultipliers { get; } =
+        new(StringComparer.OrdinalIgnoreCase);
+
+    public HashSet<string> InfiniteResistanceTypes { get; } =
+        new(StringComparer.OrdinalIgnoreCase);
+
     public List<string> Immunities { get; } = new();
 
     // Generic numeric deltas for progressive rollout (e.g. "TBLP", "LOC", "PAC", "DAC", ...).
