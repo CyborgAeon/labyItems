@@ -63,7 +63,7 @@ public partial class AdvanceAbilitySearchPage : ContentPage
         await CloseAsync();
     }
 
-    private async void OnSaveClicked(object sender, EventArgs e)
+    private async void OnNextClicked(object sender, EventArgs e)
     {
         var preReqCheck = _vm.GetSelectionPrerequisiteIssues();
         if (preReqCheck.HasIssues)
@@ -80,7 +80,18 @@ public partial class AdvanceAbilitySearchPage : ContentPage
             return;
         }
 
-        _vm.CommitSelection();
+        var selectedAbilities = _vm.GetSelectedAbilities();
+        var specialisationRequests = await _vm.BuildSpecialisationRequestsAsync(selectedAbilities);
+        if (specialisationRequests.Count > 0)
+        {
+            var specialisationPage = new AdvanceAbilitySpecialisationPage(_vm.Draft, specialisationRequests);
+            await Navigation.PushAsync(specialisationPage);
+            var shouldCommit = await specialisationPage.Completion;
+            if (!shouldCommit)
+                return;
+        }
+
+        _vm.CommitSelection(selectedAbilities);
         await CloseAsync();
     }
 

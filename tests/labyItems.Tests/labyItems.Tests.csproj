@@ -41,6 +41,7 @@
     <Compile Include="../../labyItems/Services/RuleTreeEvaluator.cs" Link="Source/RuleTreeEvaluator.cs" />
     <Compile Include="../../labyItems/Services/IAbilityAvailabilityService.cs" Link="Source/IAbilityAvailabilityService.cs" />
     <Compile Include="../../labyItems/Services/AbilityAvailabilityService.cs" Link="Source/AbilityAvailabilityService.cs" />
+    <Compile Include="../../labyItems/Services/AbilityChoiceSetResolverService.cs" Link="Source/AbilityChoiceSetResolverService.cs" />
     <Compile Include="../../labyItems/Services/PeopleService.cs" Link="Source/PeopleService.cs" />
     <Compile Include="../../labyItems/Services/LifeScalesService.cs" Link="Source/LifeScalesService.cs" />
     <Compile Include="../../labyItems/Services/SpecialisationService.cs" Link="Source/SpecialisationService.cs" />

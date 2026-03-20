@@ -131,12 +131,14 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             var description = (seed.desc ?? string.Empty).Trim();
             var table = Math.Max(0, seed.table);
             var availableRaw = SerializeAvailable(seed.available);
-            var parsedCost = ParseCost(seed.cost, seed.canBuyMultiple ?? false);
+            var parsedCost = ParseCost(seed.cost, (seed.canBuyMultiple ?? false) || (seed.canAddMultiple ?? false));
             var preReqs = NormalizePreReqs(seed.preReqs);
             var sourceBook = (seed.sourceBook ?? string.Empty).Trim();
             if (sourceBook.Length == 0)
                 sourceBook = sourceBookFallback;
             var abilityRef = (seed.abilityRef ?? string.Empty).Trim();
+            var maxAvailable = ParseOptionalPositiveInteger(seed.maxAvailable);
+            var choiceSetRefs = NormalizeChoiceSetRefs(seed.choiceSetRef, seed.choiceSetRefs);
 
             var id = DeterministicGuid($"evo|{table}|{index}");
             var dataJson = JsonSerializer.Serialize(new
@@ -149,7 +151,9 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
                 canBuyMultiple = parsedCost.CanBuyMultiple,
                 preReqs,
                 sourceBook,
-                abilityRef
+                abilityRef,
+                maxAvailable,
+                choiceSetRefs
             });
 
             list.Add(new EvolutionDefaultAbility(
@@ -217,6 +221,41 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             .Where(x => x.Length > 0)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
+
+    private static int? ParseOptionalPositiveInteger(JsonElement element)
+    {
+        if (element.ValueKind == JsonValueKind.Number && element.TryGetInt32(out var asNumber) && asNumber > 0)
+            return asNumber;
+
+        if (element.ValueKind == JsonValueKind.String)
+        {
+            var token = (element.GetString() ?? string.Empty).Trim();
+            if (int.TryParse(token, out var asString) && asString > 0)
+                return asString;
+        }
+
+        return null;
+    }
+
+    private static List<string> NormalizeChoiceSetRefs(string? choiceSetRef, List<string>? choiceSetRefs)
+    {
+        var refs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        var single = (choiceSetRef ?? string.Empty).Trim();
+        if (single.Length > 0)
+            refs.Add(single);
+
+        foreach (var entry in choiceSetRefs ?? new List<string>())
+        {
+            var trimmed = (entry ?? string.Empty).Trim();
+            if (trimmed.Length > 0)
+                refs.Add(trimmed);
+        }
+
+        return refs.Count == 0
+            ? new List<string>()
+            : refs.OrderBy(item => item, StringComparer.OrdinalIgnoreCase).ToList();
+    }
 
     private static (int Cost, bool CanBuyMultiple) ParseCost(JsonElement costElement, bool explicitCanBuyMultiple)
     {
@@ -539,8 +578,12 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
         public int table { get; set; }
         public List<string>? preReqs { get; set; }
         public bool? canBuyMultiple { get; set; }
+        public bool? canAddMultiple { get; set; }
         public string? sourceBook { get; set; }
         public string? abilityRef { get; set; }
+        public JsonElement maxAvailable { get; set; }
+        public string? choiceSetRef { get; set; }
+        public List<string>? choiceSetRefs { get; set; }
     }
 
     private sealed record EvolutionDefaultAbility(

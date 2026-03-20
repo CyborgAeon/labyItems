@@ -58,6 +58,58 @@
         }
       ]
     },
+    "choice.druid.chosen-field.primary": {
+      "Key": "choice.druid.chosen-field.primary",
+      "Title": "Chosen Field",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        { "Key": "Spring", "Label": "Spring" },
+        { "Key": "Summer", "Label": "Summer" },
+        { "Key": "Autumn", "Label": "Autumn" },
+        { "Key": "Winter", "Label": "Winter" },
+        { "Key": "Horned Man", "Label": "Horned Man" },
+        { "Key": "Mother Nature", "Label": "Mother Nature" },
+        { "Key": "Shadow of the Dawn", "Label": "Shadow of the Dawn" },
+        { "Key": "Keeper of Winds", "Label": "Keeper of Winds" },
+        { "Key": "Father of the World", "Label": "Father of the World" },
+        { "Key": "Deserts", "Label": "Deserts" },
+        { "Key": "Skies", "Label": "Skies" },
+        { "Key": "Mountains", "Label": "Mountains" },
+        { "Key": "Rivers", "Label": "Rivers" },
+        { "Key": "Forests", "Label": "Forests" },
+        { "Key": "Cities", "Label": "Cities" }
+      ]
+    },
+    "choice.druid.advocate-of-field.primary": {
+      "Key": "choice.druid.advocate-of-field.primary",
+      "Title": "Advocate of (Field)",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        { "Key": "Spring", "Label": "Spring" },
+        { "Key": "Summer", "Label": "Summer" },
+        { "Key": "Autumn", "Label": "Autumn" },
+        { "Key": "Winter", "Label": "Winter" },
+        { "Key": "Horned Man", "Label": "Horned Man" },
+        { "Key": "Mother Nature", "Label": "Mother Nature" },
+        { "Key": "Shadow of the Dawn", "Label": "Shadow of the Dawn" },
+        { "Key": "Keeper of Winds", "Label": "Keeper of Winds" },
+        { "Key": "Father of the World", "Label": "Father of the World" },
+        { "Key": "Deserts", "Label": "Deserts" },
+        { "Key": "Skies", "Label": "Skies" },
+        { "Key": "Mountains", "Label": "Mountains" },
+        { "Key": "Rivers", "Label": "Rivers" },
+        { "Key": "Forests", "Label": "Forests" },
+        { "Key": "Cities", "Label": "Cities" }
+      ]
+    },
     "choice.warrior-specialist.primary": {
       "Key": "choice.warrior-specialist.primary",
       "Title": "Warrior Specialist",

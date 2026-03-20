@@ -67,6 +67,7 @@ public static class EvolutionService
         public bool CanBuyMultiple { get; init; }
         public IReadOnlyList<string> PreReqs { get; init; } = Array.Empty<string>();
         public int? MaxAvailable { get; init; }
+        public IReadOnlyList<string> ChoiceSetRefs { get; init; } = Array.Empty<string>();
         public bool IsNonStandard { get; init; }
     }
 
@@ -365,6 +366,7 @@ public static class EvolutionService
             CanBuyMultiple = row.can_buy_multiple != 0,
             PreReqs = ParsePreReqs(row.prereqs_json),
             MaxAvailable = ParseMaxAvailable(row.data_json),
+            ChoiceSetRefs = ParseChoiceSetRefs(row.data_json),
             IsNonStandard = ParseNonStandard(row.data_json)
         };
     }
@@ -783,6 +785,60 @@ public static class EvolutionService
         }
 
         return null;
+    }
+
+    private static IReadOnlyList<string> ParseChoiceSetRefs(string? dataJson)
+    {
+        if (string.IsNullOrWhiteSpace(dataJson))
+            return Array.Empty<string>();
+
+        try
+        {
+            using var doc = JsonDocument.Parse(dataJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+                return Array.Empty<string>();
+
+            var values = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var property in doc.RootElement.EnumerateObject())
+            {
+                var propertyName = property.Name;
+                var isSingle = propertyName.Equals("choiceSetRef", StringComparison.OrdinalIgnoreCase)
+                               || propertyName.Equals("choice_set_ref", StringComparison.OrdinalIgnoreCase);
+                var isMany = propertyName.Equals("choiceSetRefs", StringComparison.OrdinalIgnoreCase)
+                             || propertyName.Equals("choice_set_refs", StringComparison.OrdinalIgnoreCase);
+                if (!isSingle && !isMany)
+                    continue;
+
+                if (property.Value.ValueKind == JsonValueKind.String)
+                {
+                    var single = (property.Value.GetString() ?? string.Empty).Trim();
+                    if (single.Length > 0)
+                        values.Add(single);
+                    continue;
+                }
+
+                if (property.Value.ValueKind != JsonValueKind.Array)
+                    continue;
+
+                foreach (var item in property.Value.EnumerateArray())
+                {
+                    if (item.ValueKind != JsonValueKind.String)
+                        continue;
+
+                    var choiceSetRef = (item.GetString() ?? string.Empty).Trim();
+                    if (choiceSetRef.Length > 0)
+                        values.Add(choiceSetRef);
+                }
+            }
+
+            return values.Count == 0
+                ? Array.Empty<string>()
+                : values.ToList();
+        }
+        catch
+        {
+            return Array.Empty<string>();
+        }
     }
 
     private static bool ParseNonStandard(string? dataJson)

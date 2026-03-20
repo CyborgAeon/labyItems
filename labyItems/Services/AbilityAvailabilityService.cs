@@ -81,6 +81,7 @@ public sealed class AbilityAvailabilityService : IAbilityAvailabilityService
                 "peopletype" or "peopletypes" => peopleTypes,
                 "racetag" or "racetags" => raceTags,
                 "specialisation" or "specialisations" or "specialization" or "specializations" => specialisationTokens,
+                "chosenfield" or "evocationfield" => specialisationTokens,
                 "manacolour" or "manacolours" or "magiccolour" or "magiccolours" or "wizardcolour" or "wizardcolours" => manaColours,
                 "prieststyle" or "prieststyles" => priestStyles,
                 "alignmentorder" => ToSingleValue(alignmentOrder),

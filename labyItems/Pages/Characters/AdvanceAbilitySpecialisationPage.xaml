@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Characters.AdvanceAbilitySpecialisationPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    xmlns:viewModels="clr-namespace:labyItems.Pages.Characters.ViewModels"
+    Title="Ability Specialisation"
+    BackgroundColor="{StaticResource White}"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto"
+          RowSpacing="0">
+        <Border Grid.Row="0"
+                Padding="16,12"
+                Stroke="{StaticResource SurfaceBorderColor}"
+                StrokeThickness="1"
+                BackgroundColor="{StaticResource White}">
+            <VerticalStackLayout Spacing="2">
+                <Label Text="Ability Specialisation"
+                       FontAttributes="Bold"
+                       FontSize="18"/>
+                <Label Text="Choose options for abilities that require specialisation."
+                       FontSize="12"
+                       Opacity="0.75"/>
+            </VerticalStackLayout>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16"
+                                 Spacing="12">
+                <Label Text="No required choice sets for the selected abilities."
+                       IsVisible="{Binding HasNoCards}"
+                       Opacity="0.7"
+                       HorizontalTextAlignment="Center"/>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AbilityCards}"
+                                     Spacing="10"
+                                     IsVisible="{Binding HasCards}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:AdvanceAbilitySpecialisationAbilityVm">
+                            <Frame Padding="12"
+                                   CornerRadius="12"
+                                   BorderColor="{StaticResource SurfaceBorderColor}"
+                                   HasShadow="False">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="8">
+                                        <Label Text="{Binding AbilityName}"
+                                               FontAttributes="Bold"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Subtitle}"
+                                               Opacity="0.7"/>
+                                    </Grid>
+
+                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Groups}"
+                                                         Spacing="8">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="viewModels:ChoiceSetGroupVm">
+                                                <VerticalStackLayout Spacing="8">
+                                                    <Grid ColumnDefinitions="*,Auto"
+                                                          ColumnSpacing="8">
+                                                        <Label Text="{Binding Title}"
+                                                               FontAttributes="Bold"/>
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding UnlockLevelText}"
+                                                               Opacity="0.7"/>
+                                                    </Grid>
+
+                                                    <controls:DictionarySearchBar x:TypeArguments="x:String"
+                                                                                  ItemsSource="{Binding SearchOptions}"
+                                                                                  SelectedText="{Binding SelectedOptionDisplay, Mode=TwoWay}"
+                                                                                  PlaceholderText="Search talents"
+                                                                                  AllowCustomOptions="False"
+                                                                                  HorizontalOptions="FillAndExpand"/>
+
+                                                    <Label Text="No granted abilities for this option."
+                                                           Opacity="0.7"
+                                                           IsVisible="{Binding HasAbilityRows, Converter={StaticResource InverseBoolConverter}}"/>
+
+                                                    <VerticalStackLayout IsVisible="{Binding HasAbilityRows}"
+                                                                         Spacing="4">
+                                                        <Grid ColumnDefinitions="*,Auto"
+                                                              ColumnSpacing="8"
+                                                              Opacity="0.7">
+                                                            <Label Text="Ability"/>
+                                                            <Label Grid.Column="1"
+                                                                   Text="Info"/>
+                                                        </Grid>
+
+                                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding AbilityRows}"
+                                                                             Spacing="2">
+                                                            <BindableLayout.ItemTemplate>
+                                                                <DataTemplate x:DataType="viewModels:ChoiceSetAbilityRowVm">
+                                                                    <Border Stroke="{StaticResource SurfaceBorderColor}"
+                                                                            StrokeThickness="1"
+                                                                            StrokeShape="RoundRectangle 8"
+                                                                            BackgroundColor="{StaticResource White}"
+                                                                            Padding="10,8">
+                                                                        <Grid ColumnDefinitions="*,Auto"
+                                                                              ColumnSpacing="8">
+                                                                            <Label Text="{Binding DisplayName}"
+                                                                                   LineBreakMode="WordWrap"/>
+                                                                            <Button Grid.Column="1"
+                                                                                    Text="&#xF05A;"
+                                                                                    FontFamily="FASolid"
+                                                                                    FontSize="12"
+                                                                                    Padding="0"
+                                                                                    BackgroundColor="Transparent"
+                                                                                    TextColor="{StaticResource SubtleTextColor}"
+                                                                                    HeightRequest="18"
+                                                                                    WidthRequest="18"
+                                                                                    MinimumHeightRequest="0"
+                                                                                    MinimumWidthRequest="0"
+                                                                                    HorizontalOptions="Center"
+                                                                                    VerticalOptions="Center"
+                                                                                    Clicked="OnAbilityInfoClicked"
+                                                                                    CommandParameter="{Binding .}"/>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </BindableLayout.ItemTemplate>
+                                                        </VerticalStackLayout>
+                                                    </VerticalStackLayout>
+                                                </VerticalStackLayout>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="2"
+              RowDefinitions="1,Auto">
+            <BoxView Grid.Row="0"
+                     HeightRequest="1"
+                     BackgroundColor="{StaticResource SurfaceBorderColor}"/>
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="10"
+                  Padding="16,10,16,18"
+                  BackgroundColor="{StaticResource White}">
+                <Button Grid.Column="0"
+                        Text="Back"
+                        Command="{Binding BackCommand}"/>
+                <Button Grid.Column="2"
+                        Text="Save"
+                        Command="{Binding SaveCommand}"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

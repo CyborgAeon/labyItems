@@ -15,6 +15,34 @@
         "choice.1st-weapon-mastery-o.primary"
       ]
     },
+    "Weapon Mastery": {
+      "Key": "definition.weapon-mastery",
+      "DisplayName": "Weapon Mastery",
+      "ChoiceSetRefs": [
+        "choice.1st-weapon-mastery.primary"
+      ]
+    },
+    "Weapon Mastery (O)": {
+      "Key": "definition.weapon-mastery-o",
+      "DisplayName": "Weapon Mastery (O)",
+      "ChoiceSetRefs": [
+        "choice.1st-weapon-mastery-o.primary"
+      ]
+    },
+    "Chosen Field": {
+      "Key": "definition.druid.chosen-field",
+      "DisplayName": "Chosen Field",
+      "ChoiceSetRefs": [
+        "choice.druid.chosen-field.primary"
+      ]
+    },
+    "Advocate of (Field)": {
+      "Key": "definition.druid.advocate-of-field",
+      "DisplayName": "Advocate of (Field)",
+      "ChoiceSetRefs": [
+        "choice.druid.advocate-of-field.primary"
+      ]
+    },
     "Warrior Specialist": {
       "Key": "definition.warrior-specialist",
       "DisplayName": "Warrior Specialist",

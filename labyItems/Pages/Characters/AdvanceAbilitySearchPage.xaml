@@ -197,8 +197,8 @@
                         Text="Cancel"
                         Clicked="OnCancelClicked"/>
                 <Button Grid.Column="2"
-                        Text="Save"
-                        Clicked="OnSaveClicked"
+                        Text="Next"
+                        Clicked="OnNextClicked"
                         IsEnabled="{Binding HasSelectedAbilities}"/>
             </Grid>
         </Grid>

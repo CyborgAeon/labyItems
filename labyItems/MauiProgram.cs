@@ -121,6 +121,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ICharacterCreationDataService, CharacterCreationDataService>();
 		builder.Services.AddSingleton<IAdvanceCharacterDataProvider, AdvanceCharacterDataProvider>();
 		builder.Services.AddSingleton<IAdvanceAbilityLookupService, AdvanceAbilityLookupService>();
+		builder.Services.AddSingleton<IAbilityChoiceSetResolverService, AbilityChoiceSetResolverService>();
 		builder.Services.AddSingleton<IAbilityAvailabilityService, AbilityAvailabilityService>();
 
 #if DEBUG

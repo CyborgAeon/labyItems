@@ -16732,5 +16732,2880 @@
       "rulesAbilityRefs": [],
       "sourceNotation": "(50, 3)"
     }
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Spring Talisman",
+    "desc": "Must have Talk to Plants, Control Plants and Neutrality to Plants evocations on list. Now regains 1 EP per 15 minutes when in a relaxed position within five feet of large live trees or plants. This does not stack with meditation but is increased by double and triple meditation to a max of 3 per 15 minutes.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Autumn Talisman",
+    "desc": "Must have Warping (Touch) and Warping evocations on list. Once per 15 minutes may cast Warping (Touch) for no EP cost. Once per hour may cast Warping for no EP cost.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Summer Talisman",
+    "desc": "Adds Dawn's Light to their evocation list and gains a once per day innate of it. Gains immunity to light based effects that interfere with sight (e.g. Bedazzle, Dawn's Light).",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Winter Talisman",
+    "desc": "Winter's Touch is now non-level based when cast by this druid and Slumber of the Trees costs a base of 2 EP to cast.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Traveller's Talisman",
+    "desc": "The Druid may now use Forest Shift within any natural non built up environment, not just from tree to tree. Additionally Forest Shift takes a maximum of five minutes and this counts as a tree talisman for the purposes of buying the Travelling the World Tree evocation.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Willow Talisman",
+    "desc": "When in an outdoor, non-city natural environment the Druid's link to nature is stronger, granting a cumulative +1 med rate for Earthpower to a maximum x5 rate ever.",
+    "table": 1,
+    "cost": 80,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Rowan Talisman",
+    "desc": "If they have a Life's Memories evocation cast upon a staff, that staff becomes completely indestructible by any means, and can be called to hand from up to twenty feet away at will for 3 TBLP. The staff also counts as a tree for the purposes of the Forest Shift evocation.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Oak Talisman",
+    "desc": "The owner may stack up to two Barkskins on themselves, only one of which may be permanent. This would also allow the stacking of Weathered Barks if the evocation is known.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Birch Talisman",
+    "desc": "Any one mundane wooden weapon carried by the Druid is empowered with the Cudgel evocation at all times. The weapon so empowered can be changed during the day as the Druid changes weapons.",
+    "table": 1,
+    "cost": 100,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Thorn Talisman",
+    "desc": "When the owner casts either Wall of Thorns or Wall of Brambles they may elect to create it in a five foot radius circle around a target within range. A Wall of Brambles or Wall of Thorns cast with this talisman now requires +2 strength to break through, inflicts 36/6 to those pushing through and has twice as many HTK as previously.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Human"]
+      }
+    ],
+    "index": "Blackwood Tree Talisman",
+    "desc": "Druidic Harm, Greater Druidic Harm and related evocations now only affect non-primal beings. However they are no longer flesh and blood effects. Innate PAC still applies as normal and the damage is still physical. If the owner of the talisman ever ceases to be primal the benefits are lost.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Twisted Tree Talisman",
+    "desc": "When casting the Font or Well of Knowledge evocations they may choose to gain the answers as visions provided that the questions are being asked about a place and the caster is in that place.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Meerkat Talisman",
+    "desc": "The owner gains the Aware Meditation skill while passively meditating in natural surroundings and Danger Sense while within natural surroundings.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Falcon Talisman",
+    "desc": "Any recipient of a Wind Walk evocation cast by this Druid is no longer limited in the amount that they can carry. The owner is immune to the first disbeneficial effect of the day that targets them and requires them to be in contact with the ground. This may be upgraded to first such effect each hour for 60 points on table one and to applying at all times for a further 90 points on table three.",
+    "table": 1,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid"]
+      }
+    ],
+    "index": "Bear Talisman",
+    "desc": "May not enter any bracket other than warrior but may now purchase 25% Cold Rages and 50% Berserk Rages from the tables as a first class warrior. May also purchase Strength and Staminas as a warrior sub-class but two tables later.",
+    "table": 1,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Fox Talisman",
+    "desc": "Gains a Lucky Idea usable once every three hours; this may not be in answer to another's spoken question.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Serpent Talisman",
+    "desc": "The Lesser and Greater Water of Spite evocations now create two doses of venom each. The Envenom evocation now grants a dose of BV6 on the first blow struck every ten seconds rather than every thirty.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Turtle Talisman",
+    "desc": "Grants +1 Max AC and +1 innate PAC. Any PAC granted by a published, unenhanced evocation which causes the druid's AC to exceed max AC instead becomes a numerical damage reduction (max 6). Applies to self only; non-standard abilities only function with this talisman if they specifically mention it.",
+    "table": 1,
+    "cost": 100,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Eagle Talisman",
+    "desc": "Eyes of the Eagle now allows the caster to observe the area for 2 minutes as well as hear any sound as if they were present and move around the area at half speed. When benefiting from a Wind Walk cast on self they are not limited in the amount they can carry.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Weasel Talisman",
+    "desc": "DAC granted by published evocations that exceeds a character's Max AC now becomes a numerical damage reduction to a maximum of six points; this does not function with enhancements to base evocations. While under an evocation that grants DAC the character also gains immunity to bruising using DAC.",
+    "table": 1,
+    "cost": 100,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Boar Talisman",
+    "desc": "The owner can ignore the first Domination effect each hour for 6 TBLP or 1 EP. This can be upgraded to the first every fifteen minutes for 100 points on table seven and to at will for 80 points on table ten.",
+    "table": 1,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Dolphin Talisman",
+    "desc": "Is unimpeded by water and can move freely through it, speak under it, not drown, etc. Gains Walk Through Water, which costs 2 EP on self or 4 EP on anyone under a joining evocation. This counts as being in the River Field if relevant.",
+    "table": 1,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Lion Talisman",
+    "desc": "Everyone under a Joining evocation (not self) benefits from +3/1 radiated life. This does not stack with another Lion Talisman.",
+    "table": 1,
+    "cost": 100,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Owl Talisman",
+    "desc": "Now benefits from the scout skill Perception at all times. If Perception is already owned then this upgrades to Supernatural Perception. May buy perception related abilities as a Ranger, including Wanderer's Hunch.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Ley Walker"]
+      }
+    ],
+    "index": "Panther Talisman",
+    "desc": "The owner is now immune to Supernatural Sights while hidden from real world view and motionless. While under a Tiger's Prowl evocation they are immune to Supernatural Sights whilst out of real world view and moving very slowly (max 1/4 speed).",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "NotIn",
+        "Value": ["Ley Walker"]
+      }
+    ],
+    "index": "Panther Talisman",
+    "desc": "The owner is now immune to Supernatural Sights while hidden from real world view and motionless. While under a Tiger's Prowl evocation they are immune to Supernatural Sights whilst out of real world view and moving very slowly (max 1/4 speed).",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Predator Talisman",
+    "desc": "Can judge the physical hits of any target as per Assassin's Eye; this requires 30 seconds observation. Can buy immunity to sniff/acute hearing as a Pathfinder. May not have Prey Talisman.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Prey Talisman",
+    "desc": "Grants Stealth 1/day as per the Scout skill and Skitter 1/day. Skitter allows the user to move 7 paces in a time freeze but never towards an enemy facing them. May buy extra Stealth innates at 50 points each, max 1 per table. May not have Predator Talisman.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Midnight Talisman",
+    "desc": "May cast Forest Shift without a tree, instead from an area of deep shadow/darkness to a similar point. May cast Camouflage without plants in deep shadow/darkness; it goes down if a light source is brought within three feet. May cast Tiger's Prowl in areas of deep shadow/darkness.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Sun Talisman",
+    "desc": "Handfire can now be cast with a fifteen minute duration, and the conjured fire can move up to twenty feet from the caster. It also no longer requires concentration to maintain. Any evocation that can only be cast in sunlight, bright light or near a light source may now be cast as long as both caster and target are within three feet of a Handfire.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "River Talisman",
+    "desc": "If the owner spends thirty seconds in quiet preparation with the recipient prior to casting a Rivers and Lakes field evocation upon them then they receive a 33% increase in effect from that evocation, or in duration if there is no numerical effect to boost. This is not cumulative with any other increase in effect.",
+    "table": 1,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Mountain Talisman",
+    "desc": "May cast Forest Shift without a tree, instead in contact with bare stone or earth. May cast Camouflage without plants against bare stone or earth. May benefit from Tiger's Prowl when moving against a background of bare stone or earth.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "PeopleType",
+        "Operator": "In",
+        "Value": ["Ishmaic"]
+      }
+    ],
+    "index": "Desert Talisman",
+    "desc": "The Resist Fire evocation must be on the character's list to buy this talisman. The Druid gains a permanent Resist Fire on themselves and when the evocation is cast by or upon the character it gains a duration of 15 minutes.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "PeopleType",
+        "Operator": "NotIn",
+        "Value": ["Ishmaic"]
+      }
+    ],
+    "index": "Desert Talisman",
+    "desc": "The Resist Fire evocation must be on the character's list to buy this talisman. The Druid gains a permanent Resist Fire on themselves and when the evocation is cast by or upon the character it gains a duration of 15 minutes.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Tundra Talisman",
+    "desc": "The Resist Cold evocation must be on the character's list to buy this talisman. The druid gains a permanent Resist Cold on themselves and when cast by the owner the evocation gains a duration of 15 minutes. May not buy Desert or Cavern talismans.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Cavern Talisman",
+    "desc": "The owner gains the Survival skill in underground locations and can use Tell Time and Direction without reference to the sun and stars. Whilst underground the Druid is immune to the first disbeneficial effect of the day that targets them and requires them to be in contact with the ground. This can be upgraded to first such effect each hour for 60 points on table one and at all times for a further 90 points on table three.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Wheat Talisman",
+    "desc": "The owner gains +1 EP per level, an extra level of EP and counts as one level higher for the purposes of casting level based evocations. May not be in any bracket bar Druid nor buy abilities through skills like Warrior of the Faith/of Nature that are not commonly available within the Druid bracket.",
+    "table": 1,
+    "cost": 100,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "NotIn",
+        "Value": ["High Druid"]
+      }
+    ],
+    "index": "Claw Talisman",
+    "desc": "The character gains the Skin Dead Animals skill and the ability to wear furs as armour. After ten seconds observation can tell what quality furs a target can provide, at the referee's discretion. The owner does not lose uses on normal, non-item furs.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Ainesford Weaver Talisman",
+    "desc": "Gains a limited talent for making poison and may make up to three batches of BV or IV 6 per week. Each dose costs 250 grulls and success is guaranteed. Additionally they gain the scout skill Poison Facility for all poisons.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Token of the City",
+    "desc": "TODO",
+    "table": 1,
+    "cost": 75,
+    "sourceBook": "Druids Way",
+    "effect": "TODO"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Guilds",
+        "Operator": "Contains",
+        "Value": ["Beast Within"]
+      }
+    ],
+    "index": "Beast Within Talisman",
+    "desc": "Gains 1 EP off, stacking with Chosen Field to a minimum of 1, the first casting of an animal related evocation on self in each fifteen minutes.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Guilds",
+        "Operator": "Contains",
+        "Value": ["Wardens of the Seasons"]
+      }
+    ],
+    "index": "Warden of the Seasons Talisman",
+    "desc": "Gains the Spring, Summer, Autumn or Winter Talisman as relevant to the current season.",
+    "table": 1,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Guilds",
+        "Operator": "Contains",
+        "Value": ["Custodians of the Horned Man"]
+      }
+    ],
+    "index": "Custodian of the Horned Man Talisman",
+    "desc": "Gains immunity to Sniff, Acute Hearing and Tracking.",
+    "table": 1,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Guilds",
+        "Operator": "Contains",
+        "Value": ["Harbingers of the Dawn"]
+      }
+    ],
+    "index": "Harbingers of the Dawn Talisman",
+    "desc": "Gains the evocation The Dawn's Breath. It costs 8 EP and negates a single ongoing evocation. If an evocation is not named then the target can choose which one. Range 20 feet. Verbal: Feel the touch of the year's end upon thee! Members are immune to its effects.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Guilds",
+        "Operator": "Contains",
+        "Value": ["Blood Sacrificed"]
+      }
+    ],
+    "index": "The Blood Sacrificed Talisman",
+    "desc": "May spend thirty seconds spilling six TBLP of own blood before casting an evocation. This grants 1 EP off, stacking with Chosen Field to a minimum of 1. Usable once per 5 minutes.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Guilds",
+        "Operator": "Contains",
+        "Value": ["Protectors"]
+      }
+    ],
+    "index": "The Protectors Talisman",
+    "desc": "May cast Neutrality to Plants and Animals on other people at touch range. The target must be under a joining evocation. Should the subject break the neutrality then they may never hold any form of neutrality to plants or animals again.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Guilds",
+        "Operator": "Contains",
+        "Value": ["Imperial Nature"]
+      }
+    ],
+    "index": "Imperial Nature Talisman",
+    "desc": "When casting a City Field evocation may choose to count as being in any city of the Empire where relevant. Everywhere within the Empire counts as a Natural Environment, excluding places such as the Mittlenacht, a Fey Realm within the Empire, or similar.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian"]
+      }
+    ],
+    "index": "Militant",
+    "desc": "Buys additionally as Warrior Subclass, is within the Warrior Bracket, but does not gain a tradition. May now wear any armour/use any weapons. All Druid abilities are now considered to be on 2 tables higher. Casts EP in a similar manner to a Leywalker, requiring ley lines etc.",
+    "table": 0,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Druid", "High Druid"]
+      }
+    ],
+    "index": "Tribal",
+    "desc": "Is a Barbarian rather than a Human. If a High Druid now calculates EP in the same manner as a Shaman calculates Spirits, if a Druid then at a Shaman's rate but never benefiting from more than at most 6 tribe members including self. No tribe may have more than 1 Druid, whether Druid or High Druid.",
+    "table": 0,
+    "cost": 0,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Chosen Field",
+    "desc": "TODO",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way",
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "effect": "TODO",
+    "abilityRef": "ability.druid.chosen-field",
+    "choiceSetRefs": [
+      "choice.druid.chosen-field.primary"
+    ]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["High Druid"]
+      }
+    ],
+    "index": "Defensive Technique",
+    "desc": "May use a staff for parrying only and may buy Distancing Combat related abilities for use with this ability.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Samila"]
+      }
+    ],
+    "index": "Defensive Technique",
+    "desc": "May use a staff for parrying only and may buy Distancing Combat related abilities for use with this ability.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Druid's Eye",
+    "desc": "With 10 seconds examination of a target within line of sight reveals the target's resistance level for the purposes of Control Animal or Control Plant.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Practiced Eye",
+    "desc": "Tell Wounds, Tell Poison and Tell Disease now require only 2 seconds examination of the target.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Improved Tell Animal Type",
+    "desc": "Tell Animal Type now reveals more detailed information about a target animal, including likely forms of attack. When used successfully on a natural animal, the user can cast Control Animal on that target for half the normal EP cost; this does not stack with other reductions unless specified.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Improved Tell Plant Type",
+    "desc": "Tell Plant Type now reveals more detailed information about the target plant, including likely forms of attack, ways to avoid being attacked and uses of the plant. When used successfully on a natural plant, the user may cast Control Plant on that target for half the normal EP cost; this does not stack with other reductions unless specified.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Improved Tell Poison",
+    "desc": "Tell Poison now reveals the quantity, potency and exact effects of any poison.",
+    "table": 1,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Discern Associated Earthpower (Self)",
+    "desc": "Reveals how many ranks of Earthpower the character has remaining.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Discern Natural Being",
+    "desc": "20 foot range, yes/no answer. Physical informational effect. Tells the user if the target is a natural being.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Discern Primal Being",
+    "desc": "20 foot range, yes/no answer. Physical informational effect. Tells the user if the target originates from Primus.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "First Extra Level of Earthpower",
+    "desc": "Gains 1 level's worth of EP. If this would be less than 4, this ability instead grants +4 EP.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Second Extra Level of Earthpower",
+    "desc": "Gains 1 level's worth of EP. If this would be less than 4, this ability instead grants +4 EP. Must have purchased First Extra Level of Earthpower before buying this.",
+    "table": 1,
+    "cost": 45,
+    "sourceBook": "Druids Way",
+    "preReqs": ["First Extra Level of Earthpower"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Release Own Earthpower",
+    "desc": "The Druid may release the effect of any Earthpower evocation they have cast using Earthpower points, bar instant or permanent effects. Usable at will. Range 10 feet. Verbal: Powers of Nature I release thee.",
+    "table": 1,
+    "cost": 25,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Survival",
+    "desc": "As per the Ranger specialist skill.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["High Druid"]
+      }
+    ],
+    "index": "Empowered Barkskin",
+    "desc": "Standard, unenhanced Barkskins cast on any Druid class are now permanent in effect. These Barkskins need to be countersigned at the checking in desk.",
+    "table": 1,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Learn Innates",
+    "desc": "Druids may buy innate Earthpower evocations in the same way that a priest buys innate miracles. They may purchase innates of any evocation on their base list. Cost is 10pts/EP.",
+    "table": 1,
+    "cost": 10,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Learn New Evocation",
+    "desc": "Druids may learn new evocations in the same way that priests learn new miracles. Cost is 10pts+5/EP.",
+    "table": 1,
+    "cost": 15,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Gauge Earthpower",
+    "desc": "When using Recognise Earthpower can now quantify the degree of Earthpower present, receiving information as to the level and quantity of any EP evocations that may be present. Requires 5 seconds concentration.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Woven Robes",
+    "desc": "If wearing thick long robes has PAC 1, non-stacking with armour. Specifically usable by High Druids and Samila. If the robes are of sufficiently high quality and visually impressive they may count as Master Crafted at the referee's discretion.",
+    "table": 1,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Ley of the Land",
+    "desc": "With 30 seconds concentration gains a general feel for how the current area is. Information is at the referee's discretion but will generally be broad such as Fine or There's something tainting the area.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Words to the Wild",
+    "desc": "The Druid may change their verbals slightly to incorporate their patrons or belief structure. The effects of the evocation being cast must still be clear and obvious, and the verbal may not be shortened.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Acceptance",
+    "desc": "An individual may join a named conclave. They lose their own base evocation list and gain the conclave's. If they own innates of evocations they can no longer cast, those innates cannot be used until the evocation is regained. This may be purchased multiple times; each purchase increases in cost by 10 points.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way",
+    "CanAddMultiple": true,
+    "maxAvailable": "*"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Founder",
+    "desc": "An individual that has successfully formed a conclave through a CC contract may choose to lose their own evocation list and instead use the conclave's. This may theoretically be purchased multiple times; each purchase increases in cost by 20 points.",
+    "table": 1,
+    "cost": 10,
+    "sourceBook": "Druids Way",
+    "CanAddMultiple": true,
+    "maxAvailable": "*"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Spring"]
+      }
+    ],
+    "index": "Expertise Wall of Thorns",
+    "desc": "1/day at the point of casting may empower a Wall of Thorns so that it regenerates all non-flaming damage. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Winter"]
+      }
+    ],
+    "index": "Expertise Gust of Wind",
+    "desc": "1/day may cause one Gust of Wind cast to affect all within a 360 degree radius rather than a cone. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Desert"]
+      }
+    ],
+    "index": "Expertise Resist Fire",
+    "desc": "1/day may empower a single casting of Resist Fire to grant complete immunity to fire for 5 minutes. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Summer"]
+      }
+    ],
+    "index": "Expertise Resist Cold",
+    "desc": "1/day may empower a single casting of Resist Cold to grant complete immunity to cold for 5 minutes. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Forests"]
+      }
+    ],
+    "index": "Expertise Forest Shift",
+    "desc": "1/day may take a willing individual when Forest Shifting. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Winter"]
+      }
+    ],
+    "index": "Expertise Neutrality Evocations",
+    "desc": "1/day may cast Neutrality to Plants or Neutrality to Animals on a willing individual under the joining evocation. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Rivers"]
+      }
+    ],
+    "index": "Expertise Slow Poison",
+    "desc": "1/day may enhance a Slow Poison so that it also counters the first ten grades of poison damage it absorbs. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Skies"]
+      }
+    ],
+    "index": "Expertise Call Lightning",
+    "desc": "1/day may empower a Call Lightning so that everyone within 5 feet of the target, including the target, suffers a knock down and a non-level based physical halt. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Mountains"]
+      }
+    ],
+    "index": "Expertise Stoneskin",
+    "desc": "1/day may empower a Stoneskin so that it grants +6PAC rather than PAC 6. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Shadow of the Dawn"]
+      }
+    ],
+    "index": "Expertise Slumber of the Trees",
+    "desc": "1/day may empower Slumber of the Trees so that it affects all trees within 20 feet when cast. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Father of the World"]
+      }
+    ],
+    "index": "Expertise Control Animals",
+    "desc": "1/day for 5 minutes all Control Animal evocations cast affect at a base of 8 levels. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Horned Man"]
+      }
+    ],
+    "index": "Expertise Invisibility to Animals",
+    "desc": "1/day one casting of Invisibility to Animals does not go down if the caster attacks animals. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Keeper of the Winds"]
+      }
+    ],
+    "index": "Expertise Predict Weather",
+    "desc": "1/day after casting Predict Weather outdoors the sky counts as cloudy for the next 5 minutes for Call Lightning and similar. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Rivers"]
+      }
+    ],
+    "index": "Expertise Create Water",
+    "desc": "1/day one casting of Create Water is sufficient to negate any form of hunger or starvation as if the person had eaten a full meal. If the hunger is induced supernaturally this makes the drinker immune to its effects for 5 minutes. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Forests"]
+      }
+    ],
+    "index": "Expertise Barkskin",
+    "desc": "1/day one casting of Barkskin grants the recipient immunity to bruising. This does not function with any ability to enhance the Barkskin's duration beyond 5 minutes. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Spring"]
+      }
+    ],
+    "index": "Expertise Ensnare",
+    "desc": "1/day one casting of Ensnare is enhanced so that it can't be cut out of as the foliage regrows instantly. If 2 grades of strength are possessed then the individual can break out. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Forests"]
+      }
+    ],
+    "index": "Expertise Trip",
+    "desc": "1/day one casting of Trip means the target cannot rise for 5 seconds as the roots they tripped over hold on. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Keeper of the Winds"]
+      }
+    ],
+    "index": "Expertise Warping",
+    "desc": "1/day one casting of Warping functions on supernatural wooden objects; after 30 seconds they reassert their normal shape. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Skilled in Camouflage",
+    "desc": "May now camouflage against any natural surrounding, not just forests.",
+    "table": 2,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian"]
+      }
+    ],
+    "index": "Guardianship",
+    "desc": "The player chooses one Druid or High Druid, recorded on the card, whom they are the guardian of. Whilst on adventure with that Druid the Guardian gains sixth sense within 20 feet, and the Druid gains cumulative live to minus 6. Should the Druid die the Forest Guardian gains half points from the adventure.",
+    "table": 2,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["High Druid"]
+      }
+    ],
+    "index": "Companion",
+    "desc": "The High Druid chooses one Forest Guardian or Ranger, recorded on the card, to whom they are the Companion. The first evocation of every 15 minute period cast by the High Druid upon their Companion costs 1 EP less. This is cumulative with Chosen Field reductions.",
+    "table": 2,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Third Extra Level of Earthpower",
+    "desc": "Gains 1 level's worth of EP. If this would be less than 4, this ability instead grants +4 EP. Must have purchased Second Extra Level of Earthpower before buying this.",
+    "table": 2,
+    "cost": 50,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Second Extra Level of Earthpower"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "No Damage Casting Evocations of between 1 and 4 EP",
+    "desc": "No damage casting for evocations costing 1 to 4 EP. Still suffers 4 TBLP for any evocations that cost 0 EP.",
+    "table": 2,
+    "cost": 100,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "+1 Max AC",
+    "desc": "First increase in Maximum Armour Class.",
+    "table": 2,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Staff Versatility",
+    "desc": "Weapon masteries purchased in O class staff still apply when using it as a B class weapon.",
+    "table": 2,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Animal Ally",
+    "desc": "Grants the Druid neutrality to all natural animals. Must be able to cast Neutrality to Animals.",
+    "table": 3,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Plant Ally",
+    "desc": "Grants the Druid neutrality to all trees and plants, including animated versions. Must be able to cast Neutrality to Plants.",
+    "table": 3,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Alignment.Moral",
+        "Operator": "NotIn",
+        "Value": ["Good"]
+      }
+    ],
+    "index": "Sacrifice to Nature",
+    "desc": "May spend 30 seconds ritually draining the last remains of life from a recently dead sentient flesh and blood being. This grants the druid 1 EP back. May be used at most once per hour. A single body can only be used once for these purposes.",
+    "table": 3,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Discern Remaining Daily EP Innates",
+    "desc": "Can tell how many uses of any EP innates they possess remain unused. This is an Earthpower informational effect.",
+    "table": 4,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Familiar",
+    "desc": "The Druid selects one animal type that is recorded. The Druid gains neutrality to that animal type and can talk to animals of that type at will.",
+    "table": 4,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Cudgel Mastery",
+    "desc": "Gains the 1st weapon mastery when wielding any weapon that has the Cudgel evocation cast upon it, even if this is a permanent effect.",
+    "table": 4,
+    "cost": 35,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Life's Link",
+    "desc": "The user knows if any other known EP user on adventure is dead, their current location and the approximate circumstances of their death. This is an Earthpower informational effect.",
+    "table": 4,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Repel Non-Primal Being 1/Day",
+    "desc": "All non-primal beings within 20 feet are thrown 20 feet away from user. Immunity to Repels applies.",
+    "table": 4,
+    "cost": 30,
+    "sourceBook": "Druids Way",
+    "CanAddMultiple": true,
+    "maxAvailable": 3
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["High Druid"]
+      }
+    ],
+    "index": "Sense the Flow",
+    "desc": "Recognise EP may now be used at 20 feet range, but requires 5 seconds concentration if used this way, and a specific target must be indicated.",
+    "table": 4,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Ranger"]
+      }
+    ],
+    "index": "Guardianship",
+    "desc": "The player chooses one Druid or High Druid, recorded on the card, whom he is the guardian of. Whilst on adventure with that Druid the Guardian gains sixth sense within 20 feet, and the Druid gains cumulative live to minus 6. Should the Druid die the Ranger gains half points from the adventure.",
+    "table": 5,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Discern Meditation Status",
+    "desc": "Can tell if another Druid is meditating and, if so, how long until their next influx of EP.",
+    "table": 5,
+    "cost": 40,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Cornerstones of Nature",
+    "desc": "The Druid may purchase a single innate of each standard evocation they can cast at half cost. This does not stack with other reductions in cost.",
+    "table": 5,
+    "cost": 80,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Improved Tell Wounds",
+    "desc": "Tell Wounds now only takes 2 seconds to perform.",
+    "table": 7,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Sense the Flow",
+    "desc": "Recognise EP may now be used at 20 feet range, but requires 5 seconds concentration if used this way, and a specific target must be indicated.",
+    "table": 7,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Chosen of Mother Nature",
+    "desc": "Gains 2 points of DAC. This does not stack with blesses, curses or other class specific abilities that grant the same effect.",
+    "table": 7,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Chosen of the Horned Man",
+    "desc": "Gains an additional +6/2 life.",
+    "table": 7,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Linked to the Pack",
+    "desc": "From Life's Link: the user knows if any Marked Ally via the Advanced Evocation Joining on adventure is dead, their current location and the approximate circumstances of their death. This is an Earthpower informational effect.",
+    "table": 7,
+    "cost": 60,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Life's Link"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Familiar Symbolism (Minor)",
+    "desc": "TODO",
+    "table": 7,
+    "cost": 20,
+    "sourceBook": "Druids Way",
+    "effect": "TODO",
+    "preReqs": ["Familiar"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Familiar Symbolism (Major)",
+    "desc": "TODO",
+    "table": 7,
+    "cost": 50,
+    "sourceBook": "Druids Way",
+    "effect": "TODO",
+    "preReqs": ["Familiar"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Hand of Banishment",
+    "desc": "Banishes one Unnatural, Non-Primal being to its home plane by touch 1/day. The druid takes 10 TBLP per resistance level to physical effects the victim has. If this damage kills the druid he dies but can be restored to life. Once banished a victim cannot normally return for 24 hours.",
+    "table": 7,
+    "cost": 90,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "x2 Meditation Rate for Earthpower",
+    "desc": "Now receives Earthpower back at 2 per 15 minutes.",
+    "table": 7,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "No Damage Casting Earthpower Evocations of between 5 and 7 EP",
+    "desc": "From No Damage Casting 1st-4th.",
+    "table": 7,
+    "cost": 120,
+    "sourceBook": "Druids Way",
+    "preReqs": ["No Damage Casting Evocations of between 1 and 4 EP"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Druid's Circle",
+    "desc": "Any Druid purchasing this ability gains 1 EP for every other holder of the Druid's Circle ability on adventure, not counting themselves.",
+    "table": 7,
+    "cost": 30,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Understanding the Land",
+    "desc": "From Ley of the Land: information gained will now be more specific and cover a greater area. It will also now reveal the general nature of EP in the area.",
+    "table": 7,
+    "cost": 40,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Ley of the Land"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Draw Upon Nature",
+    "desc": "With 30 seconds concentration in a natural environment may cast a single evocation of up to 8 EP from the user's base list for 0 EP. Casting damage is still suffered as normal.",
+    "table": 7,
+    "cost": 80,
+    "sourceBook": "Druids Way",
+    "CanAddMultiple": true,
+    "maxAvailable": 2
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "The Journey Home",
+    "desc": "Upgrades a single use of the Forest Shift evocation such that, provided it is being used to return home, it can cross all barriers including planes.",
+    "table": 7,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Aware Med",
+    "desc": "While meditating the Druid may keep their eyes open, and perform simple actions such as eating or reading, provided they remain broadly stationary. This does not allow speech or similar.",
+    "table": 7,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Greater Aware Med",
+    "desc": "From Aware Meditation: the Druid may now move, talk, and perform mundane tasks while meditating. They may not move more than 30 feet from where they began meditation. Any form of casting, combat or use of a system ability breaks this.",
+    "table": 8,
+    "cost": 70,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Aware Med"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Druid", "High Druid"]
+      }
+    ],
+    "index": "Rites of Nature",
+    "desc": "By performing a 30 second ritual in a Natural Environment making offerings to nature can regain up to X Earthpower, where X cannot be more than the user's current post-8th table. The ritual costs 3X TBLP and is usable 1/day.",
+    "table": 8,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Suppress the Ley",
+    "desc": "With 30 seconds ritual may cause a single EP warding or inanimate EP object to cease to function while the Druid concentrates on it and for 10 seconds afterwards. Costs 1 EP per 30 seconds or part thereof that it is suppressed.",
+    "table": 8,
+    "cost": 75,
+    "sourceBook": "Druids Way",
+    "CanAddMultiple": true,
+    "maxAvailable": 2
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "At One With the Land",
+    "desc": "From Understanding the Land the Druid can probe further to gain more information. This allows a Yes/No question for 1 EP or a Major Prayer style question for 2 EP.",
+    "table": 8,
+    "cost": 40,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Understanding the Land"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Spring"]
+      }
+    ],
+    "index": "Season's Gift",
+    "desc": "When casting evocations of the chosen seasonal field and in the relevant season gains 1 EP off the first evocation cast per 15 minutes, stacking with Chosen Field and Advocacy reductions to a minimum of 1. However in the opposite season all evocations of the chosen field cost an additional EP to cast.",
+    "table": 8,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Summer"]
+      }
+    ],
+    "index": "Season's Gift",
+    "desc": "When casting evocations of the chosen seasonal field and in the relevant season gains 1 EP off the first evocation cast per 15 minutes, stacking with Chosen Field and Advocacy reductions to a minimum of 1. However in the opposite season all evocations of the chosen field cost an additional EP to cast.",
+    "table": 8,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Autumn"]
+      }
+    ],
+    "index": "Season's Gift",
+    "desc": "When casting evocations of the chosen seasonal field and in the relevant season gains 1 EP off the first evocation cast per 15 minutes, stacking with Chosen Field and Advocacy reductions to a minimum of 1. However in the opposite season all evocations of the chosen field cost an additional EP to cast.",
+    "table": 8,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Winter"]
+      }
+    ],
+    "index": "Season's Gift",
+    "desc": "When casting evocations of the chosen seasonal field and in the relevant season gains 1 EP off the first evocation cast per 15 minutes, stacking with Chosen Field and Advocacy reductions to a minimum of 1. However in the opposite season all evocations of the chosen field cost an additional EP to cast.",
+    "table": 8,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Offering to Nature",
+    "desc": "From Sacrifice to Nature: Sacrifice to Nature may now be used once per half an hour.",
+    "table": 8,
+    "cost": 60,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Sacrifice to Nature"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Field Devotion",
+    "desc": "Innates of evocations for which the Druid receives an EP reduction from Chosen Field or similar published/agreed reduction may now be purchased as if they were originally of this lower EP cost. Innates of other evocations are now bought at the higher EP cost.",
+    "table": 8,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Barkskin Permanence",
+    "desc": "Barkskin cast on any Druid class is now permanent in effect. These Barkskins need to be countersigned at the checking in desk.",
+    "table": 8,
+    "cost": 60,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Perception",
+    "desc": "As the Ranger skill, but only operates in natural surroundings.",
+    "table": 8,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Bound Cudgel",
+    "desc": "First Cudgel cast per day lasts 24 hours or until the Druid has not touched the weapon for over 5 minutes.",
+    "table": 8,
+    "cost": 100,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Affinity With Nature",
+    "desc": "If 10 seconds preparation to receive the evocation is spent in natural surroundings, the next Druidic Heal cures 24/24 on self from any source. This is non-stacking with any other increase in base effect.",
+    "table": 8,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Guidance With Nature",
+    "desc": "As the Priest ability Divine Guidance but applies to Earthpower; it does not negate leywalker style restrictions or similar extrapolations.",
+    "table": 8,
+    "cost": 130,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian"]
+      }
+    ],
+    "index": "Nature's Rage",
+    "desc": "25% Cold Rage as Warrior, but only useable in defence of another Druid or High Druid.",
+    "table": 9,
+    "cost": 40,
+    "sourceBook": "Druids Way",
+    "CanAddMultiple": true,
+    "maxAvailable": 3
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian"]
+      }
+    ],
+    "index": "Favoured of the Horned Man",
+    "desc": "From Chosen of the Horned Man: now gains +10/4 additional life, from +6/2.",
+    "table": 9,
+    "cost": 50,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Chosen of the Horned Man"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Favoured of the Horned Man",
+    "desc": "From Chosen of the Horned Man: now gains +10/4 additional life, from +6/2.",
+    "table": 9,
+    "cost": 60,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Chosen of the Horned Man"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Favoured of Mother Nature",
+    "desc": "From Chosen of Mother Nature: now gains +3 DAC from +2 DAC.",
+    "table": 9,
+    "cost": 90,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Chosen of Mother Nature"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Second Weapon Mastery Staff",
+    "desc": "Now has +2 mastery in Staff, from +1. May not now use any weapons bar staff or unarmed combat.",
+    "table": 9,
+    "cost": 75,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["High Druid", "Arch Druid", "Devout Druid"]
+      }
+    ],
+    "index": "Fourth Extra Level of Earthpower",
+    "desc": "Gains 1 level's worth of EP. If this would be less than 4, this ability instead grants +4 EP. Must have purchased Third Extra Level of Earthpower before buying this.",
+    "table": 9,
+    "cost": 60,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Third Extra Level of Earthpower"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "No Damage Casting Earthpower Evocations of 8th level (8+ EP)",
+    "desc": "From No Damage Casting 5th to 7th.",
+    "table": 9,
+    "cost": 50,
+    "sourceBook": "Druids Way",
+    "preReqs": ["No Damage Casting Earthpower Evocations of between 5 and 7 EP"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Advocate of (Field)",
+    "desc": "TODO",
+    "table": 9,
+    "cost": 120,
+    "sourceBook": "Druids Way",
+    "effect": "TODO",
+    "abilityRef": "ability.druid.advocate-of-field",
+    "choiceSetRefs": [
+      "choice.druid.advocate-of-field.primary"
+    ]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      }
+    ],
+    "index": "Gift to Nature",
+    "desc": "From Offering to Nature: Sacrifice to Nature may now be used once per fifteen minutes.",
+    "table": 9,
+    "cost": 100,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Offering to Nature"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Life Returned to Nature",
+    "desc": "From Gift to Nature: Sacrifice to Nature may now be used once per five minutes. May never apply any increases to med rate.",
+    "table": 10,
+    "cost": 200,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Gift to Nature"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Druid", "High Druid"]
+      }
+    ],
+    "index": "Draw Upon Nature's Bounty",
+    "desc": "1/day while in a natural environment may perform a 5 minute ritual drawing upon nature's power. At the end of this time regains X Earthpower, but suffers 3X TBLP. May not meditate or regain Earthpower by any means for the next 3 hours. A maximum of 20 Earthpower can be regained this way.",
+    "table": 10,
+    "cost": 60,
+    "sourceBook": "Druids Way",
+    "CanAddMultiple": true,
+    "maxAvailable": 2
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Champion of Nature",
+    "desc": "Gains +1 level of Earthpower [min 4], +6/2 life, immunity to all natural elements such as normal fires, lightning and cold, and the ability to breathe underwater. Must have Chosen of Mother Nature and Chosen of the Horned Man first.",
+    "table": 10,
+    "cost": 250,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Chosen of Mother Nature", "Chosen of the Horned Man"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["High Druid", "Arch Druid"]
+      }
+    ],
+    "index": "Discern Associated Earthpower (Other)",
+    "desc": "From Discern Associated Earthpower (Self): can tell how many EP points the target has. This is an Earthpower information effect, has a 1 inch range and costs 3 TBLP to use.",
+    "table": 10,
+    "cost": 50,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Discern Associated Earthpower (Self)"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Arch Druid", "Devout Druid"]
+      }
+    ],
+    "index": "Fifth Extra Level of Earthpower",
+    "desc": "Gains 1 level's worth of EP. If this would be less than 4, this ability instead grants +4 EP. Must have purchased Fourth Extra Level of Earthpower before buying this.",
+    "table": 10,
+    "cost": 65,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Fourth Extra Level of Earthpower"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Identify Earthpower",
+    "desc": "From Gauge Earthpower: now receives the name and general purpose of any evocations present. Requires 30 seconds concentration to use.",
+    "table": 10,
+    "cost": 50,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Gauge Earthpower"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian"]
+      }
+    ],
+    "index": "Nature's Wrath",
+    "desc": "Max damage Quin when using a weapon in two hands that has the Cudgel evocation cast upon it. This only applies to weapons empowered by a temporary version of Cudgel, not permanently Cudgelled weapons such as that granted by the Birch Talisman.",
+    "table": 10,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Nature's Wrath",
+    "desc": "Max damage Quin when using a weapon in two hands that has the Cudgel evocation cast upon it. This only applies to weapons empowered by a temporary version of Cudgel, not permanently Cudgelled weapons such as that granted by the Birch Talisman.",
+    "table": 10,
+    "cost": 50,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Arch Druid", "Devout Druid"]
+      }
+    ],
+    "index": "Sixth Extra Level of Earthpower",
+    "desc": "Gains 1 level's worth of EP. If this would be less than 4, this ability instead grants +4 EP. Must have purchased Fifth Extra Level of Earthpower before buying this.",
+    "table": 10,
+    "cost": 70,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Fifth Extra Level of Earthpower"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "x3 Meditation Rate",
+    "desc": "From x2 meditation rate.",
+    "table": 10,
+    "cost": 100,
+    "sourceBook": "Druids Way",
+    "preReqs": ["x2 Meditation Rate for Earthpower"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian"]
+      }
+    ],
+    "index": "Wrathful I",
+    "desc": "From Nature's Wrath. Max damage Quin using a weapon in one hand, with the other hand not wielding a weapon, which has a Cudgel evocation cast upon it. This only applies to temporarily Cudgelled weapons, not permanently Cudgelled weapons.",
+    "table": 10,
+    "cost": 50,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Nature's Wrath"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian"]
+      }
+    ],
+    "index": "Wrathful II",
+    "desc": "Nature's Wrath now applies to weapons wielded in two hands empowered by a permanent version of the Cudgel evocation, such as that granted by the Birch Talisman. From Wrathful I.",
+    "table": 10,
+    "cost": 75,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Wrathful I"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian"]
+      }
+    ],
+    "index": "Wrathful III",
+    "desc": "Wrathful I now applies to weapons empowered by a permanent version of the Cudgel evocation, such as that granted by the Birch Talisman, but only whilst the other hand is not carrying a weapon. From Wrathful II.",
+    "table": 11,
+    "cost": 125,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Wrathful II"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Forest Guardian", "Druid", "High Druid", "Ley Walker"]
+      }
+    ],
+    "index": "Nature's Harmony",
+    "desc": "From Champion of Nature: gains half effect from the supernatural aspect of elemental attacks, e.g. fire, cold, lightning etc.",
+    "table": 11,
+    "cost": 300,
+    "sourceBook": "Druids Way",
+    "preReqs": ["Champion of Nature"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Horned Man"]
+      }
+    ],
+    "index": "Expertise Camouflage",
+    "desc": "1/day empowers one casting of Camouflage so that the caster may move at half speed while it is active; they must still meet cover restrictions. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Mother Nature"]
+      }
+    ],
+    "index": "Expertise Druidic Heal",
+    "desc": "1/day one casting of an unenhanced Druidic Heal will cure permanent wounds, or wounds otherwise unhealable. This only functions on the dungeon where the injury was suffered. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Father of the World"]
+      }
+    ],
+    "index": "Expertise Speak to Animals",
+    "desc": "1/day one casting of Speak to Animals allows all individuals under a joining evocation to understand and be understood by animals as if under the evocation. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Forests"]
+      }
+    ],
+    "index": "Expertise Cudgel",
+    "desc": "1/day one 5 minute unenhanced Cudgel may be used by anyone, granting them the +1 bonus as well. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Father of the World"]
+      }
+    ],
+    "index": "Expertise Speak to Plants",
+    "desc": "1/day one casting of Speak to Plants allows all individuals under a joining evocation to understand and be understood by plants as if under the evocation. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Forests"]
+      }
+    ],
+    "index": "Expertise Animate Tree",
+    "desc": "1/day one Animated Tree of any type lasts until killed rather than 5 minutes. Any published tree enhancement evocations used on it also last until it dies. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Mother Nature"]
+      }
+    ],
+    "index": "Expertise Cure Disease",
+    "desc": "1/day one casting of Cure Disease grants the recipient immunity to disease for 5 minutes. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🌿 Druid"]
+      },
+      {
+        "Field": "ChosenField",
+        "Operator": "In",
+        "Value": ["Rivers"]
+      }
+    ],
+    "index": "Expertise Neutralise Poison",
+    "desc": "1/day rather than curing all poison in the target the evocation instead negates the first 48 grades of poison damage they suffer over the next hour. May buy a second innate on table 8.",
+    "table": 1,
+    "cost": 20,
+    "sourceBook": "Druids Way"
   }
 ]

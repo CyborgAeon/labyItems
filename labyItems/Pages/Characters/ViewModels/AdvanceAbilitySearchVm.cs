@@ -23,6 +23,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
     private readonly AdvanceCharacterVm _root;
     private readonly CharacterDraft _draft;
     private readonly IAbilityAvailabilityService _abilityAvailabilityService;
+    private readonly IAbilityChoiceSetResolverService _abilityChoiceSetResolverService;
     private IReadOnlyDictionary<string, CharacterClassRecord> _classes
         = new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase);
     private IReadOnlyDictionary<string, PeopleRecord> _races
@@ -64,13 +65,17 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
 
     public AdvanceAbilitySearchVm(
         AdvanceCharacterVm root,
-        IAbilityAvailabilityService? abilityAvailabilityService = null)
+        IAbilityAvailabilityService? abilityAvailabilityService = null,
+        IAbilityChoiceSetResolverService? abilityChoiceSetResolverService = null)
     {
         _root = root ?? throw new ArgumentNullException(nameof(root));
         _draft = _root.Draft;
         _abilityAvailabilityService = abilityAvailabilityService
             ?? ServiceHelper.ResolveService<IAbilityAvailabilityService>()
             ?? new AbilityAvailabilityService();
+        _abilityChoiceSetResolverService = abilityChoiceSetResolverService
+            ?? ServiceHelper.ResolveService<IAbilityChoiceSetResolverService>()
+            ?? new AbilityChoiceSetResolverService();
 
         OpenFiltersCommand = new Command(OpenFilters);
         CancelFiltersCommand = new Command(CancelFilters);
@@ -80,6 +85,8 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
         ToggleSelectAbilityCommand = new Command<AdvanceAbilitySearchItemVm>(ToggleSelectAbility);
         ToggleSelectedOnlyCommand = new Command(ToggleSelectedOnly);
     }
+
+    public CharacterDraft Draft => _draft;
 
     public string SearchText
     {
@@ -164,7 +171,10 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
     }
 
     public void CommitSelection()
-        => _root.AddAdvancementAbilities(GetSelectedAbilities());
+        => CommitSelection(GetSelectedAbilities());
+
+    public void CommitSelection(IEnumerable<EvolutionService.AbilityResult>? selectedAbilities)
+        => _root.AddAdvancementAbilities(selectedAbilities);
 
     public void ClearSelections()
     {
@@ -186,6 +196,52 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
             .Cast<EvolutionService.AbilityResult>()
             .OrderBy(ability => ability.Index, StringComparer.OrdinalIgnoreCase)
             .ToList();
+
+    public async Task<IReadOnlyList<AdvanceAbilitySpecialisationRequest>> BuildSpecialisationRequestsAsync(
+        IEnumerable<EvolutionService.AbilityResult>? selectedAbilities = null,
+        CancellationToken cancellationToken = default)
+    {
+        var selected = (selectedAbilities ?? GetSelectedAbilities())
+            .Where(ability => ability != null)
+            .ToList();
+        if (selected.Count == 0)
+            return Array.Empty<AdvanceAbilitySpecialisationRequest>();
+
+        var occurrencesByAbilityKey = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var requests = new List<AdvanceAbilitySpecialisationRequest>();
+
+        foreach (var ability in selected)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                break;
+
+            var refs = await _abilityChoiceSetResolverService.ResolveChoiceSetRefsAsync(ability, cancellationToken);
+            if (refs.Count == 0)
+                continue;
+
+            var abilityKey = BuildAbilityKey(ability);
+            var displayName = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
+            if (string.IsNullOrWhiteSpace(displayName))
+                displayName = abilityKey;
+            if (string.IsNullOrWhiteSpace(displayName))
+                displayName = "Ability";
+
+            if (!occurrencesByAbilityKey.TryGetValue(abilityKey, out var previous))
+                previous = 0;
+
+            var occurrence = previous + 1;
+            occurrencesByAbilityKey[abilityKey] = occurrence;
+
+            requests.Add(new AdvanceAbilitySpecialisationRequest(
+                abilityKey,
+                displayName,
+                (ability.AbilityRef ?? string.Empty).Trim(),
+                occurrence,
+                refs.ToList()));
+        }
+
+        return requests;
+    }
 
     public AbilityPrerequisiteCheckResult GetSelectionPrerequisiteIssues()
         => AbilityPrerequisiteService.Evaluate(
@@ -687,6 +743,29 @@ internal sealed record CachedAbilityEntry(
 internal sealed record AvailabilityCacheEntry(
     string ContextSignature,
     bool IsAvailable);
+
+public sealed record AdvanceAbilitySpecialisationRequest(
+    string AbilityKey,
+    string AbilityName,
+    string AbilityRef,
+    int Occurrence,
+    IReadOnlyList<string> ChoiceSetRefs)
+{
+    public string StableId => BuildStableId(AbilityKey, Occurrence);
+
+    public static string BuildStableId(string abilityKey, int occurrence)
+    {
+        var trimmedKey = (abilityKey ?? string.Empty).Trim();
+        var resolvedOccurrence = Math.Max(1, occurrence);
+        return $"{trimmedKey}::{resolvedOccurrence}";
+    }
+
+    public string BuildStorageKey(string choiceSetRef)
+    {
+        var choiceSet = (choiceSetRef ?? string.Empty).Trim();
+        return $"advancement::{StableId}::{choiceSet}";
+    }
+}
 
 public sealed class AdvanceAbilitySearchItemVm : INotifyPropertyChanged
 {

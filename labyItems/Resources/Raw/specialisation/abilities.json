@@ -1988,6 +1988,9 @@
       "Name": "Weapon Mastery",
       "Type": "Static",
       "Effect": "Todo",
+      "ChoiceSetRefs": [
+        "choice.1st-weapon-mastery.primary"
+      ],
       "Customisation": {
         "OptionEnum": "WeaponType",
         "CustomValuesPermitted": true
@@ -1998,11 +2001,32 @@
       "Name": "Weapon Mastery (O)",
       "Type": "Static",
       "Effect": "Todo",
+      "ChoiceSetRefs": [
+        "choice.1st-weapon-mastery-o.primary"
+      ],
       "Customisation": {
         "OptionEnum": "WeaponType",
         "CustomValuesPermitted": true
       },
       "Key": "ability.weapon-mastery-o"
+    },
+    "ability.druid.chosen-field": {
+      "Name": "Chosen Field",
+      "Type": "Static",
+      "Effect": "Choose an evocation field for effects that refer to your Chosen Field.",
+      "ChoiceSetRefs": [
+        "choice.druid.chosen-field.primary"
+      ],
+      "Key": "ability.druid.chosen-field"
+    },
+    "ability.druid.advocate-of-field": {
+      "Name": "Advocate of (Field)",
+      "Type": "Static",
+      "Effect": "Choose an evocation field for effects that refer to Advocate of (Field).",
+      "ChoiceSetRefs": [
+        "choice.druid.advocate-of-field.primary"
+      ],
+      "Key": "ability.druid.advocate-of-field"
     },
     "ability.6th-sense": {
       "Name": "6th Sense",

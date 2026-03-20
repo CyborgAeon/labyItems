@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
 using labyItems.Services.Specialisations;
 
@@ -22,6 +23,9 @@ internal static class ServiceCacheResetter
         ResetField(typeof(SpecialisationDefinitionRepository), "_cache");
         ResetField(typeof(AbilityDetailsLookupService), "_lookup");
         ResetField(typeof(AbilityDefinitionLookupService), "_lookup");
+        ResetField(typeof(AdvanceAbilitySearchVm), "_cachedAbilities");
+        ResetField(typeof(AdvanceAbilitySearchVm), "_cachedAbilityLookup");
+        ResetField(typeof(AdvanceAbilitySearchVm), "_cachedSourceBooks");
     }
 
     private static void ResetField(Type type, string fieldName)
