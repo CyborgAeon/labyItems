@@ -66,9 +66,20 @@ public sealed class AbilityAvailabilityService : IAbilityAvailabilityService
             priestStyles,
             specialisationTokens);
 
-        IEnumerable<string> ResolveValues(string field)
+        IEnumerable<string> ResolveValues(RuleClause rule, string field)
         {
             var normalizedField = NormalizeRuleField(field);
+            var specialisationValues = ResolveSpecialisationTokensByKey(draft, rule?.SpecialisationKey, specialisationTokens);
+
+            if (rule?.Operator == RuleComparisonOp.Only
+                && (normalizedField == "bracket"
+                    || normalizedField == "brackets"
+                    || normalizedField == "firstclassbracket"
+                    || normalizedField == "firstclassbrackets"))
+            {
+                return anyClassBrackets;
+            }
+
             return normalizedField switch
             {
                 "class" or "classes" or "sourceclass" or "sourceclasses" or "firstclass" or "firstclasses" or "originalclass" or "originalclasses" => ToSingleValue(className),
@@ -80,8 +91,8 @@ public sealed class AbilityAvailabilityService : IAbilityAvailabilityService
                 "race" or "races" or "baserace" or "baseraces" => ToSingleValue(raceName),
                 "peopletype" or "peopletypes" => peopleTypes,
                 "racetag" or "racetags" => raceTags,
-                "specialisation" or "specialisations" or "specialization" or "specializations" => specialisationTokens,
-                "chosenfield" or "evocationfield" => specialisationTokens,
+                "specialisation" or "specialisations" or "specialization" or "specializations" => specialisationValues,
+                "chosenfield" or "evocationfield" => specialisationValues,
                 "manacolour" or "manacolours" or "magiccolour" or "magiccolours" or "wizardcolour" or "wizardcolours" => manaColours,
                 "prieststyle" or "prieststyles" => priestStyles,
                 "alignmentorder" => ToSingleValue(alignmentOrder),
@@ -393,6 +404,74 @@ public sealed class AbilityAvailabilityService : IAbilityAvailabilityService
         }
 
         return set.ToList();
+    }
+
+    private static IReadOnlyList<string> ResolveSpecialisationTokensByKey(
+        CharacterDraft? draft,
+        string? specialisationKey,
+        IReadOnlyList<string> fallbackTokens)
+    {
+        var normalizedKey = NormalizeRuleField(specialisationKey);
+        if (normalizedKey.Length == 0)
+            return fallbackTokens;
+
+        var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var pair in draft?.SpecialisationSelections ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase))
+        {
+            if (!MatchesSpecialisationKey(pair.Key, normalizedKey))
+                continue;
+
+            var value = (pair.Value ?? string.Empty).Trim();
+            if (value.Length > 0)
+                set.Add(value);
+        }
+
+        if (normalizedKey is "wizardcolour" or "wizardcolours" or "magiccolour" or "magiccolours")
+        {
+            foreach (var colour in draft?.ColourChoiceOverride ?? Enumerable.Empty<string>())
+            {
+                var value = (colour ?? string.Empty).Trim();
+                if (value.Length > 0)
+                    set.Add(value);
+            }
+        }
+
+        if (normalizedKey is "racesubtype" or "subtype")
+        {
+            var subtype = (draft?.RaceSubtypeValue ?? string.Empty).Trim();
+            if (subtype.Length > 0)
+                set.Add(subtype);
+        }
+
+        return set.ToList();
+    }
+
+    private static bool MatchesSpecialisationKey(string? rawSelectionKey, string normalizedWanted)
+    {
+        var key = (rawSelectionKey ?? string.Empty).Trim();
+        if (key.Length == 0 || normalizedWanted.Length == 0)
+            return false;
+
+        var normalizedKey = NormalizeRuleField(key);
+        if (normalizedKey.Equals(normalizedWanted, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        var suffix = ExtractSelectionKeySuffix(key);
+        var normalizedSuffix = NormalizeRuleField(suffix);
+        return normalizedSuffix.Equals(normalizedWanted, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string ExtractSelectionKeySuffix(string key)
+    {
+        var raw = (key ?? string.Empty).Trim();
+        if (raw.Length == 0)
+            return string.Empty;
+
+        var separator = raw.LastIndexOf("::", StringComparison.Ordinal);
+        if (separator < 0 || separator + 2 >= raw.Length)
+            return raw;
+
+        return raw[(separator + 2)..].Trim();
     }
 
     private static IReadOnlyList<string> ResolveManaColours(CharacterDraft? draft)

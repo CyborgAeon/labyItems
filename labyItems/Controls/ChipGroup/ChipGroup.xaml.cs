@@ -10,6 +10,7 @@ namespace labyItems.Controls;
 public partial class ChipGroup : ContentView
 {
     private INotifyCollectionChanged? _itemsCollection;
+    private INotifyCollectionChanged? _disabledItemsCollection;
 
     public ChipGroup()
     {
@@ -53,6 +54,43 @@ public partial class ChipGroup : ContentView
 
     private void OnItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         => Rebuild();
+
+    public static readonly BindableProperty DisabledItemsProperty = BindableProperty.Create(
+        nameof(DisabledItems),
+        typeof(IEnumerable<string>),
+        typeof(ChipGroup),
+        defaultValue: null,
+        propertyChanged: OnDisabledItemsChanged
+    );
+
+    public IEnumerable<string> DisabledItems
+    {
+        get => (IEnumerable<string>)GetValue(DisabledItemsProperty);
+        set => SetValue(DisabledItemsProperty, value);
+    }
+
+    private static void OnDisabledItemsChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var control = (ChipGroup)bindable;
+        control.AttachDisabledCollection(oldValue as INotifyCollectionChanged, newValue as INotifyCollectionChanged);
+        control.UpdateVisualState();
+    }
+
+    private void AttachDisabledCollection(INotifyCollectionChanged? oldCollection, INotifyCollectionChanged? newCollection)
+    {
+        if (ReferenceEquals(_disabledItemsCollection, oldCollection) && oldCollection != null)
+            oldCollection.CollectionChanged -= OnDisabledCollectionChanged;
+
+        if (oldCollection != null && !ReferenceEquals(oldCollection, newCollection))
+            oldCollection.CollectionChanged -= OnDisabledCollectionChanged;
+
+        _disabledItemsCollection = newCollection;
+        if (_disabledItemsCollection != null)
+            _disabledItemsCollection.CollectionChanged += OnDisabledCollectionChanged;
+    }
+
+    private void OnDisabledCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        => UpdateVisualState();
 
     public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(
         nameof(SelectedItem),
@@ -132,6 +170,9 @@ public partial class ChipGroup : ContentView
         var tap = new TapGestureRecognizer();
         tap.Tapped += (_, __) =>
         {
+            if (IsDisabled(text))
+                return;
+
             if (string.Equals(SelectedItem, text, System.StringComparison.OrdinalIgnoreCase))
                 SelectedItem = null;
             else
@@ -151,14 +192,30 @@ public partial class ChipGroup : ContentView
             if (child.BindingContext is not string text)
                 continue;
 
+            var isDisabled = IsDisabled(text);
             var isSelected = string.Equals(text, SelectedItem, System.StringComparison.OrdinalIgnoreCase);
-            var background = isSelected ? palette.SelectedBackground : palette.UnselectedBackground;
-            var textColor = isSelected ? palette.SelectedText : palette.UnselectedText;
-            var border = isSelected ? palette.SelectedBorder : palette.UnselectedBorder;
+            if (isDisabled && isSelected)
+                SelectedItem = null;
+
+            var background = isDisabled
+                ? palette.DisabledBackground
+                : (isSelected ? palette.SelectedBackground : palette.UnselectedBackground);
+            var textColor = isDisabled
+                ? palette.DisabledText
+                : (isSelected ? palette.SelectedText : palette.UnselectedText);
+            var border = isDisabled
+                ? palette.DisabledBorder
+                : (isSelected ? palette.SelectedBorder : palette.UnselectedBorder);
 
             ApplyPalette(child, background, border, textColor);
+            child.IsEnabled = !isDisabled;
+            child.Opacity = isDisabled ? 0.5 : 1.0;
         }
     }
+
+    private bool IsDisabled(string text)
+        => (DisabledItems ?? Enumerable.Empty<string>())
+            .Any(item => string.Equals(item, text, System.StringComparison.OrdinalIgnoreCase));
 
     private static void ApplyPalette(Border border, Color background, Color borderColor, Color textColor)
     {
@@ -178,7 +235,19 @@ public partial class ChipGroup : ContentView
         var selectedBackground = ResolveColor("AccentMaroonColor", Color.FromArgb("#7F1D1D"));
         var selectedText = ResolveColor("White", Colors.White);
         var selectedBorder = ResolveColor("Primary", Color.FromArgb("#530000"));
-        return new ChipPalette(unselectedBackground, unselectedText, unselectedBorder, selectedBackground, selectedText, selectedBorder);
+        var disabledBackground = ResolveColor("Gray300", Color.FromArgb("#D1D5DB"));
+        var disabledText = ResolveColor("Gray600", Color.FromArgb("#4B5563"));
+        var disabledBorder = ResolveColor("Gray400", Color.FromArgb("#9CA3AF"));
+        return new ChipPalette(
+            unselectedBackground,
+            unselectedText,
+            unselectedBorder,
+            selectedBackground,
+            selectedText,
+            selectedBorder,
+            disabledBackground,
+            disabledText,
+            disabledBorder);
     }
 
     private static Color ResolveColor(string key, Color fallback)
@@ -202,5 +271,8 @@ public partial class ChipGroup : ContentView
         Color UnselectedBorder,
         Color SelectedBackground,
         Color SelectedText,
-        Color SelectedBorder);
+        Color SelectedBorder,
+        Color DisabledBackground,
+        Color DisabledText,
+        Color DisabledBorder);
 }

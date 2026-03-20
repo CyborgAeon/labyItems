@@ -4,15 +4,19 @@ namespace labyItems.Services;
 
 public static class ManuAbilityService
 {
+    private const string ManufacturerSourceBook = "Manufacturers Guide";
+
     public record ManuAbilityEntry(
         string name,
+        string abilityRef,
         string availability,
         IReadOnlyList<RuleClause> availabilityRules,
         int cost,
         int table,
         string description,
         bool canBuyMultiple,
-        IReadOnlyList<string> preReqs);
+        IReadOnlyList<string> preReqs,
+        IReadOnlyList<string> choiceSetRefs);
 
     private static List<ManuAbilityEntry>? _cache;
 
@@ -23,15 +27,8 @@ public static class ManuAbilityService
         {
             var list = await EvolutionService.GetAllAbilitiesAsync();
             _cache = list
-                .Select(e => new ManuAbilityEntry(
-                    e.Index,
-                    e.Available,
-                    e.AvailabilityRules,
-                    e.Cost,
-                    e.Table,
-                    e.Description,
-                    e.CanBuyMultiple,
-                    e.PreReqs))
+                .Where(IsManufacturerAbility)
+                .Select(MapEntry)
                 .OrderBy(e => e.name)
                 .ToList();
         }
@@ -51,15 +48,9 @@ public static class ManuAbilityService
         {
             var results = await EvolutionService.SearchAbilitiesAsync(query);
             mapped = results
-                .Select(e => new ManuAbilityEntry(
-                    e.Index,
-                    e.Available,
-                    e.AvailabilityRules,
-                    e.Cost,
-                    e.Table,
-                    e.Description,
-                    e.CanBuyMultiple,
-                    e.PreReqs))
+                .Where(IsManufacturerAbility)
+                .Select(MapEntry)
+                .OrderBy(e => e.name)
                 .ToList();
         }
         catch (Exception ex)
@@ -82,5 +73,31 @@ public static class ManuAbilityService
         {
             // ignore logging failures
         }
+    }
+
+    private static ManuAbilityEntry MapEntry(EvolutionService.AbilityResult ability)
+        => new(
+            ability.Index,
+            ability.AbilityRef,
+            ability.Available,
+            ability.AvailabilityRules,
+            ability.Cost,
+            ability.Table,
+            ability.Description,
+            ability.CanBuyMultiple,
+            ability.PreReqs,
+            ability.ChoiceSetRefs);
+
+    private static bool IsManufacturerAbility(EvolutionService.AbilityResult ability)
+    {
+        var sourceBook = (ability.SourceBook ?? string.Empty).Trim();
+        if (sourceBook.Equals(ManufacturerSourceBook, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        var abilityRef = (ability.AbilityRef ?? string.Empty).Trim();
+        if (abilityRef.StartsWith("ability.make.", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
     }
 }

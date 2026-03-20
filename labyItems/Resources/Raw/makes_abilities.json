@@ -1,429 +1,942 @@
 [
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "⚔ Scout"
+      }
+    ],
     "index": "Brew the Wondrous",
     "desc": "Allows brewing Wondrous Elixirs.",
     "cost": "40",
-    "table": 1
+    "table": 1,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.brew-the-wondrous"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🌿 Druid"
+      }
+    ],
     "index": "Crafter of Charms",
     "desc": "Grants ability to craft Charms.",
     "cost": "30",
-    "table": 1
+    "table": 1,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.crafter-of-charms"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "Gem Cutter",
     "desc": "Grants ability to craft Neuronic Prisms.",
     "cost": "30",
-    "table": 1
+    "table": 1,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.gem-cutter"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🛡️ Warrior"
+      }
+    ],
     "index": "Smith (Type)",
     "desc": "Allows crafting of the chosen arms/armour type; requires Smithing skill.",
-    "cost": "30*",
-    "table": 1
+    "cost": "30",
+    "table": 1,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.smith-type",
+    "choiceSetRefs": ["choice.make.smith.type"],
+    "canBuyMultiple": true
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "Torque Crafter",
     "desc": "Grants ability to craft Torques.",
     "cost": "30",
-    "table": 1
+    "table": 1,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.torque-crafter"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "⚔ Scout"
+      }
+    ],
     "index": "Write Recipe Books",
     "desc": "Allows writing recipe books.",
     "cost": "40",
-    "table": 1
+    "table": 1,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.write-recipe-books"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "Magical Manufacturer",
     "desc": "+2% when creating magic (incl. Teaching Scrolls & Scriptures; excl. normal scrolls).",
     "cost": "50",
-    "table": 2
+    "table": 2,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.magical-manufacturer"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🛡️ Warrior"
+      }
+    ],
     "index": "Master Smith",
     "desc": "+2% when making smithed items.",
     "cost": "50",
-    "table": 2
+    "table": 2,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.master-smith"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "Mental Manufacturer",
     "desc": "+2% when making Neuronic Prisms.",
     "cost": "50",
-    "table": 2
+    "table": 2,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.mental-manufacturer"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🌿 Druid"
+      }
+    ],
     "index": "Natural Manufacturer",
     "desc": "+2% when making Earthpower Charms.",
     "cost": "50",
-    "table": 2
+    "table": 2,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.natural-manufacturer"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "Spiritual Manufacturer",
     "desc": "+2% when making spiritual items (incl. Scriptures; not normal scrolls).",
     "cost": "50",
-    "table": 2
+    "table": 2,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.spiritual-manufacturer"
   },
   {
-    "available": ["FirstClassAny"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "Scriptorium",
     "desc": "Normal spiritual scrolls base chance 80%; +2% to Scriptures; costs 12,000 grulls to set up.",
     "cost": "75",
-    "table": 5
+    "table": 5,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.scriptorium"
   },
   {
-    "available": ["FirstClassWizard"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "Wizard's Study",
     "desc": "No setup cost for teaching scrolls; normal magical scrolls base chance 80%; +2% to Teaching Scrolls; costs 10,000 grulls to set up.",
     "cost": "60",
-    "table": 5
+    "table": 5,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.wizard-s-study"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🌿 Druid"
+      }
+    ],
     "index": "Craft Speciality (Earthpower)",
     "desc": "+2% when crafting Charms.",
     "cost": "40",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.craft-speciality-earthpower"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "Craft Speciality (Neuronic)",
     "desc": "+2% when crafting Prisms or Torques (choose on purchase).",
     "cost": "40",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.craft-speciality-neuronic",
+    "choiceSetRefs": ["choice.make.craft-speciality.neuronic.type"]
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "Craft Speciality (Spiritual)",
     "desc": "From Make Major Item type. +2% in chosen item type. Once only.",
     "cost": "40",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.craft-speciality-spiritual",
+    "choiceSetRefs": ["choice.make.craft-speciality.spiritual.type"]
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🛡️ Warrior"
+      }
+    ],
     "index": "Craft Speciality (Warrior)",
     "desc": "+2% when making chosen type of items.",
     "cost": "40",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.craft-speciality-warrior",
+    "choiceSetRefs": ["choice.make.craft-speciality.warrior.type"]
   },
   {
-    "available": ["FirstClassWizard"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "Craft Speciality (Wizard)",
     "desc": "+2% when manufacturing items in chosen area (e.g., Weapons or Armour). Once only.",
     "cost": "40",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.craft-speciality-wizard",
+    "choiceSetRefs": ["choice.make.craft-speciality.wizard.type"]
   },
   {
-    "available": ["FirstClassWizard"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": "Grey",
+        "SpecialisationKey": "Wizard Colour"
+      }
+    ],
     "index": "Diverse Magic",
-    "desc": "If grey is a colour: may make items & scrolls of any known standard 1st\u20135th spell.",
+    "desc": "If grey is a colour: may make items & scrolls of any known standard 1st–5th spell.",
     "cost": "40",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.diverse-magic"
   },
   {
-    "available": ["FirstClassWarrior"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🛡️ Warrior"
+      }
+    ],
     "index": "Grand Smithy",
     "desc": "No setup cost for smithed items; costs 20,000 grulls to set up.",
     "cost": "50",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.grand-smithy"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "⚔ Scout"
+      }
+    ],
     "index": "Leave to Simmer",
     "desc": "May use a basic potion make in addition to an advanced make; no cost-reduction enhancers.",
     "cost": "40",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.leave-to-simmer"
   },
   {
-    "available": ["FirstClassAny"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "Private Shrine",
     "desc": "No setup cost for spiritual items; costs 30,000 grulls to set up.",
     "cost": "75",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.private-shrine"
   },
   {
-    "available": ["FirstClassNeuronic"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "Silent Chamber",
     "desc": "No setup cost for prisms; costs 10,000 grulls to set up.",
     "cost": "50",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.silent-chamber"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "⚔ Scout"
+      }
+    ],
     "index": "Taught by a Master",
-    "desc": "If recipe known with points: only \u00bd level loss when writing recipe book.",
+    "desc": "If recipe known with points: only ½ level loss when writing recipe book.",
     "cost": "50",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.taught-by-a-master"
   },
   {
-    "available": ["FirstClassDruid"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🌿 Druid"
+      }
+    ],
     "index": "Tranquil Grove",
     "desc": "No setup cost for charms; costs 10,000 grulls to set up.",
     "cost": "50",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.tranquil-grove"
   },
   {
-    "available": ["FirstClassWizard"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "Wizard's Laboratory",
     "desc": "No setup cost for magical items (not teaching scrolls). Costs 20,000 grulls to set up.",
     "cost": "60",
-    "table": 7
+    "table": 7,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.wizard-s-laboratory"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "Arcane Shield Manufacture",
     "desc": "From Make Major Armour: may manufacture magical shields (treated as Medium Armour); may be aligned.",
     "cost": "50",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.arcane-shield-manufacture"
   },
   {
-    "available": ["FirstClassDruid"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🌿 Druid"
+      }
+    ],
     "index": "Dangerous Escape (Druid)",
     "desc": "Once ever: end manufacture instead of rolling on Failure Table.",
-    "cost": "20*",
-    "table": 8
+    "cost": "20",
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.dangerous-escape-druid",
+    "canBuyMultiple": true
   },
   {
-    "available": ["FirstClassNeuronic"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "Dangerous Escape (Neuronic)",
     "desc": "Once ever: end manufacture instead of rolling on Failure Table.",
-    "cost": "20*",
-    "table": 8
+    "cost": "20",
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.dangerous-escape-neuronic",
+    "canBuyMultiple": true
   },
   {
-    "available": ["FirstClassScout"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "⚔ Scout"
+      }
+    ],
     "index": "Dangerous Escape (Scout)",
     "desc": "Once ever: end manufacture instead of rolling on Failure Table.",
-    "cost": "20*",
-    "table": 8
+    "cost": "20",
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.dangerous-escape-scout",
+    "canBuyMultiple": true
   },
   {
-    "available": ["FirstClassAny"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "Dangerous Escape (Spiritual)",
     "desc": "Once ever: end manufacture instead of rolling on Failure Table.",
-    "cost": "20*",
-    "table": 8
+    "cost": "20",
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.dangerous-escape-spiritual",
+    "canBuyMultiple": true
   },
   {
-    "available": ["FirstClassWarrior"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🛡️ Warrior"
+      }
+    ],
     "index": "Dangerous Escape (Warrior)",
     "desc": "Once ever: end manufacture instead of rolling on Failure Table.",
-    "cost": "20*",
-    "table": 8
+    "cost": "20",
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.dangerous-escape-warrior",
+    "canBuyMultiple": true
   },
   {
-    "available": ["FirstClassWizard"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "Dangerous Escape (Wizard)",
     "desc": "Once ever: if required to roll on Failure Table, may end manufacture immediately instead.",
-    "cost": "20*",
-    "table": 8
+    "cost": "20",
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.dangerous-escape-wizard",
+    "canBuyMultiple": true
   },
   {
-    "available": ["FirstClassWizard"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": "Grey",
+        "SpecialisationKey": "Wizard Colour"
+      }
+    ],
     "index": "Diverse Magic II",
     "desc": "From Diverse Magic; 1st colour grey. May now make items & scrolls of any specialist owned.",
     "cost": "40",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.diverse-magic-ii",
+    "preReqs": ["Diverse Magic"]
   },
   {
-    "available": ["FirstClassDruid"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🌿 Druid"
+      }
+    ],
     "index": "Rites of Protection (Druid)",
     "desc": "May take item perm as perm damage on casting stamina at 2:1.",
     "cost": "40",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.rites-of-protection-druid"
   },
   {
-    "available": ["FirstClassNeuronic"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "Rites of Protection (Neuronic)",
     "desc": "May take item perm as perm damage on casting stamina at 2:1.",
     "cost": "40",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.rites-of-protection-neuronic"
   },
   {
-    "available": ["FirstClassScout"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "⚔ Scout"
+      }
+    ],
     "index": "Rites of Protection (Scout)",
     "desc": "May take item perm from Wondrous Elixirs as perm damage on casting stamina at 2:1 (incl. kickout).",
     "cost": "40",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.rites-of-protection-scout"
   },
   {
-    "available": ["FirstClassAny"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "Rites of Protection (Spiritual)",
     "desc": "May take any item perm as perm damage on casting stamina at 2:1.",
     "cost": "40",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.rites-of-protection-spiritual"
   },
   {
-    "available": ["FirstClassWarrior"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🛡️ Warrior"
+      }
+    ],
     "index": "Rites of Protection (Warrior)",
     "desc": "May take item perm as perm damage on casting stamina at 2:1.",
     "cost": "40",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.rites-of-protection-warrior"
   },
   {
-    "available": ["FirstClassWizard"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "Rites of Protection (Wizard)",
     "desc": "May take any item perm as perm damage on casting stamina at 2:1.",
     "cost": "40",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.rites-of-protection-wizard"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "Shield Manufacture",
     "desc": "From Make Major Armour: may manufacture spiritual shields (Medium Armour); may be aligned.",
     "cost": "50",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.shield-manufacture"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🌿 Druid"
+      }
+    ],
     "index": "Trinkets (Druid)",
     "desc": "Once-ever Earthpower items; +5% chance; 500 grulls per roll & setup; no blow ups.",
     "cost": "50",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.trinkets-druid"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "Trinkets (Neuronic)",
     "desc": "Prisms only; once-ever; +5% chance; 500 grulls per roll & setup; no blow ups.",
     "cost": "50",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.trinkets-neuronic"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "Trinkets (Spiritual)",
     "desc": "Create once-ever miracle innate items; +5% chance; 1000 grulls per roll & setup; no blow ups.",
     "cost": "50",
-    "table": 8
+    "table": 8,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.trinkets-spiritual"
   },
   {
-    "available": ["Post6thNaturalArtisan"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🌿 Druid"
+      }
+    ],
     "index": "A Master of the Trade (Druid)",
     "desc": "When playing: +1 make slot for Charms (not cumulative except Simple Craft).",
     "cost": "100",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.a-master-of-the-trade-druid"
   },
   {
-    "available": ["Post6thMagicalArtisan"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "A Master of the Trade (Magical)",
     "desc": "When playing: gain an additional make slot for items or teaching scrolls (not cumulative except with Simple Craft).",
     "cost": "100",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.a-master-of-the-trade-magical"
   },
   {
-    "available": ["Post6thArtisanOfTheMind"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "A Master of the Trade (Neuronic)",
     "desc": "When playing: +1 make slot for Prisms or Torques (not cumulative except Simple Craft).",
     "cost": "100",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.a-master-of-the-trade-neuronic"
   },
   {
-    "available": ["FirstClassScout"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "⚔ Scout"
+      }
+    ],
     "index": "A Master of the Trade (Scout)",
     "desc": "When playing: +1 make slot for Wondrous Potions or Recipe Books.",
     "cost": "100",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.a-master-of-the-trade-scout"
   },
   {
-    "available": ["Post6thSmith"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🛡️ Warrior"
+      }
+    ],
     "index": "A Master of the Trade (Smith)",
     "desc": "When playing: +1 make slot for smithed items.",
     "cost": "100",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.a-master-of-the-trade-smith"
   },
   {
-    "available": ["Post6thSpiritualArtisan"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "A Master of the Trade (Spiritual)",
     "desc": "When playing: +1 make slot for spiritual items or scriptures (not cumulative except Simple Craft).",
     "cost": "100",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.a-master-of-the-trade-spiritual"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🌿 Druid"
+      }
+    ],
     "index": "Reciprocates Binding (Druid)",
     "desc": "If user named: does not blow up on death; -5% to all rolls.",
     "cost": "50",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.reciprocates-binding-druid"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "Reciprocates Binding (Neuronic)",
     "desc": "If user named: does not blow up on death; -5% to all rolls.",
     "cost": "50",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.reciprocates-binding-neuronic"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "Reciprocates Binding (Spiritual)",
     "desc": "If user named: does not blow up on death; -5% to all rolls.",
     "cost": "50",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.reciprocates-binding-spiritual"
   },
   {
-    "available": ["Wizard"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "Reciprocates Binding (Wizard)",
     "desc": "If user named on card: does not blow up on death; all rolls -5%.",
     "cost": "50",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.reciprocates-binding-wizard"
   },
   {
-    "available": ["Post6thNaturalArtisan"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🌿 Druid"
+      }
+    ],
     "index": "The Simple Craft (Druid)",
     "desc": "May manufacture Basic Talismans while crafting Charms; cannot enhance chance.",
     "cost": "50",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.the-simple-craft-druid"
   },
   {
-    "available": ["Post6thMagicalCalligrapher"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "The Simple Craft (Magical)",
     "desc": "May write normal magical scrolls while crafting an item; cannot enhance basic 70% chance.",
     "cost": "50",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.the-simple-craft-magical"
   },
   {
-    "available": ["Post6thArtisanOfTheMind"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧠 Neuro"
+      }
+    ],
     "index": "The Simple Craft (Neuronic)",
     "desc": "May manufacture Crystals at same time as Prisms/Torques; cannot enhance crystal chance.",
     "cost": "50",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.the-simple-craft-neuronic"
   },
   {
-    "available": ["Post6thSmith"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🛡️ Warrior"
+      }
+    ],
     "index": "The Simple Craft (Smith)",
     "desc": "May manufacture basic armour at same time as advanced armour.",
     "cost": "50",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.the-simple-craft-smith"
   },
   {
-    "available": ["Post6thSpiritualCalligrapher"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🙏 Priest"
+      }
+    ],
     "index": "The Simple Craft (Spiritual)",
     "desc": "May write normal spiritual scrolls while crafting an item; cannot enhance base 70%.",
     "cost": "50",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.the-simple-craft-spiritual"
   },
   {
-    "available": ["Any"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "Trinkets (Wizard)",
     "desc": "Req. Make Major Talismans. Make once-ever innate items; +5% chance; 750 grulls per roll & setup; no blow up on date/death.",
     "cost": "50",
-    "table": 9
+    "table": 9,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.trinkets-wizard"
   },
   {
-    "available": ["FirstClassWizard"],
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "Only",
+        "Value": "🧙 Wizard"
+      }
+    ],
     "index": "Research Reduction",
     "desc": "+2% when attempting to make magical teaching scrolls.",
     "cost": "100",
-    "table": 10
+    "table": 10,
+    "sourceBook": "Manufacturers Guide",
+    "abilityRef": "ability.make.research-reduction"
   }
 ]

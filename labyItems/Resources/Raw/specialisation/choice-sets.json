@@ -6421,6 +6421,125 @@
           ]
         }
       ]
-    }
+    },
+    "choice.make.smith.type": {
+      "Key": "choice.make.smith.type",
+      "Title": "Smith Type",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+            "section:choice"
+      ],
+      "Options": [
+            {
+                  "Key": "Weapons",
+                  "Label": "Weapons"
+            },
+            {
+                  "Key": "Armour",
+                  "Label": "Armour"
+            },
+            {
+                  "Key": "Other",
+                  "Label": "Other (Shields/Tools)"
+            }
+      ]
+},
+    "choice.make.craft-speciality.wizard.type": {
+      "Key": "choice.make.craft-speciality.wizard.type",
+      "Title": "Craft Speciality (Wizard)",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+            "section:choice"
+      ],
+      "Options": [
+            {
+                  "Key": "Weapons",
+                  "Label": "Weapons"
+            },
+            {
+                  "Key": "Armour",
+                  "Label": "Armour"
+            },
+            {
+                  "Key": "Talismans",
+                  "Label": "Talismans"
+            },
+            {
+                  "Key": "Teaching Scrolls",
+                  "Label": "Teaching Scrolls"
+            }
+      ]
+},
+    "choice.make.craft-speciality.spiritual.type": {
+      "Key": "choice.make.craft-speciality.spiritual.type",
+      "Title": "Craft Speciality (Spiritual)",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+            "section:choice"
+      ],
+      "Options": [
+            {
+                  "Key": "Weapons",
+                  "Label": "Weapons"
+            },
+            {
+                  "Key": "Armour",
+                  "Label": "Armour"
+            },
+            {
+                  "Key": "Talismans",
+                  "Label": "Talismans"
+            },
+            {
+                  "Key": "Scriptures",
+                  "Label": "Scriptures"
+            }
+      ]
+},
+    "choice.make.craft-speciality.warrior.type": {
+      "Key": "choice.make.craft-speciality.warrior.type",
+      "Title": "Craft Speciality (Warrior)",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+            "section:choice"
+      ],
+      "Options": [
+            {
+                  "Key": "Weapons",
+                  "Label": "Weapons"
+            },
+            {
+                  "Key": "Armour",
+                  "Label": "Armour"
+            },
+            {
+                  "Key": "Other",
+                  "Label": "Other (Shields/Tools)"
+            }
+      ]
+},
+    "choice.make.craft-speciality.neuronic.type": {
+      "Key": "choice.make.craft-speciality.neuronic.type",
+      "Title": "Craft Speciality (Neuronic)",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+            "section:choice"
+      ],
+      "Options": [
+            {
+                  "Key": "Prisms",
+                  "Label": "Prisms"
+            },
+            {
+                  "Key": "Torques",
+                  "Label": "Torques"
+            }
+      ]
+}
   }
 }

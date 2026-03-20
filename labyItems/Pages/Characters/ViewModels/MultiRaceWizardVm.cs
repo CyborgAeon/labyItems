@@ -407,7 +407,7 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
 
         foreach (var rule in availableOption.Rules ?? new List<RuleClause>())
         {
-            if (rule.Operator != RuleComparisonOp.In)
+            if (rule.Operator != RuleComparisonOp.In && rule.Operator != RuleComparisonOp.Only)
                 continue;
 
             var field = NormalizeToken(rule.Field);

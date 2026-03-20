@@ -13,7 +13,8 @@ public sealed class AbilityAvailabilityServiceTests
         new Dictionary<string, CharacterClassRecord>(StringComparer.OrdinalIgnoreCase)
         {
             ["Warrior"] = new() { Brackets = new List<string> { "🛡️ Warrior" } },
-            ["Wizard"] = new() { Brackets = new List<string> { "🧙 Wizard" } }
+            ["Wizard"] = new() { Brackets = new List<string> { "🧙 Wizard" } },
+            ["Scout"] = new() { Brackets = new List<string> { "⚔ Scout" } }
         };
 
     private static readonly IReadOnlyDictionary<string, PeopleRecord> Races =
@@ -65,5 +66,80 @@ public sealed class AbilityAvailabilityServiceTests
 
         Assert.False(service.IsAvailable(rules, warriorDraft, Classes, Races));
         Assert.True(service.IsAvailable(rules, wizardDraft, Classes, Races));
+    }
+
+    [Fact]
+    public void IsAvailable_BracketOnly_RequiresPureBracketAcrossAllClasses()
+    {
+        var service = new AbilityAvailabilityService();
+        var rules = new[]
+        {
+            new RuleClause
+            {
+                Field = "Bracket",
+                Operator = RuleComparisonOp.Only,
+                Value = new List<string> { "⚔ Scout" }
+            }
+        };
+
+        var pureScoutDraft = new CharacterDraft
+        {
+            Class = "Scout",
+            Race = "Human"
+        };
+
+        var mixedScoutWizardDraft = new CharacterDraft
+        {
+            Class = "Scout",
+            Race = "Human",
+            MultiClassLevels = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Wizard"] = 1
+            }
+        };
+
+        Assert.True(service.IsAvailable(rules, pureScoutDraft, Classes, Races));
+        Assert.False(service.IsAvailable(rules, mixedScoutWizardDraft, Classes, Races));
+    }
+
+    [Fact]
+    public void IsAvailable_SpecialisationKey_RestrictsRuleToMatchingSelectionGroup()
+    {
+        var service = new AbilityAvailabilityService();
+        var rules = new[]
+        {
+            new RuleClause
+            {
+                Field = "Bracket",
+                Operator = RuleComparisonOp.Only,
+                Value = new List<string> { "🧙 Wizard" }
+            },
+            new RuleClause
+            {
+                Field = "Specialisation",
+                Operator = RuleComparisonOp.In,
+                Value = new List<string> { "Grey" },
+                SpecialisationKey = "Wizard Colour"
+            }
+        };
+
+        var validDraft = new CharacterDraft
+        {
+            Class = "Wizard",
+            Race = "Human"
+        };
+        validDraft.SpecialisationSelections["Wizard::Wizard Colour"] = "Grey";
+        validDraft.SpecialisationSelections["Wizard::School"] = "Earth";
+
+        var wrongGroupDraft = new CharacterDraft
+        {
+            Class = "Wizard",
+            Race = "Human"
+        };
+        wrongGroupDraft.SpecialisationSelections["Wizard::Wizard Colour"] = "Blue";
+        wrongGroupDraft.SpecialisationSelections["Wizard::School"] = "Grey";
+
+        Assert.True(service.IsAvailable(rules, validDraft, Classes, Races));
+        Assert.False(service.IsAvailable(rules, wrongGroupDraft, Classes, Races));
     }
 }

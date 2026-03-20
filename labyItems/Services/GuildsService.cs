@@ -603,7 +603,7 @@ public static class GuildsService
             if (normalizedField != "alignmentorder" && normalizedField != "alignmentmoral")
                 continue;
 
-            if (rule.Operator != RuleComparisonOp.In)
+            if (rule.Operator != RuleComparisonOp.In && rule.Operator != RuleComparisonOp.Only)
                 return null;
 
             if (normalizedField == "alignmentorder")

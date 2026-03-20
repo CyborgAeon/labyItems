@@ -546,11 +546,15 @@ public static class EvolutionService
             var opToken = ReadStringProperty(ruleElement, "Operator");
             var comparisonOp = ParseComparisonOp(opToken);
             var values = ParseRuleValues(ruleElement);
+            var specialisationKey = ReadStringProperty(ruleElement, "SpecialisationKey");
+            if (specialisationKey.Length == 0)
+                specialisationKey = ReadStringProperty(ruleElement, "SpecializationKey");
             clauses.Add(new RuleClause
             {
                 Field = field,
                 Operator = comparisonOp,
-                Value = values
+                Value = values,
+                SpecialisationKey = specialisationKey.Length == 0 ? null : specialisationKey
             });
         }
 
@@ -610,6 +614,8 @@ public static class EvolutionService
     {
         if (token.Equals("NotIn", StringComparison.OrdinalIgnoreCase))
             return RuleComparisonOp.NotIn;
+        if (token.Equals("Only", StringComparison.OrdinalIgnoreCase))
+            return RuleComparisonOp.Only;
 
         return RuleComparisonOp.In;
     }
@@ -669,8 +675,16 @@ public static class EvolutionService
                 .Select(v => v.Trim())
                 .ToList();
             var valuesText = values.Count == 0 ? "any" : string.Join("/", values);
-            var opText = rule.Operator == RuleComparisonOp.NotIn ? "not in" : "in";
-            parts.Add($"{rule.Field} {opText} {valuesText}");
+            var opText = rule.Operator switch
+            {
+                RuleComparisonOp.NotIn => "not in",
+                RuleComparisonOp.Only => "only",
+                _ => "in"
+            };
+            var keyHint = string.IsNullOrWhiteSpace(rule.SpecialisationKey)
+                ? string.Empty
+                : $" [{rule.SpecialisationKey}]";
+            parts.Add($"{rule.Field}{keyHint} {opText} {valuesText}");
         }
 
         return string.Join("; ", parts);

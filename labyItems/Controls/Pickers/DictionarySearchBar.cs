@@ -723,13 +723,12 @@ public partial class DictionarySearchBar<TValue> : ContentView
     {
         var resultsView = new CollectionView
         {
-            SelectionMode = SelectionMode.Single,
+            SelectionMode = SelectionMode.None,
             ItemsLayout = new LinearItemsLayout(ItemsLayoutOrientation.Vertical) { ItemSpacing = 0 },
             IsVisible = false,
             BackgroundColor = Colors.White
         };
 
-        resultsView.SelectionChanged += OnResultSelected;
         resultsView.ItemTemplate = BuildResultTemplate();
 
         return resultsView;
@@ -762,17 +761,21 @@ public partial class DictionarySearchBar<TValue> : ContentView
             var label = new Label { VerticalOptions = LayoutOptions.Center };
             label.SetBinding(Label.TextProperty, nameof(SearchResult.DisplayText));
             grid.Add(label);
+
+            var tap = new TapGestureRecognizer();
+            tap.Tapped += OnResultTapped;
+            grid.GestureRecognizers.Add(tap);
+
             return grid;
         });
     }
 
-    private void OnResultSelected(object? sender, SelectionChangedEventArgs e)
+    private void OnResultTapped(object? sender, TappedEventArgs _)
     {
-        if (e.CurrentSelection.FirstOrDefault() is SearchResult result)
-            ApplySelection(result);
+        if (sender is not BindableObject bindable || bindable.BindingContext is not SearchResult result)
+            return;
 
-        if (sender is CollectionView collectionView)
-            collectionView.SelectedItem = null;
+        ApplySelection(result);
     }
 
     private void ApplySelection(SearchResult result)

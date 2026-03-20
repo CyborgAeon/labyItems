@@ -8,6 +8,15 @@ public static class RuleTreeEvaluator
         IEnumerable<RuleClause>? rules,
         Func<string, IEnumerable<string>> resolveFieldValues,
         Func<string, string>? normalizeValue = null)
+        => Evaluate(
+            rules,
+            (rule, field) => resolveFieldValues(field),
+            normalizeValue);
+
+    public static bool Evaluate(
+        IEnumerable<RuleClause>? rules,
+        Func<RuleClause, string, IEnumerable<string>> resolveFieldValues,
+        Func<string, string>? normalizeValue = null)
     {
         var list = (rules ?? Array.Empty<RuleClause>())
             .Where(r => r != null && r.IsValid)
@@ -37,7 +46,7 @@ public static class RuleTreeEvaluator
 
         foreach (var rule in rules ?? Array.Empty<RuleClause>())
         {
-            if (rule == null || !rule.IsValid || rule.Operator != RuleComparisonOp.In)
+            if (rule == null || !rule.IsValid || (rule.Operator != RuleComparisonOp.In && rule.Operator != RuleComparisonOp.Only))
                 continue;
 
             var fieldTokens = (rule.Field ?? string.Empty)
@@ -59,7 +68,7 @@ public static class RuleTreeEvaluator
 
     private static bool EvaluateRule(
         RuleClause rule,
-        Func<string, IEnumerable<string>> resolveFieldValues,
+        Func<RuleClause, string, IEnumerable<string>> resolveFieldValues,
         Func<string, string> normalizeValue)
     {
         var fields = (rule.Field ?? string.Empty)
@@ -72,7 +81,7 @@ public static class RuleTreeEvaluator
 
         var resolvedValues = new List<string>();
         foreach (var field in fields)
-            resolvedValues.AddRange(resolveFieldValues(field));
+            resolvedValues.AddRange(resolveFieldValues(rule, field));
 
         var fieldValues = NormalizeSet(resolvedValues, normalizeValue);
         var wantedValues = NormalizeSet(rule.Value, normalizeValue);
@@ -81,6 +90,9 @@ public static class RuleTreeEvaluator
         {
             RuleComparisonOp.In => wantedValues.Count > 0 && fieldValues.Overlaps(wantedValues),
             RuleComparisonOp.NotIn => wantedValues.Count == 0 || !fieldValues.Overlaps(wantedValues),
+            RuleComparisonOp.Only => wantedValues.Count > 0
+                                     && fieldValues.Count > 0
+                                     && fieldValues.IsSubsetOf(wantedValues),
             _ => false
         };
     }

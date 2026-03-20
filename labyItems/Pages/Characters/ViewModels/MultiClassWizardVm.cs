@@ -542,7 +542,7 @@ public sealed class MultiClassWizardVm : INotifyPropertyChanged
     {
         foreach (var rule in rules ?? Enumerable.Empty<RuleClause>())
         {
-            if (rule == null || rule.Operator != RuleComparisonOp.In)
+            if (rule == null || (rule.Operator != RuleComparisonOp.In && rule.Operator != RuleComparisonOp.Only))
                 continue;
 
             var field = NormalizeToken(rule.Field);

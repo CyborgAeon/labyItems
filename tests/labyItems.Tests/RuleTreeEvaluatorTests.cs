@@ -101,6 +101,43 @@ public sealed class RuleTreeEvaluatorTests
     }
 
     [Fact]
+    public void Evaluate_OnlyRule_RequiresResolvedValuesToBeSubset()
+    {
+        var rules = new List<RuleClause>
+        {
+            new()
+            {
+                Field = "Bracket",
+                Operator = RuleComparisonOp.Only,
+                Value = new List<string> { "Scout" }
+            }
+        };
+
+        var pureScout = RuleTreeEvaluator.Evaluate(
+            rules,
+            (_, field) => field.Equals("Bracket", StringComparison.OrdinalIgnoreCase)
+                ? new[] { "Scout" }
+                : Array.Empty<string>(),
+            NormalizeToken);
+
+        var mixedBrackets = RuleTreeEvaluator.Evaluate(
+            rules,
+            (_, field) => field.Equals("Bracket", StringComparison.OrdinalIgnoreCase)
+                ? new[] { "Scout", "Wizard" }
+                : Array.Empty<string>(),
+            NormalizeToken);
+
+        var noBracket = RuleTreeEvaluator.Evaluate(
+            rules,
+            (_, field) => Array.Empty<string>(),
+            NormalizeToken);
+
+        Assert.True(pureScout);
+        Assert.False(mixedBrackets);
+        Assert.False(noBracket);
+    }
+
+    [Fact]
     public void ContainsPositiveInValue_OnlyMatchesPositiveInRules()
     {
         var rules = new List<RuleClause>
@@ -116,6 +153,12 @@ public sealed class RuleTreeEvaluatorTests
                 Field = "PeopleType",
                 Operator = RuleComparisonOp.NotIn,
                 Value = new List<string> { "Amlesian" }
+            },
+            new()
+            {
+                Field = "Bracket",
+                Operator = RuleComparisonOp.Only,
+                Value = new List<string> { "Scout" }
             }
         };
 
@@ -130,6 +173,13 @@ public sealed class RuleTreeEvaluatorTests
             rules,
             field: "PeopleType",
             value: "Amlesian",
+            normalizeField: NormalizeToken,
+            normalizeValue: NormalizeToken));
+
+        Assert.True(RuleTreeEvaluator.ContainsPositiveInValue(
+            rules,
+            field: "Bracket",
+            value: "Scout",
             normalizeField: NormalizeToken,
             normalizeValue: NormalizeToken));
     }

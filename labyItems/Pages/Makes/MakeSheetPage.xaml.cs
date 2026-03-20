@@ -1,110 +1,237 @@
 using System.Text.RegularExpressions;
-using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Windows.Input;
 using labyItems.Models;
-using labyItems.Pages.Configs;
+using labyItems.Pages.Makes;
+using Microsoft.Maui.ApplicationModel.DataTransfer;
+using Microsoft.Maui.Storage;
+using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 
-namespace labyItems.Pages
+namespace labyItems.Pages;
+
+public partial class MakeSheetPage : ContentPage
 {
-    public partial class MakeSheetPage : ContentPage
+    private readonly MakeSheetViewModel _vm;
+
+    public MakeSheetPage(Character character)
     {
-        private readonly TaskCompletionSource<MakeSheet?> _tcs = new();
-        public Task<MakeSheet?> Completion => _tcs.Task;
-        public MakeSheetPage(Character character)
+        InitializeComponent();
+        _vm = new MakeSheetViewModel(character);
+        BindingContext = _vm;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        try
         {
-            InitializeComponent();
-
-            PlayerNameHeader.Text = character.PlayerName;
-            CharacterNameHeader.Text = character.Name;
-            CharacterClassHeader.Text = character.Class;
-
-            // BindingContext = new ManuAbilityConfig();
+            await _vm.EnsureLoadedAsync();
         }
-       public ObservableCollection<string> AbilityDescriptions { get; } = new();
-
-        private async void OnSearchAbility(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            var picked = await new MakeAbility().PickAsync(Navigation);
-            if (picked == null) return;
-
-            var delta = ExtractFirstPercent(picked.Description ?? string.Empty);
-            int.TryParse(FinalNormalChancePercent.Text, out int curr);
-            FinalNormalChancePercent.Text = (curr + delta).ToString();
-
-            var name = picked.Name ?? "Ability";
-            var bullet = delta != 0 ? $"• {name} (+{delta}%)" : $"• {name}";
-            AbilityDescriptions.Add(bullet);
+            await DisplayAlert("Make Sheet", $"Failed to load make data: {ex.Message}", "OK");
         }
+    }
 
-        private static int ExtractFirstPercent(string s)
+    private void OnBuildTabClicked(object? sender, EventArgs e)
+        => _vm.ActivateBuildTab();
+
+    private void OnConsequencesTabClicked(object? sender, EventArgs e)
+        => _vm.ActivateConsequencesTab();
+
+    private void OnCriticalTabClicked(object? sender, EventArgs e)
+        => _vm.ActivateCriticalTab();
+
+    private async void OnAddEffectClicked(object? sender, EventArgs e)
+    {
+        var error = _vm.AddEffect();
+        if (!string.IsNullOrWhiteSpace(error))
+            await DisplayAlert("Invalid Effect", error, "OK");
+    }
+
+    private void OnRemoveEffectClicked(object? sender, EventArgs e)
+    {
+        var row = (sender as Button)?.CommandParameter as MakeEffectRowVm
+                  ?? (sender as BindableObject)?.BindingContext as MakeEffectRowVm;
+        _vm.RemoveEffect(row);
+    }
+
+    private async void OnAddManualBonusClicked(object? sender, EventArgs e)
+    {
+        var error = _vm.AddManualBonus();
+        if (!string.IsNullOrWhiteSpace(error))
+            await DisplayAlert("Invalid Bonus", error, "OK");
+    }
+
+    private void OnRemoveManualBonusClicked(object? sender, EventArgs e)
+    {
+        var row = ResolveManualBonusRow(sender);
+        _vm.RemoveManualBonus(row);
+    }
+
+    private async void OnSearchAbilityClicked(object? sender, EventArgs e)
+    {
+        try
         {
-            var m = Regex.Match(s, @"([+-]?\d+)\s*%");
-            if (m.Success && int.TryParse(m.Groups[1].Value, out var n)) return n;
-            // fallback: capture plain integer if you sometimes store “+2” without %
-            m = Regex.Match(s, @"^[\s\p{P}]*([+-]?\d+)\b");
-            return m.Success && int.TryParse(m.Groups[1].Value, out n) ? n : 0;
+            _vm.SelectedBonusMode = "Manual";
+            var picked = await new MakeAbility(_vm.Draft).PickManyAsync(Navigation);
+            if (picked.Count == 0)
+                return;
+
+            foreach (var ability in picked)
+            {
+                _vm.AddManualBonusFromAbility(
+                    ability.Name,
+                    ability.Description,
+                    ability.ToAbilityResult(),
+                    ability.ChoiceSetRefs);
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ability Search", $"Failed to apply ability: {ex.Message}", "OK");
+        }
+    }
+
+    private async void OnEditManualBonusClicked(object? sender, EventArgs e)
+    {
+        var row = ResolveManualBonusRow(sender);
+        if (row == null)
+            return;
+
+        try
+        {
+            var editors = (await _vm.GetManualBonusChoiceSetEditorsAsync(row))
+                .Where(editor => editor.HasOptions)
+                .ToList();
+            if (editors.Count == 0)
+                return;
+
+            var selectedEditor = await PickChoiceSetEditorAsync(editors);
+            if (selectedEditor == null)
+                return;
+
+            var selectedOption = await PickChoiceSetOptionAsync(selectedEditor);
+            if (selectedOption == null)
+                return;
+
+            _vm.SetManualBonusSpecialisation(
+                row,
+                selectedEditor.ChoiceSetRef,
+                selectedEditor.Title,
+                selectedOption.Key,
+                selectedOption.Label);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Specialisation", $"Failed to update specialisation: {ex.Message}", "OK");
+        }
+    }
+
+    private async void OnManualBonusInfoClicked(object? sender, EventArgs e)
+    {
+        var row = ResolveManualBonusRow(sender);
+        if (row?.Ability == null)
+            return;
+
+        await Navigation.PushAsync(new AbilityCardPage(row.Ability));
+    }
+
+    private async void OnExportMakeSheetClicked(object? sender, EventArgs e)
+    {
+        var exportText = _vm.BuildExportText();
+
+        try
+        {
+            var safeCharacter = Regex.Replace(
+                string.IsNullOrWhiteSpace(_vm.CharacterName) ? "character" : _vm.CharacterName,
+                @"[^A-Za-z0-9_-]+",
+                "-");
+            var filename = $"{safeCharacter}-make-sheet-{DateTime.UtcNow:yyyyMMdd-HHmmss}.txt";
+            var path = Path.Combine(FileSystem.CacheDirectory, filename);
+            await File.WriteAllTextAsync(path, exportText);
+
+            await Share.Default.RequestAsync(new ShareFileRequest
+            {
+                Title = "Export Make Sheet",
+                File = new ShareFile(path)
+            });
+        }
+        catch
+        {
+            try
+            {
+                await Clipboard.Default.SetTextAsync(exportText);
+                await DisplayAlert(
+                    "Export Make Sheet",
+                    "Could not open share sheet. The make sheet export was copied to your clipboard.",
+                    "OK");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Export Make Sheet", $"Export failed: {ex.Message}", "OK");
+            }
+        }
+    }
+
+    private static MakeBonusRowVm? ResolveManualBonusRow(object? sender)
+        => (sender as Button)?.CommandParameter as MakeBonusRowVm
+           ?? (sender as BindableObject)?.BindingContext as MakeBonusRowVm;
+
+    private async Task<MakeBonusChoiceSetEditorVm?> PickChoiceSetEditorAsync(
+        IReadOnlyList<MakeBonusChoiceSetEditorVm> editors)
+    {
+        if (editors.Count == 0)
+            return null;
+
+        if (editors.Count == 1)
+            return editors[0];
+
+        var labels = editors
+            .Select(editor => editor.Title)
+            .ToArray();
+        var pickedTitle = await DisplayActionSheet(
+            "Select Specialisation",
+            "Cancel",
+            null,
+            labels);
+        if (string.IsNullOrWhiteSpace(pickedTitle)
+            || string.Equals(pickedTitle, "Cancel", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
         }
 
-        private async void OnRecalcClicked(object sender, EventArgs e)
+        return editors.FirstOrDefault(editor =>
+            string.Equals(editor.Title, pickedTitle, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task<MakeBonusChoiceSetOptionVm?> PickChoiceSetOptionAsync(MakeBonusChoiceSetEditorVm editor)
+    {
+        if (editor.Options.Count == 0)
+            return null;
+
+        var entries = editor.Options
+            .Select(option => new
+            {
+                Option = option,
+                Display = string.Equals(option.Key, editor.SelectedOptionKey, StringComparison.OrdinalIgnoreCase)
+                    ? $"{option.Label} (Current)"
+                    : option.Label
+            })
+            .ToList();
+
+        var picked = await DisplayActionSheet(
+            editor.Title,
+            "Cancel",
+            null,
+            entries.Select(entry => entry.Display).ToArray());
+        if (string.IsNullOrWhiteSpace(picked)
+            || string.Equals(picked, "Cancel", StringComparison.OrdinalIgnoreCase))
         {
-            Completion.Result.FinalNormalChancePercent = Completion.Result.ComputeNormalFinalChance();
-            OnPropertyChanged(nameof(Completion.Result));
+            return null;
         }
 
-        private bool TryParsePercent(string input, out int value)
-        {
-            input = input.Trim().Replace("%", string.Empty);
-            if (input.StartsWith("+")) input = input.Substring(1);
-            return int.TryParse(input, out value);
-        }
-        // private string BuildSummary(MakeAbility cfg)
-        // {
-        //     totalBonus
-        // }
+        return entries
+            .FirstOrDefault(entry => string.Equals(entry.Display, picked, StringComparison.Ordinal))
+            ?.Option;
     }
 }
-            // var query = await _page.DisplayPromptAsync("Search ability", "Type a keyword (by index)", "Search", "Cancel", "e.g. Rebirth");
-            // if (string.IsNullOrWhiteSpace(query)) return;
-
-            // // 2) Query dictionary (by index, any table)
-            // var hits = await GeneralTableService.SearchByIndexAsync(query);
-            // if (hits.Count == 0)
-            // {
-            //     await _page.DisplayAlert("No results", $"No abilities found for '{query}'.", "OK");
-            //     return;
-            // }
-
-            // // 3) Let user pick a hit (ActionSheet shows titles)
-            // var options = hits.Select(h => $"Table {h.Table}: {h.Index}").ToList();
-            // var pickedText = await _page.DisplayActionSheet("Pick ability", "Cancel", null, options.ToArray());
-            // if (string.IsNullOrWhiteSpace(pickedText) || pickedText == "Cancel") return;
-
-            // var picked = hits[options.IndexOf(pickedText)];
-
-            // // 4) Ask for modifier (e.g., 2 or +2%)
-            // var modText = await _page.DisplayPromptAsync("Modifier", "Enter modifier percent (e.g., 2 or +2%)", "OK", "Cancel", keyboard: Keyboard.Numeric);
-            // if (string.IsNullOrWhiteSpace(modText)) return;
-
-            // if (!TryParsePercent(modText, out var modPercent))
-            // {
-            //     await _page.DisplayAlert("Invalid value", "Please enter a number like 2 or +2%", "OK");
-            //     return;
-            // }
-
-            // // 5) Apply modifier to final chance
-            // Sheet.FinalNormalChancePercent += modPercent;
-
-            // // 6) Append bullet line: "• Name (+2%)"
-            // var bullet = $"• {picked.Index} (+{modPercent}%)";
-            // Sheet.AbilityDescriptions.Add(bullet);
-
-            // // Optionally: include table/cost in description
-            // // Sheet.AbilityDescriptions.Add($"   (Table {picked.Table}, Cost {picked.Cost})");
-
-            // // Notify bindings
-            // OnPropertyChanged(nameof(Sheet));
-        // }

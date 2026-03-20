@@ -95,12 +95,11 @@ public partial class DictionarySearchBar<TValue>
         _overlayCollection = new CollectionView
         {
             ItemsLayout = new LinearItemsLayout(ItemsLayoutOrientation.Vertical) { ItemSpacing = 0 },
-            SelectionMode = SelectionMode.Single,
+            SelectionMode = SelectionMode.None,
             BackgroundColor = Colors.Transparent
         };
 
         _overlayCollection.ItemsSource = _filteredResults;
-        _overlayCollection.SelectionChanged += OnResultSelected;
         _overlayCollection.ItemTemplate = BuildResultTemplate();
         _overlayContainer.Content = _overlayCollection;
         _overlayContainer.ZIndex = 1;
@@ -209,9 +208,6 @@ public partial class DictionarySearchBar<TValue>
 
     private void DismissLocalOverlay()
     {
-        if (_overlayCollection != null)
-            _overlayCollection.SelectionChanged -= OnResultSelected;
-
         if (_overlayHost != null && _overlay != null && _overlayHost.Children.Contains(_overlay))
             _overlayHost.Children.Remove(_overlay);
 
