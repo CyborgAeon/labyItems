@@ -1547,13 +1547,14 @@
     "cost": 50,
     "index": "Casting Stamina 4",
     "desc": "Casting Stamina 4 +24 tblp (from +18) for casting damage only",
-    "sourceBook": "Classes"
+    "sourceBook": "Classes",
+    "preReqs": ["Casting Stamina 3", "Casting Stamina 2", "Casting Stamina 1"]
   },
   {
     "available": [],
     "table": 7,
     "cost": 50,
-    "index": "Live to Minus 1: 6 TBLP",
+    "index": "Live to Minus 1",
     "desc": "Live to -6 tblp",
     "sourceBook": "Classes"
   },
@@ -2097,7 +2098,11 @@
     "table": 10,
     "cost": 50,
     "index": "Utilise Neuronic Items",
-    "preReqs": ["Active Neuronic Tree", "Passive Neuronic Tree"],
+    "preReqs": [
+      "Active Neuronic Tree",
+      "Passive Neuronic Tree",
+      "Recognise Neuronics"
+    ],
     "desc": "Gains Utilise Neuronic Items.",
     "sourceBook": "Classes"
   },
@@ -2273,7 +2278,7 @@
     "table": 12,
     "cost": 50,
     "index": "3rd Resistance to Causing",
-    "preReqs": ["2nc Resistance to Causing", "1st Resistance to Causing"],
+    "preReqs": ["2nd Resistance to Causing", "1st Resistance to Causing"],
     "desc": "",
     "sourceBook": "Classes"
   },
@@ -2386,7 +2391,7 @@
     "index": "Toughened Skin +5 PAC",
     "desc": "Toughened Skin, +5 P.A.C. (total) from +4",
     "sourceBook": "Races",
-    "preReqs": ["Toughened Skin +4 PAC"]
+    "preReqs": ["Toughened Skin +4 PAC", "Toughened Skin +3 PAC"]
   },
   {
     "available": [
@@ -2401,7 +2406,11 @@
     "index": "Toughened Skin +6 PAC",
     "desc": "Toughened Skin, +6 P.A.C. (total) from +5",
     "sourceBook": "Races",
-    "preReqs": ["Toughened Skin +5 PAC"]
+    "preReqs": [
+      "Toughened Skin +5 PAC",
+      "Toughened Skin +4 PAC",
+      "Toughened Skin +3 PAC"
+    ]
   },
   {
     "available": [
@@ -2763,7 +2772,7 @@
     "index": "Extra Regeneration 3",
     "desc": "[3] Regeneration is now increased to each location, this does not increase the amount of TBLP regained, only locations, from Triple Regeneration rate.",
     "sourceBook": "Races",
-    "preReqs": ["Extra Regeneration 2"]
+    "preReqs": ["Extra Regeneration 2", "Extra Regeneration 1"]
   },
   {
     "available": [
@@ -2932,7 +2941,7 @@
     "index": "+6 Abdomen Hits",
     "desc": "+6 (total) from +4 locational hits to abdomen",
     "sourceBook": "Races",
-    "preReqs": ["+4 Abdomen Hits"]
+    "preReqs": ["+4 Abdomen Hits", "+2 Abdomen Hits"]
   },
   {
     "available": [
@@ -3112,9 +3121,13 @@
     "table": 9,
     "cost": 125,
     "index": "Extra Regeneration 4",
-    "desc": "[4] Amount of tblp Regeneration gained now equals sum of damage cured to locations. From [3]",
+    "desc": "Amount of tblp Regeneration gained now equals sum of damage cured to locations.",
     "sourceBook": "Races",
-    "preReqs": ["Extra Regeneration 3"]
+    "preReqs": [
+      "Extra Regeneration 3",
+      "Extra Regeneration 2",
+      "Extra Regeneration 1"
+    ]
   },
   {
     "available": [
@@ -3127,9 +3140,14 @@
     "table": 9,
     "cost": 75,
     "index": "Extra Regeneration 5",
-    "desc": "[5] Amount of tblp Regeneration gained now equals the amount of potential locational curing per 5mins, from [4] eg with x3 rate and 7 locs would equal 21tblp.",
+    "desc": "Amount of tblp Regeneration gained now equals the amount of potential locational curing per 5mins, from [4] eg with x3 rate and 7 locs would equal 21tblp.",
     "sourceBook": "Races",
-    "preReqs": ["Extra Regeneration 4"]
+    "preReqs": [
+      "Extra Regeneration 4",
+      "Extra Regeneration 3",
+      "Extra Regeneration 2",
+      "Extra Regeneration 1"
+    ]
   },
   {
     "available": [
@@ -3519,7 +3537,10 @@
     "index": "Immunity to Voice of Retribution",
     "desc": "Immunity to Voice of Retribution from above",
     "sourceBook": "Races",
-    "preReqs": ["Immunity to Strongholds"],
+    "preReqs": [
+      "Immunity to Strongholds",
+      "Immunity to Protection from Spirits"
+    ],
     "abilityRef": "ability.merged.immunity-to-voice-of-retribution"
   },
   {
@@ -4628,7 +4649,7 @@
     "index": "Bashaw (from BayPasha)",
     "desc": "Bashaw (from BayPasha) - Has acquired the status of Bashaw within the Confederacy and should be treated with such respect. This status must be acquired through CC contracts.",
     "sourceBook": "Races",
-    "preReqs": ["BayPasha (from Pasha)"]
+    "preReqs": ["BayPasha (from Pasha)", "Pasha"]
   },
   {
     "available": [
@@ -4707,7 +4728,7 @@
     "index": "Fifth Wind",
     "desc": "The Fifth Wind (From the Sixth Wind) – Now gains + 3 MAC (Total)",
     "sourceBook": "Races",
-    "preReqs": ["Sixth Wind"]
+    "preReqs": ["Sixth Wind", "Seventh Wind"]
   },
   {
     "available": [
@@ -4874,7 +4895,7 @@
     "table": 4,
     "cost": 30,
     "index": "Knowing the Cunning Enemy 1/day",
-    "desc": "Knowing the Cunning Enemy 1/day – Acts as per Trap Wary but only vs. Magical Effects/Traps. If Trap Wary is already owned this upgrades it to Enhanced Trap Wary.",
+    "desc": "Acts as per Trap Wary but only vs. Magical Effects/Traps. If Trap Wary is already owned this upgrades it to Enhanced Trap Wary.",
     "sourceBook": "Races",
     "CanAddMultiple": true,
     "maxAvailable": "*"
@@ -4891,7 +4912,7 @@
     "table": 4,
     "cost": 60,
     "index": "Stability in the Flow of Magic",
-    "desc": "Stability in the Flow of Magic – Grants Immunity to magical Bind, Entangle, and Trip/Slip effects.",
+    "desc": "Immunity to magical Bind, Entangle, and Trip/Slip effects.",
     "sourceBook": "Races"
   },
   {
@@ -4921,7 +4942,7 @@
     "table": 4,
     "cost": 50,
     "index": "Ritualistic Casting",
-    "desc": "Ritualistic Casting - For each minute spent in preparation and ritual activities, including at least 1 prop for each minute of the rite, the casting damage for the next evocation/spell is reduced by one to a minimum of 0. This cannot be used to assist in the reading or writing of scrolls nor can it be used in the learning of new glyphs",
+    "desc": "For each minute spent in preparation and ritual activities, including at least 1 prop for each minute of the rite, the casting damage for the next evocation/spell is reduced by one to a minimum of 0. This cannot be used to assist in the reading or writing of scrolls nor can it be used in the learning of new glyphs",
     "sourceBook": "Races"
   },
   {
@@ -4936,7 +4957,7 @@
     "table": 5,
     "cost": 40,
     "index": "Watching the Wind Trail 1/day",
-    "desc": "Watching the Wind Trail 1/day - Through the use of a brief ritual of casting stones, tracing lines in blood or the similar, lasting no less than 1 minute, the user can ask three yes or no questions to be answered by the referee. This is a magical informational ability but it does not interfere with the users spiritual powers.",
+    "desc": "Through the use of a brief ritual of casting stones, tracing lines in blood or the similar, lasting no less than 1 minute, the user can ask three yes or no questions to be answered by the referee. This is a magical informational ability but it does not interfere with the users spiritual powers.",
     "sourceBook": "Races",
     "CanAddMultiple": true,
     "maxAvailable": "*"
@@ -4952,9 +4973,9 @@
     "table": 6,
     "cost": 100,
     "index": "Fourth Wind",
-    "desc": "The Fourth Wind (From the Fifth wind) – Now gains + 4 MAC (Total)",
+    "desc": "Now gains + 4 MAC (Total)",
     "sourceBook": "Races",
-    "preReqs": ["Fifth Wind"]
+    "preReqs": ["Fifth Wind", "Sixth Wind", "Seventh Wind"]
   },
   {
     "available": [
@@ -4968,7 +4989,7 @@
     "table": 7,
     "cost": 40,
     "index": "Extra Improved Laminar Armour",
-    "desc": "Extra Improved Laminar Armour – From Improved Laminar Armour. Laminar armour now grants an additional 2 points of PAC (total)",
+    "desc": "From Improved Laminar Armour. Laminar armour now grants an additional 2 points of PAC (total)",
     "sourceBook": "Races",
     "preReqs": ["Improved Laminar"]
   },
@@ -4984,7 +5005,7 @@
     "table": 7,
     "cost": 30,
     "index": "The Sharp Wind",
-    "desc": "The Sharp Wind – Gains Accuracy vs. Worn Armour when using HP weapons",
+    "desc": "Gains Accuracy vs. Worn Armour when using HP weapons",
     "sourceBook": "Races"
   },
   {
@@ -5037,6 +5058,31 @@
         "Field": "PeopleType",
         "Operator": "In",
         "Value": ["Ishmaic"]
+      },
+      {
+        "Field": "Race",
+        "Operator": "NotIn",
+        "Value": [
+          "Elf",
+          "Faerie",
+          "Athfanal",
+          "Calabrim",
+          "Half Elf",
+          "Half Athfanal",
+          "Blauz"
+        ]
+      },
+      { "Field": "Bracket", "Operator": "NotIn", "Value": ["🧙 Wizard"] },
+      {
+        "Field": "AnyClass",
+        "Operator": "NotIn",
+        "Value": ["Spiritual Mancer"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "NotIn",
+        "Value": ["Ninja-Magic", "Dabbler", "Super Dabbler", "Tinker"],
+        "SpecialistionKey": "Tendency"
       }
     ],
     "table": 8,
@@ -5044,7 +5090,7 @@
     "index": "Third Wind",
     "desc": "The Third Wind (From the Fourth Wind) – Now Gains ½ damage from all purely magical attacks. Mana users may not benefit from this.",
     "sourceBook": "Races",
-    "preReqs": ["Fourth Wind"]
+    "preReqs": ["Fourth Wind", "Fifth Wind", "Sixth Wind", "Seventh Wind"]
   },
   {
     "available": [
@@ -5139,6 +5185,26 @@
         "Field": "PeopleType",
         "Operator": "In",
         "Value": ["Ishmaic"]
+      },
+      {
+        "Field": "Race",
+        "Operator": "NotIn",
+        "Value": [
+          "Elf",
+          "Faerie",
+          "Athfanal",
+          "Calabrim",
+          "Half Elf",
+          "Half Athfanal",
+          "Blauz"
+        ]
+      },
+      { "Field": "Bracket", "Operator": "NotIn", "Value": ["🧙 Wizard"] },
+      {
+        "Field": "Specialisation",
+        "Operator": "NotIn",
+        "Value": ["Ninja-Magic", "Dabbler", "Super Dabbler", "Tinker"],
+        "SpecialistionKey": "Tendency"
       }
     ],
     "table": 10,
@@ -5146,7 +5212,13 @@
     "index": "Second Wind",
     "desc": "The Second Wind (From the Third Wind) – Is now deemed to have as many levels of resistances as required to resist any magical level based effect. Mana users may not benefit from this.",
     "sourceBook": "Races",
-    "preReqs": ["Third Wind"]
+    "preReqs": [
+      "Third Wind",
+      "Fourth Wind",
+      "Fifth Wind",
+      "Sixth Wind",
+      "Seventh Wind"
+    ]
   },
   {
     "available": [
@@ -5185,6 +5257,26 @@
         "Field": "PeopleType",
         "Operator": "In",
         "Value": ["Ishmaic"]
+      },
+      {
+        "Field": "Race",
+        "Operator": "NotIn",
+        "Value": [
+          "Elf",
+          "Faerie",
+          "Athfanal",
+          "Calabrim",
+          "Half Elf",
+          "Half Athfanal",
+          "Blauz"
+        ]
+      },
+      { "Field": "Bracket", "Operator": "NotIn", "Value": ["🧙 Wizard"] },
+      {
+        "Field": "Specialisation",
+        "Operator": "NotIn",
+        "Value": ["Ninja-Magic", "Dabbler", "Super Dabbler", "Tinker"],
+        "SpecialistionKey": "Tendency"
       }
     ],
     "table": 12,
@@ -5192,7 +5284,14 @@
     "index": "First Wind",
     "desc": "The First Wind (From the Second Wind) – May now choose whether to be affected by a non-level based and non-damaging magical effect. If the effect has a damaging and non-damaging component this can be applied to the non-damaging aspect. If the effect has additional power bases then this may only be applied IF the owner is immune to the other power bases. Mana users may not benefit from this.",
     "sourceBook": "Races",
-    "preReqs": ["Second Wind"]
+    "preReqs": [
+      "Second Wind",
+      "Third Wind",
+      "Fourth Wind",
+      "Fifth Wind",
+      "Sixth Wind",
+      "Seventh Wind"
+    ]
   },
   {
     "available": [
@@ -5205,7 +5304,7 @@
     "table": 1,
     "cost": 30,
     "index": "Light of Glass",
-    "desc": "Light of Glass - The Priest's alignment becomes Neutral from Evil. In addition the previous miracle list is discarded and a new one is created which complies with a neutral alignment as per the rules for Labyrinthian humans. Any innates of miracles bought before this ability was acquired are retained even if they are no longer on the characters miracle list or if the miracle was of evil alignment. If an evil miracle innate is used, then the character cannot use any goodly aligned miracles for the rest of the day, as the spirits of light turn their face from this troubled priest, *however the cost of this ability is multiplied by the highest table from which the Priest can buy abilities E.g. if the Priest can buy from table four, this ability costs 120pts'",
+    "desc": "The Priest's alignment becomes Neutral from Evil. In addition the previous miracle list is discarded and a new one is created which complies with a neutral alignment as per the rules for Labyrinthian humans. Any innates of miracles bought before this ability was acquired are retained even if they are no longer on the characters miracle list or if the miracle was of evil alignment. If an evil miracle innate is used, then the character cannot use any goodly aligned miracles for the rest of the day, as the spirits of light turn their face from this troubled priest, *however the cost of this ability is multiplied by the highest table from which the Priest can buy abilities E.g. if the Priest can buy from table four, this ability costs 120pts'",
     "sourceBook": "Races",
     "CanAddMultiple": true,
     "maxAvailable": "*"
@@ -5253,7 +5352,7 @@
     "table": 1,
     "cost": 20,
     "index": "Baron",
-    "desc": "Baron – The individual is a Baron within the Baronies with the rights it bestows. The status must be acquired via CC contract.",
+    "desc": "The individual is a Baron within the Baronies with the rights it bestows. The status must be acquired via CC contract.",
     "sourceBook": "Races"
   },
   {
@@ -5267,7 +5366,7 @@
     "table": 1,
     "cost": 30,
     "index": "Graf (From Baron)",
-    "desc": "Graf (From Baron) – The individual is a Graf within the Baronies with the rights it bestows. The status must be acquired via CC contract.",
+    "desc": "The individual is a Graf within the Baronies with the rights it bestows. The status must be acquired via CC contract.",
     "sourceBook": "Races",
     "preReqs": ["Baron"]
   },
@@ -5282,7 +5381,7 @@
     "table": 2,
     "cost": 40,
     "index": "Leathery Skin",
-    "desc": "Leathery Skin - A Ggrutuck's tough, leathery skin is almost as good as armour. Once this ability is bought the character's skin is counted as innate PAC 2 which however does not stack with any armour worn.",
+    "desc": "A Ggrutuck's tough, leathery skin is almost as good as armour. Once this ability is bought the character's skin is counted as innate PAC 2 which however does not stack with any armour worn.",
     "sourceBook": "Races"
   },
   {
@@ -5331,7 +5430,7 @@
     "CanAddMultiple": true,
     "maxAvailable": "*",
     "index": "Strengthening the Blood Ties",
-    "desc": "Strengthening the Blood Ties - Some have closer levels of kinship with their powerful ancestors than others; each purchase of this ability grants one more daily use of their ancestor's power as gained at 6th level. It may only be purchased once for every 1000pts or fraction thereof the character possesses.",
+    "desc": "Some have closer levels of kinship with their powerful ancestors than others; each purchase of this ability grants one more daily use of their ancestor's power as gained at 6th level. It may only be purchased once for every 1000pts or fraction thereof the character possesses.",
     "sourceBook": "Races"
   },
   {
@@ -5361,7 +5460,7 @@
     "table": 7,
     "cost": 60,
     "index": "Loud Screamer",
-    "desc": "Loud Screamer – Terror scream ability is no longer level based.",
+    "desc": "Terror scream ability is no longer level based.",
     "sourceBook": "Races"
   },
   {
@@ -5375,7 +5474,7 @@
     "table": 7,
     "cost": 80,
     "index": "Mighty Thews",
-    "desc": "Mighty Thews – The Ggrutuck are a strong and naturally resilient race. Once purchased a Ggrutuck’s locational life is calculated as half their permanent TBLP (before Items and temporary abilities).",
+    "desc": "The Ggrutuck are a strong and naturally resilient race. Once purchased a Ggrutuck’s locational life is calculated as half their permanent TBLP (before Items and temporary abilities).",
     "sourceBook": "Races"
   },
   {
@@ -5391,7 +5490,7 @@
     "CanAddMultiple": true,
     "maxAvailable": "*",
     "index": "Snatched Vitae",
-    "desc": "Snatched Vitae - A single Consume Primal Vitae may now be used with a single non-damaging blow, rather than with 30 seconds contact.",
+    "desc": "A single Consume Primal Vitae may now be used with a single non-damaging blow, rather than with 30 seconds contact.",
     "sourceBook": "Races"
   },
   {
@@ -5410,7 +5509,7 @@
     "table": 8,
     "cost": 60,
     "index": "Wider Blood Ties",
-    "desc": "Wider Blood Ties - Those with enough power may find themselves eventually able to exploit even tenuous and distant links to their ancestors, Purchase of this ability must name a single ancestor of the four which are available as a choice to Barony Humans, and gives the buyer recognised kinship with that ancestor also, granting one use of their ability. The character also becomes capable of buying more innate ability uses as per strengthening the Blood-Ties as above, although they may never have more uses of their secondary ancestor's abilities than their primary ancestor's. This ability may only be bought once, granting a secondary ancestral relationship",
+    "desc": "Those with enough power may find themselves eventually able to exploit even tenuous and distant links to their ancestors, Purchase of this ability must name a single ancestor of the four which are available as a choice to Barony Humans, and gives the buyer recognised kinship with that ancestor also, granting one use of their ability. The character also becomes capable of buying more innate ability uses as per strengthening the Blood-Ties as above, although they may never have more uses of their secondary ancestor's abilities than their primary ancestor's. This ability may only be bought once, granting a secondary ancestral relationship",
     "sourceBook": "Races"
   },
   {
@@ -5424,7 +5523,7 @@
     "table": 9,
     "cost": 60,
     "index": "Richness of Vitae",
-    "desc": "Richness of Vitae – Consume Primal Vitae can now cure the user from any amount of disease or poison they are suffering, or it may cure 6/2 per level of resistance of the target. This may not be used in conjunction with Snatched Vitae.",
+    "desc": "Consume Primal Vitae can now cure the user from any amount of disease or poison they are suffering, or it may cure 6/2 per level of resistance of the target. This may not be used in conjunction with Snatched Vitae.",
     "sourceBook": "Races"
   },
   {
@@ -5438,7 +5537,7 @@
     "table": 10,
     "cost": 100,
     "index": "Pillage of Vitae (from Richness of",
-    "desc": "Pillage of Vitae (from Richness of Vitae) – Consume Primal Vitae may now be used to cure 6 TBLP and 6 points of locational damage (spread as desired) per resistance level of the target. This may not be used with Snatch Vitae.",
+    "desc": "Consume Primal Vitae may now be used to cure 6 TBLP and 6 points of locational damage (spread as desired) per resistance level of the target. This may not be used with Snatch Vitae.",
     "sourceBook": "Races",
     "preReqs": ["Richness of Vitae"]
   },
@@ -5455,7 +5554,7 @@
     "CanAddMultiple": true,
     "maxAvailable": "*",
     "index": "Master",
-    "desc": "Master – Acts as a Mantic (Bronze and Evil Spirit) Spiritual Mastery effecting 8 levels and below, however it only lasts 5 minutes. Requires 30 seconds talking to the target to trigger.",
+    "desc": "Acts as a Mantic (Bronze and Evil Spirit) Spiritual Mastery effecting 8 levels and below, however it only lasts 5 minutes. Requires 30 seconds talking to the target to trigger.",
     "sourceBook": "Races"
   },
   {
@@ -5471,7 +5570,7 @@
     "table": 1,
     "cost": 10,
     "index": "Caste Peasant",
-    "desc": "orn to the most common Caste. Heroes often rise from this Caste to glory. Unlike the peasants of the Empire they are sometimes infused with vitae. A person choosing this can either retain their res chance, or gain benefits as per the “Peon” ability.",
+    "desc": "Born to the most common Caste. Heroes often rise from this Caste to glory. Unlike the peasants of the Empire they are sometimes infused with vitae. A person choosing this can either retain their res chance, or gain benefits as per the “Peon” ability.",
     "sourceBook": "Races"
   },
   {
@@ -6324,7 +6423,7 @@
     ],
     "table": 2,
     "cost": 35,
-    "preReqs": ["Potion Stamina 2"],
+    "preReqs": ["Potion Stamina 2", "Potion Stamina 1"],
     "index": "Potion Stamina 3",
     "desc": "Now has 18 tblp total for potion kick-outs.",
     "sourceBook": "At the sharp end"
@@ -6681,7 +6780,7 @@
     ],
     "table": 5,
     "cost": 60,
-    "preReqs": ["Spirit-Sense"],
+    "preReqs": ["Spirit Sense"],
     "index": "Spiritual Vigilance",
     "desc": "May now perceive spiritual creatures walking in walls, floors or similar; is considered to be able to see a rough outline of them at all times.",
     "sourceBook": "At the sharp end"
@@ -6890,7 +6989,7 @@
     ],
     "table": 7,
     "cost": 100,
-    "preReqs": ["2nd Backstab"],
+    "preReqs": ["2nd Backstab", "1st Backstab"],
     "index": "3rd Backstab",
     "desc": "Now adds +3 grades of damage to attacks from behind in the same way as basic Backstab.",
     "sourceBook": "At the sharp end"
@@ -7257,7 +7356,11 @@
     ],
     "table": 8,
     "cost": 40,
-    "preReqs": ["Recognise Neuronics"],
+    "preReqs": [
+      "Active Neuronic Tree",
+      "Passive Neuronic Tree",
+      "Recognise Neuronics"
+    ],
     "index": "Utilise Neuronic Items",
     "desc": "May now use Neuronic items with the same facility as a Neuronic class.",
     "sourceBook": "At the sharp end"
@@ -7312,7 +7415,7 @@
     ],
     "table": 8,
     "cost": 60,
-    "preReqs": ["Immunity To Informational Miracles"],
+    "preReqs": ["Immunity to Informational Miracles"],
     "index": "Spiritually Cloaked",
     "desc": "Grants immunity to all spiritual informational effects. Recognise Spirit still gives a Yes/No answer. Does not grant immunity to spiritual sight but would stop it yielding extra information such as alignment.",
     "sourceBook": "At the sharp end"
@@ -7332,7 +7435,7 @@
     ],
     "table": 8,
     "cost": 60,
-    "preReqs": ["Immunity To Informational Spells"],
+    "preReqs": ["Immunity to Informational Spells"],
     "index": "Magically Cloaked",
     "desc": "Grants immunity to all magical informational effects. Recognise Mana still gives a Yes/No answer. Does not grant immunity to magical sights but would stop it yielding extra information such as mana colour.",
     "sourceBook": "At the sharp end"
@@ -7471,7 +7574,7 @@
     ],
     "table": 9,
     "cost": 50,
-    "preReqs": ["Change Appearance"],
+    "preReqs": ["Change Appearance", "Disguise"],
     "index": "Greater Change Appearance",
     "desc": "No longer needs to apply base race makeup; however the quantity and quality of the disguise makeup worn should at least match all the makeup and costume restrictions possessed.",
     "sourceBook": "At the sharp end"
@@ -7511,7 +7614,7 @@
     ],
     "table": 9,
     "cost": 60,
-    "preReqs": ["Stealth"],
+    "preReqs": ["Stealth", "Stalker:3"],
     "index": "Greater Stealth",
     "desc": "May now 1/day move at slow zombie speed without breaking the effect of the Stealth innate. It is still broken should the scout break any other conditions, such as talking or attacking.",
     "sourceBook": "At the sharp end",
@@ -7532,7 +7635,7 @@
     ],
     "table": 9,
     "cost": 100,
-    "preReqs": ["2nd Backstab"],
+    "preReqs": ["2nd Backstab", "1st Backstab"],
     "index": "3rd Backstab (Kallah Beggar)",
     "desc": "Now adds +3 grades of damage to attacks from behind in the same way as basic Backstab.",
     "sourceBook": "At the sharp end"
@@ -7552,7 +7655,13 @@
     ],
     "table": 9,
     "cost": 70,
-    "preReqs": ["5th Extra Level of Life"],
+    "preReqs": [
+      "5th Extra Level of Life",
+      "4th Extra Level of Life",
+      "3rd Extra Level of Life",
+      "2nd Extra Level of Life",
+      "1st Extra Level of Life"
+    ],
     "index": "Non-Academis",
     "desc": "Grants 6th Extra Level of Life, but is not available if the character has entered into any other bracket bar Warrior.",
     "sourceBook": "At the sharp end"
@@ -7893,6 +8002,7 @@
       "Perception",
       "Supernatural Perception",
       "Locational Sniff",
+      "Discern Smell",
       "Acute Hearing",
       "Sixth Sense",
       "DAC 7 or more"
@@ -7931,7 +8041,7 @@
     ],
     "table": 10,
     "cost": 100,
-    "preReqs": ["Ghost"],
+    "preReqs": ["Ghost", "appropriate immunity to informational effect"],
     "index": "Super Ghost",
     "desc": "May now cross wardings that are warding barriers under the same conditions as Ghost.",
     "sourceBook": "At the sharp end"
@@ -7961,7 +8071,7 @@
     ],
     "table": 10,
     "cost": 120,
-    "preReqs": ["2nd Backstab"],
+    "preReqs": ["2nd Backstab", "1st Backstab"],
     "index": "3rd Backstab (Any)",
     "desc": "Now adds +3 grades of damage to attacks from behind in the same way as basic Backstab.",
     "sourceBook": "At the sharp end"
@@ -7976,7 +8086,7 @@
     ],
     "table": 10,
     "cost": 100,
-    "preReqs": ["Greater Surprise Blows"],
+    "preReqs": ["Greater Surprise Blows", "Surprise Blow"],
     "index": "Cascade",
     "desc": "May now apply Surprise Blow to the second blow of each hand. This functions with Two Isn’t as Good as One, meaning the first two blows with a B class weapon are Greater Surprise and the third and fourth blows Surprise Blows.",
     "sourceBook": "At the sharp end"
@@ -7991,7 +8101,11 @@
     ],
     "table": 10,
     "cost": 50,
-    "preReqs": ["Magically Cloaked", "Solitaire"],
+    "preReqs": [
+      "Magically Cloaked",
+      "Immunity to Informational Spells",
+      "Solitaire"
+    ],
     "index": "Magical Concealment",
     "desc": "While under a Stealth or Greater Stealth gains immunity to magical and elemental sights. Lasts 5 minutes. 1/day.",
     "sourceBook": "At the sharp end",
@@ -8007,7 +8121,11 @@
     ],
     "table": 10,
     "cost": 50,
-    "preReqs": ["Spiritually Cloaked", "Solitaire"],
+    "preReqs": [
+      "Spiritually Cloaked",
+      "Immunity to Informational Miracles",
+      "Solitaire"
+    ],
     "index": "Spiritual Concealment",
     "desc": "While under a Stealth or Greater Stealth gains immunity to spiritual sights. Lasts 5 minutes. 1/day.",
     "sourceBook": "At the sharp end",
@@ -8039,7 +8157,11 @@
     ],
     "table": 11,
     "cost": 50,
-    "preReqs": ["Ghost", "Immunity to Physical Informational Effects"],
+    "preReqs": [
+      "Ghost",
+      "appropriate immunity to informational effect",
+      "Immunity to Physical Informational"
+    ],
     "index": "Immunity to Perception",
     "desc": "Is now immune to Perception abilities except Wanderer’s Hunch and Sense Motion.",
     "sourceBook": "At the sharp end",
@@ -8055,7 +8177,7 @@
     ],
     "table": 11,
     "cost": 100,
-    "preReqs": ["Even Greater Stealth"],
+    "preReqs": ["Even Greater Stealth", "at least 2 innate Greater Stealths"],
     "index": "Stealthy",
     "desc": "Now applies to any form of own innate Chameleon used, but not from items.",
     "sourceBook": "At the sharp end"
@@ -8075,7 +8197,11 @@
     ],
     "table": 11,
     "cost": 75,
-    "preReqs": ["Super Ghost"],
+    "preReqs": [
+      "Super Ghost",
+      "Ghost",
+      "appropriate immunity to informational effect"
+    ],
     "index": "Enhanced Super Ghost",
     "desc": "Need not be aware of the wardings transgressed but must still be moving at a maximum of half speed.",
     "sourceBook": "At the sharp end"
@@ -8090,7 +8216,7 @@
     ],
     "table": 11,
     "cost": 150,
-    "preReqs": ["3rd Backstab"],
+    "preReqs": ["3rd Backstab", "2nd Backstab", "1st Backstab"],
     "index": "4th Backstab",
     "desc": "Now adds +4 grades of damage to attacks from behind in the same way as basic Backstab.",
     "sourceBook": "At the sharp end"
@@ -8105,7 +8231,7 @@
     ],
     "table": 11,
     "cost": 75,
-    "preReqs": ["Greater Ambush"],
+    "preReqs": ["Greater Ambush", "Ambush"],
     "index": "Master Ambush",
     "desc": "Ambush now grants +2 grades on the first blow and +1 grade on the second.",
     "sourceBook": "At the sharp end"
@@ -8135,7 +8261,7 @@
     ],
     "table": 11,
     "cost": 150,
-    "preReqs": ["Super Solitaire"],
+    "preReqs": ["Super Solitaire", "Solitaire"],
     "index": "Master Solitaire",
     "desc": "While under a Stealth or Greater Stealth, Solitaire may be applied regardless of items carried provided the scout has immunity to informational effects of the relevant power base. This does not affect other Solitaire restrictions such as attacking or running.",
     "sourceBook": "At the sharp end"
@@ -8150,7 +8276,7 @@
     ],
     "table": 12,
     "cost": 200,
-    "preReqs": ["Greater Surprise Blows", "Cascade"],
+    "preReqs": ["Greater Surprise Blows", "Surprise Blow", "Cascade"],
     "index": "First Cut is the Deepest",
     "desc": "Now gains No Max Damage First Strike of combat from behind. Greater Surprise Blows now applies to the next two blows, and Surprise Blow to the fourth and fifth blows. Requires 60 seconds’ study of the target before it is used. This prep time may not be reduced by any means. May only be in the Scout and Warrior brackets if this ability is owned.",
     "sourceBook": "At the sharp end"
@@ -8165,7 +8291,7 @@
     ],
     "table": 12,
     "cost": 200,
-    "preReqs": ["4th Backstab"],
+    "preReqs": ["4th Backstab", "3rd Backstab", "2nd Backstab", "1st Backstab"],
     "index": "5th Backstab",
     "desc": "Now adds +5 grades of damage to attacks from behind in the same way as basic Backstab.",
     "sourceBook": "At the sharp end"
@@ -8180,7 +8306,12 @@
     ],
     "table": 12,
     "cost": 100,
-    "preReqs": ["Immunity to Perception"],
+    "preReqs": [
+      "Immunity to Perception",
+      "Ghost",
+      "appropriate immunity to informational effect",
+      "Immunity to Physical Informational"
+    ],
     "index": "Hidden Assailant",
     "desc": "Is now immune to Wanderer’s Hunch and Sense Motion but only whilst under the effects of a Stealth, Chameleon or similar and stationary. This ability goes down for 5 minutes if attacks anyone.",
     "sourceBook": "At the sharp end"
@@ -8242,7 +8373,10 @@
     ],
     "table": 7,
     "cost": 90,
-    "preReqs": ["Membership of the Deci Assassin Guild: Butcher"],
+    "preReqs": [
+      "Membership of the Deci Assassin Guild: Butcher",
+      "Membership of the Deci Assassin Guild: Enforcer"
+    ],
     "index": "Membership of the Deci Assassin Guild: Executioner",
     "desc": "Status stage three. Is now Ostracised within the Labyrinthian Empire. Gains a second use of Step through the Shadows as per stage one and may buy extra innates at 60 points each, max 2. 1/day may trigger a Step through the Shadows in response to a blow, declared within 2 seconds of the blow landing; instead of shifting, gains half effect the blow. May buy extra innates of this response at 40 points each, max 2.",
     "sourceBook": "At the sharp end"
@@ -8289,7 +8423,10 @@
     ],
     "table": 7,
     "cost": 60,
-    "preReqs": ["The Halls of Nobility Shield Maidens: Protector"],
+    "preReqs": [
+      "The Halls of Nobility Shield Maidens: Protector",
+      "The Halls of Nobility Shield Maidens: Guardian"
+    ],
     "index": "The Halls of Nobility Shield Maidens: Pretorian",
     "desc": "Status stage three. Free and Clear may now be used at will for the chosen protectee. Any innates are retained and can be used on other people.",
     "sourceBook": "At the sharp end"
@@ -8466,7 +8603,7 @@
     "table": 1,
     "cost": 45,
     "index": "Casting Level III",
-    "preReqs": ["Casting Level II"],
+    "preReqs": ["Casting Level II", "Casting Level I"],
     "desc": "From Casting Level II: 3rd extra level for calculating damage suffered by the spell caster.",
     "sourceBook": "Wizard Grimoire"
   },
@@ -8901,7 +9038,7 @@
     "table": 2,
     "cost": 40,
     "index": "3rd Rank of Mana",
-    "preReqs": ["2nd Rank of Mana"],
+    "preReqs": ["2nd Rank of Mana", "1st Rank of Mana"],
     "desc": "From 2nd Rank of Mana: gains an extra 27 mana total (from 19).",
     "sourceBook": "Wizard Grimoire"
   },
@@ -8916,7 +9053,7 @@
     "table": 2,
     "cost": 40,
     "index": "4th Rank of Mana",
-    "preReqs": ["3rd Rank of Mana"],
+    "preReqs": ["3rd Rank of Mana", "2nd Rank of Mana", "1st Rank of Mana"],
     "desc": "From 3rd Rank of Mana: gains an extra 34 mana total (from 27).",
     "sourceBook": "Wizard Grimoire"
   },
@@ -8931,7 +9068,12 @@
     "table": 2,
     "cost": 50,
     "index": "5th Rank of Mana",
-    "preReqs": ["4th Rank of Mana"],
+    "preReqs": [
+      "4th Rank of Mana",
+      "3rd Rank of Mana",
+      "2nd Rank of Mana",
+      "1st Rank of Mana"
+    ],
     "desc": "From 4th Rank of Mana: gains an extra 39 mana total (from 34).",
     "sourceBook": "Wizard Grimoire"
   },
@@ -8946,7 +9088,7 @@
     "table": 2,
     "cost": 50,
     "index": "Casting Level IV",
-    "preReqs": ["Casting Level III"],
+    "preReqs": ["Casting Level III", "Casting Level II", "Casting Level I"],
     "desc": "From Casting Level III: 4th extra level for calculating damage suffered by the spell caster.",
     "sourceBook": "Wizard Grimoire"
   },
@@ -9457,7 +9599,7 @@
     "table": 5,
     "cost": 200,
     "index": "New Age Wizard",
-    "preReqs": ["Chromatic Wizard"],
+    "preReqs": ["Chromatic Wizard", "!Second Colour"],
     "desc": "From Chromatic Wizard: now gains access to all standard New Colour spells. This does not grant Expertise in those colours but does allow scroll writing where normal specialist-glyph rules would allow it.",
     "sourceBook": "Wizard Grimoire"
   },
@@ -9937,7 +10079,7 @@
     "table": 7,
     "cost": 80,
     "index": "Facility III",
-    "preReqs": ["Facility II"],
+    "preReqs": ["Facility II", "Facility I"],
     "desc": "From Facility II: no longer takes damage casting any spell from 1st level up to two levels below the mage’s casting level.",
     "sourceBook": "Wizard Grimoire"
   },
@@ -10020,7 +10162,7 @@
     "table": 7,
     "cost": 65,
     "index": "Specialists III",
-    "preReqs": ["Specialists II"],
+    "preReqs": ["Specialists II", "Specialists I"],
     "desc": "From Specialists II: gains +15 total non-opposite spells into capacity.",
     "sourceBook": "Wizard Grimoire",
     "data": {
@@ -10491,7 +10633,12 @@
     "table": 8,
     "cost": 50,
     "index": "Casting Level V",
-    "preReqs": ["Casting Level IV"],
+    "preReqs": [
+      "Casting Level IV",
+      "Casting Level III",
+      "Casting Level II",
+      "Casting Level I"
+    ],
     "desc": "From Casting Level IV: 5th extra level for calculating damage suffered by the spell caster.",
     "sourceBook": "Wizard Grimoire"
   },
@@ -10506,8 +10653,14 @@
     "table": 8,
     "cost": 50,
     "index": "Casting Level VI",
-    "preReqs": ["Casting Level V"],
-    "desc": "From Casting Level V: 6th extra level for calculating damage suffered by the spell caster.",
+    "preReqs": [
+      "Casting Level V",
+      "Casting Level IV",
+      "Casting Level III",
+      "Casting Level II",
+      "Casting Level I"
+    ],
+    "desc": "6th extra level for calculating damage suffered by the spell caster.",
     "sourceBook": "Wizard Grimoire"
   },
   {
@@ -10684,7 +10837,7 @@
     "table": 9,
     "cost": 250,
     "index": "Elemental Champion",
-    "desc": "Grants immunity to Domination and to listed stopping effects of own mana colour, Resistance to Own Element as per the Power Master specialist skill, immunity to natural occurrences of own element, and half damage from supernatural attacks of that element.",
+    "desc": "Grants immunity to Domination and to listed stopping effects of own mana colour, Resistance to Own Element (as per the Power Master specialist skill), immunity to natural occurrences of own element, and half damage from supernatural attacks of that element.",
     "sourceBook": "Wizard Grimoire"
   },
   {
@@ -11231,7 +11384,7 @@
     "table": 9,
     "cost": 220,
     "index": "Elemental Warlord",
-    "preReqs": ["Elemental Knight"],
+    "preReqs": ["Elemental Knight", "Elemental Squire"],
     "desc": "From Elemental Knight: +8 mana for own-colour offensive glyphs, +9/3 life, and the first directly offensive own-colour spell costing 3 mana or below each 15 minutes costs no mana. May not use any glyph, even by item, of another colour.",
     "sourceBook": "Wizard Grimoire",
     "data": {
@@ -11259,7 +11412,7 @@
     "table": 9,
     "cost": 150,
     "index": "Elemental Master",
-    "preReqs": ["Elemental Adept"],
+    "preReqs": ["Elemental Adept", "Elemental Apprentice"],
     "desc": "From Elemental Adept: +12 mana and +3 casting levels for own-colour glyphs. May have no specialist glyphs and takes half damage from casting own-colour glyphs (minimum 1 unless no-damage abilities apply).",
     "sourceBook": "Wizard Grimoire",
     "data": {
@@ -11473,7 +11626,7 @@
     "table": 10,
     "cost": 65,
     "index": "Specialists III",
-    "preReqs": ["Specialists II"],
+    "preReqs": ["Specialists II", "Specialists I"],
     "desc": "From Specialists II: gains +15 total non-opposite spells into capacity.",
     "sourceBook": "Wizard Grimoire",
     "data": {
@@ -11501,7 +11654,7 @@
     "table": 10,
     "cost": 65,
     "index": "Specialists IV",
-    "preReqs": ["Specialists III"],
+    "preReqs": ["Specialists III", "Specialists II", "Specialists I"],
     "desc": "From Specialists III: gains +20 total non-opposite spells into capacity.",
     "sourceBook": "Wizard Grimoire",
     "data": {
@@ -11589,7 +11742,7 @@
     "table": 10,
     "cost": 250,
     "index": "The Dragon’s Breath – Stage Two",
-    "preReqs": ["The Dragon's Breath - Stage One"],
+    "preReqs": ["The Dragon’s Breath – Stage One"],
     "desc": "From Stage One: the free spell may now be a standard spell of own colour up to 6th level. For stackable runes, only one rune is free. The wizard may not leave the Wizard bracket.",
     "sourceBook": "Wizard Grimoire"
   },
@@ -11817,7 +11970,10 @@
     "table": 11,
     "cost": 100,
     "index": "The Dragon’s Breath – Stage Three",
-    "preReqs": ["The Dragon's Breath - Stage Two"],
+    "preReqs": [
+      "The Dragon’s Breath – Stage Two",
+      "The Dragon’s Breath – Stage One"
+    ],
     "desc": "From Stage Two: the free spell may now be an Advanced spell of own colour up to 3rd level.",
     "sourceBook": "Wizard Grimoire"
   },
@@ -11862,7 +12018,7 @@
     "table": 11,
     "cost": 100,
     "index": "Enhanced Draconic Champion",
-    "preReqs": ["Draconic Champion"],
+    "preReqs": ["Draconic Champion", "Max Damage Quin Versus Elementals"],
     "desc": "From Draconic Champion: the maximum Quin damage may now be done with a single O class weapon if preferred.",
     "sourceBook": "Wizard Grimoire"
   },
@@ -11892,7 +12048,7 @@
     "table": 11,
     "cost": 300,
     "index": "Elemental Lord",
-    "preReqs": ["Elemental Master"],
+    "preReqs": ["Elemental Master", "Elemental Adept", "Elemental Apprentice"],
     "desc": "From Elemental Master: gains +24 own-colour mana and +4 own-colour casting levels. May Ward Pact mana users and creatures of own colour; this is non-level-based. Grants immunity to beneficial mana not of own colour.",
     "sourceBook": "Wizard Grimoire",
     "data": {
@@ -13359,7 +13515,7 @@
     "index": "Assess Spirit",
     "desc": "As Gauge Spirit, but also reveals miracle names present, if any.",
     "sourceBook": "Words From Above",
-    "preReqs": ["Gauge Spirit", "Discern ‘Spirit of Miracle'"]
+    "preReqs": ["Gauge Spirit", "Discern ‘Spirit of Miracle’"]
   },
   {
     "available": [
@@ -14367,7 +14523,7 @@
     "index": "Power Mastered (Stage Two)",
     "desc": "The miracle granted by Power Mastered may now be cast once every 30 minutes.",
     "sourceBook": "Words From Above",
-    "preReqs": ["Power Mastered (Stage One)"]
+    "preReqs": ["Power Mastered (Stage One)", "Major Sphere"]
   },
   {
     "available": [
@@ -14776,7 +14932,11 @@
     "index": "Power Mastered (Stage Three)",
     "desc": "The miracle granted by Power Mastered may now be cast once every 15 minutes.",
     "sourceBook": "Words From Above",
-    "preReqs": ["Power Mastered (Stage Two)", "Power Mastered (Stage One)"]
+    "preReqs": [
+      "Power Mastered (Stage Two)",
+      "Power Mastered (Stage One)",
+      "Major Sphere"
+    ]
   },
   {
     "available": [
@@ -14913,7 +15073,8 @@
     "cost": 150,
     "index": "Power Forms",
     "desc": "From Power Grows. Power Mastered may now cast advanced minor-sphere miracles of the relevant sphere up to 3rd level.",
-    "sourceBook": "Words From Above"
+    "sourceBook": "Words From Above",
+    "preReqs": ["Power Grows"]
   },
   {
     "available": [
@@ -15162,7 +15323,11 @@
     "index": "Blade-Fury",
     "desc": "Grants a 6pt damage reduction against all weapon blows for five minutes",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Battle-Master - B Class:2"],
+    "preReqs": [
+      "Battle-Master - B Class:2",
+      "Battle-Master - E Class:2",
+      "Battle-Master - O Class:2"
+    ],
     "CanAddMultiple": true,
     "maxAvailable": 3,
     "data": {
@@ -15186,7 +15351,11 @@
     "index": "Disarm",
     "desc": "Disarm.",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Battle-Master - B Class:4"],
+    "preReqs": [
+      "Battle-Master - B Class:4",
+      "Battle-Master - E Class:3",
+      "Battle-Master - O Class:4"
+    ],
     "CanAddMultiple": true,
     "maxAvailable": "*",
     "data": {
@@ -15210,7 +15379,11 @@
     "index": "Opponent Study",
     "desc": "Enhances a Blade-Fury to a 9pt reduction versus one opponent only after 30 seconds of calm observation",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Battle-Master - B Class:5"],
+    "preReqs": [
+      "Battle-Master - B Class:5",
+      "Battle-Master - E Class:5",
+      "Battle-Master - O Class:3"
+    ],
     "CanAddMultiple": true,
     "maxAvailable": 3,
     "data": {
@@ -15234,7 +15407,11 @@
     "index": "Blade-Fury",
     "desc": "Grants a 6pt damage reduction against all weapon blows for five minutes",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Battle-Master - E Class:2"],
+    "preReqs": [
+      "Battle-Master - B Class:2",
+      "Battle-Master - E Class:2",
+      "Battle-Master - O Class:2"
+    ],
     "CanAddMultiple": true,
     "maxAvailable": 3,
     "data": {
@@ -15258,7 +15435,11 @@
     "index": "Disarm",
     "desc": "Disarm.",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Battle-Master - E Class:3"],
+    "preReqs": [
+      "Battle-Master - B Class:4",
+      "Battle-Master - E Class:3",
+      "Battle-Master - O Class:4"
+    ],
     "CanAddMultiple": true,
     "maxAvailable": "*",
     "data": {
@@ -15306,7 +15487,11 @@
     "index": "Opponent Study",
     "desc": "Enhances a Blade-Fury to a 9pt reduction versus one opponent only after 30 seconds of calm observation",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Battle-Master - E Class:5"],
+    "preReqs": [
+      "Battle-Master - B Class:5",
+      "Battle-Master - E Class:5",
+      "Battle-Master - O Class:3"
+    ],
     "CanAddMultiple": true,
     "maxAvailable": 3,
     "data": {
@@ -15354,7 +15539,11 @@
     "index": "Blade-Fury",
     "desc": "Grants a 6pt damage reduction against all weapon blows for five minutes",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Battle-Master - O Class:2"],
+    "preReqs": [
+      "Battle-Master - B Class:2",
+      "Battle-Master - E Class:2",
+      "Battle-Master - O Class:2"
+    ],
     "CanAddMultiple": true,
     "maxAvailable": 3,
     "data": {
@@ -15378,7 +15567,11 @@
     "index": "Opponent Study",
     "desc": "Enhances a Blade-Fury to a 9pt reduction versus one opponent only after 30 seconds of calm observation",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Battle-Master - O Class:3"],
+    "preReqs": [
+      "Battle-Master - B Class:5",
+      "Battle-Master - E Class:5",
+      "Battle-Master - O Class:3"
+    ],
     "CanAddMultiple": true,
     "maxAvailable": 3,
     "data": {
@@ -15402,7 +15595,11 @@
     "index": "Disarm",
     "desc": "Disarm.",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Battle-Master - O Class:4"],
+    "preReqs": [
+      "Battle-Master - B Class:4",
+      "Battle-Master - E Class:3",
+      "Battle-Master - O Class:4"
+    ],
     "CanAddMultiple": true,
     "maxAvailable": "*",
     "data": {
@@ -15978,7 +16175,7 @@
     "index": "Greater Stealth",
     "desc": "Allows the scout to move at slow zombie speed without breaking the effect of the Stealth innate; it is still broken if the scout breaks any other condition, such as talking or attacking.",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Stalker:3"],
+    "preReqs": ["Stealth", "Stalker:3"],
     "CanAddMultiple": true,
     "maxAvailable": 2,
     "data": {
@@ -16170,7 +16367,7 @@
     "index": "Starts each adventure with one dose of any of Blindness, Dumbness",
     "desc": "Paralysis, Deafness or Sleep II potion antidotes (as handbook) per level of multiclass, which are adventure temp only (no cards issued) . Potions from this class may be distilled if the Distilling skill is owned",
     "sourceBook": "evolution-classes",
-    "preReqs": ["VWE: General:1"],
+    "preReqs": ["VWE: General:1", "VWE: General:2"],
     "CanAddMultiple": true,
     "maxAvailable": "*",
     "data": {
@@ -16194,7 +16391,7 @@
     "index": "Starts each adventure with one dose of any of Blindness, Dumbness",
     "desc": "Paralysis, Deafness or Sleep II potion (as handbook) per level of multiclass, as above",
     "sourceBook": "evolution-classes",
-    "preReqs": ["VWE: General:2"],
+    "preReqs": ["VWE: General:1", "VWE: General:2"],
     "CanAddMultiple": true,
     "maxAvailable": "*",
     "data": {
@@ -16674,7 +16871,7 @@
     "index": "Telekinesis",
     "desc": "This spell will move one object as directed by the caster. The force of the telekinesis equals the force the referee can exert with one hand. It cannot be used to wield a weapon effectively. It cannot pick up objects that contain a spirit. Only one Telekinesis may be cast upon one object or by a wizard at any one time.\nVerbal: Sylphs of air I conjure thee telekinesise that... to there",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Telekinetic:4"],
+    "preReqs": ["Telekinetic:4", "Telekinetic:5"],
     "CanAddMultiple": true,
     "maxAvailable": 4,
     "data": {
@@ -16698,7 +16895,7 @@
     "index": "Telekinesis",
     "desc": "This spell will move one object as directed by the caster. The force of the telekinesis equals the force the referee can exert with one hand. It cannot be used to wield a weapon effectively. It cannot pick up objects that contain a spirit. Only one Telekinesis may be cast upon one object or by a wizard at any one time.\nVerbal: Sylphs of air I conjure thee telekinesise that... to there",
     "sourceBook": "evolution-classes",
-    "preReqs": ["Telekinetic:5"],
+    "preReqs": ["Telekinetic:4", "Telekinetic:5"],
     "CanAddMultiple": true,
     "maxAvailable": 2,
     "data": {
@@ -17517,9 +17714,7 @@
     "maxAvailable": 3,
     "effect": "TODO",
     "abilityRef": "ability.druid.chosen-field",
-    "choiceSetRefs": [
-      "choice.druid.chosen-field.primary"
-    ]
+    "choiceSetRefs": ["choice.druid.chosen-field.primary"]
   },
   {
     "available": [
@@ -18270,7 +18465,10 @@
     "table": 2,
     "cost": 50,
     "sourceBook": "Druids Way",
-    "preReqs": ["Second Extra Level of Earthpower"]
+    "preReqs": [
+      "Second Extra Level of Earthpower",
+      "First Extra Level of Earthpower"
+    ]
   },
   {
     "available": [
@@ -18801,7 +18999,7 @@
     "table": 8,
     "cost": 40,
     "sourceBook": "Druids Way",
-    "preReqs": ["Understanding the Land"]
+    "preReqs": ["Understanding the Land", "Ley of the Land"]
   },
   {
     "available": [
@@ -19126,7 +19324,11 @@
     "table": 9,
     "cost": 60,
     "sourceBook": "Druids Way",
-    "preReqs": ["Third Extra Level of Earthpower"]
+    "preReqs": [
+      "Third Extra Level of Earthpower",
+      "Second Extra Level of Earthpower",
+      "First Extra Level of Earthpower"
+    ]
   },
   {
     "available": [
@@ -19141,7 +19343,10 @@
     "table": 9,
     "cost": 50,
     "sourceBook": "Druids Way",
-    "preReqs": ["No Damage Casting Earthpower Evocations of between 5 and 7 EP"]
+    "preReqs": [
+      "No Damage Casting Earthpower Evocations of between 5 and 7 EP",
+      "No Damage Casting Evocations of between 1 and 4 EP"
+    ]
   },
   {
     "available": [
@@ -19158,9 +19363,7 @@
     "sourceBook": "Druids Way",
     "effect": "TODO",
     "abilityRef": "ability.druid.advocate-of-field",
-    "choiceSetRefs": [
-      "choice.druid.advocate-of-field.primary"
-    ]
+    "choiceSetRefs": ["choice.druid.advocate-of-field.primary"]
   },
   {
     "available": [
@@ -19175,7 +19378,7 @@
     "table": 9,
     "cost": 100,
     "sourceBook": "Druids Way",
-    "preReqs": ["Offering to Nature"]
+    "preReqs": ["Offering to Nature", "Sacrifice to Nature"]
   },
   {
     "available": [
@@ -19195,7 +19398,7 @@
     "table": 10,
     "cost": 200,
     "sourceBook": "Druids Way",
-    "preReqs": ["Gift to Nature"]
+    "preReqs": ["Gift to Nature", "Offering to Nature", "Sacrifice to Nature"]
   },
   {
     "available": [
@@ -19276,7 +19479,12 @@
     "table": 10,
     "cost": 65,
     "sourceBook": "Druids Way",
-    "preReqs": ["Fourth Extra Level of Earthpower"]
+    "preReqs": [
+      "Fourth Extra Level of Earthpower",
+      "Third Extra Level of Earthpower",
+      "Second Extra Level of Earthpower",
+      "First Extra Level of Earthpower"
+    ]
   },
   {
     "available": [
@@ -19354,7 +19562,13 @@
     "table": 10,
     "cost": 70,
     "sourceBook": "Druids Way",
-    "preReqs": ["Fifth Extra Level of Earthpower"]
+    "preReqs": [
+      "Fifth Extra Level of Earthpower",
+      "Fourth Extra Level of Earthpower",
+      "Third Extra Level of Earthpower",
+      "Second Extra Level of Earthpower",
+      "First Extra Level of Earthpower"
+    ]
   },
   {
     "available": [
@@ -19414,7 +19628,7 @@
     "table": 10,
     "cost": 75,
     "sourceBook": "Druids Way",
-    "preReqs": ["Wrathful I"]
+    "preReqs": ["Wrathful I", "Nature's Wrath"]
   },
   {
     "available": [
@@ -19434,7 +19648,7 @@
     "table": 11,
     "cost": 125,
     "sourceBook": "Druids Way",
-    "preReqs": ["Wrathful II"]
+    "preReqs": ["Wrathful II", "Wrathful I", "Nature's Wrath"]
   },
   {
     "available": [
@@ -19454,7 +19668,11 @@
     "table": 11,
     "cost": 300,
     "sourceBook": "Druids Way",
-    "preReqs": ["Champion of Nature"]
+    "preReqs": [
+      "Champion of Nature",
+      "Chosen of Mother Nature",
+      "Chosen of the Horned Man"
+    ]
   },
   {
     "available": [

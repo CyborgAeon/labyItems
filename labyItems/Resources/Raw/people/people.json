@@ -140,7 +140,12 @@
     "levelledAbilities": {
       "1": [
         { "Name": "Recognise EP", "Type": "AtWill" },
-        { "Name": "Half-Spirit", "Type": "Resistance", "AbilityRef": "ability.half-spirit", "Key": "ability.half-spirit" }
+        {
+          "Name": "Half-Spirit",
+          "Type": "Resistance",
+          "AbilityRef": "ability.half-spirit",
+          "Key": "ability.half-spirit"
+        }
       ],
       "2": [],
       "3": [
@@ -193,7 +198,12 @@
       "1": [
         { "Name": "Faerie Colour", "Type": "Overwrite" },
         { "Name": "Faerie Colour", "Type": "Overwrite" },
-        { "Name": "Spiritless", "Type": "Resistance", "AbilityRef": "ability.spiritless", "Key": "ability.spiritless" }
+        {
+          "Name": "Spiritless",
+          "Type": "Resistance",
+          "AbilityRef": "ability.spiritless",
+          "Key": "ability.spiritless"
+        }
       ],
       "2": [{ "Name": "Lvl 2 Spell", "Type": "Innate", "Count": 4 }],
       "3": [],
@@ -432,7 +442,12 @@
     "Tags": ["Spiritless"],
     "levelledAbilities": {
       "1": [
-        { "Name": "Spiritless", "Type": "Resistance", "AbilityRef": "ability.spiritless", "Key": "ability.spiritless" }
+        {
+          "Name": "Spiritless",
+          "Type": "Resistance",
+          "AbilityRef": "ability.spiritless",
+          "Key": "ability.spiritless"
+        }
       ],
       "2": [],
       "3": [],
@@ -456,7 +471,12 @@
     "Tags": ["Half-Spirit"],
     "levelledAbilities": {
       "1": [
-        { "Name": "Half-Spirit", "Type": "Resistance", "AbilityRef": "ability.half-spirit", "Key": "ability.half-spirit" }
+        {
+          "Name": "Half-Spirit",
+          "Type": "Resistance",
+          "AbilityRef": "ability.half-spirit",
+          "Key": "ability.half-spirit"
+        }
       ],
       "2": [],
       "3": [],
@@ -524,7 +544,12 @@
     "Description": "There are many amongst the Athfanal who have human blood, being born from slaves taken from both the Ishmaics and the First Comers.",
     "levelledAbilities": {
       "1": [
-        { "Name": "Half-Spirit", "Type": "Resistance", "AbilityRef": "ability.half-spirit", "Key": "ability.half-spirit" }
+        {
+          "Name": "Half-Spirit",
+          "Type": "Resistance",
+          "AbilityRef": "ability.half-spirit",
+          "Key": "ability.half-spirit"
+        }
       ]
     }
   },
@@ -573,9 +598,24 @@
     "Description": "territorial desert and cavern spirits, born of primal Earthpower to guide or mislead travelers in the Great Sink. Solitary and robed, they wander the wastes, alternately rescuing the lost or driving them to ruin. Child Samila wield vast uncontrolled power, while adult Samila are weaker mystically but cunning, independent, and fiercely protective of their domains.",
     "levelledAbilities": {
       "1": [
-        { "Name": "1/2 effect magic", "Type": "Resistance", "AbilityRef": "ability.half-effect-magic", "Key": "ability.half-effect-magic" },
-        { "Name": "Spiritless", "Type": "Resistance", "AbilityRef": "ability.spiritless", "Key": "ability.spiritless" },
-        { "Name": "Mindless", "Type": "Resistance", "AbilityRef": "ability.mindless", "Key": "ability.mindless" }
+        {
+          "Name": "1/2 effect magic",
+          "Type": "Resistance",
+          "AbilityRef": "ability.half-effect-magic",
+          "Key": "ability.half-effect-magic"
+        },
+        {
+          "Name": "Spiritless",
+          "Type": "Resistance",
+          "AbilityRef": "ability.spiritless",
+          "Key": "ability.spiritless"
+        },
+        {
+          "Name": "Mindless",
+          "Type": "Resistance",
+          "AbilityRef": "ability.mindless",
+          "Key": "ability.mindless"
+        }
       ],
       "2": [
         {
@@ -721,13 +761,6 @@
         {
           "Name": "1st Grade of Strength",
           "Type": "Static"
-        }
-      ],
-      "8": [
-        {
-          "Name": "Terror Scream",
-          "Type": "Innate",
-          "Count": 1
         }
       ]
     },
