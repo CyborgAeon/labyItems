@@ -379,10 +379,15 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
 
     private NonStandardEntityType CurrentType => SelectedEntityType?.EntityType ?? NonStandardEntityType.CharacterClass;
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(NonStandardEntityType? preferredType = null)
     {
         if (_initialized)
+        {
+            if (preferredType.HasValue)
+                await SelectEntityTypeAsync(preferredType.Value);
+
             return;
+        }
 
         _initialized = true;
 
@@ -393,6 +398,37 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         SelectedEntityType = _entityTypes.FirstOrDefault();
 
         await LoadLifeScaleLookupsAsync();
+        await ReloadForSelectedTypeAsync(preferredTemplateName: null);
+
+        if (preferredType.HasValue)
+            await SelectEntityTypeAsync(preferredType.Value);
+    }
+
+    public async Task SelectEntityTypeAsync(NonStandardEntityType entityType)
+    {
+        if (!_initialized)
+        {
+            await InitializeAsync(entityType);
+            return;
+        }
+
+        var typeOption = _entityTypes.FirstOrDefault(option => option.EntityType == entityType);
+        if (typeOption == null)
+            return;
+
+        if (ReferenceEquals(SelectedEntityType, typeOption))
+            return;
+
+        _suppressTypeReload = true;
+        try
+        {
+            SelectedEntityType = typeOption;
+        }
+        finally
+        {
+            _suppressTypeReload = false;
+        }
+
         await ReloadForSelectedTypeAsync(preferredTemplateName: null);
     }
 
@@ -506,15 +542,8 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         if (entry == null)
             return;
 
-        await InitializeAsync();
-        var typeOption = _entityTypes.FirstOrDefault(option => option.EntityType == entry.EntityType);
-        if (typeOption == null)
-            return;
-
-        _suppressTypeReload = true;
-        SelectedEntityType = typeOption;
-        _suppressTypeReload = false;
-
+        await InitializeAsync(entry.EntityType);
+        await SelectEntityTypeAsync(entry.EntityType);
         await ReloadForSelectedTypeAsync(entry.Name);
         BuildFields(entry.EntityType, entry.DataJson);
         Name = entry.Name;

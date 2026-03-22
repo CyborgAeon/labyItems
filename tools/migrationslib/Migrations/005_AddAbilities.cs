@@ -244,27 +244,101 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
 
         using var reader = new StreamReader(stream);
         var json = reader.ReadToEnd();
+        return ParseAbilityRows(json, resourceName);
+    }
+
+    private static List<AbilityRaw> ParseAbilityRows(string json, string sourceName)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return new List<AbilityRaw>();
+
+        EnsureRowsDeclareAvailable(json, sourceName);
+
         var opts = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         return JsonSerializer.Deserialize<List<AbilityRaw>>(json, opts) ?? new List<AbilityRaw>();
     }
 
-    private static string SerializeAvailability(JsonElement available)
+    private static void EnsureRowsDeclareAvailable(string json, string sourceName)
     {
-        if (available.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
+        using var document = JsonDocument.Parse(json);
+        if (document.RootElement.ValueKind != JsonValueKind.Array)
+            return;
+
+        var missing = new List<string>();
+        var index = 0;
+        foreach (var element in document.RootElement.EnumerateArray())
+        {
+            if (element.ValueKind != JsonValueKind.Object)
+            {
+                index++;
+                continue;
+            }
+
+            var hasAvailable = element.EnumerateObject().Any(property =>
+                property.Name.Equals("available", StringComparison.OrdinalIgnoreCase));
+            if (!hasAvailable)
+            {
+                var name = TryReadName(element);
+                missing.Add($"#{index} ({name})");
+            }
+
+            index++;
+        }
+
+        if (missing.Count == 0)
+            return;
+
+        var sample = string.Join(", ", missing.Take(10));
+        var suffix = missing.Count > 10 ? $" (+{missing.Count - 10} more)" : string.Empty;
+        throw new InvalidOperationException(
+            $"Resource '{sourceName}' has rows without 'available': {sample}{suffix}");
+    }
+
+    private static string TryReadName(JsonElement element)
+    {
+        foreach (var property in element.EnumerateObject())
+        {
+            if (!property.Name.Equals("index", StringComparison.OrdinalIgnoreCase)
+                && !property.Name.Equals("idx", StringComparison.OrdinalIgnoreCase)
+                && !property.Name.Equals("name", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (property.Value.ValueKind == JsonValueKind.String)
+                return (property.Value.GetString() ?? string.Empty).Trim();
+
+            return property.Value.GetRawText();
+        }
+
+        return "<unnamed>";
+    }
+
+    private static string SerializeAvailability(List<AvailabilityRuleRaw>? available)
+    {
+        if (available is null || available.Count == 0)
             return "[]";
 
-        return available.GetRawText();
+        return JsonSerializer.Serialize(available);
     }
 
     private sealed class AbilityRaw
     {
-        public JsonElement available { get; set; }
+        public List<AvailabilityRuleRaw> available { get; set; } = new();
         public string? index { get; set; }
         public string? desc { get; set; }
         [JsonConverter(typeof(StringOrNumberJsonConverter))]
         public string? cost { get; set; }
         public int table { get; set; }
         public List<string>? preReqs { get; set; }
+    }
+
+    private sealed class AvailabilityRuleRaw
+    {
+        public string? Field { get; set; }
+        public string? Operator { get; set; }
+        public JsonElement Value { get; set; }
+        public string? SpecialisationKey { get; set; }
     }
 
     private sealed class StringOrNumberJsonConverter : JsonConverter<string?>
@@ -301,8 +375,7 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
             if (reader.TryGetDecimal(out var asDecimal))
                 return asDecimal.ToString(CultureInfo.InvariantCulture);
 
-            var asDouble = reader.GetDouble();
-            return asDouble.ToString(CultureInfo.InvariantCulture);
+            return reader.GetDouble().ToString(CultureInfo.InvariantCulture);
         }
     }
 }

@@ -7,6 +7,8 @@ public partial class NonStandardLegacyCreatePage : ContentPage
     private readonly NonStandardCreateVm _vm = new();
     private bool _appeared;
 
+    public string? FixedEntityTypeKey { get; set; }
+
     public NonStandardLegacyCreatePage()
     {
         InitializeComponent();
@@ -17,6 +19,10 @@ public partial class NonStandardLegacyCreatePage : ContentPage
     {
         try
         {
+            var fixedType = ResolveFixedEntityType();
+            if (fixedType.HasValue && entry.EntityType != fixedType.Value)
+                throw new InvalidOperationException($"This tab only edits {fixedType.Value} entries.");
+
             await _vm.LoadFromWalletEntryAsync(entry);
         }
         catch (Exception ex)
@@ -28,13 +34,16 @@ public partial class NonStandardLegacyCreatePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        var fixedType = ResolveFixedEntityType();
+        TypeSelectorSection.IsVisible = !fixedType.HasValue;
+
         if (_appeared)
             return;
 
         _appeared = true;
         try
         {
-            await _vm.InitializeAsync();
+            await _vm.InitializeAsync(fixedType);
         }
         catch (Exception ex)
         {
@@ -91,5 +100,16 @@ public partial class NonStandardLegacyCreatePage : ContentPage
     private void OnToggleLifeScaleClicked(object sender, EventArgs e)
     {
         _vm.ToggleLifeScaleExpanded();
+    }
+
+    private NonStandardEntityType? ResolveFixedEntityType()
+    {
+        var raw = (FixedEntityTypeKey ?? string.Empty).Trim();
+        if (raw.Length == 0)
+            return null;
+
+        return Enum.TryParse<NonStandardEntityType>(raw, ignoreCase: true, out var parsed)
+            ? parsed
+            : null;
     }
 }

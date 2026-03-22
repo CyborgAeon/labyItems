@@ -18,11 +18,14 @@
                    FontSize="24"
                    FontAttributes="Bold"/>
 
-            <Label Text="Type"
-                   Style="{StaticResource SectionHeaderLabelStyle}"/>
-            <Picker ItemsSource="{Binding EntityTypes}"
-                    ItemDisplayBinding="{Binding Label}"
-                    SelectedItem="{Binding SelectedEntityType, Mode=TwoWay}"/>
+            <VerticalStackLayout x:Name="TypeSelectorSection"
+                                 Spacing="4">
+                <Label Text="Type"
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                <Picker ItemsSource="{Binding EntityTypes}"
+                        ItemDisplayBinding="{Binding Label}"
+                        SelectedItem="{Binding SelectedEntityType, Mode=TwoWay}"/>
+            </VerticalStackLayout>
 
             <Label Text="From Base"
                    Style="{StaticResource SectionHeaderLabelStyle}"/>

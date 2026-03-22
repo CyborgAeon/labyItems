@@ -17,8 +17,21 @@
 
     <pages:NonStandardClassCreatePage x:Name="ClassTab"
                                       Title="Class" />
-    <pages:NonStandardLegacyCreatePage x:Name="LegacyTab"
-                                       Title="Legacy" />
+    <pages:NonStandardLegacyCreatePage x:Name="RaceTab"
+                                       FixedEntityTypeKey="CharacterRace"
+                                       Title="Race" />
+    <pages:NonStandardLegacyCreatePage x:Name="SpellTab"
+                                       FixedEntityTypeKey="Spell"
+                                       Title="Spell" />
+    <pages:NonStandardLegacyCreatePage x:Name="MiracleTab"
+                                       FixedEntityTypeKey="Miracle"
+                                       Title="Miracle" />
+    <pages:NonStandardLegacyCreatePage x:Name="EvocationTab"
+                                       FixedEntityTypeKey="Evocation"
+                                       Title="Evoc" />
+    <pages:NonStandardLegacyCreatePage x:Name="AbilityTab"
+                                       FixedEntityTypeKey="Ability"
+                                       Title="Ability" />
     <pages:NonStandardWalletPage x:Name="WalletTab"
                                  Title="Wallet" />
 </TabbedPage>

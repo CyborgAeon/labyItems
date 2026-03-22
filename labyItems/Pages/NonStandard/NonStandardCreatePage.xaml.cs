@@ -48,8 +48,12 @@ public partial class NonStandardCreatePage : TabbedPage
             return;
         }
 
-        CurrentPage = LegacyTab;
-        await LegacyTab.LoadFromWalletEntryAsync(entry);
+        var target = ResolveLegacyTab(entry.EntityType);
+        if (target == null)
+            return;
+
+        CurrentPage = target;
+        await target.LoadFromWalletEntryAsync(entry);
     }
 
     private void OnCurrentPageChanged(object? sender, EventArgs e)
@@ -90,4 +94,17 @@ public partial class NonStandardCreatePage : TabbedPage
     }
 
     partial void ApplyPlatformTabLayoutTweaks();
+
+    private NonStandardLegacyCreatePage? ResolveLegacyTab(NonStandardEntityType entityType)
+    {
+        return entityType switch
+        {
+            NonStandardEntityType.CharacterRace => RaceTab,
+            NonStandardEntityType.Spell => SpellTab,
+            NonStandardEntityType.Miracle => MiracleTab,
+            NonStandardEntityType.Evocation => EvocationTab,
+            NonStandardEntityType.Ability => AbilityTab,
+            _ => null
+        };
+    }
 }

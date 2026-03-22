@@ -16,27 +16,32 @@ public partial class NonStandardCreatePage
         if (tabLayout == null)
             return;
 
-        tabLayout.TabMode = TabLayout.ModeFixed;
-        tabLayout.TabGravity = TabLayout.GravityFill;
-
         if (tabLayout.GetChildAt(0) is not LinearLayout tabStrip)
             return;
+
+        var hasManyTabs = tabStrip.ChildCount > 5;
+        tabLayout.TabMode = hasManyTabs ? TabLayout.ModeScrollable : TabLayout.ModeFixed;
+        tabLayout.TabGravity = hasManyTabs ? TabLayout.GravityCenter : TabLayout.GravityFill;
 
         var density = tabLayout.Resources?.DisplayMetrics?.Density ?? 1f;
         for (var i = 0; i < tabStrip.ChildCount; i++)
         {
             var tabView = tabStrip.GetChildAt(i);
             tabView.SetMinimumWidth(0);
-            tabView.LayoutParameters = i == 0
+            tabView.LayoutParameters = hasManyTabs
                 ? new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WrapContent,
                     ViewGroup.LayoutParams.MatchParent)
-                : new LinearLayout.LayoutParams(
-                    0,
-                    ViewGroup.LayoutParams.MatchParent,
-                    1f);
+                : i == 0
+                    ? new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WrapContent,
+                        ViewGroup.LayoutParams.MatchParent)
+                    : new LinearLayout.LayoutParams(
+                        0,
+                        ViewGroup.LayoutParams.MatchParent,
+                        1f);
 
-            var horizontalPaddingDp = i == 0 ? 1 : 0;
+            var horizontalPaddingDp = hasManyTabs ? 10 : (i == 0 ? 1 : 0);
             var horizontalPaddingPx = (int)(horizontalPaddingDp * density);
             tabView.SetPadding(horizontalPaddingPx, tabView.PaddingTop, horizontalPaddingPx, tabView.PaddingBottom);
         }
