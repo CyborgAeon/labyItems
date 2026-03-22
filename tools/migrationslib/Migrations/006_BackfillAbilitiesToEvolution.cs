@@ -1,8 +1,10 @@
 using System.Data;
+using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FluentMigrator;
 
 namespace MigrationsLib.Migrations;
@@ -61,7 +63,7 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
                     continue;
 
                 var desc = (a.desc ?? string.Empty).Trim();
-                var available = a.available;
+                var available = SerializeAvailability(a.available);
                 var costRaw = (a.cost ?? string.Empty).Trim();
                 var canBuyMultiple = costRaw.Contains('*');
                 var hasPlus = costRaw.Contains('+');
@@ -198,6 +200,14 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
         return int.TryParse(digits, out var value) ? value : 0;
     }
 
+    private static string SerializeAvailability(JsonElement available)
+    {
+        if (available.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined)
+            return "[]";
+
+        return available.GetRawText();
+    }
+
     private static string NormalizeForNgrams(string s)
     {
         var b = new StringBuilder();
@@ -310,9 +320,10 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
 
     private sealed class AbilityRaw
     {
-        public List<string> available { get; set; } = new();
+        public JsonElement available { get; set; }
         public string index { get; set; } = string.Empty;
         public string? desc { get; set; }
+        [JsonConverter(typeof(StringOrNumberJsonConverter))]
         public string? cost { get; set; }
         public int table { get; set; }
         public List<string>? preReqs { get; set; }
@@ -320,10 +331,50 @@ VALUES (@id, @idx, @idx_lower, @description, @cost, @available, @table_id, @can_
 
     private sealed class EvolutionRaw
     {
-        public List<string> available { get; set; } = new();
+        public JsonElement available { get; set; }
         public string index { get; set; } = string.Empty;
         public string? desc { get; set; }
+        [JsonConverter(typeof(StringOrNumberJsonConverter))]
         public string? cost { get; set; }
 
+    }
+
+    private sealed class StringOrNumberJsonConverter : JsonConverter<string?>
+    {
+        public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            return reader.TokenType switch
+            {
+                JsonTokenType.String => reader.GetString(),
+                JsonTokenType.Number => ReadNumberAsString(ref reader),
+                JsonTokenType.True => bool.TrueString.ToLowerInvariant(),
+                JsonTokenType.False => bool.FalseString.ToLowerInvariant(),
+                JsonTokenType.Null => null,
+                _ => JsonDocument.ParseValue(ref reader).RootElement.GetRawText()
+            };
+        }
+
+        public override void Write(Utf8JsonWriter writer, string? value, JsonSerializerOptions options)
+        {
+            if (value is null)
+            {
+                writer.WriteNullValue();
+                return;
+            }
+
+            writer.WriteStringValue(value);
+        }
+
+        private static string ReadNumberAsString(ref Utf8JsonReader reader)
+        {
+            if (reader.TryGetInt64(out var asInt64))
+                return asInt64.ToString(CultureInfo.InvariantCulture);
+
+            if (reader.TryGetDecimal(out var asDecimal))
+                return asDecimal.ToString(CultureInfo.InvariantCulture);
+
+            var asDouble = reader.GetDouble();
+            return asDouble.ToString(CultureInfo.InvariantCulture);
+        }
     }
 }

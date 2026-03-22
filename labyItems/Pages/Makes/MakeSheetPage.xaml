@@ -198,11 +198,13 @@
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
                             <Entry
                                 Grid.Column="0"
+                                Grid.ColumnSpan="{Binding EffectPowerColumnSpan}"
                                 Keyboard="Numeric"
                                 Placeholder="Cost"
                                 Text="{Binding NewEffectPower, Mode=TwoWay}" />
                             <Entry
                                 Grid.Column="1"
+                                IsVisible="{Binding ShowEffectUsesPerDay}"
                                 Keyboard="Numeric"
                                 Placeholder="Uses/day"
                                 Text="{Binding NewEffectUses, Mode=TwoWay}" />
@@ -217,23 +219,84 @@
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding EffectRows}" Spacing="6">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <Border
-                                        Padding="8"
-                                        Stroke="{StaticResource Gray200}"
-                                        StrokeShape="RoundRectangle 8">
-                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                    <Grid RowDefinitions="Auto,Auto">
+                                        <Grid
+                                            Padding="6,4"
+                                            ColumnDefinitions="*,92,Auto,Auto,Auto"
+                                            ColumnSpacing="8">
                                             <Label
                                                 Grid.Column="0"
                                                 LineBreakMode="WordWrap"
-                                                Text="{Binding DisplayText}" />
-                                            <Button
+                                                Text="{Binding Name}"
+                                                FontAttributes="Bold"
+                                                VerticalTextAlignment="Center" />
+
+                                            <Label
                                                 Grid.Column="1"
+                                                Text="{Binding RollSummary}"
+                                                HorizontalTextAlignment="Center"
+                                                VerticalTextAlignment="Center"
+                                                FontAttributes="Bold" />
+
+                                            <Button
+                                                Grid.Column="2"
+                                                Text="&#xF044;"
+                                                FontFamily="FASolid"
+                                                FontSize="12"
+                                                Padding="0"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{StaticResource SubtleTextColor}"
+                                                HeightRequest="18"
+                                                WidthRequest="18"
+                                                MinimumHeightRequest="0"
+                                                MinimumWidthRequest="0"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"
+                                                Clicked="OnEditEffectClicked"
+                                                CommandParameter="{Binding .}" />
+
+                                            <Button
+                                                Grid.Column="3"
+                                                Text="&#xF05A;"
+                                                FontFamily="FASolid"
+                                                FontSize="12"
+                                                Padding="0"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{StaticResource SubtleTextColor}"
+                                                HeightRequest="18"
+                                                WidthRequest="18"
+                                                MinimumHeightRequest="0"
+                                                MinimumWidthRequest="0"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"
+                                                IsVisible="{Binding HasInfoCard}"
+                                                Clicked="OnEffectInfoClicked"
+                                                CommandParameter="{Binding .}" />
+
+                                            <Button
+                                                Grid.Column="4"
+                                                Text="&#xF2ED;"
+                                                FontFamily="FASolid"
+                                                FontSize="12"
+                                                Padding="0"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{StaticResource SubtleTextColor}"
+                                                HeightRequest="18"
+                                                WidthRequest="18"
+                                                MinimumHeightRequest="0"
+                                                MinimumWidthRequest="0"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"
                                                 Clicked="OnRemoveEffectClicked"
-                                                CommandParameter="{Binding .}"
-                                                Padding="10,6"
-                                                Text="Remove" />
+                                                CommandParameter="{Binding .}" />
                                         </Grid>
-                                    </Border>
+
+                                        <BoxView
+                                            Grid.Row="1"
+                                            HeightRequest="1"
+                                            BackgroundColor="{StaticResource Gray200}"
+                                            Opacity="0.6" />
+                                    </Grid>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>

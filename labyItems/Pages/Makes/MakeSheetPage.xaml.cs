@@ -4,6 +4,9 @@ using labyItems.Pages.Makes;
 using Microsoft.Maui.ApplicationModel.DataTransfer;
 using Microsoft.Maui.Storage;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
+using EvocationCardPage = labyItems.Pages.EvocationCard.EvocationCard;
+using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
+using SpellCardPage = labyItems.Pages.SpellCard.SpellCard;
 
 namespace labyItems.Pages;
 
@@ -50,9 +53,44 @@ public partial class MakeSheetPage : ContentPage
 
     private void OnRemoveEffectClicked(object? sender, EventArgs e)
     {
-        var row = (sender as Button)?.CommandParameter as MakeEffectRowVm
-                  ?? (sender as BindableObject)?.BindingContext as MakeEffectRowVm;
+        var row = ResolveEffectRow(sender);
         _vm.RemoveEffect(row);
+    }
+
+    private void OnEditEffectClicked(object? sender, EventArgs e)
+    {
+        var row = ResolveEffectRow(sender);
+        _vm.EditEffect(row);
+    }
+
+    private async void OnEffectInfoClicked(object? sender, EventArgs e)
+    {
+        var row = ResolveEffectRow(sender);
+        if (row == null || row.SourceType.Length == 0)
+            return;
+
+        if (row.SourceType.Equals("Spell", StringComparison.OrdinalIgnoreCase))
+        {
+            var spell = await _vm.FindSpellByNameAsync(row.Name);
+            if (spell != null)
+                await Navigation.PushAsync(new SpellCardPage(spell));
+            return;
+        }
+
+        if (row.SourceType.Equals("Miracle", StringComparison.OrdinalIgnoreCase))
+        {
+            var miracle = await _vm.FindMiracleByNameAsync(row.Name);
+            if (miracle != null)
+                await Navigation.PushAsync(new MiracleCardPage(miracle));
+            return;
+        }
+
+        if (row.SourceType.Equals("Evocation", StringComparison.OrdinalIgnoreCase))
+        {
+            var evocation = await _vm.FindEvocationByNameAsync(row.Name);
+            if (evocation != null)
+                await Navigation.PushAsync(new EvocationCardPage(evocation));
+        }
     }
 
     private async void OnAddManualBonusClicked(object? sender, EventArgs e)
@@ -176,6 +214,10 @@ public partial class MakeSheetPage : ContentPage
     private static MakeBonusRowVm? ResolveManualBonusRow(object? sender)
         => (sender as Button)?.CommandParameter as MakeBonusRowVm
            ?? (sender as BindableObject)?.BindingContext as MakeBonusRowVm;
+
+    private static MakeEffectRowVm? ResolveEffectRow(object? sender)
+        => (sender as Button)?.CommandParameter as MakeEffectRowVm
+           ?? (sender as BindableObject)?.BindingContext as MakeEffectRowVm;
 
     private async Task<MakeBonusChoiceSetEditorVm?> PickChoiceSetEditorAsync(
         IReadOnlyList<MakeBonusChoiceSetEditorVm> editors)

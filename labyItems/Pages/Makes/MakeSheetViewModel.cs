@@ -50,6 +50,14 @@ public sealed class MakeSheetViewModel : ObservableObject
     private const string ChoiceCraftNeuronic = "choice.make.craft-speciality.neuronic.type";
     private const string ChoiceSmithType = "choice.make.smith.type";
 
+    private const string McMagicalArtisanRefPrefix = "ability.mc.magical-artisan";
+    private const string McMagicalCalligrapherRefPrefix = "ability.mc.magical-calligrapher";
+    private const string McSpiritualArtisanRefPrefix = "ability.mc.spiritual-artisan";
+    private const string McSpiritualCalligrapherRefPrefix = "ability.mc.spiritual-calligrapher";
+    private const string McNaturalArtisanRefPrefix = "ability.mc.natural-artisan";
+    private const string McNeuronicArtisanRefPrefix = "ability.mc.artisan-of-the-mind";
+    private const string McSmithRefPrefix = "ability.mc.smith";
+
     private readonly Character _character;
     private readonly CharacterDraft _draft;
     private readonly List<OwnedAbilityEntry> _ownedAbilities = new();
@@ -248,7 +256,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _selectedDiscipline;
         set
         {
-            if (!SetProperty(ref _selectedDiscipline, value))
+            var normalized = NormalizeSelection(value, _selectedDiscipline);
+            if (!SetProperty(ref _selectedDiscipline, normalized))
                 return;
 
             RebuildItemTypes();
@@ -264,7 +273,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _selectedItemType;
         set
         {
-            if (!SetProperty(ref _selectedItemType, value))
+            var normalized = NormalizeSelection(value, _selectedItemType);
+            if (!SetProperty(ref _selectedItemType, normalized))
                 return;
 
             RebuildEffectCategoryOptions();
@@ -279,7 +289,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _selectedBonusMode;
         set
         {
-            if (!SetProperty(ref _selectedBonusMode, value))
+            var normalized = NormalizeSelection(value, _selectedBonusMode);
+            if (!SetProperty(ref _selectedBonusMode, normalized))
                 return;
 
             Raise(nameof(ShowAutomatedBonusMode));
@@ -293,7 +304,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _selectedWeaponTier;
         set
         {
-            if (!SetProperty(ref _selectedWeaponTier, value))
+            var normalized = NormalizeSelection(value, _selectedWeaponTier);
+            if (!SetProperty(ref _selectedWeaponTier, normalized))
                 return;
 
             Recalculate();
@@ -305,7 +317,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _selectedArmourWeight;
         set
         {
-            if (!SetProperty(ref _selectedArmourWeight, value))
+            var normalized = NormalizeSelection(value, _selectedArmourWeight);
+            if (!SetProperty(ref _selectedArmourWeight, normalized))
                 return;
 
             Recalculate();
@@ -317,7 +330,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _selectedArmourEnhancement;
         set
         {
-            if (!SetProperty(ref _selectedArmourEnhancement, value))
+            var normalized = NormalizeSelection(value, _selectedArmourEnhancement);
+            if (!SetProperty(ref _selectedArmourEnhancement, normalized))
                 return;
 
             Recalculate();
@@ -329,7 +343,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _selectedSmithedQuality;
         set
         {
-            if (!SetProperty(ref _selectedSmithedQuality, value))
+            var normalized = NormalizeSelection(value, _selectedSmithedQuality);
+            if (!SetProperty(ref _selectedSmithedQuality, normalized))
                 return;
 
             Recalculate();
@@ -341,7 +356,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _selectedSmithedWeaponEnhancement;
         set
         {
-            if (!SetProperty(ref _selectedSmithedWeaponEnhancement, value))
+            var normalized = NormalizeSelection(value, _selectedSmithedWeaponEnhancement);
+            if (!SetProperty(ref _selectedSmithedWeaponEnhancement, normalized))
                 return;
 
             Recalculate();
@@ -353,7 +369,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _selectedSmithedArmourEnhancement;
         set
         {
-            if (!SetProperty(ref _selectedSmithedArmourEnhancement, value))
+            var normalized = NormalizeSelection(value, _selectedSmithedArmourEnhancement);
+            if (!SetProperty(ref _selectedSmithedArmourEnhancement, normalized))
                 return;
 
             Recalculate();
@@ -440,7 +457,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _selectedTorqueNacOption;
         set
         {
-            if (!SetProperty(ref _selectedTorqueNacOption, value))
+            var normalized = NormalizeSelection(value, _selectedTorqueNacOption);
+            if (!SetProperty(ref _selectedTorqueNacOption, normalized))
                 return;
 
             Recalculate();
@@ -498,19 +516,19 @@ public sealed class MakeSheetViewModel : ObservableObject
     public string NewEffectName
     {
         get => _newEffectName;
-        set => SetProperty(ref _newEffectName, value);
+        set => SetProperty(ref _newEffectName, value ?? string.Empty);
     }
 
     public string NewEffectPower
     {
         get => _newEffectPower;
-        set => SetProperty(ref _newEffectPower, value);
+        set => SetProperty(ref _newEffectPower, value ?? string.Empty);
     }
 
     public string NewEffectUses
     {
         get => _newEffectUses;
-        set => SetProperty(ref _newEffectUses, value);
+        set => SetProperty(ref _newEffectUses, value ?? string.Empty);
     }
 
     public string NewEffectCategory
@@ -518,7 +536,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         get => _newEffectCategory;
         set
         {
-            if (!SetProperty(ref _newEffectCategory, value))
+            var normalized = NormalizeSelection(value, _newEffectCategory);
+            if (!SetProperty(ref _newEffectCategory, normalized))
                 return;
 
             _ = RefreshEffectLookupAsync();
@@ -528,13 +547,13 @@ public sealed class MakeSheetViewModel : ObservableObject
     public string NewManualBonusReason
     {
         get => _newManualBonusReason;
-        set => SetProperty(ref _newManualBonusReason, value);
+        set => SetProperty(ref _newManualBonusReason, value ?? string.Empty);
     }
 
     public string NewManualBonusPercent
     {
         get => _newManualBonusPercent;
-        set => SetProperty(ref _newManualBonusPercent, value);
+        set => SetProperty(ref _newManualBonusPercent, value ?? string.Empty);
     }
 
     public int BaseChancePercent
@@ -638,6 +657,10 @@ public sealed class MakeSheetViewModel : ObservableObject
     public bool ShowEffectSearch => ShowEffectEditor && _showEffectSearch;
 
     public bool ShowEffectNameEntry => ShowEffectEditor && !ShowEffectSearch;
+
+    public bool ShowEffectUsesPerDay => ShowEffectEditor && !IsSingleEffectType();
+
+    public int EffectPowerColumnSpan => ShowEffectUsesPerDay ? 1 : 2;
 
     public string EffectSearchPlaceholder
     {
@@ -782,7 +805,9 @@ public sealed class MakeSheetViewModel : ObservableObject
                 return "Cost must be a positive integer.";
         }
 
-        if (!int.TryParse(NewEffectUses, out var uses) || uses <= 0)
+        var usesEnabled = !IsSingleEffectType();
+        var uses = 1;
+        if (usesEnabled && (!int.TryParse(NewEffectUses, out uses) || uses <= 0))
             return "Uses/day must be a positive integer.";
 
         var category = (NewEffectCategory ?? string.Empty).Trim();
@@ -792,7 +817,13 @@ public sealed class MakeSheetViewModel : ObservableObject
         if (IsSingleEffectType())
             EffectRows.Clear();
 
-        EffectRows.Add(new MakeEffectRowVm(name, power, uses, category));
+        EffectRows.Add(new MakeEffectRowVm(
+            name: name,
+            power: power,
+            usesPerDay: uses,
+            category: category,
+            sourceType: selectedLookup?.SourceType ?? string.Empty,
+            usesPerDayEnabled: usesEnabled));
         NewEffectName = string.Empty;
         NewEffectPower = "1";
         NewEffectUses = "1";
@@ -809,6 +840,68 @@ public sealed class MakeSheetViewModel : ObservableObject
 
         EffectRows.Remove(row);
         Recalculate();
+    }
+
+    public void EditEffect(MakeEffectRowVm? row)
+    {
+        if (row == null)
+            return;
+
+        if (EffectRows.Contains(row))
+            EffectRows.Remove(row);
+
+        NewEffectName = row.Name;
+        NewEffectPower = Math.Max(1, row.Power).ToString();
+        NewEffectUses = Math.Max(1, row.UsesPerDay).ToString();
+
+        var incomingCategory = (row.Category ?? string.Empty).Trim();
+        if (incomingCategory.Length > 0
+            && EffectCategoryOptions.Any(option => option.Equals(incomingCategory, StringComparison.OrdinalIgnoreCase)))
+        {
+            NewEffectCategory = incomingCategory;
+        }
+
+        var matchedLookup = EffectLookupOptions.Values.FirstOrDefault(option =>
+            option.Name.Equals(row.Name, StringComparison.OrdinalIgnoreCase)
+            && (row.SourceType.Length == 0 || option.SourceType.Equals(row.SourceType, StringComparison.OrdinalIgnoreCase)));
+        SelectedEffectLookup = matchedLookup;
+        NewEffectPower = Math.Max(1, row.Power).ToString();
+        NewEffectUses = Math.Max(1, row.UsesPerDay).ToString();
+
+        Recalculate();
+    }
+
+    public async Task<SpellService.SpellRaw?> FindSpellByNameAsync(string? spellName)
+    {
+        var name = (spellName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return null;
+
+        var all = await SpellService.GetAllAsync();
+        return all.FirstOrDefault(spell =>
+            string.Equals((spell?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public async Task<MiracleService.MiracRaw?> FindMiracleByNameAsync(string? miracleName)
+    {
+        var name = (miracleName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return null;
+
+        var all = await MiracleService.GetAllAsync();
+        return all.FirstOrDefault(miracle =>
+            string.Equals((miracle?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public async Task<DruidEvocationService.EvocRaw?> FindEvocationByNameAsync(string? evocationName)
+    {
+        var name = (evocationName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return null;
+
+        var all = await DruidEvocationService.GetAllAsync();
+        return all.FirstOrDefault(evoc =>
+            string.Equals((evoc?.name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
     }
 
     public string? AddManualBonus()
@@ -1384,6 +1477,8 @@ public sealed class MakeSheetViewModel : ObservableObject
         Raise(nameof(ShowEffectEditor));
         Raise(nameof(ShowEffectSearch));
         Raise(nameof(ShowEffectNameEntry));
+        Raise(nameof(ShowEffectUsesPerDay));
+        Raise(nameof(EffectPowerColumnSpan));
     }
 
     private void Recalculate()
@@ -2026,6 +2121,149 @@ public sealed class MakeSheetViewModel : ObservableObject
             automaticLines,
             ref bonusFromMode);
 
+        var magicalArtisanLevel = ResolveMultiClassCraftTrackLevel(McMagicalArtisanRefPrefix);
+        var magicalCalligrapherLevel = ResolveMultiClassCraftTrackLevel(McMagicalCalligrapherRefPrefix);
+        var spiritualArtisanLevel = ResolveMultiClassCraftTrackLevel(McSpiritualArtisanRefPrefix);
+        var spiritualCalligrapherLevel = ResolveMultiClassCraftTrackLevel(McSpiritualCalligrapherRefPrefix);
+        var naturalArtisanLevel = ResolveMultiClassCraftTrackLevel(McNaturalArtisanRefPrefix);
+        var neuronicArtisanLevel = ResolveMultiClassCraftTrackLevel(McNeuronicArtisanRefPrefix);
+        var smithLevel = ResolveMultiClassCraftTrackLevel(McSmithRefPrefix);
+
+        var rollCostReductionPercent = 0;
+        var rollCostReductionReason = string.Empty;
+
+        if (isMagical && !isTeaching && magicalArtisanLevel > 0)
+        {
+            AddBonusIf(
+                true,
+                magicalArtisanLevel,
+                "Magical Artisan (+1% per class level)",
+                automaticLines,
+                ref bonusFromMode);
+            if (magicalArtisanLevel >= 4)
+                TryReduceRollCount(calculation, 1, "Magical Artisan (Place of Power)", requirementNotes);
+
+            RegisterRollCostReduction(
+                ResolveMultiClassCostReductionPercent(magicalArtisanLevel),
+                "Magical Artisan",
+                ref rollCostReductionPercent,
+                ref rollCostReductionReason);
+        }
+
+        if (isMagical && isTeaching && magicalCalligrapherLevel > 0)
+        {
+            AddBonusIf(
+                true,
+                magicalCalligrapherLevel,
+                "Magical Calligrapher (+1% per class level)",
+                automaticLines,
+                ref bonusFromMode);
+            RegisterRollCostReduction(
+                ResolveMultiClassCostReductionPercent(magicalCalligrapherLevel),
+                "Magical Calligrapher",
+                ref rollCostReductionPercent,
+                ref rollCostReductionReason);
+        }
+
+        if (isSpiritual && !isScripture && spiritualArtisanLevel > 0)
+        {
+            AddBonusIf(
+                true,
+                spiritualArtisanLevel,
+                "Spiritual Artisan (+1% per class level)",
+                automaticLines,
+                ref bonusFromMode);
+            if (spiritualArtisanLevel >= 4)
+                TryReduceRollCount(calculation, 1, "Spiritual Artisan (Place of Power)", requirementNotes);
+
+            RegisterRollCostReduction(
+                ResolveMultiClassCostReductionPercent(spiritualArtisanLevel),
+                "Spiritual Artisan",
+                ref rollCostReductionPercent,
+                ref rollCostReductionReason);
+        }
+
+        if (isSpiritual && isScripture && spiritualCalligrapherLevel > 0)
+        {
+            AddBonusIf(
+                true,
+                spiritualCalligrapherLevel,
+                "Spiritual Calligrapher (+1% per class level)",
+                automaticLines,
+                ref bonusFromMode);
+            RegisterRollCostReduction(
+                ResolveMultiClassCostReductionPercent(spiritualCalligrapherLevel),
+                "Spiritual Calligrapher",
+                ref rollCostReductionPercent,
+                ref rollCostReductionReason);
+        }
+
+        if (isEarthpower && naturalArtisanLevel > 0)
+        {
+            AddBonusIf(
+                true,
+                naturalArtisanLevel,
+                "Natural Artisan (+1% per class level)",
+                automaticLines,
+                ref bonusFromMode);
+            if (naturalArtisanLevel >= 4)
+                TryReduceRollCount(calculation, 1, "Natural Artisan (Place of Power)", requirementNotes);
+
+            RegisterRollCostReduction(
+                ResolveMultiClassCostReductionPercent(naturalArtisanLevel),
+                "Natural Artisan",
+                ref rollCostReductionPercent,
+                ref rollCostReductionReason);
+        }
+
+        if (isNeuronic && neuronicArtisanLevel > 0)
+        {
+            AddBonusIf(
+                true,
+                neuronicArtisanLevel,
+                "Artisan of the Mind (+1% per class level)",
+                automaticLines,
+                ref bonusFromMode);
+            if (neuronicArtisanLevel >= 4)
+                TryReduceRollCount(calculation, 1, "Artisan of the Mind (Place of Power)", requirementNotes);
+
+            RegisterRollCostReduction(
+                ResolveMultiClassCostReductionPercent(neuronicArtisanLevel),
+                "Artisan of the Mind",
+                ref rollCostReductionPercent,
+                ref rollCostReductionReason);
+        }
+
+        if (isSmithed && smithLevel > 0)
+        {
+            AddBonusIf(
+                true,
+                smithLevel,
+                "Smith (+1% per class level)",
+                automaticLines,
+                ref bonusFromMode);
+
+            var apprenticeBonus = smithLevel >= 6 ? 10 : (smithLevel >= 4 ? 5 : 0);
+            AddBonusIf(
+                apprenticeBonus > 0,
+                apprenticeBonus,
+                "Smith Apprentice Bonus",
+                automaticLines,
+                ref bonusFromMode);
+
+            RegisterRollCostReduction(
+                ResolveMultiClassCostReductionPercent(smithLevel),
+                "Smith",
+                ref rollCostReductionPercent,
+                ref rollCostReductionReason);
+        }
+
+        ApplyRollCostReduction(
+            calculation,
+            rollCostReductionPercent,
+            rollCostReductionReason,
+            requirementNotes);
+
         if (HasAbility("Wizard's Laboratory", "ability.make.wizard-s-laboratory")
             && isMagical
             && !isTeaching)
@@ -2293,6 +2531,91 @@ public sealed class MakeSheetViewModel : ObservableObject
         lines.Add($"{reason} ({FormatSignedPercent(percent)})");
     }
 
+    private int ResolveMultiClassCraftTrackLevel(string abilityRefPrefix)
+    {
+        var prefix = (abilityRefPrefix ?? string.Empty).Trim();
+        if (prefix.Length == 0)
+            return 0;
+
+        for (var level = 6; level >= 1; level--)
+        {
+            if (HasAbility(name: string.Empty, abilityRef: $"{prefix}.l{level}"))
+                return level;
+        }
+
+        return 0;
+    }
+
+    private static int ResolveMultiClassCostReductionPercent(int level)
+    {
+        if (level >= 5)
+            return 20;
+        if (level >= 3)
+            return 10;
+        return 0;
+    }
+
+    private static void RegisterRollCostReduction(
+        int percent,
+        string reason,
+        ref int currentPercent,
+        ref string currentReason)
+    {
+        if (percent <= currentPercent)
+            return;
+
+        currentPercent = percent;
+        currentReason = (reason ?? string.Empty).Trim();
+    }
+
+    private static void ApplyRollCostReduction(
+        MakeCalculation calculation,
+        int percent,
+        string reason,
+        List<string> requirementNotes)
+    {
+        if (percent <= 0 || calculation == null || calculation.RollCostGrulls <= 0)
+            return;
+
+        var before = Math.Max(0, calculation.RollCostGrulls);
+        if (before <= 0)
+            return;
+
+        var after = (int)Math.Round(
+            before * ((100d - percent) / 100d),
+            MidpointRounding.AwayFromZero);
+        if (after <= 0)
+            after = 1;
+
+        if (after >= before)
+            return;
+
+        calculation.RollCostGrulls = after;
+
+        var source = (reason ?? string.Empty).Trim();
+        if (source.Length == 0)
+            source = "Multi-class";
+        requirementNotes.Add($"{source} reduces cost per roll by {percent}% ({before} -> {after} grulls).");
+    }
+
+    private static void TryReduceRollCount(
+        MakeCalculation calculation,
+        int reduceBy,
+        string reason,
+        List<string> requirementNotes)
+    {
+        if (calculation == null || reduceBy <= 0 || calculation.TotalRolls <= 0)
+            return;
+
+        var before = calculation.TotalRolls;
+        var after = Math.Max(1, before - reduceBy);
+        if (after >= before)
+            return;
+
+        calculation.TotalRolls = after;
+        requirementNotes.Add($"{reason} reduces required rolls by {before - after}.");
+    }
+
     private bool HasCraftSpecialityBonus(
         string abilityName,
         string abilityRef,
@@ -2487,6 +2810,8 @@ public sealed class MakeSheetViewModel : ObservableObject
             AddOwnedAbility(resolvedName, key, $"Character: {resolvedName}");
         }
 
+        await AddOwnedMultiClassAbilitiesAsync();
+
         foreach (var token in EnumerateItemGrantedAbilityTokens())
             AddOwnedAbility(token.Name, token.AbilityRef, $"Item: {token.Name}");
 
@@ -2499,6 +2824,163 @@ public sealed class MakeSheetViewModel : ObservableObject
 
         if (OwnedAbilityLines.Count == 0)
             OwnedAbilityLines.Add("No crafting-related character/item abilities detected.");
+    }
+
+    private async Task AddOwnedMultiClassAbilitiesAsync()
+    {
+        var selectedLevels = _draft.MultiClassLevels ?? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        if (selectedLevels.Count == 0)
+            return;
+
+        MultiClassCatalog? catalog = null;
+        try
+        {
+            catalog = await MultiClassService.GetCatalogAsync();
+        }
+        catch
+        {
+            return;
+        }
+
+        var definitions = catalog?.MultiClasses ?? new Dictionary<string, MultiClassDefinition>(StringComparer.OrdinalIgnoreCase);
+        if (definitions.Count == 0)
+            return;
+
+        foreach (var pair in selectedLevels)
+        {
+            var rawKey = (pair.Key ?? string.Empty).Trim();
+            if (rawKey.Length == 0 || pair.Value <= 0)
+                continue;
+
+            if (!TryResolveMultiClassDefinition(rawKey, definitions, out var resolvedKey, out var definition))
+                continue;
+
+            var maxLevel = ResolveMultiClassMaxLevel(definition);
+            var selectedLevel = Math.Clamp(pair.Value, 0, maxLevel);
+            if (selectedLevel <= 0)
+                continue;
+
+            var displayName = (definition.DisplayName ?? string.Empty).Trim();
+            if (displayName.Length == 0)
+                displayName = resolvedKey;
+
+            var grantedAbilityRefs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            for (var level = 1; level <= selectedLevel; level++)
+            {
+                if (!definition.Levels.TryGetValue(level.ToString(), out var levelAbilities) || levelAbilities == null)
+                    continue;
+
+                foreach (var ability in levelAbilities)
+                {
+                    if (ability == null)
+                        continue;
+
+                    if (!AreMultiClassAbilityPreReqsSatisfied(ability.PreReqs, grantedAbilityRefs))
+                        continue;
+
+                    var abilityName = (ability.Name ?? string.Empty).Trim();
+                    var abilityRef = (ability.AbilityRef ?? string.Empty).Trim();
+                    if (abilityName.Length == 0 && abilityRef.Length == 0)
+                        continue;
+
+                    if (abilityRef.Length > 0)
+                        grantedAbilityRefs.Add(abilityRef);
+
+                    var display = abilityName.Length > 0 ? abilityName : abilityRef;
+                    AddOwnedAbility(display, abilityRef, $"Multi-class ({displayName} L{level}): {display}");
+                }
+            }
+        }
+    }
+
+    private static bool TryResolveMultiClassDefinition(
+        string storedKey,
+        IReadOnlyDictionary<string, MultiClassDefinition> definitions,
+        out string resolvedKey,
+        out MultiClassDefinition definition)
+    {
+        resolvedKey = string.Empty;
+        definition = null!;
+
+        var key = (storedKey ?? string.Empty).Trim();
+        if (key.Length == 0)
+            return false;
+
+        if (definitions.TryGetValue(key, out definition))
+        {
+            resolvedKey = key;
+            return true;
+        }
+
+        var normalized = NormalizeToken(key);
+        foreach (var pair in definitions)
+        {
+            var pairKey = (pair.Key ?? string.Empty).Trim();
+            if (NormalizeToken(pairKey).Equals(normalized, StringComparison.OrdinalIgnoreCase))
+            {
+                resolvedKey = pairKey;
+                definition = pair.Value;
+                return true;
+            }
+
+            var display = (pair.Value.DisplayName ?? string.Empty).Trim();
+            if (display.Length == 0)
+                continue;
+
+            if (NormalizeToken(display).Equals(normalized, StringComparison.OrdinalIgnoreCase))
+            {
+                resolvedKey = pairKey;
+                definition = pair.Value;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static int ResolveMultiClassMaxLevel(MultiClassDefinition definition)
+    {
+        if (definition == null)
+            return 0;
+
+        if (definition.MaxLevel > 0)
+            return definition.MaxLevel;
+
+        var parsedMax = definition.Levels.Keys
+            .Select(level => int.TryParse(level, out var parsed) ? parsed : 0)
+            .DefaultIfEmpty(0)
+            .Max();
+
+        return Math.Max(0, parsedMax);
+    }
+
+    private static bool AreMultiClassAbilityPreReqsSatisfied(
+        IEnumerable<string>? preReqs,
+        IReadOnlySet<string> grantedAbilityRefs)
+    {
+        var entries = preReqs?
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Select(item => item.Trim())
+            .ToList();
+        if (entries == null || entries.Count == 0)
+            return true;
+
+        foreach (var preReq in entries)
+        {
+            if (grantedAbilityRefs.Contains(preReq))
+                continue;
+
+            if (grantedAbilityRefs.Any(existing =>
+                    existing.Equals(preReq, StringComparison.OrdinalIgnoreCase)
+                    || NormalizeToken(existing).Equals(NormalizeToken(preReq), StringComparison.OrdinalIgnoreCase)))
+            {
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     private static bool IsCraftRelatedAbility(OwnedAbilityEntry entry)
@@ -2677,6 +3159,12 @@ public sealed class MakeSheetViewModel : ObservableObject
         return int.TryParse(text, out var parsed) ? Math.Max(0, parsed) : 0;
     }
 
+    private static string NormalizeSelection(string? value, string fallback)
+    {
+        var trimmed = (value ?? string.Empty).Trim();
+        return trimmed.Length == 0 ? (fallback ?? string.Empty) : trimmed;
+    }
+
     private static string NormalizeToken(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -2748,25 +3236,41 @@ public sealed class MakeSheetViewModel : ObservableObject
 
 public sealed class MakeEffectRowVm
 {
-    public MakeEffectRowVm(string name, int power, int usesPerDay, string category)
+    public MakeEffectRowVm(
+        string name,
+        int power,
+        int usesPerDay,
+        string category,
+        string? sourceType = null,
+        bool usesPerDayEnabled = true)
     {
         Name = (name ?? string.Empty).Trim();
         Power = Math.Max(1, power);
         UsesPerDay = Math.Max(1, usesPerDay);
         Category = (category ?? string.Empty).Trim();
+        SourceType = (sourceType ?? string.Empty).Trim();
+        UsesPerDayEnabled = usesPerDayEnabled;
     }
 
     public string Name { get; }
     public int Power { get; }
     public int UsesPerDay { get; }
     public string Category { get; }
+    public string SourceType { get; }
+    public bool UsesPerDayEnabled { get; }
+    public bool HasInfoCard => SourceType.Length > 0;
+
+    public string RollSummary => UsesPerDayEnabled
+        ? $"{Power} x {UsesPerDay}/day"
+        : $"{Power}";
 
     public string DisplayText
     {
         get
         {
             var categoryText = Category.Length == 0 ? string.Empty : $" [{Category}]";
-            return $"{Name}{categoryText} - Cost {Power} - {UsesPerDay}/day";
+            var usesText = UsesPerDayEnabled ? $" - {UsesPerDay}/day" : string.Empty;
+            return $"{Name}{categoryText} - Cost {Power}{usesText}";
         }
     }
 }
