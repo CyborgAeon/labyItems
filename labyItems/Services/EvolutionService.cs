@@ -67,6 +67,7 @@ public static class EvolutionService
         public bool CanBuyMultiple { get; init; }
         public IReadOnlyList<string> PreReqs { get; init; } = Array.Empty<string>();
         public int? MaxAvailable { get; init; }
+        public int MaxAcIncrease { get; init; }
         public IReadOnlyList<string> ChoiceSetRefs { get; init; } = Array.Empty<string>();
         public bool IsNonStandard { get; init; }
     }
@@ -366,6 +367,7 @@ public static class EvolutionService
             CanBuyMultiple = row.can_buy_multiple != 0,
             PreReqs = ParsePreReqs(row.prereqs_json),
             MaxAvailable = ParseMaxAvailable(row.data_json),
+            MaxAcIncrease = ParseMaxAcIncrease(row.data_json),
             ChoiceSetRefs = ParseChoiceSetRefs(row.data_json),
             IsNonStandard = ParseNonStandard(row.data_json)
         };
@@ -799,6 +801,71 @@ public static class EvolutionService
         }
 
         return null;
+    }
+
+    private static int ParseMaxAcIncrease(string? dataJson)
+    {
+        if (string.IsNullOrWhiteSpace(dataJson))
+            return 0;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(dataJson);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+                return 0;
+
+            if (TryParseMaxAcIncreaseFromElement(doc.RootElement, out var directAmount))
+                return directAmount;
+
+            if (TryGetProperty(doc.RootElement, "data", out var dataElement)
+                && dataElement.ValueKind == JsonValueKind.Object
+                && TryParseMaxAcIncreaseFromElement(dataElement, out var nestedAmount))
+            {
+                return nestedAmount;
+            }
+        }
+        catch
+        {
+            // malformed data_json; treat as no max AC increment
+        }
+
+        return 0;
+    }
+
+    private static bool TryParseMaxAcIncreaseFromElement(JsonElement element, out int amount)
+    {
+        amount = 0;
+        var effectType = ReadStringProperty(element, "effectType");
+        if (effectType.Length == 0)
+            effectType = ReadStringProperty(element, "effect_type");
+
+        if (!effectType.Equals("increase:maxAC", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        if (!TryGetProperty(element, "amount", out var amountElement))
+            return false;
+
+        var parsedAmount = ParsePositiveInt(amountElement);
+        if (parsedAmount <= 0)
+            return false;
+
+        amount = parsedAmount;
+        return true;
+    }
+
+    private static int ParsePositiveInt(JsonElement value)
+    {
+        if (value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out var asNumber))
+            return Math.Max(0, asNumber);
+
+        if (value.ValueKind == JsonValueKind.String)
+        {
+            var token = (value.GetString() ?? string.Empty).Trim();
+            if (int.TryParse(token, out var asText))
+                return Math.Max(0, asText);
+        }
+
+        return 0;
     }
 
     private static IReadOnlyList<string> ParseChoiceSetRefs(string? dataJson)

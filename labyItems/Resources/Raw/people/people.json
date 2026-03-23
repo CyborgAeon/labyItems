@@ -254,7 +254,7 @@
       ],
       "8": [
         {
-          "Name": "1st Grade of Strength",
+          "Name": "2nd Grade of Strength",
           "Type": "Static",
           "Condition": "Class=Warrior"
         }

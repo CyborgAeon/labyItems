@@ -56,6 +56,7 @@
     <Compile Include="../../labyItems/Services/BattleboardResistanceLevelService.cs" Link="Source/BattleboardResistanceLevelService.cs" />
     <Compile Include="../../labyItems/Services/AbilityPrerequisiteService.cs" Link="Source/AbilityPrerequisiteService.cs" />
     <Compile Include="../../labyItems/Services/AbilityDefinitionLookupService.cs" Link="Source/AbilityDefinitionLookupService.cs" />
+    <Compile Include="../../labyItems/Services/MaxAcResolver.cs" Link="Source/MaxAcResolver.cs" />
     <Compile Include="../../labyItems/Services/AbilityEffects/AbilityEffectEvaluator.cs" Link="Source/AbilityEffectEvaluator.cs" />
     <Compile Include="../../labyItems/Services/AbilityEffects/TextFallbackEffectApplier.cs" Link="Source/TextFallbackEffectApplier.cs" />
     <Compile Include="../../labyItems/Services/BattleboardArmourCalculator.cs" Link="Source/BattleboardArmourCalculator.cs" />

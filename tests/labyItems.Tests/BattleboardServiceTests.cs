@@ -519,4 +519,229 @@ public sealed class BattleboardServiceTests : ServiceTestBase
 
         Assert.Equal("∞", sheet.Cell("AD23").GetString());
     }
+
+    [Fact]
+    public async Task ExportAsync_DamageSheet_AppliesMasteryStrengthAndItemBonuses()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-damage-sheet-primary",
+            Name = "Damage Sheet Tester",
+            PlayerName = "Tester",
+            Class = "Warrior",
+            Race = "Human",
+            TBLP = 40,
+            Loc = 6,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral)
+        };
+
+        draft.Abilities.Add(new AbilityDraft
+        {
+            Name = "1st Weapon Mastery (Bows)",
+            AbilityType = AbilityType.Static
+        });
+        draft.Abilities.Add(new AbilityDraft
+        {
+            Name = "Skilled",
+            Effect = "1st Weapon Mastery (Bows)",
+            Source = "Guild:Knights of the Land",
+            AbilityType = AbilityType.Static
+        });
+        draft.Abilities.Add(new AbilityDraft
+        {
+            Name = "2nd Weapon Mastery (Bows)",
+            AbilityType = AbilityType.Static
+        });
+        draft.Abilities.Add(new AbilityDraft
+        {
+            Name = "1st Grade of Strength",
+            AbilityType = AbilityType.Static
+        });
+
+        var weaponItem = new Item
+        {
+            Id = Guid.NewGuid().ToString("N"),
+            AssignedCharacterId = draft.CharacterRecordId,
+            AssignedCharacterName = draft.Name,
+            AssignedCharacterPlayerName = draft.PlayerName,
+            CreatedDate = DateTime.UtcNow
+        };
+        var weaponPayload = ItemEmailService.BuildItemPayload(weaponItem, new[]
+        {
+            new CalcResult
+            {
+                AbilityType = "Weapon",
+                AbilityName = "Weapon",
+                Details = new Dictionary<string, object?>
+                {
+                    ["base"] = "MagicPlus2",
+                    ["type"] = "Crossbow"
+                }
+            }
+        });
+        weaponItem.PayloadJson = ItemEmailService.SerializeItemPayload(weaponPayload);
+
+        var strengthItem = new Item
+        {
+            Id = Guid.NewGuid().ToString("N"),
+            AssignedCharacterId = draft.CharacterRecordId,
+            AssignedCharacterName = draft.Name,
+            AssignedCharacterPlayerName = draft.PlayerName,
+            CreatedDate = DateTime.UtcNow
+        };
+        var strengthPayload = ItemEmailService.BuildItemPayload(strengthItem, new[]
+        {
+            new CalcResult
+            {
+                AbilityType = "General",
+                AbilityName = "+1 strength",
+                Summary = "+1 strength"
+            }
+        });
+        strengthItem.PayloadJson = ItemEmailService.SerializeItemPayload(strengthPayload);
+
+        var service = new BattleboardExportService(_ => new[] { weaponItem, strengthItem });
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("damage sheet");
+
+        Assert.Equal(1, CountRowsByFirstCell(sheet, "1st Weapon Mastery (Bows)"));
+        Assert.True(FindRowByFirstCell(sheet, "2nd Weapon Mastery (Bows)") > 0);
+        Assert.True(FindRowByFirstCell(sheet, "1st Grade of Strength") > 0);
+        Assert.True(FindRowByFirstCell(sheet, "Item Strength (+1)") > 0);
+        Assert.True(FindRowByFirstCell(sheet, "Item Weapon Bonus (+2 Crossbow)") > 0);
+
+        var totalRow = FindTotalRowForTable(sheet, "Ranged");
+        Assert.True(totalRow > 0);
+        Assert.Equal(7, sheet.Cell(totalRow, 2).GetValue<int>());
+        Assert.Equal("seven", sheet.Cell(totalRow, 3).GetString());
+    }
+
+    [Fact]
+    public async Task ExportAsync_DamageSheet_UsesBwtBaseAndBastardPrefix()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-damage-sheet-bwt",
+            Name = "Damage BWT Tester",
+            PlayerName = "Tester",
+            Class = "Warrior",
+            Race = "Human",
+            TBLP = 40,
+            Loc = 6,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral)
+        };
+
+        draft.Abilities.Add(new AbilityDraft
+        {
+            Name = "1st Weapon Mastery (Great Axe)",
+            AbilityType = AbilityType.Static
+        });
+        draft.Abilities.Add(new AbilityDraft
+        {
+            Name = "1st Weapon Mastery (Bastard Sword)",
+            AbilityType = AbilityType.Static
+        });
+
+        var service = new BattleboardExportService();
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("damage sheet");
+
+        var greatAxeTotalRow = FindTotalRowForTable(sheet, "Great Axe");
+        Assert.True(greatAxeTotalRow > 0);
+        Assert.Equal(3, sheet.Cell(greatAxeTotalRow, 2).GetValue<int>());
+        Assert.Equal("triple", sheet.Cell(greatAxeTotalRow, 3).GetString());
+
+        var bastardTotalRow = FindTotalRowForTable(sheet, "Bastard Sword");
+        Assert.True(bastardTotalRow > 0);
+        Assert.Equal(3, sheet.Cell(bastardTotalRow, 2).GetValue<int>());
+        Assert.Equal("bstd triple", sheet.Cell(bastardTotalRow, 3).GetString());
+    }
+
+    [Fact]
+    public async Task ExportAsync_DamageSheet_GroupsRangedWeaponsIntoSingleTable()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-damage-sheet-ranged",
+            Name = "Damage Ranged Tester",
+            PlayerName = "Tester",
+            Class = "Warrior",
+            Race = "Human",
+            TBLP = 40,
+            Loc = 6,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral)
+        };
+
+        draft.Abilities.Add(new AbilityDraft
+        {
+            Name = "1st Weapon Mastery (Bows)",
+            AbilityType = AbilityType.Static
+        });
+        draft.Abilities.Add(new AbilityDraft
+        {
+            Name = "2nd Weapon Mastery (Crossbow)",
+            AbilityType = AbilityType.Static
+        });
+
+        var service = new BattleboardExportService();
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("damage sheet");
+
+        Assert.Equal(1, CountRowsByFirstCell(sheet, "Ranged"));
+        Assert.True(FindRowByFirstCell(sheet, "1st Weapon Mastery (Bows)") > 0);
+        Assert.True(FindRowByFirstCell(sheet, "2nd Weapon Mastery (Crossbow)") > 0);
+        Assert.Equal(0, CountRowsByFirstCell(sheet, "Bow"));
+        Assert.Equal(0, CountRowsByFirstCell(sheet, "Crossbow"));
+    }
+
+    private static int FindRowByFirstCell(IXLWorksheet sheet, string expected)
+    {
+        var lastRow = sheet.LastRowUsed()?.RowNumber() ?? 0;
+        for (var row = 1; row <= lastRow; row++)
+        {
+            if (sheet.Cell(row, 1).GetString().Equals(expected, StringComparison.OrdinalIgnoreCase))
+                return row;
+        }
+
+        return 0;
+    }
+
+    private static int CountRowsByFirstCell(IXLWorksheet sheet, string expected)
+    {
+        var lastRow = sheet.LastRowUsed()?.RowNumber() ?? 0;
+        var count = 0;
+
+        for (var row = 1; row <= lastRow; row++)
+        {
+            if (sheet.Cell(row, 1).GetString().Equals(expected, StringComparison.OrdinalIgnoreCase))
+                count++;
+        }
+
+        return count;
+    }
+
+    private static int FindTotalRowForTable(IXLWorksheet sheet, string tableName)
+    {
+        var tableRow = FindRowByFirstCell(sheet, tableName);
+        if (tableRow <= 0)
+            return 0;
+
+        var lastRow = sheet.LastRowUsed()?.RowNumber() ?? 0;
+        for (var row = tableRow + 1; row <= lastRow; row++)
+        {
+            if (sheet.Cell(row, 1).GetString().Equals("Total", StringComparison.OrdinalIgnoreCase))
+                return row;
+        }
+
+        return 0;
+    }
 }

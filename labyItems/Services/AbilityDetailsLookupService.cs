@@ -114,6 +114,18 @@ public static class AbilityDetailsLookupService
         _lookup = null;
     }
 
+    public static bool TryGetLookup(out IReadOnlyDictionary<string, EvolutionService.AbilityResult> lookup)
+    {
+        if (_lookup is null)
+        {
+            lookup = new Dictionary<string, EvolutionService.AbilityResult>(StringComparer.OrdinalIgnoreCase);
+            return false;
+        }
+
+        lookup = _lookup;
+        return true;
+    }
+
     private static string StripTrailingParenthetical(string value)
     {
         var text = value ?? string.Empty;

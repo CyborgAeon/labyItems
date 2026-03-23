@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.NonStandard.NonStandardRaceAbilityRowEditorPage"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    Shell.NavBarIsVisible="False"
+    Title="">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+          Padding="16"
+          RowSpacing="12">
+        <Grid ColumnDefinitions="*,Auto">
+            <Label Text="Edit ability row"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="Center"/>
+            <Button Grid.Column="1"
+                    Text="&#xF00D;"
+                    FontFamily="FASolid"
+                    WidthRequest="36"
+                    HeightRequest="36"
+                    Padding="0"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource AccentMaroonColor}"
+                    Clicked="OnCloseClicked"/>
+        </Grid>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="Auto,*"
+              ColumnSpacing="8">
+            <Label Text="Level"
+                   VerticalTextAlignment="Center"/>
+            <Picker Grid.Column="1"
+                    ItemsSource="{Binding LevelOptions}"
+                    SelectedItem="{Binding SelectedLevel, Mode=TwoWay}"/>
+        </Grid>
+
+        <Entry Grid.Row="2"
+               Text="{Binding AbilityName, Mode=TwoWay}"
+               Placeholder="Ability name"/>
+
+        <Grid Grid.Row="3"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="8">
+            <Entry Grid.Column="0"
+                   Text="{Binding AbilityType, Mode=TwoWay}"
+                   Placeholder="Type"/>
+            <Entry Grid.Column="1"
+                   Keyboard="Numeric"
+                   Text="{Binding CountText, Mode=TwoWay}"
+                   Placeholder="Count (optional)"/>
+        </Grid>
+
+        <Button Grid.Row="4"
+                Text="Done"
+                Style="{StaticResource ExpandedActionButtonStyle}"
+                Clicked="OnDoneClicked"/>
+    </Grid>
+</ContentPage>

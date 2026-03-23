@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using labyItems.Helpers;
+using labyItems.Models.Characters;
 using labyItems.Services;
 
 namespace labyItems.Pages.NonStandard;
@@ -10,6 +12,30 @@ namespace labyItems.Pages.NonStandard;
 public sealed class NonStandardCreateVm : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    private static readonly IReadOnlyList<string> GuildOverrideTypes =
+    [
+        "Political",
+        "Professional",
+        "Social",
+        "City"
+    ];
+
+    private static readonly HashSet<string> RaceStructuredFieldKeys = new(
+        [
+            NormalizeFieldKey("PeopleType"),
+            NormalizeFieldKey("levelledAbilities"),
+            NormalizeFieldKey("Subtype"),
+            NormalizeFieldKey("GuildOverrides"),
+            NormalizeFieldKey("alignmentRule")
+        ],
+        StringComparer.OrdinalIgnoreCase);
+
+    private static readonly JsonSerializerOptions GuildJsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        Converters = { new GuildOverrideRulesConverter() }
+    };
 
     private static readonly JsonSerializerOptions PrettyJson = new()
     {
@@ -103,14 +129,37 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     private readonly ObservableCollection<NonStandardFieldVm> _fields = new();
     private readonly ObservableCollection<string> _raceOptions = new();
     private readonly ObservableCollection<string> _classOptions = new();
+    private readonly ObservableCollection<string> _racePeopleTypeOptions = new();
+    private readonly ObservableCollection<string> _selectedRacePeopleTypes = new();
+    private readonly ObservableCollection<RaceAbilityRowVm> _raceAbilityRows = new();
+    private readonly ObservableCollection<string> _guildOverrideTypeOptions = new(GuildOverrideTypes);
+    private readonly ObservableCollection<string> _selectedRaceGuildOverrideTypes = new();
+    private readonly ObservableCollection<Alignment> _selectedRaceAlignments = new();
+    private readonly ObservableCollection<RaceSubtypeOptionVm> _raceSubtypeOptions = new();
+    private readonly ObservableCollection<RaceSubtypeCopyVm> _raceSubtypeCopies = new();
+
+    private readonly Dictionary<string, EvolutionService.AbilityResult> _raceAbilityLookup =
+        new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, SpecialisationRecord> _specialisationLookup =
+        new(StringComparer.OrdinalIgnoreCase);
 
     private bool _initialized;
     private bool _suppressTypeReload;
     private bool _isBusy;
+    private bool _raceLookupsLoaded;
+    private bool _specialisationLookupLoaded;
     private string _name = string.Empty;
     private string _saveStatus = string.Empty;
     private string _lifeScalePointsJson = string.Empty;
     private bool _isLifeScaleExpanded;
+    private bool _isRaceAlignmentCardExpanded;
+    private bool _includeRaceAlignmentRule;
+    private string _raceSubtypeKey = string.Empty;
+    private string _raceSubtypeDisplayName = string.Empty;
+    private string _raceSubtypeDescription = string.Empty;
+    private string _raceSubtypeSelectionMode = "SingleOptional";
+    private string _raceSubtypeOptionsSource = string.Empty;
+    private string _raceSubtypeAbilityMapKey = string.Empty;
 
     private NonStandardTypeOptionVm? _selectedEntityType;
     private NonStandardTemplate? _selectedBaseTemplate;
@@ -130,6 +179,24 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     public ObservableCollection<NonStandardFieldVm> Fields => _fields;
     public ObservableCollection<string> LifeScaleRaceOptions => _raceOptions;
     public ObservableCollection<string> LifeScaleClassOptions => _classOptions;
+    public ObservableCollection<string> RacePeopleTypeOptions => _racePeopleTypeOptions;
+    public ObservableCollection<string> SelectedRacePeopleTypes => _selectedRacePeopleTypes;
+    public ObservableCollection<RaceAbilityRowVm> RaceAbilityRows => _raceAbilityRows;
+    public ObservableCollection<string> GuildOverrideTypeOptions => _guildOverrideTypeOptions;
+    public ObservableCollection<string> SelectedRaceGuildOverrideTypes => _selectedRaceGuildOverrideTypes;
+    public ObservableCollection<Alignment> SelectedRaceAlignments => _selectedRaceAlignments;
+    public ObservableCollection<RaceSubtypeOptionVm> RaceSubtypeOptions => _raceSubtypeOptions;
+    public ObservableCollection<RaceSubtypeCopyVm> RaceSubtypeCopies => _raceSubtypeCopies;
+
+    public NonStandardCreateVm()
+    {
+        _selectedRacePeopleTypes.CollectionChanged += (_, _) => OnRaceStructuredDataChanged();
+        _selectedRaceGuildOverrideTypes.CollectionChanged += (_, _) => OnRaceStructuredDataChanged();
+        _selectedRaceAlignments.CollectionChanged += (_, _) => OnRaceStructuredDataChanged();
+        _raceAbilityRows.CollectionChanged += OnRaceAbilityRowsChanged;
+        _raceSubtypeCopies.CollectionChanged += OnRaceSubtypeCopiesChanged;
+        InitializeRaceAlignmentDefaults();
+    }
 
     public NonStandardTypeOptionVm? SelectedEntityType
     {
@@ -142,6 +209,9 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             Raise(nameof(RequiresLifeScale));
             Raise(nameof(ShowClassLifeScaleSelectors));
             Raise(nameof(ShowRaceLifeScaleSelectors));
+            Raise(nameof(IsRaceType));
+            Raise(nameof(ShowStructuredRaceEditor));
+            Raise(nameof(HasSubtypeEditorData));
             Raise(nameof(CanSave));
 
             if (!_suppressTypeReload)
@@ -199,6 +269,125 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     }
 
     public bool HasSaveStatus => !string.IsNullOrWhiteSpace((SaveStatus ?? string.Empty).Trim());
+
+    public bool IsRaceType => CurrentType == NonStandardEntityType.CharacterRace;
+
+    public bool ShowStructuredRaceEditor => IsRaceType;
+
+    public bool HasSubtypeEditorData
+        => !string.IsNullOrWhiteSpace((_raceSubtypeKey ?? string.Empty).Trim())
+            || !string.IsNullOrWhiteSpace((_raceSubtypeDisplayName ?? string.Empty).Trim())
+            || !string.IsNullOrWhiteSpace((_raceSubtypeDescription ?? string.Empty).Trim())
+            || !string.IsNullOrWhiteSpace((_raceSubtypeOptionsSource ?? string.Empty).Trim())
+            || !string.IsNullOrWhiteSpace((_raceSubtypeAbilityMapKey ?? string.Empty).Trim())
+            || RaceSubtypeOptions.Count > 0
+            || RaceSubtypeCopies.Count > 0;
+
+    public string RaceAlignmentChevronText => IsRaceAlignmentCardExpanded ? "▴" : "▾";
+
+    public bool IsRaceAlignmentCardExpanded
+    {
+        get => _isRaceAlignmentCardExpanded;
+        set
+        {
+            if (!Set(ref _isRaceAlignmentCardExpanded, value))
+                return;
+
+            Raise(nameof(RaceAlignmentChevronText));
+        }
+    }
+
+    public bool IncludeRaceAlignmentRule
+    {
+        get => _includeRaceAlignmentRule;
+        set
+        {
+            if (!Set(ref _includeRaceAlignmentRule, value))
+                return;
+
+            OnRaceStructuredDataChanged();
+        }
+    }
+
+    public string RaceSubtypeKey
+    {
+        get => _raceSubtypeKey;
+        set
+        {
+            if (!Set(ref _raceSubtypeKey, value ?? string.Empty))
+                return;
+
+            OnRaceStructuredDataChanged();
+            Raise(nameof(HasSubtypeEditorData));
+        }
+    }
+
+    public string RaceSubtypeDisplayName
+    {
+        get => _raceSubtypeDisplayName;
+        set
+        {
+            if (!Set(ref _raceSubtypeDisplayName, value ?? string.Empty))
+                return;
+
+            OnRaceStructuredDataChanged();
+            Raise(nameof(HasSubtypeEditorData));
+        }
+    }
+
+    public string RaceSubtypeDescription
+    {
+        get => _raceSubtypeDescription;
+        set
+        {
+            if (!Set(ref _raceSubtypeDescription, value ?? string.Empty))
+                return;
+
+            OnRaceStructuredDataChanged();
+            Raise(nameof(HasSubtypeEditorData));
+        }
+    }
+
+    public string RaceSubtypeSelectionMode
+    {
+        get => _raceSubtypeSelectionMode;
+        set
+        {
+            if (!Set(ref _raceSubtypeSelectionMode, value ?? "SingleOptional"))
+                return;
+
+            OnRaceStructuredDataChanged();
+            Raise(nameof(HasSubtypeEditorData));
+        }
+    }
+
+    public string RaceSubtypeOptionsSource
+    {
+        get => _raceSubtypeOptionsSource;
+        set
+        {
+            if (!Set(ref _raceSubtypeOptionsSource, value ?? string.Empty))
+                return;
+
+            _ = RefreshSubtypeOptionsAsync();
+            OnRaceStructuredDataChanged();
+            Raise(nameof(HasSubtypeEditorData));
+        }
+    }
+
+    public string RaceSubtypeAbilityMapKey
+    {
+        get => _raceSubtypeAbilityMapKey;
+        set
+        {
+            if (!Set(ref _raceSubtypeAbilityMapKey, value ?? string.Empty))
+                return;
+
+            _ = RefreshSubtypeOptionsAsync();
+            OnRaceStructuredDataChanged();
+            Raise(nameof(HasSubtypeEditorData));
+        }
+    }
 
     public bool RequiresLifeScale => CurrentType is NonStandardEntityType.CharacterClass or NonStandardEntityType.CharacterRace;
     public bool ShowClassLifeScaleSelectors => CurrentType == NonStandardEntityType.CharacterClass;
@@ -398,6 +587,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         SelectedEntityType = _entityTypes.FirstOrDefault();
 
         await LoadLifeScaleLookupsAsync();
+        await EnsureRaceEditorLookupsAsync();
         await ReloadForSelectedTypeAsync(preferredTemplateName: null);
 
         if (preferredType.HasValue)
@@ -487,6 +677,184 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         field.Value = ConvertAlternativeValue(selected.Value, field.Kind);
     }
 
+    public async Task RefreshLookupsOnAppearAsync()
+    {
+        if (!_initialized)
+            return;
+
+        await LoadLifeScaleLookupsAsync();
+        await EnsureRaceEditorLookupsAsync();
+        EnsureLifeScaleSelectionsAreValid();
+        await RefreshSubtypeOptionsAsync();
+        Raise(nameof(CanSave));
+    }
+
+    public void ToggleRaceAlignmentExpanded()
+    {
+        IsRaceAlignmentCardExpanded = !IsRaceAlignmentCardExpanded;
+    }
+
+    public async Task SearchRaceAbilityAsync(INavigation navigation)
+    {
+        if (!IsRaceType || navigation == null)
+            return;
+
+        await EnsureRaceEditorLookupsAsync();
+        if (_raceAbilityLookup.Count == 0)
+            return;
+
+        var options = _raceAbilityLookup.Values
+            .OrderBy(entry => entry.Table)
+            .ThenBy(entry => entry.Index, StringComparer.OrdinalIgnoreCase)
+            .Select(entry => new NonStandardSearchOption(
+                Title: entry.Index,
+                Subtitle: $"Table {entry.Table}",
+                Value: entry.Index))
+            .ToList();
+
+        var selected = await NonStandardSearchPage.PickAsync(navigation, "Select Ability", options);
+        if (selected == null)
+            return;
+
+        AddRaceAbilityRow(level: 1, selected.Value, type: "Static", countText: string.Empty, subtypeCopyId: null);
+    }
+
+    public void RemoveRaceAbilityRow(RaceAbilityRowVm? row)
+    {
+        if (row == null)
+            return;
+
+        if (row.SubtypeCopyId != null)
+        {
+            var copy = RaceSubtypeCopies.FirstOrDefault(item => item.Id == row.SubtypeCopyId.Value);
+            copy?.Abilities.Remove(row);
+            return;
+        }
+
+        RaceAbilityRows.Remove(row);
+    }
+
+    public void ApplyRaceAbilityRowEdit(RaceAbilityRowVm? row, int level, string? abilityName, string? abilityType, string? countText)
+    {
+        if (row == null)
+            return;
+
+        row.Level = Math.Clamp(level, 1, 8);
+        row.AbilityName = (abilityName ?? string.Empty).Trim();
+        row.AbilityType = (abilityType ?? string.Empty).Trim();
+        row.CountText = (countText ?? string.Empty).Trim();
+        row.RefreshSummary();
+        OnRaceStructuredDataChanged();
+    }
+
+    public string BuildRaceAbilityInfoText(RaceAbilityRowVm? row)
+    {
+        if (row == null)
+            return "No ability selected.";
+
+        var name = (row.AbilityName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return "No ability selected.";
+
+        if (_raceAbilityLookup.TryGetValue(name, out var known))
+        {
+            var details = new List<string>
+            {
+                known.Index,
+                $"Type: {(string.IsNullOrWhiteSpace(row.AbilityType) ? "Static" : row.AbilityType)}",
+                $"Table: {known.Table}",
+                $"Cost: {known.Cost}"
+            };
+
+            if (known.Description?.Trim().Length > 0)
+                details.Add(known.Description.Trim());
+
+            return string.Join(Environment.NewLine, details);
+        }
+
+        var fallback = new List<string>
+        {
+            name,
+            $"Type: {(string.IsNullOrWhiteSpace(row.AbilityType) ? "Static" : row.AbilityType)}"
+        };
+
+        if (!string.IsNullOrWhiteSpace((row.CountText ?? string.Empty).Trim()))
+            fallback.Add($"Count: {row.CountText.Trim()}");
+
+        return string.Join(Environment.NewLine, fallback);
+    }
+
+    public void AddSubtypeCopyFromOption(RaceSubtypeOptionVm? option)
+    {
+        if (option == null)
+            return;
+
+        var baseName = (option.Name ?? string.Empty).Trim();
+        var nextName = BuildNextSubtypeCopyName(baseName.Length == 0 ? "Subtype option" : baseName);
+        var copy = new RaceSubtypeCopyVm
+        {
+            Name = nextName,
+            Description = option.Description
+        };
+
+        foreach (var source in option.Abilities)
+            copy.Abilities.Add(CloneRaceAbilityRow(source, copy.Id));
+
+        RaceSubtypeCopies.Add(copy);
+        Raise(nameof(HasSubtypeEditorData));
+        OnRaceStructuredDataChanged();
+    }
+
+    public void AddBlankSubtypeCopy()
+    {
+        var copy = new RaceSubtypeCopyVm
+        {
+            Name = BuildNextSubtypeCopyName("Custom subtype"),
+            Description = string.Empty
+        };
+
+        RaceSubtypeCopies.Add(copy);
+        Raise(nameof(HasSubtypeEditorData));
+        OnRaceStructuredDataChanged();
+    }
+
+    public void RemoveSubtypeCopy(RaceSubtypeCopyVm? copy)
+    {
+        if (copy == null)
+            return;
+
+        RaceSubtypeCopies.Remove(copy);
+        Raise(nameof(HasSubtypeEditorData));
+        OnRaceStructuredDataChanged();
+    }
+
+    public async Task SearchSubtypeCopyAbilityAsync(INavigation navigation, RaceSubtypeCopyVm? copy)
+    {
+        if (!IsRaceType || navigation == null || copy == null)
+            return;
+
+        await EnsureRaceEditorLookupsAsync();
+        if (_raceAbilityLookup.Count == 0)
+            return;
+
+        var options = _raceAbilityLookup.Values
+            .OrderBy(entry => entry.Table)
+            .ThenBy(entry => entry.Index, StringComparer.OrdinalIgnoreCase)
+            .Select(entry => new NonStandardSearchOption(
+                Title: entry.Index,
+                Subtitle: $"Table {entry.Table}",
+                Value: entry.Index))
+            .ToList();
+
+        var selected = await NonStandardSearchPage.PickAsync(navigation, "Select Ability", options);
+        if (selected == null)
+            return;
+
+        var row = CreateRaceAbilityRow(level: 1, abilityName: selected.Value, type: "Static", countText: string.Empty, copy.Id);
+        copy.Abilities.Add(row);
+        OnRaceStructuredDataChanged();
+    }
+
     public async Task SaveAsync()
     {
         if (!CanSave)
@@ -561,6 +929,7 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
 
         var type = CurrentType;
         var templates = await NonStandardContentService.GetTemplatesAsync(type);
+        await EnsureRaceEditorLookupsAsync();
 
         ReplaceItems(_baseTemplates, templates);
 
@@ -709,16 +1078,22 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             oldField.PropertyChanged -= OnFieldPropertyChanged;
 
         _fields.Clear();
+        ResetRaceStructuredState();
 
         var definitions = FieldDefinitions.TryGetValue(entityType, out var configured)
             ? configured
             : Array.Empty<NonStandardFieldDefinition>();
 
         var properties = ParseObjectProperties(baseJson);
+        if (entityType == NonStandardEntityType.CharacterRace)
+            ParseRaceStructuredFields(properties);
 
         foreach (var definition in definitions)
         {
             var normalized = NormalizeFieldKey(definition.Key);
+            if (entityType == NonStandardEntityType.CharacterRace && RaceStructuredFieldKeys.Contains(normalized))
+                continue;
+
             string value = string.Empty;
 
             if (properties.TryGetValue(normalized, out var property))
@@ -740,6 +1115,12 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
                 continue;
             }
 
+            if (entityType == NonStandardEntityType.CharacterRace
+                && RaceStructuredFieldKeys.Contains(NormalizeFieldKey(extra.Name)))
+            {
+                continue;
+            }
+
             var field = new NonStandardFieldVm(
                 key: extra.Name,
                 label: BuildLabel(extra.Name),
@@ -750,7 +1131,11 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
         }
 
         Raise(nameof(Fields));
+        Raise(nameof(IsRaceType));
+        Raise(nameof(ShowStructuredRaceEditor));
+        Raise(nameof(HasSubtypeEditorData));
         Raise(nameof(CanSave));
+        UpdatePreview();
     }
 
     private void OnFieldPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -760,6 +1145,762 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
 
         SaveStatus = string.Empty;
         UpdatePreview();
+    }
+
+    private void OnRaceAbilityRowsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+        {
+            foreach (var row in e.OldItems.OfType<RaceAbilityRowVm>())
+                row.PropertyChanged -= OnRaceAbilityRowChanged;
+        }
+
+        if (e.NewItems != null)
+        {
+            foreach (var row in e.NewItems.OfType<RaceAbilityRowVm>())
+                row.PropertyChanged += OnRaceAbilityRowChanged;
+        }
+
+        OnRaceStructuredDataChanged();
+    }
+
+    private void OnRaceSubtypeCopiesChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+        {
+            foreach (var copy in e.OldItems.OfType<RaceSubtypeCopyVm>())
+                DetachSubtypeCopy(copy);
+        }
+
+        if (e.NewItems != null)
+        {
+            foreach (var copy in e.NewItems.OfType<RaceSubtypeCopyVm>())
+                AttachSubtypeCopy(copy);
+        }
+
+        Raise(nameof(HasSubtypeEditorData));
+        OnRaceStructuredDataChanged();
+    }
+
+    private void AttachSubtypeCopy(RaceSubtypeCopyVm copy)
+    {
+        copy.PropertyChanged += OnRaceSubtypeCopyChanged;
+        copy.Abilities.CollectionChanged += OnSubtypeCopyAbilityRowsChanged;
+        foreach (var row in copy.Abilities)
+            row.PropertyChanged += OnRaceAbilityRowChanged;
+    }
+
+    private void DetachSubtypeCopy(RaceSubtypeCopyVm copy)
+    {
+        copy.PropertyChanged -= OnRaceSubtypeCopyChanged;
+        copy.Abilities.CollectionChanged -= OnSubtypeCopyAbilityRowsChanged;
+        foreach (var row in copy.Abilities)
+            row.PropertyChanged -= OnRaceAbilityRowChanged;
+    }
+
+    private void OnSubtypeCopyAbilityRowsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+        {
+            foreach (var row in e.OldItems.OfType<RaceAbilityRowVm>())
+                row.PropertyChanged -= OnRaceAbilityRowChanged;
+        }
+
+        if (e.NewItems != null)
+        {
+            foreach (var row in e.NewItems.OfType<RaceAbilityRowVm>())
+                row.PropertyChanged += OnRaceAbilityRowChanged;
+        }
+
+        OnRaceStructuredDataChanged();
+    }
+
+    private void OnRaceSubtypeCopyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(RaceSubtypeCopyVm.Name) or nameof(RaceSubtypeCopyVm.Description))
+            OnRaceStructuredDataChanged();
+    }
+
+    private void OnRaceAbilityRowChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(RaceAbilityRowVm.AbilityName)
+            or nameof(RaceAbilityRowVm.AbilityType)
+            or nameof(RaceAbilityRowVm.Level)
+            or nameof(RaceAbilityRowVm.CountText))
+        {
+            OnRaceStructuredDataChanged();
+        }
+    }
+
+    private void OnRaceStructuredDataChanged()
+    {
+        SaveStatus = string.Empty;
+        Raise(nameof(CanSave));
+        UpdatePreview();
+    }
+
+    private void ResetRaceStructuredState()
+    {
+        _selectedRacePeopleTypes.Clear();
+        _raceAbilityRows.Clear();
+        _selectedRaceGuildOverrideTypes.Clear();
+        _raceSubtypeOptions.Clear();
+        _raceSubtypeCopies.Clear();
+
+        _raceSubtypeKey = string.Empty;
+        _raceSubtypeDisplayName = string.Empty;
+        _raceSubtypeDescription = string.Empty;
+        _raceSubtypeSelectionMode = "SingleOptional";
+        _raceSubtypeOptionsSource = string.Empty;
+        _raceSubtypeAbilityMapKey = string.Empty;
+        _includeRaceAlignmentRule = false;
+        InitializeRaceAlignmentDefaults();
+        Raise(nameof(RaceSubtypeKey));
+        Raise(nameof(RaceSubtypeDisplayName));
+        Raise(nameof(RaceSubtypeDescription));
+        Raise(nameof(RaceSubtypeSelectionMode));
+        Raise(nameof(RaceSubtypeOptionsSource));
+        Raise(nameof(RaceSubtypeAbilityMapKey));
+        Raise(nameof(IncludeRaceAlignmentRule));
+        Raise(nameof(HasSubtypeEditorData));
+    }
+
+    private async Task EnsureRaceEditorLookupsAsync()
+    {
+        if (!_raceLookupsLoaded)
+        {
+            var races = await PeopleService.GetAllAsync();
+            var peopleTypes = races.Values
+                .SelectMany(record => record.PeopleType ?? new List<string>())
+                .Select(value => (value ?? string.Empty).Trim())
+                .Where(value => value.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(value => value, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            ReplaceItems(_racePeopleTypeOptions, peopleTypes);
+
+            _raceAbilityLookup.Clear();
+            var abilities = await EvolutionService.GetAllAbilitiesAsync();
+            foreach (var ability in abilities)
+            {
+                var key = (ability.Index ?? string.Empty).Trim();
+                if (key.Length == 0)
+                    continue;
+
+                _raceAbilityLookup[key] = ability;
+            }
+
+            _raceLookupsLoaded = true;
+        }
+
+        if (!_specialisationLookupLoaded)
+        {
+            _specialisationLookup.Clear();
+            var all = await SpecialisationService.GetAllAsync();
+            foreach (var entry in all)
+                _specialisationLookup[entry.Key] = entry.Value;
+
+            _specialisationLookupLoaded = true;
+        }
+    }
+
+    private void ParseRaceStructuredFields(Dictionary<string, (string Name, JsonElement Value)> properties)
+    {
+        if (properties.TryGetValue(NormalizeFieldKey("PeopleType"), out var peopleTypeProperty))
+        {
+            ParseRacePeopleTypeProperty(peopleTypeProperty.Value);
+            properties.Remove(NormalizeFieldKey("PeopleType"));
+        }
+
+        if (properties.TryGetValue(NormalizeFieldKey("levelledAbilities"), out var levelledProperty))
+        {
+            ParseRaceLevelledAbilities(levelledProperty.Value);
+            properties.Remove(NormalizeFieldKey("levelledAbilities"));
+        }
+
+        if (properties.TryGetValue(NormalizeFieldKey("Subtype"), out var subtypeProperty))
+        {
+            ParseRaceSubtype(subtypeProperty.Value);
+            properties.Remove(NormalizeFieldKey("Subtype"));
+        }
+
+        if (properties.TryGetValue(NormalizeFieldKey("GuildOverrides"), out var guildProperty))
+        {
+            ParseRaceGuildOverrides(guildProperty.Value);
+            properties.Remove(NormalizeFieldKey("GuildOverrides"));
+        }
+
+        if (properties.TryGetValue(NormalizeFieldKey("alignmentRule"), out var alignmentProperty))
+        {
+            ParseRaceAlignmentRule(alignmentProperty.Value);
+            properties.Remove(NormalizeFieldKey("alignmentRule"));
+        }
+
+        _ = RefreshSubtypeOptionsAsync();
+    }
+
+    private void ParseRacePeopleTypeProperty(JsonElement element)
+    {
+        var parsed = new List<string>();
+        if (element.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var item in element.EnumerateArray())
+            {
+                if (item.ValueKind != JsonValueKind.String)
+                    continue;
+
+                var value = (item.GetString() ?? string.Empty).Trim();
+                if (value.Length > 0)
+                    parsed.Add(value);
+            }
+        }
+        else if (element.ValueKind == JsonValueKind.String)
+        {
+            var value = (element.GetString() ?? string.Empty).Trim();
+            if (value.Length > 0)
+                parsed.Add(value);
+        }
+
+        ReplaceItems(_selectedRacePeopleTypes, parsed.Distinct(StringComparer.OrdinalIgnoreCase));
+    }
+
+    private void ParseRaceLevelledAbilities(JsonElement element)
+    {
+        _raceAbilityRows.Clear();
+        if (element.ValueKind != JsonValueKind.Object)
+            return;
+
+        foreach (var levelProperty in element.EnumerateObject())
+        {
+            if (!int.TryParse((levelProperty.Name ?? string.Empty).Trim(), out var level))
+                continue;
+
+            level = Math.Clamp(level, 1, 8);
+            if (levelProperty.Value.ValueKind != JsonValueKind.Array)
+                continue;
+
+            foreach (var abilityElement in levelProperty.Value.EnumerateArray())
+            {
+                AbilityDefinition ability;
+                try
+                {
+                    ability = JsonSerializer.Deserialize<AbilityDefinition>(abilityElement.GetRawText()) ?? new AbilityDefinition();
+                }
+                catch
+                {
+                    continue;
+                }
+
+                var row = CreateRaceAbilityRow(
+                    level: level,
+                    abilityName: ability.Name,
+                    type: ability.Type,
+                    countText: ability.Count?.ToString() ?? string.Empty,
+                    subtypeCopyId: null,
+                    source: ability);
+                _raceAbilityRows.Add(row);
+            }
+        }
+    }
+
+    private void ParseRaceSubtype(JsonElement element)
+    {
+        if (element.ValueKind != JsonValueKind.Object)
+            return;
+
+        RaceSubtypeKey = ReadStringProperty(element, "Key");
+        RaceSubtypeDisplayName = ReadStringProperty(element, "DisplayName");
+        RaceSubtypeDescription = ReadStringProperty(element, "Description");
+        RaceSubtypeSelectionMode = string.IsNullOrWhiteSpace(ReadStringProperty(element, "SelectionMode"))
+            ? "SingleOptional"
+            : ReadStringProperty(element, "SelectionMode");
+        RaceSubtypeOptionsSource = ReadStringProperty(element, "OptionsSource");
+        RaceSubtypeAbilityMapKey = ReadStringProperty(element, "AbilityMapKey");
+
+        foreach (var copy in _raceSubtypeCopies.ToList())
+            DetachSubtypeCopy(copy);
+        _raceSubtypeCopies.Clear();
+
+        if (!element.TryGetProperty("CustomOptions", out var customOptions)
+            || customOptions.ValueKind != JsonValueKind.Array)
+        {
+            return;
+        }
+
+        foreach (var item in customOptions.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.Object)
+                continue;
+
+            var copy = new RaceSubtypeCopyVm
+            {
+                Name = ReadStringProperty(item, "Name"),
+                Description = ReadStringProperty(item, "Description")
+            };
+
+            if (item.TryGetProperty("levelledAbilities", out var levels)
+                && levels.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var levelProperty in levels.EnumerateObject())
+                {
+                    if (!int.TryParse((levelProperty.Name ?? string.Empty).Trim(), out var level))
+                        continue;
+
+                    if (levelProperty.Value.ValueKind != JsonValueKind.Array)
+                        continue;
+
+                    foreach (var abilityElement in levelProperty.Value.EnumerateArray())
+                    {
+                        AbilityDefinition ability;
+                        try
+                        {
+                            ability = JsonSerializer.Deserialize<AbilityDefinition>(abilityElement.GetRawText()) ?? new AbilityDefinition();
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+
+                        var row = CreateRaceAbilityRow(
+                            level: Math.Clamp(level, 1, 8),
+                            abilityName: ability.Name,
+                            type: ability.Type,
+                            countText: ability.Count?.ToString() ?? string.Empty,
+                            subtypeCopyId: copy.Id,
+                            source: ability);
+                        copy.Abilities.Add(row);
+                    }
+                }
+            }
+
+            _raceSubtypeCopies.Add(copy);
+        }
+    }
+
+    private void ParseRaceGuildOverrides(JsonElement element)
+    {
+        ReplaceItems(_selectedRaceGuildOverrideTypes, ParseGuildOverrideTypes(element));
+    }
+
+    private void ParseRaceAlignmentRule(JsonElement element)
+    {
+        try
+        {
+            var parsed = JsonSerializer.Deserialize<AlignmentRule>(element.GetRawText());
+            if (parsed == null)
+            {
+                IncludeRaceAlignmentRule = false;
+                InitializeRaceAlignmentDefaults();
+                return;
+            }
+
+            IncludeRaceAlignmentRule = true;
+            ApplyRaceAlignmentRule(parsed);
+        }
+        catch
+        {
+            IncludeRaceAlignmentRule = false;
+            InitializeRaceAlignmentDefaults();
+        }
+    }
+
+    private async Task RefreshSubtypeOptionsAsync()
+    {
+        if (!IsRaceType)
+            return;
+
+        await EnsureRaceEditorLookupsAsync();
+
+        var options = ResolveSubtypeOptions(RaceSubtypeOptionsSource);
+        var abilityMapKey = (RaceSubtypeAbilityMapKey ?? string.Empty).Trim();
+
+        if (_specialisationLookup.TryGetValue(abilityMapKey, out var specialisation)
+            && specialisation.ColourAbilities is { Count: > 0 })
+        {
+            foreach (var mappedKey in specialisation.ColourAbilities.Keys)
+            {
+                if (!options.Contains(mappedKey, StringComparer.OrdinalIgnoreCase))
+                    options.Add(mappedKey);
+            }
+        }
+
+        var built = new List<RaceSubtypeOptionVm>();
+        foreach (var option in options.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            var vm = new RaceSubtypeOptionVm
+            {
+                Name = option
+            };
+
+            if (_specialisationLookup.TryGetValue(abilityMapKey, out var record)
+                && record.ColourAbilities != null
+                && record.ColourAbilities.TryGetValue(option, out var mapped))
+            {
+                vm.Description = mapped.Description ?? string.Empty;
+                foreach (var row in BuildSubtypeOptionRows(mapped.Levels, option))
+                    vm.Abilities.Add(row);
+            }
+
+            built.Add(vm);
+        }
+
+        ReplaceItems(_raceSubtypeOptions, built);
+        Raise(nameof(HasSubtypeEditorData));
+        UpdatePreview();
+    }
+
+    private static IReadOnlyList<RaceAbilityRowVm> BuildSubtypeOptionRows(
+        Dictionary<string, List<AbilityDefinition>>? levelMap,
+        string optionName)
+    {
+        if (levelMap == null || levelMap.Count == 0)
+            return Array.Empty<RaceAbilityRowVm>();
+
+        var rows = new List<RaceAbilityRowVm>();
+        foreach (var entry in levelMap)
+        {
+            if (!int.TryParse((entry.Key ?? string.Empty).Trim(), out var level))
+                continue;
+
+            foreach (var ability in entry.Value ?? new List<AbilityDefinition>())
+            {
+                if (ability == null || string.IsNullOrWhiteSpace(ability.Name))
+                    continue;
+
+                rows.Add(new RaceAbilityRowVm
+                {
+                    Level = Math.Clamp(level, 1, 8),
+                    AbilityName = ability.Name,
+                    AbilityType = ability.Type ?? "Static",
+                    CountText = ability.Count?.ToString() ?? string.Empty,
+                    SourceAbility = CloneAbilityDefinition(ability),
+                    SourceContext = optionName
+                });
+            }
+        }
+
+        return rows
+            .OrderBy(row => row.Level)
+            .ThenBy(row => row.AbilityName, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private void InitializeRaceAlignmentDefaults()
+    {
+        ReplaceItems(_selectedRaceAlignments, EnumerateAllAlignments());
+    }
+
+    private void ApplyRaceAlignmentRule(AlignmentRule? rule)
+    {
+        var allowed = rule == null
+            ? EnumerateAllAlignments().ToList()
+            : CharacterDraft.ComputeAvailableAlignments(new[] { rule }).ToList();
+
+        if (allowed.Count == 0)
+            allowed = EnumerateAllAlignments().ToList();
+
+        ReplaceItems(_selectedRaceAlignments, allowed);
+    }
+
+    private static IEnumerable<Alignment> EnumerateAllAlignments()
+    {
+        foreach (var order in Enum.GetValues<OrderAxis>())
+        {
+            foreach (var moral in Enum.GetValues<MoralAxis>())
+                yield return new Alignment(order, moral);
+        }
+    }
+
+    private void EnsureLifeScaleSelectionsAreValid()
+    {
+        if (!RequiresLifeScale)
+            return;
+
+        if (CurrentType == NonStandardEntityType.CharacterClass)
+        {
+            if (_raceOptions.Count > 0 && string.IsNullOrWhiteSpace((SelectedLifeScaleTargetRace ?? string.Empty).Trim()))
+                SelectedLifeScaleTargetRace = _raceOptions.FirstOrDefault();
+
+            if (_classOptions.Count > 0 && string.IsNullOrWhiteSpace((SelectedLifeScaleSourceClass ?? string.Empty).Trim()))
+                SelectedLifeScaleSourceClass = SelectedBaseTemplate?.Name ?? _classOptions.FirstOrDefault();
+
+            return;
+        }
+
+        if (_classOptions.Count > 0 && string.IsNullOrWhiteSpace((SelectedLifeScaleTargetClass ?? string.Empty).Trim()))
+            SelectedLifeScaleTargetClass = _classOptions.FirstOrDefault();
+
+        if (_raceOptions.Count > 0 && string.IsNullOrWhiteSpace((SelectedLifeScaleSourceRace ?? string.Empty).Trim()))
+            SelectedLifeScaleSourceRace = SelectedBaseTemplate?.Name ?? _raceOptions.FirstOrDefault();
+    }
+
+    private void AddRaceAbilityRow(int level, string? abilityName, string? type, string? countText, Guid? subtypeCopyId)
+    {
+        var row = CreateRaceAbilityRow(level, abilityName, type, countText, subtypeCopyId);
+        if (subtypeCopyId != null)
+        {
+            var copy = RaceSubtypeCopies.FirstOrDefault(item => item.Id == subtypeCopyId.Value);
+            copy?.Abilities.Add(row);
+            return;
+        }
+
+        _raceAbilityRows.Add(row);
+    }
+
+    private RaceAbilityRowVm CreateRaceAbilityRow(
+        int level,
+        string? abilityName,
+        string? type,
+        string? countText,
+        Guid? subtypeCopyId,
+        AbilityDefinition? source = null)
+    {
+        return new RaceAbilityRowVm
+        {
+            Level = Math.Clamp(level, 1, 8),
+            AbilityName = (abilityName ?? string.Empty).Trim(),
+            AbilityType = string.IsNullOrWhiteSpace((type ?? string.Empty).Trim()) ? "Static" : type.Trim(),
+            CountText = (countText ?? string.Empty).Trim(),
+            SubtypeCopyId = subtypeCopyId,
+            SourceAbility = CloneAbilityDefinition(source),
+            SourceContext = string.Empty
+        };
+    }
+
+    private static RaceAbilityRowVm CloneRaceAbilityRow(RaceAbilityRowVm source, Guid copyId)
+    {
+        return new RaceAbilityRowVm
+        {
+            Level = source.Level,
+            AbilityName = source.AbilityName,
+            AbilityType = source.AbilityType,
+            CountText = source.CountText,
+            SubtypeCopyId = copyId,
+            SourceAbility = CloneAbilityDefinition(source.SourceAbility),
+            SourceContext = source.SourceContext
+        };
+    }
+
+    private AbilityDefinition? BuildAbilityDefinitionFromRow(RaceAbilityRowVm row)
+    {
+        var name = (row.AbilityName ?? string.Empty).Trim();
+        if (name.Length == 0)
+            return null;
+
+        var ability = CloneAbilityDefinition(row.SourceAbility) ?? new AbilityDefinition();
+        ability.Name = name;
+        ability.Type = string.IsNullOrWhiteSpace((row.AbilityType ?? string.Empty).Trim())
+            ? "Static"
+            : row.AbilityType.Trim();
+
+        if (int.TryParse((row.CountText ?? string.Empty).Trim(), out var count) && count > 0)
+            ability.Count = count;
+        else
+            ability.Count = null;
+
+        return ability;
+    }
+
+    private string BuildNextSubtypeCopyName(string baseName)
+    {
+        var token = (baseName ?? string.Empty).Trim();
+        if (token.Length == 0)
+            token = "Custom subtype";
+
+        var existing = new HashSet<string>(
+            RaceSubtypeCopies
+                .Select(copy => (copy.Name ?? string.Empty).Trim())
+                .Where(name => name.Length > 0),
+            StringComparer.OrdinalIgnoreCase);
+
+        if (!existing.Contains(token))
+            return token;
+
+        var counter = 2;
+        while (true)
+        {
+            var candidate = $"{token} ({counter})";
+            if (!existing.Contains(candidate))
+                return candidate;
+
+            counter++;
+        }
+    }
+
+    private static AbilityDefinition? CloneAbilityDefinition(AbilityDefinition? source)
+    {
+        if (source == null)
+            return null;
+
+        return new AbilityDefinition
+        {
+            Key = source.Key,
+            AbilityRef = source.AbilityRef,
+            GrantId = source.GrantId,
+            GrantType = source.GrantType,
+            Duration = source.Duration,
+            Overrides = source.Overrides == null
+                ? null
+                : new GuildGrantOverrides
+                {
+                    DisplayName = source.Overrides.DisplayName,
+                    Verbal = source.Overrides.Verbal,
+                    Effect = source.Overrides.Effect,
+                    Source = source.Overrides.Source,
+                    GrantType = source.Overrides.GrantType,
+                    Count = source.Overrides.Count,
+                    Frequency = source.Overrides.Frequency,
+                    Duration = source.Overrides.Duration
+                },
+            UpgradeGrantRef = source.UpgradeGrantRef,
+            ReplaceWith = CloneAbilityDefinition(source.ReplaceWith),
+            Modify = source.Modify == null
+                ? null
+                : new GuildGrantModify
+                {
+                    CountDelta = source.Modify.CountDelta
+                },
+            Name = source.Name,
+            BattleboardNameOverride = source.BattleboardNameOverride,
+            UpdateKey = source.UpdateKey,
+            Type = source.Type,
+            Effect = source.Effect,
+            Lore = source.Lore,
+            Source = source.Source,
+            Count = source.Count,
+            Progression = source.Progression == null
+                ? null
+                : new AbilityCountProgression
+                {
+                    Amount = source.Progression.Amount,
+                    PerLevels = source.Progression.PerLevels,
+                    Minimum = source.Progression.Minimum,
+                    Maximum = source.Progression.Maximum
+                },
+            Amount = source.Amount?.ToList(),
+            Frequency = source.Frequency,
+            OverwriteKey = source.OverwriteKey,
+            PreReqs = source.PreReqs?.ToList(),
+            GuildOverrides = source.GuildOverrides?.ToList(),
+            ChoiceSetRef = source.ChoiceSetRef,
+            ChoiceSetRefs = source.ChoiceSetRefs?.ToList(),
+            Customisation = source.Customisation == null
+                ? null
+                : new AbilityCustomisation
+                {
+                    OptionEnum = source.Customisation.OptionEnum,
+                    CustomValuesPermitted = source.Customisation.CustomValuesPermitted
+                },
+            SystemEffects = source.SystemEffects?
+                .Select(effect => new AbilitySystemEffect
+                {
+                    EffectType = effect.EffectType,
+                    DisplayName = effect.DisplayName,
+                    ResistanceType = effect.ResistanceType,
+                    Level = effect.Level,
+                    ImmunityName = effect.ImmunityName
+                })
+                .ToList()
+        };
+    }
+
+    private static IReadOnlyList<string> ParseGuildOverrideTypes(JsonElement element)
+    {
+        var selected = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        GuildOverrideRules? rules = null;
+
+        try
+        {
+            rules = JsonSerializer.Deserialize<GuildOverrideRules>(element.GetRawText(), GuildJsonOptions);
+        }
+        catch
+        {
+            rules = null;
+        }
+
+        if (rules != null)
+        {
+            if (rules.IsCityBound)
+                selected.Add("City");
+
+            if (HasChannelOverride(rules.Social))
+                selected.Add("Social");
+
+            if (HasChannelOverride(rules.Professional))
+                selected.Add("Professional");
+
+            if (HasChannelOverride(rules.Political))
+                selected.Add("Political");
+        }
+
+        return GuildOverrideTypes
+            .Where(type => selected.Contains(type))
+            .ToList();
+    }
+
+    private static bool HasChannelOverride(GuildOverrideChannel? channel)
+    {
+        if (channel == null)
+            return false;
+
+        return channel.CanJoin.HasValue
+               || !string.IsNullOrWhiteSpace((channel.GuildPeople ?? string.Empty).Trim())
+               || (channel.ReplacedBy?.Count ?? 0) > 0;
+    }
+
+    private static string ReadStringProperty(JsonElement element, string name)
+    {
+        if (!element.TryGetProperty(name, out var value))
+            return string.Empty;
+
+        if (value.ValueKind == JsonValueKind.String)
+            return (value.GetString() ?? string.Empty).Trim();
+
+        return string.Empty;
+    }
+
+    private static List<string> ResolveSubtypeOptions(string? optionsSource)
+    {
+        var source = (optionsSource ?? string.Empty).Trim();
+        if (source.Length == 0)
+            return new List<string>();
+
+        if (source.StartsWith("Enum:", StringComparison.OrdinalIgnoreCase))
+        {
+            var enumName = source["Enum:".Length..].Trim();
+            if (enumName.Length == 0)
+                return new List<string>();
+
+            if (enumName.Equals("ElfColours", StringComparison.OrdinalIgnoreCase))
+            {
+                return
+                [
+                    "Fire", "Air", "Earth", "Aquatic", "Light", "Dark", "Twilight", "Bronze", "Ebony", "Gold",
+                    "Ivory", "Silver", "Jade", "Onyx", "Winter", "Spring", "Summer", "Autumn"
+                ];
+            }
+
+            if (enumName.Equals("AthfanalColours", StringComparison.OrdinalIgnoreCase))
+                return ["Fire", "Aquatic", "Earth", "Air", "Twilight", "Light", "Dark"];
+
+            var enumType = ReflectionHelper.FindEnumTypeByName(enumName);
+            if (enumType != null)
+                return Enum.GetNames(enumType).ToList();
+
+            return new List<string>();
+        }
+
+        if (source.Contains(',', StringComparison.Ordinal))
+        {
+            return source
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(item => item.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        return new List<string>();
     }
 
     private void UpdatePreview()
@@ -880,6 +2021,9 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
             payload[field.Key] = ParseFieldValue(raw, field.Kind, field.Label);
         }
 
+        if (CurrentType == NonStandardEntityType.CharacterRace)
+            AppendRaceStructuredPayload(payload);
+
         if (CurrentType == NonStandardEntityType.Ability)
             payload["index"] = (Name ?? string.Empty).Trim();
 
@@ -893,6 +2037,178 @@ public sealed class NonStandardCreateVm : INotifyPropertyChanged
     {
         var payload = BuildPayloadObject();
         return payload.ToJsonString(PrettyJson);
+    }
+
+    private void AppendRaceStructuredPayload(JsonObject payload)
+    {
+        var peopleTypes = SelectedRacePeopleTypes
+            .Select(value => (value ?? string.Empty).Trim())
+            .Where(value => value.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (peopleTypes.Count > 0)
+            payload["PeopleType"] = JsonSerializer.SerializeToNode(peopleTypes);
+
+        payload["levelledAbilities"] = BuildRaceLevelledAbilitiesPayload();
+
+        var subtypePayload = BuildRaceSubtypePayload();
+        if (subtypePayload != null)
+            payload["Subtype"] = subtypePayload;
+
+        var guildPayload = BuildRaceGuildOverridePayload();
+        if (guildPayload != null)
+            payload["GuildOverrides"] = guildPayload;
+
+        if (IncludeRaceAlignmentRule)
+            payload["alignmentRule"] = JsonSerializer.SerializeToNode(BuildRaceAlignmentRule());
+    }
+
+    private JsonObject BuildRaceLevelledAbilitiesPayload()
+    {
+        var levels = Enumerable.Range(1, 8)
+            .ToDictionary(level => level.ToString(), _ => new List<AbilityDefinition>(), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var row in RaceAbilityRows
+                     .OrderBy(item => item.Level)
+                     .ThenBy(item => item.AbilityName, StringComparer.OrdinalIgnoreCase))
+        {
+            var key = row.Level.ToString();
+            if (!levels.TryGetValue(key, out var list))
+                continue;
+
+            var ability = BuildAbilityDefinitionFromRow(row);
+            if (ability == null)
+                continue;
+
+            list.Add(ability);
+        }
+
+        var node = JsonSerializer.SerializeToNode(levels);
+        return node as JsonObject ?? new JsonObject();
+    }
+
+    private JsonNode? BuildRaceSubtypePayload()
+    {
+        var hasSubtype = !string.IsNullOrWhiteSpace((RaceSubtypeKey ?? string.Empty).Trim())
+            || !string.IsNullOrWhiteSpace((RaceSubtypeDisplayName ?? string.Empty).Trim())
+            || !string.IsNullOrWhiteSpace((RaceSubtypeDescription ?? string.Empty).Trim())
+            || !string.IsNullOrWhiteSpace((RaceSubtypeOptionsSource ?? string.Empty).Trim())
+            || !string.IsNullOrWhiteSpace((RaceSubtypeAbilityMapKey ?? string.Empty).Trim())
+            || RaceSubtypeCopies.Count > 0;
+
+        if (!hasSubtype)
+            return null;
+
+        var subtype = new JsonObject
+        {
+            ["Key"] = (RaceSubtypeKey ?? string.Empty).Trim(),
+            ["DisplayName"] = (RaceSubtypeDisplayName ?? string.Empty).Trim(),
+            ["Description"] = (RaceSubtypeDescription ?? string.Empty).Trim(),
+            ["SelectionMode"] = string.IsNullOrWhiteSpace((RaceSubtypeSelectionMode ?? string.Empty).Trim())
+                ? "SingleOptional"
+                : RaceSubtypeSelectionMode.Trim(),
+            ["OptionsSource"] = (RaceSubtypeOptionsSource ?? string.Empty).Trim(),
+            ["AbilityMapKey"] = (RaceSubtypeAbilityMapKey ?? string.Empty).Trim()
+        };
+
+        if (RaceSubtypeCopies.Count > 0)
+        {
+            var copies = new JsonArray();
+            foreach (var copy in RaceSubtypeCopies)
+            {
+                var copyObject = new JsonObject
+                {
+                    ["Name"] = (copy.Name ?? string.Empty).Trim(),
+                    ["Description"] = (copy.Description ?? string.Empty).Trim(),
+                    ["levelledAbilities"] = BuildSubtypeCopyLevelledAbilitiesPayload(copy)
+                };
+
+                copies.Add(copyObject);
+            }
+
+            subtype["CustomOptions"] = copies;
+        }
+
+        return subtype;
+    }
+
+    private JsonObject BuildSubtypeCopyLevelledAbilitiesPayload(RaceSubtypeCopyVm copy)
+    {
+        var levels = Enumerable.Range(1, 8)
+            .ToDictionary(level => level.ToString(), _ => new List<AbilityDefinition>(), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var row in copy.Abilities
+                     .OrderBy(item => item.Level)
+                     .ThenBy(item => item.AbilityName, StringComparer.OrdinalIgnoreCase))
+        {
+            if (!levels.TryGetValue(row.Level.ToString(), out var list))
+                continue;
+
+            var ability = BuildAbilityDefinitionFromRow(row);
+            if (ability == null)
+                continue;
+
+            list.Add(ability);
+        }
+
+        var node = JsonSerializer.SerializeToNode(levels);
+        return node as JsonObject ?? new JsonObject();
+    }
+
+    private JsonNode? BuildRaceGuildOverridePayload()
+    {
+        var selected = SelectedRaceGuildOverrideTypes
+            .Select(value => (value ?? string.Empty).Trim())
+            .Where(value => value.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (selected.Count == 0)
+            return null;
+
+        var rules = new GuildOverrideRules();
+        if (selected.Contains("City", StringComparer.OrdinalIgnoreCase))
+            rules.IsCityBound = true;
+
+        if (selected.Contains("Social", StringComparer.OrdinalIgnoreCase))
+            rules.Social.CanJoin = false;
+
+        if (selected.Contains("Professional", StringComparer.OrdinalIgnoreCase))
+            rules.Professional.CanJoin = false;
+
+        if (selected.Contains("Political", StringComparer.OrdinalIgnoreCase))
+            rules.Political.CanJoin = false;
+
+        return JsonSerializer.SerializeToNode(rules, GuildJsonOptions);
+    }
+
+    private AlignmentRule BuildRaceAlignmentRule()
+    {
+        var enabled = SelectedRaceAlignments
+            .Distinct()
+            .ToList();
+
+        if (enabled.Count == 0)
+            enabled = EnumerateAllAlignments().ToList();
+
+        var allowedMoral = enabled.Select(alignment => alignment.Moral).Distinct().ToList();
+        var allowedOrder = enabled.Select(alignment => alignment.Order).Distinct().ToList();
+        var allowedPairs = enabled
+            .Select(alignment => alignment.ToString())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return new AlignmentRule
+        {
+            Mode = "restrict",
+            Allowed = new AllowedAxes
+            {
+                Moral = allowedMoral,
+                Order = allowedOrder
+            },
+            AllowedPairs = allowedPairs
+        };
     }
 
     private static JsonNode ParseFieldValue(string raw, NonStandardFieldKind kind, string label)
@@ -1341,4 +2657,170 @@ public sealed class NonStandardFieldDefinition
     public string Key { get; }
     public string Label => Key.Replace("_", " ").Replace("-", " ");
     public NonStandardFieldKind Kind { get; }
+}
+
+public sealed class RaceAbilityRowVm : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private int _level = 1;
+    private string _abilityName = string.Empty;
+    private string _abilityType = "Static";
+    private string _countText = string.Empty;
+
+    public Guid? SubtypeCopyId { get; set; }
+    public AbilityDefinition? SourceAbility { get; set; }
+    public string SourceContext { get; set; } = string.Empty;
+
+    public int Level
+    {
+        get => _level;
+        set
+        {
+            var next = Math.Clamp(value, 1, 8);
+            if (_level == next)
+                return;
+
+            _level = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Level)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LevelLabel)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowSummary)));
+        }
+    }
+
+    public string AbilityName
+    {
+        get => _abilityName;
+        set
+        {
+            var next = value ?? string.Empty;
+            if (string.Equals(_abilityName, next, StringComparison.Ordinal))
+                return;
+
+            _abilityName = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AbilityName)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowSummary)));
+        }
+    }
+
+    public string AbilityType
+    {
+        get => _abilityType;
+        set
+        {
+            var next = string.IsNullOrWhiteSpace((value ?? string.Empty).Trim()) ? "Static" : value.Trim();
+            if (string.Equals(_abilityType, next, StringComparison.Ordinal))
+                return;
+
+            _abilityType = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AbilityType)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowSummary)));
+        }
+    }
+
+    public string CountText
+    {
+        get => _countText;
+        set
+        {
+            var next = value ?? string.Empty;
+            if (string.Equals(_countText, next, StringComparison.Ordinal))
+                return;
+
+            _countText = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CountText)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowSummary)));
+        }
+    }
+
+    public string LevelLabel => $"L{Level}";
+
+    public string RowSummary
+    {
+        get
+        {
+            var parts = new List<string>
+            {
+                (AbilityName ?? string.Empty).Trim(),
+                string.IsNullOrWhiteSpace((AbilityType ?? string.Empty).Trim()) ? "Static" : AbilityType.Trim()
+            };
+
+            if (int.TryParse((CountText ?? string.Empty).Trim(), out var count) && count > 0)
+                parts.Add($"x{count}");
+
+            return string.Join(" • ", parts.Where(part => !string.IsNullOrWhiteSpace(part)));
+        }
+    }
+
+    public void RefreshSummary()
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RowSummary)));
+}
+
+public sealed class RaceSubtypeOptionVm
+{
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public ObservableCollection<RaceAbilityRowVm> Abilities { get; } = new();
+
+    public string AbilitySummary
+    {
+        get
+        {
+            if (Abilities.Count == 0)
+                return "No mapped abilities.";
+
+            var grouped = Abilities
+                .GroupBy(row => row.Level)
+                .OrderBy(group => group.Key)
+                .Select(group => $"L{group.Key}: {group.Count()}");
+
+            return string.Join("  |  ", grouped);
+        }
+    }
+}
+
+public sealed class RaceSubtypeCopyVm : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private string _name = string.Empty;
+    private string _description = string.Empty;
+
+    public RaceSubtypeCopyVm()
+    {
+        Abilities.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AbilityCountSummary)));
+    }
+
+    public Guid Id { get; } = Guid.NewGuid();
+    public ObservableCollection<RaceAbilityRowVm> Abilities { get; } = new();
+
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            var next = value ?? string.Empty;
+            if (string.Equals(_name, next, StringComparison.Ordinal))
+                return;
+
+            _name = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
+        }
+    }
+
+    public string Description
+    {
+        get => _description;
+        set
+        {
+            var next = value ?? string.Empty;
+            if (string.Equals(_description, next, StringComparison.Ordinal))
+                return;
+
+            _description = next;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Description)));
+        }
+    }
+
+    public string AbilityCountSummary => Abilities.Count == 1 ? "1 ability row" : $"{Abilities.Count} ability rows";
 }

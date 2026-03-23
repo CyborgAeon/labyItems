@@ -21,6 +21,15 @@ public sealed class EvolutionServiceTests : ServiceTestBase
     }
 
     [Fact]
+    public async Task GetAllAbilitiesAsync_ParsesMaxAcIncreaseFromNestedData()
+    {
+        var all = await EvolutionService.GetAllAbilitiesAsync();
+
+        var entry = Assert.Single(all, e => e.Index == "AA1");
+        Assert.Equal(2, entry.MaxAcIncrease);
+    }
+
+    [Fact]
     public async Task GetAllAbilitiesAsync_ParsesAvailabilityRules()
     {
         var all = await EvolutionService.GetAllAbilitiesAsync();

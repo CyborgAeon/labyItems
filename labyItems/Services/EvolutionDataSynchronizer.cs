@@ -14,7 +14,7 @@ public interface IEvolutionDataSynchronizer
 
 public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
 {
-    private const string SeedVersion = "evolution-defaults-v1";
+    private const string SeedVersion = "evolution-defaults-v2";
     private const int NgramSize = 3;
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -139,6 +139,7 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             var abilityRef = (seed.abilityRef ?? string.Empty).Trim();
             var maxAvailable = ParseOptionalPositiveInteger(seed.maxAvailable);
             var choiceSetRefs = NormalizeChoiceSetRefs(seed.choiceSetRef, seed.choiceSetRefs);
+            var data = CloneJsonElement(seed.data);
 
             var id = DeterministicGuid($"evo|{table}|{index}");
             var dataJson = JsonSerializer.Serialize(new
@@ -153,7 +154,8 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
                 sourceBook,
                 abilityRef,
                 maxAvailable,
-                choiceSetRefs
+                choiceSetRefs,
+                data
             });
 
             list.Add(new EvolutionDefaultAbility(
@@ -221,6 +223,22 @@ public sealed class EvolutionDataSynchronizer : IEvolutionDataSynchronizer
             .Where(x => x.Length > 0)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
+
+    private static JsonElement? CloneJsonElement(JsonElement element)
+    {
+        if (element.ValueKind is JsonValueKind.Undefined or JsonValueKind.Null)
+            return null;
+
+        try
+        {
+            using var doc = JsonDocument.Parse(element.GetRawText());
+            return doc.RootElement.Clone();
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
     private static int? ParseOptionalPositiveInteger(JsonElement element)
     {
@@ -584,6 +602,7 @@ CREATE TABLE IF NOT EXISTS seed_metadata (
         public JsonElement maxAvailable { get; set; }
         public string? choiceSetRef { get; set; }
         public List<string>? choiceSetRefs { get; set; }
+        public JsonElement data { get; set; }
     }
 
     private sealed record EvolutionDefaultAbility(

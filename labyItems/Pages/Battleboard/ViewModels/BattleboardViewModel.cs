@@ -35,6 +35,7 @@ public sealed class BattleboardViewModel : ObservableObject
     private bool _showLifeMissing;
     private bool _hasFatalOvercast;
     private bool _deathAlertShown;
+    private int _maxAc;
 
     public BattleboardViewModel(CharacterDraft draft)
     {
@@ -120,7 +121,7 @@ public sealed class BattleboardViewModel : ObservableObject
         Dac = Math.Max(0, _draft.DAC + itemArmour.ItemDac);
         Sac = Math.Max(0, (_draft.SAC ?? 0) + itemArmour.ItemSac);
         Mac = Math.Max(0, (_draft.MAC ?? 0) + itemArmour.ItemMac);
-        MaxAc = Math.Max(0, _draft.MaxAC);
+        _maxAc = Math.Max(0, _draft.MaxAC);
 
         TotalLife = new TotalLifeVm(Tblp);
         Head = new LifeLocationVm("Head", "Head", Loc, Pac, Dac, MaxAc);
@@ -258,7 +259,18 @@ public sealed class BattleboardViewModel : ObservableObject
     public int Dac { get; }
     public int Sac { get; }
     public int Mac { get; }
-    public int MaxAc { get; }
+    public int MaxAc
+    {
+        get => _maxAc;
+        private set
+        {
+            if (!SetProperty(ref _maxAc, Math.Max(0, value)))
+                return;
+
+            foreach (var location in LifeLocations)
+                location.SetMaxAc(_maxAc);
+        }
+    }
 
     public TotalLifeVm TotalLife { get; }
     public LifeLocationVm Head { get; }
@@ -869,7 +881,8 @@ public sealed class BattleboardViewModel : ObservableObject
             var abilityEffectsTask = BattleboardAbilityEffectResolver.ResolveAsync(_draft.Abilities);
             var advancementEffectsTask = BattleboardAdvancementEffectResolver.ResolveAsync(_draft.AdvancementAbilities);
             var itemEffectsTask = BattleboardItemEffectResolver.ResolveAsync(_draft, _assignedItems);
-            await Task.WhenAll(abilityEffectsTask, advancementEffectsTask, itemEffectsTask);
+            var maxAcTask = MaxAcResolver.ResolveEffectiveForDraftAsync(_draft);
+            await Task.WhenAll(abilityEffectsTask, advancementEffectsTask, itemEffectsTask, maxAcTask);
 
             var resolvedAbilityEffects = abilityEffectsTask.Result;
             var resolvedAdvancementEffects = advancementEffectsTask.Result;
@@ -908,11 +921,19 @@ public sealed class BattleboardViewModel : ObservableObject
 
             var nextImmunities = BuildImmunities(_draft, mergedImmunities);
             UpdateImmunityRows(nextImmunities);
+            ApplyResolvedMaxAc(maxAcTask.Result);
         }
         catch
         {
             // Keep fallback values when lookup data is unavailable.
         }
+    }
+
+    private void ApplyResolvedMaxAc(int resolvedMaxAc)
+    {
+        var normalized = Math.Max(0, resolvedMaxAc);
+        _draft.MaxAC = normalized;
+        MaxAc = normalized;
     }
 
     private void ApplyResolvedResistanceOverrides(IReadOnlyDictionary<string, int> overrides)
@@ -1441,6 +1462,7 @@ public sealed class LifeLocationVm : ObservableObject
     private int _current;
     private int _pacPenalty;
     private bool _showLifeMissing;
+    private int _maxAc;
     private Color _backgroundColor = Colors.White;
     private Color _textColor = Colors.Black;
 
@@ -1451,7 +1473,7 @@ public sealed class LifeLocationVm : ObservableObject
         Max = Math.Max(0, max);
         BasePac = Math.Max(0, pac);
         BaseDac = Math.Max(0, dac);
-        MaxAc = Math.Max(0, maxAc);
+        _maxAc = Math.Max(0, maxAc);
         _current = Max;
         _pacPenalty = 0;
         _showLifeMissing = false;
@@ -1463,7 +1485,11 @@ public sealed class LifeLocationVm : ObservableObject
     public int Max { get; }
     public int BasePac { get; }
     public int BaseDac { get; }
-    public int MaxAc { get; }
+    public int MaxAc
+    {
+        get => _maxAc;
+        private set => SetProperty(ref _maxAc, Math.Max(0, value));
+    }
 
     public int Current
     {
@@ -1558,6 +1584,16 @@ public sealed class LifeLocationVm : ObservableObject
     public void SetPacPenalty(int value)
     {
         PacPenalty = value;
+        Raise(nameof(ArmourShown));
+        Raise(nameof(ArmourLabel));
+    }
+
+    public void SetMaxAc(int value)
+    {
+        if (MaxAc == Math.Max(0, value))
+            return;
+
+        MaxAc = value;
         Raise(nameof(ArmourShown));
         Raise(nameof(ArmourLabel));
     }

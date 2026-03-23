@@ -919,7 +919,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await UpdateDraftLifeAsync(expandIfChanged: false);
             ApplyLifeBonuses(abilities);
 
-            UpdateArmourStats(classRecord, classAbilities, raceAbilities, specAbilities, abilities);
+            await UpdateArmourStatsAsync(classRecord, classAbilities, raceAbilities, specAbilities, abilities);
             UpdatePowerPools(classRecord, abilities);
             UpdateResistanceLevels(abilities, classRecord);
             _draft.GuildOverrideRules = GuildOverrideRules.Merge(
@@ -1703,7 +1703,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         yield return _classAlignmentRule;
     }
 
-    private void UpdateArmourStats(
+    private async Task UpdateArmourStatsAsync(
         ServiceCharacterClassRecord? classRecord,
         List<AbilityDraft> classAbilities,
         List<AbilityDraft> raceAbilities,
@@ -1749,7 +1749,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         _draft.MAC = macTotal > 0 ? macTotal : null;
         _draft.SAC = sacTotal > 0 ? sacTotal : null;
 
-        _draft.MaxAC = classRecord != null ? ParseInt(classRecord.MaxAC) : 0;
+        var classBaseMaxAc = classRecord != null ? ParseInt(classRecord.MaxAC) : 0;
+        _draft.MaxAC = await MaxAcResolver.ResolveFromClassAndAdvancementsAsync(
+            classBaseMaxAc,
+            _draft.AdvancementAbilities);
     }
 
     private static ArmourTier? ParseArmourTier(string? value)

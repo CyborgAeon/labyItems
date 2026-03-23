@@ -1,179 +1,483 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="labyItems.Pages.NonStandard.NonStandardLegacyCreatePage"
-    x:Name="Root"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:abilityCard="clr-namespace:labyItems.Pages.AbilityCard"
-    xmlns:evocationCard="clr-namespace:labyItems.Pages.EvocationCard"
-    xmlns:miracleCard="clr-namespace:labyItems.Pages.MiracleCard"
-    xmlns:spellCard="clr-namespace:labyItems.Pages.SpellCard"
-    Shell.NavBarIsVisible="True"
-    Title="Create Non-standard">
+       x:Class="labyItems.Pages.NonStandard.NonStandardLegacyCreatePage"
+       x:Name="Root"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:abilityCard="clr-namespace:labyItems.Pages.AbilityCard"
+       xmlns:controls="clr-namespace:labyItems.Controls"
+       xmlns:evocationCard="clr-namespace:labyItems.Pages.EvocationCard"
+       xmlns:miracleCard="clr-namespace:labyItems.Pages.MiracleCard"
+       xmlns:pickers="clr-namespace:labyItems.Controls.Pickers"
+       xmlns:spellCard="clr-namespace:labyItems.Pages.SpellCard"
+       Shell.NavBarIsVisible="True"
+       Title="Create Non-standard">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16"
-                             Spacing="12">
-            <Label Text="Create New Non-standard"
-                   FontSize="24"
-                   FontAttributes="Bold"/>
+       <ScrollView>
+              <VerticalStackLayout Padding="16"
+                                   Spacing="12">
+                     <Label Text="Create New Non-standard"
+                            FontSize="24"
+                            FontAttributes="Bold"/>
 
-            <VerticalStackLayout x:Name="TypeSelectorSection"
-                                 Spacing="4">
-                <Label Text="Type"
-                       Style="{StaticResource SectionHeaderLabelStyle}"/>
-                <Picker ItemsSource="{Binding EntityTypes}"
-                        ItemDisplayBinding="{Binding Label}"
-                        SelectedItem="{Binding SelectedEntityType, Mode=TwoWay}"/>
-            </VerticalStackLayout>
+                     <VerticalStackLayout x:Name="TypeSelectorSection"
+                                          Spacing="4">
+                            <Label Text="Type"
+                                   Style="{StaticResource SectionHeaderLabelStyle}"/>
+                            <Picker ItemsSource="{Binding EntityTypes}"
+                                    ItemDisplayBinding="{Binding Label}"
+                                    SelectedItem="{Binding SelectedEntityType, Mode=TwoWay}"/>
+                     </VerticalStackLayout>
 
-            <Label Text="From Base"
-                   Style="{StaticResource SectionHeaderLabelStyle}"/>
-            <Grid ColumnDefinitions="*,Auto"
-                  ColumnSpacing="8">
-                <Picker Grid.Column="0"
-                        ItemsSource="{Binding BaseTemplates}"
-                        ItemDisplayBinding="{Binding Name}"
-                        SelectedItem="{Binding SelectedBaseTemplate, Mode=TwoWay}"/>
-                <Button Grid.Column="1"
-                        Text="&#xF002;"
-                        FontFamily="FASolid"
-                        Clicked="OnSearchBaseClicked"
-                        WidthRequest="42"
-                        HeightRequest="42"
-                        Padding="0"/>
-            </Grid>
+                     <Label Text="From Base"
+                            Style="{StaticResource SectionHeaderLabelStyle}"/>
+                     <Grid ColumnDefinitions="*,Auto"
+                           ColumnSpacing="8">
+                            <Picker Grid.Column="0"
+                                    ItemsSource="{Binding BaseTemplates}"
+                                    ItemDisplayBinding="{Binding Name}"
+                                    SelectedItem="{Binding SelectedBaseTemplate, Mode=TwoWay}"/>
+                            <Button Grid.Column="1"
+                                    Text="&#xF002;"
+                                    FontFamily="FASolid"
+                                    Clicked="OnSearchBaseClicked"
+                                    WidthRequest="42"
+                                    HeightRequest="42"
+                                    Padding="0"/>
+                     </Grid>
 
-            <Label Text="Name"
-                   Style="{StaticResource SectionHeaderLabelStyle}"/>
-            <Entry Text="{Binding Name, Mode=TwoWay}"
-                   Placeholder="Enter name"/>
+                     <Label Text="Name"
+                            Style="{StaticResource SectionHeaderLabelStyle}"/>
+                     <Entry Text="{Binding Name, Mode=TwoWay}"
+                            Placeholder="Enter name"/>
 
-            <Label Text="Fields"
-                   Style="{StaticResource SectionHeaderLabelStyle}"/>
-            <CollectionView ItemsSource="{Binding Fields}"
-                            SelectionMode="None">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame Style="{StaticResource SectionCardFrameStyle}"
-                               Margin="0,0,0,8">
-                            <Grid ColumnDefinitions="*,Auto"
+                     <VerticalStackLayout Spacing="12"
+                                          IsVisible="{Binding ShowStructuredRaceEditor}">
+                            <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                   <VerticalStackLayout Spacing="8">
+                                          <Label Text="People Type"
+                                                 Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                          <controls:MultiChipGroup Items="{Binding RacePeopleTypeOptions}"
+                                                                   SelectedItems="{Binding SelectedRacePeopleTypes, Mode=TwoWay}"/>
+                                   </VerticalStackLayout>
+                            </Frame>
+
+                            <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                   <VerticalStackLayout Spacing="8">
+                                          <Grid ColumnDefinitions="*,Auto"
+                                                ColumnSpacing="8">
+                                                 <Label Text="Levelled abilities"
+                                                        Style="{StaticResource SectionHeaderLabelStyle}"
+                                                        VerticalTextAlignment="Center"/>
+                                                 <Button Grid.Column="1"
+                                                         Text="Search"
+                                                         Style="{StaticResource ExpandedActionButtonStyle}"
+                                                         Clicked="OnSearchRaceAbilityClicked"/>
+                                          </Grid>
+
+                                          <CollectionView ItemsSource="{Binding RaceAbilityRows}"
+                                                          SelectionMode="None">
+                                                 <CollectionView.EmptyView>
+                                                        <Label Text="No abilities added yet."
+                                                               Opacity="0.75"
+                                                               Margin="0,8,0,0"/>
+                                                 </CollectionView.EmptyView>
+                                                 <CollectionView.ItemTemplate>
+                                                        <DataTemplate>
+                                                               <Grid ColumnDefinitions="44,*,Auto,Auto,Auto"
+                                                                     ColumnSpacing="8"
+                                                                     Padding="0,6">
+                                                                      <Label Text="{Binding LevelLabel}"
+                                                                             VerticalTextAlignment="Center"
+                                                                             FontAttributes="Bold"/>
+                                                                      <Label Grid.Column="1"
+                                                                             Text="{Binding RowSummary}"
+                                                                             VerticalTextAlignment="Center"
+                                                                             LineBreakMode="TailTruncation"/>
+                                                                      <Button Grid.Column="2"
+                                                                              Text="&#xF303;"
+                                                                              FontFamily="FASolid"
+                                                                              WidthRequest="32"
+                                                                              HeightRequest="32"
+                                                                              Padding="0"
+                                                                              BackgroundColor="Transparent"
+                                                                              TextColor="{StaticResource AccentMaroonColor}"
+                                                                              Clicked="OnEditRaceAbilityClicked"
+                                                                              CommandParameter="{Binding .}"/>
+                                                                      <Button Grid.Column="3"
+                                                                              Text="&#xF129;"
+                                                                              FontFamily="FASolid"
+                                                                              WidthRequest="32"
+                                                                              HeightRequest="32"
+                                                                              Padding="0"
+                                                                              BackgroundColor="Transparent"
+                                                                              TextColor="{StaticResource AccentMaroonColor}"
+                                                                              Clicked="OnRaceAbilityInfoClicked"
+                                                                              CommandParameter="{Binding .}"/>
+                                                                      <Button Grid.Column="4"
+                                                                              Text="&#xF1F8;"
+                                                                              FontFamily="FASolid"
+                                                                              WidthRequest="32"
+                                                                              HeightRequest="32"
+                                                                              Padding="0"
+                                                                              BackgroundColor="Transparent"
+                                                                              TextColor="{StaticResource AccentMaroonColor}"
+                                                                              Clicked="OnDeleteRaceAbilityClicked"
+                                                                              CommandParameter="{Binding .}"/>
+                                                               </Grid>
+                                                        </DataTemplate>
+                                                 </CollectionView.ItemTemplate>
+                                          </CollectionView>
+                                   </VerticalStackLayout>
+                            </Frame>
+
+                            <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                   <VerticalStackLayout Spacing="8">
+                                          <Label Text="Subtype"
+                                                 Style="{StaticResource SectionHeaderLabelStyle}"/>
+
+                                          <Entry Text="{Binding RaceSubtypeKey, Mode=TwoWay}"
+                                                 Placeholder="Subtype key"/>
+                                          <Entry Text="{Binding RaceSubtypeDisplayName, Mode=TwoWay}"
+                                                 Placeholder="Display name"/>
+                                          <Editor Text="{Binding RaceSubtypeDescription, Mode=TwoWay}"
+                                                  AutoSize="TextChanges"
+                                                  MinimumHeightRequest="70"
+                                                  Placeholder="Subtype description"/>
+
+                                          <Grid ColumnDefinitions="*,*"
+                                                ColumnSpacing="8">
+                                                 <Entry Grid.Column="0"
+                                                        Text="{Binding RaceSubtypeSelectionMode, Mode=TwoWay}"
+                                                        Placeholder="Selection mode"/>
+                                                 <Entry Grid.Column="1"
+                                                        Text="{Binding RaceSubtypeAbilityMapKey, Mode=TwoWay}"
+                                                        Placeholder="Ability map key"/>
+                                          </Grid>
+
+                                          <Entry Text="{Binding RaceSubtypeOptionsSource, Mode=TwoWay}"
+                                                 Placeholder="Options source"/>
+
+                                          <Label Text="Mapped options"
+                                                 FontAttributes="Bold"
+                                                 FontSize="12"
+                                                 Opacity="0.8"/>
+                                          <Grid ColumnDefinitions="*,Auto,Auto"
+                                                ColumnSpacing="8">
+                                                 <Label Text="Option"
+                                                        FontAttributes="Bold"
+                                                        FontSize="11"
+                                                        Opacity="0.75"/>
+                                                 <Label Grid.Column="1"
+                                                        Text="Abilities"
+                                                        FontAttributes="Bold"
+                                                        FontSize="11"
+                                                        Opacity="0.75"/>
+                                                 <Label Grid.Column="2"
+                                                        Text="Copy"
+                                                        FontAttributes="Bold"
+                                                        FontSize="11"
+                                                        Opacity="0.75"/>
+                                          </Grid>
+
+                                          <CollectionView ItemsSource="{Binding RaceSubtypeOptions}"
+                                                          SelectionMode="None">
+                                                 <CollectionView.EmptyView>
+                                                        <Label Text="No mapped options found for this subtype."
+                                                               Opacity="0.75"
+                                                               Margin="0,6,0,0"/>
+                                                 </CollectionView.EmptyView>
+                                                 <CollectionView.ItemTemplate>
+                                                        <DataTemplate>
+                                                               <Grid RowDefinitions="Auto,Auto"
+                                                                     ColumnDefinitions="*,Auto,Auto"
+                                                                     ColumnSpacing="8"
+                                                                     Padding="0,6">
+                                                                      <Label Text="{Binding Name}"
+                                                                             VerticalTextAlignment="Center"
+                                                                             FontAttributes="Bold"/>
+                                                                      <Label Grid.Column="1"
+                                                                             Text="{Binding AbilitySummary}"
+                                                                             VerticalTextAlignment="Center"
+                                                                             FontSize="12"
+                                                                             Opacity="0.75"/>
+                                                                      <Button Grid.Column="2"
+                                                                              Text="Add"
+                                                                              Clicked="OnAddSubtypeCopyClicked"
+                                                                              CommandParameter="{Binding .}"/>
+                                                                      <Label Grid.Row="1"
+                                                                             Grid.ColumnSpan="3"
+                                                                             Text="{Binding Description}"
+                                                                             FontSize="12"
+                                                                             Opacity="0.75"
+                                                                             LineBreakMode="WordWrap"/>
+                                                               </Grid>
+                                                        </DataTemplate>
+                                                 </CollectionView.ItemTemplate>
+                                          </CollectionView>
+
+                                          <Button Text="Add blank subtype copy"
+                                                  Style="{StaticResource ExpandedActionButtonStyle}"
+                                                  Clicked="OnAddBlankSubtypeCopyClicked"/>
+
+                                          <CollectionView ItemsSource="{Binding RaceSubtypeCopies}"
+                                                          SelectionMode="None">
+                                                 <CollectionView.EmptyView>
+                                                        <Label Text="No subtype copies yet."
+                                                               Opacity="0.75"
+                                                               Margin="0,6,0,0"/>
+                                                 </CollectionView.EmptyView>
+                                                 <CollectionView.ItemTemplate>
+                                                        <DataTemplate>
+                                                               <Frame Style="{StaticResource DetailCardFrameStyle}"
+                                                                      Margin="0,6,0,0">
+                                                                      <VerticalStackLayout Spacing="8">
+                                                                             <Grid ColumnDefinitions="*,Auto"
+                                                                                   ColumnSpacing="8">
+                                                                                    <Entry Text="{Binding Name, Mode=TwoWay}"
+                                                                                           Placeholder="Copy name"/>
+                                                                                    <Button Grid.Column="1"
+                                                                                            Text="&#xF1F8;"
+                                                                                            FontFamily="FASolid"
+                                                                                            WidthRequest="34"
+                                                                                            HeightRequest="34"
+                                                                                            Padding="0"
+                                                                                            BackgroundColor="Transparent"
+                                                                                            TextColor="{StaticResource AccentMaroonColor}"
+                                                                                            Clicked="OnDeleteSubtypeCopyClicked"
+                                                                                            CommandParameter="{Binding .}"/>
+                                                                             </Grid>
+
+                                                                             <Editor Text="{Binding Description, Mode=TwoWay}"
+                                                                                     AutoSize="TextChanges"
+                                                                                     MinimumHeightRequest="60"
+                                                                                     Placeholder="Copy description"/>
+
+                                                                             <Label Text="{Binding AbilityCountSummary}"
+                                                                                    FontSize="12"
+                                                                                    Opacity="0.75"/>
+
+                                                                             <Button Text="Search abilities"
+                                                                                     Style="{StaticResource ExpandedActionButtonStyle}"
+                                                                                     Clicked="OnSearchSubtypeCopyAbilityClicked"
+                                                                                     CommandParameter="{Binding .}"/>
+
+                                                                             <CollectionView ItemsSource="{Binding Abilities}"
+                                                                                             SelectionMode="None">
+                                                                                    <CollectionView.ItemTemplate>
+                                                                                           <DataTemplate>
+                                                                                                  <Grid ColumnDefinitions="44,*,Auto,Auto,Auto"
+                                                                                                        ColumnSpacing="8"
+                                                                                                        Padding="0,4">
+                                                                                                         <Label Text="{Binding LevelLabel}"
+                                                                                                                VerticalTextAlignment="Center"
+                                                                                                                FontAttributes="Bold"/>
+                                                                                                         <Label Grid.Column="1"
+                                                                                                                Text="{Binding RowSummary}"
+                                                                                                                VerticalTextAlignment="Center"
+                                                                                                                LineBreakMode="TailTruncation"/>
+                                                                                                         <Button Grid.Column="2"
+                                                                                                                 Text="&#xF303;"
+                                                                                                                 FontFamily="FASolid"
+                                                                                                                 WidthRequest="30"
+                                                                                                                 HeightRequest="30"
+                                                                                                                 Padding="0"
+                                                                                                                 BackgroundColor="Transparent"
+                                                                                                                 TextColor="{StaticResource AccentMaroonColor}"
+                                                                                                                 Clicked="OnEditRaceAbilityClicked"
+                                                                                                                 CommandParameter="{Binding .}"/>
+                                                                                                         <Button Grid.Column="3"
+                                                                                                                 Text="&#xF129;"
+                                                                                                                 FontFamily="FASolid"
+                                                                                                                 WidthRequest="30"
+                                                                                                                 HeightRequest="30"
+                                                                                                                 Padding="0"
+                                                                                                                 BackgroundColor="Transparent"
+                                                                                                                 TextColor="{StaticResource AccentMaroonColor}"
+                                                                                                                 Clicked="OnRaceAbilityInfoClicked"
+                                                                                                                 CommandParameter="{Binding .}"/>
+                                                                                                         <Button Grid.Column="4"
+                                                                                                                 Text="&#xF1F8;"
+                                                                                                                 FontFamily="FASolid"
+                                                                                                                 WidthRequest="30"
+                                                                                                                 HeightRequest="30"
+                                                                                                                 Padding="0"
+                                                                                                                 BackgroundColor="Transparent"
+                                                                                                                 TextColor="{StaticResource AccentMaroonColor}"
+                                                                                                                 Clicked="OnDeleteRaceAbilityClicked"
+                                                                                                                 CommandParameter="{Binding .}"/>
+                                                                                                  </Grid>
+                                                                                           </DataTemplate>
+                                                                                    </CollectionView.ItemTemplate>
+                                                                             </CollectionView>
+                                                                      </VerticalStackLayout>
+                                                               </Frame>
+                                                        </DataTemplate>
+                                                 </CollectionView.ItemTemplate>
+                                          </CollectionView>
+                                   </VerticalStackLayout>
+                            </Frame>
+
+                            <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                   <VerticalStackLayout Spacing="8">
+                                          <Label Text="Guild overrides"
+                                                 Style="{StaticResource SectionHeaderLabelStyle}"/>
+                                          <controls:MultiChipGroup Items="{Binding GuildOverrideTypeOptions}"
+                                                                   SelectedItems="{Binding SelectedRaceGuildOverrideTypes, Mode=TwoWay}"/>
+                                   </VerticalStackLayout>
+                            </Frame>
+
+                            <Frame Style="{StaticResource SectionCardFrameStyle}">
+                                   <VerticalStackLayout Spacing="8">
+                                          <Grid ColumnDefinitions="Auto,*"
+                                                ColumnSpacing="8">
+                                                 <Button Grid.Column="0"
+                                                         Text="{Binding RaceAlignmentChevronText}"
+                                                         Style="{StaticResource ChevronButtonStyle}"
+                                                         Clicked="OnToggleRaceAlignmentClicked"/>
+                                                 <Label Grid.Column="1"
+                                                        Text="Alignment rule (optional)"
+                                                        Style="{StaticResource SectionHeaderLabelStyle}"
+                                                        VerticalTextAlignment="Center"/>
+                                          </Grid>
+
+                                          <VerticalStackLayout Spacing="8"
+                                                               IsVisible="{Binding IsRaceAlignmentCardExpanded}">
+                                                 <HorizontalStackLayout Spacing="8">
+                                                        <CheckBox IsChecked="{Binding IncludeRaceAlignmentRule, Mode=TwoWay}"/>
+                                                        <Label Text="Include alignment rule"
+                                                               VerticalTextAlignment="Center"/>
+                                                 </HorizontalStackLayout>
+
+                                                 <pickers:AlignmentToggleGridPicker SelectedAlignments="{Binding SelectedRaceAlignments, Mode=TwoWay}"
+                                                                                    IsVisible="{Binding IncludeRaceAlignmentRule}"/>
+                                          </VerticalStackLayout>
+                                   </VerticalStackLayout>
+                            </Frame>
+                     </VerticalStackLayout>
+
+                     <Label Text="Fields"
+                            Style="{StaticResource SectionHeaderLabelStyle}"/>
+                     <CollectionView ItemsSource="{Binding Fields}"
+                                     SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                   <DataTemplate>
+                                          <Frame Style="{StaticResource SectionCardFrameStyle}"
+                                                 Margin="0,0,0,8">
+                                                 <Grid ColumnDefinitions="*,Auto"
+                                                       ColumnSpacing="8">
+                                                        <VerticalStackLayout Spacing="6">
+                                                               <Label Text="{Binding Label}"
+                                                                      FontAttributes="Bold"
+                                                                      FontSize="12"
+                                                                      Opacity="0.8"/>
+
+                                                               <Entry Text="{Binding Value, Mode=TwoWay}"
+                                                                      IsVisible="{Binding IsSingleLine}"/>
+
+                                                               <Editor Text="{Binding Value, Mode=TwoWay}"
+                                                                       AutoSize="TextChanges"
+                                                                       IsVisible="{Binding IsMultiLine}"
+                                                                       MinimumHeightRequest="90"/>
+                                                        </VerticalStackLayout>
+
+                                                        <Button Grid.Column="1"
+                                                                Text="&#xF002;"
+                                                                FontFamily="FASolid"
+                                                                Clicked="OnSearchFieldClicked"
+                                                                CommandParameter="{Binding .}"
+                                                                WidthRequest="38"
+                                                                HeightRequest="38"
+                                                                Padding="0"
+                                                                VerticalOptions="Start"/>
+                                                 </Grid>
+                                          </Frame>
+                                   </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                     </CollectionView>
+
+                     <VerticalStackLayout Spacing="8"
+                                          IsVisible="{Binding RequiresLifeScale}">
+                            <Label Text="Playable race for this class"
+                                   IsVisible="{Binding ShowClassLifeScaleSelectors}"/>
+                            <Picker ItemsSource="{Binding LifeScaleRaceOptions}"
+                                    SelectedItem="{Binding SelectedLifeScaleTargetRace, Mode=TwoWay}"
+                                    IsVisible="{Binding ShowClassLifeScaleSelectors}"/>
+
+                            <Label Text="Copy life-scale from class"
+                                   IsVisible="{Binding ShowClassLifeScaleSelectors}"/>
+                            <Picker ItemsSource="{Binding LifeScaleClassOptions}"
+                                    SelectedItem="{Binding SelectedLifeScaleSourceClass, Mode=TwoWay}"
+                                    IsVisible="{Binding ShowClassLifeScaleSelectors}"/>
+
+                            <Label Text="Playable class for this race"
+                                   IsVisible="{Binding ShowRaceLifeScaleSelectors}"/>
+                            <Picker ItemsSource="{Binding LifeScaleClassOptions}"
+                                    SelectedItem="{Binding SelectedLifeScaleTargetClass, Mode=TwoWay}"
+                                    IsVisible="{Binding ShowRaceLifeScaleSelectors}"/>
+
+                            <Label Text="Copy life-scale from race"
+                                   IsVisible="{Binding ShowRaceLifeScaleSelectors}"/>
+                            <Picker ItemsSource="{Binding LifeScaleRaceOptions}"
+                                    SelectedItem="{Binding SelectedLifeScaleSourceRace, Mode=TwoWay}"
+                                    IsVisible="{Binding ShowRaceLifeScaleSelectors}"/>
+
+                            <Grid ColumnDefinitions="Auto,*"
                                   ColumnSpacing="8">
-                                <VerticalStackLayout Spacing="6">
-                                    <Label Text="{Binding Label}"
-                                           FontAttributes="Bold"
-                                           FontSize="12"
-                                           Opacity="0.8"/>
-
-                                    <Entry Text="{Binding Value, Mode=TwoWay}"
-                                           IsVisible="{Binding IsSingleLine}"/>
-
-                                    <Editor Text="{Binding Value, Mode=TwoWay}"
-                                            AutoSize="TextChanges"
-                                            IsVisible="{Binding IsMultiLine}"
-                                            MinimumHeightRequest="90"/>
-                                </VerticalStackLayout>
-
-                                <Button Grid.Column="1"
-                                        Text="&#xF002;"
-                                        FontFamily="FASolid"
-                                        Clicked="OnSearchFieldClicked"
-                                        CommandParameter="{Binding .}"
-                                        WidthRequest="38"
-                                        HeightRequest="38"
-                                        Padding="0"
-                                        VerticalOptions="Start"/>
+                                   <Button Grid.Column="0"
+                                           Text="{Binding LifeScaleChevronText}"
+                                           Style="{StaticResource ChevronButtonStyle}"
+                                           Clicked="OnToggleLifeScaleClicked"/>
+                                   <Label Grid.Column="1"
+                                          Text="{Binding LifeScaleCollapsedSummary}"
+                                          VerticalTextAlignment="Center"
+                                          Opacity="0.8"/>
                             </Grid>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
 
-            <VerticalStackLayout Spacing="8"
-                                 IsVisible="{Binding RequiresLifeScale}">
-                <Label Text="Life-scale Mapping (Required)"
-                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+                            <Editor Text="{Binding LifeScalePointsJson, Mode=TwoWay}"
+                                    AutoSize="TextChanges"
+                                    IsVisible="{Binding IsLifeScaleExpanded}"
+                                    MinimumHeightRequest="110"/>
 
-                <Label Text="Playable race for this class"
-                       IsVisible="{Binding ShowClassLifeScaleSelectors}"/>
-                <Picker ItemsSource="{Binding LifeScaleRaceOptions}"
-                        SelectedItem="{Binding SelectedLifeScaleTargetRace, Mode=TwoWay}"
-                        IsVisible="{Binding ShowClassLifeScaleSelectors}"/>
+                            <Label Text="{Binding LifeScaleExpandedSummary}"
+                                   IsVisible="{Binding IsLifeScaleExpanded}"
+                                   FontSize="12"
+                                   Opacity="0.75"
+                                   LineBreakMode="WordWrap"/>
+                     </VerticalStackLayout>
 
-                <Label Text="Copy life-scale from class"
-                       IsVisible="{Binding ShowClassLifeScaleSelectors}"/>
-                <Picker ItemsSource="{Binding LifeScaleClassOptions}"
-                        SelectedItem="{Binding SelectedLifeScaleSourceClass, Mode=TwoWay}"
-                        IsVisible="{Binding ShowClassLifeScaleSelectors}"/>
+                     <Button Text="Save Non-standard"
+                             Clicked="OnSaveClicked"
+                             IsEnabled="{Binding CanSave}"/>
 
-                <Label Text="Playable class for this race"
-                       IsVisible="{Binding ShowRaceLifeScaleSelectors}"/>
-                <Picker ItemsSource="{Binding LifeScaleClassOptions}"
-                        SelectedItem="{Binding SelectedLifeScaleTargetClass, Mode=TwoWay}"
-                        IsVisible="{Binding ShowRaceLifeScaleSelectors}"/>
+                     <ActivityIndicator IsVisible="{Binding IsBusy}"
+                                        IsRunning="{Binding IsBusy}"/>
 
-                <Label Text="Copy life-scale from race"
-                       IsVisible="{Binding ShowRaceLifeScaleSelectors}"/>
-                <Picker ItemsSource="{Binding LifeScaleRaceOptions}"
-                        SelectedItem="{Binding SelectedLifeScaleSourceRace, Mode=TwoWay}"
-                        IsVisible="{Binding ShowRaceLifeScaleSelectors}"/>
+                     <Label Text="{Binding SaveStatus}"
+                            TextColor="{StaticResource AccentMaroonColor}"
+                            IsVisible="{Binding HasSaveStatus}"
+                            LineBreakMode="WordWrap"/>
 
-                <Grid ColumnDefinitions="Auto,*"
-                      ColumnSpacing="8">
-                    <Button Grid.Column="0"
-                            Text="{Binding LifeScaleChevronText}"
-                            Style="{StaticResource ChevronButtonStyle}"
-                            Clicked="OnToggleLifeScaleClicked"/>
-                    <Label Grid.Column="1"
-                           Text="{Binding LifeScaleCollapsedSummary}"
-                           VerticalTextAlignment="Center"
-                           Opacity="0.8"/>
-                </Grid>
+                     <Label Text="Preview"
+                            Style="{StaticResource SectionHeaderLabelStyle}"/>
 
-                <Editor Text="{Binding LifeScalePointsJson, Mode=TwoWay}"
-                        AutoSize="TextChanges"
-                        IsVisible="{Binding IsLifeScaleExpanded}"
-                        MinimumHeightRequest="110"/>
+                     <abilityCard:AbilityDetailCardView Ability="{Binding PreviewAbility}"
+                                                        IsVisible="{Binding ShowAbilityPreview}"/>
 
-                <Label Text="{Binding LifeScaleExpandedSummary}"
-                       IsVisible="{Binding IsLifeScaleExpanded}"
-                       FontSize="12"
-                       Opacity="0.75"
-                       LineBreakMode="WordWrap"/>
-            </VerticalStackLayout>
+                     <spellCard:SpellDetailCardView Spell="{Binding PreviewSpell}"
+                                                    IsVisible="{Binding ShowSpellPreview}"/>
 
-            <Button Text="Save Non-standard"
-                    Clicked="OnSaveClicked"
-                    IsEnabled="{Binding CanSave}"/>
+                     <miracleCard:MiracleDetailCardView Miracle="{Binding PreviewMiracle}"
+                                                        IsVisible="{Binding ShowMiraclePreview}"/>
 
-            <ActivityIndicator IsVisible="{Binding IsBusy}"
-                               IsRunning="{Binding IsBusy}"/>
+                     <evocationCard:EvocationDetailCardView Evocation="{Binding PreviewEvocation}"
+                                                            IsVisible="{Binding ShowEvocationPreview}"/>
 
-            <Label Text="{Binding SaveStatus}"
-                   TextColor="{StaticResource AccentMaroonColor}"
-                   IsVisible="{Binding HasSaveStatus}"
-                   LineBreakMode="WordWrap"/>
-
-            <Label Text="Preview"
-                   Style="{StaticResource SectionHeaderLabelStyle}"/>
-
-            <abilityCard:AbilityDetailCardView Ability="{Binding PreviewAbility}"
-                                               IsVisible="{Binding ShowAbilityPreview}"/>
-
-            <spellCard:SpellDetailCardView Spell="{Binding PreviewSpell}"
-                                           IsVisible="{Binding ShowSpellPreview}"/>
-
-            <miracleCard:MiracleDetailCardView Miracle="{Binding PreviewMiracle}"
-                                               IsVisible="{Binding ShowMiraclePreview}"/>
-
-            <evocationCard:EvocationDetailCardView Evocation="{Binding PreviewEvocation}"
-                                                   IsVisible="{Binding ShowEvocationPreview}"/>
-
-            <Frame Style="{StaticResource DetailCardFrameStyle}"
-                   IsVisible="{Binding ShowJsonPreview}">
-                <Label Text="{Binding JsonPreviewText}"
-                       LineBreakMode="WordWrap"/>
-            </Frame>
-        </VerticalStackLayout>
-    </ScrollView>
+                     <Frame Style="{StaticResource DetailCardFrameStyle}"
+                            IsVisible="{Binding ShowJsonPreview}">
+                            <Label Text="{Binding JsonPreviewText}"
+                                   LineBreakMode="WordWrap"/>
+                     </Frame>
+              </VerticalStackLayout>
+       </ScrollView>
 </ContentPage>

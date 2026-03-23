@@ -5,6 +5,7 @@ using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 namespace labyItems.Services;
 
@@ -87,6 +88,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
             effectiveResistanceLevels,
             resistanceMultipliers,
             infiniteResistanceTypes);
+        var effectiveMaxAc = await MaxAcResolver.ResolveEffectiveForDraftAsync(draft);
 
         var pools = (draft.PowerPools ?? new Dictionary<string, int>())
             .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key))
@@ -108,16 +110,16 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var ws = wb.Worksheet("BBoard");
 
         var armourBonus = ExtractArmourBonuses(draft.Abilities);
-        int pac = Math.Min(draft.MaxAC, itemArmour.WornPac + armourBonus.Pac);
+        int pac = Math.Min(effectiveMaxAc, itemArmour.WornPac + armourBonus.Pac);
         int dac = armourBonus.Dac + itemArmour.ItemDac;
         int mac = armourBonus.Mac + itemArmour.ItemMac;
         int sac = armourBonus.Sac + itemArmour.ItemSac;
-        int acShown = Math.Min(dac + pac, draft.MaxAC);
+        int acShown = Math.Min(dac + pac, effectiveMaxAc);
         ws.Cell("B2").Value = draft.Name;
         ws.Cell("C3").Value = lifeTotals.TotalTblp;
         ws.Cell("U3").Value = pac;
         ws.Cell("U4").Value = dac;
-        ws.Cell("AD3").Value = draft.MaxAC;
+        ws.Cell("AD3").Value = effectiveMaxAc;
 
         if (mac > 0) ws.Cell("U5").Value = mac;
         if (sac > 0) ws.Cell("U6").Value = sac;
@@ -252,6 +254,9 @@ public sealed class BattleboardExportService : IBattleboardExportService
             endRow: innateConfig.EndRow);
 
         WriteNotes(ws, draft.Notes, startColumn: "R", endColumn: "AD", startRow: 43, endRow: 53);
+
+        var advancementDamageTexts = await ResolveAdvancementDamageTextsAsync(draft.AdvancementAbilities);
+        WriteDamageSheet(wb, draft, assignedItems, advancementDamageTexts);
 
         var outPath = Path.Combine(FileSystem.CacheDirectory, $"Battleboard_{Sanitize(draft.Name)}.xlsx");
         wb.SaveAs(outPath);
@@ -642,6 +647,805 @@ public sealed class BattleboardExportService : IBattleboardExportService
                 row++;
             }
         }
+    }
+
+    private sealed record WeaponMasteryContribution(
+        string WeaponType,
+        string Label,
+        int Value,
+        int? Ordinal,
+        bool IsFirst);
+
+    private sealed record StrengthContribution(
+        string Label,
+        int Value,
+        int? GradeOrdinal);
+
+    private sealed record ItemWeaponBonusContribution(
+        string WeaponType,
+        string Label,
+        int Value);
+
+    private sealed record DamageTableDefinition(
+        string Key,
+        string DisplayName,
+        int BaseValue,
+        bool IsBastard);
+
+    private static readonly Regex NumberedWeaponMasteryRegex = new(
+        @"(?<ord>\d+)(?:st|nd|rd|th)\s+weapon\s+mastery(?:\s*\((?<type>[^)]+)\)|\s+(?<type2>[A-Za-z][A-Za-z\s\/\-\']+))?",
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
+
+    private static readonly Regex FlatWeaponMasteryRegex = new(
+        @"\+\s*(?<value>\d+)\s*(?:cumulative\s+)?weapon\s+mastery(?:\s+with)?\s*(?<type>[A-Za-z][A-Za-z\s\/\-\']+)?",
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
+
+    private static readonly Regex GenericWeaponMasteryRegex = new(
+        @"\bweapon\s+mastery\b(?:\s*\((?<type>[^)]+)\)|\s+(?<type2>[A-Za-z][A-Za-z\s\/\-\']+))?",
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
+
+    private static readonly Regex GradeOfStrengthRegex = new(
+        @"(?<ord>\d+)(?:st|nd|rd|th)\s+grade\s+of\s+strength",
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
+
+    private static readonly Regex PlusStrengthRegex = new(
+        @"\+\s*(?<value>\d+)\s*(?:str|strength)\b",
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
+
+    private static readonly Regex BonusValueRegex = new(
+        @"\+\s*(?<value>\d+)",
+        RegexOptionsCompat.ForRuntime(RegexOptions.IgnoreCase | RegexOptions.Compiled));
+
+    private static async Task<List<string>> ResolveAdvancementDamageTextsAsync(IEnumerable<string>? advancementAbilities)
+    {
+        var result = new List<string>();
+        var lookup = await AbilityDetailsLookupService.GetLookupAsync();
+
+        foreach (var raw in advancementAbilities ?? Array.Empty<string>())
+        {
+            var text = (raw ?? string.Empty).Trim();
+            if (text.Length == 0)
+                continue;
+
+            result.Add(text);
+            var resolved = AbilityDetailsLookupService.FindByIndex(lookup, text);
+            var display = (resolved?.Index ?? string.Empty).Trim();
+            if (display.Length > 0
+                && !display.Equals(text, StringComparison.OrdinalIgnoreCase))
+            {
+                result.Add(display);
+            }
+        }
+
+        return result;
+    }
+
+    private static void WriteDamageSheet(
+        XLWorkbook workbook,
+        CharacterDraft draft,
+        IEnumerable<Item> assignedItems,
+        IReadOnlyList<string> advancementDamageTexts)
+    {
+        var existing = workbook.Worksheets
+            .FirstOrDefault(sheet => sheet.Name.Equals("damage sheet", StringComparison.OrdinalIgnoreCase));
+        existing?.Delete();
+
+        var ws = workbook.Worksheets.Add("damage sheet");
+        ws.Cell("A1").Value = "Damage Sheet";
+        ws.Cell("A2").Value = "Character";
+        ws.Cell("B2").Value = draft.Name;
+        ws.Cell("A1").Style.Font.Bold = true;
+        ws.Cell("A2").Style.Font.Bold = true;
+
+        var masteryContributions = CollectWeaponMasteryContributions(draft, advancementDamageTexts, assignedItems);
+        var gradeStrengthContributions = CollectGradeOfStrengthContributions(draft, advancementDamageTexts, assignedItems);
+        var itemStrengthContributions = CollectItemStrengthContributions(assignedItems);
+        var itemWeaponBonusContributions = CollectItemWeaponBonusContributions(assignedItems);
+
+        var tables = new Dictionary<string, DamageTableDefinition>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var mastery in masteryContributions)
+            AddDamageTable(tables, ResolveDamageTable(mastery.WeaponType));
+        foreach (var itemBonus in itemWeaponBonusContributions)
+            AddDamageTable(tables, ResolveDamageTable(itemBonus.WeaponType));
+
+        int row = 4;
+        if (tables.Count == 0)
+        {
+            ws.Cell(row, 1).Value = "No weapon damage modifiers found.";
+            ws.Columns(1, 4).AdjustToContents();
+            return;
+        }
+
+        foreach (var table in tables.Values.OrderBy(t => t.DisplayName, StringComparer.OrdinalIgnoreCase))
+        {
+            ws.Cell(row, 1).Value = table.DisplayName;
+            ws.Cell(row, 1).Style.Font.Bold = true;
+            row++;
+
+            ws.Cell(row, 1).Value = "Source";
+            ws.Cell(row, 2).Value = "Bonus";
+            ws.Cell(row, 3).Value = "Result";
+            ws.Range(row, 1, row, 3).Style.Font.Bold = true;
+            row++;
+
+            var running = 0;
+            running = WriteDamageRow(
+                ws,
+                row++,
+                "BWT Base",
+                table.BaseValue,
+                table.IsBastard,
+                running);
+
+            var tableMasteries = masteryContributions
+                .Where(entry => MatchesDamageTable(entry.WeaponType, table.Key))
+                .OrderBy(entry => entry.IsFirst ? 0 : (entry.Ordinal.HasValue ? 1 : 2))
+                .ThenBy(entry => entry.Ordinal ?? int.MaxValue)
+                .ThenBy(entry => entry.Label, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            var firstMasteryApplied = false;
+            var numberedMasteries = new HashSet<int>();
+            foreach (var mastery in tableMasteries)
+            {
+                if (mastery.IsFirst)
+                {
+                    if (firstMasteryApplied)
+                        continue;
+                    firstMasteryApplied = true;
+                }
+                else if (mastery.Ordinal is { } ordinal && ordinal > 1)
+                {
+                    if (!numberedMasteries.Add(ordinal))
+                        continue;
+                }
+
+                running = WriteDamageRow(
+                    ws,
+                    row++,
+                    mastery.Label,
+                    Math.Max(0, mastery.Value),
+                    table.IsBastard,
+                    running);
+            }
+
+            var firstStrengthApplied = false;
+            var numberedStrengths = new HashSet<int>();
+            foreach (var strength in gradeStrengthContributions
+                         .OrderBy(entry => entry.GradeOrdinal ?? int.MaxValue)
+                         .ThenBy(entry => entry.Label, StringComparer.OrdinalIgnoreCase))
+            {
+                if (strength.GradeOrdinal is { } gradeOrdinal)
+                {
+                    if (gradeOrdinal == 1)
+                    {
+                        if (firstStrengthApplied)
+                            continue;
+                        firstStrengthApplied = true;
+                    }
+                    else if (gradeOrdinal > 1)
+                    {
+                        if (!numberedStrengths.Add(gradeOrdinal))
+                            continue;
+                    }
+                }
+
+                running = WriteDamageRow(
+                    ws,
+                    row++,
+                    strength.Label,
+                    Math.Max(0, strength.Value),
+                    table.IsBastard,
+                    running);
+            }
+
+            foreach (var itemStrength in itemStrengthContributions)
+            {
+                running = WriteDamageRow(
+                    ws,
+                    row++,
+                    itemStrength.Label,
+                    Math.Max(0, itemStrength.Value),
+                    table.IsBastard,
+                    running);
+            }
+
+            foreach (var itemBonus in itemWeaponBonusContributions
+                         .Where(entry => MatchesDamageTable(entry.WeaponType, table.Key))
+                         .OrderBy(entry => entry.Label, StringComparer.OrdinalIgnoreCase))
+            {
+                running = WriteDamageRow(
+                    ws,
+                    row++,
+                    itemBonus.Label,
+                    Math.Max(0, itemBonus.Value),
+                    table.IsBastard,
+                    running);
+            }
+
+            ws.Cell(row, 1).Value = "Total";
+            ws.Cell(row, 2).Value = running;
+            ws.Cell(row, 3).Value = FormatDamageResult(running, table.IsBastard);
+            ws.Range(row, 1, row, 3).Style.Font.Bold = true;
+            row += 2;
+        }
+
+        ws.Columns(1, 4).AdjustToContents();
+    }
+
+    private static int WriteDamageRow(
+        IXLWorksheet ws,
+        int row,
+        string label,
+        int bonus,
+        bool isBastard,
+        int runningTotal)
+    {
+        var updatedTotal = runningTotal + Math.Max(0, bonus);
+        ws.Cell(row, 1).Value = label;
+        ws.Cell(row, 2).Value = Math.Max(0, bonus);
+        ws.Cell(row, 3).Value = FormatDamageResult(updatedTotal, isBastard);
+        return updatedTotal;
+    }
+
+    private static void AddDamageTable(
+        IDictionary<string, DamageTableDefinition> tables,
+        DamageTableDefinition table)
+    {
+        if (table.Key.Length == 0)
+            return;
+
+        if (tables.ContainsKey(table.Key))
+            return;
+
+        tables[table.Key] = table;
+    }
+
+    private static bool MatchesDamageTable(string weaponType, string tableKey)
+        => ResolveDamageTable(weaponType).Key.Equals(tableKey, StringComparison.OrdinalIgnoreCase);
+
+    private static List<WeaponMasteryContribution> CollectWeaponMasteryContributions(
+        CharacterDraft draft,
+        IReadOnlyList<string> advancementDamageTexts,
+        IEnumerable<Item> assignedItems)
+    {
+        var entries = new List<WeaponMasteryContribution>();
+
+        foreach (var ability in draft.Abilities ?? new List<AbilityDraft>())
+        {
+            if (ability == null)
+                continue;
+
+            if (TryParseWeaponMasteryContribution((ability.BattleboardNameOverride ?? string.Empty).Trim(), out var fromOverride))
+            {
+                entries.Add(fromOverride);
+                continue;
+            }
+
+            if (TryParseWeaponMasteryContribution((ability.Name ?? string.Empty).Trim(), out var fromName))
+            {
+                entries.Add(fromName);
+                continue;
+            }
+
+            if (TryParseWeaponMasteryContribution((ability.Effect ?? string.Empty).Trim(), out var fromEffect))
+                entries.Add(fromEffect);
+        }
+
+        foreach (var advancement in advancementDamageTexts ?? Array.Empty<string>())
+        {
+            if (TryParseWeaponMasteryContribution(advancement, out var parsed))
+                entries.Add(parsed);
+        }
+
+        foreach (var item in assignedItems ?? Array.Empty<Item>())
+        {
+            var payload = ItemEmailService.TryDeserializeItemPayload(item?.PayloadJson);
+            foreach (var ability in payload?.Item?.Abilities ?? new List<CalcResult>())
+            {
+                foreach (var candidate in EnumerateItemTextCandidates(ability))
+                {
+                    if (TryParseWeaponMasteryContribution(candidate, out var parsed))
+                        entries.Add(parsed);
+                }
+            }
+        }
+
+        return entries;
+    }
+
+    private static List<StrengthContribution> CollectGradeOfStrengthContributions(
+        CharacterDraft draft,
+        IReadOnlyList<string> advancementDamageTexts,
+        IEnumerable<Item> assignedItems)
+    {
+        var entries = new List<StrengthContribution>();
+
+        foreach (var ability in draft.Abilities ?? new List<AbilityDraft>())
+        {
+            if (TryParseGradeOfStrengthContribution(ability?.BattleboardNameOverride, out var fromOverride))
+            {
+                entries.Add(fromOverride);
+                continue;
+            }
+
+            if (TryParseGradeOfStrengthContribution(ability?.Name, out var fromName))
+            {
+                entries.Add(fromName);
+                continue;
+            }
+
+            if (TryParseGradeOfStrengthContribution(ability?.Effect, out var fromEffect))
+                entries.Add(fromEffect);
+        }
+
+        foreach (var advancement in advancementDamageTexts ?? Array.Empty<string>())
+        {
+            if (TryParseGradeOfStrengthContribution(advancement, out var parsed))
+                entries.Add(parsed);
+        }
+
+        foreach (var item in assignedItems ?? Array.Empty<Item>())
+        {
+            var payload = ItemEmailService.TryDeserializeItemPayload(item?.PayloadJson);
+            foreach (var ability in payload?.Item?.Abilities ?? new List<CalcResult>())
+            {
+                foreach (var candidate in EnumerateItemTextCandidates(ability))
+                {
+                    if (TryParseGradeOfStrengthContribution(candidate, out var parsed))
+                        entries.Add(parsed);
+                }
+            }
+        }
+
+        return entries;
+    }
+
+    private static List<StrengthContribution> CollectItemStrengthContributions(IEnumerable<Item> assignedItems)
+    {
+        var entries = new List<StrengthContribution>();
+
+        foreach (var item in assignedItems ?? Array.Empty<Item>())
+        {
+            var payload = ItemEmailService.TryDeserializeItemPayload(item?.PayloadJson);
+            foreach (var ability in payload?.Item?.Abilities ?? new List<CalcResult>())
+            {
+                var addedFromAbility = false;
+                foreach (var candidate in EnumerateItemTextCandidates(ability))
+                {
+                    if (!TryParseFlatStrengthContribution(candidate, out var parsed))
+                        continue;
+
+                    entries.Add(parsed);
+                    addedFromAbility = true;
+                    break;
+                }
+
+                if (addedFromAbility)
+                    continue;
+            }
+        }
+
+        return entries;
+    }
+
+    private static List<ItemWeaponBonusContribution> CollectItemWeaponBonusContributions(IEnumerable<Item> assignedItems)
+    {
+        var entries = new List<ItemWeaponBonusContribution>();
+
+        foreach (var item in assignedItems ?? Array.Empty<Item>())
+        {
+            var payload = ItemEmailService.TryDeserializeItemPayload(item?.PayloadJson);
+            foreach (var ability in payload?.Item?.Abilities ?? new List<CalcResult>())
+            {
+                if (ability == null)
+                    continue;
+
+                var type = (ability.AbilityType ?? string.Empty).Trim();
+                if (!type.Equals("Weapon", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var bonus = ResolveItemWeaponBonus(ability);
+                if (bonus <= 0)
+                    continue;
+
+                var weaponType = ResolveItemWeaponType(ability);
+                var label = $"Item Weapon Bonus (+{bonus} {weaponType})";
+                entries.Add(new ItemWeaponBonusContribution(weaponType, label, bonus));
+            }
+        }
+
+        return entries;
+    }
+
+    private static IEnumerable<string> EnumerateItemTextCandidates(CalcResult? ability)
+    {
+        if (ability == null)
+            yield break;
+
+        var abilityName = (ability.AbilityName ?? string.Empty).Trim();
+        if (abilityName.Length > 0)
+            yield return abilityName;
+
+        var summary = (ability.Summary ?? string.Empty).Trim();
+        if (summary.Length > 0)
+            yield return summary;
+
+        foreach (var selected in ExtractSelectedGeneralAbilityNames(ability))
+            yield return selected;
+    }
+
+    private static IEnumerable<string> ExtractSelectedGeneralAbilityNames(CalcResult ability)
+    {
+        if (ability?.Details == null
+            || !ability.Details.TryGetValue("selectedGeneralAbilities", out var raw)
+            || raw == null)
+        {
+            yield break;
+        }
+
+        if (raw is JsonElement element)
+        {
+            if (element.ValueKind != JsonValueKind.Array)
+                yield break;
+
+            foreach (var entry in element.EnumerateArray())
+            {
+                if (entry.ValueKind == JsonValueKind.String)
+                {
+                    var parsed = (entry.GetString() ?? string.Empty).Trim();
+                    if (parsed.Length > 0)
+                        yield return parsed;
+                    continue;
+                }
+
+                if (entry.ValueKind != JsonValueKind.Object)
+                    continue;
+
+                var parsedName = ReadJsonProperty(entry, "name");
+                if (parsedName.Length > 0)
+                    yield return parsedName;
+            }
+
+            yield break;
+        }
+
+        if (raw is IEnumerable<object> objects)
+        {
+            foreach (var entry in objects)
+            {
+                if (entry is Dictionary<string, object?> dict
+                    && dict.TryGetValue("name", out var nameValue))
+                {
+                    var parsed = (nameValue?.ToString() ?? string.Empty).Trim();
+                    if (parsed.Length > 0)
+                        yield return parsed;
+                }
+            }
+        }
+    }
+
+    private static string ReadJsonProperty(JsonElement element, string propertyName)
+    {
+        if (element.ValueKind != JsonValueKind.Object
+            || !element.TryGetProperty(propertyName, out var value)
+            || value.ValueKind != JsonValueKind.String)
+        {
+            return string.Empty;
+        }
+
+        return (value.GetString() ?? string.Empty).Trim();
+    }
+
+    private static bool TryParseWeaponMasteryContribution(string? rawText, out WeaponMasteryContribution contribution)
+    {
+        contribution = default!;
+        var text = (rawText ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return false;
+
+        if (text.Contains("loss of weapon master", StringComparison.OrdinalIgnoreCase)
+            || text.Contains("weapon mastery shield", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var flatMatch = FlatWeaponMasteryRegex.Match(text);
+        if (flatMatch.Success)
+        {
+            if (!int.TryParse(flatMatch.Groups["value"].Value, out var flatValue))
+                flatValue = 0;
+
+            if (flatValue <= 0)
+                return false;
+
+            var weaponType = ResolveMasteryWeaponType(flatMatch.Groups["type"].Value);
+            contribution = new WeaponMasteryContribution(
+                weaponType,
+                BuildMasteryLabel(text, weaponType),
+                flatValue,
+                Ordinal: null,
+                IsFirst: false);
+            return true;
+        }
+
+        var numberedMatch = NumberedWeaponMasteryRegex.Match(text);
+        if (numberedMatch.Success)
+        {
+            if (!int.TryParse(numberedMatch.Groups["ord"].Value, out var ordinal))
+                ordinal = 0;
+
+            if (ordinal <= 0)
+                return false;
+
+            var weaponType = ResolveMasteryWeaponType(numberedMatch.Groups["type"].Value, numberedMatch.Groups["type2"].Value);
+            contribution = new WeaponMasteryContribution(
+                weaponType,
+                BuildMasteryLabel(text, weaponType),
+                Value: 1,
+                Ordinal: ordinal,
+                IsFirst: ordinal == 1);
+            return true;
+        }
+
+        var genericMatch = GenericWeaponMasteryRegex.Match(text);
+        if (!genericMatch.Success)
+            return false;
+
+        var genericType = ResolveMasteryWeaponType(genericMatch.Groups["type"].Value, genericMatch.Groups["type2"].Value);
+        contribution = new WeaponMasteryContribution(
+            genericType,
+            BuildMasteryLabel(text, genericType),
+            Value: 1,
+            Ordinal: null,
+            IsFirst: false);
+        return true;
+    }
+
+    private static string ResolveMasteryWeaponType(params string[] candidates)
+    {
+        foreach (var candidate in candidates ?? Array.Empty<string>())
+        {
+            var value = NormalizeWeaponType(candidate);
+            if (value.Length > 0)
+                return value;
+        }
+
+        return "Unspecified Weapon";
+    }
+
+    private static string BuildMasteryLabel(string sourceText, string weaponType)
+    {
+        var label = (sourceText ?? string.Empty).Trim();
+        if (label.Length == 0)
+            label = "Weapon Mastery";
+
+        if (label.Contains("weapon mastery", StringComparison.OrdinalIgnoreCase)
+            && !label.Contains('('))
+        {
+            if (!label.Contains(weaponType, StringComparison.OrdinalIgnoreCase))
+                label = $"{label} ({weaponType})";
+        }
+
+        return label;
+    }
+
+    private static bool TryParseGradeOfStrengthContribution(string? rawText, out StrengthContribution contribution)
+    {
+        contribution = default!;
+        var text = (rawText ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return false;
+
+        var match = GradeOfStrengthRegex.Match(text);
+        if (!match.Success)
+            return false;
+
+        if (!int.TryParse(match.Groups["ord"].Value, out var ordinal))
+            ordinal = 0;
+
+        if (ordinal <= 0)
+            return false;
+
+        var label = text;
+        contribution = new StrengthContribution(label, Value: 1, GradeOrdinal: ordinal);
+        return true;
+    }
+
+    private static bool TryParseFlatStrengthContribution(string? rawText, out StrengthContribution contribution)
+    {
+        contribution = default!;
+        var text = (rawText ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return false;
+
+        var match = PlusStrengthRegex.Match(text);
+        if (!match.Success)
+            return false;
+
+        if (!int.TryParse(match.Groups["value"].Value, out var value))
+            value = 0;
+
+        if (value <= 0)
+            return false;
+
+        contribution = new StrengthContribution(
+            $"Item Strength (+{value})",
+            value,
+            GradeOrdinal: null);
+        return true;
+    }
+
+    private static int ResolveItemWeaponBonus(CalcResult ability)
+    {
+        if (ability?.Details != null && ability.Details.TryGetValue("base", out var rawBase))
+        {
+            var token = (rawBase?.ToString() ?? string.Empty).Trim();
+            if (token.Length > 0)
+            {
+                if (token.Contains("plus2", StringComparison.OrdinalIgnoreCase))
+                    return 2;
+                if (token.Contains("plus1", StringComparison.OrdinalIgnoreCase))
+                    return 1;
+                if (token.Contains("0plus1", StringComparison.OrdinalIgnoreCase))
+                    return 1;
+            }
+        }
+
+        foreach (var candidate in EnumerateItemTextCandidates(ability))
+        {
+            var match = BonusValueRegex.Match(candidate);
+            if (!match.Success)
+                continue;
+
+            if (int.TryParse(match.Groups["value"].Value, out var parsed) && parsed > 0)
+                return parsed;
+        }
+
+        return 0;
+    }
+
+    private static string ResolveItemWeaponType(CalcResult ability)
+    {
+        if (ability?.Details != null && ability.Details.TryGetValue("type", out var rawType))
+        {
+            var parsed = NormalizeWeaponType(rawType?.ToString());
+            if (parsed.Length > 0)
+                return parsed;
+        }
+
+        foreach (var candidate in EnumerateItemTextCandidates(ability))
+        {
+            var parsed = NormalizeWeaponType(candidate);
+            if (parsed.Length > 0 && !parsed.Equals("Unspecified Weapon", StringComparison.OrdinalIgnoreCase))
+                return parsed;
+        }
+
+        return "Unspecified Weapon";
+    }
+
+    private static DamageTableDefinition ResolveDamageTable(string? rawWeaponType)
+    {
+        var weaponType = NormalizeWeaponType(rawWeaponType);
+        if (IsRangedWeaponType(weaponType))
+        {
+            return new DamageTableDefinition(
+                Key: "ranged",
+                DisplayName: "Ranged",
+                BaseValue: 1,
+                IsBastard: false);
+        }
+
+        var lower = weaponType.ToLowerInvariant();
+        var isBastard = lower.Contains("bastard", StringComparison.Ordinal)
+                        || lower.Contains("bstd", StringComparison.Ordinal);
+        var isGreat = lower.Contains("great", StringComparison.Ordinal);
+        var baseValue = (isBastard || isGreat) ? 2 : 1;
+
+        var key = BuildWeaponTableKey(weaponType);
+        return new DamageTableDefinition(
+            Key: key,
+            DisplayName: weaponType,
+            BaseValue: baseValue,
+            IsBastard: isBastard);
+    }
+
+    private static string BuildWeaponTableKey(string weaponType)
+    {
+        var normalized = new string((weaponType ?? string.Empty)
+            .Trim()
+            .ToLowerInvariant()
+            .Where(char.IsLetterOrDigit)
+            .ToArray());
+
+        return normalized.Length == 0 ? "unspecified" : normalized;
+    }
+
+    private static bool IsRangedWeaponType(string weaponType)
+    {
+        var lower = (weaponType ?? string.Empty).Trim().ToLowerInvariant();
+        if (lower.Length == 0)
+            return false;
+
+        return lower.Contains("bow", StringComparison.Ordinal)
+               || lower.Contains("crossbow", StringComparison.Ordinal)
+               || lower.Contains("blowpipe", StringComparison.Ordinal);
+    }
+
+    private static string NormalizeWeaponType(string? raw)
+    {
+        var value = (raw ?? string.Empty).Trim();
+        if (value.Length == 0)
+            return "Unspecified Weapon";
+
+        if (value.StartsWith("Type:", StringComparison.OrdinalIgnoreCase))
+            value = value.Substring(5).Trim();
+
+        if (value.StartsWith("weapon ", StringComparison.OrdinalIgnoreCase))
+            value = value.Substring("weapon ".Length).Trim();
+
+        value = value.Trim('(', ')');
+        if (value.Length == 0)
+            return "Unspecified Weapon";
+
+        if (value.Contains("sword or dagger", StringComparison.OrdinalIgnoreCase))
+            return "Sword or Dagger";
+
+        value = value
+            .Replace("only", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("weapons", "weapon", StringComparison.OrdinalIgnoreCase)
+            .Trim();
+
+        if (value.Equals("O", StringComparison.OrdinalIgnoreCase))
+            return "O class";
+        if (value.Equals("H", StringComparison.OrdinalIgnoreCase))
+            return "H class";
+        if (value.Equals("B", StringComparison.OrdinalIgnoreCase))
+            return "B class";
+        if (value.Equals("MP", StringComparison.OrdinalIgnoreCase))
+            return "MP class";
+
+        if (value.EndsWith("s", StringComparison.OrdinalIgnoreCase)
+            && value.Length > 3
+            && !value.EndsWith("ss", StringComparison.OrdinalIgnoreCase))
+        {
+            value = value.Substring(0, value.Length - 1);
+        }
+
+        value = Regex.Replace(value, @"\s+", " ").Trim();
+        return value.Length == 0 ? "Unspecified Weapon" : value;
+    }
+
+    private static string FormatDamageResult(int value, bool isBastard)
+    {
+        var word = value switch
+        {
+            <= 0 => "none",
+            1 => "single",
+            2 => "double",
+            3 => "triple",
+            4 => "quad",
+            5 => "quin",
+            6 => "six",
+            7 => "seven",
+            8 => "eight",
+            9 => "nine",
+            10 => "ten",
+            11 => "eleven",
+            12 => "twelve",
+            13 => "thirteen",
+            14 => "fourteen",
+            15 => "fifteen",
+            16 => "sixteen",
+            17 => "seventeen",
+            18 => "eighteen",
+            19 => "nineteen",
+            20 => "twenty",
+            _ => value.ToString()
+        };
+
+        return isBastard ? $"bstd {word}" : word;
     }
 
     private static string Sanitize(string name)

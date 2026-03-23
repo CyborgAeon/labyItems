@@ -2077,10 +2077,14 @@
   },
   "Wizard Specialist": {
     "Abilities": [
-      "Make Teaching Scrolls",
-      "Make Magical Armour",
-      "Make Magical Weapons",
-      "Make Artefacts"
+      "Make Minor Teaching Scrolls",
+      "Make Major Teaching Scrolls",
+      "Make Minor Magical Armour",
+      "Make Major Magical Armour",
+      "Make Minor Magical Weapons",
+      "Make Major Magical Weapons",
+      "Make Minor Artefacts",
+      "Make Major Artefacts"
     ]
   },
   "Vochstelen Specialist": {

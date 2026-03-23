@@ -4921,7 +4921,7 @@
         {
           "Name": "Skilled",
           "Type": "Static",
-          "Effect": "Gains 1st Weapon Mastery Broadsword (ability gained at 7th level). This does not stack with mastery broadsword from other sources.",
+          "Effect": "1st Weapon Mastery (Broadsword)",
           "Key": "ability.guild.knights-of-the-land.skilled",
           "AbilityRef": "ability.guild.knights-of-the-land.skilled"
         }

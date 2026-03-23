@@ -102,7 +102,7 @@ internal static class ServiceTestEnvironment
             available: "Any",
             canBuyMultiple: false,
             preReqsJson: "[\"Ability:Focus\"]",
-            dataJson: "{\"maxAvailable\":2}");
+            dataJson: "{\"maxAvailable\":2,\"data\":{\"effectType\":\"increase:maxAC\",\"amount\":2}}");
 
         InsertEvolution(
             idx: "Immunity! Fire",

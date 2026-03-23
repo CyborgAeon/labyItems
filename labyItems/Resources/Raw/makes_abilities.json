@@ -3,7 +3,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "⚔ Scout"
       }
     ],
@@ -18,7 +18,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🌿 Druid"
       }
     ],
@@ -33,7 +33,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧠 Neuro"
       }
     ],
@@ -48,7 +48,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🛡️ Warrior"
       }
     ],
@@ -58,14 +58,16 @@
     "table": 1,
     "sourceBook": "Manufacturers Guide",
     "abilityRef": "ability.make.smith-type",
-    "choiceSetRefs": ["choice.make.smith.type"],
+    "choiceSetRefs": [
+      "choice.make.smith.type"
+    ],
     "canBuyMultiple": true
   },
   {
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧠 Neuro"
       }
     ],
@@ -80,7 +82,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "⚔ Scout"
       }
     ],
@@ -95,7 +97,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       }
     ],
@@ -110,7 +112,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🛡️ Warrior"
       }
     ],
@@ -125,7 +127,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧠 Neuro"
       }
     ],
@@ -140,7 +142,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🌿 Druid"
       }
     ],
@@ -155,7 +157,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🙏 Priest"
       }
     ],
@@ -185,7 +187,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       }
     ],
@@ -200,7 +202,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🌿 Druid"
       }
     ],
@@ -215,7 +217,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧠 Neuro"
       }
     ],
@@ -225,13 +227,15 @@
     "table": 7,
     "sourceBook": "Manufacturers Guide",
     "abilityRef": "ability.make.craft-speciality-neuronic",
-    "choiceSetRefs": ["choice.make.craft-speciality.neuronic.type"]
+    "choiceSetRefs": [
+      "choice.make.craft-speciality.neuronic.type"
+    ]
   },
   {
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🙏 Priest"
       }
     ],
@@ -241,13 +245,15 @@
     "table": 7,
     "sourceBook": "Manufacturers Guide",
     "abilityRef": "ability.make.craft-speciality-spiritual",
-    "choiceSetRefs": ["choice.make.craft-speciality.spiritual.type"]
+    "choiceSetRefs": [
+      "choice.make.craft-speciality.spiritual.type"
+    ]
   },
   {
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🛡️ Warrior"
       }
     ],
@@ -257,13 +263,15 @@
     "table": 7,
     "sourceBook": "Manufacturers Guide",
     "abilityRef": "ability.make.craft-speciality-warrior",
-    "choiceSetRefs": ["choice.make.craft-speciality.warrior.type"]
+    "choiceSetRefs": [
+      "choice.make.craft-speciality.warrior.type"
+    ]
   },
   {
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       }
     ],
@@ -273,13 +281,15 @@
     "table": 7,
     "sourceBook": "Manufacturers Guide",
     "abilityRef": "ability.make.craft-speciality-wizard",
-    "choiceSetRefs": ["choice.make.craft-speciality.wizard.type"]
+    "choiceSetRefs": [
+      "choice.make.craft-speciality.wizard.type"
+    ]
   },
   {
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       },
       {
@@ -315,7 +325,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "⚔ Scout"
       }
     ],
@@ -360,7 +370,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "⚔ Scout"
       }
     ],
@@ -390,7 +400,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       }
     ],
@@ -405,7 +415,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       }
     ],
@@ -414,7 +424,10 @@
     "cost": "50",
     "table": 8,
     "sourceBook": "Manufacturers Guide",
-    "abilityRef": "ability.make.arcane-shield-manufacture"
+    "abilityRef": "ability.make.arcane-shield-manufacture",
+    "preReqs": [
+      "Make Major Magical Armour"
+    ]
   },
   {
     "available": [
@@ -516,7 +529,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       },
       {
@@ -532,7 +545,9 @@
     "table": 8,
     "sourceBook": "Manufacturers Guide",
     "abilityRef": "ability.make.diverse-magic-ii",
-    "preReqs": ["Diverse Magic"]
+    "preReqs": [
+      "Diverse Magic"
+    ]
   },
   {
     "available": [
@@ -628,7 +643,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🙏 Priest"
       }
     ],
@@ -643,7 +658,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🌿 Druid"
       }
     ],
@@ -658,7 +673,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧠 Neuro"
       }
     ],
@@ -673,7 +688,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🙏 Priest"
       }
     ],
@@ -688,7 +703,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🌿 Druid"
       }
     ],
@@ -703,7 +718,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       }
     ],
@@ -718,7 +733,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧠 Neuro"
       }
     ],
@@ -748,7 +763,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🛡️ Warrior"
       }
     ],
@@ -763,7 +778,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🙏 Priest"
       }
     ],
@@ -778,7 +793,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🌿 Druid"
       }
     ],
@@ -793,7 +808,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧠 Neuro"
       }
     ],
@@ -808,7 +823,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🙏 Priest"
       }
     ],
@@ -823,7 +838,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       }
     ],
@@ -838,7 +853,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🌿 Druid"
       }
     ],
@@ -853,7 +868,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       }
     ],
@@ -868,7 +883,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧠 Neuro"
       }
     ],
@@ -883,7 +898,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🛡️ Warrior"
       }
     ],
@@ -898,7 +913,7 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🙏 Priest"
       }
     ],
@@ -913,22 +928,25 @@
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       }
     ],
     "index": "Trinkets (Wizard)",
-    "desc": "Req. Make Major Talismans. Make once-ever innate items; +5% chance; 750 grulls per roll & setup; no blow up on date/death.",
+    "desc": "Make once-ever innate items; +5% chance; 750 grulls per roll & setup; no blow up on date/death.",
     "cost": "50",
     "table": 9,
     "sourceBook": "Manufacturers Guide",
-    "abilityRef": "ability.make.trinkets-wizard"
+    "abilityRef": "ability.make.trinkets-wizard",
+    "preReqs": [
+      "Make Major Artefacts"
+    ]
   },
   {
     "available": [
       {
         "Field": "Bracket",
-        "Operator": "Only",
+        "Operator": "In",
         "Value": "🧙 Wizard"
       }
     ],

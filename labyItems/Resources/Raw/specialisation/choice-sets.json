@@ -3224,43 +3224,83 @@
       "Options": [
         {
           "Key": "Make Teaching Scrolls",
-          "Label": "Make Teaching Scrolls",
+          "Label": "Make Minor Teaching Scrolls",
           "Grants": [
             {
               "AbilityRef": "ability.make-teaching-scrolls"
             }
           ],
-          "Description": "Crafted using the advanced making system. These can be read by Wizards, and other magical classes, to learn spells.\nTo use a teaching scroll the reader must have the Read Glyphs ability and be able to suffer double the casting damage to cast the spell. A mana user is limited in the number of advanced teaching scrolls they may use, they may use 1.5 teaching scrolls per table post 8th they have reached (rounded up). E.g. on Table 5 they may use 5 x 1.5 = 7.5 teaching scrolls, rounded up to 8.\nThis number is increased by 2 for High Wizards, and reduced by 2 for Second Class Wizards.\nWhere a teaching scroll is of a stackable rune spell, up to 5 teaching scrolls may fill one ’slot’.\nTeaching scrolls of standard spells that fill specialist slots do not apply to the limit of the number that may be used."
+          "Description": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes."
         },
         {
           "Key": "Make Magical Armour",
-          "Label": "Make Magical Armour",
+          "Label": "Make Minor Magical Armour",
           "Grants": [
             {
               "AbilityRef": "ability.make-magical-armour"
             }
           ],
-          "Description": "This skill enchants Magical armour, it applies equally against a purely magical weapon attack and a mundane attack. It does not protect against magical blast attacks and similar unless it also contains MAC. It is assumed that the item is grey magic unless coloured."
+          "Description": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes."
         },
         {
           "Key": "Make Magical Weapons",
-          "Label": "Make Magical Weapons",
+          "Label": "Make Minor Magical Weapons",
           "Grants": [
             {
               "AbilityRef": "ability.make-magical-weapons"
             }
           ],
-          "Description": "This skill allows the wizard to enchant a weapon such that it becomes magical. Magical weapons have certain intrinsic values in addition to letting the owner inflict magic damage, they do not count against a wizards metal allowance, and are not affected by spells such as Shatter and Melt [see the individual spells for further details]. They are automatically assumed to be Grey mana in colour unless ‘coloured’ – obviously they can only be coloured to a colour the wizard possesses, though if the wizard possesses more than one colour this may be applied multiple times as appropriate. Should the wizard be unable to use grey mana, then they must colour the item appropriately."
+          "Description": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes."
         },
         {
           "Key": "Make Artefacts",
-          "Label": "Make Artefacts",
+          "Label": "Make Minor Artefacts",
           "Grants": [
             {
               "AbilityRef": "ability.make-artefacts"
             }
           ],
-          "Description": "This skill covers the manufacturing of magical spell innates into objects. If the innates are to be bound intomagical armour or magical weapons then the percentages are calculated separately from that facet of the manufacture though innates can only be bound into weapons or armour of the same magical colour[s]. Innates may be bound into any non-system relevant appropriate object [except weapons and armour above], typically rings, amulets and wands are deemed appropriate. It is not possible to colour items of innates they are automatically solely their own colour. The modifier from binding innates into items is fully cumulative with itself"
+          "Description": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes."
+        },
+        {
+          "Key": "Make Major Teaching Scrolls",
+          "Label": "Make Major Teaching Scrolls",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-major-teaching-scrolls"
+            }
+          ],
+          "Description": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. Requires Make Minor Teaching Scrolls."
+        },
+        {
+          "Key": "Make Major Magical Armour",
+          "Label": "Make Major Magical Armour",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-major-magical-armour"
+            }
+          ],
+          "Description": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. Requires Make Minor Magical Armour."
+        },
+        {
+          "Key": "Make Major Magical Weapons",
+          "Label": "Make Major Magical Weapons",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-major-magical-weapons"
+            }
+          ],
+          "Description": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. Requires Make Minor Magical Weapons."
+        },
+        {
+          "Key": "Make Major Artefacts",
+          "Label": "Make Major Artefacts",
+          "Grants": [
+            {
+              "AbilityRef": "ability.make-major-artefacts"
+            }
+          ],
+          "Description": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. Requires Make Minor Artefacts."
         }
       ]
     },

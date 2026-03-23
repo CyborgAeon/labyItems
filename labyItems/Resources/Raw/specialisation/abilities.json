@@ -1389,20 +1389,71 @@
       "Key": "ability.chosen-of-the-dragon"
     },
     "ability.make-teaching-scrolls": {
-      "Name": "Make Teaching Scrolls",
+      "Name": "Make Minor Teaching Scrolls",
+      "Type": "Craft",
+      "Source": "Manufacturers Guide",
+      "Effect": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. This grants access to minor teaching scroll manufacture.",
       "Key": "ability.make-teaching-scrolls"
     },
+    "ability.make-major-teaching-scrolls": {
+      "Name": "Make Major Teaching Scrolls",
+      "Type": "Craft",
+      "Source": "Manufacturers Guide",
+      "Effect": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. This grants access to major teaching scroll manufacture.",
+      "PreReqs": ["Make Minor Teaching Scrolls"],
+      "Key": "ability.make-major-teaching-scrolls"
+    },
     "ability.make-magical-armour": {
-      "Name": "Make Magical Armour",
+      "Name": "Make Minor Magical Armour",
+      "Type": "Craft",
+      "Source": "Manufacturers Guide",
+      "Effect": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. This grants access to minor magical armour manufacture.",
       "Key": "ability.make-magical-armour"
     },
+    "ability.make-major-magical-armour": {
+      "Name": "Make Major Magical Armour",
+      "Type": "Craft",
+      "Source": "Manufacturers Guide",
+      "Effect": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. This grants access to major magical armour manufacture.",
+      "PreReqs": ["Make Minor Magical Armour"],
+      "Key": "ability.make-major-magical-armour"
+    },
     "ability.make-magical-weapons": {
-      "Name": "Make Magical Weapons",
+      "Name": "Make Minor Magical Weapons",
+      "Type": "Craft",
+      "Source": "Manufacturers Guide",
+      "Effect": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. This grants access to minor magical weapons manufacture.",
       "Key": "ability.make-magical-weapons"
     },
+    "ability.make-major-magical-weapons": {
+      "Name": "Make Major Magical Weapons",
+      "Type": "Craft",
+      "Source": "Manufacturers Guide",
+      "Effect": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. This grants access to major magical weapons manufacture.",
+      "PreReqs": ["Make Minor Magical Weapons"],
+      "Key": "ability.make-major-magical-weapons"
+    },
     "ability.make-artefacts": {
-      "Name": "Make Artefacts",
+      "Name": "Make Minor Artefacts",
+      "Type": "Craft",
+      "Source": "Manufacturers Guide",
+      "Effect": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. This grants access to minor artefact manufacture.",
       "Key": "ability.make-artefacts"
+    },
+    "ability.make-major-artefacts": {
+      "Name": "Make Major Artefacts",
+      "Type": "Craft",
+      "Source": "Manufacturers Guide",
+      "Effect": "UNOFFICIAL: Allows the user to craft the chosen type of scroll, artefact, arm or armour. Caveat: this ability was removed from the system and it's unclear if it is supposed to be here, but it's the required ability to create `advanced` magical makes. This grants access to major artefact manufacture.",
+      "PreReqs": ["Make Minor Artefacts"],
+      "Key": "ability.make-major-artefacts"
+    },
+    "ability.make.wizard-specialist-buy": {
+      "Name": "Buy Wizard Specialist Make",
+      "Type": "Craft",
+      "Source": "Manufacturers Guide",
+      "Effect": "Buy an additional Wizard Specialist make option.",
+      "Key": "ability.make.wizard-specialist-buy"
     },
     "ability.auric-colour": {
       "Name": "Auric Colour",
@@ -1988,9 +2039,7 @@
       "Name": "Weapon Mastery",
       "Type": "Static",
       "Effect": "Todo",
-      "ChoiceSetRefs": [
-        "choice.1st-weapon-mastery.primary"
-      ],
+      "ChoiceSetRefs": ["choice.1st-weapon-mastery.primary"],
       "Customisation": {
         "OptionEnum": "WeaponType",
         "CustomValuesPermitted": true
@@ -2001,9 +2050,7 @@
       "Name": "Weapon Mastery (O)",
       "Type": "Static",
       "Effect": "Todo",
-      "ChoiceSetRefs": [
-        "choice.1st-weapon-mastery-o.primary"
-      ],
+      "ChoiceSetRefs": ["choice.1st-weapon-mastery-o.primary"],
       "Customisation": {
         "OptionEnum": "WeaponType",
         "CustomValuesPermitted": true
@@ -2014,18 +2061,14 @@
       "Name": "Chosen Field",
       "Type": "Static",
       "Effect": "Choose an evocation field for effects that refer to your Chosen Field.",
-      "ChoiceSetRefs": [
-        "choice.druid.chosen-field.primary"
-      ],
+      "ChoiceSetRefs": ["choice.druid.chosen-field.primary"],
       "Key": "ability.druid.chosen-field"
     },
     "ability.druid.advocate-of-field": {
       "Name": "Advocate of (Field)",
       "Type": "Static",
       "Effect": "Choose an evocation field for effects that refer to Advocate of (Field).",
-      "ChoiceSetRefs": [
-        "choice.druid.advocate-of-field.primary"
-      ],
+      "ChoiceSetRefs": ["choice.druid.advocate-of-field.primary"],
       "Key": "ability.druid.advocate-of-field"
     },
     "ability.6th-sense": {
@@ -4681,7 +4724,7 @@
       "Key": "ability.mc.scholar.l6.2"
     },
     "ability.mc.smith.l1": {
-      "Name": "+ 1% chance per level for crafting Physical Items",
+      "Name": "+1% chance per level for crafting Physical Items",
       "Type": "Craft",
       "Effect": "As tables.",
       "Source": "multiclass Smith",
@@ -10656,442 +10699,434 @@
       "Source": "Manufacturers Guide",
       "Effect": "Allows brewing Wondrous Elixirs.",
       "Key": "ability.make.brew-the-wondrous"
-},
+    },
     "ability.make.crafter-of-charms": {
       "Name": "Crafter of Charms",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Grants ability to craft Charms.",
       "Key": "ability.make.crafter-of-charms"
-},
+    },
     "ability.make.gem-cutter": {
       "Name": "Gem Cutter",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Grants ability to craft Neuronic Prisms.",
       "Key": "ability.make.gem-cutter"
-},
+    },
     "ability.make.smith-type": {
       "Name": "Smith (Type)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Allows crafting of the chosen arms/armour type; requires Smithing skill.",
       "Key": "ability.make.smith-type",
-      "ChoiceSetRefs": [
-            "choice.make.smith.type"
-      ]
-},
+      "ChoiceSetRefs": ["choice.make.smith.type"]
+    },
     "ability.make.torque-crafter": {
       "Name": "Torque Crafter",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Grants ability to craft Torques.",
       "Key": "ability.make.torque-crafter"
-},
+    },
     "ability.make.write-recipe-books": {
       "Name": "Write Recipe Books",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Allows writing recipe books.",
       "Key": "ability.make.write-recipe-books"
-},
+    },
     "ability.make.magical-manufacturer": {
       "Name": "Magical Manufacturer",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "+2% when creating magic (incl. Teaching Scrolls & Scriptures; excl. normal scrolls).",
       "Key": "ability.make.magical-manufacturer"
-},
+    },
     "ability.make.master-smith": {
       "Name": "Master Smith",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "+2% when making smithed items.",
       "Key": "ability.make.master-smith"
-},
+    },
     "ability.make.mental-manufacturer": {
       "Name": "Mental Manufacturer",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "+2% when making Neuronic Prisms.",
       "Key": "ability.make.mental-manufacturer"
-},
+    },
     "ability.make.natural-manufacturer": {
       "Name": "Natural Manufacturer",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "+2% when making Earthpower Charms.",
       "Key": "ability.make.natural-manufacturer"
-},
+    },
     "ability.make.spiritual-manufacturer": {
       "Name": "Spiritual Manufacturer",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "+2% when making spiritual items (incl. Scriptures; not normal scrolls).",
       "Key": "ability.make.spiritual-manufacturer"
-},
+    },
     "ability.make.scriptorium": {
       "Name": "Scriptorium",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Normal spiritual scrolls base chance 80%; +2% to Scriptures; costs 12,000 grulls to set up.",
       "Key": "ability.make.scriptorium"
-},
+    },
     "ability.make.wizard-s-study": {
       "Name": "Wizard's Study",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "No setup cost for teaching scrolls; normal magical scrolls base chance 80%; +2% to Teaching Scrolls; costs 10,000 grulls to set up.",
       "Key": "ability.make.wizard-s-study"
-},
+    },
     "ability.make.craft-speciality-earthpower": {
       "Name": "Craft Speciality (Earthpower)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "+2% when crafting Charms.",
       "Key": "ability.make.craft-speciality-earthpower"
-},
+    },
     "ability.make.craft-speciality-neuronic": {
       "Name": "Craft Speciality (Neuronic)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "+2% when crafting Prisms or Torques (choose on purchase).",
       "Key": "ability.make.craft-speciality-neuronic",
-      "ChoiceSetRefs": [
-            "choice.make.craft-speciality.neuronic.type"
-      ]
-},
+      "ChoiceSetRefs": ["choice.make.craft-speciality.neuronic.type"]
+    },
     "ability.make.craft-speciality-spiritual": {
       "Name": "Craft Speciality (Spiritual)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "From Make Major Item type. +2% in chosen item type. Once only.",
       "Key": "ability.make.craft-speciality-spiritual",
-      "ChoiceSetRefs": [
-            "choice.make.craft-speciality.spiritual.type"
-      ]
-},
+      "ChoiceSetRefs": ["choice.make.craft-speciality.spiritual.type"]
+    },
     "ability.make.craft-speciality-warrior": {
       "Name": "Craft Speciality (Warrior)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "+2% when making chosen type of items.",
       "Key": "ability.make.craft-speciality-warrior",
-      "ChoiceSetRefs": [
-            "choice.make.craft-speciality.warrior.type"
-      ]
-},
+      "ChoiceSetRefs": ["choice.make.craft-speciality.warrior.type"]
+    },
     "ability.make.craft-speciality-wizard": {
       "Name": "Craft Speciality (Wizard)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "+2% when manufacturing items in chosen area (e.g., Weapons or Armour). Once only.",
       "Key": "ability.make.craft-speciality-wizard",
-      "ChoiceSetRefs": [
-            "choice.make.craft-speciality.wizard.type"
-      ]
-},
+      "ChoiceSetRefs": ["choice.make.craft-speciality.wizard.type"]
+    },
     "ability.make.diverse-magic": {
       "Name": "Diverse Magic",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "If grey is a colour: may make items & scrolls of any known standard 1st–5th spell.",
       "Key": "ability.make.diverse-magic"
-},
+    },
     "ability.make.grand-smithy": {
       "Name": "Grand Smithy",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "No setup cost for smithed items; costs 20,000 grulls to set up.",
       "Key": "ability.make.grand-smithy"
-},
+    },
     "ability.make.leave-to-simmer": {
       "Name": "Leave to Simmer",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May use a basic potion make in addition to an advanced make; no cost-reduction enhancers.",
       "Key": "ability.make.leave-to-simmer"
-},
+    },
     "ability.make.private-shrine": {
       "Name": "Private Shrine",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "No setup cost for spiritual items; costs 30,000 grulls to set up.",
       "Key": "ability.make.private-shrine"
-},
+    },
     "ability.make.silent-chamber": {
       "Name": "Silent Chamber",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "No setup cost for prisms; costs 10,000 grulls to set up.",
       "Key": "ability.make.silent-chamber"
-},
+    },
     "ability.make.taught-by-a-master": {
       "Name": "Taught by a Master",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "If recipe known with points: only ½ level loss when writing recipe book.",
       "Key": "ability.make.taught-by-a-master"
-},
+    },
     "ability.make.tranquil-grove": {
       "Name": "Tranquil Grove",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "No setup cost for charms; costs 10,000 grulls to set up.",
       "Key": "ability.make.tranquil-grove"
-},
+    },
     "ability.make.wizard-s-laboratory": {
       "Name": "Wizard's Laboratory",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "No setup cost for magical items (not teaching scrolls). Costs 20,000 grulls to set up.",
       "Key": "ability.make.wizard-s-laboratory"
-},
+    },
     "ability.make.arcane-shield-manufacture": {
       "Name": "Arcane Shield Manufacture",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "From Make Major Armour: may manufacture magical shields (treated as Medium Armour); may be aligned.",
+      "PreReqs": ["Make Major Magical Armour"],
       "Key": "ability.make.arcane-shield-manufacture"
-},
+    },
     "ability.make.dangerous-escape-druid": {
       "Name": "Dangerous Escape (Druid)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Once ever: end manufacture instead of rolling on Failure Table.",
       "Key": "ability.make.dangerous-escape-druid"
-},
+    },
     "ability.make.dangerous-escape-neuronic": {
       "Name": "Dangerous Escape (Neuronic)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Once ever: end manufacture instead of rolling on Failure Table.",
       "Key": "ability.make.dangerous-escape-neuronic"
-},
+    },
     "ability.make.dangerous-escape-scout": {
       "Name": "Dangerous Escape (Scout)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Once ever: end manufacture instead of rolling on Failure Table.",
       "Key": "ability.make.dangerous-escape-scout"
-},
+    },
     "ability.make.dangerous-escape-spiritual": {
       "Name": "Dangerous Escape (Spiritual)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Once ever: end manufacture instead of rolling on Failure Table.",
       "Key": "ability.make.dangerous-escape-spiritual"
-},
+    },
     "ability.make.dangerous-escape-warrior": {
       "Name": "Dangerous Escape (Warrior)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Once ever: end manufacture instead of rolling on Failure Table.",
       "Key": "ability.make.dangerous-escape-warrior"
-},
+    },
     "ability.make.dangerous-escape-wizard": {
       "Name": "Dangerous Escape (Wizard)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Once ever: if required to roll on Failure Table, may end manufacture immediately instead.",
       "Key": "ability.make.dangerous-escape-wizard"
-},
+    },
     "ability.make.diverse-magic-ii": {
       "Name": "Diverse Magic II",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "From Diverse Magic; 1st colour grey. May now make items & scrolls of any specialist owned.",
       "Key": "ability.make.diverse-magic-ii"
-},
+    },
     "ability.make.rites-of-protection-druid": {
       "Name": "Rites of Protection (Druid)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May take item perm as perm damage on casting stamina at 2:1.",
       "Key": "ability.make.rites-of-protection-druid"
-},
+    },
     "ability.make.rites-of-protection-neuronic": {
       "Name": "Rites of Protection (Neuronic)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May take item perm as perm damage on casting stamina at 2:1.",
       "Key": "ability.make.rites-of-protection-neuronic"
-},
+    },
     "ability.make.rites-of-protection-scout": {
       "Name": "Rites of Protection (Scout)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May take item perm from Wondrous Elixirs as perm damage on casting stamina at 2:1 (incl. kickout).",
       "Key": "ability.make.rites-of-protection-scout"
-},
+    },
     "ability.make.rites-of-protection-spiritual": {
       "Name": "Rites of Protection (Spiritual)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May take any item perm as perm damage on casting stamina at 2:1.",
       "Key": "ability.make.rites-of-protection-spiritual"
-},
+    },
     "ability.make.rites-of-protection-warrior": {
       "Name": "Rites of Protection (Warrior)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May take item perm as perm damage on casting stamina at 2:1.",
       "Key": "ability.make.rites-of-protection-warrior"
-},
+    },
     "ability.make.rites-of-protection-wizard": {
       "Name": "Rites of Protection (Wizard)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May take any item perm as perm damage on casting stamina at 2:1.",
       "Key": "ability.make.rites-of-protection-wizard"
-},
+    },
     "ability.make.shield-manufacture": {
       "Name": "Shield Manufacture",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "From Make Major Armour: may manufacture spiritual shields (Medium Armour); may be aligned.",
       "Key": "ability.make.shield-manufacture"
-},
+    },
     "ability.make.trinkets-druid": {
       "Name": "Trinkets (Druid)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Once-ever Earthpower items; +5% chance; 500 grulls per roll & setup; no blow ups.",
       "Key": "ability.make.trinkets-druid"
-},
+    },
     "ability.make.trinkets-neuronic": {
       "Name": "Trinkets (Neuronic)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Prisms only; once-ever; +5% chance; 500 grulls per roll & setup; no blow ups.",
       "Key": "ability.make.trinkets-neuronic"
-},
+    },
     "ability.make.trinkets-spiritual": {
       "Name": "Trinkets (Spiritual)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "Create once-ever miracle innate items; +5% chance; 1000 grulls per roll & setup; no blow ups.",
       "Key": "ability.make.trinkets-spiritual"
-},
+    },
     "ability.make.a-master-of-the-trade-druid": {
       "Name": "A Master of the Trade (Druid)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "When playing: +1 make slot for Charms (not cumulative except Simple Craft).",
       "Key": "ability.make.a-master-of-the-trade-druid"
-},
+    },
     "ability.make.a-master-of-the-trade-magical": {
       "Name": "A Master of the Trade (Magical)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "When playing: gain an additional make slot for items or teaching scrolls (not cumulative except with Simple Craft).",
       "Key": "ability.make.a-master-of-the-trade-magical"
-},
+    },
     "ability.make.a-master-of-the-trade-neuronic": {
       "Name": "A Master of the Trade (Neuronic)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "When playing: +1 make slot for Prisms or Torques (not cumulative except Simple Craft).",
       "Key": "ability.make.a-master-of-the-trade-neuronic"
-},
+    },
     "ability.make.a-master-of-the-trade-scout": {
       "Name": "A Master of the Trade (Scout)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "When playing: +1 make slot for Wondrous Potions or Recipe Books.",
       "Key": "ability.make.a-master-of-the-trade-scout"
-},
+    },
     "ability.make.a-master-of-the-trade-smith": {
       "Name": "A Master of the Trade (Smith)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "When playing: +1 make slot for smithed items.",
       "Key": "ability.make.a-master-of-the-trade-smith"
-},
+    },
     "ability.make.a-master-of-the-trade-spiritual": {
       "Name": "A Master of the Trade (Spiritual)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "When playing: +1 make slot for spiritual items or scriptures (not cumulative except Simple Craft).",
       "Key": "ability.make.a-master-of-the-trade-spiritual"
-},
+    },
     "ability.make.reciprocates-binding-druid": {
       "Name": "Reciprocates Binding (Druid)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "If user named: does not blow up on death; -5% to all rolls.",
       "Key": "ability.make.reciprocates-binding-druid"
-},
+    },
     "ability.make.reciprocates-binding-neuronic": {
       "Name": "Reciprocates Binding (Neuronic)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "If user named: does not blow up on death; -5% to all rolls.",
       "Key": "ability.make.reciprocates-binding-neuronic"
-},
+    },
     "ability.make.reciprocates-binding-spiritual": {
       "Name": "Reciprocates Binding (Spiritual)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "If user named: does not blow up on death; -5% to all rolls.",
       "Key": "ability.make.reciprocates-binding-spiritual"
-},
+    },
     "ability.make.reciprocates-binding-wizard": {
       "Name": "Reciprocates Binding (Wizard)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "If user named on card: does not blow up on death; all rolls -5%.",
       "Key": "ability.make.reciprocates-binding-wizard"
-},
+    },
     "ability.make.the-simple-craft-druid": {
       "Name": "The Simple Craft (Druid)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May manufacture Basic Talismans while crafting Charms; cannot enhance chance.",
       "Key": "ability.make.the-simple-craft-druid"
-},
+    },
     "ability.make.the-simple-craft-magical": {
       "Name": "The Simple Craft (Magical)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May write normal magical scrolls while crafting an item; cannot enhance basic 70% chance.",
       "Key": "ability.make.the-simple-craft-magical"
-},
+    },
     "ability.make.the-simple-craft-neuronic": {
       "Name": "The Simple Craft (Neuronic)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May manufacture Crystals at same time as Prisms/Torques; cannot enhance crystal chance.",
       "Key": "ability.make.the-simple-craft-neuronic"
-},
+    },
     "ability.make.the-simple-craft-smith": {
       "Name": "The Simple Craft (Smith)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May manufacture basic armour at same time as advanced armour.",
       "Key": "ability.make.the-simple-craft-smith"
-},
+    },
     "ability.make.the-simple-craft-spiritual": {
       "Name": "The Simple Craft (Spiritual)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "May write normal spiritual scrolls while crafting an item; cannot enhance base 70%.",
       "Key": "ability.make.the-simple-craft-spiritual"
-},
+    },
     "ability.make.trinkets-wizard": {
       "Name": "Trinkets (Wizard)",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
-      "Effect": "Req. Make Major Talismans. Make once-ever innate items; +5% chance; 750 grulls per roll & setup; no blow up on date/death.",
+      "Effect": "Make once-ever innate items; +5% chance; 750 grulls per roll & setup; no blow up on date/death.",
+      "PreReqs": ["Make Major Artefacts"],
       "Key": "ability.make.trinkets-wizard"
-},
+    },
     "ability.make.research-reduction": {
       "Name": "Research Reduction",
       "Type": "Craft",
       "Source": "Manufacturers Guide",
       "Effect": "+2% when attempting to make magical teaching scrolls.",
       "Key": "ability.make.research-reduction"
-}
+    }
   },
   "aliases": {
     "-2 DAC in sunlight": "ability.2-dac-in-sunlight",
@@ -11257,15 +11292,23 @@
     "Lvl 3 Spell": "ability.lvl-3-spell",
     "Make and Arm Snap Trap": "ability.make-and-arm-snap-trap",
     "Make Artefacts": "ability.make-artefacts",
+    "Make Minor Artefacts": "ability.make-artefacts",
+    "Make Major Artefacts": "ability.make-major-artefacts",
     "Make Concealable Weapon": "ability.make-concealable-weapon",
     "Make General Potion": "ability.make-general-potion",
     "Make healing balm": "ability.make-healing-balm",
     "Make Healing Potion": "ability.make-healing-potion",
     "Make Magical Armour": "ability.make-magical-armour",
+    "Make Minor Magical Armour": "ability.make-magical-armour",
+    "Make Major Magical Armour": "ability.make-major-magical-armour",
     "Make Magical Weapons": "ability.make-magical-weapons",
+    "Make Minor Magical Weapons": "ability.make-magical-weapons",
+    "Make Major Magical Weapons": "ability.make-major-magical-weapons",
     "Make Poison": "ability.make-poison",
     "Make Poisons Potion": "ability.make-poisons-potion",
     "Make Teaching Scrolls": "ability.make-teaching-scrolls",
+    "Make Minor Teaching Scrolls": "ability.make-teaching-scrolls",
+    "Make Major Teaching Scrolls": "ability.make-major-teaching-scrolls",
     "Mark Ally": "ability.mark-ally",
     "Mercenaries Unite!": "ability.use-self-only-beneficial-ability-on-other",
     "Metal Resistance": "ability.metal-resistance",

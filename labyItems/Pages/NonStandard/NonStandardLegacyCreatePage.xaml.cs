@@ -37,13 +37,17 @@ public partial class NonStandardLegacyCreatePage : ContentPage
         var fixedType = ResolveFixedEntityType();
         TypeSelectorSection.IsVisible = !fixedType.HasValue;
 
-        if (_appeared)
-            return;
-
-        _appeared = true;
         try
         {
-            await _vm.InitializeAsync(fixedType);
+            if (!_appeared)
+            {
+                _appeared = true;
+                await _vm.InitializeAsync(fixedType);
+            }
+            else
+            {
+                await _vm.RefreshLookupsOnAppearAsync();
+            }
         }
         catch (Exception ex)
         {
@@ -96,6 +100,90 @@ public partial class NonStandardLegacyCreatePage : ContentPage
             await DisplayAlert("Save failed", ex.Message, "OK");
         }
     }
+
+    private async void OnSearchRaceAbilityClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            await _vm.SearchRaceAbilityAsync(Navigation);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Search failed", ex.Message, "OK");
+        }
+    }
+
+    private async void OnEditRaceAbilityClicked(object sender, EventArgs e)
+    {
+        var row = (sender as Button)?.CommandParameter as RaceAbilityRowVm
+            ?? (sender as BindableObject)?.BindingContext as RaceAbilityRowVm;
+        if (row == null)
+            return;
+
+        try
+        {
+            await Navigation.PushModalAsync(new NonStandardRaceAbilityRowEditorPage(_vm, row));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Edit failed", ex.Message, "OK");
+        }
+    }
+
+    private async void OnRaceAbilityInfoClicked(object sender, EventArgs e)
+    {
+        var row = (sender as Button)?.CommandParameter as RaceAbilityRowVm
+            ?? (sender as BindableObject)?.BindingContext as RaceAbilityRowVm;
+        if (row == null)
+            return;
+
+        var info = _vm.BuildRaceAbilityInfoText(row);
+        await DisplayAlert("Ability info", info, "OK");
+    }
+
+    private void OnDeleteRaceAbilityClicked(object sender, EventArgs e)
+    {
+        var row = (sender as Button)?.CommandParameter as RaceAbilityRowVm
+            ?? (sender as BindableObject)?.BindingContext as RaceAbilityRowVm;
+        _vm.RemoveRaceAbilityRow(row);
+    }
+
+    private void OnAddSubtypeCopyClicked(object sender, EventArgs e)
+    {
+        var option = (sender as Button)?.CommandParameter as RaceSubtypeOptionVm
+            ?? (sender as BindableObject)?.BindingContext as RaceSubtypeOptionVm;
+        _vm.AddSubtypeCopyFromOption(option);
+    }
+
+    private void OnAddBlankSubtypeCopyClicked(object sender, EventArgs e)
+        => _vm.AddBlankSubtypeCopy();
+
+    private void OnDeleteSubtypeCopyClicked(object sender, EventArgs e)
+    {
+        var copy = (sender as Button)?.CommandParameter as RaceSubtypeCopyVm
+            ?? (sender as BindableObject)?.BindingContext as RaceSubtypeCopyVm;
+        _vm.RemoveSubtypeCopy(copy);
+    }
+
+    private async void OnSearchSubtypeCopyAbilityClicked(object sender, EventArgs e)
+    {
+        var copy = (sender as Button)?.CommandParameter as RaceSubtypeCopyVm
+            ?? (sender as BindableObject)?.BindingContext as RaceSubtypeCopyVm;
+        if (copy == null)
+            return;
+
+        try
+        {
+            await _vm.SearchSubtypeCopyAbilityAsync(Navigation, copy);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Search failed", ex.Message, "OK");
+        }
+    }
+
+    private void OnToggleRaceAlignmentClicked(object sender, EventArgs e)
+        => _vm.ToggleRaceAlignmentExpanded();
 
     private void OnToggleLifeScaleClicked(object sender, EventArgs e)
     {

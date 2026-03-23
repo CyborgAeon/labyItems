@@ -8564,7 +8564,7 @@
       "Levels": {
         "1": [
           {
-            "Name": "+ 1% chance per level for crafting Physical Items",
+            "Name": "+1% chance per level for crafting Physical Items",
             "AbilityRef": "ability.mc.smith.l1",
             "Type": "Craft",
             "Effect": "As tables."

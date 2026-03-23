@@ -1756,16 +1756,16 @@
       ],
       "7": [
         {
-          "Name": "Budoka Specialist skill",
+          "Name": "Budoka Specialist",
           "Type": "Overwrite",
-          "OverwriteKey": "Budoka Specialist skill"
+          "OverwriteKey": "Budoka Specialist"
         }
       ],
       "8": [
         {
-          "Name": "Budoka Specialist skill",
+          "Name": "Budoka Specialist",
           "Type": "Overwrite",
-          "OverwriteKey": "Budoka Specialist skill"
+          "OverwriteKey": "Budoka Specialist"
         },
         {
           "Name": "DAC",
