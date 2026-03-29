@@ -407,7 +407,7 @@ public sealed class TradeEntryVm : ObservableObject
         TradeAbilityKind.Spell => ResolveSpellCost(),
         TradeAbilityKind.Miracle => ResolveMiracleCost(),
         TradeAbilityKind.Evocation => ResolveEvocationCost(),
-        TradeAbilityKind.CustomItem => Math.Max(0, CustomIspTotal) * 500,
+        TradeAbilityKind.CustomItem => ResolveCustomCost().Cost,
         _ => 0
     };
 
@@ -420,12 +420,19 @@ public sealed class TradeEntryVm : ObservableObject
     {
         get
         {
+            if (Kind == TradeAbilityKind.CustomItem)
+            {
+                var customCost = ResolveCustomCost();
+                return customCost.Formula.Length == 0
+                    ? "At-cost formula unavailable."
+                    : $"At-cost: {customCost.Cost.ToString("N0", CultureInfo.InvariantCulture)} ({customCost.Formula})";
+            }
+
             var formula = Kind switch
             {
                 TradeAbilityKind.Spell => ResolveSpellFormulaText(),
                 TradeAbilityKind.Miracle => ResolveMiracleFormulaText(),
                 TradeAbilityKind.Evocation => ResolveEvocationFormulaText(),
-                TradeAbilityKind.CustomItem => $"ISP {CustomIspTotal} × 500",
                 _ => string.Empty
             };
 
@@ -435,9 +442,16 @@ public sealed class TradeEntryVm : ObservableObject
         }
     }
 
+    private TradeCustomCostResolution ResolveCustomCost()
+        => TradePublishedMakeCostResolver.Resolve(CustomAbilities, CustomIspTotal);
+
     public string OverrideDisplay => HasCostOverride
         ? $"Manual override: {ResolvedCost.ToString("N0", CultureInfo.InvariantCulture)} grulls"
         : string.Empty;
+
+    public bool HasIspEstimateFallback => IsCustom && ResolveCustomCost().HasIspEstimatePortion;
+    public bool ShowEstimateWarning => HasIspEstimateFallback;
+    public string EstimateWarningText => ShowEstimateWarning ? "Estimate based on ISP value" : string.Empty;
 
     public bool HasCustomBreakdown => CustomBreakdownText.Length > 0;
     public bool ShowCustomBreakdownOnCard => IsCustom && HasCustomBreakdown;
@@ -445,14 +459,14 @@ public sealed class TradeEntryVm : ObservableObject
     public Brush CardBorderBrush => new SolidColorBrush(
         HasCostOverride
             ? Color.FromArgb("#16A34A")
-            : Colors.Transparent);
+            : (HasIspEstimateFallback ? Color.FromArgb("#D97706") : Colors.Transparent));
 
     public Brush CardBackgroundBrush => new SolidColorBrush(
         HasCostOverride
             ? Color.FromArgb("#ECFDF3")
-            : Colors.White);
+            : (HasIspEstimateFallback ? Color.FromArgb("#FFFBEB") : Colors.White));
 
-    public double CardBorderThickness => HasCostOverride ? 3 : 0;
+    public double CardBorderThickness => (HasCostOverride || HasIspEstimateFallback) ? 3 : 0;
 
     public static TradeEntryVm CreateCustom(IspCalculationResult result)
     {
@@ -719,6 +733,9 @@ public sealed class TradeEntryVm : ObservableObject
         Raise(nameof(CostFormulaDisplay));
         Raise(nameof(OverrideDisplay));
         Raise(nameof(HasCostOverride));
+        Raise(nameof(HasIspEstimateFallback));
+        Raise(nameof(ShowEstimateWarning));
+        Raise(nameof(EstimateWarningText));
         Raise(nameof(CardBorderBrush));
         Raise(nameof(CardBackgroundBrush));
         Raise(nameof(CardBorderThickness));

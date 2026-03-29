@@ -71,6 +71,11 @@
                                                         FontSize="11"
                                                         IsVisible="{Binding HasCostOverride}"
                                                         LineBreakMode="WordWrap"/>
+                                                 <Label Text="{Binding EstimateWarningText}"
+                                                        TextColor="#92400E"
+                                                        FontSize="11"
+                                                        IsVisible="{Binding ShowEstimateWarning}"
+                                                        LineBreakMode="WordWrap"/>
                                                  <Label Text="{Binding CustomBreakdownText}"
                                                         FontSize="11"
                                                         IsVisible="{Binding ShowCustomBreakdownOnCard}"
