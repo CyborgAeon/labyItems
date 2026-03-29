@@ -386,11 +386,11 @@
       },
       {
         "Name": "Read Spirit Runes and Utilise Goodly Scrolls",
-        "Type": "Static"
+        "Type": "AtWill"
       },
       {
         "Name": "Read Spirit Runes and Utilise Goodly Item",
-        "Type": "Static"
+        "Type": "AtWill"
       }
     ]
   },
@@ -422,7 +422,7 @@
       },
       {
         "Name": "Read Spirit Runes and Utilise Evil Scrolls",
-        "Type": "Static"
+        "Type": "AtWill"
       }
     ],
     "Power List": {
@@ -461,7 +461,7 @@
       },
       {
         "Name": "Read Spirit Runes and Utilise Neutral Scrolls",
-        "Type": "Static"
+        "Type": "AtWill"
       }
     ],
     "Power List": {

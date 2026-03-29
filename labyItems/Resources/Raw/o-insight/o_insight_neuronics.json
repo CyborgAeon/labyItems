@@ -1,0 +1,889 @@
+[
+  {
+    "power": 1,
+    "name": "Detect Possible Neuronic Activity",
+    "description": "The user can sense whether there is any source of neuronic power within 60'. They are not aware of the location, or how many such sources there are; only a Yes or No answer is received",
+    "range": "60' radius",
+    "duration": "Instant",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 1,
+    "name": "Auric Colour",
+    "description": "This allows the user to recognise the colour of the mental aura of one target within range. In game terms, this means that those of Goodly alignment are seen to have a White aura, those of Neutral a Grey aura, and Evil a Black aura. Targets immune to neuronic informational effects, or all neuronics, or that simply have no mind, such as inanimate objects, have no aura at all. It is possible by training to conceal the colour of one's aura so that only a clear aura can be seen - this is not the same as having no aura.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 3,
+    "name": "Neuronic Penetration",
+    "description": "The target of this mental attack suffers a sudden sharp pain to the head, causing 6 tblp of damage and 6 points to the head location (2 Hits to monsters). Resistances to neuronics reduce this damage, and Neuronic Armour Class may be applied, but no other form of AC.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": "",
+    "Damage": {
+      "amount": [[6, 6]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    }
+  },
+  {
+    "power": 3,
+    "name": "Detect Mind",
+    "description": "The user is instantly aware of how many other minds are within range. This ability does not give location, but does give numbers",
+    "range": "60'",
+    "duration": "Instant",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 6,
+    "name": "Message",
+    "description": "One target within line-of-sight, or within 60' and known to the user, receives a telepathic message of up to one reasonable sentence in length (at most 20 words, all one sentence only).",
+    "range": "60' or line-of-sight",
+    "duration": "Instant",
+    "immunities": ""
+  },
+  {
+    "power": 6,
+    "name": "Mind Bar",
+    "description": "Renders the user actively immune to all neuronic effects and attacks. During this time the caster cannot use any neuronic ability, although they may choose to release the Mind Bar.",
+    "range": "Self",
+    "duration": "5 Minutes Maximum",
+    "immunities": ""
+  },
+  {
+    "power": 6,
+    "name": "Neuro Balance",
+    "description": "This gives the user perfect balance for the duration, granting them stability and so immunity to knockdowns and earth tremors. It also allows the user to balance on any object which will support their weight, for example walking along a tightrope, or similar feats of balance. Note this no longer allows you to open locks.",
+    "range": "Self",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 6,
+    "name": "Artefact Study",
+    "description": "This allows the user to wake a certain sentience in any inanimate object (including liquids). The user may converse with the target object for the duration while touching it. Supernatural objects, including those with minds, may answer as they see fit, while normal objects must tell the truth only. It should be noted that often an object will not know much of its surroundings or events occurring - they have no sensory apparatus! However, supernatural objects will often (at the ref's discretion) be aware of events relating to them.",
+    "range": "Touch",
+    "duration": "5 Minutes",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 9,
+    "name": "Detect Inanimate",
+    "description": "The user must concentrate on a single type of object for 10 seconds, after which he senses the location of all such objects within range. Only physical properties of objects can be detected (so ‘swords' but not ‘magic swords' could be found). Potion types can be distinguished between with this ability.",
+    "range": "20' radius",
+    "duration": "10 Seconds/ Instant",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 9,
+    "name": "Detect Lie",
+    "description": "For the duration, the user is aware whether any statements he hears the target make are lies.",
+    "range": "Hearing",
+    "duration": "5 Minutes",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 9,
+    "name": "Neuro-Mastery",
+    "description": "This ability has parallels with the magical spells of ‘Walk On…' and ‘Walk through…' elements. It can be used in the following ways: Walk on Darkness: As long as the light is at most weak candlelight, the user may ‘fly' as per the walk on darkness spell. Walk through Darkness: Half effect from darkness-based attacks. Walk on Air: The user may ‘fly' as per the walk on air spell. Walk through Air: Half effect from air attacks, including electrical. Walk on Water: The caster may walk on water as if it were solid ground. Walk through Water: The caster may breathe underwater. Note: Either version of Neuro-Mastery Water grants the user ½ effect potions, poisons, and acid for the duration. Walk on Light: The user may ‘fly' as per a walk on light spell, as long as the light is at least strong candlelight. Walk through Light: Half effect from light-based attacks. Walk on Earth: The user may walk on walls, floors, ceilings, mud, quicksand, as if it were solid, level ground. Walk through Earth: The user may walk through any stone or earth wall of not more than 10' in thickness. This is as the Passwall glyph (Brown 4 mana).Walls thicker than this cannot be entered. Walk through Fire: Half effect fire-based attacks. The Walk Through abilities above will stack with resistances to such attacks acquired post-8th, though they will not stack with other temporary defences (e.g. Walk through Fire Spell, or the Resist Fire evocation). Only one Neuro-Mastery may be active at a time.  Specialist Neuronic Abilities These skills are only available to neuronic races or classes, either as one of their 1st to 8th skills or as a post 8th purchase.",
+    "range": "Self",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 9,
+    "name": "Adrenaline Rush",
+    "description": "Grants the user +1 strength, which may exceed normal limits (max +3). It does not stack with itself, nor with abilities such as Adrenal Surge or Burst of Strength.",
+    "range": "Self",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 6,
+    "name": "Auric Sight",
+    "description": "The user can see the auric colour and size of all minds within 20', for the duration. Auric size is judged in a similar way to Spirit of Seeing - targets of 1st/2nd level are small, 3rd/4th medium, 5th/6th large and 7th+ level targets are deemed huge. This ability can be used in the dark, but not through solid objects.",
+    "range": "Self / 20'",
+    "duration": "5 Minutes",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 36,
+    "name": "Blade of the Mind's Eye",
+    "description": "Conjures a weapon formed of pure mental power. The sword inflicts Neuronic Dart by blow. It cannot normally be used while in a purity of mind as it is a weapon.",
+    "range": "Self",
+    "duration": "5 minutes",
+    "immunities": "",
+    "Damage": {
+      "amount": [[3, 3]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    }
+  },
+  {
+    "power": 3,
+    "name": "Clairvoyance",
+    "description": "Allows the caster to take a 2 second glance at any point within 40', whether through solid walls, behind closed doors, etc. It does not provide a light source.",
+    "range": "40'",
+    "duration": "Instant / 2 seconds",
+    "immunities": ""
+  },
+  {
+    "power": 24,
+    "name": "Cloud the Mind",
+    "asPer": "$spell.Bedazzle",
+    "description": "The user clouds the minds of those that engage them in combat causing the user to become a blur. This causes opponents to lose their masteries in a similar manner to a Bedazzle. Enhanced Perception grants immunity, as does Weapon Master or similar.",
+    "range": "Self",
+    "duration": "5 minutes",
+    "immunities": ["Enhanced Perception", "Loss of weapon masteries"]
+  },
+  {
+    "power": 12,
+    "name": "Chameleon",
+    "description": "The skill allows the neuronicist to alter his physical appearance such that he gains the benefits of a Chameleon, as per the 3mp grey spell. Since the user is altering himself, those unaffected by neuronics still cannot see the user.",
+    "asPer": "$spell.Chameleon (Self)",
+    "range": "Self",
+    "duration": "5 minutes",
+    "immunities": ""
+  },
+  {
+    "power": 24,
+    "name": "Deep Probe",
+    "description": "The use of this ability requires 30 seconds uninterrupted concentration while in sight of the target. Once activated, the user is able to predict the actions of the target with ease. They are granted the benefits of a Know Foe spell against the target - effectively they become immune to any attack from the target other than basic melee attacks. They are considered to have dodged with perfect facility any other attack, or otherwise have countered it.",
+    "asPer": "$spell.Know Foe",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 9,
+    "name": "Detonate ranged",
+    "asPer": "$spell.Shatter (Ranged)",
+    "description": "Causes one normal object of less than 27 cubic feet to explode apart, in a way similar to a Shatter spell.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": ""
+  },
+  {
+    "power": 3,
+    "name": "Detonate touch",
+    "asPer": "$spell.Shatter (Touch)",
+    "description": "Causes one normal object of less than 27 cubic feet to explode apart, in a way similar to a Shatter spell.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": ""
+  },
+  {
+    "power": 6,
+    "name": "Disorientation",
+    "description": "The target's balance and orientation are interfered with, such that they have trouble moving as they are used to unless they have Stability. They suffer -2 DAC for the duration, which cannot reduce DAC below 0. This ability is not cumulative with itself but will stack with abilities such as Curse.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "Stability"
+  },
+  {
+    "power": 12,
+    "name": "Displacement",
+    "description": "One target object weighing no more than 14lbs is transported instantly from any point within range to any other point within range. The user must be able to see the object or know its exact location. Objects cannot be made to appear within solid objects. Any object can be so affected, except animate or living ones, or those that weight too much. The referee's decision as to the weight of ‘phys-repped' objects such as latex props and so forth is final, but it should be noted that normal weapons will generally be well within the weight-limit.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": ""
+  },
+  {
+    "power": 15,
+    "name": "Domination",
+    "description": "The user dominates the target's mind with their own, forcing them to obey. The target must obey all commands from the user except suicidal ones. However this attack is level-based, and only affects targets with a resistance level to neuronics of less than the user's own level (i.e. will affect a 7th level target if used by an 8th level character).",
+    "range": "3' initially",
+    "duration": "5 Minutes",
+    "immunities": "Spiritual Mastery"
+  },
+  {
+    "power": 9,
+    "name": "Forget",
+    "description": "One target forgets everything that has occurred in the last 30 seconds. This memory loss is permanent.",
+    "range": "Line-of-sight",
+    "duration": "Instant",
+    "immunities": "Forget"
+  },
+  {
+    "power": 9,
+    "name": "Fumble",
+    "description": "Sends a spasm through the target's system, causing them to drop any currently held objects. They may pick them up again.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": "Fumble FX"
+  },
+  {
+    "power": 12,
+    "name": "Glimpse of Danger",
+    "description": "Grants the user 12 points of combat wary against the next weapon blow to strike during the duration.",
+    "range": "Self",
+    "duration": "3 hours",
+    "immunities": ""
+  },
+  {
+    "power": 12,
+    "name": "Greater Clairvoyance",
+    "description": "Functions as per Clairvoyance, allowing the user to cast their vision forward. However with Greater Clairvoyance the vision lasts up to 5 minutes, during which time the observation point may be moved around at a slow walking pace. During this time the user may do nothing bar speak or move slowly; if they receive damage the ability is negated.",
+    "range": "40' initially",
+    "asPer": "$neuro.Clairvoyance",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 36,
+    "name": "Greater Forget",
+    "description": "Target becomes unable to recall the words required to enact spells/miracles/etc. As such they are unable to use any form of casting that requires verbals.",
+    "range": "20'",
+    "duration": "1 minute",
+    "immunities": "Forget"
+  },
+  {
+    "power": 12,
+    "name": "Greater Telekinesis",
+    "description": "Works in the same way as Telekinesis, allowing the user to move one object around within range. However the force is much stronger, allowing the user to exert two grades of strength on the object. It may be used to move creatures giving no resistance - either willing or unconscious/dead only.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "",
+    "asPer": "$neuro.Telekinesis"
+  },
+  {
+    "power": 12,
+    "name": "Improved Message",
+    "description": "One target known to the user or in sight of them receives a telepathic message of up to one reasonable sentence in length (at most 20 words, all one sentence only). This message will span any distance, even plane-to-plane.",
+    "range": "Unlimited",
+    "duration": "Instant",
+    "immunities": ""
+  },
+  {
+    "power": 12,
+    "name": "Improved Telepathy",
+    "description": "One target known to the user or in sight of them receives a telepathic message as per Improved Message above. This message will span any distance, even plane-to-plane. After the message the recipient is Psi-Scanned, effectively allowing them to reply.",
+    "range": "Unlimited",
+    "duration": "Instant",
+    "immunities": ""
+  },
+  {
+    "power": 24,
+    "name": "Inertia Barrier",
+    "description": "The user is surrounded by a shimmering bubble, barely visible to the normal eye. This barrier turns all physical objects away, and is completely impenetrable to anything with a physical component, including creatures. However, while active the user may do nothing bar speak or move at a slow walking speed. It does not allow the user to push past people or push people or monsters out of the way.",
+    "range": "Self",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 9,
+    "name": "Inertia Shield",
+    "description": "The air around the user thickens imperceptibly, granting them resistance to physical injury. For the duration they gain +6 PAC.",
+    "range": "Self",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 15,
+    "name": "Intellect Fortress",
+    "description": "The user retreats within themselves, erecting strong mental barriers against assault. For the duration, they gain an additional 6 Neuronic AC, but may not use non-self neuronic abilities. They also gain +1 resistance level for resisting neuronic level-based effects. More insidious neuronic powers which do not directly inflict damage, such as Psychic Crush, are not prevented by the use of this ability.",
+    "range": "Self",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 24,
+    "name": "Intestinal Fortitude",
+    "description": "The user's locations will continue to function regardless of the amount of damage they have suffered, unless severed. This cannot be triggered if a person is already unconscious due to damage.",
+    "range": "Self",
+    "duration": "Max 1 minute.",
+    "immunities": "",
+    "notes": "24+6 per 15 seconds Additional maintenance cost of 6 TBLP per 15 seconds."
+  },
+  {
+    "power": 15,
+    "name": "Invisibility",
+    "description": "The user renders themselves totally undetectable to normal physical sight to one creature only. This invisibility is not broken by attacking, but whilst active the user may not use other neuronic powers without breaking the Invisibility. Creatures with Perception can see the user as normal and they also still make noise, smell etc.",
+    "range": "Line-of-sight",
+    "duration": "60 seconds",
+    "immunities": ""
+  },
+  {
+    "power": 3,
+    "name": "Locational Detect Possible Neuronic Activity",
+    "description": "The user is aware of all sources of neuronic power within the area; they know exactly where they are, in a manner similar to Detect Magic.",
+    "range": "60' radius",
+    "duration": "Instant",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 18,
+    "name": "Major Precognition",
+    "description": "Allows the caster to seek the answer to three questions. These answers can each be up to 7 words in length, and will generally seek to be helpful as it is the caster's own mind and intuition that is gaining them. Questions about creatures which are specifically immune to neuronics (as opposed to those that are simply mindless) will not be answered, and things with no physical or neuronic aspect to them (such as purely spiritual creatures) will only have questions answered if a creature with a mind knows the answers. To prepare the user must sit peacefully and undisturbed for 2 minutes, after which time the questions are deemed to be instantly answered.",
+    "range": "Self/Unlimited",
+    "duration": "2 Minutes /3 Questions",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 6,
+    "name": "Mastery",
+    "description": "Grants the user one weapon mastery in one weapon-type for the duration. Once 8th level is reached, this weapon mastery will stack with weapon masteries acquired from other sources. It will not stack with itself.",
+    "range": "Self",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 12,
+    "name": "Memory Death",
+    "description": "The target's level of resistance is reduced by 2 for duration. If they reach 0 then they die.",
+    "range": "10'",
+    "duration": "One Hour",
+    "immunities": "Level Drain"
+  },
+  {
+    "power": 48,
+    "name": "Mental Destruction",
+    "description": "In a similar manner to Neuronic Penetration, this attack inflicts 60 tblp and 60 loc damage to the head of the target (20 hits to monsters). Costs a level to use. This is usable at most once every five minutes.",
+    "range": "10'",
+    "duration": "Instant",
+    "immunities": "",
+    "Damage": {
+      "amount": [[60, 60]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    },
+    "todo": "Also costs a level to use."
+  },
+  {
+    "power": 12,
+    "name": "Mental Expansion",
+    "description": "This neuronic ability allows the user to cause a temporary, published neuronic durational ability with a duration of at least 5 minutes to last for longer. This ability is called and used when the ability to be ‘expanded' is running out. The duration may be continued for blocks of 5 minutes costing the base tblp cost of the expanded ability with each 5 minutes of renewal. Neural Foci and other damage reducing skills may be applied to this tblp cost. No duration may be expanded beyond 3 times its original duration. In addition constant mental concentration is required to maintain this expanded effect and it is broken should the Neuronicist use any other mental / psionic / neuronic talents.",
+    "range": "Self",
+    "duration": "Special",
+    "immunities": ""
+  },
+  {
+    "power": 18,
+    "name": "Mind Over Body",
+    "description": "By use of this discipline the neuronicist is able to completely halt his bodily processes, temporarily. His breathing is halted, his blood stops flowing and so on. For the duration his body and life are sustained only by the strength of his will. During this time, he becomes completely immune to flesh- and-blood effects except at ref's discretion (e.g. a Bonebreak would still work as the user still has bones), and also feels no pain at all, becoming completely immune to pain effects. However, the stresses placed on the system by use of this ability are great, and the body must be allowed to restore its natural rhythm in between uses so it cannot be used more than once without at least an hour between uses.",
+    "range": "Self",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 18,
+    "name": "Mind Shield",
+    "description": "The neuronicist must have Mind Bar from the Passive Tree before learning this. Must be used within 2 seconds of an incoming neuronic attack. The user counts as being Mind-Barred for the purposes of that attack. This does remove any active neuronics on the user, and cannot be used by Farfolk or others unable to Mind Bar. Costs a level of resistance for 1 hour to use.",
+    "range": "Self",
+    "duration": "Instant",
+    "immunities": "",
+    "todo": "Also costs 1 level of resistance for 1 hour to use."
+  },
+  {
+    "power": 20,
+    "name": "Mindspin",
+    "description": "One target with a mind has their sense of balance and perception badly warped. For the duration they find it impossible to orient themselves, and each time they attempt to take a step they instead fall over (as if Slipped or similar). They are also incapable of using abilities such as Tell Direction.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "Stability"
+  },
+  {
+    "power": 12,
+    "name": "Network of Pain",
+    "description": "The target suffers an immediate and extreme spasm of all the muscles in their body, suffering great pain throughout. In a similar manner to the Words of Pain spell, the target is completely unable to act, and suffers 6/1 damage (2 Hits) every 15 seconds. To maintain the ability the user must stay touching the target - if the touch is broken the ability is negated. During this time the user may not use other neuronic powers.",
+    "range": "Touch",
+    "duration": "Max 5 Minutes",
+    "immunities": "Pain",
+    "todo": "Additional cost details: 12 + 6/15 seconds",
+    "Damage": {
+      "amount": [[6, 1]],
+      "type": ["Missile"]
+    }
+  },
+  {
+    "power": 18,
+    "name": "Neural Purge",
+    "description": "After 30 seconds touch contact one target has all detrimental ongoing neuronic / psionic/ mental and emotional effects removed from them, this includes Fear and Insanity.",
+    "range": "Touch",
+    "duration": "30 seconds",
+    "immunities": ""
+  },
+  {
+    "power": 24,
+    "name": "Neurone Death",
+    "description": "The user's touch destroys certain critical mental functions, leaving the target unable to move their body from the neck down. Having Immunity to Paralysis negates this, and Determination may be applied but War-Cry and similar abilities are not sufficient. The effects may be removed instantly by casting a Regeneration effect on the target's nervous system.",
+    "range": "Touch",
+    "duration": "Permanent",
+    "immunities": "Paralysis"
+  },
+  {
+    "power": 9,
+    "name": "Neuronic Blast",
+    "description": "The target of this mental attack suffers a sudden sharp pain to the head, causing 12 tblp of damage and 12 points to the head location (4 Hits to monsters). Resistances to neuronics reduce this damage, and neuronic armour class may be applied, but no other form of AC. It cannot be used more than twice in one minute, or it backfires at the user.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": "",
+    "Damage": {
+      "amount": [[12, 12]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    }
+  },
+  {
+    "power": 12,
+    "name": "Neuronic Blindness",
+    "description": "The target is struck blind for the duration, if they have a mind.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "Blindness"
+  },
+  {
+    "power": 18,
+    "name": "Neuronic Bolt",
+    "description": "In a similar way to Neuronic Penetration, this mental attack assaults the mind of the target. However it is much more potent - the target suffers 24 tblp damage and 24 loc damage to the head (8 Hits to monsters). This ability cannot be used more than once per minute, or it backfires.",
+    "range": "10'",
+    "duration": "Instant",
+    "immunities": "",
+    "Damage": {
+      "amount": [[24, 24]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    }
+  },
+  {
+    "power": 24,
+    "name": "Neuronic Cluster",
+    "description": "This powerful neuronic allows the user to release a number of damaging offensive neuronics at once. The released neuronics must be the user's own innates or powers e.g. not from an item. These may be from an ‘at will' power, such as the free Neuronic Penetrations granted by Psycher. Neural Foci may be applied to the Neuronic Cluster and to any innate released separately. The innates released must all be of the same type and the target may apply his defences against each one separately as normal. For Example: \"Neuronic Cluster 4 Neuronic Penetrations\" to a user with 6 Neural Foci would cause the user [24 - 6] = 18 + [4*[3-2]=4] = 18+4 = 22 TBLP",
+    "range": "Special",
+    "duration": "Instant",
+    "immunities": "",
+    "todo": "Plus the casting damage of each released innate, reduced separately by Neural Foci."
+  },
+  {
+    "power": 15,
+    "name": "Neuronic Competence",
+    "description": "This skill grants the user +3 Neural Foci and No Damage Casting Neuronics which are, or are reduced to, TBLP for the duration. This increase in foci is not cumulative with itself - or any similar power, but does work with normal Neural Foci, and Psionic Focus. The additional foci do not apply to the damage suffered from using this innate.",
+    "range": "Self",
+    "duration": "5 minutes",
+    "immunities": ""
+  },
+  {
+    "power": 1,
+    "name": "Neuronic Dart",
+    "description": "In a similar manner to Neuronic Penetration, this attack inflicts 3 tblp and 3 loc damage to the head to the target.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": "",
+    "Damage": {
+      "amount": [[3, 3]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    }
+  },
+  {
+    "power": 6,
+    "name": "Neuronic Deafness",
+    "description": "The target is struck deaf for the duration, if they have a mind.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "Deafness"
+  },
+  {
+    "power": 24,
+    "name": "Neuronic Disruption",
+    "description": "One target within range suffers a violent mental assault, inflicting 36 tblp damage and 36 loc damage to the head (12 Hits to monsters). This innate cannot be used more than once per minute, or it backfires.",
+    "range": "10'",
+    "duration": "Instant",
+    "immunities": "",
+    "Damage": {
+      "amount": [[36, 36]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    }
+  },
+  {
+    "power": 9,
+    "name": "Neuronic Dumbness",
+    "description": "The target is struck dumb for the duration, if they have a mind.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "Dumbness"
+  },
+  {
+    "power": 9,
+    "name": "Neuronic Flare",
+    "description": "All within the cone of effect, 10' long in a 60° arc originating in front of the caster are thrown back a further 10'. Additionally all suffer damage as per the Neuronic Penetration ability.",
+    "range": "10' cone by 60°",
+    "duration": "Instant",
+    "immunities": "Repels",
+    "Damage": {
+      "amount": [[6, 6]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    }
+  },
+  {
+    "power": 6,
+    "name": "Neuronic Flash",
+    "description": "All within the cone of effect, 10' long in a 60° arc originating in front of the caster are thrown back a further 10'.",
+    "range": "10' cone by 60°",
+    "duration": "Instant",
+    "immunities": "Repels"
+  },
+  {
+    "power": 15,
+    "name": "Neuronic Lance",
+    "description": "One target is hurled back 40' by a sudden spear of mental energy; they also suffer 12 tblp and 12 loc damage to the head, to which only NAC applies (4 hits to monsters). It is not possible to use more than one Lance within a one minute period, or the second backfires.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": "Repels",
+    "Damage": {
+      "amount": [[12, 12]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    }
+  },
+  {
+    "power": 6,
+    "name": "Neuronic Leap",
+    "description": "The caster propels themselves with a brief jolt of telekinetic energy, functioning in all ways as a Jump or Salmon Leap.",
+    "range": "Self",
+    "duration": "Instant / 2 seconds",
+    "immunities": ""
+  },
+  {
+    "power": 18,
+    "name": "Neuronic Overload",
+    "description": "The target collapses unconscious for five minutes. This is considered a listed stopping effect in a similar manner to Catalepsy, and resistance to Catalepsy applies.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "Catalepsy"
+  },
+  {
+    "power": 9,
+    "name": "Neuronic Pulse",
+    "description": "All within the radius are flung back 10' from the caster, in a way similar to Neuronic Flash.",
+    "range": "10' radius",
+    "duration": "Instant",
+    "immunities": "Repels"
+  },
+  {
+    "power": 6,
+    "name": "Neuronic Push",
+    "description": "Throws one target back 10' in a similar manner to Neuronic Flash",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": "Repels"
+  },
+  {
+    "power": 30,
+    "name": "Neuronic Strike",
+    "description": "In a similar manner to Neuronic Penetration, this attack inflicts 48 tblp and 48 loc damage to the head to the target (16 hits to monsters). This is usable at most once every five minutes.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": "",
+    "Damage": {
+      "amount": [[48, 48]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    }
+  },
+  {
+    "power": 9,
+    "name": "Neuronic Stun",
+    "description": "One target is mentally stunned, suffering effects as per Halt. They are unable to move for 10 seconds or unless they are touched or suffer damage. This effect is non-level based. It is considered a listed stopping effect.",
+    "range": "10'",
+    "duration": "10 seconds",
+    "immunities": ["Stopping FX", "Halt"]
+  },
+  {
+    "power": 18,
+    "name": "Neuronic Terror",
+    "description": "All targets within range except the caster are affected by a Neuronic Whip, becoming filled with fear of the user.",
+    "range": "10'",
+    "duration": "5 Minutes",
+    "immunities": ["Fear"]
+  },
+  {
+    "power": 6,
+    "name": "Neuronic Wall",
+    "description": "The use of this ability creates a neuronic wall, at most 12' by 12' in size, of negligible thickness. This wall is completely impenetrable to any creature with a mind and to mental powers, but is no barrier to other creatures or objects. Should the user take any damage other than the cost of this casting the ability is broken. The neuronicist may not use other neuronic powers while the wall is active, nor fight or run, nor move more than 10' from the wall. Once the wall is dropped the ability cannot be used again for 30 seconds.",
+    "range": "10'",
+    "duration": "Variable",
+    "immunities": "",
+    "todo": "Additional cost details: 6TBLP+1per10 seconds Additional maintenance cost of 1 TBLP per 10 seconds."
+  },
+  {
+    "power": 9,
+    "name": "Neuronic Whip",
+    "description": "One target is stricken with a great fear, such that they must flee from the caster. While they are out of his presence the fear subsides, but should they hear his voice or see him it is triggered again. They may not attempt to approach or attack the caster, and if the caster approaches they must back away. However, should the target be trapped and unable to back away further, and the caster continues to advance, the fear is temporarily broken until the situation changes.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "Fear"
+  },
+  {
+    "power": 18,
+    "name": "Neuro-Planar Jump",
+    "description": "The user is transported to any other point which they have previously visited on the same plane. This is accomplished by brief passage through the astral plane. The user may only travel to places they have visited that adventure, or places they have chosen to memorise by spending 5 points on their character card to do so. They may also choose to return ‘home'. To buy this ability the neuronicist must have at least two Neuro-Synaptic Jumps for each Neuro-Planar Jump bought. Other people cannot be taken by use of this ability.",
+    "range": "See below",
+    "duration": "Instant",
+    "immunities": ""
+  },
+  {
+    "power": 18,
+    "name": "Neuro-Planar Vortex",
+    "description": "The user is transported to the corresponding point on a different plane. This plane must be one of which the user is ‘aware', either having travelled to before on that adventure or with sufficient information to do so at the ref's discretion. It is possible for the user to take others with him, but difficult: each willing person touching the user may be transported, but the user takes casting damage for each one separately. Creatures without minds are considered objects and must be fully carried to be transported, while creatures specifically immune to neuronics disrupt the power of the vortex and cannot be transported at all. This ability does not allow the user to travel to a specific part of a given plane.",
+    "range": "See below",
+    "duration": "Instant",
+    "immunities": "",
+    "notes": "Taking additional willing passengers causes the user to take the casting damage separately for each one."
+  },
+  {
+    "power": 12,
+    "name": "Neuro-Synaptic Jump",
+    "description": "The user can instantly transport themselves to any point within sight, or alternatively to a spot within 20' even if it cannot be seen. It is impossible to materialise within a solid object, and should this be the case the ability instead fails to function. For the sake of smooth adventure flow, it is suggested that Time Freeze is not called for the use of this ability except when the speed of the shift is critical. On arrival, there is a 2-second phase-in period, during which time the user is not vulnerable to external effects, and any on-going effects are extended by 2 seconds- but the user cannot perform any action.",
+    "range": "20'/line-of-sight",
+    "duration": "Instant / 2 Seconds",
+    "immunities": ""
+  },
+  {
+    "power": 9,
+    "name": "Precognition",
+    "description": "Allows the user to seek confirmation of three facts, gaining Yes / No answers to three separate questions. Questions asked about things which are specifically immune to neuronics (as opposed to merely being mindless) cannot be confirmed, and things with no physical or neuronic aspect to them (such as purely spiritual creatures) will only have questions answered if a creature with a mind knows the answers. It takes 30 seconds of uninterrupted concentration to activate, during which time user must sit quietly and take no action. The questions are considered to be asked and answered instantly at the end of the concentration period.",
+    "range": "Self / Unlimited",
+    "duration": "30 seconds / 3 Questions",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 12,
+    "name": "Precognitive Flash",
+    "description": "The user is able to make an intuitive leap in logic with complete confidence; metaphorically, ‘a light- bulb lights up over their head'. This ability functions very similarly to a Lucky Idea. The user receives a short answer (at most three words) to a problem or question currently facing them. At the ref's discretion, the answer to this ability can instead address a different issue, if the ref considers the other problem to be more pressing - for example, if a pack of hell-hounds are just rounding the corner while the user blithely seeks to discover the date, the answer may well be ‘Run Away!' It is acceptable for a referee to ask if the player wishes to use this ability in response to an unforeseen danger or other potentially dangerous mistake.",
+    "range": "Self",
+    "duration": "Instant",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 30,
+    "name": "Precognitive Knowledge",
+    "description": "After 2 minutes calm preparation as per Major Precognition, the caster may seek the answers to as many questions as desired, and those answers may be as detailed as necessary. The only constraints are that questions must be expressed clearly and without hurry, and that all questions must be asked within the two minute period. Creatures specifically immune to neuronics will have no questions answered about them, and things with no physical or neuronic aspect to them (such as purely spiritual creatures) will only have questions answered if a creature with a mind knows the answers.",
+    "range": "Self",
+    "duration": "2 Minutes",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 18,
+    "name": "Probe",
+    "description": "The user may ask one question of the target's mind. The creature is not aware that they are being probed, and the question will be answered truthfully. Only simple answers can be gained from this ability - single facts, for example e.g. \"Under the cloth\", \"Black\", \"I did it\". Before an answer is obtained the user must concentrate in sight of the target for a full 30 seconds.",
+    "range": "Line-of-Sight",
+    "duration": "Instant / 30 seconds",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 18,
+    "name": "Psionic Invasion",
+    "description": "This neuronic power invades the mind of the given target - and provides answers to the following info effects: Auric Colour, Psi-Scan, Probe, Neuronic Tell Profession, Neuronic Tell Form. It takes 30 seconds concentration whilst within range of the target to gain the answers required. The Probe may be asked as per the published skill.",
+    "range": "9'",
+    "duration": "30 seconds",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 6,
+    "name": "Psi-Scan",
+    "description": "Tells the user the surface thoughts of one target at time of use. The creature must be within sight.",
+    "range": "Line-of-Sight",
+    "duration": "Instant",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 18,
+    "name": "Psychic Assault",
+    "description": "One target with a mind is held motionless for as long as the user concentrates and remains totally still themselves. Every 15 seconds the Assault is maintained the target takes damage as per a Neuronic Penetration, 6 loc damage to the head and 6 tblp, to which only Neuronic AC applies. Every 15 seconds the user takes 6 tblp casting damage, reduced by Neural Foci as normal. It is broken as soon as the user performs any action, even the use of other neuronics, or receives damage. It is also broken should the target receive any damage other than that caused by the assault. It is considered a Listed Stopping Effect, and should the target be immune to the stopping aspect they are also immune to the damage and the ability fails.",
+    "range": "9'",
+    "duration": "See below",
+    "immunities": "Stopping FX",
+    "todo": "Additional cost details: 18 + 6 / 15 seconds Additional maintenance cost of 6 TBLP per 15 seconds, reduced by Neural Foci.",
+    "Damage": {
+      "amount": [[6, 6]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
+      "ArmourType": "NAC"
+    }
+  },
+  {
+    "power": 18,
+    "name": "Psychic Cage",
+    "description": "One target within sight is prevented from transporting themselves using mental powers. Each time the target attempts to use such a power (e.g. Neuro-Synaptic Jump, Neuro-Planar Vortex) the user takes 12 tblp (reduced as normal by neural foci) but the target's ability does not function - effectively the target is instantly returned to the spot which they are attempting to leave. This ability may be released early by the user, and only functions while the target is in sight of the user - in other words, it will not prevent a shift being used if the user cannot see the target.",
+    "range": "Line-of-Sight",
+    "duration": "Up to 5 Minutes",
+    "immunities": "Involuntary Mystical Transportation",
+    "todo": "Each blocked transport attempt causes the user to take 12 TBLP, reduced by Neural Foci."
+  },
+  {
+    "power": 15,
+    "name": "Psychic Crush",
+    "description": "One target with a mind is held motionless for as long as the user concentrates and remains totally still themselves. It is broken as soon as the user performs any action, even the use of other neuronics, or receives damage. It is also broken should the target receive any damage. It is considered a listed stopping effect.",
+    "range": "20'",
+    "duration": "Until stopped",
+    "immunities": "Stopping FX"
+  },
+  {
+    "power": 6,
+    "name": "Psychic Guide",
+    "description": "While active, the user is aware of faint traces left on objects and the air itself by the passage of beings with minds, fading with time. This allows the user to track individual minds by following the trail they leave, and also to judge how many minds have been in an area, and how recently. Traces usually fade completely after around 24 hours, though in a heavily used area they may be obscured by newer traces. The traces left behind are unique, so the user may track a specific mind; and if the user has previously seen a mind's aura, such as by the use of Auric Colour, they will recognise it again in the future. It is also possible to distinguish animals and similarly unintelligent minds from those of thinking beings. However, while this ability is active the constant traces left all around make it difficult to focus on the real world - the user may not use dexterity AC during this time.",
+    "range": "Self/Line-of-Sight",
+    "duration": "5 Minutes",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 9,
+    "name": "Psychic Link",
+    "description": "To use this ability the neuronicist must first Psi-Scan the target. Once a link has been established, the user may Psi-Scan the target at will for 6 tblp less Neural Foci as normal, Message them at will for 6 tblp less Neural Foci as normal, and most importantly see out of their eyes at will. To maintain the link the user must be calm and take no other actions than speech and moving at a slow walk. Should the user suffer any damage apart from the casting damage above the link is broken. Should the target leave the same plane as the user the link is broken. Should the target suffer any neuronic damage or offensive effect, the user also suffers the same effect and the link is broken.",
+    "range": "Touch / See below",
+    "duration": "5 Minutes",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 9,
+    "name": "Psychic Spy",
+    "description": "The user may touch any inanimate object with a physical component and no mental power, after which time they maintain a link between it and their consciousness. For the duration the user may observe everything which occurs within 20' of the object, as if they were standing invisibly beside it at all times. However, the link is only active while the user remains still and calm, taking no actions other than speech and moving at a slow walk. At other times they are unable to perceive through the object, although the link is not broken and they may reaffirm the link by returning to a calm motionless state. Use of any neuronic power at all on the object once the link is formed will break the link and negate the ability. Should the object leave the same plane as the user, the ability is broken until it returns.",
+    "range": "Touch / See below",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 24,
+    "name": "Purity of Mind",
+    "description": "The use of this powerful ability transports the user's body to a pocket dimension where it is completely safe; however the user's mind and will remain. The user takes on a misty, ethereal appearance, and all objects which are not imbued with mental power pass straight through them. They are capable of walking through walls with a slight disorientation of 2 seconds on leaving one. They are completely unharmed by all forms of weapon or attack, except neuronic types. While in this form, it is impossible for the user to hold objects, or in any way to strike a blow. They cannot touch anything, and as a result neuronic abilities with a range of touch cannot be used. Ranged and self neuronic powers can be used, but the user cannot apply neural foci to any casting damage they may take - their concentration is divided by the strain of keeping their will coherent without a body's template. The user cannot Mind Bar or use Intellect Fortress. They may choose to end this innate early. This is, in effect, a sort of ‘Neuro-Form'.",
+    "range": "Self",
+    "duration": "5 minutes",
+    "immunities": ""
+  },
+  {
+    "power": 9,
+    "name": "Reactions",
+    "description": "The user gains 3 extra points of dexterity armour class for the duration. This ability cannot stack with itself.",
+    "range": "Self",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 24,
+    "name": "Reap the Psychic Whirlwind",
+    "description": "All targets with a mind within 20' bar the user are seized by a Psychic Crush and held completely immobile. If the caster moves or suffers damage the effect is broken for all. If a target suffers external damage they are personally freed from the effect.",
+    "range": "20' radius",
+    "duration": "See below",
+    "immunities": "Stopping FX"
+  },
+  {
+    "power": 12,
+    "name": "Reflective Thoughts",
+    "description": "The skill allows the neuronicist to ‘recall' all of the answers from one given neuronic informational effect - that they have used on that adventure - It takes 30seconds complete concentration to reveal the answers, and give the ref a chance to find the answer again!",
+    "range": "Self",
+    "duration": "30 seconds",
+    "immunities": "Informational Neuronics"
+  },
+  {
+    "power": 12,
+    "name": "Sensory Deprivation",
+    "description": "May be used as any of Neuronic Blindness, Deafness or Dumbness, at user's choice.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "Varies"
+  },
+  {
+    "power": 9,
+    "name": "Seventh Sense",
+    "description": "The user is informed whether there are any minds within range that currently have hostile intent towards the user. This is a Yes/No answer only, and does not give locations of those meaning harm.",
+    "range": "20'",
+    "duration": "Instant",
+    "immunities": "Neuronic Informational FX"
+  },
+  {
+    "power": 12,
+    "name": "Shadowed Mind",
+    "description": "This skill allows the neuronicist to create a mental shadow that smoothers his own mind. For the duration the user is immune to neuronic informational effects, and the Shadowed Mind will filter any damaging neuronics granting a 50% reduction from them.",
+    "range": "Self",
+    "duration": "5 minutes",
+    "immunities": ""
+  },
+  {
+    "power": 12,
+    "name": "Speed of Thought",
+    "description": "This ability allows the user to induce Lightning Reactions in themselves. Each time it is used, the user may be considered to have dodged one attack which occurred in Time Freeze or Time Stop, or make similar uses at ref's discretion. It must be used for each such attack.",
+    "range": "Self",
+    "duration": "Instant",
+    "immunities": ""
+  },
+  {
+    "power": 9,
+    "name": "Telekinesis",
+    "description": "One inanimate object within range is moved by the power of the user's mind. The force of the telekinesis cannot exceed the amount of force the referee can exert with one hand, so some objects will be too heavy to move. The caster can move the target object as desired for the duration. Only one Telekinesis may be used at a time.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 36,
+    "name": "Telekinetic Buffer",
+    "description": "This potent discipline surrounds the user in an invisible field of telekinetic energy, pushing normal physical objects away from the caster and preventing physical contact. For the duration, the user may not pick up normal physical objects (although he may continue to hold any he had at the time of activation). All objects attempting to touch him are turned away. If there is real force behind an attempt, such as a weapon blow, this drains the user's reserves - each time a weapon blow is turned the caster suffers 12 TBLP in casting damage, to which Neural Foci may be applied. Only normal non-supernatural weapons are so affected, and Unarmed Combat is not.",
+    "range": "Self",
+    "duration": "5 Minutes",
+    "immunities": "Aura of Defence",
+    "todo": "Each blocked weapon blow causes the user to take 12 TBLP, reduced by Neural Foci."
+  },
+  {
+    "power": 18,
+    "name": "Telekinetic Crush",
+    "description": "Holds one target motionless as per Psychic Crush. However the target need not have a mind to be affected, as long as they exist in the physical world. The target is prevented from being physically moved in any way while the ability is active. The user must remain entirely motionless to maintain it, and damage to either the user or the target will break it. May also be used on inanimate objects, which are man-sized or smaller, to prevent them from being moved.",
+    "range": "20'",
+    "duration": "Variable",
+    "immunities": "Stopping FX"
+  },
+  {
+    "power": 15,
+    "name": "Telekinetic Finesse",
+    "description": "This allows the user to control a telekinesis more firmly and exactly than usual, and thus wield a weapon telekinetically. While the user continues to concentrate and suffers no damage, they may operate a normal, non-supernatural weapon in a similar fashion to a Dancing Sword. The damage inflicted by the weapon is by weapon type as appropriate, with the addition of one grade of strength (12 point Double for O Class, 15 point triple for Bastard Length Weapons, and 18 point triple for full B class weapons). The weapon is still vulnerable to Shatter and similar effects, and if it leaves the caster's line-of-sight or the caster is injured or uses another neuronic power the ability is cancelled.",
+    "range": "20' initially",
+    "duration": "5 Minutes",
+    "immunities": ""
+  },
+  {
+    "power": 12,
+    "name": "Telekinetic Flash",
+    "description": "All within the area of effect are flung back a further 10', in a similar way to Neuronic Flash - however this ability affects all targets which exist in the physical world, even if they have no mind, and also throws back objects which could be moved with one grade of strength.",
+    "range": "10' cone by 60°",
+    "duration": "Instant",
+    "immunities": "Repels"
+  },
+  {
+    "power": 6,
+    "name": "Telepathy",
+    "description": "One target receives a neuronic message, exactly as per the Message ability above. After the message the target is Psi-Scanned, effectively allowing them to reply.",
+    "range": "Line-of-sight / 60'",
+    "duration": "Instant",
+    "immunities": ""
+  },
+  {
+    "power": 18,
+    "name": "Trans-Location",
+    "description": "One target within 20' is instantly transported to any other point within 20', subject to the below limitations. This functions as per a Neuro-Synaptic Jump, including a 2-second phase-in period. Because the target takes 2 seconds to fully arrive at the destination, it is impossible to transport the target somewhere where they will not remain at rest - for example, in mid-air. If this is attempted, the target simply reappears where they vanished. They cannot be transported into solid objects.",
+    "range": "20'",
+    "duration": "Instant / 2 seconds",
+    "immunities": "Involuntary Mystical Transportation"
+  },
+  {
+    "power": 12,
+    "name": "Vertigo",
+    "description": "One target within range has their senses interfered with such that they have trouble balancing. Should they attempt to fly, climb ladders, or otherwise climb above ground level, they will find each step they take bringing them back closer to the ground, rather than in the direction they desired.",
+    "range": "20'",
+    "duration": "5 Minutes",
+    "immunities": "Stability"
+  }
+]

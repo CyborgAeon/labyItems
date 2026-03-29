@@ -24,6 +24,20 @@
                      <Frame HasShadow="False"
                             CornerRadius="12"
                             Padding="12"
+                            IsVisible="{Binding Source={x:Reference Root}, Path=ShowSaveButton}"
+                            BorderColor="{StaticResource SurfaceBorderColor}">
+                            <VerticalStackLayout Spacing="8">
+                                   <Label Text="Battleboard"
+                                          FontAttributes="Bold"/>
+                                   <Button Text="Get battleboard"
+                                           Style="{StaticResource ExpandedActionButtonStyle}"
+                                           Clicked="OnGetBattleboardClicked"/>
+                            </VerticalStackLayout>
+                     </Frame>
+
+                     <Frame HasShadow="False"
+                            CornerRadius="12"
+                            Padding="12"
                             BorderColor="{StaticResource SurfaceBorderColor}">
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Race and class"

@@ -140,7 +140,22 @@ public static class LifeScalesService
         var raceKey = FindBestKey(all.Keys, raceName);
         if (raceKey == null) return Array.Empty<string>();
 
-        return all[raceKey].Keys.OrderBy(x => x).ToList();
+        var normalizedBaseRace = NormalizeKey(ExtractBaseRaceName(raceKey));
+        var classes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var (candidateRace, classMap) in all)
+        {
+            if (!RaceMatchesBase(candidateRace, normalizedBaseRace))
+                continue;
+
+            foreach (var className in classMap.Keys)
+                classes.Add(className);
+        }
+
+        if (classes.Count == 0)
+            return all[raceKey].Keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList();
+
+        return classes.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList();
     }
 
     public static async Task<IReadOnlyList<string>> GetRacesForClassAsync(string className)
@@ -149,15 +164,14 @@ public static class LifeScalesService
 
         var wanted = NormalizeKey(className);
 
-        var races = new List<string>();
+        var races = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var race in all)
         {
             if (race.Value.Keys.Any(k => NormalizeKey(k) == wanted))
-                races.Add(race.Key);
+                races.Add(ExtractBaseRaceName(race.Key));
         }
 
-        races.Sort(StringComparer.OrdinalIgnoreCase);
-        return races;
+        return races.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList();
     }
 
     public static async Task<IReadOnlyList<LifeScalePoint>> GetLifeScaleAsync(string raceName, string className)
@@ -251,6 +265,29 @@ public static class LifeScalesService
 
         return candidates.FirstOrDefault(c =>
             NormalizeKey(c).Contains(wanted) || wanted.Contains(NormalizeKey(c)));
+    }
+
+    private static bool RaceMatchesBase(string candidateRace, string normalizedBaseRace)
+    {
+        if (normalizedBaseRace.Length == 0)
+            return false;
+
+        var candidateBase = NormalizeKey(ExtractBaseRaceName(candidateRace));
+        return candidateBase.Length > 0
+               && string.Equals(candidateBase, normalizedBaseRace, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string ExtractBaseRaceName(string? raceName)
+    {
+        var value = (raceName ?? string.Empty).Trim();
+        if (value.Length == 0)
+            return string.Empty;
+
+        var parenIndex = value.IndexOf('(');
+        if (parenIndex <= 0)
+            return value;
+
+        return value[..parenIndex].Trim();
     }
 }
 

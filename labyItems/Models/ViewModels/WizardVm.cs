@@ -14,6 +14,7 @@ using labyItems.Models.ViewModels;
 using labyItems.Pages.Characters;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.ApplicationModel.Communication;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -34,6 +35,7 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     public CharacterDraft Draft { get; }
     private readonly IBattleboardExportService _battleboardExportService;
+    private readonly IBattleboardDocumentService _battleboardDocumentService;
     private readonly IExportService _exportService;
     private readonly ICharacterDraftStore _draftStore;
     private readonly ICharacterAdvancementDomainService _domainService;
@@ -154,6 +156,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         CharacterDraft? draft = null,
         Func<Task>? onFinished = null,
         IBattleboardExportService? battleboardExportService = null,
+        IBattleboardDocumentService? battleboardDocumentService = null,
         IExportService? exportService = null,
         ICharacterDraftStore? draftStore = null,
         ICharacterAdvancementDomainService? domainService = null,
@@ -166,6 +169,9 @@ public sealed class WizardVm : INotifyPropertyChanged
         _battleboardExportService = battleboardExportService
             ?? ServiceHelper.ResolveService<IBattleboardExportService>()
             ?? new BattleboardExportService();
+        _battleboardDocumentService = battleboardDocumentService
+            ?? ServiceHelper.ResolveService<IBattleboardDocumentService>()
+            ?? new BattleboardDocumentService();
         _exportService = exportService
             ?? ServiceHelper.ResolveService<IExportService>()
             ?? new ExportService(
@@ -1214,9 +1220,71 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     private async Task ExportBattleboardToExcelAsync()
     {
+        await DownloadBattleboardAsExcelAsync();
+    }
+
+    public async Task DownloadBattleboardAsExcelAsync()
+    {
         await SyncDraftStateAsync();
         var path = await _battleboardExportService.ExportAsync(Draft);
         await _exportService.OpenFileAsync(path);
+    }
+
+    public async Task DownloadBattleboardAsPdfAsync()
+    {
+        await SyncDraftStateAsync();
+        var excelPath = await _battleboardExportService.ExportAsync(Draft);
+        var pdfPath = await _battleboardDocumentService.ConvertExcelToPdfAsync(
+            excelPath,
+            BuildBattleboardPdfFileName());
+        await _exportService.OpenFileAsync(pdfPath);
+    }
+
+    public async Task EmailBattleboardPdfToDeskAsync()
+    {
+        if (!Email.Default.IsComposeSupported)
+            throw new NotSupportedException("Email composition is not supported on this device.");
+
+        await SyncDraftStateAsync();
+        var excelPath = await _battleboardExportService.ExportAsync(Draft);
+        var pdfPath = await _battleboardDocumentService.ConvertExcelToPdfAsync(
+            excelPath,
+            BuildBattleboardPdfFileName());
+
+        var message = new EmailMessage
+        {
+            To = new List<string> { "battleboards@labyrinthe.com" },
+            Subject = BuildBattleboardDeskSubject(),
+            Body = string.Empty,
+            BodyFormat = EmailBodyFormat.PlainText,
+            Attachments = new List<EmailAttachment> { new(pdfPath) }
+        };
+
+        await Email.Default.ComposeAsync(message);
+    }
+
+    private string BuildBattleboardDeskSubject()
+    {
+        var playerName = (Draft.PlayerName ?? string.Empty).Trim();
+        var characterName = (Draft.Name ?? string.Empty).Trim();
+        return $"{playerName} - {characterName}";
+    }
+
+    private string BuildBattleboardPdfFileName()
+    {
+        var characterName = (Draft.Name ?? string.Empty).Trim();
+        if (characterName.Length == 0)
+            characterName = "Character";
+
+        var sanitized = new string(characterName
+            .Where(ch => !Path.GetInvalidFileNameChars().Contains(ch))
+            .ToArray())
+            .Trim();
+
+        if (sanitized.Length == 0)
+            sanitized = "Character";
+
+        return $"Battleboard_{sanitized}.pdf";
     }
 
     private bool SaveToWallet()

@@ -25,4 +25,21 @@ public sealed class LifeScalesServiceTests : ServiceTestBase
 
         Assert.NotEmpty(points);
     }
+
+    [Fact]
+    public async Task GetClassesForRaceAsync_CrolIncludesSubtypeMappedClasses()
+    {
+        var classes = await LifeScalesService.GetClassesForRaceAsync("Crol");
+
+        Assert.Contains(classes, c => c.Equals("Warrior", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(classes, c => c.Equals("Wizard", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task GetRacesForClassAsync_WarriorIncludesBaseRaceWhenOnlySubtypeDefinesClass()
+    {
+        var races = await LifeScalesService.GetRacesForClassAsync("Warrior");
+
+        Assert.Contains(races, r => r.Equals("Crol", StringComparison.OrdinalIgnoreCase));
+    }
 }

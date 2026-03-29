@@ -222,6 +222,60 @@ public partial class CharacterReviewView : ContentView
             await nav.PushAsync(new AbilityCardPage(line.Ability));
     }
 
+    private async void OnGetBattleboardClicked(object sender, EventArgs e)
+    {
+        if (BindingContext is not WizardVm vm)
+            return;
+
+        var page = ResolveHostPage();
+        if (page == null)
+            return;
+
+        const string cancel = "cancel";
+        const string emailToDesk = "email to desk";
+        const string downloadPdf = "download as pdf";
+        const string downloadExcel = "download as excel";
+
+        var selected = await page.DisplayActionSheet(
+            "Get battleboard",
+            cancel,
+            null,
+            emailToDesk,
+            downloadPdf,
+            downloadExcel);
+
+        if (string.IsNullOrWhiteSpace(selected) || selected.Equals(cancel, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        try
+        {
+            if (selected.Equals(emailToDesk, StringComparison.OrdinalIgnoreCase))
+            {
+                await vm.EmailBattleboardPdfToDeskAsync();
+                return;
+            }
+
+            if (selected.Equals(downloadPdf, StringComparison.OrdinalIgnoreCase))
+            {
+                await vm.DownloadBattleboardAsPdfAsync();
+                return;
+            }
+
+            if (selected.Equals(downloadExcel, StringComparison.OrdinalIgnoreCase))
+            {
+                await vm.DownloadBattleboardAsExcelAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("BATTLEBOARD_EXPORT", "Battleboard export action failed.", ex);
+            await page.DisplayAlert(
+                "Battleboard export failed",
+                BuildDetailedExceptionMessage(ex),
+                "OK");
+        }
+    }
+
     private static string ExtractSpecialisationTitleFromSummary(string? summaryText)
     {
         var text = (summaryText ?? string.Empty).Trim();
@@ -248,5 +302,39 @@ public partial class CharacterReviewView : ContentView
             return shellNav;
 
         return Application.Current?.MainPage?.Navigation;
+    }
+
+    private Page? ResolveHostPage()
+    {
+        Element? current = this;
+        while (current != null)
+        {
+            if (current is Page page)
+                return page;
+
+            current = current.Parent;
+        }
+
+        return Application.Current?.MainPage;
+    }
+
+    private static string BuildDetailedExceptionMessage(Exception ex)
+    {
+        var parts = new List<string>();
+        var current = ex;
+        while (current != null)
+        {
+            var message = (current.Message ?? string.Empty).Trim();
+            if (message.Length > 0)
+                parts.Add(message);
+
+            current = current.InnerException;
+        }
+
+        if (parts.Count == 0)
+            return "An unknown error occurred. Check runtime.log for details.";
+
+        var combined = string.Join("\n\n", parts.Distinct(StringComparer.Ordinal));
+        return $"{combined}\n\nLog: {RuntimeLog.LogPath}";
     }
 }

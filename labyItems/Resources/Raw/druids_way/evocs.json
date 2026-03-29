@@ -328,7 +328,7 @@
     "duration": "5 minutes",
     "fields": ["Summer", "Deserts"],
     "verbal": "Fire come and light my way",
-    "description": "Creates a small pillar of mystic fire as light; hovers near caster; requires concentration to move; fails if caster runs/fights/casts.",
+    "description": "Creates a small pillar of mystic fire that cannot actually burn anything, but simply hovers near the caster, or can be ‘held’. This can be moved around (though slowly and never more than 6’ away from the caster), directed by the caster’s will, but such movement requires concentration, and the evocation fails if the caster runs/fights/casts.",
     "isAdvanced": true
   },
   {
@@ -338,7 +338,7 @@
     "duration": "5 minutes",
     "fields": ["Rivers", "Horned Man"],
     "verbal": "May poisons flow as raging rivers!",
-    "description": "Speeds the onset/effects of venoms per full write-up.",
+    "description": "As part of the casting of this evocation, the caster must lightly cut their own palm ~ inflicting 3 points of damage to themselves (1 HTK). Any poison applied to the weapon targeted by this evocation, and used within the duration of this evocation, will kick in after 5 seconds rather than after 30, as if used by someone with the scout specialist skill Poison Facility",
     "isAdvanced": true
   },
   {

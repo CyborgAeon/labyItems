@@ -10,7 +10,7 @@
     "gesture": "Open palm of weapon hand presented",
     "duration": "Until Zombie is dismissed",
     "range": "10'",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 1,
@@ -27,7 +27,7 @@
     "gesture": "Touch injured part with open palm",
     "duration": "Instant",
     "range": "Touch",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 2,
@@ -40,7 +40,7 @@
     "gesture": "Touch forehead of recipient with open palm",
     "duration": "1 hour",
     "range": "Touch",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 2,
@@ -53,7 +53,7 @@
     "gesture": "Open palm of weapon hand presented boldly",
     "duration": "Until skeleton is dismissed",
     "range": "10'",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 3,
@@ -66,7 +66,7 @@
     "gesture": "Point at target",
     "duration": "15 minutes",
     "range": "20'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 3,
@@ -79,7 +79,7 @@
     "gesture": "Touch forehead of target with both hands",
     "duration": "24 hours",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 3,
@@ -92,7 +92,7 @@
     "gesture": "Touch target",
     "duration": "Instant",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 3,
@@ -105,7 +105,7 @@
     "gesture": "Point at Skeleton",
     "duration": "30 minutes",
     "range": "10'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 3,
@@ -118,7 +118,7 @@
     "gesture": "Draw line on ground – see below",
     "duration": "15 minutes",
     "range": "6' radius circle or 15' length line",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 3,
@@ -131,7 +131,7 @@
     "gesture": "Touch target's head with open hand",
     "duration": "15 minutes / until used",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 4,
@@ -144,7 +144,7 @@
     "gesture": "Both hands touch temples",
     "duration": "3 questions within 5 minutes",
     "range": "Self",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 4,
@@ -163,7 +163,7 @@
     "gesture": "Point at target",
     "duration": "Instant",
     "range": "20'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 4,
@@ -176,7 +176,7 @@
     "gesture": "Point at target",
     "duration": "15 minutes",
     "range": "20'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 4,
@@ -189,7 +189,7 @@
     "gesture": "Inscribe rune as below",
     "duration": "Adventure / until triggered",
     "range": "Touch / see below",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 2,
@@ -202,7 +202,7 @@
     "gesture": "Point at Undead",
     "duration": "10 sec / til struck",
     "range": "20'",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 2,
@@ -215,7 +215,7 @@
     "gesture": "Throw arms outwards",
     "duration": "Instant",
     "range": "20'",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 3,
@@ -228,7 +228,7 @@
     "gesture": "Palms on target head",
     "duration": "Instant",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 3,
@@ -241,7 +241,7 @@
     "gesture": "Palms on target head",
     "duration": "Instant",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 1,
@@ -254,7 +254,7 @@
     "gesture": "Point at Rune",
     "duration": "Instant",
     "range": "1'",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 1,
@@ -273,7 +273,7 @@
     "gesture": "Point at target",
     "duration": "Instant",
     "range": "10'",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 1,
@@ -286,7 +286,7 @@
     "gesture": "None specific",
     "duration": "Instant",
     "range": "20ft Radius",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 2,
@@ -299,7 +299,7 @@
     "gesture": "Touch ward's corners",
     "duration": "Touch",
     "range": "As per Ward set",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 2,
@@ -312,7 +312,7 @@
     "gesture": "Draw rune on target",
     "duration": "Dungeon",
     "range": "Touch",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 2,
@@ -325,7 +325,7 @@
     "gesture": "Touch Rune of Power",
     "duration": "As per Rune of Power",
     "range": "Touch",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 2,
@@ -338,7 +338,7 @@
     "gesture": "Touch temple",
     "duration": "30 seconds",
     "range": "Self",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 3,
@@ -351,7 +351,7 @@
     "gesture": "Point at Target",
     "duration": "20 seconds",
     "range": "20'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 3,
@@ -364,7 +364,7 @@
     "gesture": "Clench fist",
     "duration": "30 seconds / instant",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 6,
@@ -377,7 +377,7 @@
     "gesture": "Point at Spirit",
     "duration": "Instant",
     "range": "20'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -390,7 +390,7 @@
     "gesture": "Touch target with both hands",
     "duration": "See below",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -403,7 +403,7 @@
     "gesture": "Touch head w. both palms",
     "duration": "15 minutes",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -416,7 +416,7 @@
     "gesture": "As Protection From Spirits",
     "duration": "1 Hour",
     "range": "As Protection",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -429,7 +429,7 @@
     "gesture": "Inscribe rune on own body or clothing",
     "duration": "15 minutes",
     "range": "Self only",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -442,7 +442,7 @@
     "gesture": "Point at target",
     "duration": "Instant",
     "range": "20'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 14,
@@ -455,7 +455,7 @@
     "gesture": "Point at Undead",
     "duration": "24 Hours",
     "range": "20'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -468,7 +468,7 @@
     "gesture": "Touch target",
     "duration": "5 minutes",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -481,7 +481,7 @@
     "gesture": "Hold arms above head or Touch shoulders",
     "duration": "5 minutes",
     "range": "Self only",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -494,7 +494,7 @@
     "gesture": "Hold both hands above the targets head",
     "duration": "15 minutes",
     "range": "1'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 8,
@@ -506,7 +506,7 @@
     "verbal": "“Spirits of evil I bid thee touch this one's limb with the weight of the world”",
     "gesture": "Touch limb",
     "duration": "5 minutes",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Necromancy Range: Touch"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -518,7 +518,7 @@
     "verbal": "“By these evil spirits may I paralyse thee all!”",
     "gesture": "Throw arms out",
     "duration": "5 minutes",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Necromancy Range: 10ft radius"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -530,7 +530,7 @@
     "verbal": "“Spirits let the weak that see me look through me as if I am nothing to them”",
     "gesture": "Cover own eyes",
     "duration": "5 Minutes",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Dominion Range: Self"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -542,7 +542,7 @@
     "verbal": "\"Spirits of evil I bid thee flow forth and touch all with pestilence.\"",
     "gesture": "Cast hands up and outwards as if throwing\nsomething",
     "duration": "1 hour",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Causing Range: 20'"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -554,7 +554,7 @@
     "verbal": "“The spirits at my command are strong, but yours are weak – they will not serve you…”",
     "gesture": "Point at target",
     "duration": "60 seconds",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Dominion Range: 20'"
+    "level": "7th"
   },
   {
     "power": 1,
@@ -566,7 +566,7 @@
     "verbal": "“Spirits of light come hither!” or “Spirits of shadow abate!”",
     "gesture": "Click fingers",
     "range": "3'",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 8,
@@ -578,7 +578,7 @@
     "verbal": "“Evil / Good spirit for thy sins I command thee die!”",
     "gesture": "Point at target",
     "duration": "As Voice Of Power",
-    "level": "7th (8sp) Alignment: Good or Evil Sphere: Universal Range: 20'"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -590,7 +590,7 @@
     "verbal": "“By all my might and the powers of good / evil be thou struck and I command thee be still... Spirit Strike!”",
     "gesture": "Point at target",
     "duration": "Instant",
-    "level": "7th (8sp) Alignment: Good or Evil Sphere: Universal Range: 21'"
+    "level": "7th"
   },
   {
     "power": 10,
@@ -602,7 +602,7 @@
     "verbal": "\"Into my hands I call forth righteousness - let the spirits that serve me form grip, haft and head to smite the\nunbeliever!\"",
     "gesture": "Hands open to receive",
     "duration": "15 minutes",
-    "level": "8th (10sp) Alignment: Good or Evil Sphere: Universal Range: Self"
+    "level": "8th"
   },
   {
     "power": 10,
@@ -614,7 +614,7 @@
     "verbal": "“Lords of darkness here now my plea, an ally I request such that the warm and blood filled shall fear your\nattention and grant me safety, through use of your servant I shall offer sacrifices, aid me now... Skeletal Knight\narise!”",
     "gesture": "As Animate Skeleton",
     "duration": "1 Hour",
-    "level": "8th (10sp) Alignment: Evil Sphere: Major Necromancy Range: 3'"
+    "level": "8th"
   },
   {
     "power": 10,
@@ -626,7 +626,7 @@
     "verbal": "“Spirits of Darkness hearken unto me” followed by a 5 minute ritual concluding with:\n“Spirits of light fly from this place, by my power thou art banished from here, disembodied spirits at my command,\naid me. I call the spirit of..... to return to this place, your time is not yet come. By my powers I bind thee to your body\nas an undead to do evil's will, return to this living realm!”",
     "gesture": "As Restore Life",
     "duration": "Permanent",
-    "level": "8th (10sp) Alignment: Evil Sphere: Major Necromancy Range: 1'"
+    "level": "8th"
   },
   {
     "power": 10,
@@ -638,7 +638,7 @@
     "verbal": "\"Spirit of evil that is mine to command, let now our spirits mingle and carry me on your dark travels.\"",
     "gesture": "Touch wight with both Hands",
     "duration": "15 minutes",
-    "level": "8th (10sp) Alignment: Evil Sphere: Major Necromancy Range: Self"
+    "level": "8th"
   },
   {
     "power": 1,
@@ -651,7 +651,7 @@
     "gesture": "Open palm of empty weapon hand towards target",
     "duration": "10 seconds",
     "range": "10'",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 1,
@@ -664,7 +664,7 @@
     "gesture": "Join both hands with donating priest",
     "duration": "Instant / 5 minutes (see below)",
     "range": "Touch",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 1,
@@ -677,7 +677,7 @@
     "gesture": "Point at target",
     "duration": "Instant",
     "range": "10'",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 1,
@@ -690,7 +690,7 @@
     "gesture": "Point in desired direction",
     "duration": "Instant",
     "range": "20'",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 2,
@@ -707,7 +707,7 @@
     "gesture": "Touch target with both empty hands",
     "duration": "Instant",
     "range": "Touch",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 2,
@@ -720,7 +720,7 @@
     "gesture": "Point at Zombie",
     "duration": "30 minutes",
     "range": "10'",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 3,
@@ -732,7 +732,7 @@
     "verbal": "\"Spirit in adversity, answer me these questions three!\"",
     "duration": "3 questions / 5 minutes",
     "range": "20'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 3,
@@ -745,7 +745,7 @@
     "gesture": "Open palm towards target",
     "duration": "Until ghoul is dismissed",
     "range": "10'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 4,
@@ -758,7 +758,7 @@
     "gesture": "Open palm presented to target",
     "duration": "Until completed",
     "range": "20'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 4,
@@ -775,7 +775,7 @@
     "gesture": "Touch head with both hands",
     "duration": "Instant",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 5,
@@ -788,7 +788,7 @@
     "gesture": "Draw shape and inscribe runes",
     "duration": "25 minutes",
     "range": "As drawn",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -801,7 +801,7 @@
     "gesture": "Point at target",
     "duration": "Instant",
     "range": "20'",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -814,7 +814,7 @@
     "gesture": "Point at target",
     "duration": "Permanent",
     "range": "20'",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -827,7 +827,7 @@
     "gesture": "Open palm presented to undead",
     "duration": "Until completed",
     "range": "20'",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -840,7 +840,7 @@
     "gesture": "Touch recipient's forehead",
     "duration": "5 Minutes",
     "range": "Touch",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 6,
@@ -853,7 +853,7 @@
     "gesture": "Point at undead",
     "duration": "5 minutes / 30 minutes",
     "range": "20'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 8,
@@ -865,7 +865,7 @@
     "verbal": "\"All seeing all-knowing spirits! You whose powers are great! Give me the answers to these three questions I\nnow ask!\"",
     "gesture": "Touch temples with hands",
     "duration": "3 questions within 5 minutes",
-    "level": "8th (10sp) Alignment: Neutral Sphere: Universal Range: Self/Infinite"
+    "level": "8th"
   },
   {
     "power": 8,
@@ -881,7 +881,7 @@
     "verbal": "\"Great spirits, whose powers are mighty! I bind thee by the rune I now inscribe! Protect all within its\nboundaries from all who seek to gain entrance!\"",
     "gesture": "Draw required shape and inscribe runes",
     "duration": "50 minutes",
-    "level": "8th (10 spirits) Alignment: Neutral Sphere: Universal Range: As drawn"
+    "level": "8th"
   },
   {
     "power": 1,
@@ -900,7 +900,7 @@
     "gesture": "Touch target with open hand",
     "duration": "Instant",
     "range": "Touch",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 2,
@@ -919,7 +919,7 @@
     "gesture": "Touch target with open hand",
     "duration": "Instant",
     "range": "Touch",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 3,
@@ -938,7 +938,7 @@
     "gesture": "Touch target with both hands",
     "duration": "Instant",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 3,
@@ -951,7 +951,7 @@
     "gesture": "Point at target",
     "duration": "24 hours / 1 hour",
     "range": "20'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 3,
@@ -964,7 +964,7 @@
     "gesture": "Pass hands over body ending in upward motion",
     "duration": "Permanent until destroyed",
     "range": "15'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 4,
@@ -977,7 +977,7 @@
     "gesture": "Touch with open hand",
     "duration": "1 hour",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 2,
@@ -990,7 +990,7 @@
     "gesture": "Point at target",
     "duration": "5 minutes",
     "range": "20'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 3,
@@ -1003,7 +1003,7 @@
     "gesture": "Pass hands in front of target's face",
     "duration": "5 minutes",
     "range": "20'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 4,
@@ -1016,7 +1016,7 @@
     "gesture": "Pass both hands above body ending in\nupward motion",
     "duration": "Permanent until destroyed",
     "range": "10'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 5,
@@ -1029,7 +1029,7 @@
     "gesture": "Point at body with both hands",
     "duration": "Permanent until destroyed",
     "range": "20'",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -1048,7 +1048,7 @@
     "gesture": "Touch target with both hands",
     "duration": "Instant",
     "range": "Touch",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 6,
@@ -1061,7 +1061,7 @@
     "gesture": "Open palm towards undead",
     "duration": "Until completed",
     "range": "20'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -1086,7 +1086,7 @@
     "gesture": "Touch location",
     "duration": "5 minutes",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -1099,7 +1099,7 @@
     "gesture": "Both hands raised in supplication",
     "duration": "30 minutes",
     "range": "Self",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -1116,7 +1116,7 @@
     "gesture": "Touch target's head with both hands",
     "duration": "Instant",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 10,
@@ -1128,7 +1128,7 @@
     "verbal": "“Spirits of Light hearken unto me” This is then followed by a 5 minute ritual invoking the spirits to return\nthe person to life which must conclude with the following:\n\"Spirits of Darkness, fly from this place! There is no succour for thee here! By my powers and the powers of light, I\ncall upon the spirit of ...... to return to this place! Your time is not yet come! Come and be reunited with your body\nlying here! Return to the land of the living!\"",
     "gesture": "Pass hands over body in gather motion, ending in upward sweep",
     "duration": "Instant",
-    "level": "8th (10sp) Alignment: Good Sphere: Universal Range: Over body"
+    "level": "8th"
   },
   {
     "power": 2,
@@ -1141,7 +1141,7 @@
     "gesture": "Point in desired direction",
     "duration": "Instant",
     "range": "20'",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 2,
@@ -1154,7 +1154,7 @@
     "gesture": "Open palm towards target",
     "duration": "20 seconds",
     "range": "10'",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 3,
@@ -1167,7 +1167,7 @@
     "gesture": "Both hands raised in supplication",
     "duration": "5 minutes",
     "range": "Self",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 5,
@@ -1180,7 +1180,7 @@
     "gesture": "Point at target",
     "duration": "10 minutes",
     "range": "20'",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -1193,7 +1193,7 @@
     "gesture": "Touch head with both hands",
     "duration": "5 minutes",
     "range": "Self",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 2,
@@ -1206,7 +1206,7 @@
     "gesture": "Pass hands over body ending with upwards\nmotion",
     "duration": "Permanent until destroyed",
     "range": "10'",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 2,
@@ -1219,7 +1219,7 @@
     "gesture": "Point at target",
     "duration": "1 hour / 5 minutes",
     "range": "10'",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 4,
@@ -1232,7 +1232,7 @@
     "gesture": "Touch lips of recipient",
     "duration": "15 minutes",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 6,
@@ -1245,7 +1245,7 @@
     "gesture": "Hands raised in supplication",
     "duration": "30 minutes",
     "range": "-",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 8,
@@ -1257,7 +1257,7 @@
     "verbal": "\"By the power of my spirits I command that thy life shall stop!\"",
     "gesture": "Hands raised in appeal, touch victim",
     "duration": "Permanent",
-    "level": "7 (8sp) Alignment: Evil Sphere: Universal Range: Touch"
+    "level": "7th"
   },
   {
     "power": 10,
@@ -1269,7 +1269,7 @@
     "verbal": "Spirits of darkness, come hither at mine call, for here is death and a haven for you all. Spirits of evil and\npowers of night, I demand of thee by my power and my might, a death I require, a killing as of old, a slaying most\nswift, a body stiff and cold, by my powers and the powers of evil, I command that you shall die!",
     "gesture": "Hands raised in appeal",
     "duration": "Instant",
-    "level": "8th (10 spirits) Alignment: Evil Sphere: Universal Range: Touch"
+    "level": "8th"
   },
   {
     "power": 8,
@@ -1282,7 +1282,7 @@
     "gesture": "Point in direction of travel",
     "duration": "Instant",
     "Range": "Caster",
-    "level": "7th (8sp) Cost: 80* Duration: Instant Range: Caster"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -1294,7 +1294,7 @@
     "verbal": "“Spirits of Light let me walk as the Angels”\nOr : “Spirits of Darkness let me walk as an Abishai”\nOr : “Spirits at my command let the physical pass unhindered”",
     "gesture": "Hands to opposite shoulders",
     "duration": "5 minutes Range: Caster\nSphere: Universal / Any",
-    "level": "7th (8sp) Cost: 90* Duration: 5 minutes Range: Caster"
+    "level": "7th"
   },
   {
     "power": 6,
@@ -1307,7 +1307,7 @@
     "gesture": "Inscribe line as below",
     "duration": "24 hours",
     "range": "One (closed) line",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -1320,7 +1320,7 @@
     "gesture": "Inscribe line as below",
     "duration": "24 hours",
     "range": "One (closed) line",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -1333,7 +1333,7 @@
     "gesture": "Draw hands across face",
     "duration": "1 Hour",
     "range": "Self",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 5,
@@ -1345,7 +1345,7 @@
     "verbal": "\"Master! Witness this poor fool as he suffers in your name! Let me feel the ecstasy that is beyond agony!\"",
     "gesture": "Beat fists against head",
     "duration": "15 minutes Range: Self\nFaith: Cult of Dunatis",
-    "level": "5sp Alignment: Evil Duration: 15 minutes Range: Self"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -1358,7 +1358,7 @@
     "gesture": "Point to destination",
     "duration": "Instant",
     "range": "20' maximum",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 8,
@@ -1370,7 +1370,7 @@
     "verbal": "“Spirits of Evil at my command, come forth and take thy place within this corpse. Let this form arise and do\nmy will... Corpse arise!”",
     "gesture": "Point at corpse with both hands, fingertips curled",
     "duration": "Permanent",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Necromancy Range: 3'"
+    "level": "7th"
   },
   {
     "power": 4,
@@ -1383,7 +1383,7 @@
     "gesture": "Lift open hands upwards",
     "duration": "Permanent",
     "range": "10'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 5,
@@ -1396,7 +1396,7 @@
     "gesture": "Touch head with both hands",
     "duration": "15 minutes",
     "range": "Self",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 4,
@@ -1409,7 +1409,7 @@
     "gesture": "Touch target's head",
     "duration": "Permanent",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 5,
@@ -1422,7 +1422,7 @@
     "gesture": "Hold palm towards target",
     "duration": "5 minutes",
     "range": "20'",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 3,
@@ -1435,7 +1435,7 @@
     "gesture": "Touch target",
     "duration": "Instant",
     "range": "10'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 8,
@@ -1447,7 +1447,7 @@
     "verbal": "\"Spirits of power I bind thee to this weapon; let thy strength act against those spirits that oppose me.\"",
     "gesture": "Lay hands on weapon",
     "duration": "15 minutes",
-    "level": "7th (8sp) Alignment: Neutral Sphere: Universal Range: Touch"
+    "level": "7th"
   },
   {
     "power": 3,
@@ -1460,7 +1460,7 @@
     "gesture": "Both hands touch head",
     "duration": "5 minutes",
     "range": "Self",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 6,
@@ -1473,7 +1473,7 @@
     "gesture": "Touch",
     "duration": "24 Hours",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 4,
@@ -1486,7 +1486,7 @@
     "gesture": "Touch target's forehead",
     "duration": "1 Hour",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 8,
@@ -1498,7 +1498,7 @@
     "verbal": "“May the spirits of light fill your soul with their power. Go forth to purge the darkness from this world”",
     "gesture": "Touch targets chest from the front (heart area)",
     "duration": "5 minutes",
-    "level": "7th (8sp) Alignment: Good Sphere: Major Benediction Range: Touch"
+    "level": "7th"
   },
   {
     "power": 4,
@@ -1511,7 +1511,7 @@
     "gesture": "Touch recipient's forehead",
     "duration": "Till Next Dawn",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 4,
@@ -1524,7 +1524,7 @@
     "gesture": "Point at Target",
     "duration": "Instant / 10 seconds",
     "range": "20'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 4,
@@ -1572,7 +1572,7 @@
     "verbal": "\"Border bless this spirit and watch over him/her in their darkest times\"",
     "gesture": "Touch targets head",
     "duration": "24 hours Range: Touch\nFaith: Border",
-    "level": "3sp Alignment: Good Duration: 24 hours Range: Touch"
+    "level": "3rd"
   },
   {
     "power": 12,
@@ -1584,7 +1584,7 @@
     "verbal": "“Spirits of power bide here and let all spirits be smitten by thy strength.”",
     "gesture": "Touch weapon",
     "duration": "5 minutes",
-    "level": "8th (12sp) Alignment: Neutral Sphere: Major Force Range: Touch / Self"
+    "level": "8th"
   },
   {
     "power": 10,
@@ -1596,7 +1596,7 @@
     "verbal": "“Spirits bide here and let all smitten stand and be held by thy power.”",
     "gesture": "Touch weapon",
     "duration": "5 minutes",
-    "level": "8th (10sp) Alignment: Neutral Sphere: Major Force Range: Touch / Self"
+    "level": "8th"
   },
   {
     "power": 8,
@@ -1608,7 +1608,7 @@
     "verbal": "“Spirits of darkness I bind you to my form. Abide with me to carry my words…”",
     "gesture": "Raise hands above head",
     "duration": "24 hours",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Causing Range: Self"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -1620,7 +1620,7 @@
     "verbal": "“Spirits of evil I call upon thee to bide here a time, and be ready at my call to harm my enemies.”",
     "gesture": "Hands knitted together",
     "duration": "Dungeon",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Causing Range: Self"
+    "level": "7th"
   },
   {
     "power": 3,
@@ -1632,7 +1632,7 @@
     "verbal": "\"With my dying breath I turn thy sting, that my death not be in vain.\"",
     "gesture": "None",
     "duration": "One Year Range: 20'\nFaith: Sacred Heart",
-    "level": "3sp Alignment: Good Duration: One Year Range: 20'"
+    "level": "3rd"
   },
   {
     "power": 10,
@@ -1644,7 +1644,7 @@
     "verbal": "“Angels of truth, grant this poor corrupted undead spirit the shelter of thy wings for a while, and gentle the\nsuffering it undergoes at the hands of darkest evil!”",
     "gesture": "Point both hands at target",
     "duration": "90 seconds",
-    "level": "8th (10sp) Alignment: Good Sphere: Major Dismissal Range: 20'"
+    "level": "8th"
   },
   {
     "power": 6,
@@ -1657,7 +1657,7 @@
     "gesture": "Touch palms to head of target",
     "duration": "15 mins",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 5,
@@ -1670,7 +1670,7 @@
     "gesture": "Touch palms to head",
     "duration": "15 mins",
     "range": "Self only",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 6,
@@ -1689,7 +1689,7 @@
     "gesture": "Both hands touch target",
     "duration": "As Cause Grievous",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 10,
@@ -1708,7 +1708,7 @@
     "verbal": "“Spirits of Evil I call upon thee to inflict these Mortal wounds so the spirit may suffer and break. Let its life\nbe extinguished by my touch.”",
     "gesture": "Touch target",
     "duration": "Instant",
-    "level": "8th (10sp) Alignment: Evil Sphere: Major Causing Range: Touch"
+    "level": "8th"
   },
   {
     "power": 8,
@@ -1720,7 +1720,7 @@
     "verbal": "\"Mighty Imbaiu masters, lend me your talons that I too may rend the souls of the unwary!\"",
     "gesture": "Make claws of hands",
     "duration": "15 minutes Range: Self\nFaith: Tryst",
-    "level": "7th(8sp) Alignment: Evil Duration: 15 minutes Range: Self"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -1732,7 +1732,7 @@
     "verbal": "\"Spirits of Darkness I draw thee here! Let all before me know my power!\"",
     "gesture": "Hug Self",
     "duration": "5 minutes",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Dominion Range: Self"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -1744,7 +1744,7 @@
     "verbal": "“Dark spirits of terror shroud my form, let all see their nemesis and be afraid.”",
     "gesture": "Touch opposite shoulders with hands",
     "duration": "5 minutes",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Dominion Range: Self / 20'"
+    "level": "7th"
   },
   {
     "power": 5,
@@ -1756,7 +1756,7 @@
     "verbal": "\"The Bright Lady cares for you, and her angels shield you from misery and suffering.\"",
     "gesture": "Touch target lightly over the heart",
     "duration": "15 minutes Range: Touch\nFaith: Bright Lady",
-    "level": "5sp Alignment: Good Duration: 15 minutes Range: Touch"
+    "level": "5th"
   },
   {
     "power": 8,
@@ -1768,7 +1768,7 @@
     "verbal": "“By the power of our totem I command thee...”",
     "gesture": "Point at target",
     "duration": "Permanent",
-    "level": "7th (8sp) Alignment: Neutral Sphere: Shamanic Range: 20'"
+    "level": "7th"
   },
   {
     "power": 16,
@@ -1781,7 +1781,7 @@
     "verbal": "“All Seeing All K\nnowing Spirits, guardians of the unknown, knowers of knowledge, keepers of secrets, you whose vision and hearing\nare mighty grant me thy wisdom and understanding. Listen to me and converse for I have need of thy insight.”",
     "gesture": "As Greater Communication",
     "duration": "2 minutes/5 minutes (see below)",
-    "level": "8th (16sp) Alignment: Neutral Sphere: Major Communication Range: Infinite"
+    "level": "8th"
   },
   {
     "power": 6,
@@ -1794,7 +1794,7 @@
     "gesture": "Point at Spirit",
     "duration": "5 minutes",
     "range": "1'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 5,
@@ -1810,7 +1810,7 @@
     "gesture": "Palms on target head",
     "duration": "Instant",
     "range": "Touch",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 3,
@@ -1823,7 +1823,7 @@
     "gesture": "Throw arms outwards",
     "duration": "Instant",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 6,
@@ -1836,7 +1836,7 @@
     "gesture": "Point at target",
     "duration": "Until blessed or 15 mins",
     "range": "20'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -1849,7 +1849,7 @@
     "gesture": "Point at target",
     "duration": "Until blessed or 15 mins",
     "range": "10'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 10,
@@ -1861,7 +1861,7 @@
     "verbal": "“May these evil spirits curse thee and cause your wounds to fester and burn!”",
     "gesture": "Point at target",
     "duration": "Until blessed",
-    "level": "8th (10sp)",
+    "level": "8th",
     "range": "10'"
   },
   {
@@ -1874,7 +1874,7 @@
     "verbal": "“Spirits of evil at my command I bid thee assail my foe, draw from him the very essence which gives him\nbreath, with this curse I mark thee for unending death, let thy spirit chill and shrink as thy dynamism is let run.\nMortal I declare thee marked with the curse of Unliving!”",
     "gesture": "Point at target",
     "duration": "Permanent",
-    "level": "8th (10sp)",
+    "level": "8th",
     "range": "10'"
   },
   {
@@ -1888,7 +1888,7 @@
     "gesture": "Point at target",
     "duration": "Until blessed or 15 mins",
     "range": "10'",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 3,
@@ -1901,7 +1901,7 @@
     "gesture": "Point at target",
     "duration": "Until blessed or 15 mins",
     "range": "10'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 2,
@@ -1914,7 +1914,7 @@
     "gesture": "Point at target",
     "duration": "Instant",
     "range": "10'",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 3,
@@ -1926,7 +1926,7 @@
     "verbal": "This miracle has no standard verbal but rather the priest should spend an appropriate amount of time ritualistically warding the corpse. Taking no less than 2 minutes.",
     "gesture": "Touch Each Location",
     "duration": "Until restored to Range life",
-    "level": "3sp",
+    "level": "3rd",
     "range": "Touch"
   },
   {
@@ -1939,7 +1939,7 @@
     "verbal": "“Spirits of darkness torment this body, let wounds fester and pain grow.",
     "gesture": "Both hands touch target",
     "duration": "15 minutes (hangs for 30 seconds)",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Causing Range: Touch"
+    "level": "7th"
   },
   {
     "power": 14,
@@ -1951,7 +1951,7 @@
     "verbal": "“Shiver as I feed on thy life essence and devour thy mortal spirit. Feel the anguish and suffering as your life\nis devoured and your soul consumed!”",
     "gesture": "Hands open palms up.",
     "duration": "Instant Range: Touch\nSphere: Major Necromancy",
-    "level": "8th (14sp) Alignment: Evil Duration: Instant Range: Touch"
+    "level": "8th"
   },
   {
     "power": 5,
@@ -1964,7 +1964,7 @@
     "gesture": "Point at Target",
     "duration": "5 minutes",
     "range": "20'",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 14,
@@ -1976,7 +1976,7 @@
     "verbal": "“Spirit of... (Dismiss Name)... I dismiss thee hence.”",
     "gesture": "Open palm towards target",
     "duration": "Until dismissed",
-    "level": "8th (14sp) Alignment: Good Sphere: Major Dismissal Range: 10'"
+    "level": "8th"
   },
   {
     "power": 8,
@@ -1988,7 +1988,7 @@
     "verbal": "“Spirit of... (Dismiss Name)... I dismiss thee hence.”",
     "gesture": "Open palm towards target",
     "duration": "Until dismissed",
-    "level": "7th (8sp) Alignment: Good Sphere: Minor Dismissal Range: 20'"
+    "level": "7th"
   },
   {
     "power": 10,
@@ -2000,7 +2000,7 @@
     "verbal": "“Spirit of... (Dismiss Name)... I dismiss thee hence.”",
     "gesture": "Open palm towards target",
     "duration": "Until dismissed",
-    "level": "8th (10sp) Alignment: Good Sphere: Major Dismissal Range: 20'"
+    "level": "8th"
   },
   {
     "power": 12,
@@ -2012,7 +2012,7 @@
     "verbal": "“Spirit of... (Dismiss Name)... I dismiss thee hence.”",
     "gesture": "Open palm towards target",
     "duration": "Until dismissed",
-    "level": "8th (12sp) Alignment: Good Sphere: Major Dismissal Range: 10'"
+    "level": "8th"
   },
   {
     "power": 8,
@@ -2024,7 +2024,7 @@
     "verbal": "“Let the spirits of light watch over me, and shield my spirit from the assault of my enemies that I remain\nstrong.”",
     "gesture": "Clasp hands together",
     "duration": "5 minutes",
-    "level": "7th (8sp) Alignment: Good Sphere: Major Benediction Range: Self"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -2036,7 +2036,7 @@
     "verbal": "“I call upon the spirits of light to infuse this one with their power”",
     "gesture": "Touch targets head",
     "duration": "24 hours",
-    "level": "7th (8sp) Alignment: Good Sphere: Major Benediction Range: Touch"
+    "level": "7th"
   },
   {
     "power": 4,
@@ -2049,7 +2049,7 @@
     "gesture": "Hands on target's head",
     "duration": "1 Hour",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 3,
@@ -2062,7 +2062,7 @@
     "gesture": "Point at Target",
     "duration": "20 seconds",
     "range": "20'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 10,
@@ -2075,7 +2075,7 @@
     "gesture": "Touch every location of the receptacle",
     "duration": "Permanent until destroyed",
     "range": "Touch",
-    "level": "8th(10sp)"
+    "level": "8th"
   },
   {
     "power": 3,
@@ -2088,7 +2088,7 @@
     "gesture": "Touch both hands to head",
     "duration": "Special",
     "range": "20'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 5,
@@ -2105,7 +2105,7 @@
     "gesture": "Indicate target",
     "duration": "Instant",
     "range": "20ft",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 3,
@@ -2118,7 +2118,7 @@
     "gesture": "Throw arms outward",
     "duration": "5 minutes / until used",
     "range": "Self",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 6,
@@ -2131,7 +2131,7 @@
     "gesture": "Touch undead",
     "duration": "15 minutes",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 5,
@@ -2144,7 +2144,7 @@
     "gesture": "Touch Target",
     "duration": "5 minutes",
     "range": "Touch",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -2157,7 +2157,7 @@
     "gesture": "Touch target's forehead",
     "duration": "24 Hours",
     "range": "Touch",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 14,
@@ -2169,7 +2169,7 @@
     "verbal": "“May the spirits return us to our Temple, Greater Word of Recall.”",
     "gesture": "Raise arms above head",
     "duration": "Instant",
-    "level": "8th (14sp) Alignment: Neutral Sphere: Universal Range: N/A"
+    "level": "8th"
   },
   {
     "power": 6,
@@ -2182,7 +2182,7 @@
     "gesture": "Touch Undead",
     "duration": "30 seconds",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 3,
@@ -2195,7 +2195,7 @@
     "gesture": "Touch injured location",
     "duration": "Instant",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 8,
@@ -2207,7 +2207,7 @@
     "verbal": "“Spirit of... (Dismiss Name)... I dismiss thee hence.”",
     "gesture": "Open palm towards target",
     "duration": "Until dismissed",
-    "level": "7th (8sp) Alignment: Good Sphere: Major Dismissal / Range: 60' radius"
+    "level": "7th"
   },
   {
     "power": 5,
@@ -2220,7 +2220,7 @@
     "gesture": "Point at Spirit",
     "duration": "Instant",
     "range": "1'",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 10,
@@ -2232,7 +2232,7 @@
     "verbal": "“Spirits of the dead cluster around (him / her) with the touch of the grave.”",
     "gesture": "Point at target",
     "duration": "15 minutes",
-    "level": "8th (10sp) Alignment: Evil Sphere: Major Necromancy Range: 20'"
+    "level": "8th"
   },
   {
     "power": 12,
@@ -2244,7 +2244,7 @@
     "verbal": "“Spirits of Knowledge I call to you, Remain with me for a time so I may call upon your aid when it is\nneeded”",
     "gesture": "Touch temples",
     "duration": "24 hours",
-    "level": "8th (12sp) Alignment: Neutral Sphere: Major Communication Range: Self"
+    "level": "8th"
   },
   {
     "power": 8,
@@ -2256,7 +2256,7 @@
     "verbal": "“Spirits of light bestow thy favour upon this severed limb, let bones grow, sinew strengthen and flesh reform\ninstantly... Instant regeneration!”",
     "gesture": "Touch stump",
     "duration": "Instant",
-    "level": "7th (8sp) Alignment: Good Sphere: Major Healing Range: Touch"
+    "level": "7th"
   },
   {
     "power": 10,
@@ -2268,7 +2268,7 @@
     "verbal": "“You have infracted the balance of good and evil, and as such to restore the balance I place thee under\ninterdiction!”",
     "gesture": "Point at target",
     "duration": "1 hour",
-    "level": "8th (10sp) Alignment: Neutral Sphere: Balance Range: 20'"
+    "level": "8th"
   },
   {
     "power": 4,
@@ -2281,7 +2281,7 @@
     "gesture": "Point at target with both hands curled as claws",
     "duration": "Permanent",
     "range": "20'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 6,
@@ -2294,7 +2294,7 @@
     "gesture": "Arms upraised",
     "duration": "15 minutes",
     "range": "20' radius",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 4,
@@ -2307,7 +2307,7 @@
     "gesture": "Lower outstretched hands",
     "duration": "5 minutes",
     "range": "20'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 22,
@@ -2319,7 +2319,7 @@
     "verbal": "“Spirits of Knowledge I call to you, Remain with me for a time so I may call upon your wisdom and\nknowledge when it is needed”",
     "gesture": "Touch temples",
     "duration": "24 hours",
-    "level": "8th (22sp) Alignment: Neutral Sphere: Major Range: Self"
+    "level": "8th"
   },
   {
     "power": 8,
@@ -2331,7 +2331,7 @@
     "verbal": "\"Dark Spirits empower my voice, Lakh!\"",
     "gesture": "Raise hands",
     "duration": "N/A Range: 20ft radius\nFaith: Condesecration",
-    "level": "7th level (8) sp Alignment: Evil Duration: N/A Range: 20ft radius"
+    "level": "7th"
   },
   {
     "power": 1,
@@ -2344,7 +2344,7 @@
     "gesture": "Open hands in a giving gesture",
     "duration": "Instant",
     "range": "20'",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 6,
@@ -2357,7 +2357,7 @@
     "gesture": "Point at target",
     "duration": "Instant",
     "range": "20'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -2370,7 +2370,7 @@
     "gesture": "Touch both temples of target",
     "duration": "1 hour",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 4,
@@ -2383,7 +2383,7 @@
     "gesture": "Touch temple",
     "duration": "30 seconds",
     "range": "Self",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 8,
@@ -2395,7 +2395,7 @@
     "verbal": "“You who carry the hope of the tribe, stand strong against our foes and know that our totem stands with\nyou.”",
     "gesture": "Rest palm on target's head",
     "duration": "15 minutes",
-    "level": "7th (8sp) Alignment: Neutral Sphere: Shamanic Range: Touch"
+    "level": "7th"
   },
   {
     "power": 4,
@@ -2408,7 +2408,7 @@
     "gesture": "Throw hands out",
     "duration": "10 seconds",
     "range": "10ft radius",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 5,
@@ -2420,7 +2420,7 @@
     "verbal": "\"Spirits of the Netherworld mark me against their servants\"",
     "gesture": "Arms raised in supplication",
     "duration": "15 minutes Range: Self\nFaith: Servants of Evil",
-    "level": "5sp Alignment: Evil Duration: 15 minutes Range: Self"
+    "level": "5th"
   },
   {
     "power": 8,
@@ -2432,7 +2432,7 @@
     "verbal": "“Black spirits watch this one, and let the blood-shed he/she causes free thee to act as ye will.”",
     "gesture": "Touch with both hands",
     "duration": "15 minutes",
-    "level": "7th (8sp) Alignment: Evil Sphere: Universal Range: Touch"
+    "level": "7th"
   },
   {
     "power": 4,
@@ -2445,7 +2445,7 @@
     "gesture": "Touch Target",
     "duration": "5 minutes",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 4,
@@ -2462,7 +2462,7 @@
     "gesture": "Palms on target head",
     "duration": "15 mins or discharged",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 6,
@@ -2475,7 +2475,7 @@
     "gesture": "Touch targets head",
     "duration": "15 minutes",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 10,
@@ -2487,7 +2487,7 @@
     "verbal": "“Spirits at my command possess this feeble shell and have it act as I desire, bent to my will and purpose.”",
     "gesture": "Pass hand in front of target's eyes",
     "duration": "5 minutes (Hangs for 5 seconds)",
-    "level": "8th (10sp) Alignment: Evil Sphere: Major Dominion Range: Touch"
+    "level": "8th"
   },
   {
     "power": 5,
@@ -2499,7 +2499,7 @@
     "verbal": "\"Feel as the Power of the Throne touches your soul and grants you strength \"",
     "gesture": "Kneel in short prayer with the target",
     "duration": "One hour Range: Touch\nFaith: Glass",
-    "level": "5sp Alignment: Good Duration: One hour Range: Touch"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -2512,7 +2512,7 @@
     "gesture": "Touch both temples",
     "duration": "15 minutes",
     "range": "As Protection",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 4,
@@ -2525,7 +2525,7 @@
     "gesture": "As Protection From Spirits",
     "duration": "15 minutes",
     "range": "As Protection",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 8,
@@ -2537,7 +2537,7 @@
     "verbal": "“By all my powers let the spirits fly free and all be smitten…Spirit Storm!”",
     "gesture": "Arms upraised",
     "duration": "Instant",
-    "level": "7th (8sp) Alignment: Neutral Sphere: Major Force Range: Self"
+    "level": "7th"
   },
   {
     "power": 12,
@@ -2548,7 +2548,7 @@
     "isAdvanced": true,
     "verbal": "“Spirits of undeath thou art banished from this place, by my power and the powers of light I bid thy touch\nand taint begone. By the power vested in me I drive thee from this body, let not thy corrupt touch mock this soul.\nReturn now to the dark pits of the Netherworld from whence you came and release your unholy hold from the form\nbefore me!”",
     "gesture": "Kneel & touch target, while sprinkling Holy\nWater across them",
-    "level": "8th (12sp) Alignment: Good Sphere: Major Dismissal / Healing Range:"
+    "level": "8th"
   },
   {
     "power": 6,
@@ -2561,7 +2561,7 @@
     "gesture": "Touch own temples",
     "duration": "2 minutes",
     "range": "Self",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 4,
@@ -2574,7 +2574,7 @@
     "gesture": "Touch targets head",
     "duration": "5 minutes",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 3,
@@ -2587,7 +2587,7 @@
     "gesture": "Throw arms outwards",
     "duration": "Instant",
     "range": "20'",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 2,
@@ -2600,7 +2600,7 @@
     "gesture": "Throw arms outward",
     "duration": "Instant",
     "range": "20'",
-    "level": "2sp"
+    "level": "2nd"
   },
   {
     "power": 3,
@@ -2612,7 +2612,7 @@
     "verbal": "“Living spirits I repel thee!”",
     "gesture": "Throw arms outward",
     "duration": "Instant Range: 20'\nSphere: Minor (Force / Necromancy / Warding)",
-    "level": "3sp Alignment: Evil Duration: Instant Range: 20'"
+    "level": "3rd"
   },
   {
     "power": 6,
@@ -2625,7 +2625,7 @@
     "gesture": "Touch target with palms",
     "duration": "Instant",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 5,
@@ -2638,7 +2638,7 @@
     "gesture": "Point at Undead",
     "duration": "Instant",
     "range": "20''",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 10,
@@ -2651,7 +2651,7 @@
     "gesture": "Clenched fists raised in front of face",
     "duration": "15 minutes",
     "Range": "Self",
-    "level": "8th (10sp) Alignment: Good Duration: 15 minutes Range: Self"
+    "level": "8th"
   },
   {
     "power": 14,
@@ -2663,7 +2663,7 @@
     "verbal": "[At start] \"Dark powers witness now as I focus thy strength.\" [At completion of rite] \"By these acts so do I\nseal our pact - let harm come to all!\"",
     "gesture": "See below",
     "duration": "24 hours",
-    "level": "8th (14sp) Alignment: Evil Sphere: Major Causing Range: 1 mile"
+    "level": "8th"
   },
   {
     "power": 14,
@@ -2676,7 +2676,7 @@
     "gesture": "See below",
     "duration": "24 hours",
     "range": "1 mile",
-    "level": "8th(14sp)"
+    "level": "8th"
   },
   {
     "power": 6,
@@ -2689,7 +2689,7 @@
     "gesture": "Circle arms around own body.",
     "duration": "5 minutes",
     "range": "Self",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 4,
@@ -2721,7 +2721,7 @@
     "verbal": "\"Shaehan's touch shall soothe your suffering.\"",
     "gesture": "Hug recipient warmly",
     "duration": "15 minutes Range: Touch\nFaith: Shaehan",
-    "level": "4sp Alignment: Good Duration: 15 minutes Range: Touch"
+    "level": "4th"
   },
   {
     "power": 5,
@@ -2734,7 +2734,7 @@
     "gesture": "Touch forehead of target",
     "duration": "15mins/ til used",
     "range": "Touch",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 4,
@@ -2747,7 +2747,7 @@
     "gesture": "Touch the shield",
     "duration": "24 hours",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 5,
@@ -2759,7 +2759,7 @@
     "verbal": "\"Saint Michael in your wisdom show this spirit that your sight is true even in darkness.\"",
     "gesture": "Cover recipient's eyes with hand",
     "duration": "15 minutes Range: Touch\nFaith: St Michael",
-    "level": "5sp Alignment: Good Duration: 15 minutes Range: Touch"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -2771,7 +2771,7 @@
     "verbal": "\"Your strength is ours now, and your blood sings as I call to it.\"",
     "gesture": "Pass both hands in front of eyes",
     "duration": "15 minutes Range: 10'\nFaith: Cult of the Eternal Vampire",
-    "level": "5sp Alignment: Evil Duration: 15 minutes Range: 10'"
+    "level": "5th"
   },
   {
     "power": 3,
@@ -2788,7 +2788,7 @@
     "gesture": "Touch targets head",
     "duration": "Instant",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 8,
@@ -2804,7 +2804,7 @@
     "verbal": "\"Let the powers of evil sear your soul, and let your own strength be your undoing… Soul Lance!\"",
     "gesture": "Point both empty hands at target",
     "duration": "Instant",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Causing Range: 20'"
+    "level": "7th"
   },
   {
     "power": 4,
@@ -2816,7 +2816,7 @@
     "verbal": "\"Lady of the Stars I beseech thee allow this one to share in your strength, and touch his/her soul as you\nhave touched mine.\"",
     "gesture": "Link both hands with recipient",
     "duration": "1 hour Range: Touch\nFaith: Lady of the Stars",
-    "level": "4sp Alignment: Good Duration: 1 hour Range: Touch"
+    "level": "4th"
   },
   {
     "power": 1,
@@ -2829,7 +2829,7 @@
     "gesture": "Clench both fists",
     "duration": "Instant / 30 seconds",
     "range": "Self",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 10,
@@ -2841,7 +2841,7 @@
     "verbal": "“Spirits aid me now in my time of need, my physical form is too vulnerable for this task, so come now unto\nme and twist my body, let the physical and magical pass unhindered and let my spirit's true nature shine forth...\nSpirit Form!”",
     "gesture": "Raise arms above head",
     "duration": "5 minutes",
-    "level": "8th (10sp) Alignment: Neutral Sphere: Universal Range: Self only"
+    "level": "8th"
   },
   {
     "power": 20,
@@ -2853,7 +2853,7 @@
     "verbal": "“Feel now the wrath of my totem and let thy spirit be torn asunder... Spirit Rend!”",
     "gesture": "Hands balled into fists",
     "duration": "30 secs",
-    "level": "8th (20sp) Alignment: Neutral Sphere: Shamanic Range: Touch"
+    "level": "8th"
   },
   {
     "power": 4,
@@ -2866,7 +2866,7 @@
     "gesture": "Point at destination",
     "duration": "Instant (2 secs phase in)",
     "range": "20'",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 5,
@@ -2879,7 +2879,7 @@
     "gesture": "Touch both temples",
     "duration": "15 minutes",
     "range": "Self",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 8,
@@ -2891,7 +2891,7 @@
     "verbal": "“By all my powers let the spirits fly free and all be smitten…Spirit Storm!”",
     "gesture": "Arms upraised",
     "duration": "Instant",
-    "level": "7th (8sp) Alignment: Neutral Sphere: Major Force Range: 20' radius"
+    "level": "7th"
   },
   {
     "power": 10,
@@ -2903,7 +2903,7 @@
     "verbal": "“Spirits of protection shield and ward this spirit from the greatest of assaults”",
     "gesture": "Touch targets head",
     "duration": "15 minutes",
-    "level": "8th (10sp) Alignment: Neutral Sphere: Major Warding Range: Touch"
+    "level": "8th"
   },
   {
     "power": 16,
@@ -2915,7 +2915,7 @@
     "verbal": "“Spirits of power I invoke thee and call your anger here. Lay waste to my foes as I strike them down with a\nSpiritual Cataclysm!”",
     "gesture": "Clench fists during casting",
     "duration": "Instant",
-    "level": "8th (16 spirits) Alignment: Neutral Sphere: Major Forces Range: Touch"
+    "level": "8th"
   },
   {
     "power": 3,
@@ -2928,7 +2928,7 @@
     "gesture": "Touch forehead",
     "duration": "24 hours",
     "range": "Self only",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 4,
@@ -2941,7 +2941,7 @@
     "gesture": "Touch targets chest",
     "duration": "Max 1 minute",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 8,
@@ -2953,7 +2953,7 @@
     "verbal": "“Spirits! By my power I command thee all […]!”",
     "gesture": "Arms upraised",
     "duration": "Permanent",
-    "level": "7th (8sp) Alignment: Neutral Sphere: Major Force Range: 20' radius"
+    "level": "7th"
   },
   {
     "power": 6,
@@ -2966,7 +2966,7 @@
     "gesture": "Touch both temples of target",
     "duration": "15 minutes",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 3,
@@ -2979,7 +2979,7 @@
     "gesture": "Touch ward's corners",
     "duration": "Permanent",
     "range": "Touch",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 6,
@@ -2992,12 +2992,12 @@
     "gesture": "As Protection From Spirits",
     "duration": "15 mins",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
     "name": "Stronghold of Hatred",
-    "description": "This miracle is identical to the miracle Protection From Good Spirits in every way except where noted above and the fact that the barrier keeps out any good spirit regardless of level. 7th Level Evil Advanced Miracles Wild Evil Level: Variable* Duration: Instant Alignment: Evil Sphere: Universal Range:20' radius Gesture: See below Verbal: \"Darkness feed on my essence and let all feel your touch!\" to be shouted, followed by a declaration of the damage inflicted (see below) Description: As the verbal is incanted the caster must slash a body part with a dedicated ritual knife (which cannot be used in normal combat - it is permissible to carry this blade), inflicting 6 points of damage to the location and TBLP. The caster must be flesh-and-blood. The blood is then sucked from the wound by wild and hungry evil spirits that cluster around the priest. These spirits form a dark and evil maelstrom centred on the priest which inflicts 6/1 spiritual damage to all within the radius for each 2 spirits the priest releases, to a maximum of 12 spirits and 36/6 damage to all. SAC applies against this damage as normal, except for the casting priest, who cannot in any way shield against the attentions of the spirits, and must take the full damage. Should this miracle be cast a second time within an hour, the casting priest loses all remaining spirits to the uncontrolled evil spirits drawn to the bloodshed, including his own - thus dying. Damage from this second casting is still limited to 36/6 however. This miracle affects the undead, but may not be cast by them (as they have no blood). *This miracle costs 50pts to buy  \fPact of Blood Level: 7th (8sp) Alignment: Evil Duration: 15 minutes Sphere: Universal Range: Touch Gesture: Touch with both hands Verbal: “Black spirits watch this one, and let the blood-shed he/she causes free thee to act as ye will.” Description: This miracle 'hangs' on the hands of the caster for 30 seconds, in the same manner as causing miracles. While under the effect of this miracle each time the target draws the blood of a spiritual target (hits a flesh-and-blood creature with a sharp weapon for the first time) they are struck by the drawn evil spirits, taking 36/6 evil spiritual damage to which SAC applies (12 Hits to monsters). This damage is taken each time a new flesh-andblood target is struck after the miracle becomes active, but once taken from a given creature there is no further penalty for striking that creature again. This miracle does not affect the undead.",
+    "description": "This miracle is identical to the miracle Protection From Good Spirits in every way except where noted above and the fact that the barrier keeps out any good spirit regardless of level. 7th Level Evil Advanced Miracles Wild Evil Level: Variable* Duration: Instant Alignment: Evil Sphere: Universal Range:20' radius Gesture: See below Verbal: \"Darkness feed on my essence and let all feel your touch!\" to be shouted, followed by a declaration of the damage inflicted (see below) Description: As the verbal is incanted the caster must slash a body part with a dedicated ritual knife (which cannot be used in normal combat - it is permissible to carry this blade), inflicting 6 points of damage to the location and TBLP. The caster must be flesh-and-blood. The blood is then sucked from the wound by wild and hungry evil spirits that cluster around the priest. These spirits form a dark and evil maelstrom centred on the priest which inflicts 6/1 spiritual damage to all within the radius for each 2 spirits the priest releases, to a maximum of 12 spirits and 36/6 damage to all. SAC applies against this damage as normal, except for the casting priest, who cannot in any way shield against the attentions of the spirits, and must take the full damage. Should this miracle be cast a second time within an hour, the casting priest loses all remaining spirits to the uncontrolled evil spirits drawn to the bloodshed, including his own - thus dying. Damage from this second casting is still limited to 36/6 however. This miracle affects the undead, but may not be cast by them (as they have no blood). *This miracle costs 50pts to buy",
     "alignment": "Evil",
     "sphere": "Minor Warding",
     "isAdvanced": true,
@@ -3005,7 +3005,7 @@
     "gesture": "As Protection From Spirits",
     "duration": "15 minutes",
     "range": "As Protection",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 8,
@@ -3017,7 +3017,7 @@
     "verbal": "“Spirits of Neutrality I bid thee defend me from thy brethren!”",
     "gesture": "As Protection From Spirits",
     "duration": "15 minutes",
-    "level": "7th (8sp) Alignment: Neutral Sphere: Major Warding Range: As Protection"
+    "level": "7th"
   },
   {
     "power": 8,
@@ -3029,7 +3029,7 @@
     "verbal": "\"Spirit of darkness I call thee forth from the grey lands of the unliving. By the powers of evil bound to me, I\ncall thee to service in my name. Barrow wight I bid thee arise one more time to act in the name of the unliving!\"",
     "gesture": "See below",
     "duration": "Permanent*",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Necromancy Range: 3'"
+    "level": "7th"
   },
   {
     "power": 5,
@@ -3042,7 +3042,7 @@
     "gesture": "Curl arms around body",
     "duration": "1 Hour",
     "range": "N/A",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 10,
@@ -3054,7 +3054,7 @@
     "verbal": "\"Spirits of power I beseech thee to aid in my fight. Come now unto me and form the rod of power!\"",
     "gesture": "Hands opened to receive",
     "duration": "15 minutes",
-    "level": "8th (10sp) Alignment: Neutral Sphere: Universal Range: Self"
+    "level": "8th"
   },
   {
     "power": 8,
@@ -3066,7 +3066,7 @@
     "verbal": "\"By all the powers of darkness, spirit of evil I summon thee forth! By the shades of the netherworld and\nblood you have shed, wraith warrior I name thee! I call thee from the land of the spirits! By my powers I summon\nthee here! Behold! By the power of my spirits thou art summoned here! Come forth!\"",
     "gesture": "As Summon Wraith",
     "duration": "30 minutes",
-    "level": "7th (8sp) Alignment: Evil Sphere: Major Necromancy Range: 3'"
+    "level": "7th"
   },
   {
     "power": 10,
@@ -3078,7 +3078,7 @@
     "verbal": "\"By all my powers, and the powers of these spirits gathered here I strike thee down…Sunder Spirit!\"",
     "gesture": "Two Handed Touch",
     "duration": "Instant",
-    "level": "8th (10sp) Alignment: Neutral Sphere: Major Force Range: Touch"
+    "level": "8th"
   },
   {
     "power": 6,
@@ -3091,7 +3091,7 @@
     "gesture": "Weapon-hand forms claw",
     "duration": "15 minutes",
     "range": "20'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 1,
@@ -3104,19 +3104,19 @@
     "gesture": "Touch Target with palms",
     "duration": "Instant",
     "range": "Touch",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 12,
     "name": "The Black Death",
-    "description": "This acts as per the Cause Disease miracle, but begins at the 5 minute stage and progresses rapidly. Reaching the 10 minute stage after 1 minute, the 30 minute stage after 3, and death occurs at 5 minutes. People that have multi-raced Mummy may learn this as a minor causing miracle.  \fTreare's Harm Level: 8th (12sp) Alignment: Evil Sphere: Major Causing Duration: Instant Range: Touch Gesture: Touch target Verbal: “Spirits of Darkness and Suffering answer my call! I summon you here to bring my foes low. Spirit feel now the anguish as they life suffers mortal….. Harm!” Description: Must be able to cast Touch of Death, and be on table 10. This miracle hangs for 30 seconds as with most causing miracles. When touched it causes the target to suffer causing equal to their starting tblp. SAC applies at 6 points for every point of SAC the target has. Resistances to causing then apply. This miracle costs the caster a level to cast (reductions can be purchased as per level loss from Touch of Death). It does not affect the undead.",
+    "description": "This acts as per the Cause Disease miracle, but begins at the 5 minute stage and progresses rapidly. Reaching the 10 minute stage after 1 minute, the 30 minute stage after 3, and death occurs at 5 minutes. People that have multi-raced Mummy may learn this as a minor causing miracle.",
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true,
     "verbal": "“Spirit be thou stricken with the darkest of diseases, let your body fade and weaken and your life expire!”",
     "gesture": "Touch target",
     "duration": "5 minutes",
-    "level": "8th (12sp) Alignment: Evil Sphere: Major Causing Range: Touch"
+    "level": "8th"
   },
   {
     "power": 4,
@@ -3129,7 +3129,7 @@
     "gesture": "Touch targets head",
     "duration": "5 minutes",
     "range": "Touch",
-    "level": "4sp Alignment: Good Duration: 5 minutes Range: Touch"
+    "level": "4th"
   },
   {
     "power": 8,
@@ -3141,7 +3141,7 @@
     "verbal": "“Let the light of faith shine on all around me!”",
     "gesture": "Circle as per Prot",
     "duration": "30 min",
-    "level": "7th (8sp) Alignment: Good Sphere: Major Dismissal / Warding Range: 10' radius"
+    "level": "7th"
   },
   {
     "power": 14,
@@ -3153,7 +3153,7 @@
     "verbal": "“Spirit of the Forge I ask thee place this weapon in perfect balance, infuse it with the spirits of power.”",
     "gesture": "Pass hands over weapon",
     "duration": "24 hours Range: Touch\nFaith: Forge",
-    "level": "8th (14sp) Alignment: As caster Duration: 24 hours Range: Touch"
+    "level": "8th"
   },
   {
     "power": 3,
@@ -3165,7 +3165,7 @@
     "verbal": "“May your spirit be as calm as the seas when the storm has passed”",
     "gesture": "Touch targets head",
     "duration": "1 hour Range: Touch\nFaith: Tsu-Ling",
-    "level": "3sp Alignment: Good Duration: 1 hour Range: Touch"
+    "level": "3rd"
   },
   {
     "power": 10,
@@ -3177,7 +3177,7 @@
     "verbal": "“Spirits of the Netherworld I call you to me, grant me the power of your darkened touch.”",
     "gesture": "Touch target",
     "duration": "As the touch effect",
-    "level": "8th (10sp) Alignment: Evil Sphere: Major Necromancy Range: Touch"
+    "level": "8th"
   },
   {
     "power": 12,
@@ -3189,7 +3189,7 @@
     "verbal": "“Spirits of Darkness and Suffering answer my call! I summon you here to bring my foes low. Spirit feel now\nthe anguish as they life suffers mortal….. Harm!”",
     "gesture": "Touch target",
     "duration": "Instant Range: Touch\nSphere: Major Causing",
-    "level": "8th (12sp) Alignment: Evil Duration: Instant Range: Touch"
+    "level": "8th"
   },
   {
     "power": 5,
@@ -3202,7 +3202,7 @@
     "gesture": "Touch target",
     "duration": "15 minutes",
     "range": "Touch",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 5,
@@ -3214,7 +3214,7 @@
     "verbal": "“Angels of light gather here and let our spirits act as one.”",
     "gesture": "Link hands in a circle",
     "duration": "15 minutes Range: See below\nFaith: Church of Unity",
-    "level": "5sp Alignment: Good Duration: 15 minutes Range: See below"
+    "level": "5th"
   },
   {
     "power": 6,
@@ -3227,7 +3227,7 @@
     "gesture": "Point at target",
     "duration": "30 seconds",
     "range": "20'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 6,
@@ -3240,7 +3240,7 @@
     "gesture": "Touch targets head",
     "duration": "5 minutes",
     "range": "Touch",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 4,
@@ -3253,7 +3253,7 @@
     "gesture": "Touch temple",
     "duration": "30 seconds",
     "range": "As Prot",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 4,
@@ -3265,7 +3265,7 @@
     "verbal": "\"Spirits of the dead I bind thee to this ward - seek not to bar your brethren entrance.\"",
     "gesture": "Pass hands across ward",
     "duration": "As Ward Range: 1 inch\nFaith: Dark Deliverers",
-    "level": "4sp Alignment: Duration: As Ward Range: 1 inch"
+    "level": "4th"
   },
   {
     "power": 5,
@@ -3278,7 +3278,7 @@
     "gesture": "Inscribe rune",
     "duration": "15 mins",
     "range": "-",
-    "level": "5sp"
+    "level": "5th"
   },
   {
     "power": 2,
@@ -3291,7 +3291,7 @@
     "gesture": "Open hands in a giving gesture",
     "duration": "Instant",
     "range": "20'",
-    "level": "1sp"
+    "level": "1st"
   },
   {
     "power": 8,
@@ -3303,7 +3303,7 @@
     "verbal": "“Spirits of light I call you to my side, empower my words with your power to bring the dead low”",
     "gesture": "Raise hands in supplication",
     "duration": "5 minutes",
-    "level": "7th (8sp) Alignment: Good Sphere: Major Dismissal Range: Self"
+    "level": "7th"
   },
   {
     "power": 10,
@@ -3315,7 +3315,7 @@
     "verbal": "“Word of Recall!”",
     "gesture": "Raise arms above head",
     "duration": "Instant",
-    "level": "8th (10sp) Alignment: Neutral Sphere: Universal Range: Self only"
+    "level": "8th"
   },
   {
     "power": 4,
@@ -3328,7 +3328,7 @@
     "gesture": "As Total Heal",
     "duration": "Instant",
     "range": "Touch",
-    "level": "4sp"
+    "level": "4th"
   },
   {
     "power": 4,
@@ -3341,7 +3341,7 @@
     "gesture": "Touch Target",
     "duration": "Permanent",
     "range": "Touch",
-    "level": "4sp",
+    "level": "4th",
     "preReqs": ["Summon Wraith / Wight"]
   },
   {
@@ -3354,7 +3354,7 @@
     "verbal": "“You anger [deity name]! Feel now his/her wrath!”",
     "gesture": "Point at target with both hands",
     "duration": "Instant / below Range: 20'\nFaith: Any High Priest only",
-    "level": "7th (8sp) Alignment: ANY Duration: Instant / below Range: 20'"
+    "level": "7th"
   },
   {
     "power": 3,
@@ -3367,7 +3367,7 @@
     "gesture": "Point at target",
     "duration": "30 seconds",
     "range": "10ft",
-    "level": "3sp"
+    "level": "3rd"
   },
   {
     "power": 6,
@@ -3380,7 +3380,7 @@
     "gesture": "Point at target",
     "duration": "Permanent",
     "range": "10'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 10,
@@ -3392,7 +3392,7 @@
     "verbal": "\"Lord of the undead, I name thee ........! I summon thee from the deepest pits of darkness! I summon thee\nfrom the citadel of evil! By my powers I summon thee here! By the kindred creatures thou art summoned! By the\nbat, the rat and the wolf! Wherever thou art, hear my call! Come forth into this arena and take my offering! By my\npowers and this incantation thou art called to this spot! Come forth!\"",
     "gesture": "Hands raised in supplication",
     "duration": "Permanent until destroyed",
-    "level": "8th (10 spirits) Alignment: Evil Sphere: Universal Range: -"
+    "level": "8th"
   },
   {
     "power": 6,
@@ -3405,7 +3405,7 @@
     "gesture": "todo",
     "duration": "5 minutes",
     "range": "20'",
-    "level": "6sp"
+    "level": "6th"
   },
   {
     "power": 8,

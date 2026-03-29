@@ -2544,7 +2544,7 @@
     },
     "ability.read-runes": {
       "Name": "Read Runes",
-      "Type": "Static",
+      "Type": "AtWill",
       "Effect": "This skill allows the character to read spiritual runes with the proficiency of a priest. They may fully utilise spiritual scrolls of their alignment with this skill, but not scrolls of any other alignment.",
       "Key": "ability.read-runes"
     },

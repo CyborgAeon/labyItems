@@ -33,6 +33,9 @@
         Clicked="OnCreateMpClicked"
         Text="Create MP Item"/>
       <Button
+        Clicked="OnInitiateTradeClicked"
+        Text="Initiate Trade"/>
+      <Button
         Clicked="OnItemWalletClicked"
         Text="Item Wallet"/>
     </VerticalStackLayout>
