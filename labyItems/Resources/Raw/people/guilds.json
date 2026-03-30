@@ -531,7 +531,8 @@
             "Effect": "Acts as Discipline, but may target another willing Duke's Head member who is claiming guild benefits."
           }
         }
-      ]
+      ],
+      "Advanced": []
     },
     "PreRequisites": "Characters from Sweethaven can join freely.\nAnyone else interested in furthering the cause of Sweethaven can join & battleboard the guild, but after 3 outings they must have their candidacy agreed upon (typically by guild vote or otherwise joining Sweethaven) and cannot battleboard the guild further until this is done.\nThose with any formal position outside of Sweethaven, including military positions like Legionaries and Samurai, must have both their prospective membership and their candidacy agreed by the guild publicly, which will be announced to those overseeing their position",
     "Ethos": "Support the Free Republic of Sweethaven in blazing the trail for a better world.\nDefend the rights of peons across the world.\nStand up against the tyranny of the Great Freedom and any feudal system.\nShare Sweethaven's way of life with anyone who'll listen.\nHone your beliefs through debate, discussion and collective decision-making.",
@@ -1548,12 +1549,12 @@
           }
         },
         {
-          "Name": "Aid of the Clan ~ At the start of the day can choose to gain the aid of one of the Ishmaic Clans as follows: o Galahbhad – Armour is tinkered by the clans armourers, granting immunity to accuracy. o Buladajn – Venoms Whisper",
+          "Name": "Aid of the Clan",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "Gains Immunity to poison for 5 minutes. o Benhai – Gains an innate Jump that also grants the benefits of Trap wary o Salahmen – 1/day gains double level of resistance vs magic for 5 minutes o Harazaen – Consume the Curse 1/day – Grants immunity to one Curse, must be used within 2 seconds of the curse being suffered o Rain – Draw on the winds 1/day Takes 30 seconds prep and can act as a standard Elemental spell up to 4th level.",
-          "Key": "ability.guild.wahadamune.aid-of-the-clan-at-the-start-of-the-day-can-choose-to-gain-the-aid-of-one-of-the-ishmaic-clans-as-follows-o-galahbhad-armour-is-tinkered-by-the-clans-armourers-granting-immunity-to-accuracy-o-buladajn-venoms-whisper",
-          "AbilityRef": "ability.guild.wahadamune.aid-of-the-clan-at-the-start-of-the-day-can-choose-to-gain-the-aid-of-one-of-the-ishmaic-clans-as-follows-o-galahbhad-armour-is-tinkered-by-the-clans-armourers-granting-immunity-to-accuracy-o-buladajn-venoms-whisper"
+          "Effect": "At the start of the day can choose to gain the aid of one of the Ishmaic Clans as follows: \no Galahbhad – Armour is tinkered by the clans armourers, granting immunity to accuracy.\no Buladajn – Venoms Whisper Gains Immunity to poison for 5 minutes. \no Benhai – Gains an innate Jump that also grants the benefits of Trap wary \no Salahmen – 1/day gains double level of resistance vs magic for 5 minutes \no Harazaen – Consume the Curse 1/day – Grants immunity to one Curse, must be used within 2 seconds of the curse being suffered \no Rain – Draw on the winds 1/day Takes 30 seconds prep and can act as a standard Elemental spell up to 4th level.",
+          "Key": "ability.guild.wahadamune.aid-of-the-clan",
+          "AbilityRef": "ability.guild.wahadamune.aid-of-the-clan"
         }
       ],
       "Intermediate": [],
@@ -2844,8 +2845,7 @@
     },
     "DenominationalMiracle": {
       "$ref": "Armour of the Forge"
-    },
-    "DenominationalMiracleNote": "This miracle may be learnt by priests of the Church post 8th."
+    }
   },
   "The Rings of Talthar": {
     "PreRequisites": "Be a goodly aligned priest or Paladin",
@@ -2876,6 +2876,13 @@
     },
     "Benefits": {
       "Basic": [
+        {
+          "Name": "Talthar's Resilience",
+          "Type": "Static",
+          "Effect": "May add 60 points of immunities from table 3 at the start of the day.",
+          "Key": "ability.guild.talthar-basic-immunities",
+          "AbilityRef": "ability.guild.talthar-basic-immunities"
+        },
         {
           "Name": "Blessed of Talthar",
           "Type": "DAC",
@@ -2956,6 +2963,13 @@
         ]
       ],
       "Intermediate": [
+        {
+          "Name": "Talthar's Resilience",
+          "Type": "Update",
+          "Effect": "May add 120 points of immunities from table 3 at the start of the day.",
+          "Key": "ability.guild.talthar-basic-immunities",
+          "AbilityRef": "ability.guild.talthar-basic-immunities"
+        },
         [
           {
             "Name": "Subtlety",
@@ -3020,6 +3034,13 @@
         ]
       ],
       "Advanced": [
+        {
+          "Name": "Talthar's Resilience",
+          "Type": "Update",
+          "Effect": "May add 180 points of immunities from table 3 at the start of the day.",
+          "Key": "ability.guild.talthar-basic-immunities",
+          "AbilityRef": "ability.guild.talthar-basic-immunities"
+        },
         {
           "Name": "Subtlety",
           "UpdateKey": "Immunity to Information Spells",
@@ -3117,7 +3138,7 @@
     "DenominationalMiracle": {
       "$ref": "Claws of the Imbaiu"
     },
-    "PreRequisites": "Any Evil Priest can join this guild.\n\nMIRACLE LIST 1st Halt, Power Meld, 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Curse, Talk to Spirits, Spirit Shield, Cause Serious Wounds, Protection From Spirits 4th Spirit Shift, Spirit Bolt, Cause Disease, Create Ghoul 5th Spiritual Invisibility, Cause Grievous Wounds 6th Control Wraith, Serin’s Bound Spirit of Undeath, Walk Through Walls 7th Suspend Life",
+    "PreRequisites": "Any Evil Priest can join this guild.",
     "Ethos": "The Tryst is a church that takes spiritual power from the Imbaiu demons. It is important to understand that the church do not serve the Imbaiu, but binds, dominates and commands them. References to the Imbaiu Masters refer to those Imbaiu with mastery over lesser demons. The Imbaiu Masters that accept the bindings of the church do so because this link to Primus gives them strength upon their own worlds that they use to remain at the top of their demonic hierarchy.\n\nPRE-REQUISITES Any Evil Priest can join this guild.\n\nMIRACLE LIST 1st Halt, Power Meld, 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Curse, Talk to Spirits, Spirit Shield, Cause Serious Wounds, Protection From Spirits 4th Spirit Shift, Spirit Bolt, Cause Disease, Create Ghoul 5th Spiritual Invisibility, Cause Grievous Wounds 6th Control Wraith, Serin’s Bound Spirit of Undeath, Walk Through Walls 7th Suspend Life",
     "MiracleList": {
       "1": ["Halt", "Power Meld"],
@@ -3164,6 +3185,13 @@
           "Effect": "takes 1 minute to open a link to the Imbaiu costing 24 TBLP of the casters blood/essence in sacrifice. Acts as a mantic comm 2 but each question asked costs the user a level (c .f. casting a TOD , but reductions in level loss from casting miracles do not apply).",
           "Key": "ability.guild.church-of-the-tryst.the-dark-bargains",
           "AbilityRef": "ability.guild.church-of-the-tryst.the-dark-bargains"
+        },
+        {
+          "Name": "Shadow of the Imbaiu",
+          "Type": "Update",
+          "Effect": "allows the priest to invoke the shadow of an Imbaiu to share their form. This takes 30 seconds and grants them a spirit form 5 minutes. While active discerns as a demon kind and if banished the power ends.",
+          "Key": "ability.guild.church-of-the-tryst.shadow-of-the-imbaiu",
+          "AbilityRef": "ability.guild.church-of-the-tryst.shadow-of-the-imbaiu"
         }
       ],
       "Advanced": [
@@ -3404,8 +3432,7 @@
     },
     "DenominationalMiracle": {
       "$ref": "Fated Destruction"
-    },
-    "DenominationalMiracleNote": "This miracle may be learnt by priests of the Church post 8th."
+    }
   },
   "Arcanum": {
     "Type": "professional",
@@ -3891,7 +3918,7 @@
           "Name": "Chosen Familiar",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "Attune to an animal, requires a symbol of the creature, a piece of the creature, or incorporate that type of creatures appearance into a worn makeup design. Gain one of Jump 1/day, Assisted Climb 1/day, Sniff skill, +1 DAC or +1 innate PAC relevant to the creature chosen.",
+          "Effect": "Attune to an animal, requires a symbol of the creature, a piece of the creature, or incorporate that type of creatures appearance into a worn makeup design. Gain one of: \nJump 1/day, \nAssisted Climb 1/day, \nSniff skill, \n+1 DAC \n+1 innate PAC \n choice should be relevant to the creature chosen.",
           "Key": "ability.guild.natural-trust.chosen-familiar",
           "AbilityRef": "ability.guild.natural-trust.chosen-familiar"
         }
@@ -5583,6 +5610,14 @@
       "Intermediate": [],
       "Advanced": []
     },
+    "City Benefits": [
+      {
+        "Name": "The Citadel",
+        "Effects": [
+          "Mercenaries hired by the city council have their standard potion allowance paid for."
+        ]
+      }
+    ],
     "Availability": {
       "Rules": [
         {
@@ -5617,6 +5652,31 @@
   },
   "Deci": {
     "Type": "city",
+    "Local System Effects": [
+      "Where in all other places and cities one would find vermin in the form of Rats virtually none can be found in Deci, in their stead that ecological niche has once more been taken by serpents of all types including venomous although Deci locals are quite adept at avoiding the dangers these could pose to the unwary."
+    ],
+    "City Benefits": [
+      {
+        "Name": "The Beggar's Banquet",
+        "Effects": [
+          "The Beggar’s Banquet in Cheapside grants all Deci Beggars (both Kallah and Hanot) the CP Benefits of Haven, Home and Blinkered Eye in Deci."
+        ]
+      },
+      {
+        "Name": "The Serpent's Shadow",
+        "Effects": [
+          "Local System Effect active until the end of 2026: Black spells cast in Deci count as being 1 mana less than usual to a minimum of 1 mana. This affects both casting level and mana cost of black spells cast with free mana. Cannot be used for learning spells. This can be used by anyone casting a black spell, even if cast as a specialist. This does not stack with any other form of reduction, including Expertise"
+        ]
+      },
+      {
+        "Name": "The King’s Largesse",
+        "Effect": [
+          "Mercenaries hired by or acting on behalf of Deci, the Deci Council, Anath, Troy or the City Sprit have their potion allowance covered.",
+          "Mercenaries hired by, or acting on behalf of, Deci, the Deci Council, Anath, Troy or the City Sprit have their pay increased by 1,000Grulls per mercenary (which the referee may claim from the Desk for paying a party).",
+          "Where a mission has been sanctioned by Anath, King Troy, the City Spirit or the Deci Council for the benefit of Deci then an additional World Point is generated for use by the Referee that can only be applied to the direct benefit of Deci (i.e. adjust a Deci city stat positively).  (Referee Note:To claim this additional WP quote PCLD290 on the Debrief sheet alongside the extra WP)."
+        ]
+      }
+    ],
     "Benefits": {
       "Basic": [],
       "Intermediate": [],
@@ -5673,6 +5733,14 @@
       "Intermediate": [],
       "Advanced": []
     },
+    "City Benefits": [
+      {
+        "Name": "Halgar Inner City Wards",
+        "Effects": [
+          "Whilst in the inner city of Halgar it is not possible to use any supernatural power that is not neuronic in nature (Divine Guidance or similar applies). Additionally, any ongoing supernatural effect, other than elven animances / similar, ends upon entering. Any cast within are likewise dispelled. This is a published dispelling effect."
+        ]
+      }
+    ],
     "Availability": {
       "Rules": [
         {
@@ -5707,6 +5775,14 @@
       "Intermediate": [],
       "Advanced": []
     },
+    "City Benefits": [
+      {
+        "Name": "The Citadel",
+        "Effects": [
+          "Mercenaries hired directly by the Rodanne City Council have their standard potion allowance paid for."
+        ]
+      }
+    ],
     "Availability": {
       "Rules": [
         {
@@ -5725,6 +5801,14 @@
       "Intermediate": [],
       "Advanced": []
     },
+    "City Benefits": [
+      {
+        "Name": "Scarlene Summonation",
+        "Effects": [
+          "The Scarlene City Spirit has a spirit link (and true kin) to the city’s Hanot and Kallah and is aware if they die.  It is able to summon their bodies/spirits to try and resurrect them.  PC Scarlene beggars may choose, when they die or within the next hour, to have their body summoned (an OOC choice) – shifted as per Word of Recall. Unless the city spirit is unable to restore them itself, this counts as an on-dungeon res. Character cards need to be left at the desk in an envelope for Christine Gentry."
+        ]
+      }
+    ],
     "Availability": {
       "Rules": [
         {
@@ -5743,6 +5827,14 @@
       "Intermediate": [],
       "Advanced": []
     },
+    "City Benefits": [
+      {
+        "Name": "The Citadel",
+        "Effects": [
+          "Mercenaries hired directly by the Sellaville City Council have their standard potion allowance paid for and the council can pay an additional 1,000 grulls for a mercenary hire."
+        ]
+      }
+    ],
     "Availability": {
       "Rules": [
         {
@@ -5814,7 +5906,7 @@
       ]
     }
   },
-  "Khaniabad": {
+  "Khaniabhad": {
     "Type": "city",
     "Restrictions": "Lose clan benefits...",
     "Benefits": {
@@ -5822,6 +5914,16 @@
       "Intermediate": [],
       "Advanced": []
     },
+    "City Benefits": [
+      {
+        "Name": "Khanibad’s Assassin Guild",
+        "Effects": [
+          "Guild members do not belong to any of the cults within the city, or other factions within it. Indeed their independence is perhaps the only thing that allows them to remain active.",
+          "Their only rules are they will honour contracts taken, will not endanger the secrecy of the city, and will remain loyal to their own guild.",
+          "Available to: This replaces a published scout status and is available to 1st Class Assassins and Kallah from Khaniabad, or 1st class scouts who have multi-classed to Assassin or Kallah from Khanibad."
+        ]
+      }
+    ],
     "Availability": {
       "Rules": [
         {
@@ -5856,6 +5958,14 @@
       "Intermediate": [],
       "Advanced": []
     },
+    "City Benefits": [
+      {
+        "Name": "The Citadel",
+        "Effects": [
+          "Mercenaries hired directly by the Mordred’s Rest City Council have their standard potion allowance paid for and the council can pay an additional 1,000 grulls for a mercenary hire."
+        ]
+      }
+    ],
     "Availability": {
       "Rules": [
         {
