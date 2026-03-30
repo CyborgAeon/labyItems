@@ -69,12 +69,18 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good"]
+          "Value": [
+            "Good"
+          ]
         }
       ]
     }
@@ -218,12 +224,19 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good", "Neutral"]
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
         }
       ]
     }
@@ -317,7 +330,9 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": ["Baronial"]
+          "Value": [
+            "Baronial"
+          ]
         }
       ]
     }
@@ -333,7 +348,10 @@
           "Name": "Hard Upbringing",
           "Type": "Life",
           "Source": "Guild",
-          "Amount": [3, 1],
+          "Amount": [
+            3,
+            1
+          ],
           "Key": "ability.guild.the-deci-gentlemen-s-club.hard-upbringing",
           "AbilityRef": "ability.guild.the-deci-gentlemen-s-club.hard-upbringing"
         },
@@ -357,7 +375,10 @@
         {
           "Name": "Hard Upbringing",
           "Type": "Update",
-          "Amount": [6, 2],
+          "Amount": [
+            6,
+            2
+          ],
           "Key": "ability.guild.the-deci-gentlemen-s-club.hard-upbringing.2",
           "AbilityRef": "ability.guild.the-deci-gentlemen-s-club.hard-upbringing.2"
         },
@@ -486,7 +507,8 @@
           "Overrides": {
             "DisplayName": "The People of Sweethaven have spoken",
             "Effect": "At the start of the day (in the brief) Duke's Head members can vote which threat (from the below) will be the most dangerous that day. Depending on which wins all members gain the following benefit:\ni:The Ghoul is the most dangerous - Gains a War Cry 1/day\nii: The Demons Fire will consume us - Gains + 2 MAC vs Red\niii: The Silver Folk will be our bane - Gains + 3 NAC."
-          }
+          },
+          "Key": "ability.guild.the-duke-s-head-society.basic-1"
         },
         {
           "Name": "+1 Level of Resistance vs Domination effects",
@@ -512,7 +534,9 @@
           "Overrides": {
             "DisplayName": "The People of Sweethaven have spoken",
             "Effect": "At the start of each section Duke's Head members may vote which threat (from the below) will be the most dangerous that day. Depending on which wins all members gain the following benefit:\ni:The Ghoul is the most dangerous - Gains a War Cry 1/day\nii: The Demons Fire will consume us - Gains + 2 MAC vs Red\niii: The Silver Folk will be our bane - Gains + 3 NAC."
-          }
+          },
+          "Key": "ability.guild.the-duke-s-head-society.intermediate-1",
+          "AbilityRef": "ability.guild.the-duke-s-head-society.intermediate-1"
         },
         {
           "Name": "Understanding of freewill",
@@ -529,7 +553,8 @@
           "Overrides": {
             "DisplayName": "Discipline Other",
             "Effect": "Acts as Discipline, but may target another willing Duke's Head member who is claiming guild benefits."
-          }
+          },
+          "Key": "ability.guild.the-duke-s-head-society.intermediate-1"
         }
       ],
       "Advanced": []
@@ -738,7 +763,9 @@
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good"]
+          "Value": [
+            "Good"
+          ]
         }
       ]
     }
@@ -915,7 +942,9 @@
         {
           "Field": "Guild",
           "Operator": "In",
-          "Value": ["Knights of the Land"]
+          "Value": [
+            "Knights of the Land"
+          ]
         }
       ]
     }
@@ -1013,12 +1042,19 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good", "Neutral"]
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
         }
       ]
     }
@@ -1096,12 +1132,18 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Evil"]
+          "Value": [
+            "Evil"
+          ]
         }
       ]
     }
@@ -1179,7 +1221,10 @@
         {
           "Name": "The Brutal North",
           "Type": "Life",
-          "Amount": [6, 2],
+          "Amount": [
+            6,
+            2
+          ],
           "Source": "Guild",
           "Key": "ability.guild.of-the-north.the-brutal-north",
           "AbilityRef": "ability.guild.of-the-north.the-brutal-north"
@@ -1276,7 +1321,9 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": ["Amlesian"]
+          "Value": [
+            "Amlesian"
+          ]
         }
       ]
     }
@@ -1317,7 +1364,10 @@
             "Name": "Heart of the Lotus",
             "Type": "Life",
             "Effect": "+3/1 guild life",
-            "Amount": [3, 1],
+            "Amount": [
+              3,
+              1
+            ],
             "Source": "Guild",
             "Key": "ability.guild.the-white-lotus-society.heart-of-the-lotus",
             "AbilityRef": "ability.guild.the-white-lotus-society.heart-of-the-lotus"
@@ -1351,7 +1401,10 @@
         {
           "Name": "Heart of the Lotus",
           "Type": "Update",
-          "Amount": [6, 2],
+          "Amount": [
+            6,
+            2
+          ],
           "Key": "ability.guild.the-white-lotus-society.heart-of-the-lotus.2",
           "AbilityRef": "ability.guild.the-white-lotus-society.heart-of-the-lotus.2"
         },
@@ -1389,7 +1442,10 @@
         {
           "Name": "Heart of the lotus",
           "Type": "Update",
-          "Amount": [9, 3],
+          "Amount": [
+            9,
+            3
+          ],
           "Key": "ability.guild.the-white-lotus-society.heart-of-the-lotus.3",
           "AbilityRef": "ability.guild.the-white-lotus-society.heart-of-the-lotus.3"
         },
@@ -1504,7 +1560,9 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": ["Tribal"]
+          "Value": [
+            "Tribal"
+          ]
         }
       ]
     }
@@ -1534,7 +1592,8 @@
           "Overrides": {
             "DisplayName": "Stand with the Confederacy (Life)",
             "Effect": "Usable if a fellow member of the Ishmaic Confederacy is unconscious, incapacitated, or killed by a foe. Gains +6/2 life for 5 minutes, even if the individual recovers."
-          }
+          },
+          "Key": "ability.guild.wahadamune.basic-1"
         },
         {
           "GrantId": "wahadamune.basic.stand-with-the-confederacy-war-cry",
@@ -1546,7 +1605,8 @@
           "Overrides": {
             "DisplayName": "Stand with the Confederacy (War Cry)",
             "Effect": "Usable if a fellow member of the Ishmaic Confederacy is unconscious, incapacitated, or killed by a foe. Gains an innate War Cry for 5 minutes, even if the individual recovers."
-          }
+          },
+          "Key": "ability.guild.wahadamune.basic-1"
         },
         {
           "Name": "Aid of the Clan",
@@ -1557,7 +1617,30 @@
           "AbilityRef": "ability.guild.wahadamune.aid-of-the-clan"
         }
       ],
-      "Intermediate": [],
+      "Intermediate": [
+        {
+          "Name": "Aid of the Clan",
+          "Type": "Update",
+          "Effect": "Gains a second choice from Aid of the Clan.",
+          "Key": "ability.guild.wahadamune.aid-of-the-clan",
+          "AbilityRef": "ability.guild.wahadamune.aid-of-the-clan"
+        },
+        {
+          "Name": "Discern Enemy of the Confederacy",
+          "Type": "Innate",
+          "Count": 1,
+          "Effect": "20ft range physical/magical info FX that discerns if a member is an enemy of the Confederacy and a 3 word reason why.",
+          "Key": "ability.guild.wahadamune.discern-enemy-of-the-confederacy",
+          "AbilityRef": "ability.guild.wahadamune.discern-enemy-of-the-confederacy"
+        },
+        {
+          "Name": "Legend of the Sands",
+          "Type": "Static",
+          "Effect": "Grants stacking Live to Minus 6 the first time it is needed. Whilst in this LTM, gains Recuperate and can trigger One Last Effort (both as the Survivor multiclass).",
+          "Key": "ability.guild.wahadamune.legend-of-the-sands",
+          "AbilityRef": "ability.guild.wahadamune.legend-of-the-sands"
+        }
+      ],
       "Advanced": []
     },
     "Availability": {
@@ -1565,7 +1648,9 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": ["Ishmaic"]
+          "Value": [
+            "Ishmaic"
+          ]
         }
       ]
     }
@@ -1588,7 +1673,10 @@
         {
           "Name": "Strength of the yeoman",
           "Type": "Life",
-          "Amount": [3, 1],
+          "Amount": [
+            3,
+            1
+          ],
           "Effect": "Gain +3/1 life per yeoman on dungeon, to a max of +6/2.",
           "Key": "ability.guild.yeomen-of-the-empire.strength-of-the-yeoman",
           "AbilityRef": "ability.guild.yeomen-of-the-empire.strength-of-the-yeoman"
@@ -1602,7 +1690,30 @@
           "AbilityRef": "ability.guild.yeomen-of-the-empire.memories-of-the-yeoman"
         }
       ],
-      "Intermediate": [],
+      "Intermediate": [
+        {
+          "Name": "Aid of the Clan",
+          "Type": "Update",
+          "Effect": "Gains a second choice from Aid of the Clan.",
+          "Key": "ability.guild.wahadamune.aid-of-the-clan",
+          "AbilityRef": "ability.guild.wahadamune.aid-of-the-clan"
+        },
+        {
+          "Name": "Discern Enemy of the Confederacy",
+          "Type": "Innate",
+          "Count": 1,
+          "Effect": "20ft range physical/magical info FX that discerns if a member is an enemy of the Confederacy and a 3 word reason why.",
+          "Key": "ability.guild.wahadamune.discern-enemy-of-the-confederacy",
+          "AbilityRef": "ability.guild.wahadamune.discern-enemy-of-the-confederacy"
+        },
+        {
+          "Name": "Legend of the Sands",
+          "Type": "Static",
+          "Effect": "Grants stacking Live to Minus 6 the first time it is needed. Whilst in this LTM, gains Recuperate and can trigger One Last Effort (both as the Survivor multiclass).",
+          "Key": "ability.guild.wahadamune.legend-of-the-sands",
+          "AbilityRef": "ability.guild.wahadamune.legend-of-the-sands"
+        }
+      ],
       "Advanced": []
     },
     "Availability": {
@@ -1614,8 +1725,14 @@
     "Ethos": "The guild follows the Shadow of the First Evil, a powerful Demon of Corruption ascended to Divine Power by the actions of his chosen one Lomo, and others. The duty of the church is to foster Evil in the hearts of men. It is more powerful to cause another to carry out an act of evil than do it yourself. Working from the shadows until a place is claimed the Church seek to spread across the Empire and beyond.",
     "Restrictions": "The Guild is a full black guild (as per WFA rules). If a member ever ceases to be Evil they are instantly Excommunicated. Note - If slain a member of the church, or a character with Pact to Certizal, claiming Kallah benefits linked to Certizal or if they are Demon Touched by Certizal, can choose to Word of Recall to Lomo who can cast a Mantic (Ebony/Evil Spirit) Command Life on the individual. This costs 20% (10% if fated hero is owned). For reference: Command Life is as animate life except the individual does not become Undead. Instead they discern as spiritually mastered, and if removed they die. It does not function on those immune to spiritual mastery. This should be written on the individuals card.",
     "MiracleList": {
-      "1": ["Halt", "Lesser Wings of Darkness"],
-      "2": ["Cause Wound", "Animate Zombie"],
+      "1": [
+        "Halt",
+        "Lesser Wings of Darkness"
+      ],
+      "2": [
+        "Cause Wound",
+        "Animate Zombie"
+      ],
       "3": [
         "Cause Serious Wounds",
         "Curse",
@@ -1629,9 +1746,17 @@
         "Beguile Spirit",
         "Control Ghoul"
       ],
-      "5": ["Voice of Power", "Cause Grievous Wounds"],
-      "6": ["Walk Through Walls", "Spiritual Mastery"],
-      "7": ["Suspend Life"]
+      "5": [
+        "Voice of Power",
+        "Cause Grievous Wounds"
+      ],
+      "6": [
+        "Walk Through Walls",
+        "Spiritual Mastery"
+      ],
+      "7": [
+        "Suspend Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -1644,7 +1769,8 @@
           "Overrides": {
             "DisplayName": "Embraced by Evil",
             "Effect": "Grants immunity to one evil spiritual effect; used as warcry, cannot benefit from Goodly spirits for the duration."
-          }
+          },
+          "Key": "ability.guild.church-of-certizal-shadow-of-the-first-evil.basic-1"
         },
         {
           "Name": "Shroud of Evil",
@@ -1716,17 +1842,23 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic"]
+          "Value": [
+            "Chaotic"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Evil"]
+          "Value": [
+            "Evil"
+          ]
         }
       ]
     },
@@ -1875,7 +2007,9 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         }
       ]
     }
@@ -1888,8 +2022,14 @@
     "PreRequisites": "Open to any Goodly priest. Only Goodly individuals may join without the permission of the High Priest or 2 Custodians",
     "Ethos": "Members of this Church worship Truic Amora-Badrass, the Grand Duchess of Halgar, Empress of Labyrinthia and Realm Spirit of Glass as a Goddess in her own right. They recognise the fact that the current Empress has become the first Master or Mistress of Primus to truly master the Nagrech. Furthermore, members of this faith venerate the choice that the Empress made in sacrificing her own humanity and mortality to ascend to the position of Realm Spirit of Glass in order to combat the rise of The Spiter in the Sunless Lands. This act is held up as an example of the devotion to the duty of protecting the Empire, its borders and the people who reside within it that all members of the church should aspire to. This church is a goodly faith and represents the Empresses’ moral outlook as a goodly, constructive and peace loving being – violence should genuinely not be the first option. However, it is clearly not pacifistic in that its members are free (and often encouraged) to resort to martial means if necessary in the protection of the Empire and its people or in order to uphold Imperial Law. This faith is currently most commonly followed by those outside the mercenary community, though its influence there is starting to grow. It is also particularly popular within some of the most fervent of the legions within the Bastion.\n\nMIRACLE LIST 1st Halt (N) Dismiss Zombie (G) 2nd Halt Undead (G), Cure Serious (G) 3rd Protection from Spirits (N), Spirit Shield (N) Talk to Spirit, (N) Bless, (G) Dismiss Ghoul, (G) 4th Heal (G) 5th VoP (N) Spirit Invis (N) Dismiss Wraith (G) 6th Total Heal (G) Dismiss Vampire (G) 7th Pure Force (N)",
     "MiracleList": {
-      "1": ["Halt", "Dismiss Zombie"],
-      "2": ["Halt Undead", "Cure Serious Wounds"],
+      "1": [
+        "Halt",
+        "Dismiss Zombie"
+      ],
+      "2": [
+        "Halt Undead",
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Bless",
         "Spirit Shield",
@@ -1897,10 +2037,21 @@
         "Talk to Spirit",
         "Dismiss Ghoul"
       ],
-      "4": ["Heal"],
-      "5": ["Voice of Power", "Spiritual Invisibility", "Dismiss Wraith"],
-      "6": ["Total Heal", "Dismiss Vampire"],
-      "7": ["Pure Force"]
+      "4": [
+        "Heal"
+      ],
+      "5": [
+        "Voice of Power",
+        "Spiritual Invisibility",
+        "Dismiss Wraith"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "7": [
+        "Pure Force"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -1989,17 +2140,25 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good"]
+          "Value": [
+            "Good"
+          ]
         }
       ]
     }
@@ -2015,22 +2174,33 @@
         "Milly's Detect Spirits",
         "Spirit of Seeing"
       ],
-      "2": ["Spirit of Seeing and Hearing"],
+      "2": [
+        "Spirit of Seeing and Hearing"
+      ],
       "3": [
         "Detect Lie",
         "Spirit Shield",
         "Protection from Spirits",
         "Talk to Spirit"
       ],
-      "4": ["Major Prayer", "Rune of Power", "Spirit Bolt", "Communication"],
+      "4": [
+        "Major Prayer",
+        "Rune of Power",
+        "Spirit Bolt",
+        "Communication"
+      ],
       "5": [
         "Identify Spirit",
         "Spiritual Invisibility",
         "Voice of Power",
         "Remove Voice of Power"
       ],
-      "6": ["Control Wraith"],
-      "8": ["Greater Communication"]
+      "6": [
+        "Control Wraith"
+      ],
+      "8": [
+        "Greater Communication"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2131,17 +2301,25 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Neutral"]
+          "Value": [
+            "Neutral"
+          ]
         }
       ]
     }
@@ -2156,8 +2334,16 @@
     "Restrictions": "• Should a member become Outlawed or Ostracised by the Empire they are automatically excommunicated until the matter is resolved. In game terms they cannot cast any miracle from the Church list, nor miracles learnt whilst a member. However this does not trigger Dedicated Power restrictions unless the individual refuses to hand themselves in for trial.\n• Note: The Lord of Feldraken Isle can remove the High Priest from their role if they are not acting in the best interest of the Church, or simply fails to fulfil their duties.",
     "Type": "professional",
     "MiracleList": {
-      "1": ["Soul's Hunger", "Halt", "Lesser Wings Of Darkness"],
-      "2": ["Cause Wound", "Animate Zombie", "Halt Undead"],
+      "1": [
+        "Soul's Hunger",
+        "Halt",
+        "Lesser Wings Of Darkness"
+      ],
+      "2": [
+        "Cause Wound",
+        "Animate Zombie",
+        "Halt Undead"
+      ],
       "3": [
         "Curse",
         "Spirit Shield",
@@ -2166,10 +2352,22 @@
         "Cause Serious Wounds",
         "Animate skeleton"
       ],
-      "4": ["Cause Disease", "Create Ghoul", "Cause Fear", "Control Ghoul"],
-      "5": ["Cause Grievous Wounds"],
-      "6": ["Summon Wraith", "Cause Critical wounds"],
-      "7": ["Suspend Life"]
+      "4": [
+        "Cause Disease",
+        "Create Ghoul",
+        "Cause Fear",
+        "Control Ghoul"
+      ],
+      "5": [
+        "Cause Grievous Wounds"
+      ],
+      "6": [
+        "Summon Wraith",
+        "Cause Critical wounds"
+      ],
+      "7": [
+        "Suspend Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2264,17 +2462,26 @@
         {
           "Field": "Class|Bracket",
           "Operator": "In",
-          "Value": ["Unholy Champion", "🙏 Priest"]
+          "Value": [
+            "Unholy Champion",
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Evil"]
+          "Value": [
+            "Evil"
+          ]
         }
       ]
     }
@@ -2294,7 +2501,9 @@
         "Power Meld",
         "Spirit of Seeing"
       ],
-      "2": ["Cure Serious"],
+      "2": [
+        "Cure Serious"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2303,10 +2512,22 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": ["Heal", "Spirit Bolt"],
-      "5": ["Dismiss Wraith", "Voice of Power", "Spiritual Invisibility"],
-      "6": ["Total Heal", "Dismiss Vampire"],
-      "8": ["Restore Life"]
+      "4": [
+        "Heal",
+        "Spirit Bolt"
+      ],
+      "5": [
+        "Dismiss Wraith",
+        "Voice of Power",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2382,17 +2603,25 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good"]
+          "Value": [
+            "Good"
+          ]
         }
       ]
     }
@@ -2406,8 +2635,15 @@
     "PreRequisites": "Be a goodly weapons-wielding priest (not pure priest, hospitaller, armoured priest), or a paladin",
     "Ethos": "Mortai is the brother god of Shaehan, and her defender. He strongly believes in the sanctity of life, and is the overseer of Undead across the planes. His role is to ensure that they do not stray outside the restrictions to which they are bound, by invading the dead bodies of mortals or otherwise seeking to take revenge on living spirits. His priests are expected to harm no living thing except where it is essential to defend a life, although those who raise Undead are an exception to this rule and may be acted against as the priest sees fit. Undead must be returned to their own plane, by force if necessary, and trapped mortal bodies freed from their corruption. Antagonistic daemonkind should also be destroyed or banished, as their spirits are also perversions of lost souls and they are drawn to harm the living.\n\nMIRACLE LIST 1st Dismiss Zombie, Cure Wound 2nd Dismiss Skeleton, Halt Undead, Cure Serious Wounds 3rd Dismiss Ghoul, Protection from Spirits, Talk to Spirits, Spirit Shield, Cure Disease, Bless 4th Spirit Bolt, Heal, Dismiss Mummy 5th Spiritual Invisibility, Dismiss Wraith 6th Total Heal, Dismiss Vampire 7th Dismiss Level 7 Undead",
     "MiracleList": {
-      "1": ["Dismiss Zombie", "Cure Wound"],
-      "2": ["Dismiss Skeleton", "Halt Undead", "Cure Serious Wounds"],
+      "1": [
+        "Dismiss Zombie",
+        "Cure Wound"
+      ],
+      "2": [
+        "Dismiss Skeleton",
+        "Halt Undead",
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2416,10 +2652,22 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": ["Heal", "Spirit Bolt", "Dismiss Mummy"],
-      "5": ["Dismiss Wraith", "Spiritual Invisibility"],
-      "6": ["Total Heal", "Dismiss Vampire"],
-      "8": ["Dismiss Level 7 Undead"]
+      "4": [
+        "Heal",
+        "Spirit Bolt",
+        "Dismiss Mummy"
+      ],
+      "5": [
+        "Dismiss Wraith",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Dismiss Level 7 Undead"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2502,22 +2750,35 @@
         {
           "Field": "Class|Bracket",
           "Operator": "In",
-          "Value": ["Paladin", "🙏 Priest"]
+          "Value": [
+            "Paladin",
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good"]
+          "Value": [
+            "Good"
+          ]
         },
         {
           "Field": "Class",
           "Operator": "NotIn",
-          "Value": ["Pure-Priest", "Hospitaller", "Armoured Priest"]
+          "Value": [
+            "Pure-Priest",
+            "Hospitaller",
+            "Armoured Priest"
+          ]
         }
       ]
     }
@@ -2531,8 +2792,14 @@
     },
     "Type": "professional",
     "MiracleList": {
-      "1": ["Cure Wound", "Detect Spirit's Nature", "Halt"],
-      "2": ["Cure Serious Wounds"],
+      "1": [
+        "Cure Wound",
+        "Detect Spirit's Nature",
+        "Halt"
+      ],
+      "2": [
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2541,14 +2808,22 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": ["Heal"],
+      "4": [
+        "Heal"
+      ],
       "5": [
         "Dismiss Wraith",
         "Spiritual Invisibility",
         "Remove Fear and Paralysis"
       ],
-      "6": ["Total Heal", "Dismiss Vampire", "Spiritual Freedom"],
-      "8": ["Restore Life"]
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire",
+        "Spiritual Freedom"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2593,7 +2868,10 @@
         {
           "Name": "Strengthened",
           "Type": "Life",
-          "Amount": [4, 2],
+          "Amount": [
+            4,
+            2
+          ],
           "Source": "Guild",
           "Key": "ability.guild.church-of-shaehan.strengthened",
           "AbilityRef": "ability.guild.church-of-shaehan.strengthened"
@@ -2628,17 +2906,28 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hospitaller", "Pure-Priest", "Shaman", "Armoured Priest"]
+          "Value": [
+            "Hospitaller",
+            "Pure-Priest",
+            "Shaman",
+            "Armoured Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good"]
+          "Value": [
+            "Good"
+          ]
         },
         {
           "Field": "Class",
@@ -2670,7 +2959,9 @@
         "Power Meld",
         "Spirit of Seeing"
       ],
-      "2": ["Cure Serious Wounds"],
+      "2": [
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2679,10 +2970,22 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": ["Heal", "Spirit Bolt"],
-      "5": ["Dismiss Wraith", "Voice of Power", "Spiritual Invisibility"],
-      "6": ["Total Heal", "Dismiss Vampire"],
-      "8": ["Restore Life"]
+      "4": [
+        "Heal",
+        "Spirit Bolt"
+      ],
+      "5": [
+        "Dismiss Wraith",
+        "Voice of Power",
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2690,7 +2993,10 @@
           "Name": "Stamina Blessing of St Michael",
           "AbilityRef": "ability.6-2-stamina.1",
           "Type": "Life",
-          "Amount": [3, 1],
+          "Amount": [
+            3,
+            1
+          ],
           "Effect": "Gains +3/1 life from the blessing of St Michael.",
           "Source": "Guild",
           "Key": "ability.6-2-stamina.1"
@@ -2727,7 +3033,10 @@
           "Name": "Stamina Blessing of St Michael",
           "AbilityRef": "ability.6-2-stamina.1",
           "Type": "Update",
-          "Amount": [6, 2],
+          "Amount": [
+            6,
+            2
+          ],
           "Effect": "Gains +6/2 life from the blessing of St Michael.",
           "Source": "Guild",
           "Key": "ability.6-2-stamina.1"
@@ -2755,17 +3064,25 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good"]
+          "Value": [
+            "Good"
+          ]
         }
       ]
     }
@@ -2775,8 +3092,14 @@
     "PreRequisites": "Goodly Humans and Dwarven Priests. Other races may be accepted at the discretion of the High Priest on an individual basis.",
     "Ethos": "The Soul forger forged the dwarven race from iron and mithril, and then breathed life into them as they cooled upon his forge. Priests of the Soul Forger are charged with upholding the dwarven virtues of law and light, and with guiding their people in the arts the dwarves hold dear. The dwarves have always revered the Master of the Forge, attempting to emulate his masterful work with metals and stone. Honesty and hard work pay off just as often in the mines and the forges, as they do on the battlefield, or so the dwarves claim. As such all priests of the Soul Forger are encouraged to spend at least some of their time at a forge learning and honing their skills.",
     "MiracleList": {
-      "1": ["Cure Wound", "Detect Spirit's Nature"],
-      "2": ["Cure Serious Wounds", "Spirit of Seeing and Hearing"],
+      "1": [
+        "Cure Wound",
+        "Detect Spirit's Nature"
+      ],
+      "2": [
+        "Cure Serious Wounds",
+        "Spirit of Seeing and Hearing"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2786,10 +3109,22 @@
         "Dismiss Ghoul",
         "Healing Hand"
       ],
-      "4": ["Heal", "Spirit Bolt", "Passive Heal", "Communication"],
-      "5": ["Spiritual Invisibility"],
-      "6": ["Total Heal", "Dismiss Vampire"],
-      "8": ["Restore Life"]
+      "4": [
+        "Heal",
+        "Spirit Bolt",
+        "Passive Heal",
+        "Communication"
+      ],
+      "5": [
+        "Spiritual Invisibility"
+      ],
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -2816,30 +3151,86 @@
           "AbilityRef": "ability.guild.church-of-the-soul-forger.blessings-of-the-forge"
         }
       ],
-      "Intermediate": [],
-      "Advanced": []
+      "Intermediate": [
+        {
+          "Name": "Bonds of the Soul",
+          "Type": "Update",
+          "Effect": "No longer limited to 4 spirits, and will always grant a minimum of 4 spirits.",
+          "Key": "ability.guild.church-of-the-soul-forger.bonds-of-the-soul",
+          "AbilityRef": "ability.guild.church-of-the-soul-forger.bonds-of-the-soul"
+        },
+        {
+          "Name": "The Master Forge continues to provide",
+          "Type": "Update",
+          "Effect": "One of the objects from The Master Forge Provides (basic tier) is now journeyman status. If Blessing of the Forge is used on it then it becomes master status.",
+          "Key": "ability.guild.church-of-the-soul-forger.the-master-forge-continues-to-provide",
+          "AbilityRef": "ability.guild.church-of-the-soul-forger.the-master-forge-continues-to-provide"
+        },
+        {
+          "Name": "Forges Light",
+          "Type": "Innate",
+          "Count": 1,
+          "Effect": "Enhances a single casting of Passive Heal so that it lasts until triggered.",
+          "Key": "ability.guild.church-of-the-soul-forger.forges-light",
+          "AbilityRef": "ability.guild.church-of-the-soul-forger.forges-light"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "The Masters Forge",
+          "Type": "Update",
+          "Effect": "Two of the objects gained are now journeyman status objects as intermediate tier. Alternatively can take a single object from the list as master status.",
+          "Key": "ability.guild.church-of-the-soul-forger.the-masters-forge",
+          "AbilityRef": "ability.guild.church-of-the-soul-forger.the-masters-forge"
+        },
+        {
+          "Name": "Blessings of the Forge",
+          "Type": "Update",
+          "Effect": "If using Blessing of the Forge on a suit of armour it also grants that armour immunity to accuracy.",
+          "Key": "ability.guild.church-of-the-soul-forger.blessings-of-the-forge",
+          "AbilityRef": "ability.guild.church-of-the-soul-forger.blessings-of-the-forge"
+        },
+        {
+          "Name": "Forges Light",
+          "Type": "Update",
+          "Effect": "The passive heal can now be set to only trigger when a Crit or TBLP reaches 0. This is chosen when cast.",
+          "Key": "ability.guild.church-of-the-soul-forger.forges-light",
+          "AbilityRef": "ability.guild.church-of-the-soul-forger.forges-light"
+        }
+      ]
     },
     "Availability": {
       "Rules": [
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": ["Human", "Dwarf"]
+          "Value": [
+            "Human",
+            "Dwarf"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good"]
+          "Value": [
+            "Good"
+          ]
         }
       ]
     },
@@ -2856,8 +3247,13 @@
       "$ref": "Blessing of the Aspects of Hope"
     },
     "MiracleList": {
-      "1": ["Cure Wound", "Halt"],
-      "2": ["Cure Serious Wounds"],
+      "1": [
+        "Cure Wound",
+        "Halt"
+      ],
+      "2": [
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2865,14 +3261,23 @@
         "Protection from Spirits",
         "Bless"
       ],
-      "4": ["Heal", "Spirit Bolt"],
+      "4": [
+        "Heal",
+        "Spirit Bolt"
+      ],
       "5": [
         "Spiritual Invisibility",
         "Voice of Power",
         "Remove Voice of Power"
       ],
-      "6": ["Total Heal", "Dismiss Vampire", "Regeneration"],
-      "8": ["Restore Life"]
+      "6": [
+        "Total Heal",
+        "Dismiss Vampire",
+        "Regeneration"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -3123,12 +3528,18 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good"]
+          "Value": [
+            "Good"
+          ]
         }
       ]
     }
@@ -3141,8 +3552,14 @@
     "PreRequisites": "Any Evil Priest can join this guild.",
     "Ethos": "The Tryst is a church that takes spiritual power from the Imbaiu demons. It is important to understand that the church do not serve the Imbaiu, but binds, dominates and commands them. References to the Imbaiu Masters refer to those Imbaiu with mastery over lesser demons. The Imbaiu Masters that accept the bindings of the church do so because this link to Primus gives them strength upon their own worlds that they use to remain at the top of their demonic hierarchy.\n\nPRE-REQUISITES Any Evil Priest can join this guild.\n\nMIRACLE LIST 1st Halt, Power Meld, 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Curse, Talk to Spirits, Spirit Shield, Cause Serious Wounds, Protection From Spirits 4th Spirit Shift, Spirit Bolt, Cause Disease, Create Ghoul 5th Spiritual Invisibility, Cause Grievous Wounds 6th Control Wraith, Serin’s Bound Spirit of Undeath, Walk Through Walls 7th Suspend Life",
     "MiracleList": {
-      "1": ["Halt", "Power Meld"],
-      "2": ["Cause Wound", "Spirit of Seeing and Hearing"],
+      "1": [
+        "Halt",
+        "Power Meld"
+      ],
+      "2": [
+        "Cause Wound",
+        "Spirit of Seeing and Hearing"
+      ],
       "3": [
         "Curse",
         "Talk to Spirit",
@@ -3150,14 +3567,24 @@
         "Cause Serious Wounds",
         "Protection From Spirits"
       ],
-      "4": ["Spirit Bolt", "Spirit Shift", "Cause Disease", "Create Ghoul"],
-      "5": ["Spiritual Invisibility", "Cause Grievous Wounds"],
+      "4": [
+        "Spirit Bolt",
+        "Spirit Shift",
+        "Cause Disease",
+        "Create Ghoul"
+      ],
+      "5": [
+        "Spiritual Invisibility",
+        "Cause Grievous Wounds"
+      ],
       "6": [
         "Control Wraith",
         "Serin's Bound Spirit of Undeath",
         "Walk Through Walls"
       ],
-      "7": ["Suspend Life"]
+      "7": [
+        "Suspend Life"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -3199,9 +3626,16 @@
           "Name": "Invoke the abysmal power",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "can turn a published evil miracle demonic (black/red/evil spirit) taking 10 seconds ritual/calling on the Imb aiu per spirit of the miracle. If used for a TOD /animate life/similar miracle that requires a prot this also allows the prot to be cast mantically (taking an extra 30 seconds prep).",
+          "Effect": "Can turn a published evil miracle demonic (black/red/evil spirit) taking 10 seconds ritual/calling on the Imbaiu per spirit of the miracle. If used for a TOD/animate life/similar miracle that requires a prot this also allows the prot to be cast mantically (taking an extra 30 seconds prep).",
           "Key": "ability.guild.church-of-the-tryst.invoke-the-abysmal-power",
           "AbilityRef": "ability.guild.church-of-the-tryst.invoke-the-abysmal-power"
+        },
+        {
+          "Name": "Shadow of the Imbaiu",
+          "Type": "Update",
+          "Effect": "Now acts as a full embody abashi (including disadvantages) but does not grant 12 spirits.",
+          "Key": "ability.guild.church-of-the-tryst.shadow-of-the-imbaiu",
+          "AbilityRef": "ability.guild.church-of-the-tryst.shadow-of-the-imbaiu"
         }
       ]
     },
@@ -3210,17 +3644,25 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Evil"]
+          "Value": [
+            "Evil"
+          ]
         }
       ]
     }
@@ -3233,8 +3675,13 @@
     "PreRequisites": "• Any Evil Priest Subclass, Hermits and the alike may choose to keep their own lists, Unholy Champions may also join.\n• Any member that worships a God of their own free will, will be excommunicated.",
     "Ethos": "A Dark faith built upon the darkest whispers of the world, this church worships the malevolence woven into the fabric of existence itself.\nCore Belief: The world is a tainted and imperfect place, not because of chance, but because darkness is intrinsic to its nature. Evil spirits are not aberration - they are the world’s architects, unseen but ever-present.\nThe hearts of men, with greed, hatred and ambition, are merely conduits for this eternal corruption. To resist is folly, to embrace is power.\nIt was through Treare The Ghoul Lord's teachings that when Lord Waste left, it was him that swore never to follow a god again and find the true path to power, strength through the darkness that lives in all souls and this is what followers draw upon.\nCorruption Is Truth: Purity is a myth fed to the weak. All things decay, and the strong must harness the inevitable rot.\nThe Will of Shadows: Evil spirits, lurking beyond mortal sight, whisper their desires into the ears of men, the faithful must listen and act.\nLast words of the High Priest: Darkness is everywhere, bind it and learn control. Killing randomly and without thinking is disliked by the current leadership and harming peons is such a waste as they are a source of our strength.",
     "MiracleList": {
-      "1": ["Halt", "Spirit of Seeing"],
-      "2": ["Cause Wound"],
+      "1": [
+        "Halt",
+        "Spirit of Seeing"
+      ],
+      "2": [
+        "Cause Wound"
+      ],
       "3": [
         "Cause Serious Wounds",
         "Talk to Spirit",
@@ -3242,15 +3689,25 @@
         "Protection From Spirits",
         "Curse"
       ],
-      "4": ["Spirit Shift", "Cause Disease", "Control Ghoul"],
+      "4": [
+        "Spirit Shift",
+        "Cause Disease",
+        "Control Ghoul"
+      ],
       "5": [
         "Spiritual Invisibility",
         "Cause Grievous Wounds",
         "Voice of Power"
       ],
-      "6": ["Control Wraith"],
-      "7": ["Suspend Life"],
-      "8": ["Touch of Death"]
+      "6": [
+        "Control Wraith"
+      ],
+      "7": [
+        "Suspend Life"
+      ],
+      "8": [
+        "Touch of Death"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -3327,17 +3784,26 @@
         {
           "Field": "Class|Bracket",
           "Operator": "In",
-          "Value": ["Unholy Champion", "🙏 Priest"]
+          "Value": [
+            "Unholy Champion",
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Chaotic", "Neutral", "Lawful"]
+          "Value": [
+            "Chaotic",
+            "Neutral",
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Evil"]
+          "Value": [
+            "Evil"
+          ]
         }
       ]
     }
@@ -3354,7 +3820,10 @@
         "Soul's Hunger",
         "Milly's Detect Spirits"
       ],
-      "2": ["Cause Wound", "Spirit of Seeing and Hearing"],
+      "2": [
+        "Cause Wound",
+        "Spirit of Seeing and Hearing"
+      ],
       "3": [
         "Spirit Shield",
         "Cause Serious Wounds",
@@ -3362,15 +3831,24 @@
         "Writhe",
         "Force of Will"
       ],
-      "4": ["Spirit Bolt", "Cause Disease"],
+      "4": [
+        "Spirit Bolt",
+        "Cause Disease"
+      ],
       "5": [
         "Voice of Power",
         "Spiritual Invisibility",
         "Cause Grievous Wounds"
       ],
-      "6": ["Spiritual Mastery"],
-      "7": ["Suspend Life"],
-      "8": ["Touch of Death"]
+      "6": [
+        "Spiritual Mastery"
+      ],
+      "7": [
+        "Suspend Life"
+      ],
+      "8": [
+        "Touch of Death"
+      ]
     },
     "Benefits": {
       "Basic": [
@@ -3416,17 +3894,25 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Lawful", "Neutral", "Chaotic"]
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Evil"]
+          "Value": [
+            "Evil"
+          ]
         }
       ]
     },
@@ -3515,7 +4001,10 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Wizard", "High-Wizard"]
+          "Value": [
+            "Wizard",
+            "High-Wizard"
+          ]
         }
       ]
     }
@@ -3624,7 +4113,9 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🧙 Wizard"]
+          "Value": [
+            "🧙 Wizard"
+          ]
         }
       ]
     }
@@ -3646,7 +4137,10 @@
         {
           "Name": "Combat Hardened",
           "Type": "Life",
-          "Amount": [3, 1],
+          "Amount": [
+            3,
+            1
+          ],
           "Source": "Guild",
           "Key": "ability.guild.frontline.combat-hardened",
           "AbilityRef": "ability.guild.frontline.combat-hardened"
@@ -3663,7 +4157,10 @@
         {
           "Name": "Combat Hardened",
           "Type": "Update",
-          "Amount": [9, 3],
+          "Amount": [
+            9,
+            3
+          ],
           "Source": "Guild",
           "Key": "ability.guild.frontline.combat-hardened.2",
           "AbilityRef": "ability.guild.frontline.combat-hardened.2"
@@ -3689,7 +4186,10 @@
         {
           "Name": "Combat Hardened",
           "Type": "Update",
-          "Amount": [12, 4],
+          "Amount": [
+            12,
+            4
+          ],
           "Source": "Guild",
           "Key": "ability.guild.frontline.combat-hardened.3",
           "AbilityRef": "ability.guild.frontline.combat-hardened.3"
@@ -3703,7 +4203,8 @@
           "Overrides": {
             "DisplayName": "The Battle Line",
             "Effect": "1/day, gains the linked Battle Line immunities for 5 minutes and may be used in response to an effect (cf War Cry within 2 seconds)."
-          }
+          },
+          "Key": "ability.guild.frontline.advanced-1"
         },
         {
           "GrantId": "frontline.advanced.the-battle-line.repels",
@@ -3713,7 +4214,8 @@
           "Overrides": {
             "DisplayName": "The Battle Line: Immunity to Repels",
             "Effect": "Granted while The Battle Line is active for 5 minutes."
-          }
+          },
+          "Key": "ability.guild.frontline.advanced-1"
         },
         {
           "GrantId": "frontline.advanced.the-battle-line.imt",
@@ -3723,7 +4225,8 @@
           "Overrides": {
             "DisplayName": "The Battle Line: Immunity to Involuntary Mystical Transportation",
             "Effect": "Granted while The Battle Line is active for 5 minutes."
-          }
+          },
+          "Key": "ability.guild.frontline.advanced-1"
         },
         {
           "GrantId": "frontline.advanced.the-battle-line.fumble-disarm",
@@ -3733,7 +4236,8 @@
           "Overrides": {
             "DisplayName": "The Battle Line: Immunity to Supernatural Fumble/Disarm",
             "Effect": "Granted while The Battle Line is active for 5 minutes."
-          }
+          },
+          "Key": "ability.guild.frontline.advanced-1"
         },
         {
           "Name": "Strength in Numbers",
@@ -3749,7 +4253,9 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🛡️ Warrior"]
+          "Value": [
+            "🛡️ Warrior"
+          ]
         }
       ]
     }
@@ -3760,6 +4266,13 @@
     "Ethos": "The Hovel is a guild made up of hermits, witches and anyone who draws power not from the gods or other patrons, instead choosing to draw power as it flows freely in the world and through personal prayer. Gathering so as to seek, to learn and teach each other. Growing more powerful together than apart. This was the concept of a strange little fellow called Raymond, who, still guides us all in the journey of life. So, feel free to join, feel free to worship as you wish... all who have no church or doctrine are welcome here.",
     "Benefits": {
       "Basic": [
+        {
+          "Name": "Witch's Alignment",
+          "Type": "Static",
+          "Effect": "When casting a bless or curse can choose to count as being goodly, neutral, or evil.",
+          "Key": "ability.guild.the-hovel.witch-s-alignment",
+          "AbilityRef": "ability.guild.the-hovel.witch-s-alignment"
+        },
         {
           "Name": "Hovels Strength",
           "Type": "Static",
@@ -3782,7 +4295,36 @@
           "AbilityRef": "ability.guild.the-hovel.familiar"
         }
       ],
-      "Intermediate": [],
+      "Intermediate": [
+        {
+          "Name": "Hovels Strength",
+          "Type": "Update",
+          "Effect": "Now grants a minimum of 4 spirits.",
+          "Key": "ability.guild.the-hovel.hovels-strength",
+          "AbilityRef": "ability.guild.the-hovel.hovels-strength"
+        },
+        {
+          "Name": "Coven of the Hovel",
+          "Type": "Update",
+          "Effect": "Now works for all published miracles within normal scripture of faith rules.",
+          "Key": "ability.guild.the-hovel.coven-of-the-hovel",
+          "AbilityRef": "ability.guild.the-hovel.coven-of-the-hovel"
+        },
+        {
+          "Name": "Power Meld of the Hovel",
+          "Type": "Static",
+          "Effect": "If casting power meld on a fellow member of the hovel the caster/recipient levels and alignment no longer matter. Additionally the number of spirits taken can be determined at the time of casting.",
+          "Key": "ability.guild.the-hovel.power-meld-of-the-hovel",
+          "AbilityRef": "ability.guild.the-hovel.power-meld-of-the-hovel"
+        },
+        {
+          "Name": "Familiar Speech",
+          "Type": "Static",
+          "Effect": "May now talk to animals of their familiar type as per Talk to Animal evocation.",
+          "Key": "ability.guild.the-hovel.familiar-speech",
+          "AbilityRef": "ability.guild.the-hovel.familiar-speech"
+        }
+      ],
       "Advanced": [
         {
           "Name": "Witches Broom",
@@ -3821,7 +4363,9 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         }
       ]
     }
@@ -3888,7 +4432,9 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🧠 Neuro"]
+          "Value": [
+            "🧠 Neuro"
+          ]
         }
       ]
     }
@@ -3925,6 +4471,20 @@
       ],
       "Intermediate": [
         {
+          "Name": "Circle of Druids",
+          "Type": "Update",
+          "Effect": "Now grants a minimum of 1 level of EP.",
+          "Key": "ability.guild.natural-trust.circle-of-druids",
+          "AbilityRef": "ability.guild.natural-trust.circle-of-druids"
+        },
+        {
+          "Name": "Life's Memories",
+          "Type": "Update",
+          "Effect": "Innate Life's Memories from basic tier can now be upgraded to a Toughened Hide if desired.",
+          "Key": "ability.guild.natural-trust.life-s-memories",
+          "AbilityRef": "ability.guild.natural-trust.life-s-memories"
+        },
+        {
           "Name": "Draw on EP",
           "AbilityRef": "ability.draw-on-earthpower",
           "Type": "Innate",
@@ -3935,12 +4495,26 @@
       ],
       "Advanced": [
         {
+          "Name": "Chosen Familiar",
+          "Type": "Update",
+          "Effect": "Now grants a second ability from the list.",
+          "Key": "ability.guild.natural-trust.chosen-familiar",
+          "AbilityRef": "ability.guild.natural-trust.chosen-familiar"
+        },
+        {
           "Name": "Hand of Banishment",
           "Type": "Innate",
           "Count": 1,
           "Effect": "as post 8th druid tables). When using this innate can reduce the life suffered by sacrificing levels of resistance for 1 hour. Each level reduces the life by 5.",
           "Key": "ability.guild.natural-trust.hand-of-banishment",
           "AbilityRef": "ability.guild.natural-trust.hand-of-banishment"
+        },
+        {
+          "Name": "Master of Memories",
+          "Type": "Static",
+          "Effect": "Objects under Life's Memories from basic tier (or Toughened Hide if intermediate tier upgrade is used) are now considered master status.",
+          "Key": "ability.guild.natural-trust.master-of-memories",
+          "AbilityRef": "ability.guild.natural-trust.master-of-memories"
         }
       ]
     },
@@ -3949,7 +4523,9 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🌿 Druid"]
+          "Value": [
+            "🌿 Druid"
+          ]
         }
       ]
     }
@@ -3972,7 +4548,8 @@
             "DisplayName": "Shadow Legion!",
             "Verbal": "Shadow Legion!",
             "Effect": "War cry with verbal `Shadow Legion!` 1/day"
-          }
+          },
+          "Key": "ability.guild.shadow-legion.basic-1"
         },
         {
           "GrantId": "shadow-legion.basic.first-aid",
@@ -3982,7 +4559,8 @@
           "Overrides": {
             "DisplayName": "First Aid",
             "Effect": "Character gains 15pts of Bandage Curing. As monk loc but requires bandaging not massage."
-          }
+          },
+          "Key": "ability.guild.shadow-legion.basic-1"
         },
         {
           "Name": "Improvised Weaponry",
@@ -3999,7 +4577,8 @@
           "Source": "Guild",
           "Overrides": {
             "Effect": "Character gains 1/3rd of their TBLP as 'bandaging', with phys-repped bandages this cures the location 1pt per 'bandaging' spent."
-          }
+          },
+          "Key": "ability.guild.shadow-legion.basic-1"
         },
         {
           "Name": "+3/1 life",
@@ -4034,7 +4613,8 @@
           "Overrides": {
             "DisplayName": "Battle Fury",
             "Effect": "Coldrage 1/Day"
-          }
+          },
+          "Key": "ability.guild.shadow-legion.intermediate-1"
         },
         {
           "GrantId": "shadow-legion.intermediate.shadow-legion-upgrade",
@@ -4050,7 +4630,9 @@
               "Verbal": "Shadow Legion!",
               "Effect": "Whilst using the Shadow Legion War Cry above may also ignore other listed stopping effects for the duration for 6tblp/fx as per Determination."
             }
-          }
+          },
+          "Key": "ability.guild.shadow-legion.intermediate-1",
+          "AbilityRef": "ability.guild.shadow-legion.intermediate-1"
         },
         {
           "Name": "Hardened Body",
@@ -4067,7 +4649,8 @@
           "Source": "Guild",
           "Overrides": {
             "Effect": "Character gains 1/3rd of their TBLP as 'bandaging', with phys-repped bandages this cures the location 1pt per 'bandaging' spent."
-          }
+          },
+          "Key": "ability.guild.shadow-legion.intermediate-1"
         },
         {
           "Name": "+6/2 life",
@@ -4102,7 +4685,9 @@
           "Overrides": {
             "DisplayName": "Shadow Legion!",
             "Verbal": "Shadow Legion!"
-          }
+          },
+          "Key": "ability.guild.shadow-legion.advanced-1",
+          "AbilityRef": "ability.guild.shadow-legion.advanced-1"
         },
         {
           "Name": "Legion's Blow",
@@ -4143,7 +4728,8 @@
           "Source": "Guild",
           "Overrides": {
             "Effect": "Character gains 1/3rd of their TBLP as 'bandaging', with phys-repped bandages this cures the location 1pt per 'bandaging' spent."
-          }
+          },
+          "Key": "ability.guild.shadow-legion.advanced-1"
         },
         {
           "Name": "+9/3 life",
@@ -4167,7 +4753,9 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🛡️ Warrior"]
+          "Value": [
+            "🛡️ Warrior"
+          ]
         }
       ]
     }
@@ -4203,7 +4791,8 @@
           "Overrides": {
             "DisplayName": "Family Strength",
             "Effect": "1/day can enhance a published Ivory or Gold spell (without any non-standard enhancements) to have +50% effect if numerical (e.g. Ivory Warriors) or +50% duration if not (e.g. Ivory Armour) when cast on self or a fellow guild member."
-          }
+          },
+          "Key": "ability.guild.sons-and-daughters-of-sirac.intermediate-1"
         },
         {
           "GrantId": "sons-and-daughters-of-sirac.intermediate-self-only-on-other",
@@ -4214,7 +4803,8 @@
           "Overrides": {
             "DisplayName": "Those aligned to Harmony can cast a published self only Gold spell on a fellow guild member",
             "Effect": "1/day can use a published self only beneficial Gold ability on another willing guild member."
-          }
+          },
+          "Key": "ability.guild.sons-and-daughters-of-sirac.intermediate-1"
         }
       ],
       "Advanced": []
@@ -4224,12 +4814,16 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🧙 Wizard"]
+          "Value": [
+            "🧙 Wizard"
+          ]
         },
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": ["Magic Kin"]
+          "Value": [
+            "Magic Kin"
+          ]
         }
       ]
     }
@@ -4295,7 +4889,9 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["⚔ Scout"]
+          "Value": [
+            "⚔ Scout"
+          ]
         }
       ]
     }
@@ -4438,7 +5034,9 @@
         {
           "Field": "PeopleType",
           "Operator": "NotIn",
-          "Value": ["Tribal"]
+          "Value": [
+            "Tribal"
+          ]
         }
       ]
     }
@@ -4565,7 +5163,9 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": ["Magic Kin"]
+          "Value": [
+            "Magic Kin"
+          ]
         }
       ]
     }
@@ -4576,7 +5176,9 @@
     "Restrictions": "Modern Laws- No member of the Council of Jade may be outlawed, if they become so they no longer gain any benefits until the crime is resolved at which time they may appeal to the Council for full membership again (only by the Guild Sire’s approval).\n\nUnified Council - No member may attack or bring purposeful harm to another member, should this come to be they lose all benefits until the incident is resolved at which time they may appeal to the Council for full membership again (only by the Guild Sire’s approval). Any disagreements will be civilly dealt with by the Leaders of the Council; their decision is final in every case. The only exception in this rule will be cases of Seppuku. All cases of this restriction can be judged and dealt with by the Council Leaders in the same fashion as the outlaw restriction\n\nOnce Clan always Clan - Once you have joined the Council you may never leave unless expelled by a unified vote of the council (rebirthing releases you also).",
     "Type": "social",
     "Benefits": {
-      "Basic": ["Clan chosen on creation"],
+      "Basic": [
+        "Clan chosen on creation"
+      ],
       "Intermediate": [],
       "Advanced": []
     },
@@ -4585,7 +5187,9 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": ["Amlesian"]
+          "Value": [
+            "Amlesian"
+          ]
         }
       ]
     }
@@ -4639,7 +5243,8 @@
           "Overrides": {
             "DisplayName": "The Clan Defenders 1/day (Life)",
             "Effect": "When a member of the guild is unconscious or incapacitated, gains +6/2 life. This lasts 5 minutes or until the threat is resolved, even if the guild member becomes active again."
-          }
+          },
+          "Key": "ability.guild.earthsunder.advanced-1"
         },
         {
           "GrantId": "earthsunder.advanced.the-clan-defenders-war-cry",
@@ -4651,7 +5256,8 @@
           "Overrides": {
             "DisplayName": "The Clan Defenders 1/day (War Cry)",
             "Effect": "When a member of the guild is unconscious or incapacitated, gains an innate War Cry. This lasts 5 minutes or until the threat is resolved, even if the guild member becomes active again."
-          }
+          },
+          "Key": "ability.guild.earthsunder.advanced-1"
         },
         {
           "Name": "Eyes of the Deep",
@@ -4676,17 +5282,26 @@
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": ["Dwarf"]
+          "Value": [
+            "Dwarf"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Lawful", "Neutral", "Chaotic"]
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good", "Neutral"]
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
         }
       ]
     }
@@ -4739,12 +5354,19 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Lawful", "Neutral", "Chaotic"]
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good", "Neutral"]
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
         }
       ]
     }
@@ -4850,17 +5472,26 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": ["Ishmaic"]
+          "Value": [
+            "Ishmaic"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Lawful", "Neutral", "Chaotic"]
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Evil", "Neutral"]
+          "Value": [
+            "Evil",
+            "Neutral"
+          ]
         }
       ]
     }
@@ -4921,12 +5552,19 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Lawful", "Neutral", "Chaotic"]
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good", "Neutral"]
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
         }
       ]
     }
@@ -5081,7 +5719,10 @@
         {
           "Name": "Totemic Markings",
           "Type": "Update",
-          "Amount": [6, 2],
+          "Amount": [
+            6,
+            2
+          ],
           "Source": "Guild",
           "Effect": "Totemic Markings now also grant +6/2 guild life.",
           "Key": "ability.guild.lo-thi.totemic-markings.2",
@@ -5094,22 +5735,33 @@
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": ["Human"]
+          "Value": [
+            "Human"
+          ]
         },
         {
           "Field": "RaceSubtype",
           "Operator": "In",
-          "Value": ["Barbarian"]
+          "Value": [
+            "Barbarian"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Lawful", "Neutral", "Chaotic"]
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good", "Neutral"]
+          "Value": [
+            "Good",
+            "Neutral"
+          ]
         }
       ]
     }
@@ -5151,7 +5803,9 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": ["Tribal"]
+          "Value": [
+            "Tribal"
+          ]
         }
       ]
     }
@@ -5213,7 +5867,8 @@
           "Overrides": {
             "DisplayName": "Mercenaries Unite!",
             "Effect": "Can use a published self only beneficial ability on another willing guild member within 5ft. This could include a war cry, a cast spell, or similar."
-          }
+          },
+          "Key": "ability.guild.the-order-of-mercenaries.advanced-1"
         },
         {
           "Name": "Strength in Numbers",
@@ -5231,7 +5886,9 @@
           "Overrides": {
             "DisplayName": "Mercenaries Unite!",
             "Effect": "Can use a published self only beneficial ability on another willing guild member within 5ft. This could include a war cry, a cast spell, or similar."
-          }
+          },
+          "Key": "ability.guild.the-order-of-mercenaries.advanced-1",
+          "AbilityRef": "ability.guild.the-order-of-mercenaries.advanced-1"
         }
       ]
     },
@@ -5308,7 +5965,8 @@
           "Overrides": {
             "DisplayName": "Panama",
             "Effect": "1/day as per War Cry."
-          }
+          },
+          "Key": "ability.guild.panama-clan.intermediate-1"
         }
       ],
       "Advanced": [
@@ -5362,7 +6020,9 @@
               "DisplayName": "Panama",
               "Effect": "When using the Panama War Cry benefit, can choose to gain immunity to a second listed stopping effect at the time of use."
             }
-          }
+          },
+          "Key": "ability.guild.panama-clan.advanced-1",
+          "AbilityRef": "ability.guild.panama-clan.advanced-1"
         }
       ]
     },
@@ -5371,17 +6031,25 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": ["Amlesian"]
+          "Value": [
+            "Amlesian"
+          ]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Lawful"]
+          "Value": [
+            "Lawful"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good", "Neutral", "Evil"]
+          "Value": [
+            "Good",
+            "Neutral",
+            "Evil"
+          ]
         }
       ]
     }
@@ -5395,8 +6063,8 @@
       "Basic": [
         {
           "Name": "Stabby",
-          "Type": "Static",
-          "Effect": "Gains E skill in daggers",
+          "Type": "WeaponSkill",
+          "Effect": "E (Daggers)",
           "Key": "ability.guild.spider-tribe.stabby",
           "AbilityRef": "ability.guild.spider-tribe.stabby"
         },
@@ -5470,7 +6138,9 @@
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": ["Goblin"]
+          "Value": [
+            "Goblin"
+          ]
         }
       ]
     }
@@ -5514,7 +6184,9 @@
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": ["Ratfolk"]
+          "Value": [
+            "Ratfolk"
+          ]
         }
       ]
     }
@@ -5527,7 +6199,7 @@
     "Benefits": {
       "Basic": [
         {
-          "Name": "Ward against Sin 1/day",
+          "Name": "Ward against Sin",
           "AbilityRef": "ability.war-cry",
           "Type": "Innate",
           "Count": 1,
@@ -5543,20 +6215,88 @@
           "AbilityRef": "ability.guild.the-white-wind.the-white-ribbon"
         }
       ],
-      "Intermediate": [],
-      "Advanced": []
+      "Intermediate": [
+        {
+          "Name": "Ward against Sin",
+          "Type": "Innate",
+          "Count": 2,
+          "Effect": "Gains a second Ward against Sin innate, and can use both at the same time.",
+          "Key": "ability.war-cry",
+          "AbilityRef": "ability.war-cry"
+        },
+        {
+          "Name": "The White Ribbon",
+          "Type": "Innate",
+          "Count": 2,
+          "Effect": "Gains a second The White Ribbon innate.",
+          "Key": "ability.guild.the-white-wind.the-white-ribbon",
+          "AbilityRef": "ability.guild.the-white-wind.the-white-ribbon"
+        },
+        {
+          "Name": "White Ribbon: Protection vs Evil",
+          "Type": "Static",
+          "Effect": "Can use a White Ribbon innate to turn a Protection vs Evil mantic at the point it is cast.",
+          "Key": "ability.guild.the-white-wind.white-ribbon-protection-vs-evil",
+          "AbilityRef": "ability.guild.the-white-wind.white-ribbon-protection-vs-evil"
+        },
+        {
+          "Name": "White Ribbon: Mantic Heal",
+          "Type": "Static",
+          "Effect": "Can use 2 White Ribbon innates (taking one minute prep total) to act as a mantic heal (white/red/good spirit).",
+          "Key": "ability.guild.the-white-wind.white-ribbon-mantic-heal",
+          "AbilityRef": "ability.guild.the-white-wind.white-ribbon-mantic-heal"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Ward against Sin",
+          "Type": "Innate",
+          "Count": 3,
+          "Effect": "Gains a 3rd Ward against Sin innate; can use all 3 at the same time if desired.",
+          "Key": "ability.war-cry",
+          "AbilityRef": "ability.war-cry"
+        },
+        {
+          "Name": "The White Ribbon",
+          "Type": "Innate",
+          "Count": 3,
+          "Effect": "Gains a 3rd The White Ribbon innate.",
+          "Key": "ability.guild.the-white-wind.the-white-ribbon",
+          "AbilityRef": "ability.guild.the-white-wind.the-white-ribbon"
+        },
+        {
+          "Name": "White Ribbon: Redemption",
+          "Type": "Static",
+          "Effect": "If a White Ribbon is used to slayer an evil person on dungeon then the target can choose to have their alignment changed to goodly instead of being slayered. A person redeemed in this way will permanently die if they ever cease to be goodly.",
+          "Key": "ability.guild.the-white-wind.white-ribbon-redemption",
+          "AbilityRef": "ability.guild.the-white-wind.white-ribbon-redemption"
+        },
+        {
+          "Name": "White Ribbon: Final Disruption",
+          "Type": "Static",
+          "Effect": "If a person has a White Ribbon innate left and is slain they can choose to unleash one (max) as a mantic disruption dying effect (goodly spirit, red mana). This uses the innate.",
+          "Key": "ability.guild.the-white-wind.white-ribbon-final-disruption",
+          "AbilityRef": "ability.guild.the-white-wind.white-ribbon-final-disruption"
+        }
+      ]
     },
     "Availability": {
       "Rules": [
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": ["Lawful", "Neutral", "Chaotic"]
+          "Value": [
+            "Lawful",
+            "Neutral",
+            "Chaotic"
+          ]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": ["Good"]
+          "Value": [
+            "Good"
+          ]
         }
       ]
     }
@@ -5571,8 +6311,14 @@
       "Advanced": []
     },
     "MiracleList": {
-      "1": ["Cure Wound", "Summon Spiritual Candles", "Halt"],
-      "2": ["Cure Serious Wounds"],
+      "1": [
+        "Cure Wound",
+        "Summon Spiritual Candles",
+        "Halt"
+      ],
+      "2": [
+        "Cure Serious Wounds"
+      ],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -5581,21 +6327,31 @@
         "Healing Hand",
         "Bless"
       ],
-      "4": ["Heal"],
+      "4": [
+        "Heal"
+      ],
       "5": [
         "Remove Voice of Power",
         "Remove Fear and Paralysis",
         "Spiritual Invisibility"
       ],
-      "6": ["Total Heal", "Spiritual Freedom", "Stronghold of Goodness"],
-      "8": ["Restore Life"]
+      "6": [
+        "Total Heal",
+        "Spiritual Freedom",
+        "Stronghold of Goodness"
+      ],
+      "8": [
+        "Restore Life"
+      ]
     },
     "Availability": {
       "Rules": [
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": ["🙏 Priest"]
+          "Value": [
+            "🙏 Priest"
+          ]
         }
       ]
     },
@@ -5606,9 +6362,85 @@
   "Alguz": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Enlightened I",
+          "Type": "Static",
+          "Effect": "Enlightened I: Alignment becomes Goodly (unless immune to alignment change).",
+          "Key": "ability.guild.alguz.enlightened-i",
+          "AbilityRef": "ability.guild.alguz.enlightened-i"
+        },
+        {
+          "Name": "Permanent Paladinic Bless (lost/reversed in the same circumstances as a Paladin)",
+          "Type": "Static",
+          "Effect": "Permanent Paladinic Bless (lost/reversed in the same circumstances as a Paladin).",
+          "Key": "ability.guild.alguz.permanent-paladinic-bless-lost-reversed-in-the-same-circumstances-as-a-paladin",
+          "AbilityRef": "ability.guild.alguz.permanent-paladinic-bless-lost-reversed-in-the-same-circumstances-as-a-paladin"
+        },
+        {
+          "Name": "Gains +3/1 life in the style of a permanent Enhance Spirit",
+          "Type": "Static",
+          "Effect": "Gains +3/1 life in the style of a permanent Enhance Spirit.",
+          "Key": "ability.guild.alguz.gains-3-1-life-in-the-style-of-a-permanent-enhance-spirit",
+          "AbilityRef": "ability.guild.alguz.gains-3-1-life-in-the-style-of-a-permanent-enhance-spirit"
+        },
+        {
+          "Name": "Blessed by the Alg 1/day",
+          "Type": "Innate",
+          "Effect": "Blessed by the Alg 1/day: Acts as a mantic Walk Through Water self, but may be cast on other Alguz Kallah.",
+          "Count": 1,
+          "Key": "ability.guild.alguz.blessed-by-the-alg-1-day",
+          "AbilityRef": "ability.guild.alguz.blessed-by-the-alg-1-day"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Lay Believer Talthar (if already possessed for another faith this ability overrides that membership whilst active)",
+          "Type": "Static",
+          "Effect": "Lay Believer Talthar (if already possessed for another faith this ability overrides that membership whilst active).",
+          "Key": "ability.guild.alguz.lay-believer-talthar-if-already-possessed-for-another-faith-this-ability-overrides-that-membership-whilst-active",
+          "AbilityRef": "ability.guild.alguz.lay-believer-talthar-if-already-possessed-for-another-faith-this-ability-overrides-that-membership-whilst-active"
+        },
+        {
+          "Name": "6/2 life total from +3/1 life above",
+          "Type": "Static",
+          "Effect": "6/2 life total from +3/1 life above.",
+          "Key": "ability.guild.alguz.6-2-life-total-from-3-1-life-above",
+          "AbilityRef": "ability.guild.alguz.6-2-life-total-from-3-1-life-above"
+        },
+        {
+          "Name": "Gains a second Blessed by the Alg, and both may now be used on anyone Goodly",
+          "Type": "Innate",
+          "Effect": "Gains a second Blessed by the Alg, and both may now be used on anyone Goodly.",
+          "Key": "ability.guild.alguz.blessed-by-the-alg-1-day",
+          "AbilityRef": "ability.guild.alguz.blessed-by-the-alg-1-day",
+          "Count": 2
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Word of Renewal",
+          "Type": "Innate",
+          "Effect": "Word of Renewal: Gains Holy Word Renewal (as per the Paladin healing holy word) 1/day.",
+          "Count": 1,
+          "Key": "ability.guild.alguz.word-of-renewal",
+          "AbilityRef": "ability.guild.alguz.word-of-renewal"
+        },
+        {
+          "Name": "Can choose to lose both Blessed by the Alg and instead become unimpeded by Water (as per Aquatic Elf)",
+          "Type": "Static",
+          "Effect": "Can choose to lose both Blessed by the Alg and instead become unimpeded by Water (as per Aquatic Elf).",
+          "Key": "ability.guild.alguz.can-choose-to-lose-both-blessed-by-the-alg-and-instead-become-unimpeded-by-water-as-per-aquatic-elf",
+          "AbilityRef": "ability.guild.alguz.can-choose-to-lose-both-blessed-by-the-alg-and-instead-become-unimpeded-by-water-as-per-aquatic-elf"
+        },
+        {
+          "Name": "+12/4 life total from +6/2 life above, still as per an Enhanced Spirit",
+          "Type": "Static",
+          "Effect": "+12/4 life total from +6/2 life above, still as per an Enhanced Spirit.",
+          "Key": "ability.guild.alguz.12-4-life-total-from-6-2-life-above-still-as-per-an-enhanced-spirit",
+          "AbilityRef": "ability.guild.alguz.12-4-life-total-from-6-2-life-above-still-as-per-an-enhanced-spirit"
+        }
+      ]
     },
     "City Benefits": [
       {
@@ -5623,7 +6455,10 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5633,19 +6468,88 @@
     "Restrictions": "",
     "Benefits": {
       "Basic": [
-        "Discern Nature Of Undead",
-        "Discern Demonkind",
-        "Discern Undead Dismiss Name"
+        {
+          "Name": "Gains Discern Nature of Undead as per priest and Discern Demonkind",
+          "Type": "Static",
+          "Effect": "Gains Discern Nature of Undead as per priest and Discern Demonkind.",
+          "Key": "ability.guild.bildteve.gains-discern-nature-of-undead-as-per-priest-and-discern-demonkind",
+          "AbilityRef": "ability.guild.bildteve.gains-discern-nature-of-undead-as-per-priest-and-discern-demonkind"
+        },
+        {
+          "Name": "1/day after 10 seconds observation, may discern a target undead's dismiss name (cf",
+          "Type": "Innate",
+          "Effect": "1/day after 10 seconds observation, may discern a target undead's dismiss name (cf. reveal unknown undead), or vs a demon gains a lucky idea about their nature.",
+          "Count": 1,
+          "Key": "ability.guild.bildteve.1-day-after-10-seconds-observation-may-discern-a-target-undead-s-dismiss-name-cf",
+          "AbilityRef": "ability.guild.bildteve.1-day-after-10-seconds-observation-may-discern-a-target-undead-s-dismiss-name-cf"
+        },
+        {
+          "Name": "Gains Discern Kallah of Ghulstone",
+          "Type": "Static",
+          "Effect": "Gains Discern Kallah of Ghulstone.",
+          "Key": "ability.guild.bildteve.gains-discern-kallah-of-ghulstone",
+          "AbilityRef": "ability.guild.bildteve.gains-discern-kallah-of-ghulstone"
+        }
       ],
-      "Intermediate": ["Hand Of Purity", "Shield Of Purity"],
-      "Advanced": ["Hand Of Purity", "Traitor's Shield", "Immunity To Insanity"]
+      "Intermediate": [
+        {
+          "Name": "1/day may destroy (as per Hand of Purity, but death from casting damage is not permanent) an undead or demonkind of up to 4th level by touch",
+          "Type": "Innate",
+          "Effect": "1/day may destroy (as per Hand of Purity, but death from casting damage is not permanent) an undead or demonkind of up to 4th level by touch. This costs 6 TBLP per dismiss/resistance level.",
+          "Count": 1,
+          "Key": "ability.guild.bildteve.1-day-may-destroy-as-per-hand-of-purity-but-death-from-casting-damage-is-not-permanent-an-undead-or-demonkind-of-up-to-4th-level-by-touch",
+          "AbilityRef": "ability.guild.bildteve.1-day-may-destroy-as-per-hand-of-purity-but-death-from-casting-damage-is-not-permanent-an-undead-or-demonkind-of-up-to-4th-level-by-touch"
+        },
+        {
+          "Name": "Gains an innate Shield of Purity (as demon slayer) 1/day, but the reduction also applies vs undead",
+          "Type": "Innate",
+          "Effect": "Gains an innate Shield of Purity (as demon slayer) 1/day, but the reduction also applies vs undead.",
+          "Count": 1,
+          "Key": "ability.guild.bildteve.gains-an-innate-shield-of-purity-as-demon-slayer-1-day-but-the-reduction-also-applies-vs-undead",
+          "AbilityRef": "ability.guild.bildteve.gains-an-innate-shield-of-purity-as-demon-slayer-1-day-but-the-reduction-also-applies-vs-undead"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Gains an additional Destroy innate",
+          "Type": "Static",
+          "Effect": "Gains an additional Destroy innate. These innates may now be used to destroy undead up to 6th level or demons up to 8th level (still costing 6 TBLP per dismiss/resistance level).",
+          "Key": "ability.guild.bildteve.gains-an-additional-destroy-innate",
+          "AbilityRef": "ability.guild.bildteve.gains-an-additional-destroy-innate"
+        },
+        {
+          "Name": "Traitor's Shield as tables",
+          "Type": "Static",
+          "Effect": "Traitor's Shield as tables.",
+          "Key": "ability.guild.bildteve.traitor-s-shield-as-tables",
+          "AbilityRef": "ability.guild.bildteve.traitor-s-shield-as-tables"
+        },
+        {
+          "Name": "Gain Immunity to Insanity",
+          "Type": "Static",
+          "Effect": "Gain Immunity to Insanity.",
+          "Key": "ability.guild.bildteve.gain-immunity-to-insanity",
+          "AbilityRef": "ability.guild.bildteve.gain-immunity-to-insanity"
+        },
+        {
+          "Name": "Ghulstone Kallah now count as demonkind for the purposes of Bildteve Kallah benefits",
+          "Type": "Static",
+          "Effect": "Ghulstone Kallah now count as demonkind for the purposes of Bildteve Kallah benefits.",
+          "Key": "ability.guild.bildteve.ghulstone-kallah-now-count-as-demonkind-for-the-purposes-of-bildteve-kallah-benefits",
+          "AbilityRef": "ability.guild.bildteve.ghulstone-kallah-now-count-as-demonkind-for-the-purposes-of-bildteve-kallah-benefits"
+        }
+      ]
     },
+    "City Benefits": [],
     "Availability": {
       "Rules": [
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5670,7 +6574,7 @@
       },
       {
         "Name": "The King’s Largesse",
-        "Effect": [
+        "Effects": [
           "Mercenaries hired by or acting on behalf of Deci, the Deci Council, Anath, Troy or the City Sprit have their potion allowance covered.",
           "Mercenaries hired by, or acting on behalf of, Deci, the Deci Council, Anath, Troy or the City Sprit have their pay increased by 1,000Grulls per mercenary (which the referee may claim from the Desk for paying a party).",
           "Where a mission has been sanctioned by Anath, King Troy, the City Spirit or the Deci Council for the benefit of Deci then an additional World Point is generated for use by the Referee that can only be applied to the direct benefit of Deci (i.e. adjust a Deci city stat positively).  (Referee Note:To claim this additional WP quote PCLD290 on the Debrief sheet alongside the extra WP)."
@@ -5678,16 +6582,73 @@
       }
     ],
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "If killed, Tangle may be informed of this",
+          "Type": "Static",
+          "Effect": "If killed, Tangle may be informed of this. Gains Fated Hero if returned to life by Tangle.",
+          "Key": "ability.guild.deci.if-killed-tangle-may-be-informed-of-this",
+          "AbilityRef": "ability.guild.deci.if-killed-tangle-may-be-informed-of-this"
+        },
+        {
+          "Name": "Faith in the City 1/day",
+          "Type": "Innate",
+          "Effect": "Faith in the City 1/day: Acts as per a True Believer but may be any faith in Deci that has a score of 20 or more. Can never be used to cast a goodly miracle.",
+          "Count": 1,
+          "Key": "ability.guild.deci.faith-in-the-city-1-day",
+          "AbilityRef": "ability.guild.deci.faith-in-the-city-1-day"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "If killed may OOC choose for body to vanish 2 minutes later and be mantically Animate Life'd by Tangle; this takes 15 minutes",
+          "Type": "Static",
+          "Effect": "If killed may OOC choose for body to vanish 2 minutes later and be mantically Animate Life'd by Tangle; this takes 15 minutes. May return to adventure but must have the means/be able to.",
+          "Key": "ability.guild.deci.if-killed-may-ooc-choose-for-body-to-vanish-2-minutes-later-and-be-mantically-animate-life-d-by-tangle-this-takes-15-minutes",
+          "AbilityRef": "ability.guild.deci.if-killed-may-ooc-choose-for-body-to-vanish-2-minutes-later-and-be-mantically-animate-life-d-by-tangle-this-takes-15-minutes"
+        },
+        {
+          "Name": "Faith in the City may now instead be used to cast a standard black spell",
+          "Type": "Static",
+          "Effect": "Faith in the City may now instead be used to cast a standard black spell.",
+          "Key": "ability.guild.deci.faith-in-the-city-may-now-instead-be-used-to-cast-a-standard-black-spell",
+          "AbilityRef": "ability.guild.deci.faith-in-the-city-may-now-instead-be-used-to-cast-a-standard-black-spell"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "If using intermediate tier animate life, may choose to be mantically plane shifted back to the adventure (safe place within 20ft of party)",
+          "Type": "Static",
+          "Effect": "If using intermediate tier animate life, may choose to be mantically plane shifted back to the adventure (safe place within 20ft of party). Once completed, suffers a freeze on arrival.",
+          "Key": "ability.guild.deci.if-using-intermediate-tier-animate-life-may-choose-to-be-mantically-plane-shifted-back-to-the-adventure-safe-place-within-20ft-of-party",
+          "AbilityRef": "ability.guild.deci.if-using-intermediate-tier-animate-life-may-choose-to-be-mantically-plane-shifted-back-to-the-adventure-safe-place-within-20ft-of-party"
+        },
+        {
+          "Name": "Deci's Swarm",
+          "Type": "Innate",
+          "Effect": "Deci's Swarm: May call on Primal Force of the Swarm 1/day. Declared as per a warcry with the user taking the form of a swarm of insects, making them immune to weapon blows for 30 seconds. May not be ended early. Whilst in this form may not cast/fight as per gaseous form but can travel at a slow walk.",
+          "Count": 1,
+          "Key": "ability.guild.deci.deci-s-swarm",
+          "AbilityRef": "ability.guild.deci.deci-s-swarm"
+        },
+        {
+          "Name": "Faith in the City may be used to cast a published black spell of a level up to the Kallahs table",
+          "Type": "Static",
+          "Effect": "Faith in the City may be used to cast a published black spell of a level up to the Kallahs table.",
+          "Key": "ability.guild.deci.faith-in-the-city-may-be-used-to-cast-a-published-black-spell-of-a-level-up-to-the-kallahs-table",
+          "AbilityRef": "ability.guild.deci.faith-in-the-city-may-be-used-to-cast-a-published-black-spell-of-a-level-up-to-the-kallahs-table"
+        }
+      ]
     },
     "Availability": {
       "Rules": [
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5695,16 +6656,86 @@
   "Eartholme": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Gains innates as per Earth Elf calculated at Kallah level -2",
+          "Type": "Static",
+          "Effect": "Gains innates as per Earth Elf calculated at Kallah level -2.",
+          "Key": "ability.guild.eartholme.gains-innates-as-per-earth-elf-calculated-at-kallah-level-2",
+          "AbilityRef": "ability.guild.eartholme.gains-innates-as-per-earth-elf-calculated-at-kallah-level-2"
+        },
+        {
+          "Name": "When reading Brown or Ivory magical scrolls gains +1 level for calculating casting damage",
+          "Type": "Static",
+          "Effect": "When reading Brown or Ivory magical scrolls gains +1 level for calculating casting damage. If the Kallah cannot already read such then they gain the ability to do so with 1st level casting.",
+          "Key": "ability.guild.eartholme.when-reading-brown-or-ivory-magical-scrolls-gains-1-level-for-calculating-casting-damage",
+          "AbilityRef": "ability.guild.eartholme.when-reading-brown-or-ivory-magical-scrolls-gains-1-level-for-calculating-casting-damage"
+        },
+        {
+          "Name": "Is now bound by the Ivory code",
+          "Type": "Static",
+          "Effect": "Is now bound by the Ivory code. If they break the code they lose all city spirit benefits for the dungeon.",
+          "Key": "ability.guild.eartholme.is-now-bound-by-the-ivory-code",
+          "AbilityRef": "ability.guild.eartholme.is-now-bound-by-the-ivory-code"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Gains innates as per Earth Elf calculated at Kallah level -1",
+          "Type": "Static",
+          "Effect": "Gains innates as per Earth Elf calculated at Kallah level -1.",
+          "Key": "ability.guild.eartholme.gains-innates-as-per-earth-elf-calculated-at-kallah-level-1",
+          "AbilityRef": "ability.guild.eartholme.gains-innates-as-per-earth-elf-calculated-at-kallah-level-1"
+        },
+        {
+          "Name": "Now gains +2 levels for casting Brown or Ivory scrolls (or 2nd level casting)",
+          "Type": "Static",
+          "Effect": "Now gains +2 levels for casting Brown or Ivory scrolls (or 2nd level casting).",
+          "Key": "ability.guild.eartholme.now-gains-2-levels-for-casting-brown-or-ivory-scrolls-or-2nd-level-casting",
+          "AbilityRef": "ability.guild.eartholme.now-gains-2-levels-for-casting-brown-or-ivory-scrolls-or-2nd-level-casting"
+        },
+        {
+          "Name": "Counts as an Ivory mana user for the purposes of Honour Prevails",
+          "Type": "Static",
+          "Effect": "Counts as an Ivory mana user for the purposes of Honour Prevails.",
+          "Key": "ability.guild.eartholme.counts-as-an-ivory-mana-user-for-the-purposes-of-honour-prevails",
+          "AbilityRef": "ability.guild.eartholme.counts-as-an-ivory-mana-user-for-the-purposes-of-honour-prevails"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Gains innates as per Earth Elf calculated at Kallah level",
+          "Type": "Static",
+          "Effect": "Gains innates as per Earth Elf calculated at Kallah level.",
+          "Key": "ability.guild.eartholme.gains-innates-as-per-earth-elf-calculated-at-kallah-level",
+          "AbilityRef": "ability.guild.eartholme.gains-innates-as-per-earth-elf-calculated-at-kallah-level"
+        },
+        {
+          "Name": "May now read Brown or Ivory mana Teaching Scrolls as normal scrolls, not gaining any other benefit",
+          "Type": "Static",
+          "Effect": "May now read Brown or Ivory mana Teaching Scrolls as normal scrolls, not gaining any other benefit. This does mean advanced spells can be cast.",
+          "Key": "ability.guild.eartholme.may-now-read-brown-or-ivory-mana-teaching-scrolls-as-normal-scrolls-not-gaining-any-other-benefit",
+          "AbilityRef": "ability.guild.eartholme.may-now-read-brown-or-ivory-mana-teaching-scrolls-as-normal-scrolls-not-gaining-any-other-benefit"
+        },
+        {
+          "Name": "Now gains +4 levels (or 4th level casting) total for casting Brown or Ivory magical scrolls",
+          "Type": "Static",
+          "Effect": "Now gains +4 levels (or 4th level casting) total for casting Brown or Ivory magical scrolls.",
+          "Key": "ability.guild.eartholme.now-gains-4-levels-or-4th-level-casting-total-for-casting-brown-or-ivory-magical-scrolls",
+          "AbilityRef": "ability.guild.eartholme.now-gains-4-levels-or-4th-level-casting-total-for-casting-brown-or-ivory-magical-scrolls"
+        }
+      ]
     },
+    "City Benefits": [],
     "Availability": {
       "Rules": [
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5712,16 +6743,118 @@
   "Gothiel": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Gains Discern Demonkind and Discern Nature of Undead",
+          "Type": "Static",
+          "Effect": "Gains Discern Demonkind and Discern Nature of Undead.",
+          "Key": "ability.guild.gothiel.gains-discern-demonkind-and-discern-nature-of-undead",
+          "AbilityRef": "ability.guild.gothiel.gains-discern-demonkind-and-discern-nature-of-undead"
+        },
+        {
+          "Name": "Combat wary now applies vs the first two blows from undead or demonkind",
+          "Type": "Static",
+          "Effect": "Combat wary now applies vs the first two blows from undead or demonkind.",
+          "Key": "ability.guild.gothiel.combat-wary-now-applies-vs-the-first-two-blows-from-undead-or-demonkind",
+          "AbilityRef": "ability.guild.gothiel.combat-wary-now-applies-vs-the-first-two-blows-from-undead-or-demonkind"
+        },
+        {
+          "Name": "Gains Fortified Spirit",
+          "Type": "Static",
+          "Effect": "Gains Fortified Spirit.",
+          "Key": "ability.guild.gothiel.gains-fortified-spirit",
+          "AbilityRef": "ability.guild.gothiel.gains-fortified-spirit"
+        },
+        {
+          "Name": "Unless Goodly, Kallah do not gain 2nd or 3rd tier benefits",
+          "Type": "Static",
+          "Effect": "Unless Goodly, Kallah do not gain 2nd or 3rd tier benefits. Kallah may choose to be goodly.",
+          "Key": "ability.guild.gothiel.unless-goodly-kallah-do-not-gain-2nd-or-3rd-tier-benefits",
+          "AbilityRef": "ability.guild.gothiel.unless-goodly-kallah-do-not-gain-2nd-or-3rd-tier-benefits"
+        },
+        {
+          "Name": "Gains Well Equipped with 1 dose of adventure temp holy water",
+          "Type": "Static",
+          "Effect": "Gains Well Equipped with 1 dose of adventure temp holy water.",
+          "Key": "ability.guild.gothiel.gains-well-equipped-with-1-dose-of-adventure-temp-holy-water",
+          "AbilityRef": "ability.guild.gothiel.gains-well-equipped-with-1-dose-of-adventure-temp-holy-water"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Is well equipped with 2 total doses of adventure temp holy water",
+          "Type": "Static",
+          "Effect": "Is well equipped with 2 total doses of adventure temp holy water.",
+          "Key": "ability.guild.gothiel.is-well-equipped-with-2-total-doses-of-adventure-temp-holy-water",
+          "AbilityRef": "ability.guild.gothiel.is-well-equipped-with-2-total-doses-of-adventure-temp-holy-water"
+        },
+        {
+          "Name": "Holy water gained from above also works against evil demonkind",
+          "Type": "Static",
+          "Effect": "Holy water gained from above also works against evil demonkind.",
+          "Key": "ability.guild.gothiel.holy-water-gained-from-above-also-works-against-evil-demonkind",
+          "AbilityRef": "ability.guild.gothiel.holy-water-gained-from-above-also-works-against-evil-demonkind"
+        },
+        {
+          "Name": "Gains Holy Word dismissal as paladin 1/day",
+          "Type": "Innate",
+          "Effect": "Gains Holy Word dismissal as paladin 1/day.",
+          "Count": 1,
+          "Key": "ability.guild.gothiel.gains-holy-word-dismissal-as-paladin-1-day",
+          "AbilityRef": "ability.guild.gothiel.gains-holy-word-dismissal-as-paladin-1-day"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Hand of Purity 1/day (as priest ability)",
+          "Type": "Innate",
+          "Effect": "Hand of Purity 1/day (as priest ability).",
+          "Count": 1,
+          "Key": "ability.guild.gothiel.hand-of-purity-1-day-as-priest-ability",
+          "AbilityRef": "ability.guild.gothiel.hand-of-purity-1-day-as-priest-ability"
+        },
+        {
+          "Name": "If using holy water to coat own weapons then one dose will last for two blows vs undead",
+          "Type": "Static",
+          "Effect": "If using holy water to coat own weapons then one dose will last for two blows vs undead.",
+          "Key": "ability.guild.gothiel.if-using-holy-water-to-coat-own-weapons-then-one-dose-will-last-for-two-blows-vs-undead",
+          "AbilityRef": "ability.guild.gothiel.if-using-holy-water-to-coat-own-weapons-then-one-dose-will-last-for-two-blows-vs-undead"
+        },
+        {
+          "Name": "Gains a second Holy Word dismissal as paladin",
+          "Type": "Innate",
+          "Effect": "Gains a second Holy Word dismissal as paladin.",
+          "Key": "ability.guild.gothiel.gains-holy-word-dismissal-as-paladin-1-day",
+          "AbilityRef": "ability.guild.gothiel.gains-holy-word-dismissal-as-paladin-1-day",
+          "Count": 2
+        },
+        {
+          "Name": "Is now well equipped with 3 total doses of adventure temp holy water",
+          "Type": "Static",
+          "Effect": "Is now well equipped with 3 total doses of adventure temp holy water.",
+          "Key": "ability.guild.gothiel.is-now-well-equipped-with-3-total-doses-of-adventure-temp-holy-water",
+          "AbilityRef": "ability.guild.gothiel.is-now-well-equipped-with-3-total-doses-of-adventure-temp-holy-water"
+        },
+        {
+          "Name": "Angels Voice 1/day",
+          "Type": "Innate",
+          "Effect": "Angels Voice 1/day: before casting a dismiss miracle, or using a holy word dismiss from Gothiel benefits, may drink a dose of holy water and increase the level of effect of the dismiss by 1. The dismiss must be used within 30 seconds or this benefit is wasted.",
+          "Count": 1,
+          "Key": "ability.guild.gothiel.angels-voice-1-day",
+          "AbilityRef": "ability.guild.gothiel.angels-voice-1-day"
+        }
+      ]
     },
+    "City Benefits": [],
     "Availability": {
       "Rules": [
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5729,9 +6862,82 @@
   "Halgar": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "If on dungeon with a Noble of the Empire gains retainer to that House",
+          "Type": "Static",
+          "Effect": "If on dungeon with a Noble of the Empire gains retainer to that House. If multiple nobles are present then can only choose one house. If already a retainer then this ability does not work if a member of their house is present. Cannot gain retainer to self.",
+          "Key": "ability.guild.halgar.if-on-dungeon-with-a-noble-of-the-empire-gains-retainer-to-that-house",
+          "AbilityRef": "ability.guild.halgar.if-on-dungeon-with-a-noble-of-the-empire-gains-retainer-to-that-house"
+        },
+        {
+          "Name": "Gains absorb empathic alignment based on nobles present on dungeon (immunity to alignment change applies)",
+          "Type": "Static",
+          "Effect": "Gains absorb empathic alignment based on nobles present on dungeon (immunity to alignment change applies).",
+          "Key": "ability.guild.halgar.gains-absorb-empathic-alignment-based-on-nobles-present-on-dungeon-immunity-to-alignment-change-applies",
+          "AbilityRef": "ability.guild.halgar.gains-absorb-empathic-alignment-based-on-nobles-present-on-dungeon-immunity-to-alignment-change-applies"
+        },
+        {
+          "Name": "Evading Giants",
+          "Type": "Static",
+          "Effect": "Evading Giants: Gains immunity to damage based on being stepped on, or buildings/ceilings/similar falling on them.",
+          "Key": "ability.guild.halgar.evading-giants",
+          "AbilityRef": "ability.guild.halgar.evading-giants"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Nobles gain a 1 point power reduction on all beneficial effects cast on a Kallah (can include self)",
+          "Type": "Static",
+          "Effect": "Nobles gain a 1 point power reduction on all beneficial effects cast on a Kallah (can include self). Stacks with published reductions to a minimum of half (rounded up) or 1 (whichever is more).",
+          "Key": "ability.guild.halgar.nobles-gain-a-1-point-power-reduction-on-all-beneficial-effects-cast-on-a-kallah-can-include-self",
+          "AbilityRef": "ability.guild.halgar.nobles-gain-a-1-point-power-reduction-on-all-beneficial-effects-cast-on-a-kallah-can-include-self"
+        },
+        {
+          "Name": "Can mend weapons, shields, armour, or buildings at will",
+          "Type": "Static",
+          "Effect": "Can mend weapons, shields, armour, or buildings at will. Takes 1 minute for weapons, shields, or armour. Buildings take time at ref discretion. This requires calling on the Nagrech/similar.",
+          "Key": "ability.guild.halgar.can-mend-weapons-shields-armour-or-buildings-at-will",
+          "AbilityRef": "ability.guild.halgar.can-mend-weapons-shields-armour-or-buildings-at-will"
+        },
+        {
+          "Name": "Evading Giants can now protect one other individual within 5ft",
+          "Type": "Static",
+          "Effect": "Evading Giants can now protect one other individual within 5ft.",
+          "Key": "ability.guild.halgar.evading-giants-can-now-protect-one-other-individual-within-5ft",
+          "AbilityRef": "ability.guild.halgar.evading-giants-can-now-protect-one-other-individual-within-5ft"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Now gains retainer to all Nobles of the Empire on dungeon if desired, still not self",
+          "Type": "Static",
+          "Effect": "Now gains retainer to all Nobles of the Empire on dungeon if desired, still not self.",
+          "Key": "ability.guild.halgar.now-gains-retainer-to-all-nobles-of-the-empire-on-dungeon-if-desired-still-not-self",
+          "AbilityRef": "ability.guild.halgar.now-gains-retainer-to-all-nobles-of-the-empire-on-dungeon-if-desired-still-not-self"
+        },
+        {
+          "Name": "Can choose to be the alignment of any noble present on dungeon",
+          "Type": "Static",
+          "Effect": "Can choose to be the alignment of any noble present on dungeon.",
+          "Key": "ability.guild.halgar.can-choose-to-be-the-alignment-of-any-noble-present-on-dungeon",
+          "AbilityRef": "ability.guild.halgar.can-choose-to-be-the-alignment-of-any-noble-present-on-dungeon"
+        },
+        {
+          "Name": "2nd tier mend ability can now act as reform, reshape, fix a rust, repair a melt, or reforge a burn wood",
+          "Type": "Static",
+          "Effect": "2nd tier mend ability can now act as reform, reshape, fix a rust, repair a melt, or reforge a burn wood. Broadly it can counter any weapon-destruction style effect.",
+          "Key": "ability.guild.halgar.2nd-tier-mend-ability-can-now-act-as-reform-reshape-fix-a-rust-repair-a-melt-or-reforge-a-burn-wood",
+          "AbilityRef": "ability.guild.halgar.2nd-tier-mend-ability-can-now-act-as-reform-reshape-fix-a-rust-repair-a-melt-or-reforge-a-burn-wood"
+        },
+        {
+          "Name": "Evading Giants now protects all individuals within 5ft",
+          "Type": "Static",
+          "Effect": "Evading Giants now protects all individuals within 5ft.",
+          "Key": "ability.guild.halgar.evading-giants-now-protects-all-individuals-within-5ft",
+          "AbilityRef": "ability.guild.halgar.evading-giants-now-protects-all-individuals-within-5ft"
+        }
+      ]
     },
     "City Benefits": [
       {
@@ -5746,7 +6952,10 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5754,16 +6963,87 @@
   "Port Miere": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "It is no longer possible to gain Port Miere Kallah benefits by temporary means (e",
+          "Type": "Static",
+          "Effect": "It is no longer possible to gain Port Miere Kallah benefits by temporary means (e.g. Blessing of the City Spirit). If an individual attempts to do so they suffer an EP based drown (as per the green spell).",
+          "Key": "ability.guild.port-miere.it-is-no-longer-possible-to-gain-port-miere-kallah-benefits-by-temporary-means-e",
+          "AbilityRef": "ability.guild.port-miere.it-is-no-longer-possible-to-gain-port-miere-kallah-benefits-by-temporary-means-e"
+        },
+        {
+          "Name": "Gains EP Walk On/Through Water self at will",
+          "Type": "Static",
+          "Effect": "Gains EP Walk On/Through Water self at will. Costs 6 TBLP per use.",
+          "Key": "ability.guild.port-miere.gains-ep-walk-on-through-water-self-at-will",
+          "AbilityRef": "ability.guild.port-miere.gains-ep-walk-on-through-water-self-at-will"
+        },
+        {
+          "Name": "Gain 6 EP of innates of standard river field evocations chosen at the start of the day",
+          "Type": "Static",
+          "Effect": "Gain 6 EP of innates of standard river field evocations chosen at the start of the day. Beneficial evocations can only be cast on residents of Port Miere. These innates may instead be of a published green spell, and are instead magical if chosen this way.",
+          "Key": "ability.guild.port-miere.gain-6-ep-of-innates-of-standard-river-field-evocations-chosen-at-the-start-of-the-day",
+          "AbilityRef": "ability.guild.port-miere.gain-6-ep-of-innates-of-standard-river-field-evocations-chosen-at-the-start-of-the-day"
+        },
+        {
+          "Name": "Gains utilise Earthpower items for river field evocations",
+          "Type": "Static",
+          "Effect": "Gains utilise Earthpower items for river field evocations.",
+          "Key": "ability.guild.port-miere.gains-utilise-earthpower-items-for-river-field-evocations",
+          "AbilityRef": "ability.guild.port-miere.gains-utilise-earthpower-items-for-river-field-evocations"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Now gains 12 EP of standard river field evocations chosen at the start of the day",
+          "Type": "Static",
+          "Effect": "Now gains 12 EP of standard river field evocations chosen at the start of the day.",
+          "Key": "ability.guild.port-miere.now-gains-12-ep-of-standard-river-field-evocations-chosen-at-the-start-of-the-day",
+          "AbilityRef": "ability.guild.port-miere.now-gains-12-ep-of-standard-river-field-evocations-chosen-at-the-start-of-the-day"
+        },
+        {
+          "Name": "Is unimpeded by water, as per an aquatic elf",
+          "Type": "Static",
+          "Effect": "Is unimpeded by water, as per an aquatic elf.",
+          "Key": "ability.guild.port-miere.is-unimpeded-by-water-as-per-an-aquatic-elf",
+          "AbilityRef": "ability.guild.port-miere.is-unimpeded-by-water-as-per-an-aquatic-elf"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "The Betrayal of the Empire",
+          "Type": "Static",
+          "Effect": "The Betrayal of the Empire: Gains Discern (EP based) Imperial Servant; this reveals all nobles, legion members, members of city councils other than Port Miere, or any others with positions in the Empire's structure. Gains +1 max damage from behind and +1 backstab vs these individuals.",
+          "Key": "ability.guild.port-miere.the-betrayal-of-the-empire",
+          "AbilityRef": "ability.guild.port-miere.the-betrayal-of-the-empire"
+        },
+        {
+          "Name": "Consume the Green Dragon 1/day",
+          "Type": "Innate",
+          "Effect": "Consume the Green Dragon 1/day: Can either deny power vs a green mana effect and gain that effect as an innate, or cast a dispel up to 20 vs a green mana effect (not passive) and gain that much mana worth of standard green mana innates usable that day.",
+          "Count": 1,
+          "Key": "ability.guild.port-miere.consume-the-green-dragon-1-day",
+          "AbilityRef": "ability.guild.port-miere.consume-the-green-dragon-1-day"
+        },
+        {
+          "Name": "Now gains 18 EP of river field evocations",
+          "Type": "Static",
+          "Effect": "Now gains 18 EP of river field evocations. Can select advanced evocations up to 4 EP, but they cost double EP.",
+          "Key": "ability.guild.port-miere.now-gains-18-ep-of-river-field-evocations",
+          "AbilityRef": "ability.guild.port-miere.now-gains-18-ep-of-river-field-evocations"
+        }
+      ]
     },
+    "City Benefits": [],
     "Availability": {
       "Rules": [
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5771,9 +7051,79 @@
   "Rodanne": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Gains immunity to alignment change, or the Kallah can choose to become goodly (and then gain immunity to alignment change)",
+          "Type": "Static",
+          "Effect": "Gains immunity to alignment change, or the Kallah can choose to become goodly (and then gain immunity to alignment change).",
+          "Key": "ability.guild.rodanne.gains-immunity-to-alignment-change-or-the-kallah-can-choose-to-become-goodly-and-then-gain-immunity-to-alignment-change",
+          "AbilityRef": "ability.guild.rodanne.gains-immunity-to-alignment-change-or-the-kallah-can-choose-to-become-goodly-and-then-gain-immunity-to-alignment-change"
+        },
+        {
+          "Name": "Gains Discipline 1/day",
+          "Type": "Innate",
+          "Effect": "Gains Discipline 1/day.",
+          "Count": 1,
+          "Key": "ability.guild.rodanne.gains-discipline-1-day",
+          "AbilityRef": "ability.guild.rodanne.gains-discipline-1-day"
+        },
+        {
+          "Name": "Goodly Kallah gain Ley Believer to Talthar or Sacred Heart (see Divine Guidance)",
+          "Type": "Static",
+          "Effect": "Goodly Kallah gain Ley Believer to Talthar or Sacred Heart (see Divine Guidance). If a Kallah would be excommunicated then they lose Rodanne Kallah benefits forever, and can never claim Kallah benefits from any city.",
+          "Key": "ability.guild.rodanne.goodly-kallah-gain-ley-believer-to-talthar-or-sacred-heart-see-divine-guidance",
+          "AbilityRef": "ability.guild.rodanne.goodly-kallah-gain-ley-believer-to-talthar-or-sacred-heart-see-divine-guidance"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Gains a second innate Discipline",
+          "Type": "Innate",
+          "Effect": "Gains a second innate Discipline.",
+          "Key": "ability.guild.rodanne.gains-discipline-1-day",
+          "AbilityRef": "ability.guild.rodanne.gains-discipline-1-day",
+          "Count": 2
+        },
+        {
+          "Name": "Can use Discipline innates by touch on others",
+          "Type": "Static",
+          "Effect": "Can use Discipline innates by touch on others.",
+          "Key": "ability.guild.rodanne.can-use-discipline-innates-by-touch-on-others",
+          "AbilityRef": "ability.guild.rodanne.can-use-discipline-innates-by-touch-on-others"
+        },
+        {
+          "Name": "Gains True Believer in Sacred Heart or Talthar based on the 1st tier ley believer",
+          "Type": "Innate",
+          "Effect": "Gains True Believer in Sacred Heart or Talthar based on the 1st tier ley believer.",
+          "Key": "ability.guild.rodanne.gains-true-believer-in-sacred-heart-or-talthar-based-on-the-1st-tier-ley-believer",
+          "AbilityRef": "ability.guild.rodanne.gains-true-believer-in-sacred-heart-or-talthar-based-on-the-1st-tier-ley-believer",
+          "Count": 1
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Gains immunity to spiritual mastery",
+          "Type": "Static",
+          "Effect": "Gains immunity to spiritual mastery.",
+          "Key": "ability.guild.rodanne.gains-immunity-to-spiritual-mastery",
+          "AbilityRef": "ability.guild.rodanne.gains-immunity-to-spiritual-mastery"
+        },
+        {
+          "Name": "Discipline",
+          "Type": "Innate",
+          "Count": 3,
+          "Effect": "If Discipline is already owned, gains a third Discipline innate.",
+          "Key": "ability.guild.rodanne.gains-discipline-1-day",
+          "AbilityRef": "ability.guild.rodanne.gains-discipline-1-day"
+        },
+        {
+          "Name": "Gains immunity to the gold spell Haven and variants of it",
+          "Type": "Static",
+          "Effect": "Gains immunity to the gold spell Haven and variants of it.",
+          "Key": "ability.guild.rodanne.gains-immunity-to-the-gold-spell-haven-and-variants-of-it",
+          "AbilityRef": "ability.guild.rodanne.gains-immunity-to-the-gold-spell-haven-and-variants-of-it"
+        }
+      ]
     },
     "City Benefits": [
       {
@@ -5788,7 +7138,10 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5797,9 +7150,85 @@
     "Type": "city",
     "Restrictions": "",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Gains an innate True Believer that can be from the Empress, Talthar, Tsu-Ling, or Shaehan list",
+          "Type": "Innate",
+          "Effect": "Gains an innate True Believer that can be from the Empress, Talthar, Tsu-Ling, or Shaehan list.",
+          "Key": "ability.guild.scarlene.gains-an-innate-true-believer-that-can-be-from-the-empress-talthar-tsu-ling-or-shaehan-list",
+          "AbilityRef": "ability.guild.scarlene.gains-an-innate-true-believer-that-can-be-from-the-empress-talthar-tsu-ling-or-shaehan-list",
+          "Count": 1
+        },
+        {
+          "Name": "Gains immunity to alignment change",
+          "Type": "Static",
+          "Effect": "Gains immunity to alignment change.",
+          "Key": "ability.guild.scarlene.gains-immunity-to-alignment-change",
+          "AbilityRef": "ability.guild.scarlene.gains-immunity-to-alignment-change"
+        },
+        {
+          "Name": "Gains a mantic discern worship of Certizal (20ft range Y/N answer)",
+          "Type": "Static",
+          "Effect": "Gains a mantic discern worship of Certizal (20ft range Y/N answer).",
+          "Key": "ability.guild.scarlene.gains-a-mantic-discern-worship-of-certizal-20ft-range-y-n-answer",
+          "AbilityRef": "ability.guild.scarlene.gains-a-mantic-discern-worship-of-certizal-20ft-range-y-n-answer"
+        },
+        {
+          "Name": "If willingly acts against the city spirit then loses all Kallah benefits until forgiven",
+          "Type": "Static",
+          "Effect": "If willingly acts against the city spirit then loses all Kallah benefits until forgiven.",
+          "Key": "ability.guild.scarlene.if-willingly-acts-against-the-city-spirit-then-loses-all-kallah-benefits-until-forgiven",
+          "AbilityRef": "ability.guild.scarlene.if-willingly-acts-against-the-city-spirit-then-loses-all-kallah-benefits-until-forgiven"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Invoke the Green Dragon 1/day",
+          "Type": "Innate",
+          "Effect": "Invoke the Green Dragon 1/day: True Believer can instead be used to cast a handbook green spell.",
+          "Count": 1,
+          "Key": "ability.guild.scarlene.invoke-the-green-dragon-1-day",
+          "AbilityRef": "ability.guild.scarlene.invoke-the-green-dragon-1-day"
+        },
+        {
+          "Name": "Gains immunity to domination effects from worshippers of Certizal",
+          "Type": "Static",
+          "Effect": "Gains immunity to domination effects from worshippers of Certizal.",
+          "Key": "ability.guild.scarlene.gains-immunity-to-domination-effects-from-worshippers-of-certizal",
+          "AbilityRef": "ability.guild.scarlene.gains-immunity-to-domination-effects-from-worshippers-of-certizal"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Gains a second True Believer innate, which must be different to the first",
+          "Type": "Innate",
+          "Effect": "Gains a second True Believer innate, which must be different to the first.",
+          "Key": "ability.guild.scarlene.gains-a-second-true-believer-innate-which-must-be-different-to-the-first",
+          "AbilityRef": "ability.guild.scarlene.gains-a-second-true-believer-innate-which-must-be-different-to-the-first",
+          "Count": 2
+        },
+        {
+          "Name": "Invoke the Green Dragon can be used to cast any published green spell up to 6 mana",
+          "Type": "Static",
+          "Effect": "Invoke the Green Dragon can be used to cast any published green spell up to 6 mana.",
+          "Key": "ability.guild.scarlene.invoke-the-green-dragon-can-be-used-to-cast-any-published-green-spell-up-to-6-mana",
+          "AbilityRef": "ability.guild.scarlene.invoke-the-green-dragon-can-be-used-to-cast-any-published-green-spell-up-to-6-mana"
+        },
+        {
+          "Name": "The True Believer innates can now be used to cast the relevant denominational miracle (up to 6th level)",
+          "Type": "Static",
+          "Effect": "The True Believer innates can now be used to cast the relevant denominational miracle (up to 6th level).",
+          "Key": "ability.guild.scarlene.the-true-believer-innates-can-now-be-used-to-cast-the-relevant-denominational-miracle-up-to-6th-level",
+          "AbilityRef": "ability.guild.scarlene.the-true-believer-innates-can-now-be-used-to-cast-the-relevant-denominational-miracle-up-to-6th-level"
+        },
+        {
+          "Name": "Gains a stacking 1/2 effect miracles from worshippers of Certizal",
+          "Type": "Static",
+          "Effect": "Gains a stacking 1/2 effect miracles from worshippers of Certizal.",
+          "Key": "ability.guild.scarlene.gains-a-stacking-1-2-effect-miracles-from-worshippers-of-certizal",
+          "AbilityRef": "ability.guild.scarlene.gains-a-stacking-1-2-effect-miracles-from-worshippers-of-certizal"
+        }
+      ]
     },
     "City Benefits": [
       {
@@ -5814,7 +7243,10 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5823,9 +7255,78 @@
     "Type": "city",
     "Restrictions": "",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Gains Fortified Spirit, and the Kallah can never allow themselves to be raised as undead",
+          "Type": "Static",
+          "Effect": "Gains Fortified Spirit, and the Kallah can never allow themselves to be raised as undead.",
+          "Key": "ability.guild.sellaville.gains-fortified-spirit-and-the-kallah-can-never-allow-themselves-to-be-raised-as-undead",
+          "AbilityRef": "ability.guild.sellaville.gains-fortified-spirit-and-the-kallah-can-never-allow-themselves-to-be-raised-as-undead"
+        },
+        {
+          "Name": "Gains Discern Nature of Undead and Remember Unknown Undead Name",
+          "Type": "Static",
+          "Effect": "Gains Discern Nature of Undead and Remember Unknown Undead Name.",
+          "Key": "ability.guild.sellaville.gains-discern-nature-of-undead-and-remember-unknown-undead-name",
+          "AbilityRef": "ability.guild.sellaville.gains-discern-nature-of-undead-and-remember-unknown-undead-name"
+        },
+        {
+          "Name": "Are aware if Pebble/Joron or Ly-Chee are within 20ft",
+          "Type": "Static",
+          "Effect": "Are aware if Pebble/Joron or Ly-Chee are within 20ft.",
+          "Key": "ability.guild.sellaville.are-aware-if-pebble-joron-or-ly-chee-are-within-20ft",
+          "AbilityRef": "ability.guild.sellaville.are-aware-if-pebble-joron-or-ly-chee-are-within-20ft"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Gain immunity to domination effects that would cause the Kallah to act against the city of Sellaville, the Kallah, its people, or the council",
+          "Type": "Static",
+          "Effect": "Gain immunity to domination effects that would cause the Kallah to act against the city of Sellaville, the Kallah, its people, or the council.",
+          "Key": "ability.guild.sellaville.gain-immunity-to-domination-effects-that-would-cause-the-kallah-to-act-against-the-city-of-sellaville-the-kallah-its-people-or-the-council",
+          "AbilityRef": "ability.guild.sellaville.gain-immunity-to-domination-effects-that-would-cause-the-kallah-to-act-against-the-city-of-sellaville-the-kallah-its-people-or-the-council"
+        },
+        {
+          "Name": "Gain +1 backstab vs undead",
+          "Type": "Static",
+          "Effect": "Gain +1 backstab vs undead.",
+          "Key": "ability.guild.sellaville.gain-1-backstab-vs-undead",
+          "AbilityRef": "ability.guild.sellaville.gain-1-backstab-vs-undead"
+        },
+        {
+          "Name": "Gain Reveal Undead Name 2/day",
+          "Type": "Innate",
+          "Effect": "Gain Reveal Undead Name 2/day.",
+          "Count": 2,
+          "Key": "ability.guild.sellaville.gain-reveal-undead-name-2-day",
+          "AbilityRef": "ability.guild.sellaville.gain-reveal-undead-name-2-day"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Gains Discipline 2/day",
+          "Type": "Innate",
+          "Effect": "Gains Discipline 2/day.",
+          "Count": 2,
+          "Key": "ability.guild.sellaville.gains-discipline-2-day",
+          "AbilityRef": "ability.guild.sellaville.gains-discipline-2-day"
+        },
+        {
+          "Name": "Gains Flat of the Blade (as tables)",
+          "Type": "Static",
+          "Effect": "Gains Flat of the Blade (as tables).",
+          "Key": "ability.guild.sellaville.gains-flat-of-the-blade-as-tables",
+          "AbilityRef": "ability.guild.sellaville.gains-flat-of-the-blade-as-tables"
+        },
+        {
+          "Name": "Gains Life's Cry 2/day",
+          "Type": "Innate",
+          "Effect": "Gains Life's Cry 2/day.",
+          "Count": 2,
+          "Key": "ability.guild.sellaville.gains-life-s-cry-2-day",
+          "AbilityRef": "ability.guild.sellaville.gains-life-s-cry-2-day"
+        }
+      ]
     },
     "City Benefits": [
       {
@@ -5840,7 +7341,10 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5848,26 +7352,96 @@
   "Thimon": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Gain immunity to baneful diseases, as per a ratfolk",
+          "Type": "Static",
+          "Effect": "Gain immunity to baneful diseases, as per a ratfolk.",
+          "Key": "ability.guild.thimon.gain-immunity-to-baneful-diseases-as-per-a-ratfolk",
+          "AbilityRef": "ability.guild.thimon.gain-immunity-to-baneful-diseases-as-per-a-ratfolk"
+        },
+        {
+          "Name": "Absorb Disease 1/day",
+          "Type": "Innate",
+          "Effect": "Absorb Disease 1/day: Allows the Kallah to draw a disease from an individual, acting as per a druidic Cure Disease. This grants the Kallah +6/2 life for the next hour.",
+          "Count": 1,
+          "Key": "ability.guild.thimon.absorb-disease-1-day",
+          "AbilityRef": "ability.guild.thimon.absorb-disease-1-day"
+        },
+        {
+          "Name": "Gains Tell Disease, as druid",
+          "Type": "Static",
+          "Effect": "Gains Tell Disease, as druid. Also gains a lucky idea about the disease if it is not a published disease.",
+          "Key": "ability.guild.thimon.gains-tell-disease-as-druid",
+          "AbilityRef": "ability.guild.thimon.gains-tell-disease-as-druid"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Gains a second Absorb Disease innate",
+          "Type": "Innate",
+          "Effect": "Gains a second Absorb Disease innate. The life will stack with itself, to a max of 12/4.",
+          "Key": "ability.guild.thimon.absorb-disease-1-day",
+          "AbilityRef": "ability.guild.thimon.absorb-disease-1-day",
+          "Count": 2
+        },
+        {
+          "Name": "Instead of gaining life from an absorb disease the Kallah can gain an innate of the disease absorbed that can be used within the next hour",
+          "Type": "Static",
+          "Effect": "Instead of gaining life from an absorb disease the Kallah can gain an innate of the disease absorbed that can be used within the next hour.",
+          "Key": "ability.guild.thimon.instead-of-gaining-life-from-an-absorb-disease-the-kallah-can-gain-an-innate-of-the-disease-absorbed-that-can-be-used-within-the-next-hour",
+          "AbilityRef": "ability.guild.thimon.instead-of-gaining-life-from-an-absorb-disease-the-kallah-can-gain-an-innate-of-the-disease-absorbed-that-can-be-used-within-the-next-hour"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Gains a third Absorb Disease innate",
+          "Type": "Innate",
+          "Effect": "Gains a third Absorb Disease innate.",
+          "Key": "ability.guild.thimon.absorb-disease-1-day",
+          "AbilityRef": "ability.guild.thimon.absorb-disease-1-day",
+          "Count": 3
+        },
+        {
+          "Name": "Regains an innate Absorb Disease every hour",
+          "Type": "Static",
+          "Effect": "Regains an innate Absorb Disease every hour.",
+          "Key": "ability.guild.thimon.regains-an-innate-absorb-disease-every-hour",
+          "AbilityRef": "ability.guild.thimon.regains-an-innate-absorb-disease-every-hour"
+        },
+        {
+          "Name": "Instead of gaining life, or an innate disease, from using an absorb disease can choose to gain regen as Troll (heals spirit and fire) for the next hour",
+          "Type": "Static",
+          "Effect": "Instead of gaining life, or an innate disease, from using an absorb disease can choose to gain regen as Troll (heals spirit and fire) for the next hour. This does not stack with other regen.",
+          "Key": "ability.guild.thimon.instead-of-gaining-life-or-an-innate-disease-from-using-an-absorb-disease-can-choose-to-gain-regen-as-troll-heals-spirit-and-fire-for-the-next-hour",
+          "AbilityRef": "ability.guild.thimon.instead-of-gaining-life-or-an-innate-disease-from-using-an-absorb-disease-can-choose-to-gain-regen-as-troll-heals-spirit-and-fire-for-the-next-hour"
+        }
+      ]
     },
+    "City Benefits": [],
     "Availability": {
       "Rules": [
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         },
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": ["Ratfolk"]
+          "Value": [
+            "Ratfolk"
+          ]
         },
         {
           "Field": "RaceSubtype",
           "Operator": "In",
-          "Value": ["Caslevasp (long hairs)"]
+          "Value": [
+            "Caslevasp (long hairs)"
+          ]
         }
       ]
     }
@@ -5875,16 +7449,51 @@
   "Bulaslavia": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Gains Ley of the Land as druid ability",
+          "Type": "Static",
+          "Effect": "Gains Ley of the Land as druid ability.",
+          "Key": "ability.guild.bulaslavia.gains-ley-of-the-land-as-druid-ability",
+          "AbilityRef": "ability.guild.bulaslavia.gains-ley-of-the-land-as-druid-ability"
+        },
+        {
+          "Name": "Can sense weaknesses in Primus",
+          "Type": "Static",
+          "Effect": "Can sense weaknesses in Primus: takes 30 seconds concentration and reveals if there are rifts/portals/convergences/similar within 1/4 of a mile, and provides a rough direction.",
+          "Key": "ability.guild.bulaslavia.can-sense-weaknesses-in-primus",
+          "AbilityRef": "ability.guild.bulaslavia.can-sense-weaknesses-in-primus"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Sense weakness now functions up to 1 mile",
+          "Type": "Static",
+          "Effect": "Sense weakness now functions up to 1 mile. If within 1/4 of a mile then gains a rough idea of the nature of the weakness.",
+          "Key": "ability.guild.bulaslavia.sense-weakness-now-functions-up-to-1-mile",
+          "AbilityRef": "ability.guild.bulaslavia.sense-weakness-now-functions-up-to-1-mile"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Gains Enhanced Evaluate, as if all recs are owned, on rifts/portals",
+          "Type": "Static",
+          "Effect": "Gains Enhanced Evaluate, as if all recs are owned, on rifts/portals. For every 30 seconds study gains an additional major prayer of information.",
+          "Key": "ability.guild.bulaslavia.gains-enhanced-evaluate-as-if-all-recs-are-owned-on-rifts-portals",
+          "AbilityRef": "ability.guild.bulaslavia.gains-enhanced-evaluate-as-if-all-recs-are-owned-on-rifts-portals"
+        }
+      ]
     },
+    "City Benefits": [],
     "Availability": {
       "Rules": [
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5892,16 +7501,164 @@
   "Ghalabhad": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Kallah gain immunity to disease",
+          "Type": "Static",
+          "Effect": "Kallah gain immunity to disease.",
+          "Key": "ability.guild.ghalabhad.kallah-gain-immunity-to-disease",
+          "AbilityRef": "ability.guild.ghalabhad.kallah-gain-immunity-to-disease"
+        },
+        {
+          "Name": "Gain Discern Afthanel at will; this is a 20ft range magical and physical info FX",
+          "Type": "Static",
+          "Effect": "Gain Discern Afthanel at will; this is a 20ft range magical and physical info FX.",
+          "Key": "ability.guild.ghalabhad.gain-discern-afthanel-at-will-this-is-a-20ft-range-magical-and-physical-info-fx",
+          "AbilityRef": "ability.guild.ghalabhad.gain-discern-afthanel-at-will-this-is-a-20ft-range-magical-and-physical-info-fx"
+        },
+        {
+          "Name": "Gain Discern Citizen of Khaniabhad, again a magical and physical info effect",
+          "Type": "Static",
+          "Effect": "Gain Discern Citizen of Khaniabhad, again a magical and physical info effect.",
+          "Key": "ability.guild.ghalabhad.gain-discern-citizen-of-khaniabhad-again-a-magical-and-physical-info-effect",
+          "AbilityRef": "ability.guild.ghalabhad.gain-discern-citizen-of-khaniabhad-again-a-magical-and-physical-info-effect"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Gain +1 stacking backstab vs Afthanel or citizens of Khaniabhad",
+          "Type": "Static",
+          "Effect": "Gain +1 stacking backstab vs Afthanel or citizens of Khaniabhad.",
+          "Key": "ability.guild.ghalabhad.gain-1-stacking-backstab-vs-afthanel-or-citizens-of-khaniabhad",
+          "AbilityRef": "ability.guild.ghalabhad.gain-1-stacking-backstab-vs-afthanel-or-citizens-of-khaniabhad"
+        },
+        {
+          "Name": "Gain 4 mana per tier that can be used to cast handbook dispels, no casting damage is suffered",
+          "Type": "Static",
+          "Effect": "Gain 4 mana per tier that can be used to cast handbook dispels, no casting damage is suffered.",
+          "Key": "ability.guild.ghalabhad.gain-4-mana-per-tier-that-can-be-used-to-cast-handbook-dispels-no-casting-damage-is-suffered",
+          "AbilityRef": "ability.guild.ghalabhad.gain-4-mana-per-tier-that-can-be-used-to-cast-handbook-dispels-no-casting-damage-is-suffered"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "The spirit remains weak after being attacked at a prior Final Dawn but is recovering",
+          "Type": "Static",
+          "Effect": "The spirit remains weak after being attacked at a prior Final Dawn but is recovering.",
+          "Key": "ability.guild.ghalabhad.the-spirit-remains-weak-after-being-attacked-at-a-prior-final-dawn-but-is-recovering",
+          "AbilityRef": "ability.guild.ghalabhad.the-spirit-remains-weak-after-being-attacked-at-a-prior-final-dawn-but-is-recovering"
+        }
+      ]
     },
+    "City Benefits": [],
     "Availability": {
       "Rules": [
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
+        }
+      ]
+    }
+  },
+  "Ghulston": {
+    "Type": "city",
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "Invoke the Ghoulstone 1/day",
+          "Type": "Innate",
+          "Effect": "Invoke the Ghoulstone 1/day: lasts 5 minutes and acts as a cloak of fear but vs ghouls, ghasts and ghoul-related beings (shouls/drouls etc).",
+          "Count": 1,
+          "Key": "ability.guild.ghulston.invoke-the-ghoulstone-1-day",
+          "AbilityRef": "ability.guild.ghulston.invoke-the-ghoulstone-1-day"
+        },
+        {
+          "Name": "Gains Discern Bildteve Kallah",
+          "Type": "Static",
+          "Effect": "Gains Discern Bildteve Kallah.",
+          "Key": "ability.guild.ghulston.gains-discern-bildteve-kallah",
+          "AbilityRef": "ability.guild.ghulston.gains-discern-bildteve-kallah"
+        },
+        {
+          "Name": "Fenton's Taint 1/day",
+          "Type": "Innate",
+          "Effect": "Fenton's Taint 1/day: with 30 seconds prep acts as a dismiss ghoul (goodly spirit in nature).",
+          "Count": 1,
+          "Key": "ability.guild.ghulston.fenton-s-taint-1-day",
+          "AbilityRef": "ability.guild.ghulston.fenton-s-taint-1-day"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Call upon the Spirit",
+          "Type": "Innate",
+          "Effect": "Call upon the Spirit: acts as a True Believer but for a standard comms or necromancy miracle up to 4th level.",
+          "Key": "ability.guild.ghulston.call-upon-the-spirit",
+          "AbilityRef": "ability.guild.ghulston.call-upon-the-spirit",
+          "Count": 1
+        },
+        {
+          "Name": "Invoke the Wraithtree",
+          "Type": "Static",
+          "Effect": "Invoke the Wraithtree: acts as either Cause Fear or Level Drain (both as undead touch FX), and if successful cures the user 12/12.",
+          "Key": "ability.guild.ghulston.invoke-the-wraithtree",
+          "AbilityRef": "ability.guild.ghulston.invoke-the-wraithtree"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Fenton's Taint now acts as a dismiss vampire",
+          "Type": "Static",
+          "Effect": "Fenton's Taint now acts as a dismiss vampire.",
+          "Key": "ability.guild.ghulston.fenton-s-taint-now-acts-as-a-dismiss-vampire",
+          "AbilityRef": "ability.guild.ghulston.fenton-s-taint-now-acts-as-a-dismiss-vampire"
+        },
+        {
+          "Name": "Gains a 2nd Invoke the Ghoulstone innate",
+          "Type": "Innate",
+          "Effect": "Gains a 2nd Invoke the Ghoulstone innate.",
+          "Key": "ability.guild.ghulston.invoke-the-ghoulstone-1-day",
+          "AbilityRef": "ability.guild.ghulston.invoke-the-ghoulstone-1-day",
+          "Count": 2
+        },
+        {
+          "Name": "Gains a 2nd Invoke the Wraithtree innate",
+          "Type": "Innate",
+          "Effect": "Gains a 2nd Invoke the Wraithtree innate.",
+          "Key": "ability.guild.ghulston.invoke-the-wraithtree",
+          "AbilityRef": "ability.guild.ghulston.invoke-the-wraithtree",
+          "Count": 2
+        },
+        {
+          "Name": "Call upon the Spirit is now any standard comms or necromancy miracle",
+          "Type": "Static",
+          "Effect": "Call upon the Spirit is now any standard comms or necromancy miracle.",
+          "Key": "ability.guild.ghulston.call-upon-the-spirit-is-now-any-standard-comms-or-necromancy-miracle",
+          "AbilityRef": "ability.guild.ghulston.call-upon-the-spirit-is-now-any-standard-comms-or-necromancy-miracle"
+        },
+        {
+          "Name": "Fenton's Taint can instead be used as a Hand of Purity",
+          "Type": "Static",
+          "Effect": "Fenton's Taint can instead be used as a Hand of Purity.",
+          "Key": "ability.guild.ghulston.fenton-s-taint-can-instead-be-used-as-a-hand-of-purity",
+          "AbilityRef": "ability.guild.ghulston.fenton-s-taint-can-instead-be-used-as-a-hand-of-purity"
+        }
+      ]
+    },
+    "City Benefits": [],
+    "Availability": {
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5910,9 +7667,122 @@
     "Type": "city",
     "Restrictions": "Lose clan benefits...",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Blood Sacrifice 1/day",
+          "Type": "Innate",
+          "Effect": "Blood Sacrifice 1/day: with 30 seconds ritual prep can cast one standard evil miracle to 4th, evocation to 4th, or elemental colour (not white) spell to 6th. Costs 12 TBLP in blood sacrifice.",
+          "Count": 1,
+          "Key": "ability.guild.khaniabhad.blood-sacrifice-1-day",
+          "AbilityRef": "ability.guild.khaniabhad.blood-sacrifice-1-day"
+        },
+        {
+          "Name": "Knowledge of the Cults 1/day",
+          "Type": "Innate",
+          "Effect": "Knowledge of the Cults 1/day: physical major prayer about any cult-related activity.",
+          "Count": 1,
+          "Key": "ability.guild.khaniabhad.knowledge-of-the-cults-1-day",
+          "AbilityRef": "ability.guild.khaniabhad.knowledge-of-the-cults-1-day"
+        },
+        {
+          "Name": "Gains immunity to anything that seeks to compel or reveal the location of, or methods of finding, the city of Khaniabhad (including info effects)",
+          "Type": "Static",
+          "Effect": "Gains immunity to anything that seeks to compel or reveal the location of, or methods of finding, the city of Khaniabhad (including info effects).",
+          "Key": "ability.guild.khaniabhad.gains-immunity-to-anything-that-seeks-to-compel-or-reveal-the-location-of-or-methods-of-finding-the-city-of-khaniabhad-including-info-effects",
+          "AbilityRef": "ability.guild.khaniabhad.gains-immunity-to-anything-that-seeks-to-compel-or-reveal-the-location-of-or-methods-of-finding-the-city-of-khaniabhad-including-info-effects"
+        },
+        {
+          "Name": "Alignment becomes evil",
+          "Type": "Static",
+          "Effect": "Alignment becomes evil.",
+          "Key": "ability.guild.khaniabhad.alignment-becomes-evil",
+          "AbilityRef": "ability.guild.khaniabhad.alignment-becomes-evil"
+        },
+        {
+          "Name": "Gains Hanger On to Khaniabhad Archaeologist and Cartographers Society",
+          "Type": "Static",
+          "Effect": "Gains Hanger On to Khaniabhad Archaeologist and Cartographers Society.",
+          "Key": "ability.guild.khaniabhad.gains-hanger-on-to-khaniabhad-archaeologist-and-cartographers-society",
+          "AbilityRef": "ability.guild.khaniabhad.gains-hanger-on-to-khaniabhad-archaeologist-and-cartographers-society"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Gains a second Blood Sacrifice innate",
+          "Type": "Innate",
+          "Effect": "Gains a second Blood Sacrifice innate. If uses both at the same time (including loss of 24 TBLP) can cast any standard evocation or evil miracle, or any standard elemental (not white) spell.",
+          "Key": "ability.guild.khaniabhad.blood-sacrifice-1-day",
+          "AbilityRef": "ability.guild.khaniabhad.blood-sacrifice-1-day",
+          "Count": 2
+        },
+        {
+          "Name": "Assess Rift",
+          "Type": "Static",
+          "Effect": "Assess Rift: reveals where a rift/portal goes to, the rough consequences (if any) of using it, and other information at ref discretion.",
+          "Key": "ability.guild.khaniabhad.assess-rift",
+          "AbilityRef": "ability.guild.khaniabhad.assess-rift"
+        },
+        {
+          "Name": "Discern Cultist",
+          "Type": "Static",
+          "Effect": "Discern Cultist: can recognise the signs of cult membership (physical info effect, 20ft range) and the general nature of the cult to which they belong.",
+          "Key": "ability.guild.khaniabhad.discern-cultist",
+          "AbilityRef": "ability.guild.khaniabhad.discern-cultist"
+        },
+        {
+          "Name": "Is now Ostracised in Ishma",
+          "Type": "Static",
+          "Effect": "Is now Ostracised in Ishma.",
+          "Key": "ability.guild.khaniabhad.is-now-ostracised-in-ishma",
+          "AbilityRef": "ability.guild.khaniabhad.is-now-ostracised-in-ishma"
+        },
+        {
+          "Name": "Gains basic tier Khaniabhad Archaeologist and Cartographers Society benefits",
+          "Type": "Static",
+          "Effect": "Gains basic tier Khaniabhad Archaeologist and Cartographers Society benefits.",
+          "Key": "ability.guild.khaniabhad.gains-basic-tier-khaniabhad-archaeologist-and-cartographers-society-benefits",
+          "AbilityRef": "ability.guild.khaniabhad.gains-basic-tier-khaniabhad-archaeologist-and-cartographers-society-benefits"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Ritual Sacrifice 1/hour",
+          "Type": "Innate",
+          "Effect": "Ritual Sacrifice 1/hour: may ritually sacrifice a helpless flesh-and-blood target over 2 minutes. Acts as Strike Death Blow and grants immunity to dying effects; additionally cures 12/12 from the sacrifice.",
+          "Count": 1,
+          "Key": "ability.guild.khaniabhad.ritual-sacrifice-1-hour",
+          "AbilityRef": "ability.guild.khaniabhad.ritual-sacrifice-1-hour"
+        },
+        {
+          "Name": "Gains a third Blood Sacrifice innate, and they may now also be used to cast Onyx, Bronze, and Ebony spells (still within level limit)",
+          "Type": "Innate",
+          "Effect": "Gains a third Blood Sacrifice innate, and they may now also be used to cast Onyx, Bronze, and Ebony spells (still within level limit).",
+          "Key": "ability.guild.khaniabhad.blood-sacrifice-1-day",
+          "AbilityRef": "ability.guild.khaniabhad.blood-sacrifice-1-day",
+          "Count": 3
+        },
+        {
+          "Name": "Discern Cultist now reveals the name of and general information about the cult if they have a presence in the city",
+          "Type": "Static",
+          "Effect": "Discern Cultist now reveals the name of and general information about the cult if they have a presence in the city.",
+          "Key": "ability.guild.khaniabhad.discern-cultist-now-reveals-the-name-of-and-general-information-about-the-cult-if-they-have-a-presence-in-the-city",
+          "AbilityRef": "ability.guild.khaniabhad.discern-cultist-now-reveals-the-name-of-and-general-information-about-the-cult-if-they-have-a-presence-in-the-city"
+        },
+        {
+          "Name": "Is now demon touched if not already",
+          "Type": "Static",
+          "Effect": "Is now demon touched if not already.",
+          "Key": "ability.guild.khaniabhad.is-now-demon-touched-if-not-already",
+          "AbilityRef": "ability.guild.khaniabhad.is-now-demon-touched-if-not-already"
+        },
+        {
+          "Name": "Now gains intermediate tier Khaniabhad Archaeologist and Cartographers Society benefits",
+          "Type": "Static",
+          "Effect": "Now gains intermediate tier Khaniabhad Archaeologist and Cartographers Society benefits.",
+          "Key": "ability.guild.khaniabhad.now-gains-intermediate-tier-khaniabhad-archaeologist-and-cartographers-society-benefits",
+          "AbilityRef": "ability.guild.khaniabhad.now-gains-intermediate-tier-khaniabhad-archaeologist-and-cartographers-society-benefits"
+        }
+      ]
     },
     "City Benefits": [
       {
@@ -5929,7 +7799,10 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5937,16 +7810,123 @@
   "Amles": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Gains conditioned heart stop to never reveal information about the Order of Shadows, secrets of the Jade Empire, or to dishonour/act against the Empire of Jade, its Emperor, or the Kotei Guwen",
+          "Type": "Static",
+          "Effect": "Gains conditioned heart stop to never reveal information about the Order of Shadows, secrets of the Jade Empire, or to dishonour/act against the Empire of Jade, its Emperor, or the Kotei Guwen. If triggered the death is permanent.",
+          "Key": "ability.guild.amles.gains-conditioned-heart-stop-to-never-reveal-information-about-the-order-of-shadows-secrets-of-the-jade-empire-or-to-dishonour-act-against-the-empire-of-jade-its-emperor-or-the-kotei-guwen",
+          "AbilityRef": "ability.guild.amles.gains-conditioned-heart-stop-to-never-reveal-information-about-the-order-of-shadows-secrets-of-the-jade-empire-or-to-dishonour-act-against-the-empire-of-jade-its-emperor-or-the-kotei-guwen"
+        },
+        {
+          "Name": "If an individual gains the Kallah benefits and is not Amlesian they are also bound by the Jade Code",
+          "Type": "Static",
+          "Effect": "If an individual gains the Kallah benefits and is not Amlesian they are also bound by the Jade Code. If it is broken this triggers the conditioned heart stop.",
+          "Key": "ability.guild.amles.if-an-individual-gains-the-kallah-benefits-and-is-not-amlesian-they-are-also-bound-by-the-jade-code",
+          "AbilityRef": "ability.guild.amles.if-an-individual-gains-the-kallah-benefits-and-is-not-amlesian-they-are-also-bound-by-the-jade-code"
+        },
+        {
+          "Name": "Gains benefits as per Ninja tendency, but not the specific Magic or Neuronic powers",
+          "Type": "Static",
+          "Effect": "Gains benefits as per Ninja tendency, but not the specific Magic or Neuronic powers. Informational protections also conceal membership of the Order of Shadows.",
+          "Key": "ability.guild.amles.gains-benefits-as-per-ninja-tendency-but-not-the-specific-magic-or-neuronic-powers",
+          "AbilityRef": "ability.guild.amles.gains-benefits-as-per-ninja-tendency-but-not-the-specific-magic-or-neuronic-powers"
+        },
+        {
+          "Name": "Gains weapon skills (not masteries) as Monk",
+          "Type": "Static",
+          "Effect": "Gains weapon skills (not masteries) as Monk.",
+          "Key": "ability.guild.amles.gains-weapon-skills-not-masteries-as-monk",
+          "AbilityRef": "ability.guild.amles.gains-weapon-skills-not-masteries-as-monk"
+        },
+        {
+          "Name": "Gains forearm parry",
+          "Type": "Static",
+          "Effect": "Gains forearm parry.",
+          "Key": "ability.guild.amles.gains-forearm-parry",
+          "AbilityRef": "ability.guild.amles.gains-forearm-parry"
+        },
+        {
+          "Name": "When being restored to life, this can be done using the Kallah's disguise name",
+          "Type": "Static",
+          "Effect": "When being restored to life, this can be done using the Kallah's disguise name.",
+          "Key": "ability.guild.amles.when-being-restored-to-life-this-can-be-done-using-the-kallah-s-disguise-name",
+          "AbilityRef": "ability.guild.amles.when-being-restored-to-life-this-can-be-done-using-the-kallah-s-disguise-name"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Honour of Jade",
+          "Type": "Static",
+          "Effect": "Honour of Jade: Gains immunity to any ability that would cause the Kallah to break the restrictions under the conditioned heart stop (including physical abilities).",
+          "Key": "ability.guild.amles.honour-of-jade",
+          "AbilityRef": "ability.guild.amles.honour-of-jade"
+        },
+        {
+          "Name": "Gains Discipline 1/day",
+          "Type": "Innate",
+          "Effect": "Gains Discipline 1/day.",
+          "Count": 1,
+          "Key": "ability.guild.amles.gains-discipline-1-day",
+          "AbilityRef": "ability.guild.amles.gains-discipline-1-day"
+        },
+        {
+          "Name": "Gains a stacking mastery in one weapon, chosen at the start of the day",
+          "Type": "Static",
+          "Effect": "Gains a stacking mastery in one weapon, chosen at the start of the day.",
+          "Key": "ability.guild.amles.gains-a-stacking-mastery-in-one-weapon-chosen-at-the-start-of-the-day",
+          "AbilityRef": "ability.guild.amles.gains-a-stacking-mastery-in-one-weapon-chosen-at-the-start-of-the-day"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Gains foreleg parry",
+          "Type": "Static",
+          "Effect": "Gains foreleg parry.",
+          "Key": "ability.guild.amles.gains-foreleg-parry",
+          "AbilityRef": "ability.guild.amles.gains-foreleg-parry"
+        },
+        {
+          "Name": "A Shadow's Duty",
+          "Type": "Static",
+          "Effect": "A Shadow's Duty: at start of dungeon may, and must if a suitable individual is present, select a protectee. This individual must be Honoured One/Samurai status or higher, or a member of the Kotei Guwen may select any individual for the Shadow to protect.",
+          "Key": "ability.guild.amles.a-shadow-s-duty",
+          "AbilityRef": "ability.guild.amles.a-shadow-s-duty"
+        },
+        {
+          "Name": "With the chosen protectee",
+          "Type": "Static",
+          "Effect": "With the chosen protectee: gains restrictions as per Valdstayn with the chosen target counting as their master.",
+          "Key": "ability.guild.amles.with-the-chosen-protectee",
+          "AbilityRef": "ability.guild.amles.with-the-chosen-protectee"
+        },
+        {
+          "Name": "With the chosen protectee",
+          "Type": "Static",
+          "Effect": "With the chosen protectee: gains danger sense for threats to the master.",
+          "Key": "ability.guild.amles.with-the-chosen-protectee",
+          "AbilityRef": "ability.guild.amles.with-the-chosen-protectee"
+        },
+        {
+          "Name": "With the chosen protectee",
+          "Type": "Innate",
+          "Effect": "With the chosen protectee: gains Take Killing Blow 1/day for the master (at master's resistances, and must be used at the time).",
+          "Count": 1,
+          "Key": "ability.guild.amles.with-the-chosen-protectee",
+          "AbilityRef": "ability.guild.amles.with-the-chosen-protectee"
+        }
+      ]
     },
+    "City Benefits": [],
     "Availability": {
       "Rules": [
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }
@@ -5954,9 +7934,62 @@
   "Mordred's Rest": {
     "Type": "city",
     "Benefits": {
-      "Basic": [],
-      "Intermediate": [],
-      "Advanced": []
+      "Basic": [
+        {
+          "Name": "Can join Knights of the Land and gain benefits from the guild",
+          "Type": "Static",
+          "Effect": "Can join Knights of the Land and gain benefits from the guild. Cannot buy knight status/similar.",
+          "Key": "ability.guild.mordred-s-rest.can-join-knights-of-the-land-and-gain-benefits-from-the-guild",
+          "AbilityRef": "ability.guild.mordred-s-rest.can-join-knights-of-the-land-and-gain-benefits-from-the-guild"
+        },
+        {
+          "Name": "Gains O skill for broadsword and utilise shield skill",
+          "Type": "Static",
+          "Effect": "Gains O skill for broadsword and utilise shield skill.",
+          "Key": "ability.guild.mordred-s-rest.gains-o-skill-for-broadsword-and-utilise-shield-skill",
+          "AbilityRef": "ability.guild.mordred-s-rest.gains-o-skill-for-broadsword-and-utilise-shield-skill"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Brothers Together",
+          "Type": "Static",
+          "Effect": "Brothers Together: Gains +3/1 status life per KOTL (not self) on dungeon, to a max of 6/2 life.",
+          "Key": "ability.guild.mordred-s-rest.brothers-together",
+          "AbilityRef": "ability.guild.mordred-s-rest.brothers-together"
+        },
+        {
+          "Name": "Defend the Land 1/day",
+          "Type": "Innate",
+          "Effect": "Defend the Land 1/day: gains Stand and Die (as Soldier tradition) but locations continue to function until severed. Ends if the Kallah leaves combat.",
+          "Count": 1,
+          "Key": "ability.guild.mordred-s-rest.defend-the-land-1-day",
+          "AbilityRef": "ability.guild.mordred-s-rest.defend-the-land-1-day"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Gains Justice of the Kings",
+          "Type": "Static",
+          "Effect": "Gains Justice of the Kings.",
+          "Key": "ability.guild.mordred-s-rest.gains-justice-of-the-kings",
+          "AbilityRef": "ability.guild.mordred-s-rest.gains-justice-of-the-kings"
+        },
+        {
+          "Name": "Brothers Together can now grant up to 12/4 life",
+          "Type": "Static",
+          "Effect": "Brothers Together can now grant up to 12/4 life.",
+          "Key": "ability.guild.mordred-s-rest.brothers-together-can-now-grant-up-to-12-4-life",
+          "AbilityRef": "ability.guild.mordred-s-rest.brothers-together-can-now-grant-up-to-12-4-life"
+        },
+        {
+          "Name": "While using Defend the Land gains Determination and immunity to domination effects",
+          "Type": "Static",
+          "Effect": "While using Defend the Land gains Determination and immunity to domination effects.",
+          "Key": "ability.guild.mordred-s-rest.while-using-defend-the-land-gains-determination-and-immunity-to-domination-effects",
+          "AbilityRef": "ability.guild.mordred-s-rest.while-using-defend-the-land-gains-determination-and-immunity-to-domination-effects"
+        }
+      ]
     },
     "City Benefits": [
       {
@@ -5971,7 +8004,10 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": ["Hanot Beggar", "Kallah Beggar"]
+          "Value": [
+            "Hanot Beggar",
+            "Kallah Beggar"
+          ]
         }
       ]
     }

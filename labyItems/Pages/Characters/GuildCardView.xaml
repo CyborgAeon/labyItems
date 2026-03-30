@@ -152,7 +152,7 @@
                                 StrokeShape="RoundRectangle 8"
                                 BackgroundColor="#F9FAFB"
                                 Padding="8">
-                            <Grid RowDefinitions="Auto,*"
+                            <Grid RowDefinitions="Auto,Auto"
                                   RowSpacing="6">
                                 <Grid ColumnDefinitions="44,*,Auto"
                                       ColumnSpacing="8"
@@ -173,46 +173,44 @@
                                            Opacity="0.75"
                                            HorizontalTextAlignment="Center"/>
                                 </Grid>
-                                <ScrollView Grid.Row="1"
-                                            HeightRequest="200">
-                                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding MiracleRows}"
-                                                         Spacing="4">
-                                        <BindableLayout.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border StrokeThickness="0"
-                                                        StrokeShape="RoundRectangle 8"
-                                                        BackgroundColor="{Binding RowBackgroundColor}">
-                                                    <Grid Padding="8,6"
-                                                          ColumnDefinitions="44,*,Auto"
-                                                          ColumnSpacing="8">
-                                                        <Label Text="{Binding LevelText}"
-                                                               FontSize="13"
-                                                               Opacity="0.85"
-                                                               VerticalTextAlignment="Center"/>
-                                                        <Label Grid.Column="1"
-                                                               Text="{Binding Name}"
-                                                               FontSize="13"
-                                                               VerticalTextAlignment="Center"/>
-                                                        <Button Grid.Column="2"
-                                                                Text="&#xF05A;"
-                                                                FontFamily="FASolid"
-                                                                FontSize="12"
-                                                                Padding="0"
-                                                                BackgroundColor="Transparent"
-                                                                TextColor="{StaticResource SubtleTextColor}"
-                                                                HeightRequest="18"
-                                                                WidthRequest="18"
-                                                                MinimumHeightRequest="0"
-                                                                MinimumWidthRequest="0"
-                                                                VerticalOptions="Center"
-                                                                Clicked="OnGuildMiracleInfoClicked"
-                                                                CommandParameter="{Binding .}"/>
-                                                    </Grid>
-                                                </Border>
-                                            </DataTemplate>
-                                        </BindableLayout.ItemTemplate>
-                                    </VerticalStackLayout>
-                                </ScrollView>
+                                <VerticalStackLayout Grid.Row="1"
+                                                     BindableLayout.ItemsSource="{Binding MiracleRows}"
+                                                     Spacing="2">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border StrokeThickness="0"
+                                                    StrokeShape="RoundRectangle 8"
+                                                    BackgroundColor="{Binding RowBackgroundColor}">
+                                                <Grid Padding="8,6"
+                                                      ColumnDefinitions="44,*,Auto"
+                                                      ColumnSpacing="8">
+                                                    <Label Text="{Binding LevelText}"
+                                                           FontSize="13"
+                                                           Opacity="0.85"
+                                                           VerticalTextAlignment="Center"/>
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding Name}"
+                                                           FontSize="13"
+                                                           VerticalTextAlignment="Center"/>
+                                                    <Button Grid.Column="2"
+                                                            Text="&#xF05A;"
+                                                            FontFamily="FASolid"
+                                                            FontSize="12"
+                                                            Padding="0"
+                                                            BackgroundColor="Transparent"
+                                                            TextColor="{StaticResource SubtleTextColor}"
+                                                            HeightRequest="18"
+                                                            WidthRequest="18"
+                                                            MinimumHeightRequest="0"
+                                                            MinimumWidthRequest="0"
+                                                            VerticalOptions="Center"
+                                                            Clicked="OnGuildMiracleInfoClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
                             </Grid>
                         </Border>
                     </controls:AnimatedExpandView>
@@ -501,6 +499,53 @@
                                     </BindableLayout.ItemTemplate>
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </controls:AnimatedExpandView>
+                </VerticalStackLayout>
+
+                <!-- City benefits -->
+                <VerticalStackLayout Spacing="6"
+                                     IsVisible="{Binding HasCityBenefits}">
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="8">
+                        <Label Text="CITY BENEFITS"
+                               FontAttributes="Bold"
+                               FontSize="12"
+                               Opacity="0.85"
+                               VerticalOptions="Center"/>
+                        <Button Grid.Column="1"
+                                Text="⌄"
+                                FontSize="18"
+                                Rotation="{Binding CityBenefitsChevronRotation}"
+                                Style="{StaticResource ChevronButtonStyle}"
+                                Padding="0"
+                                WidthRequest="28"
+                                HeightRequest="28"
+                                Command="{Binding ToggleCityBenefitsCommand}"/>
+                    </Grid>
+                    <controls:AnimatedExpandView IsExpanded="{Binding IsCityBenefitsExpanded}"
+                                                 AnimationName="GuildCityBenefitsExpand">
+                        <VerticalStackLayout Spacing="6"
+                                             BindableLayout.ItemsSource="{Binding CityBenefits}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <VerticalStackLayout Spacing="3">
+                                        <Label Text="{Binding Name}"
+                                               FontAttributes="Bold"
+                                               FontSize="13"
+                                               Opacity="0.9"/>
+                                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Effects}">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Label Text="{Binding ., StringFormat='• {0}'}"
+                                                           FontSize="13"
+                                                           Opacity="0.9"/>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </VerticalStackLayout>
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
                     </controls:AnimatedExpandView>
                 </VerticalStackLayout>

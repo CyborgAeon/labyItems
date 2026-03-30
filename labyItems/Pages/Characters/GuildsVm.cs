@@ -336,6 +336,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             BasicOptionGroups = BuildBenefitOptionGroups(guildName, "Basic", benefits.Basic),
             IntermediateOptionGroups = BuildBenefitOptionGroups(guildName, "Intermediate", benefits.Intermediate),
             AdvancedOptionGroups = BuildBenefitOptionGroups(guildName, "Advanced", benefits.Advanced),
+            CityBenefits = FormatCityBenefits(rec.CityBenefits),
             MiracleRows = BuildMiracleRows(rec.MiracleList),
             DenominationalMiracle = BuildDenominationalMiracle(rec, miracleLookup)
         };
@@ -802,6 +803,33 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return list;
     }
 
+    private static List<GuildCityBenefitVm> FormatCityBenefits(IEnumerable<GuildCityBenefit>? cityBenefits)
+    {
+        var list = new List<GuildCityBenefitVm>();
+        foreach (var cityBenefit in cityBenefits ?? Enumerable.Empty<GuildCityBenefit>())
+        {
+            if (cityBenefit == null)
+                continue;
+
+            var name = (cityBenefit.Name ?? string.Empty).Trim();
+            var effects = (cityBenefit.Effects ?? new List<string>())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .ToList();
+
+            if (name.Length == 0 && effects.Count == 0)
+                continue;
+
+            list.Add(new GuildCityBenefitVm
+            {
+                Name = name.Length > 0 ? name : "City Benefit",
+                Effects = effects
+            });
+        }
+
+        return list;
+    }
+
     private static string FormatBenefit(AbilityDefinition? benefit)
     {
         if (benefit == null)
@@ -978,6 +1006,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (MiracleListContainsText(rec.MiracleList, text))
             return true;
 
+        if (CityBenefitsContainText(rec.CityBenefits, text))
+            return true;
+
         var benefits = rec.Benefits ?? new GuildBenefits();
         return BenefitEntriesContainText(benefits.Basic, text)
                || BenefitEntriesContainText(benefits.Intermediate, text)
@@ -1017,6 +1048,23 @@ public sealed class GuildsVm : INotifyPropertyChanged
                     if (optionLine.Contains(text, StringComparison.OrdinalIgnoreCase))
                         return true;
                 }
+            }
+        }
+
+        return false;
+    }
+
+    private static bool CityBenefitsContainText(IEnumerable<GuildCityBenefit>? cityBenefits, string text)
+    {
+        foreach (var cityBenefit in cityBenefits ?? Enumerable.Empty<GuildCityBenefit>())
+        {
+            if ((cityBenefit?.Name ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            foreach (var effect in cityBenefit?.Effects ?? new List<string>())
+            {
+                if ((effect ?? string.Empty).Contains(text, StringComparison.OrdinalIgnoreCase))
+                    return true;
             }
         }
 
@@ -1268,6 +1316,7 @@ public sealed class GuildCardDetailsVm
     public List<GuildBenefitOptionGroupVm> BasicOptionGroups { get; init; } = new();
     public List<GuildBenefitOptionGroupVm> IntermediateOptionGroups { get; init; } = new();
     public List<GuildBenefitOptionGroupVm> AdvancedOptionGroups { get; init; } = new();
+    public List<GuildCityBenefitVm> CityBenefits { get; init; } = new();
     public List<GuildMiracleRowVm> MiracleRows { get; init; } = new();
     public GuildDenominationalMiracleVm? DenominationalMiracle { get; init; }
 }
@@ -1278,6 +1327,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     {
         ToggleMiracleListCommand = new Command(() => IsMiracleListExpanded = !IsMiracleListExpanded);
         ToggleBenefitsCommand = new Command(() => IsBenefitsExpanded = !IsBenefitsExpanded);
+        ToggleCityBenefitsCommand = new Command(() => IsCityBenefitsExpanded = !IsCityBenefitsExpanded);
         ToggleDenominationalMiracleCommand = new Command(() => IsDenominationalMiracleExpanded = !IsDenominationalMiracleExpanded);
     }
 
@@ -1383,6 +1433,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public List<GuildBenefitOptionGroupVm> BasicOptionGroups { get; set; } = new();
     public List<GuildBenefitOptionGroupVm> IntermediateOptionGroups { get; set; } = new();
     public List<GuildBenefitOptionGroupVm> AdvancedOptionGroups { get; set; } = new();
+    public List<GuildCityBenefitVm> CityBenefits { get; set; } = new();
     public List<GuildMiracleRowVm> MiracleRows { get; set; } = new();
     public GuildDenominationalMiracleVm? DenominationalMiracle { get; set; }
 
@@ -1401,6 +1452,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
         BasicOptionGroups = source.BasicOptionGroups ?? new List<GuildBenefitOptionGroupVm>();
         IntermediateOptionGroups = source.IntermediateOptionGroups ?? new List<GuildBenefitOptionGroupVm>();
         AdvancedOptionGroups = source.AdvancedOptionGroups ?? new List<GuildBenefitOptionGroupVm>();
+        CityBenefits = source.CityBenefits ?? new List<GuildCityBenefitVm>();
         MiracleRows = source.MiracleRows ?? new List<GuildMiracleRowVm>();
         DenominationalMiracle = source.DenominationalMiracle;
 
@@ -1417,6 +1469,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
         Raise(nameof(BasicOptionGroups));
         Raise(nameof(IntermediateOptionGroups));
         Raise(nameof(AdvancedOptionGroups));
+        Raise(nameof(CityBenefits));
         Raise(nameof(MiracleRows));
         Raise(nameof(DenominationalMiracle));
         Raise(nameof(HasLore));
@@ -1427,6 +1480,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
         Raise(nameof(HasMiracles));
         Raise(nameof(HasDenominationalMiracle));
         Raise(nameof(HasAnyBenefits));
+        Raise(nameof(HasCityBenefits));
         Raise(nameof(HasBasicOptions));
         Raise(nameof(HasIntermediateOptions));
         Raise(nameof(HasAdvancedOptions));
@@ -1439,6 +1493,7 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public bool HasBasic => BasicBenefits.Count > 0 || BasicOptionGroups.Count > 0;
     public bool HasIntermediate => IntermediateBenefits.Count > 0 || IntermediateOptionGroups.Count > 0;
     public bool HasAdvanced => AdvancedBenefits.Count > 0 || AdvancedOptionGroups.Count > 0;
+    public bool HasCityBenefits => CityBenefits.Count > 0;
     public bool HasMiracles => MiracleRows.Count > 0;
     public bool HasDenominationalMiracle => DenominationalMiracle != null;
 
@@ -1454,10 +1509,12 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public double ChevronRotation => IsExpanded ? 180 : 0;
     public double MiracleListChevronRotation => IsMiracleListExpanded ? 180 : 0;
     public double BenefitsChevronRotation => IsBenefitsExpanded ? 180 : 0;
+    public double CityBenefitsChevronRotation => IsCityBenefitsExpanded ? 180 : 0;
     public double DenominationalMiracleChevronRotation => IsDenominationalMiracleExpanded ? 180 : 0;
 
     public ICommand ToggleMiracleListCommand { get; }
     public ICommand ToggleBenefitsCommand { get; }
+    public ICommand ToggleCityBenefitsCommand { get; }
     public ICommand ToggleDenominationalMiracleCommand { get; }
 
     private bool _isExpanded;
@@ -1496,6 +1553,19 @@ public sealed class GuildCardVm : INotifyPropertyChanged
             _isBenefitsExpanded = value;
             Raise();
             Raise(nameof(BenefitsChevronRotation));
+        }
+    }
+
+    private bool _isCityBenefitsExpanded = true;
+    public bool IsCityBenefitsExpanded
+    {
+        get => _isCityBenefitsExpanded;
+        set
+        {
+            if (_isCityBenefitsExpanded == value) return;
+            _isCityBenefitsExpanded = value;
+            Raise();
+            Raise(nameof(CityBenefitsChevronRotation));
         }
     }
 
@@ -1639,6 +1709,12 @@ public sealed class GuildBenefitOptionVm
     public string Label { get; init; } = string.Empty;
     public List<AbilityDefinition> Abilities { get; init; } = new();
     public List<string> Lines { get; init; } = new();
+}
+
+public sealed class GuildCityBenefitVm
+{
+    public string Name { get; init; } = string.Empty;
+    public List<string> Effects { get; init; } = new();
 }
 
 public sealed class GuildMiracleRowVm

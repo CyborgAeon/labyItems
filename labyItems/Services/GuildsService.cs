@@ -71,12 +71,40 @@ public static class GuildsService
                 record.Benefits.Basic = NormalizeBenefitTier(record.Benefits.Basic, abilityRefs, choiceSetRefs, grantsById);
                 record.Benefits.Intermediate = NormalizeBenefitTier(record.Benefits.Intermediate, abilityRefs, choiceSetRefs, grantsById);
                 record.Benefits.Advanced = NormalizeBenefitTier(record.Benefits.Advanced, abilityRefs, choiceSetRefs, grantsById);
+                record.CityBenefits = NormalizeCityBenefits(record.CityBenefits);
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"[GuildsService] Failed to normalize guild ability references: {ex.Message}");
         }
+    }
+
+    private static List<GuildCityBenefit> NormalizeCityBenefits(IEnumerable<GuildCityBenefit>? cityBenefits)
+    {
+        var normalized = new List<GuildCityBenefit>();
+        foreach (var cityBenefit in cityBenefits ?? Enumerable.Empty<GuildCityBenefit>())
+        {
+            if (cityBenefit == null)
+                continue;
+
+            var name = (cityBenefit.Name ?? string.Empty).Trim();
+            var effects = (cityBenefit.Effects ?? new List<string>())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .ToList();
+
+            if (name.Length == 0 && effects.Count == 0)
+                continue;
+
+            normalized.Add(new GuildCityBenefit
+            {
+                Name = name.Length > 0 ? name : "City Benefit",
+                Effects = effects
+            });
+        }
+
+        return normalized;
     }
 
     private static List<GuildBenefitEntry> NormalizeBenefitTier(
@@ -186,7 +214,13 @@ public static class GuildsService
             ability = new AbilityDefinition();
         }
 
+        var priorAbilityRef = ability.AbilityRef;
+        var priorKey = ability.Key;
         ApplyGrantOverlay(ability, raw);
+        if (IsSyntheticGuildAbilityToken(raw.AbilityRef) && !string.IsNullOrWhiteSpace(priorAbilityRef))
+            ability.AbilityRef = priorAbilityRef;
+        if (IsSyntheticGuildAbilityToken(raw.Key) && !string.IsNullOrWhiteSpace(priorKey))
+            ability.Key = priorKey;
 
         var countDelta = raw.Modify?.CountDelta;
         if (countDelta.HasValue && countDelta.Value != 0)
@@ -262,6 +296,13 @@ public static class GuildsService
         var resolved = TryResolveReferencedAbility(raw, abilityRefs);
         var ability = resolved != null ? CloneAbility(resolved) : new AbilityDefinition();
         ApplyGrantOverlay(ability, raw);
+        if (resolved != null)
+        {
+            if (IsSyntheticGuildAbilityToken(raw.AbilityRef))
+                ability.AbilityRef = resolved.Key;
+            if (IsSyntheticGuildAbilityToken(raw.Key))
+                ability.Key = resolved.Key;
+        }
 
         if (string.IsNullOrWhiteSpace(ability.AbilityRef))
             ability.AbilityRef = resolved?.Key;
@@ -522,6 +563,12 @@ public static class GuildsService
             .ToArray());
     }
 
+    private static bool IsSyntheticGuildAbilityToken(string? value)
+    {
+        var token = (value ?? string.Empty).Trim();
+        return token.StartsWith("ability.guild.", StringComparison.OrdinalIgnoreCase);
+    }
+
     public static async Task<IReadOnlyList<string>> GetGuildNamesAsync()
     {
         var all = await GetAllAsync();
@@ -746,6 +793,8 @@ public sealed class GuildRecord
     public string Background { get; set; } = "";
 
     public GuildBenefits Benefits { get; set; } = new();
+    [JsonPropertyName("City Benefits")]
+    public List<GuildCityBenefit> CityBenefits { get; set; } = new();
 
     [JsonPropertyName("alignmentRule")]
     public AlignmentRule? AlignmentRule { get; set; }
@@ -769,6 +818,13 @@ public sealed class GuildBenefits
     public List<GuildBenefitEntry> Basic { get; set; } = new();
     public List<GuildBenefitEntry> Intermediate { get; set; } = new();
     public List<GuildBenefitEntry> Advanced { get; set; } = new();
+}
+
+[JsonConverter(typeof(GuildCityBenefitConverter))]
+public sealed class GuildCityBenefit
+{
+    public string Name { get; set; } = string.Empty;
+    public List<string> Effects { get; set; } = new();
 }
 
 public static class GuildBenefitKeys
@@ -878,6 +934,86 @@ public sealed class GuildAvailability
 {
     public List<RuleClause> Rules { get; set; } = new();
     public string? RequiredGuild { get; set; }
+}
+
+public sealed class GuildCityBenefitConverter : JsonConverter<GuildCityBenefit>
+{
+    public override GuildCityBenefit Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            return new GuildCityBenefit
+            {
+                Name = reader.GetString() ?? string.Empty
+            };
+        }
+
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException($"Unexpected token {reader.TokenType} when parsing city benefit.");
+
+        using var doc = JsonDocument.ParseValue(ref reader);
+        var root = doc.RootElement;
+
+        var benefit = new GuildCityBenefit();
+        if (TryGetPropertyInsensitive(root, "Name", out var nameEl)
+            && nameEl.ValueKind == JsonValueKind.String)
+        {
+            benefit.Name = nameEl.GetString() ?? string.Empty;
+        }
+
+        var effects = new List<string>();
+        if (TryGetPropertyInsensitive(root, "Effects", out var effectsEl))
+            AddEffects(effectsEl, effects);
+        else if (TryGetPropertyInsensitive(root, "Effect", out var effectEl))
+            AddEffects(effectEl, effects);
+
+        benefit.Effects = effects;
+        return benefit;
+    }
+
+    public override void Write(Utf8JsonWriter writer, GuildCityBenefit value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+        writer.WriteString("Name", value?.Name ?? string.Empty);
+        writer.WritePropertyName("Effects");
+        writer.WriteStartArray();
+        foreach (var effect in value?.Effects ?? new List<string>())
+            writer.WriteStringValue(effect);
+        writer.WriteEndArray();
+        writer.WriteEndObject();
+    }
+
+    private static void AddEffects(JsonElement value, ICollection<string> target)
+    {
+        if (value.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var item in value.EnumerateArray())
+                AddEffects(item, target);
+            return;
+        }
+
+        if (value.ValueKind != JsonValueKind.String)
+            return;
+
+        var text = (value.GetString() ?? string.Empty).Trim();
+        if (text.Length > 0)
+            target.Add(text);
+    }
+
+    private static bool TryGetPropertyInsensitive(JsonElement element, string propertyName, out JsonElement value)
+    {
+        foreach (var property in element.EnumerateObject())
+        {
+            if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+            {
+                value = property.Value;
+                return true;
+            }
+        }
+
+        value = default;
+        return false;
+    }
 }
 
 public sealed class GuildMiracleReferenceConverter : JsonConverter<GuildMiracleReference>
