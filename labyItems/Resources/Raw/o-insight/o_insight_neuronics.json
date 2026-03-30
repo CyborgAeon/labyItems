@@ -23,9 +23,21 @@
     "duration": "Instant",
     "immunities": "",
     "Damage": {
-      "amount": [[6, 6]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          6,
+          6
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     }
   },
@@ -117,9 +129,21 @@
     "duration": "5 minutes",
     "immunities": "",
     "Damage": {
-      "amount": [[3, 3]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          3,
+          3
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     }
   },
@@ -138,7 +162,10 @@
     "description": "The user clouds the minds of those that engage them in combat causing the user to become a blur. This causes opponents to lose their masteries in a similar manner to a Bedazzle. Enhanced Perception grants immunity, as does Weapon Master or similar.",
     "range": "Self",
     "duration": "5 minutes",
-    "immunities": ["Enhanced Perception", "Loss of weapon masteries"]
+    "immunities": [
+      "Enhanced Perception",
+      "Loss of weapon masteries"
+    ]
   },
   {
     "power": 12,
@@ -347,9 +374,21 @@
     "duration": "Instant",
     "immunities": "",
     "Damage": {
-      "amount": [[60, 60]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          60,
+          60
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     },
     "todo": "Also costs a level to use."
@@ -396,8 +435,15 @@
     "immunities": "Pain",
     "todo": "Additional cost details: 12 + 6/15 seconds",
     "Damage": {
-      "amount": [[6, 1]],
-      "type": ["Missile"]
+      "amount": [
+        [
+          6,
+          1
+        ]
+      ],
+      "type": [
+        "Missile"
+      ]
     }
   },
   {
@@ -424,9 +470,21 @@
     "duration": "Instant",
     "immunities": "",
     "Damage": {
-      "amount": [[12, 12]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          12,
+          12
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     }
   },
@@ -446,9 +504,21 @@
     "duration": "Instant",
     "immunities": "",
     "Damage": {
-      "amount": [[24, 24]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          24,
+          24
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     }
   },
@@ -477,9 +547,21 @@
     "duration": "Instant",
     "immunities": "",
     "Damage": {
-      "amount": [[3, 3]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          3,
+          3
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     }
   },
@@ -499,9 +581,21 @@
     "duration": "Instant",
     "immunities": "",
     "Damage": {
-      "amount": [[36, 36]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          36,
+          36
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     }
   },
@@ -521,9 +615,21 @@
     "duration": "Instant",
     "immunities": "Repels",
     "Damage": {
-      "amount": [[6, 6]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          6,
+          6
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     }
   },
@@ -543,9 +649,21 @@
     "duration": "Instant",
     "immunities": "Repels",
     "Damage": {
-      "amount": [[12, 12]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          12,
+          12
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     }
   },
@@ -589,9 +707,21 @@
     "duration": "Instant",
     "immunities": "",
     "Damage": {
-      "amount": [[48, 48]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          48,
+          48
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     }
   },
@@ -601,7 +731,10 @@
     "description": "One target is mentally stunned, suffering effects as per Halt. They are unable to move for 10 seconds or unless they are touched or suffer damage. This effect is non-level based. It is considered a listed stopping effect.",
     "range": "10'",
     "duration": "10 seconds",
-    "immunities": ["Stopping FX", "Halt"]
+    "immunities": [
+      "Stopping FX",
+      "Halt"
+    ]
   },
   {
     "power": 18,
@@ -609,7 +742,9 @@
     "description": "All targets within range except the caster are affected by a Neuronic Whip, becoming filled with fear of the user.",
     "range": "10'",
     "duration": "5 Minutes",
-    "immunities": ["Fear"]
+    "immunities": [
+      "Fear"
+    ]
   },
   {
     "power": 6,
@@ -710,9 +845,21 @@
     "immunities": "Stopping FX",
     "todo": "Additional cost details: 18 + 6 / 15 seconds Additional maintenance cost of 6 TBLP per 15 seconds, reduced by Neural Foci.",
     "Damage": {
-      "amount": [[6, 6]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          6,
+          6
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "NAC"
     }
   },
@@ -885,5 +1032,21 @@
     "range": "20'",
     "duration": "5 Minutes",
     "immunities": "Stability"
+  },
+  {
+    "power": 48,
+    "name": "Offensive Neural Purge",
+    "description": "Touch target to immediately end all ongoing neuronic effects on them. As a neuronic effect, cannot remove Mind Bar/similar. Immunity to non-published dispelling effects applies.",
+    "range": "Touch",
+    "duration": "Instant",
+    "immunities": "Non-published dispelling effects"
+  },
+  {
+    "power": 24,
+    "name": "Neuronic Imbalance",
+    "description": "Target cannot use neuronics for 30 seconds. Ongoing neuronics remain, but those requiring concentration or ongoing casting damage end. Mental Fortitude (or similar) allows neuronic use but not Foci for duration.",
+    "range": "20'",
+    "duration": "30 seconds",
+    "immunities": "Mental Fortitude (partial)"
   }
 ]

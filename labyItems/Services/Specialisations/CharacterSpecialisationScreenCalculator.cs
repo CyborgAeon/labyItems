@@ -349,6 +349,12 @@ public static class CharacterSpecialisationScreenCalculator
             if (choiceSet == null)
                 continue;
 
+            var eligibleOptions = choiceSet.Options
+                .Where(option => string.IsNullOrWhiteSpace(ResolveRestrictionIssue(option, context)))
+                .ToList();
+            if (eligibleOptions.Count == 0)
+                eligibleOptions = choiceSet.Options.ToList();
+
             var levels = BuildLevelsForGroup(group.Key, group);
             sections.Add(new SpecialisationSectionSpec
             {
@@ -360,7 +366,7 @@ public static class CharacterSpecialisationScreenCalculator
                 Kind = SpecialisationSectionKind.Choice,
                 Required = true,
                 Levels = levels,
-                Options = choiceSet.Options,
+                Options = eligibleOptions,
                 StrategyIds = choiceSet.StrategyIds
             });
         }
@@ -986,8 +992,9 @@ public static class CharacterSpecialisationScreenCalculator
         var classAllowed = IsClassAllowed(option.Restrictions.ClassRestriction, context);
         var alignmentAllowed = IsAlignmentAllowed(option.Restrictions.AlignmentRestriction, context.Draft);
         var raceAllowed = IsRaceAllowed(option.Restrictions.RaceRestriction, context);
+        var raceSubtypeAllowed = IsSubtypeAllowed(option.Restrictions.RaceSubtypeRestriction, context);
 
-        if (classAllowed && alignmentAllowed && raceAllowed)
+        if (classAllowed && alignmentAllowed && raceAllowed && raceSubtypeAllowed)
             return string.Empty;
 
         var failures = new List<string>();
@@ -997,6 +1004,8 @@ public static class CharacterSpecialisationScreenCalculator
             failures.Add("Alignment");
         if (!raceAllowed)
             failures.Add("Race");
+        if (!raceSubtypeAllowed)
+            failures.Add("Race subtype");
 
         return failures.Count switch
         {
@@ -1088,6 +1097,49 @@ public static class CharacterSpecialisationScreenCalculator
                 || normalized.Contains(raceToken, StringComparison.OrdinalIgnoreCase)
                 || raceToken.Contains(singularRestriction, StringComparison.OrdinalIgnoreCase)
                 || singularRestriction.Contains(raceToken, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsSubtypeAllowed(IReadOnlyList<string>? restrictions, CharacterSpecialisationContext context)
+    {
+        var subtype = (context.CurrentRaceSubtype ?? string.Empty).Trim();
+
+        var tokens = restrictions?
+            .Select(x => (x ?? string.Empty).Trim())
+            .Where(x => x.Length > 0)
+            .ToList() ?? new List<string>();
+
+        if (tokens.Count == 0)
+            return true;
+
+        if (subtype.Length == 0)
+            return false;
+
+        var subtypeToken = NormalizeRaceToken(subtype);
+        if (subtypeToken.Length == 0)
+            return false;
+
+        var singularSubtype = TrimPluralToken(subtypeToken);
+        foreach (var token in tokens)
+        {
+            var normalized = NormalizeRaceToken(token);
+            if (normalized.Length == 0)
+                continue;
+
+            var singularRestriction = TrimPluralToken(normalized);
+            if (subtypeToken.Equals(normalized, StringComparison.OrdinalIgnoreCase)
+                || singularSubtype.Equals(normalized, StringComparison.OrdinalIgnoreCase)
+                || subtypeToken.Equals(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || singularSubtype.Equals(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || subtypeToken.Contains(normalized, StringComparison.OrdinalIgnoreCase)
+                || normalized.Contains(subtypeToken, StringComparison.OrdinalIgnoreCase)
+                || subtypeToken.Contains(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || singularRestriction.Contains(subtypeToken, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }

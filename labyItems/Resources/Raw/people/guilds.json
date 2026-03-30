@@ -69,18 +69,12 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good"
-          ]
+          "Value": ["Good"]
         }
       ]
     }
@@ -224,19 +218,12 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good",
-            "Neutral"
-          ]
+          "Value": ["Good", "Neutral"]
         }
       ]
     }
@@ -330,9 +317,7 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": [
-            "Baronial"
-          ]
+          "Value": ["Baronial"]
         }
       ]
     }
@@ -348,10 +333,7 @@
           "Name": "Hard Upbringing",
           "Type": "Life",
           "Source": "Guild",
-          "Amount": [
-            3,
-            1
-          ],
+          "Amount": [3, 1],
           "Key": "ability.guild.the-deci-gentlemen-s-club.hard-upbringing",
           "AbilityRef": "ability.guild.the-deci-gentlemen-s-club.hard-upbringing"
         },
@@ -375,10 +357,7 @@
         {
           "Name": "Hard Upbringing",
           "Type": "Update",
-          "Amount": [
-            6,
-            2
-          ],
+          "Amount": [6, 2],
           "Key": "ability.guild.the-deci-gentlemen-s-club.hard-upbringing.2",
           "AbilityRef": "ability.guild.the-deci-gentlemen-s-club.hard-upbringing.2"
         },
@@ -763,9 +742,7 @@
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good"
-          ]
+          "Value": ["Good"]
         }
       ]
     }
@@ -942,9 +919,7 @@
         {
           "Field": "Guild",
           "Operator": "In",
-          "Value": [
-            "Knights of the Land"
-          ]
+          "Value": ["Knights of the Land"]
         }
       ]
     }
@@ -1042,19 +1017,12 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good",
-            "Neutral"
-          ]
+          "Value": ["Good", "Neutral"]
         }
       ]
     }
@@ -1132,18 +1100,12 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Evil"
-          ]
+          "Value": ["Evil"]
         }
       ]
     }
@@ -1221,10 +1183,7 @@
         {
           "Name": "The Brutal North",
           "Type": "Life",
-          "Amount": [
-            6,
-            2
-          ],
+          "Amount": [6, 2],
           "Source": "Guild",
           "Key": "ability.guild.of-the-north.the-brutal-north",
           "AbilityRef": "ability.guild.of-the-north.the-brutal-north"
@@ -1321,9 +1280,7 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": [
-            "Amlesian"
-          ]
+          "Value": ["Amlesian"]
         }
       ]
     }
@@ -1364,10 +1321,7 @@
             "Name": "Heart of the Lotus",
             "Type": "Life",
             "Effect": "+3/1 guild life",
-            "Amount": [
-              3,
-              1
-            ],
+            "Amount": [3, 1],
             "Source": "Guild",
             "Key": "ability.guild.the-white-lotus-society.heart-of-the-lotus",
             "AbilityRef": "ability.guild.the-white-lotus-society.heart-of-the-lotus"
@@ -1401,10 +1355,7 @@
         {
           "Name": "Heart of the Lotus",
           "Type": "Update",
-          "Amount": [
-            6,
-            2
-          ],
+          "Amount": [6, 2],
           "Key": "ability.guild.the-white-lotus-society.heart-of-the-lotus.2",
           "AbilityRef": "ability.guild.the-white-lotus-society.heart-of-the-lotus.2"
         },
@@ -1442,10 +1393,7 @@
         {
           "Name": "Heart of the lotus",
           "Type": "Update",
-          "Amount": [
-            9,
-            3
-          ],
+          "Amount": [9, 3],
           "Key": "ability.guild.the-white-lotus-society.heart-of-the-lotus.3",
           "AbilityRef": "ability.guild.the-white-lotus-society.heart-of-the-lotus.3"
         },
@@ -1560,9 +1508,7 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": [
-            "Tribal"
-          ]
+          "Value": ["Tribal"]
         }
       ]
     }
@@ -1648,9 +1594,7 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": [
-            "Ishmaic"
-          ]
+          "Value": ["Ishmaic"]
         }
       ]
     }
@@ -1673,10 +1617,7 @@
         {
           "Name": "Strength of the yeoman",
           "Type": "Life",
-          "Amount": [
-            3,
-            1
-          ],
+          "Amount": [3, 1],
           "Effect": "Gain +3/1 life per yeoman on dungeon, to a max of +6/2.",
           "Key": "ability.guild.yeomen-of-the-empire.strength-of-the-yeoman",
           "AbilityRef": "ability.guild.yeomen-of-the-empire.strength-of-the-yeoman"
@@ -1725,14 +1666,8 @@
     "Ethos": "The guild follows the Shadow of the First Evil, a powerful Demon of Corruption ascended to Divine Power by the actions of his chosen one Lomo, and others. The duty of the church is to foster Evil in the hearts of men. It is more powerful to cause another to carry out an act of evil than do it yourself. Working from the shadows until a place is claimed the Church seek to spread across the Empire and beyond.",
     "Restrictions": "The Guild is a full black guild (as per WFA rules). If a member ever ceases to be Evil they are instantly Excommunicated. Note - If slain a member of the church, or a character with Pact to Certizal, claiming Kallah benefits linked to Certizal or if they are Demon Touched by Certizal, can choose to Word of Recall to Lomo who can cast a Mantic (Ebony/Evil Spirit) Command Life on the individual. This costs 20% (10% if fated hero is owned). For reference: Command Life is as animate life except the individual does not become Undead. Instead they discern as spiritually mastered, and if removed they die. It does not function on those immune to spiritual mastery. This should be written on the individuals card.",
     "MiracleList": {
-      "1": [
-        "Halt",
-        "Lesser Wings of Darkness"
-      ],
-      "2": [
-        "Cause Wound",
-        "Animate Zombie"
-      ],
+      "1": ["Halt", "Lesser Wings of Darkness"],
+      "2": ["Cause Wound", "Animate Zombie"],
       "3": [
         "Cause Serious Wounds",
         "Curse",
@@ -1746,17 +1681,9 @@
         "Beguile Spirit",
         "Control Ghoul"
       ],
-      "5": [
-        "Voice of Power",
-        "Cause Grievous Wounds"
-      ],
-      "6": [
-        "Walk Through Walls",
-        "Spiritual Mastery"
-      ],
-      "7": [
-        "Suspend Life"
-      ]
+      "5": ["Voice of Power", "Cause Grievous Wounds"],
+      "6": ["Walk Through Walls", "Spiritual Mastery"],
+      "7": ["Suspend Life"]
     },
     "Benefits": {
       "Basic": [
@@ -1842,23 +1769,17 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic"
-          ]
+          "Value": ["Chaotic"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Evil"
-          ]
+          "Value": ["Evil"]
         }
       ]
     },
@@ -2007,9 +1928,7 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         }
       ]
     }
@@ -2022,14 +1941,8 @@
     "PreRequisites": "Open to any Goodly priest. Only Goodly individuals may join without the permission of the High Priest or 2 Custodians",
     "Ethos": "Members of this Church worship Truic Amora-Badrass, the Grand Duchess of Halgar, Empress of Labyrinthia and Realm Spirit of Glass as a Goddess in her own right. They recognise the fact that the current Empress has become the first Master or Mistress of Primus to truly master the Nagrech. Furthermore, members of this faith venerate the choice that the Empress made in sacrificing her own humanity and mortality to ascend to the position of Realm Spirit of Glass in order to combat the rise of The Spiter in the Sunless Lands. This act is held up as an example of the devotion to the duty of protecting the Empire, its borders and the people who reside within it that all members of the church should aspire to. This church is a goodly faith and represents the Empresses’ moral outlook as a goodly, constructive and peace loving being – violence should genuinely not be the first option. However, it is clearly not pacifistic in that its members are free (and often encouraged) to resort to martial means if necessary in the protection of the Empire and its people or in order to uphold Imperial Law. This faith is currently most commonly followed by those outside the mercenary community, though its influence there is starting to grow. It is also particularly popular within some of the most fervent of the legions within the Bastion.\n\nMIRACLE LIST 1st Halt (N) Dismiss Zombie (G) 2nd Halt Undead (G), Cure Serious (G) 3rd Protection from Spirits (N), Spirit Shield (N) Talk to Spirit, (N) Bless, (G) Dismiss Ghoul, (G) 4th Heal (G) 5th VoP (N) Spirit Invis (N) Dismiss Wraith (G) 6th Total Heal (G) Dismiss Vampire (G) 7th Pure Force (N)",
     "MiracleList": {
-      "1": [
-        "Halt",
-        "Dismiss Zombie"
-      ],
-      "2": [
-        "Halt Undead",
-        "Cure Serious Wounds"
-      ],
+      "1": ["Halt", "Dismiss Zombie"],
+      "2": ["Halt Undead", "Cure Serious Wounds"],
       "3": [
         "Bless",
         "Spirit Shield",
@@ -2037,21 +1950,10 @@
         "Talk to Spirit",
         "Dismiss Ghoul"
       ],
-      "4": [
-        "Heal"
-      ],
-      "5": [
-        "Voice of Power",
-        "Spiritual Invisibility",
-        "Dismiss Wraith"
-      ],
-      "6": [
-        "Total Heal",
-        "Dismiss Vampire"
-      ],
-      "7": [
-        "Pure Force"
-      ]
+      "4": ["Heal"],
+      "5": ["Voice of Power", "Spiritual Invisibility", "Dismiss Wraith"],
+      "6": ["Total Heal", "Dismiss Vampire"],
+      "7": ["Pure Force"]
     },
     "Benefits": {
       "Basic": [
@@ -2140,25 +2042,17 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good"
-          ]
+          "Value": ["Good"]
         }
       ]
     }
@@ -2174,33 +2068,22 @@
         "Milly's Detect Spirits",
         "Spirit of Seeing"
       ],
-      "2": [
-        "Spirit of Seeing and Hearing"
-      ],
+      "2": ["Spirit of Seeing and Hearing"],
       "3": [
         "Detect Lie",
         "Spirit Shield",
         "Protection from Spirits",
         "Talk to Spirit"
       ],
-      "4": [
-        "Major Prayer",
-        "Rune of Power",
-        "Spirit Bolt",
-        "Communication"
-      ],
+      "4": ["Major Prayer", "Rune of Power", "Spirit Bolt", "Communication"],
       "5": [
         "Identify Spirit",
         "Spiritual Invisibility",
         "Voice of Power",
         "Remove Voice of Power"
       ],
-      "6": [
-        "Control Wraith"
-      ],
-      "8": [
-        "Greater Communication"
-      ]
+      "6": ["Control Wraith"],
+      "8": ["Greater Communication"]
     },
     "Benefits": {
       "Basic": [
@@ -2301,25 +2184,17 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Neutral"
-          ]
+          "Value": ["Neutral"]
         }
       ]
     }
@@ -2334,16 +2209,8 @@
     "Restrictions": "• Should a member become Outlawed or Ostracised by the Empire they are automatically excommunicated until the matter is resolved. In game terms they cannot cast any miracle from the Church list, nor miracles learnt whilst a member. However this does not trigger Dedicated Power restrictions unless the individual refuses to hand themselves in for trial.\n• Note: The Lord of Feldraken Isle can remove the High Priest from their role if they are not acting in the best interest of the Church, or simply fails to fulfil their duties.",
     "Type": "professional",
     "MiracleList": {
-      "1": [
-        "Soul's Hunger",
-        "Halt",
-        "Lesser Wings Of Darkness"
-      ],
-      "2": [
-        "Cause Wound",
-        "Animate Zombie",
-        "Halt Undead"
-      ],
+      "1": ["Soul's Hunger", "Halt", "Lesser Wings Of Darkness"],
+      "2": ["Cause Wound", "Animate Zombie", "Halt Undead"],
       "3": [
         "Curse",
         "Spirit Shield",
@@ -2352,22 +2219,10 @@
         "Cause Serious Wounds",
         "Animate skeleton"
       ],
-      "4": [
-        "Cause Disease",
-        "Create Ghoul",
-        "Cause Fear",
-        "Control Ghoul"
-      ],
-      "5": [
-        "Cause Grievous Wounds"
-      ],
-      "6": [
-        "Summon Wraith",
-        "Cause Critical wounds"
-      ],
-      "7": [
-        "Suspend Life"
-      ]
+      "4": ["Cause Disease", "Create Ghoul", "Cause Fear", "Control Ghoul"],
+      "5": ["Cause Grievous Wounds"],
+      "6": ["Summon Wraith", "Cause Critical wounds"],
+      "7": ["Suspend Life"]
     },
     "Benefits": {
       "Basic": [
@@ -2462,26 +2317,17 @@
         {
           "Field": "Class|Bracket",
           "Operator": "In",
-          "Value": [
-            "Unholy Champion",
-            "🙏 Priest"
-          ]
+          "Value": ["Unholy Champion", "🙏 Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Evil"
-          ]
+          "Value": ["Evil"]
         }
       ]
     }
@@ -2501,9 +2347,7 @@
         "Power Meld",
         "Spirit of Seeing"
       ],
-      "2": [
-        "Cure Serious"
-      ],
+      "2": ["Cure Serious"],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2512,22 +2356,10 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": [
-        "Heal",
-        "Spirit Bolt"
-      ],
-      "5": [
-        "Dismiss Wraith",
-        "Voice of Power",
-        "Spiritual Invisibility"
-      ],
-      "6": [
-        "Total Heal",
-        "Dismiss Vampire"
-      ],
-      "8": [
-        "Restore Life"
-      ]
+      "4": ["Heal", "Spirit Bolt"],
+      "5": ["Dismiss Wraith", "Voice of Power", "Spiritual Invisibility"],
+      "6": ["Total Heal", "Dismiss Vampire"],
+      "8": ["Restore Life"]
     },
     "Benefits": {
       "Basic": [
@@ -2603,25 +2435,17 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good"
-          ]
+          "Value": ["Good"]
         }
       ]
     }
@@ -2635,15 +2459,8 @@
     "PreRequisites": "Be a goodly weapons-wielding priest (not pure priest, hospitaller, armoured priest), or a paladin",
     "Ethos": "Mortai is the brother god of Shaehan, and her defender. He strongly believes in the sanctity of life, and is the overseer of Undead across the planes. His role is to ensure that they do not stray outside the restrictions to which they are bound, by invading the dead bodies of mortals or otherwise seeking to take revenge on living spirits. His priests are expected to harm no living thing except where it is essential to defend a life, although those who raise Undead are an exception to this rule and may be acted against as the priest sees fit. Undead must be returned to their own plane, by force if necessary, and trapped mortal bodies freed from their corruption. Antagonistic daemonkind should also be destroyed or banished, as their spirits are also perversions of lost souls and they are drawn to harm the living.\n\nMIRACLE LIST 1st Dismiss Zombie, Cure Wound 2nd Dismiss Skeleton, Halt Undead, Cure Serious Wounds 3rd Dismiss Ghoul, Protection from Spirits, Talk to Spirits, Spirit Shield, Cure Disease, Bless 4th Spirit Bolt, Heal, Dismiss Mummy 5th Spiritual Invisibility, Dismiss Wraith 6th Total Heal, Dismiss Vampire 7th Dismiss Level 7 Undead",
     "MiracleList": {
-      "1": [
-        "Dismiss Zombie",
-        "Cure Wound"
-      ],
-      "2": [
-        "Dismiss Skeleton",
-        "Halt Undead",
-        "Cure Serious Wounds"
-      ],
+      "1": ["Dismiss Zombie", "Cure Wound"],
+      "2": ["Dismiss Skeleton", "Halt Undead", "Cure Serious Wounds"],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2652,22 +2469,10 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": [
-        "Heal",
-        "Spirit Bolt",
-        "Dismiss Mummy"
-      ],
-      "5": [
-        "Dismiss Wraith",
-        "Spiritual Invisibility"
-      ],
-      "6": [
-        "Total Heal",
-        "Dismiss Vampire"
-      ],
-      "8": [
-        "Dismiss Level 7 Undead"
-      ]
+      "4": ["Heal", "Spirit Bolt", "Dismiss Mummy"],
+      "5": ["Dismiss Wraith", "Spiritual Invisibility"],
+      "6": ["Total Heal", "Dismiss Vampire"],
+      "8": ["Dismiss Level 7 Undead"]
     },
     "Benefits": {
       "Basic": [
@@ -2750,35 +2555,22 @@
         {
           "Field": "Class|Bracket",
           "Operator": "In",
-          "Value": [
-            "Paladin",
-            "🙏 Priest"
-          ]
+          "Value": ["Paladin", "🙏 Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good"
-          ]
+          "Value": ["Good"]
         },
         {
           "Field": "Class",
           "Operator": "NotIn",
-          "Value": [
-            "Pure-Priest",
-            "Hospitaller",
-            "Armoured Priest"
-          ]
+          "Value": ["Pure-Priest", "Hospitaller", "Armoured Priest"]
         }
       ]
     }
@@ -2792,14 +2584,8 @@
     },
     "Type": "professional",
     "MiracleList": {
-      "1": [
-        "Cure Wound",
-        "Detect Spirit's Nature",
-        "Halt"
-      ],
-      "2": [
-        "Cure Serious Wounds"
-      ],
+      "1": ["Cure Wound", "Detect Spirit's Nature", "Halt"],
+      "2": ["Cure Serious Wounds"],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2808,22 +2594,14 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": [
-        "Heal"
-      ],
+      "4": ["Heal"],
       "5": [
         "Dismiss Wraith",
         "Spiritual Invisibility",
         "Remove Fear and Paralysis"
       ],
-      "6": [
-        "Total Heal",
-        "Dismiss Vampire",
-        "Spiritual Freedom"
-      ],
-      "8": [
-        "Restore Life"
-      ]
+      "6": ["Total Heal", "Dismiss Vampire", "Spiritual Freedom"],
+      "8": ["Restore Life"]
     },
     "Benefits": {
       "Basic": [
@@ -2868,10 +2646,7 @@
         {
           "Name": "Strengthened",
           "Type": "Life",
-          "Amount": [
-            4,
-            2
-          ],
+          "Amount": [4, 2],
           "Source": "Guild",
           "Key": "ability.guild.church-of-shaehan.strengthened",
           "AbilityRef": "ability.guild.church-of-shaehan.strengthened"
@@ -2906,28 +2681,17 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hospitaller",
-            "Pure-Priest",
-            "Shaman",
-            "Armoured Priest"
-          ]
+          "Value": ["Hospitaller", "Pure-Priest", "Shaman", "Armoured Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good"
-          ]
+          "Value": ["Good"]
         },
         {
           "Field": "Class",
@@ -2959,9 +2723,7 @@
         "Power Meld",
         "Spirit of Seeing"
       ],
-      "2": [
-        "Cure Serious Wounds"
-      ],
+      "2": ["Cure Serious Wounds"],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -2970,22 +2732,10 @@
         "Bless",
         "Dismiss Ghoul"
       ],
-      "4": [
-        "Heal",
-        "Spirit Bolt"
-      ],
-      "5": [
-        "Dismiss Wraith",
-        "Voice of Power",
-        "Spiritual Invisibility"
-      ],
-      "6": [
-        "Total Heal",
-        "Dismiss Vampire"
-      ],
-      "8": [
-        "Restore Life"
-      ]
+      "4": ["Heal", "Spirit Bolt"],
+      "5": ["Dismiss Wraith", "Voice of Power", "Spiritual Invisibility"],
+      "6": ["Total Heal", "Dismiss Vampire"],
+      "8": ["Restore Life"]
     },
     "Benefits": {
       "Basic": [
@@ -2993,10 +2743,7 @@
           "Name": "Stamina Blessing of St Michael",
           "AbilityRef": "ability.6-2-stamina.1",
           "Type": "Life",
-          "Amount": [
-            3,
-            1
-          ],
+          "Amount": [3, 1],
           "Effect": "Gains +3/1 life from the blessing of St Michael.",
           "Source": "Guild",
           "Key": "ability.6-2-stamina.1"
@@ -3033,10 +2780,7 @@
           "Name": "Stamina Blessing of St Michael",
           "AbilityRef": "ability.6-2-stamina.1",
           "Type": "Update",
-          "Amount": [
-            6,
-            2
-          ],
+          "Amount": [6, 2],
           "Effect": "Gains +6/2 life from the blessing of St Michael.",
           "Source": "Guild",
           "Key": "ability.6-2-stamina.1"
@@ -3064,25 +2808,17 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good"
-          ]
+          "Value": ["Good"]
         }
       ]
     }
@@ -3092,14 +2828,8 @@
     "PreRequisites": "Goodly Humans and Dwarven Priests. Other races may be accepted at the discretion of the High Priest on an individual basis.",
     "Ethos": "The Soul forger forged the dwarven race from iron and mithril, and then breathed life into them as they cooled upon his forge. Priests of the Soul Forger are charged with upholding the dwarven virtues of law and light, and with guiding their people in the arts the dwarves hold dear. The dwarves have always revered the Master of the Forge, attempting to emulate his masterful work with metals and stone. Honesty and hard work pay off just as often in the mines and the forges, as they do on the battlefield, or so the dwarves claim. As such all priests of the Soul Forger are encouraged to spend at least some of their time at a forge learning and honing their skills.",
     "MiracleList": {
-      "1": [
-        "Cure Wound",
-        "Detect Spirit's Nature"
-      ],
-      "2": [
-        "Cure Serious Wounds",
-        "Spirit of Seeing and Hearing"
-      ],
+      "1": ["Cure Wound", "Detect Spirit's Nature"],
+      "2": ["Cure Serious Wounds", "Spirit of Seeing and Hearing"],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -3109,22 +2839,10 @@
         "Dismiss Ghoul",
         "Healing Hand"
       ],
-      "4": [
-        "Heal",
-        "Spirit Bolt",
-        "Passive Heal",
-        "Communication"
-      ],
-      "5": [
-        "Spiritual Invisibility"
-      ],
-      "6": [
-        "Total Heal",
-        "Dismiss Vampire"
-      ],
-      "8": [
-        "Restore Life"
-      ]
+      "4": ["Heal", "Spirit Bolt", "Passive Heal", "Communication"],
+      "5": ["Spiritual Invisibility"],
+      "6": ["Total Heal", "Dismiss Vampire"],
+      "8": ["Restore Life"]
     },
     "Benefits": {
       "Basic": [
@@ -3204,33 +2922,22 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         },
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": [
-            "Human",
-            "Dwarf"
-          ]
+          "Value": ["Human", "Dwarf"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good"
-          ]
+          "Value": ["Good"]
         }
       ]
     },
@@ -3247,13 +2954,8 @@
       "$ref": "Blessing of the Aspects of Hope"
     },
     "MiracleList": {
-      "1": [
-        "Cure Wound",
-        "Halt"
-      ],
-      "2": [
-        "Cure Serious Wounds"
-      ],
+      "1": ["Cure Wound", "Halt"],
+      "2": ["Cure Serious Wounds"],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -3261,23 +2963,14 @@
         "Protection from Spirits",
         "Bless"
       ],
-      "4": [
-        "Heal",
-        "Spirit Bolt"
-      ],
+      "4": ["Heal", "Spirit Bolt"],
       "5": [
         "Spiritual Invisibility",
         "Voice of Power",
         "Remove Voice of Power"
       ],
-      "6": [
-        "Total Heal",
-        "Dismiss Vampire",
-        "Regeneration"
-      ],
-      "8": [
-        "Restore Life"
-      ]
+      "6": ["Total Heal", "Dismiss Vampire", "Regeneration"],
+      "8": ["Restore Life"]
     },
     "Benefits": {
       "Basic": [
@@ -3528,18 +3221,12 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good"
-          ]
+          "Value": ["Good"]
         }
       ]
     }
@@ -3552,14 +3239,8 @@
     "PreRequisites": "Any Evil Priest can join this guild.",
     "Ethos": "The Tryst is a church that takes spiritual power from the Imbaiu demons. It is important to understand that the church do not serve the Imbaiu, but binds, dominates and commands them. References to the Imbaiu Masters refer to those Imbaiu with mastery over lesser demons. The Imbaiu Masters that accept the bindings of the church do so because this link to Primus gives them strength upon their own worlds that they use to remain at the top of their demonic hierarchy.\n\nPRE-REQUISITES Any Evil Priest can join this guild.\n\nMIRACLE LIST 1st Halt, Power Meld, 2nd Cause Wound, Spirit of Seeing and Hearing 3rd Curse, Talk to Spirits, Spirit Shield, Cause Serious Wounds, Protection From Spirits 4th Spirit Shift, Spirit Bolt, Cause Disease, Create Ghoul 5th Spiritual Invisibility, Cause Grievous Wounds 6th Control Wraith, Serin’s Bound Spirit of Undeath, Walk Through Walls 7th Suspend Life",
     "MiracleList": {
-      "1": [
-        "Halt",
-        "Power Meld"
-      ],
-      "2": [
-        "Cause Wound",
-        "Spirit of Seeing and Hearing"
-      ],
+      "1": ["Halt", "Power Meld"],
+      "2": ["Cause Wound", "Spirit of Seeing and Hearing"],
       "3": [
         "Curse",
         "Talk to Spirit",
@@ -3567,24 +3248,14 @@
         "Cause Serious Wounds",
         "Protection From Spirits"
       ],
-      "4": [
-        "Spirit Bolt",
-        "Spirit Shift",
-        "Cause Disease",
-        "Create Ghoul"
-      ],
-      "5": [
-        "Spiritual Invisibility",
-        "Cause Grievous Wounds"
-      ],
+      "4": ["Spirit Bolt", "Spirit Shift", "Cause Disease", "Create Ghoul"],
+      "5": ["Spiritual Invisibility", "Cause Grievous Wounds"],
       "6": [
         "Control Wraith",
         "Serin's Bound Spirit of Undeath",
         "Walk Through Walls"
       ],
-      "7": [
-        "Suspend Life"
-      ]
+      "7": ["Suspend Life"]
     },
     "Benefits": {
       "Basic": [
@@ -3644,25 +3315,17 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Evil"
-          ]
+          "Value": ["Evil"]
         }
       ]
     }
@@ -3675,13 +3338,8 @@
     "PreRequisites": "• Any Evil Priest Subclass, Hermits and the alike may choose to keep their own lists, Unholy Champions may also join.\n• Any member that worships a God of their own free will, will be excommunicated.",
     "Ethos": "A Dark faith built upon the darkest whispers of the world, this church worships the malevolence woven into the fabric of existence itself.\nCore Belief: The world is a tainted and imperfect place, not because of chance, but because darkness is intrinsic to its nature. Evil spirits are not aberration - they are the world’s architects, unseen but ever-present.\nThe hearts of men, with greed, hatred and ambition, are merely conduits for this eternal corruption. To resist is folly, to embrace is power.\nIt was through Treare The Ghoul Lord's teachings that when Lord Waste left, it was him that swore never to follow a god again and find the true path to power, strength through the darkness that lives in all souls and this is what followers draw upon.\nCorruption Is Truth: Purity is a myth fed to the weak. All things decay, and the strong must harness the inevitable rot.\nThe Will of Shadows: Evil spirits, lurking beyond mortal sight, whisper their desires into the ears of men, the faithful must listen and act.\nLast words of the High Priest: Darkness is everywhere, bind it and learn control. Killing randomly and without thinking is disliked by the current leadership and harming peons is such a waste as they are a source of our strength.",
     "MiracleList": {
-      "1": [
-        "Halt",
-        "Spirit of Seeing"
-      ],
-      "2": [
-        "Cause Wound"
-      ],
+      "1": ["Halt", "Spirit of Seeing"],
+      "2": ["Cause Wound"],
       "3": [
         "Cause Serious Wounds",
         "Talk to Spirit",
@@ -3689,25 +3347,15 @@
         "Protection From Spirits",
         "Curse"
       ],
-      "4": [
-        "Spirit Shift",
-        "Cause Disease",
-        "Control Ghoul"
-      ],
+      "4": ["Spirit Shift", "Cause Disease", "Control Ghoul"],
       "5": [
         "Spiritual Invisibility",
         "Cause Grievous Wounds",
         "Voice of Power"
       ],
-      "6": [
-        "Control Wraith"
-      ],
-      "7": [
-        "Suspend Life"
-      ],
-      "8": [
-        "Touch of Death"
-      ]
+      "6": ["Control Wraith"],
+      "7": ["Suspend Life"],
+      "8": ["Touch of Death"]
     },
     "Benefits": {
       "Basic": [
@@ -3784,26 +3432,17 @@
         {
           "Field": "Class|Bracket",
           "Operator": "In",
-          "Value": [
-            "Unholy Champion",
-            "🙏 Priest"
-          ]
+          "Value": ["Unholy Champion", "🙏 Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Chaotic",
-            "Neutral",
-            "Lawful"
-          ]
+          "Value": ["Chaotic", "Neutral", "Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Evil"
-          ]
+          "Value": ["Evil"]
         }
       ]
     }
@@ -3820,10 +3459,7 @@
         "Soul's Hunger",
         "Milly's Detect Spirits"
       ],
-      "2": [
-        "Cause Wound",
-        "Spirit of Seeing and Hearing"
-      ],
+      "2": ["Cause Wound", "Spirit of Seeing and Hearing"],
       "3": [
         "Spirit Shield",
         "Cause Serious Wounds",
@@ -3831,24 +3467,15 @@
         "Writhe",
         "Force of Will"
       ],
-      "4": [
-        "Spirit Bolt",
-        "Cause Disease"
-      ],
+      "4": ["Spirit Bolt", "Cause Disease"],
       "5": [
         "Voice of Power",
         "Spiritual Invisibility",
         "Cause Grievous Wounds"
       ],
-      "6": [
-        "Spiritual Mastery"
-      ],
-      "7": [
-        "Suspend Life"
-      ],
-      "8": [
-        "Touch of Death"
-      ]
+      "6": ["Spiritual Mastery"],
+      "7": ["Suspend Life"],
+      "8": ["Touch of Death"]
     },
     "Benefits": {
       "Basic": [
@@ -3894,25 +3521,17 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Lawful",
-            "Neutral",
-            "Chaotic"
-          ]
+          "Value": ["Lawful", "Neutral", "Chaotic"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Evil"
-          ]
+          "Value": ["Evil"]
         }
       ]
     },
@@ -4001,10 +3620,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Wizard",
-            "High-Wizard"
-          ]
+          "Value": ["Wizard", "High-Wizard"]
         }
       ]
     }
@@ -4113,9 +3729,7 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🧙 Wizard"
-          ]
+          "Value": ["🧙 Wizard"]
         }
       ]
     }
@@ -4137,10 +3751,7 @@
         {
           "Name": "Combat Hardened",
           "Type": "Life",
-          "Amount": [
-            3,
-            1
-          ],
+          "Amount": [3, 1],
           "Source": "Guild",
           "Key": "ability.guild.frontline.combat-hardened",
           "AbilityRef": "ability.guild.frontline.combat-hardened"
@@ -4157,10 +3768,7 @@
         {
           "Name": "Combat Hardened",
           "Type": "Update",
-          "Amount": [
-            9,
-            3
-          ],
+          "Amount": [9, 3],
           "Source": "Guild",
           "Key": "ability.guild.frontline.combat-hardened.2",
           "AbilityRef": "ability.guild.frontline.combat-hardened.2"
@@ -4186,10 +3794,7 @@
         {
           "Name": "Combat Hardened",
           "Type": "Update",
-          "Amount": [
-            12,
-            4
-          ],
+          "Amount": [12, 4],
           "Source": "Guild",
           "Key": "ability.guild.frontline.combat-hardened.3",
           "AbilityRef": "ability.guild.frontline.combat-hardened.3"
@@ -4253,9 +3858,7 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🛡️ Warrior"
-          ]
+          "Value": ["🛡️ Warrior"]
         }
       ]
     }
@@ -4363,9 +3966,7 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         }
       ]
     }
@@ -4432,9 +4033,7 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🧠 Neuro"
-          ]
+          "Value": ["🧠 Neuro"]
         }
       ]
     }
@@ -4523,9 +4122,7 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🌿 Druid"
-          ]
+          "Value": ["🌿 Druid"]
         }
       ]
     }
@@ -4753,9 +4350,7 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🛡️ Warrior"
-          ]
+          "Value": ["🛡️ Warrior"]
         }
       ]
     }
@@ -4814,16 +4409,12 @@
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🧙 Wizard"
-          ]
+          "Value": ["🧙 Wizard"]
         },
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": [
-            "Magic Kin"
-          ]
+          "Value": ["Magic Kin"]
         }
       ]
     }
@@ -4874,7 +4465,7 @@
           "AbilityRef": "ability.guild.top-secret.retreat"
         },
         {
-          "Name": "Concealed 1/day",
+          "Name": "Concealed",
           "Type": "Innate",
           "Count": 1,
           "Effect": "Enhance a stealth so that it grants immunity to all forms of sights. Does not work with Greater stealth.",
@@ -4882,16 +4473,31 @@
           "AbilityRef": "ability.guild.top-secret.concealed-1-day"
         }
       ],
-      "Advanced": []
+      "Advanced": [
+        {
+          "Name": "Retreat",
+          "Type": "Update",
+          "Count": 2,
+          "Effect": "1/day acts as a Jump away from a foe. Combat wary applies to all blows taken during the jump.",
+          "Key": "ability.guild.top-secret.retreat",
+          "AbilityRef": "ability.guild.top-secret.retreat"
+        },
+        {
+          "Name": "Concealed",
+          "Type": "Update",
+          "Count": 2,
+          "Effect": "Enhance a stealth so that it grants immunity to all forms of sights. Now works with Greater stealth.",
+          "Key": "ability.guild.top-secret.concealed-1-day",
+          "AbilityRef": "ability.guild.top-secret.concealed-1-day"
+        }
+      ]
     },
     "Availability": {
       "Rules": [
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "⚔ Scout"
-          ]
+          "Value": ["⚔ Scout"]
         }
       ]
     }
@@ -5034,9 +4640,7 @@
         {
           "Field": "PeopleType",
           "Operator": "NotIn",
-          "Value": [
-            "Tribal"
-          ]
+          "Value": ["Tribal"]
         }
       ]
     }
@@ -5163,9 +4767,7 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": [
-            "Magic Kin"
-          ]
+          "Value": ["Magic Kin"]
         }
       ]
     }
@@ -5176,9 +4778,7 @@
     "Restrictions": "Modern Laws- No member of the Council of Jade may be outlawed, if they become so they no longer gain any benefits until the crime is resolved at which time they may appeal to the Council for full membership again (only by the Guild Sire’s approval).\n\nUnified Council - No member may attack or bring purposeful harm to another member, should this come to be they lose all benefits until the incident is resolved at which time they may appeal to the Council for full membership again (only by the Guild Sire’s approval). Any disagreements will be civilly dealt with by the Leaders of the Council; their decision is final in every case. The only exception in this rule will be cases of Seppuku. All cases of this restriction can be judged and dealt with by the Council Leaders in the same fashion as the outlaw restriction\n\nOnce Clan always Clan - Once you have joined the Council you may never leave unless expelled by a unified vote of the council (rebirthing releases you also).",
     "Type": "social",
     "Benefits": {
-      "Basic": [
-        "Clan chosen on creation"
-      ],
+      "Basic": ["Clan chosen on creation"],
       "Intermediate": [],
       "Advanced": []
     },
@@ -5187,9 +4787,7 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": [
-            "Amlesian"
-          ]
+          "Value": ["Amlesian"]
         }
       ]
     }
@@ -5282,26 +4880,17 @@
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": [
-            "Dwarf"
-          ]
+          "Value": ["Dwarf"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Lawful",
-            "Neutral",
-            "Chaotic"
-          ]
+          "Value": ["Lawful", "Neutral", "Chaotic"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good",
-            "Neutral"
-          ]
+          "Value": ["Good", "Neutral"]
         }
       ]
     }
@@ -5347,26 +4936,41 @@
           "Key": "ability.discipline"
         }
       ],
-      "Advanced": []
+      "Advanced": [
+        {
+          "Name": "The Greater Good",
+          "Type": "Update",
+          "Effect": "Lucky idea from The Greater Good can now be ref-triggered.",
+          "Key": "ability.guild.the-highborn-assembly.the-greater-good-ref-trigger",
+          "AbilityRef": "ability.guild.the-highborn-assembly.the-greater-good-ref-trigger"
+        },
+        {
+          "Name": "Take Killing blow/effect for a peasant/innocent type at own resistances",
+          "Type": "Update",
+          "Effect": "Can now use the intermediate tier Take Killing Blow effect for guild members.",
+          "Key": "ability.guild.the-highborn-assembly.take-killing-blow-for-guild-members",
+          "AbilityRef": "ability.guild.the-highborn-assembly.take-killing-blow-for-guild-members"
+        },
+        {
+          "Name": "Discipline",
+          "Type": "Update",
+          "Effect": "Can now use intermediate tier Discipline on Other.",
+          "Key": "ability.guild.the-highborn-assembly.discipline-on-other",
+          "AbilityRef": "ability.guild.the-highborn-assembly.discipline-on-other"
+        }
+      ]
     },
     "Availability": {
       "Rules": [
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Lawful",
-            "Neutral",
-            "Chaotic"
-          ]
+          "Value": ["Lawful", "Neutral", "Chaotic"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good",
-            "Neutral"
-          ]
+          "Value": ["Good", "Neutral"]
         }
       ]
     }
@@ -5472,26 +5076,17 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": [
-            "Ishmaic"
-          ]
+          "Value": ["Ishmaic"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Lawful",
-            "Neutral",
-            "Chaotic"
-          ]
+          "Value": ["Lawful", "Neutral", "Chaotic"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Evil",
-            "Neutral"
-          ]
+          "Value": ["Evil", "Neutral"]
         }
       ]
     }
@@ -5552,19 +5147,12 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Lawful",
-            "Neutral",
-            "Chaotic"
-          ]
+          "Value": ["Lawful", "Neutral", "Chaotic"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good",
-            "Neutral"
-          ]
+          "Value": ["Good", "Neutral"]
         }
       ]
     }
@@ -5719,10 +5307,7 @@
         {
           "Name": "Totemic Markings",
           "Type": "Update",
-          "Amount": [
-            6,
-            2
-          ],
+          "Amount": [6, 2],
           "Source": "Guild",
           "Effect": "Totemic Markings now also grant +6/2 guild life.",
           "Key": "ability.guild.lo-thi.totemic-markings.2",
@@ -5735,33 +5320,22 @@
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": [
-            "Human"
-          ]
+          "Value": ["Human"]
         },
         {
           "Field": "RaceSubtype",
           "Operator": "In",
-          "Value": [
-            "Barbarian"
-          ]
+          "Value": ["Barbarian"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Lawful",
-            "Neutral",
-            "Chaotic"
-          ]
+          "Value": ["Lawful", "Neutral", "Chaotic"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good",
-            "Neutral"
-          ]
+          "Value": ["Good", "Neutral"]
         }
       ]
     }
@@ -5803,9 +5377,7 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": [
-            "Tribal"
-          ]
+          "Value": ["Tribal"]
         }
       ]
     }
@@ -6031,25 +5603,17 @@
         {
           "Field": "PeopleType",
           "Operator": "In",
-          "Value": [
-            "Amlesian"
-          ]
+          "Value": ["Amlesian"]
         },
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Lawful"
-          ]
+          "Value": ["Lawful"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good",
-            "Neutral",
-            "Evil"
-          ]
+          "Value": ["Good", "Neutral", "Evil"]
         }
       ]
     }
@@ -6138,16 +5702,186 @@
         {
           "Field": "Race",
           "Operator": "In",
+          "Value": ["Goblin"]
+        },
+        {
+          "Field": "RaceSubtype",
+          "Operator": "NotIn",
           "Value": [
-            "Goblin"
+            "Children of Bragyl",
+            "The Hollow Bone",
+            "Cave Fang",
+            "Bloodcrusher",
+            "The Thrice",
+            "The Broken Crown",
+            "The Lost"
           ]
+        }
+      ]
+    }
+  },
+  "The Gargoyles": {
+    "PreRequisites": "Be Goblin (or Hobgoblin).",
+    "Ethos": "The Gargoyles are a small tribe of Goblins with ancestral lands (or turf) in the Eartholme underworld. Well-adjusted to the underbelly of city life, the Gargoyles run racquets, and protection for and from the peons of Eartholme. Careful to stay beneath the notice of the D’Treals the Gargoyles follow a long established set of rules that are intended to keep them safe and keep them rich.",
+    "Restrictions": "Snitches get murdered. You don’t squeal on The Tribe, on pain of death.\nOnce you have made a deal (for money) you hold up your end of the deal.\nYou don’t kill other members of the Eartholme families (or mercenaries) without the families (or the laws) consent. If you get black-balled (or outlawed) you are a problem for The Tribe.\nYou don’t kill peons at random, these folks pay the bills. You murder a bunch and the D’Treals notice. If they notice you become a problem for The Tribe.\nThe Tribe deals with its problems.",
+    "Type": "social",
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "Immunity to Torture Mastery",
+          "Type": "Static",
+          "Effect": "Gains immunity to Torture Mastery and similar abilities that would require them to answer questions truthfully, or at all. Can still choose to snitch or answer if they want.",
+          "Key": "ability.guild.the-gargoyles.immunity-to-torture-mastery",
+          "AbilityRef": "ability.guild.the-gargoyles.immunity-to-torture-mastery"
+        },
+        {
+          "Name": "Gargoyles Protection 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Effect": "Gains Elemental Resistance to Earth (as Brown Power Master) for 5 minutes.",
+          "Key": "ability.guild.the-gargoyles.gargoyles-protection-1-day",
+          "AbilityRef": "ability.guild.the-gargoyles.gargoyles-protection-1-day"
+        },
+        {
+          "Name": "Proceeds of Hard Work",
+          "Type": "Static",
+          "Effect": "Starts day with one of the below. If multiple tribe members are on dungeon, totals can be combined: 10 mana of dungeon temporary handbook magical scrolls (not Blue); 10 spirits of dungeon temporary handbook spiritual scrolls; or 600 grulls of dungeon temporary immediately available potions (at permanent make cost).",
+          "Key": "ability.guild.the-gargoyles.proceeds-of-hard-work",
+          "AbilityRef": "ability.guild.the-gargoyles.proceeds-of-hard-work"
+        }
+      ],
+      "Intermediate": [],
+      "Advanced": []
+    },
+    "Availability": {
+      "Rules": [
+        {
+          "Field": "Race",
+          "Operator": "In",
+          "Value": ["Goblin"]
+        },
+        {
+          "Field": "RaceSubtype",
+          "Operator": "NotIn",
+          "Value": [
+            "Children of Bragyl",
+            "The Hollow Bone",
+            "Cave Fang",
+            "Bloodcrusher",
+            "The Thrice",
+            "The Broken Crown",
+            "The Lost"
+          ]
+        }
+      ]
+    }
+  },
+  "The Sorcerer's Circle": {
+    "Type": "professional",
+    "PreRequisites": "1st class mana using classes with Sorcery as a 1st colour may join. Other classes that have access to Sorcery spells may join with permission from the guild sire.",
+    "Ethos": "For too long the art of Sorcery has been considered lesser to wizards. We have less magical power, we have to beg the dragons to make our spells work on the noble bastard axe and we are precluded from many of the expert trainings of the pure wizard. No more. Come and learn why every second wizard these days has traded away their expertise to learn the sorcerous arts...",
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "A Big to your Little",
+          "Type": "Static",
+          "Effect": "If another guild member takes part in the Sorcerer's Ritual Arts, then the time is reduced by 50%.",
+          "Key": "ability.guild.the-sorcerers-circle.a-big-to-your-little",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.a-big-to-your-little"
+        },
+        {
+          "Name": "Rock and Roll all night, and part of every day",
+          "Type": "Static",
+          "Effect": "When using Sorcorial Arts, may benefit from both the mana reduction and the life reduction.",
+          "Key": "ability.guild.the-sorcerers-circle.rock-and-roll-all-night-and-part-of-every-day",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.rock-and-roll-all-night-and-part-of-every-day"
+        },
+        {
+          "Name": "Rub 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Effect": "Gains Empower Rune 1/day: a single published blade rune lasts until triggered or when Apollo lifts his skirt (sunrise). The mana spent can be regained.",
+          "Key": "ability.guild.the-sorcerers-circle.rub-1-day",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.rub-1-day"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Let us gingerly touch our tips",
+          "Type": "Static",
+          "Effect": "Can now channel dispels through a magical focus or magical weapon, counting as touch range.",
+          "Key": "ability.guild.the-sorcerers-circle.let-us-gingerly-touch-our-tips",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.let-us-gingerly-touch-our-tips"
+        },
+        {
+          "Name": "I can rock and roll from, like, one to three",
+          "Type": "Static",
+          "Effect": "Can now use Ritual Arts on any published sorcorial spell.",
+          "Key": "ability.guild.the-sorcerers-circle.i-can-rock-and-roll-from-like-one-to-three",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.i-can-rock-and-roll-from-like-one-to-three"
+        },
+        {
+          "Name": "Rub-a-dub",
+          "Type": "Update",
+          "Count": 1,
+          "Effect": "Gains a second Empower Rune.",
+          "Key": "ability.guild.the-sorcerers-circle.rub-a-dub",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.rub-a-dub"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Rock and Roll all night, and Party every day",
+          "Type": "Static",
+          "Effect": "Can now use Ritual Arts on any spell known (doesn't stack with expertise).",
+          "Key": "ability.guild.the-sorcerers-circle.rock-and-roll-all-night-and-party-every-day",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.rock-and-roll-all-night-and-party-every-day"
+        },
+        {
+          "Name": "A Little to your Big",
+          "Type": "Static",
+          "Effect": "Basic Tier A Big to your Little now works if alone.",
+          "Key": "ability.guild.the-sorcerers-circle.a-little-to-your-big",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.a-little-to-your-big"
+        },
+        {
+          "Name": "To sleep, perchance to dream",
+          "Type": "Static",
+          "Effect": "May choose the tables ability Master or Apprentice to a NPC Xanthian (in a cloak made by their mum), or choose neither and gain 6 casting stamina.",
+          "Key": "ability.guild.the-sorcerers-circle.to-sleep-perchance-to-dream",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.to-sleep-perchance-to-dream"
+        },
+        {
+          "Name": "Let's Do This, We Shall 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Effect": "1/day may cast a published sorcorial glyph as any published colour.",
+          "Key": "ability.guild.the-sorcerers-circle.lets-do-this-we-shall-1-day",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.lets-do-this-we-shall-1-day"
+        },
+        {
+          "Name": "Rub-a-dub-dub",
+          "Type": "Update",
+          "Count": 1,
+          "Effect": "Gains a 3rd Empower Rune.",
+          "Key": "ability.guild.the-sorcerers-circle.rub-a-dub-dub",
+          "AbilityRef": "ability.guild.the-sorcerers-circle.rub-a-dub-dub"
+        }
+      ]
+    },
+    "Availability": {
+      "Rules": [
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": ["Sorcerer"]
         }
       ]
     }
   },
   "The Swarm": {
     "PreRequisites": "Be a Ratfolk.",
-    "Ethos": "The Swarm is a group of rats from all clans and breeds who for one reason or another have gathered together under the banner of Slavik, treating its nine tails and teachings as a totem to be respected and worshipped in their many rat ways - trying to make their mark in the world of humankind.\n\nThe tribe (for that’s what it undoubtedly is) is made up of rural nomadic rats, a mix of those pro-Thimon, and also those who do not find or accept the sewers of Thimon as the fitting \"city\" that they were promised.\n\nThey roam Labyrinthia gathering strength and numbers from pockets of isolated rats. Offering them protection and the feeling of the swarm - for every child of Slavik knows safety is best found in numbers.\n\nIt is through this understanding, and network of contacts, rather than gathering in the open under a large banner, or other such shows of force that these few become the many, the powerless the powerful - this is the strength and power of the Swarm.",
+    "Ethos": "The Swarm is a group of rats from all clans and breeds who for one reason or another have gathered together under the banner of Slavik, treating its nine tails and teachings as a totem to be respected and worshipped in their many rat ways - trying to make their mark in the world of humankind.\n\nThe tribe (for that's what it undoubtedly is) is made up of rural nomadic rats, a mix of those pro-Thimon, and also those who do not find or accept the sewers of Thimon as the fitting \"city\" that they were promised.\n\nThey roam Labyrinthia gathering strength and numbers from pockets of isolated rats, offering them protection and the feeling of the swarm - for every child of Slavik knows safety is best found in numbers.\n\nIt is through this understanding, and network of contacts, rather than gathering in the open under a large banner, or other such shows of force that these few become the many, the powerless the powerful - this is the strength and power of the Swarm.",
     "Type": "social",
     "Benefits": {
       "Basic": [
@@ -6155,7 +5889,7 @@
           "Name": "Scurry 1/day",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "Acts as per a physical lightstep .",
+          "Effect": "Acts as per a physical lightstep.",
           "Key": "ability.guild.the-swarm.scurry-1-day",
           "AbilityRef": "ability.guild.the-swarm.scurry-1-day"
         },
@@ -6163,7 +5897,7 @@
           "Name": "Sneaky rat 1/day",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "Acts in a similar manner to Evasion, but works regardless of the wards power base .",
+          "Effect": "Acts in a similar manner to Evasion, but works regardless of the wards power base.",
           "Key": "ability.guild.the-swarm.sneaky-rat-1-day",
           "AbilityRef": "ability.guild.the-swarm.sneaky-rat-1-day"
         },
@@ -6176,19 +5910,302 @@
           "AbilityRef": "ability.guild.the-swarm.feed-on-the-plague-1-day"
         }
       ],
-      "Intermediate": [],
-      "Advanced": []
+      "Intermediate": [
+        {
+          "Name": "Scurry and Sneaky Rat",
+          "Type": "Static",
+          "Effect": "Can now use Scurry and Sneaky Rat at the same time.",
+          "Key": "ability.guild.the-swarm.scurry-and-sneaky-rat",
+          "AbilityRef": "ability.guild.the-swarm.scurry-and-sneaky-rat"
+        },
+        {
+          "Name": "Feed on the Plague",
+          "Type": "Update",
+          "Count": 2,
+          "Effect": "Gains a second Feed on the Plague innate, and may instead use it to cure a disease on another target.",
+          "Key": "ability.guild.the-swarm.feed-on-the-plague-2",
+          "AbilityRef": "ability.guild.the-swarm.feed-on-the-plague-2"
+        },
+        {
+          "Name": "Rat King's Enrunement 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Effect": "Requires a visible rune drawn on skin. 1/day can be used to gain either +2 MAC, +2 SAC, or 3 points off weapons for 5 minutes.",
+          "Key": "ability.guild.the-swarm.rat-kings-enrunement-1-day",
+          "AbilityRef": "ability.guild.the-swarm.rat-kings-enrunement-1-day"
+        }
+      ],
+      "Advanced": [
+        {
+          "Name": "Feed on the Plague",
+          "Type": "Update",
+          "Count": 3,
+          "Effect": "Gains a third Feed on the Plague innate.",
+          "Key": "ability.guild.the-swarm.feed-on-the-plague-3",
+          "AbilityRef": "ability.guild.the-swarm.feed-on-the-plague-3"
+        },
+        {
+          "Name": "Scurry",
+          "Type": "Update",
+          "Count": 2,
+          "Effect": "Gains a second Scurry innate.",
+          "Key": "ability.guild.the-swarm.scurry-2",
+          "AbilityRef": "ability.guild.the-swarm.scurry-2"
+        },
+        {
+          "Name": "Trap Wary for Scurry Innates",
+          "Type": "Static",
+          "Effect": "Gains Trap Wary (as scout) for the purposes of guild Scurry innates. If already owned, this becomes Enhanced Trap Wary for guild Scurry innates.",
+          "Key": "ability.guild.the-swarm.trap-wary-for-scurry-innates",
+          "AbilityRef": "ability.guild.the-swarm.trap-wary-for-scurry-innates"
+        },
+        {
+          "Name": "Rat King's Enrunement",
+          "Type": "Update",
+          "Effect": "Rat King's Enrunement now grants +2 MAC, +2 SAC, and 3 points off weapons for 5 minutes when triggered.",
+          "Key": "ability.guild.the-swarm.rat-kings-enrunement-upgrade",
+          "AbilityRef": "ability.guild.the-swarm.rat-kings-enrunement-upgrade"
+        }
+      ]
     },
     "Availability": {
       "Rules": [
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": [
-            "Ratfolk"
-          ]
+          "Value": ["Ratfolk"]
         }
       ]
+    }
+  },
+  "The Rosarian Faith": {
+    "Type": "professional",
+    "PreRequisites": "Be an armour wearing, weapon wielding, pro-imperial priest.",
+    "Ethos": "The Rosarian faith is a curious anomaly. A monastic faith without a divine figurehead, comprised of warrior-ascetics and a laity drawn mostly from soldiers, both retired and serving. It is a soldier's faith, a warrior-cult, devoted to the Empire, at its core built on twin pillars of belief; one is vitae, and the other is karmic reincarnation.\n\nThey believe in fate as a concept, both accepting it and acknowledging that they can improve their next life by facing it. Rosarians refer to fate as The Source Of All Things; where a Michaelean might say 'If St. Michael wills it', a Rosarian would say 'If the Source wills it' to mean 'if it is my fate'.\n\nTo Rosarians the notion that serving the Empire well, and overcoming adversity to do this, means a better station in the next life; the ultimate goal is to achieve a form of enlightenment the Rosarians call Vorder, where the spirit sheds the mortal realm and moves on to the spirit world, where they can guide members of the faith. It is these spirits the Rosarians channel in a quasi-shamanistic fashion to perform miracles and question for knowledge.",
+    "Restrictions": "Wear black. Wear armour and carry weapons; there are no Rosarian armoured or pure priests. Fight, but try not to get hit; parrying is better than using healing. Try to be calm, frugal and efficient, and avoid rages. Try to be as self-sufficient as possible.",
+    "MiracleList": {
+      "1": ["Halt", "Cure Wound", "Detect Spirit's Nature", "Spirit of Seeing"],
+      "2": ["Spirit of Seeing and Hearing"],
+      "3": [
+        "Cure Disease",
+        "Talk to Spirit",
+        "Spirit Shield",
+        "Protection from Spirits",
+        "Detect Lie"
+      ],
+      "4": ["Communication", "Spirit Bolt", "Control Ghoul"],
+      "5": ["Minor Ward of Power", "Spiritual Invisibility"],
+      "6": ["Control Wraith", "Total Heal"],
+      "8": ["Greater Communication"]
+    },
+    "DenominationalMiracle": {
+      "$ref": "Rosarian's Batton"
+    },
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "Legionnaire",
+          "Type": "Static",
+          "Effect": "Any Rosarian (Lay Believer / True Believer / Priest) may gain the Legionnaire warrior tendency on T1 for 20 points. New Rosarian characters may battleboard this from 1st level, but it must be the first post-8th ability bought. Rosarians buying this lose their political guild slot.",
+          "Key": "ability.guild.the-rosarian-faith.legionnaire",
+          "AbilityRef": "ability.guild.the-rosarian-faith.legionnaire"
+        },
+        {
+          "Name": "Morning Mass",
+          "Type": "Static",
+          "Effect": "Any Rosarian starts the day with an 18 point spirit shield, whose duration does not start until the first time it is needed (cf Spiritual Warden).",
+          "Key": "ability.guild.the-rosarian-faith.morning-mass",
+          "AbilityRef": "ability.guild.the-rosarian-faith.morning-mass"
+        }
+      ],
+      "Intermediate": [],
+      "Advanced": []
+    },
+    "Availability": {
+      "Rules": [
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": ["🙏 Priest"]
+        }
+      ]
+    }
+  },
+  "Ice Touched Souls": {
+    "Type": "social",
+    "PreRequisites": "Players who took part in the 2024 extended length, Ice Touched Souls, or those who subsequently have the permission of the Guild Head.",
+    "Ethos": "Guild Motto: \"Wash your own stuff, or die!\"\n\nWorking towards the health, security and wellbeing of a newly hatched Dragon located in the Far North and its symbiosis with the land while also assisting the Far North in its efforts to remain free from subduction, demonic entities who intend harm to the area, and to ensure the Great Freedom is enforced and encouraged regardless of race, creed, or background.",
+    "Restrictions": "Demonic, Outlawed and Ostracised players must seek permission of the Guild Head prior to joining this guild (excluding those who took part in the extended length). Any characters fundamentally opposed to the Far North are also prohibited from joining.",
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "Guided by the Lights",
+          "Type": "Static",
+          "Effect": "Can always find home regardless of being lost (including in the Nacht or similar), and can take one other person with them. There must still be a way home.",
+          "Key": "ability.guild.ice-touched-souls.guided-by-the-lights",
+          "AbilityRef": "ability.guild.ice-touched-souls.guided-by-the-lights"
+        },
+        {
+          "Name": "Written in the Stars",
+          "Type": "Static",
+          "Effect": "Gains a pre-dungeon lucky idea that may be prophetic in nature.",
+          "Key": "ability.guild.ice-touched-souls.written-in-the-stars",
+          "AbilityRef": "ability.guild.ice-touched-souls.written-in-the-stars"
+        },
+        {
+          "Name": "Blessed of the Spring Dragon",
+          "Type": "Static",
+          "Effect": "Gains 4th level Spring Elf innates.",
+          "Key": "ability.guild.ice-touched-souls.blessed-of-the-spring-dragon",
+          "AbilityRef": "ability.guild.ice-touched-souls.blessed-of-the-spring-dragon"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Draw on the Aurora Lights 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Effect": "1/day, takes 30 seconds preparation and acts as a standard 1st to 4th level spell of any elemental colour or a 1st to 3rd handbook miracle of own alignment.",
+          "Key": "ability.guild.ice-touched-souls.draw-on-the-aurora-lights-1-day",
+          "AbilityRef": "ability.guild.ice-touched-souls.draw-on-the-aurora-lights-1-day"
+        },
+        {
+          "Name": "Blessing of the Spring Dragon",
+          "Type": "Update",
+          "Effect": "Blessed of the Spring Dragon now grants 6th level Spring Elf innates.",
+          "Key": "ability.guild.ice-touched-souls.blessing-of-the-spring-dragon",
+          "AbilityRef": "ability.guild.ice-touched-souls.blessing-of-the-spring-dragon"
+        },
+        {
+          "Name": "Written in the Stars",
+          "Type": "Update",
+          "Effect": "Written in the Stars can now be used on dungeon (in addition to pre-dungeon) if a real world or ref-described star-lit sky appears, 1/day.",
+          "Key": "ability.guild.ice-touched-souls.written-in-the-stars-2",
+          "AbilityRef": "ability.guild.ice-touched-souls.written-in-the-stars-2"
+        }
+      ],
+      "Advanced": []
+    },
+    "Availability": {
+      "Rules": []
+    }
+  },
+  "Lost and Found": {
+    "Type": "social",
+    "PreRequisites": "This guild is primarily for Yeomenry or those with similar rebirth-related abilities, but anyone can join.",
+    "Ethos": "The Weave Has Many Threads - Understand that there are innumerable paths to walk; in different lives you have walked different paths. In one life you may walk the same path as those you currently oppose.\n\nUnderstanding is Not Condoning - Look to understand the motivation behind those who act against you. You should endeavour to recognise which parts of this are born of choice, necessity or circumstance.\n\nFind The Astray - People wander away from society. Some do so to find their true path, while others do so because the world has failed them. Give both a guiding hand.\n\nDo Not Become Lost - Walk the path set for you, without concern for seeming erratic, odd, or bizarre.\n\nIn many ways an anti-social social guild, the Lost and the Found are a bunch of misfits and hermits that usually try to keep a mostly perfunctory relationship with the rest of creation. They started off as Yeomenry keeping abreast of relationships that spanned lifetimes, literally, with members keeping tabs on each other as they returned from death with fresh outlooks as well as their old ones.\n\nFar more likely to advise a chosen hero than take on the mantle themselves, they find themselves called in equal parts to hide away in shacks on the edges of civilization and to wander in vast crowds.",
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "Kin",
+          "Type": "Static",
+          "Effect": "All guild members gain Kin with each other on adventure.",
+          "Key": "ability.guild.lost-and-found.kin",
+          "AbilityRef": "ability.guild.lost-and-found.kin"
+        },
+        {
+          "Name": "Lost",
+          "Type": "Innate",
+          "Count": 1,
+          "Effect": "If out of real world sight for 5 minutes, is considered to have safely left the adventure and returned to Sweethaven (cf Loner).",
+          "Key": "ability.guild.lost-and-found.lost",
+          "AbilityRef": "ability.guild.lost-and-found.lost"
+        },
+        {
+          "Name": "Found 1/day",
+          "Type": "Innate",
+          "Count": 1,
+          "Effect": "1/day may find a single use item of a standard spell up to 4th level or standard miracle up to 3rd level. They can give this item to anyone with the appropriate utilise, so it is not restricted by the finder's alignment or colours.",
+          "Key": "ability.guild.lost-and-found.found-1-day",
+          "AbilityRef": "ability.guild.lost-and-found.found-1-day"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Kin",
+          "Type": "Update",
+          "Effect": "Kin from basic tier becomes True Kin.",
+          "Key": "ability.guild.lost-and-found.kin-true-kin",
+          "AbilityRef": "ability.guild.lost-and-found.kin-true-kin"
+        },
+        {
+          "Name": "Lost",
+          "Type": "Update",
+          "Count": 2,
+          "Effect": "Gains a second Lost innate, and Lost can now be used as a Pass Unknown.",
+          "Key": "ability.guild.lost-and-found.lost-2",
+          "AbilityRef": "ability.guild.lost-and-found.lost-2"
+        },
+        {
+          "Name": "Found",
+          "Type": "Update",
+          "Count": 2,
+          "Effect": "Gains a second Found innate, and Found can now be standard spells up to 6th level, and miracles up to 4th level.",
+          "Key": "ability.guild.lost-and-found.found-2",
+          "AbilityRef": "ability.guild.lost-and-found.found-2"
+        }
+      ],
+      "Advanced": []
+    },
+    "Availability": {
+      "Rules": []
+    }
+  },
+  "Who knows?": {
+    "Type": "social",
+    "PreRequisites": "Any who seek knowledge are welcome to join, but no-one who is outlawed for party killing may join or remain a member of Who knows? without the direct permission of the guild master.",
+    "Ethos": "In the realm of the unknown, we thrive, seekers of mysteries. We are the guild Who knows? - a collective mind, in pursuit of the secrets we are destined to find. The guild encapsulates the spirit of exploration, the value of knowledge, the strength of unity, and respect for diversity, which are all key elements for a guild that prides itself on delving into the unknown and seeking answers.\n\nOur members vary from an ogre chef who wants to find the ultimate recipe, to scholars, librarians, puzzle masters and ritualists.",
+    "Benefits": {
+      "Basic": [
+        {
+          "Name": "Seeking Knowledge",
+          "Type": "Static",
+          "Effect": "Gains one of Rec Spirit, Rec Mana, Rec Neuronics or Rec Earthpower.",
+          "Key": "ability.guild.who-knows.seeking-knowledge",
+          "AbilityRef": "ability.guild.who-knows.seeking-knowledge"
+        },
+        {
+          "Name": "Knowledge of the Masses",
+          "Type": "Static",
+          "Effect": "Gains 6 power of innates chosen at the start of the day. These can be standard silver spells or standard communications miracles.",
+          "Key": "ability.guild.who-knows.knowledge-of-the-masses",
+          "AbilityRef": "ability.guild.who-knows.knowledge-of-the-masses"
+        },
+        {
+          "Name": "Read Languages",
+          "Type": "Static",
+          "Effect": "Gains Read Languages.",
+          "Key": "ability.guild.who-knows.read-languages",
+          "AbilityRef": "ability.guild.who-knows.read-languages"
+        }
+      ],
+      "Intermediate": [
+        {
+          "Name": "Seeking Knowledge",
+          "Type": "Update",
+          "Effect": "Seeking Knowledge now grants a second choice.",
+          "Key": "ability.guild.who-knows.seeking-knowledge-2",
+          "AbilityRef": "ability.guild.who-knows.seeking-knowledge-2"
+        },
+        {
+          "Name": "Knowledge of the Masses",
+          "Type": "Update",
+          "Effect": "Knowledge of the Masses now grants 12 power of innates, but to a maximum of 6th level.",
+          "Key": "ability.guild.who-knows.knowledge-of-the-masses-2",
+          "AbilityRef": "ability.guild.who-knows.knowledge-of-the-masses-2"
+        },
+        {
+          "Name": "Scholar's Insight",
+          "Type": "Static",
+          "Effect": "If already had Read Languages (not from this guild), gains a lucky idea on each piece of text studied in another language they can actually read (crib sheet is fine) after 5 minutes translating.",
+          "Key": "ability.guild.who-knows.scholars-insight",
+          "AbilityRef": "ability.guild.who-knows.scholars-insight"
+        }
+      ],
+      "Advanced": []
+    },
+    "Availability": {
+      "Rules": []
     }
   },
   "The White Wind": {
@@ -6285,18 +6302,12 @@
         {
           "Field": "Alignment.Order",
           "Operator": "In",
-          "Value": [
-            "Lawful",
-            "Neutral",
-            "Chaotic"
-          ]
+          "Value": ["Lawful", "Neutral", "Chaotic"]
         },
         {
           "Field": "Alignment.Moral",
           "Operator": "In",
-          "Value": [
-            "Good"
-          ]
+          "Value": ["Good"]
         }
       ]
     }
@@ -6311,14 +6322,8 @@
       "Advanced": []
     },
     "MiracleList": {
-      "1": [
-        "Cure Wound",
-        "Summon Spiritual Candles",
-        "Halt"
-      ],
-      "2": [
-        "Cure Serious Wounds"
-      ],
+      "1": ["Cure Wound", "Summon Spiritual Candles", "Halt"],
+      "2": ["Cure Serious Wounds"],
       "3": [
         "Cure Disease",
         "Talk to Spirit",
@@ -6327,31 +6332,21 @@
         "Healing Hand",
         "Bless"
       ],
-      "4": [
-        "Heal"
-      ],
+      "4": ["Heal"],
       "5": [
         "Remove Voice of Power",
         "Remove Fear and Paralysis",
         "Spiritual Invisibility"
       ],
-      "6": [
-        "Total Heal",
-        "Spiritual Freedom",
-        "Stronghold of Goodness"
-      ],
-      "8": [
-        "Restore Life"
-      ]
+      "6": ["Total Heal", "Spiritual Freedom", "Stronghold of Goodness"],
+      "8": ["Restore Life"]
     },
     "Availability": {
       "Rules": [
         {
           "Field": "Bracket",
           "Operator": "In",
-          "Value": [
-            "🙏 Priest"
-          ]
+          "Value": ["🙏 Priest"]
         }
       ]
     },
@@ -6455,10 +6450,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -6546,10 +6538,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -6645,10 +6634,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -6732,10 +6718,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -6851,10 +6834,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -6952,10 +6932,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -7040,10 +7017,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -7138,10 +7112,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -7243,10 +7214,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -7341,10 +7309,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -7424,24 +7389,17 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         },
         {
           "Field": "Race",
           "Operator": "In",
-          "Value": [
-            "Ratfolk"
-          ]
+          "Value": ["Ratfolk"]
         },
         {
           "Field": "RaceSubtype",
           "Operator": "In",
-          "Value": [
-            "Caslevasp (long hairs)"
-          ]
+          "Value": ["Caslevasp (long hairs)"]
         }
       ]
     }
@@ -7490,10 +7448,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -7556,10 +7511,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -7655,10 +7607,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -7799,10 +7748,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -7923,10 +7869,7 @@
         {
           "Field": "Class",
           "Operator": "In",
-          "Value": [
-            "Hanot Beggar",
-            "Kallah Beggar"
-          ]
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
         }
       ]
     }
@@ -8004,9 +7947,79 @@
         {
           "Field": "Class",
           "Operator": "In",
+          "Value": ["Hanot Beggar", "Kallah Beggar"]
+        }
+      ]
+    }
+  },
+  "Owil'Rha'Tha": {
+    "Type": "professional",
+    "PreRequisites": "Human only. Evil alignment only. Must be one of the approved Owil'Rha'Tha classes.",
+    "Ethos": "The Owil'Rha'Tha ancestral faith is a dark totemic tradition rooted in clan loyalty, grievance, and necromantic practice.",
+    "Restrictions": "Priest-class members may not join another church. Their ancestral faith counts as their church and cannot be left without excommunication.",
+    "MiracleList": {
+      "1": ["Halt", "Taint Spirit"],
+      "2": ["Cause Wound"],
+      "3": [
+        "Curse",
+        "Talk to Spirit",
+        "Protection from Spirits",
+        "Cause Serious Wounds"
+      ],
+      "4": ["Create Ghoul", "Communication", "Cause Disease"],
+      "5": ["Spiritual Invisibility", "Cause Grievous Wounds"],
+      "6": ["Control Wraith"],
+      "7": ["Animate Corpse", "Suspend Life"],
+      "8": ["Touch of Death"]
+    },
+    "Benefits": {
+      "Basic": [],
+      "Intermediate": [],
+      "Advanced": []
+    },
+    "Availability": {
+      "Rules": [
+        {
+          "Field": "Race",
+          "Operator": "In",
+          "Value": ["Human"]
+        },
+        {
+          "Field": "Alignment.Moral",
+          "Operator": "In",
+          "Value": ["Evil"]
+        },
+        {
+          "Field": "Class",
+          "Operator": "In",
+          "Value": [
+            "Warrior",
+            "Ranger",
+            "Archer",
+            "Unholy Champion",
+            "Fighter",
+            "Duellist",
+            "Kensai / Blade Master",
+            "Wizard",
+            "Warlock"
+          ]
+        },
+        {
+          "Field": "Bracket",
+          "Operator": "In",
+          "Value": ["⚔ Scout", "🙏 Priest"]
+        },
+        {
+          "Field": "Class",
+          "Operator": "NotIn",
           "Value": [
             "Hanot Beggar",
-            "Kallah Beggar"
+            "Kallah Beggar",
+            "Shaman",
+            "Grey Warden",
+            "Grey-Warden",
+            "Guardian of the Balance",
+            "Guardian of Balance"
           ]
         }
       ]

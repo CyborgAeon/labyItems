@@ -89,7 +89,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             if (IsRaceClassStep)
             {
                 if (CharacterBuilderVm.IsClassTabSelected)
-                    return CharacterBuilderVm.CanSelectRace;
+                    return true;
 
                 if (CurrentStep >= StepSteps.Count - 1)
                     return true;

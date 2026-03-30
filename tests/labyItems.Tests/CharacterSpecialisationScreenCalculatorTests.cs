@@ -95,6 +95,65 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
     }
 
     [Fact]
+    public async Task BuildScreenSections_GoblinSubtypeVisible_AndCaveFangChoiceIsSubtypeGated()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+
+        var classes = await ClassService.GetAllAsync();
+        var races = await PeopleService.GetAllAsync();
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
+        var draft = new CharacterDraft
+        {
+            Race = "Goblin",
+            Class = "Warrior"
+        };
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            classes,
+            races,
+            index.Definitions,
+            index.InjectionRules);
+
+        var required = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+        var sections = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+
+        var subtypeSection = Assert.Single(sections.Where(section => section.Kind == SpecialisationSectionKind.RaceSubtype));
+        Assert.Contains(subtypeSection.Options, option => option.Key.Equals("Cave Fang", StringComparison.OrdinalIgnoreCase));
+
+        var warriorSpecialist = Assert.Single(sections.Where(section =>
+            section.Title.Equals("Warrior Specialist", StringComparison.OrdinalIgnoreCase)));
+        Assert.DoesNotContain(
+            warriorSpecialist.Options,
+            option => option.Label.Equals("Well Equipped (poison)", StringComparison.OrdinalIgnoreCase));
+
+        var caveFangDraft = new CharacterDraft
+        {
+            Race = "Goblin",
+            Class = "Warrior",
+            RaceSubtypeValue = "Cave Fang"
+        };
+
+        var caveFangContext = CharacterSpecialisationScreenCalculator.LoadContext(
+            caveFangDraft,
+            classes,
+            races,
+            index.Definitions,
+            index.InjectionRules);
+
+        var caveFangRequired = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(caveFangContext);
+        var caveFangSections = CharacterSpecialisationScreenCalculator.BuildScreenSections(caveFangContext, caveFangRequired);
+
+        var warriorSpecialistWithSubtype = Assert.Single(caveFangSections.Where(section =>
+            section.Title.Equals("Warrior Specialist", StringComparison.OrdinalIgnoreCase)));
+        Assert.Contains(
+            warriorSpecialistWithSubtype.Options,
+            option => option.Label.Equals("Well Equipped (poison)", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public async Task BuildScreenSections_AncientFolkCloudWay_ReplacesWardPactOptions()
     {
         FileSystem.ClearPackageOverrides();

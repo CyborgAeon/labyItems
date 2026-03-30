@@ -51,6 +51,10 @@ public static class SpecialisationDefinitionRepository
         "AlignmentRestrictions",
         "RaceRestriction",
         "RaceRestrictions",
+        "RaceSubtypeRestriction",
+        "RaceSubtypeRestrictions",
+        "SubtypeRestriction",
+        "SubtypeRestrictions",
         "Races",
         "PeopleType",
         "Abilities",
@@ -521,6 +525,7 @@ public static class SpecialisationDefinitionRepository
                 ClassRestriction = source.Restrictions.ClassRestriction.ToList(),
                 AlignmentRestriction = source.Restrictions.AlignmentRestriction.ToList(),
                 RaceRestriction = source.Restrictions.RaceRestriction.ToList(),
+                RaceSubtypeRestriction = source.Restrictions.RaceSubtypeRestriction.ToList(),
                 PeopleType = source.Restrictions.PeopleType.ToList()
             },
             StrategyIds = source.StrategyIds.ToList(),
@@ -648,12 +653,21 @@ public static class SpecialisationDefinitionRepository
         if (raceRestriction.Count == 0)
             raceRestriction = ReadStringArrayProperty(source, "Races");
 
+        var raceSubtypeRestriction = ReadStringArrayProperty(source, "RaceSubtypeRestriction");
+        if (raceSubtypeRestriction.Count == 0)
+            raceSubtypeRestriction = ReadStringArrayProperty(source, "RaceSubtypeRestrictions");
+        if (raceSubtypeRestriction.Count == 0)
+            raceSubtypeRestriction = ReadStringArrayProperty(source, "SubtypeRestriction");
+        if (raceSubtypeRestriction.Count == 0)
+            raceSubtypeRestriction = ReadStringArrayProperty(source, "SubtypeRestrictions");
+
         var peopleType = ReadStringArrayProperty(source, "PeopleType");
         return new Restrictions
         {
             ClassRestriction = classRestriction,
             AlignmentRestriction = alignmentRestriction,
             RaceRestriction = raceRestriction,
+            RaceSubtypeRestriction = raceSubtypeRestriction,
             PeopleType = peopleType
         };
     }
@@ -1033,6 +1047,7 @@ public static class SpecialisationDefinitionRepository
         var classRestriction = new List<string>();
         var alignmentRestriction = new List<string>();
         var raceRestriction = new List<string>();
+        var raceSubtypeRestriction = new List<string>();
         var peopleType = new List<string>();
         IReadOnlyList<string> optionStrategyIds = Array.Empty<string>();
 
@@ -1118,6 +1133,27 @@ public static class SpecialisationDefinitionRepository
                     raceRestriction = ParseStringArray(racesElement);
                 }
 
+                if (element.TryGetProperty("RaceSubtypeRestriction", out var raceSubtypeRestrictionElement)
+                    && raceSubtypeRestrictionElement.ValueKind == JsonValueKind.Array)
+                {
+                    raceSubtypeRestriction = ParseStringArray(raceSubtypeRestrictionElement);
+                }
+                else if (element.TryGetProperty("RaceSubtypeRestrictions", out var raceSubtypeRestrictionsElement)
+                         && raceSubtypeRestrictionsElement.ValueKind == JsonValueKind.Array)
+                {
+                    raceSubtypeRestriction = ParseStringArray(raceSubtypeRestrictionsElement);
+                }
+                else if (element.TryGetProperty("SubtypeRestriction", out var subtypeRestrictionElement)
+                         && subtypeRestrictionElement.ValueKind == JsonValueKind.Array)
+                {
+                    raceSubtypeRestriction = ParseStringArray(subtypeRestrictionElement);
+                }
+                else if (element.TryGetProperty("SubtypeRestrictions", out var subtypeRestrictionsElement)
+                         && subtypeRestrictionsElement.ValueKind == JsonValueKind.Array)
+                {
+                    raceSubtypeRestriction = ParseStringArray(subtypeRestrictionsElement);
+                }
+
                 if (element.TryGetProperty("Levels", out var levelsElement)
                     && levelsElement.ValueKind == JsonValueKind.Object)
                 {
@@ -1141,6 +1177,7 @@ public static class SpecialisationDefinitionRepository
             && classRestriction.Count == 0
             && alignmentRestriction.Count == 0
             && raceRestriction.Count == 0
+            && raceSubtypeRestriction.Count == 0
             && peopleType.Count == 0
             && guildOverrides == null)
         {
@@ -1166,6 +1203,7 @@ public static class SpecialisationDefinitionRepository
                 ClassRestriction = classRestriction,
                 AlignmentRestriction = alignmentRestriction,
                 RaceRestriction = raceRestriction,
+                RaceSubtypeRestriction = raceSubtypeRestriction,
                 PeopleType = peopleType
             },
             StrategyIds = optionStrategyIds

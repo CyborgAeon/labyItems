@@ -132,7 +132,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
 
         item.IsExpanded = !item.IsExpanded;
-        RefilterRaces();
     }
 
     private async Task LoadRacesAsync()
@@ -295,8 +294,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         get => _selectedTabIndex;
         set
         {
-            var next = value == 1 && !CanSelectRace ? 0 : value;
-            if (!Set(ref _selectedTabIndex, next)) return;
+            if (!Set(ref _selectedTabIndex, value)) return;
             Raise(nameof(IsClassTabSelected));
             Raise(nameof(IsRaceTabSelected));
         }
@@ -309,9 +307,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     public bool TryMoveToRaceSelection()
     {
-        if (!CanSelectRace)
-            return false;
-
         SelectedTabIndex = 1;
         return IsRaceTabSelected;
     }
@@ -510,7 +505,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await RefreshAllowedClassesForSelectedRaceAsync();
             cancellationToken.ThrowIfCancellationRequested();
 
-            EnsureSelectedClassAllowedForRace();
+            var classStillValid = EnsureSelectedClassAllowedForRace();
             RefilterClasses();
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -520,7 +515,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await UpdateDraftLifeAsync(expandIfChanged: true);
             cancellationToken.ThrowIfCancellationRequested();
 
-            RefilterRaces();
+            if (!classStillValid)
+                RefilterRaces();
             cancellationToken.ThrowIfCancellationRequested();
 
             await SpecialisationVm.ReloadAsync(cancellationToken);

@@ -76,12 +76,14 @@ public sealed class Restrictions
     public IReadOnlyList<string> ClassRestriction { get; init; } = Array.Empty<string>();
     public IReadOnlyList<string> AlignmentRestriction { get; init; } = Array.Empty<string>();
     public IReadOnlyList<string> RaceRestriction { get; init; } = Array.Empty<string>();
+    public IReadOnlyList<string> RaceSubtypeRestriction { get; init; } = Array.Empty<string>();
     public IReadOnlyList<string> PeopleType { get; init; } = Array.Empty<string>();
 
     public bool HasRestrictions =>
         ClassRestriction.Count > 0
         || AlignmentRestriction.Count > 0
         || RaceRestriction.Count > 0
+        || RaceSubtypeRestriction.Count > 0
         || PeopleType.Count > 0;
 }
 

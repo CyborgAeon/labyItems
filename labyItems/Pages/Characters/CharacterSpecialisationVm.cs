@@ -564,8 +564,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         var classAllowed = IsClassAllowed(option.Restrictions.ClassRestriction);
         var alignmentAllowed = IsAlignmentAllowed(option.Restrictions.AlignmentRestriction);
         var raceAllowed = IsRaceAllowed(option.Restrictions.RaceRestriction);
+        var subtypeAllowed = IsSubtypeAllowed(option.Restrictions.RaceSubtypeRestriction);
 
-        if (classAllowed && alignmentAllowed && raceAllowed)
+        if (classAllowed && alignmentAllowed && raceAllowed && subtypeAllowed)
             return string.Empty;
 
         var failures = new List<string>();
@@ -575,6 +576,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             failures.Add("Alignment");
         if (!raceAllowed)
             failures.Add("Race");
+        if (!subtypeAllowed)
+            failures.Add("Race subtype");
 
         return failures.Count switch
         {
@@ -1462,6 +1465,49 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                 || normalized.Contains(raceToken, StringComparison.OrdinalIgnoreCase)
                 || raceToken.Contains(singularRestriction, StringComparison.OrdinalIgnoreCase)
                 || singularRestriction.Contains(raceToken, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsSubtypeAllowed(IReadOnlyList<string>? restrictions)
+    {
+        var subtype = (Draft.RaceSubtypeValue ?? Draft.RaceSubtype ?? string.Empty).Trim();
+
+        var list = restrictions?
+            .Select(r => (r ?? string.Empty).Trim())
+            .Where(r => r.Length > 0)
+            .ToList() ?? new List<string>();
+
+        if (list.Count == 0)
+            return true;
+
+        if (subtype.Length == 0)
+            return false;
+
+        var subtypeToken = NormalizeRaceToken(subtype);
+        if (subtypeToken.Length == 0)
+            return false;
+
+        var singularSubtype = TrimPluralToken(subtypeToken);
+        foreach (var restriction in list)
+        {
+            var normalized = NormalizeRaceToken(restriction);
+            if (normalized.Length == 0)
+                continue;
+
+            var singularRestriction = TrimPluralToken(normalized);
+            if (subtypeToken.Equals(normalized, StringComparison.OrdinalIgnoreCase)
+                || singularSubtype.Equals(normalized, StringComparison.OrdinalIgnoreCase)
+                || subtypeToken.Equals(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || singularSubtype.Equals(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || subtypeToken.Contains(normalized, StringComparison.OrdinalIgnoreCase)
+                || normalized.Contains(subtypeToken, StringComparison.OrdinalIgnoreCase)
+                || subtypeToken.Contains(singularRestriction, StringComparison.OrdinalIgnoreCase)
+                || singularRestriction.Contains(subtypeToken, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }

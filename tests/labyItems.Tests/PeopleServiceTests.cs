@@ -28,7 +28,7 @@ public sealed class PeopleServiceTests : ServiceTestBase
             .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        var expected = new[] { "Athfanal", "Elf", "Faerie", "Farfolk", "Samila" }
+        var expected = new[] { "Athfanal", "Elf", "Faerie", "Farfolk", "Samila", "Verdant Heart" }
             .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
@@ -53,6 +53,21 @@ public sealed class PeopleServiceTests : ServiceTestBase
         Assert.True(HasRaceAbilityRef(all, "Samila", "ability.half-effect-magic"));
         Assert.True(HasRaceAbilityRef(all, "Samila", "ability.spiritless"));
         Assert.True(HasRaceAbilityRef(all, "Samila", "ability.mindless"));
+    }
+
+    [Fact]
+    public async Task GetAllAsync_DebugMerge_PreservesPackagedSubtypeWhenDbRaceIsLegacy()
+    {
+        SQLite.SQLiteTestStore.AddRace(
+            "Goblin",
+            "{\"PeopleType\":[\"Tribal\"],\"Description\":\"Legacy goblin row\"}");
+
+        var all = await PeopleService.GetAllAsync();
+
+        Assert.True(all.TryGetValue("Goblin", out var goblin));
+        Assert.NotNull(goblin.Subtype);
+        Assert.Equal("GoblinSubtypeAbilities", goblin.Subtype!.AbilityMapKey);
+        Assert.Contains("Cave Fang", goblin.Subtype.OptionsSource, StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool HasRaceAbilityRef(

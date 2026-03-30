@@ -29,12 +29,14 @@ public static class SQLiteTestStore
         string DataJson);
     private sealed record NgramRow(int EvolutionId, string Token);
     private sealed record LifeScaleRow(string Race, string Class, int Index, int Body, int Loc);
+    private sealed record RaceRow(string Name, string DataJson);
 
     private static readonly List<string> SpellRows = new();
     private static readonly List<MiracleRow> MiracleRows = new();
     private static readonly List<EvolutionRow> EvolutionRows = new();
     private static readonly List<NgramRow> EvolutionNgrams = new();
     private static readonly List<LifeScaleRow> LifeScaleRows = new();
+    private static readonly List<RaceRow> RaceRows = new();
     private static int _nextEvolutionId = 1;
 
     public static void Reset()
@@ -44,6 +46,7 @@ public static class SQLiteTestStore
         EvolutionRows.Clear();
         EvolutionNgrams.Clear();
         LifeScaleRows.Clear();
+        RaceRows.Clear();
         _nextEvolutionId = 1;
     }
 
@@ -88,6 +91,9 @@ public static class SQLiteTestStore
     public static void AddLifeScale(string race, string @class, int index, int body, int loc)
         => LifeScaleRows.Add(new LifeScaleRow(race ?? string.Empty, @class ?? string.Empty, index, body, loc));
 
+    public static void AddRace(string name, string dataJson)
+        => RaceRows.Add(new RaceRow(name ?? string.Empty, dataJson ?? string.Empty));
+
     internal static List<T> Query<T>(string sql, object[] args) where T : new()
     {
         if (sql.Contains("FROM spells", StringComparison.OrdinalIgnoreCase))
@@ -127,6 +133,18 @@ public static class SQLiteTestStore
                     ["idx"] = row.Index,
                     ["body"] = row.Body,
                     ["loc"] = row.Loc
+                }))
+                .ToList();
+        }
+
+        if (sql.Contains("FROM races", StringComparison.OrdinalIgnoreCase))
+        {
+            return RaceRows
+                .OrderBy(r => r.Name, StringComparer.OrdinalIgnoreCase)
+                .Select(row => Materialize<T>(new Dictionary<string, object?>
+                {
+                    ["name"] = row.Name,
+                    ["data_json"] = row.DataJson
                 }))
                 .ToList();
         }

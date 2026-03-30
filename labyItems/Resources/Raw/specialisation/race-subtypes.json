@@ -111,6 +111,27 @@
       "ChoiceSetRefs": [
         "choice.ratfolkclanabilities.mapped"
       ]
+    },
+    "DraconianSubtypeAbilities": {
+      "Key": "definition.draconiansubtypeabilities",
+      "DisplayName": "DraconianSubtypeAbilities",
+      "ChoiceSetRefs": [
+        "choice.draconiansubtypeabilities.mapped"
+      ]
+    },
+    "GoblinSubtypeAbilities": {
+      "Key": "definition.goblinsubtypeabilities",
+      "DisplayName": "GoblinSubtypeAbilities",
+      "ChoiceSetRefs": [
+        "choice.goblinsubtypeabilities.mapped"
+      ]
+    },
+    "OrcSubtypeAbilities": {
+      "Key": "definition.orcsubtypeabilities",
+      "DisplayName": "OrcSubtypeAbilities",
+      "ChoiceSetRefs": [
+        "choice.orcsubtypeabilities.mapped"
+      ]
     }
   }
 }

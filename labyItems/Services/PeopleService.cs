@@ -96,7 +96,21 @@ public static class PeopleService
         {
             var fromDb = await Task.Run(LoadFromDb).ConfigureAwait(false);
             foreach (var kvp in fromDb)
-                dict[kvp.Key] = kvp.Value;
+            {
+                if (!dict.TryGetValue(kvp.Key, out var packaged))
+                {
+                    dict[kvp.Key] = kvp.Value;
+                    continue;
+                }
+
+                if (kvp.Value.NonStandard)
+                {
+                    dict[kvp.Key] = kvp.Value;
+                    continue;
+                }
+
+                dict[kvp.Key] = MergePreferPackaged(packaged, kvp.Value);
+            }
         }
         catch (Exception ex)
         {
@@ -104,6 +118,114 @@ public static class PeopleService
         }
 
         return dict;
+    }
+
+    private static PeopleRecord MergePreferPackaged(PeopleRecord packaged, PeopleRecord fromDb)
+    {
+        var merged = ClonePeopleRecord(packaged);
+        merged.NonStandard = packaged.NonStandard || fromDb.NonStandard;
+
+        if (merged.PeopleType.Count == 0 && fromDb.PeopleType.Count > 0)
+            merged.PeopleType = new List<string>(fromDb.PeopleType);
+        if (merged.Tags.Count == 0 && fromDb.Tags.Count > 0)
+            merged.Tags = new List<string>(fromDb.Tags);
+        if (string.IsNullOrWhiteSpace(merged.Description) && !string.IsNullOrWhiteSpace(fromDb.Description))
+            merged.Description = fromDb.Description;
+        if (merged.LevelledAbilities.Count == 0 && fromDb.LevelledAbilities.Count > 0)
+            merged.LevelledAbilities = CloneLevelledAbilities(fromDb.LevelledAbilities);
+        if (string.IsNullOrWhiteSpace(merged.AdditionalInfo) && !string.IsNullOrWhiteSpace(fromDb.AdditionalInfo))
+            merged.AdditionalInfo = fromDb.AdditionalInfo;
+        if (merged.Subtype == null && fromDb.Subtype != null)
+            merged.Subtype = CloneSubtype(fromDb.Subtype);
+        if (merged.GuildOverrides == null && fromDb.GuildOverrides != null)
+            merged.GuildOverrides = fromDb.GuildOverrides;
+        if (string.IsNullOrWhiteSpace(merged.BuyAs) && !string.IsNullOrWhiteSpace(fromDb.BuyAs))
+            merged.BuyAs = fromDb.BuyAs;
+        if (merged.AlignmentRule == null && fromDb.AlignmentRule != null)
+            merged.AlignmentRule = fromDb.AlignmentRule;
+
+        return merged;
+    }
+
+    private static PeopleRecord ClonePeopleRecord(PeopleRecord source)
+    {
+        return new PeopleRecord
+        {
+            NonStandard = source.NonStandard,
+            PeopleType = new List<string>(source.PeopleType ?? new List<string>()),
+            Tags = new List<string>(source.Tags ?? new List<string>()),
+            Description = source.Description ?? string.Empty,
+            LevelledAbilities = CloneLevelledAbilities(source.LevelledAbilities),
+            AdditionalInfo = source.AdditionalInfo,
+            Subtype = source.Subtype == null ? null : CloneSubtype(source.Subtype),
+            GuildOverrides = source.GuildOverrides,
+            BuyAs = source.BuyAs,
+            AlignmentRule = source.AlignmentRule
+        };
+    }
+
+    private static Dictionary<string, List<AbilityDefinition>> CloneLevelledAbilities(
+        Dictionary<string, List<AbilityDefinition>> source)
+    {
+        var clone = new Dictionary<string, List<AbilityDefinition>>(StringComparer.OrdinalIgnoreCase);
+        if (source == null)
+            return clone;
+
+        foreach (var entry in source)
+        {
+            var abilities = new List<AbilityDefinition>();
+            if (entry.Value != null)
+            {
+                foreach (var ability in entry.Value)
+                {
+                    if (ability == null)
+                        continue;
+
+                    abilities.Add(new AbilityDefinition
+                    {
+                        Key = ability.Key,
+                        Name = ability.Name,
+                        Type = ability.Type,
+                        Effect = ability.Effect,
+                        Lore = ability.Lore,
+                        BattleboardNameOverride = ability.BattleboardNameOverride,
+                        UpdateKey = ability.UpdateKey,
+                        Source = ability.Source,
+                        Count = ability.Count,
+                        Amount = ability.Amount == null ? null : new List<int>(ability.Amount),
+                        Frequency = ability.Frequency,
+                        OverwriteKey = ability.OverwriteKey,
+                        PreReqs = ability.PreReqs == null ? null : new List<string>(ability.PreReqs),
+                        GuildOverrides = ability.GuildOverrides == null ? null : new List<string>(ability.GuildOverrides),
+                        AbilityRef = ability.AbilityRef,
+                        Customisation = ability.Customisation == null
+                            ? null
+                            : new AbilityCustomisation
+                            {
+                                OptionEnum = ability.Customisation.OptionEnum,
+                                CustomValuesPermitted = ability.Customisation.CustomValuesPermitted
+                            }
+                    });
+                }
+            }
+
+            clone[entry.Key] = abilities;
+        }
+
+        return clone;
+    }
+
+    private static PeopleSubtypeRecord CloneSubtype(PeopleSubtypeRecord source)
+    {
+        return new PeopleSubtypeRecord
+        {
+            Key = source.Key ?? string.Empty,
+            DisplayName = source.DisplayName ?? string.Empty,
+            Description = source.Description ?? string.Empty,
+            SelectionMode = source.SelectionMode ?? "SingleOptional",
+            OptionsSource = source.OptionsSource ?? string.Empty,
+            AbilityMapKey = source.AbilityMapKey ?? string.Empty
+        };
     }
 }
 

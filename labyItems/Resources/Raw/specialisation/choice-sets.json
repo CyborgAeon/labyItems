@@ -67,21 +67,66 @@
         "section:choice"
       ],
       "Options": [
-        { "Key": "Spring", "Label": "Spring" },
-        { "Key": "Summer", "Label": "Summer" },
-        { "Key": "Autumn", "Label": "Autumn" },
-        { "Key": "Winter", "Label": "Winter" },
-        { "Key": "Horned Man", "Label": "Horned Man" },
-        { "Key": "Mother Nature", "Label": "Mother Nature" },
-        { "Key": "Shadow of the Dawn", "Label": "Shadow of the Dawn" },
-        { "Key": "Keeper of Winds", "Label": "Keeper of Winds" },
-        { "Key": "Father of the World", "Label": "Father of the World" },
-        { "Key": "Deserts", "Label": "Deserts" },
-        { "Key": "Skies", "Label": "Skies" },
-        { "Key": "Mountains", "Label": "Mountains" },
-        { "Key": "Rivers", "Label": "Rivers" },
-        { "Key": "Forests", "Label": "Forests" },
-        { "Key": "Cities", "Label": "Cities" }
+        {
+          "Key": "Spring",
+          "Label": "Spring"
+        },
+        {
+          "Key": "Summer",
+          "Label": "Summer"
+        },
+        {
+          "Key": "Autumn",
+          "Label": "Autumn"
+        },
+        {
+          "Key": "Winter",
+          "Label": "Winter"
+        },
+        {
+          "Key": "Horned Man",
+          "Label": "Horned Man"
+        },
+        {
+          "Key": "Mother Nature",
+          "Label": "Mother Nature"
+        },
+        {
+          "Key": "Shadow of the Dawn",
+          "Label": "Shadow of the Dawn"
+        },
+        {
+          "Key": "Keeper of Winds",
+          "Label": "Keeper of Winds"
+        },
+        {
+          "Key": "Father of the World",
+          "Label": "Father of the World"
+        },
+        {
+          "Key": "Deserts",
+          "Label": "Deserts"
+        },
+        {
+          "Key": "Skies",
+          "Label": "Skies"
+        },
+        {
+          "Key": "Mountains",
+          "Label": "Mountains"
+        },
+        {
+          "Key": "Rivers",
+          "Label": "Rivers"
+        },
+        {
+          "Key": "Forests",
+          "Label": "Forests"
+        },
+        {
+          "Key": "Cities",
+          "Label": "Cities"
+        }
       ]
     },
     "choice.druid.advocate-of-field.primary": {
@@ -93,21 +138,66 @@
         "section:choice"
       ],
       "Options": [
-        { "Key": "Spring", "Label": "Spring" },
-        { "Key": "Summer", "Label": "Summer" },
-        { "Key": "Autumn", "Label": "Autumn" },
-        { "Key": "Winter", "Label": "Winter" },
-        { "Key": "Horned Man", "Label": "Horned Man" },
-        { "Key": "Mother Nature", "Label": "Mother Nature" },
-        { "Key": "Shadow of the Dawn", "Label": "Shadow of the Dawn" },
-        { "Key": "Keeper of Winds", "Label": "Keeper of Winds" },
-        { "Key": "Father of the World", "Label": "Father of the World" },
-        { "Key": "Deserts", "Label": "Deserts" },
-        { "Key": "Skies", "Label": "Skies" },
-        { "Key": "Mountains", "Label": "Mountains" },
-        { "Key": "Rivers", "Label": "Rivers" },
-        { "Key": "Forests", "Label": "Forests" },
-        { "Key": "Cities", "Label": "Cities" }
+        {
+          "Key": "Spring",
+          "Label": "Spring"
+        },
+        {
+          "Key": "Summer",
+          "Label": "Summer"
+        },
+        {
+          "Key": "Autumn",
+          "Label": "Autumn"
+        },
+        {
+          "Key": "Winter",
+          "Label": "Winter"
+        },
+        {
+          "Key": "Horned Man",
+          "Label": "Horned Man"
+        },
+        {
+          "Key": "Mother Nature",
+          "Label": "Mother Nature"
+        },
+        {
+          "Key": "Shadow of the Dawn",
+          "Label": "Shadow of the Dawn"
+        },
+        {
+          "Key": "Keeper of Winds",
+          "Label": "Keeper of Winds"
+        },
+        {
+          "Key": "Father of the World",
+          "Label": "Father of the World"
+        },
+        {
+          "Key": "Deserts",
+          "Label": "Deserts"
+        },
+        {
+          "Key": "Skies",
+          "Label": "Skies"
+        },
+        {
+          "Key": "Mountains",
+          "Label": "Mountains"
+        },
+        {
+          "Key": "Rivers",
+          "Label": "Rivers"
+        },
+        {
+          "Key": "Forests",
+          "Label": "Forests"
+        },
+        {
+          "Key": "Cities",
+          "Label": "Cities"
+        }
       ]
     },
     "choice.warrior-specialist.primary": {
@@ -202,6 +292,29 @@
             }
           ],
           "Description": "This skill grants the Warrior the ability to jump a large distance. Also found listed under the spell Jump, or Salmon Leap, the distance jumped cannot be more than 20’ forwards, 10’ backwards, or 15’ upwards. Jumping past a person will enable that person to take one swing at the jumper; simple actions or other ‘instant’ abilities which need no verbal can be used (just one ability – not a string of Neuronic Penetrations!) instead of a weapon swing, including speaking a single word. This ability is usable 2/day"
+        },
+        {
+          "Key": "Well Equipped (poison)",
+          "Label": "Well Equipped (poison)",
+          "Grants": [
+            {
+              "AbilityRef": "ability.well-equipped",
+              "Overrides": {
+                "Name": "Well Equipped (poison)",
+                "Type": "Static",
+                "Effect": "As Well Equipped, but for poison and venom preparations only."
+              }
+            }
+          ],
+          "Description": "Cave Fang subtype option: add Well Equipped (poison) as a Warrior specialist skill choice.",
+          "Restrictions": {
+            "RaceSubtypeRestriction": [
+              "Cave Fang"
+            ],
+            "RaceRestriction": [
+              "Goblin"
+            ]
+          }
         }
       ]
     },
@@ -6468,118 +6581,541 @@
       "Required": true,
       "Mode": "Single",
       "StrategyIds": [
-            "section:choice"
+        "section:choice"
       ],
       "Options": [
-            {
-                  "Key": "Weapons",
-                  "Label": "Weapons"
-            },
-            {
-                  "Key": "Armour",
-                  "Label": "Armour"
-            },
-            {
-                  "Key": "Other",
-                  "Label": "Other (Shields/Tools)"
-            }
+        {
+          "Key": "Weapons",
+          "Label": "Weapons"
+        },
+        {
+          "Key": "Armour",
+          "Label": "Armour"
+        },
+        {
+          "Key": "Other",
+          "Label": "Other (Shields/Tools)"
+        }
       ]
-},
+    },
     "choice.make.craft-speciality.wizard.type": {
       "Key": "choice.make.craft-speciality.wizard.type",
       "Title": "Craft Speciality (Wizard)",
       "Required": true,
       "Mode": "Single",
       "StrategyIds": [
-            "section:choice"
+        "section:choice"
       ],
       "Options": [
-            {
-                  "Key": "Weapons",
-                  "Label": "Weapons"
-            },
-            {
-                  "Key": "Armour",
-                  "Label": "Armour"
-            },
-            {
-                  "Key": "Talismans",
-                  "Label": "Talismans"
-            },
-            {
-                  "Key": "Teaching Scrolls",
-                  "Label": "Teaching Scrolls"
-            }
+        {
+          "Key": "Weapons",
+          "Label": "Weapons"
+        },
+        {
+          "Key": "Armour",
+          "Label": "Armour"
+        },
+        {
+          "Key": "Talismans",
+          "Label": "Talismans"
+        },
+        {
+          "Key": "Teaching Scrolls",
+          "Label": "Teaching Scrolls"
+        }
       ]
-},
+    },
     "choice.make.craft-speciality.spiritual.type": {
       "Key": "choice.make.craft-speciality.spiritual.type",
       "Title": "Craft Speciality (Spiritual)",
       "Required": true,
       "Mode": "Single",
       "StrategyIds": [
-            "section:choice"
+        "section:choice"
       ],
       "Options": [
-            {
-                  "Key": "Weapons",
-                  "Label": "Weapons"
-            },
-            {
-                  "Key": "Armour",
-                  "Label": "Armour"
-            },
-            {
-                  "Key": "Talismans",
-                  "Label": "Talismans"
-            },
-            {
-                  "Key": "Scriptures",
-                  "Label": "Scriptures"
-            }
+        {
+          "Key": "Weapons",
+          "Label": "Weapons"
+        },
+        {
+          "Key": "Armour",
+          "Label": "Armour"
+        },
+        {
+          "Key": "Talismans",
+          "Label": "Talismans"
+        },
+        {
+          "Key": "Scriptures",
+          "Label": "Scriptures"
+        }
       ]
-},
+    },
     "choice.make.craft-speciality.warrior.type": {
       "Key": "choice.make.craft-speciality.warrior.type",
       "Title": "Craft Speciality (Warrior)",
       "Required": true,
       "Mode": "Single",
       "StrategyIds": [
-            "section:choice"
+        "section:choice"
       ],
       "Options": [
-            {
-                  "Key": "Weapons",
-                  "Label": "Weapons"
-            },
-            {
-                  "Key": "Armour",
-                  "Label": "Armour"
-            },
-            {
-                  "Key": "Other",
-                  "Label": "Other (Shields/Tools)"
-            }
+        {
+          "Key": "Weapons",
+          "Label": "Weapons"
+        },
+        {
+          "Key": "Armour",
+          "Label": "Armour"
+        },
+        {
+          "Key": "Other",
+          "Label": "Other (Shields/Tools)"
+        }
       ]
-},
+    },
     "choice.make.craft-speciality.neuronic.type": {
       "Key": "choice.make.craft-speciality.neuronic.type",
       "Title": "Craft Speciality (Neuronic)",
       "Required": true,
       "Mode": "Single",
       "StrategyIds": [
-            "section:choice"
+        "section:choice"
       ],
       "Options": [
+        {
+          "Key": "Prisms",
+          "Label": "Prisms"
+        },
+        {
+          "Key": "Torques",
+          "Label": "Torques"
+        }
+      ]
+    },
+    "choice.draconiansubtypeabilities.mapped": {
+      "Key": "choice.draconiansubtypeabilities.mapped",
+      "Title": "DraconianSubtypeAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "Rokeen",
+          "Label": "Rokeen (Rock-kin)",
+          "Description": "Martial draconian strain. Class-restricted to Warrior. Gains clinging breath and frenzy progression.",
+          "Effects": {
+            "LifeScaleOverride": "Rokeen (Draconian - The Rock-kin)"
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warrior"
+            ]
+          },
+          "Grants": [
             {
-                  "Key": "Prisms",
-                  "Label": "Prisms"
+              "Name": "Tunnel Vision",
+              "Type": "Static",
+              "Effect": "When in combat the Rokeen fixates on a chosen target until it dies or a senior draconian redirects them."
             },
             {
-                  "Key": "Torques",
-                  "Label": "Torques"
+              "Name": "Brute",
+              "Type": "Static",
+              "Effect": "As per Brute progression tables."
+            },
+            {
+              "Name": "Stone Form",
+              "Type": "Static",
+              "Effect": "On death the body turns to stone and is hard to move."
+            },
+            {
+              "Name": "Clinging Breath",
+              "Type": "Innate",
+              "Level": 3,
+              "Count": 1,
+              "Effect": "Magical Slow (8 levels) at 20ft."
+            },
+            {
+              "Name": "Frenzy",
+              "Type": "Innate",
+              "Level": 7,
+              "Count": 1,
+              "Effect": "50% Berserk Rage."
             }
+          ]
+        },
+        {
+          "Key": "Gloozin",
+          "Label": "Gloozin (Shadow-kin)",
+          "Description": "Cunning draconian strain using poison, bone-storm death burst, and blinding breath progression.",
+          "Effects": {
+            "LifeScaleOverride": "Gloozin (Draconian - The Shadow-kin)"
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Assassin",
+              "Thug",
+              "Warlock",
+              "Spiritual Warrior",
+              "Warrior-Priest"
+            ]
+          },
+          "Grants": [
+            {
+              "Name": "Poison Spit",
+              "Type": "Innate",
+              "Count": 1,
+              "Effect": "Spit CV2 at one target within 20ft."
+            },
+            {
+              "Name": "Healing Saliva",
+              "Type": "Innate",
+              "Count": 1,
+              "Effect": "Lick to heal 12/12 on self or another Gloozin."
+            },
+            {
+              "Name": "Bone Storm",
+              "Type": "Static",
+              "Level": 3,
+              "Effect": "On death, bones burst out and strike the killer with mixed spiritual/physical force."
+            },
+            {
+              "Name": "Blinding Breath",
+              "Type": "Innate",
+              "Level": 7,
+              "Count": 1,
+              "Effect": "One target is magically blinded for one minute."
+            }
+          ]
+        },
+        {
+          "Key": "Acriden",
+          "Label": "Acriden (Acid-kin)",
+          "Description": "Arcane/venom draconian strain with acid breath and acid death burst progression.",
+          "Effects": {
+            "LifeScaleOverride": "Acriden (Draconian - The Acid-kin)"
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Sorcerer",
+              "Warlock",
+              "Vivomancer"
+            ]
+          },
+          "Grants": [
+            {
+              "Name": "Acid Breath",
+              "Type": "Innate",
+              "Count": 2,
+              "Effect": "Breathes acid at an object within 20ft, splashing nearby handlers."
+            },
+            {
+              "Name": "Acid Splash",
+              "Type": "Static",
+              "Level": 3,
+              "Effect": "On death explodes in acid at the killer."
+            },
+            {
+              "Name": "Corrosive Acid Breath",
+              "Type": "Static",
+              "Level": 7,
+              "Effect": "Acid breath can destroy non-spiritual, non-glass objects."
+            }
+          ]
+        },
+        {
+          "Key": "Eldricen",
+          "Label": "Eldricen (Aura-kin)",
+          "Description": "Power-centric draconian strain with shadow breath, eldritch surge, and natural resistance progression.",
+          "Effects": {
+            "LifeScaleOverride": "Eldricen (Draconian - The Aura-kin)"
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Wizard",
+              "High-Wizard",
+              "Pure-Priest"
+            ]
+          },
+          "Grants": [
+            {
+              "Name": "Shadow Breath",
+              "Type": "Innate",
+              "Count": 1,
+              "Effect": "At 20ft reduces a target's MAC and SAC by 2 for five minutes."
+            },
+            {
+              "Name": "Eldritch Surge",
+              "Type": "Static",
+              "Level": 3,
+              "Effect": "On death applies a degenerative magical/spiritual backlash to the killer."
+            },
+            {
+              "Name": "Natural Resistance",
+              "Type": "Static",
+              "Level": 7,
+              "Effect": "Gain +1 MAC and +1 SAC."
+            }
+          ]
+        },
+        {
+          "Key": "Myriak",
+          "Label": "Myriak (Nature-kin)",
+          "Description": "Shape-shifting draconian strain with venom blossom, swarm form, and shape shift progression.",
+          "Effects": {
+            "LifeScaleOverride": "Myriak (Draconian - The Nature-kin)"
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Druid",
+              "High Druid",
+              "Forest Guardian",
+              "Leywalker"
+            ]
+          },
+          "Grants": [
+            {
+              "Name": "Venom Blossom",
+              "Type": "Static",
+              "Effect": "On death the killer suffers venom effects."
+            },
+            {
+              "Name": "Swarm Form",
+              "Type": "Innate",
+              "Level": 3,
+              "Count": 1,
+              "Effect": "Warcry-like swarm state for 30 seconds."
+            },
+            {
+              "Name": "Shape Shift",
+              "Type": "Innate",
+              "Level": 7,
+              "Count": 1,
+              "Effect": "Assume one animal form for up to five minutes."
+            }
+          ]
+        }
       ]
-}
+    },
+    "choice.goblinsubtypeabilities.mapped": {
+      "Key": "choice.goblinsubtypeabilities.mapped",
+      "Title": "GoblinSubtypeAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "Children of Bragyl",
+          "Label": "Children of Bragyl",
+          "Description": "Can buy minor and major prayers as a Wayfinder, to a maximum of one of each per three tables achieved (rounded up).",
+          "Grants": [
+            {
+              "Level": 1,
+              "Name": "Bragyl Prayer Access",
+              "Type": "Static",
+              "Effect": "May buy Minor and Major prayers as a Wayfinder; maximum one Minor and one Major per three tables achieved (rounded up).",
+              "Key": "ability.subtype.children-of-bragyl.prayer-access"
+            },
+            {
+              "Level": 1,
+              "Name": "No Tribal Guild Membership",
+              "Type": "Static",
+              "Effect": "Cannot join tribe-based guilds such as Spider Tribe or The Gargoyles.",
+              "Key": "ability.subtype.children-of-bragyl.no-tribe"
+            }
+          ]
+        },
+        {
+          "Key": "The Hollow Bone",
+          "Label": "The Hollow Bone",
+          "Description": "Spiritless lineage limited to Forest Guardian or Leywalker. Forest Guardian uses Goblin Pathfinder life; Leywalker uses Silverfolk Spy life.",
+          "Effects": {
+            "LifeScaleOverride": "Goblin (The Hollow Bone)"
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Forest Guardian",
+              "Leywalker"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.spiritless",
+              "Level": 1
+            },
+            {
+              "Level": 1,
+              "Name": "No Tribal Guild Membership",
+              "Type": "Static",
+              "Effect": "Cannot join tribe-based guilds such as Spider Tribe or The Gargoyles.",
+              "Key": "ability.subtype.the-hollow-bone.no-tribe"
+            }
+          ]
+        },
+        {
+          "Key": "Cave Fang",
+          "Label": "Cave Fang",
+          "Description": "Unlocks Well Equipped (poison) as an available Warrior specialist skill selection.",
+          "Grants": [
+            {
+              "Level": 1,
+              "Name": "Cave Fang Specialist Access",
+              "Type": "Static",
+              "Effect": "May select Well Equipped (poison) from Warrior specialist skills.",
+              "Key": "ability.subtype.cave-fang.specialist-access"
+            },
+            {
+              "Level": 1,
+              "Name": "No Tribal Guild Membership",
+              "Type": "Static",
+              "Effect": "Cannot join tribe-based guilds such as Spider Tribe or The Gargoyles.",
+              "Key": "ability.subtype.cave-fang.no-tribe"
+            }
+          ]
+        }
+      ]
+    },
+    "choice.orcsubtypeabilities.mapped": {
+      "Key": "choice.orcsubtypeabilities.mapped",
+      "Title": "OrcSubtypeAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "Bloodcrusher",
+          "Label": "Bloodcrusher",
+          "Description": "May only multi-race to Uruk-Hai and must be in a warrior bracket class.",
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warrior"
+            ]
+          },
+          "Grants": [
+            {
+              "Level": 1,
+              "Name": "Bloodcrusher Lineage Restriction",
+              "Type": "Static",
+              "Effect": "May only multi-race to Uruk-Hai.",
+              "Key": "ability.subtype.bloodcrusher.multirace-restriction"
+            },
+            {
+              "Level": 1,
+              "Name": "No Tribal Guild Membership",
+              "Type": "Static",
+              "Effect": "Cannot join tribe-based guilds such as Spider Tribe or The Gargoyles.",
+              "Key": "ability.subtype.bloodcrusher.no-tribe"
+            }
+          ]
+        },
+        {
+          "Key": "The Thrice",
+          "Label": "The Thrice",
+          "Description": "Restricted to Warlock or Rogue. Uses Human-equivalent life and can cast only black, white, red, green, blue, or brown spells (not grey).",
+          "Effects": {
+            "LifeScaleOverride": "Orc (The Thrice)",
+            "ColourChoiceOverride": [
+              "Black",
+              "White",
+              "Red",
+              "Green",
+              "Blue",
+              "Brown"
+            ]
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warlock",
+              "Rogue"
+            ]
+          },
+          "Grants": [
+            {
+              "Level": 1,
+              "Name": "No Teaching Scrolls",
+              "Type": "Static",
+              "Effect": "Cannot use teaching scrolls.",
+              "Key": "ability.subtype.the-thrice.no-teaching-scrolls"
+            },
+            {
+              "Level": 1,
+              "Name": "No Tribal Guild Membership",
+              "Type": "Static",
+              "Effect": "Cannot join tribe-based guilds such as Spider Tribe or The Gargoyles.",
+              "Key": "ability.subtype.the-thrice.no-tribe"
+            }
+          ]
+        },
+        {
+          "Key": "The Broken Crown",
+          "Label": "The Broken Crown",
+          "Description": "Loyal to the Church of the Tryst. Starting classes are Wayfinder or Spiritual Warrior only. Cannot read spiritual runes or use scriptures of the faith.",
+          "Effects": {
+            "GuildOverrides": [
+              "pr:Church of the Tryst"
+            ]
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Wayfinder",
+              "Spiritual Warrior"
+            ]
+          },
+          "Grants": [
+            {
+              "Level": 1,
+              "Name": "Church of the Tryst Membership",
+              "Type": "Static",
+              "Effect": "Must be a member of the Church of the Tryst.",
+              "Key": "ability.subtype.the-broken-crown.membership"
+            },
+            {
+              "Level": 1,
+              "Name": "Cannot Read Spiritual Runes",
+              "Type": "Static",
+              "Effect": "Cannot read spiritual runes and cannot use scriptures of the faith.",
+              "Key": "ability.subtype.the-broken-crown.no-runes-scriptures"
+            },
+            {
+              "Level": 1,
+              "Name": "No Tribal Guild Membership",
+              "Type": "Static",
+              "Effect": "Cannot join tribe-based guilds such as Spider Tribe or The Gargoyles.",
+              "Key": "ability.subtype.the-broken-crown.no-tribe"
+            }
+          ]
+        },
+        {
+          "Key": "The Lost",
+          "Label": "The Lost",
+          "Description": "More civilised and mind-focused lineage. Starting classes are Psi-Master or Spy only, using Human-equivalent life.",
+          "Effects": {
+            "LifeScaleOverride": "Orc (The Lost)"
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Psi-Master",
+              "Spy"
+            ]
+          },
+          "Grants": [
+            {
+              "Level": 1,
+              "Name": "No Tribal Guild Membership",
+              "Type": "Static",
+              "Effect": "Cannot join tribe-based guilds such as Spider Tribe or The Gargoyles.",
+              "Key": "ability.subtype.the-lost.no-tribe"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

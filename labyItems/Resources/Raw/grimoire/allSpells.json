@@ -449,9 +449,21 @@
     "description": "This spell inflicts 12 total body life points (TBLP) of damage and two to each location (loc) on one character or 4 hits to a monster. Magical Armour class may be applies to this at 6/1 per point.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[12, 2]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          12,
+          2
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 14
@@ -500,9 +512,21 @@
     "description": "This spell inflicts 24 points of damage on one character's total body life points (TBLP) and 4 points of damage to each of his locations (LOC). This spell damage ignores any non-magical armour. Alternatively, it delivers 8 hits of damage to a monster.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 15
@@ -659,9 +683,21 @@
     "description": "This spell charges one rock (a safe phys-rep must be used) with power. When thrown, it does 12 points of damage to the first player's location it hits, and 12 points of damage to their total life points. Alternatively, it does 4 hits to monsters. It disregards all forms of armour bar actual MAC, i.e. a suit of +0 Magic Armour would not offer any protection against a Magic Missile. The first object struck causes the rock to be discharged, so no rebounds.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[12, 12]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          12,
+          12
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 17
@@ -702,13 +738,28 @@
     "IsAdvanced": false,
     "Damage": {
       "amount": [
-        [12, 12],
-        [12, 2]
+        [
+          12,
+          12
+        ],
+        [
+          12,
+          2
+        ]
       ],
-      "type": ["Missile", "Blast"],
+      "type": [
+        "Missile",
+        "Blast"
+      ],
       "ArmourApplies": [
-        [1, 1],
-        [0, 0]
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
       ],
       "ArmourType": "MAC"
     },
@@ -956,9 +1007,21 @@
     "description": "When he casts this spell the wizard causes one player to take 12 points of total body damage and 2 points per location. Alternatively, a monster takes 4 hits. This is magical damage against which MAC may be applied, with each point of MAC reducing the damage by 6/1.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[12, 2]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          12,
+          2
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 20
@@ -1043,9 +1106,21 @@
     "description": "This spell causes 36 total body and 6 per location of magical fire damage to one character, or 12 hits to a monster. Only MAC may be applied versus this damage, with each point of MAC reducing the damage by 6/1.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[36, 6]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          36,
+          6
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 21
@@ -1220,9 +1295,21 @@
     "description": "By casting this spell the wizard creates a beam of light of great intensity that inflicts 24 magical points total body damage and 4 per location to one player. It does 8 hits to a monster. Only MAC may be applied versus the damage from this spell, with each point of MAC reducing the damage by 6/1.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 23
@@ -1352,9 +1439,21 @@
     "description": "The target of the spell is struck with a nerve-wracking pain which causes 12 TBLP damage (4 hits to a monster) – magical armour class does protect against this damage (at 1 for 1), and the damage is magical. Only creatures vulnerable to pain are affected, of course – undead and elementals, for example, are unharmed.",
     "IsAdvanced": false,
     "Damage": {
-      "amount": [[12, 0]],
-      "type": ["Body"],
-      "ArmourApplies": [[1, 0]],
+      "amount": [
+        [
+          12,
+          0
+        ]
+      ],
+      "type": [
+        "Body"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 29
@@ -1764,9 +1863,21 @@
     "IsAdvanced": false,
     "Immunity": "Flesh and Blood",
     "Damage": {
-      "amount": [[18, 18]],
-      "type": ["chest"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          18,
+          18
+        ]
+      ],
+      "type": [
+        "chest"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 36
@@ -1780,9 +1891,21 @@
     "IsAdvanced": false,
     "Immunity": "Involuntary Shape Shifting",
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 36
@@ -2039,9 +2162,21 @@
     "IsAdvanced": true,
     "Immunity": "Poison",
     "Damage": {
-      "amount": [[36, 36]],
-      "type": ["Head"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          36,
+          36
+        ]
+      ],
+      "type": [
+        "Head"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 56
@@ -2153,9 +2288,21 @@
     "description": "Inflicts 6/1 magical lightning damage in the same manner as the Storm Blast spell. Causes 2 hits to monsters.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[6, 1]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          6,
+          1
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 58
@@ -2177,9 +2324,21 @@
     "description": "Functions as the Red Spell Shock, except that the damage is blue magic lightning and Resistance to Lightning, not fire, applies.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[12, 12]],
-      "type": ["Missile"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          12,
+          12
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 58
@@ -2219,9 +2378,21 @@
     "description": "This causes two separate targets that are indicated, to be hit with a Lightning Bolt style effect. If only one target is within range then one of the bolts strikes the wizard. The same person may never be struck twice with the same single casting of this spell. If the only person within range when this spell is cast is the caster himself than one of the bolts is grounded and that bolt inflicts no damage, rather than the wizard being struck twice.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 59
@@ -2370,7 +2541,9 @@
     "damageOverride": "sever",
     "IsAdvanced": true,
     "Damage": {
-      "type": ["chest"],
+      "type": [
+        "chest"
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 61
@@ -2636,11 +2809,25 @@
     "IsAdvanced": true,
     "Damage": {
       "amount": [
-        [18, 3],
-        [18, 3]
+        [
+          18,
+          3
+        ],
+        [
+          18,
+          3
+        ]
       ],
-      "type": ["Missile", "Blast"],
-      "ArmourApplies": [[0, 0]],
+      "type": [
+        "Missile",
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 64
@@ -3103,9 +3290,21 @@
     "description": "This spell delivers 12 points TBLP and 2 points per location of magical acid damage against which only magical armour class defends. This spell delivers 4 hits to monsters.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[12, 2]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          12,
+          2
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 70
@@ -3198,11 +3397,25 @@
     "verbal": "By the mighty powers of the undine I dissolve thee... Acid Strike!",
     "description": "This spell delivers 24 points of TBLP and 4 points per location of magical damage against which only magical armour class applies. The spell also dissolves 2 points of physical armour class including toughened skin (which will regrow after the adventure only). Master crafted armour loses only one point of PAC per acid strike. This spell delivers 8 hits to monsters. Immunity to Acid stops the dissolving of the PAC and halves the damage suffered.",
     "IsAdvanced": true,
-    "PACDam": [2],
+    "PACDam": [
+      2
+    ],
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 71
@@ -3314,9 +3527,21 @@
     "description": "In a similar manner to Rain Shower [see page 70] this spell creates a short shower of acidic rain, which will burn the skin of all those within the radius. It causes 6/1 magical acid damage, against which MAC applies. Thus MAC 1 will stop its effects. Immunity to Acid grants 1/2 effect.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[6, 1]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          6,
+          1
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 72
@@ -3329,9 +3554,21 @@
     "description": "This spell has the following effects on the target of the spell: 1. Target takes 36/6 magical acid damage against which only magical armour class applies. 2. All physical armour class on the target is destroyed. 3. All non magical/spiritual/\"Item\" objects are destroyed. To monsters this spell inflicts 12 Hits. Immunity to Acid stops parts 2 and 3 and halves the damage from 1.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[36, 6]],
-      "type": ["Blast"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          36,
+          6
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 72
@@ -3354,9 +3591,21 @@
     "IsAdvanced": true,
     "Immunity": "Flesh and Blood",
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 72
@@ -3424,7 +3673,9 @@
     "damageOverride": "loc0",
     "IsAdvanced": true,
     "Damage": {
-      "type": ["chest"],
+      "type": [
+        "chest"
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 73
@@ -4020,7 +4271,9 @@
     "colour": "Onyx",
     "verbal": "With Onyx power I change your form, let your weakness to X be exposed for all to see.",
     "description": "Causes the target to suffer 50% more damage from one chosen colour of magic. This applies vs pure weapon blows, but not those with a physical component.",
-    "Immunity": ["Involuntary Shape-Shifting"],
+    "Immunity": [
+      "Involuntary Shape-Shifting"
+    ],
     "IsAdvanced": true,
     "sourcePage": 79
   },
@@ -4051,7 +4304,9 @@
     "damageOverride": "sever",
     "IsAdvanced": true,
     "Damage": {
-      "type": ["chest"],
+      "type": [
+        "chest"
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 79
@@ -4073,9 +4328,21 @@
     "description": "Inflicts 6/1 magical fire damage in the same manner as the Fire Blast spell. Causes 2 hits to monsters.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[6, 1]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          6,
+          1
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 79
@@ -4160,9 +4427,21 @@
     "description": "A shower of fire explodes outwards from the caster, inflicting 6/1 magical fire dart (2 Hits) to all within the radius. The caster also takes 6/1 magical fire damage, to which they may not apply MAC.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[6, 1]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          6,
+          1
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 80
@@ -4175,9 +4454,21 @@
     "description": "By casting this spell the wizard causes his touch to do 12 points of damage to the location and total body points (TBLP) of players. Alternatively it does 4 hits to monsters. The only AC that may be applies versus this damage is MAC, which applies on a 1 for 1 basis (so MAC2 reduces the damage by 2 TBLP and 2 to the location touched). Once the verbal is completed the wizard has 5 seconds to discharge the spell or it is wasted. He cannot cast any more spells in this time. This spell only causes damage to the first target struck so don't pick your nose! except that the damage inflicted is 24/24 (8 Hits to monsters).",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[24, 24]],
-      "type": ["Missile"],
-      "ArmourApplies": [[1, 1]],
+      "amount": [
+        [
+          24,
+          24
+        ]
+      ],
+      "type": [
+        "Missile"
+      ],
+      "ArmourApplies": [
+        [
+          1,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 80
@@ -4190,9 +4481,21 @@
     "description": "This spell generates a tennis-ball sized globe of magical flame. 5 seconds after creation, or whenever thrown against a solid surface, the fireball explodes, inflicting 12/2 magical fire damage to all within 20' (4 hits to monsters) and igniting all flammable objects within the area (i.e. this is a magical Incendiary Cache).",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[12, 2]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          12,
+          2
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 80
@@ -4214,9 +4517,21 @@
     "description": "A mass of fire explodes outwards from the caster, inflicting 24/4 magical fire damage (8 Hits) to all within the radius and hurling them back 6 paces unless they are Immune to Repels. The caster also takes 24/4 magical fire damage, to which he may not apply MAC.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 81
@@ -4247,9 +4562,21 @@
     "description": "This spell causes 48 total body and 8 per location of magical fire damage to one character, or 16 hits to a monster.\nOnly MAC may be applied versus this damage, with each point of MAC reducing the damage by 6/1.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[48, 8]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          48,
+          8
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 81
@@ -4271,9 +4598,21 @@
     "description": "This functions in all fashion exactly as the Fire Trap spell above, except when triggered it releases a Disruption. If cast by a Red Wizard with Disruption Expertise it costs only 9 mana to cast.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[36, 6]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          36,
+          6
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 81
@@ -4287,17 +4626,46 @@
     "IsAdvanced": true,
     "Damage": {
       "amount": [
-        [0, 9],
-        [0, 9],
-        [0, 9],
-        [36, 3]
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          36,
+          3
+        ]
       ],
-      "type": ["head", "chest", "abdomen", "Blast"],
+      "type": [
+        "head",
+        "chest",
+        "abdomen",
+        "Blast"
+      ],
       "ArmourApplies": [
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0]
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
       ],
       "ArmourType": "MAC"
     },
@@ -4318,7 +4686,9 @@
     "colour": "Red",
     "verbal": "Salamanders of fire I command thee to consume my foe’s eyes with absolute heat!",
     "description": "The target is blinded until a regeneration is cast upon their eyes (only one regeneration is required, which though it would not normally heal such damage does in this case).",
-    "Immunity": ["1/2 effect fire"],
+    "Immunity": [
+      "1/2 effect fire"
+    ],
     "IsAdvanced": true,
     "sourcePage": 81
   },
@@ -4348,9 +4718,21 @@
     "description": "Acts in a similar manner to Disruption, however, it causes the target to suffer 120/20 (40 HTK) and a magical halt at the caster’s skill level.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[120, 20]],
-      "type": ["Blast"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          120,
+          20
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 83
@@ -4363,9 +4745,21 @@
     "description": "This spell has several effects as the target is consumed in intense heat: 1. All normal metal on the target melts, 2. All potions boil dry, 3. Target suffers 36/6 magical fire damage (12 Hits), 4. All objects within 1' are ignited, 5. The target is blinded until a regeneration is cast upon their eyes (only one regeneration is required, which though it would not normally heal such damage does in this case).",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[36, 6]],
-      "type": ["Blast"],
-      "ArmourApplies": [[0, 0]],
+      "amount": [
+        [
+          36,
+          6
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          0,
+          0
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 83
@@ -4379,17 +4773,46 @@
     "IsAdvanced": true,
     "Damage": {
       "amount": [
-        [48, 12],
-        [0, 12],
-        [0, 12],
-        [0, 6]
+        [
+          48,
+          12
+        ],
+        [
+          0,
+          12
+        ],
+        [
+          0,
+          12
+        ],
+        [
+          0,
+          6
+        ]
       ],
-      "type": ["head", "chest", "abdomen", "Blast"],
+      "type": [
+        "head",
+        "chest",
+        "abdomen",
+        "Blast"
+      ],
       "ArmourApplies": [
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0]
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
       ],
       "ArmourType": "MAC"
     },
@@ -4592,9 +5015,21 @@
     "description": "Replicates the Winter elf innate ability listed in the handbook, inflicting 24/4 magical cold damage to one target. MAC applies, stopping 6/1 per point.",
     "IsAdvanced": true,
     "Damage": {
-      "amount": [[24, 4]],
-      "type": ["Blast"],
-      "ArmourApplies": [[6, 1]],
+      "amount": [
+        [
+          24,
+          4
+        ]
+      ],
+      "type": [
+        "Blast"
+      ],
+      "ArmourApplies": [
+        [
+          6,
+          1
+        ]
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 85
@@ -4626,13 +5061,28 @@
     "IsAdvanced": true,
     "Damage": {
       "amount": [
-        [12, 12],
-        [12, 2]
+        [
+          12,
+          12
+        ],
+        [
+          12,
+          2
+        ]
       ],
-      "type": ["Missile", "Blast"],
+      "type": [
+        "Missile",
+        "Blast"
+      ],
       "ArmourApplies": [
-        [1, 1],
-        [0, 0]
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
       ],
       "ArmourType": "MAC"
     },
@@ -4765,7 +5215,9 @@
     "Immunity": "Flesh and Blood",
     "IsAdvanced": true,
     "Damage": {
-      "type": ["chest"],
+      "type": [
+        "chest"
+      ],
       "ArmourType": "MAC"
     },
     "sourcePage": 87
@@ -4923,5 +5375,23 @@
     "description": "This spell conjures an elemental ‘Champion' to be commanded. An elemental 'Champion' may take 40 hits before being destroyed, inflicts 15pts of damage with its hands and has 10th Level Resistances. It will not be negated by being struck by a 4 or 6 mana elemental, only by an 8 mana or higher elemental. All other details are as the standard Summon Elemental spell, such as Sylph '6' on page 16.",
     "IsAdvanced": true,
     "sourcePage": 89
+  },
+  {
+    "name": "Armour of the Dragons",
+    "level": 2,
+    "colour": "Own Colour",
+    "verbal": "Let the Dragon of (B) enfold me in his/her armour.",
+    "description": "Grants +2 MAC versus the opposite colour of magic (e.g. Red gains MAC vs Green). Does not stack with itself.",
+    "IsAdvanced": false,
+    "sourcePage": 77
+  },
+  {
+    "name": "Blade of the Dragon",
+    "level": 5,
+    "colour": "Own Colour",
+    "verbal": "Into this blade I call forth the power of (B). Let the physical fade and the magical prevail.",
+    "description": "Turns a weapon that is already magical, and of the same colour as this spell, PURE for the duration. Does not work on weapons with a spiritual component. Caster must touch the weapon for the full verbal.",
+    "IsAdvanced": false,
+    "sourcePage": 77
   }
 ]

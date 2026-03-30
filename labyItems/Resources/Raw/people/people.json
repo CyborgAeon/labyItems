@@ -1,6 +1,8 @@
 {
   "Human": {
-    "PeopleType": ["Standard"],
+    "PeopleType": [
+      "Standard"
+    ],
     "Description": "The most common race on Primus, Humans are everywhere. Humans are a flexible race and can be almost any class.",
     "levelledAbilities": {
       "1": [],
@@ -24,13 +26,24 @@
     "Buy-as": "Humans are able to buy the ability 'Peon'"
   },
   "Halfling": {
-    "PeopleType": ["Standard"],
+    "PeopleType": [
+      "Standard"
+    ],
     "Description": "Halflings are a small race, rarely seen outside of their own communities. They are a social people, and are fond of drink, food and comfort. Halflings are often underestimated in combat but are tougher than they look and are often surprisingly brave.",
     "levelledAbilities": {
       "1": [
-        { "Name": "1/2 effect magic", "Type": "Resistance" },
-        { "Name": "3/4 effect paralysis", "Type": "Resistance" },
-        { "Name": "3/4 effect poison", "Type": "Resistance" },
+        {
+          "Name": "1/2 effect magic",
+          "Type": "Resistance"
+        },
+        {
+          "Name": "3/4 effect paralysis",
+          "Type": "Resistance"
+        },
+        {
+          "Name": "3/4 effect poison",
+          "Type": "Resistance"
+        },
         {
           "Name": "DAC",
           "Type": "DAC",
@@ -45,7 +58,12 @@
           "Count": 2
         }
       ],
-      "4": [{ "Name": "Weapon mastery with H or MP weapon", "Type": "Static" }],
+      "4": [
+        {
+          "Name": "Weapon mastery with H or MP weapon",
+          "Type": "Static"
+        }
+      ],
       "5": [],
       "6": [],
       "7": [],
@@ -55,18 +73,35 @@
     "Buy-as": "Multiclass as Human, Halflings may buy the ability 'Max damage Quin with H class weapon' in the post-8th tables."
   },
   "Dwarf": {
-    "PeopleType": ["Standard"],
+    "PeopleType": [
+      "Standard"
+    ],
     "Description": "Dwarves are a hardy race, suited to underground life. They are stubborn and proud and have a strong sense of kin and tradition. Dwarves are renowned for their resilience and toughness.",
     "levelledAbilities": {
       "1": [
-        { "Name": "1/2 effect magic", "Type": "Resistance" },
-        { "Name": "Darkness", "Type": "Immunity" },
-        { "Name": "1/2 effect paralysis", "Type": "Resistance" },
-        { "Name": "1/2 effect poison", "Type": "Resistance" }
+        {
+          "Name": "1/2 effect magic",
+          "Type": "Resistance"
+        },
+        {
+          "Name": "Darkness",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "1/2 effect paralysis",
+          "Type": "Resistance"
+        },
+        {
+          "Name": "1/2 effect poison",
+          "Type": "Resistance"
+        }
       ],
       "2": [],
       "3": [
-        { "Name": "Evaluate (metal, stone, jewels only)", "Type": "AtWill" }
+        {
+          "Name": "Evaluate (metal, stone, jewels only)",
+          "Type": "AtWill"
+        }
       ],
       "4": [],
       "5": [],
@@ -82,17 +117,39 @@
     ]
   },
   "Ancient Folk": {
-    "PeopleType": ["Standard"],
+    "PeopleType": [
+      "Standard"
+    ],
     "Description": "An ancient race that believes it once ruled Labyrinthia, the Ancient Folk are now bitter wanderers who resent the upstart Empire and treat most other races with contempt. Many believe they are the result of Convergences that forced them to drag lands from dying worlds to Primus.\nAncient Folk scholars claim their “Empire of Bright Lights” ended when servants taught sorcery rose up and turned it on their masters, unleashing a war of vast, reality-shaping magic. They argue that Primus was created from this chaos and that, as its former masters, they alone can ever truly control and govern it.\nPacts and treaties still bind Elves and Ancient Folk, suggesting ancient contact between the two peoples, though accounts differ. Their traditions remember an age of dragons, skyborne riders, and mastery of rituals and sorceries—yet today they are few, with only rumours of distant strongholds and rare sightings in ages past.\nThe Ancient Folk do not like to acknowledge their decline and may act as if they remain the world’s rightful lords, demanding obedience from those they claim were bred for service.",
     "levelledAbilities": {
       "1": [],
-      "2": [{ "Name": "Ward pact", "Type": "AtWill" }],
+      "2": [
+        {
+          "Name": "Ward pact",
+          "Type": "AtWill"
+        }
+      ],
       "3": [],
-      "4": [{ "Name": "Ward pact", "Type": "AtWill" }],
+      "4": [
+        {
+          "Name": "Ward pact",
+          "Type": "AtWill"
+        }
+      ],
       "5": [],
-      "6": [{ "Name": "Ward pact", "Type": "AtWill" }],
+      "6": [
+        {
+          "Name": "Ward pact",
+          "Type": "AtWill"
+        }
+      ],
       "7": [],
-      "8": [{ "Name": "Ward pact", "Type": "AtWill" }]
+      "8": [
+        {
+          "Name": "Ward pact",
+          "Type": "AtWill"
+        }
+      ]
     },
     "Subtype": {
       "Key": "AncientFolkSubtype",
@@ -105,13 +162,32 @@
     "AdditionalInfo": "Post 8thLevel Development\nThe Ancient Folk are the product of an old and tired gene pool, and thus do not have the ability to acquire neuronics. In addition, all costs for acquiring additional life points or strength are raised by 50%. It is not possible for them to acquire +2 strength.\nFurther pacts can be obtained at the cost of 50 points each, however not more than one pact can be bought for each 300 points post-8th. A pact lost through betrayal can never be re-established."
   },
   "Silver Folk": {
-    "PeopleType": ["Standard"],
+    "PeopleType": [
+      "Standard"
+    ],
     "Description": "A dying race from across the worlds, these beings once travelled the planes seeking glory and conquering all before them. However, times have changed.\n\nIn the early part of the Third Age a great plague was unleashed on Primus targeting them. The plague spread rapidly, aided by ritual, and caused all Silver Folk to become sterile. The plague endures, and those Silver Folk that travel to Primus are quickly infected with it. The result is that those who travel to Primus are never permitted to return to their home world, for fear of spreading the affliction further. However a few have left Primus and so the plague has spread across the Exostance, touching every part of existence.\n\nAll Silver Folk intensely hate non-Silver Folk neuronicists, and blame the Labyrinthian Empire for their downfall.\nThey must always do their utmost to destroy such individuals and gain no points for an adventure in which they leave alive someone whom they know to have such powers. In cases where characters can draw on neuronic powers through artefacts or guild abilities, the Silver Folk will often be more concerned with the source of the power than the user.\nSilver Folk gain the use of certain neuronic abilities. Use of these neuronic innates costs life points in the same way as it would a neuronic class.\nAll Silver Folk are extremely evil, and are immune to all forms of alignment change.\nSilver Folk are an outlawed race with all that that entails.",
     "levelledAbilities": {
-      "1": [{ "Name": "Detect Possible Neuronic Activity", "Type": "AtWill" }],
+      "1": [
+        {
+          "Name": "Detect Possible Neuronic Activity",
+          "Type": "AtWill"
+        }
+      ],
       "2": [],
-      "3": [{ "Name": "Neuronic Penetration", "Type": "Innate", "Count": 8 }],
-      "4": [{ "Name": "Neuronic Synaptic Jump", "Type": "Innate", "Count": 2 }],
+      "3": [
+        {
+          "Name": "Neuronic Penetration",
+          "Type": "Innate",
+          "Count": 8
+        }
+      ],
+      "4": [
+        {
+          "Name": "Neuronic Synaptic Jump",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ],
       "5": [],
       "6": [],
       "7": [],
@@ -120,26 +196,51 @@
     "AdditionalInfo": "Post 8th Level Development\nThe threshold for Silver Folk buying neuronic abilities from Table 6 is only 200 points. Neuronic Penetrations may not be bought from this table, instead extra uses of these and Neuro-Synaptic Jumps may be acquired on Table 1 at the costs detailed in the table below, to a maximum number of extra uses as listed on the table.\nSilver Folk may multi-class as normal to Wizard, Warrior or Spirit Warrior, and additionally may become Unholy Champions for the standard cost, gaining life points as Silver Folk Spirit Warrior."
   },
   "Elysian": {
-    "PeopleType": ["Standard"],
+    "PeopleType": [
+      "Standard"
+    ],
     "Description": "In the summer of IM 996 a band of courageous adventurers managed to rescue a few hundred people from a doomed world in another time and place, mere days before its destruction. These refugees are of the Elysian race - a race formed by the act of the goodly gods of their world sacrificing themselves and releasing their divine power into devout human worshippers, to create a truly good race to set against the evils of their world.\n\nThe Enoch-Khan caste, warriors of the Elysian race, were all destroyed when their world was annihilated, staying behind to hold open the inter-dimensional portals which allowed a scant few Elysians (and the adventuring group) to escape. The pacifist Elysians who remain are struggling to survive in an unfamiliar world.\n\nTheir task is made more difficult by the fact that the stress caused by the trans-dimensional passage and the final destruction of their godly forefathers has caused great mental trauma in the psychically sensitive race, resulting often in total amnesia. For this reason those few Elysians that have left their ghettos and mingled with Labyrinthian citizens often seem confused as to their past and history.\n\nDue to their contemplative and peaceful nature, Elysians have developed a natural affinity for neuronics and due to the suffusion of their essence with the power of their gods they are naturally resistant to a number of things; however their passive, non-physical lifestyle means that their physical frames are very weak. All Elysians were marked by the touch of their deities, and have white skin with gold or blue markings upon it.\n\nAll Elysians are immune to alignment change of all forms, and all must be Lawful Good or Neutral Good. They gain half-effect poison, and against evil spiritual effects may double their resistance levels and halve the duration of any effect. Due to their weak bodies, all Elysians find strong medications and herbs difficult to ingest – they gain only half benefit from beneficial ingestive potions of all kinds, including healing potions.\n\nNo Elysian may ever wield any form of weapon, even purely supernatural ones. They have a strong repugnance for violence, and will only cause direct harm to others in self-defence - if they willingly do so they gain no level or points for the adventure.\n\nAll Elysians gain the following neuronic powers:\nElysian Racial Neuronics",
     "levelledAbilities": {
-      "1": [{ "Name": "Detect Possible Neuronic Activity", "Type": "AtWill" }],
+      "1": [
+        {
+          "Name": "Detect Possible Neuronic Activity",
+          "Type": "AtWill"
+        }
+      ],
       "2": [],
-      "3": [{ "Name": "Auric Colour", "Type": "AtWill" }],
+      "3": [
+        {
+          "Name": "Auric Colour",
+          "Type": "AtWill"
+        }
+      ],
       "4": [],
       "5": [],
-      "6": [{ "Name": "Telepathy", "Type": "Innate", "Count": 4 }],
+      "6": [
+        {
+          "Name": "Telepathy",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
       "7": [],
       "8": []
     }
   },
   "Alfar": {
-    "PeopleType": ["Standard"],
-    "Tags": ["Half-Spirit"],
+    "PeopleType": [
+      "Standard"
+    ],
+    "Tags": [
+      "Half-Spirit"
+    ],
     "Description": "While similar to the Elves of Primus in appearance, Alfar are, in truth, the true children of Primus, created by the world spirit at the beginning of the Second Age to protect and guard the land. However, since that, much of what the Alfar once knew has been forgotten, little more than memories in the blood and soul of these much diminished guardians and keepers of the wild, untamed Primus. In a sense the Alfari failed in the task that they were set and so never grew to become the power that they might have been and were discarded by the Spirit of Primus as an experiment that never quite succeeded.\nThere are many theories as to why the Alfar are so diminished though it is possible that, as with many races, the Alfar’s time has simply passed. Regardless, over the centuries that they have lived on Primus, the Alfar have spread far and wide, forming distinct ‘tribes’, each evolving to survive in different areas of Primus.\n\nAll Alfari are really tribes of the same race, their differences being a matter of temperament and upbringing, rather than blood. It is because of this that, rarely, an Alfar is born of the union of the branches of the race, pure blooded and made in the shape which Primus first intended; a potent guardian of nature, wielding great power.\n\nWhilst all Alfar have a tendency to be tall and slim, and most have pointed ears, there are 4 sub-races:\nLight Alfar live outdoors in the fields and meadows, they tend to have pale skin and often have fair hair.\nDark Alfar live beneath the earth, they are generally of dark completion and dark hair.\nSea Alfar tend to come from coastal regions and have a greenish tinge to their skin,\nMountain Alfar are swarthy, with an earthen colour to them, though less heavily than would be seen in an Earth Elf.\nThe Sea and Mountain Alfar do not often become adventurers and are even more rarely seen than the other types, but all four sub-races may be played as characters.\nThere are no alignment restrictions on Alfar, except for those characters that choose to be wizards.\nLight Alfar may only be white wizards as their starting colour, and thus must be goodly.\nDark Alfar must begin as black wizards, and so be evil.\nSea Alfar may only be green wizards as their starting colour and these must be goodly.\nMountain Alfar wizards must initially be brown and follow the appropriate alignment restrictions for that colour, being any form of neutral alignment.\nAlfar wizards may second colour to any colour allowed by their alignment. Alfar who are become wizards by multi-classing are not limited in their choice of colour, other than by their alignment.\nAlfar have only half a spirit, in the same manner as Half-Elves.",
     "levelledAbilities": {
       "1": [
-        { "Name": "Recognise EP", "Type": "AtWill" },
+        {
+          "Name": "Recognise EP",
+          "Type": "AtWill"
+        },
         {
           "Name": "Half-Spirit",
           "Type": "Resistance",
@@ -149,14 +250,32 @@
       ],
       "2": [],
       "3": [
-        { "Name": "Immunity to Acute Hearing", "Type": "Immunity" },
-        { "Name": "Immunity to Tracking", "Type": "Immunity" }
+        {
+          "Name": "Immunity to Acute Hearing",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immunity to Tracking",
+          "Type": "Immunity"
+        }
       ],
       "4": [],
       "5": [],
-      "6": [{ "Name": "DAC", "Type": "DAC", "Count": 1 }],
+      "6": [
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 1
+        }
+      ],
       "7": [],
-      "8": [{ "Name": "Draw on Earthpower", "Type": "Innate", "Count": 1 }]
+      "8": [
+        {
+          "Name": "Draw on Earthpower",
+          "Type": "Innate",
+          "Count": 1
+        }
+      ]
     },
     "Subtype": {
       "Key": "AlfarSubtype",
@@ -168,7 +287,9 @@
     }
   },
   "Ratfolk": {
-    "PeopleType": ["Standard"],
+    "PeopleType": [
+      "Standard"
+    ],
     "Description": "The Ratfolk scurried into the Empire in the last years before the Final Dawn of the Second Age, claiming they were owed a city of their own after destroying an enemy of the Empire, a task known only to the then Gaius, Kith Kahan (himself an avatar of the Ratgod Slavik and subsequently declared renegade by the Lord Inquisitor Watching Owl). After a failed attempt to seize Thimon some of the Ratfolk allied with the Empire and others returned to their dark warrens to plot and scheme.\nRumours today say that they were created by a great ritual performed by Kith Kahan himself.\nAll Ratfolk must choose a Breed, and they may choose a Clan from those listed below. Ratfolk require obvious rat like make up that means they can be distinguished from an Elf or similar.\nBreeds\nThe rats can be broken down into the following, some of which may be selected as player characters. Because of their wirey nature, all Ratfolk have the same life points as a Half-Orc of the equivalent class. Ratfolk are immune to the negative effects of disease, and will never die as a result of one; the Ratfolk can be diseased, they simply do not suffer disbenefits from being so. Ratfolk also gain a non-stacking grade of backstab at 6 level, or if that skill is already possessed, or subsequently gained, then they gain one use of the ability Force Majeure as per the post eighth development system.\nAll Ratfolk armour must be made specifically for the Ratfolk, which costs double to manufacture, and they may never wear heavy armour.\nThey are restricted on joining guilds, as detailed by their clan below.",
     "levelledAbilities": {
       "1": [],
@@ -191,13 +312,23 @@
     "AdditionalInfo": "Karras\nKarras are larger, more intelligent versions of their smaller and normal cousins. In appearance, they resemble their verminous ancestors (although about twice the size). Karras understand speech but, due to their own physical constrictions, are only able to 'talk' in the language of vermin. Karras are able to spread disease without themselves suffering from the maladies they carry. The many and varied diseases can be conveyed through a bite, their bodily fluids, or more extremely and effectively via their own rotting corpses. Karras are not an option for player character Ratfolk.\nOurstlav\nOurstlav are the lowest form of the bipedal vermin and are the most common. They are of average intelligence and are used as workers and militia. Ourstlav are expert diggers and 'sniffers' and tend to hide by concealing themselves in covered holes in tunnels, leaping out to ambush their enemies with venom and disease. Ourstlav tend to follow whoever is powerful enough to hold their 'ownership' and are therefore often regarded as property by other breeds.\nOurstlav may be Pathfinders, Archers or Leywalkers.\nRachatat\nRachatat are bred especially for conflict and war. Often used as overseers for the Ourstlav and bodyguards for their masters, the Rachatat are as strong and resilient as Humans and have sharp minds sufficient to elevate many of them to high position whilst remaining loyal to their masters. Rachatat are dark furred and wear armour either of treated hides or whatever they have scavenged from society. Those of renown wear hide plates enchanted by Horstval or even Rat-Kings, blessed by Slavik to be especially resilient to a certain type of weapon. Rachatat are allowed to keep booty taken from a foe in combat and thus are often very well equipped. Commonly they carry spears made of a silver alloy to keep lycanthropes in line - these weapons are of the 'trusty and old' variety and are gained automatically once the Rachatat reaches 8 level.\nRachatat may be Warriors, Forest Guardians or Thugs."
   },
   "Faerie": {
-    "PeopleType": ["Magic Kin"],
-    "Tags": ["Spiritless"],
+    "PeopleType": [
+      "Magic Kin"
+    ],
+    "Tags": [
+      "Spiritless"
+    ],
     "Description": "Faeries align to two wizard colours that are not opposites.",
     "levelledAbilities": {
       "1": [
-        { "Name": "Faerie Colour", "Type": "Overwrite" },
-        { "Name": "Faerie Colour", "Type": "Overwrite" },
+        {
+          "Name": "Faerie Colour",
+          "Type": "Overwrite"
+        },
+        {
+          "Name": "Faerie Colour",
+          "Type": "Overwrite"
+        },
         {
           "Name": "Spiritless",
           "Type": "Resistance",
@@ -205,31 +336,62 @@
           "Key": "ability.spiritless"
         }
       ],
-      "2": [{ "Name": "Lvl 2 Spell", "Type": "Innate", "Count": 4 }],
+      "2": [
+        {
+          "Name": "Lvl 2 Spell",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
       "3": [],
       "4": [],
       "5": [],
-      "6": [{ "Name": "Lvl 3 Spell", "Type": "Innate", "Count": 4 }],
+      "6": [
+        {
+          "Name": "Lvl 3 Spell",
+          "Type": "Innate",
+          "Count": 4
+        }
+      ],
       "7": [],
       "8": []
     },
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral", "Good"],
-        "order": ["Chaotic"]
+        "moral": [
+          "Evil",
+          "Neutral",
+          "Good"
+        ],
+        "order": [
+          "Chaotic"
+        ]
       },
-      "allowedPairs": ["Chaotic Evil", "Chaotic Neutral", "Chaotic Good"]
+      "allowedPairs": [
+        "Chaotic Evil",
+        "Chaotic Neutral",
+        "Chaotic Good"
+      ]
     }
   },
   "Ogres": {
-    "PeopleType": ["Tribal"],
+    "PeopleType": [
+      "Tribal"
+    ],
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["Only Skin armour"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "Only Skin armour"
+      ]
     },
     "LifeOverride": {
-      "Abdomen": [0, 2]
+      "Abdomen": [
+        0,
+        2
+      ]
     },
     "levelledAbilities": {
       "1": [
@@ -262,10 +424,16 @@
     }
   },
   "Troll": {
-    "PeopleType": ["Tribal"],
+    "PeopleType": [
+      "Tribal"
+    ],
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["Only Skin armour"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "Only Skin armour"
+      ]
     },
     "Description": "Trolls are an extremely hardy and regenerating race, tribal and dangerous. They are feared for their endurance and ability to recover from wounds that would kill most other creatures.",
     "levelledAbilities": {
@@ -314,10 +482,16 @@
   },
   "Goblin": {
     "Armour": {
-      "Wearable": ["light"],
-      "Restrictions": ["Only light"]
+      "Wearable": [
+        "light"
+      ],
+      "Restrictions": [
+        "Only light"
+      ]
     },
-    "PeopleType": ["Tribal"],
+    "PeopleType": [
+      "Tribal"
+    ],
     "Description": "Goblins are Warriors or Pathfinders and are tribal. They may have a Shaman, Druid and a Witch-Doctor for each tribe, as normal. In appearance they are usually small, with dirty brown, yellow, green or blue skin and a dirty, raggish costume. Goblins have lower life points than Humans, but gain certain abilities due to their race. At first level they gain + 1 DAC in Darkness, at second they gain double DAC whilst in full retreat, performing no action other than fleeing. At 3, 5, 7 and 8 they gain a point of DAC (for 4 in total) and at 6 they gain the first grade of backstab. The backstab skill is as per assassin.",
     "levelledAbilities": {
       "1": [
@@ -370,10 +544,20 @@
           "Count": 4
         }
       ]
+    },
+    "Subtype": {
+      "Key": "GoblinSubtype",
+      "DisplayName": "Goblin subtype",
+      "Description": "Optional: choose a goblin subtype lineage.",
+      "SelectionMode": "SingleOptional",
+      "OptionsSource": "Children of Bragyl,The Hollow Bone,Cave Fang",
+      "AbilityMapKey": "GoblinSubtypeAbilities"
     }
   },
   "Orc": {
-    "PeopleType": ["Tribal"],
+    "PeopleType": [
+      "Tribal"
+    ],
     "Description": "Orcs are a disparate race. Some are cowardly and evil, others cruel and brutal, a few brave and heroic. While not as varied as Humans in their nature they are rarely the same. Due in part to their brutal upbringing, Orcs are less intelligent than humans, though may be as cunning. Reading, writing and counting are difficult for them, and in depth study of topics beyond most.\n\nOrcs are sensitive to the light, perhaps from years of lurking in tunnels and other dark places. They suffer DAC penalties (or bonuses) as follows:\n - In normal real world strong sun light -2 A.C\n - In magical light, or a normal sunny day -1 A.C\n - In candle or lamplight, or a grey overcast day normal\n - In almost total darkness +1 A.C\nThey are not adversely affected by magical darkness, being able to see as though under the effects of a see through magical darkness spell.\n\nA Half Orc's armour always loses two uses per adventure because of their careless and revolting nature. Half Orcs are tribal creatures and as such may have a Shaman, Witch Doctor, and Druid.\nHalf Orcs are generally Pathfinders or Warriors, though some variation within those classes exist as per the relevant publications.",
     "levelledAbilities": {
       "1": [
@@ -397,12 +581,24 @@
         }
       ]
     },
+    "Subtype": {
+      "Key": "OrcSubtype",
+      "DisplayName": "Orc tribe",
+      "Description": "Optional: choose an orc tribal lineage.",
+      "SelectionMode": "SingleOptional",
+      "OptionsSource": "Bloodcrusher,The Thrice,The Broken Crown,The Lost",
+      "AbilityMapKey": "OrcSubtypeAbilities"
+    },
     "AdditionalInfo": ""
   },
   "Farfolk": {
-    "PeopleType": ["Tribal"],
+    "PeopleType": [
+      "Tribal"
+    ],
     "Description": "Tales whispered around the small campfires in a harsh land tell the Farfolk of the deeds of their parents, a generation lost all too soon after arriving in this inhospitable place. Not many of the parents are still alive, the Isles of Bourthek, far to the west of the Ishmaic Confederacy are not a good place to live, filled with tremendous beasts, frozen tundra and worse. Tales explain why the northernmost Magiocracy fled Labyrinthia during the early stages of the Chaos Wars, allowed to escape the mage-war if they accepted exile to the place from where the Gods have turned their faces and the Shadow of the Dragons does not fall.",
-    "Tags": ["Spiritless"],
+    "Tags": [
+      "Spiritless"
+    ],
     "levelledAbilities": {
       "1": [
         {
@@ -435,11 +631,17 @@
         }
       ]
     },
-    "GuildOverrides": ["so:Reed"]
+    "GuildOverrides": [
+      "so:Reed"
+    ]
   },
   "Elf": {
-    "PeopleType": ["Magic Kin"],
-    "Tags": ["Spiritless"],
+    "PeopleType": [
+      "Magic Kin"
+    ],
+    "Tags": [
+      "Spiritless"
+    ],
     "levelledAbilities": {
       "1": [
         {
@@ -467,8 +669,12 @@
     }
   },
   "Half Elf": {
-    "PeopleType": ["Magic Kin"],
-    "Tags": ["Half-Spirit"],
+    "PeopleType": [
+      "Magic Kin"
+    ],
+    "Tags": [
+      "Half-Spirit"
+    ],
     "levelledAbilities": {
       "1": [
         {
@@ -495,9 +701,13 @@
     }
   },
   "Athfanal": {
-    "PeopleType": ["Ishmaic"],
+    "PeopleType": [
+      "Ishmaic"
+    ],
     "Description": "It is possible for a player to play an Athfanal, however it should be clear that Ishmaic characters quite often choose to fight such a creature on sight and great care must be made when making such a choice of character. It is possible that the Athfanal might be played by a group who decide to all play the race in which case the danger is, to a small degree, reduced. Athfanal are primitive and barbaric, subsisting on the mana that flows about the Land of the Seven Winds.\nWhether they are in the sands and steppes held by the Ishmaics or the forests and hills about the Afthash Ban Mir, or the great caverns which spread beneath both, they are able to subsist without food and water on the mana that they tap from the world around them.",
-    "Tags": ["Spiritless"],
+    "Tags": [
+      "Spiritless"
+    ],
     "levelledAbilities": {
       "1": [
         {
@@ -514,12 +724,23 @@
         }
       ]
     },
-    "GuildOverrides": ["so:Athfanal", "po:Athfanal", "pr:"],
+    "GuildOverrides": [
+      "so:Athfanal",
+      "po:Athfanal",
+      "pr:"
+    ],
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral"],
-        "order": ["Lawful", "Neutral", "Chaotic"]
+        "moral": [
+          "Evil",
+          "Neutral"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral",
+          "Chaotic"
+        ]
       },
       "allowedPairs": [
         "Chaotic Evil",
@@ -539,8 +760,12 @@
     }
   },
   "Half Athfanal": {
-    "PeopleType": ["Ishmaic"],
-    "Tags": ["Half-Spirit"],
+    "PeopleType": [
+      "Ishmaic"
+    ],
+    "Tags": [
+      "Half-Spirit"
+    ],
     "Description": "There are many amongst the Athfanal who have human blood, being born from slaves taken from both the Ishmaics and the First Comers.",
     "levelledAbilities": {
       "1": [
@@ -554,9 +779,17 @@
     }
   },
   "Calabrim": {
-    "PeopleType": ["Ishmaic"],
-    "Tags": ["Half-Spirit"],
-    "GuildOverrides": ["so:Ishmaic", "po:Ishmaic", "pr:Ishmaic"],
+    "PeopleType": [
+      "Ishmaic"
+    ],
+    "Tags": [
+      "Half-Spirit"
+    ],
+    "GuildOverrides": [
+      "so:Ishmaic",
+      "po:Ishmaic",
+      "pr:Ishmaic"
+    ],
     "Description": "The cavern wights of the deep caverns are the abandoned children of the Athfanal who have shown an inability to consume the magic laden winds. Though the vast majority of these pitted-skinned individuals resemble the undead, they are not such, simply, on the whole, pitiful creatures to watch, and terrible to do battle with.\nMost of the Calabrim are of poor or even animalistic intelligence, but every so often one rises from the caves with a sharper mind and a need to escape the harsh life of their people. Those Calabrim who are Player Characters are just such people.",
     "levelledAbilities": {
       "1": [
@@ -576,8 +809,16 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral", "Good"],
-        "order": ["Lawful", "Neutral", "Chaotic"]
+        "moral": [
+          "Evil",
+          "Neutral",
+          "Good"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral",
+          "Chaotic"
+        ]
       },
       "allowedPairs": [
         "Chaotic Neutral",
@@ -591,10 +832,18 @@
   "Samila": {
     "Armour": {
       "Wearable": [],
-      "Restrictions": ["No armour"]
+      "Restrictions": [
+        "No armour"
+      ]
     },
-    "Tags": ["Spiritless", "1/2 off magic", "Mindless"],
-    "PeopleType": ["Ishmaic"],
+    "Tags": [
+      "Spiritless",
+      "1/2 off magic",
+      "Mindless"
+    ],
+    "PeopleType": [
+      "Ishmaic"
+    ],
     "Description": "territorial desert and cavern spirits, born of primal Earthpower to guide or mislead travelers in the Great Sink. Solitary and robed, they wander the wastes, alternately rescuing the lost or driving them to ruin. Child Samila wield vast uncontrolled power, while adult Samila are weaker mystically but cunning, independent, and fiercely protective of their domains.",
     "levelledAbilities": {
       "1": [
@@ -651,9 +900,13 @@
     }
   },
   "Crol": {
-    "PeopleType": ["Ishmaic"],
+    "PeopleType": [
+      "Ishmaic"
+    ],
     "Armour": {
-      "Wearable": ["light"],
+      "Wearable": [
+        "light"
+      ],
       "Restrictions": []
     },
     "Description": "The Crol are a race of lizard men native to the lands of the Ishmaic Confederacy. Until sometime in the last Age, these huge, war-like lizard men lived in large temples and caverns beneath the deserts, emerging only to hunt the creatures native to the surface world and to perform their strange religious ceremonies to the Sun. During one such ceremony, a great many were set upon by the Athfanal, defeated and enslaved. For many Crol, slavery is the only life they have known.\n\nThe Crol vary in size and shape a great deal, although they are generally either short and bulky or tall and wiry. From birth they have tails but those Crol who are not enslaved have taken to cutting their tails off at their ritual of Maturity. Slave Crol however are easily identifiable by their reptilian tails. They all have scales and are frequently tattooed with bright colours. Their scales change colour as they mature but they start as being a yellowy green and darken as they get older. Their hair colour varies but is usually slicked back with oils and lightens to white as they age.\n\nThe Crol favour tridents and spears as their weapons and will duel only with them, though for hunting however any weapon will suffice. The Crol enjoy fighting, often doing so for fun as much as for practice but they are almost always ready for a fight (they are taught the errors of their past well). The Crol are a fairly short-lived race (on average they mature at 4 years old and will die of natural causes at about 16 (should any of them survive)) when their scales have blackened to the colour of ash and their hair an ivory white.\n\nThe Crol worship the Sun and the Moon, the Wind and the Desert (which they refer to as the mother) and they perform regular ceremonies to these things.",
@@ -714,7 +967,10 @@
     "AdditionalInfo": "Crol may join professional guild freely but may only join Crol related political and social guilds. Crol are inedible as far as natural creatures are concerned due to their acidic blood, and their blood grants creatures drinking it no benefits if normally it would."
   },
   "Blauz": {
-    "PeopleType": ["Baronial", "Demon"],
+    "PeopleType": [
+      "Baronial",
+      "Demon"
+    ],
     "levelledAbilities": {
       "3": [
         {
@@ -741,8 +997,15 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Good"],
-        "order": ["Lawful", "Neutral", "Chaotic"]
+        "moral": [
+          "Evil",
+          "Good"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral",
+          "Chaotic"
+        ]
       },
       "allowedPairs": [
         "Chaotic Evil",
@@ -755,7 +1018,10 @@
     }
   },
   "Ggrutuck": {
-    "PeopleType": ["Baronial", "Demon"],
+    "PeopleType": [
+      "Baronial",
+      "Demon"
+    ],
     "levelledAbilities": {
       "6": [
         {
@@ -767,8 +1033,15 @@
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral"],
-        "order": ["Lawful", "Neutral", "Chaotic"]
+        "moral": [
+          "Evil",
+          "Neutral"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral",
+          "Chaotic"
+        ]
       },
       "allowedPairs": [
         "Chaotic Evil",
@@ -779,13 +1052,25 @@
     }
   },
   "Duidoin": {
-    "PeopleType": ["Baronial", "Demon"],
-    "GuildOverrides": ["pr:"],
+    "PeopleType": [
+      "Baronial",
+      "Demon"
+    ],
+    "GuildOverrides": [
+      "pr:"
+    ],
     "alignmentRule": {
       "mode": "restrict",
       "allowed": {
-        "moral": ["Evil", "Neutral"],
-        "order": ["Lawful", "Neutral", "Chaotic"]
+        "moral": [
+          "Evil",
+          "Neutral"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral",
+          "Chaotic"
+        ]
       },
       "allowedPairs": [
         "Chaotic Evil",
@@ -801,6 +1086,314 @@
           "Type": "Innate",
           "Count": 4
         }
+      ]
+    }
+  },
+  "Draconian": {
+    "PeopleType": [
+      "Standard"
+    ],
+    "Description": "Draconians are corrupted dragon-egg creations from Sildêyuir. They are non-primal, cannot use neuronics, cannot wear armour, gain toughened feet and clawed unarmed combat, are immune to disease, and are generally evil-aligned.",
+    "levelledAbilities": {
+      "1": [
+        {
+          "Name": "Toughened feet",
+          "Type": "Static"
+        },
+        {
+          "Name": "Immunity to Disease",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Clawed Unarmed Combat (sharp)",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "No Neuronic Aptitude",
+          "Type": "Restriction"
+        }
+      ],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
+    },
+    "Subtype": {
+      "Key": "DraconianSubtype",
+      "DisplayName": "Draconian mutation",
+      "Description": "Choose a draconian mutation lineage.",
+      "SelectionMode": "SingleRequired",
+      "OptionsSource": "Rokeen,Gloozin,Acriden,Eldricen,Myriak",
+      "AbilityMapKey": "DraconianSubtypeAbilities"
+    },
+    "AdditionalInfo": "Draconians may only join professional guilds. All priest classes are hermit priests. Makeup should reflect mutation type.",
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": [
+          "Evil",
+          "Neutral"
+        ],
+        "order": [
+          "Lawful",
+          "Neutral",
+          "Chaotic"
+        ]
+      },
+      "allowedPairs": [
+        "Lawful Evil",
+        "Neutral Evil",
+        "Chaotic Evil"
+      ]
+    }
+  },
+  "Nightsoil": {
+    "PeopleType": [
+      "Standard"
+    ],
+    "Description": "The Nightsoil are empire-loyal dead given a second chance; not undead for discern/dismissal purposes, but living beings sustained by imperial rite.",
+    "levelledAbilities": {
+      "1": [
+        {
+          "Name": "Peon",
+          "Type": "Static"
+        },
+        {
+          "Name": "Fortified Spirit",
+          "Type": "Static"
+        },
+        {
+          "Name": "Immunity to Life/Death-only effects",
+          "Type": "Immunity"
+        },
+        {
+          "Name": "Immune to beneficial Flesh and Blood effects",
+          "Type": "Immunity"
+        }
+      ],
+      "2": [],
+      "3": [],
+      "4": [
+        {
+          "Name": "Feign Death",
+          "Type": "Innate",
+          "Count": 1
+        }
+      ],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": [
+        {
+          "Name": "Feign Death",
+          "Type": "Innate",
+          "Count": 2
+        }
+      ]
+    },
+    "AdditionalInfo": "Nightsoil may be Warrior/Archer/Pathfinder/Thug. No vitae. January 1st imperial rite can restore dead Nightsoil unless permanently invalidated by outlawing. Not dismissable as undead.",
+    "Buy-as": "Nightsoil are peons by default and cannot gain rebirth/survival abilities while in Nightsoil state."
+  },
+  "Stormvale Human": {
+    "PeopleType": [
+      "Standard"
+    ],
+    "Description": "Natives of Stormvale are full-spirit humans marked by storm power. They begin with either Air or Aquatic elf innate progression and may later buy the other set post-8th.",
+    "levelledAbilities": {
+      "1": [
+        {
+          "Name": "Stormvale Affinity",
+          "Type": "Overwrite"
+        }
+      ],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": []
+    },
+    "Subtype": {
+      "Key": "StormvaleAffinity",
+      "DisplayName": "Stormvale affinity",
+      "Description": "Choose your primary storm affinity.",
+      "SelectionMode": "SingleRequired",
+      "OptionsSource": "Air,Aquatic",
+      "AbilityMapKey": "ElfColourAbilities"
+    },
+    "AdditionalInfo": "Stormvale Humans may not join political guilds due to the isle's insular nature."
+  },
+  "Shriel": {
+    "PeopleType": [
+      "Standard"
+    ],
+    "Description": "Humanoid birdfolk from Shiret. They reject undeath and many follow one of several path traditions.",
+    "levelledAbilities": {
+      "1": [
+        {
+          "Name": "Birdfolk Physiology",
+          "Type": "Static"
+        }
+      ],
+      "2": [],
+      "3": [],
+      "4": [
+        {
+          "Name": "Falcon Talisman",
+          "Type": "Static"
+        },
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 1
+        }
+      ],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": [
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 2
+        }
+      ]
+    },
+    "AdditionalInfo": "Shriel may not wear above light armour. After being restored to life (not rebirthed), they may not fly or be carried by flight unless they have Path of Primal Acceptance.",
+    "Buy-as": "Shriel may choose one path status: Nest Weaver, Azure Talon, Lost Pilgrim, or Primal Acceptance."
+  },
+  "Grinner": {
+    "PeopleType": [
+      "Tribal"
+    ],
+    "Description": "Grinners are metal-chewing goblins of Shiret with huge toothed smiles and unusual bite-driven abilities.",
+    "levelledAbilities": {
+      "1": [
+        {
+          "Name": "Metal Armour Only",
+          "Type": "Restriction"
+        },
+        {
+          "Name": "E skill",
+          "Type": "Static"
+        }
+      ],
+      "2": [],
+      "3": [],
+      "4": [
+        {
+          "Name": "Bite in Half",
+          "Type": "Innate",
+          "Count": 1
+        }
+      ],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": [
+        {
+          "Name": "Bite in Half (At Will object-shatter)",
+          "Type": "AtWill"
+        }
+      ]
+    },
+    "AdditionalInfo": "Grinners are as Goblins except they do not gain racial DAC or flee-DAC chain benefits. Strong Teeth may upgrade Bite in Half to a Grand Weapon Blow (table progression purchase)."
+  },
+  "Verdant Heart": {
+    "PeopleType": [
+      "Tribal"
+    ],
+    "Tags": [
+      "Spiritless"
+    ],
+    "Description": "Plant-bodied tribal guardians from Mourat with strong druidic affinity.",
+    "levelledAbilities": {
+      "1": [
+        {
+          "Name": "Spiritless",
+          "Type": "Resistance",
+          "AbilityRef": "ability.spiritless",
+          "Key": "ability.spiritless"
+        }
+      ],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [
+        {
+          "Name": "PAC",
+          "Type": "PAC",
+          "Count": 1
+        }
+      ],
+      "7": [],
+      "8": []
+    },
+    "AdditionalInfo": "As Alfar in many base traits but no spirit and +1 PAC at 6th instead of +1 DAC. May wear at most stiff leather. Cannot use magical items; do not gain spirit-item use."
+  },
+  "Brae'Lan": {
+    "NonStandard": true,
+    "PeopleType": [
+      "Tribal"
+    ],
+    "Description": "Element-marked people of the Gallowglass Isles. Historically dormant; modern access is non-standard.",
+    "levelledAbilities": {
+      "1": [
+        {
+          "Name": "Elemental Alignment",
+          "Type": "Overwrite"
+        }
+      ],
+      "2": [
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 1
+        }
+      ],
+      "3": [],
+      "4": [
+        {
+          "Name": "DAC",
+          "Type": "DAC",
+          "Count": 2
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "Draw upon the Elements",
+          "Type": "Innate",
+          "Count": 1
+        }
+      ],
+      "7": [],
+      "8": []
+    },
+    "AdditionalInfo": "Brae'Lan have full spirit and flesh-and-blood nature, must include neutral in alignment, and have armour limits by class. At 8th and post-8th they can follow selected Diocello paths and broaden elemental draw limits.",
+    "alignmentRule": {
+      "mode": "restrict",
+      "allowed": {
+        "moral": [
+          "Good",
+          "Neutral",
+          "Evil"
+        ],
+        "order": [
+          "Neutral",
+          "Chaotic"
+        ]
+      },
+      "allowedPairs": [
+        "Neutral Good",
+        "Neutral Neutral",
+        "Neutral Evil",
+        "Chaotic Neutral"
       ]
     }
   }
