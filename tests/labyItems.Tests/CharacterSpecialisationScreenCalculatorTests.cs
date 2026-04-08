@@ -154,6 +154,43 @@ public sealed class CharacterSpecialisationScreenCalculatorTests : ServiceTestBa
     }
 
     [Fact]
+    public async Task BuildScreenSections_StormvaleSubtypeShowsOnlyAirAndAquatic()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+
+        var classes = await ClassService.GetAllAsync();
+        var races = await PeopleService.GetAllAsync();
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
+        var draft = new CharacterDraft
+        {
+            Race = "Stormvale Human",
+            Class = "Wizard"
+        };
+
+        var context = CharacterSpecialisationScreenCalculator.LoadContext(
+            draft,
+            classes,
+            races,
+            index.Definitions,
+            index.InjectionRules);
+
+        var required = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+        var sections = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, required);
+
+        var subtypeSection = Assert.Single(sections.Where(section => section.Kind == SpecialisationSectionKind.RaceSubtype));
+        var optionKeys = subtypeSection.Options
+            .Select(option => option.Key)
+            .Where(key => !string.IsNullOrWhiteSpace(key))
+            .ToList();
+
+        Assert.Equal(2, optionKeys.Count);
+        Assert.Contains("Air", optionKeys, StringComparer.OrdinalIgnoreCase);
+        Assert.Contains("Aquatic", optionKeys, StringComparer.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task BuildScreenSections_AncientFolkCloudWay_ReplacesWardPactOptions()
     {
         FileSystem.ClearPackageOverrides();

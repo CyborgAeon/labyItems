@@ -329,14 +329,14 @@ public sealed class AbilityAvailabilityService : IAbilityAvailabilityService
         var resolved = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         if (raceName.Length == 0 || races.Count == 0)
-            return ApplyBarbarianPeopleType(resolved, draft).ToList();
+            return ApplySubtypePeopleType(ApplyBarbarianPeopleType(resolved, draft), draft).ToList();
 
         if (races.TryGetValue(raceName, out var record))
         {
             foreach (var type in NormalizePeopleTypes(record))
                 resolved.Add(type);
 
-            return ApplyBarbarianPeopleType(resolved, draft).ToList();
+            return ApplySubtypePeopleType(ApplyBarbarianPeopleType(resolved, draft), draft).ToList();
         }
 
         var match = races.FirstOrDefault(pair =>
@@ -348,7 +348,7 @@ public sealed class AbilityAvailabilityService : IAbilityAvailabilityService
                 resolved.Add(type);
         }
 
-        return ApplyBarbarianPeopleType(resolved, draft).ToList();
+        return ApplySubtypePeopleType(ApplyBarbarianPeopleType(resolved, draft), draft).ToList();
     }
 
     private static IReadOnlyList<string> ResolveRaceTagsForRace(
@@ -632,6 +632,15 @@ public sealed class AbilityAvailabilityService : IAbilityAvailabilityService
     private static HashSet<string> ApplyBarbarianPeopleType(HashSet<string> peopleTypes, CharacterDraft? draft)
     {
         if (HasBarbarianPeopleType(draft))
+            peopleTypes.Add("Tribal");
+
+        return peopleTypes;
+    }
+
+    private static HashSet<string> ApplySubtypePeopleType(HashSet<string> peopleTypes, CharacterDraft? draft)
+    {
+        var subtype = (draft?.RaceSubtypeValue ?? draft?.RaceSubtype ?? string.Empty).Trim();
+        if (subtype.Equals("Verdant Heart", StringComparison.OrdinalIgnoreCase))
             peopleTypes.Add("Tribal");
 
         return peopleTypes;

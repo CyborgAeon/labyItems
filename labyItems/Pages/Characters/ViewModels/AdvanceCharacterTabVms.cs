@@ -38,6 +38,8 @@ public sealed class AdvanceCharacterDetailsTabVm : AdvanceCharacterTabVmBase
 
     public int Points { get => Root.Points; set => Root.Points = value; }
     public int CurrentVitae { get => Root.CurrentVitae; set => Root.CurrentVitae = value; }
+    public bool CanEditCurrentVitae => Root.CanEditCurrentVitae;
+    public string CurrentVitaeDisplayText => Root.CurrentVitaeDisplayText;
     public string Notes { get => Root.Notes; set => Root.Notes = value; }
     public Dictionary<string, ManuAbilityOption> AbilityOptions => Root.AbilityOptions;
     public ManuAbilityOption? SelectedAbilityOption { get => Root.SelectedAbilityOption; set => Root.SelectedAbilityOption = value; }

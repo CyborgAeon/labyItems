@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows.Input;
 using labyItems.Helpers;
+using labyItems.Models.Characters;
 using labyItems.Services;
 using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
 
@@ -109,6 +110,18 @@ public partial class GuildCardView : ContentView
         {
             // Ignore rapid expand/collapse interactions.
         }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write(
+                "GUILD_CARD_EXPAND",
+                $"Failed to animate guild card expand state for '{vm.Name}'.",
+                ex);
+
+            ExpandedContent.AbortAnimation("expand");
+            ExpandedContent.IsVisible = vm.IsExpanded;
+            ExpandedContent.HeightRequest = -1;
+            ExpandedContent.Opacity = 1;
+        }
     }
 
     private async Task AnimateExpandedContentAsync(bool expand, CancellationToken token)
@@ -211,5 +224,65 @@ public partial class GuildCardView : ContentView
             return;
 
         await navigation.PushModalAsync(new NavigationPage(new MiracleCardPage(miracle)));
+    }
+
+    private async void OnEditGuildBenefitOptionClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button || button.CommandParameter is not GuildBenefitOptionGroupVm group)
+            return;
+
+        var navigation = ResolveNavigation();
+        if (navigation == null)
+            return;
+
+        var page = new GuildBenefitSelectionPage(new GuildBenefitChoiceSummaryRow(
+            displayText: group.SelectionKey,
+            selectionKey: group.SelectionKey,
+            options: group.Options.Select(o => new GuildBenefitChoiceOption(
+                BuildOptionLabel(o.Abilities),
+                o.Lines)).ToList(),
+            selectedIndex: group.SelectedIndex,
+            applySelection: selectedIndex =>
+            {
+                if (selectedIndex.HasValue
+                    && selectedIndex.Value > 0
+                    && selectedIndex.Value <= group.OptionLabels.Count)
+                {
+                    group.SelectedOption = group.OptionLabels[selectedIndex.Value - 1];
+                }
+                else
+                {
+                    group.SelectedOption = null;
+                }
+            }));
+
+        await navigation.PushModalAsync(new NavigationPage(page));
+    }
+
+    private INavigation? ResolveNavigation()
+    {
+        if (Navigation?.NavigationStack is { Count: > 0 })
+            return Navigation;
+
+        if (Shell.Current?.Navigation is { } shellNav)
+            return shellNav;
+
+        return Application.Current?.MainPage?.Navigation;
+    }
+
+    private static string BuildOptionLabel(IEnumerable<AbilityDefinition> abilities)
+    {
+        var names = abilities
+            .Select(a => (a?.Name ?? string.Empty).Trim())
+            .Where(n => n.Length > 0)
+            .ToList();
+
+        if (names.Count == 0)
+            return "Option";
+
+        if (names.Count == 1)
+            return names[0];
+
+        return $"{names[0]} +{names.Count - 1}";
     }
 }

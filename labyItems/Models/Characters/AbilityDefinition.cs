@@ -26,6 +26,7 @@ public sealed class AbilityDefinition
     public int? Count { get; set; }
     public AbilityCountProgression? Progression { get; set; }
     public List<int>? Amount { get; set; }
+    public List<string>? AsPer { get; set; }
     public string? Frequency { get; set; }
     public string? OverwriteKey { get; set; }
     public List<string>? PreReqs { get; set; }
@@ -132,6 +133,7 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
                 Customisation = ReadCustomisation(el),
                 Progression = ReadProgression(el),
                 Amount = ReadAmount(el),
+                AsPer = ReadAsPer(el),
                 ChoiceSetRef = ReadStringProperty(el, "ChoiceSetRef"),
                 ChoiceSetRefs = ReadChoiceSetRefs(el),
                 SystemEffects = ReadSystemEffects(el)
@@ -220,6 +222,61 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
             return null;
 
         return prop.GetString();
+    }
+
+    private static List<string>? ReadAsPer(JsonElement el)
+    {
+        if (!TryGetPropertyCaseInsensitive(el, out var asPerElement, "AsPer", "asPer", "asper"))
+            return null;
+
+        if (asPerElement.ValueKind == JsonValueKind.String)
+        {
+            var single = (asPerElement.GetString() ?? string.Empty).Trim();
+            return single.Length == 0 ? null : new List<string> { single };
+        }
+
+        if (asPerElement.ValueKind != JsonValueKind.Array)
+            return null;
+
+        var values = asPerElement
+            .EnumerateArray()
+            .Where(item => item.ValueKind == JsonValueKind.String)
+            .Select(item => (item.GetString() ?? string.Empty).Trim())
+            .Where(item => item.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return values.Count == 0 ? null : values;
+    }
+
+    private static bool TryGetPropertyCaseInsensitive(
+        JsonElement element,
+        out JsonElement value,
+        params string[] propertyNames)
+    {
+        value = default;
+        if (element.ValueKind != JsonValueKind.Object)
+            return false;
+
+        foreach (var name in propertyNames)
+        {
+            if (element.TryGetProperty(name, out value))
+                return true;
+        }
+
+        foreach (var property in element.EnumerateObject())
+        {
+            foreach (var name in propertyNames)
+            {
+                if (!property.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                value = property.Value;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static GuildGrantOverrides? ReadGrantOverrides(JsonElement el)
@@ -351,6 +408,11 @@ public sealed class AbilityDefinitionConverter : JsonConverter<AbilityDefinition
         {
             writer.WritePropertyName("Amount");
             JsonSerializer.Serialize(writer, value.Amount, options);
+        }
+        if (value.AsPer is { Count: > 0 })
+        {
+            writer.WritePropertyName("AsPer");
+            JsonSerializer.Serialize(writer, value.AsPer, options);
         }
         if (!string.IsNullOrWhiteSpace(value.Frequency)) writer.WriteString("Frequency", value.Frequency);
         if (!string.IsNullOrWhiteSpace(value.OverwriteKey)) writer.WriteString("OverwriteKey", value.OverwriteKey);

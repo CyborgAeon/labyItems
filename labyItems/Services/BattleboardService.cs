@@ -77,6 +77,11 @@ public sealed class BattleboardExportService : IBattleboardExportService
                     advancementEffects.ResistanceMultipliers),
                 itemEffects.ResistanceMultipliers),
             StringComparer.OrdinalIgnoreCase);
+        if (IsHalfElfRace(draft.Race))
+        {
+            if (!resistanceMultipliers.TryGetValue("Spirit", out var spiritMultiplier) || spiritMultiplier < 2)
+                resistanceMultipliers["Spirit"] = 2;
+        }
         var infiniteResistanceTypes = new HashSet<string>(
             BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
                 BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
@@ -400,6 +405,15 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
         return string.Equals(race, "Elf", StringComparison.OrdinalIgnoreCase)
                || string.Equals(race, "Half Elf", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(race, "Half-Elf", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsHalfElfRace(string? race)
+    {
+        if (string.IsNullOrWhiteSpace(race))
+            return false;
+
+        return string.Equals(race, "Half Elf", StringComparison.OrdinalIgnoreCase)
                || string.Equals(race, "Half-Elf", StringComparison.OrdinalIgnoreCase);
     }
 

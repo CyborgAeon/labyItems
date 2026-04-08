@@ -487,6 +487,7 @@ public sealed class SpecialisationGroupVm : INotifyPropertyChanged, ISpecialisat
                 SelectedOptionAbilityRows.Add(new SpecialisationAbilityRow
                 {
                     Level = row?.Level,
+                    Table = row?.Table,
                     Ability = abilityName,
                     AbilityKey = (row?.AbilityKey ?? string.Empty).Trim(),
                     SpecialisationKey = DetailKey,

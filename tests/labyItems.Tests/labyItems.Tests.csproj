@@ -55,6 +55,7 @@
     <Compile Include="../../labyItems/Services/BattleboardDamageMitigationService.cs" Link="Source/BattleboardDamageMitigationService.cs" />
     <Compile Include="../../labyItems/Services/BattleboardResistanceLevelService.cs" Link="Source/BattleboardResistanceLevelService.cs" />
     <Compile Include="../../labyItems/Services/AbilityPrerequisiteService.cs" Link="Source/AbilityPrerequisiteService.cs" />
+    <Compile Include="../../labyItems/Services/AbilityOwnershipService.cs" Link="Source/AbilityOwnershipService.cs" />
     <Compile Include="../../labyItems/Services/AbilityDefinitionLookupService.cs" Link="Source/AbilityDefinitionLookupService.cs" />
     <Compile Include="../../labyItems/Services/MaxAcResolver.cs" Link="Source/MaxAcResolver.cs" />
     <Compile Include="../../labyItems/Services/AbilityEffects/AbilityEffectEvaluator.cs" Link="Source/AbilityEffectEvaluator.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="../../labyItems/Helpers/RegexOptionsCompat.cs" Link="Source/RegexOptionsCompat.cs" />
     <Compile Include="../../labyItems/Helpers/LoopHelper.cs" Link="Source/LoopHelper.cs" />
     <Compile Include="../../labyItems/Helpers/JsonTokenCompressor.cs" Link="Source/JsonTokenCompressor.cs" />
+    <Compile Include="../../labyItems/Helpers/CharacterProgressionTables.cs" Link="Source/CharacterProgressionTables.cs" />
     <Compile Include="../../labyItems/Pages/Characters/ViewModels/AdvanceAbilitySearchVm.cs" Link="Source/AdvanceAbilitySearchVm.cs" />
     <Compile Include="../../labyItems/Pages/Characters/ViewModels/SpecialisationSummaryDedupe.cs" Link="Source/SpecialisationSummaryDedupe.cs" />
     <Compile Include="../../labyItems/Pages/Characters/ISpecialisationSectionVm.cs" Link="Source/ISpecialisationSectionVm.cs" />

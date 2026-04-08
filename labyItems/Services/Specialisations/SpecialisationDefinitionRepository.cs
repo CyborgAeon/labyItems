@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 
 namespace labyItems.Services.Specialisations;
@@ -40,6 +41,7 @@ public static class SpecialisationDefinitionRepository
     private static readonly HashSet<string> KnownChoiceMetadataFields = new(StringComparer.OrdinalIgnoreCase)
     {
         "Description",
+        "asPer",
         "Levels",
         "LifeScaleOverride",
         "ArmourAvailabilityOverride",
@@ -503,6 +505,7 @@ public static class SpecialisationDefinitionRepository
             Key = source.Key,
             Label = source.Label,
             Description = source.Description,
+            AsPer = source.AsPer.ToList(),
             Grants = source.Grants.Select(CloneAbilityGrant).ToList(),
             Customisation = source.Customisation == null
                 ? null
@@ -539,6 +542,7 @@ public static class SpecialisationDefinitionRepository
         return new AbilityGrant
         {
             Level = source.Level,
+            Table = source.Table,
             Ability = CloneAbility(source.Ability),
             StrategyIds = source.StrategyIds.ToList(),
             Metadata = new ReadOnlyDictionary<string, string>(
@@ -565,6 +569,7 @@ public static class SpecialisationDefinitionRepository
             return null;
 
         var description = ReadStringProperty(optionElement, "Description", "description");
+        var asPer = ReadAsPerValues(optionElement);
         var grants = new List<AbilityGrant>();
         if (TryGetAnyProperty(optionElement, out var grantsElement, "Grants", "grants")
             && grantsElement.ValueKind == JsonValueKind.Array)
@@ -594,6 +599,7 @@ public static class SpecialisationDefinitionRepository
             Key = key,
             Label = label.Length == 0 ? key : label,
             Description = description,
+            AsPer = asPer,
             Grants = grants,
             Customisation = customisation,
             Effects = effects,
@@ -710,6 +716,7 @@ public static class SpecialisationDefinitionRepository
             return null;
 
         var level = ReadNullableIntProperty(grantElement, "Level", "level");
+        var table = ReadNullableIntProperty(grantElement, "Table", "table");
         var abilityRef = ReadStringProperty(grantElement, "AbilityRef", "abilityRef", "$ref");
 
         AbilityDefinition ability;
@@ -739,6 +746,7 @@ public static class SpecialisationDefinitionRepository
         return new AbilityGrant
         {
             Level = level,
+            Table = table,
             Ability = ability,
             StrategyIds = ParseStrategyIds(grantElement),
             Metadata = ParseMetadata(ReadObjectProperty(grantElement, "Metadata", "metadata"))
@@ -1039,6 +1047,7 @@ public static class SpecialisationDefinitionRepository
     {
         var grants = new List<AbilityGrant>();
         var description = string.Empty;
+        IReadOnlyList<string> asPer = Array.Empty<string>();
         var lifeScaleOverride = string.Empty;
         var armourOverride = string.Empty;
         var colourChoiceOverride = new List<string>();
@@ -1066,6 +1075,8 @@ public static class SpecialisationDefinitionRepository
                 {
                     description = descElement.GetString() ?? string.Empty;
                 }
+
+                asPer = ReadAsPerValues(element);
 
                 if (element.TryGetProperty("LifeScaleOverride", out var lifeScaleElement)
                     && lifeScaleElement.ValueKind == JsonValueKind.String)
@@ -1189,6 +1200,7 @@ public static class SpecialisationDefinitionRepository
             Key = optionKey,
             Label = optionKey,
             Description = description,
+            AsPer = asPer,
             Grants = grants,
             Effects = new OptionEffects
             {
@@ -1232,13 +1244,20 @@ public static class SpecialisationDefinitionRepository
 
         foreach (var levelProperty in levelsElement.EnumerateObject())
         {
-            if (!int.TryParse(levelProperty.Name, out var parsedLevel)
-                || levelProperty.Value.ValueKind != JsonValueKind.Array)
+            if (levelProperty.Value.ValueKind != JsonValueKind.Array)
             {
                 continue;
             }
 
-            grants.AddRange(ParseAbilityGrants(levelProperty.Value, parsedLevel, references));
+            if (!CharacterProgressionTables.TryParseStage(levelProperty.Name, out var stage)
+                || !stage.IsValid)
+            {
+                continue;
+            }
+
+            var level = stage.Kind == ProgressionStageKind.Level ? stage.Value : default(int?);
+            var table = stage.Kind == ProgressionStageKind.Table ? stage.Value : default(int?);
+            grants.AddRange(ParseAbilityGrants(levelProperty.Value, level, table, references));
         }
 
         return grants;
@@ -1285,6 +1304,13 @@ public static class SpecialisationDefinitionRepository
         JsonElement abilityArray,
         int? level,
         IDictionary<string, AbilityDefinition> references)
+        => ParseAbilityGrants(abilityArray, level, table: null, references);
+
+    private static List<AbilityGrant> ParseAbilityGrants(
+        JsonElement abilityArray,
+        int? level,
+        int? table,
+        IDictionary<string, AbilityDefinition> references)
     {
         var grants = new List<AbilityGrant>();
         if (abilityArray.ValueKind != JsonValueKind.Array)
@@ -1299,6 +1325,7 @@ public static class SpecialisationDefinitionRepository
             grants.Add(new AbilityGrant
             {
                 Level = level,
+                Table = table,
                 Ability = parsed
             });
         }
@@ -1372,6 +1399,7 @@ public static class SpecialisationDefinitionRepository
             Source = string.IsNullOrWhiteSpace(overrides.Source) ? baseline.Source : overrides.Source,
             Count = overrides.Count ?? baseline.Count,
             Amount = overrides.Amount is { Count: > 0 } ? overrides.Amount.ToList() : baseline.Amount?.ToList(),
+            AsPer = overrides.AsPer is { Count: > 0 } ? overrides.AsPer.ToList() : baseline.AsPer?.ToList(),
             Frequency = string.IsNullOrWhiteSpace(overrides.Frequency) ? baseline.Frequency : overrides.Frequency,
             OverwriteKey = string.IsNullOrWhiteSpace(overrides.OverwriteKey) ? baseline.OverwriteKey : overrides.OverwriteKey,
             PreReqs = overrides.PreReqs is { Count: > 0 } ? overrides.PreReqs.ToList() : baseline.PreReqs?.ToList(),
@@ -1423,6 +1451,7 @@ public static class SpecialisationDefinitionRepository
             Source = source.Source,
             Count = source.Count,
             Amount = source.Amount?.ToList(),
+            AsPer = source.AsPer?.ToList(),
             Frequency = source.Frequency,
             OverwriteKey = source.OverwriteKey,
             PreReqs = source.PreReqs?.ToList(),
@@ -1851,5 +1880,24 @@ public static class SpecialisationDefinitionRepository
         }
 
         return result;
+    }
+
+    private static IReadOnlyList<string> ReadAsPerValues(JsonElement element)
+    {
+        if (!element.TryGetProperty("asPer", out var asPerElement))
+            return Array.Empty<string>();
+
+        if (asPerElement.ValueKind == JsonValueKind.String)
+        {
+            var single = (asPerElement.GetString() ?? string.Empty).Trim();
+            return single.Length == 0 ? Array.Empty<string>() : new[] { single };
+        }
+
+        if (asPerElement.ValueKind != JsonValueKind.Array)
+            return Array.Empty<string>();
+
+        return ParseStringArray(asPerElement)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 }

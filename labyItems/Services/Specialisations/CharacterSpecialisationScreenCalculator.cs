@@ -115,6 +115,12 @@ public sealed class SpecialisationValidationState
 public sealed class SpecialisationAbilityRowState
 {
     public int? Level { get; init; }
+    public int? Table { get; init; }
+    public string StageText => Table.HasValue
+        ? $"Tbl {Table.Value}"
+        : Level.HasValue
+            ? $"Lvl {Level.Value}"
+            : string.Empty;
     public string Ability { get; init; } = string.Empty;
     public string AbilityKey { get; init; } = string.Empty;
     public string SpecialisationKey { get; init; } = string.Empty;
@@ -277,18 +283,10 @@ public static class CharacterSpecialisationScreenCalculator
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToList();
 
+                // When a race explicitly declares subtype options (for example Stormvale: "Air,Aquatic"),
+                // keep that strict subset rather than widening to every mapped option in the definition.
                 if (options.Count == 0)
-                {
                     options = mappedKeys;
-                }
-                else
-                {
-                    foreach (var key in mappedKeys)
-                    {
-                        if (!options.Contains(key, StringComparer.OrdinalIgnoreCase))
-                            options.Add(key);
-                    }
-                }
             }
 
             foreach (var option in options)
@@ -512,29 +510,70 @@ public static class CharacterSpecialisationScreenCalculator
             {
                 case SpecialisationSectionKind.Choice:
                 {
+                    var subtypeForRestrictions = !string.IsNullOrWhiteSpace(selectionState.RaceSubtype)
+                        ? selectionState.RaceSubtype
+                        : selectedSubtype;
+
+                    var restrictionContext = context;
+                    if (!string.Equals(context.CurrentRaceSubtype, subtypeForRestrictions, StringComparison.OrdinalIgnoreCase))
+                    {
+                        restrictionContext = new CharacterSpecialisationContext
+                        {
+                            Draft = context.Draft,
+                            ClassRecord = context.ClassRecord,
+                            RaceRecord = context.RaceRecord,
+                            Race = context.Race,
+                            Class = context.Class,
+                            CurrentRaceSubtype = subtypeForRestrictions,
+                            Definitions = context.Definitions,
+                            InjectionRules = context.InjectionRules
+                        };
+                    }
+
+                    var eligibleOptions = spec.Options
+                        .Where(option => string.IsNullOrWhiteSpace(ResolveRestrictionIssue(option, restrictionContext)))
+                        .ToList();
+                    if (eligibleOptions.Count == 0)
+                        eligibleOptions = spec.Options.ToList();
+
+                    var effectiveSpec = new SpecialisationSectionSpec
+                    {
+                        SectionId = spec.SectionId,
+                        DefinitionKey = spec.DefinitionKey,
+                        Title = spec.Title,
+                        Subtitle = spec.Subtitle,
+                        DetailKey = spec.DetailKey,
+                        Kind = spec.Kind,
+                        Required = spec.Required,
+                        Levels = spec.Levels,
+                        Options = eligibleOptions,
+                        StrategyIds = spec.StrategyIds,
+                        Metadata = spec.Metadata
+                    };
+
                     selectionState.ChoiceSelections.TryGetValue(spec.SectionId, out var choiceSelection);
                     var selectedByLevel = choiceSelection?.SelectedByLevel?.ToDictionary(k => k.Key, v => v.Value)
                                           ?? new Dictionary<int, string>();
                     var customisationByLevel = choiceSelection?.CustomisationByLevel?.ToDictionary(k => k.Key, v => v.Value)
                                               ?? new Dictionary<int, string>();
 
-                    var validation = ValidateChoiceSection(spec, selectedByLevel);
+                    var validation = ValidateChoiceSection(effectiveSpec, selectedByLevel);
                     if (string.IsNullOrWhiteSpace(validation)
-                        && spec.StrategyIds.Any(id => id.Equals("validation:option-restrictions", StringComparison.OrdinalIgnoreCase)))
+                        && effectiveSpec.StrategyIds.Any(id => id.Equals("validation:option-restrictions", StringComparison.OrdinalIgnoreCase)))
                     {
-                        validation = ValidateSelectedChoiceRestrictions(spec, selectedByLevel, context);
+                        validation = ValidateSelectedChoiceRestrictions(effectiveSpec, selectedByLevel, restrictionContext);
                     }
                     var selectedCount = selectedByLevel.Values.Count(value => !string.IsNullOrWhiteSpace(value));
-                    var requiredCount = spec.Required ? spec.Levels.Count : 0;
+                    var requiredCount = effectiveSpec.Required ? effectiveSpec.Levels.Count : 0;
 
-                    var complete = spec.Required
-                        ? selectedCount == spec.Levels.Count && string.IsNullOrWhiteSpace(validation)
+                    var complete = effectiveSpec.Required
+                        ? selectedCount == effectiveSpec.Levels.Count && string.IsNullOrWhiteSpace(validation)
                         : string.IsNullOrWhiteSpace(validation);
 
-                    if (spec.StrategyIds.Any(id => id.Equals("selection:multi-delimited", StringComparison.OrdinalIgnoreCase))
+                    if (effectiveSpec.StrategyIds.Any(id => id.Equals("selection:multi-delimited", StringComparison.OrdinalIgnoreCase))
                         && selectedCount > 0)
                     {
-                        var stored = spec.Levels
+                        var stored = effectiveSpec.Levels
                             .OrderBy(x => x)
                             .Select(level =>
                             {
@@ -552,28 +591,28 @@ public static class CharacterSpecialisationScreenCalculator
                         if (stored.Count > 0)
                             persistedSelections[spec.Title] = string.Join(" | ", stored);
                     }
-                    else if (spec.Levels.Count == 1
-                             && selectedByLevel.TryGetValue(spec.Levels[0], out var single)
+                    else if (effectiveSpec.Levels.Count == 1
+                             && selectedByLevel.TryGetValue(effectiveSpec.Levels[0], out var single)
                              && !string.IsNullOrWhiteSpace(single))
                     {
-                        var level = spec.Levels[0];
+                        var level = effectiveSpec.Levels[0];
                         var custom = customisationByLevel.TryGetValue(level, out var customToken)
                             ? (customToken ?? string.Empty).Trim()
                             : string.Empty;
-                        persistedSelections[spec.Title] = ComposeSelectionToken(single, custom);
+                        persistedSelections[effectiveSpec.Title] = ComposeSelectionToken(single, custom);
                     }
 
                     sections.Add(new SpecialisationSectionState
                     {
-                        Spec = spec,
+                        Spec = effectiveSpec,
                         SelectedByLevel = new ReadOnlyDictionary<int, string>(selectedByLevel),
                         CustomisationByLevel = new ReadOnlyDictionary<int, string>(customisationByLevel),
                         IsComplete = complete,
                         ValidationMessage = validation,
-                        StatusText = spec.Required
-                            ? $"{selectedCount}/{spec.Levels.Count}"
-                            : (selectedCount == 0 ? "Optional" : $"{selectedCount}/{spec.Levels.Count}"),
-                        CardState = ResolveCardState(complete, validation, spec.Required, selectedCount > 0)
+                        StatusText = effectiveSpec.Required
+                            ? $"{selectedCount}/{effectiveSpec.Levels.Count}"
+                            : (selectedCount == 0 ? "Optional" : $"{selectedCount}/{effectiveSpec.Levels.Count}"),
+                        CardState = ResolveCardState(complete, validation, effectiveSpec.Required, selectedCount > 0)
                     });
 
                     break;
@@ -970,11 +1009,13 @@ public static class CharacterSpecialisationScreenCalculator
 
         return option.Grants
             .Where(grant => grant != null && !string.IsNullOrWhiteSpace(grant.Ability?.Name))
-            .OrderBy(grant => grant.Level ?? int.MaxValue)
+            .OrderBy(grant => grant.Table.HasValue ? 1 : 0)
+            .ThenBy(grant => grant.Table ?? grant.Level ?? int.MaxValue)
             .ThenBy(grant => grant.Ability.Name, StringComparer.OrdinalIgnoreCase)
             .Select(grant => new SpecialisationAbilityRowState
             {
                 Level = grant.Level,
+                Table = grant.Table,
                 Ability = grant.Ability.Name,
                 AbilityKey = grant.Ability.Key ?? string.Empty,
                 SpecialisationKey = detailKey,

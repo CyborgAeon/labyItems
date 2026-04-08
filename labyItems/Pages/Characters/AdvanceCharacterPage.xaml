@@ -40,7 +40,19 @@
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Current vitae"
                                FontAttributes="Bold"/>
-                        <sliders:VitaeSlider Value="{Binding CurrentVitae, Mode=TwoWay}"/>
+                        <sliders:VitaeSlider Value="{Binding CurrentVitae, Mode=TwoWay}"
+                                             IsVisible="{Binding CanEditCurrentVitae}"/>
+                        <Border Stroke="{StaticResource SoftStrokeColor}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 10"
+                                BackgroundColor="#F9FAFB"
+                                Padding="12,10"
+                                IsVisible="{Binding CanEditCurrentVitae, Converter={StaticResource InverseBoolConverter}}">
+                            <Label Text="{Binding CurrentVitaeDisplayText}"
+                                   FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"
+                                   Opacity="0.8"/>
+                        </Border>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="8">

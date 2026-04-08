@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using labyItems.Helpers;
 using labyItems.Models.Abilities;
 using labyItems.Models.Characters;
 
@@ -10,20 +11,41 @@ public static class AbilityDraftBuilder
 {
     public static List<AbilityDraft> BuildFromLevels(
         Dictionary<string, List<AbilityDefinition>> levels,
-        int achievedLevel = 8)
+        int achievedLevel = 8,
+        int achievedTable = 1)
     {
         var resolvedLevel = Math.Max(0, achievedLevel);
+        var resolvedTable = Math.Max(1, achievedTable);
         var list = new List<AbilityDraft>();
         foreach (var kvp in levels ?? new Dictionary<string, List<AbilityDefinition>>())
         {
             var key = (kvp.Key ?? string.Empty).Trim();
-            int? level = int.TryParse(key, out var parsed) ? parsed : null;
+            var level = default(int?);
+            var table = default(int?);
 
-            if (level.HasValue && level.Value > resolvedLevel)
-                continue;
+            if (CharacterProgressionTables.TryParseStage(key, out var stage))
+            {
+                if (stage.Kind == ProgressionStageKind.Level)
+                {
+                    level = stage.Value;
+                    if (stage.Value > resolvedLevel)
+                        continue;
+                }
+                else if (stage.Kind == ProgressionStageKind.Table)
+                {
+                    table = stage.Value;
+                    if (stage.Value > resolvedTable)
+                        continue;
+                }
+            }
 
             foreach (var ability in kvp.Value ?? new List<AbilityDefinition>())
-                list.AddRange(ParseAbility(ability, level, resolvedLevel));
+                list.AddRange(ParseAbility(
+                    ability,
+                    levelGained: level,
+                    achievedLevel: resolvedLevel,
+                    tableGained: table,
+                    achievedTable: resolvedTable));
         }
 
         return list;
@@ -32,13 +54,22 @@ public static class AbilityDraftBuilder
     public static List<AbilityDraft> ParseAbility(
         string rawAbility,
         int? levelGained,
-        int achievedLevel = 8)
-        => ParseAbility(new AbilityDefinition { Name = rawAbility }, levelGained, achievedLevel);
+        int achievedLevel = 8,
+        int? tableGained = null,
+        int achievedTable = 1)
+        => ParseAbility(
+            new AbilityDefinition { Name = rawAbility },
+            levelGained,
+            achievedLevel,
+            tableGained,
+            achievedTable);
 
     public static List<AbilityDraft> ParseAbility(
         AbilityDefinition abilityDefinition,
         int? levelGained,
-        int achievedLevel = 8)
+        int achievedLevel = 8,
+        int? tableGained = null,
+        int achievedTable = 1)
     {
         var result = new List<AbilityDraft>();
 
@@ -49,8 +80,23 @@ public static class AbilityDraftBuilder
         if (abilityName.Length == 0)
             return result;
 
+        var resolvedAchievedLevel = Math.Max(0, achievedLevel);
+        var resolvedAchievedTable = Math.Max(1, achievedTable);
+
+        if (levelGained.HasValue && levelGained.Value > resolvedAchievedLevel)
+            return result;
+
+        if (tableGained.HasValue && tableGained.Value > resolvedAchievedTable)
+            return result;
+
         var type = ParseDeclaredType(abilityDefinition.Type);
-        var draft = CreateDraft(abilityDefinition, levelGained, Math.Max(0, achievedLevel), type);
+        var draft = CreateDraft(
+            abilityDefinition,
+            levelGained,
+            tableGained,
+            resolvedAchievedLevel,
+            resolvedAchievedTable,
+            type);
         draft.Name = abilityName;
         result.Add(draft);
 
@@ -76,7 +122,9 @@ public static class AbilityDraftBuilder
     private static AbilityDraft CreateDraft(
         AbilityDefinition def,
         int? levelGained,
+        int? tableGained,
         int achievedLevel,
+        int achievedTable,
         AbilityType type)
     {
         var draft = new AbilityDraft
@@ -87,9 +135,10 @@ public static class AbilityDraftBuilder
             UpdateKey = def.UpdateKey,
             AbilityType = type,
             LevelGained = levelGained,
+            TableGained = tableGained,
             Effect = def.Effect,
             Source = def.Source,
-            Count = ResolveCount(def, levelGained, achievedLevel),
+            Count = ResolveCount(def, levelGained, tableGained, achievedLevel, achievedTable),
             Progression = def.Progression,
             Amount = def.Amount?.ToList(),
             Frequency = def.Frequency,
@@ -105,13 +154,24 @@ public static class AbilityDraftBuilder
         return draft;
     }
 
-    private static int? ResolveCount(AbilityDefinition def, int? levelGained, int achievedLevel)
+    private static int? ResolveCount(
+        AbilityDefinition def,
+        int? levelGained,
+        int? tableGained,
+        int achievedLevel,
+        int achievedTable)
     {
         if (def.Progression == null)
             return def.Count;
 
         if (levelGained.HasValue && achievedLevel < levelGained.Value)
             return 0;
+
+        if (tableGained.HasValue && achievedTable < tableGained.Value)
+            return 0;
+
+        if (tableGained.HasValue)
+            return def.Progression.ResolveCount(achievedTable);
 
         return def.Progression.ResolveCount(achievedLevel);
     }

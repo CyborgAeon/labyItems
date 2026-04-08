@@ -248,6 +248,13 @@
         "A wizard may learn the following spells only:\n1. All spells of his own colour.\n2. All grey spells.\n3. A maximum of five spells total of other standard spells from other colours, called 'specialist glyphs'. These cannot be purchased for grulls, and may only be acquired from teaching scrolls or the teachings of powerful wizards. Multiple runes (see Stackable Glyphs on page 8) of the same spell only fill one specialist slot.\n4. Wizards may not learn spells of the colour opposite to their own.\n5. It is only possible for a wizard to purchase spells of his own colour, or grey, from the Desk, and only when preparing for an adventure.\nWizards automatically start their adventuring career with all spells of their colour and grey up to 4th level.\nAs they progress in casting levels they automatically gain their own plus grey glyphs of that level. Such that a 6th level Red Wizard would possess all Grey and Red spells to 6th level.\nA player can elect to be a grey wizard, and can learn up to 3 spells of each other Elemental colour."
       ]
     },
+    "Witch Doctor Colour": {
+      "Key": "definition.witch-doctor-colour",
+      "DisplayName": "Witch Doctor Colour",
+      "ChoiceSetRefs": [
+        "choice.witch-doctor-colour.primary"
+      ]
+    },
     "Vivomancer Colour": {
       "Key": "definition.vivomancer-colour",
       "DisplayName": "Vivomancer Colour",

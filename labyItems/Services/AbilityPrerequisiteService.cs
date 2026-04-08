@@ -32,13 +32,10 @@ public static class AbilityPrerequisiteService
             .ToList();
 
         var aliasLookup = BuildAliasLookup(allAbilities);
-        var satisfiedAliases = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var known in knownAbilityTerms ?? Array.Empty<string>())
-            AddTermAliases(known, aliasLookup, satisfiedAliases);
-
-        foreach (var ability in selected)
-            AddAbilityAliases(ability, satisfiedAliases);
+        var ownershipProfile = AbilityOwnershipService.Build(
+            knownAbilityTerms,
+            selected,
+            aliasLookup);
 
         var issues = new List<AbilityPrerequisiteIssue>();
         var missingKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -53,7 +50,7 @@ public static class AbilityPrerequisiteService
                 if (!TryParseAbilityPreReq(preReq, out var requiredTerm))
                     continue;
 
-                if (IsSatisfied(requiredTerm, aliasLookup, satisfiedAliases))
+                if (IsSatisfied(requiredTerm, aliasLookup, ownershipProfile))
                     continue;
 
                 var resolved = ResolveAbility(requiredTerm, aliasLookup);
@@ -90,17 +87,23 @@ public static class AbilityPrerequisiteService
     private static bool IsSatisfied(
         string requiredTerm,
         IReadOnlyDictionary<string, EvolutionService.AbilityResult> aliasLookup,
-        IReadOnlySet<string> satisfiedAliases)
+        AbilityOwnershipProfile ownershipProfile)
     {
+        if (AbilityOwnershipService.TryParseStrengthRequirement(requiredTerm, out var requiredStrength))
+            return ownershipProfile.StrengthGrade >= requiredStrength;
+
+        if (AbilityOwnershipService.TryParseWeaponMasteryRequirement(requiredTerm, out var requiredMastery))
+            return ownershipProfile.WeaponMasteryGrade >= requiredMastery;
+
         foreach (var equivalent in EvolutionService.GetEquivalentAbilityNames(requiredTerm))
         {
             var normalized = AbilityDetailsLookupService.NormalizeKey(equivalent);
-            if (normalized.Length > 0 && satisfiedAliases.Contains(normalized))
+            if (normalized.Length > 0 && ownershipProfile.Aliases.Contains(normalized))
                 return true;
 
             if (aliasLookup.TryGetValue(normalized, out var resolved))
             {
-                if (HasAnyAlias(resolved, satisfiedAliases))
+                if (HasAnyAlias(resolved, ownershipProfile.Aliases))
                     return true;
             }
         }
@@ -147,36 +150,6 @@ public static class AbilityPrerequisiteService
         }
 
         return null;
-    }
-
-    private static void AddTermAliases(
-        string? rawTerm,
-        IReadOnlyDictionary<string, EvolutionService.AbilityResult> aliasLookup,
-        ISet<string> satisfiedAliases)
-    {
-        var term = (rawTerm ?? string.Empty).Trim();
-        if (term.Length == 0)
-            return;
-
-        foreach (var equivalent in EvolutionService.GetEquivalentAbilityNames(term))
-        {
-            var normalized = AbilityDetailsLookupService.NormalizeKey(equivalent);
-            if (normalized.Length > 0)
-                satisfiedAliases.Add(normalized);
-
-            if (aliasLookup.TryGetValue(normalized, out var resolved))
-                AddAbilityAliases(resolved, satisfiedAliases);
-        }
-    }
-
-    private static void AddAbilityAliases(EvolutionService.AbilityResult ability, ISet<string> aliases)
-    {
-        foreach (var candidate in GetEquivalentTerms(ability))
-        {
-            var normalized = AbilityDetailsLookupService.NormalizeKey(candidate);
-            if (normalized.Length > 0)
-                aliases.Add(normalized);
-        }
     }
 
     private static IReadOnlyDictionary<string, EvolutionService.AbilityResult> BuildAliasLookup(

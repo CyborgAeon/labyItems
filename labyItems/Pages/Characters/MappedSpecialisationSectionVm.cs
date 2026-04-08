@@ -115,6 +115,11 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
     public string CardState => HasIssue ? "Issue" : (HasSelection ? "Success" : (_required ? "Error" : "Neutral"));
     public string CardStateText => CardState;
     public string DisplaySubtitle => HasIssue ? IssueMessage : Subtitle;
+    public bool HasAboutSelectionLink =>
+        HasSelection
+        && AbilityRows.Count == 0
+        && !string.IsNullOrWhiteSpace((DetailKey ?? string.Empty).Trim());
+    public string AboutSelectionLabel => IsCasteSection ? "About this caste" : "About this selection";
 
     private string _issueMessage = string.Empty;
     public string IssueMessage
@@ -196,7 +201,7 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
         RaiseComputed();
     }
 
-    public IEnumerable<(int? Level, string Ability, AbilityDefinition? AbilityDef)> GetSelectedAbilities()
+    public IEnumerable<(int? Level, int? Table, string Ability, AbilityDefinition? AbilityDef)> GetSelectedAbilities()
     {
         if (string.IsNullOrWhiteSpace(_selectedOption))
             yield break;
@@ -210,7 +215,7 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
             if (abilityName.Length == 0)
                 continue;
 
-            yield return (grant.Level, abilityName, grant.Ability);
+            yield return (grant.Level, grant.Table, abilityName, grant.Ability);
         }
     }
 
@@ -224,7 +229,8 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
 
         var ordered = (entry.Grants ?? Array.Empty<AbilityGrant>())
             .Where(g => g != null && !string.IsNullOrWhiteSpace(g.Ability?.Name))
-            .OrderBy(g => g.Level ?? int.MaxValue)
+            .OrderBy(g => g.Table.HasValue ? 1 : 0)
+            .ThenBy(g => g.Table ?? g.Level ?? int.MaxValue)
             .ThenBy(g => g.Ability.Name, StringComparer.OrdinalIgnoreCase);
 
         foreach (var grant in ordered)
@@ -232,6 +238,7 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
             AbilityRows.Add(new SpecialisationAbilityRow
             {
                 Level = grant.Level,
+                Table = grant.Table,
                 Ability = grant.Ability.Name,
                 AbilityKey = grant.Ability.Key ?? string.Empty,
                 SpecialisationKey = DetailKey,
@@ -252,6 +259,8 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
         Raise(nameof(SingleOptionEnabled));
         Raise(nameof(HasIssue));
         Raise(nameof(IssueMessage));
+        Raise(nameof(HasAboutSelectionLink));
+        Raise(nameof(AboutSelectionLabel));
         Raise(nameof(IsComplete));
         Raise(nameof(StatusText));
         Raise(nameof(CardState));
@@ -301,12 +310,22 @@ public sealed class MappedSpecialisationSectionVm : ISpecialisationSectionVm
 
         return token;
     }
+
+    private bool IsCasteSection =>
+        Title.Contains("caste", StringComparison.OrdinalIgnoreCase)
+        || Key.Contains("caste", StringComparison.OrdinalIgnoreCase)
+        || DetailKey.Contains("caste", StringComparison.OrdinalIgnoreCase);
 }
 
 public sealed class SpecialisationAbilityRow
 {
     public int? Level { get; init; }
-    public string LevelText => Level.HasValue ? $"Lvl {Level.Value}" : string.Empty;
+    public int? Table { get; init; }
+    public string LevelText => Table.HasValue
+        ? $"Tbl {Table.Value}"
+        : Level.HasValue
+            ? $"Lvl {Level.Value}"
+            : string.Empty;
     public string Ability { get; init; } = string.Empty;
     public string AbilityKey { get; init; } = string.Empty;
     public string SpecialisationKey { get; init; } = string.Empty;

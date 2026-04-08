@@ -91,7 +91,9 @@ public partial class LevelAbilityTableView : ContentView
             return;
 
         var title = row.Level > 0
-            ? $"Level {row.Level} abilities"
+            ? row.IsTableStage
+                ? $"Table {row.Level} abilities"
+                : $"Level {row.Level} abilities"
             : "Abilities";
 
         var picked = detailOptions.Count == 1

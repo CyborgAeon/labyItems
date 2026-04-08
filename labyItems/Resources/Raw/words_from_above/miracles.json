@@ -20,15 +20,8 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [
-        [
-          6,
-          6
-        ]
-      ],
-      "type": [
-        "Missile"
-      ]
+      "amount": [[6, 6]],
+      "type": ["Missile"]
     },
     "verbal": "“Spirits aid me, I abjure thee to staunch this wound.”",
     "gesture": "Touch injured part with open palm",
@@ -43,7 +36,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirits of light, I ask thee to bestow your favour upon this person\"",
+    "verbal": "Spirits of light, I ask thee to bestow your favour upon this person",
     "gesture": "Touch forehead of recipient with open palm",
     "duration": "1 hour",
     "range": "Touch",
@@ -56,7 +49,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of skeleton I dismiss thee hence! \"",
+    "verbal": "Spirit of skeleton I dismiss thee hence! ",
     "gesture": "Open palm of weapon hand presented boldly",
     "duration": "Until skeleton is dismissed",
     "range": "10'",
@@ -69,7 +62,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of ...<name/You>... in harmony stand, for in friendship shall our spirits be bound.\"",
+    "verbal": "Spirit of ...<name/You>... in harmony stand, for in friendship shall our spirits be bound.",
     "gesture": "Point at target",
     "duration": "15 minutes",
     "range": "20'",
@@ -82,7 +75,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirits of light, I call upon thee to bless this person/item here\"",
+    "verbal": "Spirits of light, I call upon thee to bless this person/item here",
     "gesture": "Touch forehead of target with both hands",
     "duration": "24 hours",
     "range": "Touch",
@@ -95,7 +88,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"By the spirits at my command, I bid this pestilence begone!\"",
+    "verbal": "By the spirits at my command, I bid this pestilence begone!",
     "gesture": "Touch target",
     "duration": "Instant",
     "range": "Touch",
@@ -108,7 +101,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of skeleton, thou art mine to command!\"",
+    "verbal": "Spirit of skeleton, thou art mine to command!",
     "gesture": "Point at Skeleton",
     "duration": "30 minutes",
     "range": "10'",
@@ -121,7 +114,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Let my spirits defend me from the spirits of good/evil!\"",
+    "verbal": "Let my spirits defend me from the spirits of good/evil!",
     "gesture": "Draw line on ground – see below",
     "duration": "15 minutes",
     "range": "6' radius circle or 15' length line",
@@ -134,7 +127,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirits shield this spirit from the assault of my/his/her foes\"",
+    "verbal": "Spirits shield this spirit from the assault of my/his/her foes",
     "gesture": "Touch target's head with open hand",
     "duration": "15 minutes / until used",
     "range": "Touch",
@@ -147,7 +140,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"All seeing, all knowing spirits! Answer me this......\"",
+    "verbal": "All seeing, all knowing spirits! Answer me this......",
     "gesture": "Both hands touch temples",
     "duration": "3 questions within 5 minutes",
     "range": "Self",
@@ -161,24 +154,12 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          18,
-          0
-        ]
-      ],
-      "type": [
-        "Body"
-      ],
-      "ArmourApplies": [
-        [
-          1,
-          1
-        ]
-      ],
+      "amount": [[18, 0]],
+      "type": ["Body"],
+      "ArmourApplies": [[1, 1]],
       "ArmourType": "SAC"
     },
-    "verbal": "\"By all my powers, let thy spirit be smitten ......... Spirit Bolt!\"",
+    "verbal": "By all my powers, let thy spirit be smitten ......... Spirit Bolt!",
     "gesture": "Point at target",
     "duration": "Instant",
     "range": "20'",
@@ -191,7 +172,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of ghoul, thou art mine to command!\"",
+    "verbal": "Spirit of ghoul, thou art mine to command!",
     "gesture": "Point at target",
     "duration": "15 minutes",
     "range": "20'",
@@ -204,7 +185,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "(For Rune of Transgression) \"Spirit of paralysis/fear/insanity, I place and bind thee to this rune! May all\nexcept (designate names) suffer the consequences of their transgression.\"\n(For Rune of Disturbance) \"Spirit of paralysis/fear/insanity, I place and bind thee to this rune! May all except\n(designate names) suffer the consequences of disturbing thee!\"",
+    "verbal": "(For Rune of Transgression) Spirit of paralysis/fear/insanity, I place and bind thee to this rune! May all\nexcept (designate names) suffer the consequences of their transgression.\n(For Rune of Disturbance) Spirit of paralysis/fear/insanity, I place and bind thee to this rune! May all except\n(designate names) suffer the consequences of disturbing thee!",
     "gesture": "Inscribe rune as below",
     "duration": "Adventure / until triggered",
     "range": "Touch / see below",
@@ -283,21 +264,9 @@
     "sphere": "Minor Force",
     "isAdvanced": true,
     "Damage": {
-      "amount": [
-        [
-          6,
-          0
-        ]
-      ],
-      "type": [
-        "Body"
-      ],
-      "ArmourApplies": [
-        [
-          1,
-          0
-        ]
-      ],
+      "amount": [[6, 0]],
+      "type": ["Body"],
+      "ArmourApplies": [[1, 0]],
       "ArmourType": "SAC"
     },
     "verbal": "“Spirits, smite that spirit…”",
@@ -339,7 +308,7 @@
     "alignment": "Neutral",
     "sphere": "Minor Warding",
     "isAdvanced": true,
-    "verbal": "\"Spirits I declare this person my Ally!\"",
+    "verbal": "Spirits I declare this person my Ally!",
     "gesture": "Draw rune on target",
     "duration": "Dungeon",
     "range": "Touch",
@@ -521,7 +490,7 @@
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true,
-    "verbal": "\"Walk in the realm of the dead. None shall touch you whilst you bear this spirit!\"",
+    "verbal": "Walk in the realm of the dead. None shall touch you whilst you bear this spirit!",
     "gesture": "Hold both hands above the targets head",
     "duration": "15 minutes",
     "range": "1'",
@@ -570,7 +539,7 @@
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true,
-    "verbal": "\"Spirits of evil I bid thee flow forth and touch all with pestilence.\"",
+    "verbal": "Spirits of evil I bid thee flow forth and touch all with pestilence.",
     "gesture": "Cast hands up and outwards as if throwing\nsomething",
     "duration": "1 hour",
     "level": "7th"
@@ -602,7 +571,7 @@
   {
     "power": 8,
     "name": "Voice of Retribution",
-    "description": "Command a single-word imperative a lower-level target must obey (e.g., Sleep/Flee/Obey); listed stopping effect; does not affect undead. but only the command \"Die!\"; affects up to caster level and only vs. the opposite alignment; does not affect undead.",
+    "description": "Command a single-word imperative a lower-level target must obey (e.g., Sleep/Flee/Obey); listed stopping effect; does not affect undead. but only the command Die!; affects up to caster level and only vs. the opposite alignment; does not affect undead.",
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": true,
@@ -630,7 +599,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": true,
-    "verbal": "\"Into my hands I call forth righteousness - let the spirits that serve me form grip, haft and head to smite the\nunbeliever!\"",
+    "verbal": "Into my hands I call forth righteousness - let the spirits that serve me form grip, haft and head to smite the\nunbeliever!",
     "gesture": "Hands open to receive",
     "duration": "15 minutes",
     "level": "8th"
@@ -666,7 +635,7 @@
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true,
-    "verbal": "\"Spirit of evil that is mine to command, let now our spirits mingle and carry me on your dark travels.\"",
+    "verbal": "Spirit of evil that is mine to command, let now our spirits mingle and carry me on your dark travels.",
     "gesture": "Touch wight with both Hands",
     "duration": "15 minutes",
     "level": "8th"
@@ -674,11 +643,11 @@
   {
     "power": 1,
     "name": "Halt",
-    "description": "Freeze a lower-level target in place for ~10 seconds; broken by any touch/damage; does not affect undead.",
+    "description": "Freeze a lower-level target in place for 10 seconds; broken by any touch/damage; does not affect undead.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Halt! I command thee be still!\"",
+    "verbal": "Halt! I command thee be still!",
     "gesture": "Open palm of empty weapon hand towards target",
     "duration": "10 seconds",
     "range": "10'",
@@ -717,7 +686,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit, go forth and relate what you see.\"",
+    "verbal": "Spirit, go forth and relate what you see.",
     "gesture": "Point in desired direction",
     "duration": "Instant",
     "range": "20'",
@@ -731,17 +700,10 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [
-        [
-          12,
-          12
-        ]
-      ],
-      "type": [
-        "Missile"
-      ]
+      "amount": [[12, 12]],
+      "type": ["Missile"]
     },
-    "verbal": "\"Spirits aid me, I abjure thee to staunch these wounds \"",
+    "verbal": "Spirits aid me, I abjure thee to staunch these wounds ",
     "gesture": "Touch target with both empty hands",
     "duration": "Instant",
     "range": "Touch",
@@ -754,7 +716,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of zombie, thou art mine to command!\"",
+    "verbal": "Spirit of zombie, thou art mine to command!",
     "gesture": "Point at Zombie",
     "duration": "30 minutes",
     "range": "10'",
@@ -767,7 +729,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit in adversity, answer me these questions three!\"",
+    "verbal": "Spirit in adversity, answer me these questions three!",
     "duration": "3 questions / 5 minutes",
     "range": "20'",
     "level": "3rd"
@@ -775,11 +737,11 @@
   {
     "power": 3,
     "name": "Dismiss Ghoul",
-    "description": "Dismiss one level-3 undead (e.g., Ghoul) by forcing it back to a barrier and completing the dismissal phrase at ~9' distance.",
+    "description": "Dismiss one level-3 undead (e.g., Ghoul) by forcing it back to a barrier and completing the dismissal phrase at 9' distance.",
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of ghoul, I dismiss thee hence!\"",
+    "verbal": "Spirit of ghoul, I dismiss thee hence!",
     "gesture": "Open palm towards target",
     "duration": "Until ghoul is dismissed",
     "range": "10'",
@@ -792,7 +754,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of mummy, I dismiss thee hence!\"",
+    "verbal": "Spirit of mummy, I dismiss thee hence!",
     "gesture": "Open palm presented to target",
     "duration": "Until completed",
     "range": "20'",
@@ -806,17 +768,10 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [
-        [
-          36,
-          36
-        ]
-      ],
-      "type": [
-        "Missile"
-      ]
+      "amount": [[36, 36]],
+      "type": ["Missile"]
     },
-    "verbal": "\"Spirits, staunch these mortal wounds and let this person be healed!\"",
+    "verbal": "Spirits, staunch these mortal wounds and let this person be healed!",
     "gesture": "Touch head with both hands",
     "duration": "Instant",
     "range": "Touch",
@@ -829,7 +784,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of power, I bind thee to this shape I now inscribe. Protect me from all who seek to enter! \"",
+    "verbal": "Spirit of power, I bind thee to this shape I now inscribe. Protect me from all who seek to enter! ",
     "gesture": "Draw shape and inscribe runes",
     "duration": "25 minutes",
     "range": "As drawn",
@@ -842,7 +797,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit! I command thee be free!\"",
+    "verbal": "Spirit! I command thee be free!",
     "gesture": "Point at target",
     "duration": "Instant",
     "range": "20'",
@@ -855,7 +810,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit! By the power of my voice I command thee .....\"",
+    "verbal": "Spirit! By the power of my voice I command thee .....",
     "gesture": "Point at target",
     "duration": "Permanent",
     "range": "20'",
@@ -864,11 +819,11 @@
   {
     "power": 5,
     "name": "Dismiss Wraith",
-    "description": "Dismiss one level-5 undead (e.g., Wraith); when dismissal begins it cannot walk through walls; complete at ~9' with the release phrase.",
+    "description": "Dismiss one level-5 undead (e.g., Wraith); when dismissal begins it cannot walk through walls; complete at 9' with the release phrase.",
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of wraith, I dismiss thee hence ..............!\"",
+    "verbal": "Spirit of wraith, I dismiss thee hence ..............!",
     "gesture": "Open palm presented to undead",
     "duration": "Until completed",
     "range": "20'",
@@ -881,7 +836,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirits of light banish away all fear and paralysis!\"",
+    "verbal": "Spirits of light banish away all fear and paralysis!",
     "gesture": "Touch recipient's forehead",
     "duration": "5 Minutes",
     "range": "Touch",
@@ -894,7 +849,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of wraith, thou art mine to command!\"",
+    "verbal": "Spirit of wraith, thou art mine to command!",
     "gesture": "Point at undead",
     "duration": "5 minutes / 30 minutes",
     "range": "20'",
@@ -907,7 +862,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"All seeing all-knowing spirits! You whose powers are great! Give me the answers to these three questions I\nnow ask!\"",
+    "verbal": "All seeing all-knowing spirits! You whose powers are great! Give me the answers to these three questions I\nnow ask!",
     "gesture": "Touch temples with hands",
     "duration": "3 questions within 5 minutes",
     "level": "8th"
@@ -920,17 +875,10 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          60,
-          0
-        ]
-      ],
-      "type": [
-        "Body"
-      ]
+      "amount": [[60, 0]],
+      "type": ["Body"]
     },
-    "verbal": "\"Great spirits, whose powers are mighty! I bind thee by the rune I now inscribe! Protect all within its\nboundaries from all who seek to gain entrance!\"",
+    "verbal": "Great spirits, whose powers are mighty! I bind thee by the rune I now inscribe! Protect all within its\nboundaries from all who seek to gain entrance!",
     "gesture": "Draw required shape and inscribe runes",
     "duration": "50 minutes",
     "level": "8th"
@@ -943,24 +891,12 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          4,
-          4
-        ]
-      ],
-      "type": [
-        "Missile"
-      ],
-      "ArmourApplies": [
-        [
-          1,
-          1
-        ]
-      ],
+      "amount": [[4, 4]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
       "ArmourType": "SAC"
     },
-    "verbal": "\"Spirit of Evil I call upon thee to inflict this minor wound\"",
+    "verbal": "Spirit of Evil I call upon thee to inflict this minor wound",
     "gesture": "Touch target with open hand",
     "duration": "Instant",
     "range": "Touch",
@@ -974,24 +910,12 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          6,
-          6
-        ]
-      ],
-      "type": [
-        "Missile"
-      ],
-      "ArmourApplies": [
-        [
-          1,
-          1
-        ]
-      ],
+      "amount": [[6, 6]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
       "ArmourType": "SAC"
     },
-    "verbal": "\"Spirit of evil I call upon thee to inflict this wound\"",
+    "verbal": "Spirit of evil I call upon thee to inflict this wound",
     "gesture": "Touch target with open hand",
     "duration": "Instant",
     "range": "Touch",
@@ -1005,24 +929,12 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          12,
-          12
-        ]
-      ],
-      "type": [
-        "Missile"
-      ],
-      "ArmourApplies": [
-        [
-          1,
-          1
-        ]
-      ],
+      "amount": [[12, 12]],
+      "type": ["Missile"],
+      "ArmourApplies": [[1, 1]],
       "ArmourType": "SAC"
     },
-    "verbal": "\"Spirits of evil, I call upon thee to inflict these wounds!\"",
+    "verbal": "Spirits of evil, I call upon thee to inflict these wounds!",
     "gesture": "Touch target with both hands",
     "duration": "Instant",
     "range": "Touch",
@@ -1035,7 +947,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"By the power of my spirits, I curse you!\" or \"May my evil spirits' spite, aid thy might\"",
+    "verbal": "By the power of my spirits, I curse you! or May my evil spirits' spite, aid thy might",
     "gesture": "Point at target",
     "duration": "24 hours / 1 hour",
     "range": "20'",
@@ -1048,7 +960,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit at my command I bind thee into this body as a skeleton to do my will\"",
+    "verbal": "Spirit at my command I bind thee into this body as a skeleton to do my will",
     "gesture": "Pass hands over body ending in upward motion",
     "duration": "Permanent until destroyed",
     "range": "15'",
@@ -1074,7 +986,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit, behold thy nemesis and be afraid!\"",
+    "verbal": "Spirit, behold thy nemesis and be afraid!",
     "gesture": "Point at target",
     "duration": "5 minutes",
     "range": "20'",
@@ -1087,7 +999,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit I am the embodiment of all you revere!\"",
+    "verbal": "Spirit I am the embodiment of all you revere!",
     "gesture": "Pass hands in front of target's face",
     "duration": "5 minutes",
     "range": "20'",
@@ -1100,7 +1012,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit at my command I bind thee into this body as a ghoul to do my will\"",
+    "verbal": "Spirit at my command I bind thee into this body as a ghoul to do my will",
     "gesture": "Pass both hands above body ending in\nupward motion",
     "duration": "Permanent until destroyed",
     "range": "10'",
@@ -1113,7 +1025,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirits at my command I bind you into this body as a mummy to do my will!\"",
+    "verbal": "Spirits at my command I bind you into this body as a mummy to do my will!",
     "gesture": "Point at body with both hands",
     "duration": "Permanent until destroyed",
     "range": "20'",
@@ -1127,21 +1039,9 @@
     "sphere": "Causing",
     "isAdvanced": false,
     "Damage": {
-      "amount": [
-        [
-          36,
-          6
-        ]
-      ],
-      "type": [
-        "Missile"
-      ],
-      "ArmourApplies": [
-        [
-          6,
-          1
-        ]
-      ],
+      "amount": [[36, 6]],
+      "type": ["Missile"],
+      "ArmourApplies": [[6, 1]],
       "ArmourType": "SAC"
     },
     "verbal": "“Spirits of evil I call upon thee to inflict these mortal wounds and let this person die”",
@@ -1157,7 +1057,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit of vampire, I dismiss thee hence!\"",
+    "verbal": "Spirit of vampire, I dismiss thee hence!",
     "gesture": "Open palm towards undead",
     "duration": "Until completed",
     "range": "20'",
@@ -1170,7 +1070,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirits of light, hear me! I abjure thee by the power of rune lore! By the power vested in me succour this\nunfortunate spirit! Help me to drive the evil from this person! Evil spirit there is no place for thee here! By my\npower and the power of these spirits I now summon, you are cast out! Evil spirit begone!\"",
+    "verbal": "Spirits of light, hear me! I abjure thee by the power of rune lore! By the power vested in me succour this\nunfortunate spirit! Help me to drive the evil from this person! Evil spirit there is no place for thee here! By my\npower and the power of these spirits I now summon, you are cast out! Evil spirit begone!",
     "gesture": "Touch target's head with both hands",
     "duration": "Instant",
     "level": "6 Spirits Alignment: Good Sphere: Universal Range: Touch"
@@ -1182,7 +1082,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirits of light, bestow thy powers on this severed stump! Let bones grow and sinews strengthen!\"",
+    "verbal": "Spirits of light, bestow thy powers on this severed stump! Let bones grow and sinews strengthen!",
     "gesture": "Touch location",
     "duration": "5 minutes",
     "range": "Touch",
@@ -1195,7 +1095,7 @@
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirits, reveal to me the truth!\"",
+    "verbal": "Spirits, reveal to me the truth!",
     "gesture": "Both hands raised in supplication",
     "duration": "30 minutes",
     "range": "Self",
@@ -1209,17 +1109,10 @@
     "sphere": "Universal",
     "isAdvanced": false,
     "Heal": {
-      "amount": [
-        [
-          72,
-          72
-        ]
-      ],
-      "type": [
-        "Worst"
-      ]
+      "amount": [[72, 72]],
+      "type": ["Worst"]
     },
-    "verbal": "\"By the power of the spirits of light, I bid that thy life shall be as new ...\"",
+    "verbal": "By the power of the spirits of light, I bid that thy life shall be as new ...",
     "gesture": "Touch target's head with both hands",
     "duration": "Instant",
     "range": "Touch",
@@ -1228,11 +1121,11 @@
   {
     "power": 10,
     "name": "Restore Life",
-    "description": "This miracle allows a recently dead (up to 2 weeks of real time) character or monster to be brought back to life. The priest is drained of a level if this miracle is used successfully – immunity to level drain and similar abilities do not apply to this loss, as the miracle is cast voluntarily. The body should be placed in a circle of Protection from Spirits (evil) with a lit candle (or safe phys rep candle) at each shoulder and at each foot. If the miracle is successful, the person restored to life has 7 total body life points and 1 location life point at each location (even if they had suffered unhealable wounds that would prevent this). A monster, if resurrected, has 2 hits. If for any reason this miracle fails to work, then the priest still loses 10 spirits and 10 life points. If the person remains at rest within the general area (20ft) of where they were restored to life do not cast/engage in combat they will be completely healed 5 minutes later. Note there is no longer a \"disease\" effect associated with a restore life. If a character has died from Level Drain then they are returned at",
+    "description": "This miracle allows a recently dead (up to 2 weeks of real time) character or monster to be brought back to life. The priest is drained of a level if this miracle is used successfully – immunity to level drain and similar abilities do not apply to this loss, as the miracle is cast voluntarily. The body should be placed in a circle of Protection from Spirits (evil) with a lit candle (or safe phys rep candle) at each shoulder and at each foot. If the miracle is successful, the person restored to life has 7 total body life points and 1 location life point at each location (even if they had suffered unhealable wounds that would prevent this). A monster, if resurrected, has 2 hits. If for any reason this miracle fails to work, then the priest still loses 10 spirits and 10 life points. If the person remains at rest within the general area (20ft) of where they were restored to life do not cast/engage in combat they will be completely healed 5 minutes later. Note there is no longer a disease effect associated with a restore life. If a character has died from Level Drain then they are returned at",
     "alignment": "Good",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "“Spirits of Light hearken unto me” This is then followed by a 5 minute ritual invoking the spirits to return\nthe person to life which must conclude with the following:\n\"Spirits of Darkness, fly from this place! There is no succour for thee here! By my powers and the powers of light, I\ncall upon the spirit of ...... to return to this place! Your time is not yet come! Come and be reunited with your body\nlying here! Return to the land of the living!\"",
+    "verbal": "“Spirits of Light hearken unto me” This is then followed by a 5 minute ritual invoking the spirits to return\nthe person to life which must conclude with the following:\nSpirits of Darkness, fly from this place! There is no succour for thee here! By my powers and the powers of light, I\ncall upon the spirit of ...... to return to this place! Your time is not yet come! Come and be reunited with your body\nlying here! Return to the land of the living!",
     "gesture": "Pass hands over body in gather motion, ending in upward sweep",
     "duration": "Instant",
     "level": "8th"
@@ -1244,7 +1137,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit go hence and relate what is there\"",
+    "verbal": "Spirit go hence and relate what is there",
     "gesture": "Point in desired direction",
     "duration": "Instant",
     "range": "20'",
@@ -1257,7 +1150,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Stand by my power thou art held!\"",
+    "verbal": "Stand by my power thou art held!",
     "gesture": "Open palm towards target",
     "duration": "20 seconds",
     "range": "10'",
@@ -1283,7 +1176,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "Spirit of mummy, thou art mine to command!\"",
+    "verbal": "Spirit of mummy, thou art mine to command!",
     "gesture": "Point at target",
     "duration": "10 minutes",
     "range": "20'",
@@ -1296,7 +1189,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirits hide my spirit from the sight of my foes\"",
+    "verbal": "Spirits hide my spirit from the sight of my foes",
     "gesture": "Touch head with both hands",
     "duration": "5 minutes",
     "range": "Self",
@@ -1309,7 +1202,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirit at my command I bind thee into this body as a zombie to do my will \" (for one zombie) or \"Spirits at\nmy command I bind ye into these bodies as zombies to do my will\"",
+    "verbal": "Spirit at my command I bind thee into this body as a zombie to do my will  (for one zombie) or Spirits at\nmy command I bind ye into these bodies as zombies to do my will",
     "gesture": "Pass hands over body ending with upwards\nmotion",
     "duration": "Permanent until destroyed",
     "range": "10'",
@@ -1318,11 +1211,11 @@
   {
     "power": 2,
     "name": "Temporary Curse",
-    "description": "This miracle enables a priest to curse a person for a limited period of time. The effect of this miracle is to spiritually slow the victim's reactions to the extent that the victim loses 2 points of dexterity AC, to a minimum of 0. If this miracle is cast on a monster then it reduces the monster's AC by 2 points alternatively if the monster is not set with AC it decreases the monsters remaining hits by four. The minimum hits a monster can be left with after being cursed is one, as clearly the miracle cannot kill but merely increase the amount of damage the victim receives during combat. This miracle is also known as 'Damn'. Alternatively, the miracle can be cast upon a target of Evil alignment beneficially, instead granting them 2 Dexterity AC in a manner similar to Temporary Bless. However in this case the miracle lasts only 5 minutes. Objects may also be cursed, and this functions as detailed under Temporary Bless. All priests of any alignment are able to cast a miracle of equivalent effect to Damn, as a final dying Damn, as long as they have at least 2 spirits remaining. The priest need not have this miracle on his guild miracle list though he must be at least second level. The dying priest always has enough time to utter the incantation before he expires providing he says it at the instant of death. The verbal for this curse is \"With my dying breath I damn thee\". This miracle if cast as a dying damn, is not removed by the involuntary Remove Own Miracle cast during the death trauma. The priest is deemed to spend the agony of his death trauma willing retribution on his slayer. This miracle cancels the effect of a Temporary Bless, though it has no effect on a full Bless.",
+    "description": "This miracle enables a priest to curse a person for a limited period of time. The effect of this miracle is to spiritually slow the victim's reactions to the extent that the victim loses 2 points of dexterity AC, to a minimum of 0. If this miracle is cast on a monster then it reduces the monster's AC by 2 points alternatively if the monster is not set with AC it decreases the monsters remaining hits by four. The minimum hits a monster can be left with after being cursed is one, as clearly the miracle cannot kill but merely increase the amount of damage the victim receives during combat. This miracle is also known as 'Damn'. Alternatively, the miracle can be cast upon a target of Evil alignment beneficially, instead granting them 2 Dexterity AC in a manner similar to Temporary Bless. However in this case the miracle lasts only 5 minutes. Objects may also be cursed, and this functions as detailed under Temporary Bless. All priests of any alignment are able to cast a miracle of equivalent effect to Damn, as a final dying Damn, as long as they have at least 2 spirits remaining. The priest need not have this miracle on his guild miracle list though he must be at least second level. The dying priest always has enough time to utter the incantation before he expires providing he says it at the instant of death. The verbal for this curse is With my dying breath I damn thee. This miracle if cast as a dying damn, is not removed by the involuntary Remove Own Miracle cast during the death trauma. The priest is deemed to spend the agony of his death trauma willing retribution on his slayer. This miracle cancels the effect of a Temporary Bless, though it has no effect on a full Bless.",
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"By the power of my spirits, I damn thee!\" or “May my evil spirits aid thee”",
+    "verbal": "By the power of my spirits, I damn thee! or “May my evil spirits aid thee”",
     "gesture": "Point at target",
     "duration": "1 hour / 5 minutes",
     "range": "10'",
@@ -1335,7 +1228,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"By my spirits, let truth and falsehood be overturned! \"",
+    "verbal": "By my spirits, let truth and falsehood be overturned! ",
     "gesture": "Touch lips of recipient",
     "duration": "15 minutes",
     "range": "Touch",
@@ -1348,7 +1241,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"By all the powers of darkness spirit of evil, I summon thee forth! By the shades of the netherworld, wraith I\nname thee! Come forth from the land of spirits. By my powers I summon thee here! Behold! By the power of my\nspirits thou art summoned here! Come forth!\"",
+    "verbal": "By all the powers of darkness spirit of evil, I summon thee forth! By the shades of the netherworld, wraith I\nname thee! Come forth from the land of spirits. By my powers I summon thee here! Behold! By the power of my\nspirits thou art summoned here! Come forth!",
     "gesture": "Hands raised in supplication",
     "duration": "30 minutes",
     "range": "-",
@@ -1361,7 +1254,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"By the power of my spirits I command that thy life shall stop!\"",
+    "verbal": "By the power of my spirits I command that thy life shall stop!",
     "gesture": "Hands raised in appeal, touch victim",
     "duration": "Permanent",
     "level": "7th"
@@ -1369,7 +1262,7 @@
   {
     "power": 10,
     "name": "Touch of Death",
-    "description": "Once the priest has finished incanting the verbal, he has 30 seconds in which to touch the victim of the miracle with the open palms of both hands. If he does so, then the victim falls unconscious. This is a listed stopping effect. The victim is not dead and has a very faint pulse (only discern nature of wounds or similar will tell that the character is still alive). If he receives 5 points of spiritual curing to every location he can regain consciousness. This miracle just renders its victim unconscious, it does not do any damage. This miracle does not affect the undead. Differences/Additional rules: if used successfully the victim is instantly killed. A character (or monster) killed by this miracle cannot benefit from a Restore Life miracle, or be restored to life in any way. This DOES NOT apply should the victim have had resistances acquired post-8th to the Touch, so that they only suffer damage rather than dying outright – if this damage slays them then the death is not permanent. The priest must be standing in a Protection from Spirits (good) miracle whilst casting the miracle. After shouting the incantation the priest has 30 seconds to touch his victim with both hands, if he fails to do so, the miracle fails. If the victim has no resistance to the miracle, the priest has a 70% chance of this miracle working and an additional 10% chance for every time the victim has previously been killed. If the miracle works then the casting priest loses a level. If for any reason the miracle fails, then the priest still loses the standard 10 spirit and 10 life points, but not a level. Obviously if someone has died three times already and has no Resistance to the miracle then they automatically die. In addition if the victim lives through the miracle as a result of a successful dice roll he suffers the effects of the Suspend Life miracle instead, to which no further resistance may be applied. This miracle does not affect the undead. Information Concerning the Undead The term undead generally refers to creatures that have passed the stage of death and are somehow held in a state of continued existence, almost always by evil spiritual power. Physical undead use the corpse of a dead creature to hold the spirit, and the spirit moves the body even as it rots slowly away. Incorporeal undead are just spirits, called from the netherworld where they reside to the prime plane. There are many, many different sorts of undead, ranging from simple unintelligent spirits which can only follow basic commands right through to spirits which are at least as clever as the humans who may summon them, and can be truly powerful. Only seven sorts of undead are universally known of, and these are listed below – other sorts are less common and their natures may vary widely. Full undead all see with spirit sight, whether they also have physical eyesight as well or not. Their spirit sight is 'active', and allows them to see all spirits within the range of normal sight, as well as recognising alignment and seeing even through solid physical barriers to see spirits behind them. Fresher physical undead, or well-preserved ones, may also have physical eyes – without these, they will not be able to see creatures like elves or priests who have hidden their spirits. Even undead who have no means of transportation other than physical movement can be ordered to return to their own plane by a controlling priest, in which case their spirit immediately does so, leaving behind the body they may have had possession of. Zombie A zombie is a mindless, unintelligent undead. It can be animated from the body of a recently dead humanoid, man- sized creature. A body can generally be animated as a zombie up to 1 lunar month (28 days) after the original death of the body. A zombie can only inflict damage of Single with one handed weapons, or Double with a two handed weapon. Zombies move very slowly, generally described as 'half-speed', meaning that a competent and agile warrior should have little trouble besting one in combat. They have a dismiss level of 1. If a zombie moves more than 18' (6 paces) away from its point of animation it collapses lifeless, never to move again. Skeleton A skeleton is also an unintelligent undead. It can be animated from a well decayed body of a dead humanoid creature of man-size. It can wield weapons in the same way as zombies, albeit faster. Their resistance to sharp weapons and their ability to move at full speed makes them relatively dangerous opponents. They have a dismiss level of 2. If a skeleton moves more than 18' (6 paces) away from its point of animation it collapses lifeless, never to move again. Ghoul A ghoul is a semi-intelligent undead. It can be created from the body of a recently dead humanoid, man-sized creature. A body can be used in the creation of ghoul up to 2 weeks (14 days) after the original death of the body. They have an animal-like cunning, and an ability to think that parallels the most intelligent of wild beasts. They will sometimes hunt in packs, and often drag helpless victims off for later feeding. A ghoul cannot be created in daylight and when created, will never venture out into daylight. Unlike zombies, skeletons and mummies, ghouls eat flesh where possible. A ghoul eats dead humanoids and prefers to eat 1 man-sized body per week to survive. A ghoul will only venture from its place of creation if it is:  Controlled  Feeding  If its place of creation is outdoors A ghoul can paralyse its victims by merely striking them, the results in them being unable to move for 5 minutes. In addition its unarmed blows do Single. The paralysis is a spiritual effect. If a ghoul is able to feed regularly its body remains in relatively good repair, and they maintain their physical eyesight indefinitely. Ghouls have a dismiss level of 3. Mummy A mummy is a semi-intelligent undead. It can be created from a specially prepared body provided it is humanoid and man-sized. The embalming process generally means that mummies keep their physical eye-sight indefinitely. The special preparations are that the body must be embalmed, within 7 days of its death, in special embalming bandages and then a Cause Disease miracle must be cast upon the body some time before the Create Mummy miracle is to be cast. If Cause Disease is not cast upon the body then the mummy will not cause disease with touch. A mummy is not restricted to its point of creation and may venture into daylight. It inflicts 9 point Double with its hands only and its touch inflicts disease on its victim as per the miracle. It has a dismiss level of 4. Wraith A wraith is an intelligent purely spiritual undead. It can be summoned anywhere as long as it is not in bright light or daylight, which it will not willingly enter. A wraith does not cause damage but is able to drain levels by touch. Once summoned a wraith will not return to its plane unless:  It is dismissed  It is slain (it takes 8 spirit hits to destroy a wraith)  It has drained 6 levels  It has been controlled and ordered to return to its plane.  The miracle's duration expires, A wraith can also walk through walls and cause fear by touch, at will. When leaving a wall it suffers a two second disorientation period during which it cannot move and is invulnerable to damage, but can be targeted by non- damaging effects. A wraith cannot attack whilst any part of it is in a wall. The fear induced by a wraith causes the victim to run away from that wraith if that wraith can be seen, and is generally as per the Cause Fear miracle. Wight A wight is also an intelligent purely spiritual creature, except that its presence chills the spirit. Its touch freezes victims still for 5 minutes, alternatively it may inflict purely spiritual single by unarmed combat. It can \"plane shift\" between locations when reappearing it suffers a two second disorientation period during which it cannot move and cannot suffer damage (but could be effect by spiritual effects that do not damage it). Once summoned a wight will not return to its own plane unless:  It is dismissed  It is slain.  It has been controlled and ordered to depart.  The miracles duration expires. It takes 10 spirit hits to destroy a wight. Wraiths and wights are only vulnerable to spirits. They cannot perceive or effect magical creatures such as elves, elementals etc. They cannot pick up or carry anything. Vampire A vampire is an undead of almost genius intelligence. Their statistics can vary, but those summoned by the Summon Vampire miracle have the following stats: 25 Hits, and considered to have",
+    "description": "Once the priest has finished incanting the verbal, he has 30 seconds in which to touch the victim of the miracle with the open palms of both hands. If he does so, then the victim falls unconscious. This is a listed stopping effect. The victim is not dead and has a very faint pulse (only discern nature of wounds or similar will tell that the character is still alive). If he receives 5 points of spiritual curing to every location he can regain consciousness. This miracle just renders its victim unconscious, it does not do any damage. This miracle does not affect the undead. Differences/Additional rules: if used successfully the victim is instantly killed. A character (or monster) killed by this miracle cannot benefit from a Restore Life miracle, or be restored to life in any way. This DOES NOT apply should the victim have had resistances acquired post-8th to the Touch, so that they only suffer damage rather than dying outright – if this damage slays them then the death is not permanent. The priest must be standing in a Protection from Spirits (good) miracle whilst casting the miracle. After shouting the incantation the priest has 30 seconds to touch his victim with both hands, if he fails to do so, the miracle fails. If the victim has no resistance to the miracle, the priest has a 70% chance of this miracle working and an additional 10% chance for every time the victim has previously been killed. If the miracle works then the casting priest loses a level. If for any reason the miracle fails, then the priest still loses the standard 10 spirit and 10 life points, but not a level. Obviously if someone has died three times already and has no Resistance to the miracle then they automatically die. In addition if the victim lives through the miracle as a result of a successful dice roll he suffers the effects of the Suspend Life miracle instead, to which no further resistance may be applied. This miracle does not affect the undead. Information Concerning the Undead The term undead generally refers to creatures that have passed the stage of death and are somehow held in a state of continued existence, almost always by evil spiritual power. Physical undead use the corpse of a dead creature to hold the spirit, and the spirit moves the body even as it rots slowly away. Incorporeal undead are just spirits, called from the netherworld where they reside to the prime plane. There are many, many different sorts of undead, ranging from simple unintelligent spirits which can only follow basic commands right through to spirits which are at least as clever as the humans who may summon them, and can be truly powerful. Only seven sorts of undead are universally known of, and these are listed below – other sorts are less common and their natures may vary widely. Full undead all see with spirit sight, whether they also have physical eyesight as well or not. Their spirit sight is 'active', and allows them to see all spirits within the range of normal sight, as well as recognising alignment and seeing even through solid physical barriers to see spirits behind them. Fresher physical undead, or well-preserved ones, may also have physical eyes – without these, they will not be able to see creatures like elves or priests who have hidden their spirits. Even undead who have no means of transportation other than physical movement can be ordered to return to their own plane by a controlling priest, in which case their spirit immediately does so, leaving behind the body they may have had possession of. Zombie A zombie is a mindless, unintelligent undead. It can be animated from the body of a recently dead humanoid, man- sized creature. A body can generally be animated as a zombie up to 1 lunar month (28 days) after the original death of the body. A zombie can only inflict damage of Single with one handed weapons, or Double with a two handed weapon. Zombies move very slowly, generally described as 'half-speed', meaning that a competent and agile warrior should have little trouble besting one in combat. They have a dismiss level of 1. If a zombie moves more than 18' (6 paces) away from its point of animation it collapses lifeless, never to move again. Skeleton A skeleton is also an unintelligent undead. It can be animated from a well decayed body of a dead humanoid creature of man-size. It can wield weapons in the same way as zombies, albeit faster. Their resistance to sharp weapons and their ability to move at full speed makes them relatively dangerous opponents. They have a dismiss level of 2. If a skeleton moves more than 18' (6 paces) away from its point of animation it collapses lifeless, never to move again. Ghoul A ghoul is a semi-intelligent undead. It can be created from the body of a recently dead humanoid, man-sized creature. A body can be used in the creation of ghoul up to 2 weeks (14 days) after the original death of the body. They have an animal-like cunning, and an ability to think that parallels the most intelligent of wild beasts. They will sometimes hunt in packs, and often drag helpless victims off for later feeding. A ghoul cannot be created in daylight and when created, will never venture out into daylight. Unlike zombies, skeletons and mummies, ghouls eat flesh where possible. A ghoul eats dead humanoids and prefers to eat 1 man-sized body per week to survive. A ghoul will only venture from its place of creation if it is:  Controlled  Feeding  If its place of creation is outdoors A ghoul can paralyse its victims by merely striking them, the results in them being unable to move for 5 minutes. In addition its unarmed blows do Single. The paralysis is a spiritual effect. If a ghoul is able to feed regularly its body remains in relatively good repair, and they maintain their physical eyesight indefinitely. Ghouls have a dismiss level of 3. Mummy A mummy is a semi-intelligent undead. It can be created from a specially prepared body provided it is humanoid and man-sized. The embalming process generally means that mummies keep their physical eye-sight indefinitely. The special preparations are that the body must be embalmed, within 7 days of its death, in special embalming bandages and then a Cause Disease miracle must be cast upon the body some time before the Create Mummy miracle is to be cast. If Cause Disease is not cast upon the body then the mummy will not cause disease with touch. A mummy is not restricted to its point of creation and may venture into daylight. It inflicts 9 point Double with its hands only and its touch inflicts disease on its victim as per the miracle. It has a dismiss level of 4. Wraith A wraith is an intelligent purely spiritual undead. It can be summoned anywhere as long as it is not in bright light or daylight, which it will not willingly enter. A wraith does not cause damage but is able to drain levels by touch. Once summoned a wraith will not return to its plane unless:  It is dismissed  It is slain (it takes 8 spirit hits to destroy a wraith)  It has drained 6 levels  It has been controlled and ordered to return to its plane.  The miracle's duration expires, A wraith can also walk through walls and cause fear by touch, at will. When leaving a wall it suffers a two second disorientation period during which it cannot move and is invulnerable to damage, but can be targeted by non- damaging effects. A wraith cannot attack whilst any part of it is in a wall. The fear induced by a wraith causes the victim to run away from that wraith if that wraith can be seen, and is generally as per the Cause Fear miracle. Wight A wight is also an intelligent purely spiritual creature, except that its presence chills the spirit. Its touch freezes victims still for 5 minutes, alternatively it may inflict purely spiritual single by unarmed combat. It can plane shift between locations when reappearing it suffers a two second disorientation period during which it cannot move and cannot suffer damage (but could be effect by spiritual effects that do not damage it). Once summoned a wight will not return to its own plane unless:  It is dismissed  It is slain.  It has been controlled and ordered to depart.  The miracles duration expires. It takes 10 spirit hits to destroy a wight. Wraiths and wights are only vulnerable to spirits. They cannot perceive or effect magical creatures such as elves, elementals etc. They cannot pick up or carry anything. Vampire A vampire is an undead of almost genius intelligence. Their statistics can vary, but those summoned by the Summon Vampire miracle have the following stats: 25 Hits, and considered to have",
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
@@ -1410,7 +1303,7 @@
     "alignment": "Good",
     "sphere": "Major Warding",
     "isAdvanced": true,
-    "verbal": "\"By the blessing of [God], let this place be sanctified in his/her name!\"",
+    "verbal": "By the blessing of [God], let this place be sanctified in his/her name!",
     "gesture": "Inscribe line as below",
     "duration": "24 hours",
     "range": "One (closed) line",
@@ -1423,7 +1316,7 @@
     "alignment": "Evil",
     "sphere": "Major Warding",
     "isAdvanced": true,
-    "verbal": "\"By the blessing of [God], let this place be sanctified in his/her name!\"",
+    "verbal": "By the blessing of [God], let this place be sanctified in his/her name!",
     "gesture": "Inscribe line as below",
     "duration": "24 hours",
     "range": "One (closed) line",
@@ -1436,7 +1329,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": true,
-    "verbal": "\"Minion spirit I bind thee now to my protection. Find those spirits that art thy brothers and draw them to\nthee.\"",
+    "verbal": "Minion spirit I bind thee now to my protection. Find those spirits that art thy brothers and draw them to\nthee.",
     "gesture": "Draw hands across face",
     "duration": "1 Hour",
     "range": "Self",
@@ -1449,7 +1342,7 @@
     "alignment": "Evil",
     "sphere": "Rites",
     "isAdvanced": false,
-    "verbal": "\"Master! Witness this poor fool as he suffers in your name! Let me feel the ecstasy that is beyond agony!\"",
+    "verbal": "Master! Witness this poor fool as he suffers in your name! Let me feel the ecstasy that is beyond agony!",
     "gesture": "Beat fists against head",
     "duration": "15 minutes Range: Self\nFaith: Cult of Dunatis",
     "level": "5th"
@@ -1486,7 +1379,7 @@
     "alignment": "Evil",
     "sphere": "Minor Necromancy",
     "isAdvanced": true,
-    "verbal": "\"Spirit at my command I bind thee into this body as a greater zombie, to do as I will.\"",
+    "verbal": "Spirit at my command I bind thee into this body as a greater zombie, to do as I will.",
     "gesture": "Lift open hands upwards",
     "duration": "Permanent",
     "range": "10'",
@@ -1551,7 +1444,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true,
-    "verbal": "\"Spirits of power I bind thee to this weapon; let thy strength act against those spirits that oppose me.\"",
+    "verbal": "Spirits of power I bind thee to this weapon; let thy strength act against those spirits that oppose me.",
     "gesture": "Lay hands on weapon",
     "duration": "15 minutes",
     "level": "7th"
@@ -1563,7 +1456,7 @@
     "alignment": "Evil",
     "sphere": "Minor Necromancy",
     "isAdvanced": true,
-    "verbal": "\"Spirit of zombie I bind thee to my body, to do as I command!\"",
+    "verbal": "Spirit of zombie I bind thee to my body, to do as I command!",
     "gesture": "Both hands touch head",
     "duration": "5 minutes",
     "range": "Self",
@@ -1589,7 +1482,7 @@
     "alignment": "Good",
     "sphere": "Witchcraft",
     "isAdvanced": true,
-    "verbal": "\"Fortune favours thee for a while!\"",
+    "verbal": "Fortune favours thee for a while!",
     "gesture": "Touch target's forehead",
     "duration": "1 Hour",
     "range": "Touch",
@@ -1614,7 +1507,7 @@
     "alignment": "Good",
     "sphere": "Minor",
     "isAdvanced": true,
-    "verbal": "\"Spirits of light watch over this one and let not the touch of unlife reach him/her.\"",
+    "verbal": "Spirits of light watch over this one and let not the touch of unlife reach him/her.",
     "gesture": "Touch recipient's forehead",
     "duration": "Till Next Dawn",
     "range": "Touch",
@@ -1625,7 +1518,7 @@
     "name": "Heart of Iron",
     "description": "One nominated target within 20’ range suffers a Cause Serious Miracle targeted to their chest.\nShould the target also be an Outlaw, Ostracised by the Empire, or a clear enemy of the Empire then they also suffer a non-level based Halt.",
     "alignment": "Evil",
-    "sphere": "Minor",
+    "sphere": "Denominational",
     "isAdvanced": false,
     "verbal": "The willing dark spirits of the Empire strike thee…Heart of Iron",
     "gesture": "Point at Target",
@@ -1676,7 +1569,7 @@
     "alignment": "Good",
     "sphere": "Denominational",
     "isAdvanced": false,
-    "verbal": "\"Border bless this spirit and watch over him/her in their darkest times\"",
+    "verbal": "Border bless this spirit and watch over him/her in their darkest times",
     "gesture": "Touch targets head",
     "duration": "24 hours Range: Touch\nFaith: Border",
     "level": "3rd"
@@ -1708,7 +1601,7 @@
   {
     "power": 8,
     "name": "Bound Lesser Wings of Darkness",
-    "description": "Allows the cast to cast lesser wings of darkness at will for 1 tblp with full verbal, to a maximum of 1 casting per 10 seconds for the duration of the miracle. If the caster receives any goodly spiritual healing while this miracle is active then the miracle fades. The spirits for this cannot be regained while it is active. This is a releasable miracle and can be cast by the undead.  \fWither Level: 7th (8sp) Alignment: Evil Duration: 5 minutes Sphere: Major Necromancy or Major Causing Range: Touch Gesture: Touch limb Verbal: “Spirits of evil I bid thee touch this one's limb with the weight of the world” Description: Causes the touched limb (not critical location) to wither and become unusable. Immunity to wither applies, and this can be countered by a regeneration miracle. This miracle does not affect the undead, and is a releasable miracle.",
+    "description": "Allows the cast to cast lesser wings of darkness at will for 1 tblp with full verbal, to a maximum of 1 casting per 10 seconds for the duration of the miracle. If the caster receives any goodly spiritual healing while this miracle is active then the miracle fades. The spirits for this cannot be regained while it is active. This is a releasable miracle and can be cast by the undead.",
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true,
@@ -1736,7 +1629,7 @@
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false,
-    "verbal": "\"With my dying breath I turn thy sting, that my death not be in vain.\"",
+    "verbal": "With my dying breath I turn thy sting, that my death not be in vain.",
     "gesture": "None",
     "duration": "One Year Range: 20'\nFaith: Sacred Heart",
     "level": "3rd"
@@ -1787,21 +1680,9 @@
     "sphere": "Major Causing",
     "isAdvanced": true,
     "Damage": {
-      "amount": [
-        [
-          60,
-          10
-        ]
-      ],
-      "type": [
-        "Blast"
-      ],
-      "ArmourApplies": [
-        [
-          6,
-          1
-        ]
-      ],
+      "amount": [[60, 10]],
+      "type": ["Blast"],
+      "ArmourApplies": [[6, 1]],
       "ArmourType": "SAC"
     },
     "verbal": "“Spirits of evil I call upon thee to inflict these critical wounds, such that this spirit may suffer great torment\nand depart its mortal form...!”",
@@ -1815,27 +1696,13 @@
     "name": "Cause Mortal Wounds",
     "description": "Must be table 11 to learn. inflicts 120/20 life (40 hits).",
     "alignment": "Evil",
-    "preReqs": [
-      "Cause Critical Wounds"
-    ],
+    "preReqs": ["Cause Critical Wounds"],
     "sphere": "Major Causing",
     "isAdvanced": true,
     "Damage": {
-      "amount": [
-        [
-          120,
-          20
-        ]
-      ],
-      "type": [
-        "Missile"
-      ],
-      "ArmourApplies": [
-        [
-          6,
-          1
-        ]
-      ],
+      "amount": [[120, 20]],
+      "type": ["Missile"],
+      "ArmourApplies": [[6, 1]],
       "ArmourType": "SAC"
     },
     "verbal": "“Spirits of Evil I call upon thee to inflict these Mortal wounds so the spirit may suffer and break. Let its life\nbe extinguished by my touch.”",
@@ -1850,9 +1717,10 @@
     "alignment": "Evil",
     "sphere": "Rites",
     "isAdvanced": false,
-    "verbal": "\"Mighty Imbaiu masters, lend me your talons that I too may rend the souls of the unwary!\"",
+    "verbal": "Mighty Imbaiu masters, lend me your talons that I too may rend the souls of the unwary!",
     "gesture": "Make claws of hands",
-    "duration": "15 minutes Range: Self\nFaith: Tryst",
+    "duration": "15 minutes",
+    "Range": "Self",
     "level": "7th"
   },
   {
@@ -1862,7 +1730,7 @@
     "alignment": "Evil",
     "sphere": "Major Dominion",
     "isAdvanced": true,
-    "verbal": "\"Spirits of Darkness I draw thee here! Let all before me know my power!\"",
+    "verbal": "Spirits of Darkness I draw thee here! Let all before me know my power!",
     "gesture": "Hug Self",
     "duration": "5 minutes",
     "level": "7th"
@@ -1886,7 +1754,7 @@
     "alignment": "Good",
     "sphere": "Denominational",
     "isAdvanced": false,
-    "verbal": "\"The Bright Lady cares for you, and her angels shield you from misery and suffering.\"",
+    "verbal": "The Bright Lady cares for you, and her angels shield you from misery and suffering.",
     "gesture": "Touch target lightly over the heart",
     "duration": "15 minutes Range: Touch\nFaith: Bright Lady",
     "level": "5th"
@@ -1908,10 +1776,7 @@
     "name": "Communication with the Gods",
     "description": "Ask three yes/no questions of knowledgeable spirits within five minutes; silence if unknown. but answers are short phrases/sentences (≈7 relevant words); three questions in five minutes. but no limit to the number of questions asked and the spirits may respond to an individual question with more than just seven words. Questions must be asked in a measured and respectful manner, or no response will be gained. The caster may choose to have all questions be only regarding one specific area, in which case the divination lasts 5 minutes, or simply answering any questions they desire, in which case the duration is only two minutes but the miracle becomes far more versatile.",
     "alignment": "Neutral",
-    "preReqs": [
-      "Communication",
-      "Greater Communication"
-    ],
+    "preReqs": ["Communication", "Greater Communication"],
     "sphere": "Major Communication",
     "isAdvanced": true,
     "verbal": "“All Seeing All K\nnowing Spirits, guardians of the unknown, knowers of knowledge, keepers of secrets, you whose vision and hearing\nare mighty grant me thy wisdom and understanding. Listen to me and converse for I have need of thy insight.”",
@@ -1940,12 +1805,7 @@
     "sphere": "Minor Healing",
     "isAdvanced": true,
     "Heal": {
-      "amount": [
-        [
-          60,
-          60
-        ]
-      ]
+      "amount": [[60, 60]]
     },
     "verbal": "“I call upon the spirits of light to staunch these mortal wounds and reforge this shattered body... Cure\nCritical Wounds!”",
     "gesture": "Palms on target head",
@@ -1982,7 +1842,7 @@
   {
     "power": 6,
     "name": "Curse Of Pain",
-    "description": "Any damage suffered by the target is increased by 25% before armour and other damage reductions. For monsters reduce their hits by 1/4 for the duration. The 25% increase in damage is unlike cold rage or berserk rage abilities in that rages are deducted after all armour calculations, whereas this curse is before all armour calculations. The effect of multiple castings of this miracle is not cumulative and is removed by a single bless. This miracle does not affect the undead.  \fCurse Of Death Level: 6sp Alignment: Evil Duration: Until blessed or 15 mins Sphere: Witchcraft Range: 20' Gesture: Point at target Verbal: “By my evil spirits I curse thee to die!” Description: As Voice of Power with the command of \"Die!\" but affects up to and including levels of resistance equal to the caster's level, and is only removed by the death of the caster, the Remove Voice of Power miracle, or by a Bless or the duration expires. This miracle does not affect the undead.",
+    "description": "Any damage suffered by the target is increased by 25% before armour and other damage reductions. For monsters reduce their hits by 1/4 for the duration. The 25% increase in damage is unlike cold rage or berserk rage abilities in that rages are deducted after all armour calculations, whereas this curse is before all armour calculations. The effect of multiple castings of this miracle is not cumulative and is removed by a single bless. This miracle does not affect the undead.",
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true,
@@ -1995,7 +1855,7 @@
   {
     "power": 10,
     "name": "Curse Of Unhealing",
-    "description": "This miracle is only removed by a bless from a Witch, Hospitaller or Paladin or 2 blesses from a normal 8th level goodly priest and causes spiritual healing rates for the afflicted character to be greatly reduced as follows: Cure Wound Cures 3/3 Cure Serious Cures 6/6 Cure Disease Slows to 1/2 rate Heal Cures 18/18 Cure Critical Cures 24/4 to locs Total Heal Cures 36/36 If the character has a reduced effect from curing for any other reason this applies after the modifier listed above and is an extension of that listed above. If a character receives an increased benefit from curing abilities this is negated whilst the miracle is active upon him, in addition to the modifiers listed above! All other healing miracles only heal 1/2 of what they would normally cure. Other sources of healing work at normal rate including Empathic Healing. An 8th level Witch who possesses this miracle may elect to use it as their dying curse in which case it may only be removed by an 8th level goodly Witch and until that point is permanent in duration. If used as a dying curse suffix the verbal with \"...Forever!\". Should the Witch spend 25 points on Table 7 the dying curse will then need 3 different goodly witches to each cast a Bless before it is removed.",
+    "description": "This miracle is only removed by a bless from a Witch, Hospitaller or Paladin or 2 blesses from a normal 8th level goodly priest and causes spiritual healing rates for the afflicted character to be greatly reduced as follows: Cure Wound Cures 3/3 Cure Serious Cures 6/6 Cure Disease Slows to 1/2 rate Heal Cures 18/18 Cure Critical Cures 24/4 to locs Total Heal Cures 36/36 If the character has a reduced effect from curing for any other reason this applies after the modifier listed above and is an extension of that listed above. If a character receives an increased benefit from curing abilities this is negated whilst the miracle is active upon him, in addition to the modifiers listed above! All other healing miracles only heal 1/2 of what they would normally cure. Other sources of healing work at normal rate including Empathic Healing. An 8th level Witch who possesses this miracle may elect to use it as their dying curse in which case it may only be removed by an 8th level goodly Witch and until that point is permanent in duration. If used as a dying curse suffix the verbal with ...Forever!. Should the Witch spend 25 points on Table 7 the dying curse will then need 3 different goodly witches to each cast a Bless before it is removed.",
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true,
@@ -2008,7 +1868,7 @@
   {
     "power": 10,
     "name": "Curse Of Unliving",
-    "description": "This miracle reduces the restore life percentage of the victim by 10% permanently, if the target is not immune to curses. This lost percentage can only be regained if the character is blessed by a good witch. An 8th level Witch who possesses this miracle may elect to use it as her dying curse in which case it may only be removed by an 8th level goodly Witch and until that point is permanent in duration. If used as a dying curse suffix the verbal with \"...Forever!\". Should the Witch spend 25 points on Table 7 the dying curse will then need 3 different goodly witches to each cast a Bless before it is removed. This miracle does not stack with itself. i.e. a victim may never be suffering more than 10% restore life chance loss from it at any given time. This miracle does not affect the undead.",
+    "description": "This miracle reduces the restore life percentage of the victim by 10% permanently, if the target is not immune to curses. This lost percentage can only be regained if the character is blessed by a good witch. An 8th level Witch who possesses this miracle may elect to use it as her dying curse in which case it may only be removed by an 8th level goodly Witch and until that point is permanent in duration. If used as a dying curse suffix the verbal with ...Forever!. Should the Witch spend 25 points on Table 7 the dying curse will then need 3 different goodly witches to each cast a Bless before it is removed. This miracle does not stack with itself. i.e. a victim may never be suffering more than 10% restore life chance loss from it at any given time. This miracle does not affect the undead.",
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true,
@@ -2038,7 +1898,7 @@
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true,
-    "verbal": "\"An ill fated path…Trip\"",
+    "verbal": "An ill fated path…Trip",
     "gesture": "Point at target",
     "duration": "Until blessed or 15 mins",
     "range": "10'",
@@ -2051,7 +1911,7 @@
     "alignment": "Evil",
     "sphere": "Witchcraft",
     "isAdvanced": true,
-    "verbal": "\"An ill fated path…Trip\"",
+    "verbal": "An ill fated path…Trip",
     "gesture": "Point at target",
     "duration": "Instant",
     "range": "10'",
@@ -2066,7 +1926,7 @@
     "isAdvanced": false,
     "verbal": "This miracle has no standard verbal but rather the priest should spend an appropriate amount of time ritualistically warding the corpse. Taking no less than 2 minutes.",
     "gesture": "Touch Each Location",
-    "duration": "Until restored to Range life",
+    "duration": "Until restored to life",
     "level": "3rd",
     "range": "Touch"
   },
@@ -2134,7 +1994,7 @@
   {
     "power": 10,
     "name": "Dismiss Level 8 Undead",
-    "description": "Dismiss a level-6 undead (e.g., Vampire) by forcing it back to a barrier and completing the release phrase at the end. but will affect up to level 8 undead. In order to acquire this miracle must first possess Dismiss Level 7.  \fDismiss Level 9 Undead Level: 8th (12sp) Alignment: Good Duration: Until dismissed Sphere: Major Dismissal Range: 10' Gesture: Open palm towards target Verbal: “Spirit of... (Dismiss Name)... I dismiss thee hence.” Description: As Dismiss Vampire but will affect up to level 9 undead. In order to acquire this miracle must first possess Dismiss Level 8.",
+    "description": "Dismiss a level-6 undead (e.g., Vampire) by forcing it back to a barrier and completing the release phrase at the end. but will affect up to level 8 undead. In order to acquire this miracle must first possess Dismiss Level 7.",
     "alignment": "Good",
     "sphere": "Major Dismissal",
     "isAdvanced": true,
@@ -2208,7 +2068,7 @@
   {
     "power": 10,
     "name": "Enslaved Spirit",
-    "description": "This miracle places a spirit within a humanoid shape. This can be a corpse, or it can be a stone or metal figure crafted for the purpose. However, such crafting is usually impractical during \"Time-In\" due to the labour and time required – it might be possible however to animate a statue or similar which was otherwise unmoving. This miracle can never be used on any form of animate creature, whether living, golem or undead. The animated form is an entirely mindless unintelligent spirit bound to do nothing but obey the caster's will, and will follow his commands to the letter, but take no other acts, even in defence of itself. It is considered to have 2 grades of strength. It has 30 hits per location, plus an additional 2 hits for each extra spirit spent during its creation. It moves at only ¾ speed, and can wield any weapon given it or use unarmed at base damage, plus strength. Each location functions independently of every other. If the animation is made from a stone or metal statue, it gains ½ effect all damage except for purely spiritual. Under no circumstances can it be healed, and a Spiritual Freedom will destroy it. It is considered to have 8th level resistances. Although the miracle is permanent, the spirits used cannot be regained while the miracle is active, so most priests will release the miracle once the spirit has served its purpose.  \fIncarna Mortis Level: 8th (10sp) Alignment: Evil Duration: 15 minutes Sphere: Major Necromancy Range: 20' Gesture: Point at target Verbal: “Spirits of the dead cluster around (him / her) with the touch of the grave.” Description: The target is surrounded by undead spirits plucking at their spirit. This feels extremely uncomfortable, and has the additional side effect of making the target immune to all miracles to which undead are immune. They now discern as (but are not actually) a level 6 type unknown (Dismiss name \"Incarna Mortis\") – if this spirit is dismissed the miracle is removed but, if not, at the end of the duration the target suffers a Paralysis, Fear, Disease, Freeze and Level Drain simultaneously, as undead touch effects. Should resistance (half-effect) be possessed to this miracle, the duration is halved and the touch effects are never triggered on the victim. This miracle does not affect the undead. Fortified Spirit grants immunity to this miracle, unless willing.",
+    "description": "This miracle places a spirit within a humanoid shape. This can be a corpse, or it can be a stone or metal figure crafted for the purpose. However, such crafting is usually impractical during Time-In due to the labour and time required – it might be possible however to animate a statue or similar which was otherwise unmoving. This miracle can never be used on any form of animate creature, whether living, golem or undead. The animated form is an entirely mindless unintelligent spirit bound to do nothing but obey the caster's will, and will follow his commands to the letter, but take no other acts, even in defence of itself. It is considered to have 2 grades of strength. It has 30 hits per location, plus an additional 2 hits for each extra spirit spent during its creation. It moves at only ¾ speed, and can wield any weapon given it or use unarmed at base damage, plus strength. Each location functions independently of every other. If the animation is made from a stone or metal statue, it gains ½ effect all damage except for purely spiritual. Under no circumstances can it be healed, and a Spiritual Freedom will destroy it. It is considered to have 8th level resistances. Although the miracle is permanent, the spirits used cannot be regained while the miracle is active, so most priests will release the miracle once the spirit has served its purpose.",
     "alignment": "Evil",
     "sphere": "Major Dominion",
     "isAdvanced": true,
@@ -2221,7 +2081,7 @@
   {
     "power": 3,
     "name": "Extend Control",
-    "description": "The duration of a control undead miracle or raise, create, summon undead miracle is raised to 30 minutes for undead up to 4th level or 15 minutes for undead of 5th level and above.  \fBind Zombie Spirit Level: 3sp Alignment: Evil Duration: 5 minutes Sphere: Minor Necromancy Range: Self Gesture: Both hands touch head Verbal: \"Spirit of zombie I bind thee to my body, to do as I command!\" Description: The caster summons the spirit which would normally animate a zombie into his own body. The effect of this is that the zombie spirit is the outer layer around the priest's own spirit. The priest will discern as a Level 1 Zombie, even if they would normally discern as some other sort of undead, and any effect targeted against undead, such as a dismiss miracle or a Hand of Purity will only destroy the zombie spirit, leaving the priest untouched. The disadvantage to this state is that the caster will be repelled by repel undead and such, and will be unable to cross protections and wards which could not be crossed by a standard zombie. This miracle can be used by the undead.",
+    "description": "The duration of a control undead miracle or raise, create, summon undead miracle is raised to 30 minutes for undead up to 4th level or 15 minutes for undead of 5th level and above.",
     "alignment": "Evil",
     "sphere": "Minor Necromancy",
     "isAdvanced": true,
@@ -2239,15 +2099,8 @@
     "sphere": "Major Forces",
     "isAdvanced": true,
     "Damage": {
-      "amount": [
-        [
-          18,
-          18
-        ]
-      ],
-      "type": [
-        "Missile"
-      ]
+      "amount": [[18, 18]],
+      "type": ["Missile"]
     },
     "verbal": "“By all my power let thy [location] be smitten, Focussed spirit bolt”",
     "gesture": "Indicate target",
@@ -2275,7 +2128,7 @@
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true,
-    "verbal": "\"Let the corruption of your spirit rise to the surface and your touch burn.\"",
+    "verbal": "Let the corruption of your spirit rise to the surface and your touch burn.",
     "gesture": "Touch undead",
     "duration": "15 minutes",
     "range": "Touch",
@@ -2284,7 +2137,7 @@
   {
     "power": 5,
     "name": "Freezing Touch",
-    "description": "This miracle grants the priest the ability to freeze a single target as though the target was touched by a Wight. The miracle once incanted stays on the caster's weapon hand for 30 seconds or until discharged. This is not considered an undead touch effect. In order to have this miracle on his miracle list the priest must also have the Summon Wraith / Wight miracle.  \fUndead Alacrity Level: 5sp Alignment: Evil Duration: 15 minutes Sphere: Major Necromancy Range: Touch Gesture: Touch target Verbal: \"Dark Spirits of the Netherworld grant this creature thy watching!\" Description: This miracle only affects Undead. If the creature previously had a movement restriction, e.g. Zombie half speed, it is removed. If they did not then they gain +1 weapon mastery. They additionally gain 6HTK, if a player character +18tblp. This extra life will stack with any other temp life, bar itself. 6th Level Evil Advanced Miracles",
+    "description": "This miracle grants the priest the ability to freeze a single target as though the target was touched by a Wight. The miracle once incanted stays on the caster's weapon hand for 30 seconds or until discharged. This is not considered an undead touch effect. In order to have this miracle on his miracle list the priest must also have the Summon Wraith / Wight miracle.",
     "alignment": "Evil",
     "sphere": "Minor Necromancy",
     "isAdvanced": true,
@@ -2301,7 +2154,7 @@
     "alignment": "Good",
     "sphere": "Witchcraft",
     "isAdvanced": true,
-    "verbal": "\"Fortune favours thee for a while!\"",
+    "verbal": "Fortune favours thee for a while!",
     "gesture": "Touch target's forehead",
     "duration": "24 Hours",
     "range": "Touch",
@@ -2310,7 +2163,7 @@
   {
     "power": 14,
     "name": "Greater Word of Recall",
-    "description": "All priests of the church of the caster are returned to their temple if they are within 1 mile of the casting Priest. Each Priest present when returned to the Temple loses all spiritual powers for the remainder of the day should they leave the temple. The return point is shielded by the god to prevent the priests being interfered with or even contacted during this time. If this miracle is cast by a Shaman allows him to take his entire tribe using the verbal: \"May the totems return us to our home, Greater Word of Recall.\" A Good or Evil version of this miracle is available also as an 8th (14sp) miracle. For 50pts Tb 8: This miracle may now be used to affect any Lay Believers of the Church that possess a spirit.",
+    "description": "All priests of the church of the caster are returned to their temple if they are within 1 mile of the casting Priest. Each Priest present when returned to the Temple loses all spiritual powers for the remainder of the day should they leave the temple. The return point is shielded by the god to prevent the priests being interfered with or even contacted during this time. If this miracle is cast by a Shaman allows him to take his entire tribe using the verbal: May the totems return us to our home, Greater Word of Recall. A Good or Evil version of this miracle is available also as an 8th (14sp) miracle. For 50pts Tb 8: This miracle may now be used to affect any Lay Believers of the Church that possess a spirit.",
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true,
@@ -2322,7 +2175,7 @@
   {
     "power": 6,
     "name": "Hand Of Purity",
-    "description": "This miracle functions in all manners as per the Tables ability Hand of Purity i.e. This miracle destroys 1 undead by touch with the Caster suffering 10 tblp per level of the undead. If the caster dies, he dies perm. This Damage may not be reduced by use of \"No Damage Casting\" abilities but the normal casting damage for spirits expended may be resisted as normal. Once the verbal is incanted the caster has 30 seconds to touch an undead. In order to acquire this miracle, the priest must first possess Dismiss Level 10.",
+    "description": "This miracle functions in all manners as per the Tables ability Hand of Purity i.e. This miracle destroys 1 undead by touch with the Caster suffering 10 tblp per level of the undead. If the caster dies, he dies perm. This Damage may not be reduced by use of No Damage Casting abilities but the normal casting damage for spirits expended may be resisted as normal. Once the verbal is incanted the caster has 30 seconds to touch an undead. In order to acquire this miracle, the priest must first possess Dismiss Level 10.",
     "alignment": "Good",
     "sphere": "Major Dismissal",
     "isAdvanced": true,
@@ -2397,7 +2250,7 @@
   {
     "power": 8,
     "name": "Instant Regeneration",
-    "description": "This acts as the 6sp standard miracle Regeneration in all respects except that it is instant in effect and cures the limb to full and an amount of tblp equal to the location's value (e.g. has 30 per location, is restored 30 tblp – not 60). This miracle does not affect the undead.  \fBlessing of Battle Level: 7th (8sp) Alignment: Good Duration: 5 minutes Sphere: Major Benediction Range: Touch Gesture: Touch targets chest from the front (heart area) Verbal: “May the spirits of light fill your soul with their power. Go forth to purge the darkness from this world” Description: This infuses the recipient, who must be goodly, with the power of the spirits of light. This grants them the benefits of a Holy Fury (as per Paladin ability), being + 12/4 life, 25% rage vs. evil, + 1 max damage vs. evil, and + 1 strength (above current max). This is a releasable miracle and life from this miracle DOES stack with enhanced spirit.",
+    "description": "This acts as the 6sp standard miracle Regeneration in all respects except that it is instant in effect and cures the limb to full and an amount of tblp equal to the location's value (e.g. has 30 per location, is restored 30 tblp – not 60). This miracle does not affect the undead.",
     "alignment": "Good",
     "sphere": "Major Healing",
     "isAdvanced": true,
@@ -2438,7 +2291,7 @@
     "alignment": "Neutral",
     "sphere": "Balance",
     "isAdvanced": true,
-    "verbal": "\"Powers of balance weigh all upon the scales of justice, and let those found wanting suffer the due\npenalty!\"",
+    "verbal": "Powers of balance weigh all upon the scales of justice, and let those found wanting suffer the due\npenalty!",
     "gesture": "Arms upraised",
     "duration": "15 minutes",
     "range": "20' radius",
@@ -2447,7 +2300,7 @@
   {
     "power": 4,
     "name": "Kneel before the Master",
-    "description": "This miracle forces the target to drop to their knees if they are of lower level than the caster. This is a Domination Effect, and is removed by a Spiritual Freedom but immunity to Spiritual Mastery does not apply. The target cannot leave their knees for the duration, although they may otherwise act freely.  \fParalysing Touch Level: 4sp Alignment: Evil Duration: 5 minutes Sphere: Minor Necromancy Range: Touch Gesture: Touch Target Verbal: “By these evil spirits may I paralyse thee...” Description: This miracle grants the priest the ability to paralyse a single target as thought the target had been touched by a ghoul, this touch will only inflict damage if the priest casting the miracle has the skill of unarmed combat. The miracle once incanted stays on the caster's weapon hand for 30 seconds or until discharged. This is not considered an undead touch effect. In order to have this miracle on his miracle list the priest must also have the miracle of Create Ghoul.",
+    "description": "This miracle forces the target to drop to their knees if they are of lower level than the caster. This is a Domination Effect, and is removed by a Spiritual Freedom but immunity to Spiritual Mastery does not apply. The target cannot leave their knees for the duration, although they may otherwise act freely.",
     "alignment": "Evil",
     "sphere": "Minor Dominion",
     "isAdvanced": true,
@@ -2476,9 +2329,10 @@
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true,
-    "verbal": "\"Dark Spirits empower my voice, Lakh!\"",
+    "verbal": "Dark Spirits empower my voice, Lakh!",
     "gesture": "Raise hands",
-    "duration": "N/A Range: 20ft radius\nFaith: Condesecration",
+    "duration": "N/A",
+    "range": "20ft radius",
     "level": "7th"
   },
   {
@@ -2488,7 +2342,7 @@
     "alignment": "Evil",
     "sphere": "Minor Causing",
     "isAdvanced": true,
-    "verbal": "\"...…sent on the Wings of Darkness…(miracle name)…\"",
+    "verbal": "...…sent on the Wings of Darkness…(miracle name)…",
     "gesture": "Open hands in a giving gesture",
     "duration": "Instant",
     "range": "20'",
@@ -2523,7 +2377,7 @@
   {
     "power": 4,
     "name": "Major Prayer",
-    "description": "Acts as a single question from a Greater Communication miracle.  Range: Self \fWard Against the Traveller Level: 4sp Alignment: Neutral Duration: 15 minutes Sphere: Major Warding Range: As Prot Gesture: As protection from spirits. Verbal: “Spirits of protection I invoke thee permit not those travelling the worlds to pass.” Description: This acts as per a stronghold in all ways, including the need for the caster to remain inside it. However rather than stopping a specific alignment it instead bars against anyone with a spirit that is using supernatural means of transport (shifting, walking through walls/floors etc.) from crossing it.",
+    "description": "Acts as a single question from a Greater Communication miracle.",
     "alignment": "Neutral",
     "sphere": "Minor Communications",
     "isAdvanced": true,
@@ -2536,7 +2390,7 @@
   {
     "power": 8,
     "name": "Mark Of The Totem",
-    "description": "The recipient of the casting of this miracle gains +6/2 life points per tribe member standing around him at the time the miracle is cast. If more than 3 tribe members are standing around him when it is cast he gains +1 DAC, +1 SAC and +1 PAC. If more than 9 tribe members are standing around him when it is cast he also gains immunity to listed stopping effects for duration. \"Standing around him\" means within 20' and focusing their attention on the casting of the miracle.",
+    "description": "The recipient of the casting of this miracle gains +6/2 life points per tribe member standing around him at the time the miracle is cast. If more than 3 tribe members are standing around him when it is cast he gains +1 DAC, +1 SAC and +1 PAC. If more than 9 tribe members are standing around him when it is cast he also gains immunity to listed stopping effects for duration. Standing around him means within 20' and focusing their attention on the casting of the miracle.",
     "alignment": "Neutral",
     "sphere": "Shamanic",
     "isAdvanced": true,
@@ -2565,7 +2419,7 @@
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true,
-    "verbal": "\"Spirits of the Netherworld mark me against their servants\"",
+    "verbal": "Spirits of the Netherworld mark me against their servants",
     "gesture": "Arms raised in supplication",
     "duration": "15 minutes Range: Self\nFaith: Servants of Evil",
     "level": "5th"
@@ -2603,15 +2457,8 @@
     "sphere": "Minor Healing",
     "isAdvanced": true,
     "Heal": {
-      "amount": [
-        [
-          36,
-          36
-        ]
-      ],
-      "type": [
-        "Worst"
-      ]
+      "amount": [[36, 36]],
+      "type": ["Worst"]
     },
     "verbal": "“Spirits of Light I beseech thee, remain with this spirit until thy aid is needed!”",
     "gesture": "Palms on target head",
@@ -2622,7 +2469,7 @@
   {
     "power": 6,
     "name": "Passive Total Heal",
-    "description": "Must be able to cast passive heal. This acts in a similar manner to a passive heal except any healing Sphere/tree miracle that cures damage can be placed in it. The miracle triggers when a critical location goes below 1 point, or the person falls to 1 (or less) tblp. If the miracle's duration expires then the healing is wasted. The maximum that can be healed by the triggered healing is 72 points of damage (cf. an Un-prepped Total heal).  \fWard against the Dead Level: 6sp Alignment: Good Sphere: Major Dismissal Duration: 5 minutes Range: Touch Gesture: Touch targets head Verbal: “Spirits of light ward this one against the touch of the undead” Description: Grants the recipient immunity to undead touch effects for the duration. This is a releasable miracle. 7th Level Goodly Advanced Miracles",
+    "description": "Must be able to cast passive heal. This acts in a similar manner to a passive heal except any healing Sphere/tree miracle that cures damage can be placed in it. The miracle triggers when a critical location goes below 1 point, or the person falls to 1 (or less) tblp. If the miracle's duration expires then the healing is wasted. The maximum that can be healed by the triggered healing is 72 points of damage (cf. an Un-prepped Total heal).",
     "alignment": "Good",
     "sphere": "Major Healing",
     "isAdvanced": true,
@@ -2651,7 +2498,7 @@
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false,
-    "verbal": "\"Feel as the Power of the Throne touches your soul and grants you strength \"",
+    "verbal": "Feel as the Power of the Throne touches your soul and grants you strength ",
     "gesture": "Kneel in short prayer with the target",
     "duration": "One hour Range: Touch\nFaith: Glass",
     "level": "5th"
@@ -2659,7 +2506,7 @@
   {
     "power": 5,
     "name": "Protection from All Spirits",
-    "description": "Creates a chalk line that bars spirits of a chosen alignment (Good or Evil) from crossing/attacking through it within listed limits. except that it will keep out spirits of any alignment, level-based as normal.  \fWarding Rune of Transgression Level: 5sp Alignment: Neutral Duration: 15 mins Sphere: Major Warding Range: - Gesture: Inscribe rune Verbal: “Spirit of power I bind thee to this rune I now inscribe. Let any that seek passage suffer the consequences of their transgression.” Description: This miracle is a very specific form of a Rune of Power. The form the rune must take is the same as that for a Rune of Power, with a spirit rune 'W' in the centre of the triangle. It is triggered in all ways as a Rune of Transgression is, except that the caster cannot choose to allow anyone passage – even the caster himself will trigger it if he passes the door or entrance-way it wards. The victim of the miracle suffers 30 tblp of spiritual damage, as if they had crossed a Minor Ward of Power – however this is the only effect of the rune. This miracle does affect the undead, unlike normal runes of power. Note the reduced duration of the miracle in comparison with other runes. Immunity to Rune of Power means that the rune is not triggered by that person – ½ Damage from Wards of Power does halve the damage received.",
+    "description": "Creates a chalk line that bars spirits of a chosen alignment (Good or Evil) from crossing/attacking through it within listed limits. except that it will keep out spirits of any alignment, level-based as normal.",
     "alignment": "Neutral",
     "sphere": "Major Warding",
     "isAdvanced": true,
@@ -2712,7 +2559,7 @@
     "alignment": "Neutral",
     "sphere": "Minor Communication",
     "isAdvanced": true,
-    "verbal": "\"All knowing Spirits abide here for a time…\"",
+    "verbal": "All knowing Spirits abide here for a time…",
     "gesture": "Touch own temples",
     "duration": "2 minutes",
     "range": "Self",
@@ -2721,7 +2568,7 @@
   {
     "power": 4,
     "name": "Renewal",
-    "description": "The target receives a cure serious wounds miracle every minute for the duration as long as they remain at rest in the same general location that it is cast.  \fShield Blessing Level: 4sp Alignment: Good Duration: 24 hours Sphere: Major Benediction Range: Touch Gesture: Touch the shield Verbal: “Spirits of light I call upon thee to bless and ward this shield here” Description: This miracles acts as per a bless on a shield, but additionally allows it to parry purely spiritual weapon blows. 5th Level Goodly Advanced Miracles",
+    "description": "The target receives a cure serious wounds miracle every minute for the duration as long as they remain at rest in the same general location that it is cast.",
     "alignment": "Good",
     "sphere": "Minor Healing",
     "isAdvanced": true,
@@ -2785,7 +2632,7 @@
   {
     "power": 5,
     "name": "Reveal Undead Name",
-    "description": "The Caster is told the full true dismiss/control name of the indicated Undead. A Neutral version of this miracle is available as a 4sp miracle. An Evil version of this miracle is available as a 5sp miracle.  \fCure Critical Level: 5sp Alignment: Good Duration: Instant Sphere: Minor Healing Range: Touch Gesture: Palms on target head Verbal: “I call upon the spirits of light to staunch these mortal wounds and reforge this shattered body... Cure Critical Wounds!” Description: This miracle heals 60 tblp damage and 60 pts of locational damage, in a similar manner to Heal. Under no circumstances can this miracle heal more than 72 points of damage, ever. This miracle does not affect the undead. 6th Level Goodly Advanced Miracles",
+    "description": "The Caster is told the full true dismiss/control name of the indicated Undead. A Neutral version of this miracle is available as a 4sp miracle. An Evil version of this miracle is available as a 5sp miracle.",
     "alignment": "Good",
     "sphere": "Minor",
     "isAdvanced": true,
@@ -2802,7 +2649,7 @@
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false,
-    "verbal": "\"Let the strength of my spirit and my righteous anger strike down foulness wherever I may find it.\"",
+    "verbal": "Let the strength of my spirit and my righteous anger strike down foulness wherever I may find it.",
     "gesture": "Clenched fists raised in front of face",
     "duration": "15 minutes",
     "Range": "Self",
@@ -2815,7 +2662,7 @@
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true,
-    "verbal": "[At start] \"Dark powers witness now as I focus thy strength.\" [At completion of rite] \"By these acts so do I\nseal our pact - let harm come to all!\"",
+    "verbal": "[At start] Dark powers witness now as I focus thy strength. [At completion of rite] By these acts so do I\nseal our pact - let harm come to all!",
     "gesture": "See below",
     "duration": "24 hours",
     "level": "8th"
@@ -2827,7 +2674,7 @@
     "alignment": "Good",
     "sphere": "Major Benediction",
     "isAdvanced": true,
-    "verbal": "[at start] \"Bright powers witness as I focus thy strength!\" [at end of rite]: \"By these acts do I seal our pact -\nlet hope come to all!\"",
+    "verbal": "[at start] Bright powers witness as I focus thy strength! [at end of rite]: By these acts do I seal our pact -\nlet hope come to all!",
     "gesture": "See below",
     "duration": "24 hours",
     "range": "1 mile",
@@ -2855,74 +2702,28 @@
     "isAdvanced": true,
     "Heal": {
       "amount": [
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ],
-        [
-          6,
-          6
-        ]
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6],
+        [6, 6]
       ],
-      "type": [
-        "Worst"
-      ]
+      "type": ["Worst"]
     },
-    "verbal": "\"Shaehan's touch shall soothe your suffering.\"",
+    "verbal": "Shaehan's touch shall soothe your suffering.",
     "gesture": "Hug recipient warmly",
-    "duration": "15 minutes Range: Touch\nFaith: Shaehan",
+    "duration": "15 minutes",
+    "range": "Touch",
     "level": "4th"
   },
   {
@@ -2958,9 +2759,10 @@
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false,
-    "verbal": "\"Saint Michael in your wisdom show this spirit that your sight is true even in darkness.\"",
+    "verbal": "Saint Michael in your wisdom show this spirit that your sight is true even in darkness.",
     "gesture": "Cover recipient's eyes with hand",
-    "duration": "15 minutes Range: Touch\nFaith: St Michael",
+    "duration": "15 minutes",
+    "Range": "Touch",
     "level": "5th"
   },
   {
@@ -2970,7 +2772,7 @@
     "alignment": "Evil",
     "sphere": "Denominational",
     "isAdvanced": false,
-    "verbal": "\"Your strength is ours now, and your blood sings as I call to it.\"",
+    "verbal": "Your strength is ours now, and your blood sings as I call to it.",
     "gesture": "Pass both hands in front of eyes",
     "duration": "15 minutes Range: 10'\nFaith: Cult of the Eternal Vampire",
     "level": "5th"
@@ -2983,15 +2785,8 @@
     "sphere": "Minor Healing",
     "isAdvanced": true,
     "Heal": {
-      "amount": [
-        [
-          24,
-          4
-        ]
-      ],
-      "type": [
-        "Body"
-      ]
+      "amount": [[24, 4]],
+      "type": ["Body"]
     },
     "verbal": "“Spirits of light, I bid thee soothe this one's suffering”",
     "gesture": "Touch targets head",
@@ -3008,11 +2803,9 @@
     "sphere": "Major Causing",
     "isAdvanced": true,
     "Damage": {
-      "type": [
-        "Body"
-      ]
+      "type": ["Body"]
     },
-    "verbal": "\"Let the powers of evil sear your soul, and let your own strength be your undoing… Soul Lance!\"",
+    "verbal": "Let the powers of evil sear your soul, and let your own strength be your undoing… Soul Lance!",
     "gesture": "Point both empty hands at target",
     "duration": "Instant",
     "level": "7th"
@@ -3024,19 +2817,20 @@
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false,
-    "verbal": "\"Lady of the Stars I beseech thee allow this one to share in your strength, and touch his/her soul as you\nhave touched mine.\"",
+    "verbal": "Lady of the Stars I beseech thee allow this one to share in your strength, and touch his/her soul as you\nhave touched mine.",
     "gesture": "Link both hands with recipient",
-    "duration": "1 hour Range: Touch\nFaith: Lady of the Stars",
+    "duration": "1 hour",
+    "range": "Touch",
     "level": "4th"
   },
   {
     "power": 1,
     "name": "Soul's Hunger",
-    "description": "This miracle only functions when cast while the priest already has a Causing miracle 'hanging' on their hands. It means that if that Causing miracle successfully injures a living spirit their life essence is taken for the casting priest, instead of going to feed the evil spirits as is normal. This means that according to the miracle's power level, the priest is cured 3 tblp and 1 to each loc per spirit of the Cause miracle 30 seconds later - so that a Cause Grievous Wounds miracle heals 15 and 5 to each loc. However, each Resistance to Causing possessed by the target halves the benefit to the caster. The caster may not use this ability to target themselves with a Causing miracle. Only damaging Causing miracles combine with this miracle - not Cause Disease, for example, nor Degeneration. For ease of use in combat, the caster should call \"Vampiric Cause XXX\" when used - this allows the target (or the ref) to warn the priest if no benefit was received, within the 30 seconds before the curing is received.  \fTaint Spirit Level: 1sp Alignment: Evil Duration: Instant Sphere: Minor Necromancy Range: Touch Gesture: Touch Target with palms Verbal: “Spirits of death taint this form such that its death is final.” Description: When cast upon a dead body the body is treated as though it has been raised as an undead, without it actually rising up as an undead, preventing the dead body from being restored to life. Fortified Spirit grants immunity to this miracle. 2nd Level Evil Advanced Miracles",
+    "description": "This miracle only functions when cast while the priest already has a Causing miracle 'hanging' on their hands. It means that if that Causing miracle successfully injures a living spirit their life essence is taken for the casting priest, instead of going to feed the evil spirits as is normal. This means that according to the miracle's power level, the priest is cured 3 tblp and 1 to each loc per spirit of the Cause miracle 30 seconds later - so that a Cause Grievous Wounds miracle heals 15 and 5 to each loc. However, each Resistance to Causing possessed by the target halves the benefit to the caster. The caster may not use this ability to target themselves with a Causing miracle. Only damaging Causing miracles combine with this miracle - not Cause Disease, for example, nor Degeneration. For ease of use in combat, the caster should call Vampiric Cause XXX when used - this allows the target (or the ref) to warn the priest if no benefit was received, within the 30 seconds before the curing is received.",
     "alignment": "Evil",
     "sphere": "Minor Causing",
     "isAdvanced": true,
-    "verbal": "\"Dark spirits feed me now… \"",
+    "verbal": "Dark spirits feed me now… ",
     "gesture": "Clench both fists",
     "duration": "Instant / 30 seconds",
     "range": "Self",
@@ -3057,7 +2851,7 @@
   {
     "power": 20,
     "name": "Spirit Rend",
-    "description": "Once cast the Shaman has 30 seconds to touch a target who then takes the effect of 6 simultaneously cast Spiritbolts. SAC and Resistances to Spiritbolt apply separately to each Spiritbolt. This miracle will not affect members of the Shaman's own tribe.  \fWitchcraft These miracles may only be acquired post 8th by a witch of the appropriate alignment. No other class or alignment may cast one of these miracles. Witchcraft ~ Evil",
+    "description": "Once cast the Shaman has 30 seconds to touch a target who then takes the effect of 6 simultaneously cast Spiritbolts. SAC and Resistances to Spiritbolt apply separately to each Spiritbolt. This miracle will not affect members of the Shaman's own tribe.  \fWitchcraft These miracles may only be acquired post 8th by a witch of the appropriate alignment. No other class or alignment may cast one of these miracles.l",
     "alignment": "Neutral",
     "sphere": "Shamanic",
     "isAdvanced": true,
@@ -3107,7 +2901,7 @@
   {
     "power": 10,
     "name": "Spiritual Aegis",
-    "description": "Must be able to cast Greater Spirit Shield. Acts as per a Spirit Shield but absorbs the first 72 points of damage.  \fBound Force of Stasis Level: 8th (10sp) Alignment: Neutral Duration: 5 minutes Sphere: Major Force Range: Touch / Self Gesture: Touch weapon Verbal: “Spirits bide here and let all smitten stand and be held by thy power.” Description: Cast on a normal, non-supernatural weapon wielded by the caster the weapon has a spirit bound to it which allows the priest to strike non-damaging blows for 'Stasis 9 levels' (i.e. affecting 8th level and below targets) instead of normal damage, at will. The priest may alternate, striking a blow for Stasis, then a damaging blow, then a Stasis blow again, and so forth. This miracle does not affect the undead.",
+    "description": "Must be able to cast Greater Spirit Shield. Acts as per a Spirit Shield but absorbs the first 72 points of damage.",
     "alignment": "Neutral",
     "sphere": "Major Warding",
     "isAdvanced": true,
@@ -3119,7 +2913,7 @@
   {
     "power": 16,
     "name": "Spiritual Cataclysm",
-    "description": "Acts as per a 144 tblp spirit bolt (48 HTK). Note the range of touch. After completing the verbal the caster has 30 seconds to touch the target. To learn this miracle the priest must be on table 11.  \fCommunication with the Gods Level: 8th (16sp) Alignment: Neutral Duration: 2 minutes/5 minutes (see below) Sphere: Major Communication Range: Infinite Gesture: As Greater Communication Verbal: “All Seeing All K nowing Spirits, guardians of the unknown, knowers of knowledge, keepers of secrets, you whose vision and hearing are mighty grant me thy wisdom and understanding. Listen to me and converse for I have need of thy insight.” Description: As per Greater Communication but no limit to the number of questions asked and the spirits may respond to an individual question with more than just seven words. Questions must be asked in a measured and respectful manner, or no response will be gained. The caster may choose to have all questions be only regarding one specific area, in which case the divination lasts 5 minutes, or simply answering any questions they desire, in which case the duration is only two minutes but the miracle becomes far more versatile. In order to acquire this miracle must first possess Communication and Greater Communication.",
+    "description": "Acts as per a 144 tblp spirit bolt (48 HTK). Note the range of touch. After completing the verbal the caster has 30 seconds to touch the target. To learn this miracle the priest must be on table 11.",
     "alignment": "Neutral",
     "sphere": "Major Forces",
     "isAdvanced": true,
@@ -3169,7 +2963,7 @@
   {
     "power": 6,
     "name": "Strengthen the Spirit",
-    "description": "The willing beneficiary gains the effects of Determination against non-magical stopping effects for the duration; that is to say, any stopping effect targeted on the beneficiary for the duration has no effect but costs the target 6 tblp to shrug it off. This is involuntary, and occurs even if the beneficiary was actually immune to the effect! This miracle does not affect the undead.  \fLight Of Purity Level: 6sp Alignment: Good Sphere: Minor Dismissal Duration: Instant Range: 20' Gesture: Point at target Verbal: “Spirits of light blaze your glorious radiance upon this undead spirit and let it be consumed in your divine brilliance... Light of Purity!” Description: This miracle inflicts 12 spiritual hits on an undead, it has no effect on any other creature. On a Player Character undead it inflicts 36pts of damage as per Spiritbolt. However Resistance to Spirit-Bolt does not apply, although SAC does. Destroy Gaseous Form Level: Variable Alignment: Good Sphere: Major Dismissal Duration:5 minutes Range: 20' Gesture: Point at target Verbal: \"By the power of the spirits of light I bid that you return to your true form!\" Description: This miracle costs spirits equal to the dismiss level of the target minus two (so 4 sp for use on a level 6 vampire) to cast. If the target is not undead it costs 6 spirits. This causes any one target which is benefiting from a Vampiric Gaseous Form to return to their normal form and then be unable to turn Gaseous for the remainder of the miracle's duration. Immunity to Involuntary Shapeshifting grants immunity to this miracle's effects. This miracle costs 40pts to buy",
+    "description": "The willing beneficiary gains the effects of Determination against non-magical stopping effects for the duration; that is to say, any stopping effect targeted on the beneficiary for the duration has no effect but costs the target 6 tblp to shrug it off. This is involuntary, and occurs even if the beneficiary was actually immune to the effect! This miracle does not affect the undead.",
     "alignment": "Good",
     "sphere": "Major Benediction",
     "isAdvanced": true,
@@ -3208,7 +3002,7 @@
   {
     "power": 6,
     "name": "Stronghold of Hatred",
-    "description": "This miracle is identical to the miracle Protection From Good Spirits in every way except where noted above and the fact that the barrier keeps out any good spirit regardless of level. 7th Level Evil Advanced Miracles Wild Evil Level: Variable* Duration: Instant Alignment: Evil Sphere: Universal Range:20' radius Gesture: See below Verbal: \"Darkness feed on my essence and let all feel your touch!\" to be shouted, followed by a declaration of the damage inflicted (see below) Description: As the verbal is incanted the caster must slash a body part with a dedicated ritual knife (which cannot be used in normal combat - it is permissible to carry this blade), inflicting 6 points of damage to the location and TBLP. The caster must be flesh-and-blood. The blood is then sucked from the wound by wild and hungry evil spirits that cluster around the priest. These spirits form a dark and evil maelstrom centred on the priest which inflicts 6/1 spiritual damage to all within the radius for each 2 spirits the priest releases, to a maximum of 12 spirits and 36/6 damage to all. SAC applies against this damage as normal, except for the casting priest, who cannot in any way shield against the attentions of the spirits, and must take the full damage. Should this miracle be cast a second time within an hour, the casting priest loses all remaining spirits to the uncontrolled evil spirits drawn to the bloodshed, including his own - thus dying. Damage from this second casting is still limited to 36/6 however. This miracle affects the undead, but may not be cast by them (as they have no blood). *This miracle costs 50pts to buy",
+    "description": "This miracle is identical to the miracle Protection From Good Spirits in every way except where noted above and the fact that the barrier keeps out any good spirit regardless of level.",
     "alignment": "Evil",
     "sphere": "Minor Warding",
     "isAdvanced": true,
@@ -3233,11 +3027,11 @@
   {
     "power": 8,
     "name": "Summon Barrow-Wight",
-    "description": "The miracle must be incanted over a corpse within a Protection from Good Spirits. This corpse need not be fresh, and in fact is often an ancient body within a tomb. At the incanting of the final words a dagger must be driven into the chest of the corpse, and from the wound the Barrow-Wight will arise. Barrow-Wights are shadowy, ethereal creatures called to guard the sanctity of an area. They are fully intelligent and may walk through walls at will in the same fashion as a wraith (suffering a 2-second disorientation on leaving). They have 25 supernatural hits, and inflict Purely Spiritual 9pt Double by unarmed blow. This does mean that magic hurts them, and for example an elf with a magic weapon could kill them while they could not harm it. Additionally their touch causes 2 points of permanent damage to the touched location (not tblp). This is an undead touch-effect, and no AC or damage reductions apply to it (having half a spirit means that only 1 point of perm is inflicted). This damage can only be cured by exposing the wounds to the rays of the next dawn (normally, lasts till end of adventure). Barrow-Wights are level 6 undead. A barrow-Wight will not willingly leave the area in which it was summoned, which may be a specific building if summoned within one, or a roughly 60' area otherwise. Even if controlled they will refuse to do so. They are banished whence they came by sunlight, and fear it terribly.  \fSummon Wraith-Warrior Level: 7th (8sp) Alignment: Evil Duration: 30 minutes Sphere: Major Necromancy Range: 3' Gesture: As Summon Wraith Verbal: \"By all the powers of darkness, spirit of evil I summon thee forth! By the shades of the netherworld and blood you have shed, wraith warrior I name thee! I call thee from the land of the spirits! By my powers I summon thee here! Behold! By the power of my spirits thou art summoned here! Come forth!\" Description: In all ways as Summon Wraith (not Wight), except that the summoned undead arrives equipped with dark and ethereal armour and sword. It now discerns as a Level 6 Wraith Warrior, has 16 spiritual Hits, and may inflict purely spiritual damage by weapon type + one weapon mastery with its sword, which no other may wield. It may also channel its powers of level-draining and fear through sword-blows. 8th Level Evil Advanced Miracles",
+    "description": "The miracle must be incanted over a corpse within a Protection from Good Spirits. This corpse need not be fresh, and in fact is often an ancient body within a tomb. At the incanting of the final words a dagger must be driven into the chest of the corpse, and from the wound the Barrow-Wight will arise. Barrow-Wights are shadowy, ethereal creatures called to guard the sanctity of an area. They are fully intelligent and may walk through walls at will in the same fashion as a wraith (suffering a 2-second disorientation on leaving). They have 25 supernatural hits, and inflict Purely Spiritual 9pt Double by unarmed blow. This does mean that magic hurts them, and for example an elf with a magic weapon could kill them while they could not harm it. Additionally their touch causes 2 points of permanent damage to the touched location (not tblp). This is an undead touch-effect, and no AC or damage reductions apply to it (having half a spirit means that only 1 point of perm is inflicted). This damage can only be cured by exposing the wounds to the rays of the next dawn (normally, lasts till end of adventure). Barrow-Wights are level 6 undead. A barrow-Wight will not willingly leave the area in which it was summoned, which may be a specific building if summoned within one, or a roughly 60' area otherwise. Even if controlled they will refuse to do so. They are banished whence they came by sunlight, and fear it terribly.",
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true,
-    "verbal": "\"Spirit of darkness I call thee forth from the grey lands of the unliving. By the powers of evil bound to me, I\ncall thee to service in my name. Barrow wight I bid thee arise one more time to act in the name of the unliving!\"",
+    "verbal": "Spirit of darkness I call thee forth from the grey lands of the unliving. By the powers of evil bound to me, I\ncall thee to service in my name. Barrow wight I bid thee arise one more time to act in the name of the unliving!",
     "gesture": "See below",
     "duration": "Permanent*",
     "level": "7th"
@@ -3262,7 +3056,7 @@
     "alignment": "Neutral",
     "sphere": "Universal",
     "isAdvanced": true,
-    "verbal": "\"Spirits of power I beseech thee to aid in my fight. Come now unto me and form the rod of power!\"",
+    "verbal": "Spirits of power I beseech thee to aid in my fight. Come now unto me and form the rod of power!",
     "gesture": "Hands opened to receive",
     "duration": "15 minutes",
     "level": "8th"
@@ -3274,7 +3068,7 @@
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true,
-    "verbal": "\"By all the powers of darkness, spirit of evil I summon thee forth! By the shades of the netherworld and\nblood you have shed, wraith warrior I name thee! I call thee from the land of the spirits! By my powers I summon\nthee here! Behold! By the power of my spirits thou art summoned here! Come forth!\"",
+    "verbal": "By all the powers of darkness, spirit of evil I summon thee forth! By the shades of the netherworld and\nblood you have shed, wraith warrior I name thee! I call thee from the land of the spirits! By my powers I summon\nthee here! Behold! By the power of my spirits thou art summoned here! Come forth!",
     "gesture": "As Summon Wraith",
     "duration": "30 minutes",
     "level": "7th"
@@ -3286,7 +3080,7 @@
     "alignment": "Neutral",
     "sphere": "Major Force",
     "isAdvanced": true,
-    "verbal": "\"By all my powers, and the powers of these spirits gathered here I strike thee down…Sunder Spirit!\"",
+    "verbal": "By all my powers, and the powers of these spirits gathered here I strike thee down…Sunder Spirit!",
     "gesture": "Two Handed Touch",
     "duration": "Instant",
     "level": "8th"
@@ -3298,7 +3092,7 @@
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": true,
-    "verbal": "\"Let the blood shed by thy spirit draw the darkness as moths to a flame…\"",
+    "verbal": "Let the blood shed by thy spirit draw the darkness as moths to a flame…",
     "gesture": "Weapon-hand forms claw",
     "duration": "15 minutes",
     "range": "20'",
@@ -3336,7 +3130,7 @@
     "alignment": "Good",
     "sphere": "Denominational",
     "isAdvanced": true,
-    "verbal": "\"May the sacrifice that Truic gave grant you strength to carry on\"",
+    "verbal": "May the sacrifice that Truic gave grant you strength to carry on",
     "gesture": "Touch targets head",
     "duration": "5 minutes",
     "range": "Touch",
@@ -3375,7 +3169,8 @@
     "isAdvanced": false,
     "verbal": "“May your spirit be as calm as the seas when the storm has passed”",
     "gesture": "Touch targets head",
-    "duration": "1 hour Range: Touch\nFaith: Tsu-Ling",
+    "duration": "1 hour",
+    "Range": "Touch",
     "level": "3rd"
   },
   {
@@ -3409,7 +3204,7 @@
     "alignment": "Evil",
     "sphere": "Major Necromancy",
     "isAdvanced": true,
-    "verbal": "\"Dark Spirits of the Netherworld grant this creature thy watching!\"",
+    "verbal": "Dark Spirits of the Netherworld grant this creature thy watching!",
     "gesture": "Touch target",
     "duration": "15 minutes",
     "range": "Touch",
@@ -3418,7 +3213,7 @@
   {
     "power": 5,
     "name": "Unified Strength",
-    "description": "The priest and at least two other people who are goodly spirits must link hands in a closed chain. All those who participate in the chain then gain +1 strength (max +2), +1 level of resistance to Evil spirits, and a Spirit Shield. Only goodly people may benefit.  \fTalthar Blessing of the Aspects of Hope Level: See miracle Alignment: Good Duration: 24 hours Faith: Talthar Range: Self Gesture: Kneel in prayer Verbal: “Spirits of hope I call to thee. Grant me the watching of the aspect of ….” Description: This is learnt as a 7th level (8 spirit) miracle. The caster chooses one of the aspects of Talthar and draws power from it. This causes them to gain benefits from one of the aspects as per the current guild benefits listed in the Almanac. It costs 4 spirits to gain basic tier, 8 for intermediate and 12 for advanced. The priest may only have this miracle active for one aspect at a time, and may only be cast once per aspect per day. This is a releasable miracle. Tsu-Ling",
+    "description": "The priest and at least two other people who are goodly spirits must link hands in a closed chain. All those who participate in the chain then gain +1 strength (max +2), +1 level of resistance to Evil spirits, and a Spirit Shield. Only goodly people may benefit.",
     "alignment": "Good",
     "sphere": "Rites",
     "isAdvanced": false,
@@ -3430,7 +3225,7 @@
   {
     "power": 6,
     "name": "Voice of Command",
-    "description": "This miracle is as Voice of Power except that it affects targets of a level equal to the caster, rather than one below, making it far more versatile. Note however the extremely short duration! This miracle does not affect the undead.  \fSpirit Sundering Level: 6sp Alignment: Neutral Duration: Instant Sphere: Major Force Range: 20' Gesture: Point at Spirit Verbal: “By all the powers of the spirits let thy spirit be smitten and struck…” Description: This miracle affects the target as a double-effect Spirit Bolt, doing 36 tblp of neutral spirit damage to the target, with SAC and resistances to Spirit Bolt applying appropriately. [Note that Dark Sundering is an identical evil version of this miracle, and also available as Major Force Sphere – Evil priests may therefore buy either if desired.]",
+    "description": "This miracle is as Voice of Power except that it affects targets of a level equal to the caster, rather than one below, making it far more versatile. Note however the extremely short duration! This miracle does not affect the undead.",
     "alignment": "Neutral",
     "sphere": "Minor Force",
     "isAdvanced": true,
@@ -3473,7 +3268,7 @@
     "alignment": "Other",
     "sphere": "Denominational",
     "isAdvanced": false,
-    "verbal": "\"Spirits of the dead I bind thee to this ward - seek not to bar your brethren entrance.\"",
+    "verbal": "Spirits of the dead I bind thee to this ward - seek not to bar your brethren entrance.",
     "gesture": "Pass hands across ward",
     "duration": "As Ward Range: 1 inch\nFaith: Dark Deliverers",
     "level": "4th"
@@ -3498,7 +3293,7 @@
     "alignment": "Evil",
     "sphere": "Major Causing",
     "isAdvanced": true,
-    "verbal": "\"...…sent on the Wings of Darkness…(miracle name)…\"",
+    "verbal": "...sent on the Wings of Darkness… (miracle name)",
     "gesture": "Open hands in a giving gesture",
     "duration": "Instant",
     "range": "20'",
@@ -3553,9 +3348,7 @@
     "duration": "Permanent",
     "range": "Touch",
     "level": "4th",
-    "preReqs": [
-      "Summon Wraith / Wight"
-    ]
+    "preReqs": ["Summon Wraith / Wight"]
   },
   {
     "power": 8,
@@ -3585,11 +3378,11 @@
   {
     "power": 6,
     "name": "Spiritual Mastery",
-    "description": "This miracle enables the priest to summon a spirit to take control of a character or monster. Short of suicide, the victim will do the priest's bidding unhesitatingly and without question. A \"controlled\" priest loses the ability to use any good aligned miracles whilst \"controlled\". If a spiritually mastered character should increase in levels to parity with the level of the priest when he performed the spiritual mastery, the spiritual mastery still holds but the character may distort any of his master's instructions. Note that the target may still perform actions of their choice as long as these do not conflict with any orders given to them by their master. A person can only have one spiritual mastery spirit within his body at any one time. The latest spiritual mastery overrides any other, but if the previous master is of a higher level then his spiritual mastery holds. A priest may only have a number of victims up to his level of experience mastered at one time, and these should be recorded on the priest's character card. A person detects as being spiritually evil whilst spiritually mastered and has this additional spirit hovering around the body. This miracle only works on characters of less than the caster's level. It does not affect the undead.",
+    "description": "This miracle enables the priest to summon a spirit to take control of a character or monster. Short of suicide, the victim will do the priest's bidding unhesitatingly and without question. A controlled priest loses the ability to use any good aligned miracles whilst controlled. If a spiritually mastered character should increase in levels to parity with the level of the priest when he performed the spiritual mastery, the spiritual mastery still holds but the character may distort any of his master's instructions. Note that the target may still perform actions of their choice as long as these do not conflict with any orders given to them by their master. A person can only have one spiritual mastery spirit within his body at any one time. The latest spiritual mastery overrides any other, but if the previous master is of a higher level then his spiritual mastery holds. A priest may only have a number of victims up to his level of experience mastered at one time, and these should be recorded on the priest's character card. A person detects as being spiritually evil whilst spiritually mastered and has this additional spirit hovering around the body. This miracle only works on characters of less than the caster's level. It does not affect the undead.",
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Spirits at my command, go forth and enter this body, to do as I command!\"",
+    "verbal": "Spirits at my command, go forth and enter this body, to do as I command!",
     "gesture": "Point at target",
     "duration": "Permanent",
     "range": "10'",
@@ -3598,11 +3391,11 @@
   {
     "power": 10,
     "name": "Summon Vampire",
-    "description": "This miracle enables a priest to summon a vampire from the spirit plane. The ritual to summon a vampire is as follows: 1) A vampire name must be used (see notes under Summon Wraith for comments on these) 2) Inscribe the name on a living human/humanoid \"sacrifice\" (this should be phys-repped but not necessarily made visible) 3) Place the sacrifice in a circle of Protection from Spirits (good), draw in chalk and then seal the circle from the outside. 4) Cast the incantation, the vampire spirit will appear 5 minutes after the end of the incantation. It will then enter the body of the sacrifice so slaying the sacrifice. The vampire so summoned is not in any way controlled by the priest and so must be persuaded to do any task the priest wishes done. A vampire is not to be trifled with; requests to bring in the milk etc. are unlikely to be greeted with delight. Remember it could still be there when your own protection runs out! N.B. A vampire cannot be summoned in daylight.",
+    "description": "This miracle enables a priest to summon a vampire from the spirit plane. The ritual to summon a vampire is as follows: 1) A vampire name must be used (see notes under Summon Wraith for comments on these) 2) Inscribe the name on a living human/humanoid sacrifice (this should be phys-repped but not necessarily made visible) 3) Place the sacrifice in a circle of Protection from Spirits (good), draw in chalk and then seal the circle from the outside. 4) Cast the incantation, the vampire spirit will appear 5 minutes after the end of the incantation. It will then enter the body of the sacrifice so slaying the sacrifice. The vampire so summoned is not in any way controlled by the priest and so must be persuaded to do any task the priest wishes done. A vampire is not to be trifled with; requests to bring in the milk etc. are unlikely to be greeted with delight. Remember it could still be there when your own protection runs out! N.B. A vampire cannot be summoned in daylight.",
     "alignment": "Evil",
     "sphere": "Universal",
     "isAdvanced": false,
-    "verbal": "\"Lord of the undead, I name thee ........! I summon thee from the deepest pits of darkness! I summon thee\nfrom the citadel of evil! By my powers I summon thee here! By the kindred creatures thou art summoned! By the\nbat, the rat and the wolf! Wherever thou art, hear my call! Come forth into this arena and take my offering! By my\npowers and this incantation thou art called to this spot! Come forth!\"",
+    "verbal": "Lord of the undead, I name thee ........! I summon thee from the deepest pits of darkness! I summon thee\nfrom the citadel of evil! By my powers I summon thee here! By the kindred creatures thou art summoned! By the\nbat, the rat and the wolf! Wherever thou art, hear my call! Come forth into this arena and take my offering! By my\npowers and this incantation thou art called to this spot! Come forth!",
     "gesture": "Hands raised in supplication",
     "duration": "Permanent until destroyed",
     "level": "8th"
@@ -3625,7 +3418,7 @@
     "name": "Armour of the Forge",
     "description": "Empowers one spiritual suit of metal armour worn by caster so that it grants a Rockskin-style reduction (e.g. 1 point per damage grade) vs weapon blows the armour applies against.",
     "alignment": "Good",
-    "sphere": "todo",
+    "sphere": "Denominational",
     "isAdvanced": false,
     "verbal": "Great Soul forger I ask you infuse my armour with the blessings of thy most Holy Forge. Allow me to enter the fray and don thy most Holy armour.",
     "gesture": "Fist over heart",

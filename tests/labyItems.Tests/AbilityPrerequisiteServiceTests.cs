@@ -65,6 +65,45 @@ public sealed class AbilityPrerequisiteServiceTests : ServiceTestBase
         Assert.Empty(result.MissingPrerequisiteKeys);
     }
 
+    [Fact]
+    public void Evaluate_SatisfiesRankedStrengthAndWeaponMasteryPrerequisitesAcrossEquivalentTerms()
+    {
+        var veteranFighter = BuildAbility(
+            "Veteran Fighter",
+            9,
+            "ability.veteran-fighter",
+            preReqs: new[] { "+1 Weapon Mastery", "+1 Strength" });
+
+        var firstStrength = BuildAbility("1st Grade of Strength", 1, "ability.strength.1");
+        var secondMastery = BuildAbility("2nd Weapon Mastery", 2, "ability.wm.2");
+
+        var result = AbilityPrerequisiteService.Evaluate(
+            selectedAbilities: new[] { veteranFighter },
+            knownAbilityTerms: new[] { "1st Grade of Strength", "2nd Weapon Mastery" },
+            abilityCatalog: new[] { veteranFighter, firstStrength, secondMastery });
+
+        Assert.False(result.HasIssues);
+        Assert.Empty(result.MissingPrerequisiteKeys);
+    }
+
+    [Fact]
+    public void Evaluate_ParsesGrantedStrengthFromKnownEffectText()
+    {
+        var veteranFighter = BuildAbility(
+            "Veteran Fighter",
+            9,
+            "ability.veteran-fighter",
+            preReqs: new[] { "+1 Strength" });
+
+        var result = AbilityPrerequisiteService.Evaluate(
+            selectedAbilities: new[] { veteranFighter },
+            knownAbilityTerms: new[] { "Grants +1 stacking Strength, max +3." },
+            abilityCatalog: new[] { veteranFighter });
+
+        Assert.False(result.HasIssues);
+        Assert.Empty(result.MissingPrerequisiteKeys);
+    }
+
     private static EvolutionService.AbilityResult BuildAbility(
         string name,
         int table,

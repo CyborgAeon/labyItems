@@ -28,7 +28,7 @@ public sealed class PeopleServiceTests : ServiceTestBase
             .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        var expected = new[] { "Athfanal", "Elf", "Faerie", "Farfolk", "Samila", "Verdant Heart" }
+        var expected = new[] { "Athfanal", "Elf", "Faerie", "Farfolk", "Samila" }
             .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
             .ToList();
 

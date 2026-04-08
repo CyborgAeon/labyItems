@@ -1,0 +1,22 @@
+{
+  "$schemaVersion": 1,
+  "rules": {
+    "system-rule.jade-code": {
+      "Key": "system-rule.jade-code",
+      "Name": "The Jade Code",
+      "Aliases": [
+        "Code of Jade",
+        "Jade Code"
+      ],
+      "Description": "Those within Amles loyal to the Jade Empire strive to follow the Jade Code, a set of ideals that uphold the spirit of the Empire of Jade. The Code should be followed in spirit more than letter. Those with the Samurai Tradition or the Honoured One Status must follow this code, and to fail to do so means they must commit Seppuku before the end of the dungeon they break it on.\n\n- Always display your clan/family symbol\n- Be honest throughout your dealings with all people\n- Be true to your word\n- Do not break the law of the Jade Empire\n- Fight the most dangerous enemy present\n- Show courtesy to all including your enemy\n- Never let an insult go un-avenged\n- Do not break a promise\n- Never betray your Lord, Clan or friends"
+    },
+    "system-rule.seppuku": {
+      "Key": "system-rule.seppuku",
+      "Name": "Seppuku",
+      "Aliases": [
+        "Rite of Seppuku"
+      ],
+      "Description": "Where an individual bound by the Jade Code has failed to live up to its ideals they must commit Seppuku (ritual suicide) to purge the dishonour. This must be completed on the dungeon where the breach occurred. Individuals committing Seppuku permanently die, though they may rebirth.\n\nAlternatively, if an individual refuses to commit Seppuku they become dishonoured and must immediately begin purchasing the Dishonoured One Status. This will result in them being cast out of their Clans (including Guilds)."
+    }
+  }
+}

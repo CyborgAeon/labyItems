@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Services;
+using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 
 namespace labyItems.Pages.SpecialisationCard;
 
@@ -66,6 +67,8 @@ public partial class SpecialisationDetailCardView : ContentView
 
     public ObservableCollection<string> MetadataChips { get; } = new();
     public bool HasMetadataChips => MetadataChips.Count > 0;
+    public ObservableCollection<AsPerEntryVm> AsPerEntries { get; } = new();
+    public bool HasAsPerEntries => AsPerEntries.Count > 0;
 
     private AbilityDefinition? _resolvedAbility;
     private ColourAbilityRecord? _resolvedColourAbility;
@@ -109,6 +112,7 @@ public partial class SpecialisationDetailCardView : ContentView
         InitializeComponent();
         SizeChanged += (_, __) => ScheduleExpandabilityRefresh();
         MetadataChips.CollectionChanged += (_, __) => OnPropertyChanged(nameof(HasMetadataChips));
+        AsPerEntries.CollectionChanged += (_, __) => OnPropertyChanged(nameof(HasAsPerEntries));
     }
 
     private static void OnSpecialisationDataChanged(BindableObject bindable, object oldValue, object newValue)
@@ -124,9 +128,30 @@ public partial class SpecialisationDetailCardView : ContentView
         _resolvedAbility = ResolveSelectedAbility();
         _resolvedColourAbility = ResolveSelectedColourAbility();
         RebuildMetadataChips();
+        RebuildAsPerEntries();
         IsDescriptionExpanded = false;
         RaiseComputedProperties();
         ScheduleExpandabilityRefresh();
+    }
+
+    private void RebuildAsPerEntries()
+    {
+        AsPerEntries.Clear();
+
+        var references = (_resolvedAbility?.AsPer ?? Enumerable.Empty<string>())
+            .Concat(_resolvedColourAbility?.AsPer ?? Enumerable.Empty<string>())
+            .Select(value => (value ?? string.Empty).Trim())
+            .Where(value => value.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var reference in references)
+        {
+            AsPerEntries.Add(new AsPerEntryVm(
+                reference,
+                BuildAsPerDisplayName(reference),
+                hasDetails: true));
+        }
     }
 
     private void RebuildMetadataChips()
@@ -378,6 +403,24 @@ public partial class SpecialisationDetailCardView : ContentView
         return trimmed.Length == 0 ? fallback : trimmed;
     }
 
+    private static string BuildAsPerDisplayName(string reference)
+    {
+        var text = (reference ?? string.Empty).Trim();
+        if (text.StartsWith("$", StringComparison.Ordinal))
+            text = text[1..].Trim();
+
+        foreach (var prefix in new[] { "system-rule.", "system-rule:", "systemrule.", "systemrule:", "rule.", "rule:" })
+        {
+            if (text.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                text = text[prefix.Length..].Trim();
+                break;
+            }
+        }
+
+        return text.Length == 0 ? reference : text;
+    }
+
     private void RaiseComputedProperties()
     {
         OnPropertyChanged(nameof(TitleText));
@@ -390,9 +433,95 @@ public partial class SpecialisationDetailCardView : ContentView
         OnPropertyChanged(nameof(HasRoleplay));
         OnPropertyChanged(nameof(LoreText));
         OnPropertyChanged(nameof(HasLore));
+        OnPropertyChanged(nameof(HasAsPerEntries));
         OnPropertyChanged(nameof(DescriptionChevronText));
         OnPropertyChanged(nameof(ShowDescriptionSeeMore));
         OnPropertyChanged(nameof(HasMetadataChips));
+    }
+
+    private async void OnAsPerInfoClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button)
+            return;
+
+        if (button.CommandParameter is not AsPerEntryVm entry)
+            return;
+
+        var nav = ResolveNavigation();
+        if (nav == null)
+            return;
+
+        var reference = (entry.Reference ?? string.Empty).Trim();
+        if (reference.Length == 0)
+            return;
+
+        var systemRule = await SystemRulesService.FindAsync(reference);
+        if (systemRule != null)
+        {
+            await nav.PushAsync(new AbilityCardPage(new EvolutionService.AbilityResult
+            {
+                Index = string.IsNullOrWhiteSpace(systemRule.Name) ? "System Rule" : systemRule.Name.Trim(),
+                Description = systemRule.Description ?? string.Empty,
+                Table = 0,
+                Cost = 0,
+                Available = "ALL",
+                CanBuyMultiple = false,
+                PreReqs = Array.Empty<string>()
+            }));
+            return;
+        }
+
+        var fromAbilityLookup = await AbilityDetailsLookupService.FindByIndexAsync(reference);
+        if (fromAbilityLookup != null)
+        {
+            await nav.PushAsync(new AbilityCardPage(fromAbilityLookup));
+            return;
+        }
+
+        var fromSpecialisation = await DetailCardLookupService.FindSpecialisationAbilityAsync(reference);
+        if (fromSpecialisation.Ability != null)
+        {
+            await nav.PushAsync(new AbilityCardPage(ToAbilityResult(fromSpecialisation.Ability, fromSpecialisation.Key, reference)));
+        }
+    }
+
+    private INavigation? ResolveNavigation()
+    {
+        if (Navigation?.NavigationStack is { Count: > 0 })
+            return Navigation;
+
+        if (Shell.Current?.Navigation is { } shellNav)
+            return shellNav;
+
+        return Application.Current?.MainPage?.Navigation;
+    }
+
+    private static EvolutionService.AbilityResult ToAbilityResult(
+        AbilityDefinition source,
+        string resolvedKey,
+        string requestedKey)
+    {
+        var name = (source.Name ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = (resolvedKey ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = (requestedKey ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = "Ability";
+
+        return new EvolutionService.AbilityResult
+        {
+            Index = name,
+            Description = source.Effect ?? string.Empty,
+            Cost = 0,
+            Table = 0,
+            Available = source.Source ?? "ALL",
+            CanBuyMultiple = false,
+            PreReqs = source.PreReqs is { Count: > 0 } preReqs
+                ? preReqs
+                : Array.Empty<string>(),
+            MaxAvailable = source.Count
+        };
     }
 
     private void OnExpandableLabelSizeChanged(object sender, EventArgs e)
@@ -537,5 +666,19 @@ public partial class SpecialisationDetailCardView : ContentView
             easing: Easing.CubicInOut);
         container.HeightRequest = -1;
         ScheduleExpandabilityRefresh();
+    }
+
+    public sealed class AsPerEntryVm
+    {
+        public AsPerEntryVm(string reference, string displayName, bool hasDetails)
+        {
+            Reference = (reference ?? string.Empty).Trim();
+            DisplayName = (displayName ?? string.Empty).Trim();
+            HasDetails = hasDetails;
+        }
+
+        public string Reference { get; }
+        public string DisplayName { get; }
+        public bool HasDetails { get; }
     }
 }

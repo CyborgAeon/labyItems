@@ -13,11 +13,45 @@
                             CornerRadius="12"
                             Padding="12"
                             BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="4">
+                            <VerticalStackLayout Spacing="6">
                                    <Label Text="Identity"
                                           FontAttributes="Bold"/>
-                                   <Label Text="{Binding PlayerNameSummary}"/>
-                                   <Label Text="{Binding CharacterNameSummary}"/>
+                                   <Grid ColumnDefinitions="*,Auto"
+                                         ColumnSpacing="8">
+                                          <Label Text="{Binding PlayerNameSummary}"
+                                                 VerticalTextAlignment="Center"/>
+                                          <Button Grid.Column="1"
+                                                  Text="&#xF1FC;"
+                                                  FontFamily="FASolid"
+                                                  FontSize="12"
+                                                  Padding="0"
+                                                  BackgroundColor="Transparent"
+                                                  TextColor="{StaticResource SubtleTextColor}"
+                                                  HeightRequest="18"
+                                                  WidthRequest="18"
+                                                  MinimumHeightRequest="0"
+                                                  MinimumWidthRequest="0"
+                                                  VerticalOptions="Center"
+                                                  Clicked="OnEditIdentityClicked"/>
+                                   </Grid>
+                                   <Grid ColumnDefinitions="*,Auto"
+                                         ColumnSpacing="8">
+                                          <Label Text="{Binding CharacterNameSummary}"
+                                                 VerticalTextAlignment="Center"/>
+                                          <Button Grid.Column="1"
+                                                  Text="&#xF1FC;"
+                                                  FontFamily="FASolid"
+                                                  FontSize="12"
+                                                  Padding="0"
+                                                  BackgroundColor="Transparent"
+                                                  TextColor="{StaticResource SubtleTextColor}"
+                                                  HeightRequest="18"
+                                                  WidthRequest="18"
+                                                  MinimumHeightRequest="0"
+                                                  MinimumWidthRequest="0"
+                                                  VerticalOptions="Center"
+                                                  Clicked="OnEditIdentityClicked"/>
+                                   </Grid>
                             </VerticalStackLayout>
                      </Frame>
 
@@ -39,12 +73,46 @@
                             CornerRadius="12"
                             Padding="12"
                             BorderColor="{StaticResource SurfaceBorderColor}">
-                            <VerticalStackLayout Spacing="4">
+                            <VerticalStackLayout Spacing="6">
                                    <Label Text="Race and class"
                                           FontAttributes="Bold"/>
-                                   <Label Text="{Binding RaceSummary}"/>
+                                   <Grid ColumnDefinitions="*,Auto"
+                                         ColumnSpacing="8">
+                                          <Label Text="{Binding RaceSummary}"
+                                                 VerticalTextAlignment="Center"/>
+                                          <Button Grid.Column="1"
+                                                  Text="&#xF1FC;"
+                                                  FontFamily="FASolid"
+                                                  FontSize="12"
+                                                  Padding="0"
+                                                  BackgroundColor="Transparent"
+                                                  TextColor="{StaticResource SubtleTextColor}"
+                                                  HeightRequest="18"
+                                                  WidthRequest="18"
+                                                  MinimumHeightRequest="0"
+                                                  MinimumWidthRequest="0"
+                                                  VerticalOptions="Center"
+                                                  Clicked="OnEditRaceClicked"/>
+                                   </Grid>
                                    <Label Text="{Binding RaceSubtypeSummary}"/>
-                                   <Label Text="{Binding ClassSummary}"/>
+                                   <Grid ColumnDefinitions="*,Auto"
+                                         ColumnSpacing="8">
+                                          <Label Text="{Binding ClassSummary}"
+                                                 VerticalTextAlignment="Center"/>
+                                          <Button Grid.Column="1"
+                                                  Text="&#xF1FC;"
+                                                  FontFamily="FASolid"
+                                                  FontSize="12"
+                                                  Padding="0"
+                                                  BackgroundColor="Transparent"
+                                                  TextColor="{StaticResource SubtleTextColor}"
+                                                  HeightRequest="18"
+                                                  WidthRequest="18"
+                                                  MinimumHeightRequest="0"
+                                                  MinimumWidthRequest="0"
+                                                  VerticalOptions="Center"
+                                                  Clicked="OnEditClassClicked"/>
+                                   </Grid>
                                    <Label Text="{Binding AlignmentSummary}"/>
                             </VerticalStackLayout>
                      </Frame>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Characters.GuildBenefitSelectionPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Choose guild benefit"
+    Shell.NavBarIsVisible="True"
+    BackgroundColor="White">
+
+    <Grid RowDefinitions="Auto,*,Auto"
+          Padding="16"
+          RowSpacing="12">
+
+        <VerticalStackLayout Spacing="4">
+            <Label Text="Choose one guild benefit"
+                   FontAttributes="Bold"
+                   FontSize="16"/>
+            <Label Text="Review each option and tap the one you want."
+                   FontSize="13"
+                   Opacity="0.7"/>
+        </VerticalStackLayout>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="12"
+                                 BindableLayout.ItemsSource="{Binding Options}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Frame
+                            Padding="12"
+                            CornerRadius="12"
+                            HasShadow="False"
+                            BorderColor="{StaticResource SurfaceBorderColor}"
+                            BackgroundColor="White">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnSpacing="8">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="{Binding Label}"
+                                           FontAttributes="Bold"
+                                           FontSize="14"/>
+                                    <VerticalStackLayout Spacing="2"
+                                                         Padding="0,4,0,0"
+                                                         BindableLayout.ItemsSource="{Binding Lines}">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Text="{Binding .}"
+                                                       FontSize="12"
+                                                       Opacity="0.75"
+                                                       LineBreakMode="WordWrap"/>
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </VerticalStackLayout>
+                                </VerticalStackLayout>
+
+                                <Button Grid.Row="0"
+                                        Grid.Column="1"
+                                        Grid.RowSpan="2"
+                                        Text="Select"
+                                        Padding="10,6"
+                                        FontSize="12"
+                                        VerticalOptions="Center"
+                                        Command="{Binding SelectCommand}"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        TextColor="White"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Button Grid.Row="2"
+                Text="Done"
+                Style="{StaticResource ExpandedActionButtonStyle}"
+                Clicked="OnDoneClicked"/>
+    </Grid>
+</ContentPage>

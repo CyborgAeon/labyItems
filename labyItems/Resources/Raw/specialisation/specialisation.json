@@ -2177,6 +2177,9 @@
       "Silver"
     ]
   },
+  "Witch Doctor Colour": {
+    "Options": ["Brown", "White", "Black"]
+  },
   "Vivomancer Colour": {
     "Options": ["Gold", "Jade", "White"]
   },

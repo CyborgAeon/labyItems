@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -132,9 +131,6 @@ public sealed class WizardVm : INotifyPropertyChanged
     private IReadOnlyList<SpecialisationSummaryLineVm> _specialisationSummaryLines = Array.Empty<SpecialisationSummaryLineVm>();
     private IReadOnlyList<LevelAbilityRowVm> _classLevelAbilityRows = Array.Empty<LevelAbilityRowVm>();
     private IReadOnlyList<LevelAbilityRowVm> _raceLevelAbilityRows = Array.Empty<LevelAbilityRowVm>();
-    private static readonly Regex LevelNumberRegex = new(
-        "\\d+",
-        RegexOptionsCompat.ForRuntime(RegexOptions.Compiled));
 
     public ObservableCollection<AbilitySpendLine> AdvancementAbilityLines { get; } = new();
 
@@ -214,7 +210,17 @@ public sealed class WizardVm : INotifyPropertyChanged
         RefreshSpecialisationSummaryLines();
         _ = EnsureSpecialisationAbilityLookupLoadedAsync();
 
-        MainThread.BeginInvokeOnMainThread(async () => await SyncDraftStateAsync(allowBackground: true));
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            try
+            {
+                await SyncDraftStateAsync(allowBackground: true);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Wizard initial sync failed: {ex}");
+            }
+        });
     }
 
     private IReadOnlyList<WizardStepDefinition> BuildSteps()
@@ -573,10 +579,10 @@ public sealed class WizardVm : INotifyPropertyChanged
             (IReadOnlyList<LevelAbilityRowVm> classRows, IReadOnlyList<LevelAbilityRowVm> raceRows) =
                 (Array.Empty<LevelAbilityRowVm>(), Array.Empty<LevelAbilityRowVm>());
 
+            await RefreshBuilderStateOnMainThreadAsync().ConfigureAwait(false);
+
             await Task.Run(async () =>
             {
-                await CharacterBuilderVm.SyncDraftLifeAsync().ConfigureAwait(false);
-                await CharacterBuilderVm.RefreshDraftAbilitiesAsync().ConfigureAwait(false);
                 await EnsureAbilityCostIndexAsync().ConfigureAwait(false);
                 (classRows, raceRows) = await BuildReviewLevelAbilityRowsAsync().ConfigureAwait(false);
             }).ConfigureAwait(false);
@@ -606,6 +612,22 @@ public sealed class WizardVm : INotifyPropertyChanged
                 ApplyAdvancementSummary();
             });
         }
+    }
+
+    private async Task RefreshBuilderStateOnMainThreadAsync()
+    {
+        if (MainThread.IsMainThread)
+        {
+            await CharacterBuilderVm.SyncDraftLifeAsync();
+            await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
+            return;
+        }
+
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            await CharacterBuilderVm.SyncDraftLifeAsync();
+            await CharacterBuilderVm.RefreshDraftAbilitiesAsync();
+        });
     }
 
     private async Task<(IReadOnlyList<LevelAbilityRowVm> ClassRows, IReadOnlyList<LevelAbilityRowVm> RaceRows)>
@@ -659,17 +681,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         if (!races.TryGetValue(raceKey, out var raceRecord) || raceRecord?.LevelledAbilities == null)
             return Array.Empty<LevelAbilityRowVm>();
 
-        var rows = new List<LevelAbilityRowVm>();
-        for (var level = 1; level <= 8; level++)
-        {
-            var abilities = GetAbilitiesForLevel(raceRecord.LevelledAbilities, level);
-            if (abilities.Count == 0)
-                continue;
-
-            rows.Add(LevelAbilityRowBuilder.Build(level, abilities));
-        }
-
-        return rows;
+        return BuildRaceStageRows(raceRecord.LevelledAbilities);
     }
 
     private void ApplyReviewLevelAbilityRows(
@@ -710,6 +722,46 @@ public sealed class WizardVm : INotifyPropertyChanged
         return Array.Empty<AbilityDefinition>();
     }
 
+    private static IReadOnlyList<LevelAbilityRowVm> BuildRaceStageRows(
+        Dictionary<string, List<AbilityDefinition>> levels)
+    {
+        if (levels == null || levels.Count == 0)
+            return Array.Empty<LevelAbilityRowVm>();
+
+        var grouped = new Dictionary<(ProgressionStageKind Kind, int Value), List<AbilityDefinition>>();
+
+        foreach (var entry in levels)
+        {
+            if (!CharacterProgressionTables.TryParseStage(entry.Key, out var stage)
+                || !stage.IsValid)
+            {
+                continue;
+            }
+
+            var key = (stage.Kind, stage.Value);
+            if (!grouped.TryGetValue(key, out var list))
+            {
+                list = new List<AbilityDefinition>();
+                grouped[key] = list;
+            }
+
+            foreach (var ability in entry.Value ?? Enumerable.Empty<AbilityDefinition>())
+            {
+                if (ability != null)
+                    list.Add(ability);
+            }
+        }
+
+        return grouped
+            .OrderBy(entry => entry.Key.Kind == ProgressionStageKind.Table ? 1 : 0)
+            .ThenBy(entry => entry.Key.Value)
+            .Select(entry => LevelAbilityRowBuilder.Build(
+                level: entry.Key.Value,
+                abilityDefinitions: entry.Value,
+                isTableStage: entry.Key.Kind == ProgressionStageKind.Table))
+            .ToList();
+    }
+
     private string? ResolveRecordKey<T>(IReadOnlyDictionary<string, T> records, string rawName)
     {
         var trimmed = (rawName ?? string.Empty).Trim();
@@ -740,15 +792,9 @@ public sealed class WizardVm : INotifyPropertyChanged
 
     private static int? ExtractLevel(string? key)
     {
-        if (int.TryParse(key, out var numericLevel))
-            return numericLevel;
-
-        var match = LevelNumberRegex.Match(key ?? string.Empty);
-        if (!match.Success)
-            return null;
-
-        return int.TryParse(match.Value, out numericLevel)
-            ? numericLevel
+        return CharacterProgressionTables.TryParseStage(key, out var stage)
+               && stage.Kind == ProgressionStageKind.Level
+            ? stage.Value
             : null;
     }
 

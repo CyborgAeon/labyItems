@@ -39,6 +39,7 @@ public sealed class ChoiceOption
     public string Key { get; init; } = string.Empty;
     public string Label { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
+    public IReadOnlyList<string> AsPer { get; init; } = Array.Empty<string>();
     public IReadOnlyList<AbilityGrant> Grants { get; init; } = Array.Empty<AbilityGrant>();
     public OptionCustomisation? Customisation { get; init; }
     public OptionEffects Effects { get; init; } = new();
@@ -50,6 +51,7 @@ public sealed class ChoiceOption
 public sealed class AbilityGrant
 {
     public int? Level { get; init; }
+    public int? Table { get; init; }
     public AbilityDefinition Ability { get; init; } = new();
     public IReadOnlyList<string> StrategyIds { get; init; } = Array.Empty<string>();
     public IReadOnlyDictionary<string, string> Metadata { get; init; } = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>());

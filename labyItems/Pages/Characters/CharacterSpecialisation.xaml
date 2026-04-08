@@ -124,7 +124,7 @@
                                   ColumnSpacing="8"
                                   IsVisible="{Binding AbilityRows.Count, Converter={StaticResource GreaterThanZeroConverter}}"
                                   Opacity="0.7">
-                                <Label Text="Lvl"/>
+                                <Label Text="Stage"/>
                                 <Label Grid.Column="1"
                                        Text="Ability"/>
                             </Grid>
@@ -171,17 +171,27 @@
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
 
-                            <Label Text="No abilities available for this selection."
-                                   Opacity="0.75">
-                                <Label.Triggers>
-                                    <DataTrigger TargetType="Label"
-                                                 Binding="{Binding AbilityRows.Count, Converter={StaticResource GreaterThanZeroConverter}}"
-                                                 Value="True">
-                                        <Setter Property="IsVisible"
-                                                Value="False"/>
-                                    </DataTrigger>
-                                </Label.Triggers>
-                            </Label>
+                            <Grid ColumnDefinitions="*,24"
+                                  ColumnSpacing="8"
+                                  IsVisible="{Binding HasAboutSelectionLink}">
+                                <Label Text="{Binding AboutSelectionLabel}"
+                                       Opacity="0.75"
+                                       VerticalTextAlignment="Center"/>
+                                <Button Grid.Column="1"
+                                        Text="&#xF05A;"
+                                        FontFamily="FASolid"
+                                        FontSize="12"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource SubtleTextColor}"
+                                        HeightRequest="18"
+                                        WidthRequest="18"
+                                        MinimumHeightRequest="0"
+                                        MinimumWidthRequest="0"
+                                        VerticalOptions="Center"
+                                        Command="{Binding Source={x:Reference Root}, Path=ViewSpecialisationDetailsCommand}"
+                                        CommandParameter="{Binding .}"/>
+                            </Grid>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </VerticalStackLayout>

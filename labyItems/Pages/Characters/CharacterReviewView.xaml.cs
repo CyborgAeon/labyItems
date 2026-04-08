@@ -11,6 +11,13 @@ namespace labyItems.Pages.Characters;
 
 public partial class CharacterReviewView : ContentView
 {
+    private enum ReviewEditDestination
+    {
+        Identity,
+        Race,
+        Class
+    }
+
     public static readonly BindableProperty ShowSaveButtonProperty = BindableProperty.Create(
         nameof(ShowSaveButton),
         typeof(bool),
@@ -222,6 +229,21 @@ public partial class CharacterReviewView : ContentView
             await nav.PushAsync(new AbilityCardPage(line.Ability));
     }
 
+    private async void OnEditIdentityClicked(object sender, EventArgs e)
+    {
+        await NavigateToEditDestinationAsync(ReviewEditDestination.Identity);
+    }
+
+    private async void OnEditRaceClicked(object sender, EventArgs e)
+    {
+        await NavigateToEditDestinationAsync(ReviewEditDestination.Race);
+    }
+
+    private async void OnEditClassClicked(object sender, EventArgs e)
+    {
+        await NavigateToEditDestinationAsync(ReviewEditDestination.Class);
+    }
+
     private async void OnGetBattleboardClicked(object sender, EventArgs e)
     {
         if (BindingContext is not WizardVm vm)
@@ -230,6 +252,23 @@ public partial class CharacterReviewView : ContentView
         var page = ResolveHostPage();
         if (page == null)
             return;
+
+        if (vm.GuildsVm != null && !vm.GuildsVm.IsComplete)
+        {
+            var shouldReview = await page.DisplayAlert(
+                "Incomplete guild choices",
+                "One or more selected guild benefit choices are incomplete. Review guilds and complete them before exporting?",
+                "Review guilds",
+                "Cancel");
+
+            if (shouldReview)
+            {
+                if (vm.StepClickCommand?.CanExecute(2) == true)
+                    vm.StepClickCommand.Execute(2);
+            }
+
+            return;
+        }
 
         const string cancel = "cancel";
         const string emailToDesk = "email to desk";
@@ -274,6 +313,53 @@ public partial class CharacterReviewView : ContentView
                 BuildDetailedExceptionMessage(ex),
                 "OK");
         }
+    }
+
+    private async Task NavigateToEditDestinationAsync(ReviewEditDestination destination)
+    {
+        if (BindingContext is not WizardVm vm)
+            return;
+
+        var hostPage = ResolveHostPage();
+        if (hostPage is Wizard)
+        {
+            ApplyReviewEditDestination(vm, destination);
+            return;
+        }
+
+        var nav = ResolveNavigation();
+        if (nav == null)
+            return;
+
+        var wizardPage = new Wizard(vm.Draft, async () => await nav.PopAsync());
+        await nav.PushAsync(wizardPage);
+
+        if (wizardPage.BindingContext is WizardVm wizardVm)
+            ApplyReviewEditDestination(wizardVm, destination);
+    }
+
+    private static void ApplyReviewEditDestination(WizardVm vm, ReviewEditDestination destination)
+    {
+        switch (destination)
+        {
+            case ReviewEditDestination.Identity:
+                NavigateToWizardStep(vm, 3);
+                break;
+            case ReviewEditDestination.Race:
+                vm.CharacterBuilderVm.TryMoveToRaceSelection();
+                NavigateToWizardStep(vm, 0);
+                break;
+            case ReviewEditDestination.Class:
+                vm.CharacterBuilderVm.TryMoveToClassSelection();
+                NavigateToWizardStep(vm, 0);
+                break;
+        }
+    }
+
+    private static void NavigateToWizardStep(WizardVm vm, int stepIndex)
+    {
+        if (vm.StepClickCommand?.CanExecute(stepIndex) == true)
+            vm.StepClickCommand.Execute(stepIndex);
     }
 
     private static string ExtractSpecialisationTitleFromSummary(string? summaryText)

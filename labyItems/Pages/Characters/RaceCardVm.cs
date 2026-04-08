@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Text.RegularExpressions;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Models.ViewModels;
 
@@ -63,13 +64,9 @@ public sealed class RaceCardVm : INotifyPropertyChanged
     {
         LevelRows.Clear();
 
-        for (var level = 1; level <= 8; level++)
+        foreach (var stageRow in BuildOrderedStageRows(levelledAbilities))
         {
-            var abilities = FindAbilitiesForLevel(levelledAbilities, level);
-            if (abilities.Count == 0)
-                continue;
-
-            LevelRows.Add(LevelAbilityRowBuilder.Build(level, abilities));
+            LevelRows.Add(stageRow);
         }
 
         HasAnyAbilities = LevelRows.Count > 0;
@@ -83,30 +80,42 @@ public sealed class RaceCardVm : INotifyPropertyChanged
         Raise(nameof(BuyAsChips));
     }
 
-    private static IReadOnlyList<AbilityDefinition> FindAbilitiesForLevel(
-        Dictionary<string, List<AbilityDefinition>> dict,
-        int level)
+    private static IReadOnlyList<LevelAbilityRowVm> BuildOrderedStageRows(
+        Dictionary<string, List<AbilityDefinition>> dict)
     {
+        var grouped = new Dictionary<(ProgressionStageKind Kind, int Value), List<AbilityDefinition>>();
+
         foreach (var kvp in dict)
         {
-            var lvl = ExtractLevel(kvp.Key);
-            if (lvl != level) continue;
+            if (!CharacterProgressionTables.TryParseStage(kvp.Key, out var stage)
+                || !stage.IsValid)
+            {
+                continue;
+            }
 
-            var abilities = kvp.Value?
-                .Where(def => def != null)
-                .ToList();
+            var key = (stage.Kind, stage.Value);
+            if (!grouped.TryGetValue(key, out var list))
+            {
+                list = new List<AbilityDefinition>();
+                grouped[key] = list;
+            }
 
-            return abilities ?? new List<AbilityDefinition>();
+            foreach (var ability in kvp.Value ?? Enumerable.Empty<AbilityDefinition>())
+            {
+                if (ability != null)
+                    list.Add(ability);
+            }
         }
 
-        return Array.Empty<AbilityDefinition>();
-    }
+        return grouped
+            .OrderBy(entry => entry.Key.Kind == ProgressionStageKind.Table ? 1 : 0)
+            .ThenBy(entry => entry.Key.Value)
+            .Select(entry => LevelAbilityRowBuilder.Build(
+                level: entry.Key.Value,
+                abilityDefinitions: entry.Value,
+                isTableStage: entry.Key.Kind == ProgressionStageKind.Table))
+            .ToList();
 
-    private static int? ExtractLevel(string key)
-    {
-        if (int.TryParse(key, out var n)) return n;
-        var m = Regex.Match(key ?? "", "\\d+");
-        return m.Success && int.TryParse(m.Value, out n) ? n : null;
     }
 
     private static IEnumerable<string> SplitBuyAs(string s)

@@ -10,14 +10,14 @@
         <Grid ColumnSpacing="8"
               Opacity="0.7">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="28"/>
+                <ColumnDefinition Width="36"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="{Binding Source={x:Reference Root}, Path=WeaponSkillColumnWidth}"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Text="Lvl"/>
+            <Label Text="Stage"/>
             <Label Grid.Column="1"
                    Text="Body"
                    IsVisible="{Binding Source={x:Reference Root}, Path=ShowBodyAndLoc}"
@@ -43,14 +43,14 @@
                     <Grid ColumnSpacing="8"
                           Padding="0,2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="28"/>
+                            <ColumnDefinition Width="36"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="{Binding Source={x:Reference Root}, Path=WeaponSkillColumnWidth}"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label Text="{Binding Level}"/>
+                        <Label Text="{Binding StageText}"/>
                         <Label Grid.Column="1"
                                Text="{Binding Body}"
                                IsVisible="{Binding Source={x:Reference Root}, Path=ShowBodyAndLoc}"

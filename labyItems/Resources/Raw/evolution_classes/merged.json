@@ -564,7 +564,7 @@
     "available": [],
     "table": 3,
     "cost": 50,
-    "index": "Resistance to Causing",
+    "index": "1st Resistance to Causing",
     "desc": "1st Resistance to Causing miracles (½ (previous) effect)",
     "sourceBook": "Classes"
   },
@@ -2393,7 +2393,7 @@
       {
         "Field": "Race",
         "Operator": "In",
-        "Value": ["Troll"]
+        "Value": ["Troll", "Draconian"]
       }
     ],
     "table": 1,
@@ -2408,7 +2408,7 @@
       {
         "Field": "Race",
         "Operator": "In",
-        "Value": ["Troll"]
+        "Value": ["Troll", "Draconian"]
       }
     ],
     "table": 1,
@@ -2423,7 +2423,7 @@
       {
         "Field": "Race",
         "Operator": "In",
-        "Value": ["Troll"]
+        "Value": ["Troll", "Draconian"]
       }
     ],
     "table": 1,
@@ -2553,7 +2553,7 @@
       {
         "Field": "Race",
         "Operator": "In",
-        "Value": ["Troll"]
+        "Value": ["Troll", "Draconian"]
       }
     ],
     "table": 2,
@@ -2698,7 +2698,7 @@
       {
         "Field": "Race",
         "Operator": "In",
-        "Value": ["Troll"]
+        "Value": ["Troll", "Draconian"]
       }
     ],
     "table": 4,
@@ -3738,7 +3738,7 @@
     ],
     "table": 3,
     "cost": 40,
-    "index": "Resistance (1/2 effect) Soul Lance",
+    "index": "Resistance to Soul Lance",
     "desc": "Resistance (1/2 effect) Soul Lance",
     "sourceBook": "Races",
     "CanAddMultiple": true,
@@ -4230,8 +4230,8 @@
     ],
     "table": 8,
     "cost": 100,
-    "index": "Resistance to 'Mantics which originate from",
-    "desc": "Resistance to 'Mantics which originate from a spiritual effect, character suffers only 1/2 damage, does not affect resistance levels or duration.",
+    "index": "Resistance to Mantics which originate from",
+    "desc": "Resistance to Mantics which originate from a spiritual effect, character suffers only 1/2 damage, does not affect resistance levels or duration.",
     "sourceBook": "Races",
     "CanAddMultiple": true,
     "maxAvailable": "*"
@@ -4252,8 +4252,8 @@
     ],
     "table": 8,
     "cost": 40,
-    "index": "Magical Radiance, may use non enchanted",
-    "desc": "Magical Radiance, may use non enchanted equipment if class would permit it.",
+    "index": "Magical Radiance",
+    "desc": "May use non enchanted equipment if class would permit it.",
     "sourceBook": "Races"
   },
   {
@@ -12165,6 +12165,33 @@
     "preReqs": ["!Dual Colour"],
     "desc": "Gains a third colour. It may not oppose any colour already owned, must be appropriate to the wizard’s alignment, and may not hold dual colour.",
     "sourceBook": "Wizard Grimoire"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🙏 Priest"]
+      }
+    ],
+    "table": 1,
+    "cost": 40,
+    "index": "First Extra Level of Spirits",
+    "desc": "Grants a minimum of 4 spirits total.",
+    "sourceBook": "Words From Above",
+    "data": {
+      "abilityRef": "ability.merged.first-extra-level-of-spirits",
+      "rulesAbilityRefs": ["ability.merged.first-extra-level-of-spirits"],
+      "effectType": "LevelOfPower:Spirit",
+      "powerRule": {
+        "PowerBase": "Spirit",
+        "Mode": "GrantExtraSpiritLevels",
+        "ExtraLevels": 1,
+        "MinimumTotalSpirits": 4,
+        "SourceCategory": "base",
+        "StacksWith": "standard"
+      }
+    }
   },
   {
     "available": [
@@ -21451,5 +21478,1599 @@
     "table": 12,
     "cost": 175,
     "sourceBook": "Collated.pdf"
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Myriak"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Swarm Form (Myriak) I",
+    "desc": "Gain one additional daily Swarm Form innate.",
+    "table": 1,
+    "cost": 60,
+    "sourceBook": "Collated.pdf"
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Myriak"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Swarm Form (Myriak) II",
+    "desc": "Gain one additional daily Swarm Form innate.",
+    "table": 4,
+    "cost": 60,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Additional Swarm Form (Myriak) I"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Myriak"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Swarm Form (Myriak) III",
+    "desc": "Gain one additional daily Swarm Form innate.",
+    "table": 7,
+    "cost": 60,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Additional Swarm Form (Myriak) II"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Myriak"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Swarm Form (Myriak) IV",
+    "desc": "Gain one additional daily Swarm Form innate.",
+    "table": 10,
+    "cost": 60,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Additional Swarm Form (Myriak) III"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Myriak"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Shape Shift (Myriak) I",
+    "desc": "Gain one additional daily Shape Shift innate.",
+    "table": 1,
+    "cost": 60,
+    "sourceBook": "Collated.pdf"
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Myriak"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Shape Shift (Myriak) II",
+    "desc": "Gain one additional daily Shape Shift innate.",
+    "table": 5,
+    "cost": 60,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Additional Shape Shift (Myriak) I"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Myriak"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Shape Shift (Myriak) III",
+    "desc": "Gain one additional daily Shape Shift innate.",
+    "table": 9,
+    "cost": 60,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Additional Shape Shift (Myriak) II"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Myriak"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Rapid Blossom",
+    "desc": "The poisons from Venom Blossom kick in instantly (as per Venom Blossom).",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Venom Blossom"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Myriak"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Poisonous Blossom",
+    "desc": "Upon death strikes the killer with a torrent of poison causing CV4 every 30 seconds for 5 minutes (or until cured), plus CV paralysis with normal 30 second kick-in.",
+    "table": 9,
+    "cost": 0,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Venom Blossom"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Myriak"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Deadly Venom",
+    "desc": "The poison from Venom Blossom becomes a CV Death.",
+    "table": 11,
+    "cost": 0,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Venom Blossom"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Human"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Stormvale"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Stormvale Secondary Affinity",
+    "desc": "Buy the elf-innate set not chosen at character start (Air or Aquatic).",
+    "table": 5,
+    "cost": 80,
+    "sourceBook": "Collated.pdf"
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Grinner"]
+      }
+    ],
+    "index": "Strong Teeth (Grinner) I",
+    "desc": "Upgrade one Bite in Half use to be a Grand Weapon Blow.",
+    "table": 9,
+    "cost": 30,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Bite in Half"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Grinner"]
+      }
+    ],
+    "index": "Strong Teeth (Grinner) II",
+    "desc": "Upgrade one additional Bite in Half use to be a Grand Weapon Blow.",
+    "table": 9,
+    "cost": 30,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Strong Teeth (Grinner) I"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Rokeen"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Clinging Breath (Rokeen)",
+    "desc": "Gain one additional daily Clinging Breath innate (max 1 per table).",
+    "table": 3,
+    "cost": 50,
+    "canBuyMultiple": true,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Clinging Breath"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Rokeen"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Non-Level Clinging Breath (Rokeen)",
+    "desc": "Enhance all Clinging Breath innates to be non-level based.",
+    "table": 9,
+    "cost": 75,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Clinging Breath"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Rokeen"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Frenzy (Rokeen)",
+    "desc": "Gain one additional daily Frenzy innate (maximum 3 total extra uses).",
+    "table": 7,
+    "cost": 80,
+    "canBuyMultiple": true,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Frenzy"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Gloozin"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Poison Spit (Gloozin)",
+    "desc": "Gain one additional daily Poison Spit innate (max 2 per table).",
+    "table": 1,
+    "cost": 20,
+    "canBuyMultiple": true,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Poison Spit"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Gloozin"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Spray (Gloozin)",
+    "desc": "Poison Spit may affect all targets within a neuronic flare cone.",
+    "table": 5,
+    "cost": 75,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Poison Spit"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Gloozin"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Concentrated Poisoned Spit (Gloozin)",
+    "desc": "May combine multiple Poison Spit uses into a stronger poison (two uses CV4, three uses CV6, etc).",
+    "table": 7,
+    "cost": 0,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Poison Spit"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Gloozin"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Healing Saliva (Gloozin)",
+    "desc": "Gain one additional daily Healing Saliva innate (max 1 per table).",
+    "table": 1,
+    "cost": 20,
+    "canBuyMultiple": true,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Healing Saliva"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Gloozin"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Bone Storm (All Locations) (Gloozin)",
+    "desc": "Enhance Bone Storm to strike every location of the slayer.",
+    "table": 10,
+    "cost": 0,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Bone Storm"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Gloozin"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Blinding Breath (Gloozin)",
+    "desc": "Gain one additional daily Blinding Breath innate (max 1 per 2 tables).",
+    "table": 7,
+    "cost": 60,
+    "canBuyMultiple": true,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Blinding Breath"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Acriden"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Acid Breath (Acriden)",
+    "desc": "Gain one additional daily Acid Breath innate (max 1 per 2 tables).",
+    "table": 7,
+    "cost": 80,
+    "canBuyMultiple": true,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Acid Breath"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Eldricen"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Additional Shadow Breath (Eldricen)",
+    "desc": "Gain one additional daily Shadow Breath innate (max 1 per table).",
+    "table": 1,
+    "cost": 40,
+    "canBuyMultiple": true,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Shadow Breath"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Eldricen"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Lingering Death (Eldricen)",
+    "desc": "Enhance Eldritch Surge degeneration to last for 5 minutes.",
+    "table": 7,
+    "cost": 40,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Eldritch Surge"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Eldricen"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Heart of Power (Eldricen)",
+    "desc": "Enhance Eldritch Surge so it becomes mantic (evil spirit).",
+    "table": 8,
+    "cost": 40,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Eldritch Surge"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Eldricen"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Eternal Death (Eldricen)",
+    "desc": "Enhance Eldritch Surge so it lasts until the killer dies or the draconian is restored to life.",
+    "table": 10,
+    "cost": 0,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Lingering Death (Eldricen)"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Race",
+        "Operator": "In",
+        "Value": ["Draconian"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Eldricen"],
+        "SpecialisationKey": "RaceSubtype"
+      }
+    ],
+    "index": "Natural Resistance Upgrade (Eldricen)",
+    "desc": "Upgrade Natural Resistance to grant +2 MAC and +2 SAC.",
+    "table": 9,
+    "cost": 150,
+    "sourceBook": "Collated.pdf",
+    "preReqs": ["Natural Resistance"]
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Weapon Mastery Shield",
+    "desc": "Grants +1 Max AC to the front while using a shield; maximum DAC is 6.",
+    "table": 1,
+    "cost": 40,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "2nd Weapon Mastery",
+    "desc": "Grants +2 Weapon Mastery in a weapon in which 1st Weapon Mastery is already owned.",
+    "table": 2,
+    "cost": 55,
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "preReqs": ["1st Weapon Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "2nd Grade of Strength",
+    "desc": "Grants 2nd Grade of Strength, from 1st Grade of Strength.",
+    "table": 2,
+    "cost": 80,
+    "preReqs": ["1st Grade of Strength"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Combatant",
+    "desc": "Increases the class base maximum armour class (Max AC) to 9.",
+    "table": 3,
+    "cost": 40,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Immunity to Puissant D'armes",
+    "desc": "Grants immunity to Puissant d'Armes and similar effects.",
+    "table": 3,
+    "cost": 80,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Immunity to Accuracy Versus PAC",
+    "desc": "Grants immunity to Accuracy effects that cut through PAC.",
+    "table": 4,
+    "cost": 60,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Puissant d'Armes",
+    "desc": "When fighting a target using a Rage ability, reduces the Rage modifier by 25%. Requires +2 Weapon Mastery in the weapon used.",
+    "table": 5,
+    "cost": 40,
+    "preReqs": ["2nd Weapon Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Counter Mastery",
+    "desc": "Choose one weapon type. While using that weapon, incoming blows from the same weapon type are reduced by 6 points. This numerical reduction does not stack with other numerical reductions.",
+    "table": 7,
+    "cost": 65,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Lesser Counter Mastery",
+    "desc": "As per Counter Mastery, but grants 3 points reduction instead of 6.",
+    "table": 7,
+    "cost": 40,
+    "asPer": ["Counter Mastery"],
+    "preReqs": ["Counter Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Mighty Strike I",
+    "desc": "Grants +1 Maximum Damage on the first blow of combat. Requires 30 seconds calm preparation.",
+    "table": 7,
+    "cost": 70,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Warrior Tutor",
+    "desc": "Per purchase, may teach one warrior specialist skill the tutor owns to one eligible character each adventure; requires ongoing coaching.",
+    "table": 7,
+    "cost": 20,
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Knockback Blow",
+    "desc": "1/day, while using a B class weapon in two hands and with +2 Strength, a struck target is knocked back 20 feet or until striking a solid object.",
+    "table": 7,
+    "cost": 35,
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "preReqs": ["+2 Strength"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Live to Minus 18",
+    "desc": "Increases Live to Minus to 18 total body life points.",
+    "table": 7,
+    "cost": 50,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Monk"]
+      }
+    ],
+    "index": "Immunity to Force Majeure",
+    "desc": "Grants immunity to Force Majeure.",
+    "table": 7,
+    "cost": 50,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Monk", "Duellist"]
+      }
+    ],
+    "index": "Accuracy",
+    "desc": "First blow of combat negates the foe's PAC. Immunity to Accuracy applies.",
+    "table": 7,
+    "cost": 50,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Contra Mastery",
+    "desc": "As per Counter Mastery, but applies when using one weapon type against a different chosen weapon type.",
+    "table": 8,
+    "cost": 90,
+    "asPer": ["Counter Mastery"],
+    "preReqs": ["Counter Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Weapon Master",
+    "desc": "Choose one weapon only. Grants immunity to loss of weapon masteries, disarm, weapon break, counter mastery and contra mastery; quick draw at will; +1 cumulative mastery in chosen weapon; and Disarm 1/day.",
+    "table": 8,
+    "cost": 200,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Adrenal Surge",
+    "desc": "1/day for 5 minutes gains +1 Strength above previous max, +1 Maximum Damage, +12/4 life, and a non-cumulative 25% Cold Rage.",
+    "table": 8,
+    "cost": 80,
+    "asPer": ["Cold Rage"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Armour Mastery Sharp",
+    "desc": "While wearing master-crafted armour on affected locations, reduces sharp weapon damage by 1 point per purchase before AC is applied. Numerical reduction does not stack with other numerical reductions.",
+    "table": 8,
+    "cost": 50,
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Armour Mastery Blunt",
+    "desc": "While wearing master-crafted armour on affected locations, reduces blunt weapon damage by 1 point per purchase before AC is applied. Numerical reduction does not stack with other numerical reductions.",
+    "table": 8,
+    "cost": 50,
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Lesser Contra Mastery",
+    "desc": "As per Contra Mastery, but grants 3 points reduction instead of 6.",
+    "table": 8,
+    "cost": 50,
+    "asPer": ["Contra Mastery"],
+    "preReqs": ["Contra Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Mighty Strike II",
+    "desc": "From Mighty Strike I: first blow bonus increases to +2 Maximum Damage and needs an additional 30 seconds preparation.",
+    "table": 8,
+    "cost": 80,
+    "preReqs": ["Mighty Strike I"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Conrad's Cheeky Flick",
+    "desc": "From 3 masteries in the weapon being used. Disarms now function regardless of the opponent's damage grade.",
+    "table": 8,
+    "cost": 50,
+    "preReqs": ["3rd Weapon Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Enhanced Weapon Mastery Shield",
+    "desc": "From Weapon Mastery Shield and Distancing Combat. As Enhanced Distancing Combat but with O class weapon and large shield (25+ inch diameter); maximum DAC remains 6.",
+    "table": 8,
+    "cost": 125,
+    "preReqs": ["Weapon Mastery Shield", "Distancing Combat"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Master Armourer",
+    "desc": "While wearing master-crafted heavy armour, gains Immunity to Accuracy vs PAC on covered locations.",
+    "table": 8,
+    "cost": 50,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Resilience",
+    "desc": "Any total body life gained above life cap converts into fully cumulative Live to Minus.",
+    "table": 8,
+    "cost": 50,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Flat of the Blade",
+    "desc": "May inflict blunt damage with a sharp weapon by fighting either at -1 normal maximum damage or without using weapon masteries.",
+    "table": 8,
+    "cost": 60,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Poised and Ready",
+    "desc": "Reduces preparation time for published Mighty Strike abilities by 30 seconds per purchase, to a minimum of 0.",
+    "table": 8,
+    "cost": 30,
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Berserk Rage",
+    "desc": "As per Cold Rage but grants 50% reduction; while berserking the user cannot differentiate friend from foe and cannot use non-weapon active skills.",
+    "table": 9,
+    "cost": 85,
+    "CanAddMultiple": true,
+    "maxAvailable": 3,
+    "asPer": ["Cold Rage"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Noble Warrior Staminas",
+    "desc": "Per purchase, one owned stamina increases from 6/2 to 8/3 (only for staminas from specialist skill or tables).",
+    "table": 9,
+    "cost": 25,
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Mighty Strike III",
+    "desc": "From Mighty Strike II. Grants +1 maximum damage on the second blow of combat and requires an additional 30 seconds preparation.",
+    "table": 9,
+    "cost": 100,
+    "preReqs": ["Mighty Strike I", "Mighty Strike II"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Battle Cry",
+    "desc": "Enhances a War Cry (consuming that innate use) so the user is immune to all listed stopping effects for the War Cry duration.",
+    "table": 9,
+    "cost": 50,
+    "asPer": ["War Cry"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Archer"]
+      }
+    ],
+    "index": "3rd Grade of Strength with Bow from +2",
+    "desc": "From 2nd Grade of Strength for Bow; grants 3rd Grade of Strength for bow use.",
+    "table": 9,
+    "cost": 100,
+    "preReqs": ["2nd Grade of Strength for Bow"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Max Damage Quin",
+    "desc": "Grants maximum damage Quin when using a B class weapon in two hands.",
+    "table": 9,
+    "cost": 100,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Arrow Cutting (Yadomejutsu)",
+    "desc": "While combat ready or engaged, grants half effect versus H and MP attacks.",
+    "table": 9,
+    "cost": 100,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Monk"]
+      }
+    ],
+    "index": "Blind-Fighting",
+    "desc": "When blinded or in supernatural darkness may still fight with eyes open at -1 maximum damage, but not for navigation.",
+    "table": 9,
+    "cost": 125,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Monk"]
+      }
+    ],
+    "index": "2nd Resistance to Sever and Location to Zero",
+    "desc": "From 1st Resistance to Sever and Location to Zero. Sever inflicts half current location value; Location to Zero inflicts a quarter of current location value.",
+    "table": 9,
+    "cost": 125,
+    "preReqs": ["1st Resistance to Sever and Location to Zero"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Monk", "Duellist"]
+      }
+    ],
+    "index": "5th Weapon Mastery (total)",
+    "desc": "From 4th Weapon Mastery, grants total +5 Weapon Mastery in a chosen weapon.",
+    "table": 9,
+    "cost": 40,
+    "preReqs": ["4th Weapon Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Veteran Fighter",
+    "desc": "Grants +6 base damage (+1 damage grade, not max damage). Does not stack with Dirty Fighter.",
+    "table": 9,
+    "cost": 50,
+    "preReqs": ["+1 Weapon Mastery", "+1 Strength"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Strength of Purpose",
+    "desc": "Enhances a War Cry (consuming that innate) to apply against one of: Bind, Entangle, Repels, Gravity Well, or effects that mimic these.",
+    "table": 9,
+    "cost": 30,
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "asPer": ["War Cry"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Tempo of Battle",
+    "desc": "Physical combat power-ups that normally last 5 minutes or longer now last for combat length (minimum 5 minutes, maximum 30 minutes).",
+    "table": 9,
+    "cost": 100,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Mystical Rages",
+    "desc": "Any rage that grants a percentage reduction now also applies against magic damage.",
+    "table": 9,
+    "cost": 60,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Knights Armour",
+    "desc": "While wearing heavy armour, gains +3 Armour Mastery vs all blows; may not be combined with Armoured Defence at this stage.",
+    "table": 9,
+    "cost": 300,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Armour Master",
+    "desc": "Choose one master-crafted armour type: grants +1 PAC, prevents normal wear use loss (unless item armour), and grants immunity to Accuracy.",
+    "table": 10,
+    "cost": 100,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Proficiency",
+    "desc": "Improves Lesser Counter Mastery or Lesser Contra Mastery from -3 points to -6 points.",
+    "table": 10,
+    "cost": 50,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Study Opponent",
+    "desc": "1/day after 30 seconds passive observation of one opponent, gain a 6-point non-cumulative damage reduction while fighting that opponent that day.",
+    "table": 10,
+    "cost": 65,
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Enhanced Weapon Mastery Shield",
+    "desc": "From Weapon Mastery Shield and Distancing. As Enhanced Distancing Combat with O class weapon and large shield (25+ inch diameter), DAC max 6, and maximum damage Quin unless Battlemaster.",
+    "table": 10,
+    "cost": 125,
+    "preReqs": ["Weapon Mastery Shield", "Distancing Combat"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Strike Blows",
+    "desc": "Each damage grade called becomes a separate blow (Double=2 blows, Triple=3 blows, etc.).",
+    "table": 10,
+    "cost": 40,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Duellist"]
+      }
+    ],
+    "index": "Keen Eye",
+    "desc": "Accuracy through PAC at all times for one weapon type. Must have Accuracy.",
+    "table": 10,
+    "cost": 150,
+    "preReqs": ["Accuracy"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Duellist"]
+      }
+    ],
+    "index": "Breaking Blow",
+    "desc": "As per Shattering Blow [Tanashiwara].",
+    "table": 10,
+    "cost": 40,
+    "CanAddMultiple": true,
+    "maxAvailable": "*",
+    "asPer": ["Shattering Blow [Tanashiwara]"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Monk", "Duellist"]
+      }
+    ],
+    "index": "Enhanced Counter Weapon Mastery",
+    "desc": "From Counter Mastery: reduction increases to 9 points (from 6). Does not apply to abilities that were previously Lesser Counter Mastery.",
+    "table": 10,
+    "cost": 100,
+    "preReqs": ["Counter Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Monk"]
+      }
+    ],
+    "index": "Enhanced Contra Weapon Mastery",
+    "desc": "From Contra Mastery: reduction increases to 9 points (from 6). Does not apply to abilities that were previously Lesser Contra Mastery.",
+    "table": 10,
+    "cost": 100,
+    "preReqs": ["Contra Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Puissant d'Mort",
+    "desc": "From Puissant d'Armes. Negates 50% of an opponent's Rage modifier.",
+    "table": 10,
+    "cost": 100,
+    "preReqs": ["Puissant d'Armes"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Live to Minus 24",
+    "desc": "Increases Live to Minus to 24 total body life points from 18.",
+    "table": 10,
+    "cost": 75,
+    "preReqs": ["Live to Minus 18"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Immunity to Disarm",
+    "desc": "Grants immunity to Disarm while wielding a weapon in which the user has at least +3 Weapon Mastery.",
+    "table": 10,
+    "cost": 40,
+    "preReqs": ["+3 Weapon Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Defensive Combat",
+    "desc": "From Enhanced Distancing Combat. While using a B class weapon in two hands, reduces unarmed damage by 12, O class by 6, and B class by 3.",
+    "table": 10,
+    "cost": 250,
+    "preReqs": ["Enhanced Distancing Combat"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Truly Determined",
+    "desc": "From Determination. Allows War Cry innates, immunities, and temporary power-ups to suppress relevant Determination damage.",
+    "table": 10,
+    "cost": 50,
+    "preReqs": ["Determination"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Contra Mastery vs. Weapons",
+    "desc": "From Counter Mastery and Contra Mastery (vs three weapons): grants Contra Mastery versus all weapons.",
+    "table": 10,
+    "cost": 200,
+    "preReqs": ["Counter Mastery", "Contra Mastery"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Darkbane's Body Building Classes",
+    "desc": "Extra Levels of Life now grant 5/2 life (does not itself grant access to Extra Levels of Life).",
+    "table": 10,
+    "cost": 100,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "True Armour Mastery",
+    "desc": "If wearing master-crafted plate over master-crafted chainmail, may apply Immunity to Bruising to standard Armour Mastery numerical reduction, up to 6 points Armour Mastery.",
+    "table": 11,
+    "cost": 50,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "5th Stamina",
+    "desc": "From 4th Stamina, increases total to +30/10 life.",
+    "table": 11,
+    "cost": 65,
+    "preReqs": ["4th Stamina"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Kensai / Blade Master", "Cavalier"]
+      }
+    ],
+    "index": "Final Stand",
+    "desc": "Usable once ever. User declares a final stand in a 20 foot radius and cannot die, be stopped, or lose limb function until combat ends; if lethal damage was taken, cannot then be cured.",
+    "table": 11,
+    "cost": 50,
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Enhanced Contra Mastery vs. Weapons",
+    "desc": "From Contra Mastery vs. Weapons: gains enhanced contra mastery against all weapons.",
+    "table": 11,
+    "cost": 300,
+    "preReqs": ["Contra Mastery vs. Weapons"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "AnyClass",
+        "Operator": "In",
+        "Value": ["Warrior", "Monk"]
+      }
+    ],
+    "index": "3rd Resistance to Sever and Location to Zero",
+    "desc": "From 2nd Resistance to Sever and Location to Zero. Sever inflicts a quarter of current location value, Location to Zero inflicts one eighth.",
+    "table": 12,
+    "cost": 175,
+    "preReqs": ["2nd Resistance to Sever and Location to Zero"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Greater Shield Mastery",
+    "desc": "From Enhanced Weapon Mastery Shield: reduces unarmed damage by 12, O class by 6, and B class by 3 while using shield setup.",
+    "table": 12,
+    "cost": 300,
+    "preReqs": ["Enhanced Weapon Mastery Shield"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "OriginalClass",
+        "Operator": "In",
+        "Value": ["Warrior"]
+      }
+    ],
+    "index": "Champion's Armour",
+    "desc": "Allows Knight's Armour to be used in conjunction with Armoured Defence.",
+    "table": 12,
+    "cost": 50,
+    "asPer": ["Knights Armour", "Armoured Defence"],
+    "sourceBook": "Engarde"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Art of Battle",
+    "desc": "Bracket-pure Warrior multiclass path. Requires Daring Deed. Additional progression costs are defined in multi-class levels.",
+    "table": 1,
+    "cost": 10,
+    "preReqs": ["Daring Deed"],
+    "sourceBook": "Multi-Classes"
+  },
+  {
+    "available": [
+      {
+        "Field": "Bracket",
+        "Operator": "In",
+        "Value": ["🛡️ Warrior"]
+      }
+    ],
+    "index": "Art of War",
+    "desc": "Bracket-pure Warrior multiclass path. Requires Flick of the Wrist. Additional progression costs are defined in multi-class levels.",
+    "table": 1,
+    "cost": 10,
+    "preReqs": ["Flick of the Wrist"],
+    "sourceBook": "Multi-Classes"
   }
 ]

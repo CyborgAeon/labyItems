@@ -48,6 +48,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private readonly IAdvanceCharacterDataProvider _dataProvider;
     private readonly IAdvanceAbilityLookupService _abilityLookupService;
     private readonly IAbilityAvailabilityService _abilityAvailabilityService;
+    private readonly IAdvanceCharacterAbilityService _abilityService;
     private readonly CharacterDraft _draft;
     private IReadOnlyList<MiracleService.MiracRaw> _allMiracles = Array.Empty<MiracleService.MiracRaw>();
     private IReadOnlyList<SpellService.SpellRaw> _allSpells = Array.Empty<SpellService.SpellRaw>();
@@ -57,11 +58,12 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     private Dictionary<string, PeopleRecord> _races = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, ManuAbilityOption> _abilityOptions = new(StringComparer.OrdinalIgnoreCase);
     private Dictionary<string, ManuAbilityOption> _abilityOptionsByName = new(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, EvolutionService.AbilityResult> _abilityDetailsByKey = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, MultiClassDefinition> _multiClassDefinitionsByKey = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, MultiRaceDefinition> _multiRaceDefinitionsByKey = new(StringComparer.OrdinalIgnoreCase);
     private bool _hasLoadedReferenceData;
     private bool _suppressAbilityReactions;
+
+    private const string NightsoilRaceName = "Nightsoil";
 
     private bool _showSpellsTab;
     public bool ShowSpellsTab { get => _showSpellsTab; private set => Set(ref _showSpellsTab, value); }
@@ -133,7 +135,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         IFileService fileService,
         IAdvanceCharacterDataProvider dataProvider,
         IAdvanceAbilityLookupService abilityLookupService,
-        IAbilityAvailabilityService abilityAvailabilityService)
+        IAbilityAvailabilityService abilityAvailabilityService,
+        IAdvanceCharacterAbilityService? abilityService = null)
     {
         _draftStore = draftStore ?? throw new ArgumentNullException(nameof(draftStore));
         _draft = _draftStore.Draft;
@@ -144,18 +147,14 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
         _abilityLookupService = abilityLookupService ?? throw new ArgumentNullException(nameof(abilityLookupService));
         _abilityAvailabilityService = abilityAvailabilityService ?? throw new ArgumentNullException(nameof(abilityAvailabilityService));
+        _abilityService = abilityService ?? ServiceHelper.ResolveService<IAdvanceCharacterAbilityService>() ?? new AdvanceCharacterAbilityService(_abilityLookupService, _abilityAvailabilityService, _dataProvider);
         _exportService = exportService ?? throw new ArgumentNullException(nameof(exportService));
 
         Items.CollectionChanged += OnItemsCollectionChanged;
         Abilities.CollectionChanged += (_, __) => OnAdvancementAbilityCollectionChanged();
         MultiClasses.CollectionChanged += (_, __) => OnMultiClassCollectionChanged();
 
-        if (!_draft.HasSetCurrentVitae)
-        {
-            _draft.CurrentVitae = 100;
-            _draft.HasSetCurrentVitae = true;
-            Raise(nameof(CurrentVitae));
-        }
+        ApplyRaceSpecificVitaeRules();
 
         AddAbilityCommand = new Command(AddAbility);
         RemoveAbilityCommand = new Command<AbilityEntryVm>(RemoveAbility);
@@ -206,12 +205,31 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         get => _draft.CurrentVitae;
         set
         {
+            if (!CanEditCurrentVitae)
+            {
+                if (_draft.CurrentVitae != 0 || !_draft.HasSetCurrentVitae)
+                {
+                    _draft.CurrentVitae = 0;
+                    _draft.HasSetCurrentVitae = true;
+                    Raise();
+                }
+
+                Raise(nameof(CurrentVitaeDisplayText));
+                return;
+            }
+
             if (_draft.CurrentVitae == value) return;
             _draft.CurrentVitae = value;
             _draft.HasSetCurrentVitae = true;
             Raise();
+            Raise(nameof(CurrentVitaeDisplayText));
         }
     }
+
+    public bool CanEditCurrentVitae => !IsNightsoilRace(_draft.Race);
+    public string CurrentVitaeDisplayText => CanEditCurrentVitae
+        ? _draft.CurrentVitae.ToString()
+        : "nightsoil";
 
     public string Notes
     {
@@ -337,44 +355,41 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
     public async Task InitializeAsync()
     {
+        ApplyRaceSpecificVitaeRules();
         var referenceData = await _dataProvider.LoadReferenceDataAsync();
+        await _abilityService.WarmCachesAsync();
         ApplyReferenceData(referenceData);
-        await WarmAbilityDetailsCacheAsync();
         await LoadDraftStateAsync();
         FinalizeInitialization();
     }
 
-    private async Task WarmAbilityDetailsCacheAsync()
+    private void ApplyRaceSpecificVitaeRules()
     {
-        if (_abilityDetailsByKey.Count > 0)
-            return;
+        var previous = _draft.CurrentVitae;
+        var hadValue = _draft.HasSetCurrentVitae;
 
-        try
+        if (IsNightsoilRace(_draft.Race))
         {
-            var abilities = await EvolutionService.GetAllAbilitiesAsync();
-            foreach (var ability in abilities ?? Array.Empty<EvolutionService.AbilityResult>())
-            {
-                if (ability == null)
-                    continue;
-
-                var displayName = EvolutionService.NormalizeAbilityDisplayText(ability.Index);
-                if (!string.IsNullOrWhiteSpace(displayName))
-                    _abilityDetailsByKey[AbilityDetailsLookupService.NormalizeKey(displayName)] = ability;
-
-                var abilityKey = AbilityKey.Build(ability);
-                if (!string.IsNullOrWhiteSpace(abilityKey))
-                    _abilityDetailsByKey[AbilityDetailsLookupService.NormalizeKey(abilityKey)] = ability;
-
-                var legacyKey = AbilityKey.BuildEvolutionFallback(ability);
-                if (!string.IsNullOrWhiteSpace(legacyKey)
-                    && !string.Equals(legacyKey, abilityKey, StringComparison.OrdinalIgnoreCase))
-                    _abilityDetailsByKey[AbilityDetailsLookupService.NormalizeKey(legacyKey)] = ability;
-            }
+            _draft.CurrentVitae = 0;
+            _draft.HasSetCurrentVitae = true;
         }
-        catch
+        else if (!_draft.HasSetCurrentVitae)
         {
-            // If this fails we fall back to showing raw keys/names.
+            _draft.CurrentVitae = 100;
+            _draft.HasSetCurrentVitae = true;
         }
+
+        if (_draft.CurrentVitae != previous || _draft.HasSetCurrentVitae != hadValue)
+            Raise(nameof(CurrentVitae));
+
+        Raise(nameof(CanEditCurrentVitae));
+        Raise(nameof(CurrentVitaeDisplayText));
+    }
+
+    private static bool IsNightsoilRace(string? raceName)
+    {
+        var normalized = (raceName ?? string.Empty).Trim();
+        return string.Equals(normalized, NightsoilRaceName, StringComparison.OrdinalIgnoreCase);
     }
 
     private async Task LoadDraftStateAsync()
@@ -417,8 +432,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         _allEvocations = referenceData.Evocations ?? Array.Empty<DruidEvocationService.EvocRaw>();
 
         var abilityEntries = referenceData.Abilities ?? Array.Empty<ManuAbilityService.ManuAbilityEntry>();
-        _abilityOptionsByName = BuildAbilityOptionsByName(abilityEntries);
-        AbilityOptions = BuildAbilityOptionsWithLabels(_abilityOptionsByName.Values);
+        _abilityOptionsByName = _abilityService.BuildAbilityOptionsByName(abilityEntries, _draft, _classes, _races);
+        AbilityOptions = _abilityService.BuildAbilityOptionsWithLabels(_abilityOptionsByName.Values);
         _hasLoadedReferenceData = true;
     }
 
@@ -699,8 +714,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return;
 
         var abilityKey = name.Trim();
-        var normalized = AbilityDetailsLookupService.NormalizeKey(name);
-        if (_abilityDetailsByKey.TryGetValue(normalized, out var resolved))
+        var resolved = _abilityService.TryResolveAbilityDetails(name);
+        if (resolved != null)
             abilityKey = AbilityKey.Build(resolved);
 
         var line = new AbilityEntryVm(
@@ -723,7 +738,13 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             if (string.IsNullOrWhiteSpace(displayName))
                 continue;
 
-            var normalizedCost = Math.Max(0, ability.Cost);
+            var normalizedCost = _abilityService.ApplyRaceAbilityCostModifiers(
+                Math.Max(0, ability.Cost),
+                displayName,
+                ability,
+                ability.AbilityRef,
+                _draft,
+                _races);
             var normalizedTable = Math.Max(0, ability.Table);
 
             var abilityKey = AbilityKey.Build(ability);
@@ -737,22 +758,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
                 ability.AvailabilityRules ?? Array.Empty<RuleClause>(),
                 ability.Description ?? string.Empty);
 
-            var byDisplayName = AbilityDetailsLookupService.NormalizeKey(displayName);
-            if (byDisplayName.Length > 0)
-                _abilityDetailsByKey[byDisplayName] = ability;
-
-            var byAbilityKey = AbilityDetailsLookupService.NormalizeKey(abilityKey);
-            if (byAbilityKey.Length > 0)
-                _abilityDetailsByKey[byAbilityKey] = ability;
-
-            var legacyKey = AbilityKey.BuildEvolutionFallback(ability);
-            if (!string.IsNullOrWhiteSpace(legacyKey)
-                && !string.Equals(legacyKey, abilityKey, StringComparison.OrdinalIgnoreCase))
-            {
-                var byLegacyKey = AbilityDetailsLookupService.NormalizeKey(legacyKey);
-                if (byLegacyKey.Length > 0)
-                    _abilityDetailsByKey[byLegacyKey] = ability;
-            }
+            _abilityService.CacheAbilityDetails(ability);
         }
 
         SelectedAbilityOption = null;
@@ -817,8 +823,8 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         var keyCandidate = (entry.AbilityKey ?? string.Empty).Trim();
         var nameCandidate = (entry.Name ?? string.Empty).Trim();
 
-        var resolved = TryResolveAbilityDetails(keyCandidate)
-                       ?? TryResolveAbilityDetails(nameCandidate);
+        var resolved = _abilityService.TryResolveAbilityDetails(keyCandidate)
+                       ?? _abilityService.TryResolveAbilityDetails(nameCandidate);
         if (resolved != null)
             return AbilityKey.Build(resolved);
 
@@ -830,31 +836,27 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         return string.Empty;
     }
 
-    private EvolutionService.AbilityResult? TryResolveAbilityDetails(string? rawKeyOrName)
-    {
-        var normalized = AbilityDetailsLookupService.NormalizeKey(rawKeyOrName);
-        if (normalized.Length == 0)
-            return null;
-
-        return _abilityDetailsByKey.TryGetValue(normalized, out var resolved)
-            ? resolved
-            : null;
-    }
-
     private AbilityEntryVm BuildAbilityEntry(string rawKeyOrName)
     {
         var trimmed = (rawKeyOrName ?? string.Empty).Trim();
         if (trimmed.Length == 0)
             return new AbilityEntryVm(string.Empty, 0, string.Empty, OnAdvancementAbilityEntryChanged);
 
-        var normalized = AbilityDetailsLookupService.NormalizeKey(trimmed);
-        if (_abilityDetailsByKey.TryGetValue(normalized, out var resolved))
+        var resolved = _abilityService.TryResolveAbilityDetails(trimmed);
+        if (resolved != null)
         {
             var displayName = EvolutionService.NormalizeAbilityDisplayText(resolved.Index);
             var abilityKey = AbilityKey.Build(resolved);
+            var adjustedCost = _abilityService.ApplyRaceAbilityCostModifiers(
+                Math.Max(0, resolved.Cost),
+                displayName,
+                resolved,
+                resolved.AbilityRef,
+                _draft,
+                _races);
             return new AbilityEntryVm(
                 displayName,
-                Math.Max(0, resolved.Cost),
+                adjustedCost,
                 abilityKey,
                 OnAdvancementAbilityEntryChanged);
         }
@@ -863,20 +865,6 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return new AbilityEntryVm(trimmed, Math.Max(0, option.Cost), trimmed, OnAdvancementAbilityEntryChanged);
 
         return new AbilityEntryVm(trimmed, 0, trimmed, OnAdvancementAbilityEntryChanged);
-    }
-
-    private string ResolveAbilityDisplayName(string? rawKeyOrName)
-    {
-        var trimmed = (rawKeyOrName ?? string.Empty).Trim();
-        if (trimmed.Length == 0)
-            return string.Empty;
-
-        var normalized = AbilityDetailsLookupService.NormalizeKey(trimmed);
-        if (_abilityDetailsByKey.TryGetValue(normalized, out var resolved))
-            return EvolutionService.NormalizeAbilityDisplayText(resolved.Index);
-
-        // Fallback for draft snapshots that may still store display names.
-        return trimmed;
     }
 
     private void UpdateAbilityPoints()
@@ -895,72 +883,18 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         Raise(nameof(AbilityPointsSummary));
     }
 
-    private static string BuildAbilityOptionLabel(ManuAbilityOption option)
-    {
-        var name = option.Name ?? string.Empty;
-        return $"{name} ({option.Cost})";
-    }
-
-    private Dictionary<string, ManuAbilityOption> BuildAbilityOptionsByName(IEnumerable<ManuAbilityService.ManuAbilityEntry> entries)
-    {
-        return entries
-            .Where(e => _abilityAvailabilityService.IsAvailable(
-                e.availabilityRules,
-                _draft,
-                _classes,
-                _races))
-            .GroupBy(a => a.name ?? string.Empty, StringComparer.OrdinalIgnoreCase)
-            .Where(g => !string.IsNullOrWhiteSpace(g.Key))
-            .ToDictionary(
-                g => g.Key,
-                g =>
-                {
-                    var entry = g.First();
-                    return new ManuAbilityOption(
-                        entry.name ?? string.Empty,
-                        entry.cost,
-                        entry.table,
-                        entry.availability ?? string.Empty,
-                        entry.availabilityRules ?? Array.Empty<RuleClause>(),
-                        entry.description ?? string.Empty);
-                },
-                StringComparer.OrdinalIgnoreCase);
-    }
-
-    private static Dictionary<string, ManuAbilityOption> BuildAbilityOptionsWithLabels(IEnumerable<ManuAbilityOption> entries)
-    {
-        return entries
-            .Where(e => !string.IsNullOrWhiteSpace(e.Name))
-            .ToDictionary(
-                e => BuildAbilityOptionLabel(e),
-                e => e,
-                StringComparer.OrdinalIgnoreCase);
-    }
-
     public async Task<Dictionary<string, ManuAbilityOption>> SearchAbilityOptionsAsync(string query)
     {
-        var results = await _dataProvider.SearchAbilitiesAsync(query ?? string.Empty);
-        var byName = BuildAbilityOptionsByName(results);
-
-        foreach (var kvp in byName)
+        var results = await _abilityService.SearchAbilityOptionsAsync(query, _draft, _classes, _races);
+        foreach (var kvp in results)
             _abilityOptionsByName[kvp.Key] = kvp.Value;
 
-        return BuildAbilityOptionsWithLabels(byName.Values);
+        return results;
     }
 
     public async Task<EvolutionService.AbilityResult?> FindAbilityByNameAsync(string? abilityName)
     {
-        var key = AbilityDetailsLookupService.NormalizeKey(abilityName);
-        if (key.Length == 0)
-            return null;
-
-        if (_abilityDetailsByKey.TryGetValue(key, out var cached))
-            return cached;
-
-        var ability = await _abilityLookupService.FindByNameAsync(abilityName);
-        if (ability != null)
-            _abilityDetailsByKey[key] = ability;
-        return ability;
+        return await _abilityService.FindAbilityByNameAsync(abilityName);
     }
 
     public SpellService.SpellRaw? FindSpellByName(string? spellName)
@@ -1953,6 +1887,9 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             if (_draft.SpecialisationSelections.TryGetValue("Wizard Colour", out var wizardColour))
                 AddNormalizedWizardSelections(selections, seen, wizardColour);
 
+            if (_draft.SpecialisationSelections.TryGetValue("Witch Doctor Colour", out var witchDoctorColour))
+                AddNormalizedWizardSelections(selections, seen, witchDoctorColour);
+
             if (_draft.SpecialisationSelections.TryGetValue("Vivomancer Colour", out var vivomancerColour))
                 AddNormalizedWizardSelections(selections, seen, vivomancerColour);
 
@@ -1974,6 +1911,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
                     continue;
 
                 if (ability.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase)
+                    || ability.Source.Contains("Specialisation:Witch Doctor Colour", StringComparison.OrdinalIgnoreCase)
                     || ability.Source.Contains("Specialisation:Vivomancer Colour", StringComparison.OrdinalIgnoreCase))
                 {
                     AddNormalizedWizardSelections(selections, seen, ability.Name);
@@ -2103,7 +2041,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
 
         foreach (var selectedAbility in _draft.AdvancementAbilities ?? Enumerable.Empty<string>())
         {
-            var displayName = ResolveAbilityDisplayName(selectedAbility);
+            var displayName = _abilityService.ResolveAbilityDisplayName(selectedAbility);
             string expectedName;
             if (AbilityNameMatches(displayName, SecondColourAbilityName))
             {
@@ -2168,7 +2106,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return false;
 
         return (_draft.AdvancementAbilities ?? Enumerable.Empty<string>())
-            .Any(raw => AbilityNameMatches(ResolveAbilityDisplayName(raw), expectedName));
+            .Any(raw => AbilityNameMatches(_abilityService.ResolveAbilityDisplayName(raw), expectedName));
     }
 
     private bool HasSecondColourAbility()

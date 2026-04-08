@@ -99,23 +99,30 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await LoadRacesAsync();
-            await LoadClassesAsync();
+            try
+            {
+                await LoadRacesAsync();
+                await LoadClassesAsync();
 
-            await RefreshAllowedRacesForSelectedClassAsync();
-            RefilterRaces();
+                await RefreshAllowedRacesForSelectedClassAsync();
+                RefilterRaces();
 
-            await RefreshAllowedClassesForSelectedRaceAsync();
-            RefilterClasses();
+                await RefreshAllowedClassesForSelectedRaceAsync();
+                RefilterClasses();
 
-            await ApplyRaceToClassesAsync(_draft.Race);
+                await ApplyRaceToClassesAsync(_draft.Race);
 
-            await CaptureHumanLifeForSelectedClassAsync();
-            await UpdateDraftLifeAsync(expandIfChanged: false);
+                await CaptureHumanLifeForSelectedClassAsync();
+                await UpdateDraftLifeAsync(expandIfChanged: false);
 
-            await SpecialisationVm.ReloadAsync();
+                await SpecialisationVm.ReloadAsync();
 
-            await RefreshDraftAbilitiesAsync();
+                await RefreshDraftAbilitiesAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"CharacterBuilder startup pipeline failed: {ex}");
+            }
         });
     }
 
@@ -895,6 +902,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     public async Task RefreshDraftAbilitiesAsync()
     {
+        if (!MainThread.IsMainThread)
+        {
+            await MainThread.InvokeOnMainThreadAsync(RefreshDraftAbilitiesAsync);
+            return;
+        }
+
         await _abilityRefreshLock.WaitAsync();
         try
         {
@@ -1522,11 +1535,15 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
 
         var all = await _creationDataService.GetPeopleAsync();
+        var achievedTable = CharacterProgressionTables.GetHighestTableReached(Draft.Points);
         if (_creationDataService.TryGetByName(all, raceName, out var rec) && rec != null)
         {
             _raceAlignmentRule = rec.AlignmentRule;
             if (rec.LevelledAbilities != null)
-                list.AddRange(AbilityDraftBuilder.BuildFromLevels(rec.LevelledAbilities));
+                list.AddRange(AbilityDraftBuilder.BuildFromLevels(
+                    rec.LevelledAbilities,
+                    achievedLevel: 8,
+                    achievedTable: achievedTable));
             guildRules = rec.GuildOverrides;
         }
         else
@@ -1545,6 +1562,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         GuildOverrideRules? guildRules = null;
 
         var className = (Draft.Class ?? string.Empty).Trim();
+        var achievedTable = CharacterProgressionTables.GetHighestTableReached(Draft.Points);
         if (className.Length == 0)
         {
             _classAlignmentRule = null;
@@ -1556,7 +1574,10 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         {
             record = rec;
             _classAlignmentRule = rec.AlignmentRule ?? BuildPaladinFallbackRule(className);
-            list.AddRange(AbilityDraftBuilder.BuildFromLevels(rec.Levels));
+            list.AddRange(AbilityDraftBuilder.BuildFromLevels(
+                rec.Levels,
+                achievedLevel: 8,
+                achievedTable: achievedTable));
             guildRules = rec.GuildOverrides;
         }
         else
@@ -1576,8 +1597,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             return list;
 
         var points = Math.Max(0, Draft.Points);
-        var includeIntermediate = points >= 250;
-        var includeAdvanced = points >= 1000;
 
         var all = await _creationDataService.GetGuildsAsync();
         foreach (var guild in Draft.Guilds.Distinct(StringComparer.OrdinalIgnoreCase))
@@ -1585,15 +1604,49 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             if (!_creationDataService.TryGetByName(all, guild, out var rec) || rec?.Benefits?.Basic == null)
                 continue;
 
-            AppendGuildBenefits(list, rec.Benefits.Basic, guild, "Basic");
-            if (includeIntermediate)
+            var guildType = (rec.Type ?? string.Empty).Trim();
+            var tierTables = ResolveGuildTierTables(guildType);
+
+            if (HasReachedGuildTier(points, tierTables.Basic))
+                AppendGuildBenefits(list, rec.Benefits.Basic, guild, "Basic");
+
+            if (HasReachedGuildTier(points, tierTables.Intermediate))
                 AppendGuildBenefits(list, rec.Benefits.Intermediate, guild, "Intermediate");
-            if (includeAdvanced)
+
+            if (HasReachedGuildTier(points, tierTables.Advanced))
                 AppendGuildBenefits(list, rec.Benefits.Advanced, guild, "Advanced");
         }
 
         return list;
     }
+
+    private (int Basic, int Intermediate, int Advanced) ResolveGuildTierTables(string guildType)
+    {
+        var race = (Draft.Race ?? string.Empty).Trim();
+        var subtype = (Draft.RaceSubtypeValue ?? Draft.RaceSubtype ?? string.Empty).Trim();
+        var type = (guildType ?? string.Empty).Trim();
+
+        if (race.Equals("Human", StringComparison.OrdinalIgnoreCase)
+            && subtype.Equals("Mourat", StringComparison.OrdinalIgnoreCase))
+        {
+            return (8, 10, 11);
+        }
+
+        if (race.Equals("Wyrm-Kin", StringComparison.OrdinalIgnoreCase))
+            return (1, 4, 9);
+
+        if (race.Equals("Human", StringComparison.OrdinalIgnoreCase)
+            && subtype.Equals("Forgotten", StringComparison.OrdinalIgnoreCase)
+            && type.Equals("political", StringComparison.OrdinalIgnoreCase))
+        {
+            return (2, 4, 9);
+        }
+
+        return (1, 3, 8);
+    }
+
+    private static bool HasReachedGuildTier(int points, int table)
+        => CharacterProgressionTables.HasReachedTable(points, table);
 
     private void AppendGuildBenefits(
         List<AbilityDraft> list,
@@ -1697,6 +1750,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         yield return _raceAlignmentRule;
         yield return _classAlignmentRule;
+
+        foreach (var rule in SpecialisationVm.BuildSelectedAlignmentRules())
+            yield return rule;
     }
 
     private async Task UpdateArmourStatsAsync(
@@ -1955,6 +2011,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private void UpdatePowerPools(ServiceCharacterClassRecord? classRecord, IEnumerable<AbilityDraft> abilities)
     {
         var pools = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var isHalfElf = IsHalfElfRaceName(_draft.Race);
 
         if (classRecord != null)
         {
@@ -1965,7 +2022,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 {
                     var key = (calc.PowerBase ?? string.Empty).Trim();
                     if (key.Length == 0) continue;
-                    pools[key] = EvaluatePowerCalculation(calc.Calculation, _draft.CasterLevel);
+                    var calculated = EvaluatePowerCalculation(calc.Calculation, _draft.CasterLevel);
+                    if (isHalfElf && IsSpiritPowerBase(key))
+                        calculated = calculated / 2;
+
+                    pools[key] = Math.Max(0, calculated);
                 }
             }
             else if (classRecord.Powerbase is { Count: > 0 })
@@ -1978,6 +2039,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 }
             }
         }
+
+        ApplySpiritAdvancementLevelBonuses(pools, isHalfElf);
 
         var monkLocCount = abilities?.Count(a => a?.Name?.IndexOf("monk locational curing", StringComparison.OrdinalIgnoreCase) >= 0) ?? 0;
         if (monkLocCount > 0 && _draft.TBLP > 0)
@@ -1993,6 +2056,65 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
 
         _draft.PowerPools = pools;
+    }
+
+    private void ApplySpiritAdvancementLevelBonuses(IDictionary<string, int> pools, bool isHalfElf)
+    {
+        var spiritKey = pools.Keys.FirstOrDefault(IsSpiritPowerBase);
+        if (string.IsNullOrWhiteSpace(spiritKey))
+            return;
+
+        var extraSpiritLevels = CountPurchasedExtraSpiritLevels(_draft.AdvancementAbilities);
+        if (extraSpiritLevels <= 0)
+            return;
+
+        var casterLevel = Math.Max(0, _draft.CasterLevel);
+        var perLevelGain = isHalfElf
+            ? Math.Min(casterLevel, 4)
+            : casterLevel;
+        if (perLevelGain <= 0)
+            return;
+
+        var existing = pools.TryGetValue(spiritKey, out var current) ? current : 0;
+        pools[spiritKey] = Math.Max(0, existing + (perLevelGain * extraSpiritLevels));
+    }
+
+    private static int CountPurchasedExtraSpiritLevels(IEnumerable<string>? advancementAbilities)
+    {
+        var count = 0;
+        foreach (var raw in advancementAbilities ?? Array.Empty<string>())
+        {
+            var normalized = NormalizeAbilityToken(raw);
+            if (normalized.Length == 0)
+                continue;
+
+            if (normalized.Contains("extralevelofspirits", StringComparison.Ordinal))
+                count++;
+        }
+
+        return count;
+    }
+
+    private static string NormalizeAbilityToken(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return new string(value
+            .Trim()
+            .ToLowerInvariant()
+            .Where(char.IsLetterOrDigit)
+            .ToArray());
+    }
+
+    private static bool IsSpiritPowerBase(string? powerBase)
+        => !string.IsNullOrWhiteSpace(powerBase)
+           && powerBase.Contains("spirit", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsHalfElfRaceName(string? raceName)
+    {
+        var normalized = NormalizeAbilityToken(raceName);
+        return normalized.Equals("halfelf", StringComparison.Ordinal);
     }
 
     private static int ParseFirstInt(params string?[] candidates)
@@ -2123,16 +2245,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         var q = (ClassSearchText ?? "").Trim().ToLowerInvariant();
 
-        var allowed = _allowedClassKeysForSelectedRace;
-        var selectedFilters = _selectedClassFilterKeys;
-
         var list = AllClasses
-            .Where(c =>
-                (selectedFilters.Count == 0 || ClassMatchesSelectedBracketFilter(c, selectedFilters)) &&
-                (allowed == null || allowed.Contains(_creationDataService.NormalizeLifeScaleKey(c.Name ?? c.Key ?? ""))) &&
-                (q.Length == 0 ||
-                 (c.Name ?? "").ToLowerInvariant().Contains(q) ||
-                 (c.Summary ?? "").ToLowerInvariant().Contains(q)))
+            .Where(ClassIsAllowedForSelectedRace)
+            .Where(c => q.Length == 0 || (c.Name ?? "").ToLowerInvariant().Contains(q))
             .ToList();
 
         ReplaceItems(FilteredClasses, list);
@@ -2163,21 +2278,39 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private void RefilterRaces()
     {
         var q = (RaceSearchText ?? "").Trim().ToLowerInvariant();
-        var filter = string.IsNullOrWhiteSpace(SelectedRaceFilter) ? "All" : SelectedRaceFilter!;
-
-        var allowed = _allowedRaceKeysForSelectedClass;
 
         var list = AllRaces
-            .Where(r =>
-                (filter == "All" || r.PeopleTypes.Any(t => string.Equals(t, filter, StringComparison.OrdinalIgnoreCase))) &&
-                (allowed == null || allowed.Contains(_creationDataService.NormalizeLifeScaleKey(r.Name))) &&
-                (q.Length == 0 ||
-                 r.Name.ToLowerInvariant().Contains(q) ||
-                 (r.Description ?? "").ToLowerInvariant().Contains(q) ||
-                 (r.SearchText ?? string.Empty).Contains(q)))
+            .Where(RaceIsAllowedForSelectedClass)
+            .Where(r => q.Length == 0 || r.Name.ToLowerInvariant().Contains(q))
             .ToList();
 
         ReplaceItems(FilteredRaces, list);
+    }
+
+    private bool ClassIsAllowedForSelectedRace(ClassCardVm classVm)
+    {
+        if (_allowedClassKeysForSelectedRace == null || _allowedClassKeysForSelectedRace.Count == 0)
+            return true;
+
+        var classKey = (classVm.Key ?? classVm.Name ?? string.Empty).Trim();
+        if (classKey.Length == 0)
+            return false;
+
+        var normalized = _creationDataService.NormalizeLifeScaleKey(classKey);
+        return normalized.Length > 0 && _allowedClassKeysForSelectedRace.Contains(normalized);
+    }
+
+    private bool RaceIsAllowedForSelectedClass(RaceCardVm raceVm)
+    {
+        if (_allowedRaceKeysForSelectedClass == null || _allowedRaceKeysForSelectedClass.Count == 0)
+            return true;
+
+        var raceName = (raceVm.Name ?? string.Empty).Trim();
+        if (raceName.Length == 0)
+            return false;
+
+        var normalized = _creationDataService.NormalizeLifeScaleKey(raceName);
+        return normalized.Length > 0 && _allowedRaceKeysForSelectedClass.Contains(normalized);
     }
 
     private void RebuildRaceFilterChips(IEnumerable<string> raceTypes)

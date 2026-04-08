@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 
 namespace labyItems.Services;
@@ -8,14 +9,7 @@ namespace labyItems.Services;
 public sealed class CharacterAdvancementDomainService : ICharacterAdvancementDomainService
 {
     public int GetScriptureTablesReached(int points)
-    {
-        var thresholds = new[]
-        {
-            0, 200, 250, 275, 450, 600, 650, 1000, 1500, 3000, 5250, 7500, 10000
-        };
-
-        return thresholds.Count(t => points >= t);
-    }
+        => CharacterProgressionTables.GetHighestTableReached(points);
 
     public IReadOnlyList<AbilityPointSpendLine> BuildAbilityPointSpendLines(
         IEnumerable<string> selectedAbilityNames,

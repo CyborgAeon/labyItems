@@ -90,7 +90,6 @@ public sealed class GuildsServiceTests : ServiceTestBase
         Assert.True(all.TryGetValue("Church of Certizal, Shadow of the First Evil", out var church));
         Assert.NotNull(church);
         Assert.Equal("The Evil Within", church!.DenominationalMiracle?.Ref);
-        Assert.Equal("This miracle may be learnt as normal by priests of Certizal post 8th.", church.DenominationalMiracleNote);
     }
 
     [Fact]

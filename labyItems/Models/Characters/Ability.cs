@@ -19,6 +19,7 @@ public sealed class AbilityDraft
 
     public AbilityType AbilityType { get; set; }
     public int? LevelGained { get; set; }
+    public int? TableGained { get; set; }
 }
 
 public enum AbilityType

@@ -704,6 +704,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
             yield return ability?.BattleboardNameOverride ?? string.Empty;
             yield return ability?.UpdateKey ?? string.Empty;
             yield return ability?.OverwriteKey ?? string.Empty;
+            yield return ability?.Effect ?? string.Empty;
         }
     }
 

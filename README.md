@@ -85,6 +85,12 @@ xcrun simctl uninstall "$SIMULATOR_UDID" "$PKG"
 `dotnet build -t:Run` on iOS stays attached to app output/logs and can look like it is "stuck"; use `Ctrl+C` to detach.
 
 then push the latest DB into that simulator app container:
+quick refresh db:
+
+```bash
+rm -f output/laby.db
+./tools/migrate-any-data.sh output/laby.db
+```
 
 ```bash
 PKG=bard.uk.labyitems

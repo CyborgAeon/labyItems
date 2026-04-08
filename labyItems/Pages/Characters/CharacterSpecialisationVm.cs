@@ -10,6 +10,7 @@ using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
 using labyItems.Services.Specialisations;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 
 namespace labyItems.Pages.Characters;
@@ -116,6 +117,12 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     public async Task ReloadAsync(CancellationToken cancellationToken = default)
     {
+        if (!MainThread.IsMainThread)
+        {
+            await MainThread.InvokeOnMainThreadAsync(() => ReloadAsync(cancellationToken));
+            return;
+        }
+
         CancelPendingSelectionRecalculation();
         var reload = _reloadGate.Begin(cancellationToken);
 
@@ -295,11 +302,13 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     Ability = ResolveGrantAbilityForCurrentDraft(grant?.Ability)
                 })
                 .Where(item => item.Grant != null && !string.IsNullOrWhiteSpace(item.Ability.Name))
-                .OrderBy(item => item.Grant!.Level ?? int.MaxValue)
+                .OrderBy(item => item.Grant!.Table.HasValue ? 1 : 0)
+                .ThenBy(item => item.Grant!.Table ?? item.Grant!.Level ?? int.MaxValue)
                 .ThenBy(item => item.Ability.Name, StringComparer.OrdinalIgnoreCase)
                 .Select(item => new SpecialisationAbilityRow
                 {
                     Level = item.Grant!.Level,
+                    Table = item.Grant!.Table,
                     Ability = item.Ability.Name,
                     AbilityKey = (item.Ability.Key ?? string.Empty).Trim(),
                     SpecialisationKey = spec.DetailKey,
@@ -833,6 +842,120 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         return (abilities, selectedGuildOverrides);
     }
 
+    public IReadOnlyList<AlignmentRule> BuildSelectedAlignmentRules()
+    {
+        var rules = new List<AlignmentRule>();
+
+        foreach (var section in Sections)
+        {
+            if (!_specBySectionId.TryGetValue(section.SectionId, out var spec))
+                continue;
+
+            switch (section)
+            {
+                case SpecialisationGroupVm group:
+                {
+                    foreach (var slot in group.Slots)
+                    {
+                        if (!slot.HasSelection)
+                            continue;
+
+                        var option = FindOptionBySelectionToken(spec, slot.SelectedOption);
+                        var rule = BuildAlignmentRuleFromRestrictions(option?.Restrictions?.AlignmentRestriction);
+                        if (rule != null)
+                            rules.Add(rule);
+                    }
+
+                    break;
+                }
+
+                case MappedSpecialisationSectionVm mapped:
+                {
+                    var option = FindOptionBySelectionToken(spec, mapped.SelectedOption);
+                    var rule = BuildAlignmentRuleFromRestrictions(option?.Restrictions?.AlignmentRestriction);
+                    if (rule != null)
+                        rules.Add(rule);
+                    break;
+                }
+            }
+        }
+
+        return rules;
+    }
+
+    private static ChoiceOption? FindOptionBySelectionToken(SpecialisationSectionSpec spec, string? token)
+    {
+        var selected = (token ?? string.Empty).Trim();
+        if (selected.Length == 0)
+            return null;
+
+        return spec.Options.FirstOrDefault(option =>
+            string.Equals(option.Key, selected, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(option.Label, selected, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static AlignmentRule? BuildAlignmentRuleFromRestrictions(IReadOnlyList<string>? restrictions)
+    {
+        var normalized = restrictions?
+            .Select(r => (r ?? string.Empty).Trim())
+            .Where(r => r.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList() ?? new List<string>();
+
+        if (normalized.Count == 0)
+            return null;
+
+        var morals = new HashSet<MoralAxis>();
+        var orders = new HashSet<OrderAxis>();
+        var pairs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var raw in normalized)
+        {
+            if (TryParseAlignmentPair(raw, out var pair))
+            {
+                pairs.Add(pair.ToString());
+                continue;
+            }
+
+            var token = NormalizeAlignmentKeyword(raw);
+            switch (token)
+            {
+                case "good":
+                case "goodly":
+                    morals.Add(MoralAxis.Good);
+                    break;
+                case "evil":
+                    morals.Add(MoralAxis.Evil);
+                    break;
+                case "neutral":
+                    morals.Add(MoralAxis.Neutral);
+                    break;
+                case "lawful":
+                    orders.Add(OrderAxis.Lawful);
+                    break;
+                case "chaotic":
+                    orders.Add(OrderAxis.Chaotic);
+                    break;
+            }
+        }
+
+        if (morals.Count == 0 && orders.Count == 0 && pairs.Count == 0)
+            return null;
+
+        return new AlignmentRule
+        {
+            Mode = "restrict",
+            Allowed = morals.Count > 0 || orders.Count > 0
+                ? new AllowedAxes
+                {
+                    Moral = morals.Count > 0 ? morals.ToList() : null,
+                    Order = orders.Count > 0 ? orders.ToList() : null
+                }
+                : null,
+            AllowedPairs = pairs.Count > 0 ? pairs.ToList() : null
+        };
+    }
+
     private void BuildChoiceSectionAbilities(
         SpecialisationGroupVm group,
         List<AbilityDraft> output,
@@ -844,6 +967,8 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         // Colour selection sections drive downstream filtering/state and do not grant direct abilities.
         if (HasStrategy(spec, "selection:multi-delimited"))
             return;
+
+        var achievedTable = CharacterProgressionTables.GetHighestTableReached(Draft.Points);
 
         foreach (var slot in group.Slots)
         {
@@ -865,6 +990,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     if (grant?.Ability == null || string.IsNullOrWhiteSpace(grant.Ability.Name))
                         continue;
 
+                    if (grant.Table.HasValue && !CharacterProgressionTables.HasReachedTable(Draft.Points, grant.Table.Value))
+                        continue;
+
                     var resolvedAbility = ResolveGrantAbilityForCurrentDraft(grant.Ability);
                     var definition = ApplyCustomisation(resolvedAbility, slot.CustomisationValue);
                     if (definition.GuildOverrides != null)
@@ -874,7 +1002,12 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                             GuildOverrideRules.FromLegacyStrings(definition.GuildOverrides));
                     }
 
-                    var parsed = AbilityDraftBuilder.ParseAbility(definition, grant.Level ?? DecodeSelectionLevel(slot.Level));
+                    var parsed = AbilityDraftBuilder.ParseAbility(
+                        definition,
+                        levelGained: grant.Level ?? DecodeSelectionLevel(slot.Level),
+                        achievedLevel: 8,
+                        tableGained: grant.Table,
+                        achievedTable: achievedTable);
                     ApplyAbilitySource(parsed, $"Specialisation:{group.Title}");
                     output.AddRange(parsed);
                 }
@@ -914,9 +1047,14 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             ? "Race"
             : $"Specialisation:{spec.Title}";
 
+        var achievedTable = CharacterProgressionTables.GetHighestTableReached(Draft.Points);
+
         foreach (var grant in option?.Grants ?? Array.Empty<AbilityGrant>())
         {
             if (grant?.Ability == null || string.IsNullOrWhiteSpace(grant.Ability.Name))
+                continue;
+
+            if (grant.Table.HasValue && !CharacterProgressionTables.HasReachedTable(Draft.Points, grant.Table.Value))
                 continue;
 
             if (grant.Ability.GuildOverrides != null)
@@ -926,7 +1064,12 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     GuildOverrideRules.FromLegacyStrings(grant.Ability.GuildOverrides));
             }
 
-            var parsed = AbilityDraftBuilder.ParseAbility(grant.Ability, grant.Level);
+            var parsed = AbilityDraftBuilder.ParseAbility(
+                grant.Ability,
+                levelGained: grant.Level,
+                achievedLevel: 8,
+                tableGained: grant.Table,
+                achievedTable: achievedTable);
             ApplyAbilitySource(parsed, source);
             output.AddRange(parsed);
         }
@@ -934,6 +1077,12 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
 
     public async Task RefreshPrereqOptionsAsync()
     {
+        if (!MainThread.IsMainThread)
+        {
+            await MainThread.InvokeOnMainThreadAsync(RefreshPrereqOptionsAsync);
+            return;
+        }
+
         if (_isRefreshingPrereqs)
             return;
 
@@ -1009,6 +1158,10 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         }
 
         if (HasBarbarianPeopleType(Draft))
+            set.Add(NormalizePrereqToken("Tribal"));
+
+        var subtype = (Draft.RaceSubtypeValue ?? Draft.RaceSubtype ?? string.Empty).Trim();
+        if (subtype.Equals("Verdant Heart", StringComparison.OrdinalIgnoreCase))
             set.Add(NormalizePrereqToken("Tribal"));
 
         return set;

@@ -3682,6 +3682,45 @@
         }
       ]
     },
+    "choice.witch-doctor-colour.primary": {
+      "Key": "choice.witch-doctor-colour.primary",
+      "Title": "Witch Doctor Colour",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice",
+        "selection:multi-delimited"
+      ],
+      "Options": [
+        {
+          "Key": "Brown",
+          "Label": "Brown",
+          "Grants": [
+            {
+              "AbilityRef": "ability.brown"
+            }
+          ]
+        },
+        {
+          "Key": "White",
+          "Label": "White",
+          "Grants": [
+            {
+              "AbilityRef": "ability.white"
+            }
+          ]
+        },
+        {
+          "Key": "Black",
+          "Label": "Black",
+          "Grants": [
+            {
+              "AbilityRef": "ability.black"
+            }
+          ]
+        }
+      ]
+    },
     "choice.power-master-colour.primary": {
       "Key": "choice.power-master-colour.primary",
       "Title": "Wizard Colour",
@@ -3928,6 +3967,107 @@
               "Amlesian"
             ]
           }
+        },
+        {
+          "Key": "Stormvale",
+          "Label": "Stormvale",
+          "Description": "Natives of Stormvale are full-spirit humans marked by storm power. They gain either Air or Aquatic elf innates and may later buy the other set post-8th.",
+          "Effects": {
+            "LifeScaleOverride": "Stormvale Human",
+            "GuildOverrides": [
+              "po:"
+            ]
+          }
+        },
+        {
+          "Key": "Forgotten",
+          "Label": "Forgotten",
+          "Description": "Forgotten humans fade from notice and age no further, but pay for that state with reduced life and strict guild limits.",
+          "Effects": {
+            "LifeScaleOverride": "Human (Forgotten)",
+            "GuildOverrides": [
+              "so:"
+            ]
+          },
+          "Grants": [
+            {
+              "Level": 1,
+              "Name": "Immunity to Ageing",
+              "Type": "Immunity",
+              "Effect": "Gains immunity to ageing."
+            },
+            {
+              "Level": 4,
+              "Name": "Fade",
+              "Type": "Innate",
+              "Count": 1,
+              "Progression": {
+                "Amount": 1,
+                "PerLevels": 4,
+                "Minimum": 1
+              },
+              "Effect": "As per spells.Chameleon (self), including the 5 minute duration, but no surface is required. This will not hide the user from anyone immune to forget. Using this power costs 6 tblp."
+            },
+            {
+              "Level": 8,
+              "Name": "Forgotten",
+              "Type": "Innate",
+              "Count": 1,
+              "Effect": "May fade from sight (as per Fade / spells.Chameleon (self)) but may move at 1/2 speed and remain hidden. This costs 12 tblp."
+            },
+            {
+              "Level": 1,
+              "Name": "Delayed Political Guild Benefits",
+              "Type": "Static",
+              "Effect": "Political guild benefits are delayed by one table: Basic at table 2, Intermediate at table 4, Advanced at table 9."
+            }
+          ]
+        },
+        {
+          "Key": "Magefold",
+          "Label": "Magefold",
+          "Description": "A disciplined anti-evil lineage for pure warrior or pure scout paths, with higher life and psionic resistance.",
+          "Effects": {
+            "GuildOverrides": [
+              "so:",
+              "po:"
+            ]
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warrior",
+              "Scout"
+            ],
+            "AlignmentRestriction": [
+              "Goodly",
+              "Neutral"
+            ]
+          },
+          "Grants": [
+            {
+              "AbilityRef": "ability.1st-extra-level-of-life",
+              "Level": 1
+            },
+            {
+              "Level": 1,
+              "Name": "Psionic Retardation",
+              "Type": "Static",
+              "Effect": "Character gains Mind Block (as Monk), but may not buy any neuronic power, or even utilise neuronics from items."
+            }
+          ]
+        },
+        {
+          "Key": "Mourat",
+          "Label": "Mourat",
+          "Description": "Mourat lineage. Select a Mourat subtype to apply the specific class, armour, and nature rules.",
+          "Grants": [
+            {
+              "Level": 1,
+              "Name": "Mourat Guild Progression Delay",
+              "Type": "Static",
+              "Effect": "Cannot join guilds until table 8; then gains Basic at table 8, Intermediate at table 10, and Advanced at table 11."
+            }
+          ]
         }
       ]
     },
@@ -3947,14 +4087,9 @@
           "Description": "The lowest of the low. They have no position, no honour, and no regard. It is impossible for one of this caste to rise beyond their starting position. They perform the most menial of tasks.",
           "Restrictions": {
             "RaceRestriction": [
-              "Faerie",
-              "Goblin",
-              "Troll",
-              "Ogres",
               "Human",
-              "Ratfolk",
-              "Samila",
-              "Fairies"
+              "Half Elf",
+              "Half-Elf"
             ]
           }
         },
@@ -3964,14 +4099,9 @@
           "Description": "The class of the masses. Many fall within the caste, even those with great talents. It is common, and although all but the Eta are above their station they are important within the social system.",
           "Restrictions": {
             "RaceRestriction": [
-              "Faerie",
-              "Goblin",
-              "Troll",
-              "Ogres",
               "Human",
-              "Ratfolk",
-              "Samila",
-              "Fairies"
+              "Half Elf",
+              "Half-Elf"
             ]
           }
         },
@@ -3981,14 +4111,9 @@
           "Description": "From a family of trade or talent the family will have money and some respect. They are rarely skilled in arms or the mystical arts, but they serve a valued role.",
           "Restrictions": {
             "RaceRestriction": [
-              "Faerie",
-              "Goblin",
-              "Troll",
-              "Ogres",
               "Human",
-              "Ratfolk",
-              "Samila",
-              "Fairies"
+              "Half Elf",
+              "Half-Elf"
             ]
           }
         },
@@ -3998,14 +4123,9 @@
           "Description": "A Priest, Wizard or similar. They are respected for their wisdom and power, though seen as less important than warriors in a land dominated by martial talent.",
           "Restrictions": {
             "RaceRestriction": [
-              "Faerie",
-              "Goblin",
-              "Troll",
-              "Ogres",
               "Human",
-              "Ratfolk",
-              "Samila",
-              "Fairies"
+              "Half Elf",
+              "Half-Elf"
             ]
           }
         },
@@ -4015,14 +4135,9 @@
           "Description": "The warriors of the land. They serve and protect the people and clans. Their duty is to ensure the Empire remains intact and its power strong.",
           "Restrictions": {
             "RaceRestriction": [
-              "Faerie",
-              "Goblin",
-              "Troll",
-              "Ogres",
               "Human",
-              "Ratfolk",
-              "Samila",
-              "Fairies"
+              "Half Elf",
+              "Half-Elf"
             ]
           }
         },
@@ -4030,16 +4145,15 @@
           "Key": "Samurai",
           "Label": "Samurai",
           "Description": "The highest standing an individual can start with. They sit beneath the clan heads, and are considered the most honourable within the lands. An individual of Samurai standing is bound by the Code of Jade and if they fail to fulfil it are expected to commit Seppuku. Those seeking to start at the Samurai caste must buy the Honoured One Status unless they are a warrior and have purchased the Samurai tradition. Should an individual rise in social rank they must buy their new caste ability, but any points spent on previous castes reduce the cost of this.",
+          "asPer": [
+            "The Jade Code",
+            "Seppuku"
+          ],
           "Restrictions": {
             "RaceRestriction": [
-              "Faerie",
-              "Goblin",
-              "Troll",
-              "Ogres",
               "Human",
-              "Ratfolk",
-              "Samila",
-              "Fairies"
+              "Half Elf",
+              "Half-Elf"
             ]
           }
         },
@@ -4049,11 +4163,13 @@
           "Description": "These are people who have failed to adhere to the strict caste system of Amles and refused to submit to justice. They may be dishonoured warriors, rebel heroes, or bandits. Those choosing this route must purchase the Dishonoured One Status rather than a caste ability. Dishonoured Ones are all Ostracised within Amles.",
           "Restrictions": {
             "RaceRestriction": [
+              "Human",
+              "Half Elf",
+              "Half-Elf",
               "Faerie",
               "Goblin",
               "Troll",
               "Ogres",
-              "Human",
               "Ratfolk",
               "Samila",
               "Fairies"
@@ -4097,6 +4213,67 @@
         }
       ]
     },
+    "choice.stormvaleaffinity.mapped": {
+      "Key": "choice.stormvaleaffinity.mapped",
+      "Title": "StormvaleAffinity",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "Air",
+          "Label": "Air",
+          "Description": "Stormvale affinity to the skies.",
+          "Grants": [
+            {
+              "AbilityRef": "ability.body-of-air",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.jump-self",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.walk-on-air-self",
+              "Level": 6
+            }
+          ]
+        },
+        {
+          "Key": "Aquatic",
+          "Label": "Aquatic",
+          "Description": "Stormvale affinity to the tides.",
+          "Grants": [
+            {
+              "AbilityRef": "ability.detect-fluid",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.body-of-water",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.unimpeded-by-water",
+              "Level": 2
+            },
+            {
+              "AbilityRef": "ability.rust-ranged",
+              "Level": 3
+            },
+            {
+              "AbilityRef": "ability.walk-on-through-water-self",
+              "Level": 5
+            },
+            {
+              "AbilityRef": "ability.vanish",
+              "Level": 6
+            }
+          ]
+        }
+      ]
+    },
     "choice.humanbarbarianupbringing.mapped": {
       "Key": "choice.humanbarbarianupbringing.mapped",
       "Title": "HumanBarbarianUpbringing",
@@ -4119,6 +4296,15 @@
             {
               "AbilityRef": "ability.illiterate",
               "Level": 1
+            },
+            {
+              "Level": 1,
+              "Name": "Frozen Tiger Tribe",
+              "Type": "Static",
+              "Effect": "Human barbarians may be paladins or priest subtypes. They gain and retain membership in the Church of the Lady of the Stars.",
+              "GuildOverrides": [
+                "so:Church of the Lady of the Stars"
+              ]
             }
           ]
         }
@@ -6734,14 +6920,14 @@
             {
               "Name": "Clinging Breath",
               "Type": "Innate",
-              "Level": 3,
+              "Table": 3,
               "Count": 1,
               "Effect": "Magical Slow (8 levels) at 20ft."
             },
             {
               "Name": "Frenzy",
               "Type": "Innate",
-              "Level": 7,
+              "Table": 7,
               "Count": 1,
               "Effect": "50% Berserk Rage."
             }
@@ -6779,13 +6965,13 @@
             {
               "Name": "Bone Storm",
               "Type": "Static",
-              "Level": 3,
+              "Table": 3,
               "Effect": "On death, bones burst out and strike the killer with mixed spiritual/physical force."
             },
             {
               "Name": "Blinding Breath",
               "Type": "Innate",
-              "Level": 7,
+              "Table": 7,
               "Count": 1,
               "Effect": "One target is magically blinded for one minute."
             }
@@ -6815,13 +7001,13 @@
             {
               "Name": "Acid Splash",
               "Type": "Static",
-              "Level": 3,
+              "Table": 3,
               "Effect": "On death explodes in acid at the killer."
             },
             {
               "Name": "Corrosive Acid Breath",
               "Type": "Static",
-              "Level": 7,
+              "Table": 7,
               "Effect": "Acid breath can destroy non-spiritual, non-glass objects."
             }
           ]
@@ -6850,13 +7036,13 @@
             {
               "Name": "Eldritch Surge",
               "Type": "Static",
-              "Level": 3,
+              "Table": 3,
               "Effect": "On death applies a degenerative magical/spiritual backlash to the killer."
             },
             {
               "Name": "Natural Resistance",
               "Type": "Static",
-              "Level": 7,
+              "Table": 7,
               "Effect": "Gain +1 MAC and +1 SAC."
             }
           ]
@@ -6870,31 +7056,32 @@
           },
           "Restrictions": {
             "ClassRestriction": [
+              "High-Druid",
               "Druid",
-              "High Druid",
-              "Forest Guardian",
+              "Forest-Guardian",
               "Leywalker"
             ]
           },
           "Grants": [
             {
+              "Level": 1,
               "Name": "Venom Blossom",
               "Type": "Static",
-              "Effect": "On death the killer suffers venom effects."
+              "Effect": "Upon death, the killer is struck with a venom blossom torrent causing CV4 and CV Paralysis with the normal 30 second kick-in."
             },
             {
               "Name": "Swarm Form",
               "Type": "Innate",
-              "Level": 3,
+              "Table": 3,
               "Count": 1,
-              "Effect": "Warcry-like swarm state for 30 seconds."
+              "Effect": "Can assume a form of a swarm of insects for 30 seconds. During this time they cannot be damaged by weapon blows. While active they cannot move from the point it was triggered."
             },
             {
               "Name": "Shape Shift",
               "Type": "Innate",
-              "Level": 7,
+              "Table": 7,
               "Count": 1,
-              "Effect": "Assume one animal form for up to five minutes."
+              "Effect": "May assume one of the following forms for 5 minutes. While in a form the Draconian takes on vague features and can only use unarmed combat as a weapon. Wolf: first two unarmed blows are Through PAC and gains 1 x Jump. Bear: Thick Hide grants 25% off physical weapon blows. Rat: Scurry grants 1 x Physical Light Step and 1 x Illness by touch (as per potion). Beetle: Heavy Carapace gives Immunity to Backstab and 1/2 damage from behind. Fly: Walk on air."
             }
           ]
         }
@@ -7114,6 +7301,139 @@
               "Key": "ability.subtype.the-lost.no-tribe"
             }
           ]
+        }
+      ]
+    },
+    "choice.mouratsubtypeabilities.mapped": {
+      "Key": "choice.mouratsubtypeabilities.mapped",
+      "Title": "MouratSubtypeAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "Verdant Heart",
+          "Label": "Verdant Heart",
+          "Description": "As Alfar in life and broad capabilities but spiritless, +1 PAC at 6th instead of +1 DAC, and light armour maximum.",
+          "Effects": {
+            "LifeScaleOverride": "Mourat (Verdant Heart)",
+            "ArmourAvailabilityOverride": "Light"
+          },
+          "Restrictions": {
+            "ClassRestriction": [
+              "Warrior",
+              "Ranger",
+              "Thug",
+              "Pathfinder",
+              "Leywalker",
+              "Forest Guardian",
+              "Druid"
+            ]
+          },
+          "Grants": [
+            {
+              "Level": 1,
+              "AbilityRef": "ability.spiritless"
+            },
+            {
+              "Level": 1,
+              "Name": "No Utilise Magic Items",
+              "Type": "Static",
+              "Effect": "Cannot use magic items."
+            }
+          ]
+        },
+        {
+          "Key": "Minions of the Decadence",
+          "Label": "Minions of the Decadence",
+          "Description": "Decadent Mourat servants with altered flesh-state interactions and undead-affecting miracle vulnerability.",
+          "Grants": [
+            {
+              "Level": 1,
+              "Name": "Immunity to Flesh and Blood",
+              "Type": "Immunity",
+              "Effect": "Gains immunity to flesh and blood effects."
+            },
+            {
+              "Level": 1,
+              "Name": "Affected by Undead Miracles",
+              "Type": "Static",
+              "Effect": "Fully affected by miracles that affect undead."
+            }
+          ]
+        }
+      ]
+    },
+    "choice.wyrmkinsubtypeabilities.mapped": {
+      "Key": "choice.wyrmkinsubtypeabilities.mapped",
+      "Title": "WyrmKinSubtypeAbilities",
+      "Required": true,
+      "Mode": "MappedSingle",
+      "StrategyIds": [
+        "section:mapped"
+      ],
+      "Options": [
+        {
+          "Key": "White Wyrm",
+          "Label": "The White Wyrms",
+          "Description": "Haven guardians and seekers of evil, bound to white draconic nature.",
+          "Effects": {
+            "ColourChoiceOverride": [
+              "White"
+            ]
+          }
+        },
+        {
+          "Key": "Red Wyrm",
+          "Label": "The Red Wyrms",
+          "Description": "Rapidly matured wyrm-kin from the island off Legend's coast, with red draconic nature.",
+          "Effects": {
+            "ColourChoiceOverride": [
+              "Red"
+            ]
+          }
+        },
+        {
+          "Key": "Blue Wyrm",
+          "Label": "The Blue Wyrms",
+          "Description": "Oathbound guardians of the Ways, fierce in battle and tied to blue draconic nature.",
+          "Effects": {
+            "ColourChoiceOverride": [
+              "Blue"
+            ]
+          }
+        },
+        {
+          "Key": "Brown Wyrm",
+          "Label": "The Brown Wyrms",
+          "Description": "Tunnel-wardens beneath Legend, stoic and bound to brown draconic nature.",
+          "Effects": {
+            "ColourChoiceOverride": [
+              "Brown"
+            ]
+          }
+        },
+        {
+          "Key": "Green Wyrm",
+          "Label": "The Green Wyrms",
+          "Description": "Coastal protectors and moon-touched seafarers aligned with green draconic nature.",
+          "Effects": {
+            "ColourChoiceOverride": [
+              "Green"
+            ]
+          }
+        },
+        {
+          "Key": "Black Wyrm",
+          "Label": "The Black Wyrm",
+          "Description": "Pious atoners of Haven in service to Imrazil or the Virtues, aligned with black draconic nature.",
+          "Effects": {
+            "ColourChoiceOverride": [
+              "Black"
+            ]
+          }
         }
       ]
     }

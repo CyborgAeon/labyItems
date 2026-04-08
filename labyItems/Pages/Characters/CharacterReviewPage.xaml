@@ -66,12 +66,12 @@
                         </ImageButton.Source>
                     </ImageButton>
 
-                    <ImageButton AutomationProperties.Name="Export to Excel"
+                    <ImageButton AutomationProperties.Name="Export battleboard"
                                  StyleId="character-action-export"
                                  Style="{StaticResource EmojiActionIconButtonStyle}"
                                  Clicked="OnExportExcelClicked">
                         <ImageButton.Source>
-                            <FontImageSource Glyph="📄" Size="20" Color="Black"/>
+                            <FontImageSource Glyph="🖨️" Size="20" Color="Black"/>
                         </ImageButton.Source>
                     </ImageButton>
 
@@ -98,7 +98,7 @@
                                  Opacity="0"
                                  Spacing="8"
                                  Padding="8,8,8,4">
-                <Button Text="Export to Excel 📄"
+                <Button Text="Export battleboard 🖨️"
                         StyleId="character-action-export"
                         Style="{StaticResource ExpandedActionButtonStyle}"
                         Clicked="OnExportExcelClicked"/>

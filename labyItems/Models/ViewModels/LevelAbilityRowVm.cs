@@ -7,11 +7,14 @@ namespace labyItems.Models.ViewModels;
 public sealed class LevelAbilityRowVm
 {
     public int Level { get; set; }
+    public bool IsTableStage { get; set; }
     public string Body { get; set; } = string.Empty;
     public string Loc { get; set; } = string.Empty;
     public string WeaponSkills { get; set; } = string.Empty;
     public IReadOnlyList<string> AbilityNames { get; set; } = Array.Empty<string>();
     public IReadOnlyList<string> AbilityDetailKeys { get; set; } = Array.Empty<string>();
+
+    public string StageText => IsTableStage ? $"T{Level}" : Level.ToString();
 
     public string AbilitiesText => string.Join(", ", AbilityNames
         .Where(name => !string.IsNullOrWhiteSpace(name))
@@ -43,7 +46,8 @@ public static class LevelAbilityRowBuilder
         int level,
         IEnumerable<AbilityDefinition>? abilityDefinitions,
         string? body = null,
-        string? loc = null)
+        string? loc = null,
+        bool isTableStage = false)
     {
         var weaponSkillCodes = new List<string>();
         var abilityNames = new List<string>();
@@ -71,6 +75,7 @@ public static class LevelAbilityRowBuilder
         return new LevelAbilityRowVm
         {
             Level = level,
+            IsTableStage = isTableStage,
             Body = (body ?? string.Empty).Trim(),
             Loc = (loc ?? string.Empty).Trim(),
             WeaponSkills = string.Join(", ", weaponSkillCodes),

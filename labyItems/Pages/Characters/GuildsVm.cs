@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Input;
 using labyItems.Helpers;
 using labyItems.Models.Characters;
@@ -48,10 +49,12 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private string _currentRaceName = "";
     private HashSet<string> _currentPeopleTypes = new(StringComparer.OrdinalIgnoreCase);
     private HashSet<string> _currentRaceSelections = new(StringComparer.OrdinalIgnoreCase);
+    private GuildSlotRules _slotRules = GuildSlotRules.Default();
     private IReadOnlyDictionary<string, GuildMiracleDefinition>? _miracleLookupCache;
     private Task<IReadOnlyDictionary<string, GuildMiracleDefinition>>? _miracleLookupTask;
     private readonly Dictionary<string, Task> _detailLoadTasks = new(StringComparer.OrdinalIgnoreCase);
     private readonly object _detailLoadGate = new();
+    private CancellationTokenSource? _searchDebounceCts;
     private readonly Func<Task>? _refreshDraftAbilitiesAsync;
     private readonly bool _applyCharacterAvailabilityFilters;
     private readonly bool _allowGuildSelection;
@@ -114,8 +117,14 @@ public sealed class GuildsVm : INotifyPropertyChanged
         FilteredGuilds = new ObservableCollection<GuildCardVm>();
         TypeFilterChips = new ObservableCollection<GuildTypeFilterChipVm>();
 
-        ToggleExpandedCommand = new Command<GuildCardVm>(item => _ = ToggleExpandedAsync(item));
-        ToggleSelectedCommand = new Command<GuildCardVm>(item => _ = ToggleSelectedAsync(item));
+        ToggleExpandedCommand = new Command<GuildCardVm>(item => _ = ExecuteGuildCardCommandSafeAsync(
+            action: () => ToggleExpandedAsync(item),
+            operation: "GUILD_TOGGLE_EXPANDED",
+            guildName: item?.Name));
+        ToggleSelectedCommand = new Command<GuildCardVm>(item => _ = ExecuteGuildCardCommandSafeAsync(
+            action: () => ToggleSelectedAsync(item),
+            operation: "GUILD_TOGGLE_SELECTED",
+            guildName: item?.Name));
         ToggleTypeFilterChipCommand = new Command<GuildTypeFilterChipVm>(ToggleTypeFilterChip);
 
         SelectTypeFilterCommand = new Command<string>(s =>
@@ -145,7 +154,43 @@ public sealed class GuildsVm : INotifyPropertyChanged
     public string SearchText
     {
         get => _searchText;
-        set { if (Set(ref _searchText, value)) Refilter(); }
+        set
+        {
+            if (!Set(ref _searchText, value))
+                return;
+
+            ScheduleRefilter();
+        }
+    }
+
+    private void ScheduleRefilter()
+    {
+        _searchDebounceCts?.Cancel();
+        _searchDebounceCts = new CancellationTokenSource();
+        var token = _searchDebounceCts.Token;
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(180, token).ConfigureAwait(false);
+                if (token.IsCancellationRequested)
+                    return;
+
+                if (MainThread.IsMainThread)
+                {
+                    Refilter();
+                }
+                else
+                {
+                    await MainThread.InvokeOnMainThreadAsync(Refilter).ConfigureAwait(false);
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                // Ignore cancelled debounce.
+            }
+        }, token);
     }
 
     public ObservableCollection<GuildCardVm> AllGuilds { get; }
@@ -241,7 +286,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 NotSelectableReason = cardSelectable
                     ? ""
                     : (_allowGuildSelection && _enforceAvailabilityForSelection ? reason : ""),
-                IsLocked = false,
+                IsLocked = _slotRules.IsGuildLocked(rec.Type ?? string.Empty, name),
             };
 
             vm.Icon = IconForType(vm.Type);
@@ -296,11 +341,46 @@ public sealed class GuildsVm : INotifyPropertyChanged
             var details = await BuildCardDetailsAsync(card.Name, rec ?? new GuildRecord());
             card.ApplyDetails(details);
         }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write(
+                "GUILD_DETAIL_LOAD",
+                $"Failed to load guild details for '{card.Name}'.",
+                ex);
+
+            if (!card.DetailsLoaded)
+                card.ApplyDetails(new GuildCardDetailsVm());
+        }
         finally
         {
             card.IsDetailsLoading = false;
             lock (_detailLoadGate)
                 _detailLoadTasks.Remove(card.Name);
+        }
+    }
+
+    private static async Task ExecuteGuildCardCommandSafeAsync(
+        Func<Task> action,
+        string operation,
+        string? guildName)
+    {
+        if (action == null)
+            return;
+
+        try
+        {
+            await action();
+        }
+        catch (Exception ex)
+        {
+            var normalizedGuildName = string.IsNullOrWhiteSpace(guildName)
+                ? "Unknown guild"
+                : guildName.Trim();
+
+            RuntimeLog.Write(
+                operation,
+                $"Guild interaction failed for '{normalizedGuildName}'.",
+                ex);
         }
     }
 
@@ -417,6 +497,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (HasBarbarianPeopleType(_draft))
             _currentPeopleTypes.Add("Tribal");
 
+        var subtypePeopleType = (_draft.RaceSubtypeValue ?? _draft.RaceSubtype ?? string.Empty).Trim();
+        if (subtypePeopleType.Equals("Verdant Heart", StringComparison.OrdinalIgnoreCase))
+            _currentPeopleTypes.Add("Tribal");
+
         var subtype = (_draft.RaceSubtypeValue ?? _draft.RaceSubtype ?? string.Empty).Trim();
         if (subtype.Length > 0)
             _currentRaceSelections.Add(subtype);
@@ -458,6 +542,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
     {
         if (!_applyCharacterAvailabilityFilters)
             return;
+
+        RecomputeSlotRules();
+        _slotRules.ApplyToCurrentSelection(_draft, _guildRecords);
 
         var kept = new List<string>();
         foreach (var g in _draft.Guilds)
@@ -508,7 +595,15 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (!_applyCharacterAvailabilityFilters)
             return AvailabilityResult.Ok();
 
-        return EvaluateAvailability(rec, guildName);
+        var baseResult = EvaluateAvailability(rec, guildName);
+        if (!baseResult.Allowed)
+            return baseResult;
+
+        var slotResult = EvaluateSlotSelectability(guildName, rec);
+        if (!slotResult.Allowed)
+            return new AvailabilityResult(false, slotResult.Reason);
+
+        return AvailabilityResult.Ok();
     }
 
     private AvailabilityResult EvaluateAvailabilityForCurrentContext(string guildName)
@@ -516,7 +611,26 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (!_applyCharacterAvailabilityFilters)
             return AvailabilityResult.Ok();
 
-        return EvaluateAvailability(guildName);
+        if (!_guildRecords.TryGetValue(guildName, out var rec) || rec == null)
+            return EvaluateAvailability(guildName);
+
+        return EvaluateAvailabilityForCurrentContext(rec, guildName);
+    }
+
+    private void RecomputeSlotRules()
+    {
+        _slotRules = GuildSlotRules.FromDraft(_draft);
+        _slotRules.ResolvePeopleTypeOverrides(_guildRecords);
+    }
+
+    private GuildSelectability EvaluateSlotSelectability(string guildName, GuildRecord? rec = null)
+    {
+        var guild = rec;
+        if (guild == null && !_guildRecords.TryGetValue(guildName, out guild))
+            return new GuildSelectability(true, string.Empty);
+
+        var type = guild?.Type ?? string.Empty;
+        return _slotRules.CanSelect(type, guildName, _draft.Guilds, _guildRecords);
     }
 
     private bool MeetsAvailabilityRules(IEnumerable<RuleClause> rules)
@@ -936,6 +1050,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     private void RecomputeDraftAlignments()
     {
+        RecomputeSlotRules();
         _draft.SetAvailableAlignmentsFromRules(_getNonGuildRules());
 
         // Refresh selectability now that the world changed
@@ -944,6 +1059,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
             card.IsSelected = _draft.Guilds.Contains(card.Name, StringComparer.OrdinalIgnoreCase);
             var availability = EvaluateAvailabilityForCurrentContext(card.Name);
             var selectable = availability.Allowed;
+            if (_guildRecords.TryGetValue(card.Name, out var rec) && rec != null)
+                card.IsLocked = _slotRules.IsGuildLocked(rec.Type ?? string.Empty, card.Name);
+            else
+                card.IsLocked = false;
 
             // Allow already-selected guilds to stay selectable so the user can deselect them
             card.IsSelectable = !_allowGuildSelection

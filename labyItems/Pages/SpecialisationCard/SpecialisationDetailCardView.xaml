@@ -52,6 +52,40 @@
                    IsVisible="{Binding ShowDescriptionSeeMore, Source={x:Reference Root}}"/>
 
             <VerticalStackLayout Spacing="6"
+                                 IsVisible="{Binding HasAsPerEntries, Source={x:Reference Root}}">
+                <Label Text="AS PER"
+                       Style="{StaticResource SectionHeaderLabelStyle}"/>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AsPerEntries, Source={x:Reference Root}}"
+                                     Spacing="6">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="8">
+                                <Label Text="{Binding DisplayName}"
+                                       LineBreakMode="WordWrap"
+                                       VerticalTextAlignment="Center"/>
+                                <Button Grid.Column="1"
+                                        Text="&#xF05A;"
+                                        FontFamily="FASolid"
+                                        FontSize="12"
+                                        Padding="0"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource SubtleTextColor}"
+                                        HeightRequest="18"
+                                        WidthRequest="18"
+                                        MinimumHeightRequest="0"
+                                        MinimumWidthRequest="0"
+                                        IsVisible="{Binding HasDetails}"
+                                        Clicked="OnAsPerInfoClicked"
+                                        CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="6"
                                  IsVisible="{Binding HasHint, Source={x:Reference Root}}">
                 <Label Text="HINT"
                        Style="{StaticResource SectionHeaderLabelStyle}"/>

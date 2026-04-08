@@ -1785,8 +1785,7 @@
     },
     "DenominationalMiracle": {
       "$ref": "The Evil Within"
-    },
-    "DenominationalMiracleNote": "This miracle may be learnt as normal by priests of Certizal post 8th."
+    }
   },
   "Church of Dead Heroes": {
     "Type": "professional",

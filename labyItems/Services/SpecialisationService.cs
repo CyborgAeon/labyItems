@@ -90,7 +90,12 @@ public static class SpecialisationService
                             {
                                 Name = optionName,
                                 Effect = option.Description ?? string.Empty,
-                                Type = "Static"
+                                Type = "Static",
+                                AsPer = option.AsPer?
+                                    .Where(IsNotBlank)
+                                    .Select(x => x.Trim())
+                                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                                    .ToList()
                             });
                         }
                     }
@@ -137,6 +142,7 @@ public static class SpecialisationService
         return new ColourAbilityRecord
         {
             Description = (option.Description ?? string.Empty).Trim(),
+            AsPer = option.AsPer?.Where(IsNotBlank).Select(x => x.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).ToList(),
             Roleplay = ReadOptionMetadata(option, "Roleplay"),
             Lore = ReadOptionMetadata(option, "Lore"),
             Levels = BuildLevelledAbilityMap(option.Grants),
@@ -203,6 +209,7 @@ public static class SpecialisationService
             Source = source.Source,
             Count = source.Count,
             Amount = source.Amount?.ToList(),
+            AsPer = source.AsPer?.ToList(),
             Frequency = source.Frequency,
             OverwriteKey = source.OverwriteKey,
             PreReqs = source.PreReqs?.ToList(),
@@ -247,6 +254,7 @@ public sealed class SpecialisationRecord
 public sealed class ColourAbilityRecord
 {
     public string Description { get; set; } = string.Empty;
+    public List<string>? AsPer { get; set; }
     public string Roleplay { get; set; } = string.Empty;
     public string Lore { get; set; } = string.Empty;
     public Dictionary<string, List<AbilityDefinition>>? Levels { get; set; }

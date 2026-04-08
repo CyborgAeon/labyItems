@@ -40,9 +40,160 @@
       }
     },
     {
+      "Id": "human-stormvale-affinity",
+      "Conditions": {
+        "Race": "Human",
+        "Subtype": "Stormvale"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "StormvaleAffinity",
+        "Title": "Stormvale Affinity",
+        "DetailKey": "StormvaleAffinity",
+        "SectionId": "mapped:Stormvale Affinity",
+        "Required": true,
+        "Subtitle": "Choose Air or Aquatic affinity."
+      }
+    },
+    {
+      "Id": "faerie-amlesian-caste",
+      "Conditions": {
+        "Race": "Faerie"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "AmlesianCasteAbilities",
+        "Title": "Amlesian Caste",
+        "DetailKey": "AmlesianCasteAbilities",
+        "SectionId": "mapped:Amlesian Caste:Faerie",
+        "Required": false,
+        "Subtitle": "Amlesian faeries are as their imperial equivalents, and may pursue Oni or Fortune status by alignment."
+      }
+    },
+    {
+      "Id": "goblin-amlesian-caste",
+      "Conditions": {
+        "Race": "Goblin"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "AmlesianCasteAbilities",
+        "Title": "Amlesian Caste",
+        "DetailKey": "AmlesianCasteAbilities",
+        "SectionId": "mapped:Amlesian Caste:Goblin",
+        "Required": false,
+        "Subtitle": "Amlesian goblins are always evil and should follow Oni status; witch doctors become wizards and shamans become pure priests."
+      }
+    },
+    {
+      "Id": "troll-amlesian-caste",
+      "Conditions": {
+        "Race": "Troll"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "AmlesianCasteAbilities",
+        "Title": "Amlesian Caste",
+        "DetailKey": "AmlesianCasteAbilities",
+        "SectionId": "mapped:Amlesian Caste:Troll",
+        "Required": false,
+        "Subtitle": "Amlesian trolls are as imperial trolls, but align Good or Evil and follow Fortune or Oni as relevant."
+      }
+    },
+    {
+      "Id": "ogres-amlesian-caste",
+      "Conditions": {
+        "Race": "Ogres"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "AmlesianCasteAbilities",
+        "Title": "Amlesian Caste",
+        "DetailKey": "AmlesianCasteAbilities",
+        "SectionId": "mapped:Amlesian Caste:Ogres",
+        "Required": false,
+        "Subtitle": "Amlesian ogres include Ogre Magi, Fortune, and Oni paths; witch doctors become wizards and shamans become pure priests."
+      }
+    },
+    {
+      "Id": "ratfolk-amlesian-caste",
+      "Conditions": {
+        "Race": "Ratfolk"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "AmlesianCasteAbilities",
+        "Title": "Amlesian Caste",
+        "DetailKey": "AmlesianCasteAbilities",
+        "SectionId": "mapped:Amlesian Caste:Ratfolk",
+        "Required": false,
+        "Subtitle": "These elder Amlesian ratfolk do not gain imperial clan or breed benefits, but may follow Amlesian paths."
+      }
+    },
+    {
+      "Id": "samila-amlesian-caste",
+      "Conditions": {
+        "Race": "Samila"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "AmlesianCasteAbilities",
+        "Title": "Amlesian Caste",
+        "DetailKey": "AmlesianCasteAbilities",
+        "SectionId": "mapped:Amlesian Caste:Samila",
+        "Required": false,
+        "Subtitle": "Amlesian Samila are as their Ishmaic equivalents (excluding Ishmaic-only parts) and may not join guilds."
+      }
+    },
+    {
+      "Id": "half-elf-gold-amlesian-caste",
+      "Conditions": {
+        "Race": "Half Elf",
+        "Subtype": "Gold"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "AmlesianCasteAbilities",
+        "Title": "Amlesian Caste",
+        "DetailKey": "AmlesianCasteAbilities",
+        "SectionId": "mapped:Amlesian Caste:HalfElfGold",
+        "Required": false,
+        "Subtitle": "Gold half-elves may opt into Amlesian caste traditions."
+      }
+    },
+    {
+      "Id": "human-mourat-subtype",
+      "Conditions": {
+        "Race": "Human",
+        "Subtype": "Mourat"
+      },
+      "Section": {
+        "SectionType": "Mapped",
+        "DefinitionKey": "MouratSubtypeAbilities",
+        "Title": "Mourat Subtype",
+        "DetailKey": "MouratSubtypeAbilities",
+        "SectionId": "mapped:Mourat Subtype",
+        "Required": true,
+        "Subtitle": "Select a Mourat subtype."
+      }
+    },
+    {
       "Id": "human-barbarian-upbringing",
       "Conditions": {
-        "Race": "Human"
+        "Race": "Human",
+        "ClassIn": [
+          "Warrior",
+          "Archer",
+          "Ranger",
+          "Shaman",
+          "Witch Doctor",
+          "Druid",
+          "Pathfinder",
+          "Paladin",
+          "Armoured-Priest",
+          "Hospitaller",
+          "Witch"
+        ]
       },
       "Section": {
         "SectionType": "Mapped",

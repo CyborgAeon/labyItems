@@ -70,6 +70,13 @@
         "choice.amlesiancasteabilities.mapped"
       ]
     },
+    "StormvaleAffinity": {
+      "Key": "definition.stormvaleaffinity",
+      "DisplayName": "StormvaleAffinity",
+      "ChoiceSetRefs": [
+        "choice.stormvaleaffinity.mapped"
+      ]
+    },
     "BaronialAncestry": {
       "Key": "definition.baronialancestry",
       "DisplayName": "BaronialAncestry",
@@ -131,6 +138,20 @@
       "DisplayName": "OrcSubtypeAbilities",
       "ChoiceSetRefs": [
         "choice.orcsubtypeabilities.mapped"
+      ]
+    },
+    "MouratSubtypeAbilities": {
+      "Key": "definition.mouratsubtypeabilities",
+      "DisplayName": "MouratSubtypeAbilities",
+      "ChoiceSetRefs": [
+        "choice.mouratsubtypeabilities.mapped"
+      ]
+    },
+    "WyrmKinSubtypeAbilities": {
+      "Key": "definition.wyrmkinsubtypeabilities",
+      "DisplayName": "WyrmKinSubtypeAbilities",
+      "ChoiceSetRefs": [
+        "choice.wyrmkinsubtypeabilities.mapped"
       ]
     }
   }

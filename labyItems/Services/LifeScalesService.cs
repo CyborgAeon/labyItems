@@ -24,11 +24,11 @@ public static class LifeScalesService
             if (_cache != null)
                 return _cache;
 
-#if DEBUG
-            _cache = await LoadDebugMergedAsync().ConfigureAwait(false);
-#else
+            // #if DEBUG
+            //             _cache = await LoadDebugMergedAsync().ConfigureAwait(false);
+            // #else
             _cache = await Task.Run(LoadFromDb).ConfigureAwait(false);
-#endif
+            // #endif
         }
         catch (Exception ex)
         {
@@ -178,6 +178,10 @@ public static class LifeScalesService
     {
         var all = await GetAllAsync();
 
+        var requestedRace = (raceName ?? string.Empty).Trim();
+        var applyForgottenHumanLifePenalty =
+            NormalizeKey(requestedRace).Equals(NormalizeKey("Human (Forgotten)"), StringComparison.Ordinal);
+
         var requestedClass = (className ?? string.Empty).Trim();
         if (requestedClass.Length == 0)
             return Array.Empty<LifeScalePoint>();
@@ -225,7 +229,22 @@ public static class LifeScalesService
                 result.Add(new LifeScalePoint(pair[0], pair[1]));
         }
 
+        if (applyForgottenHumanLifePenalty && result.Count > 0)
+            return ApplyOneLevelLifePenalty(result);
+
         return result;
+    }
+
+    private static IReadOnlyList<LifeScalePoint> ApplyOneLevelLifePenalty(IReadOnlyList<LifeScalePoint> points)
+    {
+        if (points == null || points.Count == 0)
+            return Array.Empty<LifeScalePoint>();
+
+        var adjusted = points.ToList();
+        for (var i = adjusted.Count - 1; i >= 1; i--)
+            adjusted[i] = adjusted[i - 1];
+
+        return adjusted;
     }
 
     private static (string? RaceKey, string? ClassKey) FindFirstRaceClassMatch(

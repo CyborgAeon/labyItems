@@ -3651,7 +3651,7 @@
             "Effect": "Immunity to pain in all forms."
           },
           {
-            "Name": "+1 Stacking Strength",
+            "Name": "+1 Strength",
             "AbilityRef": "ability.mr.titan.l1.2",
             "Type": "Static",
             "Effect": "+1 stacking Strength (max +3)."

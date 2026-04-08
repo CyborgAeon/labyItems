@@ -1568,23 +1568,23 @@
       "5": [],
       "6": [
         {
-          "Name": "Unholy Champion Specialist skill",
+          "Name": "Unholy Champion Specialist",
           "Type": "Overwrite",
-          "OverwriteKey": "Unholy Champion Specialist skill"
+          "OverwriteKey": "Unholy Champion Specialist"
         }
       ],
       "7": [
         {
-          "Name": "Unholy Champion Specialist skill",
+          "Name": "Unholy Champion Specialist",
           "Type": "Overwrite",
-          "OverwriteKey": "Unholy Champion Specialist skill"
+          "OverwriteKey": "Unholy Champion Specialist"
         }
       ],
       "8": [
         {
-          "Name": "Unholy Champion Specialist skill",
+          "Name": "Unholy Champion Specialist",
           "Type": "Overwrite",
-          "OverwriteKey": "Unholy Champion Specialist skill"
+          "OverwriteKey": "Unholy Champion Specialist"
         }
       ]
     },
@@ -2136,6 +2136,79 @@
       {
         "PowerBase": "Magic",
         "Calculation": "CL^2+CL"
+      }
+    ]
+  },
+  "Witch Doctor": {
+    "Brackets": ["🧙 Wizard"],
+    "Armour": {
+      "Wearable": ["light", "medium"],
+      "Restrictions": []
+    },
+    "Tags": ["Magical Caster", "Variable mana", "Tribal"],
+    "Buy as": ["1st class Wizard"],
+    "Levels": {
+      "1": [
+        {
+          "Name": "Recognise Mana",
+          "Type": "AtWill"
+        },
+        {
+          "Name": "O (Staff)",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Witch Doctor Colour",
+          "Type": "Overwrite",
+          "OverwriteKey": "Witch Doctor Colour"
+        }
+      ],
+      "2": [
+        {
+          "Name": "Read Glyphs",
+          "Type": "Static"
+        }
+      ],
+      "3": [],
+      "4": [
+        {
+          "Name": "O (Dagger)",
+          "Type": "WeaponSkill"
+        }
+      ],
+      "5": [],
+      "6": [
+        {
+          "Name": "O (Spear)",
+          "Type": "WeaponSkill"
+        },
+        {
+          "Name": "Make scrolls",
+          "Type": "Static"
+        }
+      ],
+      "7": [
+        {
+          "Name": "Wizard Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Wizard Specialist"
+        }
+      ],
+      "8": [
+        {
+          "Name": "Wizard Specialist",
+          "Type": "Overwrite",
+          "OverwriteKey": "Wizard Specialist"
+        }
+      ]
+    },
+    "Max AC": 6,
+    "Powerbase": ["🪄 Magic"],
+    "CasterLevel": 8,
+    "PowerCalculations": [
+      {
+        "PowerBase": "Magic",
+        "Calculation": "TM*2+CL"
       }
     ]
   },
