@@ -6,6 +6,7 @@ using labyItems.Models.Characters;
 using labyItems.Models.ViewModels;
 using labyItems.Models.Rules;
 using labyItems.Services;
+using labyItems.Helpers;
 using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Characters.ViewModels;
@@ -15,10 +16,6 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
     private const int SearchStep = 0;
     private const int DetailStep = 1;
 
-    private static readonly string[] IconPastelPalette =
-    {
-        "#FEC5BB", "#FAE1DD", "#F8EDEB", "#E8E8E4", "#D8E2DC", "#ECE4DB", "#FFE5D9", "#FFD7BA"
-    };
 
     private static readonly Color PurchasedRowColor = Color.FromArgb("#DCFCE7");
     private static readonly Color DefaultRowColor = Colors.Transparent;
@@ -284,7 +281,7 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
             Category = category,
             Icon = icon,
             IconGlyph = (definition.IconGlyph ?? string.Empty).Trim(),
-            IconBackground = PickRandomIconPastel(),
+            IconBackground = IconPalette.PickRandomIconPastel(),
             Summary = BuildSummary(detailRows),
             MaxAc = maxAc,
             TBLP = firstLife.Body,
@@ -304,9 +301,6 @@ public sealed class MultiRaceWizardVm : INotifyPropertyChanged
             costsByLevel: costsByLevel,
             detailRows: detailRows);
     }
-
-    private static string PickRandomIconPastel()
-        => IconPastelPalette[Random.Shared.Next(IconPastelPalette.Length)];
 
     private static string ResolvePowerBase(MultiRaceDefinition definition)
         => MultiPathWizardHelpers.ResolvePowerBase<

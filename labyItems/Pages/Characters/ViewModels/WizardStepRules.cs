@@ -11,7 +11,7 @@ public static class WizardStepRules
         => draft.IsRaceAndClassSelected && specialisationVm.IsComplete;
 
     public static bool CanEnterDetails(CharacterDraft draft, CharacterSpecialisationVm specialisationVm, GuildsVm guildsVm)
-        => CanEnterGuilds(draft, specialisationVm) && guildsVm.IsComplete;
+        => CanEnterGuilds(draft, specialisationVm);
 
     public static bool CanEnterReview(CharacterDraft draft, CharacterSpecialisationVm specialisationVm, GuildsVm guildsVm)
         => CanEnterDetails(draft, specialisationVm, guildsVm);

@@ -42,12 +42,6 @@
             <Grid Grid.Row="0"
                   ColumnDefinitions="Auto,10,*,Auto"
                   VerticalOptions="Center">
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=SelectCommand}"
-                        CommandParameter="{Binding .}"/>
-                </Grid.GestureRecognizers>
-
                 <Grid Grid.Column="0"
                       WidthRequest="28"
                       HeightRequest="28">
@@ -70,6 +64,12 @@
                     <Label Text="{Binding Type}"
                            Opacity="0.7"
                            FontSize="12"/>
+                    <Label Text="{Binding ChoiceSetNoticeText}"
+                           Opacity="0.9"
+                           FontSize="11"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource AccentMaroonColor}"
+                           IsVisible="{Binding HasAnyChoiceOptions}"/>
                     <Label Text="{Binding NotSelectableReason}"
                            Opacity="0.8"
                            FontSize="11"
@@ -84,9 +84,18 @@
                         Style="{StaticResource ChevronButtonStyle}"
                         VerticalOptions="Center"
                         HorizontalOptions="End"
-                        IsEnabled="{Binding CanToggleSelection}"
                         Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=ToggleExpandedCommand}"
                         CommandParameter="{Binding .}"/>
+
+                <BoxView Grid.Column="0"
+                         Grid.ColumnSpan="3"
+                         BackgroundColor="Transparent">
+                    <BoxView.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:GuildCardView}}, Path=SelectCommand}"
+                            CommandParameter="{Binding .}"/>
+                    </BoxView.GestureRecognizers>
+                </BoxView>
 
             </Grid>
 
@@ -394,73 +403,46 @@
                                 <Label Text="Basic"
                                        FontAttributes="Bold"
                                        Opacity="0.85"/>
-                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding BasicBenefits}">
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding BasicBenefitRows}"
+                                                     Spacing="2">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate>
-                                            <Label Text="{Binding ., StringFormat='• {0}'}"
-                                                   FontSize="13"
-                                                   Opacity="0.9"/>
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                </VerticalStackLayout>
-                                <VerticalStackLayout Spacing="6"
-                                                     IsVisible="{Binding HasBasicOptions}"
-                                                     BindableLayout.ItemsSource="{Binding BasicOptionGroups}">
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Stroke="{StaticResource SoftStrokeColor}"
-                                                    StrokeThickness="1"
+                                            <Border StrokeThickness="0"
                                                     StrokeShape="RoundRectangle 8"
-                                                    BackgroundColor="#FFFFFF"
-                                                    Padding="10">
-                                                <VerticalStackLayout Spacing="8">
-                                                    <Grid ColumnDefinitions="*,Auto"
-                                                          ColumnSpacing="8">
-                                                        <Label Text="{Binding SelectionKey}"
-                                                               FontAttributes="Bold"
-                                                               FontSize="13"/>
-                                                        <Button Text="✎"
-                                                                FontSize="14"
-                                                                Padding="10,6"
-                                                                BackgroundColor="Transparent"
-                                                                TextColor="{StaticResource Primary}"
-                                                                Clicked="OnEditGuildBenefitOptionClicked"
-                                                                CommandParameter="{Binding .}"/>
-                                                    </Grid>
-                                                    <VerticalStackLayout Spacing="6"
-                                                                         BindableLayout.ItemsSource="{Binding Options}">
-                                                        <BindableLayout.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <VerticalStackLayout Spacing="2">
-                                                                    <Label Text="{Binding Label}"
-                                                                           FontAttributes="Bold"
-                                                                           FontSize="13"/>
-                                                                    <VerticalStackLayout Spacing="1"
-                                                                                         Padding="8,0,0,0"
-                                                                                         BindableLayout.ItemsSource="{Binding Lines}">
-                                                                        <BindableLayout.ItemTemplate>
-                                                                            <DataTemplate>
-                                                                                <Label Text="{Binding .}"
-                                                                                       FontSize="12"
-                                                                                       Opacity="0.8"
-                                                                                       LineBreakMode="WordWrap"/>
-                                                                            </DataTemplate>
-                                                                        </BindableLayout.ItemTemplate>
-                                                                    </VerticalStackLayout>
-                                                                </VerticalStackLayout>
-                                                            </DataTemplate>
-                                                        </BindableLayout.ItemTemplate>
-                                                    </VerticalStackLayout>
-                                                    <Label Text="{Binding SelectedOption, StringFormat='Selected: {0}'}"
-                                                           FontSize="12"
-                                                           Opacity="0.7"
-                                                           IsVisible="{Binding HasSelection}"/>
-                                                    <Label Text="Choice required"
-                                                           FontSize="12"
-                                                           Opacity="0.7"
-                                                           TextColor="{StaticResource ErrorColor}"
-                                                           IsVisible="{Binding HasSelection, Converter={StaticResource InverseBoolConverter}}"/>
-                                                </VerticalStackLayout>
+                                                    BackgroundColor="{Binding RowBackgroundColor}">
+                                                <Grid Padding="8,6"
+                                                      ColumnDefinitions="*,Auto"
+                                                      RowDefinitions="Auto,Auto"
+                                                      ColumnSpacing="8"
+                                                      RowSpacing="2">
+                                                    <Label Text="{Binding DisplayText}"
+                                                           FontSize="13"
+                                                           VerticalTextAlignment="Center"
+                                                           LineBreakMode="WordWrap"/>
+                                                    <Button Grid.Column="1"
+                                                            Text="&#xF05A;"
+                                                            FontFamily="FASolid"
+                                                            FontSize="12"
+                                                            Padding="0"
+                                                            BackgroundColor="Transparent"
+                                                            TextColor="{StaticResource SubtleTextColor}"
+                                                            HeightRequest="18"
+                                                            WidthRequest="18"
+                                                            MinimumHeightRequest="0"
+                                                            MinimumWidthRequest="0"
+                                                            VerticalOptions="Center"
+                                                            IsVisible="{Binding HasDetails}"
+                                                            Clicked="OnGuildBenefitInfoClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Label Grid.Row="1"
+                                                           Grid.Column="0"
+                                                           Grid.ColumnSpan="2"
+                                                           Text="{Binding ChoiceLabel}"
+                                                           FontSize="11"
+                                                           FontAttributes="Bold"
+                                                           TextColor="{StaticResource AccentMaroonColor}"
+                                                           IsVisible="{Binding HasChoiceLabel}"/>
+                                                </Grid>
                                             </Border>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>
@@ -472,73 +454,46 @@
                                 <Label Text="Intermediate"
                                        FontAttributes="Bold"
                                        Opacity="0.85"/>
-                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding IntermediateBenefits}">
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding IntermediateBenefitRows}"
+                                                     Spacing="2">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate>
-                                            <Label Text="{Binding ., StringFormat='• {0}'}"
-                                                   FontSize="13"
-                                                   Opacity="0.9"/>
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                </VerticalStackLayout>
-                                <VerticalStackLayout Spacing="6"
-                                                     IsVisible="{Binding HasIntermediateOptions}"
-                                                     BindableLayout.ItemsSource="{Binding IntermediateOptionGroups}">
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Stroke="{StaticResource SoftStrokeColor}"
-                                                    StrokeThickness="1"
+                                            <Border StrokeThickness="0"
                                                     StrokeShape="RoundRectangle 8"
-                                                    BackgroundColor="#FFFFFF"
-                                                    Padding="10">
-                                                <VerticalStackLayout Spacing="8">
-                                                    <Grid ColumnDefinitions="*,Auto"
-                                                          ColumnSpacing="8">
-                                                        <Label Text="{Binding SelectionKey}"
-                                                               FontAttributes="Bold"
-                                                               FontSize="13"/>
-                                                        <Button Text="✎"
-                                                                FontSize="14"
-                                                                Padding="10,6"
-                                                                BackgroundColor="Transparent"
-                                                                TextColor="{StaticResource Primary}"
-                                                                Clicked="OnEditGuildBenefitOptionClicked"
-                                                                CommandParameter="{Binding .}"/>
-                                                    </Grid>
-                                                    <VerticalStackLayout Spacing="6"
-                                                                         BindableLayout.ItemsSource="{Binding Options}">
-                                                        <BindableLayout.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <VerticalStackLayout Spacing="2">
-                                                                    <Label Text="{Binding Label}"
-                                                                           FontAttributes="Bold"
-                                                                           FontSize="13"/>
-                                                                    <VerticalStackLayout Spacing="1"
-                                                                                         Padding="8,0,0,0"
-                                                                                         BindableLayout.ItemsSource="{Binding Lines}">
-                                                                        <BindableLayout.ItemTemplate>
-                                                                            <DataTemplate>
-                                                                                <Label Text="{Binding .}"
-                                                                                       FontSize="12"
-                                                                                       Opacity="0.8"
-                                                                                       LineBreakMode="WordWrap"/>
-                                                                            </DataTemplate>
-                                                                        </BindableLayout.ItemTemplate>
-                                                                    </VerticalStackLayout>
-                                                                </VerticalStackLayout>
-                                                            </DataTemplate>
-                                                        </BindableLayout.ItemTemplate>
-                                                    </VerticalStackLayout>
-                                                    <Label Text="{Binding SelectedOption, StringFormat='Selected: {0}'}"
-                                                           FontSize="12"
-                                                           Opacity="0.7"
-                                                           IsVisible="{Binding HasSelection}"/>
-                                                    <Label Text="Choice required"
-                                                           FontSize="12"
-                                                           Opacity="0.7"
-                                                           TextColor="{StaticResource ErrorColor}"
-                                                           IsVisible="{Binding HasSelection, Converter={StaticResource InverseBoolConverter}}"/>
-                                                </VerticalStackLayout>
+                                                    BackgroundColor="{Binding RowBackgroundColor}">
+                                                <Grid Padding="8,6"
+                                                      ColumnDefinitions="*,Auto"
+                                                      RowDefinitions="Auto,Auto"
+                                                      ColumnSpacing="8"
+                                                      RowSpacing="2">
+                                                    <Label Text="{Binding DisplayText}"
+                                                           FontSize="13"
+                                                           VerticalTextAlignment="Center"
+                                                           LineBreakMode="WordWrap"/>
+                                                    <Button Grid.Column="1"
+                                                            Text="&#xF05A;"
+                                                            FontFamily="FASolid"
+                                                            FontSize="12"
+                                                            Padding="0"
+                                                            BackgroundColor="Transparent"
+                                                            TextColor="{StaticResource SubtleTextColor}"
+                                                            HeightRequest="18"
+                                                            WidthRequest="18"
+                                                            MinimumHeightRequest="0"
+                                                            MinimumWidthRequest="0"
+                                                            VerticalOptions="Center"
+                                                            IsVisible="{Binding HasDetails}"
+                                                            Clicked="OnGuildBenefitInfoClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Label Grid.Row="1"
+                                                           Grid.Column="0"
+                                                           Grid.ColumnSpan="2"
+                                                           Text="{Binding ChoiceLabel}"
+                                                           FontSize="11"
+                                                           FontAttributes="Bold"
+                                                           TextColor="{StaticResource AccentMaroonColor}"
+                                                           IsVisible="{Binding HasChoiceLabel}"/>
+                                                </Grid>
                                             </Border>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>
@@ -550,73 +505,46 @@
                                 <Label Text="Advanced"
                                        FontAttributes="Bold"
                                        Opacity="0.85"/>
-                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancedBenefits}">
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancedBenefitRows}"
+                                                     Spacing="2">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate>
-                                            <Label Text="{Binding ., StringFormat='• {0}'}"
-                                                   FontSize="13"
-                                                   Opacity="0.9"/>
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                </VerticalStackLayout>
-                                <VerticalStackLayout Spacing="6"
-                                                     IsVisible="{Binding HasAdvancedOptions}"
-                                                     BindableLayout.ItemsSource="{Binding AdvancedOptionGroups}">
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Stroke="{StaticResource SoftStrokeColor}"
-                                                    StrokeThickness="1"
+                                            <Border StrokeThickness="0"
                                                     StrokeShape="RoundRectangle 8"
-                                                    BackgroundColor="#FFFFFF"
-                                                    Padding="10">
-                                                <VerticalStackLayout Spacing="8">
-                                                    <Grid ColumnDefinitions="*,Auto"
-                                                          ColumnSpacing="8">
-                                                        <Label Text="{Binding SelectionKey}"
-                                                               FontAttributes="Bold"
-                                                               FontSize="13"/>
-                                                        <Button Text="✎"
-                                                                FontSize="14"
-                                                                Padding="10,6"
-                                                                BackgroundColor="Transparent"
-                                                                TextColor="{StaticResource Primary}"
-                                                                Clicked="OnEditGuildBenefitOptionClicked"
-                                                                CommandParameter="{Binding .}"/>
-                                                    </Grid>
-                                                    <VerticalStackLayout Spacing="6"
-                                                                         BindableLayout.ItemsSource="{Binding Options}">
-                                                        <BindableLayout.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <VerticalStackLayout Spacing="2">
-                                                                    <Label Text="{Binding Label}"
-                                                                           FontAttributes="Bold"
-                                                                           FontSize="13"/>
-                                                                    <VerticalStackLayout Spacing="1"
-                                                                                         Padding="8,0,0,0"
-                                                                                         BindableLayout.ItemsSource="{Binding Lines}">
-                                                                        <BindableLayout.ItemTemplate>
-                                                                            <DataTemplate>
-                                                                                <Label Text="{Binding .}"
-                                                                                       FontSize="12"
-                                                                                       Opacity="0.8"
-                                                                                       LineBreakMode="WordWrap"/>
-                                                                            </DataTemplate>
-                                                                        </BindableLayout.ItemTemplate>
-                                                                    </VerticalStackLayout>
-                                                                </VerticalStackLayout>
-                                                            </DataTemplate>
-                                                        </BindableLayout.ItemTemplate>
-                                                    </VerticalStackLayout>
-                                                    <Label Text="{Binding SelectedOption, StringFormat='Selected: {0}'}"
-                                                           FontSize="12"
-                                                           Opacity="0.7"
-                                                           IsVisible="{Binding HasSelection}"/>
-                                                    <Label Text="Choice required"
-                                                           FontSize="12"
-                                                           Opacity="0.7"
-                                                           TextColor="{StaticResource ErrorColor}"
-                                                           IsVisible="{Binding HasSelection, Converter={StaticResource InverseBoolConverter}}"/>
-                                                </VerticalStackLayout>
+                                                    BackgroundColor="{Binding RowBackgroundColor}">
+                                                <Grid Padding="8,6"
+                                                      ColumnDefinitions="*,Auto"
+                                                      RowDefinitions="Auto,Auto"
+                                                      ColumnSpacing="8"
+                                                      RowSpacing="2">
+                                                    <Label Text="{Binding DisplayText}"
+                                                           FontSize="13"
+                                                           VerticalTextAlignment="Center"
+                                                           LineBreakMode="WordWrap"/>
+                                                    <Button Grid.Column="1"
+                                                            Text="&#xF05A;"
+                                                            FontFamily="FASolid"
+                                                            FontSize="12"
+                                                            Padding="0"
+                                                            BackgroundColor="Transparent"
+                                                            TextColor="{StaticResource SubtleTextColor}"
+                                                            HeightRequest="18"
+                                                            WidthRequest="18"
+                                                            MinimumHeightRequest="0"
+                                                            MinimumWidthRequest="0"
+                                                            VerticalOptions="Center"
+                                                            IsVisible="{Binding HasDetails}"
+                                                            Clicked="OnGuildBenefitInfoClicked"
+                                                            CommandParameter="{Binding .}"/>
+                                                    <Label Grid.Row="1"
+                                                           Grid.Column="0"
+                                                           Grid.ColumnSpan="2"
+                                                           Text="{Binding ChoiceLabel}"
+                                                           FontSize="11"
+                                                           FontAttributes="Bold"
+                                                           TextColor="{StaticResource AccentMaroonColor}"
+                                                           IsVisible="{Binding HasChoiceLabel}"/>
+                                                </Grid>
                                             </Border>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>

@@ -247,7 +247,11 @@
   "Buckland Hoby’s Essence Binding Powder": {
     "difficulty": 12,
     "costPerDose": "300",
-    "ingredients": ["Boleq Powder", "Avalorash Essence", "Mana Shard Stone Dust"],
+    "ingredients": [
+      "Boleq Powder",
+      "Avalorash Essence",
+      "Mana Shard Stone Dust"
+    ],
     "description": "Complex ritual to solidify an elf’s essence for transport/restoration point; prerequisites and limits apply.",
     "type": "general"
   },
@@ -261,7 +265,12 @@
   "36pt tblp Cure": {
     "difficulty": 9,
     "costPerDose": "450",
-    "ingredients": ["Merry Woundwort", "Shining Tamarisk", "Sprite’s Tears", "Twilight Elf Lembas"],
+    "ingredients": [
+      "Merry Woundwort",
+      "Shining Tamarisk",
+      "Sprite’s Tears",
+      "Twilight Elf Lembas"
+    ],
     "description": "Cures 36 tblp; requires 18 tblp Cure recipe.",
     "type": "healing"
   },
@@ -275,21 +284,33 @@
   "Anti-Venom True": {
     "difficulty": 9,
     "costPerDose": "450",
-    "ingredients": ["Giant Leech Saliva", "Powdered Stirge Eggshell", "Sprite’s Tears"],
+    "ingredients": [
+      "Giant Leech Saliva",
+      "Powdered Stirge Eggshell",
+      "Sprite’s Tears"
+    ],
     "description": "Completely negates poison effects; if drunk in advance, negates next three doses within 1 hour.",
     "type": "healing"
   },
   "Holy/Unholy Water": {
     "difficulty": 7,
     "costPerDose": "600",
-    "ingredients": ["Graveroot", "Opal Dust or Black Opal Dust", "Cherub’s Kiss or Devil’s Spit"],
+    "ingredients": [
+      "Graveroot",
+      "Opal Dust or Black Opal Dust",
+      "Cherub’s Kiss or Devil’s Spit"
+    ],
     "description": "Requires 24h Bless/Curse during manufacture; multiple uses (warding, balm, weapon application). Alignment restrictions apply.",
     "type": "general"
   },
   "Deadening Elixir": {
     "difficulty": 8,
     "costPerDose": "360",
-    "ingredients": ["Black Feathergrass", "Jurubera Flowers", "Bronze Golem’s Ichor"],
+    "ingredients": [
+      "Black Feathergrass",
+      "Jurubera Flowers",
+      "Bronze Golem’s Ichor"
+    ],
     "description": "15 min: no touch; -3 DAC (min 0); no Rage; immunity to Pain; 25% off all damage types.",
     "type": "general"
   },
@@ -310,14 +331,22 @@
   "Protection from Psionics": {
     "difficulty": 7,
     "costPerDose": "360",
-    "ingredients": ["Cloudweaver’s Essence", "Black Feathergrass", "Jurubera Berries"],
+    "ingredients": [
+      "Cloudweaver’s Essence",
+      "Black Feathergrass",
+      "Jurubera Berries"
+    ],
     "description": "Full immunity to neuronics for 15 min; then 6 head damage and 12 tblp kick-out; reduced effect if recipe not known.",
     "type": "general"
   },
   "Anger": {
     "difficulty": 7,
     "costPerDose": "360",
-    "ingredients": ["Bronze Golem’s Ichor", "Sherbet Ambrosia", "Powdered Stirge Egg-shell"],
+    "ingredients": [
+      "Bronze Golem’s Ichor",
+      "Sherbet Ambrosia",
+      "Powdered Stirge Egg-shell"
+    ],
     "description": "Choice: take periodic tblp or enter 25% rage for 1 hour; post-effects include kick-out and Strength lockout.",
     "type": "general"
   },
@@ -345,7 +374,11 @@
   "Hyper-Action": {
     "difficulty": 10,
     "costPerDose": "600",
-    "ingredients": ["Sherbet Ambrosia", "Baby Pixie Eyelashes", "Quickling Brain Fluid"],
+    "ingredients": [
+      "Sherbet Ambrosia",
+      "Baby Pixie Eyelashes",
+      "Quickling Brain Fluid"
+    ],
     "description": "1 hour: +4 DAC and Determination-like effects; then 24 tblp kick-out.",
     "type": "general"
   },
@@ -373,14 +406,22 @@
   "Blade Blindness": {
     "difficulty": 9,
     "costPerDose": "450",
-    "ingredients": ["Berberis Berries", "Galeb Duhr’s Blood", "Shadow’s Laughter"],
+    "ingredients": [
+      "Berberis Berries",
+      "Galeb Duhr’s Blood",
+      "Shadow’s Laughter"
+    ],
     "description": "Blade venom variant: 30s after entry, target is blind for 5 min; standard immunities/antidotes apply.",
     "type": "poison"
   },
   "Blade Paralysis": {
     "difficulty": 9,
     "costPerDose": "450",
-    "ingredients": ["Berberis Berries", "Galeb Duhr’s Blood", "Black Feathergrass"],
+    "ingredients": [
+      "Berberis Berries",
+      "Galeb Duhr’s Blood",
+      "Black Feathergrass"
+    ],
     "description": "Blade venom variant: 30s after entry, target is paralysed for 5 min; standard immunities/cures apply.",
     "type": "poison"
   },
@@ -401,7 +442,11 @@
   "Blade Sleep": {
     "difficulty": 9,
     "costPerDose": "450",
-    "ingredients": ["Berberis Berries", "Galeb Duhr’s Blood", "Bronze Golem’s Ichor"],
+    "ingredients": [
+      "Berberis Berries",
+      "Galeb Duhr’s Blood",
+      "Bronze Golem’s Ichor"
+    ],
     "description": "Blade venom variant: 30s after entry, target sleeps for 10 min; early waking leaves -2 DAC until proper end.",
     "type": "poison"
   },
@@ -422,7 +467,11 @@
   "Blade Nerve Venom": {
     "difficulty": 9,
     "costPerDose": "300",
-    "ingredients": ["Berberis Berries", "Black Feathergrass", "Galeb Duhr’s Blood"],
+    "ingredients": [
+      "Berberis Berries",
+      "Black Feathergrass",
+      "Galeb Duhr’s Blood"
+    ],
     "description": "Blade venom variant: 30s after entry, target suffers -2 DAC permanently until regeneration; no effect on elves/elven-immunity.",
     "type": "poison"
   }

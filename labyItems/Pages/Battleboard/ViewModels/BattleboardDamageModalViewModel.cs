@@ -529,6 +529,7 @@ public sealed class BattleboardDamageModalViewModel : ObservableObject
             loc,
             channelName,
             _board.GetResistanceMultiplier,
+            _board.GetDamagePerSixthLevel,
             _board.HasInfiniteResistance,
             sourceKind.Equals("Miracle", StringComparison.OrdinalIgnoreCase),
             isMantic);

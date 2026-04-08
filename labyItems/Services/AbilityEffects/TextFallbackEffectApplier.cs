@@ -87,6 +87,15 @@ public static class TextFallbackEffectApplier
                 Level: null,
                 ImmunityName: null);
         }
+
+        foreach (var resistanceType in ParseInfiniteResistanceTypesFromAllBut(source))
+        {
+            yield return new AbilityEffectInstruction(
+                AbilityEffectInstructionKind.ResistanceInfinite,
+                ResistanceType: resistanceType,
+                Level: null,
+                ImmunityName: null);
+        }
     }
 
     private static bool TryParseLevelResistance(
@@ -243,5 +252,44 @@ public static class TextFallbackEffectApplier
                && normalized.Contains("resistance", StringComparison.Ordinal)
                && (normalized.Contains("neuro", StringComparison.Ordinal)
                    || normalized.Contains("neuronic", StringComparison.Ordinal));
+    }
+
+    private static IEnumerable<string> ParseInfiniteResistanceTypesFromAllBut(string source)
+    {
+        var text = (source ?? string.Empty).Trim();
+        if (text.Length == 0)
+            yield break;
+
+        var normalized = text.ToLowerInvariant();
+        if (!normalized.Contains("immune", StringComparison.Ordinal))
+            yield break;
+
+        var marker = normalized.Contains("all except", StringComparison.Ordinal)
+            ? "all except"
+            : normalized.Contains("all but", StringComparison.Ordinal)
+                ? "all but"
+                : string.Empty;
+
+        if (marker.Length == 0)
+            yield break;
+
+        var markerIndex = normalized.IndexOf(marker, StringComparison.Ordinal);
+        if (markerIndex < 0)
+            yield break;
+
+        var tail = normalized[(markerIndex + marker.Length)..].Trim();
+        if (tail.Length == 0)
+            yield break;
+
+        var excepted = ResolveResistanceTypes(tail)
+            .Select(BattleboardAdvancementEffectResolver.NormalizeResistanceType)
+            .Where(type => type.Length > 0)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var type in new[] { "Physical", "Magic", "Neuro", "Spirit" })
+        {
+            if (!excepted.Contains(type))
+                yield return type;
+        }
     }
 }

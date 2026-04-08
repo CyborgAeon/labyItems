@@ -60,7 +60,7 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var lifeTotals = BattleboardLifeCalculator.Calculate(draft, assignedItems);
         var itemArmour = BattleboardArmourCalculator.Calculate(draft, assignedItems);
         var resolvedInnates = BattleboardInnateCalculator.Calculate(draft, assignedItems);
-        var abilityEffects = await BattleboardAbilityEffectResolver.ResolveAsync(draft.Abilities);
+        var abilityEffects = await BattleboardAbilityEffectResolver.ResolveAsync(draft);
         var advancementEffects = await BattleboardAdvancementEffectResolver.ResolveAsync(draft.AdvancementAbilities);
         var itemEffects = await BattleboardItemEffectResolver.ResolveAsync(draft, assignedItems);
         var effectiveResistanceLevels = BattleboardResistanceLevelService.BuildBaselineRawLevels(
@@ -77,11 +77,12 @@ public sealed class BattleboardExportService : IBattleboardExportService
                     advancementEffects.ResistanceMultipliers),
                 itemEffects.ResistanceMultipliers),
             StringComparer.OrdinalIgnoreCase);
-        if (IsHalfElfRace(draft.Race))
-        {
-            if (!resistanceMultipliers.TryGetValue("Spirit", out var spiritMultiplier) || spiritMultiplier < 2)
-                resistanceMultipliers["Spirit"] = 2;
-        }
+        var resistancePerSixths = new Dictionary<string, int>(BattleboardAdvancementEffectResolver.ApplyResistancePerSixths(
+                BattleboardAdvancementEffectResolver.ApplyResistancePerSixths(
+                    abilityEffects.ResistancePerSixths,
+                    advancementEffects.ResistancePerSixths),
+                itemEffects.ResistancePerSixths),
+            StringComparer.OrdinalIgnoreCase);
         var infiniteResistanceTypes = new HashSet<string>(
             BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
                 BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
@@ -92,7 +93,8 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var displayedResistanceLevels = BattleboardResistanceLevelService.BuildDisplayedLevels(
             effectiveResistanceLevels,
             resistanceMultipliers,
-            infiniteResistanceTypes);
+            infiniteResistanceTypes,
+            resistancePerSixths);
         var effectiveMaxAc = await MaxAcResolver.ResolveEffectiveForDraftAsync(draft);
 
         var pools = (draft.PowerPools ?? new Dictionary<string, int>())
@@ -158,8 +160,8 @@ public sealed class BattleboardExportService : IBattleboardExportService
         }
         ws.Cell("T35").Value = draft.PlayerName;
         ws.Cell("T36").Value = draft.Name;
-        ws.Cell("T37").Value = BuildClassDisplayName(draft);
-        ws.Cell("AA35").Value = BuildRaceDisplayName(draft, draft.Abilities);
+        ws.Cell("T37").Value = CharacterDisplayNameHelper.BuildClassDisplayName(draft);
+        ws.Cell("AA35").Value = CharacterDisplayNameHelper.BuildRaceDisplayName(draft, draft.Abilities);
         ws.Cell("AA36").Value = draft.Alignment.ToString();
         ws.Cell("AA37").Value = draft.Points;
 
@@ -366,38 +368,6 @@ public sealed class BattleboardExportService : IBattleboardExportService
             .ToList();
     }
 
-    private static string BuildRaceDisplayName(CharacterDraft draft, IEnumerable<AbilityDraft> abilities)
-    {
-        var race = (draft?.Race ?? string.Empty).Trim();
-        var suffixes = new List<string>();
-
-        var subtype = (draft?.RaceSubtypeValue ?? draft?.RaceSubtype ?? string.Empty).Trim();
-        if (!string.IsNullOrWhiteSpace(subtype) && !string.Equals(subtype, "Standard", StringComparison.OrdinalIgnoreCase))
-        {
-            var trimmed = TrimSubtypeLabel(subtype);
-            if (!string.IsNullOrWhiteSpace(trimmed))
-                suffixes.Add(trimmed);
-        }
-
-        if (string.Equals(race, "Faerie", StringComparison.OrdinalIgnoreCase))
-        {
-            var faerieColours = GetFaerieColourSelections(abilities);
-            foreach (var colour in faerieColours)
-            {
-                if (!suffixes.Any(s => string.Equals(s, colour, StringComparison.OrdinalIgnoreCase)))
-                    suffixes.Add(colour);
-            }
-        }
-
-        if (suffixes.Count == 0)
-            return race;
-
-        if (string.IsNullOrWhiteSpace(race))
-            return string.Join(", ", suffixes);
-
-        return $"{race} ({string.Join(", ", suffixes)})";
-    }
-
     private static bool IsElfRace(string race)
     {
         if (string.IsNullOrWhiteSpace(race))
@@ -405,15 +375,6 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
         return string.Equals(race, "Elf", StringComparison.OrdinalIgnoreCase)
                || string.Equals(race, "Half Elf", StringComparison.OrdinalIgnoreCase)
-               || string.Equals(race, "Half-Elf", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static bool IsHalfElfRace(string? race)
-    {
-        if (string.IsNullOrWhiteSpace(race))
-            return false;
-
-        return string.Equals(race, "Half Elf", StringComparison.OrdinalIgnoreCase)
                || string.Equals(race, "Half-Elf", StringComparison.OrdinalIgnoreCase);
     }
 
@@ -438,69 +399,8 @@ public sealed class BattleboardExportService : IBattleboardExportService
         return text;
     }
 
-    private static string BuildClassDisplayName(CharacterDraft draft)
-    {
-        var cls = (draft.Class ?? string.Empty).Trim();
-        if (cls.Length == 0)
-            return cls;
-
-        if (!IsWizardClassName(cls))
-            return cls;
-
-        var colour = TryGetWizardColour(draft);
-        if (!colour.HasValue)
-            return cls;
-
-        var colourName = colour.Value.ToString();
-        if (cls.StartsWith(colourName, StringComparison.OrdinalIgnoreCase))
-            return cls;
-
-        return $"{colourName} {cls}";
-    }
-
-    private static bool IsWizardClassName(string className)
-    {
-        if (string.IsNullOrWhiteSpace(className))
-            return false;
-
-        return className.Equals("Wizard", StringComparison.OrdinalIgnoreCase)
-               || className.Equals("High-Wizard", StringComparison.OrdinalIgnoreCase)
-               || className.Equals("High Wizard", StringComparison.OrdinalIgnoreCase)
-               || className.Equals("Warlock", StringComparison.OrdinalIgnoreCase)
-               || className.Equals("Rogue", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static MagicColours? TryGetWizardColour(CharacterDraft draft)
-    {
-        if (draft?.SpecialisationSelections != null)
-        {
-            var kvp = draft.SpecialisationSelections.FirstOrDefault(x =>
-                x.Key.Contains("Wizard Colour", StringComparison.OrdinalIgnoreCase)
-                && !string.IsNullOrWhiteSpace(x.Value));
-
-            if (!string.IsNullOrWhiteSpace(kvp.Value)
-                && Enum.TryParse<MagicColours>(kvp.Value.Trim().Replace(" ", string.Empty), true, out var colour))
-                return colour;
-        }
-
-        if (draft?.Abilities != null)
-        {
-            var ability = draft.Abilities.FirstOrDefault(a =>
-                !string.IsNullOrWhiteSpace(a?.Source)
-                && a.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase));
-
-            var name = ability?.Name ?? string.Empty;
-            if (!string.IsNullOrWhiteSpace(name)
-                && Enum.TryParse<MagicColours>(name.Trim().Replace(" ", string.Empty), true, out var fromAbility))
-                return fromAbility;
-        }
-
-        return null;
-    }
-
     private static string StripImmunityPrefix(string text)
-    {
-        var value = (text ?? string.Empty).Trim();
+{        var value = (text ?? string.Empty).Trim();
         if (value.Length == 0)
             return value;
 

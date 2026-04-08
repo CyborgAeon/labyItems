@@ -46,4 +46,28 @@ public sealed class BattleboardResistanceLevelServiceTests : ServiceTestBase
         Assert.Equal(8, displayed["Neuro"]);
         Assert.Equal(int.MaxValue, displayed["Spirit"]);
     }
+
+    [Fact]
+    public void BuildDisplayedLevels_AppliesPerSixthScaling()
+    {
+        var displayed = BattleboardResistanceLevelService.BuildDisplayedLevels(
+            new Dictionary<string, int>
+            {
+                ["Physical"] = 8,
+                ["Magic"] = 8,
+                ["Neuro"] = 8,
+                ["Spirit"] = 8
+            },
+            multipliers: null,
+            infiniteResistanceTypes: null,
+            perSixths: new Dictionary<string, int>
+            {
+                ["Magic"] = 3
+            });
+
+        Assert.Equal(12, displayed["Magic"]);
+        Assert.Equal(8, displayed["Physical"]);
+        Assert.Equal(8, displayed["Neuro"]);
+        Assert.Equal(8, displayed["Spirit"]);
+    }
 }

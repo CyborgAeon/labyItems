@@ -9,6 +9,7 @@ public static class BattleboardDamageMitigationService
         int loc,
         string? channel,
         Func<string, int>? getResistanceMultiplier,
+        Func<string, int>? getDamagePerSixthLevel,
         Func<string, bool>? hasInfiniteResistance,
         bool isMiracleSource,
         bool isMantic)
@@ -55,6 +56,17 @@ public static class BattleboardDamageMitigationService
             }
         }
 
+        var reductionChannel = NormalizePerSixthDamageChannel(normalizedChannel);
+        var perSixthLevel = Math.Clamp(getDamagePerSixthLevel?.Invoke(reductionChannel) ?? 0, 0, 6);
+        if (perSixthLevel >= 6)
+            return (0, 0);
+
+        if (perSixthLevel > 0)
+        {
+            tblp = ApplyPerSixthReduction(tblp, perSixthLevel);
+            loc = ApplyPerSixthReduction(loc, perSixthLevel);
+        }
+
         return (tblp, loc);
     }
 
@@ -81,5 +93,35 @@ public static class BattleboardDamageMitigationService
 
         var safeDivisor = Math.Max(1, divisor);
         return (int)Math.Ceiling(value / (double)safeDivisor);
+    }
+
+    private static int ApplyPerSixthReduction(int value, int level)
+    {
+        if (value <= 0)
+            return 0;
+
+        var clampedLevel = Math.Clamp(level, 0, 6);
+        if (clampedLevel <= 0)
+            return value;
+        if (clampedLevel >= 6)
+            return 0;
+
+        var numerator = Math.Max(0, 6 - clampedLevel);
+        return (int)Math.Ceiling(value * (numerator / 6.0));
+    }
+
+    private static string NormalizePerSixthDamageChannel(string normalizedChannel)
+    {
+        if (normalizedChannel.Equals("Magic", StringComparison.OrdinalIgnoreCase))
+            return "Magic";
+        if (normalizedChannel.Equals("Spirit", StringComparison.OrdinalIgnoreCase))
+            return "Spirit";
+        if (normalizedChannel.Equals("Neuro", StringComparison.OrdinalIgnoreCase))
+            return "Neuro";
+        if (normalizedChannel.Equals("Physical", StringComparison.OrdinalIgnoreCase))
+            return "Physical";
+
+        // Unspecified channels in manual/preset flows are physical blows by default.
+        return "Physical";
     }
 }

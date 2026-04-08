@@ -166,11 +166,93 @@
                             CornerRadius="12"
                             Padding="12"
                             BorderColor="{StaticResource SurfaceBorderColor}">
+                            <Frame.Triggers>
+                                   <DataTrigger TargetType="Frame"
+                                                Binding="{Binding HasGuildChoiceWarning}"
+                                                Value="True">
+                                          <Setter Property="BorderColor"
+                                                  Value="#D97706"/>
+                                          <Setter Property="BackgroundColor"
+                                                  Value="#FFF8E1"/>
+                                   </DataTrigger>
+                            </Frame.Triggers>
                             <VerticalStackLayout Spacing="4">
                                    <Label Text="Guilds"
                                           FontAttributes="Bold"/>
+                                   <VerticalStackLayout IsVisible="{Binding HasGuildReviewRows}"
+                                                        Spacing="6"
+                                                        BindableLayout.ItemsSource="{Binding GuildReviewRows}">
+                                          <BindableLayout.ItemTemplate>
+                                                 <DataTemplate>
+                                                        <Grid ColumnDefinitions="*,Auto,Auto"
+                                                              RowDefinitions="Auto,Auto"
+                                                              ColumnSpacing="8"
+                                                              RowSpacing="2">
+                                                               <Label Text="{Binding GuildName}"
+                                                                      LineBreakMode="WordWrap"
+                                                                      VerticalTextAlignment="Center"/>
+                                                               <Button Grid.Column="1"
+                                                                       Text="&#xF1FC;"
+                                                                       FontFamily="FASolid"
+                                                                       FontSize="12"
+                                                                       Padding="0"
+                                                                       BackgroundColor="Transparent"
+                                                                       TextColor="{StaticResource SubtleTextColor}"
+                                                                       HeightRequest="18"
+                                                                       WidthRequest="18"
+                                                                       MinimumHeightRequest="0"
+                                                                       MinimumWidthRequest="0"
+                                                                       VerticalOptions="Center"
+                                                                       IsVisible="{Binding HasChoices}"
+                                                                       Clicked="OnEditGuildChoicesClicked"
+                                                                       CommandParameter="{Binding .}"/>
+                                                               <Button Grid.Column="2"
+                                                                       Text="&#xF05A;"
+                                                                       FontFamily="FASolid"
+                                                                       FontSize="12"
+                                                                       Padding="0"
+                                                                       BackgroundColor="Transparent"
+                                                                       TextColor="{StaticResource SubtleTextColor}"
+                                                                       HeightRequest="18"
+                                                                       WidthRequest="18"
+                                                                       MinimumHeightRequest="0"
+                                                                       MinimumWidthRequest="0"
+                                                                       VerticalOptions="Center"
+                                                                       Clicked="OnViewGuildDetailsClicked"
+                                                                       CommandParameter="{Binding .}"/>
+                                                               <Label Grid.Row="1"
+                                                                      Grid.Column="0"
+                                                                      Grid.ColumnSpan="3"
+                                                                      Text="{Binding StatusText}"
+                                                                      FontSize="11"
+                                                                      FontAttributes="Bold"
+                                                                      TextColor="{StaticResource AccentMaroonColor}"
+                                                                      IsVisible="{Binding HasStatusText}"/>
+                                                        </Grid>
+                                                 </DataTemplate>
+                                          </BindableLayout.ItemTemplate>
+                                   </VerticalStackLayout>
                                    <Label Text="{Binding GuildSummary}"
+                                          IsVisible="{Binding HasGuildReviewRows, Converter={StaticResource InverseBoolConverter}}"
                                           LineBreakMode="WordWrap"/>
+                                   <Label Text="{Binding GuildChoiceWarningText}"
+                                          FontSize="12"
+                                          FontAttributes="Bold"
+                                          TextColor="{StaticResource AccentMaroonColor}"
+                                          IsVisible="{Binding HasGuildChoiceWarning}"
+                                          LineBreakMode="WordWrap"/>
+                                   <VerticalStackLayout IsVisible="{Binding HasGuildStackingWarnings}"
+                                                        Spacing="2"
+                                                        BindableLayout.ItemsSource="{Binding GuildStackingWarnings}">
+                                          <BindableLayout.ItemTemplate>
+                                                 <DataTemplate>
+                                                        <Label Text="{Binding ., StringFormat='- {0}'}"
+                                                               FontSize="12"
+                                                               TextColor="{StaticResource AccentMaroonColor}"
+                                                               LineBreakMode="WordWrap"/>
+                                                 </DataTemplate>
+                                          </BindableLayout.ItemTemplate>
+                                   </VerticalStackLayout>
                             </VerticalStackLayout>
                      </Frame>
 

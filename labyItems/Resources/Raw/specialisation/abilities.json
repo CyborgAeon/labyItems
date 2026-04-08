@@ -2722,7 +2722,7 @@
     "ability.mindless": {
       "Name": "Mindless",
       "Type": "Resistance",
-      "Effect": "Mindless creatures have infinite levels of resistance to neuronics.",
+      "Effect": "Mindless creatures have infinite levels of resistance to neuronics and take no damage from neuronics. This does not prevent neuronic communications",
       "SystemEffects": [
         {
           "EffectType": "lor-infinite:neuro",
@@ -2755,6 +2755,12 @@
       "Type": "Static",
       "Effect": "Each grade of Strength allows the character to inflict one additional grade of damage [still limited by maximum damage]. It also allows the possessor to be able to ‘carry’ a single normal person / load by placing both of their hands on the target. If two grades of strength are possessed it is possible to carry a person in a single handgrip, or two people with one in each hand. Strength being used to carry things cannot at the same time be used to increase the damage grade called.",
       "Key": "ability.1st-grade-of-strength"
+    },
+    "ability.2nd-grade-of-strength": {
+      "Name": "2nd Grade of Strength",
+      "Type": "Static",
+      "Effect": "Each grade of Strength allows the character to inflict one additional grade of damage [still limited by maximum damage]. It also allows the possessor to be able to ‘carry’ a single normal person / load by placing both of their hands on the target. If two grades of strength are possessed it is possible to carry a person in a single handgrip, or two people with one in each hand. Strength being used to carry things cannot at the same time be used to increase the damage grade called.",
+      "Key": "ability.2nd-grade-of-strength"
     },
     "ability.three-quarter-effect-paralysis": {
       "Name": "3/4 effect paralysis",
@@ -10471,18 +10477,26 @@
         }
       ]
     },
-    "ability.merged.immunity-to-incarna-mortis-miracle": {
-      "Name": "Immunity to Incarna Mortis miracle",
+
+    "ability.merged.immunity-to-voice-of-retribution": {
+      "Name": "Immunity to Voice of Retribution",
       "Type": "Immunity",
-      "Effect": "Immunity to Incarna Mortis miracle",
-      "Key": "ability.merged.immunity-to-incarna-mortis-miracle",
+      "Effect": "Immunity to Voice of Retribution from above",
+      "Key": "ability.merged.immunity-to-voice-of-retribution",
       "SystemEffects": [
         {
           "EffectType": "immunity",
-          "DisplayName": "Immunity to Incarna Mortis miracle",
-          "ImmunityName": "Incarna Mortis miracle"
+          "DisplayName": "Immunity to Voice of Retribution",
+          "ImmunityName": "Voice of Retribution"
         }
       ]
+    },
+
+    "ability.merged.voice-of-reason": {
+      "Name": "Voice of Reason",
+      "Type": "Innate",
+      "Effect": "1/day May stop any one fight if the character has preached for previous 10 seconds. Acts as a mass Stasis miracle of 10th level, but affects creatures such as undead as well. If the Hospitaller has pathed to at least 6th level then the effect is mantic as well as spiritual.",
+      "Key": "ability.merged.voice-of-reason"
     },
     "ability.merged.immunity-to-diminish-spirit-miracle": {
       "Name": "Immunity to Diminish Spirit miracle",

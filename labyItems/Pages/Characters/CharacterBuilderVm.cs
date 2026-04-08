@@ -155,11 +155,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             var record = ordered[idx].Value;
             if (record == null) continue;
 
-            var peopleTypes = NormalizePeopleTypes(record.PeopleType);
+            var peopleTypes = PeopleTypeFormatting.NormalizePeopleTypes(record.PeopleType);
             types.UnionWith(peopleTypes);
 
-            var displayPeopleType = FormatPeopleTypes(peopleTypes);
-            var primaryPeopleType = SelectPrimaryPeopleType(peopleTypes);
+            var displayPeopleType = PeopleTypeFormatting.FormatPeopleTypes(peopleTypes);
+            var primaryPeopleType = PeopleTypeFormatting.SelectPrimaryPeopleType(peopleTypes);
 
             var vm = new RaceCardVm
             {
@@ -170,7 +170,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 IsNonStandard = record.NonStandard,
                 Description = record.Description ?? "",
                 BuyAsRaw = record.BuyAs ?? "",
-                Icon = IconForPeopleType(primaryPeopleType),
+                Icon = PeopleTypeFormatting.IconForPeopleType(primaryPeopleType),
                 IsSelected = string.Equals(name, _draft.Race, StringComparison.OrdinalIgnoreCase)
             };
 
@@ -186,40 +186,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         RebuildRaceFilterChips(types);
 
         RefilterRaces();
-    }
-
-    private static string IconForPeopleType(string peopleType)
-    {
-        var t = (peopleType ?? "").Trim().ToLowerInvariant();
-        if (t == "tribal") return "🪓";
-        if (t.Contains("magic")) return "✨";
-        if (t == "ishmaic") return "🏜️";
-        if (t == "baronial") return "🏰";
-        return "👤";
-    }
-
-    private static List<string> NormalizePeopleTypes(IEnumerable<string>? raw)
-    {
-        return (raw ?? Array.Empty<string>())
-            .Select(x => (x ?? string.Empty).Trim())
-            .Where(x => x.Length > 0)
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
-    }
-
-    private static string FormatPeopleTypes(IEnumerable<string> peopleTypes)
-    {
-        var list = NormalizePeopleTypes(peopleTypes);
-        return list.Count == 0 ? "" : string.Join(", ", list);
-    }
-
-    private static string SelectPrimaryPeopleType(IReadOnlyList<string> peopleTypes)
-    {
-        if (peopleTypes == null || peopleTypes.Count == 0)
-            return "";
-
-        var nonDemon = peopleTypes.FirstOrDefault(t => !string.Equals(t, "Demon", StringComparison.OrdinalIgnoreCase));
-        return nonDemon ?? peopleTypes[0];
     }
 
     private void ToggleClassFilterChip(ClassFilterChipVm? chip)
@@ -1596,8 +1562,6 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         if (Draft.Guilds.Count == 0)
             return list;
 
-        var points = Math.Max(0, Draft.Points);
-
         var all = await _creationDataService.GetGuildsAsync();
         foreach (var guild in Draft.Guilds.Distinct(StringComparer.OrdinalIgnoreCase))
         {
@@ -1605,48 +1569,18 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 continue;
 
             var guildType = (rec.Type ?? string.Empty).Trim();
-            var tierTables = ResolveGuildTierTables(guildType);
-
-            if (HasReachedGuildTier(points, tierTables.Basic))
+            if (GuildBenefitTierService.IsTierAvailable(Draft, guildType, GuildBenefitTier.Basic))
                 AppendGuildBenefits(list, rec.Benefits.Basic, guild, "Basic");
 
-            if (HasReachedGuildTier(points, tierTables.Intermediate))
+            if (GuildBenefitTierService.IsTierAvailable(Draft, guildType, GuildBenefitTier.Intermediate))
                 AppendGuildBenefits(list, rec.Benefits.Intermediate, guild, "Intermediate");
 
-            if (HasReachedGuildTier(points, tierTables.Advanced))
+            if (GuildBenefitTierService.IsTierAvailable(Draft, guildType, GuildBenefitTier.Advanced))
                 AppendGuildBenefits(list, rec.Benefits.Advanced, guild, "Advanced");
         }
 
         return list;
     }
-
-    private (int Basic, int Intermediate, int Advanced) ResolveGuildTierTables(string guildType)
-    {
-        var race = (Draft.Race ?? string.Empty).Trim();
-        var subtype = (Draft.RaceSubtypeValue ?? Draft.RaceSubtype ?? string.Empty).Trim();
-        var type = (guildType ?? string.Empty).Trim();
-
-        if (race.Equals("Human", StringComparison.OrdinalIgnoreCase)
-            && subtype.Equals("Mourat", StringComparison.OrdinalIgnoreCase))
-        {
-            return (8, 10, 11);
-        }
-
-        if (race.Equals("Wyrm-Kin", StringComparison.OrdinalIgnoreCase))
-            return (1, 4, 9);
-
-        if (race.Equals("Human", StringComparison.OrdinalIgnoreCase)
-            && subtype.Equals("Forgotten", StringComparison.OrdinalIgnoreCase)
-            && type.Equals("political", StringComparison.OrdinalIgnoreCase))
-        {
-            return (2, 4, 9);
-        }
-
-        return (1, 3, 8);
-    }
-
-    private static bool HasReachedGuildTier(int points, int table)
-        => CharacterProgressionTables.HasReachedTable(points, table);
 
     private void AppendGuildBenefits(
         List<AbilityDraft> list,
@@ -2005,6 +1939,9 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 : delta;
         }
 
+        foreach (var key in levels.Keys.ToList())
+            levels[key] = Math.Max(8, levels[key]);
+
         _draft.ResistanceLevels = levels;
     }
 
@@ -2226,10 +2163,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var parts = new List<string>
         {
             name,
-            FormatPeopleTypes(NormalizePeopleTypes(record.PeopleType)),
-            record.Description ?? "",
-            record.AdditionalInfo ?? "",
-            record.BuyAs ?? "",
+                PeopleTypeFormatting.FormatPeopleTypes(record.PeopleType),
             record.Subtype?.OptionsSource ?? "",
             record.Subtype?.DisplayName ?? ""
         };

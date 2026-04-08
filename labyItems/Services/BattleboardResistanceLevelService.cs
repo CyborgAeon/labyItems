@@ -35,7 +35,8 @@ public static class BattleboardResistanceLevelService
     public static IReadOnlyDictionary<string, int> BuildDisplayedLevels(
         IReadOnlyDictionary<string, int>? rawLevels,
         IReadOnlyDictionary<string, int>? multipliers,
-        IReadOnlySet<string>? infiniteResistanceTypes)
+        IReadOnlySet<string>? infiniteResistanceTypes,
+        IReadOnlyDictionary<string, int>? perSixths = null)
     {
         var baseline = BuildBaselineRawLevels(rawLevels);
         var multiplierLookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -59,6 +60,20 @@ public static class BattleboardResistanceLevelService
             }
         }
 
+        var perSixthLookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach (var pair in perSixths ?? new Dictionary<string, int>())
+        {
+            var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(pair.Key);
+            if (key.Length == 0)
+                continue;
+
+            var value = Math.Clamp(pair.Value, 0, 6);
+            if (value <= 0)
+                continue;
+
+            perSixthLookup[key] = value;
+        }
+
         var displayed = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         foreach (var pair in baseline)
         {
@@ -75,9 +90,35 @@ public static class BattleboardResistanceLevelService
             var multiplier = multiplierLookup.TryGetValue(key, out var resolvedMultiplier)
                 ? resolvedMultiplier
                 : 1;
-            displayed[key] = Math.Max(0, pair.Value) * Math.Max(1, multiplier);
+            var baseDisplayed = Math.Max(0, pair.Value) * Math.Max(1, multiplier);
+
+            if (perSixthLookup.TryGetValue(key, out var perSixthLevel))
+            {
+                if (perSixthLevel >= 6)
+                {
+                    displayed[key] = int.MaxValue;
+                    continue;
+                }
+
+                if (perSixthLevel > 0)
+                    baseDisplayed += CalculatePerSixthBonus(baseDisplayed, perSixthLevel);
+            }
+
+            displayed[key] = baseDisplayed;
         }
 
         return displayed;
+    }
+
+    public static int CalculatePerSixthBonus(int baseLevel, int perSixthLevel)
+    {
+        if (baseLevel <= 0)
+            return 0;
+
+        var clamped = Math.Clamp(perSixthLevel, 0, 6);
+        if (clamped <= 0)
+            return 0;
+
+        return (int)Math.Round(baseLevel * (clamped / 6d), MidpointRounding.AwayFromZero);
     }
 }

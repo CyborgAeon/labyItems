@@ -1641,7 +1641,7 @@
             "Name": "Stone Major Power",
             "AbilityRef": "ability.mr.golem.l5.2",
             "Type": "AtWill",
-            "Effect": "May inflict Knockback by weapon blow at will; costs 6 TBLP per blow if +2 Strength or greater, otherwise 9 TBLP.",
+            "Effect": "May inflict Knockback by weapon blow at will; costs 6 TBLP per blow if 2nd grade of Strength or greater, otherwise 9 TBLP.",
             "PreReqs": ["ability.mr.golem.type.stone"]
           },
           {

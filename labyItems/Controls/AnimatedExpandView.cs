@@ -71,7 +71,7 @@ public class AnimatedExpandView : ContentView
     private void OnUnloaded(object? sender, EventArgs e)
     {
         _isLoaded = false;
-        _animationCts?.Cancel();
+        CancelAnimationToken();
     }
 
     private static void OnIsExpandedChanged(BindableObject bindable, object oldValue, object newValue)
@@ -94,7 +94,7 @@ public class AnimatedExpandView : ContentView
     private void ApplyImmediateState(bool expanded)
     {
         this.AbortAnimation(AnimationName);
-        _animationCts?.Cancel();
+        CancelAnimationToken();
         HeightRequest = -1;
         Opacity = 1;
         IsVisible = expanded;
@@ -108,7 +108,7 @@ public class AnimatedExpandView : ContentView
             return;
         }
 
-        _animationCts?.Cancel();
+        CancelAnimationToken();
         _animationCts = new CancellationTokenSource();
         var token = _animationCts.Token;
 
@@ -202,6 +202,26 @@ public class AnimatedExpandView : ContentView
         catch (OperationCanceledException)
         {
             // Ignore rapid toggle interactions.
+        }
+    }
+
+    private void CancelAnimationToken()
+    {
+        if (_animationCts == null)
+            return;
+
+        try
+        {
+            _animationCts.Cancel();
+        }
+        catch
+        {
+            // Ignore cancellation errors.
+        }
+        finally
+        {
+            _animationCts.Dispose();
+            _animationCts = null;
         }
     }
 }

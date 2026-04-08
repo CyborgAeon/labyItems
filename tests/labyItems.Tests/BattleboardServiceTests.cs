@@ -490,6 +490,91 @@ public sealed class BattleboardServiceTests : ServiceTestBase
     }
 
     [Fact]
+    public async Task ExportAsync_HalfElfRace_WithoutExplicitAbility_DoublesSpiritResistance()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-half-elf-race-metadata",
+            Name = "Half Elf Tester",
+            PlayerName = "Tester",
+            Class = "Warrior",
+            Race = "Half Elf",
+            TBLP = 40,
+            Loc = 5,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral)
+        };
+
+        var service = new BattleboardExportService();
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("BBoard");
+
+        Assert.Equal(16, sheet.Cell("AD23").GetValue<int>());
+    }
+
+    [Fact]
+    public async Task ExportAsync_SpiritualVesselLevelThree_DoesNotScaleResistanceLevels()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-spiritual-vessel-level-3",
+            Name = "Spiritual Vessel Three",
+            PlayerName = "Tester",
+            Class = "Priest",
+            Race = "Human",
+            MultiRaceKey = "Spiritual Vessel",
+            MultiRaceLevel = 3,
+            TBLP = 40,
+            Loc = 5,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral)
+        };
+
+        var service = new BattleboardExportService();
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("BBoard");
+
+        Assert.Equal(8, sheet.Cell("AD20").GetValue<int>());
+        Assert.Equal(8, sheet.Cell("AD21").GetValue<int>());
+        Assert.Equal(8, sheet.Cell("AD22").GetValue<int>());
+        Assert.Equal(8, sheet.Cell("AD23").GetValue<int>());
+    }
+
+    [Fact]
+    public async Task ExportAsync_MindOverRealityLevelSix_ShowsInfiniteMagicAndSpirit()
+    {
+        var draft = new CharacterDraft
+        {
+            CharacterRecordId = "battleboard-mind-over-reality-level-6",
+            Name = "Mind Over Reality Six",
+            PlayerName = "Tester",
+            Class = "Priest",
+            Race = "Human",
+            MultiRaceKey = "Mind Over Reality",
+            MultiRaceLevel = 6,
+            TBLP = 40,
+            Loc = 5,
+            MaxAC = 20,
+            Alignment = new Alignment(OrderAxis.Neutral, MoralAxis.Neutral)
+        };
+
+        var service = new BattleboardExportService();
+        var outputPath = await service.ExportAsync(draft);
+
+        using var workbook = new XLWorkbook(outputPath);
+        var sheet = workbook.Worksheet("BBoard");
+
+        Assert.Equal(8, sheet.Cell("AD20").GetValue<int>());
+        Assert.Equal("∞", sheet.Cell("AD21").GetString());
+        Assert.Equal(8, sheet.Cell("AD22").GetValue<int>());
+        Assert.Equal("∞", sheet.Cell("AD23").GetString());
+    }
+
+    [Fact]
     public async Task ExportAsync_SpiritlessAbility_ShowsInfiniteSpiritResistance()
     {
         var draft = new CharacterDraft

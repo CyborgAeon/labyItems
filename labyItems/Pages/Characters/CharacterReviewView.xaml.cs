@@ -255,6 +255,72 @@ public partial class CharacterReviewView : ContentView
         await NavigateToEditDestinationAsync(ReviewEditDestination.Specialisation);
     }
 
+    private async void OnEditGuildChoicesClicked(object sender, EventArgs e)
+    {
+        if (BindingContext is not WizardVm vm)
+            return;
+
+        if (sender is not Button button || button.CommandParameter is not GuildReviewSummaryRowVm row)
+            return;
+
+        if (!row.HasChoices)
+            return;
+
+        var hostPage = ResolveHostPage();
+        if (hostPage == null)
+            return;
+
+        await GuildBenefitChoicePromptHelper.EditChoicesForGuildAsync(
+            hostPage,
+            vm.GuildsVm,
+            row.GuildName,
+            refreshAfterSelection: vm.RefreshReviewAsync);
+    }
+
+    private async void OnViewGuildDetailsClicked(object sender, EventArgs e)
+    {
+        if (BindingContext is not WizardVm vm)
+            return;
+
+        if (sender is not Button button || button.CommandParameter is not GuildReviewSummaryRowVm row)
+            return;
+
+        var detailCard = await vm.GuildsVm.BuildGuildDetailCardAsync(row.GuildName, expand: true);
+        if (detailCard == null)
+            return;
+
+        var navigation = ResolveNavigation();
+        if (navigation == null)
+            return;
+
+        var detailView = new GuildCardView
+        {
+            BindingContext = detailCard,
+            ToggleExpandedCommand = new Command<GuildCardVm>(card =>
+            {
+                if (card == null)
+                    return;
+                card.IsExpanded = !card.IsExpanded;
+            }),
+            SelectCommand = new Command<GuildCardVm>(_ => { })
+        };
+
+        var page = new ContentPage
+        {
+            Title = detailCard.Name,
+            Content = new ScrollView
+            {
+                Content = new VerticalStackLayout
+                {
+                    Padding = new Thickness(16, 16, 16, 24),
+                    Children = { detailView }
+                }
+            }
+        };
+
+        await navigation.PushAsync(page);
+    }
+
     private async void OnGetBattleboardClicked(object sender, EventArgs e)
     {
         if (BindingContext is not WizardVm vm)
@@ -264,22 +330,13 @@ public partial class CharacterReviewView : ContentView
         if (page == null)
             return;
 
-        if (vm.GuildsVm != null && !vm.GuildsVm.IsComplete)
-        {
-            var shouldReview = await page.DisplayAlert(
-                "Incomplete guild choices",
-                "One or more selected guild benefit choices are incomplete. Review guilds and complete them before exporting?",
-                "Review guilds",
-                "Cancel");
-
-            if (shouldReview)
-            {
-                if (vm.StepClickCommand?.CanExecute(2) == true)
-                    vm.StepClickCommand.Execute(2);
-            }
-
+        var choicesComplete = await GuildBenefitChoicePromptHelper.EnsureChoicesCompletedAsync(
+            page,
+            vm.GuildsVm,
+            refreshAfterSelection: vm.RefreshReviewAsync,
+            actionLabel: "getting battleboard output");
+        if (!choicesComplete)
             return;
-        }
 
         const string cancel = "cancel";
         const string emailToDesk = "email to desk";

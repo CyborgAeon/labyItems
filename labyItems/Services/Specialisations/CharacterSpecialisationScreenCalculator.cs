@@ -509,197 +509,197 @@ public static class CharacterSpecialisationScreenCalculator
             switch (spec.Kind)
             {
                 case SpecialisationSectionKind.Choice:
-                {
-                    var subtypeForRestrictions = !string.IsNullOrWhiteSpace(selectionState.RaceSubtype)
-                        ? selectionState.RaceSubtype
-                        : selectedSubtype;
-
-                    var restrictionContext = context;
-                    if (!string.Equals(context.CurrentRaceSubtype, subtypeForRestrictions, StringComparison.OrdinalIgnoreCase))
                     {
-                        restrictionContext = new CharacterSpecialisationContext
+                        var subtypeForRestrictions = !string.IsNullOrWhiteSpace(selectionState.RaceSubtype)
+                            ? selectionState.RaceSubtype
+                            : selectedSubtype;
+
+                        var restrictionContext = context;
+                        if (!string.Equals(context.CurrentRaceSubtype, subtypeForRestrictions, StringComparison.OrdinalIgnoreCase))
                         {
-                            Draft = context.Draft,
-                            ClassRecord = context.ClassRecord,
-                            RaceRecord = context.RaceRecord,
-                            Race = context.Race,
-                            Class = context.Class,
-                            CurrentRaceSubtype = subtypeForRestrictions,
-                            Definitions = context.Definitions,
-                            InjectionRules = context.InjectionRules
-                        };
-                    }
-
-                    var eligibleOptions = spec.Options
-                        .Where(option => string.IsNullOrWhiteSpace(ResolveRestrictionIssue(option, restrictionContext)))
-                        .ToList();
-                    if (eligibleOptions.Count == 0)
-                        eligibleOptions = spec.Options.ToList();
-
-                    var effectiveSpec = new SpecialisationSectionSpec
-                    {
-                        SectionId = spec.SectionId,
-                        DefinitionKey = spec.DefinitionKey,
-                        Title = spec.Title,
-                        Subtitle = spec.Subtitle,
-                        DetailKey = spec.DetailKey,
-                        Kind = spec.Kind,
-                        Required = spec.Required,
-                        Levels = spec.Levels,
-                        Options = eligibleOptions,
-                        StrategyIds = spec.StrategyIds,
-                        Metadata = spec.Metadata
-                    };
-
-                    selectionState.ChoiceSelections.TryGetValue(spec.SectionId, out var choiceSelection);
-                    var selectedByLevel = choiceSelection?.SelectedByLevel?.ToDictionary(k => k.Key, v => v.Value)
-                                          ?? new Dictionary<int, string>();
-                    var customisationByLevel = choiceSelection?.CustomisationByLevel?.ToDictionary(k => k.Key, v => v.Value)
-                                              ?? new Dictionary<int, string>();
-
-                    var validation = ValidateChoiceSection(effectiveSpec, selectedByLevel);
-                    if (string.IsNullOrWhiteSpace(validation)
-                        && effectiveSpec.StrategyIds.Any(id => id.Equals("validation:option-restrictions", StringComparison.OrdinalIgnoreCase)))
-                    {
-                        validation = ValidateSelectedChoiceRestrictions(effectiveSpec, selectedByLevel, restrictionContext);
-                    }
-                    var selectedCount = selectedByLevel.Values.Count(value => !string.IsNullOrWhiteSpace(value));
-                    var requiredCount = effectiveSpec.Required ? effectiveSpec.Levels.Count : 0;
-
-                    var complete = effectiveSpec.Required
-                        ? selectedCount == effectiveSpec.Levels.Count && string.IsNullOrWhiteSpace(validation)
-                        : string.IsNullOrWhiteSpace(validation);
-
-                    if (effectiveSpec.StrategyIds.Any(id => id.Equals("selection:multi-delimited", StringComparison.OrdinalIgnoreCase))
-                        && selectedCount > 0)
-                    {
-                        var stored = effectiveSpec.Levels
-                            .OrderBy(x => x)
-                            .Select(level =>
+                            restrictionContext = new CharacterSpecialisationContext
                             {
-                                var picked = selectedByLevel.TryGetValue(level, out var selectedToken)
-                                    ? (selectedToken ?? string.Empty).Trim()
-                                    : string.Empty;
-                                var custom = customisationByLevel.TryGetValue(level, out var customToken)
-                                    ? (customToken ?? string.Empty).Trim()
-                                    : string.Empty;
-                                return ComposeSelectionToken(picked, custom);
-                            })
-                            .Where(value => value.Length > 0)
+                                Draft = context.Draft,
+                                ClassRecord = context.ClassRecord,
+                                RaceRecord = context.RaceRecord,
+                                Race = context.Race,
+                                Class = context.Class,
+                                CurrentRaceSubtype = subtypeForRestrictions,
+                                Definitions = context.Definitions,
+                                InjectionRules = context.InjectionRules
+                            };
+                        }
+
+                        var eligibleOptions = spec.Options
+                            .Where(option => string.IsNullOrWhiteSpace(ResolveRestrictionIssue(option, restrictionContext)))
                             .ToList();
+                        if (eligibleOptions.Count == 0)
+                            eligibleOptions = spec.Options.ToList();
 
-                        if (stored.Count > 0)
-                            persistedSelections[spec.Title] = string.Join(" | ", stored);
+                        var effectiveSpec = new SpecialisationSectionSpec
+                        {
+                            SectionId = spec.SectionId,
+                            DefinitionKey = spec.DefinitionKey,
+                            Title = spec.Title,
+                            Subtitle = spec.Subtitle,
+                            DetailKey = spec.DetailKey,
+                            Kind = spec.Kind,
+                            Required = spec.Required,
+                            Levels = spec.Levels,
+                            Options = eligibleOptions,
+                            StrategyIds = spec.StrategyIds,
+                            Metadata = spec.Metadata
+                        };
+
+                        selectionState.ChoiceSelections.TryGetValue(spec.SectionId, out var choiceSelection);
+                        var selectedByLevel = choiceSelection?.SelectedByLevel?.ToDictionary(k => k.Key, v => v.Value)
+                                              ?? new Dictionary<int, string>();
+                        var customisationByLevel = choiceSelection?.CustomisationByLevel?.ToDictionary(k => k.Key, v => v.Value)
+                                                  ?? new Dictionary<int, string>();
+
+                        var validation = ValidateChoiceSection(effectiveSpec, selectedByLevel);
+                        if (string.IsNullOrWhiteSpace(validation)
+                            && effectiveSpec.StrategyIds.Any(id => id.Equals("validation:option-restrictions", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            validation = ValidateSelectedChoiceRestrictions(effectiveSpec, selectedByLevel, restrictionContext);
+                        }
+                        var selectedCount = selectedByLevel.Values.Count(value => !string.IsNullOrWhiteSpace(value));
+                        var requiredCount = effectiveSpec.Required ? effectiveSpec.Levels.Count : 0;
+
+                        var complete = effectiveSpec.Required
+                            ? selectedCount == effectiveSpec.Levels.Count && string.IsNullOrWhiteSpace(validation)
+                            : string.IsNullOrWhiteSpace(validation);
+
+                        if (effectiveSpec.StrategyIds.Any(id => id.Equals("selection:multi-delimited", StringComparison.OrdinalIgnoreCase))
+                            && selectedCount > 0)
+                        {
+                            var stored = effectiveSpec.Levels
+                                .OrderBy(x => x)
+                                .Select(level =>
+                                {
+                                    var picked = selectedByLevel.TryGetValue(level, out var selectedToken)
+                                        ? (selectedToken ?? string.Empty).Trim()
+                                        : string.Empty;
+                                    var custom = customisationByLevel.TryGetValue(level, out var customToken)
+                                        ? (customToken ?? string.Empty).Trim()
+                                        : string.Empty;
+                                    return ComposeSelectionToken(picked, custom);
+                                })
+                                .Where(value => value.Length > 0)
+                                .ToList();
+
+                            if (stored.Count > 0)
+                                persistedSelections[spec.Title] = string.Join(" | ", stored);
+                        }
+                        else if (effectiveSpec.Levels.Count == 1
+                                 && selectedByLevel.TryGetValue(effectiveSpec.Levels[0], out var single)
+                                 && !string.IsNullOrWhiteSpace(single))
+                        {
+                            var level = effectiveSpec.Levels[0];
+                            var custom = customisationByLevel.TryGetValue(level, out var customToken)
+                                ? (customToken ?? string.Empty).Trim()
+                                : string.Empty;
+                            persistedSelections[effectiveSpec.Title] = ComposeSelectionToken(single, custom);
+                        }
+
+                        sections.Add(new SpecialisationSectionState
+                        {
+                            Spec = effectiveSpec,
+                            SelectedByLevel = new ReadOnlyDictionary<int, string>(selectedByLevel),
+                            CustomisationByLevel = new ReadOnlyDictionary<int, string>(customisationByLevel),
+                            IsComplete = complete,
+                            ValidationMessage = validation,
+                            StatusText = effectiveSpec.Required
+                                ? $"{selectedCount}/{effectiveSpec.Levels.Count}"
+                                : (selectedCount == 0 ? "Optional" : $"{selectedCount}/{effectiveSpec.Levels.Count}"),
+                            CardState = ResolveCardState(complete, validation, effectiveSpec.Required, selectedCount > 0)
+                        });
+
+                        break;
                     }
-                    else if (effectiveSpec.Levels.Count == 1
-                             && selectedByLevel.TryGetValue(effectiveSpec.Levels[0], out var single)
-                             && !string.IsNullOrWhiteSpace(single))
-                    {
-                        var level = effectiveSpec.Levels[0];
-                        var custom = customisationByLevel.TryGetValue(level, out var customToken)
-                            ? (customToken ?? string.Empty).Trim()
-                            : string.Empty;
-                        persistedSelections[effectiveSpec.Title] = ComposeSelectionToken(single, custom);
-                    }
-
-                    sections.Add(new SpecialisationSectionState
-                    {
-                        Spec = effectiveSpec,
-                        SelectedByLevel = new ReadOnlyDictionary<int, string>(selectedByLevel),
-                        CustomisationByLevel = new ReadOnlyDictionary<int, string>(customisationByLevel),
-                        IsComplete = complete,
-                        ValidationMessage = validation,
-                        StatusText = effectiveSpec.Required
-                            ? $"{selectedCount}/{effectiveSpec.Levels.Count}"
-                            : (selectedCount == 0 ? "Optional" : $"{selectedCount}/{effectiveSpec.Levels.Count}"),
-                        CardState = ResolveCardState(complete, validation, effectiveSpec.Required, selectedCount > 0)
-                    });
-
-                    break;
-                }
 
                 case SpecialisationSectionKind.Mapped:
-                {
-                    var selectedToken = selectionState.MappedSelections.TryGetValue(spec.SectionId, out var mapped)
-                        ? (mapped ?? string.Empty).Trim()
-                        : string.Empty;
-
-                    var option = ResolveSelectedOption(spec.Options, selectedToken);
-                    var selected = (option?.Key ?? string.Empty).Trim();
-                    var issue = ResolveRestrictionIssue(option, context);
-                    var rows = BuildAbilityRows(spec.DetailKey, selected, option);
-                    var complete = (!spec.Required || selected.Length > 0) && issue.Length == 0;
-
-                    if (selected.Length > 0)
-                        persistedSelections[spec.Title] = selected;
-
-                    if (option?.Effects.GuildOverrides != null)
-                        guildOverrides = GuildOverrideRules.Merge(guildOverrides, option.Effects.GuildOverrides);
-
-                    sections.Add(new SpecialisationSectionState
                     {
-                        Spec = spec,
-                        SelectedOption = selected,
-                        AbilityRows = rows,
-                        IsComplete = complete,
-                        ValidationMessage = issue,
-                        StatusText = issue.Length > 0 ? "Issue" : (selected.Length > 0 ? "Selected" : (spec.Required ? "Required" : "Optional")),
-                        CardState = issue.Length > 0 ? "Issue" : (selected.Length > 0 ? "Success" : (spec.Required ? "Error" : "Neutral"))
-                    });
-
-                    break;
-                }
-
-                case SpecialisationSectionKind.RaceSubtype:
-                {
-                    if (selectedSubtype.Length == 0)
-                    {
-                        selectedSubtype = selectionState.MappedSelections.TryGetValue(spec.SectionId, out var mapped)
+                        var selectedToken = selectionState.MappedSelections.TryGetValue(spec.SectionId, out var mapped)
                             ? (mapped ?? string.Empty).Trim()
                             : string.Empty;
+
+                        var option = ResolveSelectedOption(spec.Options, selectedToken);
+                        var selected = (option?.Key ?? string.Empty).Trim();
+                        var issue = ResolveRestrictionIssue(option, context);
+                        var rows = BuildAbilityRows(spec.DetailKey, selected, option);
+                        var complete = (!spec.Required || selected.Length > 0) && issue.Length == 0;
+
+                        if (selected.Length > 0)
+                            persistedSelections[spec.Title] = selected;
+
+                        if (option?.Effects.GuildOverrides != null)
+                            guildOverrides = GuildOverrideRules.Merge(guildOverrides, option.Effects.GuildOverrides);
+
+                        sections.Add(new SpecialisationSectionState
+                        {
+                            Spec = spec,
+                            SelectedOption = selected,
+                            AbilityRows = rows,
+                            IsComplete = complete,
+                            ValidationMessage = issue,
+                            StatusText = issue.Length > 0 ? "Issue" : (selected.Length > 0 ? "Selected" : (spec.Required ? "Required" : "Optional")),
+                            CardState = issue.Length > 0 ? "Issue" : (selected.Length > 0 ? "Success" : (spec.Required ? "Error" : "Neutral"))
+                        });
+
+                        break;
                     }
 
-                    if (selectedSubtype.Length == 0
-                        && string.Equals(context.Race, "Human", StringComparison.OrdinalIgnoreCase))
+                case SpecialisationSectionKind.RaceSubtype:
                     {
-                        var standard = spec.Options.FirstOrDefault(option =>
-                            string.Equals((option.Key ?? string.Empty).Trim(), "Standard", StringComparison.OrdinalIgnoreCase)
-                            || string.Equals((option.Label ?? string.Empty).Trim(), "Standard", StringComparison.OrdinalIgnoreCase));
-                        if (standard != null)
-                            selectedSubtype = ResolveChoiceSelectionToken(standard);
+                        if (selectedSubtype.Length == 0)
+                        {
+                            selectedSubtype = selectionState.MappedSelections.TryGetValue(spec.SectionId, out var mapped)
+                                ? (mapped ?? string.Empty).Trim()
+                                : string.Empty;
+                        }
+
+                        if (selectedSubtype.Length == 0
+                            && string.Equals(context.Race, "Human", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var standard = spec.Options.FirstOrDefault(option =>
+                                string.Equals((option.Key ?? string.Empty).Trim(), "Standard", StringComparison.OrdinalIgnoreCase)
+                                || string.Equals((option.Label ?? string.Empty).Trim(), "Standard", StringComparison.OrdinalIgnoreCase));
+                            if (standard != null)
+                                selectedSubtype = ResolveChoiceSelectionToken(standard);
+                        }
+
+                        var option = ResolveSelectedOption(spec.Options, selectedSubtype);
+                        selectedSubtype = (option?.Key ?? string.Empty).Trim();
+
+                        var mappedOption = ResolveMappedOptionFromDefinition(spec.DefinitionKey, selectedSubtype, context.Definitions);
+                        var issue = ResolveRestrictionIssue(mappedOption, context);
+                        var rows = BuildAbilityRows(spec.DetailKey, selectedSubtype, mappedOption);
+                        var complete = (!spec.Required || selectedSubtype.Length > 0) && issue.Length == 0;
+
+                        if (mappedOption?.Effects.GuildOverrides != null)
+                            guildOverrides = GuildOverrideRules.Merge(guildOverrides, mappedOption.Effects.GuildOverrides);
+
+                        if (mappedOption != null)
+                        {
+                            lifeScaleOverride = mappedOption.Effects.LifeScaleOverride;
+                            armourOverride = mappedOption.Effects.ArmourAvailabilityOverride;
+                            colourChoiceOverride = mappedOption.Effects.ColourChoiceOverride?.ToList() ?? new List<string>();
+                        }
+
+                        sections.Add(new SpecialisationSectionState
+                        {
+                            Spec = spec,
+                            SelectedOption = selectedSubtype,
+                            AbilityRows = rows,
+                            IsComplete = complete,
+                            ValidationMessage = issue,
+                            StatusText = issue.Length > 0 ? "Issue" : (selectedSubtype.Length > 0 ? "Selected" : (spec.Required ? "Required" : "Optional")),
+                            CardState = issue.Length > 0 ? "Issue" : (selectedSubtype.Length > 0 ? "Success" : (spec.Required ? "Error" : "Neutral"))
+                        });
+
+                        break;
                     }
-
-                    var option = ResolveSelectedOption(spec.Options, selectedSubtype);
-                    selectedSubtype = (option?.Key ?? string.Empty).Trim();
-
-                    var mappedOption = ResolveMappedOptionFromDefinition(spec.DefinitionKey, selectedSubtype, context.Definitions);
-                    var issue = ResolveRestrictionIssue(mappedOption, context);
-                    var rows = BuildAbilityRows(spec.DetailKey, selectedSubtype, mappedOption);
-                    var complete = (!spec.Required || selectedSubtype.Length > 0) && issue.Length == 0;
-
-                    if (mappedOption?.Effects.GuildOverrides != null)
-                        guildOverrides = GuildOverrideRules.Merge(guildOverrides, mappedOption.Effects.GuildOverrides);
-
-                    if (mappedOption != null)
-                    {
-                        lifeScaleOverride = mappedOption.Effects.LifeScaleOverride;
-                        armourOverride = mappedOption.Effects.ArmourAvailabilityOverride;
-                        colourChoiceOverride = mappedOption.Effects.ColourChoiceOverride?.ToList() ?? new List<string>();
-                    }
-
-                    sections.Add(new SpecialisationSectionState
-                    {
-                        Spec = spec,
-                        SelectedOption = selectedSubtype,
-                        AbilityRows = rows,
-                        IsComplete = complete,
-                        ValidationMessage = issue,
-                        StatusText = issue.Length > 0 ? "Issue" : (selectedSubtype.Length > 0 ? "Selected" : (spec.Required ? "Required" : "Optional")),
-                        CardState = issue.Length > 0 ? "Issue" : (selectedSubtype.Length > 0 ? "Success" : (spec.Required ? "Error" : "Neutral"))
-                    });
-
-                    break;
-                }
             }
         }
 
@@ -1754,7 +1754,7 @@ public static class CharacterSpecialisationScreenCalculator
                 return
                 [
                     "Fire", "Air", "Earth", "Aquatic", "Light", "Dark", "Twilight", "Bronze", "Ebony", "Gold",
-                    "Ivory", "Silver", "Jade", "Onyx", "Winter", "Spring", "Summer", "Autumn"
+                    "Ivory", "Silver", "Jade", "Onyx", "Winter", "Spring", "Summer", "Autumn", "Drowe"
                 ];
             }
 

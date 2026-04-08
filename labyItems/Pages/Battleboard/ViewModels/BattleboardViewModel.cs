@@ -8,6 +8,7 @@ using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
+using labyItems.Helpers;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 
@@ -18,6 +19,8 @@ public sealed class BattleboardViewModel : ObservableObject
     private readonly CharacterDraft _draft;
     private readonly List<Item> _assignedItems;
     private readonly Dictionary<string, int> _resistanceMultipliers = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, int> _resistancePerSixths = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, int> _damagePerSixths = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _infiniteResistanceTypes = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<CastingEntryVm> _allCastingEntries = new();
     private string _castingSearch = string.Empty;
@@ -44,7 +47,7 @@ public sealed class BattleboardViewModel : ObservableObject
         var lifeTotals = BattleboardLifeCalculator.Calculate(_draft, _assignedItems);
         var itemArmour = BattleboardArmourCalculator.Calculate(_draft, _assignedItems);
         var resolvedInnates = BattleboardInnateCalculator.Calculate(_draft, _assignedItems);
-        var abilityEffects = BattleboardAbilityEffectResolver.ResolveFallback(_draft.Abilities);
+        var abilityEffects = BattleboardAbilityEffectResolver.ResolveFallback(_draft);
         var advancementEffects = BattleboardAdvancementEffectResolver.ResolveFallback(_draft.AdvancementAbilities);
         var itemEffects = BattleboardItemEffectResolver.ResolveFallback(_draft, _assignedItems);
         var fallbackResistanceOverrides = BattleboardAdvancementEffectResolver.ApplyResistanceOverrides(
@@ -58,13 +61,21 @@ public sealed class BattleboardViewModel : ObservableObject
                 abilityEffects.ResistanceMultipliers,
                 advancementEffects.ResistanceMultipliers),
             itemEffects.ResistanceMultipliers);
+        var fallbackResistancePerSixths = BattleboardAdvancementEffectResolver.ApplyResistancePerSixths(
+            BattleboardAdvancementEffectResolver.ApplyResistancePerSixths(
+                abilityEffects.ResistancePerSixths,
+                advancementEffects.ResistancePerSixths),
+            itemEffects.ResistancePerSixths);
         var fallbackInfiniteResistanceTypes = BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
             BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
                 abilityEffects.InfiniteResistanceTypes,
                 advancementEffects.InfiniteResistanceTypes),
             itemEffects.InfiniteResistanceTypes);
+        var fallbackDamageEffects = BattleboardDamageReductionEffectResolver.ResolveFallback(_draft);
         MergeResistanceMultipliers(fallbackResistanceMultipliers);
+        MergeResistancePerSixths(fallbackResistancePerSixths);
         MergeInfiniteResistanceTypes(fallbackInfiniteResistanceTypes);
+        MergeDamagePerSixths(fallbackDamageEffects.DamagePerSixths);
         var fallbackImmunities = (abilityEffects.Immunities ?? Array.Empty<string>())
             .Concat(advancementEffects.Immunities ?? Array.Empty<string>())
             .Concat(itemEffects.Immunities ?? Array.Empty<string>())
@@ -73,8 +84,8 @@ public sealed class BattleboardViewModel : ObservableObject
 
         CharacterName = _draft.Name ?? string.Empty;
         PlayerName = _draft.PlayerName ?? string.Empty;
-        RaceDisplay = BuildRaceDisplayName(_draft, _draft.Abilities);
-        ClassDisplay = BuildClassDisplayName(_draft);
+        RaceDisplay = CharacterDisplayNameHelper.BuildRaceDisplayName(_draft, _draft.Abilities);
+        ClassDisplay = CharacterDisplayNameHelper.BuildClassDisplayName(_draft);
         _alignment = _draft.Alignment ?? new Alignment(OrderAxis.Neutral, MoralAxis.Neutral);
         _alignmentDisplay = _alignment.ToString();
         Points = _draft.Points;
@@ -339,7 +350,18 @@ public sealed class BattleboardViewModel : ObservableObject
     public bool HasInfiniteResistance(string resistanceType)
     {
         var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(resistanceType);
-        return key.Length > 0 && _infiniteResistanceTypes.Contains(key);
+        return key.Length > 0 && IsInfiniteResistanceType(key);
+    }
+
+    public int GetDamagePerSixthLevel(string resistanceType)
+    {
+        var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(resistanceType);
+        if (key.Length == 0)
+            return 0;
+
+        return _damagePerSixths.TryGetValue(key, out var level)
+            ? Math.Clamp(level, 0, 6)
+            : 0;
     }
 
     private void AdjustResistance(ResistanceLevelVm? level, int delta)
@@ -348,7 +370,7 @@ public sealed class BattleboardViewModel : ObservableObject
             return;
 
         var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(level.Name);
-        if (key.Length == 0 || _infiniteResistanceTypes.Contains(key))
+        if (key.Length == 0 || IsInfiniteResistanceType(key))
             return;
 
         _draft.ResistanceLevels ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -521,7 +543,7 @@ public sealed class BattleboardViewModel : ObservableObject
 
             var rawLevel = _snapshot.ResistanceLevels.TryGetValue(key, out var value) ? value : 8;
             _draft.ResistanceLevels[key] = rawLevel;
-            level.IsInfinite = _infiniteResistanceTypes.Contains(key);
+            level.IsInfinite = IsInfiniteResistanceType(key);
             level.Level = CalculateDisplayedResistanceLevel(key, rawLevel);
         }
 
@@ -822,7 +844,7 @@ public sealed class BattleboardViewModel : ObservableObject
             var vm = new ResistanceLevelVm(
                 key,
                 CalculateDisplayedResistanceLevel(key, level),
-                _infiniteResistanceTypes.Contains(BattleboardAdvancementEffectResolver.NormalizeResistanceType(key)));
+                IsInfiniteResistanceType(key));
             list.Add(vm);
         }
 
@@ -838,7 +860,7 @@ public sealed class BattleboardViewModel : ObservableObject
             var vm = new ResistanceLevelVm(
                 displayName,
                 CalculateDisplayedResistanceLevel(displayName, kvp.Value),
-                _infiniteResistanceTypes.Contains(BattleboardAdvancementEffectResolver.NormalizeResistanceType(displayName)));
+                IsInfiniteResistanceType(displayName));
             list.Add(vm);
             used.Add(displayName);
         }
@@ -878,7 +900,7 @@ public sealed class BattleboardViewModel : ObservableObject
     {
         try
         {
-            var abilityEffectsTask = BattleboardAbilityEffectResolver.ResolveAsync(_draft.Abilities);
+            var abilityEffectsTask = BattleboardAbilityEffectResolver.ResolveAsync(_draft);
             var advancementEffectsTask = BattleboardAdvancementEffectResolver.ResolveAsync(_draft.AdvancementAbilities);
             var itemEffectsTask = BattleboardItemEffectResolver.ResolveAsync(_draft, _assignedItems);
             var maxAcTask = MaxAcResolver.ResolveEffectiveForDraftAsync(_draft);
@@ -899,6 +921,11 @@ public sealed class BattleboardViewModel : ObservableObject
                     resolvedAbilityEffects?.ResistanceMultipliers,
                     resolvedAdvancementEffects?.ResistanceMultipliers),
                 resolvedItemEffects?.ResistanceMultipliers);
+            var mergedResistancePerSixths = BattleboardAdvancementEffectResolver.ApplyResistancePerSixths(
+                BattleboardAdvancementEffectResolver.ApplyResistancePerSixths(
+                    resolvedAbilityEffects?.ResistancePerSixths,
+                    resolvedAdvancementEffects?.ResistancePerSixths),
+                resolvedItemEffects?.ResistancePerSixths);
             var mergedInfiniteResistanceTypes = BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
                 BattleboardAdvancementEffectResolver.MergeInfiniteResistanceTypes(
                     resolvedAbilityEffects?.InfiniteResistanceTypes,
@@ -906,6 +933,7 @@ public sealed class BattleboardViewModel : ObservableObject
                 resolvedItemEffects?.InfiniteResistanceTypes);
 
             MergeResistanceMultipliers(mergedResistanceMultipliers);
+            MergeResistancePerSixths(mergedResistancePerSixths);
             MergeInfiniteResistanceTypes(mergedInfiniteResistanceTypes);
 
             if ((mergedResistance?.Count ?? 0) > 0)
@@ -964,13 +992,13 @@ public sealed class BattleboardViewModel : ObservableObject
                 var vm = new ResistanceLevelVm(
                     key,
                     CalculateDisplayedResistanceLevel(key, incoming),
-                    _infiniteResistanceTypes.Contains(key));
+                    IsInfiniteResistanceType(key));
                 ResistanceLevels.Add(vm);
                 AttachResistanceLevelSubscription(vm);
                 continue;
             }
 
-            target.IsInfinite = _infiniteResistanceTypes.Contains(key);
+            target.IsInfinite = IsInfiniteResistanceType(key);
             target.Level = CalculateDisplayedResistanceLevel(key, incoming);
         }
 
@@ -998,14 +1026,24 @@ public sealed class BattleboardViewModel : ObservableObject
         if (key.Length == 0)
             return Math.Max(0, rawLevel);
 
-        if (_infiniteResistanceTypes.Contains(key))
+        if (IsInfiniteResistanceType(key))
             return int.MaxValue;
 
         var multiplier = _resistanceMultipliers.TryGetValue(key, out var resolvedMultiplier)
             ? Math.Max(1, resolvedMultiplier)
             : 1;
 
-        return Math.Max(0, rawLevel) * multiplier;
+        var displayed = Math.Max(0, rawLevel) * multiplier;
+        if (_resistancePerSixths.TryGetValue(key, out var perSixthLevel))
+        {
+            if (perSixthLevel >= 6)
+                return int.MaxValue;
+
+            if (perSixthLevel > 0)
+                displayed += BattleboardResistanceLevelService.CalculatePerSixthBonus(displayed, perSixthLevel);
+        }
+
+        return displayed;
     }
 
     private void RefreshResistanceDisplayLevels()
@@ -1022,7 +1060,7 @@ public sealed class BattleboardViewModel : ObservableObject
             var rawLevel = _draft.ResistanceLevels.TryGetValue(key, out var resolved)
                 ? Math.Max(8, resolved)
                 : 8;
-            level.IsInfinite = _infiniteResistanceTypes.Contains(key);
+            level.IsInfinite = IsInfiniteResistanceType(key);
             level.Level = CalculateDisplayedResistanceLevel(key, rawLevel);
         }
     }
@@ -1049,6 +1087,59 @@ public sealed class BattleboardViewModel : ObservableObject
             if (key.Length > 0)
                 _infiniteResistanceTypes.Add(key);
         }
+    }
+
+    private void MergeDamagePerSixths(IReadOnlyDictionary<string, int>? perSixths)
+    {
+        foreach (var pair in perSixths ?? new Dictionary<string, int>())
+        {
+            var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(pair.Key);
+            if (key.Length == 0)
+                continue;
+
+            var incoming = Math.Clamp(pair.Value, 0, 6);
+            if (incoming <= 0)
+                continue;
+
+            if (!_damagePerSixths.TryGetValue(key, out var existing) || incoming > existing)
+                _damagePerSixths[key] = incoming;
+        }
+    }
+
+    private void MergeResistancePerSixths(IReadOnlyDictionary<string, int>? perSixths)
+    {
+        foreach (var pair in perSixths ?? new Dictionary<string, int>())
+        {
+            var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(pair.Key);
+            if (key.Length == 0)
+                continue;
+
+            var incoming = Math.Clamp(pair.Value, 0, 6);
+            if (incoming <= 0)
+                continue;
+
+            if (incoming >= 6)
+            {
+                _infiniteResistanceTypes.Add(key);
+                _resistancePerSixths.Remove(key);
+                continue;
+            }
+
+            if (!_resistancePerSixths.TryGetValue(key, out var existing) || incoming > existing)
+                _resistancePerSixths[key] = incoming;
+        }
+    }
+
+    private bool IsInfiniteResistanceType(string resistanceType)
+    {
+        var key = BattleboardAdvancementEffectResolver.NormalizeResistanceType(resistanceType);
+        if (key.Length == 0)
+            return false;
+
+        if (_infiniteResistanceTypes.Contains(key))
+            return true;
+
+        return _resistancePerSixths.TryGetValue(key, out var perSixthLevel) && perSixthLevel >= 6;
     }
 
     private LifeLocationVm? FindLocation(string key)
@@ -1130,154 +1221,6 @@ public sealed class BattleboardViewModel : ObservableObject
         return $"Immunity to {value}";
     }
 
-    private static string BuildClassDisplayName(CharacterDraft draft)
-    {
-        var cls = (draft?.Class ?? string.Empty).Trim();
-        if (cls.Length == 0)
-            return cls;
-
-        if (!IsWizardClassName(cls))
-            return cls;
-
-        var colour = TryGetWizardColour(draft);
-        if (!colour.HasValue)
-            return cls;
-
-        var colourName = colour.Value.ToString();
-        if (cls.StartsWith(colourName, StringComparison.OrdinalIgnoreCase))
-            return cls;
-
-        return $"{colourName} {cls}";
-    }
-
-    private static bool IsWizardClassName(string className)
-    {
-        if (string.IsNullOrWhiteSpace(className))
-            return false;
-
-        return className.Equals("Wizard", StringComparison.OrdinalIgnoreCase)
-               || className.Equals("High-Wizard", StringComparison.OrdinalIgnoreCase)
-               || className.Equals("High Wizard", StringComparison.OrdinalIgnoreCase)
-               || className.Equals("Warlock", StringComparison.OrdinalIgnoreCase)
-               || className.Equals("Rogue", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static MagicColours? TryGetWizardColour(CharacterDraft draft)
-    {
-        if (draft?.SpecialisationSelections != null)
-        {
-            var kvp = draft.SpecialisationSelections.FirstOrDefault(x =>
-                x.Key.Contains("Wizard Colour", StringComparison.OrdinalIgnoreCase)
-                && !string.IsNullOrWhiteSpace(x.Value));
-
-            if (!string.IsNullOrWhiteSpace(kvp.Value)
-                && Enum.TryParse<MagicColours>(kvp.Value.Trim().Replace(" ", string.Empty), true, out var colour))
-                return colour;
-        }
-
-        if (draft?.Abilities != null)
-        {
-            var ability = draft.Abilities.FirstOrDefault(a =>
-                !string.IsNullOrWhiteSpace(a?.Source)
-                && a.Source.Contains("Specialisation:Wizard Colour", StringComparison.OrdinalIgnoreCase));
-
-            var name = ability?.Name ?? string.Empty;
-            if (!string.IsNullOrWhiteSpace(name)
-                && Enum.TryParse<MagicColours>(name.Trim().Replace(" ", string.Empty), true, out var fromAbility))
-                return fromAbility;
-        }
-
-        return null;
-    }
-
-    private static string BuildRaceDisplayName(CharacterDraft draft, IEnumerable<AbilityDraft> abilities)
-    {
-        var race = (draft?.Race ?? string.Empty).Trim();
-        var suffixes = new List<string>();
-
-        var subtype = (draft?.RaceSubtypeValue ?? draft?.RaceSubtype ?? string.Empty).Trim();
-        if (!string.IsNullOrWhiteSpace(subtype) && !string.Equals(subtype, "Standard", StringComparison.OrdinalIgnoreCase))
-        {
-            var trimmed = TrimSubtypeLabel(subtype);
-            if (!string.IsNullOrWhiteSpace(trimmed))
-                suffixes.Add(trimmed);
-        }
-
-        if (string.Equals(race, "Faerie", StringComparison.OrdinalIgnoreCase))
-        {
-            var faerieColours = GetFaerieColourSelections(abilities);
-            foreach (var colour in faerieColours)
-            {
-                if (!suffixes.Any(s => string.Equals(s, colour, StringComparison.OrdinalIgnoreCase)))
-                    suffixes.Add(colour);
-            }
-        }
-
-        if (suffixes.Count == 0)
-            return race;
-
-        if (string.IsNullOrWhiteSpace(race))
-            return string.Join(", ", suffixes);
-
-        return $"{race} ({string.Join(", ", suffixes)})";
-    }
-
-    private static List<string> GetFaerieColourSelections(IEnumerable<AbilityDraft> abilities)
-    {
-        return (abilities ?? Enumerable.Empty<AbilityDraft>())
-            .Where(IsFaerieColourSelection)
-            .Select(a => (a?.Name ?? string.Empty).Trim())
-            .Where(n => !string.IsNullOrWhiteSpace(n))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(n => n, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-    }
-
-    private static bool IsFaerieColourSelection(AbilityDraft ability)
-    {
-        var source = (ability?.Source ?? string.Empty).Trim();
-        return string.Equals(source, "Specialisation:Faerie Colour", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static string TrimSubtypeLabel(string subtype)
-    {
-        var value = (subtype ?? string.Empty).Trim();
-        if (value.Length == 0)
-            return value;
-
-        var parenIndex = value.IndexOf('(');
-        if (parenIndex >= 0)
-            value = value[..parenIndex].Trim();
-
-        if (value.Length == 0)
-            return value;
-
-        var parts = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length <= 1)
-            return value;
-
-        var end = parts.Length;
-        while (end > 1 && IsAllLower(parts[end - 1]))
-            end--;
-
-        return string.Join(' ', parts.Take(end));
-    }
-
-    private static bool IsAllLower(string token)
-    {
-        var hasLetter = false;
-        foreach (var ch in token)
-        {
-            if (!char.IsLetter(ch))
-                continue;
-
-            hasLetter = true;
-            if (!char.IsLower(ch))
-                return false;
-        }
-
-        return hasLetter;
-    }
 }
 
 internal sealed class BattleboardSnapshot

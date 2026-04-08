@@ -56,7 +56,8 @@ public static class AbilityEffectEvaluator
             evaluated.ResistanceOverrides,
             evaluated.Immunities,
             evaluated.ResistanceMultipliers,
-            evaluated.InfiniteResistanceTypes);
+            evaluated.InfiniteResistanceTypes,
+            new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
     }
 
     public static void ApplyInstructions(

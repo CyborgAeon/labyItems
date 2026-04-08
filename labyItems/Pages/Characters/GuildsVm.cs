@@ -202,12 +202,218 @@ public sealed class GuildsVm : INotifyPropertyChanged
             .OrderBy(g => g.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
     public bool IsComplete =>
-        SelectedGuilds.All(g => g.AreBenefitOptionsComplete);
+        AreRequiredBenefitChoicesComplete(_guildRecords);
 
     public ICommand ToggleExpandedCommand { get; }
     public ICommand ToggleSelectedCommand { get; }
     public ICommand SelectTypeFilterCommand { get; }
     public ICommand ToggleTypeFilterChipCommand { get; }
+
+    public async Task<IReadOnlyList<GuildBenefitChoiceSummaryRow>> BuildIncompleteChoiceRowsAsync()
+    {
+        await EnsureGuildRecordsLoadedAsync();
+        var requirements = EnumerateAvailableChoiceRequirements(
+            _guildRecords,
+            onlyIncomplete: true,
+            includeUnavailableTiers: false).ToList();
+        var rows = new List<GuildBenefitChoiceSummaryRow>(requirements.Count);
+
+        foreach (var requirement in requirements)
+        {
+            var optionRows = requirement.Options
+                .Select(option => new GuildBenefitChoiceOption(
+                    BuildOptionLabel(option.Abilities),
+                    option.Abilities
+                        .Select(FormatBenefit)
+                        .Where(line => !string.IsNullOrWhiteSpace(line))
+                        .ToList()))
+                .ToList();
+
+            if (optionRows.Count == 0)
+                continue;
+
+            rows.Add(new GuildBenefitChoiceSummaryRow(
+                displayText: $"{requirement.GuildName} ({requirement.TierLabel}) choice {requirement.OptionIndex}",
+                selectionKey: requirement.SelectionKey,
+                options: optionRows,
+                selectedIndex: requirement.SelectedIndex,
+                applySelection: selectedIndex =>
+                {
+                    if (selectedIndex.HasValue
+                        && selectedIndex.Value > 0
+                        && selectedIndex.Value <= optionRows.Count)
+                    {
+                        ApplyBenefitOptionSelection(requirement.SelectionKey, selectedIndex.Value);
+                    }
+                    else
+                    {
+                        ApplyBenefitOptionSelection(requirement.SelectionKey, null);
+                    }
+                },
+                guildName: requirement.GuildName,
+                tier: requirement.TierLabel,
+                optionNumber: requirement.OptionIndex,
+                isTierAvailableNow: requirement.IsTierAvailableNow));
+        }
+
+        return rows;
+    }
+
+    public async Task<IReadOnlyList<GuildBenefitChoiceSummaryRow>> BuildChoiceRowsForGuildAsync(string guildName)
+    {
+        var normalizedGuildName = (guildName ?? string.Empty).Trim();
+        if (normalizedGuildName.Length == 0)
+            return Array.Empty<GuildBenefitChoiceSummaryRow>();
+
+        await EnsureGuildRecordsLoadedAsync();
+        var requirements = EnumerateAvailableChoiceRequirements(
+                _guildRecords,
+                onlyIncomplete: false,
+                includeUnavailableTiers: true)
+            .Where(requirement => string.Equals(requirement.GuildName, normalizedGuildName, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        var rows = new List<GuildBenefitChoiceSummaryRow>(requirements.Count);
+        foreach (var requirement in requirements)
+        {
+            var optionRows = requirement.Options
+                .Select(option => new GuildBenefitChoiceOption(
+                    BuildOptionLabel(option.Abilities),
+                    option.Abilities
+                        .Select(FormatBenefit)
+                        .Where(line => !string.IsNullOrWhiteSpace(line))
+                        .ToList()))
+                .ToList();
+
+            if (optionRows.Count == 0)
+                continue;
+
+            rows.Add(new GuildBenefitChoiceSummaryRow(
+                displayText: $"{requirement.GuildName} ({requirement.TierLabel}) choice {requirement.OptionIndex}",
+                selectionKey: requirement.SelectionKey,
+                options: optionRows,
+                selectedIndex: requirement.SelectedIndex,
+                applySelection: selectedIndex =>
+                {
+                    if (selectedIndex.HasValue
+                        && selectedIndex.Value > 0
+                        && selectedIndex.Value <= optionRows.Count)
+                    {
+                        ApplyBenefitOptionSelection(requirement.SelectionKey, selectedIndex.Value);
+                    }
+                    else
+                    {
+                        ApplyBenefitOptionSelection(requirement.SelectionKey, null);
+                    }
+                },
+                guildName: requirement.GuildName,
+                tier: requirement.TierLabel,
+                optionNumber: requirement.OptionIndex,
+                isTierAvailableNow: requirement.IsTierAvailableNow));
+        }
+
+        return rows;
+    }
+
+    public async Task<IReadOnlyList<GuildReviewSummaryRowVm>> BuildSelectedGuildReviewRowsAsync()
+    {
+        await EnsureGuildRecordsLoadedAsync();
+        var requirementsByGuild = EnumerateAvailableChoiceRequirements(
+                _guildRecords,
+                onlyIncomplete: false,
+                includeUnavailableTiers: false)
+            .GroupBy(requirement => requirement.GuildName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group.ToList(),
+                StringComparer.OrdinalIgnoreCase);
+
+        var rows = new List<GuildReviewSummaryRowVm>();
+        foreach (var guildName in _draft.Guilds
+                     .Where(name => !string.IsNullOrWhiteSpace(name))
+                     .Select(name => name.Trim())
+                     .Distinct(StringComparer.OrdinalIgnoreCase)
+                     .OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
+        {
+            if (!requirementsByGuild.TryGetValue(guildName, out var requirementsForGuild))
+                requirementsForGuild = new List<GuildChoiceRequirement>();
+
+            var totalChoices = requirementsForGuild.Count;
+            var missingChoices = requirementsForGuild.Count(requirement => !requirement.HasValidSelection);
+            var hasChoices = totalChoices > 0;
+            var hasMissingChoices = missingChoices > 0;
+
+            var status = hasChoices
+                ? hasMissingChoices
+                    ? $"{missingChoices}/{totalChoices} choice{(totalChoices == 1 ? string.Empty : "s")} still required."
+                    : "All guild choices set."
+                : string.Empty;
+
+            rows.Add(new GuildReviewSummaryRowVm(
+                guildName: guildName,
+                hasChoices: hasChoices,
+                hasMissingChoices: hasMissingChoices,
+                statusText: status));
+        }
+
+        return rows;
+    }
+
+    public async Task<GuildCardVm?> BuildGuildDetailCardAsync(string guildName, bool expand = true)
+    {
+        var normalizedGuildName = (guildName ?? string.Empty).Trim();
+        if (normalizedGuildName.Length == 0)
+            return null;
+
+        await EnsureGuildRecordsLoadedAsync();
+        if (!_guildRecords.TryGetValue(normalizedGuildName, out var record) || record == null)
+            return null;
+
+        var isSelected = _draft.Guilds.Contains(normalizedGuildName, StringComparer.OrdinalIgnoreCase);
+        var availability = EvaluateAvailabilityForCurrentContext(record, normalizedGuildName);
+        var selectable = availability.Allowed;
+        var cardSelectable = !_allowGuildSelection
+            || (!_enforceAvailabilityForSelection)
+            || (selectable || isSelected);
+
+        var card = new GuildCardVm
+        {
+            Name = normalizedGuildName,
+            Type = record.Type ?? string.Empty,
+            Logo = NormalizeLogoPath(record.Logo),
+            Icon = IconForType(record.Type ?? string.Empty),
+            IsSelected = isSelected,
+            IsSelectable = cardSelectable,
+            NotSelectableReason = cardSelectable
+                ? string.Empty
+                : (_allowGuildSelection && _enforceAvailabilityForSelection ? availability.Reason : string.Empty),
+            IsLocked = _slotRules.IsGuildLocked(record.Type ?? string.Empty, normalizedGuildName),
+            HasAnyChoiceOptions = HasAvailableChoiceOptions(record)
+        };
+
+        await EnsureCardDetailsLoadedCoreAsync(card, record);
+        card.IsExpanded = expand;
+        return card;
+    }
+
+    public async Task<IReadOnlyList<string>> BuildIncompleteChoiceWarningsAsync()
+    {
+        await EnsureGuildRecordsLoadedAsync();
+        var requirements = EnumerateAvailableChoiceRequirements(
+            _guildRecords,
+            onlyIncomplete: true,
+            includeUnavailableTiers: false).ToList();
+        return requirements
+            .GroupBy(requirement => $"{requirement.GuildName} ({requirement.TierLabel})", StringComparer.OrdinalIgnoreCase)
+            .Select(group =>
+            {
+                var count = group.Count();
+                var suffix = count == 1 ? string.Empty : "s";
+                return $"{group.Key}: {count} choice{suffix} still required.";
+            })
+            .OrderBy(line => line, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
 
     public async Task ReloadAsync()
     {
@@ -287,6 +493,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
                     ? ""
                     : (_allowGuildSelection && _enforceAvailabilityForSelection ? reason : ""),
                 IsLocked = _slotRules.IsGuildLocked(rec.Type ?? string.Empty, name),
+                HasAnyChoiceOptions = HasAvailableChoiceOptions(rec),
             };
 
             vm.Icon = IconForType(vm.Type);
@@ -388,6 +595,14 @@ public sealed class GuildsVm : INotifyPropertyChanged
     {
         var rec = record ?? new GuildRecord();
         var benefits = rec.Benefits ?? new GuildBenefits();
+        var guildType = (rec.Type ?? string.Empty).Trim();
+        var applyTierAvailability = _allowGuildSelection;
+        var includeBasic = !applyTierAvailability
+            || GuildBenefitTierService.IsTierAvailable(_draft, guildType, GuildBenefitTier.Basic);
+        var includeIntermediate = !applyTierAvailability
+            || GuildBenefitTierService.IsTierAvailable(_draft, guildType, GuildBenefitTier.Intermediate);
+        var includeAdvanced = !applyTierAvailability
+            || GuildBenefitTierService.IsTierAvailable(_draft, guildType, GuildBenefitTier.Advanced);
 
         var denominatorRef = (rec.DenominationalMiracle?.Ref ?? string.Empty).Trim();
         var miracleLookup = denominatorRef.Length > 0
@@ -410,12 +625,27 @@ public sealed class GuildsVm : INotifyPropertyChanged
             Ethos = rec.Ethos ?? string.Empty,
             Background = rec.Background ?? string.Empty,
             LoreSections = BuildLoreSections(rec),
-            BasicBenefits = FormatBenefitList(benefits.Basic),
-            IntermediateBenefits = FormatBenefitList(benefits.Intermediate),
-            AdvancedBenefits = FormatBenefitList(benefits.Advanced),
-            BasicOptionGroups = BuildBenefitOptionGroups(guildName, "Basic", benefits.Basic),
-            IntermediateOptionGroups = BuildBenefitOptionGroups(guildName, "Intermediate", benefits.Intermediate),
-            AdvancedOptionGroups = BuildBenefitOptionGroups(guildName, "Advanced", benefits.Advanced),
+            BasicBenefits = includeBasic ? FormatBenefitList(benefits.Basic) : new List<string>(),
+            IntermediateBenefits = includeIntermediate ? FormatBenefitList(benefits.Intermediate) : new List<string>(),
+            AdvancedBenefits = includeAdvanced ? FormatBenefitList(benefits.Advanced) : new List<string>(),
+            BasicBenefitRows = includeBasic
+                ? BuildBenefitRows(guildName, "Basic", benefits.Basic)
+                : new List<GuildBenefitRowVm>(),
+            IntermediateBenefitRows = includeIntermediate
+                ? BuildBenefitRows(guildName, "Intermediate", benefits.Intermediate)
+                : new List<GuildBenefitRowVm>(),
+            AdvancedBenefitRows = includeAdvanced
+                ? BuildBenefitRows(guildName, "Advanced", benefits.Advanced)
+                : new List<GuildBenefitRowVm>(),
+            BasicOptionGroups = includeBasic
+                ? BuildBenefitOptionGroups(guildName, "Basic", benefits.Basic)
+                : new List<GuildBenefitOptionGroupVm>(),
+            IntermediateOptionGroups = includeIntermediate
+                ? BuildBenefitOptionGroups(guildName, "Intermediate", benefits.Intermediate)
+                : new List<GuildBenefitOptionGroupVm>(),
+            AdvancedOptionGroups = includeAdvanced
+                ? BuildBenefitOptionGroups(guildName, "Advanced", benefits.Advanced)
+                : new List<GuildBenefitOptionGroupVm>(),
             CityBenefits = FormatCityBenefits(rec.CityBenefits),
             MiracleRows = BuildMiracleRows(rec.MiracleList),
             DenominationalMiracle = BuildDenominationalMiracle(rec, miracleLookup)
@@ -787,6 +1017,34 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return value.Trim();
     }
 
+    private bool HasAvailableChoiceOptions(GuildRecord record)
+    {
+        if (record == null)
+            return false;
+
+        var benefits = record.Benefits ?? new GuildBenefits();
+        var guildType = (record.Type ?? string.Empty).Trim();
+        var includeBasic = !_allowGuildSelection
+            || GuildBenefitTierService.IsTierAvailable(_draft, guildType, GuildBenefitTier.Basic);
+        var includeIntermediate = !_allowGuildSelection
+            || GuildBenefitTierService.IsTierAvailable(_draft, guildType, GuildBenefitTier.Intermediate);
+        var includeAdvanced = !_allowGuildSelection
+            || GuildBenefitTierService.IsTierAvailable(_draft, guildType, GuildBenefitTier.Advanced);
+
+        if (includeBasic && TierHasChoiceOptions(benefits.Basic))
+            return true;
+        if (includeIntermediate && TierHasChoiceOptions(benefits.Intermediate))
+            return true;
+        if (includeAdvanced && TierHasChoiceOptions(benefits.Advanced))
+            return true;
+
+        return false;
+    }
+
+    private static bool TierHasChoiceOptions(IEnumerable<GuildBenefitEntry>? benefits)
+        => (benefits ?? Enumerable.Empty<GuildBenefitEntry>())
+            .Any(entry => entry?.Options is { Count: > 0 });
+
     private static List<GuildMiracleRowVm> BuildMiracleRows(Dictionary<string, List<string>>? miracleList)
     {
         if (miracleList == null || miracleList.Count == 0)
@@ -1083,8 +1341,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     private async Task ToggleExpandedAsync(GuildCardVm? item)
     {
-        if (item == null || !item.CanToggleSelection)
+        if (item == null)
             return;
+
+        var shouldExpand = !item.IsExpanded;
 
         foreach (var g in FilteredGuilds)
         {
@@ -1092,10 +1352,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 g.IsExpanded = false;
         }
 
-        if (!item.IsExpanded)
-            await EnsureCardDetailsLoadedAsync(item);
+        item.IsExpanded = shouldExpand;
 
-        item.IsExpanded = !item.IsExpanded;
+        if (shouldExpand)
+            await EnsureCardDetailsLoadedAsync(item);
     }
 
     private static bool RecordMatchesSearch(string guildName, GuildRecord record, string text)
@@ -1190,6 +1450,115 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return false;
     }
 
+    private List<GuildBenefitRowVm> BuildBenefitRows(
+        string guildName,
+        string tier,
+        IEnumerable<GuildBenefitEntry>? benefits)
+    {
+        var rows = new List<GuildBenefitRowVm>();
+        var selections = EnsureGuildBenefitSelections();
+        var optionIndex = 0;
+
+        foreach (var entry in benefits ?? Enumerable.Empty<GuildBenefitEntry>())
+        {
+            if (entry?.Ability != null)
+            {
+                var ability = entry.Ability;
+                var display = BuildBenefitNameText(ability);
+                if (string.IsNullOrWhiteSpace(display))
+                    display = FormatBenefit(ability);
+                if (string.IsNullOrWhiteSpace(display))
+                    continue;
+
+                rows.Add(new GuildBenefitRowVm
+                {
+                    DisplayText = display,
+                    Abilities = new List<AbilityDefinition> { ability },
+                    IsChoiceOption = false,
+                    IsSelectedChoice = false,
+                    ChoiceLabel = string.Empty
+                });
+                continue;
+            }
+
+            if (entry?.Options == null || entry.Options.Count == 0)
+                continue;
+
+            optionIndex++;
+            var selectionKey = GuildBenefitKeys.BuildSelectionKey(guildName, tier, optionIndex);
+            var selectedIndex = selections.TryGetValue(selectionKey, out var savedSelection)
+                ? savedSelection
+                : (int?)null;
+
+            for (var optionPosition = 0; optionPosition < entry.Options.Count; optionPosition++)
+            {
+                var option = entry.Options[optionPosition];
+                var optionAbilities = (option?.Abilities ?? new List<AbilityDefinition>())
+                    .Where(ability => ability != null)
+                    .Select(ability => ability)
+                    .ToList();
+
+                if (optionAbilities.Count == 0)
+                    continue;
+
+                var display = BuildOptionNameSummary(optionAbilities);
+                if (string.IsNullOrWhiteSpace(display))
+                    display = BuildOptionLabel(optionAbilities);
+                if (string.IsNullOrWhiteSpace(display))
+                    continue;
+
+                var choiceNumber = optionIndex;
+                var optionNumber = optionPosition + 1;
+                rows.Add(new GuildBenefitRowVm
+                {
+                    DisplayText = display,
+                    Abilities = optionAbilities,
+                    IsChoiceOption = true,
+                    IsSelectedChoice = selectedIndex.HasValue && selectedIndex.Value == optionNumber,
+                    ChoiceLabel = $"Choice {choiceNumber}, Option {optionNumber}"
+                });
+            }
+        }
+
+        for (var i = 0; i < rows.Count; i++)
+            rows[i].RowBackgroundColor = i % 2 == 0 ? "#FFFFFF" : "#F9FAFB";
+
+        return rows;
+    }
+
+    private static string BuildBenefitNameText(AbilityDefinition? ability)
+    {
+        var name = (ability?.Name ?? string.Empty).Trim();
+        if (name.Length > 0)
+            return name;
+
+        var battleboardName = (ability?.BattleboardNameOverride ?? string.Empty).Trim();
+        if (battleboardName.Length > 0)
+            return battleboardName;
+
+        var updateKey = (ability?.UpdateKey ?? string.Empty).Trim();
+        if (updateKey.Length > 0)
+            return updateKey;
+
+        var key = (ability?.AbilityRef ?? ability?.Key ?? string.Empty).Trim();
+        return key;
+    }
+
+    private static string BuildOptionNameSummary(IEnumerable<AbilityDefinition> abilities)
+    {
+        var names = (abilities ?? Enumerable.Empty<AbilityDefinition>())
+            .Select(BuildBenefitNameText)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (names.Count == 0)
+            return string.Empty;
+
+        return string.Join(", ", names);
+    }
+
     private List<GuildBenefitOptionGroupVm> BuildBenefitOptionGroups(
         string guildName,
         string tier,
@@ -1199,6 +1568,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (string.IsNullOrWhiteSpace(guildName))
             return list;
 
+        var selections = EnsureGuildBenefitSelections();
         var optionIndex = 0;
         foreach (var entry in benefits ?? Enumerable.Empty<GuildBenefitEntry>())
         {
@@ -1216,7 +1586,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
             if (options.Count == 0)
                 continue;
 
-            var selected = _draft.GuildBenefitSelections.TryGetValue(key, out var saved)
+            var selected = selections.TryGetValue(key, out var saved)
                 ? saved
                 : (int?)null;
 
@@ -1334,16 +1704,146 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (group == null)
             return;
 
-        if (group.SelectedIndex.HasValue)
-            _draft.GuildBenefitSelections[group.SelectionKey] = group.SelectedIndex.Value;
+        ApplyBenefitOptionSelection(group.SelectionKey, group.SelectedIndex);
+    }
+
+    private async Task EnsureGuildRecordsLoadedAsync()
+    {
+        if (_guildRecords.Count > 0)
+            return;
+
+        _guildRecords = _detailMode == GuildCardDetailMode.MiracleOnly
+            ? await _creationDataService.GetGuildsForMiracleSearchAsync()
+            : await _creationDataService.GetGuildsAsync();
+        _guildRecords ??= new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
+    }
+
+    private Dictionary<string, int> EnsureGuildBenefitSelections()
+    {
+        if (_draft.GuildBenefitSelections == null)
+            _draft.GuildBenefitSelections = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        return _draft.GuildBenefitSelections;
+    }
+
+    private void ApplyBenefitOptionSelection(string selectionKey, int? selectedIndex)
+    {
+        var key = (selectionKey ?? string.Empty).Trim();
+        if (key.Length == 0)
+            return;
+
+        var selections = EnsureGuildBenefitSelections();
+        if (selectedIndex.HasValue && selectedIndex.Value > 0)
+            selections[key] = selectedIndex.Value;
         else
-            _draft.GuildBenefitSelections.Remove(group.SelectionKey);
+            selections.Remove(key);
 
         Raise(nameof(IsComplete));
         _notifyWizardGatingChanged();
 
         if (_refreshDraftAbilitiesAsync != null)
             MainThread.BeginInvokeOnMainThread(async () => await _refreshDraftAbilitiesAsync());
+    }
+
+    private bool AreRequiredBenefitChoicesComplete(IReadOnlyDictionary<string, GuildRecord> records)
+    {
+        foreach (var requirement in EnumerateAvailableChoiceRequirements(
+                     records,
+                     onlyIncomplete: false,
+                     includeUnavailableTiers: false))
+        {
+            if (!requirement.HasValidSelection)
+                return false;
+        }
+
+        return true;
+    }
+
+    private IEnumerable<GuildChoiceRequirement> EnumerateAvailableChoiceRequirements(
+        IReadOnlyDictionary<string, GuildRecord> records,
+        bool onlyIncomplete,
+        bool includeUnavailableTiers)
+    {
+        var selections = EnsureGuildBenefitSelections();
+
+        foreach (var guildName in _draft.Guilds
+                     .Where(name => !string.IsNullOrWhiteSpace(name))
+                     .Select(name => name.Trim())
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (!records.TryGetValue(guildName, out var record) || record == null)
+                continue;
+
+            var guildType = (record.Type ?? string.Empty).Trim();
+            var benefits = record.Benefits ?? new GuildBenefits();
+
+            foreach (var tier in new[] { GuildBenefitTier.Basic, GuildBenefitTier.Intermediate, GuildBenefitTier.Advanced })
+            {
+                var isTierAvailableNow = GuildBenefitTierService.IsTierAvailable(_draft, guildType, tier);
+                if (!includeUnavailableTiers && !isTierAvailableNow)
+                    continue;
+
+                var tierName = ToTierName(tier);
+                var optionIndex = 0;
+                foreach (var entry in GetTierBenefits(benefits, tier))
+                {
+                    if (entry?.Options == null || entry.Options.Count == 0)
+                        continue;
+
+                    optionIndex++;
+                    var selectionKey = GuildBenefitKeys.BuildSelectionKey(guildName, tierName, optionIndex);
+                    var selectedIndex = selections.TryGetValue(selectionKey, out var saved)
+                        ? saved
+                        : (int?)null;
+                    var requirement = new GuildChoiceRequirement(
+                        guildName,
+                        tierName,
+                        optionIndex,
+                        selectionKey,
+                        entry.Options,
+                        selectedIndex,
+                        isTierAvailableNow);
+
+                    if (onlyIncomplete && requirement.HasValidSelection)
+                        continue;
+
+                    yield return requirement;
+                }
+            }
+        }
+    }
+
+    private static IEnumerable<GuildBenefitEntry> GetTierBenefits(GuildBenefits benefits, GuildBenefitTier tier)
+        => tier switch
+        {
+            GuildBenefitTier.Basic => benefits.Basic ?? new List<GuildBenefitEntry>(),
+            GuildBenefitTier.Intermediate => benefits.Intermediate ?? new List<GuildBenefitEntry>(),
+            GuildBenefitTier.Advanced => benefits.Advanced ?? new List<GuildBenefitEntry>(),
+            _ => new List<GuildBenefitEntry>()
+        };
+
+    private static string ToTierName(GuildBenefitTier tier)
+        => tier switch
+        {
+            GuildBenefitTier.Basic => "Basic",
+            GuildBenefitTier.Intermediate => "Intermediate",
+            GuildBenefitTier.Advanced => "Advanced",
+            _ => "Basic"
+        };
+
+    private sealed record GuildChoiceRequirement(
+        string GuildName,
+        string TierLabel,
+        int OptionIndex,
+        string SelectionKey,
+        IReadOnlyList<GuildBenefitOption> Options,
+        int? SelectedIndex,
+        bool IsTierAvailableNow)
+    {
+        public bool HasValidSelection =>
+            SelectedIndex.HasValue
+            && SelectedIndex.Value > 0
+            && SelectedIndex.Value <= Options.Count;
     }
 
     private async Task ToggleSelectedAsync(GuildCardVm? item)
@@ -1432,6 +1932,9 @@ public sealed class GuildCardDetailsVm
     public List<string> BasicBenefits { get; init; } = new();
     public List<string> IntermediateBenefits { get; init; } = new();
     public List<string> AdvancedBenefits { get; init; } = new();
+    public List<GuildBenefitRowVm> BasicBenefitRows { get; init; } = new();
+    public List<GuildBenefitRowVm> IntermediateBenefitRows { get; init; } = new();
+    public List<GuildBenefitRowVm> AdvancedBenefitRows { get; init; } = new();
     public List<GuildBenefitOptionGroupVm> BasicOptionGroups { get; init; } = new();
     public List<GuildBenefitOptionGroupVm> IntermediateOptionGroups { get; init; } = new();
     public List<GuildBenefitOptionGroupVm> AdvancedOptionGroups { get; init; } = new();
@@ -1549,6 +2052,9 @@ public sealed class GuildCardVm : INotifyPropertyChanged
     public List<string> BasicBenefits { get; set; } = new();
     public List<string> IntermediateBenefits { get; set; } = new();
     public List<string> AdvancedBenefits { get; set; } = new();
+    public List<GuildBenefitRowVm> BasicBenefitRows { get; set; } = new();
+    public List<GuildBenefitRowVm> IntermediateBenefitRows { get; set; } = new();
+    public List<GuildBenefitRowVm> AdvancedBenefitRows { get; set; } = new();
     public List<GuildBenefitOptionGroupVm> BasicOptionGroups { get; set; } = new();
     public List<GuildBenefitOptionGroupVm> IntermediateOptionGroups { get; set; } = new();
     public List<GuildBenefitOptionGroupVm> AdvancedOptionGroups { get; set; } = new();
@@ -1568,6 +2074,12 @@ public sealed class GuildCardVm : INotifyPropertyChanged
         BasicBenefits = source.BasicBenefits ?? new List<string>();
         IntermediateBenefits = source.IntermediateBenefits ?? new List<string>();
         AdvancedBenefits = source.AdvancedBenefits ?? new List<string>();
+        BasicBenefitRows = source.BasicBenefitRows ?? new List<GuildBenefitRowVm>();
+        IntermediateBenefitRows = source.IntermediateBenefitRows ?? new List<GuildBenefitRowVm>();
+        AdvancedBenefitRows = source.AdvancedBenefitRows ?? new List<GuildBenefitRowVm>();
+        HasAnyChoiceOptions = BasicBenefitRows.Any(row => row.IsChoiceOption)
+            || IntermediateBenefitRows.Any(row => row.IsChoiceOption)
+            || AdvancedBenefitRows.Any(row => row.IsChoiceOption);
         BasicOptionGroups = source.BasicOptionGroups ?? new List<GuildBenefitOptionGroupVm>();
         IntermediateOptionGroups = source.IntermediateOptionGroups ?? new List<GuildBenefitOptionGroupVm>();
         AdvancedOptionGroups = source.AdvancedOptionGroups ?? new List<GuildBenefitOptionGroupVm>();
@@ -1585,6 +2097,9 @@ public sealed class GuildCardVm : INotifyPropertyChanged
         Raise(nameof(BasicBenefits));
         Raise(nameof(IntermediateBenefits));
         Raise(nameof(AdvancedBenefits));
+        Raise(nameof(BasicBenefitRows));
+        Raise(nameof(IntermediateBenefitRows));
+        Raise(nameof(AdvancedBenefitRows));
         Raise(nameof(BasicOptionGroups));
         Raise(nameof(IntermediateOptionGroups));
         Raise(nameof(AdvancedOptionGroups));
@@ -1604,22 +2119,42 @@ public sealed class GuildCardVm : INotifyPropertyChanged
         Raise(nameof(HasIntermediateOptions));
         Raise(nameof(HasAdvancedOptions));
         Raise(nameof(AreBenefitOptionsComplete));
+        Raise(nameof(HasAnyChoiceOptions));
+        Raise(nameof(ChoiceSetNoticeText));
     }
 
     public bool HasLore => LoreSections.Count > 0;
     public bool HasRestrictions => !string.IsNullOrWhiteSpace(Restrictions);
 
-    public bool HasBasic => BasicBenefits.Count > 0 || BasicOptionGroups.Count > 0;
-    public bool HasIntermediate => IntermediateBenefits.Count > 0 || IntermediateOptionGroups.Count > 0;
-    public bool HasAdvanced => AdvancedBenefits.Count > 0 || AdvancedOptionGroups.Count > 0;
+    public bool HasBasic => BasicBenefitRows.Count > 0;
+    public bool HasIntermediate => IntermediateBenefitRows.Count > 0;
+    public bool HasAdvanced => AdvancedBenefitRows.Count > 0;
     public bool HasCityBenefits => CityBenefits.Count > 0;
     public bool HasMiracles => MiracleRows.Count > 0;
     public bool HasDenominationalMiracle => DenominationalMiracle != null;
 
     public bool HasAnyBenefits => HasBasic || HasIntermediate || HasAdvanced;
-    public bool HasBasicOptions => BasicOptionGroups.Count > 0;
-    public bool HasIntermediateOptions => IntermediateOptionGroups.Count > 0;
-    public bool HasAdvancedOptions => AdvancedOptionGroups.Count > 0;
+    public bool HasBasicOptions => BasicBenefitRows.Any(row => row.IsChoiceOption);
+    public bool HasIntermediateOptions => IntermediateBenefitRows.Any(row => row.IsChoiceOption);
+    public bool HasAdvancedOptions => AdvancedBenefitRows.Any(row => row.IsChoiceOption);
+    private bool _hasAnyChoiceOptions;
+    public bool HasAnyChoiceOptions
+    {
+        get => _hasAnyChoiceOptions || HasBasicOptions || HasIntermediateOptions || HasAdvancedOptions;
+        set
+        {
+            if (_hasAnyChoiceOptions == value)
+                return;
+
+            _hasAnyChoiceOptions = value;
+            Raise();
+            Raise(nameof(ChoiceSetNoticeText));
+        }
+    }
+
+    public string ChoiceSetNoticeText => HasAnyChoiceOptions
+        ? "Guild options available"
+        : string.Empty;
     public bool AreBenefitOptionsComplete =>
         BasicOptionGroups.All(g => g.HasSelection)
         && IntermediateOptionGroups.All(g => g.HasSelection)
@@ -1718,6 +2253,40 @@ public sealed class GuildCardVm : INotifyPropertyChanged
             Raise(nameof(HasNotSelectableReason));
         }
     }
+}
+
+public sealed class GuildReviewSummaryRowVm
+{
+    public GuildReviewSummaryRowVm(
+        string guildName,
+        bool hasChoices,
+        bool hasMissingChoices,
+        string statusText)
+    {
+        GuildName = (guildName ?? string.Empty).Trim();
+        HasChoices = hasChoices;
+        HasMissingChoices = hasMissingChoices;
+        StatusText = (statusText ?? string.Empty).Trim();
+    }
+
+    public string GuildName { get; }
+    public bool HasChoices { get; }
+    public bool HasMissingChoices { get; }
+    public string StatusText { get; }
+    public bool HasStatusText => StatusText.Length > 0;
+}
+
+public sealed class GuildBenefitRowVm
+{
+    public string DisplayText { get; init; } = string.Empty;
+    public List<AbilityDefinition> Abilities { get; init; } = new();
+    public bool IsChoiceOption { get; init; }
+    public bool IsSelectedChoice { get; init; }
+    public string ChoiceLabel { get; init; } = string.Empty;
+    public string RowBackgroundColor { get; set; } = "#FFFFFF";
+
+    public bool HasDetails => Abilities.Count > 0;
+    public bool HasChoiceLabel => !string.IsNullOrWhiteSpace(ChoiceLabel);
 }
 
 public sealed class GuildBenefitOptionGroupVm : INotifyPropertyChanged

@@ -140,6 +140,10 @@ public sealed class WizardVm : INotifyPropertyChanged
     private IReadOnlyList<SpecialisationSummaryLineVm> _specialisationSummaryLines = Array.Empty<SpecialisationSummaryLineVm>();
     private IReadOnlyList<LevelAbilityRowVm> _classLevelAbilityRows = Array.Empty<LevelAbilityRowVm>();
     private IReadOnlyList<LevelAbilityRowVm> _raceLevelAbilityRows = Array.Empty<LevelAbilityRowVm>();
+    private bool _hasGuildChoiceWarning;
+    private string _guildChoiceWarningText = string.Empty;
+    private IReadOnlyList<string> _guildStackingWarnings = Array.Empty<string>();
+    private IReadOnlyList<GuildReviewSummaryRowVm> _guildReviewRows = Array.Empty<GuildReviewSummaryRowVm>();
 
     public ObservableCollection<AbilitySpendLine> AdvancementAbilityLines { get; } = new();
 
@@ -224,6 +228,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             try
             {
                 await SyncDraftStateAsync(allowBackground: true);
+                await RefreshGuildWarningsAsync();
             }
             catch (Exception ex)
             {
@@ -271,13 +276,15 @@ public sealed class WizardVm : INotifyPropertyChanged
                 createView: () => new CharacterReviewView(this)
                 {
                     ShowPost8Card = false
-                })
+                },
+                onEnterAsync: async () => await RefreshReviewAsync())
         };
 
     public async Task RefreshReviewAsync()
     {
         await SyncDraftStateAsync();
         RaiseReviewProperties();
+        await RefreshGuildWarningsAsync();
     }
 
     public string PlayerName
@@ -369,6 +376,12 @@ public sealed class WizardVm : INotifyPropertyChanged
     public string GuildSummary => Draft.Guilds.Count == 0
         ? "Guilds: none selected"
         : $"Guilds: {string.Join(", ", Draft.Guilds)}";
+    public IReadOnlyList<GuildReviewSummaryRowVm> GuildReviewRows => _guildReviewRows;
+    public bool HasGuildReviewRows => _guildReviewRows.Count > 0;
+    public bool HasGuildChoiceWarning => _hasGuildChoiceWarning;
+    public string GuildChoiceWarningText => _guildChoiceWarningText;
+    public IReadOnlyList<string> GuildStackingWarnings => _guildStackingWarnings;
+    public bool HasGuildStackingWarnings => _guildStackingWarnings.Count > 0;
 
     public IReadOnlyList<SpecialisationSummaryLineVm> SpecialisationSummaryLines => _specialisationSummaryLines;
 
@@ -461,6 +474,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(ArmourBaseSummary));
         Raise(nameof(ArmourSelectionSummary));
         RaiseReviewProperties();
+        _ = RefreshGuildWarningsAsync();
         ExportToBattleboardCommand?.ChangeCanExecute();
         ExportToExcelCommand?.ChangeCanExecute();
         SaveToWalletCommand?.ChangeCanExecute();
@@ -1232,6 +1246,8 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(HasRaceLevelAbilityRows));
         Raise(nameof(RaceLevelAbilityHeader));
         Raise(nameof(GuildSummary));
+        Raise(nameof(GuildReviewRows));
+        Raise(nameof(HasGuildReviewRows));
         RefreshSpecialisationSummaryLines();
         _ = EnsureSpecialisationAbilityLookupLoadedAsync();
         Raise(nameof(NotesSummary));
@@ -1242,7 +1258,132 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(AdvancementItemsSummary));
         Raise(nameof(AdvancementNotesSummary));
         Raise(nameof(AdvancementAbilitiesHeader));
+        RefreshGuildStackingWarnings();
     }
+
+    private async Task RefreshGuildWarningsAsync()
+    {
+        IReadOnlyList<string> warnings;
+        IReadOnlyList<GuildReviewSummaryRowVm> reviewRows;
+        try
+        {
+            warnings = await GuildsVm.BuildIncompleteChoiceWarningsAsync();
+            reviewRows = await GuildsVm.BuildSelectedGuildReviewRowsAsync();
+        }
+        catch (Exception ex)
+        {
+            RuntimeLog.Write("GUILD_WARNING_REFRESH", "Failed refreshing guild warning state.", ex);
+            warnings = Array.Empty<string>();
+            reviewRows = Draft.Guilds
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .Select(name => new GuildReviewSummaryRowVm(
+                    guildName: name.Trim(),
+                    hasChoices: false,
+                    hasMissingChoices: false,
+                    statusText: string.Empty))
+                .ToList();
+        }
+
+        var hasWarning = warnings.Count > 0;
+        var text = hasWarning
+            ? $"Set guild choices before battleboard/export:\n{string.Join("\n", warnings)}"
+            : string.Empty;
+
+        void ApplyWarningState()
+        {
+            var hasChanged = _hasGuildChoiceWarning != hasWarning;
+            if (hasChanged)
+            {
+                _hasGuildChoiceWarning = hasWarning;
+                Raise(nameof(HasGuildChoiceWarning));
+            }
+
+            if (!string.Equals(_guildChoiceWarningText, text, StringComparison.Ordinal))
+            {
+                _guildChoiceWarningText = text;
+                Raise(nameof(GuildChoiceWarningText));
+            }
+
+            _guildReviewRows = reviewRows;
+            Raise(nameof(GuildReviewRows));
+            Raise(nameof(HasGuildReviewRows));
+        }
+
+        if (MainThread.IsMainThread)
+            ApplyWarningState();
+        else
+            await MainThread.InvokeOnMainThreadAsync(ApplyWarningState);
+    }
+
+    private void RefreshGuildStackingWarnings()
+    {
+        var guildAbilities = (Draft.Abilities ?? new List<AbilityDraft>())
+            .Where(ability => ability != null
+                              && string.Equals((ability.Source ?? string.Empty).Trim(), "Guild", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        var warnings = new List<string>();
+        var lifeGuilds = guildAbilities
+            .Where(ability => ability.AbilityType == AbilityType.Life)
+            .Select(ExtractGuildIdentity)
+            .Where(identity => identity.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (lifeGuilds.Count >= 2)
+            warnings.Add("Guild life bonuses do not stack.");
+
+        foreach (var armourType in new[] { "PAC", "MAC", "SAC" })
+        {
+            var armourGuilds = guildAbilities
+                .Where(ability => string.Equals(GetGuildArmourType(ability), armourType, StringComparison.OrdinalIgnoreCase))
+                .Select(ExtractGuildIdentity)
+                .Where(identity => identity.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (armourGuilds.Count >= 2)
+                warnings.Add($"Guild {armourType} bonuses do not stack.");
+        }
+
+        var ordered = warnings
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(line => line, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (_guildStackingWarnings.SequenceEqual(ordered, StringComparer.Ordinal))
+            return;
+
+        _guildStackingWarnings = ordered;
+        Raise(nameof(GuildStackingWarnings));
+        Raise(nameof(HasGuildStackingWarnings));
+    }
+
+    private static string ExtractGuildIdentity(AbilityDraft ability)
+    {
+        var source = (ability.Source ?? string.Empty).Trim();
+        if (source.StartsWith("Guild:", StringComparison.OrdinalIgnoreCase))
+            return source["Guild:".Length..].Trim();
+
+        var key = (ability.AbilityKey ?? string.Empty).Trim();
+        const string guildKeyPrefix = "ability.guild.";
+        if (key.StartsWith(guildKeyPrefix, StringComparison.OrdinalIgnoreCase))
+        {
+            var remaining = key[guildKeyPrefix.Length..];
+            var nextDot = remaining.IndexOf('.');
+            return (nextDot > 0 ? remaining[..nextDot] : remaining).Trim();
+        }
+
+        var name = (ability.Name ?? string.Empty).Trim();
+        return name.Length > 0 ? name : key;
+    }
+
+    private static string GetGuildArmourType(AbilityDraft ability)
+        => ability.AbilityType switch
+        {
+            AbilityType.Pac => "PAC",
+            AbilityType.Mac => "MAC",
+            AbilityType.Sac => "SAC",
+            _ => string.Empty
+        };
 
     private ArmourTier GetArmourTierFromDraft()
     {

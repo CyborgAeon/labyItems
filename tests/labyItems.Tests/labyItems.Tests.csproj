@@ -26,10 +26,13 @@
     <Compile Include="../../labyItems/Helpers/WizardSpellRules.cs" Link="Source/WizardSpellRules.cs" />
     <Compile Include="../../labyItems/Helpers/MagicColourExtensions.cs" Link="Source/MagicColourExtensions.cs" />
     <Compile Include="../../labyItems/Helpers/WizardAbilityProgressionHelper.cs" Link="Source/WizardAbilityProgressionHelper.cs" />
-    <Compile Include="../../labyItems/Helpers/WizardSlotSelectionFormatter.cs" Link="Source/WizardSlotSelectionFormatter.cs" />
     <Compile Include="../../labyItems/Helpers/CharacterDraftExtensions.cs" Link="Source/CharacterDraftExtensions.cs" />
+    <Compile Include="../../labyItems/Helpers/PeopleTypeFormatting.cs" Link="Source/PeopleTypeFormatting.cs" />
+    <Compile Include="../../labyItems/Helpers/IconPalette.cs" Link="Source/IconPalette.cs" />
+    <Compile Include="../../labyItems/Helpers/CharacterDisplayNameHelper.cs" Link="Source/CharacterDisplayNameHelper.cs" />
     <Compile Include="../../labyItems/Helpers/MagicColourOppositionRules.cs" Link="Source/MagicColourOppositionRules.cs" />
     <Compile Include="../../labyItems/Controls/Pickers/EnumDisplayFormatter.cs" Link="Source/EnumDisplayFormatter.cs" />
+    <Compile Include="../../labyItems/Models/ViewModels/LevelAbilityRowVm.cs" Link="Source/LevelAbilityRowVm.cs" />
     <Compile Include="../../labyItems/Controls/ContributionRow.cs" Link="Source/ContributionRow.cs" />
     <Compile Include="../../labyItems/Controls/StickyFooterContentBuilder.cs" Link="Source/StickyFooterContentBuilder.cs" />
     <Compile Include="../../labyItems/Services/ILookupService.cs" Link="Source/ILookupService.cs" />
@@ -57,7 +60,10 @@
     <Compile Include="../../labyItems/Services/BattleboardAbilityEffectResolver.cs" Link="Source/BattleboardAbilityEffectResolver.cs" />
     <Compile Include="../../labyItems/Services/BattleboardItemEffectResolver.cs" Link="Source/BattleboardItemEffectResolver.cs" />
     <Compile Include="../../labyItems/Services/BattleboardDamageMitigationService.cs" Link="Source/BattleboardDamageMitigationService.cs" />
+    <Compile Include="../../labyItems/Services/BattleboardDamageReductionEffectResolver.cs" Link="Source/BattleboardDamageReductionEffectResolver.cs" />
     <Compile Include="../../labyItems/Services/BattleboardResistanceLevelService.cs" Link="Source/BattleboardResistanceLevelService.cs" />
+    <Compile Include="../../labyItems/Services/MultiPathContracts.cs" Link="Source/MultiPathContracts.cs" />
+    <Compile Include="../../labyItems/Services/MultiRaceService.cs" Link="Source/MultiRaceService.cs" />
     <Compile Include="../../labyItems/Services/AbilityPrerequisiteService.cs" Link="Source/AbilityPrerequisiteService.cs" />
     <Compile Include="../../labyItems/Services/AbilityOwnershipService.cs" Link="Source/AbilityOwnershipService.cs" />
     <Compile Include="../../labyItems/Services/AbilityDefinitionLookupService.cs" Link="Source/AbilityDefinitionLookupService.cs" />

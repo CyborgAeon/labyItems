@@ -6,6 +6,7 @@ using labyItems.Models.Characters;
 using labyItems.Models.ViewModels;
 using labyItems.Models.Rules;
 using labyItems.Services;
+using labyItems.Helpers;
 using Microsoft.Maui.Graphics;
 
 namespace labyItems.Pages.Characters.ViewModels;
@@ -20,10 +21,6 @@ public sealed class MultiClassWizardVm : INotifyPropertyChanged
     private const string RequiredBracketPurityWarningMessage = "Non-standard warning: This class requires bracket purity and your character currently has brackets outside the required bracket.";
     private const string ExistingBracketPurityWarningMessage = "Non-standard warning: This choice breaks bracket purity because this character already has a bracket-pure multi-class.";
 
-    private static readonly string[] IconPastelPalette =
-    {
-        "#FEC5BB", "#FAE1DD", "#F8EDEB", "#E8E8E4", "#D8E2DC", "#ECE4DB", "#FFE5D9", "#FFD7BA"
-    };
 
     private static readonly Color PurchasedRowColor = Color.FromArgb("#DCFCE7");
     private static readonly Color DefaultRowColor = Colors.Transparent;
@@ -288,7 +285,7 @@ public sealed class MultiClassWizardVm : INotifyPropertyChanged
             Category = category,
             Icon = icon,
             IconGlyph = (definition.IconGlyph ?? string.Empty).Trim(),
-            IconBackground = PickRandomIconPastel(),
+            IconBackground = IconPalette.PickRandomIconPastel(),
             Summary = BuildSummary(detailRows),
             MaxAc = maxAc,
             TBLP = firstLife.Body,
@@ -310,9 +307,6 @@ public sealed class MultiClassWizardVm : INotifyPropertyChanged
             detailRows: detailRows,
             targetBrackets: targetBrackets);
     }
-
-    private static string PickRandomIconPastel()
-        => IconPastelPalette[Random.Shared.Next(IconPastelPalette.Length)];
 
     private static string ResolvePowerBase(MultiClassDefinition definition)
         => MultiPathWizardHelpers.ResolvePowerBase<

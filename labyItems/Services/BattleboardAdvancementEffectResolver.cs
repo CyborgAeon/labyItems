@@ -6,7 +6,8 @@ public sealed record BattleboardAdvancementEffects(
     IReadOnlyDictionary<string, int> ResistanceOverrides,
     IReadOnlyList<string> Immunities,
     IReadOnlyDictionary<string, int> ResistanceMultipliers,
-    IReadOnlySet<string> InfiniteResistanceTypes);
+    IReadOnlySet<string> InfiniteResistanceTypes,
+    IReadOnlyDictionary<string, int> ResistancePerSixths);
 
 public static class BattleboardAdvancementEffectResolver
 {
@@ -30,7 +31,8 @@ public static class BattleboardAdvancementEffectResolver
             resistance,
             immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList(),
             multipliers,
-            infiniteResistanceTypes);
+            infiniteResistanceTypes,
+            new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
     }
 
     public static async Task<BattleboardAdvancementEffects> ResolveAsync(IEnumerable<string>? advancementAbilityKeysOrNames)
@@ -47,10 +49,11 @@ public static class BattleboardAdvancementEffectResolver
         var resistance = new Dictionary<string, int>(fallback.ResistanceOverrides, StringComparer.OrdinalIgnoreCase);
         var multipliers = new Dictionary<string, int>(fallback.ResistanceMultipliers, StringComparer.OrdinalIgnoreCase);
         var infiniteResistanceTypes = new HashSet<string>(fallback.InfiniteResistanceTypes, StringComparer.OrdinalIgnoreCase);
+        var perSixths = new Dictionary<string, int>(fallback.ResistancePerSixths, StringComparer.OrdinalIgnoreCase);
         var immunities = new HashSet<string>(fallback.Immunities, StringComparer.OrdinalIgnoreCase);
 
         if (keysOrNames.Count == 0)
-            return new BattleboardAdvancementEffects(resistance, immunities.ToList(), multipliers, infiniteResistanceTypes);
+            return new BattleboardAdvancementEffects(resistance, immunities.ToList(), multipliers, infiniteResistanceTypes, perSixths);
 
         try
         {
@@ -103,7 +106,8 @@ public static class BattleboardAdvancementEffectResolver
             resistance,
             immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList(),
             multipliers,
-            infiniteResistanceTypes);
+            infiniteResistanceTypes,
+            perSixths);
     }
 
     public static IReadOnlyDictionary<string, int> ApplyResistanceOverrides(
@@ -183,6 +187,41 @@ public static class BattleboardAdvancementEffectResolver
             var key = NormalizeResistanceType(raw);
             if (key.Length > 0)
                 merged.Add(key);
+        }
+
+        return merged;
+    }
+
+    public static IReadOnlyDictionary<string, int> ApplyResistancePerSixths(
+        IReadOnlyDictionary<string, int>? baseline,
+        IReadOnlyDictionary<string, int>? overrides)
+    {
+        var merged = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach (var pair in baseline ?? new Dictionary<string, int>())
+        {
+            var key = NormalizeResistanceType(pair.Key);
+            if (key.Length == 0)
+                continue;
+
+            var value = Math.Clamp(pair.Value, 0, 6);
+            if (value <= 0)
+                continue;
+
+            merged[key] = value;
+        }
+
+        foreach (var pair in overrides ?? new Dictionary<string, int>())
+        {
+            var key = NormalizeResistanceType(pair.Key);
+            if (key.Length == 0)
+                continue;
+
+            var incoming = Math.Clamp(pair.Value, 0, 6);
+            if (incoming <= 0)
+                continue;
+
+            if (!merged.TryGetValue(key, out var current) || incoming > current)
+                merged[key] = incoming;
         }
 
         return merged;

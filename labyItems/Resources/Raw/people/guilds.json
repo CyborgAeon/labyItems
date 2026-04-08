@@ -4561,10 +4561,10 @@
           "Key": "ability.monk-locational-curing"
         },
         {
-          "Name": "The Empire's Strength 1/day",
+          "Name": "The Empire's Strength",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "For 5 minutes, gains 1/2 fx all non-weapon blows from a non-Imperial source.",
+          "Effect": "1/day For 5 minutes, gains 1/2 fx all non-weapon blows from a non-Imperial source.",
           "Key": "ability.guild.18th-imperial-legion.the-empire-s-strength-1-day",
           "AbilityRef": "ability.guild.18th-imperial-legion.the-empire-s-strength-1-day"
         }
@@ -4625,10 +4625,10 @@
           "AbilityRef": "ability.guild.18th-imperial-legion.together.2"
         },
         {
-          "Name": "Tied to Bildteve 1/day",
+          "Name": "Tied to Bildteve",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "May choose to have an undead returner (as Unholy Champion) that does not taint their body on death. If not used, can instead be triggered as an Animate Life on self (no prot or candles needed, takes 5 minutes from triggering to kick in, must rest in location it was used for 5 minutes to gain the total heal).",
+          "Effect": " 1/day May choose to have an undead returner (as Unholy Champion) that does not taint their body on death. If not used, can instead be triggered as an Animate Life on self (no prot or candles needed, takes 5 minutes from triggering to kick in, must rest in location it was used for 5 minutes to gain the total heal).",
           "Key": "ability.guild.18th-imperial-legion.tied-to-bildteve-1-day",
           "AbilityRef": "ability.guild.18th-imperial-legion.tied-to-bildteve-1-day"
         }
@@ -4672,18 +4672,18 @@
       ],
       "Intermediate": [
         {
-          "Name": "Words of Comfort 1/day",
+          "Name": "Words of Comfort",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "May touch a single target and act as a Mantic Hearten and Pacification on the target for as long as the guild member remains touching them and focussing on them. This ends if the recipient or the guild member take any damage or use any powers.",
+          "Effect": "1/day May touch a single target and act as a Mantic Hearten and Pacification on the target for as long as the guild member remains touching them and focussing on them. This ends if the recipient or the guild member take any damage or use any powers.",
           "Key": "ability.guild.buggledexters.words-of-comfort-1-day",
           "AbilityRef": "ability.guild.buggledexters.words-of-comfort-1-day"
         },
         {
-          "Name": "Words of Harmony 1/day",
+          "Name": "Words of Harmony",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "Acts as per the Hospitaller ability Voice of Reason.",
+          "Effect": "1/day Acts as per the Hospitaller ability Voice of Reason.",
           "Key": "ability.guild.buggledexters.words-of-harmony-1-day",
           "AbilityRef": "ability.guild.buggledexters.words-of-harmony-1-day"
         }
@@ -4697,12 +4697,12 @@
           "AbilityRef": "ability.guild.buggledexters.wisdom-in-the-words-of-light"
         },
         {
-          "Name": "Words of Harmony 1/day",
+          "Name": "Words of Harmony",
           "Type": "Update",
           "Count": 1,
-          "Effect": "Acts as per the Hospitaller ability Voice of Reason.",
+          "Effect": "1/day Acts as per the Hospitaller ability Voice of Reason.",
           "Key": "ability.guild.buggledexters.words-of-harmony-1-day.2",
-          "AbilityRef": "ability.guild.buggledexters.words-of-harmony-1-day.2"
+          "AbilityRef": "ability.merged.voice-of-reason"
         },
         {
           "Name": "a third Turn Away the Evil",
@@ -4752,10 +4752,10 @@
       "Intermediate": [],
       "Advanced": [
         {
-          "Name": "Explosive Death 1/day",
+          "Name": "Explosive Death",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "Upon death can expend X mana of racial innates (these are used) and cause their slayer to suffer TBLP damage equal to three times the mana expended (1 hit to monsters per 3 TBLP). MAC applies at 1 for 1 and the damage is of the colour of innates used. This is a dying effect.",
+          "Effect": "1/day Upon death can expend X mana of racial innates (these are used) and cause their slayer to suffer TBLP damage equal to three times the mana expended (1 hit to monsters per 3 TBLP). MAC applies at 1 for 1 and the damage is of the colour of innates used. This is a dying effect.",
           "Key": "ability.guild.children-of-the-dusk.explosive-death-1-day",
           "AbilityRef": "ability.guild.children-of-the-dusk.explosive-death-1-day"
         }
@@ -4919,10 +4919,10 @@
       ],
       "Intermediate": [
         {
-          "Name": "Take Killing blow/effect for a peasant/innocent type at own resistances",
+          "Name": "Take Killing blow/effect for a peasant/innocent",
           "Type": "Innate",
           "Count": 1,
-          "Effect": "1/day",
+          "Effect": "1/day Take Killing blow/effect type at own resistances",
           "Key": "ability.guild.the-highborn-assembly.take-killing-blow-effect-for-a-peasant-innocent-type-at-own-resistances",
           "AbilityRef": "ability.guild.the-highborn-assembly.take-killing-blow-effect-for-a-peasant-innocent-type-at-own-resistances"
         },
@@ -7464,11 +7464,11 @@
           "AbilityRef": "ability.guild.ghalabhad.kallah-gain-immunity-to-disease"
         },
         {
-          "Name": "Gain Discern Afthanel at will; this is a 20ft range magical and physical info FX",
+          "Name": "Gain Discern Athfanal at will; this is a 20ft range magical and physical info FX",
           "Type": "Static",
-          "Effect": "Gain Discern Afthanel at will; this is a 20ft range magical and physical info FX.",
-          "Key": "ability.guild.ghalabhad.gain-discern-afthanel-at-will-this-is-a-20ft-range-magical-and-physical-info-fx",
-          "AbilityRef": "ability.guild.ghalabhad.gain-discern-afthanel-at-will-this-is-a-20ft-range-magical-and-physical-info-fx"
+          "Effect": "Gain Discern Athfanal at will; this is a 20ft range magical and physical info FX.",
+          "Key": "ability.guild.ghalabhad.gain-discern-Athfanal-at-will-this-is-a-20ft-range-magical-and-physical-info-fx",
+          "AbilityRef": "ability.guild.ghalabhad.gain-discern-Athfanal-at-will-this-is-a-20ft-range-magical-and-physical-info-fx"
         },
         {
           "Name": "Gain Discern Citizen of Khaniabhad, again a magical and physical info effect",
@@ -7480,11 +7480,11 @@
       ],
       "Intermediate": [
         {
-          "Name": "Gain +1 stacking backstab vs Afthanel or citizens of Khaniabhad",
+          "Name": "Gain +1 stacking backstab vs Athfanal or citizens of Khaniabhad",
           "Type": "Static",
-          "Effect": "Gain +1 stacking backstab vs Afthanel or citizens of Khaniabhad.",
-          "Key": "ability.guild.ghalabhad.gain-1-stacking-backstab-vs-afthanel-or-citizens-of-khaniabhad",
-          "AbilityRef": "ability.guild.ghalabhad.gain-1-stacking-backstab-vs-afthanel-or-citizens-of-khaniabhad"
+          "Effect": "Gain +1 stacking backstab vs Athfanal or citizens of Khaniabhad.",
+          "Key": "ability.guild.ghalabhad.gain-1-stacking-backstab-vs-Athfanal-or-citizens-of-khaniabhad",
+          "AbilityRef": "ability.guild.ghalabhad.gain-1-stacking-backstab-vs-Athfanal-or-citizens-of-khaniabhad"
         },
         {
           "Name": "Gain 4 mana per tier that can be used to cast handbook dispels, no casting damage is suffered",

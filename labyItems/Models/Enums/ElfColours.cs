@@ -20,6 +20,7 @@ public enum ElfColours
     Spring,
     Summer,
     Autumn,
+    Drowe,
 }
 
 public enum AthfanalColours

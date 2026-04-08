@@ -1755,7 +1755,7 @@
     "table": 7,
     "cost": 100,
     "index": "1st Grade of Strength",
-    "desc": "+1 (total) Strength",
+    "desc": "Each grade of Strength allows the character to inflict one additional grade of damage [still limited by maximum damage]. It also allows the possessor to be able to ‘carry’ a single normal person / load by placing both of their hands on the target. If two grades of strength are possessed it is possible to carry a person in a single handgrip, or two people with one in each hand. Strength being used to carry things cannot at the same time be used to increase the damage grade called.",
     "sourceBook": "Classes"
   },
   {
@@ -2146,7 +2146,7 @@
     "table": 10,
     "cost": 100,
     "index": "1st Grade of Strength",
-    "desc": "+1 (total) Strength",
+    "desc": "Each grade of Strength allows the character to inflict one additional grade of damage [still limited by maximum damage]. It also allows the possessor to be able to ‘carry’ a single normal person / load by placing both of their hands on the target. If two grades of strength are possessed it is possible to carry a person in a single handgrip, or two people with one in each hand. Strength being used to carry things cannot at the same time be used to increase the damage grade called.",
     "sourceBook": "Classes"
   },
   {
@@ -3232,6 +3232,12 @@
         "Field": "Race",
         "Operator": "In",
         "Value": ["Elf"]
+      },
+      {
+        "Field": "Specialisation",
+        "Operator": "In",
+        "Value": ["Drowe"],
+        "SpecialisationKey": "Race Subtype"
       }
     ],
     "table": 1,
@@ -3288,12 +3294,12 @@
       {
         "Field": "Race",
         "Operator": "In",
-        "Value": ["Elf"]
+        "Value": ["Elf", "Faerie"]
       },
       {
         "Field": "Specialisation",
-        "Operator": "In",
-        "Value": ["Faerie except Drowe"],
+        "Operator": "NotIn",
+        "Value": ["Drowe"],
         "SpecialisationKey": "Race Subtype"
       }
     ],
@@ -5752,7 +5758,7 @@
     "table": 7,
     "cost": 100,
     "index": "Take Killing Blow",
-    "desc": "Take Killing Blow – Allows the user to take the effects of a weapon blows that would kill a member of their own clan. Damage is suffered as per the person being saved. Must be used at the time of death. Cannot stop the Rite of Seppuku.",
+    "desc": "Allows the user to take the effects of a weapon blows that would kill a member of their own clan. Damage is suffered as per the person being saved. Must be used at the time of death. Cannot stop the Rite of Seppuku.",
     "sourceBook": "Races",
     "CanAddMultiple": true,
     "maxAvailable": "*"
@@ -5761,16 +5767,17 @@
     "available": [],
     "table": 7,
     "cost": 50,
-    "index": "Take Killing Blow",
-    "desc": "Take Killing Blow (above only) may now be used for effects as well as blows.",
-    "sourceBook": "Races"
+    "index": "Take Killing Effect",
+    "desc": "Allows the user to take an effect that would kill a member of their own clan. Damage is suffered as per the person being saved. Must be used at the time of death. Cannot stop the Rite of Seppuku.",
+    "sourceBook": "Races",
+    "preReqs": ["Take Killing Blow"]
   },
   {
     "available": [],
     "table": 7,
     "cost": 50,
     "index": "Twins Protection",
-    "desc": "Twins Protection – If a user would die from use of Take Killing Blow (above only) then instead falls unconscious for 5 minutes.",
+    "desc": "If a user would die from use of Take Killing Blow (above only) then instead falls unconscious for 5 minutes.",
     "sourceBook": "Races"
   },
   {
@@ -5783,8 +5790,8 @@
     ],
     "table": 1,
     "cost": 0,
-    "index": "Tribal Heritage. Character now counts as",
-    "desc": "Tribal Heritage. Character now counts as tribal and can benefit from a Shaman/Witch Doctor as per tribal rules. May now buy abilities available to tribal characters but looses access to abilities denied to tribal characters.",
+    "index": "Tribal Heritage",
+    "desc": "Character now counts as tribal and can benefit from a Shaman/Witch Doctor as per tribal rules. May now buy abilities available to tribal characters but looses access to abilities denied to tribal characters.",
     "sourceBook": "Races"
   },
   {
@@ -5798,7 +5805,7 @@
     "table": 1,
     "cost": 20,
     "index": "Tell Time",
-    "desc": "Tell Time - in own environment only",
+    "desc": "With 10 seconds looking at an open sky the Alfar can tell the time, to within the nearest ¼ hour.",
     "sourceBook": "Races"
   },
   {
@@ -5826,7 +5833,7 @@
     "table": 1,
     "cost": 25,
     "index": "Ward Pact with Glass",
-    "desc": "Ward Pact with Glass: Is no longer outlawed by Race, this does not remove any class restrictions, or outlawhoods separately received. This ability additionally costs a Ward Pact.",
+    "desc": "Is no longer outlawed by Race, this does not remove any class restrictions, or outlawhoods separately received. This ability additionally costs a Ward Pact.",
     "sourceBook": "Races"
   },
   {
@@ -5840,7 +5847,7 @@
     "table": 1,
     "cost": 40,
     "index": "Sturdy Stock",
-    "desc": "Sturdy Stock – The Dwarf now calculates their locational life as half their permanent TBLP (Before items and temporary abilities)",
+    "desc": "The Dwarf now calculates their locational life as half their permanent TBLP (Before items and temporary abilities)",
     "sourceBook": "Races"
   },
   {
@@ -5855,7 +5862,7 @@
     "table": 1,
     "cost": 75,
     "index": "Pure Humanity 1",
-    "desc": "Pure Humanity 1 - Acquisition of this ability precludes the purchase or possession of a multi-race, even a multi-race which is a ‘pure’ or ‘enhanced’ version of basic humanity. The ability is bought in three stages, and must be bought before other abilities are acquired once available. Should the character have several abilities with this requirement, then they may be bought in any order desired. With each acquisition of this ability the character gains +1 level of resistance to stopping effects of a Physical, Magical, Earthpower or Neuronic nature, but not against a Spiritual source. The character also gains one use of the War Cry ability per acquisition of Pure Humanity. Also a character with Pure Humanity gains the benefits of Fated Hero (As table 1 ability)",
+    "desc": "Acquisition of this ability precludes the purchase or possession of a multi-race, even a multi-race which is a ‘pure’ or ‘enhanced’ version of basic humanity. The ability is bought in three stages, and must be bought before other abilities are acquired once available. Should the character have several abilities with this requirement, then they may be bought in any order desired. With each acquisition of this ability the character gains +1 level of resistance to stopping effects of a Physical, Magical, Earthpower or Neuronic nature, but not against a Spiritual source. The character also gains one use of the War Cry ability per acquisition of Pure Humanity. Also a character with Pure Humanity gains the benefits of Fated Hero (As table 1 ability)",
     "sourceBook": "Races"
   },
   {
@@ -5869,8 +5876,8 @@
     ],
     "table": 1,
     "cost": 75,
-    "index": "Scion of Primus 1 –Restrictions as",
-    "desc": "Scion of Primus 1 –Restrictions as per Pure Humanity, benefits: With each acquisition of this ability the character gains +1 level of resistance to stopping effects of a power base for which racial innates are gained from 1st to 8th level as well as physical resistance levels. e.g. an Elf would apply this to Magic and Physical, a Farfolk would apply it to Neuronics and Physical. In the case of a race with no racial innate abilities (e.g. an Ogre) the benefit applies solely to Physical stopping effects but grants +2 resistance levels. Additionally all gain a use of the War Cry ability per acquisition of Scion of Primus. Also a character with Scion of Primus gains the benefit of Fated Hero (as per the Table 1 ability).",
+    "index": "Scion of Primus 1",
+    "desc": "Restrictions as per Pure Humanity, benefits: With each acquisition of this ability the character gains +1 level of resistance to stopping effects of a power base for which racial innates are gained from 1st to 8th level as well as physical resistance levels. e.g. an Elf would apply this to Magic and Physical, a Farfolk would apply it to Neuronics and Physical. In the case of a race with no racial innate abilities (e.g. an Ogre) the benefit applies solely to Physical stopping effects but grants +2 resistance levels. Additionally all gain a use of the War Cry ability per acquisition of Scion of Primus. Also a character with Scion of Primus gains the benefit of Fated Hero (as per the Table 1 ability).",
     "sourceBook": "Races"
   },
   {
@@ -5889,7 +5896,7 @@
     "table": 1,
     "cost": 10,
     "index": "Peon",
-    "desc": "Peon- This must be the first ability bought post 8th. If other abilities have been selected which must also be the first ability bought post 8th, then you may choose which order to purchase them in as long as all are bought before any other abilities are purchased. The character loses all restore to life chance remaining to them, no longer able to hold the vitae of Primus within themselves. May not rebirth or have been rebirthed. The character is so entwined with the fabric of Primus that should they be separated from Primus for more than fourteen days their memories twist and turn such that their new plane of existence appears to have been their home for as long as they can remember. To return to Primus does not cause a return of these lost memories, simply substituting another new set. Effectively the personality dies and is replaced with a new one, not played by the same player. If a peon achieves table 7, they may buy 20% vitae (restore to life chance) for 60 points, once for each table reached from table 7 upwards (i.e. a table 10 peon could have acquired 80% vitae). Such restorations must take place on Primus. It is not envisaged that many characters will take this option, but it is included here for completeness sake. Alternatively the character (as all conventional peons do) can choose to have ‘peon’ added to their race from 1st level, only paying the 10 points if they reach 8th level, at which time it must be the first ability they buy.",
+    "desc": "This must be the first ability bought post 8th. If other abilities have been selected which must also be the first ability bought post 8th, then you may choose which order to purchase them in as long as all are bought before any other abilities are purchased. The character loses all restore to life chance remaining to them, no longer able to hold the vitae of Primus within themselves. May not rebirth or have been rebirthed. The character is so entwined with the fabric of Primus that should they be separated from Primus for more than fourteen days their memories twist and turn such that their new plane of existence appears to have been their home for as long as they can remember. To return to Primus does not cause a return of these lost memories, simply substituting another new set. Effectively the personality dies and is replaced with a new one, not played by the same player. If a peon achieves table 7, they may buy 20% vitae (restore to life chance) for 60 points, once for each table reached from table 7 upwards (i.e. a table 10 peon could have acquired 80% vitae). Such restorations must take place on Primus. It is not envisaged that many characters will take this option, but it is included here for completeness sake. Alternatively the character (as all conventional peons do) can choose to have ‘peon’ added to their race from 1st level, only paying the 10 points if they reach 8th level, at which time it must be the first ability they buy.",
     "sourceBook": "Races"
   },
   {
@@ -5904,7 +5911,7 @@
     "table": 1,
     "cost": 25,
     "index": "Position of Power",
-    "desc": "Position of Power – The individual has acquired a position of power (through CC contract, previous dungeons, being awarded it or similar) and can produce documents to prove such. If the character loses their position then the ability becomes redundant until the gain a new one. One purchase of this ability covers as many positions of power as owned.",
+    "desc": "The individual has acquired a position of power (through CC contract, previous dungeons, being awarded it or similar) and can produce documents to prove such. If the character loses their position then the ability becomes redundant until the gain a new one. One purchase of this ability covers as many positions of power as owned.",
     "sourceBook": "Races"
   },
   {
@@ -5931,8 +5938,8 @@
     ],
     "table": 7,
     "cost": 30,
-    "index": "Dwarf Toughened Skin +1",
-    "desc": "Toughened Skin, gives Dwarf +1 P.A.C. innate",
+    "index": "Dwarf Toughened Skin",
+    "desc": "gives Dwarf +1 P.A.C. innate",
     "sourceBook": "Races"
   },
   {
@@ -5945,10 +5952,10 @@
     ],
     "table": 7,
     "cost": 65,
-    "index": "Dwarf Toughened Skin +2",
-    "desc": "Toughened Skin, gives Dwarf +2 (total) P.A.C. innate from +1",
+    "index": "Dwarf Toughened Skin II",
+    "desc": "Gives Dwarf +2 (total) P.A.C. innate from +1",
     "sourceBook": "Races",
-    "preReqs": ["Dwarf Toughened Skin +1"]
+    "preReqs": ["Dwarf Toughened Skin"]
   },
   {
     "available": [
@@ -5975,7 +5982,7 @@
     "table": 8,
     "cost": 60,
     "index": "Make and Eat Lembas",
-    "desc": "Make and Eat Lembas - as per Faerie ability. Non-stacking with original racial ability to make lembas, if possessed",
+    "desc": "as per Faerie ability. Non-stacking with original racial ability to make lembas, if possessed",
     "sourceBook": "Races"
   },
   {
@@ -6020,7 +6027,7 @@
     "table": 8,
     "cost": 100,
     "index": "Pure Soul",
-    "desc": "Pure Soul – Levels of Resistance from Pure Humanity now apply to all effects, including spiritual.",
+    "desc": "Levels of Resistance from Pure Humanity now apply to all effects, including spiritual.",
     "sourceBook": "Races"
   },
   {
@@ -6035,7 +6042,7 @@
     "table": 8,
     "cost": 100,
     "index": "Primal Binding",
-    "desc": "Primal Binding – Each level of Scion of Primus now grants + 1 level of resistance to all effects, rather than dependant on the owners base race.",
+    "desc": "Each level of Scion of Primus now grants + 1 level of resistance to all effects, rather than dependant on the owners base race.",
     "sourceBook": "Races"
   },
   {
@@ -6049,7 +6056,7 @@
     "table": 9,
     "cost": 40,
     "index": "Affinity with Nature",
-    "desc": "Affinity with Nature - If 10 seconds preparation to receive the earthpower is spent in natural surroundings of any sort, the next Druidic Heal cures 24/24 on self, from any source. This is non-stacking with any other increase in base effect",
+    "desc": "If 10 seconds preparation to receive the earthpower is spent in natural surroundings of any sort, the next Druidic Heal cures 24/24 on self, from any source. This is non-stacking with any other increase in base effect",
     "sourceBook": "Races"
   },
   {
@@ -6097,7 +6104,7 @@
     "table": 9,
     "cost": 75,
     "index": "Pure Humanity 2",
-    "desc": "Pure Humanity 2 – See Table 1 ability for details.",
+    "desc": "+1 additional level of resistance to stopping effects of a Physical, Magical, Earthpower or Neuronic nature, but not against a Spiritual source. The character also gains one use of the War Cry ability per acquisition of Pure Humanity. Also a character with Pure Humanity gains the benefits of Fated Hero",
     "sourceBook": "Races",
     "preReqs": ["Pure Humanity 1"]
   },
@@ -6113,7 +6120,7 @@
     "table": 9,
     "cost": 75,
     "index": "Scion of Primus 2",
-    "desc": "Scion of Primus 2 – See Table 1 ability for more details",
+    "desc": "Restrictions as per Pure Humanity, benefits: \nWith each acquisition of this ability the character gains +1 level of resistance to stopping effects of a power base for which racial innates are gained from 1st to 8th level as well as physical resistance levels. e.g. an Elf would apply this to Magic and Physical, a Farfolk would apply it to Neuronics and Physical. In the case of a race with no racial innate abilities (e.g. an Ogre) the benefit applies solely to Physical stopping effects but grants +2 resistance levels. \nAdditionally all gain a use of the War Cry ability per acquisition of Scion of Primus. \nAlso a character with Scion of Primus gains the benefit of Fated Hero (as per the Table 1 ability).",
     "sourceBook": "Races",
     "preReqs": ["Scion of Primus 1 –Restrictions as"]
   },
@@ -6135,7 +6142,7 @@
     "table": 9,
     "cost": 50,
     "index": "Spiritual Evolution",
-    "desc": "Spiritual Evolution: May multi-class to the race “Spiritual Vessel”. Loses the ability to take a race to 8th level.",
+    "desc": "May multi-class to the race “Spiritual Vessel”. Loses the ability to take a race to 8th level.",
     "sourceBook": "Races"
   },
   {
@@ -6150,7 +6157,7 @@
     "table": 9,
     "cost": 50,
     "index": "Immortality",
-    "desc": "Immortality: May multi-class to the race Immortal. Loses the ability to take a race to 8th level.",
+    "desc": "May multi-class to the race Immortal. Loses the ability to take a race to 8th level.",
     "sourceBook": "Races"
   },
   {
@@ -6164,7 +6171,7 @@
     "table": 9,
     "cost": 50,
     "index": "Draconic Binding",
-    "desc": "Draconic Binding: May Multi-class to the race Vessel of the Dragons. Loses the ability to take a race to 8th level.",
+    "desc": "May Multi-class to the race Vessel of the Dragons. Loses the ability to take a race to 8th level.",
     "sourceBook": "Races"
   },
   {
@@ -6179,7 +6186,7 @@
     "table": 9,
     "cost": 50,
     "index": "Fey Like Nature",
-    "desc": "Fey Like Nature: May multi-class to the race “Elder Fey”. Loses the ability to take a race to 8th level.",
+    "desc": "May multi-class to the race “Elder Fey”. Loses the ability to take a race to 8th level.",
     "sourceBook": "Races"
   },
   {
@@ -6199,7 +6206,7 @@
     "table": 9,
     "cost": 50,
     "index": "Titanic",
-    "desc": "Titanic: May multi-class to the race “Titan”. Loses the ability to take a race to 8th level.",
+    "desc": "May multi-class to the race “Titan”. Loses the ability to take a race to 8th level.",
     "sourceBook": "Races"
   },
   {
@@ -6229,7 +6236,7 @@
     "table": 10,
     "cost": 100,
     "index": "Foul Touch",
-    "desc": "\"Foul Touch\", inflict by blow, a spiritual evil aligned touch effect inflicting damage equal to the undead dismiss level.",
+    "desc": "inflict 'foul touch' by blow, a spiritual evil aligned touch effect inflicting damage equal to the undead dismiss level.",
     "sourceBook": "Races"
   },
   {
@@ -6244,7 +6251,7 @@
     "table": 12,
     "cost": 75,
     "index": "Pure Humanity 3",
-    "desc": "Pure Humanity 3 – See Table 1 for description",
+    "desc": "See Table 1 for description",
     "sourceBook": "Races",
     "preReqs": ["Pure Humanity 2", "Pure Humanity 1"]
   },
@@ -7277,8 +7284,8 @@
     ],
     "table": 7,
     "cost": 65,
-    "preReqs": ["+1 Weapon Mastery Dagger"],
-    "index": "+2 Weapon Mastery Dagger",
+    "preReqs": ["1st Weapon Mastery Dagger"],
+    "index": "2nd Weapon Mastery Dagger",
     "desc": "Now has +2 masteries with dagger.",
     "sourceBook": "At the sharp end"
   },
@@ -7581,7 +7588,7 @@
     ],
     "table": 9,
     "cost": 65,
-    "preReqs": ["1st Backstab", "+1 Weapon Mastery", "+1 Strength"],
+    "preReqs": ["1st Backstab", "1st Weapon Mastery", "1st grade of Strength"],
     "index": "Dirty Fighter",
     "desc": "Grants +6 points of damage from behind. This does not modify max damage in any way and does not stack with the Warrior ability Veteran Fighter.",
     "sourceBook": "At the sharp end"
@@ -7596,8 +7603,8 @@
     ],
     "table": 9,
     "cost": 75,
-    "preReqs": ["+1 Weapon Mastery"],
-    "index": "Enhanced +2 Weapon Mastery",
+    "preReqs": ["1st Weapon Mastery"],
+    "index": "2nd Weapon Mastery",
     "desc": "Now has +2 masteries in one nominated weapon type.",
     "sourceBook": "At the sharp end"
   },
@@ -12708,8 +12715,8 @@
     ],
     "table": 4,
     "cost": 40,
-    "index": "Weapon Mastery Pure",
-    "desc": "Grants +1 weapon mastery in one class of pure spirit weapons.",
+    "index": "1st Weapon Mastery (Pure)",
+    "desc": "Grants 1st weapon mastery in one class of pure spirit weapons.",
     "sourceBook": "Words From Above",
     "CanAddMultiple": true
   },
@@ -22082,7 +22089,7 @@
       }
     ],
     "index": "2nd Weapon Mastery",
-    "desc": "Grants +2 Weapon Mastery in a weapon in which 1st Weapon Mastery is already owned.",
+    "desc": "Grants 2nd Weapon Mastery in a weapon in which 1st Weapon Mastery is already owned.",
     "table": 2,
     "cost": 55,
     "CanAddMultiple": true,
@@ -22099,7 +22106,7 @@
       }
     ],
     "index": "2nd Grade of Strength",
-    "desc": "Grants 2nd Grade of Strength, from 1st Grade of Strength.",
+    "desc": "Each grade of Strength allows the character to inflict one additional grade of damage [still limited by maximum damage]. It also allows the possessor to be able to ‘carry’ a single normal person / load by placing both of their hands on the target. If two grades of strength are possessed it is possible to carry a person in a single handgrip, or two people with one in each hand. Strength being used to carry things cannot at the same time be used to increase the damage grade called.",
     "table": 2,
     "cost": 80,
     "preReqs": ["1st Grade of Strength"],
@@ -22156,7 +22163,7 @@
       }
     ],
     "index": "Puissant d'Armes",
-    "desc": "When fighting a target using a Rage ability, reduces the Rage modifier by 25%. Requires +2 Weapon Mastery in the weapon used.",
+    "desc": "When fighting a target using a Rage ability, reduces the Rage modifier by 25%. Requires 2nd Weapon Mastery in the weapon used.",
     "table": 5,
     "cost": 40,
     "preReqs": ["2nd Weapon Mastery"],
@@ -22236,7 +22243,7 @@
     "cost": 35,
     "CanAddMultiple": true,
     "maxAvailable": "*",
-    "preReqs": ["+2 Strength"],
+    "preReqs": ["2nd grade of Strength"],
     "sourceBook": "Engarde"
   },
   {
@@ -22639,7 +22646,7 @@
     "desc": "Grants +6 base damage (+1 damage grade, not max damage). Does not stack with Dirty Fighter.",
     "table": 9,
     "cost": 50,
-    "preReqs": ["+1 Weapon Mastery", "+1 Strength"],
+    "preReqs": ["1st Weapon Mastery", "1st grade of Strength"],
     "sourceBook": "Engarde"
   },
   {

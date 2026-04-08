@@ -27,7 +27,8 @@ public static class BattleboardItemEffectResolver
             resistance,
             immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList(),
             multipliers,
-            infiniteResistanceTypes);
+            infiniteResistanceTypes,
+            new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
     }
 
     public static async Task<BattleboardAdvancementEffects> ResolveAsync(
@@ -42,7 +43,12 @@ public static class BattleboardItemEffectResolver
         var immunities = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         if (abilityList.Count == 0)
-            return new BattleboardAdvancementEffects(resistance, immunities.ToList(), multipliers, infiniteResistanceTypes);
+            return new BattleboardAdvancementEffects(
+                resistance,
+                immunities.ToList(),
+                multipliers,
+                infiniteResistanceTypes,
+                new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
 
         try
         {
@@ -121,7 +127,8 @@ public static class BattleboardItemEffectResolver
             resistance,
             immunities.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToList(),
             multipliers,
-            infiniteResistanceTypes);
+            infiniteResistanceTypes,
+            new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
     }
 
     private static IEnumerable<CalcResult> EnumerateItemAbilities(

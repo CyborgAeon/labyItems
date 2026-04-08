@@ -160,8 +160,15 @@ public partial class CharacterReviewPage : ContentPage
     {
         await CloseActionMenuIfOpenAsync();
 
-        if (_vm.ExportToExcelCommand.CanExecute(null))
-            _vm.ExportToExcelCommand.Execute(null);
+        var choicesComplete = await GuildBenefitChoicePromptHelper.EnsureChoicesCompletedAsync(
+            this,
+            _vm.GuildsVm,
+            refreshAfterSelection: _vm.RefreshReviewAsync,
+            actionLabel: "exporting the battleboard");
+        if (!choicesComplete)
+            return;
+
+        await _vm.DownloadBattleboardAsExcelAsync();
     }
 
     private async void OnAdvanceClicked(object sender, EventArgs e)
@@ -173,6 +180,15 @@ public partial class CharacterReviewPage : ContentPage
     private async void OnBattleboardClicked(object sender, EventArgs e)
     {
         await CloseActionMenuIfOpenAsync();
+
+        var choicesComplete = await GuildBenefitChoicePromptHelper.EnsureChoicesCompletedAsync(
+            this,
+            _vm.GuildsVm,
+            refreshAfterSelection: _vm.RefreshReviewAsync,
+            actionLabel: "opening the battleboard");
+        if (!choicesComplete)
+            return;
+
         await NavigateAwayFromSummaryAsync(new BattleboardPage(_draft));
     }
 

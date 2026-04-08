@@ -86,7 +86,8 @@
 
         <CollectionView Grid.Row="3"
                         ItemsSource="{Binding FilteredGuilds}"
-                        SelectionMode="None">
+                        SelectionMode="None"
+                        ItemSizingStrategy="MeasureAllItems">
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>

@@ -3,6 +3,7 @@
     x:Class="labyItems.Pages.Characters.GuildBenefitSelectionPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
     Title="Choose guild benefit"
     Shell.NavBarIsVisible="True"
     BackgroundColor="White">
@@ -12,57 +13,145 @@
           RowSpacing="12">
 
         <VerticalStackLayout Spacing="4">
-            <Label Text="Choose one guild benefit"
+            <Label Text="Choose guild benefits"
                    FontAttributes="Bold"
                    FontSize="16"/>
-            <Label Text="Review each option and tap the one you want."
+            <Label Text="Set choices now. Higher-tier sections can still be selected early."
                    FontSize="13"
                    Opacity="0.7"/>
+            <Label Text="{Binding Header}"
+                   FontSize="13"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource SubtleTextColor}"/>
         </VerticalStackLayout>
 
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Spacing="12"
-                                 BindableLayout.ItemsSource="{Binding Options}">
+                                 BindableLayout.ItemsSource="{Binding Sections}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Frame
-                            Padding="12"
-                            CornerRadius="12"
-                            HasShadow="False"
-                            BorderColor="{StaticResource SurfaceBorderColor}"
-                            BackgroundColor="White">
-                            <Grid ColumnDefinitions="*,Auto"
-                                  RowDefinitions="Auto,Auto"
-                                  ColumnSpacing="8">
-                                <VerticalStackLayout Spacing="4">
-                                    <Label Text="{Binding Label}"
-                                           FontAttributes="Bold"
-                                           FontSize="14"/>
-                                    <VerticalStackLayout Spacing="2"
-                                                         Padding="0,4,0,0"
-                                                         BindableLayout.ItemsSource="{Binding Lines}">
+                        <Frame Padding="12"
+                               CornerRadius="12"
+                               HasShadow="False"
+                               BorderColor="{StaticResource SurfaceBorderColor}"
+                               BackgroundColor="White">
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="8">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="{Binding TierTitle}"
+                                               FontAttributes="Bold"
+                                               FontSize="14"/>
+                                        <Label Text="{Binding AvailabilityText}"
+                                               FontSize="11"
+                                               Opacity="0.75"/>
+                                    </VerticalStackLayout>
+
+                                    <Button Grid.Column="1"
+                                            Text="{Binding ChevronText}"
+                                            Style="{StaticResource ChevronButtonStyle}"
+                                            WidthRequest="28"
+                                            HeightRequest="28"
+                                            Padding="0"
+                                            Command="{Binding ToggleExpandedCommand}"/>
+                                </Grid>
+
+                                <controls:AnimatedExpandView IsExpanded="{Binding IsExpanded}"
+                                                             AnimationName="GuildChoiceTierExpand">
+                                    <VerticalStackLayout Spacing="8"
+                                                         BindableLayout.ItemsSource="{Binding ChoiceRows}">
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Text="{Binding .}"
-                                                       FontSize="12"
-                                                       Opacity="0.75"
-                                                       LineBreakMode="WordWrap"/>
+                                                <Border Stroke="{StaticResource SoftStrokeColor}"
+                                                        StrokeThickness="1"
+                                                        StrokeShape="RoundRectangle 8"
+                                                        BackgroundColor="#FFFFFF"
+                                                        Padding="10">
+                                                    <VerticalStackLayout Spacing="8">
+                                                        <Grid ColumnDefinitions="*,Auto"
+                                                              ColumnSpacing="8">
+                                                            <Label Text="{Binding RowTitle}"
+                                                                   FontAttributes="Bold"
+                                                                   FontSize="13"/>
+                                                            <Label Grid.Column="1"
+                                                                   Text="Selected"
+                                                                   FontSize="11"
+                                                                   FontAttributes="Bold"
+                                                                   TextColor="{StaticResource AccentMaroonColor}"
+                                                                   IsVisible="{Binding HasSelection}"/>
+                                                        </Grid>
+
+                                                        <VerticalStackLayout Spacing="6"
+                                                                             BindableLayout.ItemsSource="{Binding Options}">
+                                                            <BindableLayout.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Frame Padding="12"
+                                                                           CornerRadius="10"
+                                                                           HasShadow="False"
+                                                                           BorderColor="{StaticResource SurfaceBorderColor}"
+                                                                           BackgroundColor="White">
+                                                                        <Frame.Triggers>
+                                                                            <DataTrigger TargetType="Frame"
+                                                                                         Binding="{Binding IsSelected}"
+                                                                                         Value="True">
+                                                                                <Setter Property="BorderColor"
+                                                                                        Value="{StaticResource AccentMaroonColor}"/>
+                                                                                <Setter Property="BackgroundColor"
+                                                                                        Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
+                                                                            </DataTrigger>
+                                                                        </Frame.Triggers>
+                                                                        <Grid ColumnDefinitions="*,Auto"
+                                                                              RowDefinitions="Auto,Auto"
+                                                                              ColumnSpacing="8">
+                                                                            <VerticalStackLayout Spacing="4">
+                                                                                <Label Text="{Binding Label}"
+                                                                                       FontAttributes="Bold"
+                                                                                       FontSize="14"/>
+                                                                                <VerticalStackLayout Spacing="2"
+                                                                                                     Padding="0,4,0,0"
+                                                                                                     BindableLayout.ItemsSource="{Binding Lines}">
+                                                                                    <BindableLayout.ItemTemplate>
+                                                                                        <DataTemplate>
+                                                                                            <Label Text="{Binding .}"
+                                                                                                   FontSize="12"
+                                                                                                   Opacity="0.75"
+                                                                                                   LineBreakMode="WordWrap"/>
+                                                                                        </DataTemplate>
+                                                                                    </BindableLayout.ItemTemplate>
+                                                                                </VerticalStackLayout>
+                                                                            </VerticalStackLayout>
+
+                                                                            <Button Grid.Row="0"
+                                                                                    Grid.Column="1"
+                                                                                    Grid.RowSpan="2"
+                                                                                    Text="{Binding SelectButtonText}"
+                                                                                    Padding="10,6"
+                                                                                    FontSize="12"
+                                                                                    VerticalOptions="Center"
+                                                                                    Command="{Binding SelectCommand}"
+                                                                                    BackgroundColor="{StaticResource Primary}"
+                                                                                    TextColor="White">
+                                                                                <Button.Triggers>
+                                                                                    <DataTrigger TargetType="Button"
+                                                                                                 Binding="{Binding IsSelected}"
+                                                                                                 Value="True">
+                                                                                        <Setter Property="BackgroundColor"
+                                                                                                Value="{StaticResource AccentMaroonColor}"/>
+                                                                                    </DataTrigger>
+                                                                                </Button.Triggers>
+                                                                            </Button>
+                                                                        </Grid>
+                                                                    </Frame>
+                                                                </DataTemplate>
+                                                            </BindableLayout.ItemTemplate>
+                                                        </VerticalStackLayout>
+                                                    </VerticalStackLayout>
+                                                </Border>
                                             </DataTemplate>
                                         </BindableLayout.ItemTemplate>
                                     </VerticalStackLayout>
-                                </VerticalStackLayout>
-
-                                <Button Grid.Row="0"
-                                        Grid.Column="1"
-                                        Grid.RowSpan="2"
-                                        Text="Select"
-                                        Padding="10,6"
-                                        FontSize="12"
-                                        VerticalOptions="Center"
-                                        Command="{Binding SelectCommand}"
-                                        BackgroundColor="{StaticResource Primary}"
-                                        TextColor="White"/>
-                            </Grid>
+                                </controls:AnimatedExpandView>
+                            </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>

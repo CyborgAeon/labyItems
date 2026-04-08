@@ -3,6 +3,7 @@ using System.Windows.Input;
 using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Services;
+using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
 
 namespace labyItems.Pages.Characters;
@@ -33,7 +34,6 @@ public partial class GuildCardView : ContentView
     }
 
     private INotifyPropertyChanged? _boundVm;
-    private CancellationTokenSource? _expandCts;
 
     protected override void OnBindingContextChanged()
     {
@@ -42,25 +42,23 @@ public partial class GuildCardView : ContentView
 
         base.OnBindingContextChanged();
 
-        _expandCts?.Cancel();
         _boundVm = BindingContext as INotifyPropertyChanged;
         if (_boundVm != null)
             _boundVm.PropertyChanged += OnVmPropertyChanged;
 
-        if (BindingContext is GuildCardVm vm)
+        ApplyExpandedState((BindingContext as GuildCardVm)?.IsExpanded == true);
+    }
+
+    protected override void OnParentSet()
+    {
+        if (Parent == null)
         {
-            ExpandedContent.AbortAnimation("expand");
-            ExpandedContent.IsVisible = vm.IsExpanded;
-            ExpandedContent.HeightRequest = -1;
-            ExpandedContent.Opacity = 1;
+            if (_boundVm != null)
+                _boundVm.PropertyChanged -= OnVmPropertyChanged;
+            _boundVm = null;
         }
-        else
-        {
-            ExpandedContent.AbortAnimation("expand");
-            ExpandedContent.IsVisible = false;
-            ExpandedContent.HeightRequest = -1;
-            ExpandedContent.Opacity = 1;
-        }
+
+        base.OnParentSet();
     }
 
     private void OnVmPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -69,7 +67,11 @@ public partial class GuildCardView : ContentView
             Dispatcher.Dispatch(async () => await AnimateSelectionAsync());
 
         if (e.PropertyName == nameof(GuildCardVm.IsExpanded))
-            Dispatcher.Dispatch(async () => await HandleExpandedChangedAsync());
+            Dispatcher.Dispatch(() =>
+            {
+                if (BindingContext is GuildCardVm vm)
+                    ApplyExpandedState(vm.IsExpanded);
+            });
     }
 
     private async Task AnimateSelectionAsync()
@@ -83,122 +85,13 @@ public partial class GuildCardView : ContentView
         }
     }
 
-    private async Task HandleExpandedChangedAsync()
-    {
-        if (BindingContext is not GuildCardVm vm) return;
-
-        _expandCts?.Cancel();
-        _expandCts = new CancellationTokenSource();
-        var token = _expandCts.Token;
-
-        try
-        {
-            if (vm.IsExpanded)
-            {
-                await AnimateExpandedContentAsync(expand: true, token);
-            }
-            else
-            {
-                await AnimateExpandedContentAsync(expand: false, token);
-            }
-        }
-        catch (TaskCanceledException)
-        {
-            // Ignore rapid expand/collapse interactions.
-        }
-        catch (OperationCanceledException)
-        {
-            // Ignore rapid expand/collapse interactions.
-        }
-        catch (Exception ex)
-        {
-            RuntimeLog.Write(
-                "GUILD_CARD_EXPAND",
-                $"Failed to animate guild card expand state for '{vm.Name}'.",
-                ex);
-
-            ExpandedContent.AbortAnimation("expand");
-            ExpandedContent.IsVisible = vm.IsExpanded;
-            ExpandedContent.HeightRequest = -1;
-            ExpandedContent.Opacity = 1;
-        }
-    }
-
-    private async Task AnimateExpandedContentAsync(bool expand, CancellationToken token)
+    private void ApplyExpandedState(bool expand)
     {
         if (ExpandedContent == null)
             return;
 
         ExpandedContent.AbortAnimation("expand");
-
-        if (expand)
-        {
-            ExpandedContent.IsVisible = true;
-            ExpandedContent.Opacity = 0;
-            ExpandedContent.HeightRequest = -1;
-
-            await Task.Yield();
-            await Task.Delay(1, token);
-
-            var width = CardExpandAnimationHelper.ResolveMeasureWidth(ExpandedContent, CardFrame, this);
-            var measured = width > 0
-                ? CardExpandAnimationHelper.MeasureContentHeight(ExpandedContent, width)
-                : -1;
-
-            if (measured <= 0)
-            {
-                ExpandedContent.Opacity = 1;
-                ExpandedContent.HeightRequest = -1;
-                return;
-            }
-
-            ExpandedContent.HeightRequest = 0;
-            ExpandedContent.Opacity = 0;
-            await CardExpandAnimationHelper.AnimateHeightAsync(
-                owner: this,
-                target: ExpandedContent,
-                animationName: "expand",
-                from: 0,
-                to: measured,
-                length: 240,
-                easing: Easing.CubicOut,
-                onStep: v => ExpandedContent.Opacity = Math.Min(1, v / measured),
-                cancellationToken: token);
-
-            if (token.IsCancellationRequested) return;
-
-            ExpandedContent.HeightRequest = -1;
-            ExpandedContent.Opacity = 1;
-            return;
-        }
-
-        if (!ExpandedContent.IsVisible)
-            return;
-
-        var startHeight = ExpandedContent.Height;
-        if (startHeight <= 0)
-        {
-            ExpandedContent.IsVisible = false;
-            ExpandedContent.HeightRequest = -1;
-            ExpandedContent.Opacity = 1;
-            return;
-        }
-
-        ExpandedContent.HeightRequest = startHeight;
-        await CardExpandAnimationHelper.AnimateHeightAsync(
-            owner: this,
-            target: ExpandedContent,
-            animationName: "expand",
-            from: startHeight,
-            to: 0,
-            length: 200,
-            easing: Easing.CubicIn,
-            onStep: v => ExpandedContent.Opacity = startHeight <= 0 ? 0 : Math.Max(0, v / startHeight),
-            cancellationToken: token);
-
-        if (token.IsCancellationRequested) return;
-
-        ExpandedContent.IsVisible = false;
+        ExpandedContent.IsVisible = expand;
         ExpandedContent.HeightRequest = -1;
         ExpandedContent.Opacity = 1;
     }
@@ -226,37 +119,48 @@ public partial class GuildCardView : ContentView
         await navigation.PushModalAsync(new NavigationPage(new MiracleCardPage(miracle)));
     }
 
-    private async void OnEditGuildBenefitOptionClicked(object sender, EventArgs e)
+    private async void OnGuildBenefitInfoClicked(object sender, EventArgs e)
     {
-        if (sender is not Button button || button.CommandParameter is not GuildBenefitOptionGroupVm group)
+        if (sender is not Button button || button.CommandParameter is not GuildBenefitRowVm row)
+            return;
+
+        var detailOptions = BuildBenefitDetailOptions(row);
+        if (detailOptions.Count == 0)
+            return;
+
+        GuildBenefitDetailOption? pickedOption;
+        var hostPage = ResolveHostPage();
+        if (detailOptions.Count == 1)
+        {
+            pickedOption = detailOptions[0];
+        }
+        else
+        {
+            if (hostPage == null)
+                return;
+
+            var labels = detailOptions
+                .Select(option => option.DisplayName)
+                .ToArray();
+            var picked = await hostPage.DisplayActionSheet("Guild benefit details", "Cancel", null, labels);
+            if (string.IsNullOrWhiteSpace(picked) || picked.Equals("Cancel", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            pickedOption = detailOptions.FirstOrDefault(option =>
+                option.DisplayName.Equals(picked, StringComparison.OrdinalIgnoreCase));
+            if (pickedOption == null)
+                return;
+        }
+
+        var abilityResult = await ResolveAbilityFromDefinitionAsync(pickedOption.Ability);
+        if (abilityResult == null)
             return;
 
         var navigation = ResolveNavigation();
         if (navigation == null)
             return;
 
-        var page = new GuildBenefitSelectionPage(new GuildBenefitChoiceSummaryRow(
-            displayText: group.SelectionKey,
-            selectionKey: group.SelectionKey,
-            options: group.Options.Select(o => new GuildBenefitChoiceOption(
-                BuildOptionLabel(o.Abilities),
-                o.Lines)).ToList(),
-            selectedIndex: group.SelectedIndex,
-            applySelection: selectedIndex =>
-            {
-                if (selectedIndex.HasValue
-                    && selectedIndex.Value > 0
-                    && selectedIndex.Value <= group.OptionLabels.Count)
-                {
-                    group.SelectedOption = group.OptionLabels[selectedIndex.Value - 1];
-                }
-                else
-                {
-                    group.SelectedOption = null;
-                }
-            }));
-
-        await navigation.PushModalAsync(new NavigationPage(page));
+        await navigation.PushAsync(new AbilityCardPage(abilityResult));
     }
 
     private INavigation? ResolveNavigation()
@@ -268,6 +172,115 @@ public partial class GuildCardView : ContentView
             return shellNav;
 
         return Application.Current?.MainPage?.Navigation;
+    }
+
+    private Page? ResolveHostPage()
+    {
+        Element? current = this;
+        while (current != null)
+        {
+            if (current is Page page)
+                return page;
+
+            current = current.Parent;
+        }
+
+        return Application.Current?.MainPage;
+    }
+
+    private static List<GuildBenefitDetailOption> BuildBenefitDetailOptions(GuildBenefitRowVm row)
+    {
+        var options = new List<GuildBenefitDetailOption>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var ability in row.Abilities ?? new List<AbilityDefinition>())
+        {
+            if (ability == null)
+                continue;
+
+            var displayName = (ability.Name ?? string.Empty).Trim();
+            if (displayName.Length == 0)
+                displayName = "Ability";
+
+            var dedupeKey = $"{displayName}|{ability.Key}|{ability.AbilityRef}";
+            if (!seen.Add(dedupeKey))
+                continue;
+
+            options.Add(new GuildBenefitDetailOption(displayName, ability));
+        }
+
+        return options;
+    }
+
+    private static async Task<EvolutionService.AbilityResult?> ResolveAbilityFromDefinitionAsync(AbilityDefinition? definition)
+    {
+        if (definition == null)
+            return null;
+
+        foreach (var lookupKey in EnumerateAbilityLookupKeys(definition))
+        {
+            var resolved = await AbilityDetailsLookupService.FindByIndexAsync(lookupKey);
+            if (resolved != null)
+                return resolved;
+
+            var specialisationMatch = await DetailCardLookupService.FindSpecialisationAbilityAsync(lookupKey);
+            if (specialisationMatch.Ability != null)
+                return ToAbilityResult(specialisationMatch.Ability, specialisationMatch.Key, lookupKey);
+        }
+
+        var fallbackKey = (definition.Key ?? definition.AbilityRef ?? definition.Name ?? string.Empty).Trim();
+        return ToAbilityResult(definition, definition.Key ?? definition.AbilityRef ?? string.Empty, fallbackKey);
+    }
+
+    private static IEnumerable<string> EnumerateAbilityLookupKeys(AbilityDefinition definition)
+    {
+        var candidates = new[]
+        {
+            definition.Key,
+            definition.AbilityRef,
+            definition.Name,
+            definition.UpdateKey,
+            definition.BattleboardNameOverride,
+            definition.OverwriteKey
+        };
+
+        foreach (var candidate in candidates)
+        {
+            var normalized = (candidate ?? string.Empty).Trim();
+            if (normalized.Length == 0)
+                continue;
+
+            yield return normalized;
+        }
+    }
+
+    private static EvolutionService.AbilityResult ToAbilityResult(
+        AbilityDefinition source,
+        string resolvedKey,
+        string requestedKey)
+    {
+        var name = (source.Name ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = (resolvedKey ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = (requestedKey ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = "Ability";
+
+        return new EvolutionService.AbilityResult
+        {
+            Index = name,
+            Description = source.Effect ?? string.Empty,
+            Cost = 0,
+            Table = 0,
+            AbilityRef = (source.Key ?? source.AbilityRef ?? string.Empty).Trim(),
+            Available = source.Source ?? "ALL",
+            CanBuyMultiple = false,
+            PreReqs = source.PreReqs is { Count: > 0 } preReqs
+                ? preReqs
+                : Array.Empty<string>(),
+            MaxAvailable = source.Count
+        };
     }
 
     private static string BuildOptionLabel(IEnumerable<AbilityDefinition> abilities)
@@ -285,4 +298,6 @@ public partial class GuildCardView : ContentView
 
         return $"{names[0]} +{names.Count - 1}";
     }
+
+    private sealed record GuildBenefitDetailOption(string DisplayName, AbilityDefinition Ability);
 }

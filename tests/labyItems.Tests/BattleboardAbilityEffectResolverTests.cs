@@ -89,4 +89,58 @@ public sealed class BattleboardAbilityEffectResolverTests : ServiceTestBase
         Assert.Contains("Spirit", resolved.InfiniteResistanceTypes);
         Assert.Contains("Neuro", resolved.InfiniteResistanceTypes);
     }
+
+    [Fact]
+    public async Task ResolveAsync_FromDraft_UsesRaceAndMultiRaceMetadata()
+    {
+        var draft = new CharacterDraft
+        {
+            Race = "Half Elf",
+            MultiRaceKey = "Spiritual Vessel",
+            MultiRaceLevel = 3
+        };
+
+        var resolved = await BattleboardAbilityEffectResolver.ResolveAsync(draft);
+
+        Assert.Equal(2, resolved.ResistanceMultipliers["Spirit"]);
+        Assert.Empty(resolved.ResistancePerSixths);
+    }
+
+    [Fact]
+    public async Task ResolveAsync_FromDraft_MindOverReality_AppliesPerSixthsToResistance()
+    {
+        var draft = new CharacterDraft
+        {
+            Race = "Half Elf",
+            MultiRaceKey = "Mind Over Reality",
+            MultiRaceLevel = 3
+        };
+
+        var resolved = await BattleboardAbilityEffectResolver.ResolveAsync(draft);
+
+        Assert.Equal(3, resolved.ResistancePerSixths["Magic"]);
+        Assert.Equal(3, resolved.ResistancePerSixths["Spirit"]);
+        Assert.DoesNotContain("Physical", resolved.ResistancePerSixths.Keys, StringComparer.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Neuro", resolved.ResistancePerSixths.Keys, StringComparer.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Magic", resolved.InfiniteResistanceTypes);
+        Assert.DoesNotContain("Spirit", resolved.InfiniteResistanceTypes);
+    }
+
+    [Fact]
+    public async Task ResolveAsync_FromDraft_LevelSixMindOverReality_GrantsInfiniteMagicAndSpiritResistance()
+    {
+        var draft = new CharacterDraft
+        {
+            Race = "Half Elf",
+            MultiRaceKey = "Mind Over Reality",
+            MultiRaceLevel = 6
+        };
+
+        var resolved = await BattleboardAbilityEffectResolver.ResolveAsync(draft);
+
+        Assert.Contains("Magic", resolved.InfiniteResistanceTypes);
+        Assert.Contains("Spirit", resolved.InfiniteResistanceTypes);
+        Assert.DoesNotContain("Physical", resolved.InfiniteResistanceTypes);
+        Assert.DoesNotContain("Neuro", resolved.InfiniteResistanceTypes);
+    }
 }

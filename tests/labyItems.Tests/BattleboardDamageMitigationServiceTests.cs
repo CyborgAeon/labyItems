@@ -20,6 +20,7 @@ public sealed class BattleboardDamageMitigationServiceTests : ServiceTestBase
             loc: 3,
             channel: "Magic",
             getResistanceMultiplier: ResolveMultiplier(multipliers),
+            getDamagePerSixthLevel: _ => 0,
             hasInfiniteResistance: _ => false,
             isMiracleSource: false,
             isMantic: false);
@@ -41,6 +42,7 @@ public sealed class BattleboardDamageMitigationServiceTests : ServiceTestBase
             loc: 2,
             channel: string.Empty,
             getResistanceMultiplier: _ => 1,
+            getDamagePerSixthLevel: _ => 0,
             hasInfiniteResistance: ResolveInfinite(infinite),
             isMiracleSource: true,
             isMantic: false);
@@ -62,6 +64,7 @@ public sealed class BattleboardDamageMitigationServiceTests : ServiceTestBase
             loc: 0,
             channel: "Spirit",
             getResistanceMultiplier: _ => 1,
+            getDamagePerSixthLevel: _ => 0,
             hasInfiniteResistance: ResolveInfinite(infinite),
             isMiracleSource: false,
             isMantic: false);
@@ -83,6 +86,7 @@ public sealed class BattleboardDamageMitigationServiceTests : ServiceTestBase
             loc: 2,
             channel: "Spirit",
             getResistanceMultiplier: _ => 1,
+            getDamagePerSixthLevel: _ => 0,
             hasInfiniteResistance: ResolveInfinite(infinite),
             isMiracleSource: true,
             isMantic: true);
@@ -104,6 +108,7 @@ public sealed class BattleboardDamageMitigationServiceTests : ServiceTestBase
             loc: 0,
             channel: "Spirit",
             getResistanceMultiplier: ResolveMultiplier(multipliers),
+            getDamagePerSixthLevel: _ => 0,
             hasInfiniteResistance: _ => false,
             isMiracleSource: true,
             isMantic: false);
@@ -125,7 +130,52 @@ public sealed class BattleboardDamageMitigationServiceTests : ServiceTestBase
             loc: 3,
             channel: "Neuronic",
             getResistanceMultiplier: _ => 1,
+            getDamagePerSixthLevel: _ => 0,
             hasInfiniteResistance: ResolveInfinite(infinite),
+            isMiracleSource: false,
+            isMantic: false);
+
+        Assert.Equal(0, tblp);
+        Assert.Equal(0, loc);
+    }
+
+    [Fact]
+    public void ApplyPostArmourMitigation_PerSixthDamageReduction_AppliesToMatchingChannel()
+    {
+        var perSixths = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Physical"] = 3
+        };
+
+        var (tblp, loc) = BattleboardDamageMitigationService.ApplyPostArmourMitigation(
+            tblp: 12,
+            loc: 5,
+            channel: "Physical",
+            getResistanceMultiplier: _ => 1,
+            getDamagePerSixthLevel: ResolveLevel(perSixths),
+            hasInfiniteResistance: _ => false,
+            isMiracleSource: false,
+            isMantic: false);
+
+        Assert.Equal(6, tblp);
+        Assert.Equal(3, loc);
+    }
+
+    [Fact]
+    public void ApplyPostArmourMitigation_PerSixthLevelSix_BlocksMatchingChannel()
+    {
+        var perSixths = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Magic"] = 6
+        };
+
+        var (tblp, loc) = BattleboardDamageMitigationService.ApplyPostArmourMitigation(
+            tblp: 12,
+            loc: 5,
+            channel: "Magic",
+            getResistanceMultiplier: _ => 1,
+            getDamagePerSixthLevel: ResolveLevel(perSixths),
+            hasInfiniteResistance: _ => false,
             isMiracleSource: false,
             isMantic: false);
 
@@ -135,6 +185,9 @@ public sealed class BattleboardDamageMitigationServiceTests : ServiceTestBase
 
     private static Func<string, int> ResolveMultiplier(IReadOnlyDictionary<string, int> values)
         => type => values.TryGetValue(type, out var value) ? Math.Max(1, value) : 1;
+
+    private static Func<string, int> ResolveLevel(IReadOnlyDictionary<string, int> values)
+        => type => values.TryGetValue(type, out var value) ? Math.Max(0, value) : 0;
 
     private static Func<string, bool> ResolveInfinite(IReadOnlySet<string> values)
         => type => values.Contains(type);
