@@ -13,9 +13,10 @@ public partial class CharacterReviewView : ContentView
 {
     private enum ReviewEditDestination
     {
-        Identity,
+        Details,
         Race,
-        Class
+        Class,
+        Specialisation
     }
 
     public static readonly BindableProperty ShowSaveButtonProperty = BindableProperty.Create(
@@ -231,7 +232,12 @@ public partial class CharacterReviewView : ContentView
 
     private async void OnEditIdentityClicked(object sender, EventArgs e)
     {
-        await NavigateToEditDestinationAsync(ReviewEditDestination.Identity);
+        await NavigateToEditDestinationAsync(ReviewEditDestination.Details);
+    }
+
+    private async void OnEditDetailsClicked(object sender, EventArgs e)
+    {
+        await NavigateToEditDestinationAsync(ReviewEditDestination.Details);
     }
 
     private async void OnEditRaceClicked(object sender, EventArgs e)
@@ -242,6 +248,11 @@ public partial class CharacterReviewView : ContentView
     private async void OnEditClassClicked(object sender, EventArgs e)
     {
         await NavigateToEditDestinationAsync(ReviewEditDestination.Class);
+    }
+
+    private async void OnEditSpecialisationClicked(object sender, EventArgs e)
+    {
+        await NavigateToEditDestinationAsync(ReviewEditDestination.Specialisation);
     }
 
     private async void OnGetBattleboardClicked(object sender, EventArgs e)
@@ -323,7 +334,7 @@ public partial class CharacterReviewView : ContentView
         var hostPage = ResolveHostPage();
         if (hostPage is Wizard)
         {
-            ApplyReviewEditDestination(vm, destination);
+            await vm.NavigateToEditTargetAsync(MapDestination(destination));
             return;
         }
 
@@ -335,31 +346,24 @@ public partial class CharacterReviewView : ContentView
         await nav.PushAsync(wizardPage);
 
         if (wizardPage.BindingContext is WizardVm wizardVm)
-            ApplyReviewEditDestination(wizardVm, destination);
+            await wizardVm.NavigateToEditTargetAsync(MapDestination(destination));
     }
 
-    private static void ApplyReviewEditDestination(WizardVm vm, ReviewEditDestination destination)
+    private static WizardEditTarget MapDestination(ReviewEditDestination destination)
     {
         switch (destination)
         {
-            case ReviewEditDestination.Identity:
-                NavigateToWizardStep(vm, 3);
-                break;
+            case ReviewEditDestination.Details:
+                return WizardEditTarget.Details;
             case ReviewEditDestination.Race:
-                vm.CharacterBuilderVm.TryMoveToRaceSelection();
-                NavigateToWizardStep(vm, 0);
-                break;
+                return WizardEditTarget.Race;
             case ReviewEditDestination.Class:
-                vm.CharacterBuilderVm.TryMoveToClassSelection();
-                NavigateToWizardStep(vm, 0);
-                break;
+                return WizardEditTarget.Class;
+            case ReviewEditDestination.Specialisation:
+                return WizardEditTarget.Specialisation;
+            default:
+                return WizardEditTarget.Details;
         }
-    }
-
-    private static void NavigateToWizardStep(WizardVm vm, int stepIndex)
-    {
-        if (vm.StepClickCommand?.CanExecute(stepIndex) == true)
-            vm.StepClickCommand.Execute(stepIndex);
     }
 
     private static string ExtractSpecialisationTitleFromSummary(string? summaryText)

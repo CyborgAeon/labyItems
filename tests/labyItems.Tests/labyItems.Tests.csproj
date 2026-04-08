@@ -24,6 +24,10 @@
 
   <ItemGroup>
     <Compile Include="../../labyItems/Helpers/WizardSpellRules.cs" Link="Source/WizardSpellRules.cs" />
+    <Compile Include="../../labyItems/Helpers/MagicColourExtensions.cs" Link="Source/MagicColourExtensions.cs" />
+    <Compile Include="../../labyItems/Helpers/WizardAbilityProgressionHelper.cs" Link="Source/WizardAbilityProgressionHelper.cs" />
+    <Compile Include="../../labyItems/Helpers/WizardSlotSelectionFormatter.cs" Link="Source/WizardSlotSelectionFormatter.cs" />
+    <Compile Include="../../labyItems/Helpers/CharacterDraftExtensions.cs" Link="Source/CharacterDraftExtensions.cs" />
     <Compile Include="../../labyItems/Helpers/MagicColourOppositionRules.cs" Link="Source/MagicColourOppositionRules.cs" />
     <Compile Include="../../labyItems/Controls/Pickers/EnumDisplayFormatter.cs" Link="Source/EnumDisplayFormatter.cs" />
     <Compile Include="../../labyItems/Controls/ContributionRow.cs" Link="Source/ContributionRow.cs" />

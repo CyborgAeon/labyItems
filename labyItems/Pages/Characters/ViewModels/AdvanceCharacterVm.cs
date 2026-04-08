@@ -2180,29 +2180,9 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
     {
         foreach (var token in WizardSpellRules.ParseWizardSelections(raw))
         {
-            if (TryMapRaceTokenToMagicColour(token, out var mappedColour))
+            if (WizardSpellRules.TryMapRaceTokenToMagicColour(token, out var mappedColour))
                 target.Add(mappedColour);
         }
-    }
-
-    private static bool TryMapRaceTokenToMagicColour(string? token, out MagicColours colour)
-    {
-        if (WizardSpellRules.TryParseMagicColour(token, out colour))
-            return true;
-
-        var normalized = NormalizeClassKey(token);
-        colour = normalized switch
-        {
-            "light" => MagicColours.White,
-            "dark" => MagicColours.Black,
-            "air" => MagicColours.Blue,
-            "earth" => MagicColours.Brown,
-            "fire" => MagicColours.Red,
-            "water" => MagicColours.Green,
-            _ => default
-        };
-
-        return normalized is "light" or "dark" or "air" or "earth" or "fire" or "water";
     }
 
     private HashSet<MagicColours> GetRaceRestrictedOppositeColours()
@@ -2363,7 +2343,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             return;
 
         var selectedColours = GetWizardColourSelections();
-        var listLabel = BuildBaseSpellListLabel(selectedColours);
+        var listLabel = WizardSpellRules.BuildBaseSpellListLabel(selectedColours);
 
         if (_draft.SpellLists == null)
             _draft.SpellLists = new List<SpellListDraft>();
@@ -2407,17 +2387,6 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         return _draft.SpellLists.FirstOrDefault(l =>
             !string.IsNullOrWhiteSpace(l?.Name)
             && l.Name.Contains("Spells", StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static string BuildBaseSpellListLabel(IReadOnlyList<string> selectedColours)
-    {
-        if (selectedColours == null || selectedColours.Count == 0)
-            return "Base Spells";
-
-        if (selectedColours.Count == 1)
-            return $"{selectedColours[0]} Spells";
-
-        return $"{string.Join(" / ", selectedColours)} Spells";
     }
 
     private void RebuildBaseSpellEntries(SpellListDraft target, IReadOnlyList<string> selectedColours)
@@ -2484,7 +2453,7 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
             if (used <= 0)
                 continue;
 
-            var colourValue = GetMagicColourColor(colour);
+            var colourValue = colour.ToColour();
             segments.Add(new SpecialistSlotSegmentVm(used, colourValue));
             legend.Add(new SpecialistSlotLegendVm(colour.ToString(), used, colourValue));
         }
@@ -2546,25 +2515,6 @@ public sealed class AdvanceCharacterVm : INotifyPropertyChanged
         return counts;
     }
 
-    private static Color GetMagicColourColor(MagicColours colour)
-        => colour switch
-        {
-            MagicColours.Red => Color.FromArgb("#EF4444"),
-            MagicColours.Blue => Color.FromArgb("#3B82F6"),
-            MagicColours.Green => Color.FromArgb("#10B981"),
-            MagicColours.Brown => Color.FromArgb("#8B5E3C"),
-            MagicColours.White => Color.FromArgb("#F3F4F6"),
-            MagicColours.Black => Color.FromArgb("#111827"),
-            MagicColours.Grey => Color.FromArgb("#9CA3AF"),
-            MagicColours.Gold => Color.FromArgb("#D4AF37"),
-            MagicColours.Bronze => Color.FromArgb("#CD7F32"),
-            MagicColours.Silver => Color.FromArgb("#C0C0C0"),
-            MagicColours.Ivory => Color.FromArgb("#F5F5DC"),
-            MagicColours.Ebony => Color.FromArgb("#2F1B0C"),
-            MagicColours.Jade => Color.FromArgb("#00A86B"),
-            MagicColours.Onyx => Color.FromArgb("#353839"),
-            _ => Color.FromArgb("#6B7280")
-        };
 
 
     private static string ExtractImportedSourceName(string? name)

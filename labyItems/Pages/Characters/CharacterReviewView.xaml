@@ -113,7 +113,24 @@
                                                   VerticalOptions="Center"
                                                   Clicked="OnEditClassClicked"/>
                                    </Grid>
-                                   <Label Text="{Binding AlignmentSummary}"/>
+                                   <Grid ColumnDefinitions="*,Auto"
+                                         ColumnSpacing="8">
+                                          <Label Text="{Binding AlignmentSummary}"
+                                                 VerticalTextAlignment="Center"/>
+                                          <Button Grid.Column="1"
+                                                  Text="&#xF1FC;"
+                                                  FontFamily="FASolid"
+                                                  FontSize="12"
+                                                  Padding="0"
+                                                  BackgroundColor="Transparent"
+                                                  TextColor="{StaticResource SubtleTextColor}"
+                                                  HeightRequest="18"
+                                                  WidthRequest="18"
+                                                  MinimumHeightRequest="0"
+                                                  MinimumWidthRequest="0"
+                                                  VerticalOptions="Center"
+                                                  Clicked="OnEditDetailsClicked"/>
+                                   </Grid>
                             </VerticalStackLayout>
                      </Frame>
 
@@ -171,12 +188,26 @@
                                                         Spacing="6">
                                           <BindableLayout.ItemTemplate>
                                                  <DataTemplate>
-                                                        <Grid ColumnDefinitions="*,Auto"
+                                                        <Grid ColumnDefinitions="*,Auto,Auto"
                                                               ColumnSpacing="8">
                                                                <Label Text="{Binding Text}"
                                                                       LineBreakMode="WordWrap"
                                                                       VerticalTextAlignment="Center"/>
                                                                <Button Grid.Column="1"
+                                                                       Text="&#xF1FC;"
+                                                                       FontFamily="FASolid"
+                                                                       FontSize="12"
+                                                                       Padding="0"
+                                                                       BackgroundColor="Transparent"
+                                                                       TextColor="{StaticResource SubtleTextColor}"
+                                                                       HeightRequest="18"
+                                                                       WidthRequest="18"
+                                                                       MinimumHeightRequest="0"
+                                                                       MinimumWidthRequest="0"
+                                                                       VerticalOptions="Center"
+                                                                       Clicked="OnEditSpecialisationClicked"
+                                                                       CommandParameter="{Binding .}"/>
+                                                               <Button Grid.Column="2"
                                                                        Text="&#xF05A;"
                                                                        FontFamily="FASolid"
                                                                        FontSize="12"

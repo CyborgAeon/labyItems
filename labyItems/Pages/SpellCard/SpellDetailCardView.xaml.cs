@@ -136,10 +136,10 @@ public partial class SpellDetailCardView : ContentView
     public bool ShowVerbalSeeMore => CanExpandVerbal && !IsVerbalExpanded;
     public bool ShowNotesSeeMore => CanExpandNotes && !IsNotesExpanded;
 
-    public string ColourDisplayText => BuildColourDisplayText(Spell?.colour);
+    public string ColourDisplayText => WizardSpellRules.BuildColourDisplayText(Spell?.colour);
     public string LevelDisplayText => $"Lvl {Math.Max(0, Spell?.level ?? 0)}";
 
-    public Color ColourCircleColor => ResolveColourCircleColor(Spell?.colour);
+    public Color ColourCircleColor => WizardSpellRules.ResolveColourCircleColor(Spell?.colour);
     public Color ColourCircleBorderColor => NeedsContrastBorder(ColourCircleColor)
         ? Color.FromArgb("#9CA3AF")
         : Color.FromArgb("#00000000");
@@ -410,81 +410,8 @@ public partial class SpellDetailCardView : ContentView
         ScheduleExpandabilityRefresh();
     }
 
-    private static string BuildColourDisplayText(string? rawColour)
-    {
-        if (TryResolveMagicColour(rawColour, out var parsed))
-            return parsed.ToString();
-
-        var fallback = GetFirstColourToken(rawColour);
-        if (fallback.Length == 0)
-            return "Unknown";
-
-        return Capitalize(fallback);
-    }
-
-    private static Color ResolveColourCircleColor(string? rawColour)
-    {
-        if (!TryResolveMagicColour(rawColour, out var parsed))
-            return Color.FromArgb("#9CA3AF");
-
-        return parsed switch
-        {
-            MagicColours.Red => Color.FromArgb("#EF4444"),
-            MagicColours.Blue => Color.FromArgb("#3B82F6"),
-            MagicColours.Green => Color.FromArgb("#10B981"),
-            MagicColours.Brown => Color.FromArgb("#8B5E3C"),
-            MagicColours.White => Color.FromArgb("#F3F4F6"),
-            MagicColours.Black => Color.FromArgb("#111827"),
-            MagicColours.Grey => Color.FromArgb("#9CA3AF"),
-            MagicColours.Gold => Color.FromArgb("#D4AF37"),
-            MagicColours.Bronze => Color.FromArgb("#CD7F32"),
-            MagicColours.Silver => Color.FromArgb("#C0C0C0"),
-            MagicColours.Ivory => Color.FromArgb("#F5F5DC"),
-            MagicColours.Ebony => Color.FromArgb("#2F1B0C"),
-            MagicColours.Jade => Color.FromArgb("#00A86B"),
-            MagicColours.Onyx => Color.FromArgb("#353839"),
-            _ => Color.FromArgb("#6B7280")
-        };
-    }
-
     private static bool NeedsContrastBorder(Color colour)
         => colour.Red > 0.90 && colour.Green > 0.90 && colour.Blue > 0.90;
-
-    private static bool TryResolveMagicColour(string? rawColour, out MagicColours colour)
-    {
-        colour = default;
-
-        var tokens = (rawColour ?? string.Empty)
-            .Split(new[] { '/', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-        foreach (var token in tokens)
-        {
-            if (TryParseMagicColour(token, out colour))
-                return true;
-        }
-
-        return TryParseMagicColour(rawColour, out colour);
-    }
-
-    private static bool TryParseMagicColour(string? value, out MagicColours colour)
-    {
-        colour = default;
-        if (string.IsNullOrWhiteSpace(value))
-            return false;
-
-        var normalized = value.Trim().Replace(" ", string.Empty);
-        return Enum.TryParse(normalized, ignoreCase: true, out colour);
-    }
-
-    private static string GetFirstColourToken(string? rawColour)
-    {
-        if (string.IsNullOrWhiteSpace(rawColour))
-            return string.Empty;
-
-        return rawColour
-            .Split(new[] { '/', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .FirstOrDefault() ?? string.Empty;
-    }
 
     private static string ReadOrFallback(string? value, string fallback)
     {

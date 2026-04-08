@@ -27,7 +27,7 @@ public static class AbilityOwnershipService
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private static readonly Regex WeaponMasteryGrantRegex = new(
-        @"^\s*(?:grants?|gains?|provides?)\s*\+?(?<grade>\d+)\s*(?:weapon\s*mastery|wm)\b",
+        @"^\s*(?:grants?|gains?)\s*\+?(?<grade>\d+)\s*(?:weapon\s*mastery|wm)\b",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private static readonly Regex StrengthRequirementRegex = new(

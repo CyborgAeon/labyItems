@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Controls;
@@ -16,6 +17,14 @@ using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.ApplicationModel.Communication;
 
 namespace labyItems.Pages.Characters.ViewModels;
+
+public enum WizardEditTarget
+{
+    Details = 0,
+    Race = 1,
+    Class = 2,
+    Specialisation = 3
+}
 
 public sealed class WizardVm : INotifyPropertyChanged
 {
@@ -457,6 +466,119 @@ public sealed class WizardVm : INotifyPropertyChanged
         SaveToWalletCommand?.ChangeCanExecute();
     }
 
+    public async Task NavigateToEditTargetAsync(WizardEditTarget target, CancellationToken cancellationToken = default)
+    {
+        if (!MainThread.IsMainThread)
+        {
+            await MainThread.InvokeOnMainThreadAsync(() => NavigateToEditTargetAsync(target, cancellationToken));
+            return;
+        }
+
+        try
+        {
+            await WaitForBuilderLoadAsync(cancellationToken);
+
+            if (Draft.IsRaceAndClassSelected)
+                await EnsureSpecialisationReadyAsync(cancellationToken);
+
+            var targetStep = ResolveTargetStep(target);
+            await NavigateToStepForEditAsync(targetStep, cancellationToken);
+
+            if (target == WizardEditTarget.Class)
+                CharacterBuilderVm.TryMoveToClassSelection();
+            else if (target == WizardEditTarget.Race)
+                CharacterBuilderVm.TryMoveToRaceSelection();
+
+            Raise(nameof(CanGoBack));
+            Raise(nameof(CanGoNext));
+            Raise(nameof(NextButtonText));
+        }
+        catch (OperationCanceledException)
+        {
+            // Ignore interrupted edit-navigation requests.
+        }
+    }
+
+    private static int ResolveTargetStep(WizardEditTarget target)
+        => target switch
+        {
+            WizardEditTarget.Specialisation => 1,
+            WizardEditTarget.Details => 3,
+            _ => 0
+        };
+
+    private async Task WaitForBuilderLoadAsync(CancellationToken cancellationToken)
+    {
+        const int maxAttempts = 30;
+        for (var attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (CharacterBuilderVm.AllClasses.Count > 0 && CharacterBuilderVm.AllRaces.Count > 0)
+                return;
+
+            await Task.Delay(80, cancellationToken);
+        }
+    }
+
+    private async Task EnsureSpecialisationReadyAsync(CancellationToken cancellationToken)
+    {
+        const int maxAttempts = 4;
+        for (var attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await CharacterBuilderVm.SpecialisationVm.ReloadAsync(cancellationToken);
+
+            if (!Draft.IsRaceAndClassSelected || CharacterBuilderVm.SpecialisationVm.IsComplete)
+                return;
+
+            await Task.Delay(60, cancellationToken);
+        }
+    }
+
+    private async Task NavigateToStepForEditAsync(int targetStep, CancellationToken cancellationToken)
+    {
+        var clampedTarget = Math.Clamp(targetStep, 0, StepSteps.Count - 1);
+        if (clampedTarget == CurrentStep)
+            return;
+
+        if (clampedTarget < CurrentStep)
+        {
+            await TryGoToStepImmediateAsync(clampedTarget);
+            return;
+        }
+
+        for (var step = CurrentStep + 1; step <= clampedTarget; step++)
+        {
+            var moved = false;
+            for (var attempt = 0; attempt < 10; attempt++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                moved = await TryGoToStepImmediateAsync(step);
+                if (moved)
+                    break;
+
+                await Task.Delay(80, cancellationToken);
+            }
+
+            if (!moved)
+                break;
+        }
+    }
+
+    private async Task<bool> TryGoToStepImmediateAsync(int targetIndex)
+    {
+        if (targetIndex == CurrentStep)
+            return true;
+
+        var moved = await _flow.TryTransitionAsync(targetIndex, deferEnter: false);
+        if (!moved)
+            return false;
+
+        CurrentStep = _flow.CurrentStep;
+        return true;
+    }
+
     private async Task OnBackAsync()
     {
         if (_isBackNavigationInProgress)
@@ -652,13 +774,13 @@ public sealed class WizardVm : INotifyPropertyChanged
         if (!classes.TryGetValue(classKey, out var classRecord) || classRecord?.Levels == null)
             return Array.Empty<LevelAbilityRowVm>();
 
-        var raceKey = ResolveRaceKeyForLifeScale(Draft);
+        var raceKey = Draft.ResolveRaceKeyForLifeScale();
         var lifeByLevel = await _creationDataService.GetLifeScaleAsync(raceKey, classKey);
 
         var rows = new List<LevelAbilityRowVm>(capacity: 8);
         for (var level = 1; level <= 8; level++)
         {
-            var abilities = GetAbilitiesForLevel(classRecord.Levels, level);
+            var abilities = WizardAbilityProgressionHelper.GetAbilitiesForLevel(classRecord.Levels, level);
             var body = lifeByLevel.Count >= level ? lifeByLevel[level - 1].Body.ToString() : string.Empty;
             var loc = lifeByLevel.Count >= level ? lifeByLevel[level - 1].Loc.ToString() : string.Empty;
             rows.Add(LevelAbilityRowBuilder.Build(level, abilities, body, loc));
@@ -681,7 +803,7 @@ public sealed class WizardVm : INotifyPropertyChanged
         if (!races.TryGetValue(raceKey, out var raceRecord) || raceRecord?.LevelledAbilities == null)
             return Array.Empty<LevelAbilityRowVm>();
 
-        return BuildRaceStageRows(raceRecord.LevelledAbilities);
+        return WizardAbilityProgressionHelper.BuildRaceStageRows(raceRecord.LevelledAbilities);
     }
 
     private void ApplyReviewLevelAbilityRows(
@@ -697,69 +819,6 @@ public sealed class WizardVm : INotifyPropertyChanged
         Raise(nameof(RaceLevelAbilityRows));
         Raise(nameof(HasRaceLevelAbilityRows));
         Raise(nameof(RaceLevelAbilityHeader));
-    }
-
-    private static IReadOnlyList<AbilityDefinition> GetAbilitiesForLevel(
-        Dictionary<string, List<AbilityDefinition>> levels,
-        int level)
-    {
-        if (levels == null || levels.Count == 0)
-            return Array.Empty<AbilityDefinition>();
-
-        foreach (var kvp in levels)
-        {
-            var parsedLevel = ExtractLevel(kvp.Key);
-            if (parsedLevel != level)
-                continue;
-
-            var abilities = kvp.Value?
-                .Where(def => def != null)
-                .ToList();
-
-            return abilities ?? new List<AbilityDefinition>();
-        }
-
-        return Array.Empty<AbilityDefinition>();
-    }
-
-    private static IReadOnlyList<LevelAbilityRowVm> BuildRaceStageRows(
-        Dictionary<string, List<AbilityDefinition>> levels)
-    {
-        if (levels == null || levels.Count == 0)
-            return Array.Empty<LevelAbilityRowVm>();
-
-        var grouped = new Dictionary<(ProgressionStageKind Kind, int Value), List<AbilityDefinition>>();
-
-        foreach (var entry in levels)
-        {
-            if (!CharacterProgressionTables.TryParseStage(entry.Key, out var stage)
-                || !stage.IsValid)
-            {
-                continue;
-            }
-
-            var key = (stage.Kind, stage.Value);
-            if (!grouped.TryGetValue(key, out var list))
-            {
-                list = new List<AbilityDefinition>();
-                grouped[key] = list;
-            }
-
-            foreach (var ability in entry.Value ?? Enumerable.Empty<AbilityDefinition>())
-            {
-                if (ability != null)
-                    list.Add(ability);
-            }
-        }
-
-        return grouped
-            .OrderBy(entry => entry.Key.Kind == ProgressionStageKind.Table ? 1 : 0)
-            .ThenBy(entry => entry.Key.Value)
-            .Select(entry => LevelAbilityRowBuilder.Build(
-                level: entry.Key.Value,
-                abilityDefinitions: entry.Value,
-                isTableStage: entry.Key.Kind == ProgressionStageKind.Table))
-            .ToList();
     }
 
     private string? ResolveRecordKey<T>(IReadOnlyDictionary<string, T> records, string rawName)
@@ -788,30 +847,6 @@ public sealed class WizardVm : INotifyPropertyChanged
                    (normalizedKey.Contains(normalized, StringComparison.OrdinalIgnoreCase)
                     || normalized.Contains(normalizedKey, StringComparison.OrdinalIgnoreCase));
         });
-    }
-
-    private static int? ExtractLevel(string? key)
-    {
-        return CharacterProgressionTables.TryParseStage(key, out var stage)
-               && stage.Kind == ProgressionStageKind.Level
-            ? stage.Value
-            : null;
-    }
-
-    private static string ResolveRaceKeyForLifeScale(CharacterDraft draft)
-    {
-        var race = (draft.Race ?? string.Empty).Trim();
-        if (!race.Equals("Elf", StringComparison.OrdinalIgnoreCase))
-            return race;
-
-        var subtype = (draft.RaceSubtype ?? string.Empty).Trim();
-        if (subtype.Equals("Winter", StringComparison.OrdinalIgnoreCase))
-            return "Winter Elf";
-
-        if (subtype.Equals("Summer", StringComparison.OrdinalIgnoreCase))
-            return "Drowe";
-
-        return "Elf";
     }
 
     private async Task TryGoToStepAsync(int targetIndex)
@@ -920,7 +955,7 @@ public sealed class WizardVm : INotifyPropertyChanged
                 if (group == null || slot == null || !slot.HasSelection)
                     continue;
 
-                var selection = FormatSlotSelection(slot);
+                var selection = WizardSlotSelectionFormatter.FormatSelection(slot);
                 if (string.IsNullOrWhiteSpace(selection))
                     continue;
 
@@ -1027,25 +1062,6 @@ public sealed class WizardVm : INotifyPropertyChanged
         }
     }
 
-    private static string FormatSlotSelection(SpecialisationSlotVm slot)
-    {
-        var baseName = slot.IsLocked
-            ? (slot.ForcedAbilityDefinition?.Name ?? slot.LockedDisplayText)
-            : (slot.SelectedOption ?? string.Empty).Trim();
-
-        var custom = (slot.CustomisationValue ?? string.Empty).Trim();
-        if (custom.Length == 0)
-            return baseName;
-
-        if (baseName.Length == 0)
-            return custom;
-
-        if (baseName.Contains(custom, StringComparison.OrdinalIgnoreCase))
-            return baseName;
-
-        return $"{baseName} ({custom})";
-    }
-
     private void UpdateArmourUiFromDraft()
     {
         var tier = GetArmourTierFromDraft();
@@ -1053,6 +1069,13 @@ public sealed class WizardVm : INotifyPropertyChanged
         ArmourMaxBasePac = basePac;
         ArmourMaxTotalPac = basePac > 0 ? GetMaxTotalPacForTier(tier) : 0;
         IsArmourSelectionEnabled = basePac > 0 && tier != ArmourTier.None;
+
+        var draftWornArmour = Math.Max(0, Draft.WornArmour);
+        if (_wornArmourPac != draftWornArmour)
+        {
+            _wornArmourPac = draftWornArmour;
+            Raise(nameof(WornArmourPac));
+        }
 
         EnsureArmourLayersInitialized();
         ClampArmourLayers(tier);

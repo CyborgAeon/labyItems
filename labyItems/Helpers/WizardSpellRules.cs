@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Maui.Graphics;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
 using labyItems.Services;
@@ -278,5 +279,92 @@ public static class WizardSpellRules
 
         return Enum.TryParse<ExtendedMagicColours>(trimmed, ignoreCase: true, out var ext)
                && ext == ExtendedMagicColours.Sorcorial;
+    }
+
+    public static bool TryResolveMagicColour(string? rawColour, out MagicColours colour)
+    {
+        colour = default;
+        if (string.IsNullOrWhiteSpace(rawColour))
+            return false;
+
+        var tokens = (rawColour ?? string.Empty)
+            .Split(new[] { '/', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        foreach (var token in tokens)
+        {
+            if (TryParseMagicColour(token, out colour))
+                return true;
+        }
+
+        return TryParseMagicColour(rawColour, out colour);
+    }
+
+    public static string BuildColourDisplayText(string? rawColour)
+    {
+        if (TryResolveMagicColour(rawColour, out var parsed))
+            return parsed.ToString();
+
+        var fallback = GetFirstColourToken(rawColour);
+        return fallback.Length == 0 ? "Unknown" : Capitalize(fallback);
+    }
+
+    public static string BuildBaseSpellListLabel(IReadOnlyList<string> selectedColours)
+    {
+        if (selectedColours == null || selectedColours.Count == 0)
+            return "Base Spells";
+
+        if (selectedColours.Count == 1)
+            return $"{selectedColours[0]} Spells";
+
+        return $"{string.Join(" / ", selectedColours)} Spells";
+    }
+
+    public static Color ResolveColourCircleColor(string? rawColour)
+    {
+        if (!TryResolveMagicColour(rawColour, out var parsed))
+            return Color.FromArgb("#9CA3AF");
+
+        return MagicColourExtensions.ToColour(parsed);
+    }
+
+    private static string GetFirstColourToken(string? rawColour)
+    {
+        if (string.IsNullOrWhiteSpace(rawColour))
+            return string.Empty;
+
+        return rawColour
+            .Split(new[] { '/', ',', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .FirstOrDefault() ?? string.Empty;
+    }
+
+    private static string Capitalize(string value)
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0)
+            return string.Empty;
+        if (text.Length == 1)
+            return text.ToUpperInvariant();
+
+        return char.ToUpperInvariant(text[0]) + text[1..].ToLowerInvariant();
+    }
+
+    public static bool TryMapRaceTokenToMagicColour(string? token, out MagicColours colour)
+    {
+        if (TryParseMagicColour(token, out colour))
+            return true;
+
+        var normalized = (token ?? string.Empty).Trim().ToLowerInvariant();
+        colour = normalized switch
+        {
+            "light" => MagicColours.White,
+            "dark" => MagicColours.Black,
+            "air" => MagicColours.Blue,
+            "earth" => MagicColours.Brown,
+            "fire" => MagicColours.Red,
+            "water" => MagicColours.Green,
+            _ => default
+        };
+
+        return normalized is "light" or "dark" or "air" or "earth" or "fire" or "water";
     }
 }
