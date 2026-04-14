@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -351,6 +351,7 @@
     };
 
     const PENDING_ROUTE_KEY = 'laby-admin-pending-route';
+    const SESSION_TOKEN_KEY = 'laby-admin-session-token';
 
     const ROUTES = {
       home: { id: 'home', label: 'Home', description: 'Login only' },
@@ -619,6 +620,7 @@
     async function init() {
       wireEvents();
       renderNav();
+      consumeSessionTokenFromUrl();
       await checkAuth();
       await handleRouteChange();
     }
@@ -676,6 +678,30 @@
       els.availabilitySearchInput.addEventListener('input', renderAvailabilitySearch);
       els.lifeScaleBaseInput.addEventListener('input', renderLifeScaleBaseSearch);
     }
+    function getSessionToken() {
+      return sessionStorage.getItem(SESSION_TOKEN_KEY);
+    }
+
+    function setSessionToken(token) {
+      if (token) sessionStorage.setItem(SESSION_TOKEN_KEY, token);
+    }
+
+    function clearSessionToken() {
+      sessionStorage.removeItem(SESSION_TOKEN_KEY);
+    }
+
+    function consumeSessionTokenFromUrl() {
+      const url = new URL(window.location.href);
+      const token = url.searchParams.get('session_token');
+
+      if (token) {
+        setSessionToken(token);
+        url.searchParams.delete('session_token');
+        url.searchParams.delete('login');
+        history.replaceState(null, '', url.toString());
+      }
+    }
+
     function beginLogin() {
       const currentHash = window.location.hash || '#/abilities';
       sessionStorage.setItem(PENDING_ROUTE_KEY, currentHash);
@@ -684,15 +710,31 @@
 
     function beginLogout() {
       sessionStorage.removeItem(PENDING_ROUTE_KEY);
+      clearSessionToken();
+      state.authUser = null;
       window.location.href = `${CONFIG.authBaseUrl}/auth/logout`;
     }
 
     async function checkAuth() {
       try {
-        const response = await fetch(`${CONFIG.authBaseUrl}/auth/me`, { credentials: 'include' });
-        if (!response.ok) {
+        const token = getSessionToken();
+
+        if (!token) {
           state.authUser = null;
-          els.authStatus.textContent = 'Not signed in. Open Home and authenticate with GitHub.';
+          els.authStatus.textContent = 'Not signed in. Click Sign in with GitHub.';
+          return;
+        }
+
+        const response = await fetch(`${CONFIG.authBaseUrl}/auth/me`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          clearSessionToken();
+          state.authUser = null;
+          els.authStatus.textContent = 'Not signed in. Click Sign in with GitHub.';
           return;
         }
 
@@ -700,6 +742,7 @@
         state.authUser = data.user || null;
         els.authStatus.textContent = `Signed in as ${data.user.login}. Authentication stays in the worker; GitHub Pages only hosts this static editor.`;
       } catch (error) {
+        clearSessionToken();
         state.authUser = null;
         els.authStatus.textContent = `Could not verify login: ${error.message}`;
       }
@@ -1215,10 +1258,17 @@
         els.submitBtn.disabled = true;
         setStatus('submit', 'Submitting proposal...', false);
 
+        const token = getSessionToken();
+        if (!token) {
+          throw new Error('You are not authenticated with the worker.');
+        }
+
         const response = await fetch(CONFIG.submitEndpoint, {
           method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify(payload)
         });
 
