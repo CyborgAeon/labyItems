@@ -3,465 +3,611 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laby Items Admin</title>
+  <title>Laby Admin</title>
   <style>
     :root {
-      --bg: #0b1020;
-      --panel: #121933;
-      --panel-2: #182246;
-      --text: #eef2ff;
-      --muted: #a6b0cf;
-      --line: #2a376a;
-      --accent: #7aa2ff;
-      --accent-2: #9b8cff;
-      --danger: #ff7b7b;
-      --success: #77d39b;
-      --warning: #ffcf70;
+      --bg: #f4efe6;
+      --panel: #fffaf2;
+      --panel-2: #f0e2c8;
+      --panel-3: #ead6af;
+      --text: #2f2414;
+      --muted: #6d5a3d;
+      --line: #c8b08a;
+      --accent: #8f4e1f;
+      --accent-2: #b87333;
+      --success: #2f7d4b;
+      --danger: #a23434;
+      --warning: #9b6a05;
+      --shadow: 0 20px 48px rgba(78, 52, 18, 0.12);
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(180deg, #09101d 0%, #0b1020 100%);
+      font-family: "Aptos", "Trebuchet MS", "Segoe UI", sans-serif;
       color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(184, 115, 51, 0.16), transparent 34%),
+        radial-gradient(circle at top right, rgba(143, 78, 31, 0.14), transparent 28%),
+        linear-gradient(180deg, #f8f3ea 0%, #f1e5cf 100%);
+      min-height: 100vh;
     }
 
-    .wrap {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 24px;
-    }
+    button, input, select, textarea { font: inherit; }
 
-    h1, h2, h3 { margin: 0 0 12px; }
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.2rem; }
-    h3 { font-size: 1rem; }
-
-    .muted { color: var(--muted); }
-    .status {
-      padding: 12px 14px;
-      border-radius: 10px;
+    button {
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-      margin-bottom: 16px;
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff7ef;
+      font-weight: 700;
+    }
+
+    button.danger {
+      color: #fff5f5;
+      border: none;
+      background: linear-gradient(135deg, #9e2d2d, #c85151);
+    }
+
+    button.ghost { background: transparent; }
+
+    button.active {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 1px var(--accent);
+      background: rgba(184, 115, 51, 0.12);
+    }
+
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 242, 0.96);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 11px 12px;
+      outline: none;
+    }
+
+    textarea { min-height: 110px; resize: vertical; }
+    .app { max-width: 1600px; margin: 0 auto; padding: 24px; }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 3vw, 3rem);
+      letter-spacing: 0.02em;
+    }
+
+    .hero p { margin: 0; color: var(--muted); max-width: 860px; line-height: 1.5; }
+
+    .status {
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 242, 0.8);
+      border-radius: 14px;
+      padding: 12px 14px;
       white-space: pre-wrap;
     }
 
-    .grid {
+    .layout {
       display: grid;
-      gap: 20px;
-      grid-template-columns: 420px minmax(0, 1fr);
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 18px;
       align-items: start;
     }
 
     .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      border: 1px solid var(--line);
-      border-radius: 18px;
+      background: rgba(255, 250, 242, 0.82);
+      border: 1px solid rgba(200, 176, 138, 0.9);
+      border-radius: 24px;
       padding: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
     }
 
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
+    .nav { position: sticky; top: 24px; }
+    .nav-list { display: grid; gap: 8px; }
+    .nav button { text-align: left; padding: 12px 14px; }
+    .nav-label { display: block; font-weight: 700; }
+    .nav-sub { display: block; margin-top: 3px; color: var(--muted); font-size: 0.88rem; }
+    .workspace { display: grid; gap: 18px; }
+
+    .home {
+      max-width: 640px;
+      margin: 8vh auto 0;
+      text-align: center;
+      padding: 34px;
     }
 
-    button, input, select, textarea {
-      font: inherit;
+    .home h2 {
+      margin: 0 0 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2rem;
     }
 
-    button {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 14px;
-      color: var(--text);
-      background: var(--panel-2);
-      cursor: pointer;
-    }
-    button.primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #0b1020;
-      border: none;
-      font-weight: 700;
-    }
-    button.warn {
-      background: rgba(255, 207, 112, 0.12);
-      color: var(--warning);
-    }
-    button.danger {
-      background: rgba(255, 123, 123, 0.1);
-      color: var(--danger);
-    }
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .field, .row {
-      display: grid;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .row.two {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    label {
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    input, select, textarea {
-      width: 100%;
-      color: var(--text);
-      background: #0f1730;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 12px;
-      outline: none;
-    }
-
-    textarea {
-      min-height: 96px;
-      resize: vertical;
-    }
-
-    .search-results {
-      max-height: 420px;
-      overflow: auto;
-      display: grid;
-      gap: 10px;
-    }
+    .home p { margin: 0 0 18px; color: var(--muted); line-height: 1.5; }
+    .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .panel-head h2, .panel-head h3 { margin: 0; }
+    .muted { color: var(--muted); }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; }
+    .grid { display: grid; gap: 18px; grid-template-columns: 360px minmax(0, 1fr); }
+    .field-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .field-grid .span-2 { grid-column: span 2; }
+    .field { display: grid; gap: 8px; }
+    label { font-size: 0.92rem; color: var(--muted); font-weight: 600; }
+    .result-list { display: grid; gap: 10px; max-height: 72vh; overflow: auto; padding-right: 4px; }
 
     .result {
-      padding: 12px;
       border: 1px solid var(--line);
-      border-radius: 12px;
-      background: rgba(255,255,255,0.03);
+      border-radius: 16px;
+      background: rgba(240, 226, 200, 0.35);
+      padding: 12px;
       cursor: pointer;
     }
-    .result:hover, .result.active {
-      border-color: var(--accent);
-      background: rgba(122,162,255,0.09);
-    }
-    .result-title {
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .pill {
-      border-radius: 999px;
-      padding: 4px 8px;
-      border: 1px solid var(--line);
+
+    .result.active { border-color: var(--accent); background: rgba(184, 115, 51, 0.12); }
+    .result-title { font-weight: 700; margin-bottom: 4px; }
+    .result-sub { color: var(--muted); font-size: 0.9rem; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .chip { padding: 4px 8px; border-radius: 999px; border: 1px solid var(--line); font-size: 0.82rem; color: var(--muted); background: rgba(255, 250, 242, 0.85); }
+    .meta-bar { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 16px; }
+    .meta-box { border: 1px solid var(--line); border-radius: 16px; padding: 12px; background: rgba(240, 226, 200, 0.25); }
+
+    .meta-box strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.86rem;
       color: var(--muted);
-      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .json-preview {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.85rem;
-      background: #091120;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px;
+    .preview {
+      font-family: Consolas, "SFMono-Regular", monospace;
+      font-size: 0.86rem;
+      line-height: 1.45;
       white-space: pre-wrap;
-      max-height: 420px;
+      background: #fffdf8;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      max-height: 520px;
       overflow: auto;
     }
 
-    .small {
-      font-size: 0.85rem;
+    .helper-grid { display: grid; gap: 18px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .helper-results { display: grid; gap: 8px; max-height: 240px; overflow: auto; margin-top: 10px; }
+    .helper-item { border: 1px solid var(--line); border-radius: 14px; background: rgba(255, 250, 242, 0.84); padding: 10px; }
+    .helper-item strong { display: block; margin-bottom: 6px; }
+    .small { font-size: 0.88rem; }
+    .hidden { display: none !important; }
+
+    @media (max-width: 1200px) {
+      .grid, .helper-grid, .layout { grid-template-columns: 1fr; }
+      .nav { position: static; }
+      .meta-bar { grid-template-columns: 1fr; }
     }
 
-    .notice {
-      border-left: 4px solid var(--warning);
-      padding: 10px 12px;
-      background: rgba(255, 207, 112, 0.08);
-      border-radius: 8px;
-      color: #ffe5aa;
-      margin-bottom: 14px;
-    }
-
-    @media (max-width: 1000px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 760px) {
+      .app { padding: 16px; }
+      .hero { flex-direction: column; }
+      .field-grid { grid-template-columns: 1fr; }
+      .field-grid .span-2 { grid-column: span 1; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>Laby Items Admin</h1>
-    <p class="muted">Search, create, update, or delete abilities. This page assumes authentication is handled by the Cloudflare Worker and that submission goes to the Worker API.</p>
-
-    <div id="authStatus" class="status">Checking login…</div>
-    <div id="submitStatus" class="status" hidden></div>
-    <div style="margin-bottom: 16px;">
-      <button id="loginBtn" class="primary" type="button">Sign in with GitHub</button>
-      <button id="logoutBtn" type="button">Sign out</button>
+  <div class="app">
+    <div class="hero">
+      <div>
+        <h1>Laby Admin</h1>
+        <p>Static GitHub Pages admin for proposing JSON changes through the Cloudflare worker. Routes stay inside one page, authentication returns cleanly to the requested editor, and each preview now reflects the actual record model and target file rather than an ability-only payload.</p>
+      </div>
+      <div class="toolbar">
+        <button id="loginBtn" class="primary" type="button">Sign in with GitHub</button>
+        <button id="logoutBtn" class="ghost" type="button">Sign out</button>
+      </div>
     </div>
-    <div class="grid">
-      <aside class="card">
-        <div class="section-title">
-          <h2>Ability lookup</h2>
-          <button id="newAbilityBtn">New ability</button>
-        </div>
 
-        <div class="field">
-          <label for="searchInput">Search by name, description, source book, ref, prerequisite, or condition text</label>
-          <input id="searchInput" type="text" placeholder="e.g. immunity, fear, Classes, wizard specialist" />
-        </div>
+    <div id="authStatus" class="status">Checking login...</div>
+    <div id="submitStatus" class="status hidden"></div>
 
-        <div class="row two">
-          <div class="field">
-            <label for="tableFilter">Table</label>
-            <select id="tableFilter">
-              <option value="">All</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="sourceBookFilter">Source book</label>
-            <select id="sourceBookFilter">
-              <option value="">All</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row two">
-          <div class="field">
-            <label for="operationMode">Mode</label>
-            <select id="operationMode">
-              <option value="update">Update existing</option>
-              <option value="create">Create new</option>
-              <option value="delete">Delete existing</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="resultLimit">Results</label>
-            <select id="resultLimit">
-              <option>15</option>
-              <option selected>30</option>
-              <option>50</option>
-              <option>100</option>
-            </select>
-          </div>
-        </div>
-
-        <div id="searchResults" class="search-results"></div>
+    <div class="layout">
+      <aside id="navCard" class="card nav hidden">
+        <div class="panel-head"><h3>Forms</h3></div>
+        <div id="navList" class="nav-list"></div>
       </aside>
 
-      <main class="card">
-        <div class="section-title">
-          <h2 id="editorTitle">Ability editor</h2>
-          <div class="toolbar">
-            <button id="loadSelectedBtn">Load selected</button>
-            <button id="duplicateBtn" class="warn">Duplicate to new</button>
-            <button id="resetFormBtn">Reset form</button>
-          </div>
-        </div>
+      <main class="workspace">
+        <section id="homeView" class="card home">
+          <h2>Sign in to continue</h2>
+          <p>Home stays intentionally minimal. Once authenticated, you will be returned to the form you were trying to open.</p>
+          <button id="homeLoginBtn" class="primary" type="button">Sign in with GitHub</button>
+        </section>
 
-        <div class="notice">
-          Suggested branch convention: <strong>ability/&lt;slug&gt;-&lt;action&gt;-&lt;yyyymmddhhmmss&gt;</strong>. This avoids collisions and keeps intent obvious in Git history.
-        </div>
+        <section id="editorView" class="hidden">
+          <div class="grid">
+            <section class="card">
+              <div class="panel-head">
+                <div>
+                  <h2 id="searchTitle">Search</h2>
+                  <div id="searchSubtitle" class="muted small"></div>
+                </div>
+                <div class="toolbar">
+                  <button id="newRecordBtn" type="button">New</button>
+                  <button id="loadSelectedBtn" type="button">Load selected</button>
+                </div>
+              </div>
 
-        <form id="abilityForm">
-          <div class="row two">
-            <div class="field">
-              <label for="submittedBy">Submitted by</label>
-              <input id="submittedBy" name="submittedBy" type="text" placeholder="Human-readable submitter name" required />
-            </div>
-            <div class="field">
-              <label for="reviewer">Reviewer</label>
-              <input id="reviewer" name="reviewer" type="text" value="cyborgaeon" required />
-            </div>
-          </div>
+              <div class="field">
+                <label for="searchInput">Search existing entries</label>
+                <input id="searchInput" type="text" placeholder="Search by title or content" />
+              </div>
 
-          <div class="row two">
-            <div class="field">
-              <label for="branchName">Branch name</label>
-              <input id="branchName" name="branchName" type="text" placeholder="Auto-generated unless overridden" />
-            </div>
-            <div class="field">
-              <label for="commitAction">Commit action</label>
-              <select id="commitAction" name="commitAction">
-                <option value="create">Create</option>
-                <option value="update" selected>Update</option>
-                <option value="delete">Delete</option>
-              </select>
-            </div>
-          </div>
+              <div id="resultList" class="result-list"></div>
+            </section>
 
-          <div class="row two">
-            <div class="field">
-              <label for="index">Index / display name</label>
-              <input id="index" name="index" type="text" required />
-            </div>
-            <div class="field">
-              <label for="abilityRef">Ability ref</label>
-              <input id="abilityRef" name="abilityRef" type="text" placeholder="e.g. ability.merged.immunity-to-fear" />
-            </div>
-          </div>
+            <section class="card">
+              <div class="panel-head">
+                <div>
+                  <h2 id="editorTitle">Editor</h2>
+                  <div id="editorSubtitle" class="muted small"></div>
+                </div>
+                <div class="toolbar">
+                  <button id="modeCreateBtn" type="button">Create</button>
+                  <button id="modeUpdateBtn" type="button">Update</button>
+                  <button id="modeDeleteBtn" class="danger" type="button">Delete</button>
+                  <button id="resetBtn" type="button">Reset</button>
+                </div>
+              </div>
 
-          <div class="row two">
-            <div class="field">
-              <label for="table">Table</label>
-              <input id="table" name="table" type="number" min="1" step="1" required />
-            </div>
-            <div class="field">
-              <label for="cost">Cost</label>
-              <input id="cost" name="cost" type="number" min="0" step="1" required />
-            </div>
-          </div>
+              <div class="meta-bar">
+                <div class="meta-box"><strong>Target file</strong><span id="filePathText">-</span></div>
+                <div class="meta-box"><strong>Branch</strong><span id="branchText">-</span></div>
+                <div class="meta-box"><strong>Action</strong><span id="actionText">-</span></div>
+              </div>
 
-          <div class="row two">
-            <div class="field">
-              <label for="sourceBook">Source book</label>
-              <input id="sourceBook" name="sourceBook" type="text" required />
-            </div>
-            <div class="field">
-              <label for="maxAvailable">maxAvailable</label>
-              <input id="maxAvailable" name="maxAvailable" type="text" placeholder="e.g. *, 1, 3" />
-            </div>
+              <form id="recordForm">
+                <div id="fieldGrid" class="field-grid"></div>
+                <div class="field span-2" style="margin-top: 14px;">
+                  <label for="notesInput">Submission notes</label>
+                  <textarea id="notesInput" placeholder="Why should this JSON change be accepted?"></textarea>
+                </div>
+                <div class="toolbar" style="margin-top: 16px;">
+                  <button id="previewBtn" type="button">Preview submission payload</button>
+                  <button id="submitBtn" class="primary" type="submit">Submit proposal</button>
+                </div>
+              </form>
+
+              <h3 style="margin-top: 20px;">Preview payload</h3>
+              <div id="payloadPreview" class="preview">Nothing yet.</div>
+            </section>
           </div>
 
-          <div class="field">
-            <label for="desc">Description</label>
-            <textarea id="desc" name="desc" required></textarea>
-          </div>
+          <section id="helperSection" class="helper-grid hidden" style="margin-top: 18px;">
+            <section id="preReqCard" class="card hidden">
+              <div class="panel-head"><h3>PreReq Builder</h3></div>
+              <div class="field">
+                <label for="preReqSearchInput">Add a prerequisite by ability name</label>
+                <input id="preReqSearchInput" type="text" placeholder="Search abilities" />
+              </div>
+              <div id="preReqResults" class="helper-results"></div>
+            </section>
 
-          <div class="row two">
-            <div class="field">
-              <label for="canAddMultiple">CanAddMultiple</label>
-              <select id="canAddMultiple" name="canAddMultiple">
-                <option value="">Unset</option>
-                <option value="true">true</option>
-                <option value="false">false</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="canBuyMultiple">canBuyMultiple</label>
-              <select id="canBuyMultiple" name="canBuyMultiple">
-                <option value="">Unset</option>
-                <option value="true">true</option>
-                <option value="false">false</option>
-              </select>
-            </div>
-          </div>
+            <section id="preReqCloneCard" class="card hidden">
+              <div class="panel-head"><h3>Clone Existing PreReqs</h3></div>
+              <div class="field">
+                <label for="preReqCloneInput">Search existing records that already have prerequisites</label>
+                <input id="preReqCloneInput" type="text" placeholder="Search abilities, miracles, evocations, multi-races..." />
+              </div>
+              <div id="preReqCloneResults" class="helper-results"></div>
+            </section>
 
-          <div class="field">
-            <label for="preReqs">preReqs (JSON array)</label>
-            <textarea id="preReqs" name="preReqs" placeholder='["1st Enhanced Reflexes"]'></textarea>
-          </div>
+            <section id="availabilityCard" class="card hidden">
+              <div class="panel-head"><h3>Reuse Availability</h3></div>
+              <div class="field">
+                <label for="availabilitySearchInput">Search this type for matching availability</label>
+                <input id="availabilitySearchInput" type="text" placeholder="Search current route" />
+              </div>
+              <div id="availabilityResults" class="helper-results"></div>
+            </section>
 
-          <div class="field">
-            <label for="choiceSetRefs">choiceSetRefs (JSON array)</label>
-            <textarea id="choiceSetRefs" name="choiceSetRefs" placeholder='["choice.wizard-specialist.primary"]'></textarea>
-          </div>
-
-          <div class="field">
-            <label for="available">available conditions (JSON array)</label>
-            <textarea id="available" name="available" placeholder='[{"Field":"Bracket","Operator":"In","Value":"🧙 Wizard"}]'></textarea>
-          </div>
-
-          <div class="field">
-            <label for="data">data object (JSON object)</label>
-            <textarea id="data" name="data" placeholder='{"effectType":"increase:maxAC","amount":1}'></textarea>
-          </div>
-
-          <div class="field">
-            <label for="notes">Submission notes</label>
-            <textarea id="notes" name="notes" placeholder="Explain why this is being created, changed, or deleted. This goes into the PR body."></textarea>
-          </div>
-
-          <div class="toolbar">
-            <button type="button" id="previewPayloadBtn">Preview submission payload</button>
-            <button type="submit" class="primary" id="submitBtn">Submit proposal</button>
-            <button type="button" class="danger" id="deleteModeBtn">Switch to delete</button>
-          </div>
-        </form>
-
-        <h3 style="margin-top:20px;">Preview payload</h3>
-        <div id="payloadPreview" class="json-preview">Nothing yet.</div>
+            <section id="lifeScaleBaseCard" class="card hidden">
+              <div class="panel-head"><h3>Copy Existing Lifescale</h3></div>
+              <div class="field">
+                <label for="lifeScaleBaseInput">Use an existing lifescale as a base</label>
+                <input id="lifeScaleBaseInput" type="text" placeholder="Search race or class" />
+              </div>
+              <div id="lifeScaleBaseResults" class="helper-results"></div>
+            </section>
+          </section>
+        </section>
       </main>
     </div>
   </div>
 
   <script>
     const CONFIG = {
-  authBaseUrl: 'https://laby-auth.bradleyjamesbarfoot.workers.dev',
-  submitEndpoint: 'https://laby-auth.bradleyjamesbarfoot.workers.dev/api/propose-change',
-  rulesDataUrl: 'labyItems\\Resources\\Raw\\evolution_classes\\merged.json',
-  fallbackRulesDataUrl: 'labyItems\\Resources\\Raw\\evolution_classes\\merged.json',
-  entityType: 'ability'
-};
+      authBaseUrl: 'https://laby-auth.bradleyjamesbarfoot.workers.dev',
+      submitEndpoint: 'https://laby-auth.bradleyjamesbarfoot.workers.dev/api/propose-change'
+    };
+
+    const ROUTES = {
+      home: { id: 'home', label: 'Home', description: 'Login only' },
+      abilities: {
+        id: 'abilities', label: 'Abilities', singular: 'ability', description: 'Merged evolution abilities',
+        dataUrl: 'labyItems/Resources/Raw/evolution_classes/merged.json',
+        filePath: 'labyItems/Resources/Raw/evolution_classes/merged.json',
+        store: 'array', keyField: 'index', branchPrefix: 'ability', availabilityField: 'available', preReqField: 'preReqs',
+        schema: [
+          { key: 'index', label: 'Ability name', type: 'text', span: 2, required: true },
+          { key: 'table', label: 'Table', type: 'number', required: true },
+          { key: 'cost', label: 'Cost', type: 'number', required: true },
+          { key: 'sourceBook', label: 'Source book', type: 'text', required: true },
+          { key: 'maxAvailable', label: 'maxAvailable', type: 'text' },
+          { key: 'desc', label: 'Description', type: 'textarea', span: 2, required: true },
+          { key: 'CanAddMultiple', label: 'CanAddMultiple', type: 'boolean' },
+          { key: 'canBuyMultiple', label: 'canBuyMultiple', type: 'boolean' },
+          { key: 'preReqs', label: 'preReqs', type: 'array-lines', span: 2 },
+          { key: 'available', label: 'available', type: 'json', span: 2, defaultValue: [] },
+          { key: 'data', label: 'data', type: 'json', span: 2, defaultValue: {} },
+          { key: 'abilityRef', label: 'abilityRef', type: 'hidden', defaultValue: '' },
+          { key: 'choiceSetRefs', label: 'choiceSetRefs', type: 'hidden', defaultValue: [] }
+        ],
+        summary(entry) { return `${entry.sourceBook || 'Unknown source'} | table ${entry.table ?? '-'} | cost ${entry.cost ?? '-'}`; }
+      },
+      guilds: {
+        id: 'guilds', label: 'Guilds', singular: 'guild', description: 'Guild definitions',
+        dataUrl: 'labyItems/Resources/Raw/people/guilds.json', filePath: 'labyItems/Resources/Raw/people/guilds.json',
+        store: 'map', branchPrefix: 'guild', identity: { label: 'Guild name' }, availabilityField: 'Availability',
+        schema: [
+          { key: 'Type', label: 'Type', type: 'text' },
+          { key: 'Logo', label: 'Logo', type: 'text' },
+          { key: 'PreRequisites', label: 'PreRequisites', type: 'textarea', span: 2 },
+          { key: 'Restrictions', label: 'Restrictions', type: 'textarea', span: 2 },
+          { key: 'Ethos', label: 'Ethos', type: 'textarea', span: 2 },
+          { key: 'Background', label: 'Background', type: 'textarea', span: 2 },
+          { key: 'Benefits', label: 'Benefits', type: 'json', span: 2, defaultValue: { Basic: [], Intermediate: [], Advanced: [] } },
+          { key: 'City Benefits', label: 'City Benefits', type: 'json', span: 2, defaultValue: [] },
+          { key: 'alignmentRule', label: 'alignmentRule', type: 'json', span: 2 },
+          { key: 'MiracleList', label: 'MiracleList', type: 'json', span: 2, defaultValue: {} },
+          { key: 'DenominationalMiracle', label: 'DenominationalMiracle', type: 'json', span: 2 },
+          { key: 'DenominationalMiracleNote', label: 'DenominationalMiracleNote', type: 'textarea', span: 2 },
+          { key: 'Availability', label: 'Availability', type: 'json', span: 2, defaultValue: { Rules: [] } }
+        ],
+        summary(entry, key) { return `${entry.Type || 'guild'} | ${entry.Availability?.Rules?.length || 0} availability rules | ${key}`; }
+      },
+      spells: {
+        id: 'spells', label: 'Spells', singular: 'spell', description: 'Wizard spell list',
+        dataUrl: 'labyItems/Resources/Raw/grimoire/allSpells.json', filePath: 'labyItems/Resources/Raw/grimoire/allSpells.json',
+        store: 'array', keyField: 'name', branchPrefix: 'spell',
+        schema: [
+          { key: 'name', label: 'Spell name', type: 'text', span: 2, required: true },
+          { key: 'level', label: 'Level', type: 'number', required: true },
+          { key: 'colour', label: 'Colour', type: 'text' },
+          { key: 'range', label: 'Range', type: 'text' },
+          { key: 'duration', label: 'Duration', type: 'text' },
+          { key: 'gesture', label: 'Gesture', type: 'text' },
+          { key: 'verbal', label: 'Verbal', type: 'textarea', span: 2 },
+          { key: 'description', label: 'Description', type: 'textarea', span: 2, required: true },
+          { key: 'notes', label: 'Notes', type: 'textarea', span: 2 },
+          { key: 'Damage', label: 'Damage', type: 'json', span: 2 },
+          { key: 'isAdvanced', label: 'isAdvanced', type: 'boolean' },
+          { key: 'sourcePage', label: 'sourcePage', type: 'number' }
+        ],
+        summary(entry) { return `${entry.colour || 'Unknown colour'} | level ${entry.level ?? '-'} | ${entry.isAdvanced ? 'advanced' : 'standard'}`; }
+      },
+      miracles: {
+        id: 'miracles', label: 'Miracles', singular: 'miracle', description: 'Priest miracles',
+        dataUrl: 'labyItems/Resources/Raw/words_from_above/miracles.json', filePath: 'labyItems/Resources/Raw/words_from_above/miracles.json',
+        store: 'array', keyField: 'name', branchPrefix: 'miracle', preReqField: 'preReqs',
+        schema: [
+          { key: 'name', label: 'Miracle name', type: 'text', span: 2, required: true },
+          { key: 'power', label: 'Power', type: 'number', required: true },
+          { key: 'alignment', label: 'Alignment', type: 'text' },
+          { key: 'sphere', label: 'Sphere', type: 'text' },
+          { key: 'level', label: 'Level text', type: 'text' },
+          { key: 'range', label: 'Range', type: 'text' },
+          { key: 'duration', label: 'Duration', type: 'text' },
+          { key: 'gesture', label: 'Gesture', type: 'text' },
+          { key: 'verbal', label: 'Verbal', type: 'textarea', span: 2 },
+          { key: 'description', label: 'Description', type: 'textarea', span: 2, required: true },
+          { key: 'Damage', label: 'Damage', type: 'json', span: 2 },
+          { key: 'Heal', label: 'Heal', type: 'json', span: 2 },
+          { key: 'preReqs', label: 'preReqs', type: 'array-lines', span: 2 },
+          { key: 'isAdvanced', label: 'isAdvanced', type: 'boolean' }
+        ],
+        summary(entry) { return `${entry.alignment || 'Unknown alignment'} | ${entry.sphere || 'Unknown sphere'} | power ${entry.power ?? '-'}`; }
+      },
+      neuronics: {
+        id: 'neuronics', label: 'Neuronics', singular: 'neuronic', description: 'O-Insight entries',
+        dataUrl: 'labyItems/Resources/Raw/o-insight/o_insight_neuronics.json', filePath: 'labyItems/Resources/Raw/o-insight/o_insight_neuronics.json',
+        store: 'array', keyField: 'name', branchPrefix: 'neuronic',
+        schema: [
+          { key: 'name', label: 'Name', type: 'text', span: 2, required: true },
+          { key: 'power', label: 'Power', type: 'number', required: true },
+          { key: 'range', label: 'Range', type: 'text' },
+          { key: 'duration', label: 'Duration', type: 'text' },
+          { key: 'immunities', label: 'immunities', type: 'text' },
+          { key: 'description', label: 'Description', type: 'textarea', span: 2, required: true },
+          { key: 'Damage', label: 'Damage', type: 'json', span: 2 }
+        ],
+        summary(entry) { return `${entry.power ?? '-'} power | ${entry.range || 'Unknown range'}`; }
+      },
+      evocations: {
+        id: 'evocations', label: 'Evocations', singular: 'evocation', description: 'Druid evocations',
+        dataUrl: 'labyItems/Resources/Raw/druids_way/evocs.json', filePath: 'labyItems/Resources/Raw/druids_way/evocs.json',
+        store: 'array', keyField: 'name', branchPrefix: 'evocation', preReqField: 'preReqs',
+        schema: [
+          { key: 'name', label: 'Name', type: 'text', span: 2, required: true },
+          { key: 'power', label: 'Power', type: 'number', required: true },
+          { key: 'range', label: 'Range', type: 'text' },
+          { key: 'duration', label: 'Duration', type: 'text' },
+          { key: 'fields', label: 'fields', type: 'array-lines', span: 2, defaultValue: [] },
+          { key: 'verbal', label: 'Verbal', type: 'textarea', span: 2 },
+          { key: 'description', label: 'Description', type: 'textarea', span: 2, required: true },
+          { key: 'preReqs', label: 'preReqs', type: 'array-lines', span: 2, defaultValue: [] },
+          { key: 'Damage', label: 'Damage', type: 'json', span: 2 },
+          { key: 'Heal', label: 'Heal', type: 'json', span: 2 },
+          { key: 'isAdvanced', label: 'isAdvanced', type: 'boolean' }
+        ],
+        summary(entry) { return `${entry.fields?.join(', ') || 'No fields'} | power ${entry.power ?? '-'}`; }
+      },
+      potions: {
+        id: 'potions', label: 'Potions', singular: 'potion', description: 'Potion recipes',
+        dataUrl: 'labyItems/Resources/Raw/at_the_sharp_end/potions.json', filePath: 'labyItems/Resources/Raw/at_the_sharp_end/potions.json',
+        store: 'map', branchPrefix: 'potion', identity: { label: 'Potion name' },
+        schema: [
+          { key: 'difficulty', label: 'difficulty', type: 'number' },
+          { key: 'costPerDose', label: 'costPerDose', type: 'text' },
+          { key: 'ingredients', label: 'ingredients', type: 'array-lines', span: 2, defaultValue: [] },
+          { key: 'description', label: 'Description', type: 'textarea', span: 2 },
+          { key: 'type', label: 'type', type: 'text' }
+        ],
+        summary(entry, key) { return `${entry.type || 'type?'} | difficulty ${entry.difficulty ?? '-'} | ${key}`; }
+      },
+      classes: {
+        id: 'classes', label: 'Classes', singular: 'class', description: 'Class records',
+        dataUrl: 'labyItems/Resources/Raw/people/classes.json', filePath: 'labyItems/Resources/Raw/people/classes.json',
+        store: 'map', branchPrefix: 'class', identity: { label: 'Class name' },
+        schema: [
+          { key: 'Brackets', label: 'Brackets', type: 'array-lines', span: 2, defaultValue: [] },
+          { key: 'Tags', label: 'Tags', type: 'array-lines', span: 2, defaultValue: [] },
+          { key: 'Armour', label: 'Armour', type: 'json', span: 2, defaultValue: { Wearable: [], Restrictions: [] } },
+          { key: 'Levels', label: 'Levels', type: 'json', span: 2, defaultValue: {} },
+          { key: 'Max AC', label: 'Max AC', type: 'number' },
+          { key: 'Buy as', label: 'Buy as', type: 'array-lines', span: 2, defaultValue: [] },
+          { key: 'Path', label: 'Path', type: 'text' },
+          { key: 'alignmentRule', label: 'alignmentRule', type: 'json', span: 2 },
+          { key: 'Powerbase', label: 'Powerbase', type: 'array-lines', span: 2 },
+          { key: 'PowerPerLevel', label: 'PowerPerLevel', type: 'json', span: 2 },
+          { key: 'CasterLevel', label: 'CasterLevel', type: 'number' },
+          { key: 'PowerCalculations', label: 'PowerCalculations', type: 'json', span: 2 },
+          { key: 'GuildOverrides', label: 'GuildOverrides', type: 'json', span: 2 },
+          { key: 'NonStandard', label: 'NonStandard', type: 'boolean' }
+        ],
+        summary(entry, key) { return `${entry.Brackets?.join(', ') || 'No brackets'} | ${key}`; }
+      },
+      lifescales: {
+        id: 'lifescales', label: 'Lifescales', singular: 'lifescale', description: 'Race/class body and loc progression',
+        dataUrl: 'labyItems/Resources/Raw/people/lifescales.json', filePath: 'labyItems/Resources/Raw/people/lifescales.json',
+        store: 'lifescales', branchPrefix: 'lifescale', identity: { label: 'Race', secondaryLabel: 'Class' },
+        schema: [
+          { key: '__race', label: 'Race', type: 'identity' },
+          { key: '__class', label: 'Class', type: 'identity-secondary' },
+          { key: '__points', label: 'Points', type: 'lifescale-points', span: 2, defaultValue: [] }
+        ],
+        summary(entry) { return `${entry.primaryKey} | ${entry.secondaryKey} | ${entry.value.length} rows`; }
+      },
+      'multi-classes': {
+        id: 'multi-classes', label: 'Multi-Classes', singular: 'multi-class', description: 'Entries inside multiClasses',
+        dataUrl: 'labyItems/Resources/Raw/people/multi-classes.json', filePath: 'labyItems/Resources/Raw/people/multi-classes.json',
+        store: 'nested-map', containerKey: 'multiClasses', branchPrefix: 'multi-class', identity: { label: 'Multi-class name' },
+        schema: [
+          { key: 'DisplayName', label: 'DisplayName', type: 'text' },
+          { key: 'MaxLevel', label: 'MaxLevel', type: 'number' },
+          { key: 'Levels', label: 'Levels', type: 'json', span: 2, defaultValue: {} },
+          { key: 'AvailabilityOptions', label: 'AvailabilityOptions', type: 'json', span: 2 },
+          { key: 'CostsByLevel', label: 'CostsByLevel', type: 'json', span: 2 },
+          { key: 'CostTotals', label: 'CostTotals', type: 'json', span: 2 },
+          { key: 'Prerequisites', label: 'Prerequisites', type: 'json', span: 2 },
+          { key: 'LifeScaleReference', label: 'LifeScaleReference', type: 'json', span: 2 },
+          { key: 'SystemEffects', label: 'SystemEffects', type: 'json', span: 2 },
+          { key: 'Tags', label: 'Tags', type: 'array-lines', span: 2 }
+        ],
+        summary(entry, key) { return `${entry.DisplayName || key} | max level ${entry.MaxLevel ?? '-'}`; }
+      },
+      'multi-races': {
+        id: 'multi-races', label: 'Multi-Races', singular: 'multi-race', description: 'Entries inside multiRaces',
+        dataUrl: 'labyItems/Resources/Raw/people/multi-races.json', filePath: 'labyItems/Resources/Raw/people/multi-races.json',
+        store: 'nested-map', containerKey: 'multiRaces', branchPrefix: 'multi-race', identity: { label: 'Multi-race name' },
+        schema: [
+          { key: 'DisplayName', label: 'DisplayName', type: 'text' },
+          { key: 'MaxLevel', label: 'MaxLevel', type: 'number' },
+          { key: 'Levels', label: 'Levels', type: 'json', span: 2, defaultValue: {} },
+          { key: 'AvailabilityOptions', label: 'AvailabilityOptions', type: 'json', span: 2 },
+          { key: 'CostsByLevel', label: 'CostsByLevel', type: 'json', span: 2 },
+          { key: 'CostTotals', label: 'CostTotals', type: 'json', span: 2 },
+          { key: 'LifeScaleReference', label: 'LifeScaleReference', type: 'json', span: 2 },
+          { key: 'SystemEffects', label: 'SystemEffects', type: 'json', span: 2 },
+          { key: 'Tags', label: 'Tags', type: 'array-lines', span: 2 }
+        ],
+        summary(entry, key) { return `${entry.DisplayName || key} | max level ${entry.MaxLevel ?? '-'}`; }
+      }
+    };
 
     const state = {
       authUser: null,
-      abilities: [],
-      filtered: [],
-      selectedIndex: null,
-      selectedAbility: null,
-      mode: 'update'
+      currentRouteId: 'home',
+      routeData: {},
+      selectedRecord: null,
+      mode: 'create',
+      fieldRefs: {}
     };
 
     const els = {
-  authStatus: document.getElementById('authStatus'),
-  submitStatus: document.getElementById('submitStatus'),
-  loginBtn: document.getElementById('loginBtn'),
-  logoutBtn: document.getElementById('logoutBtn'),
-  searchInput: document.getElementById('searchInput'),
-  tableFilter: document.getElementById('tableFilter'),
-  sourceBookFilter: document.getElementById('sourceBookFilter'),
-  searchResults: document.getElementById('searchResults'),
-  operationMode: document.getElementById('operationMode'),
-  resultLimit: document.getElementById('resultLimit'),
-  editorTitle: document.getElementById('editorTitle'),
-  payloadPreview: document.getElementById('payloadPreview'),
-  form: document.getElementById('abilityForm'),
-  submittedBy: document.getElementById('submittedBy'),
-  reviewer: document.getElementById('reviewer'),
-  branchName: document.getElementById('branchName'),
-  commitAction: document.getElementById('commitAction'),
-  index: document.getElementById('index'),
-  abilityRef: document.getElementById('abilityRef'),
-  table: document.getElementById('table'),
-  cost: document.getElementById('cost'),
-  sourceBook: document.getElementById('sourceBook'),
-  maxAvailable: document.getElementById('maxAvailable'),
-  desc: document.getElementById('desc'),
-  canAddMultiple: document.getElementById('canAddMultiple'),
-  canBuyMultiple: document.getElementById('canBuyMultiple'),
-  preReqs: document.getElementById('preReqs'),
-  choiceSetRefs: document.getElementById('choiceSetRefs'),
-  available: document.getElementById('available'),
-  data: document.getElementById('data'),
-  notes: document.getElementById('notes'),
-  submitBtn: document.getElementById('submitBtn'),
-  previewPayloadBtn: document.getElementById('previewPayloadBtn'),
-  deleteModeBtn: document.getElementById('deleteModeBtn'),
-  loadSelectedBtn: document.getElementById('loadSelectedBtn'),
-  duplicateBtn: document.getElementById('duplicateBtn'),
-  resetFormBtn: document.getElementById('resetFormBtn'),
-  newAbilityBtn: document.getElementById('newAbilityBtn')
-};
+      authStatus: document.getElementById('authStatus'),
+      submitStatus: document.getElementById('submitStatus'),
+      loginBtn: document.getElementById('loginBtn'),
+      logoutBtn: document.getElementById('logoutBtn'),
+      homeLoginBtn: document.getElementById('homeLoginBtn'),
+      navCard: document.getElementById('navCard'),
+      navList: document.getElementById('navList'),
+      homeView: document.getElementById('homeView'),
+      editorView: document.getElementById('editorView'),
+      searchTitle: document.getElementById('searchTitle'),
+      searchSubtitle: document.getElementById('searchSubtitle'),
+      searchInput: document.getElementById('searchInput'),
+      resultList: document.getElementById('resultList'),
+      editorTitle: document.getElementById('editorTitle'),
+      editorSubtitle: document.getElementById('editorSubtitle'),
+      fieldGrid: document.getElementById('fieldGrid'),
+      notesInput: document.getElementById('notesInput'),
+      previewBtn: document.getElementById('previewBtn'),
+      submitBtn: document.getElementById('submitBtn'),
+      payloadPreview: document.getElementById('payloadPreview'),
+      recordForm: document.getElementById('recordForm'),
+      newRecordBtn: document.getElementById('newRecordBtn'),
+      loadSelectedBtn: document.getElementById('loadSelectedBtn'),
+      modeCreateBtn: document.getElementById('modeCreateBtn'),
+      modeUpdateBtn: document.getElementById('modeUpdateBtn'),
+      modeDeleteBtn: document.getElementById('modeDeleteBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      filePathText: document.getElementById('filePathText'),
+      branchText: document.getElementById('branchText'),
+      actionText: document.getElementById('actionText'),
+      helperSection: document.getElementById('helperSection'),
+      preReqCard: document.getElementById('preReqCard'),
+      preReqSearchInput: document.getElementById('preReqSearchInput'),
+      preReqResults: document.getElementById('preReqResults'),
+      preReqCloneCard: document.getElementById('preReqCloneCard'),
+      preReqCloneInput: document.getElementById('preReqCloneInput'),
+      preReqCloneResults: document.getElementById('preReqCloneResults'),
+      availabilityCard: document.getElementById('availabilityCard'),
+      availabilitySearchInput: document.getElementById('availabilitySearchInput'),
+      availabilityResults: document.getElementById('availabilityResults'),
+      lifeScaleBaseCard: document.getElementById('lifeScaleBaseCard'),
+      lifeScaleBaseInput: document.getElementById('lifeScaleBaseInput'),
+      lifeScaleBaseResults: document.getElementById('lifeScaleBaseResults')
+    };
 
     init().catch(error => {
       console.error(error);
@@ -470,412 +616,580 @@
 
     async function init() {
       wireEvents();
-      await Promise.all([checkAuth(), loadAbilities()]);
-      applyFilters();
-      resetFormForCreate();
+      renderNav();
+      await checkAuth();
+      await handleRouteChange();
     }
 
     function wireEvents() {
-  els.loginBtn.addEventListener('click', () => {
-    window.location.href = `${CONFIG.authBaseUrl}/auth/start`;
-  });
+      window.addEventListener('hashchange', () => {
+        handleRouteChange().catch(error => setStatus('submit', error.message, true));
+      });
 
-  els.logoutBtn.addEventListener('click', () => {
-    window.location.href = `${CONFIG.authBaseUrl}/auth/logout`;
-  });
+      els.loginBtn.addEventListener('click', beginLogin);
+      els.homeLoginBtn.addEventListener('click', beginLogin);
+      els.logoutBtn.addEventListener('click', beginLogout);
+      els.searchInput.addEventListener('input', renderSearchResults);
+      els.newRecordBtn.addEventListener('click', () => {
+        state.selectedRecord = null;
+        setMode('create');
+        fillFormForCreate();
+      });
+      els.loadSelectedBtn.addEventListener('click', () => {
+        if (!state.selectedRecord) {
+          setStatus('submit', 'Select a record first.', true);
+          return;
+        }
+        setMode('update');
+        fillFormFromRecord(state.selectedRecord);
+      });
+      els.modeCreateBtn.addEventListener('click', () => {
+        setMode('create');
+        if (!state.selectedRecord) fillFormForCreate();
+      });
+      els.modeUpdateBtn.addEventListener('click', () => {
+        if (!state.selectedRecord) {
+          setStatus('submit', 'Select a record before switching to update mode.', true);
+          return;
+        }
+        setMode('update');
+        fillFormFromRecord(state.selectedRecord);
+      });
+      els.modeDeleteBtn.addEventListener('click', () => {
+        if (!state.selectedRecord) {
+          setStatus('submit', 'Select a record before switching to delete mode.', true);
+          return;
+        }
+        setMode('delete');
+        fillFormFromRecord(state.selectedRecord);
+      });
+      els.resetBtn.addEventListener('click', () => {
+        if (state.selectedRecord && state.mode !== 'create') fillFormFromRecord(state.selectedRecord);
+        else fillFormForCreate();
+      });
+      els.previewBtn.addEventListener('click', onPreview);
+      els.recordForm.addEventListener('submit', onSubmit);
+      els.preReqSearchInput.addEventListener('input', renderPreReqSearch);
+      els.preReqCloneInput.addEventListener('input', renderPreReqCloneSearch);
+      els.availabilitySearchInput.addEventListener('input', renderAvailabilitySearch);
+      els.lifeScaleBaseInput.addEventListener('input', renderLifeScaleBaseSearch);
+    }
+    function beginLogin() {
+      const returnTo = window.location.href;
+      window.location.href = `${CONFIG.authBaseUrl}/auth/start?returnTo=${encodeURIComponent(returnTo)}`;
+    }
 
-  els.searchInput.addEventListener('input', applyFilters);
-  els.tableFilter.addEventListener('change', applyFilters);
-  els.sourceBookFilter.addEventListener('change', applyFilters);
-  els.operationMode.addEventListener('change', onModeChange);
-  els.resultLimit.addEventListener('change', applyFilters);
-  els.previewPayloadBtn.addEventListener('click', onPreviewPayload);
-  els.deleteModeBtn.addEventListener('click', () => setMode('delete'));
-  els.loadSelectedBtn.addEventListener('click', loadSelectedIntoForm);
-  els.duplicateBtn.addEventListener('click', duplicateSelectedIntoCreate);
-  els.resetFormBtn.addEventListener('click', () => {
-    if (state.mode === 'create') resetFormForCreate();
-    else loadSelectedIntoForm();
-  });
-  els.newAbilityBtn.addEventListener('click', () => setMode('create'));
-  els.form.addEventListener('submit', onSubmit);
-  [els.index, els.commitAction].forEach(el => el.addEventListener('input', maybeAutofillBranch));
-}
+    function beginLogout() {
+      const returnTo = `${window.location.origin}${window.location.pathname}#/home`;
+      window.location.href = `${CONFIG.authBaseUrl}/auth/logout?returnTo=${encodeURIComponent(returnTo)}`;
+    }
 
     async function checkAuth() {
-  try {
-    const response = await fetch(`${CONFIG.authBaseUrl}/auth/me`, {
-      credentials: 'include'
-    });
+      try {
+        const response = await fetch(`${CONFIG.authBaseUrl}/auth/me`, { credentials: 'include' });
+        if (!response.ok) {
+          state.authUser = null;
+          els.authStatus.textContent = 'Not signed in. Open Home and authenticate with GitHub.';
+          return;
+        }
 
-    if (!response.ok) {
-      state.authUser = null;
-      els.authStatus.textContent = 'Not signed in. Click “Sign in with GitHub”.';
-      return;
-    }
-
-    const data = await response.json();
-    state.authUser = data.user;
-    els.authStatus.textContent = `Signed in as ${data.user.login}. Authentication is handled by the Worker; this page does not store credentials.`;
-    els.submittedBy.value = data.user.login;
-  } catch (error) {
-    state.authUser = null;
-    els.authStatus.textContent = `Could not verify login: ${error.message}`;
-  }
-}
-
-    async function loadAbilities() {
-      let response = await fetch(CONFIG.rulesDataUrl);
-      if (!response.ok) {
-        response = await fetch(CONFIG.fallbackRulesDataUrl);
-      }
-      if (!response.ok) {
-        throw new Error(`Could not load rules data from ${CONFIG.rulesDataUrl} or ${CONFIG.fallbackRulesDataUrl}`);
-      }
-
-      const json = await response.json();
-      if (!Array.isArray(json)) {
-        throw new Error('Expected merged.json to be a top-level array');
-      }
-
-      state.abilities = json;
-      populateFilters(json);
-    }
-
-    function populateFilters(items) {
-      const tables = [...new Set(items.map(x => x.table).filter(v => v !== undefined && v !== null))].sort((a, b) => a - b);
-      const sourceBooks = [...new Set(items.map(x => x.sourceBook).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-
-      for (const table of tables) {
-        const opt = document.createElement('option');
-        opt.value = String(table);
-        opt.textContent = String(table);
-        els.tableFilter.appendChild(opt);
-      }
-
-      for (const sourceBook of sourceBooks) {
-        const opt = document.createElement('option');
-        opt.value = sourceBook;
-        opt.textContent = sourceBook;
-        els.sourceBookFilter.appendChild(opt);
+        const data = await response.json();
+        state.authUser = data.user || null;
+        els.authStatus.textContent = `Signed in as ${data.user.login}. Authentication stays in the worker; GitHub Pages only hosts this static editor.`;
+      } catch (error) {
+        state.authUser = null;
+        els.authStatus.textContent = `Could not verify login: ${error.message}`;
       }
     }
 
-    function stringifySearchable(item) {
-      return [
-        item.index,
-        item.desc,
-        item.sourceBook,
-        item.abilityRef,
-        JSON.stringify(item.preReqs || []),
-        JSON.stringify(item.available || []),
-        JSON.stringify(item.choiceSetRefs || []),
-        JSON.stringify(item.data || {})
-      ].filter(Boolean).join(' ').toLowerCase();
-    }
+    async function handleRouteChange() {
+      const routeState = parseHash();
+      let routeId = routeState.routeId;
+      if (!ROUTES[routeId]) routeId = 'home';
+      state.currentRouteId = routeId;
 
-    function applyFilters() {
-      const q = els.searchInput.value.trim().toLowerCase();
-      const table = els.tableFilter.value;
-      const sourceBook = els.sourceBookFilter.value;
-      const limit = Number(els.resultLimit.value || '30');
-
-      state.filtered = state.abilities
-        .map((item, idx) => ({ item, idx, searchable: stringifySearchable(item) }))
-        .filter(({ item, searchable }) => {
-          if (table && String(item.table) !== table) return false;
-          if (sourceBook && item.sourceBook !== sourceBook) return false;
-          if (q && !searchable.includes(q)) return false;
-          return true;
-        })
-        .slice(0, limit);
-
-      renderResults();
-    }
-
-    function renderResults() {
-      els.searchResults.innerHTML = '';
-
-      if (!state.filtered.length) {
-        const empty = document.createElement('div');
-        empty.className = 'muted small';
-        empty.textContent = 'No matching abilities.';
-        els.searchResults.appendChild(empty);
+      if (!state.authUser && routeId !== 'home') {
+        navigate('home', { callback: routeId }, true);
+        renderForRoute('home');
         return;
       }
 
-      for (const { item, idx } of state.filtered) {
-        const div = document.createElement('div');
-        div.className = 'result' + (state.selectedIndex === idx ? ' active' : '');
-        div.innerHTML = `
-          <div class="result-title">${escapeHtml(item.index || '(untitled ability)')}</div>
-          <div class="small muted">${escapeHtml(item.sourceBook || 'Unknown source')} · table ${item.table ?? '—'} · cost ${item.cost ?? '—'}</div>
-          <div class="small" style="margin-top:6px;">${escapeHtml((item.desc || '').slice(0, 180))}${(item.desc || '').length > 180 ? '…' : ''}</div>
-          <div class="pill-row">
-            ${item.abilityRef ? `<span class="pill">${escapeHtml(item.abilityRef)}</span>` : ''}
-            ${Array.isArray(item.preReqs) && item.preReqs.length ? `<span class="pill">preReqs: ${item.preReqs.length}</span>` : ''}
-            ${Array.isArray(item.available) && item.available.length ? `<span class="pill">available: ${item.available.length}</span>` : ''}
-          </div>
-        `;
-        div.addEventListener('click', () => selectAbility(idx));
-        els.searchResults.appendChild(div);
+      if (state.authUser && routeId === 'home') {
+        const callback = routeState.params.get('callback');
+        if (callback && ROUTES[callback] && callback !== 'home') {
+          navigate(callback, {}, true);
+          return;
+        }
+        navigate('abilities', {}, true);
+        return;
+      }
+
+      if (routeId !== 'home') await ensureRouteData(routeId);
+      renderForRoute(routeId);
+    }
+
+    function parseHash() {
+      const raw = (window.location.hash || '#/home').slice(1);
+      const [pathPart, queryPart = ''] = raw.split('?');
+      const routeId = pathPart.replace(/^\//, '') || 'home';
+      return { routeId, params: new URLSearchParams(queryPart) };
+    }
+
+    function navigate(routeId, params = {}, replace = false) {
+      const search = new URLSearchParams(params);
+      const nextHash = `#/${routeId}${search.toString() ? `?${search.toString()}` : ''}`;
+      if (replace) history.replaceState(null, '', `${window.location.pathname}${window.location.search}${nextHash}`);
+      else window.location.hash = nextHash;
+    }
+
+    function renderNav() {
+      els.navList.innerHTML = '';
+      for (const route of Object.values(ROUTES)) {
+        if (route.id === 'home') continue;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.innerHTML = `<span class="nav-label">${escapeHtml(route.label)}</span><span class="nav-sub">${escapeHtml(route.description)}</span>`;
+        button.addEventListener('click', () => navigate(route.id));
+        button.dataset.routeId = route.id;
+        els.navList.appendChild(button);
       }
     }
 
-    function selectAbility(idx) {
-      state.selectedIndex = idx;
-      state.selectedAbility = state.abilities[idx] || null;
-      renderResults();
-      if (state.mode !== 'create') loadSelectedIntoForm();
+    function renderForRoute(routeId) {
+      const isHome = routeId === 'home' || !state.authUser;
+      els.homeView.classList.toggle('hidden', !isHome);
+      els.editorView.classList.toggle('hidden', isHome);
+      els.navCard.classList.toggle('hidden', !state.authUser);
+      els.loginBtn.classList.toggle('hidden', !!state.authUser);
+
+      for (const button of els.navList.querySelectorAll('button')) {
+        button.classList.toggle('active', button.dataset.routeId === routeId);
+      }
+
+      if (isHome) return;
+
+      const route = ROUTES[routeId];
+      state.selectedRecord = null;
+      state.mode = 'create';
+      els.searchInput.value = '';
+      els.notesInput.value = '';
+      els.payloadPreview.textContent = 'Nothing yet.';
+      renderEditorShell(route);
+      renderSearchResults();
+      renderHelpers();
+      fillFormForCreate();
+      updateMetaBar();
     }
 
-    function onModeChange() {
-      setMode(els.operationMode.value);
+    async function ensureRouteData(routeId) {
+      if (state.routeData[routeId]) return state.routeData[routeId];
+
+      const route = ROUTES[routeId];
+      const response = await fetch(route.dataUrl, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Could not load ${route.dataUrl}`);
+
+      const raw = await response.json();
+      state.routeData[routeId] = { raw, records: normalizeRecords(route, raw) };
+      return state.routeData[routeId];
+    }
+
+    function normalizeRecords(route, raw) {
+      if (route.store === 'array') {
+        return (Array.isArray(raw) ? raw : []).map((value, index) => ({
+          recordId: `${route.id}:${index}`,
+          primaryKey: String(value?.[route.keyField] ?? `${route.singular} ${index + 1}`),
+          secondaryKey: null,
+          value: deepClone(value ?? {})
+        }));
+      }
+
+      if (route.store === 'map') {
+        return Object.entries(raw || {}).map(([key, value]) => ({
+          recordId: `${route.id}:${key}`,
+          primaryKey: key,
+          secondaryKey: null,
+          value: deepClone(value ?? {})
+        }));
+      }
+
+      if (route.store === 'nested-map') {
+        const container = raw?.[route.containerKey] || {};
+        return Object.entries(container).map(([key, value]) => ({
+          recordId: `${route.id}:${key}`,
+          primaryKey: key,
+          secondaryKey: null,
+          value: deepClone(value ?? {})
+        }));
+      }
+
+      if (route.store === 'lifescales') {
+        const records = [];
+        for (const [race, classMap] of Object.entries(raw || {})) {
+          for (const [className, points] of Object.entries(classMap || {})) {
+            records.push({
+              recordId: `${route.id}:${race}:${className}`,
+              primaryKey: race,
+              secondaryKey: className,
+              value: deepClone(points ?? [])
+            });
+          }
+        }
+        return records;
+      }
+
+      return [];
+    }
+
+    function renderEditorShell(route) {
+      els.searchTitle.textContent = `${route.label} search`;
+      els.searchSubtitle.textContent = route.description;
+      els.editorTitle.textContent = `${route.label} editor`;
+      els.editorSubtitle.textContent = `Create, amend, or delete ${route.singular} entries against ${route.filePath}`;
+      renderFields(route);
+    }
+
+    function renderFields(route) {
+      els.fieldGrid.innerHTML = '';
+      state.fieldRefs = {};
+
+      if (route.store === 'map' || route.store === 'nested-map') {
+        const primary = buildFieldControl({ key: '__primaryKey', label: route.identity.label, type: 'text', span: 2, required: true });
+        state.fieldRefs.__primaryKey = primary.control;
+        els.fieldGrid.appendChild(primary.wrapper);
+      }
+
+      if (route.store === 'lifescales') {
+        const raceField = buildFieldControl({ key: '__primaryKey', label: route.identity.label, type: 'text', required: true });
+        const classField = buildFieldControl({ key: '__secondaryKey', label: route.identity.secondaryLabel, type: 'text', required: true });
+        state.fieldRefs.__primaryKey = raceField.control;
+        state.fieldRefs.__secondaryKey = classField.control;
+        els.fieldGrid.appendChild(raceField.wrapper);
+        els.fieldGrid.appendChild(classField.wrapper);
+      }
+
+      for (const field of route.schema) {
+        if (field.type === 'identity' || field.type === 'identity-secondary') continue;
+        const built = buildFieldControl(field);
+        state.fieldRefs[field.key] = built.control;
+        els.fieldGrid.appendChild(built.wrapper);
+      }
+    }
+
+    function buildFieldControl(field) {
+      const wrapper = document.createElement('div');
+      wrapper.className = `field${field.span === 2 ? ' span-2' : ''}`;
+      if (field.type === 'hidden') wrapper.classList.add('hidden');
+
+      const label = document.createElement('label');
+      label.textContent = field.label;
+      wrapper.appendChild(label);
+
+      let control;
+      if (field.type === 'textarea' || field.type === 'json' || field.type === 'lifescale-points') control = document.createElement('textarea');
+      else if (field.type === 'boolean') {
+        control = document.createElement('select');
+        control.innerHTML = `<option value="">Unset</option><option value="true">true</option><option value="false">false</option>`;
+      } else {
+        control = document.createElement('input');
+        control.type = field.type === 'number' ? 'number' : 'text';
+      }
+
+      control.id = `field-${field.key.replace(/[^a-z0-9_-]/gi, '-')}`;
+      if (field.placeholder) control.placeholder = field.placeholder;
+      if (field.required) control.required = true;
+      if (field.type === 'number') control.step = '1';
+      control.addEventListener('input', () => updateMetaBar());
+      wrapper.appendChild(control);
+      return { wrapper, control };
+    }
+    function renderSearchResults() {
+      const route = ROUTES[state.currentRouteId];
+      const data = state.routeData[state.currentRouteId];
+      if (!route || !data) return;
+
+      const query = els.searchInput.value.trim().toLowerCase();
+      const filtered = data.records.filter(record => {
+        if (!query) return true;
+        return buildSearchText(route, record).includes(query);
+      });
+
+      els.resultList.innerHTML = '';
+      if (!filtered.length) {
+        const empty = document.createElement('div');
+        empty.className = 'muted small';
+        empty.textContent = 'No matching entries.';
+        els.resultList.appendChild(empty);
+        return;
+      }
+
+      for (const record of filtered) {
+        const div = document.createElement('div');
+        div.className = `result${state.selectedRecord?.recordId === record.recordId ? ' active' : ''}`;
+        const title = record.secondaryKey ? `${record.primaryKey} / ${record.secondaryKey}` : record.primaryKey;
+        div.innerHTML = `
+          <div class="result-title">${escapeHtml(title)}</div>
+          <div class="result-sub">${escapeHtml(route.summary?.(record.value, record.primaryKey) || '')}</div>
+          <div class="chips">
+            <span class="chip">${escapeHtml(route.singular)}</span>
+            <span class="chip">${escapeHtml(route.filePath)}</span>
+          </div>
+        `;
+        div.addEventListener('click', () => {
+          state.selectedRecord = record;
+          if (state.mode !== 'create') fillFormFromRecord(record);
+          renderSearchResults();
+          updateMetaBar();
+        });
+        els.resultList.appendChild(div);
+      }
+    }
+
+    function buildSearchText(route, record) {
+      return [route.label, record.primaryKey, record.secondaryKey || '', safeJson(record.value)].join(' ').toLowerCase();
+    }
+
+    function fillFormForCreate() {
+      const route = ROUTES[state.currentRouteId];
+      if (!route) return;
+      clearFields(route);
+      applyDefaults(route);
+      setMode('create');
+      updateMetaBar();
+      renderHelpers();
+    }
+
+    function fillFormFromRecord(record) {
+      const route = ROUTES[state.currentRouteId];
+      if (!route || !record) return;
+      clearFields(route);
+      applyDefaults(route);
+
+      if (route.store === 'map' || route.store === 'nested-map') {
+        state.fieldRefs.__primaryKey.value = record.primaryKey;
+      }
+
+      if (route.store === 'lifescales') {
+        state.fieldRefs.__primaryKey.value = record.primaryKey;
+        state.fieldRefs.__secondaryKey.value = record.secondaryKey || '';
+        state.fieldRefs.__points.value = lifeScalePointsToText(record.value);
+      }
+
+      for (const field of route.schema) {
+        if (field.type === 'identity' || field.type === 'identity-secondary') continue;
+        const control = state.fieldRefs[field.key];
+        if (!control) continue;
+        control.value = fieldValueToInput(field, record.value?.[field.key]);
+      }
+
+      updateFieldLocking();
+      updateMetaBar();
+      renderHelpers();
+    }
+
+    function clearFields(route) {
+      els.notesInput.value = '';
+      for (const key of Object.keys(state.fieldRefs)) state.fieldRefs[key].value = '';
+      if (route.store === 'lifescales' && state.fieldRefs.__points) state.fieldRefs.__points.value = '';
+    }
+
+    function applyDefaults(route) {
+      for (const field of route.schema) {
+        const control = state.fieldRefs[field.key];
+        if (!control) continue;
+        if (field.defaultValue !== undefined) control.value = fieldValueToInput(field, field.defaultValue);
+      }
+    }
+
+    function fieldValueToInput(field, value) {
+      if (value === undefined || value === null) return '';
+      if (field.type === 'boolean') return value === true ? 'true' : value === false ? 'false' : '';
+      if (field.type === 'json') return JSON.stringify(value, null, 2);
+      if (field.type === 'array-lines') return Array.isArray(value) ? value.join('\n') : '';
+      if (field.type === 'lifescale-points') return lifeScalePointsToText(value);
+      return String(value);
+    }
+
+    function lifeScalePointsToText(points) {
+      return (Array.isArray(points) ? points : [])
+        .map(pair => Array.isArray(pair) ? `${pair[0] ?? ''}, ${pair[1] ?? ''}` : '')
+        .filter(Boolean)
+        .join('\n');
     }
 
     function setMode(mode) {
       state.mode = mode;
-      els.operationMode.value = mode;
-      els.commitAction.value = mode;
-      els.editorTitle.textContent = `Ability editor · ${mode}`;
+      els.modeCreateBtn.classList.toggle('active', mode === 'create');
+      els.modeUpdateBtn.classList.toggle('active', mode === 'update');
+      els.modeDeleteBtn.classList.toggle('active', mode === 'delete');
+      updateFieldLocking();
+      updateMetaBar();
+    }
 
-      if (mode === 'create') {
-        resetFormForCreate();
-      } else if (state.selectedAbility) {
-        loadSelectedIntoForm();
+    function updateFieldLocking() {
+      const disabled = state.mode === 'delete';
+      for (const control of Object.values(state.fieldRefs)) control.disabled = disabled;
+      els.notesInput.disabled = false;
+    }
+
+    function updateMetaBar() {
+      const route = ROUTES[state.currentRouteId];
+      if (!route || route.id === 'home') return;
+      els.filePathText.textContent = route.filePath;
+      els.actionText.textContent = `${state.mode} ${route.singular}`;
+      els.branchText.textContent = buildBranchName();
+    }
+
+    function buildBranchName() {
+      const route = ROUTES[state.currentRouteId];
+      if (!route || route.id === 'home') return '-';
+      const title = getProposedPrimaryKey() || state.selectedRecord?.primaryKey || route.singular;
+      return `${route.branchPrefix}/${slugify(title)}/${state.mode}/${shortTimestamp()}`;
+    }
+
+    function shortTimestamp() {
+      const now = new Date();
+      const pad = value => String(value).padStart(2, '0');
+      return `${String(now.getUTCFullYear()).slice(-2)}-${pad(now.getUTCMonth() + 1)}-${pad(now.getUTCDate())}-${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}`;
+    }
+
+    function getProposedPrimaryKey() {
+      const route = ROUTES[state.currentRouteId];
+      if (!route) return '';
+      if (route.store === 'array') return state.fieldRefs[route.keyField]?.value.trim() || '';
+      return state.fieldRefs.__primaryKey?.value.trim() || '';
+    }
+
+    function getProposedSecondaryKey() {
+      return state.fieldRefs.__secondaryKey?.value.trim() || '';
+    }
+
+    function buildRecordFromForm() {
+      const route = ROUTES[state.currentRouteId];
+      if (!route) throw new Error('No active route.');
+      if (route.store === 'lifescales') return parseLifeScalePoints(state.fieldRefs.__points.value);
+
+      const record = {};
+      for (const field of route.schema) {
+        if (field.type === 'identity' || field.type === 'identity-secondary' || field.type === 'hidden') {
+          if (field.type === 'hidden') record[field.key] = deepClone(field.defaultValue);
+          continue;
+        }
+
+        const control = state.fieldRefs[field.key];
+        if (!control) continue;
+        const value = parseFieldValue(field, control.value);
+        if (value === undefined) continue;
+        record[field.key] = value;
       }
 
-      maybeAutofillBranch();
-    }
-
-    function resetFormForCreate(source = null) {
-      els.form.reset();
-      els.reviewer.value = 'cyborgaeon';
-      els.commitAction.value = state.mode === 'delete' ? 'delete' : 'create';
-      els.submittedBy.value = state.authUser?.login || '';
-      els.payloadPreview.textContent = 'Nothing yet.';
-
-      if (source) {
-        fillFormFromAbility(source, true);
-        els.index.value = `${source.index || ''} Copy`.trim();
-      } else {
-        els.available.value = '[]';
-        els.preReqs.value = '[]';
-        els.choiceSetRefs.value = '[]';
-        els.data.value = '{}';
+      if (route.id === 'abilities') {
+        record.abilityRef = '';
+        record.choiceSetRefs = [];
       }
 
-      maybeAutofillBranch();
+      return record;
     }
 
-    function loadSelectedIntoForm() {
-      if (!state.selectedAbility) {
-        setStatus('submit', 'Select an ability first.', true);
-        return;
+    function parseFieldValue(field, raw) {
+      const trimmed = raw.trim();
+      if (field.type === 'number') {
+        if (!trimmed) return undefined;
+        const parsed = Number(trimmed);
+        if (!Number.isFinite(parsed)) throw new Error(`${field.label} must be a number.`);
+        return parsed;
       }
-      fillFormFromAbility(state.selectedAbility, false);
-      maybeAutofillBranch();
-      setStatus('submit', `Loaded “${state.selectedAbility.index}” into the form.`, false);
-    }
-
-    function duplicateSelectedIntoCreate() {
-      if (!state.selectedAbility) {
-        setStatus('submit', 'Select an ability first.', true);
-        return;
+      if (field.type === 'boolean') return !trimmed ? undefined : trimmed === 'true';
+      if (field.type === 'json') {
+        if (!trimmed) return undefined;
+        try { return JSON.parse(trimmed); }
+        catch { throw new Error(`${field.label} must be valid JSON.`); }
       }
-      setMode('create');
-      resetFormForCreate(state.selectedAbility);
+      if (field.type === 'array-lines') return !trimmed ? [] : trimmed.split('\n').map(line => line.trim()).filter(Boolean);
+      if (field.type === 'lifescale-points') return parseLifeScalePoints(trimmed);
+      return trimmed || undefined;
     }
 
-    function fillFormFromAbility(ability, asCreate) {
-      els.submittedBy.value = state.authUser?.login || els.submittedBy.value || '';
-      els.reviewer.value = 'cyborgaeon';
-      els.commitAction.value = asCreate ? 'create' : state.mode;
-      els.index.value = ability.index ?? '';
-      els.abilityRef.value = ability.abilityRef ?? '';
-      els.table.value = ability.table ?? '';
-      els.cost.value = ability.cost ?? '';
-      els.sourceBook.value = ability.sourceBook ?? '';
-      els.maxAvailable.value = ability.maxAvailable ?? '';
-      els.desc.value = ability.desc ?? '';
-      els.canAddMultiple.value = toTriState(ability.CanAddMultiple);
-      els.canBuyMultiple.value = toTriState(ability.canBuyMultiple);
-      els.preReqs.value = JSON.stringify(ability.preReqs ?? [], null, 2);
-      els.choiceSetRefs.value = JSON.stringify(ability.choiceSetRefs ?? [], null, 2);
-      els.available.value = JSON.stringify(ability.available ?? [], null, 2);
-      els.data.value = JSON.stringify(ability.data ?? {}, null, 2);
-      els.notes.value = '';
-    }
-
-    function toTriState(value) {
-      if (value === true) return 'true';
-      if (value === false) return 'false';
-      return '';
-    }
-
-    function parseJsonField(value, fallback, fieldName) {
-      const trimmed = value.trim();
-      if (!trimmed) return fallback;
-      try {
-        return JSON.parse(trimmed);
-      } catch (error) {
-        throw new Error(`${fieldName} must be valid JSON`);
-      }
-    }
-
-    function buildAbilityFromForm() {
-      const ability = {
-        available: parseJsonField(els.available.value, [], 'available'),
-        table: Number(els.table.value),
-        cost: Number(els.cost.value),
-        index: els.index.value.trim(),
-        desc: els.desc.value.trim(),
-        sourceBook: els.sourceBook.value.trim()
-      };
-
-      const preReqs = parseJsonField(els.preReqs.value, [], 'preReqs');
-      const choiceSetRefs = parseJsonField(els.choiceSetRefs.value, [], 'choiceSetRefs');
-      const data = parseJsonField(els.data.value, {}, 'data');
-
-      if (preReqs.length) ability.preReqs = preReqs;
-      if (choiceSetRefs.length) ability.choiceSetRefs = choiceSetRefs;
-      if (Object.keys(data).length) ability.data = data;
-
-      const abilityRef = els.abilityRef.value.trim();
-      if (abilityRef) ability.abilityRef = abilityRef;
-
-      const maxAvailableRaw = els.maxAvailable.value.trim();
-      if (maxAvailableRaw) {
-        ability.maxAvailable = /^\d+$/.test(maxAvailableRaw) ? Number(maxAvailableRaw) : maxAvailableRaw;
-      }
-
-      const canAddMultiple = triStateToValue(els.canAddMultiple.value);
-      const canBuyMultiple = triStateToValue(els.canBuyMultiple.value);
-      if (canAddMultiple !== undefined) ability.CanAddMultiple = canAddMultiple;
-      if (canBuyMultiple !== undefined) ability.canBuyMultiple = canBuyMultiple;
-
-      return ability;
-    }
-
-    function triStateToValue(value) {
-      if (value === 'true') return true;
-      if (value === 'false') return false;
-      return undefined;
-    }
-
-    function slugify(input) {
-      return String(input || '')
-        .toLowerCase()
-        .normalize('NFKD')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .slice(0, 60) || 'unnamed';
-    }
-
-    function timestampString() {
-      const d = new Date();
-      const pad = n => String(n).padStart(2, '0');
-      return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}`;
-    }
-
-    function maybeAutofillBranch() {
-      if (els.branchName.value.trim()) return;
-      const action = els.commitAction.value || state.mode || 'update';
-      const slug = slugify(els.index.value);
-      els.branchName.value = `${CONFIG.entityType}/${slug}-${action}-${timestampString()}`;
+    function parseLifeScalePoints(raw) {
+      const lines = raw.split('\n').map(line => line.trim()).filter(Boolean);
+      return lines.map((line, index) => {
+        const parts = line.split(',').map(part => part.trim());
+        if (parts.length !== 2) throw new Error(`Life scale row ${index + 1} must be "body, loc".`);
+        const body = Number(parts[0]);
+        const loc = Number(parts[1]);
+        if (!Number.isFinite(body) || !Number.isFinite(loc)) throw new Error(`Life scale row ${index + 1} must contain two numbers.`);
+        return [body, loc];
+      });
     }
 
     function buildSubmissionPayload() {
-      const action = els.commitAction.value;
-      const ability = action === 'delete' ? null : buildAbilityFromForm();
-      const selectedOriginal = state.selectedAbility ? structuredClone(state.selectedAbility) : null;
+      const route = ROUTES[state.currentRouteId];
+      if (!route || route.id === 'home') throw new Error('Choose a form first.');
+      if (!state.authUser) throw new Error('You are not authenticated with the worker.');
+
+      const primaryKey = getProposedPrimaryKey();
+      const secondaryKey = getProposedSecondaryKey();
+      if (!primaryKey) throw new Error('A record name is required.');
+      if (route.store === 'lifescales' && !secondaryKey) throw new Error('A class name is required.');
+      if (state.mode !== 'create' && !state.selectedRecord) throw new Error('Update and delete actions require an existing selected record.');
+
+      const updatedRecord = state.mode === 'delete' ? null : buildRecordFromForm();
+      validateRecord(route, updatedRecord, primaryKey);
+      const selectedOriginal = state.selectedRecord ? deepClone(state.selectedRecord.value) : null;
 
       const payload = {
-        entityType: CONFIG.entityType,
-        operation: action,
-        submittedBy: els.submittedBy.value.trim(),
-        reviewer: els.reviewer.value.trim(),
-        branchName: els.branchName.value.trim() || `${CONFIG.entityType}/${slugify(els.index.value)}-${action}-${timestampString()}`,
-        notes: els.notes.value.trim(),
-        lookup: {
-          index: state.selectedAbility?.index || null,
-          abilityRef: state.selectedAbility?.abilityRef || null
+        entityType: route.id,
+        entityLabel: route.label,
+        operation: state.mode,
+        filePath: route.filePath,
+        branchName: buildBranchName(),
+        submittedBy: state.authUser.login,
+        notes: els.notesInput.value.trim(),
+        target: {
+          primaryKey,
+          secondaryKey: secondaryKey || null,
+          originalPrimaryKey: state.selectedRecord?.primaryKey || null,
+          originalSecondaryKey: state.selectedRecord?.secondaryKey || null
         },
+        mutation: { strategy: route.store, keyField: route.keyField || null, containerKey: route.containerKey || null },
         commit: {
-          title: buildCommitTitle(action),
-          body: buildCommitBody(action)
+          title: `${capitalize(state.mode)} ${route.singular}: ${primaryKey}`,
+          body: [`${capitalize(state.mode)} ${route.singular} via admin page`, `File: ${route.filePath}`, `Submitted by: ${state.authUser.login}`, els.notesInput.value.trim() ? `Notes: ${els.notesInput.value.trim()}` : null].filter(Boolean).join('\n')
         },
         pullRequest: {
-          title: buildPrTitle(action),
-          body: buildPrBody(action),
-          base: 'init',
-          requestedReviewers: [els.reviewer.value.trim()]
+          title: `${capitalize(state.mode)} ${route.singular}: ${primaryKey}`,
+          body: [`Route: ${route.label}`, `File: ${route.filePath}`, `Operation: ${state.mode}`, `Target: ${secondaryKey ? `${primaryKey} / ${secondaryKey}` : primaryKey}`, '', 'Notes:', els.notesInput.value.trim() || '(none)'].join('\n'),
+          base: 'init'
         },
-        originalAbility: selectedOriginal,
-        updatedAbility: ability
+        before: selectedOriginal,
+        after: updatedRecord
       };
 
-      validatePayload(payload);
+      if (route.id === 'abilities') {
+        payload.lookup = { index: state.selectedRecord?.primaryKey || null, abilityRef: state.selectedRecord?.value?.abilityRef || null };
+        payload.originalAbility = selectedOriginal;
+        payload.updatedAbility = updatedRecord;
+      }
+
       return payload;
     }
-
-    function validatePayload(payload) {
-      if (!payload.submittedBy) throw new Error('Submitted by is required.');
-      if (!payload.reviewer) throw new Error('Reviewer is required.');
-      if (!payload.branchName) throw new Error('Branch name is required.');
-
-      if (payload.operation !== 'create' && !state.selectedAbility) {
-        throw new Error('Update/delete requires an existing selected ability.');
-      }
-
-      if (payload.operation !== 'delete') {
-        const ability = payload.updatedAbility;
-        if (!ability.index) throw new Error('Index is required.');
-        if (!ability.desc) throw new Error('Description is required.');
-        if (!ability.sourceBook) throw new Error('Source book is required.');
-        if (!Number.isFinite(ability.table)) throw new Error('Table must be a number.');
-        if (!Number.isFinite(ability.cost)) throw new Error('Cost must be a number.');
-        if (!Array.isArray(ability.available)) throw new Error('available must be an array.');
+    function validateRecord(route, record, primaryKey) {
+      if (state.mode === 'delete') return;
+      if (!primaryKey) throw new Error(`${route.singular} name is required.`);
+      if (route.store === 'array' && route.keyField && !record?.[route.keyField]) throw new Error(`${route.keyField} is required.`);
+      if (route.id === 'abilities') {
+        if (!record.index) throw new Error('Ability name is required.');
+        if (!record.desc) throw new Error('Description is required.');
+        if (!record.sourceBook) throw new Error('Source book is required.');
+        if (!Number.isFinite(record.table)) throw new Error('Table must be numeric.');
+        if (!Number.isFinite(record.cost)) throw new Error('Cost must be numeric.');
       }
     }
 
-    function buildCommitTitle(action) {
-      const name = els.index.value.trim() || state.selectedAbility?.index || 'unknown ability';
-      const verbs = { create: 'Create', update: 'Update', delete: 'Delete' };
-      return `${verbs[action] || 'Update'} ability: ${name}`;
-    }
-
-    function buildCommitBody(action) {
-      const actor = els.submittedBy.value.trim() || 'unknown';
-      return `${action} ability via admin page\n\nSubmitted by: ${actor}`;
-    }
-
-    function buildPrTitle(action) {
-      const name = els.index.value.trim() || state.selectedAbility?.index || 'unknown ability';
-      const verbs = { create: 'Add', update: 'Edit', delete: 'Remove' };
-      return `${verbs[action] || 'Edit'} ability: ${name}`;
-    }
-
-    function buildPrBody(action) {
-      const selectedName = state.selectedAbility?.index || '(none selected)';
-      const newName = els.index.value.trim() || '(none)';
-      return [
-        `Operation: ${action}`,
-        `Submitted by: ${els.submittedBy.value.trim() || 'unknown'}`,
-        `Reviewer requested: ${els.reviewer.value.trim() || 'none'}`,
-        `Original ability: ${selectedName}`,
-        `Updated ability: ${newName}`,
-        '',
-        'Notes:',
-        els.notes.value.trim() || '(none)'
-      ].join('\n');
-    }
-
-    function onPreviewPayload() {
+    function onPreview() {
       try {
         const payload = buildSubmissionPayload();
         els.payloadPreview.textContent = JSON.stringify(payload, null, 2);
-        setStatus('submit', 'Payload preview updated.', false);
+        setStatus('submit', 'Preview updated.', false);
       } catch (error) {
         setStatus('submit', error.message, true);
       }
@@ -883,34 +1197,23 @@
 
     async function onSubmit(event) {
       event.preventDefault();
-
       try {
         const payload = buildSubmissionPayload();
         els.payloadPreview.textContent = JSON.stringify(payload, null, 2);
-
-        if (!state.authUser) {
-          throw new Error('You are not authenticated with the Worker.');
-        }
-
         els.submitBtn.disabled = true;
-        setStatus('submit', 'Submitting proposal…', false);
+        setStatus('submit', 'Submitting proposal...', false);
 
         const response = await fetch(CONFIG.submitEndpoint, {
           method: 'POST',
           credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
         const responseText = await response.text();
         let responseJson;
-        try {
-          responseJson = JSON.parse(responseText);
-        } catch {
-          responseJson = { raw: responseText };
-        }
+        try { responseJson = JSON.parse(responseText); }
+        catch { responseJson = { raw: responseText }; }
 
         if (!response.ok) {
           throw new Error(responseJson.message || responseJson.error || `Submission failed with status ${response.status}`);
@@ -925,13 +1228,170 @@
       }
     }
 
+    function renderHelpers() {
+      const route = ROUTES[state.currentRouteId];
+      const showHelpers = !!route && route.id !== 'home';
+      els.helperSection.classList.toggle('hidden', !showHelpers);
+      els.preReqCard.classList.toggle('hidden', !route?.preReqField);
+      els.preReqCloneCard.classList.toggle('hidden', !route?.preReqField);
+      els.availabilityCard.classList.toggle('hidden', !route?.availabilityField);
+      els.lifeScaleBaseCard.classList.toggle('hidden', route?.id !== 'lifescales');
+
+      if (route?.preReqField) {
+        renderPreReqSearch();
+        renderPreReqCloneSearch();
+      }
+      if (route?.availabilityField) renderAvailabilitySearch();
+      if (route?.id === 'lifescales') renderLifeScaleBaseSearch();
+    }
+
+    async function renderPreReqSearch() {
+      const route = ROUTES[state.currentRouteId];
+      if (!route?.preReqField) return;
+
+      await ensureRouteData('abilities');
+      const abilities = state.routeData.abilities.records;
+      const query = els.preReqSearchInput.value.trim().toLowerCase();
+      const hits = abilities.filter(record => !query || buildSearchText(ROUTES.abilities, record).includes(query)).slice(0, 12);
+
+      els.preReqResults.innerHTML = '';
+      for (const hit of hits) {
+        const item = document.createElement('div');
+        item.className = 'helper-item';
+        item.innerHTML = `<strong>${escapeHtml(hit.primaryKey)}</strong><div class="small muted">${escapeHtml(ROUTES.abilities.summary(hit.value))}</div>`;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = 'Add to preReqs';
+        button.style.marginTop = '8px';
+        button.addEventListener('click', () => appendLineValue(route.preReqField, hit.primaryKey));
+        item.appendChild(button);
+        els.preReqResults.appendChild(item);
+      }
+    }
+
+    async function renderPreReqCloneSearch() {
+      const route = ROUTES[state.currentRouteId];
+      if (!route?.preReqField) return;
+
+      const searchableRoutes = ['abilities', 'miracles', 'evocations'];
+      for (const routeId of searchableRoutes) await ensureRouteData(routeId);
+
+      const query = els.preReqCloneInput.value.trim().toLowerCase();
+      const pool = searchableRoutes.flatMap(routeId =>
+        state.routeData[routeId].records
+          .filter(record => Array.isArray(record.value?.preReqs) && record.value.preReqs.length)
+          .map(record => ({ routeId, record }))
+      );
+
+      const hits = pool.filter(({ routeId, record }) => {
+        const haystack = `${routeId} ${record.primaryKey} ${safeJson(record.value.preReqs)}`.toLowerCase();
+        return !query || haystack.includes(query);
+      }).slice(0, 10);
+
+      els.preReqCloneResults.innerHTML = '';
+      for (const hit of hits) {
+        const item = document.createElement('div');
+        item.className = 'helper-item';
+        item.innerHTML = `<strong>${escapeHtml(hit.record.primaryKey)}</strong><div class="small muted">${escapeHtml(hit.routeId)} | ${hit.record.value.preReqs.length} prereqs</div>`;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = 'Use these preReqs';
+        button.style.marginTop = '8px';
+        button.addEventListener('click', () => {
+          state.fieldRefs[route.preReqField].value = hit.record.value.preReqs.join('\n');
+          updateMetaBar();
+        });
+        item.appendChild(button);
+        els.preReqCloneResults.appendChild(item);
+      }
+    }
+
+    function renderAvailabilitySearch() {
+      const route = ROUTES[state.currentRouteId];
+      if (!route?.availabilityField) return;
+
+      const records = state.routeData[state.currentRouteId]?.records || [];
+      const query = els.availabilitySearchInput.value.trim().toLowerCase();
+      const hits = records.filter(record => {
+        if (!record.value?.[route.availabilityField]) return false;
+        const haystack = `${record.primaryKey} ${safeJson(record.value[route.availabilityField])}`.toLowerCase();
+        return !query || haystack.includes(query);
+      }).slice(0, 10);
+
+      els.availabilityResults.innerHTML = '';
+      for (const hit of hits) {
+        const item = document.createElement('div');
+        item.className = 'helper-item';
+        item.innerHTML = `<strong>${escapeHtml(hit.primaryKey)}</strong><div class="small muted">Reuse ${escapeHtml(route.availabilityField)}</div>`;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = 'Copy availability';
+        button.style.marginTop = '8px';
+        button.addEventListener('click', () => {
+          state.fieldRefs[route.availabilityField].value = JSON.stringify(hit.value[route.availabilityField], null, 2);
+          updateMetaBar();
+        });
+        item.appendChild(button);
+        els.availabilityResults.appendChild(item);
+      }
+    }
+
+    function renderLifeScaleBaseSearch() {
+      if (state.currentRouteId !== 'lifescales') return;
+      const records = state.routeData.lifescales?.records || [];
+      const query = els.lifeScaleBaseInput.value.trim().toLowerCase();
+      const hits = records.filter(record => `${record.primaryKey} ${record.secondaryKey}`.toLowerCase().includes(query || '')).slice(0, 12);
+
+      els.lifeScaleBaseResults.innerHTML = '';
+      for (const hit of hits) {
+        const item = document.createElement('div');
+        item.className = 'helper-item';
+        item.innerHTML = `<strong>${escapeHtml(hit.primaryKey)} / ${escapeHtml(hit.secondaryKey || '')}</strong><div class="small muted">${hit.value.length} rows</div>`;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = 'Use as base';
+        button.style.marginTop = '8px';
+        button.addEventListener('click', () => {
+          state.fieldRefs.__points.value = lifeScalePointsToText(hit.value);
+          updateMetaBar();
+        });
+        item.appendChild(button);
+        els.lifeScaleBaseResults.appendChild(item);
+      }
+    }
+
+    function appendLineValue(fieldKey, nextValue) {
+      const control = state.fieldRefs[fieldKey];
+      const existing = control.value.split('\n').map(line => line.trim()).filter(Boolean);
+      if (!existing.includes(nextValue)) existing.push(nextValue);
+      control.value = existing.join('\n');
+      updateMetaBar();
+    }
+
+    function deepClone(value) {
+      return value === undefined ? undefined : JSON.parse(JSON.stringify(value));
+    }
+
+    function safeJson(value) {
+      try { return JSON.stringify(value); }
+      catch { return ''; }
+    }
+
+    function slugify(input) {
+      return String(input || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'unnamed';
+    }
+
+    function capitalize(value) {
+      return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
+    }
+
     function setStatus(kind, message, isError) {
       const el = kind === 'submit' ? els.submitStatus : els.authStatus;
-      el.hidden = false;
+      el.classList.remove('hidden');
       el.textContent = message;
-      el.style.borderColor = isError ? 'rgba(255,123,123,0.5)' : 'rgba(119,211,155,0.45)';
-      el.style.color = isError ? '#ffd3d3' : '#dbffe9';
-      el.style.background = isError ? 'rgba(255,123,123,0.08)' : 'rgba(119,211,155,0.08)';
+      el.style.borderColor = isError ? 'rgba(162, 52, 52, 0.5)' : 'rgba(47, 125, 75, 0.4)';
+      el.style.color = isError ? '#7f1f1f' : '#1e5c36';
+      el.style.background = isError ? 'rgba(235, 203, 203, 0.7)' : 'rgba(212, 238, 219, 0.75)';
     }
 
     function escapeHtml(value) {
