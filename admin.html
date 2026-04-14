@@ -350,6 +350,8 @@
       submitEndpoint: 'https://laby-auth.bradleyjamesbarfoot.workers.dev/api/propose-change'
     };
 
+    const PENDING_ROUTE_KEY = 'laby-admin-pending-route';
+
     const ROUTES = {
       home: { id: 'home', label: 'Home', description: 'Login only' },
       abilities: {
@@ -675,13 +677,14 @@
       els.lifeScaleBaseInput.addEventListener('input', renderLifeScaleBaseSearch);
     }
     function beginLogin() {
-      const returnTo = window.location.href;
-      window.location.href = `${CONFIG.authBaseUrl}/auth/start?returnTo=${encodeURIComponent(returnTo)}`;
+      const currentHash = window.location.hash || '#/abilities';
+      sessionStorage.setItem(PENDING_ROUTE_KEY, currentHash);
+      window.location.href = `${CONFIG.authBaseUrl}/auth/start`;
     }
 
     function beginLogout() {
-      const returnTo = `${window.location.origin}${window.location.pathname}#/home`;
-      window.location.href = `${CONFIG.authBaseUrl}/auth/logout?returnTo=${encodeURIComponent(returnTo)}`;
+      sessionStorage.removeItem(PENDING_ROUTE_KEY);
+      window.location.href = `${CONFIG.authBaseUrl}/auth/logout`;
     }
 
     async function checkAuth() {
@@ -709,12 +712,21 @@
       state.currentRouteId = routeId;
 
       if (!state.authUser && routeId !== 'home') {
+        sessionStorage.setItem(PENDING_ROUTE_KEY, `#/${routeId}`);
         navigate('home', { callback: routeId }, true);
         renderForRoute('home');
         return;
       }
 
       if (state.authUser && routeId === 'home') {
+        const storedRoute = sessionStorage.getItem(PENDING_ROUTE_KEY);
+        if (storedRoute && storedRoute.startsWith('#/')) {
+          sessionStorage.removeItem(PENDING_ROUTE_KEY);
+          history.replaceState(null, '', `${window.location.pathname}${window.location.search}${storedRoute}`);
+          await handleRouteChange();
+          return;
+        }
+
         const callback = routeState.params.get('callback');
         if (callback && ROUTES[callback] && callback !== 'home') {
           navigate(callback, {}, true);
