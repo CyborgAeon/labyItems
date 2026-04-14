@@ -1005,7 +1005,12 @@
       wrapper.appendChild(label);
 
       let control;
-      if (field.type === 'textarea' || field.type === 'json' || field.type === 'lifescale-points') control = document.createElement('textarea');
+      if (
+        field.type === 'textarea'
+        || field.type === 'json'
+        || field.type === 'lifescale-points'
+        || field.type === 'array-lines'
+      ) control = document.createElement('textarea');
       else if (field.type === 'boolean') {
         control = document.createElement('select');
         control.innerHTML = `<option value="">Unset</option><option value="true">true</option><option value="false">false</option>`;
@@ -1224,7 +1229,24 @@
         try { return JSON.parse(trimmed); }
         catch { throw new Error(`${field.label} must be valid JSON.`); }
       }
-      if (field.type === 'array-lines') return !trimmed ? [] : trimmed.split('\n').map(line => line.trim()).filter(Boolean);
+      if (field.type === 'array-lines') {
+        if (!trimmed) return [];
+
+        if (trimmed.startsWith('[')) {
+          try {
+            const parsed = JSON.parse(trimmed);
+            if (!Array.isArray(parsed)) throw new Error();
+            return parsed.map(value => String(value).trim()).filter(Boolean);
+          } catch {
+            throw new Error(`${field.label} must be one entry per line or a JSON string array.`);
+          }
+        }
+
+        return trimmed
+          .split(/\r?\n/)
+          .map(line => line.trim())
+          .filter(Boolean);
+      }
       if (field.type === 'lifescale-points') return parseLifeScalePoints(trimmed);
       return trimmed || undefined;
     }
