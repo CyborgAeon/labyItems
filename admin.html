@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laby Items Admin</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121933;
+      --panel-2: #182246;
+      --text: #eef2ff;
+      --muted: #a6b0cf;
+      --line: #2a376a;
+      --accent: #7aa2ff;
+      --accent-2: #9b8cff;
+      --danger: #ff7b7b;
+      --success: #77d39b;
+      --warning: #ffcf70;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #09101d 0%, #0b1020 100%);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    h1, h2, h3 { margin: 0 0 12px; }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.2rem; }
+    h3 { font-size: 1rem; }
+
+    .muted { color: var(--muted); }
+    .status {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      margin-bottom: 16px;
+      white-space: pre-wrap;
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: 420px minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--text);
+      background: var(--panel-2);
+      cursor: pointer;
+    }
+    button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #0b1020;
+      border: none;
+      font-weight: 700;
+    }
+    button.warn {
+      background: rgba(255, 207, 112, 0.12);
+      color: var(--warning);
+    }
+    button.danger {
+      background: rgba(255, 123, 123, 0.1);
+      color: var(--danger);
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .field, .row {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .row.two {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      color: var(--text);
+      background: #0f1730;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .search-results {
+      max-height: 420px;
+      overflow: auto;
+      display: grid;
+      gap: 10px;
+    }
+
+    .result {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      cursor: pointer;
+    }
+    .result:hover, .result.active {
+      border-color: var(--accent);
+      background: rgba(122,162,255,0.09);
+    }
+    .result-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .pill {
+      border-radius: 999px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .json-preview {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.85rem;
+      background: #091120;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      white-space: pre-wrap;
+      max-height: 420px;
+      overflow: auto;
+    }
+
+    .small {
+      font-size: 0.85rem;
+    }
+
+    .notice {
+      border-left: 4px solid var(--warning);
+      padding: 10px 12px;
+      background: rgba(255, 207, 112, 0.08);
+      border-radius: 8px;
+      color: #ffe5aa;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 1000px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Laby Items Admin</h1>
+    <p class="muted">Search, create, update, or delete abilities. This page assumes authentication is handled by the Cloudflare Worker and that submission goes to the Worker API.</p>
+
+    <div id="authStatus" class="status">Checking login…</div>
+    <div id="submitStatus" class="status" hidden></div>
+
+    <div class="grid">
+      <aside class="card">
+        <div class="section-title">
+          <h2>Ability lookup</h2>
+          <button id="newAbilityBtn">New ability</button>
+        </div>
+
+        <div class="field">
+          <label for="searchInput">Search by name, description, source book, ref, prerequisite, or condition text</label>
+          <input id="searchInput" type="text" placeholder="e.g. immunity, fear, Classes, wizard specialist" />
+        </div>
+
+        <div class="row two">
+          <div class="field">
+            <label for="tableFilter">Table</label>
+            <select id="tableFilter">
+              <option value="">All</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="sourceBookFilter">Source book</label>
+            <select id="sourceBookFilter">
+              <option value="">All</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row two">
+          <div class="field">
+            <label for="operationMode">Mode</label>
+            <select id="operationMode">
+              <option value="update">Update existing</option>
+              <option value="create">Create new</option>
+              <option value="delete">Delete existing</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="resultLimit">Results</label>
+            <select id="resultLimit">
+              <option>15</option>
+              <option selected>30</option>
+              <option>50</option>
+              <option>100</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="searchResults" class="search-results"></div>
+      </aside>
+
+      <main class="card">
+        <div class="section-title">
+          <h2 id="editorTitle">Ability editor</h2>
+          <div class="toolbar">
+            <button id="loadSelectedBtn">Load selected</button>
+            <button id="duplicateBtn" class="warn">Duplicate to new</button>
+            <button id="resetFormBtn">Reset form</button>
+          </div>
+        </div>
+
+        <div class="notice">
+          Suggested branch convention: <strong>ability/&lt;slug&gt;-&lt;action&gt;-&lt;yyyymmddhhmmss&gt;</strong>. This avoids collisions and keeps intent obvious in Git history.
+        </div>
+
+        <form id="abilityForm">
+          <div class="row two">
+            <div class="field">
+              <label for="submittedBy">Submitted by</label>
+              <input id="submittedBy" name="submittedBy" type="text" placeholder="Human-readable submitter name" required />
+            </div>
+            <div class="field">
+              <label for="reviewer">Reviewer</label>
+              <input id="reviewer" name="reviewer" type="text" value="cyborgaeon" required />
+            </div>
+          </div>
+
+          <div class="row two">
+            <div class="field">
+              <label for="branchName">Branch name</label>
+              <input id="branchName" name="branchName" type="text" placeholder="Auto-generated unless overridden" />
+            </div>
+            <div class="field">
+              <label for="commitAction">Commit action</label>
+              <select id="commitAction" name="commitAction">
+                <option value="create">Create</option>
+                <option value="update" selected>Update</option>
+                <option value="delete">Delete</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row two">
+            <div class="field">
+              <label for="index">Index / display name</label>
+              <input id="index" name="index" type="text" required />
+            </div>
+            <div class="field">
+              <label for="abilityRef">Ability ref</label>
+              <input id="abilityRef" name="abilityRef" type="text" placeholder="e.g. ability.merged.immunity-to-fear" />
+            </div>
+          </div>
+
+          <div class="row two">
+            <div class="field">
+              <label for="table">Table</label>
+              <input id="table" name="table" type="number" min="1" step="1" required />
+            </div>
+            <div class="field">
+              <label for="cost">Cost</label>
+              <input id="cost" name="cost" type="number" min="0" step="1" required />
+            </div>
+          </div>
+
+          <div class="row two">
+            <div class="field">
+              <label for="sourceBook">Source book</label>
+              <input id="sourceBook" name="sourceBook" type="text" required />
+            </div>
+            <div class="field">
+              <label for="maxAvailable">maxAvailable</label>
+              <input id="maxAvailable" name="maxAvailable" type="text" placeholder="e.g. *, 1, 3" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="desc">Description</label>
+            <textarea id="desc" name="desc" required></textarea>
+          </div>
+
+          <div class="row two">
+            <div class="field">
+              <label for="canAddMultiple">CanAddMultiple</label>
+              <select id="canAddMultiple" name="canAddMultiple">
+                <option value="">Unset</option>
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="canBuyMultiple">canBuyMultiple</label>
+              <select id="canBuyMultiple" name="canBuyMultiple">
+                <option value="">Unset</option>
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="preReqs">preReqs (JSON array)</label>
+            <textarea id="preReqs" name="preReqs" placeholder='["1st Enhanced Reflexes"]'></textarea>
+          </div>
+
+          <div class="field">
+            <label for="choiceSetRefs">choiceSetRefs (JSON array)</label>
+            <textarea id="choiceSetRefs" name="choiceSetRefs" placeholder='["choice.wizard-specialist.primary"]'></textarea>
+          </div>
+
+          <div class="field">
+            <label for="available">available conditions (JSON array)</label>
+            <textarea id="available" name="available" placeholder='[{"Field":"Bracket","Operator":"In","Value":"🧙 Wizard"}]'></textarea>
+          </div>
+
+          <div class="field">
+            <label for="data">data object (JSON object)</label>
+            <textarea id="data" name="data" placeholder='{"effectType":"increase:maxAC","amount":1}'></textarea>
+          </div>
+
+          <div class="field">
+            <label for="notes">Submission notes</label>
+            <textarea id="notes" name="notes" placeholder="Explain why this is being created, changed, or deleted. This goes into the PR body."></textarea>
+          </div>
+
+          <div class="toolbar">
+            <button type="button" id="previewPayloadBtn">Preview submission payload</button>
+            <button type="submit" class="primary" id="submitBtn">Submit proposal</button>
+            <button type="button" class="danger" id="deleteModeBtn">Switch to delete</button>
+          </div>
+        </form>
+
+        <h3 style="margin-top:20px;">Preview payload</h3>
+        <div id="payloadPreview" class="json-preview">Nothing yet.</div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const CONFIG = {
+      authBaseUrl: 'https://laby-auth.bradleyjamesbarfoot.workers.dev',
+      submitEndpoint: 'https://laby-auth.bradleyjamesbarfoot.workers.dev/api/propose-change',
+      rulesDataUrl: '../merged.json',
+      fallbackRulesDataUrl: '/labyitems/merged.json',
+      entityType: 'ability'
+    };
+
+    const state = {
+      authUser: null,
+      abilities: [],
+      filtered: [],
+      selectedIndex: null,
+      selectedAbility: null,
+      mode: 'update'
+    };
+
+    const els = {
+      authStatus: document.getElementById('authStatus'),
+      submitStatus: document.getElementById('submitStatus'),
+      searchInput: document.getElementById('searchInput'),
+      tableFilter: document.getElementById('tableFilter'),
+      sourceBookFilter: document.getElementById('sourceBookFilter'),
+      searchResults: document.getElementById('searchResults'),
+      operationMode: document.getElementById('operationMode'),
+      resultLimit: document.getElementById('resultLimit'),
+      editorTitle: document.getElementById('editorTitle'),
+      payloadPreview: document.getElementById('payloadPreview'),
+      form: document.getElementById('abilityForm'),
+      submittedBy: document.getElementById('submittedBy'),
+      reviewer: document.getElementById('reviewer'),
+      branchName: document.getElementById('branchName'),
+      commitAction: document.getElementById('commitAction'),
+      index: document.getElementById('index'),
+      abilityRef: document.getElementById('abilityRef'),
+      table: document.getElementById('table'),
+      cost: document.getElementById('cost'),
+      sourceBook: document.getElementById('sourceBook'),
+      maxAvailable: document.getElementById('maxAvailable'),
+      desc: document.getElementById('desc'),
+      canAddMultiple: document.getElementById('canAddMultiple'),
+      canBuyMultiple: document.getElementById('canBuyMultiple'),
+      preReqs: document.getElementById('preReqs'),
+      choiceSetRefs: document.getElementById('choiceSetRefs'),
+      available: document.getElementById('available'),
+      data: document.getElementById('data'),
+      notes: document.getElementById('notes'),
+      submitBtn: document.getElementById('submitBtn'),
+      previewPayloadBtn: document.getElementById('previewPayloadBtn'),
+      deleteModeBtn: document.getElementById('deleteModeBtn'),
+      loadSelectedBtn: document.getElementById('loadSelectedBtn'),
+      duplicateBtn: document.getElementById('duplicateBtn'),
+      resetFormBtn: document.getElementById('resetFormBtn'),
+      newAbilityBtn: document.getElementById('newAbilityBtn')
+    };
+
+    init().catch(error => {
+      console.error(error);
+      setStatus('submit', `Initialisation failed: ${error.message}`, true);
+    });
+
+    async function init() {
+      wireEvents();
+      await Promise.all([checkAuth(), loadAbilities()]);
+      applyFilters();
+      resetFormForCreate();
+    }
+
+    function wireEvents() {
+      els.searchInput.addEventListener('input', applyFilters);
+      els.tableFilter.addEventListener('change', applyFilters);
+      els.sourceBookFilter.addEventListener('change', applyFilters);
+      els.operationMode.addEventListener('change', onModeChange);
+      els.resultLimit.addEventListener('change', applyFilters);
+      els.previewPayloadBtn.addEventListener('click', onPreviewPayload);
+      els.deleteModeBtn.addEventListener('click', () => setMode('delete'));
+      els.loadSelectedBtn.addEventListener('click', loadSelectedIntoForm);
+      els.duplicateBtn.addEventListener('click', duplicateSelectedIntoCreate);
+      els.resetFormBtn.addEventListener('click', () => {
+        if (state.mode === 'create') resetFormForCreate();
+        else loadSelectedIntoForm();
+      });
+      els.newAbilityBtn.addEventListener('click', () => setMode('create'));
+      els.form.addEventListener('submit', onSubmit);
+      [els.index, els.commitAction].forEach(el => el.addEventListener('input', maybeAutofillBranch));
+    }
+
+    async function checkAuth() {
+      try {
+        const response = await fetch(`${CONFIG.authBaseUrl}/auth/me`, {
+          credentials: 'include'
+        });
+
+        if (!response.ok) {
+          state.authUser = null;
+          els.authStatus.textContent = `Not signed in. Use your Worker login flow first.`;
+          return;
+        }
+
+        const data = await response.json();
+        state.authUser = data.user;
+        els.authStatus.textContent = `Signed in as ${data.user.login}. Authentication is handled by the Worker; this page does not store credentials.`;
+      } catch (error) {
+        state.authUser = null;
+        els.authStatus.textContent = `Could not verify login: ${error.message}`;
+      }
+    }
+
+    async function loadAbilities() {
+      let response = await fetch(CONFIG.rulesDataUrl);
+      if (!response.ok) {
+        response = await fetch(CONFIG.fallbackRulesDataUrl);
+      }
+      if (!response.ok) {
+        throw new Error(`Could not load rules data from ${CONFIG.rulesDataUrl} or ${CONFIG.fallbackRulesDataUrl}`);
+      }
+
+      const json = await response.json();
+      if (!Array.isArray(json)) {
+        throw new Error('Expected merged.json to be a top-level array');
+      }
+
+      state.abilities = json;
+      populateFilters(json);
+    }
+
+    function populateFilters(items) {
+      const tables = [...new Set(items.map(x => x.table).filter(v => v !== undefined && v !== null))].sort((a, b) => a - b);
+      const sourceBooks = [...new Set(items.map(x => x.sourceBook).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+
+      for (const table of tables) {
+        const opt = document.createElement('option');
+        opt.value = String(table);
+        opt.textContent = String(table);
+        els.tableFilter.appendChild(opt);
+      }
+
+      for (const sourceBook of sourceBooks) {
+        const opt = document.createElement('option');
+        opt.value = sourceBook;
+        opt.textContent = sourceBook;
+        els.sourceBookFilter.appendChild(opt);
+      }
+    }
+
+    function stringifySearchable(item) {
+      return [
+        item.index,
+        item.desc,
+        item.sourceBook,
+        item.abilityRef,
+        JSON.stringify(item.preReqs || []),
+        JSON.stringify(item.available || []),
+        JSON.stringify(item.choiceSetRefs || []),
+        JSON.stringify(item.data || {})
+      ].filter(Boolean).join(' ').toLowerCase();
+    }
+
+    function applyFilters() {
+      const q = els.searchInput.value.trim().toLowerCase();
+      const table = els.tableFilter.value;
+      const sourceBook = els.sourceBookFilter.value;
+      const limit = Number(els.resultLimit.value || '30');
+
+      state.filtered = state.abilities
+        .map((item, idx) => ({ item, idx, searchable: stringifySearchable(item) }))
+        .filter(({ item, searchable }) => {
+          if (table && String(item.table) !== table) return false;
+          if (sourceBook && item.sourceBook !== sourceBook) return false;
+          if (q && !searchable.includes(q)) return false;
+          return true;
+        })
+        .slice(0, limit);
+
+      renderResults();
+    }
+
+    function renderResults() {
+      els.searchResults.innerHTML = '';
+
+      if (!state.filtered.length) {
+        const empty = document.createElement('div');
+        empty.className = 'muted small';
+        empty.textContent = 'No matching abilities.';
+        els.searchResults.appendChild(empty);
+        return;
+      }
+
+      for (const { item, idx } of state.filtered) {
+        const div = document.createElement('div');
+        div.className = 'result' + (state.selectedIndex === idx ? ' active' : '');
+        div.innerHTML = `
+          <div class="result-title">${escapeHtml(item.index || '(untitled ability)')}</div>
+          <div class="small muted">${escapeHtml(item.sourceBook || 'Unknown source')} · table ${item.table ?? '—'} · cost ${item.cost ?? '—'}</div>
+          <div class="small" style="margin-top:6px;">${escapeHtml((item.desc || '').slice(0, 180))}${(item.desc || '').length > 180 ? '…' : ''}</div>
+          <div class="pill-row">
+            ${item.abilityRef ? `<span class="pill">${escapeHtml(item.abilityRef)}</span>` : ''}
+            ${Array.isArray(item.preReqs) && item.preReqs.length ? `<span class="pill">preReqs: ${item.preReqs.length}</span>` : ''}
+            ${Array.isArray(item.available) && item.available.length ? `<span class="pill">available: ${item.available.length}</span>` : ''}
+          </div>
+        `;
+        div.addEventListener('click', () => selectAbility(idx));
+        els.searchResults.appendChild(div);
+      }
+    }
+
+    function selectAbility(idx) {
+      state.selectedIndex = idx;
+      state.selectedAbility = state.abilities[idx] || null;
+      renderResults();
+      if (state.mode !== 'create') loadSelectedIntoForm();
+    }
+
+    function onModeChange() {
+      setMode(els.operationMode.value);
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      els.operationMode.value = mode;
+      els.commitAction.value = mode;
+      els.editorTitle.textContent = `Ability editor · ${mode}`;
+
+      if (mode === 'create') {
+        resetFormForCreate();
+      } else if (state.selectedAbility) {
+        loadSelectedIntoForm();
+      }
+
+      maybeAutofillBranch();
+    }
+
+    function resetFormForCreate(source = null) {
+      els.form.reset();
+      els.reviewer.value = 'cyborgaeon';
+      els.commitAction.value = state.mode === 'delete' ? 'delete' : 'create';
+      els.submittedBy.value = state.authUser?.login || '';
+      els.payloadPreview.textContent = 'Nothing yet.';
+
+      if (source) {
+        fillFormFromAbility(source, true);
+        els.index.value = `${source.index || ''} Copy`.trim();
+      } else {
+        els.available.value = '[]';
+        els.preReqs.value = '[]';
+        els.choiceSetRefs.value = '[]';
+        els.data.value = '{}';
+      }
+
+      maybeAutofillBranch();
+    }
+
+    function loadSelectedIntoForm() {
+      if (!state.selectedAbility) {
+        setStatus('submit', 'Select an ability first.', true);
+        return;
+      }
+      fillFormFromAbility(state.selectedAbility, false);
+      maybeAutofillBranch();
+      setStatus('submit', `Loaded “${state.selectedAbility.index}” into the form.`, false);
+    }
+
+    function duplicateSelectedIntoCreate() {
+      if (!state.selectedAbility) {
+        setStatus('submit', 'Select an ability first.', true);
+        return;
+      }
+      setMode('create');
+      resetFormForCreate(state.selectedAbility);
+    }
+
+    function fillFormFromAbility(ability, asCreate) {
+      els.submittedBy.value = state.authUser?.login || els.submittedBy.value || '';
+      els.reviewer.value = 'cyborgaeon';
+      els.commitAction.value = asCreate ? 'create' : state.mode;
+      els.index.value = ability.index ?? '';
+      els.abilityRef.value = ability.abilityRef ?? '';
+      els.table.value = ability.table ?? '';
+      els.cost.value = ability.cost ?? '';
+      els.sourceBook.value = ability.sourceBook ?? '';
+      els.maxAvailable.value = ability.maxAvailable ?? '';
+      els.desc.value = ability.desc ?? '';
+      els.canAddMultiple.value = toTriState(ability.CanAddMultiple);
+      els.canBuyMultiple.value = toTriState(ability.canBuyMultiple);
+      els.preReqs.value = JSON.stringify(ability.preReqs ?? [], null, 2);
+      els.choiceSetRefs.value = JSON.stringify(ability.choiceSetRefs ?? [], null, 2);
+      els.available.value = JSON.stringify(ability.available ?? [], null, 2);
+      els.data.value = JSON.stringify(ability.data ?? {}, null, 2);
+      els.notes.value = '';
+    }
+
+    function toTriState(value) {
+      if (value === true) return 'true';
+      if (value === false) return 'false';
+      return '';
+    }
+
+    function parseJsonField(value, fallback, fieldName) {
+      const trimmed = value.trim();
+      if (!trimmed) return fallback;
+      try {
+        return JSON.parse(trimmed);
+      } catch (error) {
+        throw new Error(`${fieldName} must be valid JSON`);
+      }
+    }
+
+    function buildAbilityFromForm() {
+      const ability = {
+        available: parseJsonField(els.available.value, [], 'available'),
+        table: Number(els.table.value),
+        cost: Number(els.cost.value),
+        index: els.index.value.trim(),
+        desc: els.desc.value.trim(),
+        sourceBook: els.sourceBook.value.trim()
+      };
+
+      const preReqs = parseJsonField(els.preReqs.value, [], 'preReqs');
+      const choiceSetRefs = parseJsonField(els.choiceSetRefs.value, [], 'choiceSetRefs');
+      const data = parseJsonField(els.data.value, {}, 'data');
+
+      if (preReqs.length) ability.preReqs = preReqs;
+      if (choiceSetRefs.length) ability.choiceSetRefs = choiceSetRefs;
+      if (Object.keys(data).length) ability.data = data;
+
+      const abilityRef = els.abilityRef.value.trim();
+      if (abilityRef) ability.abilityRef = abilityRef;
+
+      const maxAvailableRaw = els.maxAvailable.value.trim();
+      if (maxAvailableRaw) {
+        ability.maxAvailable = /^\d+$/.test(maxAvailableRaw) ? Number(maxAvailableRaw) : maxAvailableRaw;
+      }
+
+      const canAddMultiple = triStateToValue(els.canAddMultiple.value);
+      const canBuyMultiple = triStateToValue(els.canBuyMultiple.value);
+      if (canAddMultiple !== undefined) ability.CanAddMultiple = canAddMultiple;
+      if (canBuyMultiple !== undefined) ability.canBuyMultiple = canBuyMultiple;
+
+      return ability;
+    }
+
+    function triStateToValue(value) {
+      if (value === 'true') return true;
+      if (value === 'false') return false;
+      return undefined;
+    }
+
+    function slugify(input) {
+      return String(input || '')
+        .toLowerCase()
+        .normalize('NFKD')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 60) || 'unnamed';
+    }
+
+    function timestampString() {
+      const d = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}`;
+    }
+
+    function maybeAutofillBranch() {
+      if (els.branchName.value.trim()) return;
+      const action = els.commitAction.value || state.mode || 'update';
+      const slug = slugify(els.index.value);
+      els.branchName.value = `${CONFIG.entityType}/${slug}-${action}-${timestampString()}`;
+    }
+
+    function buildSubmissionPayload() {
+      const action = els.commitAction.value;
+      const ability = action === 'delete' ? null : buildAbilityFromForm();
+      const selectedOriginal = state.selectedAbility ? structuredClone(state.selectedAbility) : null;
+
+      const payload = {
+        entityType: CONFIG.entityType,
+        operation: action,
+        submittedBy: els.submittedBy.value.trim(),
+        reviewer: els.reviewer.value.trim(),
+        branchName: els.branchName.value.trim() || `${CONFIG.entityType}/${slugify(els.index.value)}-${action}-${timestampString()}`,
+        notes: els.notes.value.trim(),
+        lookup: {
+          index: state.selectedAbility?.index || null,
+          abilityRef: state.selectedAbility?.abilityRef || null
+        },
+        commit: {
+          title: buildCommitTitle(action),
+          body: buildCommitBody(action)
+        },
+        pullRequest: {
+          title: buildPrTitle(action),
+          body: buildPrBody(action),
+          base: 'init',
+          requestedReviewers: [els.reviewer.value.trim()]
+        },
+        originalAbility: selectedOriginal,
+        updatedAbility: ability
+      };
+
+      validatePayload(payload);
+      return payload;
+    }
+
+    function validatePayload(payload) {
+      if (!payload.submittedBy) throw new Error('Submitted by is required.');
+      if (!payload.reviewer) throw new Error('Reviewer is required.');
+      if (!payload.branchName) throw new Error('Branch name is required.');
+
+      if (payload.operation !== 'create' && !state.selectedAbility) {
+        throw new Error('Update/delete requires an existing selected ability.');
+      }
+
+      if (payload.operation !== 'delete') {
+        const ability = payload.updatedAbility;
+        if (!ability.index) throw new Error('Index is required.');
+        if (!ability.desc) throw new Error('Description is required.');
+        if (!ability.sourceBook) throw new Error('Source book is required.');
+        if (!Number.isFinite(ability.table)) throw new Error('Table must be a number.');
+        if (!Number.isFinite(ability.cost)) throw new Error('Cost must be a number.');
+        if (!Array.isArray(ability.available)) throw new Error('available must be an array.');
+      }
+    }
+
+    function buildCommitTitle(action) {
+      const name = els.index.value.trim() || state.selectedAbility?.index || 'unknown ability';
+      const verbs = { create: 'Create', update: 'Update', delete: 'Delete' };
+      return `${verbs[action] || 'Update'} ability: ${name}`;
+    }
+
+    function buildCommitBody(action) {
+      const actor = els.submittedBy.value.trim() || 'unknown';
+      return `${action} ability via admin page\n\nSubmitted by: ${actor}`;
+    }
+
+    function buildPrTitle(action) {
+      const name = els.index.value.trim() || state.selectedAbility?.index || 'unknown ability';
+      const verbs = { create: 'Add', update: 'Edit', delete: 'Remove' };
+      return `${verbs[action] || 'Edit'} ability: ${name}`;
+    }
+
+    function buildPrBody(action) {
+      const selectedName = state.selectedAbility?.index || '(none selected)';
+      const newName = els.index.value.trim() || '(none)';
+      return [
+        `Operation: ${action}`,
+        `Submitted by: ${els.submittedBy.value.trim() || 'unknown'}`,
+        `Reviewer requested: ${els.reviewer.value.trim() || 'none'}`,
+        `Original ability: ${selectedName}`,
+        `Updated ability: ${newName}`,
+        '',
+        'Notes:',
+        els.notes.value.trim() || '(none)'
+      ].join('\n');
+    }
+
+    function onPreviewPayload() {
+      try {
+        const payload = buildSubmissionPayload();
+        els.payloadPreview.textContent = JSON.stringify(payload, null, 2);
+        setStatus('submit', 'Payload preview updated.', false);
+      } catch (error) {
+        setStatus('submit', error.message, true);
+      }
+    }
+
+    async function onSubmit(event) {
+      event.preventDefault();
+
+      try {
+        const payload = buildSubmissionPayload();
+        els.payloadPreview.textContent = JSON.stringify(payload, null, 2);
+
+        if (!state.authUser) {
+          throw new Error('You are not authenticated with the Worker.');
+        }
+
+        els.submitBtn.disabled = true;
+        setStatus('submit', 'Submitting proposal…', false);
+
+        const response = await fetch(CONFIG.submitEndpoint, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const responseText = await response.text();
+        let responseJson;
+        try {
+          responseJson = JSON.parse(responseText);
+        } catch {
+          responseJson = { raw: responseText };
+        }
+
+        if (!response.ok) {
+          throw new Error(responseJson.message || responseJson.error || `Submission failed with status ${response.status}`);
+        }
+
+        setStatus('submit', `Proposal submitted successfully.\n\n${JSON.stringify(responseJson, null, 2)}`, false);
+      } catch (error) {
+        console.error(error);
+        setStatus('submit', error.message, true);
+      } finally {
+        els.submitBtn.disabled = false;
+      }
+    }
+
+    function setStatus(kind, message, isError) {
+      const el = kind === 'submit' ? els.submitStatus : els.authStatus;
+      el.hidden = false;
+      el.textContent = message;
+      el.style.borderColor = isError ? 'rgba(255,123,123,0.5)' : 'rgba(119,211,155,0.45)';
+      el.style.color = isError ? '#ffd3d3' : '#dbffe9';
+      el.style.background = isError ? 'rgba(255,123,123,0.08)' : 'rgba(119,211,155,0.08)';
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+  </script>
+</body>
+</html>
