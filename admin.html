@@ -114,6 +114,10 @@
       align-items: start;
     }
 
+    .layout.nav-collapsed {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .card {
       background: rgba(255, 250, 242, 0.82);
       border: 1px solid rgba(200, 176, 138, 0.9);
@@ -123,7 +127,29 @@
       backdrop-filter: blur(6px);
     }
 
-    .nav { position: sticky; top: 24px; }
+    .nav {
+      position: sticky;
+      top: 24px;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .layout.nav-collapsed .nav {
+      display: none;
+    }
+
+    .shell-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .burger {
+      min-width: 48px;
+      padding: 10px 12px;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
     .nav-list { display: grid; gap: 8px; }
     .nav button { text-align: left; padding: 12px 14px; }
     .nav-label { display: block; font-weight: 700; }
@@ -202,7 +228,13 @@
 
     @media (max-width: 1200px) {
       .grid, .helper-grid, .layout { grid-template-columns: 1fr; }
-      .nav { position: static; }
+      .nav {
+        position: static;
+        display: none;
+      }
+      .layout.nav-open .nav {
+        display: block;
+      }
       .meta-bar { grid-template-columns: 1fr; }
     }
 
@@ -230,7 +262,12 @@
     <div id="authStatus" class="status">Checking login...</div>
     <div id="submitStatus" class="status hidden"></div>
 
-    <div class="layout">
+    <div class="shell-toolbar">
+      <button id="navToggleBtn" class="burger" type="button" aria-expanded="true" aria-controls="navCard">☰</button>
+      <div class="muted small">Forms menu</div>
+    </div>
+
+    <div id="appLayout" class="layout">
       <aside id="navCard" class="card nav hidden">
         <div class="panel-head"><h3>Forms</h3></div>
         <div id="navList" class="nav-list"></div>
@@ -563,7 +600,8 @@
       routeData: {},
       selectedRecord: null,
       mode: 'create',
-      fieldRefs: {}
+      fieldRefs: {},
+      navOpen: true
     };
 
     const els = {
@@ -572,6 +610,8 @@
       loginBtn: document.getElementById('loginBtn'),
       logoutBtn: document.getElementById('logoutBtn'),
       homeLoginBtn: document.getElementById('homeLoginBtn'),
+      appLayout: document.getElementById('appLayout'),
+      navToggleBtn: document.getElementById('navToggleBtn'),
       navCard: document.getElementById('navCard'),
       navList: document.getElementById('navList'),
       homeView: document.getElementById('homeView'),
@@ -618,8 +658,12 @@
     });
 
     async function init() {
+      if (window.matchMedia('(max-width: 1200px)').matches) {
+        state.navOpen = false;
+      }
       wireEvents();
       renderNav();
+      updateNavVisibility();
       consumeSessionTokenFromUrl();
       await checkAuth();
       await handleRouteChange();
@@ -633,6 +677,7 @@
       els.loginBtn.addEventListener('click', beginLogin);
       els.homeLoginBtn.addEventListener('click', beginLogin);
       els.logoutBtn.addEventListener('click', beginLogout);
+      els.navToggleBtn.addEventListener('click', toggleNav);
       els.searchInput.addEventListener('input', renderSearchResults);
       els.newRecordBtn.addEventListener('click', () => {
         state.selectedRecord = null;
@@ -804,10 +849,28 @@
         const button = document.createElement('button');
         button.type = 'button';
         button.innerHTML = `<span class="nav-label">${escapeHtml(route.label)}</span><span class="nav-sub">${escapeHtml(route.description)}</span>`;
-        button.addEventListener('click', () => navigate(route.id));
+        button.addEventListener('click', () => {
+          navigate(route.id);
+          if (window.matchMedia('(max-width: 1200px)').matches) {
+            state.navOpen = false;
+            updateNavVisibility();
+          }
+        });
         button.dataset.routeId = route.id;
         els.navList.appendChild(button);
       }
+    }
+
+    function toggleNav() {
+      state.navOpen = !state.navOpen;
+      updateNavVisibility();
+    }
+
+    function updateNavVisibility() {
+      els.navToggleBtn.setAttribute('aria-expanded', String(state.navOpen));
+      els.appLayout.classList.toggle('nav-open', state.navOpen);
+      els.appLayout.classList.toggle('nav-collapsed', !state.navOpen);
+      els.navToggleBtn.textContent = state.navOpen ? '✕' : '☰';
     }
 
     function renderForRoute(routeId) {
@@ -815,7 +878,9 @@
       els.homeView.classList.toggle('hidden', !isHome);
       els.editorView.classList.toggle('hidden', isHome);
       els.navCard.classList.toggle('hidden', !state.authUser);
+      els.navToggleBtn.classList.toggle('hidden', !state.authUser);
       els.loginBtn.classList.toggle('hidden', !!state.authUser);
+      updateNavVisibility();
 
       for (const button of els.navList.querySelectorAll('button')) {
         button.classList.toggle('active', button.dataset.routeId === routeId);
@@ -1187,11 +1252,10 @@
       if (route.store === 'lifescales' && !secondaryKey) throw new Error('A class name is required.');
       if (state.mode !== 'create' && !state.selectedRecord) throw new Error('Update and delete actions require an existing selected record.');
 
-      const updatedRecord = state.mode === 'delete' ? null : buildRecordFromForm();
-      validateRecord(route, updatedRecord, primaryKey);
-      const selectedOriginal = state.selectedRecord ? deepClone(state.selectedRecord.value) : null;
+      const record = state.mode === 'delete' ? null : buildRecordFromForm();
+      validateRecord(route, record, primaryKey);
 
-      const payload = {
+      const basePayload = {
         entityType: route.id,
         entityLabel: route.label,
         operation: state.mode,
@@ -1199,33 +1263,56 @@
         branchName: buildBranchName(),
         submittedBy: state.authUser.login,
         notes: els.notesInput.value.trim(),
-        target: {
-          primaryKey,
-          secondaryKey: secondaryKey || null,
-          originalPrimaryKey: state.selectedRecord?.primaryKey || null,
-          originalSecondaryKey: state.selectedRecord?.secondaryKey || null
-        },
-        mutation: { strategy: route.store, keyField: route.keyField || null, containerKey: route.containerKey || null },
-        commit: {
-          title: `${capitalize(state.mode)} ${route.singular}: ${primaryKey}`,
-          body: [`${capitalize(state.mode)} ${route.singular} via admin page`, `File: ${route.filePath}`, `Submitted by: ${state.authUser.login}`, els.notesInput.value.trim() ? `Notes: ${els.notesInput.value.trim()}` : null].filter(Boolean).join('\n')
-        },
-        pullRequest: {
-          title: `${capitalize(state.mode)} ${route.singular}: ${primaryKey}`,
-          body: [`Route: ${route.label}`, `File: ${route.filePath}`, `Operation: ${state.mode}`, `Target: ${secondaryKey ? `${primaryKey} / ${secondaryKey}` : primaryKey}`, '', 'Notes:', els.notesInput.value.trim() || '(none)'].join('\n'),
-          base: 'init'
-        },
-        before: selectedOriginal,
-        after: updatedRecord
+        storage: {
+          strategy: route.store,
+          keyField: route.keyField || null,
+          containerKey: route.containerKey || null
+        }
       };
 
-      if (route.id === 'abilities') {
-        payload.lookup = { index: state.selectedRecord?.primaryKey || null, abilityRef: state.selectedRecord?.value?.abilityRef || null };
-        payload.originalAbility = selectedOriginal;
-        payload.updatedAbility = updatedRecord;
+      if (state.mode === 'create') {
+        return {
+          ...basePayload,
+          create: {
+            key: {
+              primaryKey,
+              secondaryKey: secondaryKey || null
+            },
+            record
+          }
+        };
       }
 
-      return payload;
+      const match = {
+        primaryKey: state.selectedRecord?.primaryKey || null,
+        secondaryKey: state.selectedRecord?.secondaryKey || null
+      };
+
+      if (state.mode === 'delete') {
+        return {
+          ...basePayload,
+          delete: {
+            match
+          }
+        };
+      }
+
+      return {
+        ...basePayload,
+        update: {
+          match,
+          key: {
+            primaryKey,
+            secondaryKey: secondaryKey || null
+          },
+          record,
+          rename: {
+            changed: primaryKey !== (state.selectedRecord?.primaryKey || ''),
+            from: state.selectedRecord?.primaryKey || null,
+            to: primaryKey
+          }
+        }
+      };
     }
     function validateRecord(route, record, primaryKey) {
       if (state.mode === 'delete') return;
