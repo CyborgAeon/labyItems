@@ -214,7 +214,10 @@
 
     <div id="authStatus" class="status">Checking login…</div>
     <div id="submitStatus" class="status" hidden></div>
-
+    <div style="margin-bottom: 16px;">
+      <button id="loginBtn" class="primary" type="button">Sign in with GitHub</button>
+      <button id="logoutBtn" type="button">Sign out</button>
+    </div>
     <div class="grid">
       <aside class="card">
         <div class="section-title">
@@ -403,12 +406,12 @@
 
   <script>
     const CONFIG = {
-      authBaseUrl: 'https://laby-auth.bradleyjamesbarfoot.workers.dev',
-      submitEndpoint: 'https://laby-auth.bradleyjamesbarfoot.workers.dev/api/propose-change',
-      rulesDataUrl: '../merged.json',
-      fallbackRulesDataUrl: '/labyitems/merged.json',
-      entityType: 'ability'
-    };
+  authBaseUrl: 'https://laby-auth.bradleyjamesbarfoot.workers.dev',
+  submitEndpoint: 'https://laby-auth.bradleyjamesbarfoot.workers.dev/api/propose-change',
+  rulesDataUrl: './merged.json',
+  fallbackRulesDataUrl: '/labyItems/merged.json',
+  entityType: 'ability'
+};
 
     const state = {
       authUser: null,
@@ -420,43 +423,45 @@
     };
 
     const els = {
-      authStatus: document.getElementById('authStatus'),
-      submitStatus: document.getElementById('submitStatus'),
-      searchInput: document.getElementById('searchInput'),
-      tableFilter: document.getElementById('tableFilter'),
-      sourceBookFilter: document.getElementById('sourceBookFilter'),
-      searchResults: document.getElementById('searchResults'),
-      operationMode: document.getElementById('operationMode'),
-      resultLimit: document.getElementById('resultLimit'),
-      editorTitle: document.getElementById('editorTitle'),
-      payloadPreview: document.getElementById('payloadPreview'),
-      form: document.getElementById('abilityForm'),
-      submittedBy: document.getElementById('submittedBy'),
-      reviewer: document.getElementById('reviewer'),
-      branchName: document.getElementById('branchName'),
-      commitAction: document.getElementById('commitAction'),
-      index: document.getElementById('index'),
-      abilityRef: document.getElementById('abilityRef'),
-      table: document.getElementById('table'),
-      cost: document.getElementById('cost'),
-      sourceBook: document.getElementById('sourceBook'),
-      maxAvailable: document.getElementById('maxAvailable'),
-      desc: document.getElementById('desc'),
-      canAddMultiple: document.getElementById('canAddMultiple'),
-      canBuyMultiple: document.getElementById('canBuyMultiple'),
-      preReqs: document.getElementById('preReqs'),
-      choiceSetRefs: document.getElementById('choiceSetRefs'),
-      available: document.getElementById('available'),
-      data: document.getElementById('data'),
-      notes: document.getElementById('notes'),
-      submitBtn: document.getElementById('submitBtn'),
-      previewPayloadBtn: document.getElementById('previewPayloadBtn'),
-      deleteModeBtn: document.getElementById('deleteModeBtn'),
-      loadSelectedBtn: document.getElementById('loadSelectedBtn'),
-      duplicateBtn: document.getElementById('duplicateBtn'),
-      resetFormBtn: document.getElementById('resetFormBtn'),
-      newAbilityBtn: document.getElementById('newAbilityBtn')
-    };
+  authStatus: document.getElementById('authStatus'),
+  submitStatus: document.getElementById('submitStatus'),
+  loginBtn: document.getElementById('loginBtn'),
+  logoutBtn: document.getElementById('logoutBtn'),
+  searchInput: document.getElementById('searchInput'),
+  tableFilter: document.getElementById('tableFilter'),
+  sourceBookFilter: document.getElementById('sourceBookFilter'),
+  searchResults: document.getElementById('searchResults'),
+  operationMode: document.getElementById('operationMode'),
+  resultLimit: document.getElementById('resultLimit'),
+  editorTitle: document.getElementById('editorTitle'),
+  payloadPreview: document.getElementById('payloadPreview'),
+  form: document.getElementById('abilityForm'),
+  submittedBy: document.getElementById('submittedBy'),
+  reviewer: document.getElementById('reviewer'),
+  branchName: document.getElementById('branchName'),
+  commitAction: document.getElementById('commitAction'),
+  index: document.getElementById('index'),
+  abilityRef: document.getElementById('abilityRef'),
+  table: document.getElementById('table'),
+  cost: document.getElementById('cost'),
+  sourceBook: document.getElementById('sourceBook'),
+  maxAvailable: document.getElementById('maxAvailable'),
+  desc: document.getElementById('desc'),
+  canAddMultiple: document.getElementById('canAddMultiple'),
+  canBuyMultiple: document.getElementById('canBuyMultiple'),
+  preReqs: document.getElementById('preReqs'),
+  choiceSetRefs: document.getElementById('choiceSetRefs'),
+  available: document.getElementById('available'),
+  data: document.getElementById('data'),
+  notes: document.getElementById('notes'),
+  submitBtn: document.getElementById('submitBtn'),
+  previewPayloadBtn: document.getElementById('previewPayloadBtn'),
+  deleteModeBtn: document.getElementById('deleteModeBtn'),
+  loadSelectedBtn: document.getElementById('loadSelectedBtn'),
+  duplicateBtn: document.getElementById('duplicateBtn'),
+  resetFormBtn: document.getElementById('resetFormBtn'),
+  newAbilityBtn: document.getElementById('newAbilityBtn')
+};
 
     init().catch(error => {
       console.error(error);
@@ -471,44 +476,53 @@
     }
 
     function wireEvents() {
-      els.searchInput.addEventListener('input', applyFilters);
-      els.tableFilter.addEventListener('change', applyFilters);
-      els.sourceBookFilter.addEventListener('change', applyFilters);
-      els.operationMode.addEventListener('change', onModeChange);
-      els.resultLimit.addEventListener('change', applyFilters);
-      els.previewPayloadBtn.addEventListener('click', onPreviewPayload);
-      els.deleteModeBtn.addEventListener('click', () => setMode('delete'));
-      els.loadSelectedBtn.addEventListener('click', loadSelectedIntoForm);
-      els.duplicateBtn.addEventListener('click', duplicateSelectedIntoCreate);
-      els.resetFormBtn.addEventListener('click', () => {
-        if (state.mode === 'create') resetFormForCreate();
-        else loadSelectedIntoForm();
-      });
-      els.newAbilityBtn.addEventListener('click', () => setMode('create'));
-      els.form.addEventListener('submit', onSubmit);
-      [els.index, els.commitAction].forEach(el => el.addEventListener('input', maybeAutofillBranch));
-    }
+  els.loginBtn.addEventListener('click', () => {
+    window.location.href = `${CONFIG.authBaseUrl}/auth/start`;
+  });
+
+  els.logoutBtn.addEventListener('click', () => {
+    window.location.href = `${CONFIG.authBaseUrl}/auth/logout`;
+  });
+
+  els.searchInput.addEventListener('input', applyFilters);
+  els.tableFilter.addEventListener('change', applyFilters);
+  els.sourceBookFilter.addEventListener('change', applyFilters);
+  els.operationMode.addEventListener('change', onModeChange);
+  els.resultLimit.addEventListener('change', applyFilters);
+  els.previewPayloadBtn.addEventListener('click', onPreviewPayload);
+  els.deleteModeBtn.addEventListener('click', () => setMode('delete'));
+  els.loadSelectedBtn.addEventListener('click', loadSelectedIntoForm);
+  els.duplicateBtn.addEventListener('click', duplicateSelectedIntoCreate);
+  els.resetFormBtn.addEventListener('click', () => {
+    if (state.mode === 'create') resetFormForCreate();
+    else loadSelectedIntoForm();
+  });
+  els.newAbilityBtn.addEventListener('click', () => setMode('create'));
+  els.form.addEventListener('submit', onSubmit);
+  [els.index, els.commitAction].forEach(el => el.addEventListener('input', maybeAutofillBranch));
+}
 
     async function checkAuth() {
-      try {
-        const response = await fetch(`${CONFIG.authBaseUrl}/auth/me`, {
-          credentials: 'include'
-        });
+  try {
+    const response = await fetch(`${CONFIG.authBaseUrl}/auth/me`, {
+      credentials: 'include'
+    });
 
-        if (!response.ok) {
-          state.authUser = null;
-          els.authStatus.textContent = `Not signed in. Use your Worker login flow first.`;
-          return;
-        }
-
-        const data = await response.json();
-        state.authUser = data.user;
-        els.authStatus.textContent = `Signed in as ${data.user.login}. Authentication is handled by the Worker; this page does not store credentials.`;
-      } catch (error) {
-        state.authUser = null;
-        els.authStatus.textContent = `Could not verify login: ${error.message}`;
-      }
+    if (!response.ok) {
+      state.authUser = null;
+      els.authStatus.textContent = 'Not signed in. Click “Sign in with GitHub”.';
+      return;
     }
+
+    const data = await response.json();
+    state.authUser = data.user;
+    els.authStatus.textContent = `Signed in as ${data.user.login}. Authentication is handled by the Worker; this page does not store credentials.`;
+    els.submittedBy.value = data.user.login;
+  } catch (error) {
+    state.authUser = null;
+    els.authStatus.textContent = `Could not verify login: ${error.message}`;
+  }
+}
 
     async function loadAbilities() {
       let response = await fetch(CONFIG.rulesDataUrl);
