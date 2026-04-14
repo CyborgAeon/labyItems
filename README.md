@@ -2,6 +2,10 @@
 
 https://trello.com/b/UmbW9Vwl/laby-automation
 
+## Admin Auth & changes API
+
+https://dash.cloudflare.com/0ff838b499061f3416722568f1e57adc/workers/services/view/laby-auth/production
+
 ## setup local: you'll need dotnet 10
 
 ```bash
