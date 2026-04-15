@@ -15,6 +15,7 @@ namespace labyItems;
 public partial class App : Application
 {
     private readonly IDatabaseInitializer _dbInitializer;
+    private readonly NavigationPage _mainNavPage;
     private static readonly object FirstChanceSync = new();
     private static readonly HashSet<string> FirstChanceSignatures = new(StringComparer.Ordinal);
     private const int FirstChanceSignatureCap = 64;
@@ -24,11 +25,17 @@ public partial class App : Application
         _dbInitializer = dbInitializer;
         InitializeComponent();
         UserAppTheme = AppTheme.Light;
-        var navPage = new NavigationPage(new ItemRoutePage())
+
+        _mainNavPage = new NavigationPage(new ItemRoutePage())
         {
             BarTextColor = Colors.White
         };
-        MainPage = navPage;
+
+        MainPage = new NavigationPage(new Pages.StartupDataRefreshPage())
+        {
+            BarTextColor = Colors.White
+        };
+
         MainPage.Appearing += OnMainPageAppearing;
         RuntimeLog.Write(
             "RUNTIME",
@@ -67,6 +74,10 @@ public partial class App : Application
             catch (Exception ex)
             {
                 RuntimeLog.Write("DB_INIT", "Database initialization failed.", ex);
+            }
+            finally
+            {
+                MainPage.Dispatcher.Dispatch(() => MainPage = _mainNavPage);
             }
         });
     }

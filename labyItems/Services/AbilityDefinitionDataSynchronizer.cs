@@ -70,6 +70,9 @@ public sealed class AbilityDefinitionDataSynchronizer : IAbilityDefinitionDataSy
         SaveChecksum(conn, tx, checksum);
         tx.Commit();
 
+        AbilityDefinitionLookupService.InvalidateCache();
+        AbilityDetailsLookupService.InvalidateCache();
+
         _logger.LogInformation("Ability definitions synchronized. Upserted {Count} defaults.", parsed.Count);
     }
 

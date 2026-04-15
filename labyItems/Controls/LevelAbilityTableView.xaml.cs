@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Specialized;
 using labyItems.Models.ViewModels;
 using labyItems.Models.Characters;
+using labyItems.Pages.AbilityCard;
+using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 
@@ -86,8 +88,8 @@ public partial class LevelAbilityTableView : ContentView
         if (detailOptions.Count == 0)
             return;
 
-        var hostPage = ResolveHostPage();
-        if (hostPage == null)
+        var navigation = ResolveNavigation();
+        if (navigation == null)
             return;
 
         var title = row.Level > 0
@@ -96,55 +98,10 @@ public partial class LevelAbilityTableView : ContentView
                 : $"Level {row.Level} abilities"
             : "Abilities";
 
-        var picked = detailOptions.Count == 1
-            ? detailOptions[0]
-            : await PickAbilityDetailOptionAsync(hostPage, title, detailOptions);
-        if (picked == null)
-            return;
-
-        var ability = await ResolveAbilityAsync(picked.LookupKey);
-        if (ability == null
-            && !string.Equals(picked.LookupKey, picked.DisplayName, StringComparison.OrdinalIgnoreCase))
-        {
-            ability = await ResolveAbilityAsync(picked.DisplayName);
-        }
-
-        if (ability == null)
-        {
-            await hostPage.DisplayAlert("No Ability Card", $"Could not find a detail card for \"{picked.DisplayName}\".", "OK");
-            return;
-        }
-
-        var navigation = ResolveNavigation();
-        if (navigation == null)
-            return;
-
-        await navigation.PushAsync(new AbilityCardPage(ability));
+        await navigation.PushAsync(new AbilityCardOptionListPage(title, detailOptions));
     }
 
-    private static async Task<AbilityDetailOption?> PickAbilityDetailOptionAsync(
-        Page hostPage,
-        string title,
-        IReadOnlyList<AbilityDetailOption> options)
-    {
-        var labels = options
-            .Select(option => option.DisplayName)
-            .ToArray();
-
-        var picked = await hostPage.DisplayActionSheet(title, "Cancel", null, labels);
-        if (string.IsNullOrWhiteSpace(picked) || picked.Equals("Cancel", StringComparison.OrdinalIgnoreCase))
-            return null;
-
-        foreach (var option in options)
-        {
-            if (option.DisplayName.Equals(picked, StringComparison.OrdinalIgnoreCase))
-                return option;
-        }
-
-        return null;
-    }
-
-    private static List<AbilityDetailOption> BuildAbilityDetailOptions(LevelAbilityRowVm row)
+    private static List<ChoiceSetAbilityRowVm> BuildAbilityDetailOptions(LevelAbilityRowVm row)
     {
         var names = (row.AbilityNames ?? Array.Empty<string>())
             .Where(name => !string.IsNullOrWhiteSpace(name))
@@ -156,7 +113,7 @@ public partial class LevelAbilityTableView : ContentView
             .Select(key => key.Trim())
             .ToList();
 
-        var options = new List<AbilityDetailOption>();
+        var options = new List<ChoiceSetAbilityRowVm>();
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         var pairedCount = Math.Min(names.Count, keys.Count);
@@ -171,7 +128,7 @@ public partial class LevelAbilityTableView : ContentView
             if (!seen.Add(dedupe))
                 continue;
 
-            options.Add(new AbilityDetailOption(
+            options.Add(new ChoiceSetAbilityRowVm(
                 displayName.Length > 0 ? displayName : lookupKey,
                 lookupKey.Length > 0 ? lookupKey : displayName));
         }
@@ -182,7 +139,7 @@ public partial class LevelAbilityTableView : ContentView
                 continue;
 
             seen.Add($"::{key}");
-            options.Add(new AbilityDetailOption(key, key));
+            options.Add(new ChoiceSetAbilityRowVm(key, key));
         }
 
         foreach (var name in names.Skip(pairedCount))
@@ -191,7 +148,7 @@ public partial class LevelAbilityTableView : ContentView
                 continue;
 
             seen.Add($"{name}::{name}");
-            options.Add(new AbilityDetailOption(name, name));
+            options.Add(new ChoiceSetAbilityRowVm(name, name));
         }
 
         return options;
@@ -310,6 +267,4 @@ public partial class LevelAbilityTableView : ContentView
 
         return Application.Current?.MainPage?.Navigation;
     }
-
-    private sealed record AbilityDetailOption(string DisplayName, string LookupKey);
 }

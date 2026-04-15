@@ -108,6 +108,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<Services.IDefaultDatabaseInstaller, Services.DefaultDatabaseInstaller>();
 		builder.Services.AddSingleton<Services.IEvolutionDataSynchronizer, Services.EvolutionDataSynchronizer>();
 		builder.Services.AddSingleton<Services.IAbilityDefinitionDataSynchronizer, Services.AbilityDefinitionDataSynchronizer>();
+		builder.Services.AddSingleton<Services.IPackagedDatabaseSynchronizer, Services.PackagedDatabaseSynchronizer>();
 		builder.Services.AddSingleton<Services.IDatabaseInitializer, Services.DatabaseInitializer>();
 		builder.Services.AddSingleton<IBattleboardExportService, BattleboardExportService>();
 		builder.Services.AddSingleton<IBattleboardDocumentService, BattleboardDocumentService>();

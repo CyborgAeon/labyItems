@@ -22,6 +22,7 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 	private readonly ILogger<DatabaseInitializer> _logger;
     private readonly IEvolutionDataSynchronizer _evolutionDataSynchronizer;
     private readonly IAbilityDefinitionDataSynchronizer _abilityDefinitionDataSynchronizer;
+    private readonly IPackagedDatabaseSynchronizer _packagedDatabaseSynchronizer;
 	private readonly SemaphoreSlim _initLock = new(1, 1);
 	private bool _initialized;
 
@@ -29,12 +30,14 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         IServiceProvider services,
         ILogger<DatabaseInitializer> logger,
         IEvolutionDataSynchronizer evolutionDataSynchronizer,
-        IAbilityDefinitionDataSynchronizer abilityDefinitionDataSynchronizer)
+        IAbilityDefinitionDataSynchronizer abilityDefinitionDataSynchronizer,
+        IPackagedDatabaseSynchronizer packagedDatabaseSynchronizer)
 	{
 		_services = services;
 		_logger = logger;
         _evolutionDataSynchronizer = evolutionDataSynchronizer;
         _abilityDefinitionDataSynchronizer = abilityDefinitionDataSynchronizer;
+        _packagedDatabaseSynchronizer = packagedDatabaseSynchronizer;
 	}
 
 	public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -105,6 +108,16 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 			}
 		}
 #endif
+
+        try
+        {
+            await _packagedDatabaseSynchronizer.EnsureCurrentAsync(dbPath, cancellationToken);
+            log2.LogInformation("Packaged database defaults are synchronized.");
+        }
+        catch (Exception ex)
+        {
+            log2.LogError(ex, "Packaged database sync failed: {Message}", ex.Message);
+        }
 
         try
         {
