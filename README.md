@@ -1,3 +1,34 @@
+## Required setup
+
+This repo targets .NET 10 and MAUI. The minimum local setup is:
+
+- .NET 10 SDK installed and available on `PATH`.
+- MAUI workloads installed: `maui`, `maui-android`, `ios`.
+- Java 17 for Android builds (macOS: `brew install --cask temurin@17`).
+- Android SDK/NDK available for Android targets, or `dotnet workload install maui-android` will install required SDK bits.
+- If you install via the Microsoft install script, add `$HOME/.dotnet` to your PATH or use `$HOME/.dotnet/dotnet` explicitly.
+
+Example bootstrap for macOS or Linux:
+
+```bash
+curl -L https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
+  && chmod +x dotnet-install.sh \
+  && ./dotnet-install.sh --channel 10.0 \
+  && export PATH="$HOME/.dotnet:$PATH" \
+  && dotnet --info \
+  && dotnet workload install maui \
+  && dotnet workload install maui-android \
+  && dotnet workload install ios \
+  && dotnet build -t:InstallAndroidDependencies -f net10.0-android
+```
+
+If the shell cannot find `dotnet` after install, ensure the `PATH` change is persisted in your profile or use:
+
+```bash
+export PATH="$HOME/.dotnet:$PATH"
+$HOME/.dotnet/dotnet --info
+```
+
 ## task board
 
 https://trello.com/b/UmbW9Vwl/laby-automation

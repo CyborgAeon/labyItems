@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using labyItems.Models.Characters;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
