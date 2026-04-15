@@ -141,5 +141,13 @@ public sealed class ChoiceSetGroupVm : INotifyPropertyChanged
 
 public sealed record ChoiceSetAbilityRowVm(string DisplayName, string LookupKey)
 {
+    private Color _rowBackgroundColor = Colors.Transparent;
+
     public bool IsValid => !string.IsNullOrWhiteSpace(DisplayName) || !string.IsNullOrWhiteSpace(LookupKey);
+
+    public Color RowBackgroundColor
+    {
+        get => _rowBackgroundColor;
+        set => _rowBackgroundColor = value;
+    }
 }

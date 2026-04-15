@@ -51,6 +51,8 @@
 		<IosStrictAotSimulator>false</IosStrictAotSimulator>
 		<!-- Optional fail-fast mode: force full-AOT runtime behavior on simulator (can abort at startup). -->
 		<IosFailFastFullAotSimulator>false</IosFailFastFullAotSimulator>
+		<!-- Allow iOS SDK to work with slightly older Xcode versions -->
+		<IosUseXcodeSdk>false</IosUseXcodeSdk>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(IosStrictAotSimulator)' == 'true'">

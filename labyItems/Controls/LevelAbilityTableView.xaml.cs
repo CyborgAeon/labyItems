@@ -84,6 +84,19 @@ public partial class LevelAbilityTableView : ContentView
         if (sender is not Button button || button.CommandParameter is not LevelAbilityRowVm row)
             return;
 
+        // Check if this row has abilities with choice sets (specialist abilities)
+        var hasChoiceSets = await HasAbilityChoiceSetsAsync(row);
+        if (!hasChoiceSets)
+        {
+            // For non-specialist abilities, show alert or other behavior
+            var hostPage = ResolveHostPage();
+            if (hostPage != null)
+            {
+                await hostPage.DisplayAlert("Ability Details", "No ability card or specialist options available.", "OK");
+            }
+            return;
+        }
+
         var detailOptions = BuildAbilityDetailOptions(row);
         if (detailOptions.Count == 0)
             return;
@@ -99,6 +112,36 @@ public partial class LevelAbilityTableView : ContentView
             : "Abilities";
 
         await navigation.PushAsync(new AbilityCardOptionListPage(title, detailOptions));
+    }
+
+    private static async Task<bool> HasAbilityChoiceSetsAsync(LevelAbilityRowVm row)
+    {
+        var names = (row.AbilityNames ?? Array.Empty<string>())
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => name.Trim())
+            .ToList();
+
+        var keys = (row.AbilityDetailKeys ?? Array.Empty<string>())
+            .Where(key => !string.IsNullOrWhiteSpace(key))
+            .Select(key => key.Trim())
+            .ToList();
+
+        // Check if any of the abilities have choice sets
+        foreach (var name in names)
+        {
+            var ability = await AbilityDetailsLookupService.FindByIndexAsync(name);
+            if (ability != null && (ability.ChoiceSetRef != null || (ability.ChoiceSetRefs?.Count ?? 0) > 0))
+                return true;
+        }
+
+        foreach (var key in keys)
+        {
+            var ability = await AbilityDetailsLookupService.FindByIndexAsync(key);
+            if (ability != null && (ability.ChoiceSetRef != null || (ability.ChoiceSetRefs?.Count ?? 0) > 0))
+                return true;
+        }
+
+        return false;
     }
 
     private static List<ChoiceSetAbilityRowVm> BuildAbilityDetailOptions(LevelAbilityRowVm row)

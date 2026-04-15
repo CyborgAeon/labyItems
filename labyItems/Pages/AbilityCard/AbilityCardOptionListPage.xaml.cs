@@ -8,18 +8,24 @@ namespace labyItems.Pages.AbilityCard;
 
 public partial class AbilityCardOptionListPage : ContentPage
 {
+    private static readonly Color RowEvenColor = Colors.White;           // White
+    private static readonly Color RowOddColor = Color.FromArgb("#F6F6F6"); // Light gray
+
     public ObservableCollection<ChoiceSetAbilityRowVm> Options { get; } = new();
     public string TitleText { get; private set; }
-    public bool ShowHeaderDescription => Options.Count > 0;
 
     public AbilityCardOptionListPage(string title, IReadOnlyList<ChoiceSetAbilityRowVm> options)
     {
         InitializeComponent();
         Title = title;
         TitleText = title;
+        
+        var index = 0;
         foreach (var option in options)
         {
+            option.RowBackgroundColor = index % 2 == 0 ? RowEvenColor : RowOddColor;
             Options.Add(option);
+            index++;
         }
 
         BindingContext = this;
