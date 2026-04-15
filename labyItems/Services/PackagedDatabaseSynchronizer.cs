@@ -51,7 +51,7 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
         if (tables.Count == 0)
         {
             _logger.LogWarning("Skipped packaged DB sync: packaged DB contains no tables with is_default.");
-            SaveChecksum(conn, packagedChecksum);
+            SaveChecksum(conn, tx: null, packagedChecksum);
             return;
         }
 

@@ -137,12 +137,18 @@ public static class CharacterSpecialisationScreenCalculator
         IReadOnlyDictionary<string, SpecialisationDefinition> definitions,
         IReadOnlyList<SpecialisationInjectionRule>? injectionRules = null)
     {
-        var race = (draft.Race ?? string.Empty).Trim();
+        var requestedRace = (draft.Race ?? string.Empty).Trim();
         var cls = (draft.Class ?? string.Empty).Trim();
-        var subtype = (draft.RaceSubtypeValue ?? draft.RaceSubtype ?? string.Empty).Trim();
+        var requestedSubtype = (draft.RaceSubtypeValue ?? draft.RaceSubtype ?? string.Empty).Trim();
+        var resolvedInjectionRules = injectionRules ?? Array.Empty<SpecialisationInjectionRule>();
 
         allClasses.TryGetValue(cls, out var classRecord);
-        allRaces.TryGetValue(race, out var raceRecord);
+        var (race, subtype, raceRecord) = ResolveRaceContext(
+            allRaces,
+            requestedRace,
+            requestedSubtype,
+            definitions,
+            resolvedInjectionRules);
 
         return new CharacterSpecialisationContext
         {
@@ -153,7 +159,115 @@ public static class CharacterSpecialisationScreenCalculator
             ClassRecord = classRecord,
             RaceRecord = raceRecord,
             Definitions = definitions,
-            InjectionRules = injectionRules ?? Array.Empty<SpecialisationInjectionRule>()
+            InjectionRules = resolvedInjectionRules
+        };
+    }
+
+    private static (string Race, string Subtype, PeopleRecord? RaceRecord) ResolveRaceContext(
+        IReadOnlyDictionary<string, PeopleRecord> allRaces,
+        string requestedRace,
+        string requestedSubtype,
+        IReadOnlyDictionary<string, SpecialisationDefinition> definitions,
+        IReadOnlyList<SpecialisationInjectionRule> injectionRules)
+    {
+        if (allRaces.TryGetValue(requestedRace, out var exactRaceRecord))
+            return (requestedRace, requestedSubtype, exactRaceRecord);
+
+        foreach (var (raceKey, raceRecord) in allRaces)
+        {
+            var subtypeRecord = raceRecord?.Subtype;
+            if (raceRecord == null || subtypeRecord == null)
+                continue;
+
+            var subtypeOptions = ResolveSubtypeOptions(subtypeRecord.OptionsSource);
+            foreach (var subtypeOption in subtypeOptions)
+            {
+                var alias = $"{subtypeOption} {raceKey}";
+                if (!alias.Equals(requestedRace, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var syntheticSubtype = BuildNestedSubtypeAlias(
+                    raceKey,
+                    subtypeOption,
+                    definitions,
+                    injectionRules);
+                if (syntheticSubtype != null)
+                {
+                    return (
+                        raceKey,
+                        requestedSubtype,
+                        CloneRaceRecordWithSubtype(raceRecord, syntheticSubtype));
+                }
+
+                var resolvedSubtype = string.IsNullOrWhiteSpace(requestedSubtype) ? subtypeOption : requestedSubtype;
+
+                return (raceKey, resolvedSubtype, raceRecord);
+            }
+        }
+
+        return (requestedRace, requestedSubtype, null);
+    }
+
+    private static PeopleSubtypeRecord? BuildNestedSubtypeAlias(
+        string raceKey,
+        string subtypeOption,
+        IReadOnlyDictionary<string, SpecialisationDefinition> definitions,
+        IReadOnlyList<SpecialisationInjectionRule> injectionRules)
+    {
+        var matchingRule = injectionRules.FirstOrDefault(rule =>
+            rule != null
+            && rule.Section != null
+            && string.Equals(rule.Section.SectionType, "Mapped", StringComparison.OrdinalIgnoreCase)
+            && string.Equals(rule.Conditions.Race, raceKey, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(rule.Conditions.Subtype, subtypeOption, StringComparison.OrdinalIgnoreCase));
+        if (matchingRule == null)
+            return null;
+
+        if (!definitions.TryGetValue(matchingRule.Section.DefinitionKey, out var definition))
+            return null;
+
+        var mappedChoiceSet = definition.ChoiceSets.FirstOrDefault(set => set.Mode == ChoiceMode.MappedSingle);
+        if (mappedChoiceSet == null || mappedChoiceSet.Options.Count == 0)
+            return null;
+
+        var optionKeys = mappedChoiceSet.Options
+            .Select(option => (option.Key ?? string.Empty).Trim())
+            .Where(key => key.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (optionKeys.Count == 0)
+            return null;
+
+        return new PeopleSubtypeRecord
+        {
+            Key = $"{raceKey}{subtypeOption}Subtype",
+            DisplayName = string.IsNullOrWhiteSpace(matchingRule.Section.Title)
+                ? $"{subtypeOption} affinity"
+                : matchingRule.Section.Title,
+            Description = matchingRule.Section.Subtitle ?? string.Empty,
+            SelectionMode = "SingleRequired",
+            OptionsSource = string.Join(",", optionKeys),
+            AbilityMapKey = matchingRule.Section.DefinitionKey
+        };
+    }
+
+    private static PeopleRecord CloneRaceRecordWithSubtype(PeopleRecord source, PeopleSubtypeRecord subtype)
+    {
+        return new PeopleRecord
+        {
+            NonStandard = source.NonStandard,
+            PeopleType = source.PeopleType?.ToList() ?? new List<string>(),
+            Tags = source.Tags?.ToList() ?? new List<string>(),
+            Description = source.Description ?? string.Empty,
+            LevelledAbilities = source.LevelledAbilities.ToDictionary(
+                entry => entry.Key,
+                entry => entry.Value?.Where(ability => ability != null).ToList() ?? new List<AbilityDefinition>(),
+                StringComparer.OrdinalIgnoreCase),
+            AdditionalInfo = source.AdditionalInfo,
+            Subtype = subtype,
+            GuildOverrides = source.GuildOverrides,
+            BuyAs = source.BuyAs,
+            AlignmentRule = source.AlignmentRule
         };
     }
 
