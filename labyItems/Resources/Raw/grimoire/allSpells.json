@@ -2032,8 +2032,7 @@
     "level": 4,
     "colour": "Black",
     "verbal": "By the shades of the dark, I strike thee blind ... Blindness X levels",
-    "description": "Blindness can do one of the following:\n • 6 levels of Blindness destroys a Fireblade\n •7 Levels destroys a Sword of Power\n • 8 levels destroys a Sabre of Light and Truth\n • UNOFFICIAL: at the resistance levels of the target, blindness makes a creature magically blind for 5 minutes or until the runes on them are lower than their levels of resistance.\nThis is a stackable glyph. If this spell is bought post 8th with points it is assumed to come in a set of 5 runes for the one rune cost and may be bought multiple times.",
-    "IsAdvanced": true,
+    "description": "Blindness can do one of the following:\n • 6 levels of Blindness destroys a Fireblade\n • 7 Levels destroys a Sword of Power\n • 8 levels destroys a Sabre of Light and Truth\n • at the resistance levels of the target, blindness makes a creature magically blind for 5 minutes or until the runes on them are lower than their levels of resistance.\nThis is a stackable glyph. If this spell is bought post 8th with points it is assumed to come in a set of 5 runes for the one rune cost and may be bought multiple times.",
     "sourcePage": 55
   },
   {
