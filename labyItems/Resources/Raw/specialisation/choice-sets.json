@@ -1052,6 +1052,37 @@
         }
       ]
     },
+    "choice.unholy-champion-devotion.primary": {
+      "Key": "choice.unholy-champion-devotion.primary",
+      "Title": "Unholy Champion Devotion",
+      "Required": true,
+      "Mode": "Single",
+      "StrategyIds": [
+        "section:choice"
+      ],
+      "Options": [
+        {
+          "Key": "Repel Good",
+          "Label": "Repel Good",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unholy-champion-devotion.repel-good"
+            }
+          ],
+          "Description": "Gain Repel Good at 1 use per 2 levels, as per the previous Unholy Champion progression."
+        },
+        {
+          "Key": "Permanent Beneficial Curse",
+          "Label": "Permanent Beneficial Curse",
+          "Grants": [
+            {
+              "AbilityRef": "ability.unholy-champion-devotion.permanent-curse"
+            }
+          ],
+          "Description": "Take a permanent beneficial Curse instead of Repel Good, granting +2 DAC from a Curse source."
+        }
+      ]
+    },
     "choice.grey-knight.primary": {
       "Key": "choice.grey-knight.primary",
       "Title": "Grey Knight",

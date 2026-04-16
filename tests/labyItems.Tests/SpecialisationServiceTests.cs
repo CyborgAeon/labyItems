@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using labyItems.Services;
+using labyItems.Services.Specialisations;
 using Xunit;
 
 namespace labyItems.Tests;
@@ -53,5 +54,38 @@ public sealed class SpecialisationServiceTests : ServiceTestBase
         var elfColour = Assert.Contains("ElfColourAbilities", all);
         Assert.Contains("immune to spiritual effects", elfColour.Description, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("Elven Abilities", elfColour.Description, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task GetAllAsync_UnholyChampionDevotion_IncludesRepelGoodAndPermanentCurse()
+    {
+        FileSystem.ClearPackageOverrides();
+        ServiceCacheResetter.ResetAll();
+        var all = await SpecialisationService.GetAllAsync();
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
+        var devotion = Assert.Contains("Unholy Champion Devotion", all);
+        Assert.True((devotion.Abilities?.Count ?? 0) + (devotion.Options?.Count ?? 0) > 0);
+
+        var definition = Assert.Contains("Unholy Champion Devotion", index.Definitions);
+        var choiceSet = Assert.Single(definition.ChoiceSets);
+
+        var repelGood = Assert.Single(choiceSet.Options.Where(option => option.Label == "Repel Good"))
+            .Grants
+            .Single()
+            .Ability;
+        Assert.NotNull(repelGood);
+        Assert.NotNull(repelGood.Progression);
+        Assert.Equal(1, repelGood.Progression!.Amount);
+        Assert.Equal(2, repelGood.Progression.PerLevels);
+
+        var permanentCurse = Assert.Single(choiceSet.Options.Where(option => option.Label == "Permanent Beneficial Curse"))
+            .Grants
+            .Single()
+            .Ability;
+        Assert.NotNull(permanentCurse);
+        Assert.Equal("Curse", permanentCurse.Source);
+        Assert.Equal("DAC", permanentCurse.Type);
+        Assert.Equal(2, permanentCurse.Count);
     }
 }

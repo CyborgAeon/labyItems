@@ -5,6 +5,15 @@ namespace labyItems.Services;
 
 public static class DetailCardLookupService
 {
+    public sealed class DetailCardLookupResult
+    {
+        public string Key { get; init; } = string.Empty;
+        public EvolutionService.AbilityResult? Ability { get; init; }
+        public SpecialisationRecord? Specialisation { get; init; }
+
+        public bool HasValue => Ability != null || Specialisation != null;
+    }
+
     public static async Task<(string Key, SpecialisationRecord? Record)> FindSpecialisationAsync(string key)
     {
         var match = await FindByKeyAsync<SpecialisationRecord>(
@@ -20,6 +29,60 @@ public static class DetailCardLookupService
             key,
             () => Task.FromResult(index.AbilityReferences));
         return (match.Key, match.Value);
+    }
+
+    public static async Task<EvolutionService.AbilityResult?> ResolveAbilityAsync(string key)
+    {
+        var requested = (key ?? string.Empty).Trim();
+        if (requested.Length == 0)
+            return null;
+
+        var byIndex = await AbilityDetailsLookupService.FindByIndexAsync(requested);
+        if (byIndex != null)
+            return byIndex;
+
+        var fromSpecialisation = await FindSpecialisationAbilityAsync(requested);
+        if (fromSpecialisation.Ability == null)
+            return null;
+
+        return ToAbilityResult(fromSpecialisation.Ability, fromSpecialisation.Key, requested);
+    }
+
+    public static async Task<DetailCardLookupResult?> ResolveDetailAsync(params string?[] candidates)
+    {
+        var normalizedCandidates = (candidates ?? Array.Empty<string?>())
+            .Select(candidate => (candidate ?? string.Empty).Trim())
+            .Where(candidate => candidate.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var candidate in normalizedCandidates)
+        {
+            var ability = await ResolveAbilityAsync(candidate);
+            if (ability != null)
+            {
+                return new DetailCardLookupResult
+                {
+                    Key = candidate,
+                    Ability = ability
+                };
+            }
+        }
+
+        foreach (var candidate in normalizedCandidates)
+        {
+            var specialisation = await FindSpecialisationAsync(candidate);
+            if (specialisation.Record != null)
+            {
+                return new DetailCardLookupResult
+                {
+                    Key = specialisation.Key,
+                    Specialisation = specialisation.Record
+                };
+            }
+        }
+
+        return null;
     }
 
     public static async Task<(string Key, TValue? Value)> FindByKeyAsync<TValue>(
@@ -65,6 +128,34 @@ public static class DetailCardLookupService
         }
 
         return (string.Empty, null);
+    }
+
+    public static EvolutionService.AbilityResult ToAbilityResult(
+        AbilityDefinition source,
+        string resolvedKey,
+        string requestedKey)
+    {
+        var name = (source.Name ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = (resolvedKey ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = (requestedKey ?? string.Empty).Trim();
+        if (name.Length == 0)
+            name = "Ability";
+
+        return new EvolutionService.AbilityResult
+        {
+            Index = name,
+            Description = source.Effect ?? string.Empty,
+            Cost = 0,
+            Table = 0,
+            Available = source.Source ?? "ALL",
+            CanBuyMultiple = false,
+            PreReqs = source.PreReqs is { Count: > 0 } preReqs
+                ? preReqs
+                : Array.Empty<string>(),
+            MaxAvailable = source.Count
+        };
     }
 
     private static string NormalizeLookupKey(string? value)

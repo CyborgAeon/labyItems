@@ -2580,6 +2580,24 @@
       "Effect": "This power will work on any goodly creature with a spirit within 20’. A goodly spirit so affected is instantly repelled away from the Unholy Champion up to 20’, or until a solid object is met.\n Any Unholy Champion may sacrifice this ability in order to gain a permanent beneficial Curse (signed on card). This operates in the same manner as a Paladin’s Permanent Bless being irremovable as long as the Unholy Champion is an Unholy Champion. If the Unholy Champion becomes immune to Handbook Curses (as per the table 3 post 8th ability), then he remains cursed and retains the A/C benefit. If however he becomes immune to non-handbook curses (for example via the table 10 immunity), then they lose the A/C benefit from their curse.",
       "Key": "ability.repel-good"
     },
+    "ability.unholy-champion-devotion.repel-good": {
+      "Name": "Repel Good",
+      "Type": "Innate",
+      "Effect": "This power will work on any goodly creature with a spirit within 20â€™. A goodly spirit so affected is instantly repelled away from the Unholy Champion up to 20â€™, or until a solid object is met.\nAny Unholy Champion may sacrifice this ability in order to gain a permanent beneficial Curse (signed on card). This operates in the same manner as a Paladinâ€™s Permanent Bless being irremovable as long as the Unholy Champion is an Unholy Champion. If the Unholy Champion becomes immune to Handbook Curses (as per the table 3 post 8th ability), then he remains cursed and retains the A/C benefit. If however he becomes immune to non-handbook curses (for example via the table 10 immunity), then they lose the A/C benefit from their curse.",
+      "Progression": {
+        "Amount": 1,
+        "PerLevels": 2
+      },
+      "Key": "ability.unholy-champion-devotion.repel-good"
+    },
+    "ability.unholy-champion-devotion.permanent-curse": {
+      "Name": "Permanent Beneficial Curse",
+      "Type": "DAC",
+      "Count": 2,
+      "Source": "Curse",
+      "Effect": "Take a permanent beneficial Curse, signed on the card, instead of gaining Repel Good. This grants +2 DAC from a Curse source while the character remains an Unholy Champion.",
+      "Key": "ability.unholy-champion-devotion.permanent-curse"
+    },
     "ability.repel-undead": {
       "Name": "Repel Undead",
       "Type": "Innate",

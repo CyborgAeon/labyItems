@@ -69,6 +69,8 @@ public partial class SpecialisationDetailCardView : ContentView
     public bool HasMetadataChips => MetadataChips.Count > 0;
     public ObservableCollection<AsPerEntryVm> AsPerEntries { get; } = new();
     public bool HasAsPerEntries => AsPerEntries.Count > 0;
+    public ObservableCollection<SpecialistAbilityRowVm> SpecialistAbilityRows { get; } = new();
+    public bool HasSpecialistAbilityRows => SpecialistAbilityRows.Count > 0;
 
     private AbilityDefinition? _resolvedAbility;
     private ColourAbilityRecord? _resolvedColourAbility;
@@ -113,6 +115,7 @@ public partial class SpecialisationDetailCardView : ContentView
         SizeChanged += (_, __) => ScheduleExpandabilityRefresh();
         MetadataChips.CollectionChanged += (_, __) => OnPropertyChanged(nameof(HasMetadataChips));
         AsPerEntries.CollectionChanged += (_, __) => OnPropertyChanged(nameof(HasAsPerEntries));
+        SpecialistAbilityRows.CollectionChanged += (_, __) => OnPropertyChanged(nameof(HasSpecialistAbilityRows));
     }
 
     private static void OnSpecialisationDataChanged(BindableObject bindable, object oldValue, object newValue)
@@ -129,9 +132,34 @@ public partial class SpecialisationDetailCardView : ContentView
         _resolvedColourAbility = ResolveSelectedColourAbility();
         RebuildMetadataChips();
         RebuildAsPerEntries();
+        RebuildSpecialistAbilityRows();
         IsDescriptionExpanded = false;
         RaiseComputedProperties();
         ScheduleExpandabilityRefresh();
+    }
+
+    private void RebuildSpecialistAbilityRows()
+    {
+        SpecialistAbilityRows.Clear();
+
+        if (_resolvedAbility != null || _resolvedColourAbility != null || Specialisation == null)
+            return;
+
+        var allRows = Enumerable.Empty<AbilityDefinition>()
+            .Concat(Specialisation.Abilities ?? Enumerable.Empty<AbilityDefinition>())
+            .Concat(Specialisation.Options ?? Enumerable.Empty<AbilityDefinition>())
+            .Where(ability => !string.IsNullOrWhiteSpace(ability?.Name))
+            .GroupBy(ability => (ability.Name ?? string.Empty).Trim(), StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .Select(ability => new SpecialistAbilityRowVm(
+                (ability.Name ?? string.Empty).Trim(),
+                (ability.Key ?? ability.Name ?? string.Empty).Trim(),
+                ResolveDescriptionFromAbility(ability)))
+            .Where(row => row.Name.Length > 0)
+            .ToList();
+
+        foreach (var row in allRows)
+            SpecialistAbilityRows.Add(row);
     }
 
     private void RebuildAsPerEntries()
@@ -434,6 +462,7 @@ public partial class SpecialisationDetailCardView : ContentView
         OnPropertyChanged(nameof(LoreText));
         OnPropertyChanged(nameof(HasLore));
         OnPropertyChanged(nameof(HasAsPerEntries));
+        OnPropertyChanged(nameof(HasSpecialistAbilityRows));
         OnPropertyChanged(nameof(DescriptionChevronText));
         OnPropertyChanged(nameof(ShowDescriptionSeeMore));
         OnPropertyChanged(nameof(HasMetadataChips));
@@ -481,8 +510,28 @@ public partial class SpecialisationDetailCardView : ContentView
         var fromSpecialisation = await DetailCardLookupService.FindSpecialisationAbilityAsync(reference);
         if (fromSpecialisation.Ability != null)
         {
-            await nav.PushAsync(new AbilityCardPage(ToAbilityResult(fromSpecialisation.Ability, fromSpecialisation.Key, reference)));
+            await nav.PushAsync(new AbilityCardPage(DetailCardLookupService.ToAbilityResult(fromSpecialisation.Ability, fromSpecialisation.Key, reference)));
         }
+    }
+
+    private async void OnSpecialistAbilityInfoClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button || button.CommandParameter is not SpecialistAbilityRowVm row)
+            return;
+
+        var nav = ResolveNavigation();
+        if (nav == null)
+            return;
+
+        var detail = await DetailCardLookupService.ResolveDetailAsync(row.LookupKey, row.Name);
+        if (detail?.Ability != null)
+        {
+            await nav.PushAsync(new AbilityCardPage(detail.Ability));
+            return;
+        }
+
+        if (detail?.Specialisation != null)
+            await nav.PushAsync(new SpecialisationCard(detail.Key, detail.Specialisation));
     }
 
     private INavigation? ResolveNavigation()
@@ -494,34 +543,6 @@ public partial class SpecialisationDetailCardView : ContentView
             return shellNav;
 
         return Application.Current?.MainPage?.Navigation;
-    }
-
-    private static EvolutionService.AbilityResult ToAbilityResult(
-        AbilityDefinition source,
-        string resolvedKey,
-        string requestedKey)
-    {
-        var name = (source.Name ?? string.Empty).Trim();
-        if (name.Length == 0)
-            name = (resolvedKey ?? string.Empty).Trim();
-        if (name.Length == 0)
-            name = (requestedKey ?? string.Empty).Trim();
-        if (name.Length == 0)
-            name = "Ability";
-
-        return new EvolutionService.AbilityResult
-        {
-            Index = name,
-            Description = source.Effect ?? string.Empty,
-            Cost = 0,
-            Table = 0,
-            Available = source.Source ?? "ALL",
-            CanBuyMultiple = false,
-            PreReqs = source.PreReqs is { Count: > 0 } preReqs
-                ? preReqs
-                : Array.Empty<string>(),
-            MaxAvailable = source.Count
-        };
     }
 
     private void OnExpandableLabelSizeChanged(object sender, EventArgs e)
@@ -680,5 +701,20 @@ public partial class SpecialisationDetailCardView : ContentView
         public string Reference { get; }
         public string DisplayName { get; }
         public bool HasDetails { get; }
+    }
+
+    public sealed class SpecialistAbilityRowVm
+    {
+        public SpecialistAbilityRowVm(string name, string lookupKey, string description)
+        {
+            Name = (name ?? string.Empty).Trim();
+            LookupKey = (lookupKey ?? string.Empty).Trim();
+            Description = (description ?? string.Empty).Trim();
+        }
+
+        public string Name { get; }
+        public string LookupKey { get; }
+        public string Description { get; }
+        public bool HasDescription => Description.Length > 0 && !string.Equals(Description, "No description provided.", StringComparison.OrdinalIgnoreCase);
     }
 }

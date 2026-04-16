@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using labyItems.Models.ViewModels;
 using labyItems.Models.Characters;
 using labyItems.Pages.AbilityCard;
+using SpecialisationCardPage = labyItems.Pages.SpecialisationCard.SpecialisationCard;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
 using labyItems.Services.Specialisations;
@@ -85,19 +86,6 @@ public partial class LevelAbilityTableView : ContentView
         if (sender is not Button button || button.CommandParameter is not LevelAbilityRowVm row)
             return;
 
-        // Check if this row has abilities with choice sets (specialist abilities)
-        var hasChoiceSets = await HasAbilityChoiceSetsAsync(row);
-        if (!hasChoiceSets)
-        {
-            // For non-specialist abilities, show alert or other behavior
-            var hostPage = ResolveHostPage();
-            if (hostPage != null)
-            {
-                await hostPage.DisplayAlert("Ability Details", "No ability card or specialist options available.", "OK");
-            }
-            return;
-        }
-
         var detailOptions = BuildAbilityDetailOptions(row);
         if (detailOptions.Count == 0)
             return;
@@ -112,40 +100,13 @@ public partial class LevelAbilityTableView : ContentView
                 : $"Level {row.Level} abilities"
             : "Abilities";
 
+        if (detailOptions.Count == 1)
+        {
+            await OpenDetailAsync(navigation, detailOptions[0].DisplayName, detailOptions[0].LookupKey);
+            return;
+        }
+
         await navigation.PushAsync(new AbilityCardOptionListPage(title, detailOptions));
-    }
-
-    private static async Task<bool> HasAbilityChoiceSetsAsync(LevelAbilityRowVm row)
-    {
-        var names = (row.AbilityNames ?? Array.Empty<string>())
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Select(name => name.Trim())
-            .ToList();
-
-        var keys = (row.AbilityDetailKeys ?? Array.Empty<string>())
-            .Where(key => !string.IsNullOrWhiteSpace(key))
-            .Select(key => key.Trim())
-            .ToList();
-
-        // Get the specialisation index to access AbilityDefinition objects
-        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
-
-        // Check if any of the abilities have choice sets
-        foreach (var name in names)
-        {
-            if (index.AbilityReferences.TryGetValue(name, out var abilityDef) &&
-                (abilityDef.ChoiceSetRef != null || (abilityDef.ChoiceSetRefs?.Count ?? 0) > 0))
-                return true;
-        }
-
-        foreach (var key in keys)
-        {
-            if (index.AbilityReferences.TryGetValue(key, out var abilityDef) &&
-                (abilityDef.ChoiceSetRef != null || (abilityDef.ChoiceSetRefs?.Count ?? 0) > 0))
-                return true;
-        }
-
-        return false;
     }
 
     private static List<ChoiceSetAbilityRowVm> BuildAbilityDetailOptions(LevelAbilityRowVm row)
@@ -201,48 +162,24 @@ public partial class LevelAbilityTableView : ContentView
         return options;
     }
 
-    private static async Task<EvolutionService.AbilityResult?> ResolveAbilityAsync(string selectedAbility)
+    private async Task OpenDetailAsync(INavigation navigation, string displayName, string lookupKey)
     {
-        var ability = await AbilityDetailsLookupService.FindByIndexAsync(selectedAbility);
-        if (ability != null)
-            return ability;
-
-        var specialisationAbility = await DetailCardLookupService.FindSpecialisationAbilityAsync(selectedAbility);
-        if (specialisationAbility.Ability == null)
-            return null;
-
-        return ToAbilityResult(
-            specialisationAbility.Ability,
-            specialisationAbility.Key,
-            selectedAbility);
-    }
-
-    private static EvolutionService.AbilityResult ToAbilityResult(
-        AbilityDefinition source,
-        string resolvedKey,
-        string requestedKey)
-    {
-        var name = (source.Name ?? string.Empty).Trim();
-        if (name.Length == 0)
-            name = (resolvedKey ?? string.Empty).Trim();
-        if (name.Length == 0)
-            name = (requestedKey ?? string.Empty).Trim();
-        if (name.Length == 0)
-            name = "Ability";
-
-        return new EvolutionService.AbilityResult
+        var detail = await DetailCardLookupService.ResolveDetailAsync(lookupKey, displayName);
+        if (detail?.Ability != null)
         {
-            Index = name,
-            Description = source.Effect ?? string.Empty,
-            Cost = 0,
-            Table = 0,
-            Available = source.Source ?? "ALL",
-            CanBuyMultiple = false,
-            PreReqs = source.PreReqs is { Count: > 0 } preReqs
-                ? preReqs
-                : Array.Empty<string>(),
-            MaxAvailable = source.Count
-        };
+            await navigation.PushAsync(new AbilityCardPage(detail.Ability));
+            return;
+        }
+
+        if (detail?.Specialisation != null)
+        {
+            await navigation.PushAsync(new SpecialisationCardPage(detail.Key, detail.Specialisation));
+            return;
+        }
+
+        var hostPage = ResolveHostPage();
+        if (hostPage != null)
+            await hostPage.DisplayAlert("Ability Details", $"Could not find a detail card for \"{displayName}\".", "OK");
     }
 
     private static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)

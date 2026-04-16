@@ -1398,6 +1398,9 @@ public static class SpecialisationDefinitionRepository
             UpdateKey = string.IsNullOrWhiteSpace(overrides.UpdateKey) ? baseline.UpdateKey : overrides.UpdateKey,
             Source = string.IsNullOrWhiteSpace(overrides.Source) ? baseline.Source : overrides.Source,
             Count = overrides.Count ?? baseline.Count,
+            Progression = overrides.Progression != null
+                ? CloneProgression(overrides.Progression)
+                : CloneProgression(baseline.Progression),
             Amount = overrides.Amount is { Count: > 0 } ? overrides.Amount.ToList() : baseline.Amount?.ToList(),
             AsPer = overrides.AsPer is { Count: > 0 } ? overrides.AsPer.ToList() : baseline.AsPer?.ToList(),
             Frequency = string.IsNullOrWhiteSpace(overrides.Frequency) ? baseline.Frequency : overrides.Frequency,
@@ -1450,6 +1453,7 @@ public static class SpecialisationDefinitionRepository
             UpdateKey = source.UpdateKey,
             Source = source.Source,
             Count = source.Count,
+            Progression = CloneProgression(source.Progression),
             Amount = source.Amount?.ToList(),
             AsPer = source.AsPer?.ToList(),
             Frequency = source.Frequency,
@@ -1478,6 +1482,20 @@ public static class SpecialisationDefinitionRepository
             ResistanceType = source.ResistanceType,
             Level = source.Level,
             ImmunityName = source.ImmunityName
+        };
+    }
+
+    private static AbilityCountProgression? CloneProgression(AbilityCountProgression? source)
+    {
+        if (source == null)
+            return null;
+
+        return new AbilityCountProgression
+        {
+            Amount = source.Amount,
+            PerLevels = source.PerLevels,
+            Minimum = source.Minimum,
+            Maximum = source.Maximum
         };
     }
 

@@ -113,6 +113,13 @@
         "choice.unholy-champion-specialist.primary"
       ]
     },
+    "Unholy Champion Devotion": {
+      "Key": "definition.unholy-champion-devotion",
+      "DisplayName": "Unholy Champion Devotion",
+      "ChoiceSetRefs": [
+        "choice.unholy-champion-devotion.primary"
+      ]
+    },
     "Grey Knight": {
       "Key": "definition.grey-knight",
       "DisplayName": "Grey Knight",

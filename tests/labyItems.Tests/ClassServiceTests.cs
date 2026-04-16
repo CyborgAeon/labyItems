@@ -39,19 +39,17 @@ public sealed class ClassServiceTests : ServiceTestBase
     }
 
     [Fact]
-    public async Task UnholyChampion_RepelGood_IsAtLevelTwoWithProgression()
+    public async Task UnholyChampion_LevelTwo_UsesDevotionSpecialisation()
     {
         var all = await ClassService.GetAllAsync();
         var unholyChampion = all["Unholy Champion"];
 
         var level2 = unholyChampion.Levels["2"];
         var level3 = unholyChampion.Levels["3"];
-        var repelGood = level2.First(a => a.Name == "Repel Good");
+        var devotion = level2.First(a => a.Name == "Unholy Champion Devotion");
 
-        Assert.Equal("Innate", repelGood.Type);
-        Assert.NotNull(repelGood.Progression);
-        Assert.Equal(1, repelGood.Progression!.Amount);
-        Assert.Equal(2, repelGood.Progression.PerLevels);
+        Assert.Equal("Overwrite", devotion.Type);
+        Assert.Equal("Unholy Champion Devotion", devotion.OverwriteKey);
         Assert.DoesNotContain(level3, a => a.Name == "Repel Good");
     }
 }

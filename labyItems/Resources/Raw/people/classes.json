@@ -1541,12 +1541,9 @@
           "Type": "WeaponSkill"
         },
         {
-          "Name": "Repel Good",
-          "Type": "Innate",
-          "Progression": {
-            "Amount": 1,
-            "PerLevels": 2
-          }
+          "Name": "Unholy Champion Devotion",
+          "Type": "Overwrite",
+          "OverwriteKey": "Unholy Champion Devotion"
         }
       ],
       "3": [

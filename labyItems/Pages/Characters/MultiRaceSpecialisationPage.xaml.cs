@@ -1,6 +1,7 @@
 using labyItems.Models.Characters;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
+using SpecialisationCardPage = labyItems.Pages.SpecialisationCard.SpecialisationCard;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 
 namespace labyItems.Pages.Characters;
@@ -69,60 +70,19 @@ public partial class MultiRaceSpecialisationPage : ContentPage
             return;
 
         var selected = options[0];
-        var ability = await ResolveAbilityAsync(selected.LookupKey);
-        if (ability == null
-            && !string.Equals(selected.LookupKey, selected.DisplayName, StringComparison.OrdinalIgnoreCase))
+        var detail = await DetailCardLookupService.ResolveDetailAsync(selected.LookupKey, selected.DisplayName);
+        if (detail?.Ability != null)
         {
-            ability = await ResolveAbilityAsync(selected.DisplayName);
-        }
-
-        if (ability == null)
-        {
-            await DisplayAlert("No Ability Card", $"Could not find a detail card for \"{selected.DisplayName}\".", "OK");
+            await Navigation.PushAsync(new AbilityCardPage(detail.Ability));
             return;
         }
 
-        await Navigation.PushAsync(new AbilityCardPage(ability));
-    }
-
-    private static async Task<EvolutionService.AbilityResult?> ResolveAbilityAsync(string key)
-    {
-        var byIndex = await AbilityDetailsLookupService.FindByIndexAsync(key);
-        if (byIndex != null)
-            return byIndex;
-
-        var fromSpecialisation = await DetailCardLookupService.FindSpecialisationAbilityAsync(key);
-        if (fromSpecialisation.Ability == null)
-            return null;
-
-        return ToAbilityResult(fromSpecialisation.Ability, fromSpecialisation.Key, key);
-    }
-
-    private static EvolutionService.AbilityResult ToAbilityResult(
-        AbilityDefinition source,
-        string resolvedKey,
-        string requestedKey)
-    {
-        var name = (source.Name ?? string.Empty).Trim();
-        if (name.Length == 0)
-            name = (resolvedKey ?? string.Empty).Trim();
-        if (name.Length == 0)
-            name = (requestedKey ?? string.Empty).Trim();
-        if (name.Length == 0)
-            name = "Ability";
-
-        return new EvolutionService.AbilityResult
+        if (detail?.Specialisation != null)
         {
-            Index = name,
-            Description = source.Effect ?? string.Empty,
-            Cost = 0,
-            Table = 0,
-            Available = source.Source ?? "ALL",
-            CanBuyMultiple = false,
-            PreReqs = source.PreReqs is { Count: > 0 } preReqs
-                ? preReqs
-                : Array.Empty<string>(),
-            MaxAvailable = source.Count
-        };
+            await Navigation.PushAsync(new SpecialisationCardPage(detail.Key, detail.Specialisation));
+            return;
+        }
+
+        await DisplayAlert("No Ability Card", $"Could not find a detail card for \"{selected.DisplayName}\".", "OK");
     }
 }

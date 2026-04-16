@@ -208,6 +208,15 @@ public static class SpecialisationService
             UpdateKey = source.UpdateKey,
             Source = source.Source,
             Count = source.Count,
+            Progression = source.Progression == null
+                ? null
+                : new AbilityCountProgression
+                {
+                    Amount = source.Progression.Amount,
+                    PerLevels = source.Progression.PerLevels,
+                    Minimum = source.Progression.Minimum,
+                    Maximum = source.Progression.Maximum
+                },
             Amount = source.Amount?.ToList(),
             AsPer = source.AsPer?.ToList(),
             Frequency = source.Frequency,
