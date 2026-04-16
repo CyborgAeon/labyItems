@@ -5,6 +5,7 @@ using labyItems.Models.Characters;
 using labyItems.Pages.AbilityCard;
 using labyItems.Pages.Characters.ViewModels;
 using labyItems.Services;
+using labyItems.Services.Specialisations;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 
 namespace labyItems.Controls;
@@ -126,18 +127,21 @@ public partial class LevelAbilityTableView : ContentView
             .Select(key => key.Trim())
             .ToList();
 
+        // Get the specialisation index to access AbilityDefinition objects
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+
         // Check if any of the abilities have choice sets
         foreach (var name in names)
         {
-            var ability = await AbilityDetailsLookupService.FindByIndexAsync(name);
-            if (ability != null && (ability.ChoiceSetRef != null || (ability.ChoiceSetRefs?.Count ?? 0) > 0))
+            if (index.AbilityReferences.TryGetValue(name, out var abilityDef) &&
+                (abilityDef.ChoiceSetRef != null || (abilityDef.ChoiceSetRefs?.Count ?? 0) > 0))
                 return true;
         }
 
         foreach (var key in keys)
         {
-            var ability = await AbilityDetailsLookupService.FindByIndexAsync(key);
-            if (ability != null && (ability.ChoiceSetRef != null || (ability.ChoiceSetRefs?.Count ?? 0) > 0))
+            if (index.AbilityReferences.TryGetValue(key, out var abilityDef) &&
+                (abilityDef.ChoiceSetRef != null || (abilityDef.ChoiceSetRefs?.Count ?? 0) > 0))
                 return true;
         }
 

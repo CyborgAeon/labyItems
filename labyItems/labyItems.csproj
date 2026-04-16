@@ -51,17 +51,14 @@
 		<IosStrictAotSimulator>false</IosStrictAotSimulator>
 		<!-- Optional fail-fast mode: force full-AOT runtime behavior on simulator (can abort at startup). -->
 		<IosFailFastFullAotSimulator>false</IosFailFastFullAotSimulator>
-		<!-- Allow iOS SDK to work with slightly older Xcode versions -->
-		<IosUseXcodeSdk>false</IosUseXcodeSdk>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(IosStrictAotSimulator)' == 'true'">
-		<UseInterpreter>false</UseInterpreter>
-		<MtouchUseLlvm>true</MtouchUseLlvm>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(IosStrictAotSimulator)' == 'true' and '$(IosFailFastFullAotSimulator)' == 'true'">
-		<MtouchExtraArgs>$(MtouchExtraArgs) --setenv=MONO_ENV_OPTIONS=--full-aot --setenv=MONO_LOG_LEVEL=debug --setenv=MONO_LOG_MASK=aot</MtouchExtraArgs>
+	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' and '$(Configuration)' == 'Release'">
+		<!-- For CI builds with older Xcode, use interpreter mode to bypass strict AOT requirements -->
+		<UseInterpreter>true</UseInterpreter>
+		<MtouchUseLlvm>false</MtouchUseLlvm>
+		<IosStrictAotSimulator>false</IosStrictAotSimulator>
+		<IosFailFastFullAotSimulator>false</IosFailFastFullAotSimulator>
 	</PropertyGroup>
 
 	<ItemGroup>
