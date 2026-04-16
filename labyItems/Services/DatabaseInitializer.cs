@@ -22,6 +22,7 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 	private readonly ILogger<DatabaseInitializer> _logger;
     private readonly IEvolutionDataSynchronizer _evolutionDataSynchronizer;
     private readonly IAbilityDefinitionDataSynchronizer _abilityDefinitionDataSynchronizer;
+    private readonly ICharacterReferenceDataSynchronizer _characterReferenceDataSynchronizer;
     private readonly IPackagedDatabaseSynchronizer _packagedDatabaseSynchronizer;
 	private readonly SemaphoreSlim _initLock = new(1, 1);
 	private bool _initialized;
@@ -31,12 +32,14 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         ILogger<DatabaseInitializer> logger,
         IEvolutionDataSynchronizer evolutionDataSynchronizer,
         IAbilityDefinitionDataSynchronizer abilityDefinitionDataSynchronizer,
+        ICharacterReferenceDataSynchronizer characterReferenceDataSynchronizer,
         IPackagedDatabaseSynchronizer packagedDatabaseSynchronizer)
 	{
 		_services = services;
 		_logger = logger;
         _evolutionDataSynchronizer = evolutionDataSynchronizer;
         _abilityDefinitionDataSynchronizer = abilityDefinitionDataSynchronizer;
+        _characterReferenceDataSynchronizer = characterReferenceDataSynchronizer;
         _packagedDatabaseSynchronizer = packagedDatabaseSynchronizer;
 	}
 
@@ -137,6 +140,16 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         catch (Exception ex)
         {
             log2.LogError(ex, "Ability definition sync failed: {Message}", ex.Message);
+        }
+
+        try
+        {
+            await _characterReferenceDataSynchronizer.EnsureCurrentAsync(dbPath, cancellationToken);
+            log2.LogInformation("Character reference defaults are synchronized.");
+        }
+        catch (Exception ex)
+        {
+            log2.LogError(ex, "Character reference sync failed: {Message}", ex.Message);
         }
 	}
 }
