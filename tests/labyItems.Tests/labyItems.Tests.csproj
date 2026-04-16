@@ -20,6 +20,7 @@
     </PackageReference>
     <PackageReference Include="ClosedXML" />
     <PackageReference Include="Microsoft.Data.Sqlite" />
+    <PackageReference Include="PdfSharpCore" />
   </ItemGroup>
 
   <ItemGroup>
@@ -77,10 +78,16 @@
     <Compile Include="../../labyItems/Services/BattleboardInnateCalculator.cs" Link="Source/BattleboardInnateCalculator.cs" />
     <Compile Include="../../labyItems/Services/ItemEmailService.cs" Link="Source/ItemEmailService.cs" />
     <Compile Include="../../labyItems/Services/LiteDbService.cs" Link="Source/LiteDbService.cs" />
+    <Compile Include="../../labyItems/Services/IScrollDocumentService.cs" Link="Source/IScrollDocumentService.cs" />
+    <Compile Include="../../labyItems/Services/PdfSharpFontResolverBootstrapper.cs" Link="Source/PdfSharpFontResolverBootstrapper.cs" />
+    <Compile Include="../../labyItems/Services/ScrollDocumentService.cs" Link="Source/ScrollDocumentService.cs" />
     <Compile Include="../../labyItems/Helpers/ReflectionHelper.cs" Link="Source/ReflectionHelper.cs" />
     <Compile Include="../../labyItems/Helpers/RegexOptionsCompat.cs" Link="Source/RegexOptionsCompat.cs" />
     <Compile Include="../../labyItems/Helpers/LoopHelper.cs" Link="Source/LoopHelper.cs" />
     <Compile Include="../../labyItems/Helpers/JsonTokenCompressor.cs" Link="Source/JsonTokenCompressor.cs" />
+    <Compile Include="../../labyItems/Helpers/ScrollCribSheetCatalog.cs" Link="Source/ScrollCribSheetCatalog.cs" />
+    <Compile Include="../../labyItems/Helpers/ScrollTextFormatter.cs" Link="Source/ScrollTextFormatter.cs" />
+    <Compile Include="../../labyItems/Helpers/ScrollToolModels.cs" Link="Source/ScrollToolModels.cs" />
     <Compile Include="../../labyItems/Helpers/CharacterProgressionTables.cs" Link="Source/CharacterProgressionTables.cs" />
     <Compile Include="../../labyItems/Pages/Characters/ViewModels/AdvanceAbilitySearchVm.cs" Link="Source/AdvanceAbilitySearchVm.cs" />
     <Compile Include="../../labyItems/Pages/Characters/ViewModels/SpecialisationSummaryDedupe.cs" Link="Source/SpecialisationSummaryDedupe.cs" />

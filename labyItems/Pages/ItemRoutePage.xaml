@@ -33,6 +33,9 @@
         Clicked="OnCreateMpClicked"
         Text="Create MP Item"/>
       <Button
+        Clicked="OnBuildScrollClicked"
+        Text="Build Scroll"/>
+      <Button
         Clicked="OnInitiateTradeClicked"
         Text="Initiate Trade"/>
       <Button

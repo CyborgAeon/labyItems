@@ -39,14 +39,15 @@ public sealed class BattleboardDocumentService : IBattleboardDocumentService
 
     private static void ConvertInternal(string inputPath, string outputPath)
     {
+        PdfSharpFontResolverBootstrapper.EnsureInitialized();
+
         using var workbook = new XLWorkbook(inputPath);
         using var document = new PdfDocument();
         document.Version = 14;
         document.Info.Title = Path.GetFileNameWithoutExtension(outputPath);
 
-        // Use PDF core fonts for maximum viewer compatibility on iOS/macOS Preview.
-        var headerFont = new XFont("Helvetica", 9, XFontStyle.Bold);
-        var cellFont = new XFont("Helvetica", 6, XFontStyle.Regular);
+        var headerFont = new XFont(PdfSharpFontResolverBootstrapper.GetStandardFaceName("OpenSansSemibold", isBold: true), 9, XFontStyle.Bold);
+        var cellFont = new XFont(PdfSharpFontResolverBootstrapper.GetStandardFaceName("OpenSansRegular"), 6, XFontStyle.Regular);
         var borderPen = new XPen(XColor.FromArgb(220, 220, 220), 0.4);
 
         foreach (var worksheet in workbook.Worksheets)
@@ -156,7 +157,7 @@ public sealed class BattleboardDocumentService : IBattleboardDocumentService
             return string.Empty;
 
         text = System.Text.RegularExpressions.Regex.Replace(text, "\\s+", " ");
-        return NormalizeToPdfSafeAscii(text);
+        return text;
     }
 
     private static string ClipText(string text, double columnWidth)
@@ -176,30 +177,6 @@ public sealed class BattleboardDocumentService : IBattleboardDocumentService
 
         return text[..(maxChars - 3)] + "...";
     }
-
-    private static string NormalizeToPdfSafeAscii(string text)
-    {
-        var buffer = new StringBuilder(text.Length);
-        foreach (var ch in text)
-        {
-            if (ch >= ' ' && ch <= '~')
-            {
-                buffer.Append(ch);
-                continue;
-            }
-
-            if (char.IsWhiteSpace(ch))
-            {
-                buffer.Append(' ');
-                continue;
-            }
-
-            buffer.Append('?');
-        }
-
-        return buffer.ToString();
-    }
-
     private static void ValidatePdfFile(string outputPath)
     {
         using var stream = File.OpenRead(outputPath);

@@ -69,6 +69,7 @@ public static class MauiProgram
 		{
 			// If Batteries init fails, migrations that require ADO.NET may still fail later; we catch to avoid startup crash here.
 		}
+
 			builder
 				.UseMauiApp<App>()
 				.ConfigureFonts(fonts =>
@@ -76,6 +77,10 @@ public static class MauiProgram
 					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 					fonts.AddFont("fa-solid-900.ttf", "FASolid");
+					fonts.AddFont("Mana_Glyphs_smart_v2.ttf", "ManaGlyphs");
+					fonts.AddFont("Mana_Glyphs_handwritten_style.ttf", "ManaGlyphsBasic");
+					fonts.AddFont("Spirit_Runes.ttf", "SpiritRunes");
+					fonts.AddFont("Ogham.ttf", "OghamFont");
 				})
 				.ConfigureLifecycleEvents(events =>
 				{
@@ -118,6 +123,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ILauncherService, MauiLauncherService>();
 		builder.Services.AddSingleton<IShareService, MauiShareService>();
 		builder.Services.AddSingleton<IExportService, ExportService>();
+		builder.Services.AddSingleton<IScrollDocumentService, ScrollDocumentService>();
 		builder.Services.AddSingleton<ICharacterAdvancementDomainService, CharacterAdvancementDomainService>();
 		builder.Services.AddSingleton<IAdvancementTabVisibilityService, AdvancementTabVisibilityService>();
 		builder.Services.AddSingleton<IAdvancementValidationService, AdvancementValidationService>();

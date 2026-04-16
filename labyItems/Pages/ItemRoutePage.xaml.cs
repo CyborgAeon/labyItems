@@ -72,6 +72,11 @@ public partial class ItemRoutePage : ContentPage
         await Navigation.PushAsync(new TradePage());
     }
 
+    private async void OnBuildScrollClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new ScrollBuilderPage());
+    }
+
     private void RefreshWalletButton()
     {
         try
