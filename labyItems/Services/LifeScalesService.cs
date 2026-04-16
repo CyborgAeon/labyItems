@@ -24,7 +24,11 @@ public static class LifeScalesService
             if (_cache != null)
                 return _cache;
 
+#if DEBUG
             _cache = await LoadDebugMergedAsync().ConfigureAwait(false);
+#else
+            _cache = await Task.Run(LoadFromDb).ConfigureAwait(false);
+#endif
         }
         catch (Exception ex)
         {
