@@ -76,6 +76,9 @@ public static class MauiProgram
 				{
 					fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+					fonts.AddFont("LibreCaslonText-Regular.ttf", "LibreCaslonTextRegular");
+					fonts.AddFont("LibreCaslonText-Bold.ttf", "LibreCaslonTextBold");
+					fonts.AddFont("LibreCaslonText-Italic.ttf", "LibreCaslonTextItalic");
 					fonts.AddFont("fa-solid-900.ttf", "FASolid");
 					fonts.AddFont("Mana_Glyphs_smart_v2.ttf", "ManaGlyphs");
 					fonts.AddFont("Mana_Glyphs_handwritten_style.ttf", "ManaGlyphsBasic");

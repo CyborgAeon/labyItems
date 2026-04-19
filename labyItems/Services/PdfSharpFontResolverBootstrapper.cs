@@ -42,13 +42,14 @@ public static class PdfSharpFontResolverBootstrapper
         private const string ManaGlyphsBasicFace = "ManaGlyphsBasicPdf";
         private const string SpiritRunesFace = "SpiritRunesPdf";
         private const string OghamFace = "OghamPdf";
-        private const string OpenSansRegularFace = "OpenSansRegularPdf";
-        private const string OpenSansSemiboldFace = "OpenSansSemiboldPdf";
+        private const string BrandRegularFace = "LibreCaslonTextRegularPdf";
+        private const string BrandBoldFace = "LibreCaslonTextBoldPdf";
+        private const string BrandItalicFace = "LibreCaslonTextItalicPdf";
 
         private readonly ConcurrentDictionary<string, byte[]> _fontBytes = new(StringComparer.OrdinalIgnoreCase);
         private readonly ConcurrentDictionary<string, FontResolverInfo> _cache = new(StringComparer.OrdinalIgnoreCase);
 
-        public string DefaultFontName => OpenSansRegularFace;
+        public string DefaultFontName => BrandRegularFace;
 
         public byte[]? GetFont(string faceName)
         {
@@ -98,18 +99,36 @@ public static class PdfSharpFontResolverBootstrapper
                 return OghamFace;
             }
 
-            if (name.Equals("OpenSansSemibold", StringComparison.OrdinalIgnoreCase))
-                return OpenSansSemiboldFace;
+            if (name.Equals("LibreCaslonTextBold", StringComparison.OrdinalIgnoreCase))
+                return BrandBoldFace;
+
+            if (name.Equals("LibreCaslonTextItalic", StringComparison.OrdinalIgnoreCase))
+                return BrandItalicFace;
 
             if (name.Equals("Helvetica", StringComparison.OrdinalIgnoreCase)
                 || name.Equals("Arial", StringComparison.OrdinalIgnoreCase)
+                || name.Equals("LibreCaslonTextRegular", StringComparison.OrdinalIgnoreCase)
+                || name.Equals("LibreCaslonText", StringComparison.OrdinalIgnoreCase)
+                || name.Equals("OpenSansSemibold", StringComparison.OrdinalIgnoreCase)
                 || name.Equals("OpenSansRegular", StringComparison.OrdinalIgnoreCase)
                 || name.Equals("OpenSans", StringComparison.OrdinalIgnoreCase))
             {
-                return isBold || isItalic ? OpenSansSemiboldFace : OpenSansRegularFace;
+                if (isBold)
+                    return BrandBoldFace;
+
+                if (isItalic)
+                    return BrandItalicFace;
+
+                return BrandRegularFace;
             }
 
-            return isBold || isItalic ? OpenSansSemiboldFace : OpenSansRegularFace;
+            if (isBold)
+                return BrandBoldFace;
+
+            if (isItalic)
+                return BrandItalicFace;
+
+            return BrandRegularFace;
         }
 
         private static byte[] ReadFont(string fileName)
@@ -139,8 +158,9 @@ public static class PdfSharpFontResolverBootstrapper
                 ManaGlyphsBasicFace => "Mana_Glyphs_handwritten_style.ttf",
                 SpiritRunesFace => "Spirit_Runes.ttf",
                 OghamFace => "Ogham.ttf",
-                OpenSansRegularFace => "OpenSans-Regular.ttf",
-                OpenSansSemiboldFace => "OpenSans-Semibold.ttf",
+                BrandRegularFace => "LibreCaslonText-Regular.ttf",
+                BrandBoldFace => "LibreCaslonText-Bold.ttf",
+                BrandItalicFace => "LibreCaslonText-Italic.ttf",
                 _ => null
             };
     }
@@ -153,7 +173,7 @@ public static class PdfSharpFontResolverBootstrapper
                 : AppPdfSharpFontResolver.GetFaceName("ManaGlyphsAdvanced"),
             labyItems.Helpers.ScrollLanguage.SpiritRunes => AppPdfSharpFontResolver.GetFaceName("SpiritRunes"),
             labyItems.Helpers.ScrollLanguage.Ogham => AppPdfSharpFontResolver.GetFaceName("OghamFont"),
-            _ => AppPdfSharpFontResolver.GetFaceName("OpenSansRegular")
+            _ => AppPdfSharpFontResolver.GetFaceName("LibreCaslonTextRegular")
         };
 
     public static string GetStandardFaceName(string familyName, bool isBold = false)

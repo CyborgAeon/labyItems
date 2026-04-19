@@ -26,13 +26,24 @@
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{StaticResource White}" />
         <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="BorderWidth" Value="0"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="14,10"/>
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Style.Triggers>
+            <Trigger TargetType="Button" Property="FontAttributes" Value="Bold">
+                <Setter Property="FontFamily" Value="LibreCaslonTextBold" />
+            </Trigger>
+            <Trigger TargetType="Button" Property="FontAttributes" Value="Italic">
+                <Setter Property="FontFamily" Value="LibreCaslonTextItalic" />
+            </Trigger>
+            <Trigger TargetType="Button" Property="FontAttributes" Value="Bold, Italic">
+                <Setter Property="FontFamily" Value="LibreCaslonTextBold" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -70,7 +81,7 @@
     <Style TargetType="DatePicker">
         <Setter Property="TextColor" Value="{StaticResource Gray900}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
@@ -91,13 +102,21 @@
     <Style TargetType="Editor">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular"/>
         <Setter Property="FontSize" Value="14" />
         <Setter Property="IsTextPredictionEnabled" Value="False" />
         <Setter Property="IsSpellCheckEnabled" Value="False" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray200}" />
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Style.Triggers>
+            <Trigger TargetType="Editor" Property="FontAttributes" Value="Bold">
+                <Setter Property="FontFamily" Value="LibreCaslonTextBold" />
+            </Trigger>
+            <Trigger TargetType="Editor" Property="FontAttributes" Value="Italic">
+                <Setter Property="FontFamily" Value="LibreCaslonTextItalic" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -115,13 +134,21 @@
     <Style TargetType="Entry">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular"/>
         <Setter Property="FontSize" Value="14" />
         <Setter Property="IsTextPredictionEnabled" Value="False" />
         <Setter Property="IsSpellCheckEnabled" Value="False" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray200}" />
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Style.Triggers>
+            <Trigger TargetType="Entry" Property="FontAttributes" Value="Bold">
+                <Setter Property="FontFamily" Value="LibreCaslonTextBold" />
+            </Trigger>
+            <Trigger TargetType="Entry" Property="FontAttributes" Value="Italic">
+                <Setter Property="FontFamily" Value="LibreCaslonTextItalic" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -168,8 +195,19 @@
     <Style TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular" />
         <Setter Property="FontSize" Value="14" />
+        <Style.Triggers>
+            <Trigger TargetType="Label" Property="FontAttributes" Value="Bold">
+                <Setter Property="FontFamily" Value="LibreCaslonTextBold" />
+            </Trigger>
+            <Trigger TargetType="Label" Property="FontAttributes" Value="Italic">
+                <Setter Property="FontFamily" Value="LibreCaslonTextItalic" />
+            </Trigger>
+            <Trigger TargetType="Label" Property="FontAttributes" Value="Bold, Italic">
+                <Setter Property="FontFamily" Value="LibreCaslonTextBold" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -186,6 +224,15 @@
 
     <Style TargetType="Span">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular" />
+        <Style.Triggers>
+            <Trigger TargetType="Span" Property="FontAttributes" Value="Bold">
+                <Setter Property="FontFamily" Value="LibreCaslonTextBold" />
+            </Trigger>
+            <Trigger TargetType="Span" Property="FontAttributes" Value="Italic">
+                <Setter Property="FontFamily" Value="LibreCaslonTextItalic" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="Label" x:Key="Headline">
@@ -342,7 +389,7 @@
         <Setter Property="TextColor" Value="{StaticResource Gray900}" />
         <Setter Property="TitleColor" Value="{StaticResource Gray900}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
@@ -380,7 +427,7 @@
     <Style TargetType="RadioButton">
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextColor" Value="{StaticResource Black}" />
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
@@ -407,7 +454,7 @@
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray500}" />
         <Setter Property="CancelButtonColor" Value="{StaticResource Gray500}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="IsTextPredictionEnabled" Value="False" />
         <Setter Property="IsSpellCheckEnabled" Value="False" />
@@ -432,7 +479,7 @@
         <Setter Property="TextColor" Value="{StaticResource Gray900}" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray500}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -512,7 +559,7 @@
     <Style TargetType="TimePicker">
         <Setter Property="TextColor" Value="{StaticResource Gray900}" />
         <Setter Property="BackgroundColor" Value="Transparent"/>
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontFamily" Value="LibreCaslonTextRegular"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>

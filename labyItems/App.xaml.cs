@@ -26,7 +26,7 @@ public partial class App : Application
         InitializeComponent();
         UserAppTheme = AppTheme.Light;
 
-        _mainNavPage = new NavigationPage(new ItemRoutePage())
+        _mainNavPage = new NavigationPage(new LoginPage())
         {
             BarTextColor = Colors.White
         };

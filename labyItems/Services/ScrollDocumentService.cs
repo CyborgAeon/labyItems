@@ -247,7 +247,7 @@ public sealed class ScrollDocumentService : IScrollDocumentService
             ScrollLanguage.ManaGlyphs => "Mana_Glyphs_smart_v2.ttf",
             ScrollLanguage.SpiritRunes => "Spirit_Runes.ttf",
             ScrollLanguage.Ogham => "Ogham.ttf",
-            _ => "OpenSans-Regular.ttf"
+            _ => "LibreCaslonText-Regular.ttf"
         };
 
         RuntimeLog.Write("SCROLL_PDF", $"Loading Android typeface '{fileName}' from assets.");
@@ -373,8 +373,8 @@ public sealed class ScrollDocumentService : IScrollDocumentService
 
         var glyphFace = PdfSharpFontResolverBootstrapper.GetScrollFaceName(request.Language, request.ManaGlyphVariant);
         var glyphFont = new XFont(glyphFace, CribGlyphFontSize, XFontStyle.Regular, EmbeddedUnicodeFontOptions);
-        var headerFont = new XFont(PdfSharpFontResolverBootstrapper.GetStandardFaceName("OpenSansSemibold", isBold: true), CribHeaderFontSize, XFontStyle.Bold, EmbeddedUnicodeFontOptions);
-        var textFont = new XFont(PdfSharpFontResolverBootstrapper.GetStandardFaceName("OpenSansRegular"), CribTextFontSize, XFontStyle.Regular, EmbeddedUnicodeFontOptions);
+        var headerFont = new XFont(PdfSharpFontResolverBootstrapper.GetStandardFaceName("LibreCaslonTextBold", isBold: true), CribHeaderFontSize, XFontStyle.Bold, EmbeddedUnicodeFontOptions);
+        var textFont = new XFont(PdfSharpFontResolverBootstrapper.GetStandardFaceName("LibreCaslonTextRegular"), CribTextFontSize, XFontStyle.Regular, EmbeddedUnicodeFontOptions);
         var glyphBrush = XBrushes.Black;
         var borderPen = new XPen(XColor.FromArgb(220, 220, 220), 0.5);
 

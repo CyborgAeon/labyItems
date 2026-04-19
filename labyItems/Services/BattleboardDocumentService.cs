@@ -46,8 +46,8 @@ public sealed class BattleboardDocumentService : IBattleboardDocumentService
         document.Version = 14;
         document.Info.Title = Path.GetFileNameWithoutExtension(outputPath);
 
-        var headerFont = new XFont(PdfSharpFontResolverBootstrapper.GetStandardFaceName("OpenSansSemibold", isBold: true), 9, XFontStyle.Bold);
-        var cellFont = new XFont(PdfSharpFontResolverBootstrapper.GetStandardFaceName("OpenSansRegular"), 6, XFontStyle.Regular);
+        var headerFont = new XFont(PdfSharpFontResolverBootstrapper.GetStandardFaceName("LibreCaslonTextBold", isBold: true), 9, XFontStyle.Bold);
+        var cellFont = new XFont(PdfSharpFontResolverBootstrapper.GetStandardFaceName("LibreCaslonTextRegular"), 6, XFontStyle.Regular);
         var borderPen = new XPen(XColor.FromArgb(220, 220, 220), 0.4);
 
         foreach (var worksheet in workbook.Worksheets)

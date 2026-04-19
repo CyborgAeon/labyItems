@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Shell.NavBarIsVisible="False"
+    NavigationPage.HasNavigationBar="False">
+
+    <Grid BackgroundColor="{StaticResource White}">
+        <ScrollView>
+            <VerticalStackLayout Padding="24,40,24,24"
+                                 Spacing="18"
+                                 VerticalOptions="Center">
+                <Label FontAttributes="Bold"
+                       FontSize="34"
+                       Text="Login"
+                       TextColor="{StaticResource Gray950}" />
+
+                <Label Margin="0,6,0,0"
+                       FontSize="16"
+                       Text="Email address"
+                       TextColor="{StaticResource Gray950}" />
+
+                <Border BackgroundColor="#EEF4FF"
+                        Padding="14,6"
+                        Stroke="{StaticResource Gray200}"
+                        StrokeShape="RoundRectangle 4">
+                    <Entry x:Name="UsernameEntry"
+                           BackgroundColor="Transparent"
+                           ClearButtonVisibility="WhileEditing"
+                           FontSize="16"
+                           Placeholder="Enter your email address"
+                           Text="admin" />
+                </Border>
+
+                <Label Margin="0,8,0,0"
+                       FontSize="16"
+                       Text="Password"
+                       TextColor="{StaticResource Gray950}" />
+
+                <Border BackgroundColor="#EEF4FF"
+                        Padding="14,6"
+                        Stroke="{StaticResource Gray200}"
+                        StrokeShape="RoundRectangle 4">
+                    <Entry x:Name="PasswordEntry"
+                           BackgroundColor="Transparent"
+                           FontSize="16"
+                           IsPassword="True"
+                           Placeholder="Enter your password"
+                           Text="admin" />
+                </Border>
+
+                <Button Clicked="OnForgotPasswordClicked"
+                        FontSize="16"
+                        HorizontalOptions="Start"
+                        Padding="0"
+                        Text="Forgot password?"
+                        TextColor="{StaticResource Secondary}">
+                    <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                </Button>
+
+                <Button Clicked="OnLoginClicked"
+                        FontSize="18"
+                        HorizontalOptions="Start"
+                        Margin="0,8,0,0"
+                        Padding="32,14"
+                        Text="LOGIN"
+                        TextColor="{StaticResource White}" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

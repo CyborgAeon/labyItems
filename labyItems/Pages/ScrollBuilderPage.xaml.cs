@@ -120,7 +120,7 @@ public partial class ScrollBuilderPage : ContentPage
         private bool _useAdvancedManaGlyphs = true;
         private bool _asScroll;
         private string _previewText = "Select a spell, miracle, or evocation to preview its verbal.";
-        private string _previewFontFamily = "OpenSansRegular";
+        private string _previewFontFamily = "LibreCaslonTextRegular";
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -361,7 +361,7 @@ public partial class ScrollBuilderPage : ContentPage
             }
             catch
             {
-                PreviewFontFamily = "OpenSansRegular";
+                PreviewFontFamily = "LibreCaslonTextRegular";
                 PreviewText = IsCatalogMode
                     ? "Select a spell, miracle, or evocation to preview its verbal."
                     : IsCustomMode
@@ -458,7 +458,7 @@ public partial class ScrollBuilderPage : ContentPage
                 ScrollLanguage.ManaGlyphs => manaGlyphVariant == ManaGlyphVariant.Basic ? "ManaGlyphsBasic" : "ManaGlyphs",
                 ScrollLanguage.SpiritRunes => "SpiritRunes",
                 ScrollLanguage.Ogham => "OghamFont",
-                _ => "OpenSansRegular"
+                _ => "LibreCaslonTextRegular"
             };
 
         private bool Set<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
