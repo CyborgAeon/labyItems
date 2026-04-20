@@ -184,7 +184,10 @@ internal static class CalendarVisualHelper
         {
             Text = evt.Name,
             FontAttributes = FontAttributes.Bold,
-            FontSize = 20
+            FontSize = 20,
+            LineBreakMode = LineBreakMode.WordWrap,
+            MaxLines = 2,
+            VerticalTextAlignment = TextAlignment.Start
         });
 
         var badge = new Border
@@ -193,6 +196,8 @@ internal static class CalendarVisualHelper
             Padding = new Thickness(10, 4),
             StrokeThickness = 0,
             StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(999) },
+            VerticalOptions = LayoutOptions.Start,
+            HorizontalOptions = LayoutOptions.End,
             Content = new Label
             {
                 Text = evt.ThresholdBadge,

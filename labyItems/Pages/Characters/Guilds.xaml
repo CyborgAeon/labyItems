@@ -76,21 +76,38 @@
             </CollectionView>
         </Grid>
 
-        <CollectionView x:Name="GuildList"
-                        Grid.Row="3"
-                        ItemsSource="{Binding FilteredGuilds}"
-                        SelectionMode="None"
-                        ItemSizingStrategy="MeasureFirstItem"
-                        ItemsUpdatingScrollMode="KeepScrollOffset">
+        <Grid Grid.Row="3">
+            <CollectionView x:Name="GuildList"
+                            ItemsSource="{Binding FilteredGuilds}"
+                            SelectionMode="None"
+                            ItemSizingStrategy="MeasureAllItems"
+                            ItemsUpdatingScrollMode="KeepScrollOffset">
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <local:GuildCardView
-                        ToggleExpandedCommand="{Binding Source={x:Reference Root}, Path=ToggleExpandedCommand}"
-                        SelectCommand="{Binding Source={RelativeSource AncestorType={x:Type local:Guilds}}, Path=BindingContext.ToggleSelectedCommand}"/>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <local:GuildCardView
+                            ToggleExpandedCommand="{Binding Source={x:Reference Root}, Path=ToggleExpandedCommand}"
+                            SelectCommand="{Binding Source={RelativeSource AncestorType={x:Type local:Guilds}}, Path=BindingContext.ToggleSelectedCommand}"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Border IsVisible="{Binding IsLoading}"
+                    BackgroundColor="#CCFFFFFF"
+                    StrokeThickness="0"
+                    InputTransparent="True">
+                <VerticalStackLayout Spacing="10"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center">
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                       WidthRequest="32"
+                                       HeightRequest="32"/>
+                    <Label Text="Loading guilds..."
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
 
     </Grid>
 </ContentView>

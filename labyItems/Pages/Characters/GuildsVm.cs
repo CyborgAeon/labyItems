@@ -64,6 +64,7 @@ public sealed class GuildsVm : INotifyPropertyChanged
     private readonly bool _hideUnavailableGuilds;
     private readonly GuildCardDetailMode _detailMode;
     private readonly HashSet<string> _selectedTypeFilters = new(StringComparer.OrdinalIgnoreCase);
+    private bool _isLoading;
     private bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
@@ -208,6 +209,12 @@ public sealed class GuildsVm : INotifyPropertyChanged
     public ObservableCollection<GuildCardVm> AllGuilds { get; }
     public ObservableCollection<GuildCardVm> FilteredGuilds { get; }
     public ObservableCollection<GuildTypeFilterChipVm> TypeFilterChips { get; }
+    public bool IsLoading
+    {
+        get => _isLoading;
+        private set => Set(ref _isLoading, value);
+    }
+
     public IEnumerable<GuildCardVm> SelectedGuilds =>
         AllGuilds
             .Where(g => g.IsSelected)
@@ -429,98 +436,107 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
     public async Task ReloadAsync()
     {
-        _guildRecords = _detailMode == GuildCardDetailMode.MiracleOnly
-            ? await _creationDataService.GetGuildsForMiracleSearchAsync()
-            : await _creationDataService.GetGuildsAsync();
-        _guildRecords ??= new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
-        lock (_detailLoadGate)
-            _detailLoadTasks.Clear();
-
-        await RefreshContextAsync();
-
-        ApplyAvailabilityToCurrentSelection();
-
-        var (hasCityBound, cityName) = GetCityBoundInfo();
-        if (hasCityBound && !string.IsNullOrWhiteSpace(cityName))
+        IsLoading = true;
+        try
         {
-            var matchedGuildName = _guildRecords.Keys
-                .FirstOrDefault(k => string.Equals(k, cityName, StringComparison.OrdinalIgnoreCase));
+            _guildRecords = _detailMode == GuildCardDetailMode.MiracleOnly
+                ? await _creationDataService.GetGuildsForMiracleSearchAsync()
+                : await _creationDataService.GetGuildsAsync();
+            _guildRecords ??= new Dictionary<string, GuildRecord>(StringComparer.OrdinalIgnoreCase);
+            lock (_detailLoadGate)
+                _detailLoadTasks.Clear();
 
-            if (!string.IsNullOrWhiteSpace(matchedGuildName))
+            await RefreshContextAsync();
+
+            ApplyAvailabilityToCurrentSelection();
+
+            var (hasCityBound, cityName) = GetCityBoundInfo();
+            if (hasCityBound && !string.IsNullOrWhiteSpace(cityName))
             {
-                if (!_draft.Guilds.Any(g => string.Equals(g, matchedGuildName, StringComparison.OrdinalIgnoreCase)))
-                    _draft.Guilds.Add(matchedGuildName);
+                var matchedGuildName = _guildRecords.Keys
+                    .FirstOrDefault(k => string.Equals(k, cityName, StringComparison.OrdinalIgnoreCase));
+
+                if (!string.IsNullOrWhiteSpace(matchedGuildName))
+                {
+                    if (!_draft.Guilds.Any(g => string.Equals(g, matchedGuildName, StringComparison.OrdinalIgnoreCase)))
+                        _draft.Guilds.Add(matchedGuildName);
+                }
             }
-        }
-        ApplyAvailabilityToCurrentSelection();
-        var types = _detailMode == GuildCardDetailMode.MiracleOnly
-            ? _guildRecords.Values
-                .Select(record => (record?.Type ?? string.Empty).Trim())
-                .Where(type => !string.IsNullOrWhiteSpace(type))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(type => type, StringComparer.OrdinalIgnoreCase)
-                .ToList()
-            : await _creationDataService.GetGuildTypesAsync();
-        TypeFilters.Clear();
-        TypeFilters.Add(AllTypeFilterValue);
-        foreach (var t in types)
-            TypeFilters.Add(t);
 
-        if (string.IsNullOrWhiteSpace(SelectedTypeFilter) || !TypeFilters.Contains(SelectedTypeFilter))
-            SelectedTypeFilter = AllTypeFilterValue;
+            ApplyAvailabilityToCurrentSelection();
+            var types = _detailMode == GuildCardDetailMode.MiracleOnly
+                ? _guildRecords.Values
+                    .Select(record => (record?.Type ?? string.Empty).Trim())
+                    .Where(type => !string.IsNullOrWhiteSpace(type))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .OrderBy(type => type, StringComparer.OrdinalIgnoreCase)
+                    .ToList()
+                : await _creationDataService.GetGuildTypesAsync();
+            TypeFilters.Clear();
+            TypeFilters.Add(AllTypeFilterValue);
+            foreach (var t in types)
+                TypeFilters.Add(t);
 
-        if (_useMultiTypeFilters)
-            RebuildTypeFilterChips();
-        else
-            TypeFilterChips.Clear();
+            if (string.IsNullOrWhiteSpace(SelectedTypeFilter) || !TypeFilters.Contains(SelectedTypeFilter))
+                SelectedTypeFilter = AllTypeFilterValue;
 
-        var ordered = _guildRecords
-            .OrderBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-        AllGuilds.Clear();
-        var preloadDetails = new List<Task>();
-        for (var i = 0; i < ordered.Count; i++)
-        {
-            var name = ordered[i].Key;
-            var rec = ordered[i].Value ?? new GuildRecord();
+            if (_useMultiTypeFilters)
+                RebuildTypeFilterChips();
+            else
+                TypeFilterChips.Clear();
 
-            var isSelected = _draft.Guilds.Contains(name, StringComparer.OrdinalIgnoreCase);
-            var availability = EvaluateAvailabilityForCurrentContext(rec, name);
-            var selectable = availability.Allowed;
-            var reason = availability.Reason;
-            var cardSelectable = !_allowGuildSelection
-                || (!_enforceAvailabilityForSelection)
-                || (selectable || isSelected);
-
-            var vm = new GuildCardVm
+            var ordered = _guildRecords
+                .OrderBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            AllGuilds.Clear();
+            var preloadDetails = new List<Task>();
+            for (var i = 0; i < ordered.Count; i++)
             {
-                Id = i + 1,
-                Name = name,
-                Type = rec.Type ?? "",
-                Logo = NormalizeLogoPath(rec.Logo),
-                IsSelected = isSelected,
-                IsExpanded = false,
-                IsSelectable = cardSelectable,
-                NotSelectableReason = cardSelectable
-                    ? ""
-                    : (_allowGuildSelection && _enforceAvailabilityForSelection ? reason : ""),
-                IsLocked = _slotRules.IsGuildLocked(rec.Type ?? string.Empty, name),
-                HasAnyChoiceOptions = HasAvailableChoiceOptions(rec),
-            };
+                var name = ordered[i].Key;
+                var rec = ordered[i].Value ?? new GuildRecord();
 
-            vm.Icon = IconForType(vm.Type);
-            AllGuilds.Add(vm);
+                var isSelected = _draft.Guilds.Contains(name, StringComparer.OrdinalIgnoreCase);
+                var availability = EvaluateAvailabilityForCurrentContext(rec, name);
+                var selectable = availability.Allowed;
+                var reason = availability.Reason;
+                var cardSelectable = !_allowGuildSelection
+                    || (!_enforceAvailabilityForSelection)
+                    || (selectable || isSelected);
 
-            if (isSelected)
-                preloadDetails.Add(EnsureCardDetailsLoadedAsync(vm, rec));
+                var vm = new GuildCardVm
+                {
+                    Id = i + 1,
+                    Name = name,
+                    Type = rec.Type ?? "",
+                    Logo = NormalizeLogoPath(rec.Logo),
+                    IsSelected = isSelected,
+                    IsExpanded = false,
+                    IsSelectable = cardSelectable,
+                    NotSelectableReason = cardSelectable
+                        ? ""
+                        : (_allowGuildSelection && _enforceAvailabilityForSelection ? reason : ""),
+                    IsLocked = _slotRules.IsGuildLocked(rec.Type ?? string.Empty, name),
+                    HasAnyChoiceOptions = HasAvailableChoiceOptions(rec),
+                };
+
+                vm.Icon = IconForType(vm.Type);
+                AllGuilds.Add(vm);
+
+                if (isSelected)
+                    preloadDetails.Add(EnsureCardDetailsLoadedAsync(vm, rec));
+            }
+
+            if (preloadDetails.Count > 0)
+                await Task.WhenAll(preloadDetails);
+
+            Refilter();
+            RecomputeDraftAlignments();
+            _notifyWizardGatingChanged();
         }
-
-        if (preloadDetails.Count > 0)
-            await Task.WhenAll(preloadDetails);
-
-        Refilter();
-        RecomputeDraftAlignments();
-        _notifyWizardGatingChanged();
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     private async Task EnsureCardDetailsLoadedAsync(GuildCardVm card, GuildRecord? record = null)

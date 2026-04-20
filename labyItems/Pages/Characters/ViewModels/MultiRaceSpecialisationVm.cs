@@ -6,6 +6,7 @@ using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Services;
 using labyItems.Services.Specialisations;
+using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -184,7 +185,38 @@ public sealed class MultiRaceSpecialisationVm : INotifyPropertyChanged
         else
             _draft.MultiRaceChoiceSelections[group.ChoiceSetRef] = group.SelectedOptionKey;
 
-        RebuildGroups();
+        if (RequiresGroupRebuild())
+        {
+            MainThread.BeginInvokeOnMainThread(RebuildGroups);
+            return;
+        }
+
+        group.RefreshAbilityRows(_abilityRefs);
+    }
+
+    private bool RequiresGroupRebuild()
+    {
+        var raceKey = (_draft.MultiRaceKey ?? string.Empty).Trim();
+        if (raceKey.Length == 0 || _draft.MultiRaceLevel <= 0)
+            return false;
+
+        if (!TryResolveMultiRaceDefinition(raceKey, out _, out var definition))
+            return false;
+
+        var maxLevel = ResolveMaxLevel(definition);
+        var selectedLevel = Math.Clamp(_draft.MultiRaceLevel, 0, maxLevel);
+        if (selectedLevel <= 0)
+            return false;
+
+        var selections = _draft.MultiRaceChoiceSelections ?? EmptySelections;
+        var unlockedKeys = ResolveUnlockedChoiceSets(definition, selectedLevel, selections)
+            .Select(item => item.ChoiceSetRef)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var currentKeys = Groups
+            .Select(item => item.ChoiceSetRef)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        return !unlockedKeys.SetEquals(currentKeys);
     }
 
     private List<UnlockedChoiceSet> ResolveUnlockedChoiceSets(
@@ -346,6 +378,9 @@ public sealed class MultiRaceSpecialisationVm : INotifyPropertyChanged
 
     private void Raise([CallerMemberName] string? propertyName = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+    private static readonly IReadOnlyDictionary<string, string> EmptySelections =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
     private sealed record UnlockedChoiceSet(string ChoiceSetRef, int UnlockLevel);
 }

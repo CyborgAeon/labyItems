@@ -6,6 +6,7 @@ using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Services;
 using labyItems.Services.Specialisations;
+using Microsoft.Maui.ApplicationModel;
 
 namespace labyItems.Pages.Characters.ViewModels;
 
@@ -241,7 +242,40 @@ public sealed class MultiClassSpecialisationVm : INotifyPropertyChanged
         else
             _draft.MultiClassChoiceSelections[group.StorageKey] = group.SelectedOptionKey;
 
-        RebuildGroups();
+        if (RequiresGroupRebuild())
+        {
+            MainThread.BeginInvokeOnMainThread(RebuildGroups);
+            return;
+        }
+
+        group.RefreshAbilityRows(_abilityRefs);
+    }
+
+    private bool RequiresGroupRebuild()
+    {
+        var selectedClasses = ResolveSelectedMultiClasses();
+        if (selectedClasses.Count == 0)
+            return false;
+
+        var selections = _draft.MultiClassChoiceSelections ?? EmptySelections;
+        var unlockedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var selectedClass in selectedClasses)
+        {
+            foreach (var unlocked in ResolveUnlockedChoiceSets(
+                         selectedClass.Definition,
+                         selectedClass.Level,
+                         selectedClass.ResolvedKey,
+                         selections))
+            {
+                unlockedKeys.Add(BuildChoiceSelectionStorageKey(selectedClass.ResolvedKey, unlocked.ChoiceSetRef));
+            }
+        }
+
+        var currentKeys = Groups
+            .Select(item => item.StorageKey)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        return !unlockedKeys.SetEquals(currentKeys);
     }
 
     private List<UnlockedChoiceSet> ResolveUnlockedChoiceSets(
@@ -414,6 +448,9 @@ public sealed class MultiClassSpecialisationVm : INotifyPropertyChanged
 
     private void Raise([CallerMemberName] string? propertyName = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+    private static readonly IReadOnlyDictionary<string, string> EmptySelections =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
     private sealed record UnlockedChoiceSet(string ChoiceSetRef, int UnlockLevel);
     private sealed record SelectedMultiClassVm(

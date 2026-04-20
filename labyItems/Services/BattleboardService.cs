@@ -3,6 +3,7 @@ using labyItems.Helpers;
 using labyItems.Models;
 using labyItems.Models.Characters;
 using labyItems.Models.Enums;
+using labyItems.Services.Specialisations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -57,9 +58,12 @@ public sealed class BattleboardExportService : IBattleboardExportService
         var assignedItems = (_assignedItemsResolver?.Invoke(draft)
                              ?? BattleboardInnateCalculator.ResolveAssignedItems(draft))
             .ToList();
+        var supplementalSpecialisationAbilities = await ResolveSelectedSpecialisationAbilitiesAsync(draft);
         var lifeTotals = BattleboardLifeCalculator.Calculate(draft, assignedItems);
         var itemArmour = BattleboardArmourCalculator.Calculate(draft, assignedItems);
-        var resolvedInnates = BattleboardInnateCalculator.Calculate(draft, assignedItems);
+        var resolvedInnates = MergeInnates(
+            BattleboardInnateCalculator.Calculate(draft, assignedItems),
+            supplementalSpecialisationAbilities);
         var abilityEffects = await BattleboardAbilityEffectResolver.ResolveAsync(draft);
         var advancementEffects = await BattleboardAdvancementEffectResolver.ResolveAsync(draft.AdvancementAbilities);
         var itemEffects = await BattleboardItemEffectResolver.ResolveAsync(draft, assignedItems);
@@ -174,7 +178,8 @@ public sealed class BattleboardExportService : IBattleboardExportService
             ws.Cell("AA4").Value = "Combat Wary";
             ws.Cell("AD4").Value = rank;
         }
-        var atWillAbilities = draft.Abilities
+        var atWillAbilities = (draft.Abilities ?? new List<AbilityDraft>())
+            .Concat(supplementalSpecialisationAbilities)
             .Where(a => a.AbilityType == AbilityType.AtWill)
             .Select(FormatAbilityText)
             .Where(v => !string.IsNullOrWhiteSpace(v))
@@ -281,6 +286,195 @@ public sealed class BattleboardExportService : IBattleboardExportService
 
             yield return $"{level}th Level Resistance to {type}";
         }
+    }
+
+    private static async Task<List<AbilityDraft>> ResolveSelectedSpecialisationAbilitiesAsync(CharacterDraft draft)
+    {
+        if (draft?.SpecialisationSelections == null || draft.SpecialisationSelections.Count == 0)
+            return new List<AbilityDraft>();
+
+        var index = await SpecialisationDefinitionRepository.GetIndexAsync();
+        var lookup = await AbilityDefinitionLookupService.GetLookupAsync();
+        var resolved = new List<AbilityDraft>();
+        var achievedTable = CharacterProgressionTables.GetHighestTableReached(draft.Points);
+
+        foreach (var selection in draft.SpecialisationSelections)
+        {
+            if (!TryResolveSpecialisationDefinition(index.Definitions, selection.Key, out var definition))
+                continue;
+
+            foreach (var grant in definition.PassiveGrants ?? Array.Empty<AbilityGrant>())
+                AddGrantedAbilityDraft(resolved, grant, lookup, achievedTable);
+
+            var selectedTokens = ParseSelectionTokens(selection.Value);
+            if (selectedTokens.Count == 0)
+                continue;
+
+            foreach (var choiceSet in definition.ChoiceSets ?? Array.Empty<SpecialisationChoiceSet>())
+            {
+                foreach (var option in choiceSet.Options ?? Array.Empty<ChoiceOption>())
+                {
+                    if (!SelectionMatchesOption(selectedTokens, option))
+                        continue;
+
+                    foreach (var grant in option.Grants ?? Array.Empty<AbilityGrant>())
+                        AddGrantedAbilityDraft(resolved, grant, lookup, achievedTable);
+                }
+            }
+        }
+
+        return resolved;
+    }
+
+    private static List<InnateAbilityDraft> MergeInnates(
+        IReadOnlyList<InnateAbilityDraft> baseInnates,
+        IReadOnlyList<AbilityDraft> supplementalAbilities)
+    {
+        var totals = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        void AddInnate(string? rawName, int rank)
+        {
+            var name = (rawName ?? string.Empty).Trim();
+            if (name.Length == 0 || rank <= 0)
+                return;
+
+            totals[name] = totals.TryGetValue(name, out var existing)
+                ? existing + rank
+                : rank;
+        }
+
+        foreach (var innate in baseInnates ?? Array.Empty<InnateAbilityDraft>())
+            AddInnate(innate?.Name, innate?.Rank ?? 0);
+
+        foreach (var ability in supplementalAbilities ?? Array.Empty<AbilityDraft>())
+        {
+            if (ability?.AbilityType != AbilityType.Innate)
+                continue;
+
+            var name = !string.IsNullOrWhiteSpace(ability.BattleboardNameOverride)
+                ? ability.BattleboardNameOverride
+                : ability.Name;
+            var rank = Math.Max(1, AbilityDraftBuilder.ResolveInnateRank(ability, achievedLevel: 8));
+            AddInnate(name, rank);
+        }
+
+        return totals
+            .Where(kvp => kvp.Value > 0)
+            .OrderBy(kvp => kvp.Key, StringComparer.OrdinalIgnoreCase)
+            .Select(kvp => new InnateAbilityDraft
+            {
+                Name = kvp.Key,
+                Rank = kvp.Value
+            })
+            .ToList();
+    }
+
+    private static bool TryResolveSpecialisationDefinition(
+        IReadOnlyDictionary<string, SpecialisationDefinition> definitions,
+        string? selectionKey,
+        out SpecialisationDefinition definition)
+    {
+        definition = null!;
+
+        var raw = (selectionKey ?? string.Empty).Trim();
+        if (raw.Length == 0 || definitions.Count == 0)
+            return false;
+
+        if (definitions.TryGetValue(raw, out var direct) && direct != null)
+        {
+            definition = direct;
+            return true;
+        }
+
+        var wanted = AbilityDefinitionLookupService.NormalizeKey(raw);
+        foreach (var pair in definitions)
+        {
+            if (AbilityDefinitionLookupService.NormalizeKey(pair.Key).Equals(wanted, StringComparison.OrdinalIgnoreCase))
+            {
+                definition = pair.Value;
+                return true;
+            }
+
+            if (AbilityDefinitionLookupService.NormalizeKey(pair.Value.Key).Equals(wanted, StringComparison.OrdinalIgnoreCase))
+            {
+                definition = pair.Value;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static List<string> ParseSelectionTokens(string? raw)
+    {
+        return (raw ?? string.Empty)
+            .Split(new[] { '|', ',', ';', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(token => token.Trim())
+            .Where(token => token.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static bool SelectionMatchesOption(IReadOnlyCollection<string> selectedTokens, ChoiceOption option)
+    {
+        foreach (var token in selectedTokens)
+        {
+            if (token.Equals(option.Key, StringComparison.OrdinalIgnoreCase)
+                || token.Equals(option.Label, StringComparison.OrdinalIgnoreCase)
+                || AbilityDefinitionLookupService.NormalizeKey(token)
+                    .Equals(AbilityDefinitionLookupService.NormalizeKey(option.Key), StringComparison.OrdinalIgnoreCase)
+                || AbilityDefinitionLookupService.NormalizeKey(token)
+                    .Equals(AbilityDefinitionLookupService.NormalizeKey(option.Label), StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void AddGrantedAbilityDraft(
+        ICollection<AbilityDraft> target,
+        AbilityGrant? grant,
+        IReadOnlyDictionary<string, AbilityDefinition> lookup,
+        int achievedTable)
+    {
+        var definition = ResolveGrantedAbilityDefinition(grant, lookup);
+        if (definition == null)
+            return;
+
+        foreach (var draft in AbilityDraftBuilder.ParseAbility(
+                     definition,
+                     levelGained: grant?.Level,
+                     achievedLevel: 8,
+                     tableGained: grant?.Table,
+                     achievedTable: achievedTable))
+        {
+            if (draft == null)
+                continue;
+
+            target.Add(draft);
+        }
+    }
+
+    private static AbilityDefinition? ResolveGrantedAbilityDefinition(
+        AbilityGrant? grant,
+        IReadOnlyDictionary<string, AbilityDefinition> lookup)
+    {
+        var candidate = grant?.Ability;
+        if (candidate == null)
+            return null;
+
+        if (!string.IsNullOrWhiteSpace(candidate.Name)
+            || !string.IsNullOrWhiteSpace(candidate.Type)
+            || !string.IsNullOrWhiteSpace(candidate.Effect))
+        {
+            return candidate;
+        }
+
+        return AbilityDefinitionLookupService.Find(
+            lookup,
+            candidate.AbilityRef ?? candidate.Key ?? candidate.Name);
     }
 
     private static XLCellValue FormatResistanceCellValue(int level)

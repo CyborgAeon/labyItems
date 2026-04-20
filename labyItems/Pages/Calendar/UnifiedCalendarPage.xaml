@@ -61,10 +61,7 @@
                     Stroke="{StaticResource SurfaceBorderColor}"
                     StrokeShape="RoundRectangle 18">
                 <Border.GestureRecognizers>
-                    <SwipeGestureRecognizer Direction="Left"
-                                            Swiped="OnNextMonthSwiped" />
-                    <SwipeGestureRecognizer Direction="Right"
-                                            Swiped="OnPreviousMonthSwiped" />
+                    <PanGestureRecognizer PanUpdated="OnCalendarPanUpdated" />
                 </Border.GestureRecognizers>
                 <VerticalStackLayout Spacing="10">
                     <Grid ColumnDefinitions="*,Auto"

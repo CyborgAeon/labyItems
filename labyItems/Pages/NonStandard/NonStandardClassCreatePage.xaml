@@ -523,9 +523,9 @@
 
             <Frame Style="{StaticResource SectionCardFrameStyle}">
                 <VerticalStackLayout Spacing="8">
-                    <Label Text="Whitelist races"
+                    <Label Text="Included races"
                            Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Button Text="Add to whitelist"
+                    <Button Text="Add to included"
                             Clicked="OnAddWhitelistRaceClicked"/>
                     <CollectionView ItemsSource="{Binding RaceWhitelist}"
                                     SelectionMode="None"
@@ -558,9 +558,9 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <Label Text="Blacklist races"
+                    <Label Text="Excluded races"
                            Style="{StaticResource SectionHeaderLabelStyle}"/>
-                    <Button Text="Add to blacklist"
+                    <Button Text="Add to excluded"
                             Clicked="OnAddBlacklistRaceClicked"/>
                     <CollectionView ItemsSource="{Binding RaceBlacklist}"
                                     SelectionMode="None"

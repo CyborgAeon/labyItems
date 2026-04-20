@@ -154,7 +154,8 @@ public partial class SpecialisationDetailCardView : ContentView
             .Select(ability => new SpecialistAbilityRowVm(
                 (ability.Name ?? string.Empty).Trim(),
                 (ability.Key ?? ability.Name ?? string.Empty).Trim(),
-                ResolveDescriptionFromAbility(ability)))
+                ResolveDescriptionFromAbility(ability),
+                ResolveProgressionText(ability)))
             .Where(row => row.Name.Length > 0)
             .ToList();
 
@@ -330,6 +331,22 @@ public partial class SpecialisationDetailCardView : ContentView
             return ResolveDescriptionFromAbility(ability);
 
         return "No description provided.";
+    }
+
+    private static string ResolveProgressionText(AbilityDefinition ability)
+    {
+        if (ability.Progression != null)
+        {
+            var maximum = ability.Progression.Maximum;
+            return maximum.HasValue && maximum.Value > 0
+                ? $"1/{maximum.Value}"
+                : "1/X";
+        }
+
+        if (ability.Count.HasValue && ability.Count.Value > 1)
+            return $"1/{ability.Count.Value}";
+
+        return string.Empty;
     }
 
     private AbilityDefinition? ResolveSelectedAbility()
@@ -705,16 +722,19 @@ public partial class SpecialisationDetailCardView : ContentView
 
     public sealed class SpecialistAbilityRowVm
     {
-        public SpecialistAbilityRowVm(string name, string lookupKey, string description)
+        public SpecialistAbilityRowVm(string name, string lookupKey, string description, string progressionText)
         {
             Name = (name ?? string.Empty).Trim();
             LookupKey = (lookupKey ?? string.Empty).Trim();
             Description = (description ?? string.Empty).Trim();
+            ProgressionText = (progressionText ?? string.Empty).Trim();
         }
 
         public string Name { get; }
         public string LookupKey { get; }
         public string Description { get; }
+        public string ProgressionText { get; }
         public bool HasDescription => Description.Length > 0 && !string.Equals(Description, "No description provided.", StringComparison.OrdinalIgnoreCase);
+        public bool HasProgression => ProgressionText.Length > 0;
     }
 }

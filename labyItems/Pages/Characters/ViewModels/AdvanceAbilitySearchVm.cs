@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Input;
+using labyItems.Helpers;
 using labyItems.Models.Characters;
 using labyItems.Models.Abilities;
 using labyItems.Services;
@@ -15,6 +16,36 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
 {
     private const int MaxVisibleResults = 100;
     private const int SearchDebounceMs = 500;
+    private static readonly string[] DefaultSourceBookPriority =
+    {
+        "classes",
+        "evolution-classes",
+        "At the sharp end",
+        "Wizard Grimoire",
+        "Druids Way",
+        "Engarde",
+        "words from above",
+        "Races",
+        "collated.pdf"
+    };
+
+    private static readonly string[] AlwaysIncludedSourceBooks =
+    {
+        "Races",
+        "collated.pdf",
+        "classes",
+        "evolution-classes"
+    };
+
+    private static readonly (string Bracket, string SourceBook)[] BracketSpecificSourceBooks =
+    {
+        ("Scout", "At the sharp end"),
+        ("Wizard", "Wizard Grimoire"),
+        ("Druid", "Druids Way"),
+        ("Warrior", "Engarde"),
+        ("Priest", "words from above")
+    };
+
     private static readonly SemaphoreSlim AbilityCacheLock = new(1, 1);
     private static IReadOnlyList<CachedAbilityEntry>? _cachedAbilities;
     private static IReadOnlyDictionary<string, EvolutionService.AbilityResult>? _cachedAbilityLookup;
@@ -166,6 +197,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
         _selectedAbilityKeys.Clear();
 
         BuildFilterOptions();
+        ApplyCharacterDefaultFilters();
         ScheduleRefilter(debounce: false);
         UpdateSelectedCount();
     }
@@ -194,7 +226,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
             .Select(key => _abilityLookupByKey.TryGetValue(key, out var ability) ? ability : null)
             .Where(ability => ability is not null)
             .Cast<EvolutionService.AbilityResult>()
-            .OrderBy(ability => ability.Index, StringComparer.OrdinalIgnoreCase)
+            .OrderBy(ability => ability, Comparer<EvolutionService.AbilityResult>.Create(CompareAbilities))
             .ToList();
 
     public async Task<IReadOnlyList<AdvanceAbilitySpecialisationRequest>> BuildSpecialisationRequestsAsync(
@@ -363,6 +395,26 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
             TableFilters.Add(new AdvanceAbilitySearchFilterOptionVm<int>(table.ToString(), table));
     }
 
+    private void ApplyCharacterDefaultFilters()
+    {
+        _activeSourceBookFilters.Clear();
+        foreach (var sourceBook in ResolveDefaultSourceBooks())
+            _activeSourceBookFilters.Add(sourceBook);
+
+        _activeTableFilters.Clear();
+        var highestTableReached = Math.Max(1, CharacterProgressionTables.GetHighestTableReached(_draft.Points));
+        for (var table = 0; table <= highestTableReached; table++)
+            _activeTableFilters.Add(table);
+
+        PendingAvailableOnly = _activeAvailableOnly;
+
+        foreach (var filter in SourceBookFilters)
+            filter.IsSelected = _activeSourceBookFilters.Contains(filter.Value);
+
+        foreach (var filter in TableFilters)
+            filter.IsSelected = _activeTableFilters.Contains(filter.Value);
+    }
+
     private IReadOnlyList<AdvanceAbilitySearchItemVm> ComputeFilteredItems(
         string query,
         IReadOnlySet<string> sourceBooks,
@@ -435,8 +487,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
             filtered = filtered
                 .OrderByDescending(item => item.Name.Equals(query, StringComparison.OrdinalIgnoreCase))
                 .ThenByDescending(item => item.Name.StartsWith(query, StringComparison.OrdinalIgnoreCase))
-                .ThenBy(item => item.Table)
-                .ThenBy(item => item.Name, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(item => item, Comparer<AdvanceAbilitySearchItemVm>.Create(CompareItems))
                 .Take(MaxVisibleResults)
                 .ToList();
         }
@@ -578,6 +629,168 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
         return value.Length == 0 ? "Unknown" : value;
     }
 
+    private IReadOnlyList<string> ResolveDefaultSourceBooks()
+    {
+        var resolved = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var sourceBook in AlwaysIncludedSourceBooks)
+            resolved.Add(ResolveCachedSourceBook(sourceBook));
+
+        foreach (var bracket in ResolveActiveClassBrackets())
+        {
+            foreach (var (token, sourceBook) in BracketSpecificSourceBooks)
+            {
+                if (bracket.Contains(token, StringComparison.OrdinalIgnoreCase))
+                    resolved.Add(ResolveCachedSourceBook(sourceBook));
+            }
+        }
+
+        return resolved
+            .Where(sourceBook => !string.IsNullOrWhiteSpace(sourceBook))
+            .OrderBy(sourceBook => sourceBook, Comparer<string>.Create(CompareSourceBooks))
+            .ToList();
+    }
+
+    private IReadOnlyList<string> ResolveActiveClassBrackets()
+    {
+        var brackets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        AddClassBrackets(_draft.Class, brackets);
+
+        foreach (var pair in _draft.MultiClassLevels)
+        {
+            if (pair.Value > 0)
+                AddClassBrackets(pair.Key, brackets);
+        }
+
+        return brackets.ToList();
+    }
+
+    private void AddClassBrackets(string? className, HashSet<string> brackets)
+    {
+        var record = ResolveClassRecord(className);
+        if (record?.Brackets?.Count > 0)
+        {
+            foreach (var bracket in record.Brackets)
+            {
+                var trimmed = (bracket ?? string.Empty).Trim();
+                if (trimmed.Length > 0)
+                    brackets.Add(trimmed);
+            }
+        }
+
+        var raw = (className ?? string.Empty).Trim();
+        if (raw.Length == 0)
+            return;
+
+        if (raw.Contains("Scout", StringComparison.OrdinalIgnoreCase))
+            brackets.Add("Scout");
+        if (raw.Contains("Wizard", StringComparison.OrdinalIgnoreCase)
+            || raw.Contains("Warlock", StringComparison.OrdinalIgnoreCase)
+            || raw.Contains("Vivomancer", StringComparison.OrdinalIgnoreCase)
+            || raw.Contains("Sorc", StringComparison.OrdinalIgnoreCase))
+        {
+            brackets.Add("Wizard");
+        }
+        if (raw.Contains("Druid", StringComparison.OrdinalIgnoreCase))
+            brackets.Add("Druid");
+        if (raw.Contains("Warrior", StringComparison.OrdinalIgnoreCase))
+            brackets.Add("Warrior");
+        if (raw.Contains("Priest", StringComparison.OrdinalIgnoreCase))
+            brackets.Add("Priest");
+    }
+
+    private CharacterClassRecord? ResolveClassRecord(string? className)
+    {
+        var raw = (className ?? string.Empty).Trim();
+        if (raw.Length == 0 || _classes.Count == 0)
+            return null;
+
+        if (_classes.TryGetValue(raw, out var direct))
+            return direct;
+
+        return _classes
+            .FirstOrDefault(pair => string.Equals(pair.Key, raw, StringComparison.OrdinalIgnoreCase)
+                                   || string.Equals(pair.Value?.Path, raw, StringComparison.OrdinalIgnoreCase))
+            .Value;
+    }
+
+    private string ResolveCachedSourceBook(string token)
+        => (_cachedSourceBooks ?? Array.Empty<string>())
+            .FirstOrDefault(sourceBook => SourceBooksMatch(sourceBook, token))
+           ?? token;
+
+    private static int CompareItems(AdvanceAbilitySearchItemVm? left, AdvanceAbilitySearchItemVm? right)
+    {
+        if (ReferenceEquals(left, right))
+            return 0;
+        if (left is null)
+            return -1;
+        if (right is null)
+            return 1;
+
+        var tableCompare = left.Table.CompareTo(right.Table);
+        if (tableCompare != 0)
+            return tableCompare;
+
+        var sourceCompare = CompareSourceBooks(left.SourceBook, right.SourceBook);
+        if (sourceCompare != 0)
+            return sourceCompare;
+
+        return string.Compare(left.Name, right.Name, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static int CompareAbilities(EvolutionService.AbilityResult? left, EvolutionService.AbilityResult? right)
+    {
+        if (ReferenceEquals(left, right))
+            return 0;
+        if (left is null)
+            return -1;
+        if (right is null)
+            return 1;
+
+        var tableCompare = left.Table.CompareTo(right.Table);
+        if (tableCompare != 0)
+            return tableCompare;
+
+        var sourceCompare = CompareSourceBooks(left.SourceBook, right.SourceBook);
+        if (sourceCompare != 0)
+            return sourceCompare;
+
+        return string.Compare(left.Index, right.Index, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static int CompareSourceBooks(string? left, string? right)
+    {
+        var leftIndex = GetSourceBookPriority(left);
+        var rightIndex = GetSourceBookPriority(right);
+        if (leftIndex != rightIndex)
+            return leftIndex.CompareTo(rightIndex);
+
+        return string.Compare(NormalizeSourceBook(left), NormalizeSourceBook(right), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static int GetSourceBookPriority(string? sourceBook)
+    {
+        for (var i = 0; i < DefaultSourceBookPriority.Length; i++)
+        {
+            if (SourceBooksMatch(sourceBook, DefaultSourceBookPriority[i]))
+                return i;
+        }
+
+        return int.MaxValue;
+    }
+
+    private static bool SourceBooksMatch(string? left, string? right)
+        => string.Equals(CanonicalizeSourceBook(left), CanonicalizeSourceBook(right), StringComparison.Ordinal);
+
+    private static string CanonicalizeSourceBook(string? sourceBook)
+        => new string((sourceBook ?? string.Empty)
+            .Trim()
+            .Where(char.IsLetterOrDigit)
+            .Select(char.ToLowerInvariant)
+            .ToArray());
+
     private async Task EnsureAbilityCacheAsync()
     {
         if (_cachedAbilities is not null
@@ -599,7 +812,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
 
             var abilities = await EvolutionService.GetAllAbilitiesAsync();
             var entries = abilities
-                .OrderBy(ability => ability.Index, StringComparer.OrdinalIgnoreCase)
+                .OrderBy(ability => ability, Comparer<EvolutionService.AbilityResult>.Create(CompareAbilities))
                 .Select(ability => new CachedAbilityEntry(
                     BuildAbilityKey(ability),
                     ability,
@@ -614,7 +827,7 @@ public sealed class AdvanceAbilitySearchVm : INotifyPropertyChanged, IDisposable
                 .Select(entry => entry.SourceBook)
                 .Where(sourceBook => !string.IsNullOrWhiteSpace(sourceBook))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(sourceBook => sourceBook, StringComparer.OrdinalIgnoreCase)
+                .OrderBy(sourceBook => sourceBook, Comparer<string>.Create(CompareSourceBooks))
                 .ToList();
 
             _cachedAbilities = entries;

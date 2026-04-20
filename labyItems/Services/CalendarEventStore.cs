@@ -107,7 +107,7 @@ public sealed class CalendarEventStore
 
             var threshold = string.IsNullOrWhiteSpace(request.Threshold) ? "100" : request.Threshold.Trim();
             var eventType = string.IsNullOrWhiteSpace(request.EventType) ? "Single" : request.EventType.Trim();
-            var title = string.IsNullOrWhiteSpace(request.Title) ? $"New Event {threshold}" : request.Title.Trim();
+            var title = string.IsNullOrWhiteSpace(request.Title) ? "New Event" : request.Title.Trim();
             var location = string.IsNullOrWhiteSpace(request.Location) ? "TBC" : request.Location.Trim();
 
             var playerCapacity = threshold.Equals("No-Max", StringComparison.OrdinalIgnoreCase) ? 24 : 16;
@@ -233,7 +233,7 @@ public sealed class CalendarEventStore
                 var threshold = Thresholds[index % Thresholds.Length];
                 var eventType = EventTypes[index % EventTypes.Length];
                 var location = Locations[index % Locations.Length];
-                var name = $"{NamePrefixes[index % NamePrefixes.Length]} {threshold}";
+                var name = NamePrefixes[index % NamePrefixes.Length];
                 var playerCapacity = day.DayOfWeek == DayOfWeek.Wednesday ? 12 : 16;
                 var refereeCapacity = day.DayOfWeek == DayOfWeek.Wednesday ? 1 : 2;
                 var crewCapacity = day.DayOfWeek == DayOfWeek.Wednesday ? 4 : 6;

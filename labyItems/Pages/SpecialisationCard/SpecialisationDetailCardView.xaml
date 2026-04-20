@@ -60,19 +60,20 @@
                                      Spacing="8">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="*,Auto"
+                        <Grid ColumnDefinitions="*,Auto,Auto"
                                   ColumnSpacing="8">
-                                <VerticalStackLayout Spacing="2">
-                                    <Label Text="{Binding Name}"
-                                           FontAttributes="Bold"
-                                           LineBreakMode="WordWrap"/>
-                                    <Label Text="{Binding Description}"
-                                           FontSize="12"
-                                           TextColor="{StaticResource MutedTextColor}"
-                                           LineBreakMode="WordWrap"
-                                           IsVisible="{Binding HasDescription}"/>
-                                </VerticalStackLayout>
-                                <Button Grid.Column="1"
+                            <Label Text="{Binding Name}"
+                                FontAttributes="Bold"
+                                LineBreakMode="WordWrap"
+                                VerticalTextAlignment="Center"/>
+                            <Label Grid.Column="1"
+                                Text="{Binding ProgressionText}"
+                                FontSize="12"
+                                TextColor="{StaticResource MutedTextColor}"
+                                HorizontalTextAlignment="End"
+                                VerticalTextAlignment="Center"
+                                IsVisible="{Binding HasProgression}"/>
+                            <Button Grid.Column="2"
                                         Text="&#xF05A;"
                                         FontFamily="FASolid"
                                         FontSize="12"

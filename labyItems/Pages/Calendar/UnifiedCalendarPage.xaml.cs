@@ -10,10 +10,14 @@ namespace labyItems.Pages.Calendar;
 
 public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
 {
+    private const double MonthSwipeThreshold = 48;
+    private const double HorizontalGestureBias = 1.2;
     private readonly CalendarEventStore _eventStore;
     private bool _isAnimatingCalendarCollapse;
     private bool _isAnimatingMonthTransition;
     private bool _isPerformingPageFade;
+    private double _calendarPanTotalX;
+    private double _calendarPanTotalY;
     private DateTime _visibleMonth;
     private DateTime? _selectedDay;
     private bool _isCalendarExpanded = true;
@@ -130,6 +134,44 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
     private async void OnPreviousMonthSwiped(object sender, SwipedEventArgs e)
     {
         await ChangeVisibleMonthAsync(_visibleMonth.AddMonths(-1), -1);
+    }
+
+    private async void OnCalendarPanUpdated(object sender, PanUpdatedEventArgs e)
+    {
+        switch (e.StatusType)
+        {
+            case GestureStatus.Started:
+                _calendarPanTotalX = 0;
+                _calendarPanTotalY = 0;
+                break;
+
+            case GestureStatus.Running:
+                _calendarPanTotalX = e.TotalX;
+                _calendarPanTotalY = e.TotalY;
+                break;
+
+            case GestureStatus.Completed:
+            case GestureStatus.Canceled:
+            {
+                var totalX = _calendarPanTotalX;
+                var totalY = _calendarPanTotalY;
+                var absX = Math.Abs(totalX);
+                var absY = Math.Abs(totalY);
+
+                _calendarPanTotalX = 0;
+                _calendarPanTotalY = 0;
+
+                if (absX < MonthSwipeThreshold || absX <= absY * HorizontalGestureBias)
+                    return;
+
+                if (totalX < 0)
+                    await ChangeVisibleMonthAsync(_visibleMonth.AddMonths(1), 1);
+                else
+                    await ChangeVisibleMonthAsync(_visibleMonth.AddMonths(-1), -1);
+
+                break;
+            }
+        }
     }
 
     private async void OnCreateEventClicked(object sender, EventArgs e)
@@ -335,13 +377,6 @@ public partial class UnifiedCalendarPage : ContentPage, INotifyPropertyChanged
                 };
                 dayBorder.GestureRecognizers.Add(tap);
 
-                var nextSwipe = new SwipeGestureRecognizer { Direction = SwipeDirection.Left };
-                nextSwipe.Swiped += OnNextMonthSwiped;
-                dayBorder.GestureRecognizers.Add(nextSwipe);
-
-                var previousSwipe = new SwipeGestureRecognizer { Direction = SwipeDirection.Right };
-                previousSwipe.Swiped += OnPreviousMonthSwiped;
-                dayBorder.GestureRecognizers.Add(previousSwipe);
             }
 
             grid.Add(dayBorder, column, row);
