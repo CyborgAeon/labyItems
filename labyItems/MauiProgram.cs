@@ -98,7 +98,7 @@ public static class MauiProgram
 #endif
 				});
 
-#if !IOS
+#if !IOS && !ANDROID
 		// Register FluentMigrator runner to apply migrations against the app DB.
 		builder.Services.AddFluentMigratorCore()
 			.ConfigureRunner(rb => rb

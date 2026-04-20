@@ -55,10 +55,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         ["keeperofthewind"] = NormalizeToken(EvocationFields.KeeperOfWinds.ToString())
     };
 
-    private readonly List<GlobalSearchResultVm> _allResults = new();
-    private readonly SearchDataLoadService _loadService = new();
-    private readonly SearchFilterService _filterService = new();
+    private readonly OptimizedSearchService _optimizedSearchService = new();
     private readonly CancellationTokenSource _cts = new();
+    private DebouncedAsyncAction? _searchDebounce;
     private readonly HashSet<string> _selectedSpellColourTokens = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedSpellTierTokens = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _selectedAbilityTableTokens = new(StringComparer.OrdinalIgnoreCase);
@@ -95,7 +94,9 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
             if (!Set(ref _searchText, value ?? string.Empty))
                 return;
 
-            ApplyFilters();
+            // Debounce search with 300ms delay to avoid excessive filtering
+            _searchDebounce ??= new DebouncedAsyncAction(300, ApplyFiltersAsync);
+            _searchDebounce.Trigger();
         }
     }
 
@@ -133,6 +134,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
 
     public GlobalSearchVm()
     {
+        _searchDebounce = new DebouncedAsyncAction(300, ApplyFiltersAsync);
         RebuildActiveFilterChips();
     }
 
@@ -195,9 +197,7 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         IsLoading = true;
         try
         {
-            _allResults.Clear();
-            var results = await _loadService.LoadAllSearchResultsAsync(_cts.Token);
-            _allResults.AddRange(results);
+            // No need to preload all results - OptimizedSearchService queries database directly
             _isLoaded = true;
             await ApplyFiltersAsync();
         }
@@ -216,21 +216,138 @@ public sealed class GlobalSearchVm : INotifyPropertyChanged
         if (!_isLoaded)
             return;
 
-        _ = ApplyFiltersAsync();
+        // Use debounced filtering instead of immediate
+        _searchDebounce?.Trigger();
     }
 
-    private async Task ApplyFiltersAsync()
+    private async Task ApplyFiltersAsync(CancellationToken cancellationToken = default)
     {
+        if (!_isLoaded)
+            return;
+
         var selectedKind = ResolveFilterKind(_selectedPrimaryFilter);
         var allFilters = BuildSelectedFiltersSet();
-        var filtered = await _filterService.FilterAndSortAsync(
-            _allResults,
-            _searchText,
-            selectedKind,
-            allFilters,
-            _cts.Token);
 
-        FilteredResults = filtered;
+        try
+        {
+            // Use optimized database-level filtering instead of in-memory
+            var result = selectedKind.HasValue
+                ? await _optimizedSearchService.SearchByKindAsync(
+                    selectedKind.Value,
+                    _searchText,
+                    allFilters,
+                    pageNumber: 1,
+                    pageSize: 300,   // Limit to first 300 visible results
+                    cancellationToken: cancellationToken)
+                : await _optimizedSearchService.SearchAllAsync(
+                    _searchText,
+                    filterKind: null,
+                    pageNumber: 1,
+                    pageSize: 300,
+                    cancellationToken: cancellationToken);
+
+            // Convert optimized results back to GlobalSearchResultVm format
+            var converted = await Task.Run(
+                () => ConvertOptimizedResults(result.Results),
+                cancellationToken);
+            
+            FilteredResults = converted;
+        }
+        catch (OperationCanceledException)
+        {
+            // Search was cancelled by new search, ignore
+        }
+        catch (Exception ex)
+        {
+            ServiceHelper.LogDbError("ApplyFiltersAsync", ex);
+        }
+    }
+
+    /// <summary>
+    /// Converts OptimizedSearchService results back to GlobalSearchResultVm format.
+    /// This bridges the optimized database queries with the existing UI model.
+    /// </summary>
+    private List<GlobalSearchResultVm> ConvertOptimizedResults(IReadOnlyList<OptimizedSearchService.SearchResultDto> results)
+    {
+        var converted = new List<GlobalSearchResultVm>();
+
+        foreach (var result in results)
+        {
+            var kind = (GlobalSearchKind)result.Kind;
+            var vm = kind switch
+            {
+                GlobalSearchKind.Ability => CreateAbilityResultFromDto(result),
+                GlobalSearchKind.Spell => CreateSpellResultFromDto(result),
+                GlobalSearchKind.Miracle => CreateMiracleResultFromDto(result),
+                GlobalSearchKind.Evocation => CreateEvocationResultFromDto(result),
+                _ => null
+            };
+
+            if (vm != null)
+                converted.Add(vm);
+        }
+
+        return converted;
+    }
+
+    private GlobalSearchResultVm CreateAbilityResultFromDto(OptimizedSearchService.SearchResultDto dto)
+    {
+        return new GlobalSearchResultVm(
+            Kind: GlobalSearchKind.Ability,
+            Name: dto.Name,
+            GroupText: dto.ExtraInfo ?? string.Empty,
+            IconGlyph: "\uf013",
+            MetaText: $"Ability · {dto.ExtraInfo}",
+            DescriptionText: dto.Description,
+            Ability: null, // Would require loading full data if user clicks
+            Spell: null,
+            Miracle: null,
+            Evocation: null);
+    }
+
+    private GlobalSearchResultVm CreateSpellResultFromDto(OptimizedSearchService.SearchResultDto dto)
+    {
+        return new GlobalSearchResultVm(
+            Kind: GlobalSearchKind.Spell,
+            Name: dto.Name,
+            GroupText: dto.ExtraInfo ?? string.Empty,
+            IconGlyph: "\uf518",
+            MetaText: $"Spell · {dto.ExtraInfo}",
+            DescriptionText: dto.Description,
+            Ability: null,
+            Spell: null,
+            Miracle: null,
+            Evocation: null);
+    }
+
+    private GlobalSearchResultVm CreateMiracleResultFromDto(OptimizedSearchService.SearchResultDto dto)
+    {
+        return new GlobalSearchResultVm(
+            Kind: GlobalSearchKind.Miracle,
+            Name: dto.Name,
+            GroupText: dto.ExtraInfo ?? string.Empty,
+            IconGlyph: "\uf005",
+            MetaText: $"Miracle · {dto.ExtraInfo}",
+            DescriptionText: dto.Description,
+            Ability: null,
+            Spell: null,
+            Miracle: null,
+            Evocation: null);
+    }
+
+    private GlobalSearchResultVm CreateEvocationResultFromDto(OptimizedSearchService.SearchResultDto dto)
+    {
+        return new GlobalSearchResultVm(
+            Kind: GlobalSearchKind.Evocation,
+            Name: dto.Name,
+            GroupText: dto.ExtraInfo ?? string.Empty,
+            IconGlyph: "\uf06c",
+            MetaText: $"Evocation · {dto.ExtraInfo}",
+            DescriptionText: dto.Description,
+            Ability: null,
+            Spell: null,
+            Miracle: null,
+            Evocation: null);
     }
 
     private HashSet<string> BuildSelectedFiltersSet()

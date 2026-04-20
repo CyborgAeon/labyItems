@@ -29,47 +29,57 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
         var tempPath = Path.Combine(FileSystem.CacheDirectory, "laby.pkg.db");
         Directory.CreateDirectory(Path.GetDirectoryName(tempPath) ?? FileSystem.CacheDirectory);
 
-        var packagedChecksum = await CopyPackagedDatabaseToTempAsync(tempPath, cancellationToken);
-        if (string.IsNullOrWhiteSpace(packagedChecksum))
+        try
         {
-            _logger.LogWarning("Skipped packaged DB sync: packaged laby.db is not available.");
-            return;
+            var packagedChecksum = await CopyPackagedDatabaseToTempAsync(tempPath, cancellationToken);
+            if (string.IsNullOrWhiteSpace(packagedChecksum))
+            {
+                _logger.LogWarning("Skipped packaged DB sync: packaged laby.db is not available.");
+                return;
+            }
+
+            List<string> tables;
+            using (var packagedConn = new SqliteConnection($"Data Source={tempPath};Mode=ReadOnly"))
+            {
+                await packagedConn.OpenAsync(cancellationToken);
+                tables = GetTablesWithIsDefault(packagedConn).ToList();
+            }
+
+            using var conn = new SqliteConnection($"Data Source={dbPath}");
+            await conn.OpenAsync(cancellationToken);
+            EnsureSeedMetadataTable(conn);
+
+            var existingChecksum = GetExistingChecksum(conn);
+            if (string.Equals(existingChecksum, packagedChecksum, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            if (tables.Count == 0)
+            {
+                _logger.LogWarning("Skipped packaged DB sync: packaged DB contains no tables with is_default.");
+                SaveChecksum(conn, tx: null, packagedChecksum);
+                return;
+            }
+
+            using var tx = conn.BeginTransaction();
+            foreach (var tableName in tables)
+            {
+                if (!TableExists(conn, tableName))
+                    continue;
+
+                DeleteDefaultRows(conn, tx, tableName);
+                CopyDefaultRows(conn, tx, tempPath, tableName);
+            }
+
+            SaveChecksum(conn, tx, packagedChecksum);
+            tx.Commit();
+
+            InvalidateCaches();
+            _logger.LogInformation("Packaged DB synchronized from updated package. Tables refreshed: {Tables}", string.Join(", ", tables));
         }
-
-        using var conn = new SqliteConnection($"Data Source={dbPath}");
-        await conn.OpenAsync(cancellationToken);
-        EnsureSeedMetadataTable(conn);
-
-        var existingChecksum = GetExistingChecksum(conn);
-        if (string.Equals(existingChecksum, packagedChecksum, StringComparison.OrdinalIgnoreCase))
-            return;
-
-        using var packagedConn = new SqliteConnection($"Data Source={tempPath}");
-        await packagedConn.OpenAsync(cancellationToken);
-
-        var tables = GetTablesWithIsDefault(packagedConn).ToList();
-        if (tables.Count == 0)
+        finally
         {
-            _logger.LogWarning("Skipped packaged DB sync: packaged DB contains no tables with is_default.");
-            SaveChecksum(conn, tx: null, packagedChecksum);
-            return;
+            TryDeleteTemp(tempPath);
         }
-
-        using var tx = conn.BeginTransaction();
-        foreach (var tableName in tables)
-        {
-            if (!TableExists(conn, tableName))
-                continue;
-
-            DeleteDefaultRows(conn, tx, tableName);
-            CopyDefaultRows(conn, tx, packagedConn, tableName);
-        }
-
-        SaveChecksum(conn, tx, packagedChecksum);
-        tx.Commit();
-
-        InvalidateCaches();
-        _logger.LogInformation("Packaged DB synchronized from updated package. Tables refreshed: {Tables}", string.Join(", ", tables));
     }
 
     private static async Task<string> CopyPackagedDatabaseToTempAsync(string tempPath, CancellationToken cancellationToken)
@@ -143,16 +153,21 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
         cmd.ExecuteNonQuery();
     }
 
-    private static void CopyDefaultRows(SqliteConnection conn, SqliteTransaction tx, SqliteConnection packagedConn, string tableName)
+    private static void CopyDefaultRows(SqliteConnection conn, SqliteTransaction tx, string packagedDbPath, string tableName)
     {
+        using var packagedConn = new SqliteConnection($"Data Source={packagedDbPath};Mode=ReadOnly");
+        packagedConn.Open();
+
         var columns = GetTableColumns(packagedConn, tableName).ToList();
         if (columns.Count == 0)
             return;
 
+        packagedConn.Close();
+
         using var attach = conn.CreateCommand();
         attach.Transaction = tx;
         attach.CommandText = "ATTACH DATABASE $source AS packaged;";
-        attach.Parameters.AddWithValue("$source", packagedConn.DataSource);
+        attach.Parameters.AddWithValue("$source", packagedDbPath);
         attach.ExecuteNonQuery();
 
         try
@@ -169,6 +184,19 @@ public sealed class PackagedDatabaseSynchronizer : IPackagedDatabaseSynchronizer
             detach.Transaction = tx;
             detach.CommandText = "DETACH DATABASE packaged;";
             detach.ExecuteNonQuery();
+        }
+    }
+
+    private static void TryDeleteTemp(string tempPath)
+    {
+        try
+        {
+            if (File.Exists(tempPath))
+                File.Delete(tempPath);
+        }
+        catch
+        {
+            // Best effort cleanup only.
         }
     }
 

@@ -79,15 +79,15 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 
 		var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
 		var log2 = loggerFactory.CreateLogger("Migrations");
-#if IOS
+#if IOS || ANDROID
 		try
 		{
 			LightweightMigrator.ApplyInitialSchema(dbPath, scope.ServiceProvider.GetService<ILogger>());
-			log2.LogInformation("Applied lightweight migrations on iOS.");
+			log2.LogInformation("Applied lightweight migrations on mobile platform.");
 		}
 		catch (Exception ex)
 		{
-			log2.LogError(ex, "Lightweight migrations failed on iOS: {Message}", ex.Message);
+			log2.LogError(ex, "Lightweight migrations failed on mobile platform: {Message}", ex.Message);
 		}
 #else
 		try

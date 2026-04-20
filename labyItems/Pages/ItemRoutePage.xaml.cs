@@ -37,12 +37,8 @@ public partial class ItemRoutePage : ContentPage
     {
         base.OnAppearing();
         await SetMenuOpenAsync(false, immediate: true);
-
-        if (!_walletButtonLoaded)
-        {
-            _walletButtonLoaded = true;
-            await RefreshWalletButtonAsync();
-        }
+        _walletButtonLoaded = true;
+        await RefreshWalletButtonAsync();
     }
 
     private async void OnToggleMenuClicked(object sender, EventArgs e)

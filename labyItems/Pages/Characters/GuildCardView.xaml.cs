@@ -32,9 +32,13 @@ public partial class GuildCardView : ContentView
     public GuildCardView()
     {
         InitializeComponent();
+        GuildMiracleInfoCommand = new Command<GuildMiracleRowVm>(row => _ = OpenGuildMiracleInfoAsync(row));
+        GuildBenefitInfoCommand = new Command<GuildBenefitRowVm>(row => _ = OpenGuildBenefitInfoAsync(row));
     }
 
     private INotifyPropertyChanged? _boundVm;
+    public ICommand GuildMiracleInfoCommand { get; }
+    public ICommand GuildBenefitInfoCommand { get; }
 
     protected override void OnBindingContextChanged()
     {
@@ -97,9 +101,9 @@ public partial class GuildCardView : ContentView
         ExpandedContent.Opacity = 1;
     }
 
-    private async void OnGuildMiracleInfoClicked(object sender, EventArgs e)
+    private async Task OpenGuildMiracleInfoAsync(GuildMiracleRowVm? row)
     {
-        if (sender is not Button button || button.CommandParameter is not GuildMiracleRowVm row)
+        if (row == null)
             return;
 
         var miracleName = (row.Name ?? string.Empty).Trim();
@@ -120,9 +124,9 @@ public partial class GuildCardView : ContentView
         await navigation.PushModalAsync(new NavigationPage(new MiracleCardPage(miracle)));
     }
 
-    private async void OnGuildBenefitInfoClicked(object sender, EventArgs e)
+    private async Task OpenGuildBenefitInfoAsync(GuildBenefitRowVm? row)
     {
-        if (sender is not Button button || button.CommandParameter is not GuildBenefitRowVm row)
+        if (row == null)
             return;
 
         var detailOptions = BuildBenefitDetailOptions(row);

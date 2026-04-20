@@ -211,6 +211,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             _creationDataService,
             useMultiTypeFilters: true,
             searchByNameOnly: true,
+            hideUnavailableGuilds: true,
             autoReload: false);
 
         _flow = new WizardFlowStateMachine(BuildSteps());
