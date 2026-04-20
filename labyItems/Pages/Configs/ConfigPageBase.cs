@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using labyItems.Controls;
+using labyItems.Helpers;
 using labyItems.Models;
 using labyItems.Pages.Calculator;
 using Microsoft.Maui.Controls;
