@@ -207,7 +207,7 @@ public sealed class WizardVm : INotifyPropertyChanged
             Draft,
             NotifyGatingChanged,
             CharacterBuilderVm.GetNonGuildAlignmentRules,
-            CharacterBuilderVm.RefreshDraftAbilitiesAsync,
+            () => CharacterBuilderVm.RefreshDraftAbilitiesAsync(),
             _creationDataService,
             useMultiTypeFilters: true,
             searchByNameOnly: true,

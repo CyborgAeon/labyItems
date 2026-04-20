@@ -36,7 +36,6 @@ public partial class DictionarySearchBar<TValue> : ContentView
     private bool _suppressTextChanged;
     private bool _suppressSelectedTextChanged;
     private bool _overlayHostInitialized;
-    private bool _suppressNextUnfocus;
     private int _remoteRequestId;
     private bool _isUserEditing;
 
@@ -428,13 +427,6 @@ public partial class DictionarySearchBar<TValue> : ContentView
     {
         if (!IsEnabled)
             return;
-
-        if (_suppressNextUnfocus)
-        {
-            _suppressNextUnfocus = false;
-            _ = Device.InvokeOnMainThreadAsync(() => _searchBar.Focus());
-            return;
-        }
 
         // Give result taps a moment to complete before dismissing the overlay.
         if (_overlay != null)

@@ -20,6 +20,17 @@ namespace labyItems.Pages.Characters;
 
 public sealed class CharacterBuilderVm : INotifyPropertyChanged
 {
+    private static readonly IReadOnlyDictionary<string, int> PreferredClassFilterOrder =
+        new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Warrior"] = 0,
+            ["Priest"] = 1,
+            ["Wizard"] = 2,
+            ["Scout"] = 3,
+            ["Druid"] = 4,
+            ["Neuro"] = 5
+        };
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private HashSet<string>? _allowedRaceKeysForSelectedClass;
@@ -238,7 +249,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
         ClassFilterChips.Clear();
         foreach (var entry in labelsByKey
-                     .OrderBy(kvp => NormalizeClassFilterSortLabel(kvp.Value), StringComparer.OrdinalIgnoreCase))
+                     .OrderBy(kvp => GetClassFilterSortRank(kvp.Value))
+                     .ThenBy(kvp => NormalizeClassFilterSortLabel(kvp.Value), StringComparer.OrdinalIgnoreCase))
         {
             ClassFilterChips.Add(new ClassFilterChipVm(
                 entry.Key,
@@ -272,6 +284,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var prefix = text[..firstSpace];
         var hasEmojiPrefix = prefix.Any(ch => !char.IsLetterOrDigit(ch));
         return hasEmojiPrefix ? text[(firstSpace + 1)..].Trim() : text;
+    }
+
+    private static int GetClassFilterSortRank(string? value)
+    {
+        var normalized = NormalizeClassFilterSortLabel(value);
+        return PreferredClassFilterOrder.TryGetValue(normalized, out var rank)
+            ? rank
+            : int.MaxValue;
     }
 
     private int _selectedTabIndex;
@@ -370,6 +390,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     {
         if (item == null) return;
 
+        SpecialisationVm.CancelReloads();
+
         var wasSelected = item.IsSelected;
         var shouldSelect = !wasSelected;
         var previousClass = (_draft.Class ?? string.Empty).Trim();
@@ -434,7 +456,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await SpecialisationVm.ReloadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
-            await RefreshDraftAbilitiesAsync();
+            await RefreshDraftAbilitiesAsync(cancellationToken);
             _notifyWizardGatingChanged();
         });
     }
@@ -442,6 +464,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     private void SelectRace(RaceCardVm? item)
     {
         if (item == null) return;
+
+        SpecialisationVm.CancelReloads();
 
         var wasSelected = item.IsSelected;
         var shouldSelect = !wasSelected;
@@ -508,13 +532,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             await SpecialisationVm.ReloadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
-            await RefreshDraftAbilitiesAsync();
+            await RefreshDraftAbilitiesAsync(cancellationToken);
             _notifyWizardGatingChanged();
         });
     }
 
     private void RunSelectionPipeline(Func<CancellationToken, Task> pipeline)
     {
+        SpecialisationVm.CancelReloads();
         _selectionPipelineCts?.Cancel();
         _selectionPipelineCts?.Dispose();
 
@@ -879,23 +904,30 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
     public Task SyncDraftLifeAsync(bool expandIfChanged = false)
         => UpdateDraftLifeAsync(expandIfChanged);
 
-    public async Task RefreshDraftAbilitiesAsync()
+    public async Task RefreshDraftAbilitiesAsync(CancellationToken cancellationToken = default)
     {
         if (!MainThread.IsMainThread)
         {
-            await MainThread.InvokeOnMainThreadAsync(RefreshDraftAbilitiesAsync);
+            await MainThread.InvokeOnMainThreadAsync(() => RefreshDraftAbilitiesAsync(cancellationToken));
             return;
         }
 
-        await _abilityRefreshLock.WaitAsync();
+        var lockTaken = false;
         try
         {
+            await _abilityRefreshLock.WaitAsync(cancellationToken);
+            lockTaken = true;
+            cancellationToken.ThrowIfCancellationRequested();
+
             var abilities = new List<AbilityDraft>();
 
             var (raceAbilities, raceGuildRules) = await BuildRaceAbilitiesAsync();
+            cancellationToken.ThrowIfCancellationRequested();
             var (classAbilities, classRecord, classGuildRules) = await BuildClassAbilitiesAsync();
+            cancellationToken.ThrowIfCancellationRequested();
             var (specAbilities, specGuildRules) = SpecialisationVm.BuildSelectedAbilityDraftsWithRules();
             var guildAbilities = await BuildGuildAbilitiesAsync();
+            cancellationToken.ThrowIfCancellationRequested();
 
             abilities.AddRange(raceAbilities);
             abilities.AddRange(classAbilities);
@@ -905,9 +937,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             abilities = ConsolidateAbilities(abilities);
 
             await UpdateDraftLifeAsync(expandIfChanged: false);
+            cancellationToken.ThrowIfCancellationRequested();
             ApplyLifeBonuses(abilities);
 
             await UpdateArmourStatsAsync(classRecord, classAbilities, raceAbilities, specAbilities, abilities);
+            cancellationToken.ThrowIfCancellationRequested();
             UpdatePowerPools(classRecord, abilities);
             UpdateResistanceLevels(abilities, classRecord);
             _draft.GuildOverrideRules = GuildOverrideRules.Merge(
@@ -929,9 +963,14 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
                 .ToList();
 
             await UpdateAvailableAlignmentsAsync();
+            cancellationToken.ThrowIfCancellationRequested();
             await SpecialisationVm.RefreshPrereqOptionsAsync();
+            cancellationToken.ThrowIfCancellationRequested();
 
             MainThread.BeginInvokeOnMainThread(_notifyWizardGatingChanged);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
         }
         catch (Exception ex)
         {
@@ -939,7 +978,8 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         }
         finally
         {
-            _abilityRefreshLock.Release();
+            if (lockTaken)
+                _abilityRefreshLock.Release();
         }
     }
 

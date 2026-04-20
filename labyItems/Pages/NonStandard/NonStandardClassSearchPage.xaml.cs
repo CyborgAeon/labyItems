@@ -110,6 +110,17 @@ public partial class NonStandardClassSearchPage : ContentPage
 
 internal sealed class NonStandardClassSearchVm : INotifyPropertyChanged
 {
+    private static readonly IReadOnlyDictionary<string, int> PreferredFilterOrder =
+        new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Warrior"] = 0,
+            ["Priest"] = 1,
+            ["Wizard"] = 2,
+            ["Scout"] = 3,
+            ["Druid"] = 4,
+            ["Neuro"] = 5
+        };
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private readonly ObservableCollection<ClassCardVm> _allClasses = new();
@@ -189,11 +200,20 @@ internal sealed class NonStandardClassSearchVm : INotifyPropertyChanged
             .SelectMany(card => card.BracketLabels)
             .Where(label => !string.IsNullOrWhiteSpace(label))
             .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(label => label, StringComparer.OrdinalIgnoreCase)
+            .OrderBy(label => GetFilterSortRank(label))
+            .ThenBy(label => label, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
         foreach (var label in bracketLabels)
             FilterChips.Add(new NonStandardClassFilterChipVm(label, label, false));
+    }
+
+    private static int GetFilterSortRank(string? label)
+    {
+        var text = (label ?? string.Empty).Trim();
+        return PreferredFilterOrder.TryGetValue(text, out var rank)
+            ? rank
+            : int.MaxValue;
     }
 
     private void Refilter()

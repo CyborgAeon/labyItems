@@ -54,8 +54,6 @@ public partial class DictionarySearchBar<TValue>
 
         _resultsView.IsVisible = false;
         _inlineResultsContainer.IsVisible = false;
-        if (createdHost)
-            _suppressNextUnfocus = true;
 
         _overlay = new AbsoluteLayout
         {

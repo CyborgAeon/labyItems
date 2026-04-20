@@ -6,6 +6,7 @@ namespace labyItems.Helpers;
 public static class RuntimeLog
 {
     private static readonly object Sync = new();
+    private const long MaxLogBytes = 1_024 * 1_024;
     private static string? _logPath;
 
     public static string LogPath
@@ -56,6 +57,7 @@ public static class RuntimeLog
         {
             lock (Sync)
             {
+                RotateIfNeeded(LogPath);
                 File.AppendAllText(LogPath, line + Environment.NewLine + Environment.NewLine);
             }
         }
@@ -63,5 +65,23 @@ public static class RuntimeLog
         {
             // Ignore file I/O logging failures.
         }
+    }
+
+    private static void RotateIfNeeded(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+            return;
+
+        var info = new FileInfo(path);
+        if (info.Length < MaxLogBytes)
+            return;
+
+        var directory = Path.GetDirectoryName(path) ?? FileSystem.AppDataDirectory;
+        var backupPath = Path.Combine(directory, "runtime.prev.log");
+
+        if (File.Exists(backupPath))
+            File.Delete(backupPath);
+
+        File.Move(path, backupPath, overwrite: true);
     }
 }

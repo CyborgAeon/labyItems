@@ -610,6 +610,9 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         if (_isApplyingState)
             return;
 
+        // Surface completion/gating changes immediately; expensive recomputation can trail behind.
+        RecomputeCompletion();
+        _builder.NotifyGatingChanged();
         QueueSelectionRecalculation();
     }
 
@@ -629,6 +632,7 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
         var cts = Interlocked.Exchange(ref _selectionRecalcCts, null);
         cts?.Cancel();
         cts?.Dispose();
+        Interlocked.Increment(ref _selectionRecalcVersion);
     }
 
     private bool IsLatestSelectionRecalc(int version)
@@ -689,11 +693,17 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     return (context, requiredChoices, sectionSpecs, recalculated);
                 });
 
+                if (cancellationToken.IsCancellationRequested || !IsLatestSelectionRecalc(version))
+                    return;
+
                 _context = result.context;
                 _requiredChoices = result.requiredChoices;
                 _sectionSpecs = result.sectionSpecs;
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {
+                    if (cancellationToken.IsCancellationRequested || !IsLatestSelectionRecalc(version))
+                        return;
+
                     ApplyScreenState(result.recalculated, preserveExpanded: true);
                     UpdateSpellCustomisationVisibility();
                 });
