@@ -9,6 +9,7 @@ namespace labyItems.Pages.Configs;
 public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
 {
     private bool _miracleLookupLoaded;
+    private bool _isLoading;
     private MiracleSearchOption? _selectedSearchMiracle;
 
     public MiracleConfigPage()
@@ -18,6 +19,17 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
         ViewMiracleInfoCommand = new Command<object?>(OnMiracleInfoRequested);
         DeleteMiracleCommand = new Command<object?>(OnDeleteMiracleRequested);
         InitializeComponent();
+    }
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        set
+        {
+            if (_isLoading == value) return;
+            _isLoading = value;
+            OnPropertyChanged();
+        }
     }
 
     public ICommand AddSelectedMiracleCommand { get; }
@@ -121,6 +133,7 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
 
     private async Task LoadMiracleLookupAsync()
     {
+        IsLoading = true;
         try
         {
             var miracles = await MiracleService.GetAllAsync();
@@ -145,6 +158,10 @@ public partial class MiracleConfigPage : ConfigPageBase<MiracleConfig>
         catch (Exception ex)
         {
             await DisplayAlert("Miracle load failed", ex.Message, "OK");
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 

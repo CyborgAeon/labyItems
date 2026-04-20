@@ -146,18 +146,26 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
             _allRaces = racesTask.Result;
             EnsureActive();
 
-            _context = CharacterSpecialisationScreenCalculator.LoadContext(
-                Draft,
-                _allClasses,
-                _allRaces,
-                _specialisationIndex.Definitions,
-                _specialisationIndex.InjectionRules);
+            var loaded = await Task.Run(() =>
+            {
+                var context = CharacterSpecialisationScreenCalculator.LoadContext(
+                    Draft,
+                    _allClasses,
+                    _allRaces,
+                    _specialisationIndex.Definitions,
+                    _specialisationIndex.InjectionRules);
 
-            _requiredChoices = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(_context);
-            _sectionSpecs = CharacterSpecialisationScreenCalculator.BuildScreenSections(_context, _requiredChoices);
-            var initialScreen = CharacterSpecialisationScreenCalculator.ApplySavedSelections(_context, _sectionSpecs);
+                var requiredChoices = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+                var sectionSpecs = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, requiredChoices);
+                var initialScreen = CharacterSpecialisationScreenCalculator.ApplySavedSelections(context, sectionSpecs);
 
-            ApplyScreenState(initialScreen, preserveExpanded: false);
+                return (context, requiredChoices, sectionSpecs, initialScreen);
+            });
+
+            _context = loaded.context;
+            _requiredChoices = loaded.requiredChoices;
+            _sectionSpecs = loaded.sectionSpecs;
+            await MainThread.InvokeOnMainThreadAsync(() => ApplyScreenState(loaded.initialScreen, preserveExpanded: false));
 
             EnsureActive();
             await RefreshSpellCustomisationOptionsAsync();
@@ -643,42 +651,52 @@ public sealed class CharacterSpecialisationVm : INotifyPropertyChanged, IDisposa
                     return;
 
                 var selectionState = BuildSelectionStateFromSections();
-                var context = CharacterSpecialisationScreenCalculator.LoadContext(
-                    Draft,
-                    _allClasses,
-                    _allRaces,
-                    _specialisationIndex.Definitions,
-                    _specialisationIndex.InjectionRules);
-
-                context = new CharacterSpecialisationContext
+                var result = await Task.Run(() =>
                 {
-                    Draft = context.Draft,
-                    Race = context.Race,
-                    Class = context.Class,
-                    ClassRecord = context.ClassRecord,
-                    RaceRecord = context.RaceRecord,
-                    Definitions = context.Definitions,
-                    InjectionRules = context.InjectionRules,
-                    CurrentRaceSubtype = selectionState.RaceSubtype
-                };
+                    var context = CharacterSpecialisationScreenCalculator.LoadContext(
+                        Draft,
+                        _allClasses,
+                        _allRaces,
+                        _specialisationIndex.Definitions,
+                        _specialisationIndex.InjectionRules);
 
-                _context = context;
-                _requiredChoices = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
-                _sectionSpecs = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, _requiredChoices);
+                    context = new CharacterSpecialisationContext
+                    {
+                        Draft = context.Draft,
+                        Race = context.Race,
+                        Class = context.Class,
+                        ClassRecord = context.ClassRecord,
+                        RaceRecord = context.RaceRecord,
+                        Definitions = context.Definitions,
+                        InjectionRules = context.InjectionRules,
+                        CurrentRaceSubtype = selectionState.RaceSubtype
+                    };
 
-                var raceSubtypeSpec = _sectionSpecs.FirstOrDefault(spec => spec.Kind == SpecialisationSectionKind.RaceSubtype);
-                var raceSubtypeKey = raceSubtypeSpec?.Metadata.TryGetValue("raceSubtypeKey", out var subtypeKey) == true ? subtypeKey : string.Empty;
-                var raceSubtypeMapKey = raceSubtypeSpec?.Metadata.TryGetValue("abilityMapKey", out var mapKey) == true ? mapKey : string.Empty;
+                    var requiredChoices = CharacterSpecialisationScreenCalculator.ResolveRequiredChoices(context);
+                    var sectionSpecs = CharacterSpecialisationScreenCalculator.BuildScreenSections(context, requiredChoices);
 
-                var recalculated = CharacterSpecialisationScreenCalculator.Recalculate(
-                    context,
-                    _sectionSpecs,
-                    selectionState,
-                    raceSubtypeKey,
-                    raceSubtypeMapKey);
+                    var raceSubtypeSpec = sectionSpecs.FirstOrDefault(spec => spec.Kind == SpecialisationSectionKind.RaceSubtype);
+                    var raceSubtypeKey = raceSubtypeSpec?.Metadata.TryGetValue("raceSubtypeKey", out var subtypeKey) == true ? subtypeKey : string.Empty;
+                    var raceSubtypeMapKey = raceSubtypeSpec?.Metadata.TryGetValue("abilityMapKey", out var mapKey) == true ? mapKey : string.Empty;
 
-                ApplyScreenState(recalculated, preserveExpanded: true);
-                UpdateSpellCustomisationVisibility();
+                    var recalculated = CharacterSpecialisationScreenCalculator.Recalculate(
+                        context,
+                        sectionSpecs,
+                        selectionState,
+                        raceSubtypeKey,
+                        raceSubtypeMapKey);
+
+                    return (context, requiredChoices, sectionSpecs, recalculated);
+                });
+
+                _context = result.context;
+                _requiredChoices = result.requiredChoices;
+                _sectionSpecs = result.sectionSpecs;
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    ApplyScreenState(result.recalculated, preserveExpanded: true);
+                    UpdateSpellCustomisationVisibility();
+                });
             }
             finally
             {

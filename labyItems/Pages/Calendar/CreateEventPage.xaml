@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Calendar.CreateEventPage"
+    x:Name="PageRoot"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
+    Title="Creating an Event">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,18,20,28"
+                             Spacing="16">
+            <Grid ColumnDefinitions="48,*,48">
+                <Button Clicked="OnBackClicked"
+                        FontSize="22"
+                        Padding="8"
+                        Text="&#x2039;"
+                        TextColor="{StaticResource Gray950}">
+                    <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                </Button>
+
+                <Label x:Name="PageTitleLabel"
+                       Grid.Column="1"
+                       FontAttributes="Bold"
+                       FontSize="28"
+                       HorizontalTextAlignment="Center"
+                       Text="Creating an Event"
+                       VerticalTextAlignment="Center" />
+
+                <Label Grid.Column="2"
+                       WidthRequest="48"
+                       InputTransparent="True" />
+            </Grid>
+
+            <Label FontAttributes="Bold"
+                   FontSize="16"
+                   Text="Event Title" />
+            <Border Padding="14,6"
+                    Stroke="{StaticResource Gray200}"
+                    StrokeShape="RoundRectangle 4">
+                <Entry x:Name="TitleEntry"
+                       Placeholder="Enter the event name" />
+            </Border>
+
+            <Label FontAttributes="Bold"
+                   FontSize="16"
+                   Text="Date" />
+            <Border Padding="14,6"
+                    Stroke="{StaticResource Gray200}"
+                    StrokeShape="RoundRectangle 4">
+                <DatePicker x:Name="EventDatePicker" />
+            </Border>
+
+            <Label FontAttributes="Bold"
+                   FontSize="16"
+                   Text="Location" />
+            <Border Padding="14,6"
+                    Stroke="{StaticResource Gray200}"
+                    StrokeShape="RoundRectangle 4">
+                <Entry x:Name="LocationEntry"
+                       Placeholder="Enter the event location" />
+            </Border>
+
+            <Label FontAttributes="Bold"
+                   FontSize="16"
+                   Text="Dungeon Threshold" />
+            <controls:ChipGroup Items="{Binding ThresholdOptions}"
+                                SelectedItem="{Binding SelectedThreshold, Mode=TwoWay}" />
+
+            <Label FontAttributes="Bold"
+                   FontSize="16"
+                   Text="Event Type" />
+            <controls:ChipGroup Items="{Binding EventTypeOptions}"
+                                SelectedItem="{Binding SelectedEventType, Mode=TwoWay}" />
+
+            <Border Padding="16"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeShape="RoundRectangle 16">
+                <VerticalStackLayout Spacing="12">
+                    <Label FontAttributes="Bold"
+                           FontSize="16"
+                           Text="Optional Area Booking" />
+                    <Label FontAttributes="Italic"
+                           FontSize="13"
+                           Text="Area booking is optional. Areas already taken are disabled as booked."
+                           TextColor="{StaticResource Gray500}" />
+                    <VerticalStackLayout x:Name="AreaOptionsHost"
+                                         Spacing="10" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Padding="16"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeShape="RoundRectangle 16">
+                <VerticalStackLayout Spacing="12">
+                    <Label FontAttributes="Bold"
+                           FontSize="16"
+                           Text="Invitees" />
+                    <controls:RepeatingEntryList Items="{Binding Invitees}"
+                                                 EntryPlaceholder="Enter invitee email"
+                                                 MaxItems="12" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button x:Name="SaveEventButton"
+                    Clicked="OnCreateEventClicked"
+                    FontSize="18"
+                    Padding="20,14"
+                    Text="Create Event" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

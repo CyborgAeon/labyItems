@@ -3,6 +3,7 @@
   x:Class="labyItems.Pages.ItemRoutePage"
   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  x:Name="RootPage"
   Title="Home"
   NavigationPage.HasNavigationBar="False"
   Shell.NavBarIsVisible="False">
@@ -45,7 +46,7 @@
                    TextColor="{StaticResource White}" />
             <Label FontAttributes="Italic"
                    FontSize="16"
-                   Text="Use the menu to jump into characters, calculators, search, trading, or your item tools."
+                   Text="Use the menu to jump into characters, calculators, search, trading, item tools, and the unified calendar."
                    TextColor="#F8EDED" />
           </VerticalStackLayout>
         </Border>
@@ -69,14 +70,18 @@
 
           <Border Grid.Row="0"
                   Grid.Column="1"
+                  x:Name="CalendarCard"
                   Padding="18"
                   Stroke="{StaticResource SurfaceBorderColor}"
                   StrokeShape="RoundRectangle 18">
-            <VerticalStackLayout Spacing="8">
+            <Border.GestureRecognizers>
+              <TapGestureRecognizer Tapped="OnOpenCalendarTapped" />
+            </Border.GestureRecognizers>
+            <VerticalStackLayout Spacing="12">
               <Label FontAttributes="Bold"
                      FontSize="20"
-                     Text="Quick Start" />
-              <Label Text="Open the burger menu in the top-left to reach the same destinations that previously lived on this screen." />
+                     Text="Calendar" />
+              <Label Text="View month-by-month bookings, inspect event details, and create new events from one unified calendar." />
             </VerticalStackLayout>
           </Border>
 
@@ -107,8 +112,10 @@
     <Grid x:Name="MenuOverlay"
           BackgroundColor="#66000000"
           ColumnDefinitions="300,*"
-          IsVisible="False">
-      <Border BackgroundColor="{StaticResource White}"
+          IsVisible="False"
+          Opacity="0">
+      <Border x:Name="MenuPanel"
+              BackgroundColor="{StaticResource White}"
               Padding="18,22"
               StrokeThickness="0">
         <ScrollView>
@@ -133,6 +140,7 @@
                    Margin="0,0,0,8"
                    TextColor="{StaticResource Gray500}" />
 
+            <Button Clicked="OnOpenCalendarClicked" Text="Unified Calendar" />
             <Button Clicked="OnMakeCharacterClicked" Text="Create a Character" />
             <Button x:Name="CharacterWalletButton" Clicked="OnCharacterWalletClicked" IsEnabled="False" Text="Character Wallet" />
             <Button Clicked="OnSearchClicked" Text="Search" />
@@ -153,6 +161,24 @@
           <TapGestureRecognizer Tapped="OnCloseMenuTapped" />
         </BoxView.GestureRecognizers>
       </BoxView>
+    </Grid>
+
+    <Grid x:Name="LoadingOverlay"
+          BackgroundColor="#66000000"
+          IsVisible="{Binding Source={x:Reference RootPage}, Path=IsBusy}">
+      <VerticalStackLayout VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           Spacing="16"
+                           Padding="24">
+        <ActivityIndicator IsRunning="True"
+                           Color="{StaticResource Primary}"
+                           WidthRequest="48"
+                           HeightRequest="48" />
+        <Label Text="Loading tool..."
+               FontAttributes="Bold"
+               TextColor="White"
+               HorizontalTextAlignment="Center" />
+      </VerticalStackLayout>
     </Grid>
   </Grid>
 </ContentPage>

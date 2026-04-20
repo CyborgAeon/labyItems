@@ -104,10 +104,31 @@
                                  Grid.Row="1"
                                  IsVisible="False"
                                  Spacing="10">
-
-                <!-- Lore -->
                 <VerticalStackLayout Spacing="8"
-                                     IsVisible="{Binding HasLore}">
+                                     IsVisible="{Binding IsDetailsLoading}">
+                    <Border Stroke="{StaticResource SoftStrokeColor}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 10"
+                            BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
+                            Padding="12">
+                        <HorizontalStackLayout Spacing="10"
+                                               VerticalOptions="Center">
+                            <ActivityIndicator IsRunning="{Binding IsDetailsLoading}"
+                                               Color="{StaticResource Primary}" />
+                            <Label Text="Loading guild details..."
+                                   FontAttributes="Bold"
+                                   FontSize="13"
+                                   VerticalTextAlignment="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="10"
+                                     IsVisible="{Binding DetailsLoaded}">
+
+                    <!-- Lore -->
+                    <VerticalStackLayout Spacing="8"
+                                         IsVisible="{Binding HasLore}">
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding LoreSections}"
                                          Spacing="8">
                         <BindableLayout.ItemTemplate>
@@ -132,11 +153,11 @@
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
-                </VerticalStackLayout>
+                    </VerticalStackLayout>
 
-                <!-- Miracle list -->
-                <VerticalStackLayout Spacing="6"
-                                     IsVisible="{Binding HasMiracles}">
+                    <!-- Miracle list -->
+                    <VerticalStackLayout Spacing="6"
+                                         IsVisible="{Binding HasMiracles}">
                     <Grid ColumnDefinitions="*,Auto"
                           ColumnSpacing="8">
                         <Label Text="MIRACLE LIST"
@@ -223,7 +244,7 @@
                             </Grid>
                         </Border>
                     </controls:AnimatedExpandView>
-                </VerticalStackLayout>
+                    </VerticalStackLayout>
 
                 <!-- Denominational miracle -->
                 <VerticalStackLayout Spacing="6"
@@ -404,21 +425,48 @@
                                        FontAttributes="Bold"
                                        Opacity="0.85"/>
                                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding BasicBenefitRows}"
-                                                     Spacing="2">
+                                                     Spacing="6">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate>
-                                            <Border StrokeThickness="0"
-                                                    StrokeShape="RoundRectangle 8"
-                                                    BackgroundColor="{Binding RowBackgroundColor}">
-                                                <Grid Padding="8,6"
-                                                      ColumnDefinitions="*,Auto"
-                                                      RowDefinitions="Auto,Auto"
-                                                      ColumnSpacing="8"
-                                                      RowSpacing="2">
-                                                    <Label Text="{Binding DisplayText}"
-                                                           FontSize="13"
-                                                           VerticalTextAlignment="Center"
-                                                           LineBreakMode="WordWrap"/>
+                                            <Grid Padding="10,8"
+                                                  BackgroundColor="{Binding RowBackgroundColor}"
+                                                  ColumnDefinitions="*,Auto"
+                                                  RowDefinitions="Auto"
+                                                  ColumnSpacing="8"
+                                                  RowSpacing="0">
+                                                    <ScrollView Orientation="Horizontal"
+                                                                HorizontalScrollBarVisibility="Never"
+                                                                VerticalScrollBarVisibility="Never">
+                                                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding DisplayItems}"
+                                                                               Spacing="0">
+                                                            <BindableLayout.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Grid ColumnDefinitions="Auto,Auto"
+                                                                          ColumnSpacing="0">
+                                                                        <Grid Padding="10,2"
+                                                                              BackgroundColor="Transparent">
+                                                                            <Grid.Triggers>
+                                                                                <DataTrigger TargetType="Grid"
+                                                                                             Binding="{Binding IsSelected}"
+                                                                                             Value="True">
+                                                                                    <Setter Property="BackgroundColor"
+                                                                                            Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
+                                                                                </DataTrigger>
+                                                                            </Grid.Triggers>
+                                                                            <Label Text="{Binding Text}"
+                                                                                   FontSize="13"
+                                                                                   VerticalTextAlignment="Center"/>
+                                                                        </Grid>
+                                                                        <BoxView Grid.Column="1"
+                                                                                 WidthRequest="1"
+                                                                                 Margin="0,2"
+                                                                                 Color="{StaticResource SoftStrokeColor}"
+                                                                                 IsVisible="{Binding ShowTrailingDivider}" />
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </BindableLayout.ItemTemplate>
+                                                        </HorizontalStackLayout>
+                                                    </ScrollView>
                                                     <Button Grid.Column="1"
                                                             Text="&#xF05A;"
                                                             FontFamily="FASolid"
@@ -434,16 +482,7 @@
                                                             IsVisible="{Binding HasDetails}"
                                                             Clicked="OnGuildBenefitInfoClicked"
                                                             CommandParameter="{Binding .}"/>
-                                                    <Label Grid.Row="1"
-                                                           Grid.Column="0"
-                                                           Grid.ColumnSpan="2"
-                                                           Text="{Binding ChoiceLabel}"
-                                                           FontSize="11"
-                                                           FontAttributes="Bold"
-                                                           TextColor="{StaticResource AccentMaroonColor}"
-                                                           IsVisible="{Binding HasChoiceLabel}"/>
-                                                </Grid>
-                                            </Border>
+                                            </Grid>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>
                                 </VerticalStackLayout>
@@ -455,21 +494,48 @@
                                        FontAttributes="Bold"
                                        Opacity="0.85"/>
                                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding IntermediateBenefitRows}"
-                                                     Spacing="2">
+                                                     Spacing="6">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate>
-                                            <Border StrokeThickness="0"
-                                                    StrokeShape="RoundRectangle 8"
-                                                    BackgroundColor="{Binding RowBackgroundColor}">
-                                                <Grid Padding="8,6"
-                                                      ColumnDefinitions="*,Auto"
-                                                      RowDefinitions="Auto,Auto"
-                                                      ColumnSpacing="8"
-                                                      RowSpacing="2">
-                                                    <Label Text="{Binding DisplayText}"
-                                                           FontSize="13"
-                                                           VerticalTextAlignment="Center"
-                                                           LineBreakMode="WordWrap"/>
+                                            <Grid Padding="10,8"
+                                                  BackgroundColor="{Binding RowBackgroundColor}"
+                                                  ColumnDefinitions="*,Auto"
+                                                  RowDefinitions="Auto"
+                                                  ColumnSpacing="8"
+                                                  RowSpacing="0">
+                                                    <ScrollView Orientation="Horizontal"
+                                                                HorizontalScrollBarVisibility="Never"
+                                                                VerticalScrollBarVisibility="Never">
+                                                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding DisplayItems}"
+                                                                               Spacing="0">
+                                                            <BindableLayout.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Grid ColumnDefinitions="Auto,Auto"
+                                                                          ColumnSpacing="0">
+                                                                        <Grid Padding="10,2"
+                                                                              BackgroundColor="Transparent">
+                                                                            <Grid.Triggers>
+                                                                                <DataTrigger TargetType="Grid"
+                                                                                             Binding="{Binding IsSelected}"
+                                                                                             Value="True">
+                                                                                    <Setter Property="BackgroundColor"
+                                                                                            Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
+                                                                                </DataTrigger>
+                                                                            </Grid.Triggers>
+                                                                            <Label Text="{Binding Text}"
+                                                                                   FontSize="13"
+                                                                                   VerticalTextAlignment="Center"/>
+                                                                        </Grid>
+                                                                        <BoxView Grid.Column="1"
+                                                                                 WidthRequest="1"
+                                                                                 Margin="0,2"
+                                                                                 Color="{StaticResource SoftStrokeColor}"
+                                                                                 IsVisible="{Binding ShowTrailingDivider}" />
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </BindableLayout.ItemTemplate>
+                                                        </HorizontalStackLayout>
+                                                    </ScrollView>
                                                     <Button Grid.Column="1"
                                                             Text="&#xF05A;"
                                                             FontFamily="FASolid"
@@ -485,16 +551,7 @@
                                                             IsVisible="{Binding HasDetails}"
                                                             Clicked="OnGuildBenefitInfoClicked"
                                                             CommandParameter="{Binding .}"/>
-                                                    <Label Grid.Row="1"
-                                                           Grid.Column="0"
-                                                           Grid.ColumnSpan="2"
-                                                           Text="{Binding ChoiceLabel}"
-                                                           FontSize="11"
-                                                           FontAttributes="Bold"
-                                                           TextColor="{StaticResource AccentMaroonColor}"
-                                                           IsVisible="{Binding HasChoiceLabel}"/>
-                                                </Grid>
-                                            </Border>
+                                            </Grid>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>
                                 </VerticalStackLayout>
@@ -506,21 +563,48 @@
                                        FontAttributes="Bold"
                                        Opacity="0.85"/>
                                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding AdvancedBenefitRows}"
-                                                     Spacing="2">
+                                                     Spacing="6">
                                     <BindableLayout.ItemTemplate>
                                         <DataTemplate>
-                                            <Border StrokeThickness="0"
-                                                    StrokeShape="RoundRectangle 8"
-                                                    BackgroundColor="{Binding RowBackgroundColor}">
-                                                <Grid Padding="8,6"
-                                                      ColumnDefinitions="*,Auto"
-                                                      RowDefinitions="Auto,Auto"
-                                                      ColumnSpacing="8"
-                                                      RowSpacing="2">
-                                                    <Label Text="{Binding DisplayText}"
-                                                           FontSize="13"
-                                                           VerticalTextAlignment="Center"
-                                                           LineBreakMode="WordWrap"/>
+                                            <Grid Padding="10,8"
+                                                  BackgroundColor="{Binding RowBackgroundColor}"
+                                                  ColumnDefinitions="*,Auto"
+                                                  RowDefinitions="Auto"
+                                                  ColumnSpacing="8"
+                                                  RowSpacing="0">
+                                                    <ScrollView Orientation="Horizontal"
+                                                                HorizontalScrollBarVisibility="Never"
+                                                                VerticalScrollBarVisibility="Never">
+                                                        <HorizontalStackLayout BindableLayout.ItemsSource="{Binding DisplayItems}"
+                                                                               Spacing="0">
+                                                            <BindableLayout.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Grid ColumnDefinitions="Auto,Auto"
+                                                                          ColumnSpacing="0">
+                                                                        <Grid Padding="10,2"
+                                                                              BackgroundColor="Transparent">
+                                                                            <Grid.Triggers>
+                                                                                <DataTrigger TargetType="Grid"
+                                                                                             Binding="{Binding IsSelected}"
+                                                                                             Value="True">
+                                                                                    <Setter Property="BackgroundColor"
+                                                                                            Value="{StaticResource SelectedSurfaceBackgroundColor}"/>
+                                                                                </DataTrigger>
+                                                                            </Grid.Triggers>
+                                                                            <Label Text="{Binding Text}"
+                                                                                   FontSize="13"
+                                                                                   VerticalTextAlignment="Center"/>
+                                                                        </Grid>
+                                                                        <BoxView Grid.Column="1"
+                                                                                 WidthRequest="1"
+                                                                                 Margin="0,2"
+                                                                                 Color="{StaticResource SoftStrokeColor}"
+                                                                                 IsVisible="{Binding ShowTrailingDivider}" />
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </BindableLayout.ItemTemplate>
+                                                        </HorizontalStackLayout>
+                                                    </ScrollView>
                                                     <Button Grid.Column="1"
                                                             Text="&#xF05A;"
                                                             FontFamily="FASolid"
@@ -536,16 +620,7 @@
                                                             IsVisible="{Binding HasDetails}"
                                                             Clicked="OnGuildBenefitInfoClicked"
                                                             CommandParameter="{Binding .}"/>
-                                                    <Label Grid.Row="1"
-                                                           Grid.Column="0"
-                                                           Grid.ColumnSpan="2"
-                                                           Text="{Binding ChoiceLabel}"
-                                                           FontSize="11"
-                                                           FontAttributes="Bold"
-                                                           TextColor="{StaticResource AccentMaroonColor}"
-                                                           IsVisible="{Binding HasChoiceLabel}"/>
-                                                </Grid>
-                                            </Border>
+                                            </Grid>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>
                                 </VerticalStackLayout>
@@ -554,9 +629,9 @@
                     </controls:AnimatedExpandView>
                 </VerticalStackLayout>
 
-                <!-- City benefits -->
-                <VerticalStackLayout Spacing="6"
-                                     IsVisible="{Binding HasCityBenefits}">
+                    <!-- City benefits -->
+                    <VerticalStackLayout Spacing="6"
+                                         IsVisible="{Binding HasCityBenefits}">
                     <Grid ColumnDefinitions="*,Auto"
                           ColumnSpacing="8">
                         <Label Text="CITY BENEFITS"
@@ -599,6 +674,7 @@
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
                     </controls:AnimatedExpandView>
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </Grid>

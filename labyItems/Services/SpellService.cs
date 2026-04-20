@@ -98,7 +98,7 @@ public static class SpellService
 
         var dbPath = ResolveDbPath();
         Debug.WriteLine($"[SPELLS] ResolveDbPath => {dbPath ?? "<none>"}");
-        var dbList = LoadFromDatabase(dbPath);
+        var dbList = await Task.Run(() => LoadFromDatabase(dbPath));
         if (dbList is { Count: > 0 })
         {
             Debug.WriteLine($"[SPELLS] Loaded {dbList.Count} spells from DB.");

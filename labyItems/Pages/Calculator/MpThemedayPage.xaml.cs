@@ -643,12 +643,15 @@ public partial class MpThemedayPage : MpCalculatorPageBase
 
     private void ScrollToLocationSelectorAsync()
     {
-        MainThread.BeginInvokeOnMainThread(async () =>
+        UiDispatchHelper.RunFireAndForget(async () =>
         {
-            await Task.Delay(50);
+            await Task.Delay(50).ConfigureAwait(false);
             if (CpLocationSearch != null && ThemedayScroll != null)
-                await ThemedayScroll.ScrollToAsync(CpLocationSearch, ScrollToPosition.Center, true);
-        });
+            {
+                await MainThread.InvokeOnMainThreadAsync(
+                    () => ThemedayScroll.ScrollToAsync(CpLocationSearch, ScrollToPosition.Center, true));
+            }
+        }, "MP_THEME_DAY_SCROLL");
     }
 
     private static string FormatWeapon(WeaponType value) => EnumDisplayFormatter.Format(value);

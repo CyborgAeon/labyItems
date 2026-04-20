@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="labyItems.Controls.BackNavigationButton"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Root">
+
+    <ImageButton AutomationProperties.Name="Back"
+                 BackgroundColor="Transparent"
+                 Command="{Binding Source={x:Reference Root}, Path=Command}"
+                 Padding="0"
+                 HeightRequest="48"
+                 WidthRequest="48"
+                 MinimumHeightRequest="44"
+                 MinimumWidthRequest="44">
+        <ImageButton.Source>
+            <FontImageSource FontFamily="FASolid"
+                             Glyph="&#xf060;"
+                             Size="24"
+                             Color="{StaticResource Gray300}"/>
+        </ImageButton.Source>
+    </ImageButton>
+</ContentView>

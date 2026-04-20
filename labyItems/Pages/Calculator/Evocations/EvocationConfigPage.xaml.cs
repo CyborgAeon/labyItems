@@ -9,6 +9,7 @@ namespace labyItems.Pages.Calculator;
 public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
 {
     private bool _evocationLookupLoaded;
+    private bool _isLoading;
     private EvocationSearchOption? _selectedSearchEvocation;
 
     public EvocationConfigPage()
@@ -18,6 +19,17 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
         ViewEvocationInfoCommand = new Command<object?>(OnEvocationInfoRequested);
         DeleteEvocationCommand = new Command<object?>(OnDeleteEvocationRequested);
         InitializeComponent();
+    }
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        set
+        {
+            if (_isLoading == value) return;
+            _isLoading = value;
+            OnPropertyChanged();
+        }
     }
 
     public ICommand AddSelectedEvocationCommand { get; }
@@ -98,6 +110,7 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
 
     private async Task LoadEvocationLookupAsync()
     {
+        IsLoading = true;
         try
         {
             var evocations = await DruidEvocationService.GetAllAsync();
@@ -122,6 +135,10 @@ public partial class EvocationConfigPage : ConfigPageBase<EvocationConfig>
         catch (Exception ex)
         {
             await DisplayAlert("Evocation load failed", ex.Message, "OK");
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 

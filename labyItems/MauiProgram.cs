@@ -135,6 +135,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IAdvanceAbilityLookupService, AdvanceAbilityLookupService>();
 		builder.Services.AddSingleton<IAbilityChoiceSetResolverService, AbilityChoiceSetResolverService>();
 		builder.Services.AddSingleton<IAbilityAvailabilityService, AbilityAvailabilityService>();
+		builder.Services.AddSingleton(_ => CalendarEventStore.Shared);
 
 #if DEBUG
 		builder.Logging.AddDebug();

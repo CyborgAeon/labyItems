@@ -1,5 +1,6 @@
 using System.Collections.Specialized;
 using Microsoft.Maui.ApplicationModel;
+using labyItems.Helpers;
 using labyItems.Infrastructure;
 using Microsoft.Maui.Controls.Shapes;
 
@@ -19,8 +20,7 @@ public partial class StepIndicator : ContentView
         ApplyThemeDefaults();
         SizeChanged += (_, __) => UpdateProgressLine();
         StepsGrid.SizeChanged += (_, __) => UpdateProgressLine();
-        BindingContextChanged += (_, __) =>
-            MainThread.BeginInvokeOnMainThread(Rebuild);
+        BindingContextChanged += (_, __) => UiDispatchHelper.BeginOnMainThread(Rebuild);
     }
 
     public static readonly BindableProperty StepsProperty =
@@ -130,7 +130,7 @@ public partial class StepIndicator : ContentView
     }
 
     private void Steps_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        => MainThread.BeginInvokeOnMainThread(Rebuild);
+        => UiDispatchHelper.BeginOnMainThread(Rebuild);
 
     private void ApplyThemeDefaults()
     {
@@ -280,11 +280,11 @@ public partial class StepIndicator : ContentView
         UpdateVisualStates();
 
         // Ensure line updates after layout positions settle
-        MainThread.BeginInvokeOnMainThread(async () =>
+        UiDispatchHelper.RunFireAndForget(async () =>
         {
-            await Task.Delay(1);
-            UpdateProgressLine();
-        });
+            await Task.Delay(1).ConfigureAwait(false);
+            await MainThread.InvokeOnMainThreadAsync(UpdateProgressLine);
+        }, "STEP_INDICATOR_PROGRESS");
     }
 
     private void UpdateVisualStates()

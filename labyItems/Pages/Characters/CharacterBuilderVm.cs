@@ -97,34 +97,39 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         RefilterClasses();
         RefilterRaces();
 
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            try
-            {
-                await LoadRacesAsync();
-                await LoadClassesAsync();
-
-                await RefreshAllowedRacesForSelectedClassAsync();
-                RefilterRaces();
-
-                await RefreshAllowedClassesForSelectedRaceAsync();
-                RefilterClasses();
-
-                await ApplyRaceToClassesAsync(_draft.Race);
-
-                await CaptureHumanLifeForSelectedClassAsync();
-                await UpdateDraftLifeAsync(expandIfChanged: false);
-
-                await SpecialisationVm.ReloadAsync();
-
-                await RefreshDraftAbilitiesAsync();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"CharacterBuilder startup pipeline failed: {ex}");
-            }
-        });
+        Task.Run(async () => await RunStartupPipelineAsync());
     }
+
+    private async Task RunStartupPipelineAsync()
+    {
+        try
+        {
+            await LoadRacesAsync();
+            await LoadClassesAsync();
+
+            await RefreshAllowedRacesForSelectedClassAsync();
+            RefilterRaces();
+
+            await RefreshAllowedClassesForSelectedRaceAsync();
+            RefilterClasses();
+
+            await ApplyRaceToClassesAsync(_draft.Race);
+
+            await CaptureHumanLifeForSelectedClassAsync();
+            await UpdateDraftLifeAsync(expandIfChanged: false);
+
+            await SpecialisationVm.ReloadAsync();
+
+            await RefreshDraftAbilitiesAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"CharacterBuilder startup pipeline failed: {ex}");
+        }
+    }
+
+    private static void RunOnMainThread(Action action)
+        => UiDispatchHelper.BeginOnMainThread(action);
 
     public ICommand ToggleRaceExpandedCommand { get; }
 
@@ -179,13 +184,15 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             list.Add(vm);
         }
 
-        AllRaces.Clear();
-        foreach (var vm in list)
-            AllRaces.Add(vm);
+        RunOnMainThread(() =>
+        {
+            AllRaces.Clear();
+            foreach (var vm in list)
+                AllRaces.Add(vm);
 
-        RebuildRaceFilterChips(types);
-
-        RefilterRaces();
+            RebuildRaceFilterChips(types);
+            RefilterRaces();
+        });
     }
 
     private void ToggleClassFilterChip(ClassFilterChipVm? chip)
@@ -206,6 +213,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private void RebuildClassFilterChips()
     {
+        if (!MainThread.IsMainThread)
+        {
+            MainThread.BeginInvokeOnMainThread(RebuildClassFilterChips);
+            return;
+        }
+
         var labelsByKey = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var classVm in AllClasses)
@@ -508,11 +521,11 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
         var cts = new CancellationTokenSource();
         _selectionPipelineCts = cts;
 
-        MainThread.BeginInvokeOnMainThread(async () =>
+        UiDispatchHelper.RunFireAndForget(async () =>
         {
             try
             {
-                await pipeline(cts.Token);
+                await pipeline(cts.Token).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cts.IsCancellationRequested)
             {
@@ -528,7 +541,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
                 cts.Dispose();
             }
-        });
+        }, "CHARACTER_BUILDER_SELECTION_PIPELINE");
     }
 
     private void ResetDependentDraftSelections()
@@ -643,7 +656,7 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
             });
         }
 
-        MainThread.BeginInvokeOnMainThread(() =>
+        RunOnMainThread(() =>
         {
             AllClasses.Clear();
             foreach (var vm in list)
@@ -2177,6 +2190,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private void RefilterClasses()
     {
+        if (!MainThread.IsMainThread)
+        {
+            MainThread.BeginInvokeOnMainThread(RefilterClasses);
+            return;
+        }
+
         var q = (ClassSearchText ?? "").Trim().ToLowerInvariant();
 
         var list = AllClasses
@@ -2211,6 +2230,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private void RefilterRaces()
     {
+        if (!MainThread.IsMainThread)
+        {
+            MainThread.BeginInvokeOnMainThread(RefilterRaces);
+            return;
+        }
+
         var q = (RaceSearchText ?? "").Trim().ToLowerInvariant();
 
         var list = AllRaces
@@ -2249,6 +2274,12 @@ public sealed class CharacterBuilderVm : INotifyPropertyChanged
 
     private void RebuildRaceFilterChips(IEnumerable<string> raceTypes)
     {
+        if (!MainThread.IsMainThread)
+        {
+            MainThread.BeginInvokeOnMainThread(() => RebuildRaceFilterChips(raceTypes));
+            return;
+        }
+
         var options = new List<string> { "All" };
         options.AddRange((raceTypes ?? Enumerable.Empty<string>())
             .Where(type => !string.IsNullOrWhiteSpace(type))

@@ -22,6 +22,9 @@ public partial class LoginPage : ContentPage
             return;
         }
 
+        if (sender is Button loginButton)
+            loginButton.IsEnabled = false;
+
         var homePage = new ItemRoutePage();
         Navigation.InsertPageBefore(homePage, this);
         await Navigation.PopAsync();

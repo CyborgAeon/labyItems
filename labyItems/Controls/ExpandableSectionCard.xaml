@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="labyItems.Controls.ExpandableSectionCard"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:labyItems.Controls"
+             x:Name="Root">
+
+    <Border Padding="14"
+            Stroke="{StaticResource SurfaceBorderColor}"
+            StrokeShape="RoundRectangle 16">
+        <VerticalStackLayout Spacing="12">
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="12">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnHeaderTapped" />
+                </Grid.GestureRecognizers>
+
+                <Label FontAttributes="Bold"
+                       FontSize="16"
+                       InputTransparent="True"
+                       Text="{Binding Source={x:Reference Root}, Path=HeaderText}"
+                       TextColor="{StaticResource Gray950}"
+                       VerticalTextAlignment="Center" />
+
+                <Label Grid.Column="1"
+                       FontAttributes="Bold"
+                       FontSize="18"
+                       HorizontalTextAlignment="End"
+                       InputTransparent="True"
+                       Text="{Binding Source={x:Reference Root}, Path=ChevronText}"
+                       TextColor="{StaticResource Gray500}"
+                       VerticalTextAlignment="Center" />
+            </Grid>
+
+            <BoxView HeightRequest="1"
+                     BackgroundColor="{StaticResource SurfaceBorderColor}"
+                     IsVisible="{Binding Source={x:Reference Root}, Path=IsExpanded}" />
+
+            <controls:AnimatedExpandView IsExpanded="{Binding Source={x:Reference Root}, Path=IsExpanded}"
+                                         Content="{Binding Source={x:Reference Root}, Path=BodyContent}" />
+        </VerticalStackLayout>
+    </Border>
+</ContentView>

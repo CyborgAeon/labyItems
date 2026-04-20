@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Calendar.EventDetailsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
+    Title="Event Details">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,18,20,28"
+                             Spacing="14">
+            <Grid ColumnDefinitions="48,*,48">
+                <Button Clicked="OnBackClicked"
+                        FontSize="22"
+                        Padding="8"
+                        Text="&#x2039;"
+                        TextColor="{StaticResource Gray950}">
+                    <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                </Button>
+
+                <Label x:Name="PageTitleLabel"
+                       Grid.Column="1"
+                       FontAttributes="Bold"
+                       FontSize="18"
+                       HorizontalTextAlignment="Center"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1"
+                       Text="Event"
+                       VerticalTextAlignment="Center" />
+
+                <Button Grid.Column="2"
+                        x:Name="EditEventButton"
+                        Clicked="OnEditEventClicked"
+                        FontSize="14"
+                        Padding="0"
+                        Text="Edit"
+                        TextColor="{StaticResource Primary}">
+                    <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                </Button>
+            </Grid>
+
+            <Border Padding="18"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeShape="RoundRectangle 18">
+                <VerticalStackLayout Spacing="8">
+                    <Label x:Name="EventDateLabel"
+                           FontSize="16" />
+                    <Label x:Name="EventLocationLabel"
+                           FontSize="16" />
+                    <Label x:Name="EventThresholdLabel"
+                           FontAttributes="Italic"
+                           FontSize="14"
+                           TextColor="{StaticResource Gray500}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Grid ColumnDefinitions="1.2*,0.8*"
+                  ColumnSpacing="12"
+                  VerticalOptions="Start">
+                <controls:ExpandableSectionCard x:Name="PlayersSectionCard"
+                                                HeaderText="Players"
+                                                VerticalOptions="Start">
+                    <controls:ExpandableSectionCard.BodyContent>
+                        <VerticalStackLayout x:Name="PlayersSection"
+                                             BindableLayout.ItemsSource="{Binding Players}"
+                                             Spacing="8" />
+                    </controls:ExpandableSectionCard.BodyContent>
+                </controls:ExpandableSectionCard>
+
+                <VerticalStackLayout Grid.Column="1"
+                                     Spacing="12"
+                                     VerticalOptions="Start">
+                    <controls:ExpandableSectionCard x:Name="RefereesSectionCard"
+                                                    HeaderText="Referees">
+                        <controls:ExpandableSectionCard.BodyContent>
+                            <VerticalStackLayout x:Name="RefereesSection"
+                                                 BindableLayout.ItemsSource="{Binding Referees}"
+                                                 Spacing="8" />
+                        </controls:ExpandableSectionCard.BodyContent>
+                    </controls:ExpandableSectionCard>
+
+                    <controls:ExpandableSectionCard x:Name="ARefsSectionCard"
+                                                    HeaderText="A-ref">
+                        <controls:ExpandableSectionCard.BodyContent>
+                            <VerticalStackLayout x:Name="ARefsSection"
+                                                 BindableLayout.ItemsSource="{Binding ARefs}"
+                                                 Spacing="8" />
+                        </controls:ExpandableSectionCard.BodyContent>
+                    </controls:ExpandableSectionCard>
+
+                    <controls:ExpandableSectionCard x:Name="CrewSectionCard"
+                                                    HeaderText="Crew">
+                        <controls:ExpandableSectionCard.BodyContent>
+                            <VerticalStackLayout x:Name="CrewSection"
+                                                 BindableLayout.ItemsSource="{Binding Crew}"
+                                                 Spacing="8" />
+                        </controls:ExpandableSectionCard.BodyContent>
+                    </controls:ExpandableSectionCard>
+                </VerticalStackLayout>
+            </Grid>
+
+            <VerticalStackLayout Spacing="10">
+                <Button Clicked="OnJoinPlayerClicked"
+                        FontSize="18"
+                        Text="Join as Player" />
+                <Button Clicked="OnJoinRefereeClicked"
+                        BackgroundColor="{StaticResource White}"
+                        BorderColor="{StaticResource Primary}"
+                        BorderWidth="1"
+                        FontSize="18"
+                        Text="Join as Referee"
+                        TextColor="{StaticResource Primary}" />
+                <Button Clicked="OnJoinARefClicked"
+                        BackgroundColor="{StaticResource White}"
+                        BorderColor="{StaticResource Primary}"
+                        BorderWidth="1"
+                        FontSize="18"
+                        Text="Join as A-ref"
+                        TextColor="{StaticResource Primary}" />
+                <Button Clicked="OnJoinCrewClicked"
+                        BackgroundColor="{StaticResource White}"
+                        BorderColor="{StaticResource Primary}"
+                        BorderWidth="1"
+                        FontSize="18"
+                        Text="Join as Crew"
+                        TextColor="{StaticResource Primary}" />
+            </VerticalStackLayout>
+
+            <Border Padding="16"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeShape="RoundRectangle 16">
+                <VerticalStackLayout Spacing="12">
+                    <Label FontAttributes="Bold"
+                           FontSize="16"
+                           Text="Associated Users" />
+                    <HorizontalStackLayout x:Name="ProfileIconsHost"
+                                           Spacing="10" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

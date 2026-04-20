@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Models;
 using labyItems.Pages.Calculator;
@@ -28,6 +29,7 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
     public TConfig Config { get; private set; }
     public ObservableCollection<ContributionRow> FooterBreakdownItems { get; } = new();
     public Command ReturnFromConfigCommand { get; set; }
+    public ICommand BackNavigationCommand { get; }
     private Pages.Calculator.IspCalculator? _calculatorContext;
     private bool _isUpdatingFooter;
     private int _footerRunningTotal;
@@ -77,6 +79,7 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
             Complete(BuildResult(Config));
             await StickyFooterControl.DefaultNavigateAsync(this);
         });
+        BackNavigationCommand = new Command(async () => await NavigateBackAsync());
 
         UpdateFooterBreakdown();
     }
@@ -104,20 +107,36 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
 
         // OnDisappearing fires when a child page is pushed (search, etc) as well as when this
         // page is popped. Delay and check the navigation stack so we only complete on a true pop.
-        MainThread.BeginInvokeOnMainThread(async () =>
+        UiDispatchHelper.RunFireAndForget(async () =>
         {
-            await Task.Delay(25);
-
-            var stillInStack = Navigation?.NavigationStack?.Contains(this) == true;
+            await Task.Delay(25).ConfigureAwait(false);
+            var stillInStack = await MainThread.InvokeOnMainThreadAsync(
+                () => Navigation?.NavigationStack?.Contains(this) == true);
             if (!stillInStack && !CompletionSet)
-                Complete(null);
-        });
+            {
+                await MainThread.InvokeOnMainThreadAsync(() => Complete(null));
+            }
+        }, "CONFIG_PAGE_DISAPPEAR");
     }
 
     protected override bool OnBackButtonPressed()
     {
         Complete(null);
         return base.OnBackButtonPressed();
+    }
+
+    protected virtual async Task NavigateBackAsync()
+    {
+        Complete(null);
+
+        if (Navigation?.NavigationStack?.Count > 1)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        if (Shell.Current != null)
+            await Shell.Current.GoToAsync("..");
     }
 
     protected void Complete(CalcResult? result)

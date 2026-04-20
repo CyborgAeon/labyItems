@@ -30,10 +30,9 @@ public partial class CharacterReviewPage : ContentPage
         Title = string.IsNullOrWhiteSpace(_draft.Name) ? "Character" : _draft.Name;
         Review.BindingContext = _vm;
 
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await _vm.RefreshReviewAsync();
-        });
+        UiDispatchHelper.RunFireAndForget(
+            () => _vm.RefreshReviewAsync(),
+            "CHARACTER_REVIEW_INITIAL_REFRESH");
     }
 
     protected override async void OnAppearing()

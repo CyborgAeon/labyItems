@@ -9,6 +9,7 @@ namespace labyItems.Pages.Calculator;
 public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
 {
     private bool _spellLookupLoaded;
+    private bool _isLoading;
     private SpellSearchOption? _selectedSearchSpell;
 
     public SpellConfigPage()
@@ -18,6 +19,17 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
         ViewSpellInfoCommand = new Command<object?>(OnSpellInfoRequested);
         DeleteSpellCommand = new Command<object?>(OnDeleteSpellRequested);
         InitializeComponent();
+    }
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        set
+        {
+            if (_isLoading == value) return;
+            _isLoading = value;
+            OnPropertyChanged();
+        }
     }
 
     public ICommand AddSelectedSpellCommand { get; }
@@ -111,6 +123,7 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
 
     private async Task LoadSpellLookupAsync()
     {
+        IsLoading = true;
         try
         {
             var spells = await SpellService.GetAllAsync();
@@ -134,6 +147,10 @@ public partial class SpellConfigPage : ConfigPageBase<SpellConfig>
         catch (Exception ex)
         {
             await DisplayAlert("Spell load failed", ex.Message, "OK");
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 

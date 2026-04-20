@@ -134,10 +134,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
 
         if (autoReload)
         {
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                await ReloadAsync();
-            });
+            MainThread.BeginInvokeOnMainThread(() => _ = ExecuteGuildCardCommandSafeAsync(
+                action: ReloadAsync,
+                operation: "GUILD_AUTO_RELOAD",
+                guildName: null));
         }
     }
 
@@ -189,6 +189,13 @@ public sealed class GuildsVm : INotifyPropertyChanged
             catch (TaskCanceledException)
             {
                 // Ignore cancelled debounce.
+            }
+            catch (Exception ex)
+            {
+                RuntimeLog.Write(
+                    "GUILD_REFILTER",
+                    "Guild search refilter failed.",
+                    ex);
             }
         }, token);
     }
@@ -657,9 +664,18 @@ public sealed class GuildsVm : INotifyPropertyChanged
         if (_miracleLookupCache != null)
             return _miracleLookupCache;
 
-        _miracleLookupTask ??= LoadMiracleLookupAsync();
-        _miracleLookupCache = await _miracleLookupTask;
-        return _miracleLookupCache;
+        var task = _miracleLookupTask ??= LoadMiracleLookupAsync();
+        try
+        {
+            _miracleLookupCache = await task;
+            return _miracleLookupCache;
+        }
+        catch
+        {
+            if (ReferenceEquals(_miracleLookupTask, task))
+                _miracleLookupTask = null;
+            throw;
+        }
     }
 
     private (bool HasCityBound, string? CityName) GetCityBoundInfo()
@@ -1473,6 +1489,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 rows.Add(new GuildBenefitRowVm
                 {
                     DisplayText = display,
+                    DisplayItems = new List<GuildBenefitDisplayItemVm>
+                    {
+                        new() { Text = display }
+                    },
                     Abilities = new List<AbilityDefinition> { ability },
                     IsChoiceOption = false,
                     IsSelectedChoice = false,
@@ -1490,6 +1510,9 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 ? savedSelection
                 : (int?)null;
 
+            var optionDisplays = new List<GuildBenefitDisplayItemVm>();
+            var rowAbilities = new List<AbilityDefinition>();
+            var seenAbilityKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             for (var optionPosition = 0; optionPosition < entry.Options.Count; optionPosition++)
             {
                 var option = entry.Options[optionPosition];
@@ -1507,17 +1530,40 @@ public sealed class GuildsVm : INotifyPropertyChanged
                 if (string.IsNullOrWhiteSpace(display))
                     continue;
 
-                var choiceNumber = optionIndex;
-                var optionNumber = optionPosition + 1;
-                rows.Add(new GuildBenefitRowVm
+                optionDisplays.Add(new GuildBenefitDisplayItemVm
                 {
-                    DisplayText = display,
-                    Abilities = optionAbilities,
-                    IsChoiceOption = true,
-                    IsSelectedChoice = selectedIndex.HasValue && selectedIndex.Value == optionNumber,
-                    ChoiceLabel = $"Choice {choiceNumber}, Option {optionNumber}"
+                    Text = display,
+                    IsSelected = selectedIndex.HasValue && selectedIndex.Value == optionPosition + 1,
+                    ShowTrailingDivider = false
                 });
+
+                foreach (var optionAbility in optionAbilities)
+                {
+                    var dedupeKey = BuildGuildBenefitAbilityKey(optionAbility);
+                    if (!seenAbilityKeys.Add(dedupeKey))
+                        continue;
+
+                    rowAbilities.Add(optionAbility);
+                }
             }
+
+            if (optionDisplays.Count == 0)
+                continue;
+
+            for (var displayIndex = 0; displayIndex < optionDisplays.Count; displayIndex++)
+            {
+                optionDisplays[displayIndex].ShowTrailingDivider = displayIndex < optionDisplays.Count - 1;
+            }
+
+            rows.Add(new GuildBenefitRowVm
+            {
+                DisplayText = string.Join(" / ", optionDisplays.Select(item => item.Text)),
+                DisplayItems = optionDisplays,
+                Abilities = rowAbilities,
+                IsChoiceOption = true,
+                IsSelectedChoice = selectedIndex.HasValue,
+                ChoiceLabel = $"Choice {optionIndex}"
+            });
         }
 
         for (var i = 0; i < rows.Count; i++)
@@ -1632,6 +1678,22 @@ public sealed class GuildsVm : INotifyPropertyChanged
         return $"{names[0]} +{names.Count - 1}";
     }
 
+    private static string BuildGuildBenefitAbilityKey(AbilityDefinition? ability)
+    {
+        if (ability == null)
+            return string.Empty;
+
+        return string.Join(
+            "|",
+            new[]
+            {
+                (ability.Key ?? string.Empty).Trim(),
+                (ability.AbilityRef ?? string.Empty).Trim(),
+                (ability.Name ?? string.Empty).Trim(),
+                (ability.UpdateKey ?? string.Empty).Trim()
+            });
+    }
+
     private static List<GuildLoreSectionVm> BuildLoreSections(GuildRecord rec)
     {
         var sections = new List<GuildLoreSectionVm>();
@@ -1742,7 +1804,10 @@ public sealed class GuildsVm : INotifyPropertyChanged
         _notifyWizardGatingChanged();
 
         if (_refreshDraftAbilitiesAsync != null)
-            MainThread.BeginInvokeOnMainThread(async () => await _refreshDraftAbilitiesAsync());
+            MainThread.BeginInvokeOnMainThread(() => _ = ExecuteGuildCardCommandSafeAsync(
+                action: _refreshDraftAbilitiesAsync,
+                operation: "GUILD_REFRESH_DRAFT_ABILITIES",
+                guildName: null));
     }
 
     private bool AreRequiredBenefitChoicesComplete(IReadOnlyDictionary<string, GuildRecord> records)
@@ -2279,6 +2344,7 @@ public sealed class GuildReviewSummaryRowVm
 public sealed class GuildBenefitRowVm
 {
     public string DisplayText { get; init; } = string.Empty;
+    public List<GuildBenefitDisplayItemVm> DisplayItems { get; init; } = new();
     public List<AbilityDefinition> Abilities { get; init; } = new();
     public bool IsChoiceOption { get; init; }
     public bool IsSelectedChoice { get; init; }
@@ -2287,6 +2353,14 @@ public sealed class GuildBenefitRowVm
 
     public bool HasDetails => Abilities.Count > 0;
     public bool HasChoiceLabel => !string.IsNullOrWhiteSpace(ChoiceLabel);
+    public bool HasDisplayItems => DisplayItems.Count > 0;
+}
+
+public sealed class GuildBenefitDisplayItemVm
+{
+    public string Text { get; init; } = string.Empty;
+    public bool IsSelected { get; init; }
+    public bool ShowTrailingDivider { get; set; }
 }
 
 public sealed class GuildBenefitOptionGroupVm : INotifyPropertyChanged

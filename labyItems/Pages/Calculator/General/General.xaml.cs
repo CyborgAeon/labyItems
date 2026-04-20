@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using labyItems.Services;
 using Microsoft.Maui.Graphics;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
@@ -12,9 +13,11 @@ public partial class General : ContentPage
     private readonly GeneralAbilitySearchVm _vm = new();
     private TaskCompletionSource<IReadOnlyList<EvolutionService.AbilityResult>>? _tcs;
     private bool _isCompleting;
+    public ICommand BackNavigationCommand { get; }
 
     public General()
     {
+        BackNavigationCommand = new Command(async () => await CompleteAndCloseAsync());
         InitializeComponent();
         BindingContext = _vm;
     }
@@ -54,11 +57,6 @@ public partial class General : ContentPage
         {
             _isCompleting = false;
         }
-    }
-
-    private async void OnBackClicked(object sender, EventArgs e)
-    {
-        await CompleteAndCloseAsync();
     }
 
     private async void OnDoneClicked(object sender, EventArgs e)

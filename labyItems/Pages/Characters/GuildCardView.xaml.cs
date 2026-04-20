@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using labyItems.Helpers;
 using labyItems.Models.Characters;
+using labyItems.Pages.AbilityCard;
 using labyItems.Services;
 using AbilityCardPage = labyItems.Pages.AbilityCard.AbilityCard;
 using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
@@ -128,39 +129,43 @@ public partial class GuildCardView : ContentView
         if (detailOptions.Count == 0)
             return;
 
-        GuildBenefitDetailOption? pickedOption;
-        var hostPage = ResolveHostPage();
         if (detailOptions.Count == 1)
         {
-            pickedOption = detailOptions[0];
+            var abilityResult = await ResolveAbilityFromDefinitionAsync(detailOptions[0].Ability);
+            if (abilityResult == null)
+                return;
+
+            var navigation = ResolveNavigation();
+            if (navigation == null)
+                return;
+
+            await navigation.PushAsync(new AbilityCardPage(abilityResult));
+            return;
         }
-        else
+
+        var abilities = new List<EvolutionService.AbilityResult>();
+        foreach (var option in detailOptions)
         {
-            if (hostPage == null)
-                return;
+            var ability = await ResolveAbilityFromDefinitionAsync(option.Ability);
+            if (ability == null)
+                continue;
 
-            var labels = detailOptions
-                .Select(option => option.DisplayName)
-                .ToArray();
-            var picked = await hostPage.DisplayActionSheet("Guild benefit details", "Cancel", null, labels);
-            if (string.IsNullOrWhiteSpace(picked) || picked.Equals("Cancel", StringComparison.OrdinalIgnoreCase))
-                return;
-
-            pickedOption = detailOptions.FirstOrDefault(option =>
-                option.DisplayName.Equals(picked, StringComparison.OrdinalIgnoreCase));
-            if (pickedOption == null)
-                return;
+            abilities.Add(ability);
         }
 
-        var abilityResult = await ResolveAbilityFromDefinitionAsync(pickedOption.Ability);
-        if (abilityResult == null)
+        if (abilities.Count == 0)
             return;
 
-        var navigation = ResolveNavigation();
-        if (navigation == null)
+        var compareTitle = string.IsNullOrWhiteSpace(row.ChoiceLabel)
+            ? "Guild benefit details"
+            : $"{row.ChoiceLabel} details";
+        var comparePage = new AbilityCardComparisonPage(compareTitle, abilities);
+
+        var compareNavigation = ResolveNavigation();
+        if (compareNavigation == null)
             return;
 
-        await navigation.PushAsync(new AbilityCardPage(abilityResult));
+        await compareNavigation.PushAsync(comparePage);
     }
 
     private INavigation? ResolveNavigation()
@@ -172,20 +177,6 @@ public partial class GuildCardView : ContentView
             return shellNav;
 
         return Application.Current?.MainPage?.Navigation;
-    }
-
-    private Page? ResolveHostPage()
-    {
-        Element? current = this;
-        while (current != null)
-        {
-            if (current is Page page)
-                return page;
-
-            current = current.Parent;
-        }
-
-        return Application.Current?.MainPage;
     }
 
     private static List<GuildBenefitDetailOption> BuildBenefitDetailOptions(GuildBenefitRowVm row)

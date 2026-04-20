@@ -90,12 +90,12 @@ public partial class AdvanceCharacterPage : Microsoft.Maui.Controls.TabbedPage
         ApplyTabVisibility();
         QueuePlatformTabLayoutRefresh();
 
-        MainThread.BeginInvokeOnMainThread(async () =>
+        UiDispatchHelper.RunFireAndForget(async () =>
         {
             await Task.Yield();
-            await _vm.InitializeAsync();
-            ApplyTabVisibility();
-        });
+            await _vm.InitializeAsync().ConfigureAwait(false);
+            await MainThread.InvokeOnMainThreadAsync(ApplyTabVisibility);
+        }, "ADVANCE_CHARACTER_INIT");
     }
 
     private void ApplyTabVisibility()

@@ -22,13 +22,11 @@
                                         KeepFocusOnResultSelection="True"
                                         ClearAfterResultSelection="True" />
         </Grid>
-        <VerticalStackLayout BindableLayout.ItemsSource="{Binding SpellSelections}" IsVisible="{Binding HasSpellSelections}" Spacing="6">
-          <BindableLayout.ItemTemplate>
-            <DataTemplate>
-              <controls:PlusMinusControl LabelText="{Binding DisplayText}" AllowMultiple="True" Count="{Binding Uses, Mode=TwoWay}" Min="0" />
-            </DataTemplate>
-          </BindableLayout.ItemTemplate>
-        </VerticalStackLayout>
+        <controls:ConfigSelectionList ItemsSource="{Binding SpellSelections}"
+                                      IsVisible="{Binding HasSpellSelections}"
+                                      EditCommand="{Binding EditSpellSelectionCommand}"
+                                      InfoCommand="{Binding ViewSpellInfoCommand}"
+                                      DeleteCommand="{Binding DeleteSpellSelectionCommand}" />
 
         <!-- Miracles -->
         <Label Text="Add standard miracle (1st-5th) or advanced (1-3)" FontAttributes="Bold" />
@@ -43,13 +41,11 @@
                                         KeepFocusOnResultSelection="True"
                                         ClearAfterResultSelection="True" />
         </Grid>
-        <VerticalStackLayout BindableLayout.ItemsSource="{Binding MiracleSelections}" IsVisible="{Binding HasMiracleSelections}" Spacing="6">
-          <BindableLayout.ItemTemplate>
-            <DataTemplate>
-              <controls:PlusMinusControl LabelText="{Binding DisplayText}" AllowMultiple="True" Count="{Binding Uses, Mode=TwoWay}" Min="0" />
-            </DataTemplate>
-          </BindableLayout.ItemTemplate>
-        </VerticalStackLayout>
+        <controls:ConfigSelectionList ItemsSource="{Binding MiracleSelections}"
+                                      IsVisible="{Binding HasMiracleSelections}"
+                                      EditCommand="{Binding EditMiracleSelectionCommand}"
+                                      InfoCommand="{Binding ViewMiracleInfoCommand}"
+                                      DeleteCommand="{Binding DeleteMiracleSelectionCommand}" />
 
         <!-- Evocations -->
         <Label Text="Add 0-4th standard evocation" FontAttributes="Bold" />
@@ -65,13 +61,11 @@
                                         KeepFocusOnResultSelection="True"
                                         ClearAfterResultSelection="True" />
         </Grid>
-        <VerticalStackLayout BindableLayout.ItemsSource="{Binding EvocationSelections}" IsVisible="{Binding HasEvocationSelections}" Spacing="6">
-          <BindableLayout.ItemTemplate>
-            <DataTemplate>
-              <controls:PlusMinusControl LabelText="{Binding DisplayText}" AllowMultiple="True" Count="{Binding Uses, Mode=TwoWay}" Min="0" />
-            </DataTemplate>
-          </BindableLayout.ItemTemplate>
-        </VerticalStackLayout>
+        <controls:ConfigSelectionList ItemsSource="{Binding EvocationSelections}"
+                                      IsVisible="{Binding HasEvocationSelections}"
+                                      EditCommand="{Binding EditEvocationSelectionCommand}"
+                                      InfoCommand="{Binding ViewEvocationInfoCommand}"
+                                      DeleteCommand="{Binding DeleteEvocationSelectionCommand}" />
 
         <VerticalStackLayout Spacing="8">
           <controls:PlusMinusControl LabelText="Active neuro" AllowMultiple="True" Count="{Binding ActiveNeuroCount, Mode=TwoWay}" IsEnabled="False" />

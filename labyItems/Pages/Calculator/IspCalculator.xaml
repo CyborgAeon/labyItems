@@ -1,26 +1,13 @@
 <TabbedPage x:Class="labyItems.Pages.Calculator.IspCalculator"
             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            xmlns:controls="clr-namespace:labyItems.Controls"
-            xmlns:local="clr-namespace:labyItems.Pages.Calculator"
-            xmlns:nav="clr-namespace:labyItems.Pages.Calculator.CalcNav"
             x:Name="Root"
             NavigationPage.HasNavigationBar="False"
             NavigationPage.HasBackButton="False"
             Shell.NavBarIsVisible="False"
             Title="">
     <ContentPage x:Name="BackTab"
-                 Title="←">
+                 Title="Back">
         <Grid />
     </ContentPage>
-    <nav:ArmourNav x:Name="ArmourCategoryPage"
-            Title="Armour"/>
-    <local:WeaponConfigPage x:Name="WeaponCategoryPage"
-            Title="Weapon"/>
-    <nav:CharmNav x:Name="CharmCategoryPage"
-            Title="Charm"/>
-    <nav:LifeConfigPage x:Name="LifeCategoryPage"
-            Title="Life"/>
-    <nav:MoreNav x:Name="MoreCategoryPage"
-                 Title="More"/>
 </TabbedPage>

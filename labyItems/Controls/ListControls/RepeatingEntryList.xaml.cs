@@ -75,6 +75,19 @@ public partial class RepeatingEntryList : ContentView
         set => SetValue(MaxItemsProperty, value);
     }
 
+    public static readonly BindableProperty EntryPlaceholderProperty = BindableProperty.Create(
+        nameof(EntryPlaceholder),
+        typeof(string),
+        typeof(RepeatingEntryList),
+        defaultValue: "Type a group"
+    );
+
+    public string EntryPlaceholder
+    {
+        get => (string)GetValue(EntryPlaceholderProperty);
+        set => SetValue(EntryPlaceholderProperty, value);
+    }
+
     // Expose summary of all non-empty values (e.g. joined by ", ")
     public static readonly BindableProperty SummaryTextProperty = BindableProperty.Create(
         nameof(SummaryText),
@@ -210,7 +223,7 @@ public partial class RepeatingEntryList : ContentView
         var entry = new Entry
         {
             Text = initialValue,
-            Placeholder = "Type a group",
+            Placeholder = EntryPlaceholder,
             HorizontalOptions = LayoutOptions.FillAndExpand,
         };
 

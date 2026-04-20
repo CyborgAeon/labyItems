@@ -143,7 +143,7 @@ public static class MiracleService
     {
         if (_cache != null) return _cache;
 
-        var dbList = LoadFromDatabase();
+        var dbList = await Task.Run(() => LoadFromDatabase());
         if (dbList is { Count: > 0 })
         {
             _cache = dbList;

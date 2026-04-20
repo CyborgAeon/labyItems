@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Calendar.AreaMapPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False">
+
+    <VerticalStackLayout Padding="20,18,20,28"
+                         Spacing="16">
+        <Grid ColumnDefinitions="Auto,*">
+            <Button Clicked="OnBackClicked"
+                    FontSize="22"
+                    Padding="8"
+                    Text="&#x2039;"
+                    TextColor="{StaticResource Gray950}">
+                <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+            </Button>
+
+            <Label Grid.Column="1"
+                   x:Name="TitleLabel"
+                   FontAttributes="Bold"
+                   FontSize="28"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center" />
+        </Grid>
+
+        <Border Padding="18"
+                Stroke="{StaticResource SurfaceBorderColor}"
+                StrokeShape="RoundRectangle 18">
+            <VerticalStackLayout Spacing="12">
+                <Label FontAttributes="Italic"
+                       FontSize="14"
+                       Text="Placeholder map view for the selected area."
+                       TextColor="{StaticResource Gray500}" />
+                <BoxView HeightRequest="280"
+                         CornerRadius="20"
+                         Color="#E8E0D0" />
+            </VerticalStackLayout>
+        </Border>
+    </VerticalStackLayout>
+</ContentPage>

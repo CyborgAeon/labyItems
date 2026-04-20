@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Calendar.MyBookingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
+    Title="My Bookings">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20,18,20,28"
+                             Spacing="14">
+            <Grid ColumnDefinitions="48,*,48">
+                <Button Clicked="OnBackClicked"
+                        FontSize="22"
+                        Padding="8"
+                        Text="&#x2039;"
+                        TextColor="{StaticResource Gray950}">
+                    <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                </Button>
+
+                <Label Grid.Column="1"
+                       FontAttributes="Bold"
+                       FontSize="18"
+                       HorizontalTextAlignment="Center"
+                       Text="My Bookings"
+                       VerticalTextAlignment="Center" />
+
+                <Label Grid.Column="2"
+                       WidthRequest="48"
+                       InputTransparent="True" />
+            </Grid>
+
+            <Border Padding="16,14"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeShape="RoundRectangle 18">
+                <VerticalStackLayout x:Name="LegendHost"
+                                     Spacing="8" />
+            </Border>
+
+            <VerticalStackLayout x:Name="BookingsHost"
+                                 Spacing="12" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

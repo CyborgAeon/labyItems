@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="labyItems.Pages.Calendar.UnifiedCalendarPage"
+    x:Name="RootPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
+    Title="Unified Calendar">
+
+    <ScrollView>
+        <VerticalStackLayout x:Name="PageContent"
+                             Padding="20,18,20,20"
+                             Spacing="14">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <controls:BackNavigationButton Command="{Binding Source={x:Reference RootPage}, Path=BackNavigationCommand}" />
+
+                <HorizontalStackLayout x:Name="CalendarTitleHost"
+                                       Grid.Column="1"
+                                       HorizontalOptions="Center"
+                                       Spacing="6">
+                    <Button x:Name="MonthButton"
+                            Clicked="OnMonthTitleClicked"
+                            FontAttributes="Bold"
+                            FontSize="28"
+                            Padding="0"
+                            TextColor="{StaticResource Gray950}">
+                        <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                    </Button>
+
+                    <Button x:Name="YearButton"
+                            Clicked="OnYearTitleClicked"
+                            FontAttributes="Bold"
+                            FontSize="28"
+                            Padding="0"
+                            TextColor="{StaticResource Gray950}">
+                        <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                    </Button>
+                </HorizontalStackLayout>
+
+                <Button Grid.Column="2"
+                        Clicked="OnOpenMyBookingsClicked"
+                        FontAttributes="Italic"
+                        FontSize="14"
+                        HorizontalOptions="End"
+                        Padding="0"
+                        Text="My bookings"
+                        TextColor="{StaticResource Gray500}">
+                    <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                </Button>
+            </Grid>
+
+            <Label x:Name="SelectedDayLabel"
+                   FontAttributes="Italic"
+                   FontSize="14"
+                   TextColor="{StaticResource Gray500}" />
+
+            <Border x:Name="CalendarCard"
+                    Padding="16,14"
+                    Stroke="{StaticResource SurfaceBorderColor}"
+                    StrokeShape="RoundRectangle 18">
+                <Border.GestureRecognizers>
+                    <SwipeGestureRecognizer Direction="Left"
+                                            Swiped="OnNextMonthSwiped" />
+                    <SwipeGestureRecognizer Direction="Right"
+                                            Swiped="OnPreviousMonthSwiped" />
+                </Border.GestureRecognizers>
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="10">
+                        <Label FontAttributes="Bold"
+                               FontSize="18"
+                               Text="Calendar" />
+
+                        <Button Grid.Column="1"
+                                x:Name="ToggleCalendarButton"
+                                Clicked="OnToggleCalendarClicked"
+                                FontSize="18"
+                                Padding="6"
+                                Text="^"
+                                TextColor="{StaticResource Gray950}">
+                            <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                        </Button>
+                    </Grid>
+
+                    <controls:AnimatedExpandView x:Name="CalendarBodyHost"
+                                                 AnimationName="calendar-body-rollup"
+                                                 IsExpanded="True">
+                        <VerticalStackLayout Spacing="10">
+                            <VerticalStackLayout x:Name="CalendarHost"
+                                                 Spacing="10" />
+
+                            <VerticalStackLayout x:Name="LegendHost"
+                                                 Spacing="8" />
+                        </VerticalStackLayout>
+                    </controls:AnimatedExpandView>
+                </VerticalStackLayout>
+            </Border>
+
+            <VerticalStackLayout x:Name="EventsHost"
+                                 Spacing="12" />
+
+            <Button Clicked="OnCreateEventClicked"
+                    FontSize="18"
+                    Padding="20,14"
+                    Text="+ Create Event" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

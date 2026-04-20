@@ -165,13 +165,13 @@ public partial class BattleboardPage : TabbedPage
 
     private void QueuePlatformTabLayoutRefresh()
     {
-        MainThread.BeginInvokeOnMainThread(async () =>
+        UiDispatchHelper.RunFireAndForget(async () =>
         {
-            await Task.Delay(10);
-            ApplyPlatformTabLayoutTweaks();
-            await Task.Delay(60);
-            ApplyPlatformTabLayoutTweaks();
-        });
+            await Task.Delay(10).ConfigureAwait(false);
+            await MainThread.InvokeOnMainThreadAsync(ApplyPlatformTabLayoutTweaks);
+            await Task.Delay(60).ConfigureAwait(false);
+            await MainThread.InvokeOnMainThreadAsync(ApplyPlatformTabLayoutTweaks);
+        }, "BATTLEBOARD_TAB_LAYOUT_REFRESH");
     }
 
     partial void ApplyPlatformTabLayoutTweaks();

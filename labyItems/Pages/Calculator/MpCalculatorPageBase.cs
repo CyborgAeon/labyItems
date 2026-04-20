@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,8 +10,13 @@ using System.Windows.Input;
 using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models.Enums;
+using labyItems.Pages.Configs;
 using labyItems.Pages;
 using labyItems.Services;
+using Microsoft.Maui.Graphics;
+using SpellCardPage = labyItems.Pages.SpellCard.SpellCard;
+using MiracleCardPage = labyItems.Pages.MiracleCard.MiracleCard;
+using EvocationCardPage = labyItems.Pages.EvocationCard.EvocationCard;
 
 namespace labyItems.Pages.Calculator;
 
@@ -23,7 +29,6 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     private bool _dataLoaded;
     private bool _isReady;
     private readonly ObservableCollection<ContributionRow> _breakdown = new();
-    private IReadOnlyList<DruidEvocationService.EvocRaw>? _evocationCatalogue;
 
     private const int DefaultRepelGoodEvilPerUse = 40;
     private const int DefaultRepelLifePerUse = 50;
@@ -48,6 +53,10 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     private static readonly string[] ApprenticeTypeChipOptions = { "🛡️ Shield", "🗡️ Weapon" };
     private static readonly string[] RepelGoodEvilChipOptions = { "👼 Good", "😈 Evil" };
 
+    private static readonly ConcurrentDictionary<Type, Task<Dictionary<string, SpellOption>>> SpellLookupCache = new();
+    private static readonly ConcurrentDictionary<Type, Task<Dictionary<string, MiracleOption>>> MiracleLookupCache = new();
+    private static Task<IReadOnlyList<DruidEvocationService.EvocRaw>>? _evocationCatalogueTask;
+
     public ObservableCollection<ContributionRow> Breakdown => _breakdown;
 
     public ICommand ContinueCommand => new Command(async () => await HandleSubmitAsync());
@@ -60,6 +69,9 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     }
     private int _totalMp;
 
+    private static readonly Color RowEvenColor = Colors.White;
+    private static readonly Color RowOddColor = Color.FromArgb("#F6F6F6");
+
     public ObservableCollection<SelectedItemUseVm<SpellOption>> SpellSelections { get; } = new();
     public ObservableCollection<SelectedItemUseVm<MiracleOption>> MiracleSelections { get; } = new();
     public ObservableCollection<SelectedItemUseVm<EvocationOption>> EvocationSelections { get; } = new();
@@ -71,6 +83,15 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     public ICommand AddSelectedSpellCommand { get; }
     public ICommand AddSelectedMiracleCommand { get; }
     public ICommand AddSelectedEvocationCommand { get; }
+    public ICommand EditSpellSelectionCommand { get; }
+    public ICommand EditMiracleSelectionCommand { get; }
+    public ICommand EditEvocationSelectionCommand { get; }
+    public ICommand ViewSpellInfoCommand { get; }
+    public ICommand ViewMiracleInfoCommand { get; }
+    public ICommand ViewEvocationInfoCommand { get; }
+    public ICommand DeleteSpellSelectionCommand { get; }
+    public ICommand DeleteMiracleSelectionCommand { get; }
+    public ICommand DeleteEvocationSelectionCommand { get; }
 
     public int SpellCount { get => _spellCount; set { if (SetProperty(ref _spellCount, value)) Recalculate(); } }
     private int _spellCount;
@@ -198,22 +219,34 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         AddSelectedSpellCommand = new Command<object?>(OnSpellResultSelected);
         AddSelectedMiracleCommand = new Command<object?>(OnMiracleResultSelected);
         AddSelectedEvocationCommand = new Command<object?>(OnEvocationResultSelected);
+        EditSpellSelectionCommand = new Command<object?>(OnEditSpellSelectionRequested);
+        EditMiracleSelectionCommand = new Command<object?>(OnEditMiracleSelectionRequested);
+        EditEvocationSelectionCommand = new Command<object?>(OnEditEvocationSelectionRequested);
+        ViewSpellInfoCommand = new Command<object?>(OnViewSpellInfoRequested);
+        ViewMiracleInfoCommand = new Command<object?>(OnViewMiracleInfoRequested);
+        ViewEvocationInfoCommand = new Command<object?>(OnViewEvocationInfoRequested);
+        DeleteSpellSelectionCommand = new Command<object?>(OnDeleteSpellSelectionRequested);
+        DeleteMiracleSelectionCommand = new Command<object?>(OnDeleteMiracleSelectionRequested);
+        DeleteEvocationSelectionCommand = new Command<object?>(OnDeleteEvocationSelectionRequested);
 
         SpellSelections.CollectionChanged += (_, __) =>
         {
             OnPropertyChanged(nameof(HasSpellSelections));
+            RefreshSelectionRowStyles(SpellSelections);
             Recalculate();
         };
 
         MiracleSelections.CollectionChanged += (_, __) =>
         {
             OnPropertyChanged(nameof(HasMiracleSelections));
+            RefreshSelectionRowStyles(MiracleSelections);
             Recalculate();
         };
 
         EvocationSelections.CollectionChanged += (_, __) =>
         {
             OnPropertyChanged(nameof(HasEvocationSelections));
+            RefreshSelectionRowStyles(EvocationSelections);
             Recalculate();
         };
 
@@ -235,6 +268,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
         LifeSliderControl.SelectedIndex = 0;
         _isReady = true;
         Recalculate();
+        _ = PrimeLookupCachesAsync();
     }
 
     private async Task HandleSubmitAsync()
@@ -284,6 +318,7 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
             return;
 
         _dataLoaded = true;
+        await Task.Yield();
 
         if (ShouldWarnWhenDbMissing && !await HasEvocationDataAsync())
         {
@@ -308,9 +343,10 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     private async Task LoadLookupDataAsync()
     {
-        await LoadSpellsAsync();
-        await LoadMiraclesAsync();
-        await LoadEvocationsAsync();
+        await Task.WhenAll(
+            LoadSpellsAsync(),
+            LoadMiraclesAsync(),
+            LoadEvocationsAsync());
     }
 
     protected virtual async Task LoadSpellsAsync()
@@ -351,36 +387,32 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     protected virtual async Task<Dictionary<string, SpellOption>> BuildSpellLookupAsync()
     {
-        var spells = (await SpellService.GetAllAsync())
-            .Where(ShouldIncludeSpell)
-            .OrderBy(s => s.level)
-            .ThenBy(s => s.name)
-            .Select(s =>
-            {
-                var option = new SpellOption(s.name, s.level, s.isAdvanced ?? false);
-                return new KeyValuePair<string, SpellOption>(FormatSpellLabel(option), option);
-            })
-            .GroupBy(k => k.Key, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
-
-        return spells;
+        var pageType = GetType();
+        var lookupTask = SpellLookupCache.GetOrAdd(pageType, _ => BuildSpellLookupCoreAsync());
+        try
+        {
+            return await lookupTask;
+        }
+        catch
+        {
+            SpellLookupCache.TryRemove(pageType, out _);
+            throw;
+        }
     }
 
     protected virtual async Task<Dictionary<string, MiracleOption>> BuildMiracleLookupAsync()
     {
-        var miracles = (await MiracleService.GetAllAsync())
-            .Where(ShouldIncludeMiracle)
-            .OrderBy(m => m.power)
-            .ThenBy(m => m.name)
-            .Select(m =>
-            {
-                var option = new MiracleOption(m.name, m.power, m.isAdvanced);
-                return new KeyValuePair<string, MiracleOption>(FormatMiracleLabel(option), option);
-            })
-            .GroupBy(k => k.Key, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
-
-        return miracles;
+        var pageType = GetType();
+        var lookupTask = MiracleLookupCache.GetOrAdd(pageType, _ => BuildMiracleLookupCoreAsync());
+        try
+        {
+            return await lookupTask;
+        }
+        catch
+        {
+            MiracleLookupCache.TryRemove(pageType, out _);
+            throw;
+        }
     }
 
     protected virtual async Task<Dictionary<string, EvocationOption>> FetchEvocationOptionsAsync(string query)
@@ -407,11 +439,57 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     private async Task<IReadOnlyList<DruidEvocationService.EvocRaw>> GetEvocationCatalogueAsync()
     {
-        if (_evocationCatalogue != null && _evocationCatalogue.Count > 0)
-            return _evocationCatalogue;
+        var task = _evocationCatalogueTask ??= EvocationCatalogService.GetAllAsync();
+        try
+        {
+            return await task;
+        }
+        catch
+        {
+            if (ReferenceEquals(_evocationCatalogueTask, task))
+                _evocationCatalogueTask = null;
+            throw;
+        }
+    }
 
-        _evocationCatalogue = await EvocationCatalogService.GetAllAsync();
-        return _evocationCatalogue;
+    private Task PrimeLookupCachesAsync()
+        => Task.WhenAll(
+            BuildSpellLookupAsync(),
+            BuildMiracleLookupAsync(),
+            GetEvocationCatalogueAsync());
+
+    private async Task<Dictionary<string, SpellOption>> BuildSpellLookupCoreAsync()
+    {
+        var spells = (await SpellService.GetAllAsync())
+            .Where(ShouldIncludeSpell)
+            .OrderBy(s => s.level)
+            .ThenBy(s => s.name)
+            .Select(s =>
+            {
+                var option = new SpellOption(s.name, s.level, s.isAdvanced ?? false);
+                return new KeyValuePair<string, SpellOption>(FormatSpellLabel(option), option);
+            })
+            .GroupBy(k => k.Key, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
+
+        return spells;
+    }
+
+    private async Task<Dictionary<string, MiracleOption>> BuildMiracleLookupCoreAsync()
+    {
+        var miracles = (await MiracleService.GetAllAsync())
+            .Where(ShouldIncludeMiracle)
+            .OrderBy(m => m.power)
+            .ThenBy(m => m.name)
+            .Select(m =>
+            {
+                var option = new MiracleOption(m.name, m.power, m.isAdvanced);
+                return new KeyValuePair<string, MiracleOption>(FormatMiracleLabel(option), option);
+            })
+            .GroupBy(k => k.Key, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
+
+        return miracles;
     }
 
     protected virtual bool ShouldIncludeSpell(SpellService.SpellRaw spell) => spell.level <= 6 && (spell.isAdvanced ?? false) == false;
@@ -447,57 +525,17 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
     private void AddOrIncrementSpell(SpellOption option)
     {
-        if (string.IsNullOrWhiteSpace(option.Name))
-            return;
-
-        var existing = SpellSelections.FirstOrDefault(s => s.Option.Equals(option));
-        if (existing != null)
-        {
-            existing.Uses++;
-            return;
-        }
-
-        SpellSelections.Add(new SelectedItemUseVm<SpellOption>(
-            option,
-            FormatSpellLabel(option),
-            OnSpellSelectionUsesChanged));
+        AddOrIncrementSelection(SpellSelections, option, FormatSpellLabel, OnSpellSelectionUsesChanged);
     }
 
     private void AddOrIncrementMiracle(MiracleOption option)
     {
-        if (string.IsNullOrWhiteSpace(option.Name))
-            return;
-
-        var existing = MiracleSelections.FirstOrDefault(s => s.Option.Equals(option));
-        if (existing != null)
-        {
-            existing.Uses++;
-            return;
-        }
-
-        MiracleSelections.Add(new SelectedItemUseVm<MiracleOption>(
-            option,
-            FormatMiracleLabel(option),
-            OnMiracleSelectionUsesChanged));
+        AddOrIncrementSelection(MiracleSelections, option, FormatMiracleLabel, OnMiracleSelectionUsesChanged);
     }
 
     private void AddOrIncrementEvocation(EvocationOption option)
     {
-        if (string.IsNullOrWhiteSpace(option.Name))
-            return;
-
-        var existing = EvocationSelections.FirstOrDefault(s => s.Option.Equals(option));
-        if (existing != null)
-        {
-            existing.Uses++;
-            return;
-        }
-
-        var label = $"{option.Name} ({option.Power}{(option.IsAdvanced ? " adv" : string.Empty)})";
-        EvocationSelections.Add(new SelectedItemUseVm<EvocationOption>(
-            option,
-            label,
-            OnEvocationSelectionUsesChanged));
+        AddOrIncrementSelection(EvocationSelections, option, FormatEvocationLabel, OnEvocationSelectionUsesChanged);
     }
 
     private void OnSpellSelectionUsesChanged(SelectedItemUseVm<SpellOption> entry)
@@ -523,6 +561,209 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
 
         Recalculate();
     }
+
+    private static void AddOrIncrementSelection<TOption>(
+        ObservableCollection<SelectedItemUseVm<TOption>> collection,
+        TOption option,
+        Func<TOption, string> displayNameFactory,
+        Action<SelectedItemUseVm<TOption>> onUsesChanged)
+        where TOption : struct
+    {
+        if (!HasNamedValue(option))
+            return;
+
+        var existing = collection.FirstOrDefault(s => s.Option.Equals(option));
+        if (existing != null)
+        {
+            existing.Uses++;
+            return;
+        }
+
+        collection.Add(new SelectedItemUseVm<TOption>(
+            option,
+            displayNameFactory(option),
+            onUsesChanged));
+    }
+
+    private static bool HasNamedValue<TOption>(TOption option)
+        where TOption : struct
+    {
+        var nameProperty = typeof(TOption).GetProperty("Name");
+        if (nameProperty?.GetValue(option) is string name)
+            return !string.IsNullOrWhiteSpace(name);
+
+        return true;
+    }
+
+    private async void OnEditSpellSelectionRequested(object? parameter)
+    {
+        if (parameter is not SelectedItemUseVm<SpellOption> entry)
+            return;
+
+        var page = new MpSelectionEditorPage<SpellOption>(
+            title: "Edit spell",
+            initialOption: entry.Option,
+            initialUses: entry.Uses,
+            placeholderText: "Search spells",
+            selectionDisplayMemberPath: nameof(SpellOption.Name),
+            displayNameFactory: FormatSpellLabel,
+            loadOptionsAsync: BuildSpellLookupAsync,
+            remoteSearchProvider: null,
+            applyChanges: (option, uses) => ApplyEditedSelection(SpellSelections, entry, option, uses, FormatSpellLabel));
+
+        await Navigation.PushModalAsync(new NavigationPage(page));
+    }
+
+    private async void OnEditMiracleSelectionRequested(object? parameter)
+    {
+        if (parameter is not SelectedItemUseVm<MiracleOption> entry)
+            return;
+
+        var page = new MpSelectionEditorPage<MiracleOption>(
+            title: "Edit miracle",
+            initialOption: entry.Option,
+            initialUses: entry.Uses,
+            placeholderText: "Search miracles",
+            selectionDisplayMemberPath: nameof(MiracleOption.Name),
+            displayNameFactory: FormatMiracleLabel,
+            loadOptionsAsync: BuildMiracleLookupAsync,
+            remoteSearchProvider: null,
+            applyChanges: (option, uses) => ApplyEditedSelection(MiracleSelections, entry, option, uses, FormatMiracleLabel));
+
+        await Navigation.PushModalAsync(new NavigationPage(page));
+    }
+
+    private async void OnEditEvocationSelectionRequested(object? parameter)
+    {
+        if (parameter is not SelectedItemUseVm<EvocationOption> entry)
+            return;
+
+        var page = new MpSelectionEditorPage<EvocationOption>(
+            title: "Edit evocation",
+            initialOption: entry.Option,
+            initialUses: entry.Uses,
+            placeholderText: "Search evocations",
+            selectionDisplayMemberPath: nameof(EvocationOption.Name),
+            displayNameFactory: FormatEvocationLabel,
+            loadOptionsAsync: () => FetchEvocationOptionsAsync(string.Empty),
+            remoteSearchProvider: FetchEvocationOptionsAsync,
+            applyChanges: (option, uses) => ApplyEditedSelection(EvocationSelections, entry, option, uses, FormatEvocationLabel));
+
+        await Navigation.PushModalAsync(new NavigationPage(page));
+    }
+
+    private async void OnViewSpellInfoRequested(object? parameter)
+    {
+        if (parameter is not SelectedItemUseVm<SpellOption> entry)
+            return;
+
+        var spell = await ResolveSpellAsync(entry.Option);
+        if (spell == null)
+            return;
+
+        await Navigation.PushModalAsync(new NavigationPage(new SpellCardPage(spell)));
+    }
+
+    private async void OnViewMiracleInfoRequested(object? parameter)
+    {
+        if (parameter is not SelectedItemUseVm<MiracleOption> entry)
+            return;
+
+        var miracle = await ResolveMiracleAsync(entry.Option);
+        if (miracle == null)
+            return;
+
+        await Navigation.PushModalAsync(new NavigationPage(new MiracleCardPage(miracle)));
+    }
+
+    private async void OnViewEvocationInfoRequested(object? parameter)
+    {
+        if (parameter is not SelectedItemUseVm<EvocationOption> entry)
+            return;
+
+        var evocation = await ResolveEvocationAsync(entry.Option);
+        if (evocation == null)
+            return;
+
+        await Navigation.PushModalAsync(new NavigationPage(new EvocationCardPage(evocation)));
+    }
+
+    private void OnDeleteSpellSelectionRequested(object? parameter)
+    {
+        if (parameter is SelectedItemUseVm<SpellOption> entry)
+            SpellSelections.Remove(entry);
+    }
+
+    private void OnDeleteMiracleSelectionRequested(object? parameter)
+    {
+        if (parameter is SelectedItemUseVm<MiracleOption> entry)
+            MiracleSelections.Remove(entry);
+    }
+
+    private void OnDeleteEvocationSelectionRequested(object? parameter)
+    {
+        if (parameter is SelectedItemUseVm<EvocationOption> entry)
+            EvocationSelections.Remove(entry);
+    }
+
+    private static void ApplyEditedSelection<TOption>(
+        ObservableCollection<SelectedItemUseVm<TOption>> collection,
+        SelectedItemUseVm<TOption> target,
+        TOption updatedOption,
+        int updatedUses,
+        Func<TOption, string> displayNameFactory)
+        where TOption : struct
+    {
+        var sanitizedUses = Math.Max(1, updatedUses);
+        var duplicate = collection.FirstOrDefault(item =>
+            !ReferenceEquals(item, target) && item.Option.Equals(updatedOption));
+
+        if (duplicate != null)
+        {
+            duplicate.Uses += sanitizedUses;
+            collection.Remove(target);
+            return;
+        }
+
+        target.Update(updatedOption, displayNameFactory(updatedOption), sanitizedUses);
+    }
+
+    private static void RefreshSelectionRowStyles<TOption>(ObservableCollection<SelectedItemUseVm<TOption>> collection)
+        where TOption : struct
+    {
+        for (var i = 0; i < collection.Count; i++)
+            collection[i].RowBackgroundColor = i % 2 == 0 ? RowEvenColor : RowOddColor;
+    }
+
+    private async Task<SpellService.SpellRaw?> ResolveSpellAsync(SpellOption option)
+    {
+        var spells = await SpellService.GetAllAsync();
+        return spells.FirstOrDefault(spell =>
+            string.Equals(spell.name, option.Name, StringComparison.OrdinalIgnoreCase)
+            && spell.level == option.Level
+            && (spell.isAdvanced ?? false) == option.IsAdvanced);
+    }
+
+    private async Task<MiracleService.MiracRaw?> ResolveMiracleAsync(MiracleOption option)
+    {
+        var miracles = await MiracleService.GetAllAsync();
+        return miracles.FirstOrDefault(miracle =>
+            string.Equals(miracle.name, option.Name, StringComparison.OrdinalIgnoreCase)
+            && miracle.power == option.Power
+            && miracle.isAdvanced == option.IsAdvanced);
+    }
+
+    private async Task<DruidEvocationService.EvocRaw?> ResolveEvocationAsync(EvocationOption option)
+    {
+        var evocations = await GetEvocationCatalogueAsync();
+        return evocations.FirstOrDefault(evocation =>
+            string.Equals(evocation.name, option.Name, StringComparison.OrdinalIgnoreCase)
+            && evocation.power == option.Power
+            && evocation.isAdvanced == option.IsAdvanced);
+    }
+
+    protected virtual string FormatEvocationLabel(EvocationOption option)
+        => $"{option.Name} ({option.Power}{(option.IsAdvanced ? " adv" : string.Empty)})";
 
     protected void OnLifeSelectionChanged(object sender, DictionarySelectionChangedEventArgs e)
     {
@@ -825,12 +1066,26 @@ public abstract partial class MpCalculatorPageBase : ContentPage, INotifyPropert
     #endregion
 }
 
-public sealed class SelectedItemUseVm<TOption> : INotifyPropertyChanged where TOption : struct
+public sealed class SelectedItemUseVm<TOption> : INotifyPropertyChanged, IConfigSelectionListItem where TOption : struct
 {
     private readonly Action<SelectedItemUseVm<TOption>> _onUsesChanged;
+    private string _displayName;
+    private Color _rowBackgroundColor = Colors.White;
 
-    public TOption Option { get; }
-    public string DisplayText { get; }
+    public TOption Option { get; private set; }
+    public string DisplayText => DisplayName;
+    public string DisplayName
+    {
+        get => _displayName;
+        private set
+        {
+            if (_displayName == value)
+                return;
+
+            _displayName = value;
+            OnPropertyChanged();
+        }
+    }
 
     private int _uses;
     public int Uses
@@ -844,7 +1099,23 @@ public sealed class SelectedItemUseVm<TOption> : INotifyPropertyChanged where TO
 
             _uses = sanitized;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(InlineSummary));
             _onUsesChanged(this);
+        }
+    }
+
+    public string InlineSummary => Uses == 1 ? "1 use assigned." : $"{Uses} uses assigned.";
+
+    public Color RowBackgroundColor
+    {
+        get => _rowBackgroundColor;
+        set
+        {
+            if (_rowBackgroundColor == value)
+                return;
+
+            _rowBackgroundColor = value;
+            OnPropertyChanged();
         }
     }
 
@@ -858,12 +1129,20 @@ public sealed class SelectedItemUseVm<TOption> : INotifyPropertyChanged where TO
         int initialUses = 1)
     {
         Option = option;
-        DisplayText = displayText ?? string.Empty;
+        _displayName = displayText ?? string.Empty;
         _onUsesChanged = onUsesChanged ?? (_ => { });
         _uses = Math.Max(1, initialUses);
 
         IncrementCommand = new Command(() => Uses++);
         DecrementCommand = new Command(() => Uses = Math.Max(0, Uses - 1));
+    }
+
+    public void Update(TOption option, string displayText, int uses)
+    {
+        Option = option;
+        DisplayName = displayText ?? string.Empty;
+        Uses = Math.Max(1, uses);
+        OnPropertyChanged(nameof(Option));
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

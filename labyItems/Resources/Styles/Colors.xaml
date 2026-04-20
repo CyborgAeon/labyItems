@@ -40,6 +40,12 @@
     <Color x:Key="OverlayBackdropColor">#66000000</Color>
     <Color x:Key="DividerShadowColor">#22000000</Color>
     <Color x:Key="PrimaryTextStrongColor">#1F2937</Color>
+    <Color x:Key="CalendarBookedPlayerColor">#A61E1E</Color>
+    <Color x:Key="CalendarBookedRefereeColor">#1F6F78</Color>
+    <Color x:Key="CalendarBookedARefColor">#8A5A13</Color>
+    <Color x:Key="CalendarBookedCrewColor">#4F46A5</Color>
+    <Color x:Key="CalendarDisabledColor">#D4D4D8</Color>
+    <Color x:Key="CalendarDisabledTextColor">#71717A</Color>
 
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>

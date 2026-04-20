@@ -3,6 +3,8 @@
     x:Class="labyItems.Pages.Calculator.General"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    x:Name="RootPage"
     Shell.NavBarIsVisible="False"
     NavigationPage.HasNavigationBar="False"
     Title="Select Abilities">
@@ -13,17 +15,8 @@
         <Grid Grid.Row="0"
               ColumnDefinitions="Auto,*"
               ColumnSpacing="8">
-            <ImageButton Grid.Column="0"
-                         AutomationProperties.Name="Back"
-                         Style="{StaticResource BackArrowImageButtonStyle}"
-                         Clicked="OnBackClicked">
-                <ImageButton.Source>
-                    <FontImageSource FontFamily="FASolid"
-                                     Glyph="&#xf060;"
-                                     Size="24"
-                                     Color="{StaticResource Gray300}"/>
-                </ImageButton.Source>
-            </ImageButton>
+            <controls:BackNavigationButton Grid.Column="0"
+                                           Command="{Binding Source={x:Reference RootPage}, Path=BackNavigationCommand}" />
             <Entry Grid.Column="1"
                    ClearButtonVisibility="WhileEditing"
                    Placeholder="Search abilities..."

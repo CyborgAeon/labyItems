@@ -136,7 +136,7 @@ public static class DruidEvocationService
             merged[item.name.Trim()] = item;
         }
 
-        foreach (var item in LoadFromDatabase())
+        foreach (var item in await Task.Run(() => LoadFromDatabase()))
         {
             if (string.IsNullOrWhiteSpace(item?.name))
                 continue;

@@ -6,6 +6,7 @@ using labyItems.Categories;
 using labyItems.Controls;
 using labyItems.Helpers;
 using labyItems.Models;
+using labyItems.Pages.Calculator.CalcNav;
 using labyItems.Services;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Devices;
@@ -24,6 +25,14 @@ public partial class IspCalculator : TabbedPage
     private double _lastMeasuredWidth;
     private bool _isHandlingBackTabSelection;
     private Page? _lastNonBackTab;
+    private bool _chromeConfigured;
+    private bool _iosChromePinned;
+    private readonly Dictionary<string, ContentPage> _tabPlaceholders = new(StringComparer.Ordinal);
+    private ArmourNav? _armourCategoryPage;
+    private WeaponConfigPage? _weaponCategoryPage;
+    private CharmNav? _charmCategoryPage;
+    private LifeConfigPage? _lifeCategoryPage;
+    private MoreNav? _moreCategoryPage;
 
     public ICommand? ReturnToFormCommand { get; set; }
     public ICommand RemoveContributionCommand { get; }
@@ -50,68 +59,42 @@ public partial class IspCalculator : TabbedPage
         Func<IspCalculationResult, Task>? onSave = null)
     {
         InitializeComponent();
-        TabbedPageChromeHelper.ApplyHiddenNavigation(this);
-        foreach (var page in Children)
-            TabbedPageChromeHelper.ConfigureTabPageChrome(page);
 
         _baseIsp = baseTotal;
         _onSave = onSave;
         Total = baseTotal;
 
-        ArmourCategoryPage.BindingContext = this;
-        CharmCategoryPage.BindingContext = this;
-        // Consumable tab temporarily removed per request:
-        // ConsumableCategoryPage.BindingContext = this;
-        LifeCategoryPage.BindingContext = this;
-        MoreCategoryPage.CalculatorContext = this;
-        WeaponCategoryPage.CalculatorContext = this;
-
-        ArmourCategoryPage.ContributionAdded += AddContribution;
-        WeaponCategoryPage.ContributionAdded += AddContribution;
-        CharmCategoryPage.ContributionAdded += AddContribution;
-        // Consumable tab temporarily removed per request:
-        // ConsumableCategoryPage.ContributionAdded += AddContribution;
-        LifeCategoryPage.ContributionAdded += AddContribution;
-        MoreCategoryPage.ContributionAdded += AddContribution;
-
         ReturnToFormCommand = new Command(async () => await ExecuteSaveAsync());
-        ArmourCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
-        CharmCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
-        // WeaponCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
-        // Consumable tab temporarily removed per request:
-        // ConsumableCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
-        LifeCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
-        MoreCategoryPage.ReturnToFormCommand = ReturnToFormCommand;
-
         RemoveContributionCommand = new Command<string>(RemoveContributionById);
+
         CurrentPageChanged += OnCurrentPageChanged;
-        CurrentPage = ArmourCategoryPage;
-        _lastNonBackTab = ArmourCategoryPage;
         Loaded += OnLoaded;
         SizeChanged += OnSizeChanged;
+
+        ConfigureChromeIfNeeded();
+        InitializeTabs();
 
         if (existingAbilities != null)
             SeedExisting(existingAbilities);
 
         UpdateTotal();
-        IosTabBarHelper.EnsurePinnedToTop(this);
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        TabbedPageChromeHelper.ApplyHiddenNavigation(this);
-        foreach (var page in Children)
-            TabbedPageChromeHelper.ConfigureTabPageChrome(page);
-        IosTabBarHelper.EnsurePinnedToTop(this);
+        ConfigureChromeIfNeeded();
+        EnsureIosChromePinned();
     }
 
     public void UpsertContribution(CalcContribution contribution) => AddContribution(contribution);
+
     private void AddContribution(CalcContribution contribution)
     {
         var existing = _contributions.FirstOrDefault(c => c.Id == contribution.Id);
         if (existing != null)
             _contributions.Remove(existing);
+
         _contributions.Add(contribution);
         UpdateTotal();
     }
@@ -120,16 +103,15 @@ public partial class IspCalculator : TabbedPage
     {
         _contributions.Clear();
         var baseAbility = abilities.FirstOrDefault(a =>
-            string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase)
-        );
+            string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase));
         _baseIsp = baseAbility?.TotalIsp ?? _baseIsp;
 
-        foreach (var a in abilities)
+        foreach (var ability in abilities)
         {
-            if (string.Equals(a.AbilityType, "Base", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(ability.AbilityType, "Base", StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            AddContribution(new CalcContribution(Guid.NewGuid().ToString(), a.AbilityType, a));
+            AddContribution(new CalcContribution(Guid.NewGuid().ToString(), ability.AbilityType, ability));
         }
     }
 
@@ -142,7 +124,6 @@ public partial class IspCalculator : TabbedPage
             SummaryText = BuildSummary(),
         };
 
-        // Legacy flow: calculator opened from ItemForm and expecting a callback result.
         if (_tcsCalc != null)
         {
             _tcsCalc.TrySetResult(result);
@@ -181,6 +162,7 @@ public partial class IspCalculator : TabbedPage
                 Isp = result.TotalIsp,
                 CreatedDate = DateTime.Now
             };
+
             var payload = ItemEmailService.BuildItemPayload(item, result.Abilities);
             item.PayloadJson = ItemEmailService.SerializeItemPayload(payload);
 
@@ -194,7 +176,12 @@ public partial class IspCalculator : TabbedPage
         }
     }
 
-    private void OnLoaded(object? sender, EventArgs e) => UpdateTabFontSize();
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        UpdateTabFontSize();
+        EnsureIosChromePinned();
+    }
+
     private void OnSizeChanged(object? sender, EventArgs e) => UpdateTabFontSize();
 
     private void OnCurrentPageChanged(object? sender, EventArgs e)
@@ -209,8 +196,8 @@ public partial class IspCalculator : TabbedPage
                 backTab: BackTab,
                 fallbackFactory: () =>
                 {
-                    if (Children.Contains(ArmourCategoryPage))
-                        return ArmourCategoryPage;
+                    if (_armourCategoryPage != null && Children.Contains(_armourCategoryPage))
+                        return _armourCategoryPage;
 
                     return Children.FirstOrDefault(page => !ReferenceEquals(page, BackTab));
                 },
@@ -220,8 +207,15 @@ public partial class IspCalculator : TabbedPage
             return;
         }
 
+        if (TryRealizeLazyTab(CurrentPage, out var realizedPage))
+        {
+            _lastNonBackTab = realizedPage;
+            EnsureIosChromePinned();
+            return;
+        }
+
         _lastNonBackTab = CurrentPage;
-        IosTabBarHelper.EnsurePinnedToTop(this);
+        EnsureIosChromePinned();
     }
 
     public async Task<IspCalculationResult?> GetResultAsync(INavigation nav)
@@ -282,9 +276,9 @@ public partial class IspCalculator : TabbedPage
                     AbilityName = "Manual ISP entry",
                     TotalIsp = _baseIsp,
                     Details = new() { ["source"] = "ItemForm" },
-                }
-            );
+                });
         }
+
         return list;
     }
 
@@ -318,23 +312,26 @@ public partial class IspCalculator : TabbedPage
         if (abilities == null)
             return ItemTypeEnum.None;
 
-        bool hasMagic = abilities.Any(a =>
+        if (abilities.Any(a =>
             string.Equals(a.AbilityType, "Spell", StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(a.AbilityType, "Magic", StringComparison.OrdinalIgnoreCase));
-        if (hasMagic)
+            string.Equals(a.AbilityType, "Magic", StringComparison.OrdinalIgnoreCase)))
+        {
             return ItemTypeEnum.Magic;
+        }
 
-        bool hasSpirit = abilities.Any(a =>
+        if (abilities.Any(a =>
             string.Equals(a.AbilityType, "Miracle", StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(a.AbilityType, "Spirit", StringComparison.OrdinalIgnoreCase));
-        if (hasSpirit)
+            string.Equals(a.AbilityType, "Spirit", StringComparison.OrdinalIgnoreCase)))
+        {
             return ItemTypeEnum.Spirit;
+        }
 
-        bool hasEarthpower = abilities.Any(a =>
+        if (abilities.Any(a =>
             string.Equals(a.AbilityType, "Evocation", StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(a.AbilityType, "Earthpower", StringComparison.OrdinalIgnoreCase));
-        if (hasEarthpower)
+            string.Equals(a.AbilityType, "Earthpower", StringComparison.OrdinalIgnoreCase)))
+        {
             return ItemTypeEnum.EarthPower;
+        }
 
         return ItemTypeEnum.Other;
     }
@@ -342,32 +339,28 @@ public partial class IspCalculator : TabbedPage
     private void RefreshBreakdown()
     {
         BreakdownItems.Clear();
-        int running = 0;
+        var running = 0;
 
         if (_baseIsp > 0)
         {
             running += _baseIsp;
-            BreakdownItems.Add(
-                new ContributionRow
-                {
-                    Id = "base",
-                    Text = $"Base ISP: {_baseIsp}",
-                    RunningTotal = running,
-                }
-            );
+            BreakdownItems.Add(new ContributionRow
+            {
+                Id = "base",
+                Text = $"Base ISP: {_baseIsp}",
+                RunningTotal = running,
+            });
         }
 
-        foreach (var c in _contributions)
+        foreach (var contribution in _contributions)
         {
-            running += c.Result.TotalIsp;
-            BreakdownItems.Add(
-                new ContributionRow
-                {
-                    Id = c.Id,
-                    Text = c.Result.Summary,
-                    RunningTotal = running,
-                }
-            );
+            running += contribution.Result.TotalIsp;
+            BreakdownItems.Add(new ContributionRow
+            {
+                Id = contribution.Id,
+                Text = contribution.Result.Summary,
+                RunningTotal = running,
+            });
         }
     }
 
@@ -390,16 +383,15 @@ public partial class IspCalculator : TabbedPage
 
     private void UpdateTabFontSize()
     {
-        double width = Width > 0
+        var width = Width > 0
             ? Width
             : DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
 
-        // Avoid excessive churn when size hasn't meaningfully changed
         if (Math.Abs(width - _lastMeasuredWidth) < 1 && _lastAppliedTabFontSize > 0)
             return;
 
         _lastMeasuredWidth = width;
-        double targetFontSize = CalculateTabFontSize(width);
+        var targetFontSize = CalculateTabFontSize(width);
 
         if (Math.Abs(targetFontSize - _lastAppliedTabFontSize) < 0.1)
             return;
@@ -413,18 +405,186 @@ public partial class IspCalculator : TabbedPage
         if (availableWidth <= 0 || Children.Count == 0)
             return 12;
 
-        double perTabWidth = availableWidth / Children.Count;
+        var perTabWidth = availableWidth / Children.Count;
 
-        // Scale font size linearly between small and large widths
         const double minFont = 11;
         const double maxFont = 14;
-        const double minWidth = 70;  // typical small-phone width per tab
-        const double maxWidth = 140; // roomy tablet width per tab
+        const double minWidth = 70;
+        const double maxWidth = 140;
 
-        double clamped = Math.Clamp(perTabWidth, minWidth, maxWidth);
-        double ratio = (clamped - minWidth) / (maxWidth - minWidth);
+        var clamped = Math.Clamp(perTabWidth, minWidth, maxWidth);
+        var ratio = (clamped - minWidth) / (maxWidth - minWidth);
 
         return Math.Round(minFont + (maxFont - minFont) * ratio, 1);
+    }
+
+    private void InitializeTabs()
+    {
+        Children.Clear();
+        Children.Add(BackTab);
+
+        var armourPage = GetOrCreateArmourCategoryPage();
+        Children.Add(armourPage);
+        Children.Add(CreateLazyTabPlaceholder("Weapon"));
+        Children.Add(CreateLazyTabPlaceholder("Charm"));
+        Children.Add(CreateLazyTabPlaceholder("Life"));
+        Children.Add(CreateLazyTabPlaceholder("More"));
+
+        CurrentPage = armourPage;
+        _lastNonBackTab = armourPage;
+    }
+
+    private void ConfigureChromeIfNeeded()
+    {
+        if (_chromeConfigured)
+            return;
+
+        TabbedPageChromeHelper.ApplyHiddenNavigation(this);
+        TabbedPageChromeHelper.ConfigureTabPageChrome(BackTab);
+        _chromeConfigured = true;
+    }
+
+    private void ConfigureTabPage(Page page) => TabbedPageChromeHelper.ConfigureTabPageChrome(page);
+
+    private void EnsureIosChromePinned()
+    {
+        if (_iosChromePinned)
+            return;
+
+        _iosChromePinned = true;
+        IosTabBarHelper.EnsurePinnedToTop(this);
+    }
+
+    private ContentPage CreateLazyTabPlaceholder(string title)
+    {
+        var placeholder = new ContentPage
+        {
+            Title = title,
+            Content = new Grid()
+        };
+
+        ConfigureTabPage(placeholder);
+        _tabPlaceholders[title] = placeholder;
+        return placeholder;
+    }
+
+    private bool TryRealizeLazyTab(Page? selectedPage, out Page realizedPage)
+    {
+        realizedPage = selectedPage ?? BackTab;
+        if (selectedPage == null)
+            return false;
+
+        var title = selectedPage.Title ?? string.Empty;
+        if (!_tabPlaceholders.TryGetValue(title, out var placeholder) || !ReferenceEquals(placeholder, selectedPage))
+            return false;
+
+        realizedPage = title switch
+        {
+            "Weapon" => GetOrCreateWeaponCategoryPage(),
+            "Charm" => GetOrCreateCharmCategoryPage(),
+            "Life" => GetOrCreateLifeCategoryPage(),
+            "More" => GetOrCreateMoreCategoryPage(),
+            _ => selectedPage
+        };
+
+        var index = Children.IndexOf(placeholder);
+        if (index < 0)
+            return false;
+
+        Children.RemoveAt(index);
+        Children.Insert(index, realizedPage);
+        _tabPlaceholders.Remove(title);
+        CurrentPage = realizedPage;
+        return true;
+    }
+
+    private ArmourNav GetOrCreateArmourCategoryPage()
+    {
+        if (_armourCategoryPage != null)
+            return _armourCategoryPage;
+
+        var page = new ArmourNav
+        {
+            Title = "Armour",
+            BindingContext = this,
+            ReturnToFormCommand = ReturnToFormCommand
+        };
+
+        page.ContributionAdded += AddContribution;
+        ConfigureTabPage(page);
+        _armourCategoryPage = page;
+        return page;
+    }
+
+    private WeaponConfigPage GetOrCreateWeaponCategoryPage()
+    {
+        if (_weaponCategoryPage != null)
+            return _weaponCategoryPage;
+
+        var page = new WeaponConfigPage
+        {
+            Title = "Weapon",
+            CalculatorContext = this
+        };
+
+        page.ContributionAdded += AddContribution;
+        ConfigureTabPage(page);
+        _weaponCategoryPage = page;
+        return page;
+    }
+
+    private CharmNav GetOrCreateCharmCategoryPage()
+    {
+        if (_charmCategoryPage != null)
+            return _charmCategoryPage;
+
+        var page = new CharmNav
+        {
+            Title = "Charm",
+            BindingContext = this,
+            ReturnToFormCommand = ReturnToFormCommand
+        };
+
+        page.ContributionAdded += AddContribution;
+        ConfigureTabPage(page);
+        _charmCategoryPage = page;
+        return page;
+    }
+
+    private LifeConfigPage GetOrCreateLifeCategoryPage()
+    {
+        if (_lifeCategoryPage != null)
+            return _lifeCategoryPage;
+
+        var page = new LifeConfigPage
+        {
+            Title = "Life",
+            BindingContext = this,
+            ReturnToFormCommand = ReturnToFormCommand
+        };
+
+        page.ContributionAdded += AddContribution;
+        ConfigureTabPage(page);
+        _lifeCategoryPage = page;
+        return page;
+    }
+
+    private MoreNav GetOrCreateMoreCategoryPage()
+    {
+        if (_moreCategoryPage != null)
+            return _moreCategoryPage;
+
+        var page = new MoreNav
+        {
+            Title = "More",
+            CalculatorContext = this,
+            ReturnToFormCommand = ReturnToFormCommand
+        };
+
+        page.ContributionAdded += AddContribution;
+        ConfigureTabPage(page);
+        _moreCategoryPage = page;
+        return page;
     }
 
     partial void ApplyPlatformTabFontSize(double fontSize);

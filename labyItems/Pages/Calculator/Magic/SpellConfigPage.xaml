@@ -9,18 +9,32 @@
   xmlns:calc="clr-namespace:labyItems.Pages.Calculator"
   x:Name="RootPage"
   Title="Configure Spells"
+  NavigationPage.HasNavigationBar="False"
+  Shell.NavBarIsVisible="False"
   x:TypeArguments="cfg:SpellConfig">
   <ContentPage.Resources>
     <ResourceDictionary>
       <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+      <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
     </ResourceDictionary>
   </ContentPage.Resources>
   <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0">
       <VerticalStackLayout Padding="20" Spacing="14">
-        <Label FontAttributes="Bold"
-               FontSize="20"
-               Text="Spells" />
+        <Grid ColumnDefinitions="Auto,*,Auto"
+              ColumnSpacing="8">
+          <controls:BackNavigationButton Command="{Binding Source={x:Reference RootPage}, Path=BackNavigationCommand}" />
+          <Label Grid.Column="1"
+                 FontAttributes="Bold"
+                 FontSize="28"
+                 HorizontalTextAlignment="Center"
+                 Text="Spells"
+                 VerticalTextAlignment="Center" />
+          <BoxView Grid.Column="2"
+                   WidthRequest="48"
+                   BackgroundColor="Transparent"
+                   InputTransparent="True" />
+        </Grid>
 
         <controls:DictionarySearchBar x:Name="SpellSearch"
                                       x:TypeArguments="calc:SpellSearchOption"
@@ -30,7 +44,8 @@
                                       SelectionDisplayMemberPath="Name"
                                       ResultSelectedCommand="{Binding Source={x:Reference RootPage}, Path=AddSelectedSpellCommand}"
                                       ClearAfterResultSelection="True"
-                                      KeyboardAvoidanceEnabled="True"/>
+                                      KeyboardAvoidanceEnabled="True"
+                                      IsEnabled="{Binding Source={x:Reference RootPage}, Path=IsLoading, Converter={StaticResource InverseBoolConverter}}"/>
 
         <Label Text="No spells selected yet."
                Opacity="0.7"
@@ -104,6 +119,22 @@
                                    LabelText="Turn any published spell mantic" />
       </VerticalStackLayout>
     </ScrollView>
+
+    <!-- Loading overlay -->
+    <Grid Grid.Row="0"
+          IsVisible="{Binding Source={x:Reference RootPage}, Path=IsLoading}"
+          BackgroundColor="{StaticResource White}"
+          Opacity="0.9">
+      <VerticalStackLayout VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           Spacing="16">
+        <ActivityIndicator IsRunning="{Binding Source={x:Reference RootPage}, Path=IsLoading}"
+                           Color="{StaticResource Primary}" />
+        <Label Text="Loading spells..."
+               FontAttributes="Bold"
+               HorizontalTextAlignment="Center" />
+      </VerticalStackLayout>
+    </Grid>
 
     <controls:StickyFooterControl Grid.Row="1"
                                   BreakdownItems="{Binding Source={x:Reference RootPage}, Path=FooterBreakdownItems}"
