@@ -4538,7 +4538,7 @@
           "Key": "ability.monk-locational-curing"
         },
         {
-          "Name": "Together 1/day",
+          "Name": "Together",
           "Type": "Innate",
           "Count": 1,
           "Effect": "Can only be used while on dungeon with another legion member, and is declared as a war cry. For 5 minutes gains immunity to one of the following: Fear, Emotion attacks, or Insanity.",
@@ -6366,23 +6366,24 @@
           "AbilityRef": "ability.guild.alguz.enlightened-i"
         },
         {
-          "Name": "Permanent Paladinic Bless (lost/reversed in the same circumstances as a Paladin)",
+          "Name": "Permanent Paladinic Bless",
           "Type": "Static",
           "Effect": "Permanent Paladinic Bless (lost/reversed in the same circumstances as a Paladin).",
           "Key": "ability.guild.alguz.permanent-paladinic-bless-lost-reversed-in-the-same-circumstances-as-a-paladin",
           "AbilityRef": "ability.guild.alguz.permanent-paladinic-bless-lost-reversed-in-the-same-circumstances-as-a-paladin"
         },
         {
-          "Name": "Gains +3/1 life in the style of a permanent Enhance Spirit",
-          "Type": "Static",
-          "Effect": "Gains +3/1 life in the style of a permanent Enhance Spirit.",
-          "Key": "ability.guild.alguz.gains-3-1-life-in-the-style-of-a-permanent-enhance-spirit",
+          "Name": "Gains +3/1 life",
+          "Type": "Life",
+          "Effect": "Gains +3/1 life",
+          "Source":"Miracle",
+          "Key": "ability.guild.alguz.gains-3-1-life",
           "AbilityRef": "ability.guild.alguz.gains-3-1-life-in-the-style-of-a-permanent-enhance-spirit"
         },
         {
-          "Name": "Blessed by the Alg 1/day",
+          "Name": "Blessed by the Alg",
           "Type": "Innate",
-          "Effect": "Blessed by the Alg 1/day: Acts as a mantic Walk Through Water self, but may be cast on other Alguz Kallah.",
+          "Effect": "1/day: Acts as a mantic Walk Through Water self, but may be cast on other Alguz Kallah.",
           "Count": 1,
           "Key": "ability.guild.alguz.blessed-by-the-alg-1-day",
           "AbilityRef": "ability.guild.alguz.blessed-by-the-alg-1-day"
@@ -6390,25 +6391,26 @@
       ],
       "Intermediate": [
         {
-          "Name": "Lay Believer Talthar (if already possessed for another faith this ability overrides that membership whilst active)",
+          "Name": "Lay Believer Talthar",
           "Type": "Static",
-          "Effect": "Lay Believer Talthar (if already possessed for another faith this ability overrides that membership whilst active).",
-          "Key": "ability.guild.alguz.lay-believer-talthar-if-already-possessed-for-another-faith-this-ability-overrides-that-membership-whilst-active",
-          "AbilityRef": "ability.guild.alguz.lay-believer-talthar-if-already-possessed-for-another-faith-this-ability-overrides-that-membership-whilst-active"
+          "Effect": "If lay-believer for another faith is possessed, this ability overrides that membership.",
+          "Key": "ability.guild.alguz.lay-believer-talthar",
+          "AbilityRef": "ability.guild.alguz.lay-believer-talthar"
         },
         {
-          "Name": "6/2 life total from +3/1 life above",
-          "Type": "Static",
-          "Effect": "6/2 life total from +3/1 life above.",
-          "Key": "ability.guild.alguz.6-2-life-total-from-3-1-life-above",
-          "AbilityRef": "ability.guild.alguz.6-2-life-total-from-3-1-life-above"
+          "Name": "+6/2 life",
+          "Type": "Life",
+          "Source":"Miracle",
+          "Effect": "+6/2 life total from +3/1 life above",
+          "Key": "ability.guild.alguz.6-2-life",
+          "AbilityRef": "ability.guild.alguz.6-2-life"
         },
         {
-          "Name": "Gains a second Blessed by the Alg, and both may now be used on anyone Goodly",
+          "Name": "Blessed by the Alg",
           "Type": "Innate",
           "Effect": "Gains a second Blessed by the Alg, and both may now be used on anyone Goodly.",
-          "Key": "ability.guild.alguz.blessed-by-the-alg-1-day",
-          "AbilityRef": "ability.guild.alguz.blessed-by-the-alg-1-day",
+          "Key": "ability.guild.alguz.blessed-by-the-alg",
+          "AbilityRef": "ability.guild.alguz.blessed-by-the-alg",
           "Count": 2
         }
       ],
@@ -6416,24 +6418,25 @@
         {
           "Name": "Word of Renewal",
           "Type": "Innate",
-          "Effect": "Word of Renewal: Gains Holy Word Renewal (as per the Paladin healing holy word) 1/day.",
+          "Effect": "Gains Holy Word Renewal (as per the Paladin healing holy word) 1/day.",
           "Count": 1,
           "Key": "ability.guild.alguz.word-of-renewal",
           "AbilityRef": "ability.guild.alguz.word-of-renewal"
         },
         {
-          "Name": "Can choose to lose both Blessed by the Alg and instead become unimpeded by Water (as per Aquatic Elf)",
+          "Name": "Unimpeded by Water",
           "Type": "Static",
           "Effect": "Can choose to lose both Blessed by the Alg and instead become unimpeded by Water (as per Aquatic Elf).",
-          "Key": "ability.guild.alguz.can-choose-to-lose-both-blessed-by-the-alg-and-instead-become-unimpeded-by-water-as-per-aquatic-elf",
-          "AbilityRef": "ability.guild.alguz.can-choose-to-lose-both-blessed-by-the-alg-and-instead-become-unimpeded-by-water-as-per-aquatic-elf"
+          "Key": "ability.guild.alguz.unimpeded-by-water",
+          "AbilityRef": "ability.guild.alguz.unimpeded-by-water"
         },
         {
-          "Name": "+12/4 life total from +6/2 life above, still as per an Enhanced Spirit",
-          "Type": "Static",
+          "Name": "+12/4 life",
+          "Type": "Life",
+          "Source":"Miracle",
           "Effect": "+12/4 life total from +6/2 life above, still as per an Enhanced Spirit.",
-          "Key": "ability.guild.alguz.12-4-life-total-from-6-2-life-above-still-as-per-an-enhanced-spirit",
-          "AbilityRef": "ability.guild.alguz.12-4-life-total-from-6-2-life-above-still-as-per-an-enhanced-spirit"
+          "Key": "ability.guild.alguz.12-4-life",
+          "AbilityRef": "ability.guild.alguz.12-4-life"
         }
       ]
     },
