@@ -12,8 +12,20 @@ public sealed partial class DocumentReferenceService
         var presenter = GetPresenter();
         var tcs = new TaskCompletionSource<DocumentReferenceCapture?>();
 
+        var supportedTypes = new[]
+        {
+            UTType.CreateFromIdentifier("public.image"),
+            UTType.CreateFromIdentifier("com.adobe.pdf")
+        }
+        .Where(type => type != null)
+        .Cast<UTType>()
+        .ToArray();
+
+        if (supportedTypes.Length == 0)
+            throw new InvalidOperationException("Unable to configure supported document types for iOS document picking.");
+
         var picker = new UIDocumentPickerViewController(
-            new[] { UTType.Image, UTType.Pdf },
+            supportedTypes,
             asCopy: false)
         {
             AllowsMultipleSelection = false,
