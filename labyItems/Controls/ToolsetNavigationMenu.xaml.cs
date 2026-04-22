@@ -13,8 +13,8 @@ namespace labyItems.Controls;
 public partial class ToolsetNavigationMenu : ContentView
 {
     private bool _isMenuAnimating;
-    private readonly Color _selectedBackground = Color.FromArgb("#EEF4FF");
-    private readonly Color _selectedText = Color.FromArgb("#183A70");
+    private readonly Color _selectedBackground = Color.FromRgba(127, 29, 29, 22);
+    private readonly Color _selectedText = Color.FromArgb("#111827");
     private readonly Color _defaultBackground = Colors.Transparent;
     private readonly Color _defaultText = Color.FromArgb("#111827");
 
@@ -85,37 +85,83 @@ public partial class ToolsetNavigationMenu : ContentView
     private async void OnHomeClicked(object sender, EventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemRoutePage()));
 
+    private async void OnHomeTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemRoutePage()));
+
     private async void OnOpenCalendarClicked(object sender, EventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new UnifiedCalendarPage()));
+
+    private async void OnOpenCalendarTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new UnifiedCalendarPage()));
 
     private async void OnMakeCharacterClicked(object sender, EventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new CharacterWalletPage()));
 
+    private async void OnMakeCharacterTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new CharacterWalletPage()));
+
     private async void OnCalculateIspClicked(object sender, EventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new IspCalculator(0)));
+
+    private async void OnCalculateIspTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new IspCalculator(0)));
 
     private async void OnCreateMpClicked(object sender, EventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MpCalculator()));
 
+    private async void OnCreateMpTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new MpCalculator()));
+
+    private async void OnScrollBuilderClicked(object sender, EventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ScrollBuilderPage()));
+
+    private async void OnScrollBuilderTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ScrollBuilderPage()));
+
     private async void OnSearchClicked(object sender, EventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage()));
+
+    private async void OnSearchTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GlobalSearchPage()));
 
     private async void OnGuildSearchClicked(object sender, EventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GuildSearchPage()));
 
+    private async void OnGuildSearchTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new GuildSearchPage()));
+
     private async void OnOpenNonStandardDashboardClicked(object sender, EventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new NonStandardWalletPage()));
+
+    private async void OnOpenNonStandardDashboardTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new NonStandardWalletPage()));
 
     private async void OnItemWalletClicked(object sender, EventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemWalletPage()));
 
+    private async void OnItemWalletTapped(object sender, TappedEventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new ItemWalletPage()));
+
     private async void OnInitiateTradeClicked(object sender, EventArgs e)
+        => await ExecuteNavigationAsync(() => Navigation.PushAsync(new TradePage()));
+
+    private async void OnInitiateTradeTapped(object sender, TappedEventArgs e)
         => await ExecuteNavigationAsync(() => Navigation.PushAsync(new TradePage()));
 
     private void OnItemsGroupClicked(object sender, EventArgs e)
         => ItemsExpanded = !ItemsExpanded;
 
+    private void OnItemsGroupTapped(object sender, TappedEventArgs e)
+        => ItemsExpanded = !ItemsExpanded;
+
     private async void OnSettingsClicked(object sender, EventArgs e)
+    {
+        var page = Application.Current?.Windows.FirstOrDefault()?.Page ?? Application.Current?.MainPage;
+        if (page != null)
+            await page.DisplayAlert("Settings", "Settings is not wired in yet.", "OK");
+    }
+
+    private async void OnSettingsTapped(object sender, TappedEventArgs e)
     {
         var page = Application.Current?.Windows.FirstOrDefault()?.Page ?? Application.Current?.MainPage;
         if (page != null)
@@ -201,6 +247,7 @@ public partial class ToolsetNavigationMenu : ContentView
         ApplyRowState(ItemsRow, SelectedRoute, IsItemsRoute);
         ApplyRowState(CalculateIspRow, ToolsetRouteKeys.ItemsIsp);
         ApplyRowState(CreateMpRow, ToolsetRouteKeys.ItemsMp);
+        ApplyRowState(ScrollBuilderRow, ToolsetRouteKeys.ScrollBuilder);
         ApplyRowState(ItemWalletRow, ToolsetRouteKeys.ItemsWallet);
         ApplyRowState(CreationsRow, ToolsetRouteKeys.NonStandard);
         ApplyRowState(CalendarRow, ToolsetRouteKeys.Calendar);
@@ -231,6 +278,7 @@ public partial class ToolsetNavigationMenu : ContentView
     private static bool IsItemsRoute(string? route)
         => string.Equals(route, ToolsetRouteKeys.ItemsIsp, StringComparison.OrdinalIgnoreCase)
            || string.Equals(route, ToolsetRouteKeys.ItemsMp, StringComparison.OrdinalIgnoreCase)
+           || string.Equals(route, ToolsetRouteKeys.ScrollBuilder, StringComparison.OrdinalIgnoreCase)
            || string.Equals(route, ToolsetRouteKeys.ItemsWallet, StringComparison.OrdinalIgnoreCase);
 
     private static IEnumerable<T> GetDescendants<T>(Element root) where T : Element

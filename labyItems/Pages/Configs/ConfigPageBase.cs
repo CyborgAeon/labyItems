@@ -122,12 +122,14 @@ public abstract class ConfigPageBase<TConfig> : ContentPage
 
     protected override bool OnBackButtonPressed()
     {
+        ResetConfig();
         Complete(null);
         return base.OnBackButtonPressed();
     }
 
     protected virtual async Task NavigateBackAsync()
     {
+        ResetConfig();
         Complete(null);
 
         if (Navigation?.NavigationStack?.Count > 1)

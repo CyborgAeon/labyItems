@@ -6,6 +6,7 @@ public static class ToolsetRouteKeys
     public const string Characters = "characters";
     public const string ItemsIsp = "items-isp";
     public const string ItemsMp = "items-mp";
+    public const string ScrollBuilder = "scroll-builder";
     public const string ItemsWallet = "items-wallet";
     public const string Battleboard = "battleboard";
     public const string NonStandard = "non-standard";

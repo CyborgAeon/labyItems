@@ -45,7 +45,9 @@ public partial class CharacterWalletPage : ContentPage
         foreach (var c in list)
             CharacterRows.Add(new CharacterWalletRowVm(c));
 
-        EmptyStateLabel.IsVisible = CharacterRows.Count == 0;
+        var hasNoCharacters = CharacterRows.Count == 0;
+        EmptyStateLabel.IsVisible = hasNoCharacters;
+        CreateCharacterButton.IsVisible = hasNoCharacters;
         // Force row container recreation to avoid stale recycled visual/input state after deep navigation.
         WalletView.ItemsSource = null;
         WalletView.ItemsSource = CharacterRows;
@@ -134,6 +136,9 @@ public partial class CharacterWalletPage : ContentPage
             LoadCharacters();
         }
     }
+
+    private async void OnAddCharacterClicked(object sender, EventArgs e)
+        => await Navigation.PushAsync(new Wizard(null, async () => await Navigation.PopAsync()));
 
     private static Character? ResolveCharacter(object sender)
     {

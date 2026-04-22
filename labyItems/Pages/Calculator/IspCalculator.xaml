@@ -26,27 +26,34 @@
                     </VerticalStackLayout>
                 </Grid>
 
-                <Border Padding="18"
-                        Stroke="{StaticResource SurfaceBorderColor}"
-                        StrokeShape="RoundRectangle 20">
-                    <VerticalStackLayout Spacing="12">
+                <VerticalStackLayout Spacing="12">
+                   <Grid ColumnDefinitions="*,Auto"
+                      ColumnSpacing="8">
                         <Label FontAttributes="Bold"
                                FontSize="18"
-                               Text="Item details" />
+                               Text="Item details"
+                               VerticalTextAlignment="Center" />
+                        <Button Grid.Column="1"
+                                Clicked="OnAddComponentClicked"
+                                HorizontalOptions="End"
+                                Padding="12,6"
+                                Text="+ Add component" />
+                   </Grid>
+
+                    <Grid ColumnDefinitions="*,*"
+                          ColumnSpacing="12">
                         <Entry Placeholder="Item name"
                                Text="{Binding Source={x:Reference Root}, Path=ItemName}" />
-                        <Entry Placeholder="Phys-rep"
+                        <Entry Grid.Column="1"
+                               Placeholder="Phys-rep"
                                Text="{Binding Source={x:Reference Root}, Path=PhysicalRepresentation}" />
-                    </VerticalStackLayout>
-                </Border>
+                    </Grid>
 
-                <Button Clicked="OnAddComponentClicked"
-                        CornerRadius="18"
-                        HeightRequest="52"
-                        Text="Add component" />
+                </VerticalStackLayout>
 
                 <CollectionView ItemsSource="{Binding Source={x:Reference Root}, Path=ComponentCards}"
-                                SelectionMode="None">
+                                SelectionMode="None"
+                                HeightRequest="220">
                     <CollectionView.EmptyView>
                         <Border Padding="18"
                                 Stroke="{StaticResource SurfaceBorderColor}"
@@ -57,88 +64,72 @@
                     </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border Padding="16"
-                                    Margin="0,0,0,12"
-                                    Stroke="{StaticResource SurfaceBorderColor}"
-                                    StrokeShape="RoundRectangle 18">
+                                                        <Border Padding="10,8"
+                                                                        Margin="0,0,0,8"
+                                                                        StrokeThickness="0"
+                                                                        StrokeShape="RoundRectangle 8"
+                                                                        BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}">
                                 <Grid ColumnDefinitions="*,Auto,Auto"
-                                      ColumnSpacing="10"
-                                      RowDefinitions="Auto,Auto,Auto">
-                                    <Label FontAttributes="Bold"
-                                           FontSize="18"
-                                           Text="{Binding Title}" />
+                                                                            ColumnSpacing="8">
+                                                                        <Label Text="{Binding AppliedConfigurationText}"
+                                                                                     FontSize="14"
+                                                                                     MaxLines="1"
+                                                                                     LineBreakMode="TailTruncation"
+                                                                                     VerticalTextAlignment="Center" />
                                     <Button Grid.Column="1"
                                             Clicked="OnEditComponentClicked"
                                             CommandParameter="{Binding .}"
                                             FontFamily="FASolid"
-                                            FontSize="16"
-                                            HeightRequest="36"
+                                            FontSize="12"
+                                            Padding="0"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource SubtleTextColor}"
+                                            HeightRequest="18"
                                             Text="&#xF1FC;"
-                                            WidthRequest="36" />
+                                            WidthRequest="18"
+                                            MinimumHeightRequest="0"
+                                            MinimumWidthRequest="0"
+                                            VerticalOptions="Center" />
                                     <Button Grid.Column="2"
                                             Clicked="OnDeleteComponentClicked"
                                             CommandParameter="{Binding .}"
                                             FontFamily="FASolid"
-                                            FontSize="16"
-                                            HeightRequest="36"
+                                            FontSize="12"
+                                            Padding="0"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource SubtleTextColor}"
+                                            HeightRequest="18"
                                             Text="&#xF2ED;"
-                                            WidthRequest="36" />
+                                            WidthRequest="18"
+                                            MinimumHeightRequest="0"
+                                            MinimumWidthRequest="0"
+                                            VerticalOptions="Center" />
 
-                                    <Label Grid.Row="1"
-                                           Grid.ColumnSpan="3"
-                                           Text="{Binding Summary}"
-                                           TextColor="{StaticResource Gray500}" />
-
-                                    <Label Grid.Row="2"
-                                           Grid.ColumnSpan="3"
-                                           FontAttributes="Bold"
-                                           Text="{Binding TotalText}" />
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <Border Padding="18"
-                        Stroke="{StaticResource SurfaceBorderColor}"
-                        StrokeShape="RoundRectangle 20">
-                    <VerticalStackLayout Spacing="12">
-                        <Grid ColumnDefinitions="*,Auto">
-                            <VerticalStackLayout Spacing="2">
-                                <Label FontAttributes="Bold"
-                                       FontSize="18"
-                                       Text="Total ISP" />
-                                <Label FontAttributes="Bold"
-                                       FontSize="20"
-                                       Text="{Binding Source={x:Reference Root}, Path=FormattedTotal}" />
-                            </VerticalStackLayout>
-                            <Button Grid.Column="1"
-                                    Clicked="OnToggleBreakdownClicked"
-                                    FontFamily="FASolid"
-                                    FontSize="14"
-                                    HeightRequest="36"
-                                    Text="{Binding Source={x:Reference Root}, Path=BreakdownChevronGlyph}"
-                                    WidthRequest="36" />
-                        </Grid>
-
-                        <controls:AnimatedExpandView IsExpanded="{Binding Source={x:Reference Root}, Path=IsBreakdownExpanded}">
-                            <CollectionView ItemsSource="{Binding Source={x:Reference Root}, Path=BreakdownItems}"
-                                            SelectionMode="None">
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid ColumnDefinitions="*,Auto"
-                                              Padding="0,4">
-                                            <Label Text="{Binding Text}" />
-                                            <Label Grid.Column="1"
-                                                   Text="{Binding RunningTotal}"
-                                                   TextColor="{StaticResource Gray500}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-                        </controls:AnimatedExpandView>
-                    </VerticalStackLayout>
-                </Border>
+                <controls:ExpandableSectionCard HeaderText="{Binding Source={x:Reference Root}, Path=FormattedTotal}"
+                                                IsExpanded="{Binding Source={x:Reference Root}, Path=IsBreakdownExpanded}">
+                    <controls:ExpandableSectionCard.BodyContent>
+                        <CollectionView ItemsSource="{Binding Source={x:Reference Root}, Path=BreakdownItems}"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          Padding="0,4">
+                                        <Label Text="{Binding Text}" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding RunningTotal}"
+                                               TextColor="{StaticResource Gray500}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </controls:ExpandableSectionCard.BodyContent>
+                </controls:ExpandableSectionCard>
 
                 <Grid ColumnDefinitions="*,*"
                       ColumnSpacing="12">

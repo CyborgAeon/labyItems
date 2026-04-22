@@ -24,11 +24,23 @@ public partial class Guilds : ContentView
         typeof(Guilds),
         false);
 
+    public static readonly BindableProperty HeaderLeadingViewProperty = BindableProperty.Create(
+        nameof(HeaderLeadingView),
+        typeof(View),
+        typeof(Guilds),
+        null,
+        propertyChanged: static (bindable, _, newValue) =>
+        {
+            if (bindable is Guilds guilds)
+                guilds.UpdateHeaderLeadingView(newValue as View);
+        });
+
     public Guilds(GuildsVm vm)
     {
         InitializeComponent();
         BindingContext = vm;
         ToggleExpandedCommand = new Command<GuildCardVm>(item => _ = HandleToggleExpandedAsync(item));
+        UpdateHeaderLeadingView(HeaderLeadingView);
     }
 
     public bool ShowBackButton
@@ -49,7 +61,22 @@ public partial class Guilds : ContentView
         set => SetValue(UseTypePillsProperty, value);
     }
 
+    public View? HeaderLeadingView
+    {
+        get => (View?)GetValue(HeaderLeadingViewProperty);
+        set => SetValue(HeaderLeadingViewProperty, value);
+    }
+
     public ICommand ToggleExpandedCommand { get; }
+
+    private void UpdateHeaderLeadingView(View? view)
+    {
+        if (HeaderLeadingHost == null)
+            return;
+
+        HeaderLeadingHost.Content = view;
+        HeaderLeadingHost.IsVisible = view != null;
+    }
 
     private async Task HandleToggleExpandedAsync(GuildCardVm? item)
     {

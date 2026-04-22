@@ -25,6 +25,7 @@ public partial class LifeConfigPage : ContentPage
 
     public LifeConfigPage()
     {
+        BackNavigationCommand = new Command(async () => await NavigateBackAsync());
         InitializeComponent();
         ComputeTotal();
         // Default mapping (your keys/values)
@@ -56,6 +57,8 @@ public partial class LifeConfigPage : ContentPage
         get => (ICommand?)GetValue(ReturnToFormCommandProperty);
         set => SetValue(ReturnToFormCommandProperty, value);
     }
+
+    public ICommand BackNavigationCommand { get; }
 
     private async Task OnReturnCommand()
     {
@@ -110,5 +113,17 @@ public partial class LifeConfigPage : ContentPage
                 OnRemove: ResetSelection
             )
         );
+    }
+
+    private async Task NavigateBackAsync()
+    {
+        if (Navigation?.NavigationStack?.Count > 1)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        if (Shell.Current != null)
+            await Shell.Current.GoToAsync("..");
     }
 }

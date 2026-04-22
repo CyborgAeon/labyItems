@@ -25,12 +25,17 @@
                 Padding="18,22"
                 Stroke="{StaticResource SurfaceBorderColor}"
                 StrokeThickness="1"
-            StrokeShape="RoundRectangle 0,28,28,0">
+                >
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,28,28,0" />
+            </Border.StrokeShape>
             <ScrollView>
                 <VerticalStackLayout Spacing="14">
                     <Grid ColumnDefinitions="*,Auto">
                         <Label FontAttributes="Bold"
                                FontSize="26"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
                                Text="Navigate"
                                VerticalTextAlignment="Center" />
                         <Button Grid.Column="1"
@@ -47,6 +52,9 @@
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnHomeTapped" />
+                        </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
@@ -54,10 +62,11 @@
                                    Text="&#xF015;"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
-                            <Button Grid.Column="1"
-                                    Clicked="OnHomeClicked"
-                                    HorizontalOptions="Center"
-                                    Text="Home" />
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Home"
+                                   VerticalTextAlignment="Center" />
                             <Label Grid.Column="2"
                                    Opacity="0"
                                    Text="v" />
@@ -68,6 +77,9 @@
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMakeCharacterTapped" />
+                        </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
@@ -75,10 +87,11 @@
                                    Text="&#xF007;"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
-                            <Button Grid.Column="1"
-                                    Clicked="OnMakeCharacterClicked"
-                                    HorizontalOptions="Center"
-                                    Text="Characters" />
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Characters"
+                                   VerticalTextAlignment="Center" />
                             <Label Grid.Column="2"
                                    Opacity="0"
                                    Text="v" />
@@ -96,10 +109,15 @@
                                        Text="&#xF468;"
                                        HorizontalTextAlignment="Center"
                                        VerticalTextAlignment="Center" />
-                                <Button Grid.Column="1"
-                                        Clicked="OnItemsGroupClicked"
-                                        HorizontalOptions="Center"
-                                        Text="Items" />
+                                <Label Grid.Column="1"
+                                       HorizontalOptions="Fill"
+                                       HorizontalTextAlignment="Start"
+                                       Text="Items"
+                                       VerticalTextAlignment="Center">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnItemsGroupTapped" />
+                                    </Label.GestureRecognizers>
+                                </Label>
                                 <Button Grid.Column="2"
                                         Clicked="OnItemsGroupClicked"
                                         FontFamily="FASolid"
@@ -118,25 +136,49 @@
                                             Padding="10,8"
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
-                                        <Button Clicked="OnCalculateIspClicked"
-                                                HorizontalOptions="Fill"
-                                                Text="Calculate ISP" />
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnCalculateIspTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Label HorizontalOptions="Fill"
+                                               HorizontalTextAlignment="Start"
+                                               Text="Calculate ISP"
+                                               VerticalTextAlignment="Center" />
                                     </Border>
                                     <Border x:Name="CreateMpRow"
                                             Padding="10,8"
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
-                                        <Button Clicked="OnCreateMpClicked"
-                                                HorizontalOptions="Fill"
-                                                Text="Create MP Item" />
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnCreateMpTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Label HorizontalOptions="Fill"
+                                               HorizontalTextAlignment="Start"
+                                               Text="Create MP Item"
+                                               VerticalTextAlignment="Center" />
+                                    </Border>
+                                    <Border x:Name="ScrollBuilderRow"
+                                            Padding="10,8"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnScrollBuilderTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Label HorizontalOptions="Fill"
+                                               HorizontalTextAlignment="Start"
+                                               Text="scroll builder"
+                                               VerticalTextAlignment="Center" />
                                     </Border>
                                     <Border x:Name="ItemWalletRow"
                                             Padding="10,8"
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 14">
-                                        <Button Clicked="OnItemWalletClicked"
-                                                HorizontalOptions="Fill"
-                                                Text="Item Wallet" />
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnItemWalletTapped" />
+                                        </Border.GestureRecognizers>
+                                        <Label HorizontalOptions="Fill"
+                                               HorizontalTextAlignment="Start"
+                                               Text="Item Wallet"
+                                               VerticalTextAlignment="Center" />
                                     </Border>
                                 </VerticalStackLayout>
                             </controls:AnimatedExpandView>
@@ -147,6 +189,9 @@
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnOpenNonStandardDashboardTapped" />
+                        </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
@@ -154,10 +199,11 @@
                                    Text="&#xF53F;"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
-                            <Button Grid.Column="1"
-                                    Clicked="OnOpenNonStandardDashboardClicked"
-                                    HorizontalOptions="Center"
-                                    Text="Creations" />
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Creations"
+                                   VerticalTextAlignment="Center" />
                             <Label Grid.Column="2"
                                    Opacity="0"
                                    Text="v" />
@@ -168,6 +214,9 @@
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnOpenCalendarTapped" />
+                        </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
@@ -175,10 +224,11 @@
                                    Text="&#xF073;"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
-                            <Button Grid.Column="1"
-                                    Clicked="OnOpenCalendarClicked"
-                                    HorizontalOptions="Center"
-                                    Text="Calendar" />
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Calendar"
+                                   VerticalTextAlignment="Center" />
                             <Label Grid.Column="2"
                                    Opacity="0"
                                    Text="v" />
@@ -189,6 +239,9 @@
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSearchTapped" />
+                        </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
@@ -196,10 +249,11 @@
                                    Text="&#xF002;"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
-                            <Button Grid.Column="1"
-                                    Clicked="OnSearchClicked"
-                                    HorizontalOptions="Center"
-                                    Text="Search" />
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Search"
+                                   VerticalTextAlignment="Center" />
                             <Label Grid.Column="2"
                                    Opacity="0"
                                    Text="v" />
@@ -210,6 +264,9 @@
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnGuildSearchTapped" />
+                        </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
@@ -217,10 +274,11 @@
                                    Text="&#xF0C0;"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
-                            <Button Grid.Column="1"
-                                    Clicked="OnGuildSearchClicked"
-                                    HorizontalOptions="Center"
-                                    Text="Guilds" />
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Guilds"
+                                   VerticalTextAlignment="Center" />
                             <Label Grid.Column="2"
                                    Opacity="0"
                                    Text="v" />
@@ -231,6 +289,9 @@
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnInitiateTradeTapped" />
+                        </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
@@ -238,10 +299,11 @@
                                    Text="&#xF362;"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
-                            <Button Grid.Column="1"
-                                    Clicked="OnInitiateTradeClicked"
-                                    HorizontalOptions="Center"
-                                    Text="Trade" />
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Trade"
+                                   VerticalTextAlignment="Center" />
                             <Label Grid.Column="2"
                                    Opacity="0"
                                    Text="v" />
@@ -252,6 +314,9 @@
                             Padding="12,10"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSettingsTapped" />
+                        </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="28,*,24"
                               ColumnSpacing="8">
                             <Label FontFamily="FASolid"
@@ -259,10 +324,11 @@
                                    Text="&#xF013;"
                                    HorizontalTextAlignment="Center"
                                    VerticalTextAlignment="Center" />
-                            <Button Grid.Column="1"
-                                    Clicked="OnSettingsClicked"
-                                    HorizontalOptions="Center"
-                                    Text="Settings" />
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Fill"
+                                   HorizontalTextAlignment="Start"
+                                   Text="Settings"
+                                   VerticalTextAlignment="Center" />
                             <Label Grid.Column="2"
                                    Opacity="0"
                                    Text="v" />

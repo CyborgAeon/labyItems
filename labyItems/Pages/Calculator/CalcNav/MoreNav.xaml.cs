@@ -90,6 +90,8 @@ public partial class MoreNav : ContentPage
         set => SetValue(CalculatorContextProperty, value);
     }
 
+    public ICommand BackNavigationCommand { get; }
+
     public string? SelectedStatus
     {
         get => _selectedStatus;
@@ -292,9 +294,22 @@ public partial class MoreNav : ContentPage
 
     public MoreNav()
     {
+        BackNavigationCommand = new Command(async () => await NavigateBackAsync());
         InitializeComponent();
         BindingContext = this;
         PublishContribution();
+    }
+
+    private async Task NavigateBackAsync()
+    {
+        if (Navigation?.NavigationStack?.Count > 1)
+        {
+            await Navigation.PopAsync();
+            return;
+        }
+
+        if (Shell.Current != null)
+            await Shell.Current.GoToAsync("..");
     }
 
     private bool SetAndPublish<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)

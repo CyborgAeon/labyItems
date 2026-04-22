@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="labyItems.Pages.ItemWalletPage"
+    x:Name="RootPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
     Title="Item Wallet">
     <Grid Padding="16"
           RowDefinitions="Auto,*"
           RowSpacing="8">
-        <Label x:Name="EmptyItemWalletLabel"
-               Grid.Row="0"
-               Text="No saved items yet."
-               Opacity="0.7"
-               IsVisible="False"/>
+        <VerticalStackLayout Grid.Row="0"
+                             Spacing="8">
+            <Grid ColumnDefinitions="Auto,*"
+                  ColumnSpacing="8">
+                <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                <Label Grid.Column="1"
+                       Text="Item Wallet"
+                       FontAttributes="Bold"
+                       FontSize="24"
+                       VerticalTextAlignment="Center" />
+            </Grid>
+
+            <Label x:Name="EmptyItemWalletLabel"
+                   Text="No saved items yet."
+                   Opacity="0.7"
+                   IsVisible="False"/>
+        </VerticalStackLayout>
 
         <CollectionView x:Name="ItemWalletView"
                         Grid.Row="1"
@@ -98,5 +114,9 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
+        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                        Grid.RowSpan="2"
+                                        SelectedRoute="{x:Static controls:ToolsetRouteKeys.ItemsWallet}" />
     </Grid>
 </ContentPage>

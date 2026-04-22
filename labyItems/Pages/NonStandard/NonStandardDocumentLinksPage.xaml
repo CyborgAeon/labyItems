@@ -63,10 +63,6 @@
                                         <Label Text="{Binding MetaText}"
                                                FontSize="12"
                                                Opacity="0.7" />
-                                        <Label Text="{Binding FilePath}"
-                                               FontSize="12"
-                                               LineBreakMode="CharacterWrap"
-                                               Opacity="0.58" />
                                     </VerticalStackLayout>
 
                                     <Button Grid.Column="1"

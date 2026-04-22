@@ -7,7 +7,6 @@
   xmlns:conv="clr-namespace:labyItems.Converters"
   xmlns:enums="clr-namespace:labyItems.Models.Enums"
   xmlns:calc="clr-namespace:labyItems.Pages.Calculator"
-  xmlns:toolset="clr-namespace:labyItems.Controls"
   x:Name="RootPage"
   Title="Configure Spells"
   NavigationPage.HasNavigationBar="False"
@@ -25,7 +24,7 @@
       <VerticalStackLayout Padding="20" Spacing="14">
         <Grid ColumnDefinitions="Auto,*"
               ColumnSpacing="8">
-          <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+          <controls:BackNavigationButton Command="{Binding Source={x:Reference RootPage}, Path=BackNavigationCommand}" />
           <Label Grid.Column="1"
                  FontAttributes="Bold"
                  FontSize="28"
@@ -141,7 +140,5 @@
                                   ReturnCommandParameter="{x:Reference RootPage}"
                                   Total="{Binding Source={x:Reference RootPage}, Path=FooterRunningTotal}" />
     </Grid>
-    <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
-                                    SelectedRoute="{x:Static toolset:ToolsetRouteKeys.ItemsIsp}" />
   </Grid>
 </cfg:ConfigPageBase>

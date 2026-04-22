@@ -560,6 +560,9 @@ public partial class IspCalculator : ContentPage
         public Action? ResetAction { get; }
         public string Summary => (_result.Summary ?? string.Empty).Split('\n').FirstOrDefault()?.Trim() ?? string.Empty;
         public string TotalText => $"ISP: {_result.TotalIsp}";
+        public string AppliedConfigurationText => string.IsNullOrWhiteSpace(Summary)
+            ? TotalText
+            : Summary;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -569,6 +572,7 @@ public partial class IspCalculator : ContentPage
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Result)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Summary)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalText)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AppliedConfigurationText)));
         }
 
         public void Reset()

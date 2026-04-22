@@ -17,11 +17,11 @@
           <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
 
           <Label Grid.Column="1"
-                 FontAttributes="Italic"
-                 FontSize="14"
-                 HorizontalTextAlignment="End"
-                 Text="Laby tools"
-                 TextColor="{StaticResource Gray500}"
+                 FontAttributes="Bold"
+                 FontSize="24"
+                 HorizontalOptions="Start"
+                 Text="Home"
+                 TextColor="{StaticResource Gray950}"
                  VerticalTextAlignment="Center" />
         </Grid>
 
@@ -30,10 +30,6 @@
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 24">
           <VerticalStackLayout Spacing="10">
-            <Label FontAttributes="Bold"
-                   FontSize="34"
-                   Text="Home"
-                   TextColor="{StaticResource White}" />
             <Label FontSize="18"
                    Text="Welcome back, admin."
                    TextColor="{StaticResource White}" />

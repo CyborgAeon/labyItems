@@ -6,6 +6,8 @@
        xmlns:controls="clr-namespace:labyItems.Controls"
        xmlns:trade="clr-namespace:labyItems.Pages.Trade"
        x:Name="RootPage"
+       NavigationPage.HasNavigationBar="False"
+       Shell.NavBarIsVisible="False"
        Title="Initiate Trade">
        <ContentPage.Resources>
               <DataTemplate x:Key="TradeEntryTemplate"
@@ -92,9 +94,21 @@
               </DataTemplate>
        </ContentPage.Resources>
 
-       <Grid RowDefinitions="Auto,*"
+       <Grid RowDefinitions="Auto,Auto,*"
              RowSpacing="0">
-              <VerticalStackLayout Grid.Row="0"
+              <Grid Grid.Row="0"
+                    Padding="16,12,16,8"
+                    ColumnDefinitions="Auto,*"
+                    ColumnSpacing="8">
+                     <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                     <Label Grid.Column="1"
+                            Text="Trade"
+                            FontAttributes="Bold"
+                            FontSize="24"
+                            VerticalTextAlignment="Center" />
+              </Grid>
+
+              <VerticalStackLayout Grid.Row="1"
                                    Padding="10,6,10,8"
                                    Spacing="6">
                      <Label Text="Search spells, miracles, evocations"
@@ -138,7 +152,7 @@
                      </Grid>
               </VerticalStackLayout>
 
-              <Grid Grid.Row="1"
+              <Grid Grid.Row="2"
                     RowDefinitions="1,*"
                     ColumnDefinitions="*,1,*"
                     RowSpacing="0"
@@ -174,5 +188,9 @@
                             </CollectionView.ItemsLayout>
                      </CollectionView>
               </Grid>
+
+              <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                              Grid.RowSpan="3"
+                                              SelectedRoute="{x:Static controls:ToolsetRouteKeys.Trade}" />
        </Grid>
 </ContentPage>

@@ -1,25 +1,50 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="labyItems.Pages.Characters.CharacterWalletPage"
+    x:Name="RootPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Character Wallet">
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
+    Title="Characters">
 
-    <ContentPage.Content>
-        <Grid RowDefinitions="Auto,*"
-              Padding="16,8,16,8"
-              RowSpacing="0">
-            <Label Grid.Row="0"
-                   x:Name="EmptyStateLabel"
-                   Text="No characters saved yet."
-                   Opacity="0.7"
-                   Margin="0,0,0,8"
-                   IsVisible="False"/>
+    <Grid RowDefinitions="Auto,*"
+          Padding="16,8,16,8"
+          RowSpacing="0">
+        <VerticalStackLayout Grid.Row="0"
+                             Spacing="8"
+                             Margin="0,0,0,8">
+                <Grid ColumnDefinitions="Auto,*,Auto"
+                      ColumnSpacing="8">
+                    <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                    <Label Grid.Column="1"
+                           Text="Characters"
+                           FontAttributes="Bold"
+                           FontSize="24"
+                           VerticalTextAlignment="Center" />
+                    <Button Grid.Column="2"
+                            Text="+"
+                            Clicked="OnAddCharacterClicked"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            Padding="0" />
+                </Grid>
 
-            <CollectionView x:Name="WalletView"
-                            Grid.Row="1"
-                            SelectionMode="None"
-                            ItemsSource="{Binding CharacterRows}">
+                <Label x:Name="EmptyStateLabel"
+                       Text="No characters saved yet."
+                       Opacity="0.7"
+                       IsVisible="False"/>
+                <Button x:Name="CreateCharacterButton"
+                        Text="Create a character"
+                        Clicked="OnAddCharacterClicked"
+                        IsVisible="False"/>
+        </VerticalStackLayout>
+
+        <CollectionView x:Name="WalletView"
+                Grid.Row="1"
+                        SelectionMode="None"
+                        ItemsSource="{Binding CharacterRows}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame Margin="0,0,0,12"
@@ -166,7 +191,10 @@
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-            </CollectionView>
-        </Grid>
-    </ContentPage.Content>
+        </CollectionView>
+
+        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                        Grid.RowSpan="2"
+                                        SelectedRoute="{x:Static controls:ToolsetRouteKeys.Characters}" />
+    </Grid>
 </ContentPage>

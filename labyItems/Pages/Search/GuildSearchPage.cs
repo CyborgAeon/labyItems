@@ -1,12 +1,11 @@
 using labyItems.Models.Characters;
 using labyItems.Pages.Characters;
+using labyItems.Controls;
 
 namespace labyItems.Pages.Search;
 
 public sealed class GuildSearchPage : ContentPage
 {
-    private bool _isNavigatingBack;
-
     public GuildSearchPage()
     {
         Shell.SetNavBarIsVisible(this, false);
@@ -20,34 +19,31 @@ public sealed class GuildSearchPage : ContentPage
             searchByNameOnly: true,
             useMultiTypeFilters: true);
 
-        Content = new Guilds(vm)
+        var guilds = new Guilds(vm)
         {
-            ShowBackButton = true,
-            UseTypePills = true,
-            BackCommand = new Command(async () => await NavigateBackAsync())
+            ShowBackButton = false,
+            UseTypePills = true
         };
-    }
 
-    private async Task NavigateBackAsync()
-    {
-        if (_isNavigatingBack)
-            return;
-
-        _isNavigatingBack = true;
-        try
+        var menu = new ToolsetNavigationMenu
         {
-            if (Navigation.NavigationStack.Count > 1)
+            SelectedRoute = ToolsetRouteKeys.Guilds
+        };
+
+        guilds.HeaderLeadingView = new BurgerMenuButton
+        {
+            Command = menu.OpenMenuCommand
+        };
+
+        var layout = new Grid
+        {
+            Children =
             {
-                await Navigation.PopAsync();
-                return;
+                guilds,
+                menu
             }
+        };
 
-            if (Shell.Current != null)
-                await Shell.Current.GoToAsync("..");
-        }
-        finally
-        {
-            _isNavigatingBack = false;
-        }
+        Content = layout;
     }
 }

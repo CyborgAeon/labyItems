@@ -20,14 +20,34 @@
                                          VerticalOptions="Center">
                         <Label FontAttributes="Bold"
                                FontSize="28"
-                               Text="Choose component" />
-                        <Label Text="Pick the next part to add to this item."
+                               Text="Add component" />
+                        <Label Text="Choose a component type to add."
                                TextColor="{StaticResource Gray500}" />
                     </VerticalStackLayout>
                 </Grid>
 
-                <VerticalStackLayout x:Name="ComponentList"
-                                     Spacing="12" />
+                <Grid x:Name="ComponentList"
+                      ColumnDefinitions="*,*"
+                      ColumnSpacing="12"
+                      RowSpacing="12" />
+
+                <Border Padding="14,10"
+                        BackgroundColor="{StaticResource SurfaceMutedBackgroundColor}"
+                        Stroke="{StaticResource SurfaceBorderColor}"
+                        StrokeShape="RoundRectangle 16">
+                    <Grid ColumnDefinitions="Auto,*"
+                          ColumnSpacing="10">
+                        <Label FontFamily="FASolid"
+                               FontSize="16"
+                               Text="&#xF05A;"
+                               TextColor="{StaticResource Primary}"
+                               VerticalTextAlignment="Center" />
+                        <Label Grid.Column="1"
+                               Text="You can add multiple of any type."
+                               TextColor="{StaticResource Gray500}"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+                </Border>
             </VerticalStackLayout>
         </ScrollView>
 

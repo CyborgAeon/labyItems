@@ -3,133 +3,152 @@
     x:Class="labyItems.Pages.ScrollBuilderPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:labyItems.Controls"
+    x:Name="Root"
+    NavigationPage.HasNavigationBar="False"
+    Shell.NavBarIsVisible="False"
     Title="Scroll Builder">
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="14">
-            <Picker
-                Title="Mode"
-                ItemsSource="{Binding ModeOptions}"
-                SelectedItem="{Binding SelectedMode}" />
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Padding="20,20,20,32" Spacing="14">
+                <Grid ColumnDefinitions="Auto,*"
+                      ColumnSpacing="12">
+                    <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
+                    <Label Grid.Column="1"
+                           Text="Scroll builder"
+                           FontAttributes="Bold"
+                           FontSize="24"
+                           VerticalTextAlignment="Center" />
+                </Grid>
 
-            <VerticalStackLayout IsVisible="{Binding IsCatalogMode}" Spacing="10">
-                <SearchBar
-                    Placeholder="Search miracles, spells, and evocations"
-                    Text="{Binding SearchText}" />
-
-                <CollectionView
-                    HeightRequest="280"
-                    ItemsSource="{Binding FilteredEntries}"
-                    SelectionMode="Single"
-                    SelectedItem="{Binding SelectedEntry}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Padding="10,8" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                                <Label FontAttributes="Bold" Text="{Binding Name}" />
-                                <Label
-                                    Grid.Column="1"
-                                    HorizontalTextAlignment="End"
-                                    Text="{Binding KindLabel}" />
-                                <Label
-                                    Grid.Row="1"
-                                    Grid.ColumnSpan="2"
-                                    FontSize="12"
-                                    Opacity="0.75"
-                                    Text="{Binding Summary}" />
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
-            </VerticalStackLayout>
-
-            <VerticalStackLayout IsVisible="{Binding IsCustomMode}" Spacing="10">
                 <Picker
-                    Title="Language"
-                    ItemsSource="{Binding LanguageOptions}"
-                    SelectedItem="{Binding SelectedLanguageLabel}" />
+                    Title="Mode"
+                    ItemsSource="{Binding ModeOptions}"
+                    SelectedItem="{Binding SelectedMode}" />
 
-                <Editor
-                    AutoSize="TextChanges"
-                    HeightRequest="180"
-                    Placeholder="Write the custom scroll text here"
-                    Text="{Binding CustomText}" />
-            </VerticalStackLayout>
+                <VerticalStackLayout IsVisible="{Binding IsCatalogMode}" Spacing="10">
+                    <SearchBar
+                        Placeholder="Search miracles, spells, and evocations"
+                        Text="{Binding SearchText}" />
 
-            <VerticalStackLayout IsVisible="{Binding IsCribSheetMode}" Spacing="10">
-                <Picker
-                    Title="Crib sheet"
-                    ItemsSource="{Binding CribSheetOptions}"
-                    SelectedItem="{Binding SelectedCribSheetLabel}" />
-            </VerticalStackLayout>
-
-            <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="10" IsVisible="{Binding ShowOptionsRow}">
-                <Switch
-                    IsToggled="{Binding UseAdvancedManaGlyphs}"
-                    IsVisible="{Binding IsManaGlyphToggleVisible}"
-                    VerticalOptions="Center" />
-                <Label
-                    Grid.Column="1"
-                    IsVisible="{Binding IsManaGlyphToggleVisible}"
-                    Text="{Binding ManaGlyphToggleLabel}"
-                    VerticalOptions="Center" />
-                <CheckBox
-                    Grid.Column="2"
-                    IsVisible="{Binding ShowAsScrollOption}"
-                    IsChecked="{Binding AsScroll}"
-                    IsEnabled="{Binding CanUseAsScroll}"
-                    VerticalOptions="Center" />
-                <Label
-                    Grid.Column="3"
-                    IsVisible="{Binding ShowAsScrollOption}"
-                    Opacity="{Binding AsScrollLabelOpacity}"
-                    Text="as scroll"
-                    VerticalOptions="Center" />
-            </Grid>
-
-            <Frame Padding="14" HasShadow="False" BorderColor="#D0D0D0">
-                <VerticalStackLayout Spacing="8">
-                    <Label FontAttributes="Bold" Text="Preview" />
-                    <Label
-                        IsVisible="{Binding ShowTextPreview}"
-                        FontFamily="{Binding PreviewFontFamily}"
-                        FontSize="22"
-                        HorizontalTextAlignment="Center"
-                        LineBreakMode="WordWrap"
-                        Text="{Binding PreviewText}" />
                     <CollectionView
-                        IsVisible="{Binding ShowCribSheetPreview}"
-                        ItemsSource="{Binding CribSheetPreviewEntries}"
-                        SelectionMode="None">
-                        <CollectionView.ItemsLayout>
-                            <GridItemsLayout Orientation="Vertical" Span="3" />
-                        </CollectionView.ItemsLayout>
+                        HeightRequest="280"
+                        ItemsSource="{Binding FilteredEntries}"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedEntry}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="6" ColumnDefinitions="54,*">
-                                    <Label
-                                        FontFamily="{Binding GlyphFontFamily}"
-                                        FontSize="20"
-                                        HorizontalTextAlignment="Center"
-                                        Text="{Binding GlyphText}"
-                                        VerticalTextAlignment="Center" />
+                                <Grid Padding="10,8" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                    <Label FontAttributes="Bold" Text="{Binding Name}" />
                                     <Label
                                         Grid.Column="1"
+                                        HorizontalTextAlignment="End"
+                                        Text="{Binding KindLabel}" />
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.ColumnSpan="2"
                                         FontSize="12"
-                                        Text="{Binding Translation}"
-                                        VerticalTextAlignment="Center" />
+                                        Opacity="0.75"
+                                        Text="{Binding Summary}" />
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <Label
-                        IsVisible="{Binding HasCribSheetNote}"
-                        FontSize="12"
-                        LineBreakMode="WordWrap"
-                        Text="{Binding CribSheetNote}" />
-                </VerticalStackLayout>
-            </Frame>
 
-            <Button Clicked="OnPrintClicked" Text="Print" />
-        </VerticalStackLayout>
-    </ScrollView>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout IsVisible="{Binding IsCustomMode}" Spacing="10">
+                    <Picker
+                        Title="Language"
+                        ItemsSource="{Binding LanguageOptions}"
+                        SelectedItem="{Binding SelectedLanguageLabel}" />
+
+                    <Editor
+                        AutoSize="TextChanges"
+                        HeightRequest="180"
+                        Placeholder="Write the custom scroll text here"
+                        Text="{Binding CustomText}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout IsVisible="{Binding IsCribSheetMode}" Spacing="10">
+                    <Picker
+                        Title="Crib sheet"
+                        ItemsSource="{Binding CribSheetOptions}"
+                        SelectedItem="{Binding SelectedCribSheetLabel}" />
+                </VerticalStackLayout>
+
+                <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="10" IsVisible="{Binding ShowOptionsRow}">
+                    <Switch
+                        IsToggled="{Binding UseAdvancedManaGlyphs}"
+                        IsVisible="{Binding IsManaGlyphToggleVisible}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Column="1"
+                        IsVisible="{Binding IsManaGlyphToggleVisible}"
+                        Text="{Binding ManaGlyphToggleLabel}"
+                        VerticalOptions="Center" />
+                    <CheckBox
+                        Grid.Column="2"
+                        IsVisible="{Binding ShowAsScrollOption}"
+                        IsChecked="{Binding AsScroll}"
+                        IsEnabled="{Binding CanUseAsScroll}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Column="3"
+                        IsVisible="{Binding ShowAsScrollOption}"
+                        Opacity="{Binding AsScrollLabelOpacity}"
+                        Text="as scroll"
+                        VerticalOptions="Center" />
+                </Grid>
+
+                <Frame Padding="14" HasShadow="False" BorderColor="#D0D0D0">
+                    <VerticalStackLayout Spacing="8">
+                        <Label FontAttributes="Bold" Text="Preview" />
+                        <Label
+                            IsVisible="{Binding ShowTextPreview}"
+                            FontFamily="{Binding PreviewFontFamily}"
+                            FontSize="22"
+                            HorizontalTextAlignment="Center"
+                            LineBreakMode="WordWrap"
+                            Text="{Binding PreviewText}" />
+                        <CollectionView
+                            IsVisible="{Binding ShowCribSheetPreview}"
+                            ItemsSource="{Binding CribSheetPreviewEntries}"
+                            SelectionMode="None">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="3" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="6" ColumnDefinitions="54,*">
+                                        <Label
+                                            FontFamily="{Binding GlyphFontFamily}"
+                                            FontSize="20"
+                                            HorizontalTextAlignment="Center"
+                                            Text="{Binding GlyphText}"
+                                            VerticalTextAlignment="Center" />
+                                        <Label
+                                            Grid.Column="1"
+                                            FontSize="12"
+                                            Text="{Binding Translation}"
+                                            VerticalTextAlignment="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <Label
+                            IsVisible="{Binding HasCribSheetNote}"
+                            FontSize="12"
+                            LineBreakMode="WordWrap"
+                            Text="{Binding CribSheetNote}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Button Clicked="OnPrintClicked" Text="Print" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                        SelectedRoute="{x:Static controls:ToolsetRouteKeys.ScrollBuilder}" />
+    </Grid>
 </ContentPage>

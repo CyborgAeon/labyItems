@@ -9,47 +9,49 @@
     Shell.NavBarIsVisible="False"
     Title="Unified Calendar">
 
-    <ScrollView>
-        <VerticalStackLayout x:Name="PageContent"
-                             Padding="20,18,20,20"
-                             Spacing="14">
-            <Grid ColumnDefinitions="Auto,*,Auto">
-                <controls:BackNavigationButton Command="{Binding Source={x:Reference RootPage}, Path=BackNavigationCommand}" />
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout x:Name="PageContent"
+                                 Padding="20,18,20,20"
+                                 Spacing="14">
+                <Grid ColumnDefinitions="Auto,*,Auto"
+                      ColumnSpacing="8">
+                    <controls:BurgerMenuButton Command="{Binding Source={x:Reference ToolsetMenu}, Path=OpenMenuCommand}" />
 
-                <HorizontalStackLayout x:Name="CalendarTitleHost"
-                                       Grid.Column="1"
-                                       HorizontalOptions="Center"
-                                       Spacing="6">
-                    <Button x:Name="MonthButton"
-                            Clicked="OnMonthTitleClicked"
-                            FontAttributes="Bold"
-                            FontSize="28"
+                    <HorizontalStackLayout x:Name="CalendarTitleHost"
+                                           Grid.Column="1"
+                                           HorizontalOptions="Start"
+                                           Spacing="6">
+                        <Button x:Name="MonthButton"
+                                Clicked="OnMonthTitleClicked"
+                                FontAttributes="Bold"
+                                FontSize="28"
+                                Padding="0"
+                                TextColor="{StaticResource Gray950}">
+                            <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                        </Button>
+
+                        <Button x:Name="YearButton"
+                                Clicked="OnYearTitleClicked"
+                                FontAttributes="Bold"
+                                FontSize="28"
+                                Padding="0"
+                                TextColor="{StaticResource Gray950}">
+                            <Button.BackgroundColor>Transparent</Button.BackgroundColor>
+                        </Button>
+                    </HorizontalStackLayout>
+
+                    <Button Grid.Column="2"
+                            Clicked="OnOpenMyBookingsClicked"
+                            FontAttributes="Italic"
+                            FontSize="14"
+                            HorizontalOptions="End"
                             Padding="0"
-                            TextColor="{StaticResource Gray950}">
+                            Text="My bookings"
+                            TextColor="{StaticResource Gray500}">
                         <Button.BackgroundColor>Transparent</Button.BackgroundColor>
                     </Button>
-
-                    <Button x:Name="YearButton"
-                            Clicked="OnYearTitleClicked"
-                            FontAttributes="Bold"
-                            FontSize="28"
-                            Padding="0"
-                            TextColor="{StaticResource Gray950}">
-                        <Button.BackgroundColor>Transparent</Button.BackgroundColor>
-                    </Button>
-                </HorizontalStackLayout>
-
-                <Button Grid.Column="2"
-                        Clicked="OnOpenMyBookingsClicked"
-                        FontAttributes="Italic"
-                        FontSize="14"
-                        HorizontalOptions="End"
-                        Padding="0"
-                        Text="My bookings"
-                        TextColor="{StaticResource Gray500}">
-                    <Button.BackgroundColor>Transparent</Button.BackgroundColor>
-                </Button>
-            </Grid>
+                </Grid>
 
             <Label x:Name="SelectedDayLabel"
                    FontAttributes="Italic"
@@ -102,6 +104,10 @@
                     FontSize="18"
                     Padding="20,14"
                     Text="+ Create Event" />
-        </VerticalStackLayout>
-    </ScrollView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <controls:ToolsetNavigationMenu x:Name="ToolsetMenu"
+                                        SelectedRoute="{x:Static controls:ToolsetRouteKeys.Calendar}" />
+    </Grid>
 </ContentPage>
